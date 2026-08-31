@@ -51,7 +51,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--ink);
   font-weight: 500;
   margin-top: 16px;
@@ -64,7 +64,7 @@
 .curatorLink {
   display: inline-block;
   margin-top: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent);
 }
@@ -85,12 +85,12 @@
   margin-top: 18px;
 }
 .heroRecogChip {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 12px;
 }
 @media (hover: hover) {
@@ -135,7 +135,7 @@
 .bio {
   margin: 0;
   color: var(--ink);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.65;
   max-width: 52ch;
   white-space: pre-wrap;
@@ -152,7 +152,7 @@
 .biolang button {
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 0.125rem 0.625rem;
   font: inherit;
   color: var(--ink-60);

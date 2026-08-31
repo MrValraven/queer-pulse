@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { ApiError } from "../../../shared/api/client";
 import {
   demoStats,
   getSpace,
@@ -39,7 +40,14 @@ function demoSafeSpaces(): SafeSpacesView {
  * verified + removed listing plus the header stats) and adapts each card —
  * so with "Populate platform" OFF the page shows real safe spaces.
  */
-export function useSafeSpaces(): SafeSpacesView & { isLoading: boolean } {
+export function useSafeSpaces(): SafeSpacesView & {
+  isLoading: boolean;
+  /** True when the directory fetch failed, so the grid can say so instead of
+   *  reading as a directory with no safe spaces in it (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch. */
+  refetch: () => void;
+} {
   const { demoMode } = useDemoMode();
   const query = useQuery<SafeSpacesView>({
     queryKey: [SAFE_SPACES_KEY, demoMode],
@@ -55,6 +63,8 @@ export function useSafeSpaces(): SafeSpacesView & { isLoading: boolean } {
     removed: query.data?.removed ?? [],
     stats: query.data?.stats ?? { verified: 0, reviews: 0, removed: 0 },
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 
@@ -72,6 +82,12 @@ export function useSafeSpaces(): SafeSpacesView & { isLoading: boolean } {
 export function useSafeSpace(slug: string | undefined): {
   space: AnySpace | undefined;
   isLoading: boolean;
+  /** True when the read failed for a reason OTHER than a 404. A 404 still
+   *  resolves to `undefined` so the page can redirect, but an outage must not
+   *  be reported to a member as "this safe space does not exist" (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch. */
+  refetch: () => void;
 } {
   const { demoMode } = useDemoMode();
   const query = useQuery<AnySpace | undefined>({
@@ -83,11 +99,21 @@ export function useSafeSpace(slug: string | undefined): {
       if (slug === undefined) return undefined;
       try {
         return safeSpaceDetailDtoToSpace(await getSafeSpace(slug));
-      } catch {
-        // 404 (or any read failure) → treat as not found; the page redirects.
-        return undefined;
+      } catch (error) {
+        // A 404 is an answer: this slug names no safe space, and the page
+        // redirects. Anything else is an outage, and rethrowing is what keeps
+        // it from being rendered as "not found" (DES-22).
+        if (error instanceof ApiError && error.status === 404) {
+          return undefined;
+        }
+        throw error;
       }
     },
   });
-  return { space: query.data, isLoading: query.isLoading };
+  return {
+    space: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

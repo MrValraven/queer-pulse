@@ -98,12 +98,17 @@ a {
    The halo uses box-shadow, so any component with a class-scoped `:focus` glow
    out-specifies it — those components re-declare the halo in their own
    `:focus-visible` rule (FormField, CopyLinkRow). See
-   docs/production-readiness/contrast-audit.md §8. */
+   docs/production-readiness/contrast-audit.md §8.
+
+   The three values live in tokens/effects.css, so a component that has to
+   out-specify this rule can restate the ring without copying its numbers. Tune
+   --focus-ring, --focus-ring-offset and --ring-cream there and every override
+   follows. */
 :focus-visible {
-  outline: 3px solid var(--accent-deep);
-  outline-offset: 3px;
-  box-shadow: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
-  border-radius: 4px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
 }
 
 img {
@@ -331,7 +336,7 @@ html[data-reduce-motion="true"] *::after {
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(var(--plum-rgb), 0.22);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 3px solid transparent;
   background-clip: padding-box;
 }
@@ -341,14 +346,14 @@ html[data-reduce-motion="true"] *::after {
   background-clip: padding-box;
 }
 [data-theme="dark"] * {
-  scrollbar-color: rgba(247, 243, 238, 0.28) transparent;
+  scrollbar-color: rgba(var(--cream-rgb), 0.28) transparent;
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: rgba(247, 243, 238, 0.22);
+  background: rgba(var(--cream-rgb), 0.22);
   background-clip: padding-box;
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(247, 243, 238, 0.4);
+  background: rgba(var(--cream-rgb), 0.4);
   background-clip: padding-box;
 }
 

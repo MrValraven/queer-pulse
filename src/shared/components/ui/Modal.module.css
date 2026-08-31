@@ -13,8 +13,8 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(var(--plum-rgb), 0.42);
-  backdrop-filter: blur(2px);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   animation: scrimIn 0.22s var(--ease, ease);
 }
 .modal {
@@ -28,7 +28,7 @@
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
-  box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-e4);
   overflow: hidden;
   animation: modalIn 0.26s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
@@ -46,7 +46,7 @@
   min-width: 0;
 }
 .modalEyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -70,7 +70,7 @@
 }
 .modalSub {
   margin: 6px 0 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -82,7 +82,7 @@
   display: grid;
   place-items: center;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--paper);
   color: var(--ink-60);
   cursor: pointer;
@@ -151,7 +151,7 @@
     width: 40px;
     height: 5px;
     transform: translateX(-50%);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: rgba(var(--plum-rgb), 0.18);
     z-index: 2;
   }
@@ -175,8 +175,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(26, 26, 31, 0.55);
-  backdrop-filter: blur(4px);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   animation: scrimIn 0.28s var(--ease, ease);
   /* Lift the bottom-anchored sheet above the on-screen keyboard (the overlap is
      published app-wide by useVisualViewportKeyboard; 0px when no keyboard). */
@@ -198,18 +198,21 @@
   /* Keep an over-scroll from chaining to the page behind the sheet. */
   overscroll-behavior: contain;
   background: var(--cream);
-  border-radius: 28px 28px 0 0;
+  border-radius: var(--radius-28) var(--radius-28) 0 0;
   /* Clear the iOS home indicator (and, in standalone, the installed tab bar
      sits below this z-index so the scrim covers it). */
   padding: 44px 32px max(40px, env(safe-area-inset-bottom));
-  box-shadow: 0 -20px 60px -30px rgba(0, 0, 0, 0.5);
+  /* --shadow-e4's geometry and channel with the y offset negated: a
+     bottom-anchored surface casts upward, so the overlay token as written
+     would throw its shadow off the bottom of the screen. */
+  box-shadow: 0 -24px 60px -20px rgba(var(--plum-rgb), 0.38);
   animation: sheetUp 0.4s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
 @media (min-width: 720px) {
   .sheet {
-    border-radius: 28px;
+    border-radius: var(--radius-28);
     padding: 44px 48px 48px;
-    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.55);
+    box-shadow: var(--shadow-e4);
   }
 }
 /* Drag-to-dismiss handle — a visible affordance that the sheet is draggable,
@@ -225,7 +228,7 @@
   width: 40px;
   height: 5px;
   margin: -32px auto 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.18);
   /* The sheet owns this vertical gesture; don't let it scroll the page. */
   touch-action: none;
@@ -257,7 +260,7 @@
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--ink-60);
-  font-size: 20px;
+  font-size: var(--text-20);
   line-height: 1;
   cursor: pointer;
   transition:
@@ -303,7 +306,7 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-card) var(--radius-card) 0 0;
-  box-shadow: 0 -20px 60px -20px rgba(var(--plum-rgb), 0.5);
+  box-shadow: 0 -24px 60px -20px rgba(var(--plum-rgb), 0.38);
   animation: sheetUp 0.4s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
 @media (prefers-reduced-motion: reduce) {
@@ -372,5 +375,24 @@
   .overlay,
   .sheet {
     animation: none;
+  }
+}
+
+/* ── Dark theme ────────────────────────────────────────────────────────────
+   `.modal`, `.sheet` and `.sideSheet` all sit on --cream, which flips to a
+   near-black in dark mode. The plum tints below are the grabber and the close
+   chip: --plum-rgb deliberately does not flip, so on the dark surface they
+   land within a channel of the background and disappear. Same treatment as
+   Tag/Badge — swap the channel to cream at a matching opacity. */
+:global([data-theme="dark"]) .modal::before,
+:global([data-theme="dark"]) .grabber {
+  background: rgba(var(--cream-rgb), 0.22);
+}
+:global([data-theme="dark"]) .close {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .close:hover {
+    background: rgba(var(--cream-rgb), 0.18);
   }
 }

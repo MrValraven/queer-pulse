@@ -14,7 +14,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.68;
   max-width: 60ch;
@@ -43,18 +43,18 @@
 .infoTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .infoBody {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.68;
   flex: 1;
 }
 .infoLink {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: none;
@@ -83,7 +83,7 @@
 .clinicCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px 24px;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -93,16 +93,16 @@
 }
 @media (hover: hover) {
   .clinicCard:hover {
-    box-shadow: 0 10px 24px -14px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-e2);
   }
 }
 .ccType {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   display: inline-block;
   margin-bottom: 8px;
 }
@@ -125,13 +125,13 @@
 .ccName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
 }
 .ccDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 10px;
@@ -140,14 +140,14 @@
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 .ccBadge {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   padding: 4px 10px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   background: rgba(var(--jade-rgb), 0.1);
   color: var(--jade);
   white-space: nowrap;
@@ -160,13 +160,13 @@
 }
 .ccBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   cursor: pointer;
   background: transparent;
   color: var(--text-strong);
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   transition:
     background 0.2s var(--ease),
@@ -185,7 +185,7 @@
   border-color: var(--line-strong);
 }
 .ccReview {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   text-align: right;
 }
@@ -234,7 +234,7 @@
   }
 }
 .ccDetailLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -242,7 +242,7 @@
   padding-top: 2px;
 }
 .ccDetailVal {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -250,7 +250,7 @@
 .tip {
   background: rgba(var(--jade-rgb), 0.07);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 24px;
   display: flex;
   gap: 14px;
@@ -258,11 +258,11 @@
   margin-bottom: 36px;
 }
 .tipIcon {
-  font-size: 20px;
+  font-size: var(--text-20);
   flex: none;
 }
 .tipText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--jade);
   line-height: 1.65;
 }
@@ -272,7 +272,7 @@
   flex-direction: column;
   gap: 0;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   overflow: hidden;
   margin-bottom: 40px;
 }
@@ -301,18 +301,18 @@
   padding: 22px 24px;
 }
 .psTitle {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 5px;
 }
 .psDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
 }
 .psNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
   font-weight: 600;
   margin-top: 6px;
@@ -351,7 +351,7 @@
   font-family: var(--sans);
 }
 .faqQText {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--text-strong);
   line-height: 1.3;
@@ -364,7 +364,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   flex: none;
   transition:
@@ -378,7 +378,7 @@
 }
 .faqA {
   padding: 0 4px 22px;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.72;
   max-width: 66ch;
@@ -386,7 +386,7 @@
 
 .hivBanner {
   background: var(--plum);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 40px 44px;
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 40px;
@@ -405,7 +405,7 @@
   color: var(--accent);
 }
 .hivBanner p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.7;
   max-width: 58ch;
@@ -424,7 +424,7 @@
 }
 .hivStat {
   background: rgba(var(--cream-rgb), 0.07);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 20px;
 }
 .hivStat .n {
@@ -435,7 +435,7 @@
   line-height: 1;
 }
 .hivStat .l {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.52);
   margin-top: 4px;
   line-height: 1.4;
@@ -449,7 +449,7 @@
 .anonBox {
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 32px 36px;
   margin-top: 44px;
 }
@@ -462,7 +462,7 @@
   margin-bottom: 8px;
 }
 .anonBox p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
   margin-bottom: 18px;
@@ -470,10 +470,10 @@
 .anonInput {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 16px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   background: var(--paper);
   resize: vertical;
@@ -494,15 +494,15 @@
   flex-wrap: wrap;
 }
 .anonNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 .primaryBtn {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   padding: 11px 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: rgba(var(--cream-rgb), 1);
   border: none;
@@ -526,7 +526,7 @@
 /* Inline confirmation that replaces the form inside the anonBox. */
 .anonDone {
   background: var(--plum);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 26px 28px;
   text-align: center;
   animation: qpRevealIn var(--dur-slow) var(--ease-out);
@@ -555,7 +555,7 @@
   color: var(--accent);
 }
 .anonDoneBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.6;
   max-width: 46ch;

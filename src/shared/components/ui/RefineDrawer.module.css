@@ -8,12 +8,12 @@
   align-items: center;
   gap: 8px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
   transition:
@@ -50,16 +50,16 @@
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   line-height: 1;
 }
 .chevron {
   color: var(--ink-40);
-  font-size: 11px;
+  font-size: var(--text-11);
   line-height: 1;
   transition: transform 0.2s var(--ease);
 }
@@ -104,7 +104,7 @@
   margin-top: 14px;
   padding: 18px 20px 20px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--paper);
 }
 :global([data-theme="dark"]) .panel {
@@ -130,7 +130,7 @@
 .groupLabel {
   display: block;
   margin-bottom: 9px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -139,7 +139,7 @@
 .note {
   margin: 7px 0 0;
   max-width: 34ch;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   line-height: 1.45;
   font-style: italic;
   color: var(--ink-40);

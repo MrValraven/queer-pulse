@@ -8,6 +8,7 @@ import {
   StatTile,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -65,6 +66,26 @@ const PRINCIPLES = [
   },
 ];
 
+/** i18n Pattern A — the two halves of the named/anonymous choice, with the
+ *  consequence of each spelled out under it. Sole consumer is
+ *  `ReportFormSection`. */
+const IDENTITY_OPTIONS: {
+  value: ReporterIdentity;
+  labelKey: string;
+  helperKey: string;
+}[] = [
+  {
+    value: "named",
+    labelKey: "safety:report.form.identity.named",
+    helperKey: "safety:report.form.identity.namedHelper",
+  },
+  {
+    value: "anonymous",
+    labelKey: "safety:report.form.identity.anonymous",
+    helperKey: "safety:report.form.identity.anonymousHelper",
+  },
+];
+
 /** Aggregate moderation stats. The counts are mock report data (content —
  * the live-mode equivalent of a fetched quarterly report); only the label
  * next to each count is platform chrome and gets translated. */
@@ -85,6 +106,23 @@ const LOG = [
  * useful inside `detail`, where they read as the account they are.
  */
 const UNLINKED_SUBJECT_ID = "unspecified";
+
+/**
+ * Who the moderator sees when this report reaches them.
+ *
+ * This used to be INFERRED: `anonymous` was `email.trim().length === 0`, so a
+ * signed-in member who filled in the platform's main report form and left the
+ * optional email blank reached the moderator anonymously without ever being
+ * told. The cost is not abstract. An anonymous report withholds the reporter's
+ * identity AND the prior-report credibility aggregate a moderator weighs a
+ * report against, and the report stays linked to them internally either way,
+ * so the member gave up the signal and kept none of the protection they
+ * thought they were buying.
+ *
+ * A signed-out reporter has no identity to attach in the first place, so their
+ * behaviour is left exactly as it was and this control is not shown to them.
+ */
+type ReporterIdentity = "named" | "anonymous";
 
 /** The "how reporting works" preamble — flow steps 01–04. Lives on the
  *  guidelines page (ReportingGuidePage), separate from the form. */
@@ -117,12 +155,18 @@ export function ReportFlowSection() {
 export function ReportFormSection() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { loggedIn } = useAuth();
   const createReport = useCreateReport();
   const describeReportError = useReportSubmissionError();
   const [category, setCategory] = useState<ReasonCode | "">("");
   const [involved, setInvolved] = useState("");
   const [detail, setDetail] = useState("");
   const [email, setEmail] = useState("");
+  // Defaults to "named" for a signed-in member: filing as yourself is what
+  // somebody using their own account expects, and it is the option that keeps
+  // their prior-report signal in front of the moderator. Anonymity stays one
+  // click away, with the trade spelled out beside it.
+  const [identity, setIdentity] = useState<ReporterIdentity>("named");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -136,6 +180,7 @@ export function ReportFormSection() {
       setInvolved("");
       setDetail("");
       setEmail("");
+      setIdentity("named");
     };
     // The "who or what was involved" line is a description, so it travels with
     // the account of what happened rather than posing as a subject id.
@@ -147,15 +192,25 @@ export function ReportFormSection() {
     const composedDetail = [describedSubject, detailText]
       .filter(Boolean)
       .join("\n\n");
-    // Live POSTs /reports (anonymous unless an email is given); demo resolves
-    // locally. The backend derives severity + SLA and sends the acknowledgement.
+    // Live POSTs /reports; demo resolves locally. The backend derives severity
+    // and the SLA from the reason code alone.
+    //
+    // `anonymous` is the signed-in member's OWN choice now, never inferred
+    // from the optional email field. A signed-out reporter keeps the original
+    // behaviour exactly: no account to name them, so leaving the email blank
+    // is what makes the report anonymous. The wire format is untouched, still
+    // the `anonymous?: boolean` + `contactEmail?: string` pair in
+    // `CreateReportInput`.
+    const isAnonymous = loggedIn
+      ? identity === "anonymous"
+      : email.trim().length === 0;
     createReport.mutate(
       {
         subjectType: subjectTypeForCategory(category),
         subjectId: UNLINKED_SUBJECT_ID,
         reasonCode: category,
         detail: composedDetail || undefined,
-        anonymous: email.trim().length === 0,
+        anonymous: isAnonymous,
         contactEmail: email.trim() || undefined,
       },
       {
@@ -220,6 +275,34 @@ export function ReportFormSection() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </FormField>
+              {loggedIn ? (
+                <fieldset className={s.identity}>
+                  <legend className={s.identityLegend}>
+                    {t("safety:report.form.identityLegend")}
+                  </legend>
+                  {IDENTITY_OPTIONS.map((option) => (
+                    <label key={option.value} className={s.identityOption}>
+                      <span className={s.identityChoice}>
+                        <input
+                          type="radio"
+                          name="report-identity"
+                          value={option.value}
+                          checked={identity === option.value}
+                          onChange={() => setIdentity(option.value)}
+                        />
+                        {t(option.labelKey)}
+                      </span>
+                      <span className={s.identityHelper}>
+                        {t(option.helperKey)}
+                      </span>
+                    </label>
+                  ))}
+                </fieldset>
+              ) : (
+                <p className={s.identityNote}>
+                  {t("safety:report.form.identity.signedOutNote")}
+                </p>
+              )}
               <div style={{ marginTop: 16 }}>
                 <Button type="submit" disabled={createReport.isPending}>
                   {createReport.isPending

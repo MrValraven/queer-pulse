@@ -13,7 +13,7 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   padding: 9px 16px;
   padding-block-start: max(9px, env(safe-area-inset-top));

@@ -18,6 +18,10 @@
  * Errors only: no Session Replay, no performance tracing, no default PII. The
  * only user context ever attached is an opaque hashed id via `setMonitoringUser`.
  *
+ * `beforeSend` gates on two things: the consent flag above, and the expected-
+ * failure filter below, which drops the one HTTP status the whole app treats as
+ * an answer rather than a fault.
+ *
  * FOLLOW-UP (not done here — needs a build/secrets change, out of scope for a
  * source edit): add a source-map upload step so minified stack traces resolve.
  * Use `@sentry/vite-plugin` in `vite.config.ts` gated on an auth token secret
@@ -46,6 +50,35 @@ let enabled = false;
 
 /** Guards against a double `Sentry.init` (StrictMode / hot reload). */
 let initialised = false;
+
+/**
+ * HTTP statuses discarded before transmission, whichever call site reported
+ * them. Held to the single status the app treats as an expected answer
+ * everywhere: 401 means the caller is signed out, an outcome the auth refresh /
+ * `onAuthLost` path owns, and one that every member-scoped fetch living on a
+ * public page would otherwise report on each signed-out load.
+ *
+ * `errorHandling.ts`, `consent.api.ts` and `nudges.api.ts` already filter this
+ * at their own call sites. This is the second line of defence for the many
+ * places that call `logError` directly, so a new one cannot quietly bring the
+ * noise back.
+ *
+ * Deliberately narrow. Nothing here can drop a 5xx, a 4xx that signals a real
+ * defect (400 / 403 / 409 / 422), or any non-HTTP error. 404 stays reportable
+ * too: away from a page read it usually means a broken endpoint path.
+ */
+const SILENT_HTTP_STATUSES: readonly number[] = [401];
+
+/**
+ * Recognises `ApiError` (`shared/api/client.ts`) structurally, by its `name`
+ * plus a numeric `status`, so this module keeps its promise of importing
+ * neither a vendor SDK nor the api layer.
+ */
+function isExpectedHttpFailure(error: unknown): boolean {
+  if (!(error instanceof Error) || error.name !== "ApiError") return false;
+  const { status } = error as Error & { status?: unknown };
+  return typeof status === "number" && SILENT_HTTP_STATUSES.includes(status);
+}
 
 /**
  * Errors raised while the SDK chunk is still downloading.
@@ -118,10 +151,17 @@ export async function initObservability(): Promise<void> {
     // Errors only — keep the footprint minimal and consent-friendly.
     sendDefaultPii: false,
     tracesSampleRate: 0,
-    // Consent gate: initialised at startup so global handlers are installed, but
-    // every event is dropped until the member grants `monitoring` consent
-    // (setMonitoringConsent flips `enabled`). Returning null discards the event.
-    beforeSend: (event) => (enabled ? event : null),
+    // Two gates, both returning null to discard the event.
+    // 1. Consent: initialised at startup so global handlers are installed, but
+    //    every event is dropped until the member grants `monitoring` consent
+    //    (setMonitoringConsent flips `enabled`).
+    // 2. Expected failure: a signed-out 401 is an answer the app handles, so it
+    //    never spends monitoring quota. See SILENT_HTTP_STATUSES.
+    beforeSend: (event, hint) => {
+      if (!enabled) return null;
+      if (isExpectedHttpFailure(hint.originalException)) return null;
+      return event;
+    },
   });
 
   // Anything thrown while the chunk was in flight goes out now.

@@ -18,6 +18,7 @@ import type { Catalog } from "../../types";
 export const resources: Catalog = {
   // ── Partilhado: ResourceModal ───────────────────────────────────────────
   "modal.closeAriaLabel": "Fechar",
+  "modal.resultAriaLabel": "Confirmação",
   "modal.doneCta": "Concluído",
 
   // ── Partilhado: CrisisStrip ──────────────────────────────────────────────
@@ -25,7 +26,7 @@ export const resources: Catalog = {
   "crisis.title": "Em crise <em>agora mesmo?</em>",
   "crisis.body":
     "Se estás em perigo imediato, liga para o <strong>112</strong>. Estas linhas são gratuitas e confidenciais. Toca para ligar, ou copia o número.",
-  "crisis.jumpCta": "Todos os recursos de crise ↓",
+  "crisis.jumpCta": "Todos os recursos de crise",
   // crisisStrip.data.ts — nomes reais de linhas de apoio mantidos como estão;
   // só a parte descritiva e o horário são traduzidos. Assinalar para revisão
   // nativa: exatidão das linhas de crise.
@@ -285,7 +286,7 @@ export const resources: Catalog = {
   "queer101.faq.q4":
     "Só tive relações com um género. Isso faz de mim uma pessoa heterossexual?",
   "queer101.faq.a4":
-    "Não necessariamente. Identidade e experiência não são a mesma coisa. Muitas pessoas bissexuais e queer só namoraram com um género durante longos períodos das suas vidas: circunstâncias, preferência ou acaso têm todos um papel. O que importa é o que sentes, mais do que uma lista das tuas relações passadas.",
+    "Não necessariamente. Identidade e experiência não são a mesma coisa. Muitas pessoas bissexuais e queer só namoraram com um género durante longos períodos das suas vidas: circunstâncias, preferência ou acaso têm todos um papel. O que importa é o que sentes agora.",
   "queer101.faq.q5":
     "Tudo bem estar em questionamento? E se nunca tiver a certeza?",
   "queer101.faq.a5":
@@ -304,7 +305,7 @@ export const resources: Catalog = {
   "queer101.glossary.suggestEditCta": "Sugerir uma alteração",
   "queer101.glossary.searchPlaceholder": "Pesquisar termos…",
   "queer101.glossary.notice":
-    "Este glossário é um ponto de partida, não uma autoridade. A linguagem evolui, as pessoas discordam, e definições que parecem certas para uma pessoa podem não parecer para outra.",
+    "Este glossário é um ponto de partida, aberto a contestação. A linguagem evolui, as pessoas discordam, e definições que parecem certas para uma pessoa podem parecer erradas para outra.",
 
   // Termos do glossário — nota: "não-binárie" e "aromântique" seguem a forma
   // neutra em -e do glossário pt-PT; "aromântique" é cunhado por analogia
@@ -501,16 +502,16 @@ export const resources: Catalog = {
 
   "pronounsGuide.faq.q1": "Posso mudar o meu nome de utilizador?",
   "pronounsGuide.faq.a1":
-    "Sim, uma vez por ano. As alterações de nome de utilizador atualizam o URL do teu perfil, e os links antigos redirecionam durante 90 dias. Vai a Editar Perfil → Identidade para o alterar.",
+    "Sim, uma vez por ano. As alterações de nome de utilizador atualizam o URL do teu perfil, e os links antigos redirecionam durante 90 dias. Vai a Editar Perfil e depois a Identidade para o alterar.",
   "pronounsGuide.faq.q2": "E se o meu nome morto aparecer nalgum lugar?",
   "pronounsGuide.faq.a2":
     "Contacta-nos imediatamente através de <a>hello@queerpulse.com</a> e vamos remover ou atualizar isso com prioridade. Isto inclui assinaturas na revista, publicações antigas do fórum atribuídas ao teu nome anterior, e quaisquer arquivos de email que guardemos.",
   "pronounsGuide.faq.q3": "Mudar o meu nome afeta o meu histórico de convites?",
   "pronounsGuide.faq.a3":
-    "Não. As tuas relações de convite (quem te convidou, quem convidaste) são mantidas internamente por ID de conta, não por nome, por isso as mudanças de nome não têm qualquer efeito nelas.",
+    "Não. As tuas relações de convite (quem te convidou, quem convidaste) são mantidas internamente por ID de conta, por isso as mudanças de nome não têm qualquer efeito nelas.",
   "pronounsGuide.faq.q4": "Posso tornar os meus pronomes privados?",
   "pronounsGuide.faq.a4":
-    "Sim, vai a Editar Perfil → Visibilidade de Campos e define Pronomes como 'Oculto'. Não vão aparecer no teu perfil nem na pesquisa de pessoas. Continuam a ser usados pela equipa em comunicações diretas.",
+    "Sim, vai a Editar Perfil, depois a Visibilidade de Campos, e define Pronomes como 'Oculto'. Não vão aparecer no teu perfil nem na pesquisa de pessoas. Continuam a ser usados pela equipa em comunicações diretas.",
   "pronounsGuide.faq.q5": "E se eu não quiser especificar pronomes?",
   "pronounsGuide.faq.a5":
     "Basta deixares o campo de pronomes em branco ou por selecionar. Nenhum campo é obrigatório. Não te vamos pedir para o preencheres.",
@@ -844,7 +845,7 @@ export const resources: Catalog = {
   "harmReduction.section.beforeNight.title": "Fica a saber antes de sair",
   "harmReduction.section.beforeNight.item.eat.title": "Come antes",
   "harmReduction.section.beforeNight.item.eat.body":
-    "O álcool e o MDMA fazem-se sentir com mais força com o estômago vazio. Faz uma refeição a sério 2–3 horas antes, não mesmo antes.",
+    "O álcool e o MDMA fazem-se sentir com mais força com o estômago vazio. Faz uma refeição a sério, a terminar 2–3 horas antes de saíres.",
   "harmReduction.section.beforeNight.item.test.title":
     "Testa as tuas substâncias",
   "harmReduction.section.beforeNight.item.test.body":
@@ -865,7 +866,7 @@ export const resources: Catalog = {
   "harmReduction.section.duringNight.label": "Na festa",
   "harmReduction.section.duringNight.title": "Durante a noite",
   "harmReduction.section.duringNight.alert.head":
-    "Água: nem pouca, nem demasiada",
+    "Água: beber a menos e beber a mais são ambos perigosos",
   "harmReduction.section.duringNight.alert.body":
     "O MDMA pode causar tanto desidratação como hiponatremia (excesso de água). Se estiveres a dançar muito: cerca de 500 ml por hora. Se não estiveres a dançar: cerca de 250 ml por hora. Bebidas isotónicas ajudam com o sal.",
   "harmReduction.section.duringNight.item.startLow.title":
@@ -887,7 +888,7 @@ export const resources: Catalog = {
   "harmReduction.section.after.title": "Recuperação",
   "harmReduction.section.after.item.comedown.title": "A quebra do MDMA é real",
   "harmReduction.section.after.item.comedown.body":
-    "O MDMA esgota temporariamente a serotonina. Os dias 2 a 4 depois do consumo podem trazer humor em baixo, ansiedade, e fadiga. Isto é neurológico, não um reflexo da tua vida. Passa. Comer, dormir, e atividade física ligeira ajudam.",
+    "O MDMA esgota temporariamente a serotonina. Os dias 2 a 4 depois do consumo podem trazer humor em baixo, ansiedade, e fadiga. Isto é neurológico: é a tua química cerebral a causar a sensação. Passa. Comer, dormir, e atividade física ligeira ajudam.",
   "harmReduction.section.after.item.sleepFood.title": "Dormir e comer primeiro",
   "harmReduction.section.after.item.sleepFood.body":
     "Antes de mais nada. O teu corpo trabalhou muito. A vontade de tomar mais para perseguir a sensação boa quase sempre piora a quebra.",
@@ -1236,7 +1237,7 @@ export const resources: Catalog = {
     "Uma atualização breve aos 3 meses, publicada aqui e na revista. Sem reembolso, mas a responsabilização importa.",
   "microGrants.rule.noPolitics.title": "Sem campanhas políticas",
   "microGrants.rule.noPolitics.body":
-    "Financiamos projetos comunitários, não atividade eleitoral ou partidária.",
+    "Financiamos projetos comunitários. A atividade eleitoral e partidária fica fora do fundo.",
   "microGrants.sidebar.panelTitle":
     "Painel de avaliação: 2.º trimestre de 2026",
   "microGrants.sidebar.joinPanelCta": "Juntar-te ao painel de avaliação",
@@ -1273,7 +1274,7 @@ export const resources: Catalog = {
   "microGrants.apply.commitment.update":
     "Vou partilhar uma atualização pública breve aos 3 meses: o que aconteceu, o que foi gasto, o que mudou.",
   "microGrants.apply.commitment.benefit":
-    "Este projeto beneficia genuinamente a comunidade queer em Lisboa, não só eu pessoalmente.",
+    "Este projeto beneficia genuinamente a comunidade queer em Lisboa, para lá de mim pessoalmente.",
   "microGrants.apply.commitment.timeline":
     "Consigo concretizar isto até 3 meses depois de receber a bolsa.",
 
@@ -1525,7 +1526,7 @@ export const resources: Catalog = {
     "Tens dois minutos para dizer o que é e, se quiseres, em que estás preso. Também podes não dizer nada e deixar o trabalho falar. Ambos são permitidos.",
   "artCritGuide.flow.step3.title": "A sala responde",
   "artCritGuide.flow.step3.body":
-    "Vamos dando a volta. Observações específicas, depois perguntas, depois sugestões se convidadas. Falamos do que está na parede, não do que teríamos feito em vez disso.",
+    "Vamos dando a volta. Observações específicas, depois perguntas, depois sugestões se convidadas. Falamos do que está na parede, nos seus próprios termos.",
   "artCritGuide.flow.step4.title": "Quem fez fica com o que serve",
   "artCritGuide.flow.step4.body":
     "Nunca és obrigade a concordar. Fica com o que é útil, deixa o resto, e passamos ao próximo trabalho. Mesa comprida e comida a seguir.",
@@ -1542,7 +1543,7 @@ export const resources: Catalog = {
   "artCritGuide.example2.good":
     '"O bordo por acabar parece vivo; terminá-lo pode matar a tensão que aqui tens."',
   "artCritGuide.example2.avoid":
-    '"Eu teria usado uma paleta diferente." (sobre o trabalho que terias feito, não o dela.)',
+    '"Eu teria usado uma paleta diferente." (isto é sobre o trabalho que terias feito. Responde ao que está à tua frente.)',
   "artCritGuide.example3.good":
     '"O que estavas a tentar fazer com o espaço negativo? Pode estar a fazer mais do que pensas."',
   "artCritGuide.example3.avoid":
@@ -1590,7 +1591,7 @@ export const resources: Catalog = {
   "comingOutAtWork.signal2.text":
     "Uma política escrita de não discriminação que nomeia orientação sexual e identidade de género",
   "comingOutAtWork.signal3.text":
-    "Linguagem inclusiva na conversa do dia a dia: perguntar por parceiros/as em vez de assumir",
+    "Linguagem inclusiva na conversa do dia a dia: perguntas abertas sobre com quem estás",
   "comingOutAtWork.signal4.text":
     "Piadas que ficam por contestar, inclusive por parte de chefias",
   "comingOutAtWork.signal5.text":
@@ -2305,13 +2306,13 @@ export const resources: Catalog = {
     "A plataforma é ativamente moderada para racismo, transfobia, classismo e capacitismo, a par da homofobia. As denúncias são levadas a sério e têm seguimento.",
   "intersectionality.commitment2.title": "Grupos comunitários interseccionais",
   "intersectionality.commitment2.text":
-    "Espaços fechados para pessoas QTIPOC, com deficiência, sóbrias, e outras comunidades dentro da comunidade são mantidos como um recurso genuíno, não um gesto simbólico.",
+    "Espaços fechados para pessoas QTIPOC, com deficiência, sóbrias, e outras comunidades dentro da comunidade são mantidos como um recurso genuíno.",
   "intersectionality.commitment3.title": "Acessibilidade económica",
   "intersectionality.commitment3.text":
     "Ninguém é excluído de eventos ou recursos da comunidade por causa do custo. Existem opções de preço variável e gratuitas para tudo o que organizamos.",
   "intersectionality.commitment4.title": "Não somos um bloco único",
   "intersectionality.commitment4.text":
-    "A QueerPulse não fala a uma só voz sobre questões políticas. A comunidade contém multidões. O fórum é um lugar para ter os debates, não para os resolver a partir de cima.",
+    "A QueerPulse não fala a uma só voz sobre questões políticas. A comunidade contém multidões. O fórum é um lugar para ter os debates, e é a comunidade que os trabalha.",
 
   "intersectionality.orgs.heading": "Organizações e <em>recursos</em>",
   "intersectionality.orgs.intro":
@@ -2358,6 +2359,34 @@ export const resources: Catalog = {
     "Estamos a verificar que serviços de rastreio são genuinamente amigos de pessoas queer e trans antes de os listarmos aqui, para que cada clínica seja de confiança.",
   "sexualHealth.guides.ask.liveBody":
     "As perguntas anónimas ainda não estão abertas. Estamos a preparar uma forma segura de os voluntários de saúde da comunidade as responderem. Volta em breve.",
+
+  // ── Painéis de falha de carregamento dos diretórios (DES-22 / DES-24) ───
+  // Renderizados através do `LoadErrorState` partilhado. Ficam separados do
+  // texto de "está para breve" acima de propósito: um pedido que falhou e um
+  // diretório que ainda não foi preenchido são factos diferentes.
+  "sexualHealth.testing.loadError.title":
+    "Não conseguimos carregar o <em>diretório de clínicas.</em>",
+  "sexualHealth.testing.loadError.body":
+    "A lista de serviços de rastreio não chegou. A falha é nossa e as clínicas continuam lá. Tenta novamente dentro de instantes e usa as linhas de crise no topo desta página se precisares de ajuda agora.",
+
+  "legal.lawyers.loadError.title":
+    "Não conseguimos carregar o <em>diretório jurídico.</em>",
+  "legal.lawyers.loadError.body":
+    "A lista de apoio jurídico validado não chegou. A falha é nossa. Tenta novamente dentro de instantes.",
+
+  "therapists.loadError.title":
+    "Não conseguimos carregar o <em>diretório de terapeutas.</em>",
+  "therapists.loadError.body":
+    "A lista de terapeutas não chegou. A falha é nossa e o diretório continua lá. Tenta novamente dentro de instantes e usa as linhas de crise no topo desta página se precisares de ajuda agora.",
+
+  "glossary.loadError.title": "Não conseguimos carregar o <em>glossário.</em>",
+  "glossary.loadError.body":
+    "Os termos não chegaram. A falha é nossa. Tenta novamente dentro de instantes.",
+
+  "guideIndex.loadError.title":
+    "Não conseguimos carregar o <em>índice de guias.</em>",
+  "guideIndex.loadError.body":
+    "A lista de guias não chegou. A falha é nossa e todos os guias continuam publicados. Tenta novamente dentro de instantes.",
 
   "accessibleLisbon.live.title":
     "Os espaços acessíveis verificados estão para breve.",

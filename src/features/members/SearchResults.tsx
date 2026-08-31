@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath, routes } from "../../app/routeMap";
@@ -87,34 +91,38 @@ function BrowseView({
   const { t } = useTranslation();
   return (
     <>
-      <div className={styles.recent}>
-        <div className={styles.recentLabel}>
-          {t("members:search.recentSearches")}
-        </div>
-        <div className={styles.recentChips}>
-          {recents.map((r) => (
-            <button
-              key={r}
-              type="button"
-              className={styles.chip}
-              onClick={() => setQuery(r)}
-            >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
+      {/* A first-time member has no recents at all. The whole block stays away
+          until there is one, rather than heading an empty row (DES-31). */}
+      {recents.length > 0 && (
+        <div className={styles.recent}>
+          <div className={styles.recentLabel}>
+            {t("members:search.recentSearches")}
+          </div>
+          <div className={styles.recentChips}>
+            {recents.map((recentQuery) => (
+              <button
+                key={recentQuery}
+                type="button"
+                className={styles.chip}
+                onClick={() => setQuery(recentQuery)}
               >
-                <polyline points="1 4 1 10 7 10" />
-                <path d="M3.51 15a9 9 0 1 0 .49-6.93" />
-              </svg>
-              {r}
-            </button>
-          ))}
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <polyline points="1 4 1 10 7 10" />
+                  <path d="M3.51 15a9 9 0 1 0 .49-6.93" />
+                </svg>
+                {recentQuery}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       {tab === "all" ? (
         <>
           <Group
@@ -277,7 +285,12 @@ function HitsView({
   );
 }
 
-/** Search results body: sign-in prompt, loading skeletons, browse, or query hits. */
+/**
+ * Search results body. Four distinguishable states, in order: sign-in prompt,
+ * loading skeletons, a failed request, then browse or query hits. The failed
+ * request gets its own panel so an outage is never dressed up as
+ * `0 results for "maria"` (DES-23).
+ */
 export function SearchResults({
   query,
   tab,
@@ -285,6 +298,8 @@ export function SearchResults({
   onSelectTab,
   signInRequired,
   loading,
+  hasFailed,
+  onRetry,
   searchData,
   recents,
 }: {
@@ -296,9 +311,14 @@ export function SearchResults({
   onSelectTab: (type: ResultType) => void;
   signInRequired: boolean;
   loading: boolean;
+  /** The live GET /search failed. Renders the retryable error panel. */
+  hasFailed: boolean;
+  /** Re-runs the failed search. */
+  onRetry: () => void;
   searchData: SearchItem[];
   recents: string[];
 }) {
+  const { t } = useTranslation();
   const q = query.trim().toLowerCase();
   if (signInRequired) return <SearchSignInPrompt />;
   if (loading) {
@@ -307,6 +327,20 @@ export function SearchResults({
         <SkeletonGroup />
         <SkeletonGroup />
       </>
+    );
+  }
+  if (hasFailed) {
+    return (
+      <LoadErrorState
+        onRetry={onRetry}
+        title={
+          <Translation
+            i18nKey="members:search.loadError.title"
+            components={{ em: <em /> }}
+          />
+        }
+        description={t("members:search.loadError.body")}
+      />
     );
   }
   if (!q) {

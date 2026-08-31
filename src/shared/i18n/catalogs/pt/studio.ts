@@ -319,7 +319,7 @@ export const studio: Catalog = {
   "about.sec.whatItIs.heading":
     "Uma plataforma de audição, gerida como <em>cooperativa</em>.",
   "about.sec.whatItIs.p1":
-    "A QueerPulse Studio pertence a quem a usa, quem ouve e quem faz música, juntos, não a acionistas nem a uma editora discográfica. <strong>Oitenta cêntimos de cada euro gerado por uma audição vão para o artista.</strong> Cada cêntimo de cada gorjeta, também. A divisão é pública, o catálogo é curado por um conselho eleito de seis pessoas, e os masters nunca saem das mãos de quem os fez.",
+    "A QueerPulse Studio pertence a quem a usa: quem ouve e quem faz música detêm entre si todas as partes sociais. <strong>Oitenta cêntimos de cada euro gerado por uma audição vão para o artista.</strong> Cada cêntimo de cada gorjeta, também. A divisão é pública, o catálogo é curado por um conselho eleito de seis pessoas, e os masters nunca saem das mãos de quem os fez.",
   "about.sec.whatItIs.p2":
     "É a terceira sala da cooperativa QueerPulse, depois da Magazine e do Cinema. Uma só assinatura cobre tudo. Podes ser pessoa da comunidade só pela escrita e nunca abrir a Studio; podes estar aqui só pela música e nunca ler uma palavra.",
   "about.sec.whatItIs.pull":
@@ -435,7 +435,7 @@ export const studio: Catalog = {
   "accessibility.item.interfaceLang.heading":
     "Interface na <em>tua língua</em>",
   "accessibility.item.interfaceLang.body":
-    "A interface da Studio está disponível em português, inglês, espanhol e francês, com mais línguas à medida que a comunidade as traduz. Define-a em Definições → Legendas e letras.",
+    "A interface da Studio está disponível em português, inglês, espanhol e francês, com mais línguas à medida que a comunidade as traduz. Define-a em Definições, depois Legendas e letras.",
 
   "accessibility.group.lowVision.heading":
     "Para navegação por <em>baixa visão</em> e teclado",
@@ -513,7 +513,7 @@ export const studio: Catalog = {
     "<strong>€7/mês</strong> é só a Studio. <strong>€11/mês</strong> é toda a cooperativa QueerPulse: Studio mais Cinema, Magazine, Convívios, grupos de leitura e um voto na assembleia anual. Uma só assinatura, todos os espaços. Muda de nível em qualquer mês.",
   "help.faq.cancel.q": "Como cancelo?",
   "help.faq.cancel.a":
-    'Um clique em <a>Definições → Apagar e sair</a>. Sem chamada de retenção, sem ciclo de "tens a certeza", sem emails a insistir. Achamos que sair devia ser tão fácil como entrar. É a única forma honesta de te pedir para ficares.',
+    'Um clique em <a>Definições, depois Apagar e sair</a>. Sem chamada de retenção, sem ciclo de "tens a certeza", sem emails a insistir. Achamos que sair devia ser tão fácil como entrar. É a única forma honesta de te pedir para ficares.',
   "help.faq.dataSold.q":
     "Os meus dados são vendidos ou usados para treinar alguma coisa?",
   "help.faq.dataSold.a":
@@ -615,7 +615,7 @@ export const studio: Catalog = {
     "Sem corte da plataforma nas gorjetas, nunca. Isto não está sujeito a votação. É uma cláusula fundadora.",
   "terms.deal.data.title": "Os teus dados <em>nunca</em> são vendidos",
   "terms.deal.data.body":
-    "Não são vendidos, não são partilhados, não são usados para treinar nada. O histórico está desligado por defeito e é apagável num toque.",
+    "Ficam dentro da cooperativa e servem exatamente uma coisa: pagar a quem faz música. O histórico está desligado por defeito e é apagável num toque.",
   "terms.deal.leaving.title": "Sair é <em>uma página</em>",
   "terms.deal.leaving.body":
     "A remoção do teu trabalho demora 14 dias, e fechas a conta com um clique. As reproduções passadas continuam pagas de qualquer forma.",
@@ -658,7 +658,7 @@ export const studio: Catalog = {
   "terms.sec.privacy.p1":
     "Guardamos a tua conta, as tuas gravações, os teus recibos, e o que ativares explicitamente. <strong>Não</strong> guardamos um perfil do teu gosto para vender, um histórico que não pediste que guardássemos, nem nada que déssemos a um anunciante, porque não temos anunciantes.",
   "terms.sec.privacy.footnote":
-    "Contagens de reproduções agregadas e anónimas alimentam o livro-razão público, para que os artistas sejam pagos e os números sejam auditáveis. Podes exportar tudo o que guardamos, ou apagá-lo, em <a>Definições → Apagar e sair</a>: instantaneamente, sem modal, sem necessidade de desfazer porque falamos a sério.",
+    "Contagens de reproduções agregadas e anónimas alimentam o livro-razão público, para que os artistas sejam pagos e os números sejam auditáveis. Podes exportar tudo o que guardamos, ou apagá-lo, em <a>Definições, depois Apagar e sair</a>: instantaneamente, sem modal, sem necessidade de desfazer porque falamos a sério.",
 
   "terms.longVersions.title": "As versões completas",
   "terms.longVersions.meta":
@@ -699,7 +699,7 @@ export const studio: Catalog = {
 
   "rights.leavingCoop.title": "A sair da cooperativa <em>por completo</em>?",
   "rights.leavingCoop.body":
-    "Esta página só remove lançamentos individuais. Para encerrar a tua conta de artista, terminar a tua contribuição de sustentador e pedir uma exportação completa dos teus dados, isso está em <a>Definições → Apagar e sair</a>. <em>Mesmo assim, os pagamentos passados ficam contigo</em> e vamos continuar a pagar quaisquer reproduções que já tenham acontecido.",
+    "Esta página só remove lançamentos individuais. Para encerrar a tua conta de artista, terminar a tua contribuição de sustentador e pedir uma exportação completa dos teus dados, isso está em <a>Definições, depois Apagar e sair</a>. <em>Mesmo assim, os pagamentos passados ficam contigo</em> e vamos continuar a pagar quaisquer reproduções que já tenham acontecido.",
 
   "rights.takedownStartedToast":
     "«{title}» entra na janela de remoção de 14 dias",
@@ -1185,7 +1185,7 @@ export const studio: Catalog = {
   "upload.side.lyrics.list.autoTranscribe.value": "grátis · ~94%",
   "upload.side.lyrics.list.communityTranslation.label":
     "Tradução da comunidade",
-  "upload.side.lyrics.list.communityTranslation.value": "€40 → tradutor(a)",
+  "upload.side.lyrics.list.communityTranslation.value": "€40 para quem traduz",
   "upload.side.lyrics.list.approval.label": "A tua aprovação",
   "upload.side.lyrics.list.approval.value": "antes de publicar",
 
@@ -1226,7 +1226,7 @@ export const studio: Catalog = {
   "payouts.summary.fromAlbumBuys": "De compras de álbuns",
   "payouts.summary.directSubs": "Subscrições diretas de €3/mês",
   "payouts.summary.splitsRouted": "Divisões encaminhadas para outros",
-  "payouts.summary.toYourIban": "→ para o teu IBAN",
+  "payouts.summary.toYourIban": "Para o teu IBAN",
 
   "payouts.list.heading": "Pagamentos <em>recentes</em>",
   "payouts.list.exportCsv": "Exportar CSV",
@@ -1244,7 +1244,7 @@ export const studio: Catalog = {
   "payouts.sidebar.method.sepa.label": "SEPA: IBAN",
   "payouts.sidebar.method.sepa.badge": "Ativo",
   "payouts.sidebar.method.stripe.label": "Stripe Connect",
-  "payouts.sidebar.method.stripe.hint": "ligado · reserva, não principal",
+  "payouts.sidebar.method.stripe.hint": "ligado · via de reserva",
   "payouts.sidebar.method.stripe.switchCta": "Mudar",
   "payouts.sidebar.method.coopCredit.label": "Crédito da cooperativa",
   "payouts.sidebar.method.coopCredit.hint":
@@ -1511,7 +1511,7 @@ export const studio: Catalog = {
   "sheet.preview.transcribedBy": "Transcrito por <em>{name}</em>",
   "sheet.preview.transcriberRole": "Transcrição da comunidade",
   "sheet.preview.transcriberNote":
-    "<em>pago pela tua compra, não pelo fundo, quando compras</em>",
+    "<em>a tua compra paga diretamente a quem transcreve</em>",
 
   "sheet.checkout.title": "O teu <em>download</em>",
   "sheet.checkout.subtitle":
@@ -1740,7 +1740,7 @@ export const studio: Catalog = {
     "Cola a tua tracklist · marca de tempo · artista · título",
   "setSubmission.matcher.pasteHint":
     "Uma linha por faixa. Aceitamos a maioria dos formatos. <em>Volta a correr o comparador</em> sempre que editares.",
-  "setSubmission.matcher.runCta": "▸ Correr o comparador",
+  "setSubmission.matcher.runCta": "Correr o comparador",
   "setSubmission.matcher.matchingCta": "A comparar…",
   "setSubmission.matcher.resultsLabel":
     "Resultados do comparador · <em>resolvidos face ao catálogo + base de dados PRO</em>",

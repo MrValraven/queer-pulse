@@ -4,6 +4,7 @@ import {
   currentUserSlug,
   memberName,
 } from "../../members/data/members";
+import { handleFormatError } from "../../../shared/handles";
 import { isContentSection } from "../subprofile-kinds";
 import type {
   CollaboratorDTO,
@@ -3087,20 +3088,12 @@ export function mockMyPersonaInvites(): MyInviteDTO[] {
 // Constants mirror contract C5; the codes returned match the exact strings the
 // PublishChecklist maps. Live mode gets these from the server's 422 body instead.
 
-export const HANDLE_RE = /^[a-z0-9][a-z0-9-]{2,29}$/;
-export const RESERVED_HANDLES = [
-  "p",
-  "me",
-  "admin",
-  "members",
-  "profile",
-  "profiles",
-  "settings",
-  "account",
-  "api",
-  "subprofiles",
-  "directory",
-];
+// HANDLE_RE and RESERVED_HANDLES are deliberately NOT redeclared here. This
+// file used to carry its own copy of both, which drifted: the shared list grew
+// an impersonation group (`support`, `moderator`, `official` and the rest) and
+// this copy did not, so demo mode was telling a member `@support` was
+// publishable while live mode refused it. One import keeps the demo gate
+// honest about what the server will actually do.
 export const MIN_BIO = 80;
 export const MIN_CONTENT_ITEMS = 3;
 /** Placeholder blocklist; a real moderation-module hook is a documented follow-up. */
@@ -3112,8 +3105,9 @@ export function validatePublishDemo(dto: SubprofileDTO): string[] {
   const unmet: string[] = [];
   if (dto.linkVisibility === "linked") return unmet; // linked: displayName only
   const handle = dto.handle ?? dto.slug;
-  if (!HANDLE_RE.test(handle)) unmet.push("handle_invalid");
-  if (RESERVED_HANDLES.includes(handle)) unmet.push("handle_reserved");
+  const handleFormatProblem = handleFormatError(handle);
+  if (handleFormatProblem === "invalid") unmet.push("handle_invalid");
+  if (handleFormatProblem === "reserved") unmet.push("handle_reserved");
   if (!dto.avatarUrl) unmet.push("avatar_missing");
   if ((dto.bio ?? "").length < MIN_BIO) unmet.push("bio_too_short");
   if (contentItemCount(dto) < MIN_CONTENT_ITEMS) unmet.push("not_enough_items");

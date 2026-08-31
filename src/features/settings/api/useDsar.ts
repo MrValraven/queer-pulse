@@ -91,6 +91,8 @@ export interface ListDsarResult {
   loading: boolean;
   /** True when the live fetch failed — the page says so rather than showing nothing. */
   failed: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 /**
@@ -120,11 +122,17 @@ export function useListDsar(): ListDsarResult {
   });
 
   if (demoMode) {
-    return { requests: DEMO_PAST_DSAR, loading: false, failed: false };
+    return {
+      requests: DEMO_PAST_DSAR,
+      loading: false,
+      failed: false,
+      refetch: () => {},
+    };
   }
   return {
     requests: query.data ?? EMPTY_DSAR,
     loading: query.isPending,
     failed: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

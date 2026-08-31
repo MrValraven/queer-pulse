@@ -8,7 +8,9 @@ import {
   PrivateIdentitiesSection,
 } from "./IdentitySections";
 import { ProfessionalDetailsSection } from "./ProfessionalDetailsSection";
+import { ConsentToggleRow } from "./NotificationVolumeSections";
 import { Pane, Section, ToggleList, ToggleRow } from "./SettingsControls";
+import { useContentSensitivity } from "./api/useContentSensitivity";
 import {
   AGE_LABELS,
   CONTENT_SETTINGS,
@@ -200,25 +202,51 @@ export function InterestsPane({
         </div>
       </div>
 
-      <Section label={t("settings:interests.content.heading")}>
-        <div className={styles.psHelper}>
-          {t("settings:interests.content.helper")}
-        </div>
-        <ToggleList>
-          {CONTENT_SETTINGS.map((setting) => (
-            <ToggleRow
-              key={setting.id}
-              title={t(setting.labelKey)}
-              defaultChecked
-              comingSoon
-              onChange={onChange}
-            />
-          ))}
-        </ToggleList>
-        <div className={styles.legalNote}>
-          {t("settings:interests.content.legalNote")}
-        </div>
-      </Section>
+      <ContentSettingsSection />
     </Pane>
+  );
+}
+
+/**
+ * The three content-sensitivity switches, persisted since PRD-10 through
+ * `GET|PUT /me/content-sensitivity`. They were `defaultChecked comingSoon`
+ * rows: interactive-looking, disabled, reading and writing nothing.
+ *
+ * Its own component so it can own the hook without pushing `InterestsPane`
+ * past the repo's 200-line rule, and because it takes no `onChange`: each
+ * switch saves the moment it is flipped, so joining the pane's dirty/save flow
+ * would ask the member to press Save for something already stored. A feed
+ * filter that only takes effect once they find that button is a filter that
+ * quietly did not take effect.
+ */
+function ContentSettingsSection() {
+  const { t } = useTranslation();
+  const { isShown, setShown, isLoading } = useContentSensitivity();
+  return (
+    <Section label={t("settings:interests.content.heading")}>
+      <div className={styles.psHelper}>
+        {t("settings:interests.content.helper")}
+      </div>
+      <ToggleList>
+        {/* Checked means SHOWN, matching the labels. The hook owns the one
+            inversion against the stored `hide*` fields, so this must never
+            invert again. */}
+        {CONTENT_SETTINGS.map((setting) => (
+          <ConsentToggleRow
+            key={setting.id}
+            title={t(setting.labelKey)}
+            description={t(
+              `settings:interests.contentSetting.${setting.id}.desc`,
+            )}
+            checked={isShown(setting.id)}
+            disabled={isLoading}
+            onChange={(isShownNext) => setShown(setting.id, isShownNext)}
+          />
+        ))}
+      </ToggleList>
+      <div className={styles.legalNote}>
+        {t("settings:interests.content.legalNote")}
+      </div>
+    </Section>
   );
 }

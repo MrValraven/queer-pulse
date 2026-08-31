@@ -1,19 +1,25 @@
 import { useNavigate } from "react-router-dom";
-import { FiChevronDown } from "react-icons/fi";
+import { FiChevronDown, FiUser } from "react-icons/fi";
 import { useTeamRole } from "../../../features/admin/adminRole";
-import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../feedback/useToast";
-import { initialsFromParts } from "../../lib/initials";
 import { useTranslation } from "../../i18n/useTranslation";
 import { modPanel } from "../../../app/routeMap";
 import { STEWARDED, ADMIN_PROFILE } from "./adminNav.data";
+import { useAccountIdentity } from "./useAccountIdentity";
 import { useSidebarMenu } from "./useSidebarMenu";
 import styles from "./AdminShell.module.css";
 
 const COMMUNITY_SLUGS = ["trans-hub", "rainbow-arts"];
 
-/** Avatar + role/scope lines — the switcher's trigger content, and the whole of
- *  what live mode renders (there's nothing to switch to). */
+/**
+ * Avatar + role/scope lines: the switcher's trigger content, and the whole of
+ * what live mode renders (there's nothing to switch to).
+ *
+ * `initials` is empty whenever the viewer's own mark can't be derived: live mode
+ * with no resolved session, or a profile whose name parts are blank. That draws
+ * a neutral person mark. It used to fall back to the DEMO persona's monogram,
+ * which put a mock member's initials in a real admin's sidebar.
+ */
 function RoleChip({
   initials,
   role,
@@ -23,9 +29,20 @@ function RoleChip({
   role: string;
   scope: string;
 }) {
+  const { t } = useTranslation();
   return (
     <>
-      <span className={styles.switchAv}>{initials}</span>
+      {initials ? (
+        <span className={styles.switchAv}>{initials}</span>
+      ) : (
+        <span
+          className={`${styles.switchAv} ${styles.switchAvBlank}`}
+          role="img"
+          aria-label={t("shared:adminRoleSwitcher.avatarPlaceholderAria")}
+        >
+          <FiUser aria-hidden />
+        </span>
+      )}
       <span className={styles.switchTx}>
         <span className={styles.switchRole}>{role}</span>
         <span className={styles.switchScope}>{scope}</span>
@@ -50,7 +67,6 @@ function RoleChip({
  */
 export function AdminRoleSwitcher() {
   const { role, setRole, canSwitch } = useTeamRole();
-  const { user } = useAuth();
   const { showToast } = useToast();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -65,11 +81,12 @@ export function AdminRoleSwitcher() {
     ? t("shared:adminRoleSwitcher.scopeAll")
     : t("shared:adminRoleSwitcher.scopeStewarded");
 
-  // Live mode shows the signed-in member's own initials; demo keeps the fixture.
-  const profile = user?.profile;
-  const initials = profile
-    ? initialsFromParts(profile.firstName, profile.lastName)
-    : ADMIN_PROFILE.initials;
+  // Identity comes from `useAccountIdentity`, the demo-safe resolver the account
+  // menu at the foot of this same rail already uses. It branches on demo mode
+  // explicitly: the mock persona's monogram is a DEMO fixture and is returned
+  // only in demo mode, so live mode gets the signed-in member's own mark or an
+  // empty string, which RoleChip draws as a neutral person mark.
+  const { initials } = useAccountIdentity();
 
   if (!canSwitch) {
     return (
@@ -132,6 +149,8 @@ export function AdminRoleSwitcher() {
                 color: "var(--accent-soft)",
               }}
             >
+              {/* Demo-only branch (`canSwitch` is true only in demo mode), so
+                  the fixture persona's monogram is the right mark here. */}
               {ADMIN_PROFILE.initials}
             </span>
             <span>

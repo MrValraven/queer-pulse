@@ -9,6 +9,7 @@ export const NOTIFICATION_PREFERENCE_CATEGORY = {
   eventInvites: "event_invites",
   eventReminders: "event_reminders",
   eventActivity: "event_activity",
+  eventCapacity: "event_capacity",
   newMessages: "new_messages",
   connections: "connections",
   communityReplies: "community_replies",

@@ -1,4 +1,5 @@
-import { Avatar } from "../../shared/components/ui";
+import { Avatar, LoadErrorState } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberRowAvatar } from "./searchAvatar";
@@ -8,6 +9,8 @@ import styles from "./CommandPalette.module.css";
 /** The recents chips + the keyboard-navigable results list for the palette. */
 export function CommandPaletteResults({
   q,
+  hasFailed,
+  onRetry,
   recents,
   setQuery,
   results,
@@ -16,6 +19,11 @@ export function CommandPaletteResults({
   goToItem,
 }: {
   q: string;
+  /** The live GET /search failed. Shows the retryable error panel in place of
+   *  the results list, so an outage is never read as "no matches" (DES-23). */
+  hasFailed: boolean;
+  /** Re-runs the failed search. */
+  onRetry: () => void;
   recents: string[];
   setQuery: (value: string) => void;
   results: SearchItem[];
@@ -24,9 +32,27 @@ export function CommandPaletteResults({
   goToItem: (item: SearchItem) => void;
 }) {
   const { t } = useTranslation();
+  if (hasFailed) {
+    // Keeps the id the input's `aria-controls` points at.
+    return (
+      <div id="qp-cmd-results">
+        <LoadErrorState
+          compact
+          onRetry={onRetry}
+          title={
+            <Translation
+              i18nKey="members:search.loadError.title"
+              components={{ em: <em /> }}
+            />
+          }
+          description={t("members:search.loadError.body")}
+        />
+      </div>
+    );
+  }
   return (
     <>
-      {!q && (
+      {!q && recents.length > 0 && (
         <div className={styles.recents}>
           {recents.slice(0, 5).map((r) => (
             <button

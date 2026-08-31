@@ -10,6 +10,12 @@ export interface FeaturedPartnersResult {
   /** The first featured partner that carries a quote (null when none do). */
   testimonial: PartnerTestimonial | null;
   isLoading: boolean;
+  /** True when the featured-partners read failed (DES-22). The rail is proof,
+   *  so a caller may choose to render nothing — but it must be able to tell
+   *  "no featured partners" apart from "the read failed". */
+  isError: boolean;
+  /** Re-run the failed read. */
+  refetch: () => void;
 }
 
 /** Pick the first featured partner with a testimonial for the quote card. */
@@ -41,5 +47,7 @@ export function useFeaturedPartners(): FeaturedPartnersResult {
     partners,
     testimonial: firstTestimonial(partners),
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

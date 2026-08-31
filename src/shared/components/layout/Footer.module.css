@@ -38,7 +38,7 @@
   flex: none;
 }
 .blurb {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 16px;
   line-height: 1.6;
@@ -55,7 +55,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.7);
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
@@ -89,7 +89,7 @@
   max-width: 150px;
 }
 .col h2 {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
@@ -98,7 +98,7 @@
 }
 .col a {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.66);
   margin-bottom: 11px;
   transition: color var(--dur-base) var(--ease);
@@ -121,7 +121,7 @@
   flex-wrap: wrap;
 }
 .copyright {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.5);
 }
 
@@ -130,7 +130,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 16px;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .baseLinks a {
   display: inline-flex;
@@ -157,7 +157,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.8);
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
@@ -175,12 +175,12 @@
 .langSwitch {
   display: inline-flex;
   border: 1px solid rgba(var(--cream-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 .langSwitch button {
   padding: 5px 11px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(var(--cream-rgb), 0.55);

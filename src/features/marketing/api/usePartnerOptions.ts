@@ -18,8 +18,28 @@ export interface PartnerOption {
  * `usePartners` backs.
  */
 export function usePartnerOptions(): PartnerOption[] {
+  return usePartnerOptionsQuery().options;
+}
+
+export interface PartnerOptionsResult {
+  options: PartnerOption[];
+  isLoading: boolean;
+  /** True when the options read failed (DES-22). A picker that silently offers
+   *  nothing looks like "there are no partners", so a caller that renders these
+   *  as content must be able to say otherwise. */
+  isError: boolean;
+  /** Re-run the failed read. */
+  refetch: () => void;
+}
+
+/**
+ * The same read as `usePartnerOptions`, with the query state attached (DES-22).
+ * `usePartnerOptions` stays the array-returning convenience for pickers that
+ * fail quietly.
+ */
+export function usePartnerOptionsQuery(): PartnerOptionsResult {
   const { demoMode } = useDemoMode();
-  const { data } = useQuery<PartnerOption[]>({
+  const query = useQuery<PartnerOption[]>({
     queryKey: ["partnerOptions", demoMode],
     queryFn: async () => {
       if (demoMode) {
@@ -36,5 +56,10 @@ export function usePartnerOptions(): PartnerOption[] {
       }));
     },
   });
-  return data ?? [];
+  return {
+    options: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

@@ -6,7 +6,7 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -32,7 +32,7 @@
   color: var(--accent);
 }
 .hero p {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   max-width: 56ch;
   margin-top: 18px;
@@ -58,7 +58,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   max-width: 60ch;
   margin: 12px 0 32px;
@@ -74,7 +74,7 @@
 .flowStep {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
 }
 .flowN {
@@ -85,13 +85,13 @@
   margin-bottom: 10px;
 }
 .flowTitle {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 6px;
 }
 .flowDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -117,18 +117,67 @@
   color: var(--accent);
 }
 .formBox > div > p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-top: 8px;
 }
 .fineprint {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 10px;
 }
+
+/* The explicit "named or anonymous" choice. A radio group rather than a
+   checkbox, because both halves carry a consequence worth reading and a
+   checkbox only ever labels one of them. */
+.identity {
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  padding: 16px 18px;
+  margin: 0 0 4px;
+  min-width: 0;
+}
+.identityLegend {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+  padding: 0 6px;
+}
+.identityOption {
+  display: block;
+  padding: 9px 0;
+  cursor: pointer;
+}
+.identityOption + .identityOption {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.identityChoice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+.identityChoice input {
+  accent-color: var(--accent);
+  flex: none;
+}
+.identityHelper {
+  margin: 5px 0 0 26px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+.identityNote {
+  margin: 0 0 4px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  line-height: 1.55;
+}
 .princLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -149,7 +198,7 @@
   margin-top: 7px;
 }
 .principle span {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -174,7 +223,7 @@
   color: var(--accent);
 }
 .modLog > p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.6);
   margin: 6px 0 24px;
 }
@@ -192,7 +241,7 @@
   line-height: 1;
 }
 .logStat .l {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.55);
   margin-top: 6px;
   line-height: 1.4;

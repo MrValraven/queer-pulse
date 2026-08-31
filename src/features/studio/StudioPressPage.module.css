@@ -4,7 +4,10 @@
 .page {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
 
@@ -42,14 +45,14 @@
 .bar {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: var(--z-sticky);
   display: flex;
   align-items: center;
   gap: 18px;
   padding: 16px 36px;
   padding-block-start: max(16px, env(safe-area-inset-top));
   background: rgba(26, 16, 40, 0.85);
-  backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: var(--blur-nav);
   border-bottom: 1px solid var(--line);
 }
 .brand {
@@ -78,7 +81,7 @@
 .wm {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 20px;
+  font-size: var(--text-20);
   letter-spacing: -0.005em;
 }
 .wm .q {
@@ -87,7 +90,7 @@
 .crumb {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text-60);
   padding-left: 18px;
   border-left: 1px solid var(--line);
@@ -104,7 +107,7 @@
 
 /* ── Layout ─────────────────────────────────────────────────── */
 .wrap {
-  max-width: 1040px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 48px 36px 96px;
 }
@@ -137,14 +140,14 @@
 }
 .eb {
   display: inline-flex;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 14px;
   padding: 6px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--accent-rgb), 0.32);
   background: rgba(var(--accent-rgb), 0.1);
 }
@@ -191,7 +194,7 @@
   gap: 3px;
 }
 .pf .l {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -199,7 +202,7 @@
 }
 .pf > span:last-child {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text);
 }
 .pf em {
@@ -237,7 +240,7 @@
 }
 .dl {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--accent);
@@ -258,7 +261,7 @@
   align-items: center;
   gap: 22px;
   padding: 24px 28px;
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -303,7 +306,7 @@ a.track:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 12px 26px -10px rgba(var(--accent-rgb), 0.7);
+  box-shadow: var(--shadow-accent);
   transition: transform 0.18s var(--ease);
 }
 .playBig:hover {
@@ -322,7 +325,7 @@ a.track:hover {
 .ptInfo h4 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   letter-spacing: -0.01em;
   color: var(--text);
   margin: 0 0 10px;
@@ -340,7 +343,7 @@ a.track:hover {
 .ptWave span {
   flex: 1;
   min-width: 1px;
-  border-radius: 1.5px;
+  border-radius: var(--radius-1-5);
   background: rgba(var(--accent-rgb), 0.55);
 }
 .wavePlaying span {
@@ -351,7 +354,7 @@ a.track:hover {
   z-index: 1;
   width: 72px;
   height: 72px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   flex: none;
   box-shadow: 0 12px 24px -14px rgba(0, 0, 0, 0.6);
@@ -359,7 +362,7 @@ a.track:hover {
 .relMeta {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-60);
 }
 .wmBadge {
@@ -367,13 +370,13 @@ a.track:hover {
   z-index: 1;
   flex: none;
   align-self: flex-start;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
   padding: 5px 11px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--accent-rgb), 0.4);
   background: rgba(var(--accent-rgb), 0.12);
 }
@@ -386,11 +389,11 @@ a.track:hover {
   margin-top: 16px;
   padding: 14px 18px;
   border-left: 2px solid var(--accent);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--radius-8) var(--radius-8) 0;
   background: rgba(var(--cream-rgb), 0.04);
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--text);
 }
@@ -412,7 +415,7 @@ a.track:hover {
 .col {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 24px 26px;
 }
 .col.short {
@@ -420,7 +423,7 @@ a.track:hover {
   border-color: rgba(var(--accent-rgb), 0.22);
 }
 .bl {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -429,7 +432,7 @@ a.track:hover {
 }
 .col p {
   font-family: var(--serif);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.68;
   color: var(--text-60);
   margin: 0 0 14px;
@@ -456,7 +459,7 @@ a.track:hover {
 .photo {
   position: relative;
   aspect-ratio: 3 / 4;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
   border: 1px solid var(--line);
   background: none;
@@ -470,7 +473,7 @@ a.track:hover {
   display: flex;
   align-items: flex-end;
   padding: 14px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   background: linear-gradient(to top, rgba(10, 4, 20, 0.82), transparent 60%);
@@ -503,21 +506,21 @@ a.track:hover {
 .quote {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 26px 28px;
 }
 .quote p {
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.4;
   letter-spacing: -0.01em;
   color: var(--text);
   margin: 0 0 16px;
 }
 .src {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -534,7 +537,7 @@ a.track:hover {
 /* ── Boilerplate ────────────────────────────────────────────── */
 .boiler {
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
 }
 .copyRow {
@@ -560,7 +563,7 @@ a.track:hover {
   }
 }
 .k {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -568,7 +571,7 @@ a.track:hover {
 }
 .v {
   font-family: var(--serif);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--text);
 }
 .v em {
@@ -577,13 +580,13 @@ a.track:hover {
 }
 .cp {
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--accent);
   background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid rgba(var(--accent-rgb), 0.3);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 14px;
   cursor: pointer;
   transition:
@@ -602,7 +605,7 @@ a.track:hover {
   flex-wrap: wrap;
   gap: 18px;
   padding: 34px 36px;
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   background: linear-gradient(
     135deg,
     rgba(var(--accent-rgb), 0.12),
@@ -628,7 +631,7 @@ a.track:hover {
 }
 .ci p {
   font-family: var(--serif);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.6;
   color: var(--text-60);
   margin: 0;
@@ -643,7 +646,7 @@ a.track:hover {
   text-align: center;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-40);
 }
 

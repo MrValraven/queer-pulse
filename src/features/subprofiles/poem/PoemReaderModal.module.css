@@ -3,11 +3,11 @@
   inset: 0;
   /* Match the shared full-screen dialog layer (Modal.module.css) so the scrim
      covers the nav (z-index 100) instead of the nav bleeding over the modal. */
-  z-index: 220;
+  z-index: var(--z-modal);
   display: grid;
   place-items: center;
   padding: clamp(1rem, 4vw, 3rem);
-  background: rgba(var(--plum-rgb), 0.55);
+  background: var(--scrim);
   animation: scrimIn 160ms var(--ease, ease-out);
 }
 .panel {
@@ -16,9 +16,9 @@
   max-height: 88vh;
   overflow-y: auto;
   background: var(--cream);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: clamp(1.75rem, 4vw, 3.25rem);
-  box-shadow: 0 24px 64px rgba(var(--plum-rgb), 0.35);
+  box-shadow: var(--shadow-e4);
   animation: panelIn 200ms var(--ease, ease-out);
 }
 .close {

@@ -27,13 +27,25 @@ export interface RoadmapView {
   notBuilding: NotBuildingItem[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /**
+   * True when the roadmap read failed (DES-22). The page MUST branch on this
+   * before it renders the board: an outage drawn as three empty columns says
+   * nothing is shipped, being built, or planned.
+   */
+  isError: boolean;
+  /** Re-run the failed read, for the error state's retry. */
+  refetch: () => void;
 }
 
 // Demo mode reshapes the page's own mocks into the view model — byte-for-byte
 // the same demo experience, no network. The `roadmap.data` mock is imported on
 // demand inside the demo queryFn (see below) so it never ships in the live
 // bundle.
-async function buildDemo(): Promise<Omit<RoadmapView, "loading">> {
+/** The data half of the view model: everything both modes resolve to, without
+ *  the query-state fields the hook adds around it. */
+type RoadmapData = Omit<RoadmapView, "loading" | "isError" | "refetch">;
+
+async function buildDemo(): Promise<RoadmapData> {
   const {
     HERO_STATS,
     SHIPPED,
@@ -54,7 +66,7 @@ async function buildDemo(): Promise<Omit<RoadmapView, "loading">> {
   };
 }
 
-function fromDto(dto: RoadmapResponseDTO): Omit<RoadmapView, "loading"> {
+function fromDto(dto: RoadmapResponseDTO): RoadmapData {
   return {
     heroStats: dto.heroStats.map((stat) => ({
       label: stat.label,
@@ -79,7 +91,7 @@ function fromDto(dto: RoadmapResponseDTO): Omit<RoadmapView, "loading"> {
   };
 }
 
-const EMPTY: Omit<RoadmapView, "loading"> = {
+const EMPTY: RoadmapData = {
   heroStats: [],
   shipped: [],
   building: [],
@@ -99,14 +111,21 @@ const EMPTY: Omit<RoadmapView, "loading"> = {
 export function useRoadmap(): RoadmapView {
   const { demoMode } = useDemoMode();
 
-  const query = useQuery<Omit<RoadmapView, "loading">>({
+  const query = useQuery<RoadmapData>({
     queryKey: ["roadmap", demoMode],
     queryFn: async () => (demoMode ? buildDemo() : fromDto(await getRoadmap())),
   });
 
+  const refetch = () => void query.refetch();
+
   if (!query.data) {
-    return { ...EMPTY, loading: query.isPending };
+    return {
+      ...EMPTY,
+      loading: query.isPending,
+      isError: query.isError,
+      refetch,
+    };
   }
 
-  return { ...query.data, loading: false };
+  return { ...query.data, loading: false, isError: false, refetch };
 }

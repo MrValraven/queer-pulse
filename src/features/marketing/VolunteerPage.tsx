@@ -45,6 +45,8 @@ export function VolunteerPage() {
   const {
     items: opps,
     isLoading,
+    isError,
+    refetch,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -140,6 +142,8 @@ export function VolunteerPage() {
         visibleOpportunities={visible}
         loadedCount={opps.length}
         isLoading={loading}
+        isError={isError}
+        onRetry={refetch}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         onLoadMore={fetchNextPage}

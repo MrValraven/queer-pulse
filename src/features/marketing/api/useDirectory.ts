@@ -44,6 +44,26 @@ export const DIRECTORY_KEY = "directory";
  * drop-in for the previous synchronous read point.
  */
 export function useDirectoryPlaces(): DirectoryPlace[] {
+  return useDirectoryPlacesQuery().places;
+}
+
+export interface DirectoryPlacesResult {
+  places: DirectoryPlace[];
+  isLoading: boolean;
+  /** True when the whole-catalog read failed. Consumers that show the places
+   *  as their own content must render an error instead of an empty rail. */
+  isError: boolean;
+  refetch: () => void;
+}
+
+/**
+ * The same whole-catalog read as `useDirectoryPlaces`, with the query state
+ * attached (DES-22). A caller that renders these places as content needs to
+ * tell "the catalog is empty" apart from "the catalog did not load", which a
+ * bare array cannot say. `useDirectoryPlaces` stays as the array-returning
+ * convenience for callers that keep their own loading UI.
+ */
+export function useDirectoryPlacesQuery(): DirectoryPlacesResult {
   const { demoMode } = useDemoMode();
   const query = useQuery<DirectoryPlace[]>({
     queryKey: [DIRECTORY_KEY, demoMode],
@@ -54,7 +74,12 @@ export function useDirectoryPlaces(): DirectoryPlace[] {
       return cards.map(cardDtoToPlace);
     },
   });
-  return query.data ?? [];
+  return {
+    places: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 export interface DirectoryPlacesPageFilters {
@@ -81,6 +106,15 @@ export interface DirectoryPlacesPageResult {
   total: number;
   /** True while the first page is in flight. */
   isLoading: boolean;
+  /**
+   * True when the read failed (DES-25). The grid MUST branch on this before it
+   * branches on `places.length === 0`: an outage rendered as "no places listed
+   * yet" tells a member Lisbon has no queer-owned places, which is the single
+   * most misleading thing this surface can say.
+   */
+  isError: boolean;
+  /** Re-run the failed read, for the error state's retry. */
+  refetch: () => void;
   /** True when another page is available (always false in demo). */
   hasNextPage: boolean;
   /** Fetch and append the next page. */
@@ -159,6 +193,8 @@ export function useDirectoryPlacesPage(
     places: pages.flatMap((page) => page.items),
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,

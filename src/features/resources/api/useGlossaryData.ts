@@ -8,6 +8,11 @@ export interface GlossaryDataResult {
   blocks: LetterBlock[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /** True when the term fetch failed, so the page can say the glossary did
+   *  not load instead of rendering an alphabet with nothing under it. */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 /** Stable empty array so the "no data yet" case doesn't churn identity every render. */
@@ -47,5 +52,10 @@ export function useGlossaryData(): GlossaryDataResult {
     },
   });
 
-  return { blocks: query.data ?? EMPTY_BLOCKS, loading: query.isPending };
+  return {
+    blocks: query.data ?? EMPTY_BLOCKS,
+    loading: query.isPending,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

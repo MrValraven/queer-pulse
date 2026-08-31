@@ -16,6 +16,11 @@ export interface LibraryDataResult {
   fetchNextPage: () => void;
   /** True while a subsequent page loads. */
   isFetchingNextPage: boolean;
+  /** True when the guide fetch failed, so the page can say so instead of
+   *  rendering an empty library (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 interface LibraryPageVM {
@@ -83,5 +88,7 @@ export function useLibraryData(): LibraryDataResult {
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

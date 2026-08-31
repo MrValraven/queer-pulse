@@ -727,6 +727,24 @@ export const admin: Catalog = {
   "members.timeline.title": "Moderation history: for & against",
   "members.timeline.auditLinkCta": "Every entry in the audit log",
 
+  // ── Ban-evasion check on one member (admin member drawer) — PRD-27 ────────
+  // The per-member twin of the invite queue's `invites.banEvasion.*` panel,
+  // for the case where somebody already got in. Run only when a staff member
+  // asks for it. A failed check says so plainly: it must never read as clean.
+  "members.banEvasion.title": "Returning account check",
+  "members.banEvasion.hint":
+    "Asks whether this account correlates with an account that was removed. It runs only when you ask for it, and it changes nothing on its own.",
+  "members.banEvasion.checkCta": "Check for ban-evasion signals",
+  "members.banEvasion.recheckCta": "Check again",
+  "members.banEvasion.retryCta": "Try the check again",
+  "members.banEvasion.checking": "Checking…",
+  "members.banEvasion.clear":
+    "Checked. Nothing about this account matches an account that was removed.",
+  "members.banEvasion.errorBody":
+    "The check didn't run, so nothing was checked. This is not a clear result. Try again before you draw any conclusion from it.",
+  "members.banEvasion.note":
+    "This is a signal to check. Read the removed account first, then judge this member on what they have actually done here.",
+
   "members.sealed.sectionTitle": "Identity & privacy",
   "members.sealed.title": "No prior name is stored",
   "members.sealed.body":
@@ -834,6 +852,9 @@ export const admin: Catalog = {
   "adminSafeSpaces.header.sub":
     "Mark a listing as a verified safe space, edit its public profile, or remove one that's no longer earning that trust.",
   "adminSafeSpaces.empty": "No listings to review yet.",
+  "adminSafeSpaces.loadError.title": "The listings didn't load",
+  "adminSafeSpaces.loadError.body":
+    "This is an outage on our side, so nothing is listed because nothing arrived. Try again.",
   "adminSafeSpaces.status.none": "Not reviewed",
   "adminSafeSpaces.status.verified": "Verified",
   "adminSafeSpaces.status.removed": "Removed",
@@ -882,6 +903,9 @@ export const admin: Catalog = {
   "adminInvites.header.sub":
     "The whole vouched-invite graph: who sent what, who accepted, and what's still open. Filter by status to audit the network's edges.",
   "adminInvites.empty": "No invites match this filter yet.",
+  "adminInvites.loadError.title": "The invites didn't load",
+  "adminInvites.loadError.body":
+    "This is an outage on our side, so the list is blank because nothing arrived. Try again.",
   "adminInvites.emptyForInviter": "No invites from this member yet.",
   "adminInvites.filterByInviter": "Sent by",
   "adminInvites.allInviters": "Anyone",
@@ -1026,6 +1050,9 @@ export const admin: Catalog = {
     "Every resource guide members have rated helpful or not, worst first.",
   "adminGuideFeedback.empty": "No guide ratings yet.",
   "adminGuideFeedback.error": "Couldn't load guide feedback. Please try again.",
+  "adminGuideFeedback.loadError.title": "Guide feedback didn't load",
+  "adminGuideFeedback.loadError.body":
+    "This is an outage on our side. Ratings may exist that this page could not read. Try again.",
   "adminGuideFeedback.row.counts":
     "{helpful} helpful · {notHelpful} not helpful",
 
@@ -1462,6 +1489,9 @@ export const admin: Catalog = {
 
   // ── Edit suggestions ─────────────────────────────────────────────────────────
   "editSuggestions.empty": "No corrections in this filter right now.",
+  "editSuggestions.loadError.title": "The corrections didn't load",
+  "editSuggestions.loadError.body":
+    "This is an outage on our side, so nothing is listed because nothing arrived. Members may still be waiting on a correction. Try again.",
   "editSuggestions.field.hours": "Hours",
   "editSuggestions.field.address": "Address",
   "editSuggestions.field.phone": "Phone number",
@@ -2143,9 +2173,12 @@ export const admin: Catalog = {
   "governance.proposals.header.eyebrow": "Proposals",
   "governance.proposals.header.title": "Open it to a <em>vote</em>",
   "governance.proposals.header.sub":
-    "Council-seat removals and funding-policy changes are decided by member vote, not admin fiat. Open a proposal here; members vote on the public Governance page.",
+    "Council-seat removals and funding-policy changes are decided by member vote. Open a proposal here; members vote on the public Governance page.",
   "governance.proposals.createCta": "New proposal",
   "governance.proposals.empty": "No proposal has been opened yet.",
+  "governance.proposals.loadError.title": "The proposals didn't load",
+  "governance.proposals.loadError.body":
+    "This is an outage on our side. Proposals may be open that this list could not read. Try again.",
   "governance.proposals.list.status.passed": "Passed",
   "governance.proposals.list.status.failed": "Did not pass",
   "governance.proposals.list.type.council_removal": "Council seat removal",
@@ -2406,6 +2439,9 @@ export const admin: Catalog = {
   "modPanel.requests.searchPlaceholder": "Search by name…",
   "modPanel.requests.approveAllCta": "Approve all ({count})",
   "modPanel.requests.sectionLabel": "Requests",
+  // ENG-41: reaching a request past the first page of the queue.
+  "modPanel.requests.loadMore": "Load more requests",
+  "modPanel.requests.loadingMore": "Loading…",
   "modPanel.requests.emptyTitle": "No requests waiting",
   "modPanel.requests.emptyDesc":
     "You're all caught up. New requests will appear here.",
@@ -2497,6 +2533,9 @@ export const admin: Catalog = {
 
   // ── Vouch graph (trust-network visualisation) ─────────────────────────────
   "vouchGraph.modes.network": "Network",
+  "vouchGraph.loadError.title": "The trust network didn't load",
+  "vouchGraph.loadError.body":
+    "This is an outage on our side, so the graph is empty because nothing arrived. Try again.",
   "vouchGraph.modes.scenes": "Scenes",
   "vouchGraph.modes.safety": "Safety",
   "vouchGraph.pathbar.stepPath_one": "{count}-step trust path:",
@@ -2728,7 +2767,9 @@ export const admin: Catalog = {
   "settings.history.on": "on",
   "settings.history.off": "off",
   "settings.history.cleared": "cleared",
-  "settings.history.changed": "{setting}: {from} → {to}",
+  "settings.history.changed": "{setting}: from {from} to {to}",
+  "settings.history.truncatedNotice":
+    "Showing {shown} of {total} changes, newest first. Older entries are not on this page.",
 
   "settings.key.registrationEnabled": "Registration",
   "settings.key.joinRequestsEnabled": "Invite requests",
@@ -2932,6 +2973,12 @@ export const admin: Catalog = {
   "housingRequests.householdSize": "{size} in the household",
   "housingRequests.declineCta": "Decline",
   "housingRequests.acceptCta": "Accept",
+  // ENG-41: the queue is paginated, so the number of people waiting and the
+  // number of rows on screen are two different things.
+  "housingRequests.pendingCount_one": "{count} person waiting",
+  "housingRequests.pendingCount_other": "{count} people waiting",
+  "housingRequests.loadMore": "Load more requests",
+  "housingRequests.loadingMore": "Loading…",
 
   // ── Housing groups (/admin/housing-groups) — join triage + norm enforcement ─
   "housingGroups.title": "Housing <em>groups</em>",
@@ -2949,6 +2996,12 @@ export const admin: Catalog = {
   "housingGroups.requests.declineCta": "Decline",
   "housingGroups.requests.approveCta": "Approve",
   "housingGroups.requests.error": "Couldn't save that decision",
+  // ENG-41: the queue is paginated, so the number of people waiting and the
+  // number of rows on screen are different things and the count says which.
+  "housingGroups.requests.pendingCount_one": "{count} person waiting",
+  "housingGroups.requests.pendingCount_other": "{count} people waiting",
+  "housingGroups.requests.loadMore": "Load more requests",
+  "housingGroups.requests.loadingMore": "Loading…",
   "housingGroups.listings.title": "Listings",
   "housingGroups.listings.loadError":
     "The listings couldn't load right now. Please try again.",
@@ -3053,7 +3106,7 @@ export const admin: Catalog = {
   // empty/WIP states, flag tooltips, alert strips, kebab menu.
   "roadmap.board.column.backlog": "Backlog",
   "roadmap.board.column.subtitle.backlog": "Parked with intent",
-  "roadmap.board.column.subtitle.planned": "Committed, not started",
+  "roadmap.board.column.subtitle.planned": "Committed, queued",
   "roadmap.board.column.subtitle.building": "Hands on it",
   "roadmap.board.column.subtitle.shipped": "Live for members",
   "roadmap.board.addToColumnAriaLabel": "Add to {column}",
@@ -3074,6 +3127,12 @@ export const admin: Catalog = {
   "roadmap.board.alert.waitingOn": "Waiting on {name}",
   "roadmap.board.alert.waitingOnMore": "Waiting on {name} +{count}",
   "roadmap.board.alert.staleUntouched": "Untouched {days} days",
+  "roadmap.board.reorder.movedAnnouncement":
+    "Moved {name} to position {position} of {total}",
+  "roadmap.board.menu.moveUp": "Move up",
+  "roadmap.board.menu.moveDown": "Move down",
+  "roadmap.board.menu.moveUpAriaLabel": "Move up: {name}",
+  "roadmap.board.menu.moveDownAriaLabel": "Move down: {name}",
   "roadmap.board.menu.moveTo": "Move to {column}",
   "roadmap.board.menu.editDetails": "Edit details",
   "roadmap.board.menu.showPublic": "Show on public",
@@ -3469,8 +3528,9 @@ export const admin: Catalog = {
   "roadmap.publicPreview.committedTag": "Committed",
   "roadmap.publicPreview.noPublicNoteFallback":
     "No public note yet. Members won't see anything here until you add one.",
-  "roadmap.publicPreview.movedOnce": "Moved once: {from} → {to}.",
-  "roadmap.publicPreview.movedMultiple": "Moved {count}×: {from} → {to}.",
+  "roadmap.publicPreview.movedOnce": "Moved once: from {from} to {to}.",
+  "roadmap.publicPreview.movedMultiple":
+    "Moved {count} times: from {from} to {to}.",
   "roadmap.publicPreview.noDateHonest": "No date, honestly",
   "roadmap.publicPreview.liveLabel": "Live",
   "roadmap.publicPreview.editItemTooltip": "Edit this item",
@@ -3587,6 +3647,9 @@ export const admin: Catalog = {
     "No copy yet. Add some so this reads well on the homepage.",
   "landing.list.unknownTarget": "This profile no longer exists",
   "landing.list.empty.member.title": "No members featured yet",
+  "landing.list.loadError.title": "The featured list didn't load",
+  "landing.list.loadError.body":
+    "This is an outage on our side. Features may be live on the landing page that this list could not read. Try again.",
   "landing.list.empty.member.body":
     "Search for a public member on the left and add them. Their quote will appear here, ready to edit.",
   "landing.list.empty.community.title": "No communities featured yet",
@@ -3670,6 +3733,9 @@ export const admin: Catalog = {
   "pressKit.add.team.error": "Couldn't add. Try again",
 
   "pressKit.list.inactivePill": "Hidden by you",
+  "pressKit.list.loadError.title": "The press kit didn't load",
+  "pressKit.list.loadError.body":
+    "This is an outage on our side, so nothing is listed because nothing arrived. Try again.",
   "pressKit.list.previewEmpty": "No detail yet.",
   "pressKit.list.moveUpAria": "Move {name} up",
   "pressKit.list.moveDownAria": "Move {name} down",
@@ -3845,6 +3911,9 @@ export const admin: Catalog = {
   "adminListings.queerOwned.toast.unverified":
     "The verified queer-owned badge was withdrawn from {name}.",
   "listingClaims.empty": "No claims in this filter right now.",
+  "listingClaims.loadError.title": "The claims queue didn't load",
+  "listingClaims.loadError.body":
+    "This is an outage on our side, so the queue is blank because nothing arrived. Claims may still be pending. Try again.",
   "listingClaims.claimedBy": "Claimed by {name}",
   "listingClaims.unknownClaimant": "an unknown member",
   "listingClaims.approveCta": "Approve",
@@ -3996,6 +4065,12 @@ export const admin: Catalog = {
   "listingClaims.status.declined": "Declined",
   "listingClaims.toast.approved": "{name} now belongs to its claimant.",
   "listingClaims.toast.declined": "The claim on {name} was declined.",
+  // ENG-41: the pending queue is paginated, so its real depth and the rows
+  // loaded so far are different numbers.
+  "listingClaims.pendingCount_one": "{count} claim waiting",
+  "listingClaims.pendingCount_other": "{count} claims waiting",
+  "listingClaims.loadMore": "Load more claims",
+  "listingClaims.loadingMore": "Loading…",
   "governance.overview.health.stat.activeMembers": "Active members",
   "governance.overview.health.stat.retention": "Member retention rate",
   "governance.overview.health.stat.reportsFiled": "Reports filed this quarter",
@@ -4955,4 +5030,305 @@ export const admin: Catalog = {
   // Partner-application queue, once OPS-04's filter can empty it (Task B).
   "partners.emptyFiltered":
     "Nothing matches this filter. Switch back to Everything to see the whole queue.",
+
+  // ── Account recovery: the three levers that stop an accident stranding
+  // somebody permanently (PRD-06/11/13). Shown in the member drawer only when
+  // there is something to recover, plus the suppression-list tool in the page
+  // header, which belongs to no member because the account it protected was
+  // erased.
+  //
+  // `blockedReason` sentences are NOT here. The server writes them, because it
+  // is the only place that knows which refusal applies, and a translated copy
+  // would be a second set of guardrails free to drift from the enforced ones.
+  "recovery.sectionTitle": "Account recovery",
+  "recovery.sectionHint":
+    "Repairs for members who cannot get back in on their own. Every action here is recorded against your name.",
+  "recovery.loadError":
+    "Could not load this member's recovery status. Reload before assuming there is nothing here.",
+  "recovery.reasonLabel": "Why are you doing this?",
+  "recovery.reasonHint":
+    "Kept in the permanent audit trail. Write what a colleague would need a year from now.",
+  "recovery.missingReasonToast": "Add a reason before you confirm.",
+
+  "recovery.reactivate.label": "Stranded deactivation",
+  "recovery.reactivate.body":
+    "This account is deactivated with no record of anyone asking for it, so signing in will not bring it back on its own.",
+  "recovery.reactivate.cta": "Reactivate account",
+  "recovery.reactivate.blockedFallback":
+    "Reactivation is not available for this member.",
+  "recovery.reactivate.confirmTitle": "Reactivate {name}?",
+  "recovery.reactivate.confirmBody":
+    "{name} becomes active again and reappears across the platform. It restores nothing else: no sanction is lifted and no deletion is cancelled.",
+  "recovery.reactivate.confirmCta": "Reactivate",
+  "recovery.reactivate.reasonPlaceholder":
+    "e.g. support ticket 412: deactivated with no ledger row after the June migration",
+  "recovery.reactivate.doneToast": "{name} is active again.",
+
+  "recovery.relink.label": "Sign-in identity",
+  "recovery.relink.body":
+    "A Google account holding this member's verified address has been turned away at sign-in. That happens when their Google account is re-created, which issues a new identity for the same address.",
+  "recovery.relink.blockedFallback":
+    "Re-linking is not available for this member.",
+  "recovery.relink.candidateLabel": "Google identity ending {tail}",
+  "recovery.relink.candidateMeta":
+    "{attempts} attempts, first {first}, most recent {last}",
+  "recovery.relink.status.pending": "Waiting",
+  "recovery.relink.status.applied": "Linked",
+  "recovery.relink.status.dismissed": "Refused",
+  "recovery.relink.status.superseded": "Retired",
+  "recovery.relink.applyCta": "Re-link",
+  "recovery.relink.dismissCta": "Refuse",
+  "recovery.relink.relinkConfirmTitle":
+    "Hand {name}'s account to this identity?",
+  "recovery.relink.relinkConfirmBody":
+    "From now on, whoever holds the Google account ending {tail} signs in as {name}. Every session {name} currently has ends immediately. Only do this when you are sure that account is theirs.",
+  "recovery.relink.relinkConfirmCta": "Re-link sign-in",
+  "recovery.relink.relinkReasonPlaceholder":
+    "e.g. support ticket 987: confirmed by video call that their work Google account was re-created",
+  "recovery.relink.relinkDoneToast":
+    "{name} can sign in with their new Google account. Their old sessions were ended.",
+  "recovery.relink.dismissConfirmTitle": "Refuse this sign-in identity?",
+  "recovery.relink.dismissConfirmBody":
+    "The Google account ending {tail} stops being offered as a way back into {name}'s account. It is kept on the record, and knocking again will not put it back in the queue.",
+  "recovery.relink.dismissConfirmCta": "Refuse identity",
+  "recovery.relink.dismissReasonPlaceholder":
+    "e.g. member confirmed this is not their account",
+  "recovery.relink.dismissDoneToast":
+    "That identity will not be offered again.",
+
+  "recovery.suppression.openCta": "Suppression list",
+  "recovery.suppression.title": "Erasure suppression list",
+  "recovery.suppression.body":
+    "When someone erases their account, their address goes on a permanent list so signing in again cannot quietly re-create it. Look an address up here, and lift it when someone has changed their mind or the erasure was a mistake.",
+  "recovery.suppression.emailLabel": "Email address",
+  "recovery.suppression.emailPlaceholder": "the address they are trying to use",
+  "recovery.suppression.lookupCta": "Check address",
+  "recovery.suppression.missingEmailToast": "Enter an address to check.",
+  "recovery.suppression.notSuppressed":
+    "{email} is not on the suppression list. Whatever is blocking them is something else.",
+  "recovery.suppression.found":
+    "{email} was suppressed on {date}. Entry {hash}.",
+  "recovery.suppression.liftWarning":
+    "Lifting restores nothing. The erased account and everything in it are gone for good. It only stops the platform refusing a brand-new account on this address.",
+  "recovery.suppression.reasonPlaceholder":
+    "e.g. support ticket 233: asked to come back and start over",
+  "recovery.suppression.liftCta": "Lift suppression",
+  "recovery.suppression.liftedToast": "Suppression lifted.",
+  "recovery.suppression.liftedBody":
+    "Lifted. That address can create a new account now. Nothing from the old one comes back.",
+
+  // ── PRD-32: the legal and government request register ─────────────────────
+  // Admin-only. Every enum value below is a stable identifier the backend
+  // serves with no label text at all, so this catalogue owns every word a
+  // staff member reads about a state demand.
+  "legalRequests.navLabel": "Legal requests",
+  "legalRequests.title": "Legal and government <em>demands</em>",
+  "legalRequests.eyebrow": "Transparency register",
+  "legalRequests.headerSub":
+    "Every demand for member data from a court, a police force, a ministry or any other arm of a state. The public transparency report counts these rows and publishes no field of them.",
+  "legalRequests.recordCta": "Record a demand",
+  "legalRequests.demoNotice":
+    "Demo mode shows sample rows. Nothing here has been recorded, and nothing is sent.",
+  "legalRequests.countLine": "Records matching these filters: {count}.",
+  "legalRequests.empty":
+    "No record matches these filters. Widen them to see the rest of the register.",
+  "legalRequests.loadError":
+    "The register could not be read. Try again before you treat this as an empty register.",
+  "legalRequests.forbidden":
+    "Your account cannot read this register. It is open to admins only.",
+  "legalRequests.loadMore": "Load more",
+  "legalRequests.loadingMore": "Loading…",
+  "legalRequests.voidedChip": "Voided",
+  "legalRequests.gagOrderChip": "Gag order",
+  "legalRequests.row.openAriaLabel":
+    "Open the demand from {body}, received {date}",
+  "legalRequests.row.meta": "{jurisdiction}, received {date}",
+  "legalRequests.row.accounts": "{affected} accounts named, {notified} told",
+  "legalRequests.type.subpoena": "Subpoena",
+  "legalRequests.type.court_order": "Court order",
+  "legalRequests.type.police_request": "Police request",
+  "legalRequests.type.emergency_disclosure_request":
+    "Emergency disclosure demand",
+  "legalRequests.type.preservation_request": "Preservation request",
+  "legalRequests.type.takedown_demand": "Takedown demand",
+  "legalRequests.type.other": "Other",
+  "legalRequests.outcome.complied_in_full": "Complied in full",
+  "legalRequests.outcome.complied_in_part": "Complied in part",
+  "legalRequests.outcome.narrowed": "Narrowed, then complied",
+  "legalRequests.outcome.refused": "Refused",
+  "legalRequests.outcome.withdrawn": "Withdrawn",
+  "legalRequests.outcome.pending": "Pending",
+  "legalRequests.dataCategory.account_identifiers": "Account identifiers",
+  "legalRequests.dataCategory.contact_details": "Contact details",
+  "legalRequests.dataCategory.account_metadata": "Account metadata",
+  "legalRequests.dataCategory.connection_logs": "Connection logs",
+  "legalRequests.dataCategory.profile_content": "Profile content",
+  "legalRequests.dataCategory.posts_and_comments": "Posts and comments",
+  "legalRequests.dataCategory.private_messages": "Private messages",
+  "legalRequests.dataCategory.uploaded_media": "Uploaded media",
+  "legalRequests.dataCategory.membership_records": "Membership records",
+  "legalRequests.dataCategory.other": "Other",
+  "legalRequests.filter.stateLabel": "Records",
+  "legalRequests.filter.state.all": "All records",
+  "legalRequests.filter.state.active": "Standing",
+  "legalRequests.filter.state.voided": "Voided",
+  "legalRequests.filter.typeLabel": "Kind of demand",
+  "legalRequests.filter.anyType": "Any kind",
+  "legalRequests.filter.outcomeLabel": "Outcome",
+  "legalRequests.filter.anyOutcome": "Any outcome",
+  "legalRequests.field.requestingBody": "Who demanded it",
+  "legalRequests.field.requestingBodyHint":
+    "The body that made the demand, named as it names itself on the instrument.",
+  "legalRequests.field.jurisdiction": "Jurisdiction",
+  "legalRequests.field.requestType": "Kind of demand",
+  "legalRequests.field.receivedOn": "Received on",
+  "legalRequests.field.accountsAffected": "Accounts named",
+  "legalRequests.field.accountsAffectedHint":
+    "How many member accounts the demand covered, whatever was handed over in the end.",
+  "legalRequests.field.outcome": "Outcome",
+  "legalRequests.field.outcomeHint":
+    "Leave this pending if the demand arrived today. Come back and complete it once the team has answered.",
+  "legalRequests.field.dataDisclosed": "What was handed over",
+  "legalRequests.field.dataDisclosedHint":
+    "Tick nothing when nothing left the platform. These categories are staff-only, at every level of aggregation.",
+  "legalRequests.field.memberNotifiedOn": "Members told on",
+  "legalRequests.field.memberNotifiedOnHint":
+    "The day the named members were told. This records what the team did: QueerPulse sends nothing from this screen.",
+  "legalRequests.field.accountsNotified": "Accounts told",
+  "legalRequests.field.accountsNotifiedHint":
+    "How many of the named accounts were told. It can never be more than the number named.",
+  "legalRequests.field.withheldReason": "Why they were not told",
+  "legalRequests.field.withheldReasonHint":
+    "Optional while nobody needed telling.",
+  "legalRequests.field.withheldReasonRequired":
+    "Why they were not told (required)",
+  "legalRequests.field.withheldReasonRequiredHint":
+    "Data left the platform and nobody was told, so the reason has to be on file. A blank here is refused.",
+  "legalRequests.field.gagOrder": "Under a gag order",
+  "legalRequests.field.gagOrderHint":
+    "On when the instrument forbids telling the members it names.",
+  "legalRequests.field.internalNote": "Internal note",
+  "legalRequests.field.internalNoteHint":
+    "Staff-only, at every level of aggregation. It reaches no member and no published figure.",
+  "legalRequests.form.drawerLabel": "Legal demand editor",
+  "legalRequests.form.createEyebrow": "New record",
+  "legalRequests.form.createTitle": "Record a demand",
+  "legalRequests.form.editEyebrow": "Amend",
+  "legalRequests.form.editTitle": "Amend this record",
+  "legalRequests.action.cancel": "Cancel",
+  "legalRequests.action.record": "Record it",
+  "legalRequests.action.save": "Save changes",
+  "legalRequests.action.amend": "Amend",
+  "legalRequests.action.void": "Void this record",
+  "legalRequests.problem.requestingBodyRequired":
+    "Name the body that made the demand.",
+  "legalRequests.problem.jurisdictionRequired": "Name the jurisdiction.",
+  "legalRequests.problem.receivedOnRequired":
+    "Give the day the demand arrived.",
+  "legalRequests.problem.accountsAffectedInvalid":
+    "Accounts named has to be a whole number, 100000 or fewer.",
+  "legalRequests.problem.accountsNotifiedInvalid":
+    "Accounts told has to be a whole number, 100000 or fewer.",
+  "legalRequests.problem.notifiedExceedsAffected":
+    "More accounts were told than the demand named. Only a named account can be told.",
+  "legalRequests.problem.notifiedCountNeedsDate":
+    "Give the day the members were told, or set the count back to zero.",
+  "legalRequests.problem.notifiedDateNeedsCount":
+    "Give how many accounts were told on that day, or clear the date.",
+  "legalRequests.problem.withheldReasonRequired":
+    "Data was handed over and nobody was told. Say why.",
+  "legalRequests.detail.drawerLabel": "Recorded demand",
+  "legalRequests.detail.eyebrow": "Register record",
+  "legalRequests.detail.untitled": "Loading this record",
+  "legalRequests.detail.loadError":
+    "This record could not be read. Read it again before you act on it.",
+  "legalRequests.detail.voidedOn":
+    "Struck from the published figures on {date}.",
+  "legalRequests.detail.noVoidReason": "No reason was stored.",
+  "legalRequests.detail.nothingDisclosed": "Nothing was handed over.",
+  "legalRequests.detail.nobodyNotified": "Nobody has been told.",
+  "legalRequests.detail.noWithheldReason": "Nothing on file.",
+  "legalRequests.detail.gagOrderYes":
+    "Yes. The instrument forbids telling the members it names.",
+  "legalRequests.detail.gagOrderNo": "No.",
+  "legalRequests.detail.noInternalNote": "No note.",
+  "legalRequests.detail.recordedBy": "Recorded by",
+  "legalRequests.detail.recorderErased": "That account has since been erased.",
+  "legalRequests.detail.lastUpdated": "Last amended",
+  "legalRequests.void.eyebrow": "Strike a record",
+  "legalRequests.void.title": "Void this record",
+  "legalRequests.void.warning":
+    "This cannot be undone. The row stays in the register and stays readable, every published figure drops it, and the count of voided records is itself published.",
+  "legalRequests.void.body":
+    "The demand from {body} leaves the published figures the moment you do this.",
+  "legalRequests.void.reasonLabel": "Why it is being struck",
+  "legalRequests.void.reasonPlaceholder":
+    "e.g. entered twice, and the surviving record is the one dated 11 May",
+  "legalRequests.void.reasonHint":
+    "Required. A register that cannot say why a record left the figures is worth less than one that never let it leave.",
+  "legalRequests.toast.created": "Recorded in the register.",
+  "legalRequests.toast.updated": "Record amended.",
+  "legalRequests.toast.voided":
+    "Record struck. It stays in the register, out of the published figures.",
+  "legalRequests.error.save": "That record could not be saved.",
+  "legalRequests.error.voidedConflict":
+    "This record has been voided, and a voided record is frozen.",
+  "legalRequests.error.void": "That record could not be struck.",
+  "legalRequests.error.alreadyVoided":
+    "Somebody has already struck this record.",
+
+  // ── PRD-31: the staff ban-evasion escalations queue ───────────────────────
+  // Moderator and admin. A community moderator is told one bit; escalating is
+  // how they ask staff for the cross-community picture, and nothing staff find
+  // here goes back to them.
+  "banEvasionEscalations.navLabel": "Ban-evasion escalations",
+  "banEvasionEscalations.title": "Ban-evasion <em>escalations</em>",
+  "banEvasionEscalations.eyebrow": "Staff queue",
+  "banEvasionEscalations.headerSub":
+    "A community moderator is told one thing about an applicant: whether they match somebody that community itself barred. Escalating is how they ask for the rest of the picture, and this is where it gets read.",
+  "banEvasionEscalations.demoNotice":
+    "Demo mode shows sample escalations. Nothing here is a real applicant, and resolving one sends nothing.",
+  "banEvasionEscalations.status.open": "Open",
+  "banEvasionEscalations.status.resolved": "Resolved",
+  "banEvasionEscalations.emptyOpen":
+    "No escalation is waiting. Every question a community moderator has raised is closed.",
+  "banEvasionEscalations.emptyResolved": "No escalation has been closed yet.",
+  "banEvasionEscalations.loadError":
+    "The queue could not be read. Somebody may still be waiting, so read it again before you treat this as clear.",
+  "banEvasionEscalations.forbidden":
+    "Your account cannot read this queue. It is open to moderators and admins.",
+  "banEvasionEscalations.subjectErased":
+    "This applicant has erased their account",
+  "banEvasionEscalations.moderatorErased":
+    "a moderator who has since erased their account",
+  "banEvasionEscalations.resolverErased":
+    "a colleague who has since erased their account",
+  "banEvasionEscalations.raisedBy": "Raised by {name} on {date}",
+  "banEvasionEscalations.moderatorNote": "What the moderator wrote",
+  "banEvasionEscalations.assessmentNote":
+    "This is a signal to read, and the judgement is yours. Nothing on the platform acts on it, and none of it goes back to the community that asked.",
+  "banEvasionEscalations.assessmentClear":
+    "Checked across every community and the platform ban list. Nothing correlated with a removed account.",
+  "banEvasionEscalations.assessmentUnavailable":
+    "This applicant's account has been erased, so there is nothing left to correlate. No assessment can be made.",
+  "banEvasionEscalations.outcomeTerm": "What staff found",
+  "banEvasionEscalations.resolvedBy": "Closed by {name} on {date}",
+  "banEvasionEscalations.resolvedUnknownDate": "Closed by {name}",
+  "banEvasionEscalations.noResolutionNote": "Nobody wrote a note.",
+  "banEvasionEscalations.action.resolve": "Resolve",
+  "banEvasionEscalations.action.cancel": "Cancel",
+  "banEvasionEscalations.resolve.eyebrow": "Close the question",
+  "banEvasionEscalations.resolve.title": "Resolve this escalation",
+  "banEvasionEscalations.resolve.body":
+    "This records that you looked, and it lets {community} ask again if the applicant comes back. It bans nobody: whatever you decide to do happens on the surfaces that already exist for it.",
+  "banEvasionEscalations.resolve.noteLabel": "Note (optional)",
+  "banEvasionEscalations.resolve.notePlaceholder":
+    "What you checked, and what you found",
+  "banEvasionEscalations.resolve.noteHint":
+    "Staff-only. The moderator who escalated learns that somebody closed the question, and nothing about what you found.",
+  "banEvasionEscalations.toast.resolved": "Escalation resolved.",
+  "banEvasionEscalations.error.resolve":
+    "That escalation could not be resolved.",
+  "banEvasionEscalations.error.alreadyResolved":
+    "Somebody has already resolved this escalation.",
 };

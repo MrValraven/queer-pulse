@@ -15,6 +15,20 @@ import {
 } from "react-icons/fi";
 import { SECTION_LABEL_KEYS } from "./editProfileNav.data";
 
+/**
+ * Google's own 2-Step Verification page.
+ *
+ * QueerPulse has no password and no second factor of its own to offer: sign-in
+ * is Google OAuth only, so the second factor guarding a QueerPulse account is
+ * the one on the member's Google account, and it also guards the recovery path
+ * back in (an admin can only ever re-link an account to an identity Google
+ * confirms holds the same verified address). The Account pane links here
+ * rather than badging a switch "coming soon" for something that is not
+ * QueerPulse's to build.
+ */
+export const GOOGLE_TWO_STEP_VERIFICATION_URL =
+  "https://myaccount.google.com/signinoptions/two-step-verification";
+
 export type PaneId =
   | "notifications"
   | "language"

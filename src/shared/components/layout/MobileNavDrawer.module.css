@@ -10,8 +10,8 @@
   position: fixed;
   inset: 0;
   z-index: 99;
-  background: rgba(var(--plum-rgb), 0.4);
-  backdrop-filter: var(--blur-overlay);
+  background: var(--scrim-soft);
+  backdrop-filter: var(--blur-sm);
 }
 .panel {
   position: fixed;
@@ -19,7 +19,7 @@
   right: 0;
   bottom: 0;
   max-height: 85svh;
-  border-radius: 20px 20px 0 0;
+  border-radius: var(--radius-20) var(--radius-20) 0 0;
   background: var(--cream);
   padding: 4px 28px max(16px, env(safe-area-inset-bottom));
   display: flex;
@@ -72,7 +72,7 @@
 .grabber {
   width: 36px;
   height: 4px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   /* rgba(var(--line-rgb), …) is the repo's dark-mode-aware equivalent of the
      hairline plum used for borders elsewhere (ResourceModal, Consent) — it
      flips with the theme instead of a hardcoded rgba(var(--plum-rgb), …). */
@@ -97,7 +97,7 @@
   border-radius: 50%;
   background: rgba(var(--line-rgb), 0.12);
   color: var(--text-strong);
-  font-size: 18px;
+  font-size: var(--text-18);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease);
 }
@@ -132,7 +132,7 @@
 }
 .link {
   margin-top: 20px;
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--text-strong);
   text-decoration: none;

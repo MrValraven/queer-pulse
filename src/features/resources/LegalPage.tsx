@@ -2,7 +2,13 @@ import { useState, type ReactNode } from "react";
 import { FiArrowRight, FiBriefcase } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button, EmptyState, Outro, Reveal } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  LoadErrorState,
+  Outro,
+  Reveal,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -218,8 +224,12 @@ export function LegalPage() {
   const { demoMode } = useDemoMode();
   const navigate = useNavigate();
   const loading = useSimulatedLoad();
-  const { listings, isLoading: listingsLoading } =
-    useResourceListings("legal_aid");
+  const {
+    listings,
+    isLoading: isLoadingListings,
+    isError: hasListingsError,
+    refetch: refetchListings,
+  } = useResourceListings("legal_aid");
   const [suggestOpen, setSuggestOpen] = useState(false);
   const pageTitle = t("resources:legal.meta.title");
   const pageDescription = t("resources:legal.meta.description");
@@ -313,13 +323,28 @@ export function LegalPage() {
           <Reveal as="p" className={styles.leadP}>
             {t("resources:legal.lawyers.lead")}
           </Reveal>
+          {/* Three live states kept apart (DES-24): skeletons while the
+              directory loads, `LoadErrorState` when the request fails, and
+              the "coming soon" copy only for a request that came back with
+              nothing in it. */}
           {!demoMode ? (
-            listingsLoading ? (
+            isLoadingListings ? (
               <CardGrid busy>
                 {Array.from({ length: 3 }).map((_, index) => (
                   <ResourceCardSkeleton key={index} />
                 ))}
               </CardGrid>
+            ) : hasListingsError && listings.length === 0 ? (
+              <LoadErrorState
+                onRetry={refetchListings}
+                title={
+                  <Translation
+                    i18nKey="resources:legal.lawyers.loadError.title"
+                    components={{ em: <em /> }}
+                  />
+                }
+                description={t("resources:legal.lawyers.loadError.body")}
+              />
             ) : listings.length > 0 ? (
               <>
                 <CardGrid>

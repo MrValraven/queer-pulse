@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiPlus } from "react-icons/fi";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -87,7 +87,9 @@ export function Queer101Faq() {
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
               >
                 <span className={styles.faqQText}>{t(f.qKey)}</span>
-                <span className={styles.faqArrow}>+</span>
+                <span className={styles.faqArrow} aria-hidden>
+                  <FiPlus />
+                </span>
               </button>
               {openFaq === i && <div className={styles.faqA}>{t(f.aKey)}</div>}
             </div>

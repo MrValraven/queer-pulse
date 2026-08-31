@@ -33,7 +33,17 @@ function labelForTag(tag: string): string {
  * `label` comes from `DEMO_TOPIC_LABELS` above and `description` is left
  * blank. Live mode calls `GET /topics`. Never calls the live API in demo mode.
  */
-export function useTopics(): { items: TopicResponse[]; isLoading: boolean } {
+export interface TopicsResult {
+  items: TopicResponse[];
+  isLoading: boolean;
+  /** True when the request failed, so a caller can say so instead of
+   *  rendering "no topics yet" over an outage (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
+}
+
+export function useTopics(): TopicsResult {
   const { demoMode } = useDemoMode();
   const query = useQuery<TopicResponse[]>({
     queryKey: ["topics", demoMode],
@@ -49,5 +59,10 @@ export function useTopics(): { items: TopicResponse[]; isLoading: boolean } {
       return getTopics();
     },
   });
-  return { items: query.data ?? [], isLoading: query.isLoading };
+  return {
+    items: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

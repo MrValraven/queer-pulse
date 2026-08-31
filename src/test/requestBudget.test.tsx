@@ -376,6 +376,16 @@ describe("request budget (live mode)", () => {
       http.get(`${API_V1}/feed`, () => HttpResponse.json([])),
       http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
       http.get(`${API_V1}/events`, () => HttpResponse.json([])),
+      // SOC-06: the sidebar's connections widget (`useConnectionsList("all")`
+      // in useFeedPage) — the true total and the avatars it draws.
+      http.get(`${API_V1}/connections`, () => HttpResponse.json(EMPTY_PAGE)),
+      // SOC-05: SuggestedPeopleStrip. Empty on purpose — an empty answer means
+      // the strip renders nothing and no SuggestedPeopleCard mounts, so the
+      // per-card `useMemberContact` never pulls
+      // `/connections/relationships` onto this route.
+      http.get(`${API_V1}/members/suggested`, () =>
+        HttpResponse.json({ items: [] }),
+      ),
     );
 
     const seen = await renderRouteLive("/feed");
@@ -400,9 +410,18 @@ describe("request budget (live mode)", () => {
       [
         ...SESSION_REQUEST_BUDGET,
         ...APP_WIDE_REQUEST_BUDGET,
+        // SOC-06: FeedSidebar's connections widget, via
+        // `useConnectionsList("all")` in useFeedPage. It replaced a hardcoded
+        // "42" in demo and an empty state for every live member, so the widget
+        // needs the real list; there is no cheaper source that also carries the
+        // avatars it draws (`/connections/counts` is totals only).
+        "/v1/connections",
         "/v1/events",
         "/v1/feed",
         "/v1/me/communities",
+        // SOC-05: SuggestedPeopleStrip, the feed's "people you might know"
+        // band. Its own data, fetched nowhere else on this route.
+        "/v1/members/suggested",
       ].sort(),
     );
   }, 15000);
@@ -436,7 +455,7 @@ describe("request budget (live mode)", () => {
     // (those reads are App-chrome-level, not mounted by this harness — see the
     // budget constants). That keeps it a clean guard that no *listings* read
     // (esp. `/v1/listings/mine`) has crept into the wizard. In particular the
-    // profile-page reads (`/v1/communities`, `/v1/connections/accepted`,
+    // profile-page reads (`/v1/communities`, `/v1/connections/relationships`,
     // `/v1/directory/by-member/:slug`, `/v1/me/communities`) do NOT fire here:
     // they are subscribed by member-profile components, not by this page.
     expect(seen).toEqual(
@@ -454,12 +473,19 @@ describe("request budget (live mode)", () => {
     server.use(
       // ProfilePage self-view reads subscribed by the profile's own sections
       // (each traced in the assertion comment below): the viewer's
-      // communities + membership map (ProfileCommunitiesSection), accepted
-      // connections (member-contact affordance), and the owner's directory
+      // communities + membership map (ProfileCommunitiesSection), the viewer's
+      // connection relationships (member-contact affordance, PRD-03: connected,
+      // incoming and sent in ONE call), and the owner's directory
       // listings.
       http.get(`${API_V1}/communities`, () => HttpResponse.json([])),
       http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
-      http.get(`${API_V1}/connections/accepted`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/connections/relationships`, () =>
+        HttpResponse.json({ connected: [], incoming: [], sent: [] }),
+      ),
+      // ProfileNetworkSection → useProfileNetwork → useConnectionsList("all").
+      // Already in the budget below; it had no handler, so it was the one call
+      // this suite let fail rather than answer.
+      http.get(`${API_V1}/connections`, () => HttpResponse.json(EMPTY_PAGE)),
       http.get(`${API_V1}/directory/by-member/${SLUG}`, () =>
         HttpResponse.json([]),
       ),
@@ -504,6 +530,17 @@ describe("request budget (live mode)", () => {
       ),
       http.get(`${API_V1}/members/${SLUG}/vouchers`, () =>
         HttpResponse.json({ vouchers: [] }),
+      ),
+      // ACQ-08: ProfileInviteCard, the invites-left strip at the foot of a
+      // member's OWN profile. Self view only.
+      http.get(`${API_V1}/invites/quota`, () =>
+        HttpResponse.json({
+          limit: 5,
+          used: 0,
+          remaining: 5,
+          resetsAt: "2026-10-01T00:00:00.000Z",
+          memberCount: 1,
+        }),
       ),
       // ProfileHero (src/features/members/ProfileSections.tsx) renders
       // MemberStaffBadge, which reads useStaffRole()'s useStaffMap() →
@@ -565,8 +602,13 @@ describe("request budget (live mode)", () => {
         // fetch on. Its absence from every other route's budget is the
         // assertion that the provider no longer fetches app-wide.
         "/v1/me/public-eligibility",
-        "/v1/connections/accepted",
+        "/v1/connections/relationships",
         `/v1/directory/by-member/${SLUG}`,
+        // ACQ-08: ProfilePage (self view, not editing) → ProfileInviteCard →
+        // useInviteQuota() → GET /invites/quota. Route-owned and self-view
+        // only: a visitor, and an owner previewing as a visitor, never mount
+        // the strip, so this fires on no other route.
+        "/v1/invites/quota",
         "/v1/listings/co-manager-invites",
         "/v1/listings/mine",
         // ProfileBelowHeroSections → ProfileWritingSection →

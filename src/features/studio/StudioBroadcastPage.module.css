@@ -1,7 +1,10 @@
 .wrap {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
@@ -47,7 +50,7 @@
   flex-wrap: wrap;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 16px 22px;
   margin: 20px 0 24px;
 }
@@ -64,7 +67,7 @@
 }
 .onAir {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 300;
   color: var(--text);
 }
@@ -73,28 +76,28 @@
   color: var(--accent);
 }
 .pill {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
   background: rgba(var(--accent-rgb), 0.14);
   border: 1px solid rgba(var(--accent-rgb), 0.3);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 10px;
 }
 .clock {
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
-  font-size: 15px;
+  font-size: var(--text-15);
   letter-spacing: 0.04em;
   color: var(--text);
   padding: 4px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: rgba(var(--cream-rgb), 0.06);
 }
 .headMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-60);
 }
 .headMeta em {
@@ -110,12 +113,12 @@
 }
 .pauseBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-60);
   background: transparent;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 9px 16px;
   cursor: pointer;
   transition:
@@ -129,12 +132,12 @@
 }
 .endBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent);
   background: transparent;
   border: 1.5px solid rgba(var(--accent-rgb), 0.5);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 9px 16px;
   cursor: pointer;
   transition:
@@ -168,11 +171,11 @@
 .panel {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 18px 20px;
 }
 .panelLbl {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -187,7 +190,7 @@
   text-align: left;
   background: transparent;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   cursor: pointer;
   margin-bottom: 10px;
@@ -230,12 +233,12 @@
   background: var(--jade-light);
 }
 .devName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text);
 }
 .devSub {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   margin-top: 4px;
   padding-left: 25px;
@@ -252,7 +255,7 @@
   margin-bottom: 10px;
 }
 .meterCh {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   color: var(--text-40);
   width: 12px;
@@ -260,13 +263,13 @@
 .meterTrack {
   flex: 1;
   height: 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.08);
   overflow: hidden;
 }
 .meterFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: linear-gradient(
     90deg,
     var(--jade) 0%,
@@ -278,7 +281,7 @@
 .meterScale {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: var(--text-10);
   color: var(--text-40);
   padding-left: 22px;
   margin-top: 2px;
@@ -295,12 +298,12 @@
   flex: 1;
 }
 .camName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text);
 }
 .camSub {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   margin-top: 5px;
   line-height: 1.5;
@@ -308,7 +311,7 @@
 .toggle {
   width: 40px;
   height: 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.12);
   border: 1px solid var(--line);
   flex: none;
@@ -330,14 +333,14 @@
 .nowCard {
   background: rgba(var(--accent-rgb), 0.09);
   border: 1px solid rgba(var(--accent-rgb), 0.24);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px 24px;
 }
 .nowEb {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -366,7 +369,7 @@
 .waveBar {
   flex: 1;
   min-width: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   background: var(--accent);
   transform-origin: bottom;
   animation: bcEq 0.9s var(--ease) infinite;
@@ -378,7 +381,7 @@
 
 /* ---- Setlist input ---- */
 .setLbl {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-60);
   margin: 26px 0 12px;
 }
@@ -395,11 +398,11 @@
 .setInput {
   flex: 1;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 16px;
 }
 .setInput::placeholder {
@@ -425,12 +428,12 @@
 .cueTime {
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-40);
 }
 .cueTitle {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 300;
   color: var(--text);
 }
@@ -439,15 +442,15 @@
   color: var(--accent);
 }
 .cueWho {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   margin-top: 3px;
 }
 .badge {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.04em;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 10px;
   white-space: nowrap;
 }
@@ -467,7 +470,7 @@
   border: 1px solid rgba(var(--amber-rgb), 0.32);
 }
 .cueFoot {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-40);
   line-height: 1.6;
   margin-top: 18px;
@@ -488,12 +491,12 @@
 .tab {
   flex: 1;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-40);
   background: transparent;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 8px;
   cursor: pointer;
   transition:
@@ -536,7 +539,7 @@
   flex: none;
   display: grid;
   place-items: center;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   color: var(--text);
   background: rgba(var(--cream-rgb), 0.1);
@@ -551,17 +554,17 @@
   gap: 8px;
 }
 .tipName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text);
 }
 .tipAmount {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--jade-light);
 }
 .tipNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-60);
   line-height: 1.5;
   margin-top: 3px;
@@ -573,12 +576,12 @@
 .tipTotal {
   margin-top: 18px;
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--jade-rgb), 0.1);
   border: 1px solid rgba(var(--jade-rgb), 0.24);
 }
 .tipTotalLbl {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-60);
 }
 .tipTotalLbl em {
@@ -610,7 +613,7 @@
   flex: none;
   display: grid;
   place-items: center;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   color: var(--text);
   background: rgba(var(--cream-rgb), 0.1);
@@ -627,7 +630,7 @@
   text-align: right;
 }
 .tbName {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--text);
 }
@@ -637,7 +640,7 @@
   color: var(--text-40);
 }
 .tbText {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-60);
   line-height: 1.55;
   margin-top: 4px;
@@ -653,11 +656,11 @@
 .tbInput {
   flex: 1;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 14px;
 }
 .tbInput::placeholder {

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import { useReportReasons } from "./useReportReasons";
@@ -73,9 +73,16 @@ describe("useReportReasons", () => {
     expect(screen.getAllByRole("listitem").length).toBe(
       SUBJECT_REASONS.member.length,
     );
-    // Still the local list after the rejection settles, and nothing announced.
-    await Promise.resolve();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    // Let the rejection settle rather than flushing a single microtask, so the
+    // assertions below describe the state a member is actually left in.
+    await waitFor(() => expect(fetchReportReasons).toHaveBeenCalled());
+    // Nothing announced. `ToastProvider` keeps an assertive live region mounted
+    // from first paint (assistive tech ignores a region inserted at announce
+    // time), so the check is that every live region is still EMPTY, not that
+    // none exists.
+    for (const liveRegion of screen.queryAllByRole("alert")) {
+      expect(liveRegion).toBeEmptyDOMElement();
+    }
     expect(screen.getAllByRole("listitem").length).toBe(
       SUBJECT_REASONS.member.length,
     );
@@ -85,8 +92,14 @@ describe("useReportReasons", () => {
     demoMode.value = false;
     fetchReportReasons.mockResolvedValue([]);
     renderProbe();
-    expect(await screen.findAllByRole("listitem")).toHaveLength(
-      SUBJECT_REASONS.member.length,
+    // Wait for the answer to land first: the local list is on screen from the
+    // first paint, so asserting before the query settles would pass even if an
+    // empty answer wiped the list.
+    await waitFor(() => expect(fetchReportReasons).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(screen.getAllByRole("listitem")).toHaveLength(
+        SUBJECT_REASONS.member.length,
+      ),
     );
   });
 
@@ -123,7 +136,13 @@ describe("useReportReasons", () => {
       { code: "other", label: "Other" },
     ]);
     renderProbe();
-    const items = await screen.findAllByRole("listitem");
-    expect(items.map((node) => node.dataset.code)).toEqual(["spam", "other"]);
+    // `findAllByRole` would resolve on the local list this hook paints
+    // synchronously, so it can never observe the swap. Wait for the codes
+    // themselves instead.
+    await waitFor(() =>
+      expect(
+        screen.getAllByRole("listitem").map((node) => node.dataset.code),
+      ).toEqual(["spam", "other"]),
+    );
   });
 });

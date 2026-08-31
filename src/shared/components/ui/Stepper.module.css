@@ -25,7 +25,7 @@
   top: calc(var(--stepper-dot) / 2 - 1px);
   height: 2px;
   background: rgba(var(--plum-rgb), 0.1);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
 }
 .fill {
   position: absolute;
@@ -34,7 +34,7 @@
   height: 2px;
   transform-origin: left;
   background: var(--stepper-fill);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   transition: transform var(--dur-slow) var(--ease);
   z-index: 1;
 }
@@ -261,4 +261,10 @@
   100% {
     transform: scale(1);
   }
+}
+
+/* Dark theme — the unfilled rail is a --plum-rgb tint, which does not flip, so
+   the track behind the progress fill disappears. */
+:global([data-theme="dark"]) .track::before {
+  background: rgba(var(--cream-rgb), 0.16);
 }

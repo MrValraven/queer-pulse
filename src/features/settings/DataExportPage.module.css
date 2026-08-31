@@ -23,7 +23,7 @@
 }
 
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
 }
 
 .sub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.6);
   max-width: 52ch;
   margin-top: 22px;
@@ -56,7 +56,7 @@
 }
 
 .body {
-  padding: 80px 0 120px;
+  padding: 80px 0 var(--section-y-lg);
 }
 
 /* Steps — shared vertical Stepper; wrapper only supplies the block spacing. */
@@ -131,14 +131,14 @@
 }
 
 .cardSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 28px;
   line-height: 1.6;
 }
 
 .fieldLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -166,7 +166,7 @@
   gap: 12px;
   background: rgba(var(--plum-rgb), 0.03);
   border: 1.5px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 16px;
   cursor: pointer;
   transition:
@@ -196,7 +196,7 @@
 .dtCheck {
   width: 18px;
   height: 18px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   border: 1.5px solid rgba(var(--line-rgb), 0.28);
   flex: none;
   margin-top: 1px;
@@ -230,13 +230,13 @@
 
 .dtLabel {
   font-weight: 600;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   margin-bottom: 2px;
 }
 
 .dtSub {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   line-height: 1.45;
 }
@@ -251,12 +251,12 @@
 
 .fmtBtn {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   border: 1.5px solid rgba(var(--line-rgb), 0.18);
   background: transparent;
   color: var(--ink-60);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 20px;
   cursor: pointer;
   transition:
@@ -291,7 +291,7 @@
 .legalNote {
   background: rgba(var(--jade-rgb), 0.07);
   border: 1px solid rgba(var(--jade-rgb), 0.22);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 20px;
   margin-bottom: 28px;
   display: flex;
@@ -308,7 +308,7 @@
 }
 
 .legalNoteText {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -345,7 +345,7 @@
 }
 
 .confirmBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 40ch;
@@ -353,7 +353,7 @@
 }
 
 .confirmResend {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 
@@ -389,7 +389,7 @@
 }
 
 .incSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 28px;
   line-height: 1.6;
@@ -414,12 +414,12 @@
 
 .accName {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
 }
 
 .accArrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   transition: transform 0.25s var(--ease);
 }
@@ -429,7 +429,7 @@
 }
 
 .accBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   padding: 0 0 18px;
@@ -443,10 +443,10 @@
 }
 
 .accTag {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 4px 10px;
   font-weight: 500;
 }

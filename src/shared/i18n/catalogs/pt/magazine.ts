@@ -263,7 +263,7 @@ export const magazine: Catalog = {
   "deck.editor.backToDashboard": "Voltar ao painel",
   "deck.editor.metaTitle": "Detalhes do deck",
   "deck.editor.untitled": "Deck sem título",
-  "deck.editor.header.subtitle": "Deck · {count} slides",
+  "deck.editor.header.subtitle": "Deck com {count} slides",
   "deck.editor.unsavedChanges": "Alterações por guardar",
   "deck.editor.convert": "Transformar em texto",
   "deck.editor.slidesHeading": "Slides",
@@ -359,6 +359,7 @@ export const magazine: Catalog = {
   "issues.current.eyebrow": "Edição atual · publicada a {date}",
   "issues.current.coverPlaceholder": "Capa da edição {number}",
   "issues.archiveHeading": "O <em>arquivo</em> completo",
+  "issues.archiveAriaLabel": "O arquivo completo",
   "issues.viewCoversCta": "Capas",
   "issues.viewListCta": "Lista",
   "issues.archiveErrorTitle": "Não conseguimos carregar o arquivo.",
@@ -695,8 +696,8 @@ export const magazine: Catalog = {
   "desk.issuePlan.slotsOpen_other": "{count} vagas por preencher",
   "desk.issuePlan.full": "Completa",
   "desk.issuePlan.commissionFor": "Encomendar para {section}",
-  "desk.issuePlan.slidesCount_one": "{count} slide",
-  "desk.issuePlan.slidesCount_other": "{count} slides",
+  "desk.issuePlan.slidesCount_one": "{count} slide no deck",
+  "desk.issuePlan.slidesCount_other": "{count} slides no deck",
   "desk.issuePlan.lateSuffix": " · atrasada",
 
   // ── PitchInbox ───────────────────────────────────────────────────────────
@@ -1573,6 +1574,8 @@ export const magazine: Catalog = {
   "issue.runOrder.moveLaterAria":
     "Mover “{title}” para mais tarde na ordem de publicação",
   "issue.runOrder.open": "Abrir",
+  "issue.runOrder.movedAnnouncement":
+    "“{title}” passou para a posição {position} de {total}",
 
   // ── CoverContentsTab ─────────────────────────────────────────────────────
   "issue.cover.heading": "Capa",

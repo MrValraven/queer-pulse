@@ -1,0 +1,7 @@
+{
+  "//": "Committed floor for scripts/check-css-scale.mjs. Every number here is debt to pay down. Lower it with `node scripts/check-css-scale.mjs --update-budget` after a cleanup; raising one is a hand edit that needs a written reason in the commit, the same rule as BUDGET in report-a11y.mjs.",
+  "font-size": 1118,
+  "border-radius": 11,
+  "box-shadow": 208,
+  "z-index": 9
+}

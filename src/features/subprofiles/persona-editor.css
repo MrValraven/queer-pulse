@@ -146,7 +146,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 12px 12px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink-40);
   white-space: nowrap;
@@ -165,7 +165,7 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   /* This repo has no global <button> reset (the convention is the <Button>
      component); these ported plain <button>s must zero the native UA chrome
      themselves, or every rail row shows a grey border + button-face fill —
@@ -174,7 +174,7 @@
   background: none;
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   color: var(--ink-60);
   text-align: left;
@@ -194,11 +194,11 @@
 }
 .ed-rail .rail-n {
   margin-left: auto;
-  font-size: 12px;
+  font-size: var(--text-12);
   opacity: 0.6;
 }
 .ed-rail .rail-head {
-  font-size: 11px;
+  font-size: var(--text-11);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -311,11 +311,11 @@
   padding: 14px;
 }
 .ed-prev-frame {
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--cream);
-  box-shadow: 0 18px 40px -28px rgba(var(--plum-rgb), 0.6);
+  box-shadow: var(--shadow-e3);
 }
 /* Shrinks the real persona page tree to fit the dock without a second,
    drifting layout — the prototype's own approach (see Task 6: the docked
@@ -338,7 +338,7 @@
   align-items: flex-start;
   padding: 14px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--paper);
   transition: border-color var(--dur-base) var(--ease);
 }
@@ -361,13 +361,13 @@
   cursor: grabbing;
 }
 .itemrow b {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   display: block;
 }
 .itemrow small {
   color: var(--ink-40);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .itemacts {
   display: flex;
@@ -378,7 +378,7 @@
 .iact {
   width: 30px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   display: grid;
   place-items: center;
   color: var(--ink-40);
@@ -425,12 +425,12 @@
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   /* Same floating-glass idiom as the app nav bar: cream-tinted glass in
      light mode, paper-tinted in dark (the two surfaces the prototype's
      literal rgba pair actually resolved to — see the Task 1 report). */
   background: color-mix(in srgb, var(--cream) 86%, transparent);
-  backdrop-filter: blur(14px);
+  backdrop-filter: var(--blur-lg);
   border: 1px solid var(--line);
   box-shadow: 0 -6px 24px -18px rgba(var(--plum-rgb), 0.6);
 }
@@ -438,7 +438,7 @@
   background: color-mix(in srgb, var(--paper) 86%, transparent);
 }
 .savebar span {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   flex: 1;
 }
@@ -469,7 +469,7 @@
   gap: 6px;
 }
 .savebar-heading {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
 }
@@ -484,7 +484,7 @@
   overflow-y: auto;
 }
 .savebar-list li {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.45;
   color: var(--ink-60);
 }
@@ -502,7 +502,7 @@
   flex: 1 1 auto;
   min-width: 0;
   margin-inline-end: auto;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--accent-ink);
   line-height: 1.4;
 }
@@ -528,7 +528,7 @@
   border: 0;
   background: none;
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
   text-align: start;
@@ -557,7 +557,7 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 .ready-item i {
@@ -583,7 +583,7 @@
 }
 .meter {
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--line-2);
   overflow: hidden;
 }
@@ -591,7 +591,7 @@
   display: block;
   height: 100%;
   background: var(--accent-ink);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transition: width 0.5s var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -616,7 +616,7 @@
 }
 .choice {
   border: 1.5px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px;
   text-align: left;
   display: flex;
@@ -639,20 +639,20 @@
 }
 .choice b {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 400;
 }
 .choice p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
 .choice code {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   background: var(--wash);
   padding: 3px 7px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   align-self: flex-start;
 }
 
@@ -668,12 +668,13 @@
 .scrim {
   position: fixed;
   inset: 0;
-  z-index: 220;
+  z-index: var(--z-modal);
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(var(--plum-rgb), 0.42);
-  backdrop-filter: blur(5px);
+  background: var(--scrim);
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
   animation: qpDrawerScrimIn 0.2s var(--ease);
 }
 .scrim.bottom {
@@ -702,7 +703,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-panel);
-  border-radius: 26px 26px 0 0;
+  border-radius: var(--radius-26) var(--radius-26) 0 0;
   animation: qpDrawerSlideIn 0.34s var(--ease);
 }
 @keyframes qpDrawerSlideIn {
@@ -796,7 +797,7 @@
   align-items: center;
   padding: 14px;
   border: 1.5px dashed var(--line-2);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 .upload.done,
 .upload.failed {
@@ -807,12 +808,12 @@
   color: var(--danger);
 }
 .upload b {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   display: block;
 }
 .upload small {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   display: block;
 }
@@ -822,11 +823,11 @@
   display: flex;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--wash);
   align-items: flex-start;
   line-height: 1.6;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
 }
 .notice.warn {
   background: rgba(var(--accent-rgb), 0.08);
@@ -838,7 +839,7 @@
 }
 .notice p {
   color: var(--ink-60);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .notice.warn p {
   color: inherit;
@@ -854,7 +855,7 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 .losing li {
@@ -874,7 +875,7 @@
   align-items: flex-start;
   padding: 14px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   cursor: pointer;
 }
 .switchrow input {
@@ -884,11 +885,11 @@
   height: 17px;
 }
 .switchrow b {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   display: block;
 }
 .switchrow small {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 
@@ -897,7 +898,7 @@
    own scoped `.handlestateGood/Bad/Idle` re-implementation of this exact
    prototype rule. */
 .handlestate {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   display: inline-flex;
   align-items: center;
   gap: 6px;

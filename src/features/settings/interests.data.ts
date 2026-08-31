@@ -1,3 +1,5 @@
+import type { ContentSettingId } from "./api/useContentSensitivity";
+
 export interface ChipGroup {
   options: string[];
   defaults: string[];
@@ -149,9 +151,17 @@ export const FREQ_OPTIONS: FreqOption[] = [
 
 export const DEFAULT_FREQ = "weekly";
 
-// UI-only toggles — no persisted value beyond local component state.
+/**
+ * The three content-sensitivity switches, persisted since PRD-10 through
+ * `GET|PUT /me/content-sensitivity`.
+ *
+ * `id` is typed as `ContentSettingId` rather than `string` on purpose: the
+ * hook owns the map from each id to the field it stores, so adding a switch
+ * here that nothing persists is now a compile error instead of the silent dead
+ * toggle this list used to be.
+ */
 export interface ContentSetting {
-  id: string;
+  id: ContentSettingId;
   labelKey: string;
 }
 

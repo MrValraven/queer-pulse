@@ -40,6 +40,25 @@ describe("MemberStaffBadge", () => {
     await waitFor(() => expect(container).toBeEmptyDOMElement());
   });
 
+  it("badges a grant holder who sits on the ordinary member tier", async () => {
+    // ENG-28: Inês runs the housing queue and holds no account tier, so before
+    // grants joined the roster she decided on other members' listings while
+    // appearing everywhere as an ordinary account.
+    mockAuth.loggedIn = true;
+    renderBadge(<MemberStaffBadge slug="ines" />);
+    await waitFor(() =>
+      expect(screen.getByText("Housing Moderator")).toBeInTheDocument(),
+    );
+  });
+
+  it("shows the account tier alone for a moderator who also holds grants", async () => {
+    mockAuth.loggedIn = true;
+    renderBadge(<MemberStaffBadge slug="mariana" />);
+    await waitFor(() => expect(screen.getByText("Mod")).toBeInTheDocument());
+    expect(screen.queryByText("Directory Moderator")).not.toBeInTheDocument();
+    expect(screen.queryByText("Communities Team")).not.toBeInTheDocument();
+  });
+
   it("renders nothing when logged out", async () => {
     mockAuth.loggedIn = false;
     const { container } = renderBadge(<MemberStaffBadge slug="tiago" />);

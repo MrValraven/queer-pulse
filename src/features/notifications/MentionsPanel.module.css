@@ -15,11 +15,11 @@
   align-items: center;
   padding: 12px 18px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   margin-bottom: 18px;
 }
 .markRow p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .markRow p b {
@@ -32,10 +32,10 @@
   cursor: pointer;
   color: var(--text-strong);
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 @media (hover: hover) {
   .markBtn:hover {
@@ -54,7 +54,7 @@
 }
 
 .day {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -72,7 +72,7 @@
   padding: 18px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   transition:
     background 0.4s var(--ease),
     border-color 0.4s var(--ease);
@@ -106,7 +106,7 @@
   border-radius: 50%;
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 11px;
+  font-size: var(--text-11);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,7 +125,7 @@
   color: var(--text-strong);
 }
 .who {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
 }
 .who a {
   color: var(--text-strong);
@@ -144,7 +144,7 @@
 }
 .when {
   margin-left: auto;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 .when.fresh {
@@ -152,7 +152,7 @@
   font-weight: 700;
 }
 .content {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.65;
   padding-left: 42px;
@@ -165,13 +165,13 @@
   background: rgba(var(--accent-rgb), 0.2);
   color: var(--accent-ink);
   padding: 0 3px;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   font-weight: 600;
 }
 .where {
   padding-left: 42px;
   margin-top: 6px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .where a {
@@ -190,9 +190,9 @@
   border: none;
   cursor: pointer;
   padding: 5px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   transition: all 0.2s;
@@ -227,10 +227,10 @@
   flex: 1;
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 9px 13px;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   outline: none;
   resize: none;
@@ -244,10 +244,10 @@
 .rcSend {
   background: var(--plum);
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   padding: 8px 14px;
   color: rgba(var(--cream-rgb), 1);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   cursor: pointer;
   font-family: var(--sans);
@@ -265,8 +265,8 @@
   padding: 10px 14px;
   background: rgba(var(--accent-rgb), 0.05);
   border: 1px solid rgba(var(--accent-rgb), 0.14);
-  border-radius: 11px;
-  font-size: 13.5px;
+  border-radius: var(--radius-11);
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink);
 }

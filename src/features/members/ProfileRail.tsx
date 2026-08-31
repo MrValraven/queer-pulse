@@ -189,10 +189,13 @@ function ProfileSectionNav({
   // only when there's at least one persona to show.
   const showAlsoWorkingAs = !subprofilesLoading && (isSelf || hasSubprofiles);
 
-  const visitorPlaces = useMemberListings(profile.slug);
+  const visitorListings = useMemberListings(profile.slug);
   // Mirrors PlacesSection: the owner always gets a section (places or the
-  // empty-state prompt), a visitor only when there's at least one place.
-  const showPlaces = isSelf || visitorPlaces.length > 0;
+  // empty-state prompt), a visitor when there's at least one place or when the
+  // fetch failed — PlacesSection then renders its retryable error panel, and
+  // the nav link has to point at a section that really is on the page.
+  const showPlaces =
+    isSelf || visitorListings.places.length > 0 || visitorListings.isError;
 
   const dynamicVisibility: Record<string, boolean> = {
     "also-working-as": showAlsoWorkingAs,

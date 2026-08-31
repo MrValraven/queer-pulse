@@ -61,6 +61,22 @@
   --skin-page-ink-rgb: 42, 35, 32;
 }
 
+/* ── Per-skin --ink-40 floor ─────────────────────────────────────────────
+   Each skin block below remaps --ink / --ink-60 / --ink-40 to its own family
+   ink so the base persona elements it does not restyle still read against the
+   family ground. That remap is a HUE decision. The opacity is not free: the
+   root --ink-40 (tokens/colors.css) was raised to 0.61 after a contrast audit
+   because 0.55 composited to 3.77:1, and thirteen blocks here were still
+   re-declaring it between 0.40 and 0.50, roughly 2.7:1 for persona metadata,
+   placeholders and FormField helper text on the light craft grounds. Nothing
+   caught it: `check:tokens` matches raw literals, and a declaration already
+   spelled `rgba(var(--…), 0.45)` reads as tokenised to every gate we have.
+
+   The floor for any per-skin --ink-40 is therefore the audited 0.61, and where
+   the family ink is light enough that 0.61 still misses 4.5:1 on its own
+   ground the value goes higher (page 0.64, record 0.65, classroom 0.64: each
+   is the lowest step that clears AA against that skin's ground). Keep the
+   channel, raise the alpha. */
 .pp {
   --sk-tint: var(--plum);
   /* Cream text painted on plum fills (`.pp-spot`, `.nextup`, `::selection`).
@@ -228,7 +244,7 @@
   font-size: 34px;
   margin-top: -58px;
   border: 5px solid var(--cream);
-  box-shadow: 0 3px 14px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--shadow-e2);
   border-radius: 50%;
 }
 /* Tap-to-enlarge trigger wrapping the avatar. `display:contents` keeps the
@@ -245,10 +261,6 @@
 .pp-avButton:focus-visible {
   outline: none;
 }
-.pp-avButton:focus-visible .pp-av {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
 .pp-text {
   flex: 1 1 340px;
   min-width: 0;
@@ -258,12 +270,12 @@
 }
 .pp-kind {
   align-self: flex-start;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 5px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--sk-tint);
   color: var(--sk-on);
 }
@@ -359,7 +371,7 @@
   gap: 18px;
   flex-wrap: wrap;
   align-items: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   padding-top: 4px;
 }
@@ -384,16 +396,17 @@
   cursor: default;
 }
 .pp-metabtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
 }
 .pp-owner {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink-60);
 }
@@ -404,7 +417,7 @@
   max-width: 62ch;
   line-height: 1.7;
   color: var(--ink);
-  font-size: 16px;
+  font-size: var(--text-16);
   padding-top: 20px;
 }
 /* NOTE: the social row renders as `.pp-social-row` (SubprofileSocialRow.tsx)
@@ -589,7 +602,7 @@
   line-height: 1.05;
 }
 .pp-sec .count {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
 }
@@ -610,23 +623,23 @@
 }
 .pp-row b {
   font-weight: 600;
-  font-size: 17px;
+  font-size: var(--text-17);
   flex: 1;
   min-width: 0;
 }
 .pp-row small {
   color: var(--ink-60);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
 }
 .pp-row .when {
   color: var(--ink-40);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 .pp-row p {
   color: var(--ink-60);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   flex-basis: 100%;
   margin-top: 2px;
@@ -652,7 +665,7 @@ button.pp-row {
 .pp-link .href {
   margin-left: auto;
   color: var(--ink-40);
-  font-size: 14px;
+  font-size: var(--text-14);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -690,12 +703,12 @@ button.pp-row {
 }
 .pp-tile .art {
   aspect-ratio: 1;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
 }
 .pp-tile b {
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--text-16);
   overflow-wrap: break-word;
   word-break: normal;
   hyphens: none;
@@ -705,7 +718,7 @@ button.pp-row {
 }
 .pp-tile small {
   color: var(--ink-60);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.45;
 }
 /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
@@ -724,9 +737,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -741,7 +755,7 @@ button.pp-row {
 .pp-gallery-cell {
   margin: 0;
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   overflow: hidden;
   min-width: 0;
 }
@@ -765,8 +779,9 @@ button.pp-row {
   transform: scale(1.04);
 }
 .pp-gallery-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 @media (prefers-reduced-motion: reduce) {
   .pp-gallery-btn img {
@@ -783,7 +798,7 @@ button.pp-row {
   }
 }
 .pp-spot {
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   padding: clamp(24px, 3.4cqw, 38px);
   background: color-mix(in srgb, var(--sk-tint) 9%, var(--paper));
   border: 1px solid color-mix(in srgb, var(--sk-tint) 22%, transparent);
@@ -795,7 +810,7 @@ button.pp-row {
 .pp-spot .art {
   width: 150px;
   height: 150px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   flex: none;
   overflow: hidden;
 }
@@ -826,13 +841,13 @@ button.pp-row {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 .credits .avatar {
   width: 22px;
   height: 22px;
-  font-size: 9px;
+  font-size: var(--text-9);
 }
 
 .pp-foot {
@@ -848,7 +863,7 @@ button.pp-row {
 }
 .endo {
   padding: 22px;
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   border: 1px solid var(--line);
   background: var(--paper);
   display: flex;
@@ -858,7 +873,7 @@ button.pp-row {
 }
 .endo-q {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.45;
   font-weight: 300;
   color: var(--ink);
@@ -867,7 +882,7 @@ button.pp-row {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   font-weight: 600;
 }
@@ -883,10 +898,10 @@ button.pp-row {
   align-items: center;
   gap: 11px;
   padding: 11px 13px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1px solid var(--line);
   color: var(--ink);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 500;
 }
 @media (hover: hover) {
@@ -897,7 +912,7 @@ button.pp-row {
 }
 .partof span {
   color: var(--ink-40);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   margin-left: auto;
 }
 
@@ -981,7 +996,7 @@ button.pp-row {
   color: rgba(var(--cream-rgb), 0.72);
 }
 .pp[data-skin="stage"] .pp-bio {
-  font-size: 17px;
+  font-size: var(--text-17);
 }
 .pp[data-skin="stage"] .pp-meta,
 .pp[data-skin="stage"] .pp-owner {
@@ -1013,14 +1028,14 @@ button.pp-row {
 .pp[data-skin="stage"] .pp-row .when {
   order: -1;
   font-family: "Anton", var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--sk-text);
   width: 96px;
 }
 .pp[data-skin="stage"] .pp-row b {
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 500;
   color: rgb(var(--cream-rgb));
 }
@@ -1028,10 +1043,10 @@ button.pp-row {
   color: rgba(var(--cream-rgb), 0.55);
 }
 .pp[data-skin="stage"] .pp-tile .art {
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 .pp[data-skin="stage"] .pp-gallery-cell {
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 .pp[data-skin="stage"] .pp-tile b {
   color: rgb(var(--cream-rgb));
@@ -1047,7 +1062,7 @@ button.pp-row {
   background: var(--sk-tint);
   border: none;
   color: var(--sk-on);
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 .pp[data-skin="stage"] .pp-spot h2 {
   font-family: "Anton", var(--sans);
@@ -1058,7 +1073,7 @@ button.pp-row {
   line-height: 0.95;
 }
 .pp[data-skin="stage"] .pp-spot .art {
-  border-radius: 2px;
+  border-radius: var(--radius-2);
 }
 .pp[data-skin="stage"] .endo,
 .pp[data-skin="stage"] .partof > * {
@@ -1104,13 +1119,13 @@ button.pp-row {
   padding-bottom: 0;
 }
 .pp[data-skin="studio"] .wrap {
-  max-width: 1080px;
+  max-width: var(--maxw-page);
 }
 .pp[data-skin="studio"] .pp-cover {
   --pp-cover-h: clamp(240px, 38cqw, 460px);
   margin: 0 auto;
   width: calc(100% - 2 * var(--wrap-px));
-  max-width: 1080px;
+  max-width: var(--maxw-page);
   border: 1px solid var(--ink);
 }
 .pp[data-skin="studio"] .pp-hero {
@@ -1144,7 +1159,7 @@ button.pp-row {
   padding: 0;
   letter-spacing: 0.24em;
   font-weight: 600;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   order: -1;
 }
 .pp[data-skin="studio"] .pp-tagline {
@@ -1162,7 +1177,7 @@ button.pp-row {
   max-width: none;
   column-count: 2;
   column-gap: 48px;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.75;
   padding-top: 26px;
 }
@@ -1181,7 +1196,7 @@ button.pp-row {
 }
 .pp[data-skin="studio"] .pp-sec h2 {
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -1218,7 +1233,7 @@ button.pp-row {
 .pp[data-skin="studio"] .plate {
   display: block;
   grid-row: span 2;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   color: var(--ink-40);
@@ -1230,7 +1245,7 @@ button.pp-row {
   font-weight: 400;
 }
 .pp[data-skin="studio"] .pp-tile small {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   letter-spacing: 0.01em;
 }
 .pp[data-skin="studio"] .pp-row {
@@ -1300,7 +1315,7 @@ button.pp-row {
   margin: 0 auto;
   padding: 44px 0 8px;
   border-bottom: 0.5px solid rgba(var(--plum-rgb), 0.4);
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-60);
@@ -1344,7 +1359,7 @@ button.pp-row {
 .pp[data-skin="page"] .pp-bio {
   max-width: 600px;
   margin: 0 auto;
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.9;
   text-align: justify;
   hyphens: auto;
@@ -1384,7 +1399,7 @@ button.pp-row {
   display: block;
   text-align: center;
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   padding-top: 40px;
 }
@@ -1414,13 +1429,13 @@ button.pp-row {
 .pp[data-skin="page"] .pp-row b {
   font-weight: 400;
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   display: inline;
 }
 .pp[data-skin="page"] .pp-row small {
   font-variant: small-caps;
   letter-spacing: 0.06em;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   display: inline;
 }
@@ -1431,7 +1446,7 @@ button.pp-row {
 .pp[data-skin="page"] .pp-row .when {
   float: right;
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-40);
   text-indent: 0;
 }
@@ -1512,7 +1527,7 @@ button.pp-row {
   align-items: flex-start;
 }
 .pp[data-skin="workshop"] .pp-av {
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   width: 76px;
   height: 76px;
   font-size: 22px;
@@ -1557,7 +1572,7 @@ button.pp-row {
   border-radius: 0;
   letter-spacing: 0.08em;
   font-weight: 500;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
 }
 .pp[data-skin="workshop"] .pp-name {
   font-weight: 500;
@@ -1568,7 +1583,7 @@ button.pp-row {
    them on the same plum hairline as the rest of the card (was a round grey
    pill — the odd one out that looked pinned to the avatar). */
 .pp[data-skin="workshop"] .pp-social a {
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   border-color: rgba(var(--line-rgb), 0.28);
 }
 .pp[data-skin="workshop"] .pp-titleblock {
@@ -1579,7 +1594,7 @@ button.pp-row {
   align-content: center;
   border-left: 1px solid rgba(var(--line-rgb), 0.22);
   padding-left: 20px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 .pp[data-skin="workshop"] .pp-titleblock dt {
@@ -1599,7 +1614,7 @@ button.pp-row {
   }
 }
 .pp[data-skin="workshop"] .pp-bio {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   max-width: 70ch;
 }
 .pp[data-skin="workshop"] .pp-sec > header {
@@ -1608,7 +1623,7 @@ button.pp-row {
 }
 .pp[data-skin="workshop"] .pp-sec h2 {
   font-family: "DM Mono", monospace;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--ink);
@@ -1643,11 +1658,11 @@ button.pp-row {
   left: 4px;
   top: 18px;
   font-family: "DM Mono", monospace;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--sk-tint);
 }
 .pp[data-skin="workshop"] .pp-row b {
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 600;
 }
 .pp[data-skin="workshop"] .pp-tiles {
@@ -1673,9 +1688,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -1685,7 +1701,7 @@ button.pp-row {
   border-radius: 0;
   padding: 0 6px 0 0;
   color: var(--ink-40);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .pp[data-skin="workshop"] .tag::before {
   content: "[";
@@ -1772,18 +1788,18 @@ button.pp-row {
   color: var(--skin-practice-ink);
   padding: 0;
   letter-spacing: 0.18em;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   order: -1;
 }
 .pp[data-skin="practice"] .pp-tagline {
-  font-size: 17px;
+  font-size: var(--text-17);
   max-width: 40ch;
 }
 .pp[data-skin="practice"] .pp-meta {
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .pp[data-skin="practice"] .pp-bio {
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 2;
   max-width: 56ch;
   padding-top: 30px;
@@ -1794,7 +1810,7 @@ button.pp-row {
 .pp[data-skin="practice"] .pp-sec h2 {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-15);
   letter-spacing: 0.02em;
   color: var(--skin-practice-ink);
 }
@@ -1820,16 +1836,16 @@ button.pp-row {
   position: absolute;
   left: 0;
   top: 27px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: color-mix(in srgb, var(--sk-tint) 70%, var(--ink-40));
 }
 .pp[data-skin="practice"] .pp-row b {
   font-weight: 600;
-  font-size: 19px;
+  font-size: var(--text-19);
   flex: none;
 }
 .pp[data-skin="practice"] .pp-row p {
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.8;
   margin-top: 8px;
   color: var(--ink-60);
@@ -1862,15 +1878,16 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
 }
 .pp[data-skin="practice"] .pp-spot {
-  border-radius: 4px;
+  border-radius: var(--radius-4);
   background: none;
   border: 1px solid color-mix(in srgb, var(--sk-tint) 40%, transparent);
   border-left-width: 3px;
@@ -1886,13 +1903,13 @@ button.pp-row {
 }
 .pp[data-skin="practice"] .endo,
 .pp[data-skin="practice"] .partof > * {
-  border-radius: 4px;
+  border-radius: var(--radius-4);
   background: none;
   border-color: rgba(var(--line-rgb), 0.12);
 }
 .pp[data-skin="practice"] .endo-q {
   font-family: var(--sans);
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   line-height: 1.75;
   font-weight: 400;
 }
@@ -2023,7 +2040,7 @@ button.pp-row {
   color: var(--skin-table-ink);
   letter-spacing: 0.3em;
   padding: 0;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
 }
 .pp[data-skin="table"] .pp-tagline {
   font-style: italic;
@@ -2034,7 +2051,7 @@ button.pp-row {
   text-align: center;
   margin: 0 auto;
   max-width: 52ch;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.85;
 }
 .pp[data-skin="table"] .pp-sec > header {
@@ -2044,7 +2061,7 @@ button.pp-row {
 }
 .pp[data-skin="table"] .pp-sec h2 {
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.34em;
   text-transform: uppercase;
@@ -2084,19 +2101,19 @@ button.pp-row {
   flex-basis: 100%;
   font-style: italic;
   color: var(--ink-60);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   margin-top: 2px;
 }
 .pp[data-skin="table"] .pp-row p {
   text-align: center;
   font-style: italic;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   margin-top: 4px;
 }
 .pp[data-skin="table"] .pp-row .when {
   flex-basis: 100%;
   font-family: var(--serif);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--skin-table-ink);
   font-variant-numeric: oldstyle-nums;
   margin-top: 6px;
@@ -2119,7 +2136,7 @@ button.pp-row {
 .pp[data-skin="table"] .pp-tile .art {
   aspect-ratio: 5/4;
   width: 100%;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   border: 1px solid color-mix(in srgb, var(--sk-tint) 40%, transparent);
 }
 .pp[data-skin="table"] .pp-tile b {
@@ -2143,9 +2160,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -2153,7 +2171,7 @@ button.pp-row {
 .pp[data-skin="table"] .pp-spot {
   background: color-mix(in srgb, var(--paper) 50%, transparent);
   border: 1px solid color-mix(in srgb, var(--sk-tint) 50%, transparent);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   text-align: center;
   flex-direction: column;
   padding: clamp(24px, 3.4cqw, 40px);
@@ -2165,7 +2183,7 @@ button.pp-row {
   width: 100%;
   max-width: 320px;
   height: 170px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
 }
 .pp[data-skin="table"] .pp-spot h2 {
   letter-spacing: 0.01em;
@@ -2173,7 +2191,7 @@ button.pp-row {
 .pp[data-skin="table"] .endo,
 .pp[data-skin="table"] .partof > * {
   background: color-mix(in srgb, var(--paper) 50%, transparent);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   border-color: color-mix(in srgb, var(--sk-tint) 35%, transparent);
 }
 .pp[data-skin="table"] .endo {
@@ -2221,7 +2239,7 @@ button.pp-row {
   --line-rgb: var(--chart-ink-rgb);
   --line-strong: rgba(var(--chart-ink-rgb), 0.45);
   --ink-60: rgba(var(--chart-ink-rgb), 0.62);
-  --ink-40: rgba(var(--chart-ink-rgb), 0.5);
+  --ink-40: rgba(var(--chart-ink-rgb), 0.61);
   --sk-text: var(--chart-gold);
 }
 .pp[data-skin="chart"] .wrap {
@@ -2263,7 +2281,7 @@ button.pp-row {
   background: none;
   color: var(--chart-gold);
   padding: 0;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 600;
   letter-spacing: 0.42em;
   text-indent: 0.42em;
@@ -2313,7 +2331,7 @@ button.pp-row {
   text-align: center;
   margin: 0 auto;
   max-width: 56ch;
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.95;
   color: rgba(var(--chart-ink-rgb), 0.72);
   padding-top: 28px;
@@ -2333,7 +2351,7 @@ button.pp-row {
 }
 .pp[data-skin="chart"] .pp-sec h2 {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.4em;
   text-transform: uppercase;
@@ -2367,7 +2385,7 @@ button.pp-row {
   grid-row: 1;
   justify-self: end;
   font-family: "Cormorant", var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   letter-spacing: 0.1em;
   color: var(--chart-gold);
 }
@@ -2382,7 +2400,7 @@ button.pp-row {
 }
 .pp[data-skin="chart"] .pp-row small {
   grid-column: 2;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 600;
   letter-spacing: 0.22em;
   text-indent: 0.22em;
@@ -2395,7 +2413,7 @@ button.pp-row {
   grid-row: 1;
   justify-self: start;
   font-family: "Cormorant", var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--chart-ink-rgb), 0.5);
   font-variant-numeric: tabular-nums;
 }
@@ -2404,7 +2422,7 @@ button.pp-row {
   flex-basis: auto;
   max-width: 46ch;
   margin: 10px auto 0;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.7;
   color: rgba(var(--chart-ink-rgb), 0.62);
 }
@@ -2456,9 +2474,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -2466,7 +2485,7 @@ button.pp-row {
 .pp[data-skin="chart"] .pp-spot {
   background: rgba(var(--chart-ink-rgb), 0.04);
   border: 1px solid rgba(var(--chart-gold-rgb), 0.3);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   flex-direction: column;
   text-align: center;
   padding: clamp(28px, 4cqw, 46px);
@@ -2496,7 +2515,7 @@ button.pp-row {
 .pp[data-skin="chart"] .partof > * {
   background: rgba(var(--chart-ink-rgb), 0.04);
   border-color: rgba(var(--chart-ink-rgb), 0.14);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
 }
 .pp[data-skin="chart"] .endo-q {
   font-family: "Cormorant", var(--serif);
@@ -2671,13 +2690,13 @@ button.pp-row {
   padding: 14px 20px;
   background: var(--sk-tint);
   color: var(--sk-on);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
 }
 .pp[data-skin="stage"] .nextup-label {
   font-family: "Anton", var(--sans);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 13px;
+  font-size: var(--text-13);
   opacity: 0.8;
 }
 .pp[data-skin="stage"] .nextup b {
@@ -2688,7 +2707,7 @@ button.pp-row {
   letter-spacing: 0.01em;
 }
 .pp[data-skin="stage"] .nextup-when {
-  font-size: 14px;
+  font-size: var(--text-14);
   opacity: 0.85;
   margin-right: auto;
 }
@@ -2703,12 +2722,12 @@ button.pp-row {
   text-wrap: balance;
 }
 .gigstate {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   border: 1px solid currentColor;
   white-space: nowrap;
 }
@@ -2751,7 +2770,7 @@ button.pp-row {
   }
 }
 .pp[data-skin="stage"] .doors {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.45);
 }
 .pp[data-skin="stage"] .ticketgo {
@@ -2763,7 +2782,7 @@ button.pp-row {
 }
 .pp-past-label {
   display: block;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -2793,7 +2812,7 @@ button.pp-row {
   gap: 14px 26px;
 }
 .booker dt {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2802,7 +2821,7 @@ button.pp-row {
 }
 .booker dd {
   color: rgba(var(--cream-rgb), 0.82);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.5;
 }
 .booker-acts {
@@ -2846,8 +2865,10 @@ button.pp-row {
 .lightbox {
   position: fixed;
   inset: 0;
-  z-index: 500;
-  background: rgba(var(--plum-rgb), 0.94);
+  z-index: var(--z-lightbox);
+  background: var(--scrim-strong);
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
   display: grid;
   place-items: center;
   padding: clamp(20px, 5vw, 64px);
@@ -2882,17 +2903,17 @@ button.pp-row {
   color: var(--cream);
 }
 .lb-figure figcaption span {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-variant: small-caps;
   letter-spacing: 0.06em;
 }
 .lb-figure figcaption p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.6;
   padding-top: 6px;
 }
 .plate-n {
-  font-size: 10.5px !important;
+  font-size: var(--text-10-5) !important;
   font-variant: normal !important;
   letter-spacing: 0.16em !important;
   color: rgba(var(--cream-rgb), 0.5);
@@ -2910,8 +2931,9 @@ button.pp-row {
   color: var(--cream);
 }
 .lb-x:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .lb-arrow {
   position: absolute;
@@ -2927,8 +2949,9 @@ button.pp-row {
   color: var(--cream);
 }
 .lb-arrow:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .lb-arrow.left {
   left: 8px;
@@ -2941,13 +2964,13 @@ button.pp-row {
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.16em;
   color: rgba(var(--cream-rgb), 0.5);
 }
 .checklist h2 {
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -2969,30 +2992,30 @@ button.pp-row {
   text-align: left;
   padding: 11px 2px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
-  font-size: 14px;
+  font-size: var(--text-14);
   align-items: baseline;
 }
 .checklist li button:hover {
   background: rgba(var(--plum-rgb), 0.03);
 }
 .ck-n {
-  font-size: 11px;
+  font-size: var(--text-11);
   letter-spacing: 0.12em;
   color: var(--ink-40);
 }
 .ck-t {
   font-family: "Instrument Serif", var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 .ck-m {
   color: var(--ink-40);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-variant: small-caps;
   letter-spacing: 0.05em;
 }
 .ck-d {
   color: var(--ink-40);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 @container (max-width:700px) {
   .checklist li button {
@@ -3014,7 +3037,9 @@ button.pp-row {
 .pp[data-skin="page"] {
   --ink: var(--skin-page-ink);
   --ink-60: rgba(var(--skin-page-ink-rgb), 0.66);
-  --ink-40: rgba(var(--skin-page-ink-rgb), 0.45);
+  /* 0.64, above the 0.61 floor: this warm ink needs it to clear AA on the
+     newsprint ground (4.57:1; 0.61 lands at 4.17:1). */
+  --ink-40: rgba(var(--skin-page-ink-rgb), 0.64);
   color: var(--skin-page-ink);
 }
 .excerpt {
@@ -3040,7 +3065,7 @@ button.pp-row {
   hanging-punctuation: first;
 }
 .excerpt-from {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -3049,14 +3074,14 @@ button.pp-row {
   font-style: italic;
   text-transform: none;
   letter-spacing: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--accent-ink);
 }
 .colophon {
   max-width: 600px;
   margin: 26px auto 0;
   text-align: center;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-style: italic;
   color: var(--ink-40);
   border-top: 0.5px solid rgba(var(--skin-page-ink-rgb), 0.25);
@@ -3073,7 +3098,7 @@ button.pp-row {
   top: 15px;
   width: 84px;
   float: none;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.4;
 }
 .pp[data-skin="page"] .pp-row b::after {
@@ -3083,7 +3108,7 @@ button.pp-row {
 /* — WORKSHOP — */
 .snippet {
   font-family: "DM Mono", ui-monospace, monospace;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.75;
   color: var(--ink-60);
   background: rgba(var(--line-rgb), 0.04);
@@ -3153,14 +3178,11 @@ button.pp-row {
 }
 .pp[data-skin="workshop"] .scalebar em {
   font-family: "DM Mono", monospace;
-  font-size: 9.5px;
+  font-size: var(--text-9-5);
   color: var(--ink-40);
   font-style: normal;
   padding-left: 8px;
   border-left: 1px solid rgba(var(--line-rgb), 0.4);
-}
-.pp[data-skin="workshop"] .pp-link .href::before {
-  content: "→ ";
 }
 .pp[data-skin="workshop"] .gigstate {
   border-radius: 0;
@@ -3168,7 +3190,7 @@ button.pp-row {
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: lowercase;
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 
 /* — PRACTICE — */
@@ -3184,7 +3206,7 @@ button.pp-row {
   gap: 16px 32px;
 }
 .practical dt {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -3192,7 +3214,7 @@ button.pp-row {
   margin-bottom: 4px;
 }
 .practical dd {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -3200,7 +3222,7 @@ button.pp-row {
 .access h2 {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--skin-practice-ink);
   letter-spacing: 0.02em;
   margin-bottom: 16px;
@@ -3228,11 +3250,11 @@ button.pp-row {
   border: 1px solid color-mix(in srgb, var(--sk-tint) 45%, transparent);
   display: grid;
   place-items: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--skin-practice-ink);
 }
 .firstsession li b {
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 600;
   display: block;
   margin-bottom: 5px;
@@ -3240,7 +3262,7 @@ button.pp-row {
 .firstsession li p {
   color: var(--ink-60);
   line-height: 1.75;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   max-width: 52ch;
 }
 .access ul {
@@ -3253,7 +3275,7 @@ button.pp-row {
   display: flex;
   gap: 10px;
   align-items: center;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
 }
 .access li svg {
@@ -3271,16 +3293,16 @@ button.pp-row {
   align-items: center;
 }
 .ref b {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   display: block;
 }
 .ref small {
   color: var(--ink-40);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .refnote {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
   color: var(--ink-40);
   max-width: 46ch;
@@ -3305,13 +3327,13 @@ button.pp-row {
 .pp[data-skin="practice"] .vouches h2 {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--skin-practice-ink);
   letter-spacing: 0.02em;
   margin-bottom: 16px;
 }
 .pp[data-skin="practice"] .approach p {
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.85;
   color: var(--ink);
   max-width: 60ch;
@@ -3327,7 +3349,7 @@ button.pp-row {
   gap: 10px;
 }
 .pp[data-skin="practice"] .training li {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: var(--ink-60);
   padding-left: 18px;
@@ -3352,7 +3374,7 @@ button.pp-row {
   gap: 14px;
 }
 .pp[data-skin="practice"] .fees dt {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -3360,20 +3382,20 @@ button.pp-row {
   margin-bottom: 3px;
 }
 .pp[data-skin="practice"] .fees dd {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.5;
   color: var(--ink);
 }
 .pp[data-skin="practice"] .venue-name {
   display: block;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 400;
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .pp[data-skin="practice"] .venue-line {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -3388,7 +3410,7 @@ button.pp-row {
 }
 .pp[data-skin="practice"] .av-weekday {
   text-align: center;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--ink-40);
@@ -3408,8 +3430,8 @@ button.pp-row {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1/1;
-  border-radius: 6px;
-  font-size: 11px;
+  border-radius: var(--radius-6);
+  font-size: var(--text-11);
   font-weight: 600;
   background: rgba(var(--line-rgb), 0.06);
   color: var(--ink-40);
@@ -3430,7 +3452,7 @@ button.pp-row {
   gap: 14px;
   flex-wrap: wrap;
   margin-top: 10px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
 }
 .pp[data-skin="practice"] .av-legend-item {
@@ -3442,7 +3464,7 @@ button.pp-row {
   content: "";
   width: 8px;
   height: 8px;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
 }
 .pp[data-skin="practice"] .av-legend-item.av-open::before {
   background: var(--jade);
@@ -3452,7 +3474,7 @@ button.pp-row {
 }
 .pp[data-skin="practice"] .av-slot {
   margin-top: 10px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-40);
 }
@@ -3470,14 +3492,14 @@ button.pp-row {
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .pp[data-skin="practice"] .vouch b {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
   display: block;
   padding-top: 6px;
 }
 .pp[data-skin="practice"] .vouch p {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink-60);
   margin-top: 3px;
@@ -3496,7 +3518,7 @@ button.pp-row {
   text-align: center;
 }
 .pp[data-skin="table"] .menuhead-no {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.34em;
   text-transform: uppercase;
@@ -3505,11 +3527,11 @@ button.pp-row {
 .pp[data-skin="table"] .menuhead-when {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
 }
 .pp[data-skin="table"] .menuhead-practical {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   letter-spacing: 0.06em;
   color: var(--ink-40);
 }
@@ -3519,7 +3541,7 @@ button.pp-row {
 }
 .menucard {
   border: 1px solid color-mix(in srgb, var(--sk-tint) 50%, transparent);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   padding: clamp(26px, 4cqw, 44px);
   text-align: center;
   display: flex;
@@ -3540,7 +3562,7 @@ button.pp-row {
 .menucard-line {
   font-style: italic;
   color: var(--ink-60);
-  font-size: 15px;
+  font-size: var(--text-15);
   margin-bottom: 10px;
 }
 .course {
@@ -3555,7 +3577,7 @@ button.pp-row {
   border-top: 1px solid color-mix(in srgb, var(--sk-tint) 28%, transparent);
 }
 .course-name {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.26em;
   text-transform: uppercase;
@@ -3564,11 +3586,11 @@ button.pp-row {
 .dish b {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   display: block;
 }
 .dish sup {
-  font-size: 9.5px;
+  font-size: var(--text-9-5);
   letter-spacing: 0.06em;
   color: var(--skin-table-ink);
   padding-left: 3px;
@@ -3576,21 +3598,21 @@ button.pp-row {
 .dish em {
   font-style: italic;
   color: var(--ink-40);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .legend {
   display: flex;
   gap: 18px;
   justify-content: center;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   letter-spacing: 0.04em;
 }
 .legend sup {
   color: var(--skin-table-ink);
   padding-right: 4px;
-  font-size: 9.5px;
+  font-size: var(--text-9-5);
 }
 
 /* — CHART — */
@@ -3611,7 +3633,7 @@ button.pp-row {
   border-bottom: 1px solid rgba(var(--chart-gold-rgb), 0.28);
 }
 .skynow-label {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.34em;
   text-transform: uppercase;
@@ -3625,14 +3647,14 @@ button.pp-row {
   color: var(--chart-lit);
 }
 .pp[data-skin="chart"] .skynow span:not(.skynow-label) {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--chart-ink-rgb), 0.58);
 }
 .pp[data-skin="chart"] .skynow span:not(.skynow-label)::before {
   content: "◇";
   padding-right: 14px;
   color: rgba(var(--chart-gold-rgb), 0.6);
-  font-size: 10px;
+  font-size: var(--text-10);
   vertical-align: 2px;
 }
 .pp[data-skin="chart"] .birthdata {
@@ -3647,7 +3669,7 @@ button.pp-row {
 .pp[data-skin="chart"] .birthdata h2,
 .pp[data-skin="chart"] .ethics h2 {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.4em;
   text-transform: uppercase;
@@ -3661,7 +3683,7 @@ button.pp-row {
   margin-top: 20px;
 }
 .birthdata dt {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -3670,7 +3692,7 @@ button.pp-row {
 }
 .birthdata dd {
   font-family: "Cormorant", var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.5;
   color: rgba(var(--chart-ink-rgb), 0.82);
 }
@@ -3678,7 +3700,7 @@ button.pp-row {
   margin-top: 20px;
   font-family: "Cormorant", var(--serif);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--chart-ink-rgb), 0.5);
 }
 .pp[data-skin="chart"] .ethics {
@@ -3877,7 +3899,7 @@ button.pp-row {
   --sk-ink: #fbf3ea;
   --ink: #fbf3ea;
   --ink-60: rgba(251, 243, 234, 0.7);
-  --ink-40: rgba(251, 243, 234, 0.5);
+  --ink-40: rgba(251, 243, 234, 0.61);
   --text-strong: #fbf3ea;
 }
 .pp[data-skin="chair"] .wrap {
@@ -3902,7 +3924,7 @@ button.pp-row {
   background: none;
   color: var(--ch-bulb);
   padding: 0;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 600;
   letter-spacing: 0.3em;
   text-indent: 0.3em;
@@ -3925,7 +3947,7 @@ button.pp-row {
 .pp[data-skin="chair"] .pp-bio {
   color: rgba(251, 243, 234, 0.74);
   max-width: 58ch;
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.8;
 }
 .pp[data-skin="chair"] .pp-meta,
@@ -3963,7 +3985,7 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .pp-sec h2 {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -3991,7 +4013,7 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .pp-row small {
   color: rgba(251, 243, 234, 0.5);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-style: italic;
 }
 .pp[data-skin="chair"] .pp-row .when {
@@ -4003,7 +4025,7 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .pp-row p {
   color: rgba(251, 243, 234, 0.6);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   max-width: 60ch;
 }
 .pp[data-skin="chair"] .pp-link .href {
@@ -4015,13 +4037,14 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .pp-tile .art {
   aspect-ratio: 3/4;
-  border-radius: 999px 999px 14px 14px;
+  border-radius: var(--radius-pill) var(--radius-pill) var(--radius-14)
+    var(--radius-14);
   border: 1px solid rgba(242, 217, 184, 0.24);
 }
 .pp[data-skin="chair"] .pp-tile b {
   font-family: "Bodoni Moda", var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--ch-lit);
 }
 .pp[data-skin="chair"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
@@ -4040,9 +4063,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -4050,7 +4074,7 @@ button.pp-row {
 .pp[data-skin="chair"] .pp-spot {
   background: rgba(251, 243, 234, 0.04);
   border: 1px solid rgba(242, 217, 184, 0.3);
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 .pp[data-skin="chair"] .pp-spot h2 {
   font-family: "Bodoni Moda", var(--serif);
@@ -4058,13 +4082,14 @@ button.pp-row {
   color: var(--ch-lit);
 }
 .pp[data-skin="chair"] .pp-spot .art {
-  border-radius: 999px 999px 8px 8px;
+  border-radius: var(--radius-pill) var(--radius-pill) var(--radius-8)
+    var(--radius-8);
 }
 .pp[data-skin="chair"] .endo,
 .pp[data-skin="chair"] .partof > * {
   background: rgba(251, 243, 234, 0.04);
   border-color: rgba(251, 243, 234, 0.14);
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 .pp[data-skin="chair"] .endo-q {
   font-family: "Bodoni Moda", var(--serif);
@@ -4102,7 +4127,7 @@ button.pp-row {
   gap: 16px 30px;
 }
 .pp[data-skin="chair"] .chaircard dt {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -4110,7 +4135,7 @@ button.pp-row {
   margin-bottom: 6px;
 }
 .pp[data-skin="chair"] .chaircard dd {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.5;
   color: rgba(251, 243, 234, 0.85);
 }
@@ -4119,7 +4144,7 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .beforesit h2 {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -4252,7 +4277,7 @@ button.pp-row {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  font-size: 19px;
+  font-size: var(--text-19);
 }
 .pp[data-skin="chair"] .pp-row b::after {
   content: "";
@@ -4264,7 +4289,7 @@ button.pp-row {
 .pp[data-skin="chair"] .pp-row small {
   flex-basis: 100%;
   order: 3;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .pp[data-skin="chair"] .pp-row .when {
   font-size: 30px;
@@ -4333,7 +4358,7 @@ button.pp-row {
   color: var(--rw-ink);
   --ink: #121110;
   --ink-60: rgba(18, 17, 16, 0.62);
-  --ink-40: rgba(18, 17, 16, 0.42);
+  --ink-40: rgba(18, 17, 16, 0.61);
   --text-strong: #121110;
   --sk-ink: #121110;
 }
@@ -4371,7 +4396,7 @@ button.pp-row {
   background: none;
   color: var(--rw-ink);
   padding: 0;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.44em;
   text-indent: 0.44em;
@@ -4397,12 +4422,12 @@ button.pp-row {
 }
 .pp[data-skin="runway"] .pp-bio {
   max-width: 52ch;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.75;
   padding-top: 26px;
 }
 .pp[data-skin="runway"] .pp-meta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -4449,7 +4474,7 @@ button.pp-row {
   display: block;
   font-family: "Syne", var(--sans);
   font-weight: 700;
-  font-size: 11px;
+  font-size: var(--text-11);
   letter-spacing: 0.1em;
   color: var(--ink-40);
   grid-row: span 2;
@@ -4458,11 +4483,11 @@ button.pp-row {
   font-family: "Syne", var(--sans);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   letter-spacing: 0.02em;
 }
 .pp[data-skin="runway"] .pp-tile small {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -4479,12 +4504,12 @@ button.pp-row {
   font-family: "Syne", var(--sans);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 16px;
+  font-size: var(--text-16);
   letter-spacing: -0.01em;
 }
 .pp[data-skin="runway"] .pp-row small,
 .pp[data-skin="runway"] .pp-row .when {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -4526,7 +4551,7 @@ button.pp-row {
 .pp[data-skin="runway"] .endo-q {
   font-family: "Syne", var(--sans);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.4;
   letter-spacing: -0.01em;
 }
@@ -4552,7 +4577,7 @@ button.pp-row {
   font-family: "Syne", var(--sans);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.3em;
   margin-bottom: 18px;
 }
@@ -4562,7 +4587,7 @@ button.pp-row {
   gap: 18px 32px;
 }
 .pp[data-skin="runway"] .credits-block dt {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -4570,7 +4595,7 @@ button.pp-row {
   margin-bottom: 6px;
 }
 .pp[data-skin="runway"] .credits-block dd {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.5;
 }
 
@@ -4580,7 +4605,7 @@ button.pp-row {
   color: #1c1a17;
   --ink: #1c1a17;
   --ink-60: rgba(28, 26, 23, 0.6);
-  --ink-40: rgba(28, 26, 23, 0.42);
+  --ink-40: rgba(28, 26, 23, 0.61);
   --text-strong: #1c1a17;
   --sk-ink: #1c1a17;
   --gl-rule: rgba(28, 26, 23, 0.2);
@@ -4602,7 +4627,7 @@ button.pp-row {
   background: none;
   color: var(--ink-40);
   padding: 0;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 600;
   letter-spacing: 0.28em;
   text-indent: 0.28em;
@@ -4623,11 +4648,11 @@ button.pp-row {
   max-width: 44ch;
 }
 .pp[data-skin="gallery"] .pp-meta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 .pp[data-skin="gallery"] .pp-sec h2 {
   font-family: var(--sans);
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -4653,7 +4678,7 @@ button.pp-row {
   content: "ACC. " counter(acc, decimal-leading-zero);
   grid-column: 2;
   grid-row: 3;
-  font-size: 9.5px;
+  font-size: var(--text-9-5);
   letter-spacing: 0.16em;
   color: var(--ink-40);
 }
@@ -4669,7 +4694,7 @@ button.pp-row {
   grid-column: 1;
   font-variant: small-caps;
   letter-spacing: 0.08em;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   margin-top: 2px;
 }
@@ -4677,14 +4702,14 @@ button.pp-row {
   grid-column: 2;
   grid-row: 1;
   font-family: "EB Garamond", var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-40);
   white-space: normal;
 }
 .pp[data-skin="gallery"] .pp-row p {
   grid-column: 1;
   flex-basis: auto;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.65;
   max-width: 56ch;
   margin-top: 9px;
@@ -4717,11 +4742,11 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-tile small {
   font-variant: small-caps;
   letter-spacing: 0.06em;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .pp[data-skin="gallery"] .plate {
   display: block;
-  font-size: 9.5px;
+  font-size: var(--text-9-5);
   letter-spacing: 0.18em;
   color: var(--ink-40);
 }
@@ -4754,7 +4779,7 @@ button.pp-row {
 }
 .pp[data-skin="gallery"] .visit h2 {
   font-family: var(--sans);
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -4766,7 +4791,7 @@ button.pp-row {
   gap: 18px 34px;
 }
 .pp[data-skin="gallery"] .visit dt {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.12em;
   color: var(--ink-40);
@@ -4776,7 +4801,7 @@ button.pp-row {
 }
 .pp[data-skin="gallery"] .visit dd {
   font-family: "EB Garamond", var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1.5;
 }
 .pp[data-skin="gallery"] .pp-meta,
@@ -4844,7 +4869,7 @@ button.pp-row {
   display: block;
   color: rgba(247, 245, 240, 0.6);
   margin-bottom: 10px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -4872,14 +4897,14 @@ button.pp-row {
   margin-top: 8px;
   font-variant: all-small-caps;
   letter-spacing: 0.1em;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(247, 245, 240, 0.78);
 }
 .pp[data-skin="gallery"] .onview-dates,
 .pp[data-skin="gallery"] .onview-room {
   display: inline-block;
   margin: 10px 22px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(247, 245, 240, 0.55);
@@ -4916,7 +4941,7 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-tagline {
   grid-column: 1;
   grid-row: 2;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.6;
   font-style: normal;
   max-width: none;
@@ -4952,7 +4977,7 @@ button.pp-row {
   max-width: none;
   text-align: justify;
   hyphens: auto;
-  font-size: 17.5px;
+  font-size: var(--text-17-5);
   line-height: 1.7;
   padding-top: clamp(26px, 3.4cqw, 40px);
   color: var(--ink-60);
@@ -4986,7 +5011,7 @@ button.pp-row {
   text-align: center;
   font-variant: all-small-caps;
   letter-spacing: 0.24em;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   padding-top: clamp(34px, 5cqw, 60px);
 }
@@ -5016,7 +5041,7 @@ button.pp-row {
   transform: rotate(180deg);
   background: var(--skin-gallery-ground);
   padding: 0 4px 14px;
-  font-size: 11px;
+  font-size: var(--text-11);
   letter-spacing: 0.3em;
 }
 .pp[data-skin="gallery"] .pp-sec .count {
@@ -5081,7 +5106,7 @@ button.pp-row {
   grid-row: 1;
   align-self: start;
   padding-top: 9px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-variant: all-small-caps;
   letter-spacing: 0.14em;
   font-weight: 600;
@@ -5098,7 +5123,7 @@ button.pp-row {
   grid-column: 2;
   font-variant: all-small-caps;
   letter-spacing: 0.1em;
-  font-size: 15px;
+  font-size: var(--text-15);
   margin-top: 6px;
   color: var(--ink-60);
 }
@@ -5110,12 +5135,12 @@ button.pp-row {
   padding-top: 11px;
   border-top: 1px solid var(--gl-rule);
   font-variant-numeric: oldstyle-nums;
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 .pp[data-skin="gallery"] .pp-row p {
   grid-column: 2;
   margin-top: 10px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
 }
 .pp[data-skin="gallery"] .pp-link .href {
   grid-column: 2;
@@ -5171,7 +5196,8 @@ button.pp-row {
   color: #2e2418;
   --ink: #2e2418;
   --ink-60: rgba(46, 36, 24, 0.66);
-  --ink-40: rgba(46, 36, 24, 0.46);
+  /* 0.65 for AA on the aged-stock ground: 4.54:1 (0.61 lands at 4.04:1). */
+  --ink-40: rgba(46, 36, 24, 0.65);
   --text-strong: #2e2418;
   --sk-ink: #2e2418;
   --hs-rule: rgba(51, 41, 29, 0.24);
@@ -5213,7 +5239,7 @@ button.pp-row {
   width: 74px;
   height: 74px;
   font-size: 21px;
-  border-radius: 4px;
+  border-radius: var(--radius-4);
   border: 1px solid var(--hs-rule);
   box-shadow: none;
   background: none;
@@ -5225,7 +5251,7 @@ button.pp-row {
   background: none;
   color: #7a5b33;
   padding: 0;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.26em;
   text-indent: 0.26em;
@@ -5247,7 +5273,7 @@ button.pp-row {
 }
 .pp[data-skin="history"] .pp-bio {
   font-family: "Libre Caslon Text", var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.85;
   max-width: 60ch;
   padding-top: 24px;
@@ -5258,7 +5284,7 @@ button.pp-row {
 }
 .pp[data-skin="history"] .pp-sec h2 {
   font-family: "Libre Caslon Text", var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 400;
   font-variant: all-small-caps;
   letter-spacing: 0.14em;
@@ -5323,7 +5349,7 @@ button.pp-row {
 .pp[data-skin="history"] .pp-row small {
   font-variant: small-caps;
   letter-spacing: 0.07em;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 .pp[data-skin="history"] .pp-row .when {
@@ -5351,7 +5377,7 @@ button.pp-row {
   }
 }
 .pp[data-skin="history"] .pp-row p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.75;
   max-width: 56ch;
   margin-top: 8px;
@@ -5365,14 +5391,14 @@ button.pp-row {
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 }
 .pp[data-skin="history"] .pp-tile .art {
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   border: 1px solid var(--hs-rule);
   aspect-ratio: 4/3;
 }
 .pp[data-skin="history"] .pp-tile b {
   font-family: "Libre Caslon Text", var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
 }
 .pp[data-skin="history"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
    opens the lightbox, so it resets browser chrome and stays visually identical
@@ -5390,9 +5416,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -5400,7 +5427,7 @@ button.pp-row {
 .pp[data-skin="history"] .pp-spot {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid var(--hs-rule);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   box-shadow: inset 0 0 30px rgba(122, 91, 51, 0.07);
 }
 .pp[data-skin="history"] .pp-spot h2 {
@@ -5411,12 +5438,12 @@ button.pp-row {
 .pp[data-skin="history"] .partof > * {
   background: rgba(255, 255, 255, 0.5);
   border-color: var(--hs-rule);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
 }
 .pp[data-skin="history"] .endo-q {
   font-family: "Libre Caslon Text", var(--serif);
   font-style: italic;
-  font-size: 20px;
+  font-size: var(--text-20);
 }
 .pp[data-skin="history"] .ph {
   background:
@@ -5438,7 +5465,7 @@ button.pp-row {
 }
 .pp[data-skin="history"] .recordblock h2 {
   font-family: "Libre Caslon Text", var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 400;
   font-variant: all-small-caps;
   letter-spacing: 0.14em;
@@ -5452,7 +5479,7 @@ button.pp-row {
   gap: 18px 32px;
 }
 .pp[data-skin="history"] .recordblock dt {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -5461,14 +5488,14 @@ button.pp-row {
 }
 .pp[data-skin="history"] .recordblock dd {
   font-family: "Libre Caslon Text", var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.55;
 }
 .pp[data-skin="history"] .recordblock .gaps {
   margin-top: 22px;
   padding-left: 18px;
   border-left: 2px solid #7a5b33;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.7;
   color: var(--ink-60);
   max-width: 60ch;
@@ -5476,7 +5503,7 @@ button.pp-row {
 .pp[data-skin="history"] .recordblock .gaps span {
   display: block;
   font-family: var(--sans);
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -5490,7 +5517,7 @@ button.pp-row {
   color: #141210;
   --ink: #141210;
   --ink-60: rgba(20, 18, 16, 0.66);
-  --ink-40: rgba(20, 18, 16, 0.45);
+  --ink-40: rgba(20, 18, 16, 0.61);
   --text-strong: #141210;
   --sk-ink: #141210;
 }
@@ -5524,7 +5551,7 @@ button.pp-row {
   background: var(--sk-tint);
   color: var(--sk-on);
   border-radius: 0;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.2em;
   padding: 6px 12px;
@@ -5546,7 +5573,7 @@ button.pp-row {
   line-height: 1.3;
 }
 .pp[data-skin="collective"] .pp-bio {
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.7;
   max-width: 56ch;
   padding-top: 22px;
@@ -5569,7 +5596,7 @@ button.pp-row {
 }
 .pp[data-skin="collective"] .pp-sec .count {
   font-family: "Archivo Black", var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .pp[data-skin="collective"] .pp-row {
   border-top: none;
@@ -5591,7 +5618,7 @@ button.pp-row {
   color: var(--ink);
 }
 .pp[data-skin="collective"] .pp-row small {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5601,13 +5628,13 @@ button.pp-row {
   order: -1;
   width: 118px;
   font-family: "Archivo Black", var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--sk-tint);
 }
 .pp[data-skin="collective"] .pp-row p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.65;
   max-width: 60ch;
   color: var(--ink-60);
@@ -5623,7 +5650,7 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: 17px;
+  font-size: var(--text-17);
 }
 .pp[data-skin="collective"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
    opens the lightbox, so it resets browser chrome and stays visually identical
@@ -5641,9 +5668,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -5675,7 +5703,7 @@ button.pp-row {
 .pp[data-skin="collective"] .endo-q {
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.45;
 }
 .pp[data-skin="collective"] .ph {
@@ -5705,7 +5733,7 @@ button.pp-row {
 .pp[data-skin="collective"] .nextaction-label {
   font-family: "Archivo Black", var(--sans);
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.16em;
   color: var(--sk-tint);
 }
@@ -5718,13 +5746,13 @@ button.pp-row {
 }
 .pp[data-skin="collective"] .nextaction-when {
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--text-14);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   margin-left: auto;
 }
 .pp[data-skin="collective"] .nextaction-where {
-  font-size: 14px;
+  font-size: var(--text-14);
   opacity: 0.7;
 }
 .pp[data-skin="collective"] .principles {
@@ -5751,7 +5779,7 @@ button.pp-row {
   counter-increment: pr;
   padding: 20px 22px 20px 0;
   border-bottom: 2px solid rgba(20, 18, 16, 0.2);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.5;
   font-weight: 500;
   display: flex;
@@ -5761,7 +5789,7 @@ button.pp-row {
 .pp[data-skin="collective"] .principles li::before {
   content: counter(pr, decimal-leading-zero);
   font-family: "Archivo Black", var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--sk-tint);
   padding-top: 3px;
   flex: none;
@@ -5775,7 +5803,8 @@ button.pp-row {
   color: #20261f;
   --ink: #20261f;
   --ink-60: rgba(32, 38, 31, 0.66);
-  --ink-40: rgba(32, 38, 31, 0.45);
+  /* 0.64 for AA on the handout ground: 4.57:1 (0.61 lands at 4.17:1). */
+  --ink-40: rgba(32, 38, 31, 0.64);
   --text-strong: #20261f;
   --sk-ink: #20261f;
   --cl-board: #24382f;
@@ -5789,7 +5818,7 @@ button.pp-row {
 .pp[data-skin="classroom"] .pp-hero {
   position: relative;
   background: linear-gradient(#27392f, #1f3128);
-  border-radius: 8px 8px 4px 4px;
+  border-radius: var(--radius-8) var(--radius-8) var(--radius-4) var(--radius-4);
   padding: clamp(30px, 4.4cqw, 52px) clamp(24px, 4cqw, 48px)
     clamp(38px, 5cqw, 60px);
   margin-top: 16px;
@@ -5799,7 +5828,7 @@ button.pp-row {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 8px 8px 4px 4px;
+  border-radius: var(--radius-8) var(--radius-8) var(--radius-4) var(--radius-4);
   background:
     repeating-linear-gradient(
       102deg,
@@ -5820,7 +5849,7 @@ button.pp-row {
   right: -6px;
   bottom: -11px;
   height: 11px;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   background: linear-gradient(#9a7247, #6f4e2c);
   box-shadow: 0 3px 10px rgba(31, 49, 40, 0.3);
 }
@@ -5834,7 +5863,7 @@ button.pp-row {
   margin-top: 0;
   width: 70px;
   height: 70px;
-  font-size: 20px;
+  font-size: var(--text-20);
   border: 1.5px solid rgba(246, 244, 238, 0.6);
   background: none;
   color: #f6f4ee;
@@ -5845,7 +5874,7 @@ button.pp-row {
   background: none;
   color: rgba(246, 244, 238, 0.72);
   padding: 0;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.24em;
   text-indent: 0.24em;
@@ -5900,7 +5929,7 @@ button.pp-row {
   color: rgba(246, 244, 238, 0.86);
   max-width: 58ch;
   padding-top: 26px;
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.85;
 }
 .pp[data-skin="classroom"] .pp-sec > header {
@@ -5942,13 +5971,13 @@ button.pp-row {
 }
 .pp[data-skin="classroom"] .pp-row b {
   grid-column: 2;
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 600;
   color: var(--ink);
 }
 .pp[data-skin="classroom"] .pp-row small {
   grid-column: 2;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -5959,13 +5988,13 @@ button.pp-row {
   grid-column: 3;
   grid-row: 1;
   font-family: "Newsreader", var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-40);
 }
 .pp[data-skin="classroom"] .pp-row p {
   grid-column: 2;
   flex-basis: auto;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.7;
   max-width: 56ch;
   margin-top: 8px;
@@ -5979,7 +6008,7 @@ button.pp-row {
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 }
 .pp[data-skin="classroom"] .pp-tile .art {
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .pp[data-skin="classroom"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
    opens the lightbox, so it resets browser chrome and stays visually identical
@@ -5997,9 +6026,10 @@ button.pp-row {
   cursor: pointer;
 }
 .pp-tile-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 14px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-14);
 }
 .plate {
   display: none;
@@ -6008,20 +6038,20 @@ button.pp-row {
   background: var(--cl-board);
   color: #f6f4ee;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 .pp[data-skin="classroom"] .pp-spot .art {
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .pp[data-skin="classroom"] .endo,
 .pp[data-skin="classroom"] .partof > * {
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(36, 56, 47, 0.04);
   border-color: rgba(32, 38, 31, 0.14);
 }
 .pp[data-skin="classroom"] .endo-q {
   font-family: "Newsreader", var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   line-height: 1.5;
 }
 .pp[data-skin="classroom"] .ph {
@@ -6044,7 +6074,7 @@ button.pp-row {
   z-index: 1;
   margin-top: 30px;
   border: 1px dashed rgba(246, 244, 238, 0.45);
-  border-radius: 4px;
+  border-radius: var(--radius-4);
   background: rgba(0, 0, 0, 0.14);
   padding: 24px 26px;
 }
@@ -6054,7 +6084,7 @@ button.pp-row {
   gap: 18px 30px;
 }
 .pp[data-skin="classroom"] .fees dt {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -6062,7 +6092,7 @@ button.pp-row {
   margin-bottom: 6px;
 }
 .pp[data-skin="classroom"] .fees dd {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.5;
   color: rgba(246, 244, 238, 0.9);
 }
@@ -6080,7 +6110,7 @@ button.pp-row {
   margin-top: 18px;
   font-family: "Newsreader", var(--serif);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.4;
   color: #ebc98a;
   transform: rotate(-1.4deg);
@@ -6096,7 +6126,7 @@ button.pp-row {
     rgba(32, 38, 31, 0.12) 25px 26px
   );
   border: 1px solid rgba(32, 38, 31, 0.14);
-  border-radius: 3px;
+  border-radius: var(--radius-3);
 }
 .pp[data-skin="classroom"] .promises::before {
   content: "";
@@ -6129,7 +6159,7 @@ button.pp-row {
   align-items: flex-start;
   padding: 13px 0;
   border-bottom: none;
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.6;
   max-width: 64ch;
 }
@@ -6224,7 +6254,7 @@ button.pp-row {
   color: #f2f1ee;
   --ink: #f2f1ee;
   --ink-60: rgba(242, 241, 238, 0.66);
-  --ink-40: rgba(242, 241, 238, 0.45);
+  --ink-40: rgba(242, 241, 238, 0.61);
   --text-strong: #f2f1ee;
   --sk-ink: #f2f1ee;
   --rw-ink: #f2f1ee;
@@ -6252,7 +6282,7 @@ button.pp-row {
   --gl-ox: #c97a6d;
   --ink: #edeae3;
   --ink-60: rgba(237, 234, 227, 0.6);
-  --ink-40: rgba(237, 234, 227, 0.4);
+  --ink-40: rgba(237, 234, 227, 0.61);
   --text-strong: #edeae3;
   --sk-ink: #edeae3;
   --gl-rule: rgba(237, 234, 227, 0.18);
@@ -6314,7 +6344,7 @@ button.pp-row {
   color: #efe6d4;
   --ink: #efe6d4;
   --ink-60: rgba(239, 230, 212, 0.66);
-  --ink-40: rgba(239, 230, 212, 0.45);
+  --ink-40: rgba(239, 230, 212, 0.61);
   --text-strong: #efe6d4;
   --sk-ink: #efe6d4;
   --hs-rule: rgba(239, 230, 212, 0.26);
@@ -6360,7 +6390,7 @@ button.pp-row {
   color: #f1eadd;
   --ink: #f1eadd;
   --ink-60: rgba(241, 234, 221, 0.66);
-  --ink-40: rgba(241, 234, 221, 0.45);
+  --ink-40: rgba(241, 234, 221, 0.61);
   --text-strong: #f1eadd;
   --sk-ink: #f1eadd;
 }
@@ -6380,7 +6410,7 @@ button.pp-row {
   color: #e8ede6;
   --ink: #e8ede6;
   --ink-60: rgba(232, 237, 230, 0.66);
-  --ink-40: rgba(232, 237, 230, 0.45);
+  --ink-40: rgba(232, 237, 230, 0.61);
   --text-strong: #e8ede6;
   --sk-ink: #e8ede6;
   --cl-board: #8fc5a6;
@@ -6443,4 +6473,20 @@ button.pp-row {
   .pp[data-skin="chair"] .pp-tile:hover .art .ph {
     transform: none;
   }
+}
+
+/* Keyboard focus ring for the enlarge-photo button.
+
+   It lives at the very bottom of this file, and carries the extra `.pp`, on
+   purpose. Twenty-odd `.pp[data-skin="…"] .pp-av` rules above set their own
+   `box-shadow`, several of them to `none`, and two dark-theme variants reach
+   (0,4,0). At the ring's old position and specificity every one of them won,
+   which silently erased the light halo on the skins that need it most: a
+   persona avatar sits on a ground the member chose, so the two-tone ring is the
+   only thing guaranteeing 3:1 against it. Last rule, matching specificity,
+   always wins. See the ring rationale in styles/base.css. */
+.pp .pp-avButton:focus-visible .pp-av {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }

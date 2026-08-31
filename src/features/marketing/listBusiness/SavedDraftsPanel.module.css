@@ -19,7 +19,7 @@
 }
 
 .title {
-  font-family: var(--font-serif, Fraunces), serif;
+  font-family: var(--serif);
   font-weight: 500;
   font-size: 1.02rem;
   color: var(--ink);
@@ -41,7 +41,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }

@@ -39,7 +39,7 @@
      the countdown and the close button is reachable. */
   pointer-events: auto;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.4;
   font-weight: 500;
   color: var(--ink);
@@ -70,7 +70,7 @@
   border-radius: 50%;
   background: color-mix(in srgb, var(--toast-accent) 15%, transparent);
   color: var(--toast-accent);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .icon svg {
   display: block;
@@ -85,6 +85,8 @@
 .action {
   pointer-events: auto;
   flex-shrink: 0;
+  /* Anchors the coarse-pointer hit-area overlay below. */
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -95,7 +97,7 @@
   background: color-mix(in srgb, var(--toast-accent) 10%, transparent);
   color: var(--toast-accent);
   font: inherit;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease);
@@ -109,6 +111,18 @@
   outline: 2px solid var(--toast-accent);
   outline-offset: 2px;
 }
+/* On touch, keep the pill's ~30px visual but extend the hit area vertically to
+   >=44px so Undo clears the WCAG/Apple/Material touch-target minimum. Only the
+   block axis grows: the pill's label plus its 12px side padding already puts
+   it well past 44px wide. */
+@media (pointer: coarse) {
+  .action::before {
+    content: "";
+    position: absolute;
+    inset-block: -8px;
+    inset-inline: 0;
+  }
+}
 .action svg {
   width: 13px;
   height: 13px;
@@ -119,10 +133,13 @@
 .close {
   pointer-events: auto;
   flex-shrink: 0;
+  /* Anchors the coarse-pointer hit-area overlay below. */
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Ink stays 16px; the padded hit area grows the tap target toward 44px. */
+  /* A 16px glyph centred in a 28px chip. The chip is the visual only: on touch
+     the ::before overlay below is what carries the 44px target. */
   width: 28px;
   height: 28px;
   margin-inline-start: 1px;
@@ -136,6 +153,20 @@
   transition:
     color var(--dur-fast) var(--ease),
     background var(--dur-fast) var(--ease);
+}
+/* On touch, keep the 28px chip but extend the hit area to 44px square. The
+   growth is deliberately asymmetric: 4px into the 12px gap on the inline
+   start, 12px into the toast's own 16px end padding. That reaches the full
+   44px while staying clear of the Undo button beside it, and both edges stay
+   inside the toast, so nothing spills onto the page behind. */
+@media (pointer: coarse) {
+  .close::before {
+    content: "";
+    position: absolute;
+    inset-block: -8px;
+    inset-inline-start: -4px;
+    inset-inline-end: -12px;
+  }
 }
 .close svg {
   width: 16px;

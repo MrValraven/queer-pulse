@@ -24,7 +24,7 @@
   flex: 1;
   min-width: 0;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
   background: transparent;
   border: none;
@@ -55,7 +55,7 @@
 .categoryTitle {
   margin: 0;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -75,12 +75,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: 1.5px dashed rgba(var(--line-rgb), 0.28);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 13px;
   cursor: pointer;
   transition:
@@ -108,7 +108,7 @@
 }
 .chip:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+  box-shadow: var(--ring-accent-soft);
 }
 .searchInput:focus-visible {
   outline: none;
@@ -116,7 +116,7 @@
 
 .empty {
   margin: 18px 0 8px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   color: var(--ink-60);
 }

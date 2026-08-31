@@ -27,13 +27,13 @@
   margin-bottom: 4px;
 }
 .pkSub {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.5;
   margin-bottom: 22px;
 }
 .pkLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -56,7 +56,7 @@
   height: 40px;
   width: 100%;
   padding: 0;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   cursor: pointer;
   border: 2.5px solid transparent;
   transition:
@@ -87,7 +87,7 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   cursor: pointer;
   transition:
@@ -126,7 +126,7 @@
   display: block;
 }
 .csLabel {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
 }
@@ -153,7 +153,7 @@
   width: 100%;
   padding: 0;
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   cursor: pointer;
   border: 2.5px solid transparent;
   transition:
@@ -168,7 +168,7 @@
 /* Toggles */
 .tglRows {
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   overflow: hidden;
   background: var(--paper);
   margin-bottom: 10px;
@@ -184,7 +184,7 @@
   border-bottom: none;
 }
 .tglTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
@@ -192,10 +192,10 @@
 .badgeSelect {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 8px 12px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   cursor: pointer;
@@ -206,7 +206,7 @@
 
 /* Preview */
 .previewLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -214,7 +214,7 @@
   margin-bottom: 14px;
 }
 .previewHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 10px;
   line-height: 1.5;
@@ -257,7 +257,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 500;
   background: rgba(var(--jade-rgb), 0.15);
   color: var(--jade);
@@ -279,23 +279,23 @@
 }
 .pclName {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 2px;
 }
 .pclPronouns {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-bottom: 4px;
 }
 .pclLoc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-bottom: 10px;
 }
 .pclBio {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   margin-bottom: 12px;
@@ -308,10 +308,10 @@
   display: inline-flex;
   background: var(--accent);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 3px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transition: opacity 0.2s;
 }
 
@@ -319,7 +319,7 @@
 .dirCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   max-width: 280px;
 }
@@ -343,7 +343,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   background: rgba(var(--jade-rgb), 0.15);
   color: var(--jade);
@@ -353,18 +353,18 @@
 }
 .dcName {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 2px;
 }
 .dcMeta {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-bottom: 6px;
 }
 .dcBio {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
   display: -webkit-box;

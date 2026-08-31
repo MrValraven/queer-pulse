@@ -1,11 +1,33 @@
+/* The card primitive. docs/STYLE-RULES.md and docs/design-system.md §Cards
+   define the shape every surface in the app copies: 22px, paper on cream, a
+   hairline border, a resting hairline shadow and a 4px lift on hover. This
+   file shipped at 14px with no shadow, so the one component that should have
+   been the reference disagreed with the hand-rolled surfaces that followed
+   the doc. */
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 :global([data-theme="dark"]) .card {
-  border-color: rgba(247, 243, 238, 0.12);
+  border-color: rgba(var(--cream-rgb), 0.12);
 }
+
+/* The lift is scoped to a card that is genuinely clickable (rendered through
+   `as="a"` or `as="button"`). A static panel that rose under the cursor would
+   be promising an interaction it does not have. */
+@media (hover: hover) {
+  a.card:hover,
+  button.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+
 .pad-sm {
   padding: 12px 16px;
 }

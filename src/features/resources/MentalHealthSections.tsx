@@ -6,6 +6,7 @@ import {
   Button,
   EmptyState,
   FilterChips,
+  LoadErrorState,
   Reveal,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -18,7 +19,9 @@ import styles from "./MentalHealthPage.module.css";
 
 export function TherapistSection() {
   const { t } = useTranslation();
-  const { cards, comingSoon } = useTherapistPersonas();
+  // A failed fetch is its own state (DES-22). `comingSoon` is now reserved
+  // for a request that succeeded and came back empty.
+  const { cards, comingSoon, isError, refetch } = useTherapistPersonas();
   const [filter, setFilter] = useState("all");
 
   const langOptions = ["all", ...new Set(cards.flatMap((card) => card.langs))];
@@ -40,7 +43,18 @@ export function TherapistSection() {
           </h2>
           <p>{t("resources:mentalHealth.therapists.lead")}</p>
         </Reveal>
-        {comingSoon ? (
+        {isError && cards.length === 0 ? (
+          <LoadErrorState
+            onRetry={refetch}
+            title={
+              <Translation
+                i18nKey="resources:therapists.loadError.title"
+                components={{ em: <em /> }}
+              />
+            }
+            description={t("resources:therapists.loadError.body")}
+          />
+        ) : comingSoon ? (
           <EmptyState
             icon={<FiHeart />}
             title={

@@ -339,6 +339,9 @@ export const economy: Catalog = {
   "jobs.safetyBanner.showAll": "Show all",
   "jobs.safetyBanner.showAllCount": "Show all ({count} more)",
 
+  "jobs.loadError.title": "We couldn't load the job board",
+  "jobs.loadError.description":
+    "The roles are still there. Give it another try in a moment.",
   "jobs.empty.title": "No roles match right now",
   "jobs.empty.verifiedDescription":
     "Nothing in this category is verified-safe yet. Show all roles, or pick a different category.",
@@ -359,7 +362,7 @@ export const economy: Catalog = {
   // ── Safety badges (shared employer-safety vocabulary) ──────────────────
   "safetyBadge.verified.label": "Verified safe",
   "safetyBadge.verified.blurb":
-    "Earned, not claimed. We confirm inclusive policies on paper, then cross-check with at least three anonymous reviews from current or former LGBTQ+ staff. Re-checked every year.",
+    "Every badge is earned. We confirm inclusive policies on paper, then cross-check with at least three anonymous reviews from current or former LGBTQ+ staff. Re-checked every year.",
   "safetyBadge.trans.label": "Trans-friendly",
   "safetyBadge.trans.blurb":
     "Documented trans-inclusive practice: gender-affirming healthcare in the plan, a name/pronoun-change process, and gender-neutral facilities, confirmed by staff reviews.",
@@ -368,7 +371,7 @@ export const economy: Catalog = {
     'Members rate this employer 8+/10 on "safe to be out at work". Being open about who you are is a non-event here.',
   "safetyBadge.affiliation.run.label": "Queer-run",
   "safetyBadge.affiliation.run.blurb":
-    "Led or owned by queer people. Decisions, culture, and money stay inside the community. Verified during vetting, not self-reported.",
+    "Led or owned by queer people. Decisions, culture, and money stay inside the community. Verified by us during vetting.",
   "safetyBadge.affiliation.friendly.label": "Queer-friendly",
   "safetyBadge.affiliation.friendly.blurb":
     "An affirming employer with inclusive policies and a real LGBTQ+ presence, but not queer-led. Welcoming, just not community-owned.",
@@ -417,6 +420,7 @@ export const economy: Catalog = {
   // ── ShareToCommunityModal ───────────────────────────────────────────────
   "shareToCommunity.eyebrow": "Pass it on",
   "shareToCommunity.title": "Share to <em>a community.</em>",
+  "shareToCommunity.ariaLabel": "Share to a community",
   "shareToCommunity.sub":
     "Post this to one of your rooms. It shows up on the room's wall and in the feed, under that community's own rules.",
   "shareToCommunity.communityLabel": "Which community",
@@ -467,6 +471,9 @@ export const economy: Catalog = {
   "housing.filter.short": "Short-term",
   "housing.filter.studio": "Studio / whole flat",
   "housing.listSpaceCta": "+ List your space",
+  "housing.loadError.title": "We couldn't load the housing board",
+  "housing.loadError.description":
+    "The homes are still there. Give it another try in a moment.",
   "housing.loadMore": "Show more homes",
   "housing.loadingMore": "Loading more homes…",
   "housing.filterBar.area": "Neighbourhood",
@@ -825,6 +832,7 @@ export const economy: Catalog = {
   "housingGallery.photoAlt": "{title}, photo {index} of {total}",
   "housingGallery.openAt": "Open photos of {title}, photo {index} of {total}",
   "housingGallery.counter": "{index} / {total}",
+  "housingGallery.slideAnnouncement": "Photo {index} of {total}, {label}",
   "housingGallery.close": "Close photos",
   "housingGallery.prev": "Previous photo",
   "housingGallery.next": "Next photo",
@@ -832,7 +840,7 @@ export const economy: Catalog = {
   "housingListing.billsExcluded": "Bills not included",
   "housingListing.agentBadge.label": "Agent listing",
   "housingListing.agentBadge.tooltip":
-    "Listed by an agent or agency, not the resident. Agents are welcome. This badge just makes it clear.",
+    "Listed by an agent or agency on behalf of the resident. Agents are welcome. This badge just makes it clear.",
   "housingListing.messageCtaArrow": "Message {name}",
   "housingListing.messageCta": "Message {name}",
   "housingListing.listedBy": "Listed by",
@@ -848,7 +856,7 @@ export const economy: Catalog = {
   "affirmingPledge.ariaLabel": "The LGBTQ+ affirming housing pledge",
   "affirmingPledge.title": "Homes where you're <em>affirmed</em>",
   "affirmingPledge.sub":
-    "Every home and housemate on QueerPulse is LGBTQ+ affirming, that's the standard here, not an extra. Before you post or reach out, take the pledge.",
+    "Every home and housemate on QueerPulse is LGBTQ+ affirming. That's the standard here, for everyone. Before you post or reach out, take the pledge.",
   "affirmingPledge.point.affirm":
     "I'll keep homes and housemates affirming, trans, nonbinary, and queer folks are welcome and respected here.",
   "affirmingPledge.point.noHarm":
@@ -930,13 +938,13 @@ export const economy: Catalog = {
   // Fetch-error state (non-404): show a retry rather than silently redirecting.
   "housingListing.error.title": "We couldn't load this place",
   "housingListing.error.body":
-    "Something went wrong on our end, not yours. Give it another try in a moment.",
+    "Something went wrong on our end. Give it another try in a moment.",
   "housingListing.error.retry": "Try again",
 
   // ── Verified listing chip (P2.3) ───────────────────────────────────────
   "verifiedListing.label": "Verified listing",
   "verifiedListing.tooltip":
-    "The person listing is ID-verified, this listing passed our review, and it raised no red flags. It's a real check, not a safety guarantee, and not an endorsement.",
+    "The person listing is ID-verified, this listing passed our review, and it raised no red flags. It's a real check. It stops short of being a safety guarantee or an endorsement.",
 
   // ── Request a viewing (P2.3) ───────────────────────────────────────────
   "housingViewing.request.cta": "Request a viewing",
@@ -972,6 +980,9 @@ export const economy: Catalog = {
   "housingViewing.list.title": "Your <em>viewings</em>",
   "housingViewing.list.sub":
     "Everywhere you've asked to view a home, and every request to see yours. Accept a time, suggest another, or leave a review once you've met.",
+  "housingViewing.list.loadError.title": "We couldn't load your viewings",
+  "housingViewing.list.loadError.description":
+    "Your viewings are still there. Give it another try in a moment.",
   "housingViewing.list.empty":
     "No viewings yet. When you request one from a listing, it'll show up here.",
   "housingViewing.list.group.needsResponse": "Waiting on you",
@@ -1154,6 +1165,9 @@ export const economy: Catalog = {
   "flatmates.count_one": "{count} profile active this week",
   "flatmates.count_other": "{count} profiles active this week",
   "flatmates.loadMore": "Show more people",
+  "flatmates.loadError.title": "We couldn't load the flatmate board",
+  "flatmates.loadError.description":
+    "The profiles are still there. Give it another try in a moment.",
   "flatmates.loadingMore": "Loading more people…",
   "flatmates.postProfileCta": "Post your profile",
 
@@ -1267,10 +1281,13 @@ export const economy: Catalog = {
   "postProfileForm.visibilityLabel": "Who can see these",
   "postProfileForm.visibility.public": "Anyone on the board",
   "postProfileForm.visibility.members": "Any member",
-  "postProfileForm.visibility.matches": "Only people I could share a home with",
+  "postProfileForm.visibility.matches": "Only people I have matched with",
   "postProfileForm.visibility.hidden": "Only me",
 
   // ── CompanyPage (+ Cover / Sidebar / Tabs) ──────────────────────────────
+  "company.loadError.title": "We couldn't load this employer",
+  "company.loadError.description":
+    "The profile is still there. Give it another try in a moment.",
   "company.notFound.title": "Company not found",
   "company.notFound.description":
     "This company profile doesn't exist or has been taken down. Browse the job board to find queer-run and verified-inclusive employers.",
@@ -1309,6 +1326,9 @@ export const economy: Catalog = {
   "company.reviews.outOf5_one": "/ 5 · {count} review",
   "company.reviews.outOf5_other": "/ 5 · {count} reviews",
   "company.reviews.writeReview": "Write a review",
+  "company.reviews.loadError.title": "We couldn't load the reviews",
+  "company.reviews.loadError.description":
+    "The reviews are still there. Give it another try in a moment.",
   "company.reviews.empty.title": "No reviews yet",
   "company.reviews.empty.description":
     "Been here, or worked with them? Be the first to tell the next queer person what it's actually like.",
@@ -1368,7 +1388,7 @@ export const economy: Catalog = {
 
   "employerReviews.how.title": "How it <em>works</em>",
   "employerReviews.how.sub":
-    "Anonymous, verified by membership, not editable by employers.",
+    "Anonymous, verified by membership, and employers can never edit them.",
   "employerReviews.how.write.title": "Write anonymously",
   "employerReviews.how.write.desc":
     "Your identity is never attached to your review. We verify you're a member. Nothing else is logged.",
@@ -1384,6 +1404,9 @@ export const economy: Catalog = {
     "Member-written · anonymous · updated continuously",
   "employerReviews.recent.browseCta": "Browse queer-inclusive jobs",
   "employerReviews.recent.writeCta": "Write a review",
+  "employerReviews.loadError.title": "We couldn't load the employers",
+  "employerReviews.loadError.description":
+    "The list is still there. Give it another try in a moment.",
   "employerReviews.emptyLive.title": "No employers reviewed yet",
   "employerReviews.emptyLive.description":
     "No reviews have been published yet. Be the first to share what it's really like to work somewhere.",
@@ -1998,7 +2021,7 @@ export const economy: Catalog = {
   "postJob.step5.questionCount_other": "{count} questions",
   "postJob.step5.editCta": "Edit",
   "postJob.step5.agreement":
-    "I confirm this listing follows the <link>Code of Care</link>, no discrimination on identity, and pay that's fair. <strong>QueerPulse is a solidarity space, not an exploitation channel.</strong>",
+    "I confirm this listing follows the <link>Code of Care</link>, no discrimination on identity, and pay that's fair. <strong>QueerPulse is a solidarity space.</strong>",
 
   "postJob.sidebar.livePreview": "Live preview",
   "postJob.sidebar.fullView": "Full view",
@@ -2214,7 +2237,7 @@ export const economy: Catalog = {
   "applicationStatus.legend.key": "Tracker key",
   "applicationStatus.legend.done": "Done. This step is complete",
   "applicationStatus.legend.active": "You are here, current step",
-  "applicationStatus.legend.upcoming": "Upcoming, not started yet",
+  "applicationStatus.legend.upcoming": "Upcoming. This step is still ahead",
   "applicationStatus.legend.closed": "Closed, ended or withdrawn",
 
   "applicationStatus.group.offers.title": "Offers, your decision",
@@ -2639,7 +2662,7 @@ export const economy: Catalog = {
   "scopeTool.preview.total": "Total",
   "scopeTool.preview.validUntil": "Valid until {date}",
   "scopeTool.disclaimer":
-    "This document is a working scope, not a binding contract. Anything not listed under “What's included” is out of scope and quoted separately.",
+    "This document is a working scope. Only a signed contract creates binding obligations. Anything left out of “What's included” falls outside the scope and is quoted separately.",
   "scopeTool.plainText.quote": "QUOTE",
   "scopeTool.plainText.scopeOfWork": "SCOPE OF WORK",
   "scopeTool.plainText.from": "From: {name}",
@@ -2898,7 +2921,7 @@ export const economy: Catalog = {
   "slidingScale.preview.outro":
     "Pay the tier that's honest for you. Choosing higher keeps this work open to everyone.",
   "slidingScale.disclaimer":
-    "These tiers are this maker's own pricing, a sliding scale offered in good faith, not a fixed market rate or a means test.",
+    "These tiers are this maker's own pricing, a sliding scale offered in good faith. Rates vary from maker to maker, and nobody asks you to prove your income.",
 
   // ── ReciboVerdeGuidePage (page chrome only — see report re: GUIDE_SECTIONS) ──
   // Scope note: the guide's own section titles/bodies (reciboVerdeGuide.data.tsx
@@ -3001,7 +3024,7 @@ export const economy: Catalog = {
     "When consensus can't be reached after genuine effort, we fall back to [a supermajority vote, a cooling-off period and re-vote, an outside facilitator]. Decide this now, while it's still hypothetical.",
   "coopTemplate.doc.founding-values.s3.h": "How we take care of each other",
   "coopTemplate.doc.founding-values.s3.b0":
-    "Safety and care commitments belong here, not only in a separate policy nobody reads.",
+    "Safety and care commitments belong here, inside the document the group actually reads.",
   "coopTemplate.doc.founding-values.s3.b1.0":
     "We check in with each other, especially members going through a hard time, without making it any one person's job alone.",
   "coopTemplate.doc.founding-values.s3.b1.1":
@@ -3025,19 +3048,19 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.s5.b1.1":
     "Changes need [a supermajority / full consensus. Decide which] and take effect only after every member has seen the proposed wording.",
   "coopTemplate.doc.founding-values.s5.b2":
-    "This charter is a starting template, not a finished document, the version that matters is the one your group argues its way into, and revisits every year after.",
+    "This charter is a starting template. The version that matters is the one your group argues its way into, and revisits every year after.",
   // financial-honesty
   "coopTemplate.doc.financial-honesty.tag": "Phase 1 · template",
   "coopTemplate.doc.financial-honesty.title": "Financial Honesty",
   "coopTemplate.doc.financial-honesty.titleEm": "Agreement",
   "coopTemplate.doc.financial-honesty.intro":
-    "Housing co-ops fail more often over unspoken money trouble than over any legal problem. This agreement exists so that a member who's struggling says so in week two, not month eight, and so nobody has to guess what anyone else earns, owes, or is worried about. Adapt the specifics to your group; keep the principle that everyone sees the same numbers.",
+    "Housing co-ops fail more often over unspoken money trouble than over any legal problem. This agreement exists so that a member who's struggling says so in week two, while the problem is still small, and so nobody has to guess what anyone else earns, owes, or is worried about. Adapt the specifics to your group; keep the principle that everyone sees the same numbers.",
   "coopTemplate.doc.financial-honesty.s0.h":
     "What full transparency means here",
   "coopTemplate.doc.financial-honesty.s0.b0":
     "Financial transparency doesn't mean everyone reveals their entire personal finances. It means everyone sees the same numbers about the co-op, and the group agrees in advance what individual information is shared, and why.",
   "coopTemplate.doc.financial-honesty.s0.b1.0":
-    "Every member can see the co-op's shared ledger at any time, not only at the annual meeting.",
+    "Every member can see the co-op's shared ledger at any time, at any point in the year.",
   "coopTemplate.doc.financial-honesty.s0.b1.1":
     "Individual contribution amounts (if scaled to income) are visible to the group, though the underlying payslips or tax returns are not, unless a member chooses to share them.",
   "coopTemplate.doc.financial-honesty.s0.b1.2":
@@ -3049,25 +3072,25 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.s1.b1.0":
     "At joining: whether you can meet the full share amount, on what schedule, and any support you're bringing to or need from the group's solidarity fund.",
   "coopTemplate.doc.financial-honesty.s1.b1.1":
-    "Ongoing: any change that affects your ability to pay, job loss, illness, a change in hours, disclosed to [a finance steward / the full group] as soon as you know, not after you've missed a payment.",
+    "Ongoing: any change that affects your ability to pay, job loss, illness, a change in hours, disclosed to [a finance steward / the full group] as soon as you know, well before a payment is missed.",
   "coopTemplate.doc.financial-honesty.s1.b1.2":
     "Annually: a joint review of whether contributions still reflect people's actual circumstances.",
   "coopTemplate.doc.financial-honesty.s2.h": "The shared ledger",
   "coopTemplate.doc.financial-honesty.s2.b0":
-    "Name the tool and the access rule, not only the intention.",
+    "Name the specific tool and the access rule.",
   "coopTemplate.doc.financial-honesty.s2.b1.0":
     "The ledger lives in [a shared spreadsheet, accounting software] that every member can open, read, and export at any time.",
   "coopTemplate.doc.financial-honesty.s2.b1.1":
-    "One or two members act as finance stewards, rotating every [year], responsible for entries, not for gatekeeping who gets to see them.",
+    "One or two members act as finance stewards, rotating every [year], responsible for keeping the entries up to date and open to the whole group.",
   "coopTemplate.doc.financial-honesty.s2.b1.2":
     "Every payment in and out is logged within [one week], with a plain-language note. No line item nobody can explain.",
   "coopTemplate.doc.financial-honesty.s3.h": "Handling arrears with dignity",
   "coopTemplate.doc.financial-honesty.s3.b0":
     "Write this process before anyone's actually behind. It's much harder to agree on once it's personal.",
   "coopTemplate.doc.financial-honesty.s3.b1.0":
-    "A missed payment triggers a private, non-punitive conversation within two weeks, not a group announcement.",
+    "A missed payment triggers a private, non-punitive conversation within two weeks, between the people directly involved.",
   "coopTemplate.doc.financial-honesty.s3.b1.1":
-    "The member and a finance steward agree a repayment plan together; the group is told a plan exists, not the personal details behind it, unless the member wants to share them.",
+    "The member and a finance steward agree a repayment plan together; the group is told only that a plan exists, and the personal details behind it stay with the member unless they want to share them.",
   "coopTemplate.doc.financial-honesty.s3.b1.2":
     "The solidarity fund (below) is offered before any conversation about a member leaving.",
   "coopTemplate.doc.financial-honesty.s4.h": "Solidarity & hardship fund",
@@ -3081,7 +3104,7 @@ export const economy: Catalog = {
     "Requests are approved by [the finance stewards / a simple majority] within one week, with no requirement to justify the hardship in detail.",
   "coopTemplate.doc.financial-honesty.s5.h": "Annual review",
   "coopTemplate.doc.financial-honesty.s5.b0":
-    "Set a fixed date so this is revisited on schedule, not only during a crisis.",
+    "Set a fixed date so this is revisited on schedule, calmly and well away from any crisis.",
   "coopTemplate.doc.financial-honesty.s5.b1.0":
     "Once a year, the group reviews: whether contributions still match circumstances, whether the hardship fund is adequately funded, and whether anyone has unspoken money worries.",
   "coopTemplate.doc.financial-honesty.s5.b2":
@@ -3121,7 +3144,7 @@ export const economy: Catalog = {
     "Grounds and process for involuntary exit, cross-reference your Conflict Resolution Process so this isn't decided ad hoc.",
   "coopTemplate.doc.crl-statutes.s3.h": "Member rights & duties",
   "coopTemplate.doc.crl-statutes.s3.b0.0":
-    "Right to participate and vote in the general assembly, one member, one vote, regardless of share size. This is a core cooperative principle, not optional.",
+    "Right to participate and vote in the general assembly, one member, one vote, regardless of share size. This is a core cooperative principle, and it always holds.",
   "coopTemplate.doc.crl-statutes.s3.b0.1":
     "Right to full financial information about the cooperative (cross-reference your Financial Honesty Agreement).",
   "coopTemplate.doc.crl-statutes.s3.b0.2":
@@ -3148,19 +3171,19 @@ export const economy: Catalog = {
     "Conselho fiscal (supervisory board): an independent body reviewing accounts and reporting to the assembly, kept separate from the direção, so one small group doesn't control both spending and oversight.",
   "coopTemplate.doc.crl-statutes.s6.h": "Surplus, reserves & dissolution",
   "coopTemplate.doc.crl-statutes.s6.b0.0":
-    "Any operating surplus is allocated to reserves or reinvested in the property, not distributed as profit. This is what keeps the co-op non-speculative.",
+    "Any operating surplus stays in the co-op, allocated to reserves or reinvested in the property. This is what keeps the co-op non-speculative.",
   "coopTemplate.doc.crl-statutes.s6.b0.1":
     "A minimum legal reserve fund, built up over time, for unexpected repairs or shortfalls.",
   "coopTemplate.doc.crl-statutes.s6.b0.2":
     "On dissolution, remaining assets after debts are settled are transferred to another cooperative or social-purpose entity, never distributed to members as a windfall. This is both a legal requirement and a values commitment.",
   "coopTemplate.doc.crl-statutes.s6.b1":
-    "This is a plain-language outline, not registrable statutes. Take it, together with your founding values charter, to a lawyer or notary who works with cooperative law before drafting the document you'll actually file.",
+    "This is a plain-language outline. Registrable statutes are a separate, formal document: take this, together with your founding values charter, to a lawyer or notary who works with cooperative law before drafting the document you'll actually file.",
   // share-agreement
   "coopTemplate.doc.share-agreement.tag": "Phase 2 · legal",
   "coopTemplate.doc.share-agreement.title": "Member Share",
   "coopTemplate.doc.share-agreement.titleEm": "Agreement",
   "coopTemplate.doc.share-agreement.intro":
-    "A member share agreement is the individual contract between the cooperative and one member. It turns the group-level statutes into a document a specific person signs, with specific numbers next to their name. Read it as a template to fill in together and check with a lawyer, not as a form to sign as-is.",
+    "A member share agreement is the individual contract between the cooperative and one member. It turns the group-level statutes into a document a specific person signs, with specific numbers next to their name. Read it as a template to fill in together and check with a lawyer before anyone signs.",
   "coopTemplate.doc.share-agreement.s0.h": "What the share buys",
   "coopTemplate.doc.share-agreement.s0.b0":
     "State plainly what membership entitles someone to, and what it doesn't.",
@@ -3169,7 +3192,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.share-agreement.s0.b1.1":
     "A share is not ownership of a specific unit or square metre. It's membership in the cooperative, which holds the property collectively.",
   "coopTemplate.doc.share-agreement.s0.b1.2":
-    "The share does not appreciate with the property's market value; on exit it is repaid at its adjusted nominal value (see below), not at a market price.",
+    "The share stays at its nominal value while the property's market value moves; on exit it is repaid at that adjusted nominal value (see below).",
   "coopTemplate.doc.share-agreement.s1.h": "Payment schedule",
   "coopTemplate.doc.share-agreement.s1.b0":
     "Set out how the share gets paid, since few members can pay the full amount up front.",
@@ -3188,7 +3211,7 @@ export const economy: Catalog = {
     "No exit penalty applies to members leaving in good standing; hardship-driven exits go through the solidarity fund first.",
   "coopTemplate.doc.share-agreement.s3.h": "Who can hold a share",
   "coopTemplate.doc.share-agreement.s3.b0.0":
-    "Shares are held by individual adult members, not transferred by inheritance, sale, or gift without the assembly's approval. This keeps membership tied to actual participation, not investment.",
+    "Shares are held by individual adult members, and any transfer by inheritance, sale, or gift needs the assembly's approval. This keeps membership tied to actual participation.",
   "coopTemplate.doc.share-agreement.s3.b0.1":
     "A member's household, partners, kids, chosen family living with them, doesn't each need a separate share, but state clearly who counts as living under one membership.",
   "coopTemplate.doc.share-agreement.s4.h": "Deposit protection",
@@ -3255,7 +3278,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s4.b0.1":
     "The city housing fund: co-investment, long leases on municipal buildings, or grants tied to affordable-housing targets. Terms vary by city and change over time, so check current terms with QueerPulse's housing fund liaison rather than relying on this document.",
   "coopTemplate.doc.finance-model.s4.b0.2":
-    "QueerPulse's legal team: a first read of financing terms before you sign, not a substitute for independent legal and financial advice.",
+    "QueerPulse's legal team: a first read of financing terms before you sign. Get independent legal and financial advice as well.",
   "coopTemplate.doc.finance-model.s5.h":
     "A worked example (illustrative numbers only)",
   "coopTemplate.doc.finance-model.s5.b0":
@@ -3271,7 +3294,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s5.b1.4":
     "Estimated monthly running cost per household, including reserve: €420–€480 (illustrative)",
   "coopTemplate.doc.finance-model.s5.b2":
-    "Treat this model as a starting structure, not a forecast. Build your real numbers with your lender, your municipality, and, for anything binding, an accountant or lawyer.",
+    "Treat this model as a starting structure. The numbers here are illustrative. Build your real numbers with your lender, your municipality, and, for anything binding, an accountant or lawyer.",
   // conflict-resolution
   "coopTemplate.doc.conflict-resolution.tag": "Phase 5 · governance",
   "coopTemplate.doc.conflict-resolution.title": "Conflict Resolution",
@@ -3283,7 +3306,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s0.b0":
     "Set the tone before the steps. A process that only exists to punish tends to make people hide problems instead of raising them.",
   "coopTemplate.doc.conflict-resolution.s0.b1.0":
-    "The goal of any step below is to repair the relationship or the situation enough that the co-op keeps working, not to establish who was right.",
+    "The goal of any step below is to repair the relationship or the situation enough that the co-op keeps working. Settling who was right stays beside the point.",
   "coopTemplate.doc.conflict-resolution.s0.b1.1":
     "Anyone can raise a concern without it being treated as an accusation against them for raising it.",
   "coopTemplate.doc.conflict-resolution.s0.b1.2":
@@ -3294,7 +3317,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s1.b1.0":
     "Noise, chores, guests, shared-space use: raised directly, one to one, as close to when it happens as possible.",
   "coopTemplate.doc.conflict-resolution.s1.b1.1":
-    "If a direct conversation feels too hard to start alone, ask a third member to sit in, not to take sides, just so it isn't two people alone in a hard moment.",
+    "If a direct conversation feels too hard to start alone, ask a third member to sit in. Their role is simply to be present, so it isn't two people alone in a hard moment.",
   "coopTemplate.doc.conflict-resolution.s2.h": "The stepped process",
   "coopTemplate.doc.conflict-resolution.s2.b0":
     "When a direct conversation doesn't resolve something, or feels unsafe to attempt alone, the process escalates in stages, each one lower-stakes than the next, so most things resolve before reaching the assembly.",
@@ -3303,7 +3326,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s2.b1.1":
     "Step 2, facilitated: if step 1 doesn't land, a third member, chosen by agreement rather than assigned, facilitates a conversation between those involved.",
   "coopTemplate.doc.conflict-resolution.s2.b1.2":
-    "Step 3, assembly: if it's still unresolved, or affects the whole household, it's brought to the full group with a clear, agreed agenda item, not an ambush.",
+    "Step 3, assembly: if it's still unresolved, or affects the whole household, it's brought to the full group as a clear agenda item everyone has agreed to in advance.",
   "coopTemplate.doc.conflict-resolution.s2.b1.3":
     "Step 4, external mediation: for anything the group can't resolve internally, an outside mediator is brought in, at the co-op's cost, before any decision about someone leaving is considered.",
   "coopTemplate.doc.conflict-resolution.s3.h": "Harm & safety issues",
@@ -3623,7 +3646,7 @@ export const economy: Catalog = {
   "housingSafety.price.studio.label": "Studio of your own",
   "housingSafety.price.perMonth": "/ mo",
   "housingSafety.price.note":
-    "Rough Lisbon ranges, meant as a sanity check, not a valuation.",
+    "Rough Lisbon ranges, meant as a sanity check. A formal valuation is a different thing.",
   "housingSafety.page.eyebrow": "Housing safety",
   "housingSafety.page.title": "Renting, <em>safely</em>",
   "housingSafety.page.lead":
@@ -3695,8 +3718,7 @@ export const economy: Catalog = {
   "sayHello.cancel": "Cancel",
   "sayHello.send": "Send hello",
   "sayHello.sending": "Sending…",
-  "sayHello.success.title": "Your hello is on its <em>way</em>",
-  "sayHello.success.em": "way",
+  "sayHello.success.title": "Your hello is on its <em>way.</em>",
   "sayHello.success.body":
     "{name} will see your message in their inbox. You'll hear back there if they'd like to talk.",
   "sayHello.success.bodyWithPronouns":
@@ -3767,8 +3789,7 @@ export const economy: Catalog = {
   "joinGroup.sending": "Sending…",
   "joinGroup.sendCta": "Send request",
   "joinGroup.error": "Couldn't send that. Try again in a moment.",
-  "joinGroup.success.title": "Your request is <em>in</em>",
-  "joinGroup.success.em": "in",
+  "joinGroup.success.title": "Your request is <em>in.</em>",
   "joinGroup.success.closeLabel": "Done",
   "joinGroup.success.body":
     "A steward from <strong>{name}</strong> will review it and get back to you. You'll hear from them in your inbox.",

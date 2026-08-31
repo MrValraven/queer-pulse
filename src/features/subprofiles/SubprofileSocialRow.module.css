@@ -10,7 +10,7 @@
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   touch-action: manipulation;
   /* Theme-responsive chip: a faint accent wash + accent hairline over the
      skin's own ground (not a solid white circle, which clashed on the dark

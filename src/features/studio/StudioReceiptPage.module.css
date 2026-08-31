@@ -2,12 +2,15 @@
 .wrap {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
 
-  max-width: 640px;
+  max-width: var(--maxw-text);
   margin: 0 auto;
   padding: 8px 0 72px;
 }
@@ -46,7 +49,7 @@
   color: var(--jade-light);
 }
 .thank .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-60);
   line-height: 1.6;
   margin-top: 14px;
@@ -61,7 +64,7 @@
   position: relative;
   background: var(--studio-receipt);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 30px 32px 26px;
   overflow: hidden;
 }
@@ -85,12 +88,12 @@
 .cv {
   width: 64px;
   height: 64px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   overflow: hidden;
   flex: none;
 }
 .info .eb {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -109,7 +112,7 @@
   font-style: italic;
 }
 .by {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-60);
   margin-top: 5px;
 }
@@ -152,7 +155,7 @@
 .splitH h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: rgba(var(--cream-rgb), 1);
 }
 .splitH h3 em {
@@ -160,12 +163,12 @@
   color: var(--accent);
 }
 .splitH .small {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
 }
 .bar {
   height: 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--surface);
   overflow: hidden;
   margin: 16px 0 18px;
@@ -185,12 +188,12 @@
   grid-template-columns: auto 1fr auto auto;
   gap: 12px;
   align-items: baseline;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .dot {
   width: 10px;
   height: 10px;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   flex: none;
   align-self: center;
 }
@@ -206,7 +209,7 @@
 }
 .k small {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-40);
   margin-top: 3px;
 }
@@ -216,7 +219,7 @@
 .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
   white-space: nowrap;
 }
@@ -230,7 +233,7 @@
   color: var(--text-40);
 }
 .pct {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   white-space: nowrap;
   min-width: 34px;
@@ -246,7 +249,7 @@
   border-bottom: 1px dashed var(--line);
 }
 .rcd .eb {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -256,7 +259,7 @@
 .rcd .v {
   font-family: var(--sans);
   font-weight: 400;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text);
   white-space: normal;
   line-height: 1.45;
@@ -267,7 +270,7 @@
 }
 .rcd .v code {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade-light);
   letter-spacing: 0.01em;
 }
@@ -278,7 +281,7 @@
   border-bottom: 1px dashed var(--line);
 }
 .note .label {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -287,7 +290,7 @@
 }
 .quote {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-style: italic;
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.5;
@@ -298,7 +301,7 @@
   margin-top: 18px;
   background: rgba(var(--accent-rgb), 0.07);
   border: 1px solid rgba(var(--accent-rgb), 0.18);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 16px;
 }
 .av {
@@ -309,7 +312,7 @@
   background: rgba(var(--accent-rgb), 0.2);
   color: var(--accent-soft);
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: var(--text-13);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -318,7 +321,7 @@
   min-width: 0;
 }
 .who {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-soft);
   font-weight: 600;
 }
@@ -329,14 +332,14 @@
 }
 .replyText {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-style: italic;
   color: var(--text);
   line-height: 1.5;
   margin-top: 5px;
 }
 .when {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-40);
   margin-top: 8px;
 }
@@ -348,7 +351,7 @@
   justify-content: space-between;
   gap: 16px;
   padding-top: 22px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   flex-wrap: wrap;
 }
@@ -375,7 +378,7 @@
   padding: 0;
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .exportBtn:hover {
   color: var(--accent);
@@ -394,7 +397,7 @@
 
 /* Privacy note */
 .privNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-40);
   line-height: 1.7;
   text-align: center;

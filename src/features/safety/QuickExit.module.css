@@ -3,7 +3,7 @@
    the installed bottom tab bar via --bottom-inset (0 in a browser tab). */
 .quickExit {
   position: fixed;
-  z-index: 300;
+  z-index: var(--z-lightbox);
   right: max(16px, env(safe-area-inset-right));
   bottom: max(
     16px,
@@ -15,10 +15,10 @@
   min-height: 44px;
   padding: 0 18px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   letter-spacing: 0.01em;
   color: rgba(var(--cream-rgb), 1);
@@ -44,8 +44,11 @@
   transform: translateY(0) scale(0.97);
 }
 .quickExit:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  /* The halo is listed first so it paints over the resting shadow, which is
+     restated here because this rule out-specifies the base one. */
+  box-shadow: var(--ring-cream), var(--shadow-toast);
 }
 @media (prefers-reduced-motion: reduce) {
   .quickExit {

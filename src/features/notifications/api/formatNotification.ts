@@ -312,7 +312,40 @@ export type NotificationKind =
   //
   // IN-APP. QueerPulse sends no email, so no copy for this type may say
   // anything is on its way by any other channel.
-  | "card_expiring";
+  | "card_expiring"
+  // Sent to the members holding an unmade decision about a gathering (they
+  // saved it, or they RSVP'd `maybe`) when its last few seats go (PRD-18,
+  // mirrors the backend `notifications_type_enum` value added in
+  // `AddEventNearlyFullNotificationType1796020000000`, emitted from
+  // `EventCapacityAlertsService`). System-driven, no actor: a room filling up
+  // is nobody's act. Payload carries `{ source: "event", eventSlug, title,
+  // seatsRemaining }`; `seatsRemaining` is a NUMBER, mirrored onto `count` for
+  // CLDR pluralisation the same way `daysRemaining` is.
+  | "event_nearly_full"
+  // PRD-31, the two rows that close the ban-evasion loop. A community's
+  // moderators get a one-bit "this applicant matches somebody THIS community
+  // barred" flag on a join request, plus a one-click ask for platform staff to
+  // look; before these, the ask disappeared and the answer never came back.
+  //
+  // `ban_evasion_escalation_raised` goes to platform staff (moderator and
+  // admin), minus whoever raised it. Payload: `{ source: "moderation",
+  // escalationId, communitySlug, communityName }`. It is a work item: it names
+  // the community and says a moderator asked, and it never names the applicant
+  // or hints at an answer, because staff have not looked yet.
+  //
+  // `ban_evasion_escalation_resolved` goes only to the community moderator who
+  // raised it. Payload: `{ source: "community", escalationId, joinRequestId,
+  // communitySlug, communityName }`. The backend deliberately withholds the
+  // resolution note, the resolver and the timestamp: what staff found is the
+  // cross-community judgement the one-bit flag exists to withhold. So the copy
+  // says the escalation is closed and that the decision on the request is
+  // still the moderator's, and says nothing else.
+  //
+  // Both are system-driven with no actor, in-app only (absent from the push
+  // whitelist), and always delivered (no preference mutes them). Neither may
+  // promise any other channel: QueerPulse sends no email.
+  | "ban_evasion_escalation_raised"
+  | "ban_evasion_escalation_resolved";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -421,6 +454,15 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // A credential of the member's own running out is the platform's word about
   // their own standing, same tab as account_deletion_final_warning.
   card_expiring: "platform",
+  // A gathering you were weighing up running out of room is gathering news,
+  // same tab as event_reminder and waitlist_promoted.
+  event_nearly_full: "events",
+  // Both halves of a ban-evasion escalation sit beside `report_filed` and
+  // `community_report_filed` for the same reason those do: each hands somebody
+  // with a duty a queue to open, and each deep-links into a console rather than
+  // into a community's own activity.
+  ban_evasion_escalation_raised: "platform",
+  ban_evasion_escalation_resolved: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -766,6 +808,31 @@ function barterOfferToken(payload: unknown, t: TFunction): string {
 }
 
 /**
+ * Resolves the `{communityName}` token both PRD-31 ban-evasion rows
+ * interpolate: the community the escalation was raised from.
+ *
+ * Read defensively, the way `barterOfferToken` and `deviceLabelToken` are. The
+ * backend writes `communityName` on both payloads, but a row from an older or
+ * future shape must not leave a literal `{communityName}` sitting in a
+ * moderation row, and a blank one must not leave a hole mid-sentence. The
+ * fallback phrase is per type because the two sentences read differently: the
+ * staff row is about some community, and the moderator's row is about their
+ * own. Passing the type through keeps that in the catalog, where the
+ * surrounding grammar lives, rather than hardcoding a phrase here.
+ */
+function banEvasionCommunityToken(
+  type: string,
+  payload: unknown,
+  t: TFunction,
+): string {
+  const communityName = (payload as { communityName?: string } | null)
+    ?.communityName;
+  return typeof communityName === "string" && communityName.trim() !== ""
+    ? communityName
+    : t(`notifications:type.${type}.communityFallback`);
+}
+
+/**
  * Resolve the i18n subkey a `report_filed` / `community_report_filed`
  * notification's copy lives under. The row carries `payload.severity`
  * (`emergency | high | medium | low`, derived server-side from the reason code
@@ -1073,6 +1140,17 @@ export function formatNotification(
       tokens.count = daysRemaining;
     }
   }
+  if (type === "event_nearly_full") {
+    // Same reason as `card_expiring` above: the copy is pluralised ("1 spot
+    // left" / "3 spots left") and CLDR selection keys off `count`, while the
+    // payload names the value `seatsRemaining` because that is what the copy
+    // interpolates. Both names carry the same number.
+    const seatsRemaining = (payload as { seatsRemaining?: unknown } | null)
+      ?.seatsRemaining;
+    if (typeof seatsRemaining === "number") {
+      tokens.count = seatsRemaining;
+    }
+  }
   if (type === "intake_reviewed") {
     // The copy names the form the member actually filled in; the payload only
     // carries its snake_case identifier, so the readable phrase is resolved
@@ -1097,6 +1175,16 @@ export function formatNotification(
     // Same reason: overrides the raw value `interpolationTokens` copied so a
     // missing label reads as a phrase rather than an empty gap.
     tokens.deviceLabel = deviceLabelToken(payload, t);
+  }
+  if (
+    type === "ban_evasion_escalation_raised" ||
+    type === "ban_evasion_escalation_resolved"
+  ) {
+    // Overrides the raw `communityName` `interpolationTokens` already copied
+    // through with the same value, defensively re-resolved so a row whose
+    // payload is missing or malformed still reads as a whole sentence instead
+    // of showing `{communityName}` to somebody being asked to act.
+    tokens.communityName = banEvasionCommunityToken(type, payload, t);
   }
   if (type === "barter_proposal_received") {
     // Overrides the raw `listingOffer` `interpolationTokens` already copied

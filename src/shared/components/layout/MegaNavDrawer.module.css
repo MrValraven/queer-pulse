@@ -12,12 +12,12 @@
   cursor: pointer;
   padding: 16px 0;
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
 }
 
 .sectionChevron {
-  font-size: 11px;
+  font-size: var(--text-11);
   opacity: 0.6;
   transition: transform 0.2s var(--ease);
 }
@@ -50,7 +50,7 @@
 }
 
 .colHead {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -60,7 +60,7 @@
 
 .link {
   display: block;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   padding: 8px 0 8px 10px;
 }

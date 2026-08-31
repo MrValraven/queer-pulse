@@ -29,8 +29,9 @@
   }
 }
 .swatch:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .swatch[data-selected] {
   border-color: var(--ink);

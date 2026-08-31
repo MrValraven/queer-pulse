@@ -154,12 +154,16 @@ export function DataCard({
   button,
   onClick,
   to,
+  href,
 }: {
   title: string;
   description: string;
   button: string;
   onClick?: () => void;
   to?: string;
+  /** An address outside QueerPulse. Opens in a new tab, so the member does not
+   *  lose the settings pane they were reading. */
+  href?: string;
 }) {
   return (
     <div className={styles.dataCard}>
@@ -167,11 +171,21 @@ export function DataCard({
         <div className={styles.dcTitle}>{title}</div>
         <div className={styles.dcDesc}>{description}</div>
       </div>
-      {/* Shared <Button> in both shapes (polymorphic via `to`), keeping the
-          data-card pill via className, the same way the Data pane's danger
-          cards already do. */}
+      {/* Shared <Button> in all three shapes (polymorphic via `to`/`href`),
+          keeping the data-card pill via className, the same way the Data
+          pane's danger cards already do. */}
       {to ? (
         <Button variant="ghost" className={styles.dcBtn} to={to}>
+          {button}
+        </Button>
+      ) : href ? (
+        <Button
+          variant="ghost"
+          className={styles.dcBtn}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {button}
         </Button>
       ) : (

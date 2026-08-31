@@ -1,3 +1,4 @@
+import { FiX } from "react-icons/fi";
 import { MdDragIndicator } from "react-icons/md";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -125,7 +126,7 @@ export function StudioProgramSlate({
                   title: `${single.titlePre}${single.titleEm}`,
                 })}
               >
-                ×
+                <FiX aria-hidden />
               </button>
             </div>
           ))}

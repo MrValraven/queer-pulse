@@ -51,6 +51,14 @@ export const shared: Catalog = {
   "feedback.errorFallback.tryAgain": "Try again",
   "feedback.errorFallback.reference": "Reference: {referenceId}",
 
+  // LoadErrorState — the shared "we couldn't load this" panel. Distinct from
+  // errorFallback (a crashed boundary): the request failed and is worth
+  // retrying, and it must never be rendered as an empty state.
+  "loadError.title": "We couldn't load <em>this</em>",
+  "loadError.body":
+    "The request didn't come back. This one is on us. Try again in a moment.",
+  "loadError.retryCta": "Try again",
+
   "feedback.roomLoader.ariaLabel": "Preparing the room",
   "feedback.roomLoader.title": "Setting up your <em>room</em>",
   "feedback.roomLoader.caption": "Pouring the coffee, dimming the lights…",
@@ -81,6 +89,7 @@ export const shared: Catalog = {
   // ACQ-08 — the member-minted invite flow's home in the account menu, with a
   // live count of unspent invites attached by `useInviteQuotaBadge`.
   "accountMenu.items.invite": "Invite someone",
+  "accountMenu.items.vouch": "Vouch for someone",
   "accountMenu.items.messages": "Messages",
   "accountMenu.items.work": "Work",
   // Personas discovery Phase 5, Moment 3 — the "Your personas" row (badge via
@@ -134,6 +143,7 @@ export const shared: Catalog = {
   "accountMenu.controls.navSidebar": "Sidebar",
 
   // AdminRoleSwitcher
+  "adminRoleSwitcher.avatarPlaceholderAria": "Account avatar",
   "adminRoleSwitcher.roleStaffAdmin": "Staff admin",
   "adminRoleSwitcher.roleCommunityMod": "Community mod",
   "adminRoleSwitcher.scopeAll": "All communities",
@@ -315,6 +325,16 @@ export const shared: Catalog = {
   "staffBadge.admin.short": "Staff",
   "staffBadge.moderator.long": "QueerPulse Mod",
   "staffBadge.moderator.short": "Mod",
+  // Badged staff grants: a member handed one domain of the platform to run.
+  // One label each, at both badge sizes, saying plainly what the person
+  // decides, because the reader is usually a member whose listing, piece or
+  // community they just decided on.
+  "staffBadge.grant.magazineEditor": "Magazine Editor",
+  "staffBadge.grant.housingModerator": "Housing Moderator",
+  "staffBadge.grant.directoryModerator": "Directory Moderator",
+  "staffBadge.grant.resourceCurator": "Resource Curator",
+  "staffBadge.grant.editorial": "Editorial Team",
+  "staffBadge.grant.communities": "Communities Team",
 
   // ImageSlot
   "imageSlot.placeholder": "Image",
@@ -522,6 +542,7 @@ export const shared: Catalog = {
   "mediaRef.magazine-article": "Magazine article",
   "mediaRef.magazine-deck": "Magazine deck",
   "mediaRef.message-photo": "Conversation",
+  "mediaRef.press-contact": "Press contact",
 
   // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
   // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,

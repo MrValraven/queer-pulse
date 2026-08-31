@@ -15,7 +15,7 @@
 }
 .sub {
   margin: 6px 0 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -28,7 +28,7 @@
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 10px;
@@ -47,9 +47,9 @@
   gap: 11px;
   padding: 12px 14px;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   transition:
     border-color var(--dur-base) var(--ease),
@@ -68,10 +68,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -82,5 +82,5 @@
 }
 .textarea:focus {
   border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgba(var(--danger-rgb), 0.18);
+  box-shadow: var(--ring-danger);
 }

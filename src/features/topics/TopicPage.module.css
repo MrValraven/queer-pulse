@@ -1,5 +1,5 @@
 .page {
-  max-width: 980px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
   padding: 28px 28px 80px;
@@ -12,7 +12,7 @@
   border-bottom: 2px solid var(--line-strong);
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -38,7 +38,7 @@
   margin-right: 4px;
 }
 .sub {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 60ch;
@@ -60,7 +60,7 @@
   gap: 32px;
   margin-top: 24px;
   flex-wrap: wrap;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
 }
 .stats b {
@@ -110,9 +110,9 @@
   border: 1px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 14px;
   cursor: pointer;
   transition:
@@ -144,7 +144,7 @@
 .post {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px 24px;
   text-decoration: none;
   color: inherit;
@@ -158,7 +158,7 @@
   .post:hover {
     transform: translateY(-2px);
     border-color: rgba(var(--line-rgb), 0.18);
-    box-shadow: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-e3);
   }
 }
 
@@ -176,16 +176,16 @@
   flex-wrap: wrap;
 }
 .postName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
 }
 .postMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .kind {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -193,7 +193,7 @@
   margin-left: auto;
   padding: 3px 9px;
   background: rgba(var(--accent-rgb), 0.08);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   flex: none;
 }
 .kindEvent {
@@ -212,7 +212,7 @@
 .postTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
@@ -223,7 +223,7 @@
   color: var(--accent);
 }
 .postBody {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.6;
   text-wrap: pretty;
@@ -236,7 +236,7 @@
   margin-top: 14px;
   padding-top: 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .postFoot b {
@@ -250,11 +250,11 @@
   margin-left: auto;
 }
 .postTag {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   color: var(--ink-40);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 2px 9px;
 }
 .postTagMatch {
@@ -283,11 +283,11 @@
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
 }
 .sideCard h4 {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -301,7 +301,7 @@
   gap: 6px;
 }
 .relatedList a {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
   text-decoration: none;
   padding: 6px 0;
@@ -317,7 +317,7 @@
   }
 }
 .relatedList .count {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 .relatedList .hash {
@@ -350,12 +350,12 @@
   flex-wrap: wrap;
 }
 .personName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .personDetail {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -363,22 +363,22 @@
   padding: 14px 16px;
   background: rgba(var(--jade-rgb), 0.06);
   border-left: 3px solid var(--jade);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 .resources h5 {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--jade);
   margin: 0 0 8px;
 }
 .resources p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0 0 10px;
 }
 .resources a {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   text-decoration: none;
@@ -392,12 +392,12 @@
 /* Plum crisis card (plum-panel pattern) */
 .crisis {
   background: var(--plum);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px;
   text-align: center;
 }
 .crisis p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.6;
   margin: 0 0 14px;

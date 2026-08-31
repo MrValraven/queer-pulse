@@ -1,12 +1,12 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 26, 31, 0.55);
-  z-index: 200;
+  background: var(--scrim);
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
   animation: vouchOverlayIn 0.3s var(--ease) both;
 }
 @keyframes vouchOverlayIn {
@@ -16,7 +16,7 @@
 }
 .modal {
   background: var(--paper);
-  border-radius: 28px 28px 0 0;
+  border-radius: var(--radius-28) var(--radius-28) 0 0;
   width: 100%;
   max-width: 540px;
   position: relative;
@@ -39,7 +39,7 @@
     align-items: center;
   }
   .modal {
-    border-radius: 28px;
+    border-radius: var(--radius-28);
   }
 }
 @keyframes vouchUp {
@@ -68,7 +68,7 @@
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -101,7 +101,7 @@
 }
 
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -122,14 +122,14 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 22px;
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 10px;
@@ -146,9 +146,9 @@
   gap: 11px;
   padding: 12px 14px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   transition:
     border-color 0.2s var(--ease),
@@ -167,10 +167,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -182,17 +182,17 @@
 }
 .textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+  box-shadow: var(--ring-accent);
 }
 .counter {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   text-align: right;
   margin-bottom: 18px;
 }
 
 .error {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--danger);
   margin: 0 0 14px;
 }
@@ -258,7 +258,7 @@
   color: var(--accent);
 }
 .successSub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.6;
   margin-bottom: 24px;

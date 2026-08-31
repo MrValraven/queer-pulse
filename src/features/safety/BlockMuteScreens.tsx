@@ -268,7 +268,10 @@ export function BlockMuteMuted({
           ]}
         />
       </div>
-      <Link to={routes.settings} className={s.manageLink}>
+      <Link
+        to={`${routes.settings}?pane=blockedUsers`}
+        className={s.manageLink}
+      >
         {t("safety:blockMute.muted.manageLink")} <FiArrowRight aria-hidden />
       </Link>
       <button type="button" className={s.undoLink} onClick={onUndo}>

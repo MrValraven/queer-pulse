@@ -6,6 +6,14 @@ import {
 } from "../../shared/api/gifs";
 import { DEMO_GIFS } from "./demoGifs.data";
 
+/** An aborted fetch rejects with a DOMException named "AbortError". That
+ *  rejection is this hook cancelling its own superseded request, so it stays
+ *  out of the picker's error state. Matches how the share sheets read a
+ *  user-cancelled `navigator.share` (`shareSubprofile.ts`). */
+function isAbortError(error: unknown): boolean {
+  return error instanceof Error && error.name === "AbortError";
+}
+
 export interface GifSearchState {
   results: GifResult[];
   loading: boolean;
@@ -60,19 +68,37 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
       return;
     }
     let cancelled = false;
+    // The network half of supersession. `clearTimeout` below already suppresses
+    // a request superseded INSIDE the 300ms debounce window, but one that has
+    // already fired stays in flight against KLIPY, a rate-limited third party,
+    // and burns a slot of that limit for a response nobody will read. Aborting
+    // in the cleanup stops the request itself, where `cancelled` and
+    // `requestIdRef` only stop us from applying its result.
+    //
+    // Both layers stay. Abort is the network half, the requestId above is the
+    // ordering half: `loadMore` deliberately runs without a controller (one
+    // click-initiated page fetch at a time), so a loadMore that lands after
+    // the query changed is still discarded by id alone. The
+    // `cancelled` flag also covers the last sliver abort cannot reach, a
+    // response that already resolved in the microtask queue before the cleanup
+    // ran.
+    const abortController = new AbortController();
     setLoading(true);
     setError(false);
     const timer = window.setTimeout(() => {
       const request = trimmedQuery
-        ? gifProvider.search(trimmedQuery)
-        : gifProvider.featured();
+        ? gifProvider.search(trimmedQuery, undefined, abortController.signal)
+        : gifProvider.featured(undefined, abortController.signal);
       request
         .then((page) => {
           if (cancelled || requestIdRef.current !== requestId) return;
           setResults(page.results);
           setNextPage(page.nextPage);
         })
-        .catch(() => {
+        .catch((error: unknown) => {
+          // Belt and braces: the guards below already stop an aborted run from
+          // writing state, but an AbortError is never an error to surface.
+          if (isAbortError(error)) return;
           if (cancelled || requestIdRef.current !== requestId) return;
           setError(true);
           setResults([]);
@@ -86,6 +112,7 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
+      abortController.abort();
     };
   }, [trimmedQuery, demoMode]);
 
@@ -94,6 +121,12 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
     // Claim an id for this page fetch; if the query changes (the search effect
     // bumps the id) or another request supersedes it before this resolves, the
     // stale page is dropped rather than appended to a newer result set.
+    // No AbortController here on purpose. This fires once per deliberate click
+    // and only when nothing else is loading, so it cannot stack up requests
+    // against KLIPY's rate limit the way a per-keystroke search can, and the id
+    // guard already drops a page that lands late. Giving it a controller would
+    // mean parking one in a ref for the search effect's cleanup to abort, which
+    // buys at most one saved request per click for a real lifecycle tangle.
     const requestId = ++requestIdRef.current;
     setLoading(true);
     const request = trimmedQuery

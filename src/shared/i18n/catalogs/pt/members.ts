@@ -145,6 +145,10 @@ export const members: Catalog = {
   "profile.hero.editCta": "Editar perfil",
   "profile.hero.previewCta": "Ver como visitante",
   "profile.hero.sayHelloCta": "Dizer olá",
+  // PRD-03. Quando esta pessoa já pediu ligação, o cabeçalho responde-lhe em
+  // vez de oferecer outro olá que o servidor recusaria.
+  "profile.hero.acceptRequestCta": "Aceitar o pedido de {first}",
+  "profile.hero.declineRequestCta": "Recusar com delicadeza",
   "profile.hero.vouchedFor": "Deste um voto de confiança a {first}",
   "profile.hero.vouchedShort": "Com voto de confiança",
   "profile.hero.withdrawVouchCta": "Retirar voto de confiança",
@@ -685,6 +689,9 @@ export const members: Catalog = {
   "search.empty.title": "Nada encontrado",
   "search.empty.body":
     "Tenta outra palavra: nome de uma pessoa, bairro, competência, ou tipo de convívio.",
+  "search.loadError.title": "Não conseguimos <em>fazer essa pesquisa</em>",
+  "search.loadError.body":
+    "O pedido não voltou. A falha é do nosso lado, as tuas palavras estavam bem. Tenta outra vez daqui a um momento.",
   "search.hero.label": "Pesquisar",
   "search.hero.title":
     "Encontra quem ou o que quiseres <em>na comunidade.</em>",
@@ -1234,6 +1241,9 @@ export const members: Catalog = {
   "places.empty.description":
     "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",
   "places.empty.action": "Registar o meu espaço",
+  "places.loadError.title": "Não conseguimos carregar <em>estes espaços</em>",
+  "places.loadError.body":
+    "A lista não voltou. A falha é do nosso lado. Tenta outra vez daqui a um momento.",
 
   "places.quickEdit.title": "Edição rápida",
   "places.quickEdit.sub": "Atualiza os dados principais de {name}.",
@@ -1274,7 +1284,8 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.profile": "Perfil completo",
   "badges.xpBreakdown.sources.profileDesc": "Uma foto e uma bio no teu perfil.",
   "badges.xpBreakdown.sources.communities": "Comunidades a que te juntaste",
-  "badges.xpBreakdown.sources.communitiesDesc": "Entrares numa comunidade.",
+  "badges.xpBreakdown.sources.communitiesDesc":
+    "Entrares numa comunidade onde há outras pessoas.",
   "badges.xpBreakdown.sources.personas": "Personas publicadas",
   "badges.xpBreakdown.sources.personasDesc": "Publicares uma persona.",
   "badges.xpBreakdown.sources.vouches": "Avais que deste",
@@ -1282,9 +1293,11 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.connections": "Ligações feitas",
   "badges.xpBreakdown.sources.connectionsDesc": "Ligares-te a outro membro.",
   "badges.xpBreakdown.sources.events": "Convívios em que participaste",
-  "badges.xpBreakdown.sources.eventsDesc": "Participares num convívio.",
+  "badges.xpBreakdown.sources.eventsDesc":
+    "Participares num convívio organizado por outra pessoa.",
   "badges.xpBreakdown.sources.posts": "Publicações na comunidade",
-  "badges.xpBreakdown.sources.postsDesc": "Publicares numa comunidade.",
+  "badges.xpBreakdown.sources.postsDesc":
+    "Publicares onde há outras pessoas, ou responderes a alguém.",
   "badges.xpBreakdown.sources.endorsements": "Endossos recebidos",
   "badges.xpBreakdown.sources.endorsementsDesc":
     "Seres endossade por outro membro.",
@@ -1302,7 +1315,7 @@ export const members: Catalog = {
     "Uma sessão de voluntariado confirmada por quem publicou a oportunidade.",
   "badges.xpBreakdown.sources.hosting": "Convívios que organizaste",
   "badges.xpBreakdown.sources.hostingDesc":
-    "Organizares ou coorganizares um convívio aberto.",
+    "Organizares um convívio que aconteceu e teve gente.",
   "badges.xpBreakdown.sources.magazine": "Peças publicadas na revista",
   "badges.xpBreakdown.sources.magazineDesc":
     "Uma peça tua publicada na revista.",

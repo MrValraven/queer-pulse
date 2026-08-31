@@ -92,6 +92,9 @@ export const topics: Catalog = {
   // `label`/`description` are content (live: `GET /topics`) and stay
   // untranslated, same scope rule as the rest of this catalog.
   "directory.eyebrow": "Topics",
+  "directory.loadError.title": "We couldn't load <em>the topics</em>",
+  "directory.loadError.body":
+    "The list didn't come back. The topics are all still there. Try again in a moment.",
   "directory.title": "Every conversation, by tag.",
   "directory.sub":
     "Follow a topic and you'll hear about it the moment someone posts.",

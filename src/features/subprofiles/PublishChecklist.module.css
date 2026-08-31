@@ -12,7 +12,7 @@
 }
 
 .lede {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 0 0 20px;
@@ -41,7 +41,7 @@
 }
 .meterLabel {
   flex: none;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
 }
@@ -54,11 +54,11 @@
   flex: 1;
 }
 .rowTitle {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
 }
 .rowHelp {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   opacity: 0.85;
 }
@@ -85,7 +85,7 @@
 
 .polishTitle {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -105,7 +105,7 @@
 .polishRow {
   position: relative;
   padding-left: 14px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -127,6 +127,6 @@
   margin: 18px 0 0;
   padding-top: 16px;
   border-top: 1px dashed rgba(var(--line-rgb), 0.14);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }

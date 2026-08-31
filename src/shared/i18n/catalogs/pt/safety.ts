@@ -73,6 +73,8 @@ export const safety: Catalog = {
   "report.category.doxxing":
     "Alguém partilhou os meus dados pessoais ou a minha localização",
   "report.category.harassment": "Assédio ou ameaças",
+  // Ver o comentário na versão EN: é a formulação do backend, traduzida.
+  "report.category.hateSpeech": "Discurso de ódio ou um insulto",
   "report.category.unwantedContact": "Contacto ou mensagens indesejados",
   "report.category.impersonation": "Falsa identidade ou personificação",
   "report.category.discrimination": "Discriminação",
@@ -91,10 +93,21 @@ export const safety: Catalog = {
   "report.form.emailLabel":
     "O teu email de contacto (opcional, para acompanhamento)",
   "report.form.emailPlaceholder": "teu@email.com",
+  // Ver o comentário na versão EN: é uma escolha EXPLÍCITA, porque este
+  // formulário costumava deduzi-la a partir do campo de email em branco.
+  "report.form.identityLegend": "Como isto chega a quem modera",
+  "report.form.identity.named": "Com o meu nome",
+  "report.form.identity.namedHelper":
+    "Quem modera vê quem submeteu esta denúncia e o registo das denúncias que já fizeste. Esse registo faz parte da forma como pesam aquilo que lhes contas.",
+  "report.form.identity.anonymous": "Anonimamente",
+  "report.form.identity.anonymousHelper":
+    "Quem modera vê a denúncia sem o teu nome e sem esse registo de denúncias anteriores. A QueerPulse continua a guardar internamente a ligação entre ti e esta denúncia, para que possa ser rastreada se for preciso.",
+  "report.form.identity.signedOutNote":
+    "Não tens sessão iniciada, por isso quem modera vê esta denúncia sem nome e sem qualquer registo de denúncias anteriores para a pesar. Inicia sessão primeiro se quiseres que fique submetida em teu nome.",
   "report.form.submitting": "A submeter…",
   "report.form.submitCta": "Submeter denúncia",
   "report.form.fineprint":
-    "Aceitamos denúncias anónimas. Se deixares um email, entraremos em contacto diretamente contigo.",
+    "Todas as denúncias são lidas pela equipa de moderação. A gravidade e o prazo de revisão são calculados a partir da categoria que escolheres, por isso escolhe a que mais se aproxima do que aconteceu.",
 
   "report.principles.eyebrow": "Os nossos princípios",
   "report.principles.believeReporter.strong":
@@ -139,6 +152,51 @@ export const safety: Catalog = {
   "report.tooFast":
     "Estás a enviar denúncias mais depressa do que conseguimos recebê-las. Espera um momento e envia esta outra vez.",
 
+  // ── CommunityReportControl / CommunityReportModal ───────────────────────
+  // Ver o comentário na versão EN: denunciar uma comunidade INTEIRA, a partir
+  // do cabeçalho da página da comunidade.
+  "report.community.trigger": "Denunciar esta comunidade",
+  "report.community.triggerAria": "Denunciar a comunidade {name}",
+  "report.community.title": "Denunciar {name}",
+  "report.community.lead":
+    "Isto denuncia a comunidade em si. Usa quando o problema é o espaço: aquilo em torno do qual se organiza, aquilo que deixa passar, ou o que quem a organiza faz.",
+  "report.community.reasonLabel": "O que está errado aqui?",
+  "report.community.detailLabel": "O que deve quem modera saber? (opcional)",
+  "report.community.detailPlaceholder":
+    "Links, datas, publicações de quem, o que tiveres. Quem modera lê isto antes de abrir a comunidade.",
+  "report.community.cancelCta": "Cancelar",
+  "report.community.submitCta": "Enviar denúncia",
+  "report.community.submitting": "A enviar…",
+  "report.community.error":
+    "Não conseguimos enviar essa denúncia. Ainda não foi submetida. Verifica a tua ligação e tenta outra vez.",
+  "report.community.success.title": "A denúncia está com a equipa de moderação",
+  "report.community.success.body":
+    "Quem modera vai rever {name} como um todo. A gravidade e o prazo de revisão são definidos a partir do motivo que escolheste, por isso isto já está na fila certa.",
+  "report.community.success.doneCta": "Concluído",
+
+  // ── ConversationReportModal / MessageReportModal / ConnectionReportModal ─
+  // Denunciar uma PESSOA, ou uma mensagem que enviou. Ver a nota em en/safety.
+  "reportPerson.success.title": "A tua denúncia está <em>com quem modera.</em>",
+  "reportPerson.success.body":
+    "Alguém da equipa de moderação lê todas as denúncias. A gravidade e o prazo de revisão são definidos a partir do motivo que escolheste, por isso isto já está na fila certa. Se quiseres distância entretanto, bloquear tem efeito imediato e é independente da revisão.",
+  "reportPerson.success.doneCta": "Concluído",
+  "reportPerson.error":
+    "Não conseguimos enviar essa denúncia. Ainda não foi submetida. Verifica a tua ligação e tenta outra vez.",
+  "reportPerson.form.lead":
+    "Quem modera lê o que escreveres aqui. Detalhes ajudam: o que aconteceu, quando, e em que parte da plataforma. Escolhe o motivo mais próximo do que aconteceu, porque é ele que define com que rapidez isto é revisto.",
+  "reportPerson.form.reasonLabel": "Sobre o que é isto?",
+  "reportPerson.form.detailLabel": "O que deve quem modera saber?",
+  "reportPerson.form.detailPlaceholder":
+    "O que aconteceu, quando, e qualquer coisa que ajude quem modera a encontrar isto. Sê tão específique quanto te sintas confortável.",
+  "reportPerson.form.charsRemaining_one": "Falta {count} carácter para enviar",
+  "reportPerson.form.charsRemaining_other":
+    "Faltam {count} carateres para enviar",
+  "reportPerson.form.charsCount_one": "{count} carácter",
+  "reportPerson.form.charsCount_other": "{count} carateres",
+  "reportPerson.form.cancelCta": "Cancelar",
+  "reportPerson.form.submitting": "A enviar…",
+  "reportPerson.form.submitCta": "Enviar denúncia",
+
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
   "reason.outing": "Outing / partilhar identidade privada sem consentimento",
@@ -164,7 +222,7 @@ export const safety: Catalog = {
     "Contacto com quem gere: anúncio sugerido ou amigo",
   "reason.other": "Outra coisa, explicada em detalhe",
 
-  // ── FlagModal.tsx ──────────────────────────────────────────────────────
+  // ── Safe-space BADGE flag copy. Ver a nota em en/safety.ts ─────────────
   "flag.success.title": "Sinalização <em>recebida.</em>",
   "flag.success.body":
     "Obrigade. Uma pessoa moderadora vai ler a tua denúncia. <b>Três sinalizações independentes desencadeiam uma revisão imediata e a suspensão temporária do emblema</b>. A tua denúncia conta para isso. Podemos contactar-te para mais detalhe, mas nunca o espaço.",
@@ -556,7 +614,7 @@ export const safety: Catalog = {
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Espaços seguros LGBTQ+ verificados em Lisboa",
   "spaces.meta.description":
-    "Um diretório de espaços em Lisboa avaliado pela comunidade e verificado como genuinamente seguro para pessoas LGBTQ+, não autodeclarado, com avaliações, um emblema de verificação, e uma forma de sinalizar ou nomear um espaço.",
+    "Um diretório de espaços em Lisboa avaliado pela comunidade e verificado como genuinamente seguro para pessoas LGBTQ+, com avaliações, um emblema de verificação, e uma forma de sinalizar ou nomear um espaço.",
   "spaces.hero.category": "Verificado pela comunidade",
   "spaces.hero.title": "Espaços que são realmente <em>seguros.</em>",
   "spaces.hero.lead":
@@ -803,6 +861,15 @@ export const safety: Catalog = {
   "governance.summary.reReview_other":
     "{count} emblemas passaram a verificação anual.",
   "governance.empty": "Nada nesta vista de momento.",
+  "governance.loadError.nominations.title": "A fila de nomeações não carregou",
+  "governance.loadError.nominations.body":
+    "A falha é do nosso lado, por isso a fila abaixo está vazia porque nada chegou. Pode haver espaços à espera. Tenta de novo.",
+  "governance.loadError.flags.title": "A fila de sinalizações não carregou",
+  "governance.loadError.flags.body":
+    "A falha é do nosso lado, por isso a fila abaixo está vazia porque nada chegou. Pode haver sinalizações em aberto. Tenta de novo.",
+  "governance.loadError.reReview.title": "A lista de reavaliação não carregou",
+  "governance.loadError.reReview.body":
+    "A falha é do nosso lado. Pode haver emblemas com a verificação anual em atraso. Tenta de novo.",
   "governance.status.pending": "À espera",
   "governance.status.acknowledged": "Confirmada",
   "governance.status.in_review": "Em revisão",
@@ -933,8 +1000,7 @@ export const safety: Catalog = {
     "Se uma pessoa membra merece direitos n\u00e3o \u00e9 um debate que acolhemos. N\u00e3o arquives uma den\u00fancia com o argumento de que o outro lado merece ser ouvido.",
   "moderationStance.rule.neverProveGender":
     "Nunca pe\u00e7as a uma pessoa membra que prove o seu g\u00e9nero, e encerra qualquer den\u00fancia que equivalha a esse pedido. A norma \u00e9 a autodetermina\u00e7\u00e3o.",
-  "moderationStance.applicantHead":
-    "Est\u00e1s a avaliar uma pessoa, n\u00e3o um perfil",
+  "moderationStance.applicantHead": "Estás a avaliar uma pessoa",
   "moderationStance.applicantRule.neverProveIdentity":
     "Nunca pe\u00e7as a quem se candidata que prove o seu g\u00e9nero, a sua condi\u00e7\u00e3o queer ou a sua identidade, e nunca recuses algu\u00e9m por duvidares disso. A norma \u00e9 a autodetermina\u00e7\u00e3o, aqui como em todo o lado.",
   "moderationStance.applicantRule.politicsNotAScreen":
@@ -989,4 +1055,24 @@ export const safety: Catalog = {
   "moderationStance.digest.stand.point.whenWeSpeak.body":
     "É esse teste que explica por que razão estas posições estão publicadas, e é a norma a que deves sujeitar a tua própria decisão.",
   "moderationStance.digest.stand.cta": "Ler a posição completa",
+
+  // ── Muted-members list (PRD-07) / BlockedUsersPane.tsx ───────────────────
+  "blockedMembers.row.unblockLabel": "Desbloquear {name}",
+  "mutedMembers.section.muted": "Silenciados",
+  "mutedMembers.note":
+    "Silenciar é unilateral e discreto. Ninguém aqui foi avisado, ninguém aqui foi removido de nada, e podes trazer qualquer pessoa de volta com um toque.",
+  "mutedMembers.row.mutedOn": "Silenciado {date}",
+  "mutedMembers.row.deletedMember": "Membro eliminado",
+  "mutedMembers.row.unmuteCta": "Deixar de silenciar",
+  "mutedMembers.row.unmuteLabel": "Deixar de silenciar {name}",
+  "mutedMembers.empty.none.title": "Ainda não silenciaste ninguém",
+  "mutedMembers.empty.none.desc":
+    "Quando silenciares um membro, as publicações e os comentários dele ficam em silêncio para ti e ele nunca é avisado. Todas as pessoas que silenciares aparecem aqui para poderes desfazer.",
+  "mutedMembers.empty.error.title":
+    "Não conseguimos carregar os teus membros silenciados",
+  "mutedMembers.empty.error.desc":
+    "Em vez de te mostrarmos uma lista em que não podemos confiar, não mostrámos nada. Tenta novamente dentro de momentos.",
+  "mutedMembers.toast.unmuted": "{name} deixou de estar silenciado.",
+  "mutedMembers.toast.unmutedError":
+    "Não conseguimos deixar de silenciar esse membro. Tenta novamente.",
 };

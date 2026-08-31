@@ -8,7 +8,7 @@
   gap: 8px;
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   text-decoration: none;
   margin-bottom: 28px;
 }
@@ -21,7 +21,7 @@
 .tag {
   display: inline-block;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--jade);
@@ -39,7 +39,7 @@
   gap: 16px;
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 .hood,
 .access {
@@ -54,12 +54,12 @@
   max-width: 640px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 32px;
 }
 .note {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.5;
   color: var(--ink);
   margin: 0 0 24px;
@@ -79,7 +79,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -87,7 +87,7 @@
 .details dd {
   margin: 0;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
 }
 .vibes {
@@ -99,21 +99,21 @@
 }
 .vibesLabel {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-right: 4px;
 }
 .vibe {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
-  background: rgba(74, 140, 111, 0.1);
-  border-radius: 6px;
+  background: rgba(var(--jade-rgb), 0.1);
+  border-radius: var(--radius-6);
   padding: 4px 10px;
 }
 .been {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 24px;
 }

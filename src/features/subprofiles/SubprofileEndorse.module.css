@@ -18,7 +18,7 @@
 
 .clusterFace {
   border: 2px solid var(--cream);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .clusterFace:not(:first-child) {
   margin-inline-start: -10px;

@@ -81,7 +81,7 @@
   }
 }
 .shapingLabel {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -92,7 +92,7 @@
 }
 /* Mirrors `.shapingNote`'s italic, left-rule treatment on the read-only card. */
 .shapingNoteInput {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.62;
   font-style: italic;
   color: var(--ink-60);

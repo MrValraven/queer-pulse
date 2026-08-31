@@ -6,7 +6,7 @@
   padding: 28px 28px 80px;
 }
 .back {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   text-decoration: none;
@@ -22,7 +22,7 @@
   }
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -44,7 +44,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 54ch;
@@ -53,7 +53,7 @@
 
 /* Section header */
 .sectionH {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -76,7 +76,7 @@
   padding: 20px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   align-items: flex-start;
   transition:
     transform 0.25s var(--ease),
@@ -87,14 +87,14 @@
   .card:hover {
     transform: translateY(-1px);
     border-color: rgba(var(--line-rgb), 0.18);
-    box-shadow: 0 12px 26px -22px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-lift);
   }
 }
 
 .ic {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
@@ -115,7 +115,7 @@
 }
 
 .details {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -126,7 +126,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 5px;
@@ -149,10 +149,10 @@
   border: 1.5px solid rgba(var(--line-rgb), 0.18);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   padding: 8px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   transition:
     color 0.2s var(--ease),
@@ -181,8 +181,8 @@
   padding: 18px 22px;
   background: rgba(var(--accent-rgb), 0.05);
   border-left: 3px solid var(--accent);
-  border-radius: 10px;
-  font-size: 13.5px;
+  border-radius: var(--radius-10);
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.65;
 }

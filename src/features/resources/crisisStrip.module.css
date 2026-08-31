@@ -57,7 +57,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.6;
   margin-top: 8px;
@@ -80,11 +80,11 @@
 .line {
   background: rgba(var(--cream-rgb), 0.07);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
 }
 .lineName {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.62);
   margin-bottom: 8px;
@@ -101,7 +101,7 @@
   transition: color 0.2s var(--ease);
 }
 .num svg {
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 @media (hover: hover) {
   .num:hover {
@@ -109,7 +109,7 @@
   }
 }
 .hours {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 6px;
 }
@@ -123,7 +123,7 @@
   position: relative;
 }
 .jump {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.7);
   transition: color 0.2s var(--ease);

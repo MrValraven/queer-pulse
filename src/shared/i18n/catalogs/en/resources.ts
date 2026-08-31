@@ -10,6 +10,8 @@ import type { Catalog } from "../../types";
 export const resources: Catalog = {
   // ── Shared: ResourceModal ──────────────────────────────────────────────
   "modal.closeAriaLabel": "Close",
+  // Names the dialog while it is showing a result panel and carries no title.
+  "modal.resultAriaLabel": "Confirmation",
   "modal.doneCta": "Done",
 
   // ── Shared: CrisisStrip ─────────────────────────────────────────────────
@@ -17,7 +19,7 @@ export const resources: Catalog = {
   "crisis.title": "In crisis <em>right now?</em>",
   "crisis.body":
     "If you are in immediate danger, call <strong>112</strong>. These lines are free and confidential. Tap to call, or copy the number.",
-  "crisis.jumpCta": "All crisis resources ↓",
+  "crisis.jumpCta": "All crisis resources",
   // crisisStrip.data.ts — real-world helpline names kept in English/as-is;
   // only the descriptive portions and hours are translated. Flag for native
   // review: crisis-line accuracy matters.
@@ -186,7 +188,7 @@ export const resources: Catalog = {
 
   "safety.visibility.title": "How <em>visibility</em> works",
   "safety.visibility.body":
-    "Every member chooses their own visibility level. It's a first-class part of how you exist in the network, not a setting buried in a profile. Think of it as a dimmer, not a switch.",
+    "Every member chooses their own visibility level. It's a first-class part of how you exist in the network, and it works as a dimmer you can adjust whenever you want.",
   "safety.visibility.open.title": "Open to connect",
   "safety.visibility.open.body":
     "Your profile is visible to all members. Anyone in the network can reach out directly. You can change this at any time, and there's no penalty for stepping back.",
@@ -263,10 +265,10 @@ export const resources: Catalog = {
     "Honest answers, without assumptions about where you are right now.",
   "queer101.faq.q1": "How do I know if I'm queer?",
   "queer101.faq.a1":
-    'There\'s no test and no threshold. Some people feel certain early; others figure it out over years, or never settle on a label at all — and all of that is fine. A useful question isn\'t "am I queer?" but "what feels true to me right now?" You don\'t owe anyone an answer, including yourself.',
+    'There\'s no test and no threshold. Some people feel certain early; others figure it out over years, or never settle on a label at all. All of that is fine. A useful question isn\'t "am I queer?" but "what feels true to me right now?" You don\'t owe anyone an answer, including yourself.',
   "queer101.faq.q2": "Do I need a label?",
   "queer101.faq.a2":
-    'No. Labels can be useful — they give you language, community, and a way to explain yourself when you want to. But they can also feel like a cage if they don\'t quite fit. Many people use "queer" as a broad, flexible umbrella. Others prefer specificity. Others use nothing. All of it is valid, and it can change.',
+    'No. Labels can be useful: they give you language, community, and a way to explain yourself when you want to. But they can also feel like a cage if they don\'t quite fit. Many people use "queer" as a broad, flexible umbrella. Others prefer specificity. Others use nothing. All of it is valid, and it can change.',
   "queer101.faq.q3":
     "What's the difference between gender identity and sexual orientation?",
   "queer101.faq.a3":
@@ -274,10 +276,10 @@ export const resources: Catalog = {
   "queer101.faq.q4":
     "I've only ever had relationships with one gender. Does that make me straight?",
   "queer101.faq.a4":
-    "Not necessarily. Identity and experience aren't the same thing. Many bisexual and queer people have only dated one gender for long stretches of their lives, whether through circumstance, preference, or chance. What matters is how you feel, and not a list of your past relationships.",
+    "Not necessarily. Identity and experience aren't the same thing. Many bisexual and queer people have only dated one gender for long stretches of their lives, whether through circumstance, preference, or chance. What matters is how you feel now.",
   "queer101.faq.q5": "Is it okay to be questioning? What if I'm never sure?",
   "queer101.faq.a5":
-    '"Questioning" is a valid identity in its own right — not just a waiting room. Some people find clarity; others find that the question itself stops mattering over time. There\'s no deadline. You are not broken for not knowing.',
+    '"Questioning" is a valid identity in its own right, with a place of its own. Some people find clarity; others find that the question itself stops mattering over time. There\'s no deadline. You are not broken for not knowing.',
   "queer101.faq.q6":
     "I came to Lisbon as an adult and I'm only exploring this now. Is that unusual?",
   "queer101.faq.a6":
@@ -292,7 +294,7 @@ export const resources: Catalog = {
   "queer101.glossary.suggestEditCta": "Suggest an edit",
   "queer101.glossary.searchPlaceholder": "Search terms…",
   "queer101.glossary.notice":
-    "This glossary is a starting point, not an authority. Language evolves, people disagree, and definitions that feel right for one person may not for another.",
+    "This glossary is a starting point, open to challenge. Language evolves, people disagree, and definitions that feel right for one person may feel wrong to another.",
 
   // Glossary terms — chrome (platform-authored queer terminology definitions).
   // "Queer"/"LGBTQ+" are kept identical across languages (universal terms).
@@ -316,7 +318,7 @@ export const resources: Catalog = {
     "A person whose gender identity differs from the sex they were assigned at birth. Being trans is independent of sexual orientation: trans people can be straight, gay, bisexual, or anything else.",
   "queer101.glossary.term.bisexual": "Bisexual",
   "queer101.glossary.def.bisexual":
-    'Attracted to more than one gender. The "bi" doesn\'t mean "only two" — most definitions include attraction to people of similar and different genders. Often shortened to "bi."',
+    'Attracted to more than one gender. The "bi" doesn\'t mean "only two": most definitions include attraction to people of similar and different genders. Often shortened to "bi."',
   "queer101.glossary.term.pansexual": "Pansexual",
   "queer101.glossary.def.pansexual":
     "Attracted to people regardless of their gender. Sometimes used interchangeably with bisexual; some people prefer pansexual to emphasise that gender isn't a factor in their attraction.",
@@ -373,7 +375,7 @@ export const resources: Catalog = {
   "queer101.talk.therapy.cta": "Find a therapist",
   "queer101.talk.askAnon.title": "Ask anonymously",
   "queer101.talk.askAnon.desc":
-    "Submit a question anonymously to the community forum. Answered by real people, not bots.",
+    "Submit a question anonymously to the community forum. Answered by real people, one at a time.",
   "queer101.talk.askAnon.cta": "Ask the forum",
 
   "queer101.outro.title": "You're welcome <em>here.</em>",
@@ -489,16 +491,16 @@ export const resources: Catalog = {
 
   "pronounsGuide.faq.q1": "Can I change my username?",
   "pronounsGuide.faq.a1":
-    "Yes, once per year. Username changes update your profile URL, and any old links will redirect for 90 days. Go to Edit Profile → Identity to change it.",
+    "Yes, once per year. Username changes update your profile URL, and any old links will redirect for 90 days. Go to Edit Profile, then Identity, to change it.",
   "pronounsGuide.faq.q2": "What if my deadname appears somewhere?",
   "pronounsGuide.faq.a2":
     "Contact us immediately at <a>hello@queerpulse.com</a> and we'll remove or update it as a priority. This includes magazine bylines, old forum posts attributed to your previous name, and any email archives we hold.",
   "pronounsGuide.faq.q3": "Does changing my name affect my invite history?",
   "pronounsGuide.faq.a3":
-    "No. Your invite relationships (who invited you, who you've invited) are maintained internally by account ID, not name, so name changes have no effect on them.",
+    "No. Your invite relationships (who invited you, who you've invited) are maintained internally by account ID, so name changes have no effect on them.",
   "pronounsGuide.faq.q4": "Can I make my pronouns private?",
   "pronounsGuide.faq.a4":
-    "Yes. Go to Edit Profile → Field Visibility and set Pronouns to 'Hidden'. They won't appear on your profile or in member search. They'll still be used by the team in any direct communications.",
+    "Yes. Go to Edit Profile, then Field Visibility, and set Pronouns to 'Hidden'. They won't appear on your profile or in member search. They'll still be used by the team in any direct communications.",
   "pronounsGuide.faq.q5": "What if I don't want to specify pronouns?",
   "pronounsGuide.faq.a5":
     "Just leave the pronouns field blank or unselected. No field is mandatory. You won't be prompted to fill it in.",
@@ -523,7 +525,7 @@ export const resources: Catalog = {
   "mentalHealth.therapists.title":
     "Queer-affirming <em>therapists in Lisbon</em>",
   "mentalHealth.therapists.lead":
-    'Reviewed and recommended by community members. Every therapist here has been verified as genuinely queer-affirming — not just "welcoming" but experienced with queer lives, identities, and the specific pressures of being queer and an expat in Lisbon.',
+    "Reviewed and recommended by community members. Every therapist here has been verified as genuinely queer-affirming, with experience of queer lives, identities, and the specific pressures of being queer and an expat in Lisbon.",
   "mentalHealth.therapists.filterLabel": "Filter",
   "mentalHealth.therapists.allLanguages": "All languages",
   "mentalHealth.therapists.accepting": "Accepting",
@@ -825,7 +827,7 @@ export const resources: Catalog = {
     "In Lisbon: GAT Lisboa, APDES, and the Ares do Pinhal harm reduction team distribute naloxone free of charge. Ask at your nearest harm reduction service or contact GAT directly.",
   "harmReduction.naloxone.stepsLabel": "If someone overdoses",
   "harmReduction.naloxone.step1":
-    '<strong>Call 112</strong> — say "a person is unresponsive and not breathing normally"',
+    '<strong>Call 112</strong>: say "a person is unresponsive and not breathing normally"',
   "harmReduction.naloxone.step2":
     "<strong>Administer naloxone.</strong> Nasal spray: one spray in one nostril. Injection: follow kit instructions.",
   "harmReduction.naloxone.step3":
@@ -839,7 +841,7 @@ export const resources: Catalog = {
   "harmReduction.section.beforeNight.title": "Know before you go",
   "harmReduction.section.beforeNight.item.eat.title": "Eat beforehand",
   "harmReduction.section.beforeNight.item.eat.body":
-    "Alcohol and MDMA both hit harder on an empty stomach. Eat a proper meal 2–3 hours before, not immediately before.",
+    "Alcohol and MDMA both hit harder on an empty stomach. Eat a proper meal, finishing 2–3 hours before you go out.",
   "harmReduction.section.beforeNight.item.test.title": "Test your substances",
   "harmReduction.section.beforeNight.item.test.body":
     "Drug checking services operate in Lisbon: KOSMICARE at festivals, and the DICAD-supported service. Reagent test kits are legal in Portugal and available online. Never assume a pill is what you were told.",
@@ -857,7 +859,7 @@ export const resources: Catalog = {
   "harmReduction.section.duringNight.label": "At the party",
   "harmReduction.section.duringNight.title": "During the night",
   "harmReduction.section.duringNight.alert.head":
-    "Water: not too little, not too much",
+    "Water: drinking too little and drinking too much are both dangerous",
   "harmReduction.section.duringNight.alert.body":
     "MDMA can cause both dehydration and hyponatraemia (too much water). If dancing heavily: ~500ml per hour. If not dancing: ~250ml per hour. Sports drinks help with salt.",
   "harmReduction.section.duringNight.item.startLow.title":
@@ -880,7 +882,7 @@ export const resources: Catalog = {
   "harmReduction.section.after.title": "Recovery",
   "harmReduction.section.after.item.comedown.title": "MDMA comedown is real",
   "harmReduction.section.after.item.comedown.body":
-    "MDMA temporarily depletes serotonin. Days 2–4 after use can involve low mood, anxiety, and fatigue. This is neurological, not a reflection of your life. It passes. Eating, sleeping, and light activity help.",
+    "MDMA temporarily depletes serotonin. Days 2–4 after use can involve low mood, anxiety, and fatigue. This is neurological: your brain chemistry is causing the feeling. It passes. Eating, sleeping, and light activity help.",
   "harmReduction.section.after.item.sleepFood.title": "Sleep and food first",
   "harmReduction.section.after.item.sleepFood.body":
     "Before anything else. Your body has worked hard. The urge to redose to chase the good feeling almost always makes the comedown worse.",
@@ -1235,7 +1237,7 @@ export const resources: Catalog = {
     "A brief update at 3 months, published here and in the magazine. No repayment, but accountability matters.",
   "microGrants.rule.noPolitics.title": "No political campaigns",
   "microGrants.rule.noPolitics.body":
-    "We fund community projects, not election or party-political activity.",
+    "We fund community projects. Election and party-political activity fall outside the fund.",
   "microGrants.sidebar.panelTitle": "Review panel: Q2 2026",
   "microGrants.sidebar.joinPanelCta": "Join the review panel",
 
@@ -1270,7 +1272,7 @@ export const resources: Catalog = {
   "microGrants.apply.commitment.update":
     "I will share a brief public update at 3 months: what happened, what was spent, what changed.",
   "microGrants.apply.commitment.benefit":
-    "This project genuinely benefits the queer community in Lisbon, not just me personally.",
+    "This project genuinely benefits the queer community in Lisbon, beyond me personally.",
   "microGrants.apply.commitment.timeline":
     "I can deliver this within 3 months of receiving the grant.",
 
@@ -1386,7 +1388,7 @@ export const resources: Catalog = {
   "peerSupport.meta.title":
     "Peer support for trans people in Lisbon: how it works",
   "peerSupport.meta.description":
-    "Peer support in QueerPulse's Trans Hub. Not therapy, not advice, just someone who's been where you are. How to ask for support or become a peer yourself.",
+    "Peer support in QueerPulse's Trans Hub: someone who's been where you are. How to ask for support or become a peer yourself.",
 
   "peerSupport.hero.eyebrow": "Trans Hub · Peer Support",
   "peerSupport.hero.title": "Someone who <em>gets it.</em>",
@@ -1517,7 +1519,7 @@ export const resources: Catalog = {
     "You get two minutes to say what it is and, if you want, what you are stuck on. You can also say nothing and let the work speak. Both are allowed.",
   "artCritGuide.flow.step3.title": "The room responds",
   "artCritGuide.flow.step3.body":
-    "We go round. Specific observations, then questions, then suggestions if invited. We talk about what is on the wall, not what we would have made instead.",
+    "We go round. Specific observations, then questions, then suggestions if invited. We talk about what is on the wall, on its own terms.",
   "artCritGuide.flow.step4.title": "The maker keeps what fits",
   "artCritGuide.flow.step4.body":
     "You are never obliged to agree. Take what is useful, leave the rest, and we move to the next work. Long table and food after.",
@@ -1530,11 +1532,11 @@ export const resources: Catalog = {
   "artCritGuide.example1.good":
     '"The coral reads as the focal point but the eye keeps getting pulled to the bottom-left corner. Is that intended?"',
   "artCritGuide.example1.avoid":
-    '"I love it!" (kind, but not specific — gives the maker nothing to work with.)',
+    '"I love it!" (kind, but too general: it gives the maker nothing to work with.)',
   "artCritGuide.example2.good":
     '"The half-finished edge feels alive; finishing it might kill the tension you have got here."',
   "artCritGuide.example2.avoid":
-    '"I would have used a different palette." (about the work you would have made, not theirs.)',
+    '"I would have used a different palette." (this is about the work you would have made. Respond to the one in front of you.)',
   "artCritGuide.example3.good":
     '"What were you trying to do with the negative space? It might be doing more than you think."',
   "artCritGuide.example3.avoid":
@@ -1582,7 +1584,7 @@ export const resources: Catalog = {
   "comingOutAtWork.signal2.text":
     "A written non-discrimination policy that names sexual orientation and gender identity",
   "comingOutAtWork.signal3.text":
-    "Inclusive language in everyday talk: partners, not assumptions",
+    "Inclusive language in everyday talk: open questions about who you're with",
   "comingOutAtWork.signal4.text":
     "Jokes that go unchallenged, including by managers",
   "comingOutAtWork.signal5.text":
@@ -2049,7 +2051,7 @@ export const resources: Catalog = {
   "schoolFormsGuide.forms.lead": "Three moves that handle most of it.",
   "schoolFormsGuide.form1.title": "Read the parent fields first",
   "schoolFormsGuide.form1.body":
-    'Many Lisbon schools now use two unlabelled "encarregado de educação" fields with no gender specified — you can put both your names straight in. Where a form still says "mãe / pai", you are allowed to cross out and write what is true.',
+    'Many Lisbon schools now use two unlabelled "encarregado de educação" fields with no gender specified: you can put both your names straight in. Where a form still says "mãe / pai", you are allowed to cross out and write what is true.',
   "schoolFormsGuide.form2.title": "Ask before you assume the worst",
   "schoolFormsGuide.form2.body":
     "Most administrative staff say yes without hesitation when asked to use both parents' names everywhere. Ask early, ask in writing, and you usually find the form is the only old-fashioned thing about the school.",
@@ -2291,7 +2293,7 @@ export const resources: Catalog = {
 
   "intersectionality.commit.heading": "What QueerPulse <em>commits to.</em>",
   "intersectionality.commit.sub":
-    "These are specific things, not aspirations. We're accountable to them, so if we're not doing them, say so.",
+    "These are specific, checkable things. We're accountable to them, so if we're not doing them, say so.",
   "intersectionality.commit.governanceCta": "How we're governed",
   "intersectionality.commit.accountableCta": "Hold us accountable",
   "intersectionality.commitment1.title": "Active moderation",
@@ -2299,13 +2301,13 @@ export const resources: Catalog = {
     "The platform is actively moderated for racism, transphobia, classism, and ableism alongside homophobia. Reports are taken seriously and followed up.",
   "intersectionality.commitment2.title": "Intersectional community groups",
   "intersectionality.commitment2.text":
-    "Closed spaces for QTIPOC, disabled, sober, and other communities within the community are maintained as a genuine resource, not a token gesture.",
+    "Closed spaces for QTIPOC, disabled, sober, and other communities within the community are maintained as a genuine resource.",
   "intersectionality.commitment3.title": "Economic accessibility",
   "intersectionality.commitment3.text":
     "No member is excluded from community events or resources due to cost. Sliding-scale and free options are available for everything we run.",
   "intersectionality.commitment4.title": "Not a monolith",
   "intersectionality.commitment4.text":
-    "QueerPulse doesn't speak with one voice on political questions. The community contains multitudes. The forum is a place to have the arguments, not to have them resolved from above.",
+    "QueerPulse doesn't speak with one voice on political questions. The community contains multitudes. The forum is a place to have the arguments, and the community works them through itself.",
 
   "intersectionality.orgs.heading": "Organisations & <em>resources</em>",
   "intersectionality.orgs.intro":
@@ -2350,6 +2352,35 @@ export const resources: Catalog = {
     "We're verifying which testing services are genuinely queer- and trans-friendly before we list them here, so every clinic is one you can trust.",
   "sexualHealth.guides.ask.liveBody":
     "Anonymous questions aren't open yet. We're setting up a safe way for the community's health volunteers to answer them. Check back soon.",
+
+  // ── Failed-fetch panels for the resource directories (DES-22 / DES-24) ──
+  // Rendered through the shared `LoadErrorState`. These are kept apart from
+  // the "coming soon" copy above them on purpose: a request that failed and
+  // a directory an admin has not filled yet are different facts, and reading
+  // one as the other is how someone looking for HIV or STI testing was told
+  // the clinic directory did not exist.
+  "sexualHealth.testing.loadError.title":
+    "We couldn't load the <em>clinic directory.</em>",
+  "sexualHealth.testing.loadError.body":
+    "The list of testing services didn't come back. This is a fault on our side, and the clinics are still there. Try again in a moment, and use the crisis lines at the top of this page if you need help right now.",
+
+  "legal.lawyers.loadError.title":
+    "We couldn't load the <em>lawyer directory.</em>",
+  "legal.lawyers.loadError.body":
+    "The list of vetted lawyers didn't come back. This is a fault on our side. Try again in a moment.",
+
+  "therapists.loadError.title":
+    "We couldn't load the <em>therapist directory.</em>",
+  "therapists.loadError.body":
+    "The list of therapists didn't come back. This is a fault on our side, and the directory is still there. Try again in a moment, and use the crisis lines at the top of this page if you need help right now.",
+
+  "glossary.loadError.title": "We couldn't load the <em>glossary.</em>",
+  "glossary.loadError.body":
+    "The terms didn't come back. This is a fault on our side. Try again in a moment.",
+
+  "guideIndex.loadError.title": "We couldn't load the <em>guide index.</em>",
+  "guideIndex.loadError.body":
+    "The list of guides didn't come back. This is a fault on our side, and every guide is still published. Try again in a moment.",
 
   "accessibleLisbon.live.title": "Verified accessible spaces are coming soon.",
   "accessibleLisbon.live.body":

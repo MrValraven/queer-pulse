@@ -28,7 +28,7 @@ export const COLUMNS: FooterColumn[] = [
         href: routes.changemakers,
       },
       // Gather
-      { labelKey: "nav:gatherings", href: routes.events },
+      { labelKey: "nav:events", href: routes.events },
       { labelKey: "nav:communities", href: routes.communities },
       {
         labelKey: "shared:megaNav.community.col.organise.activismVolunteering",

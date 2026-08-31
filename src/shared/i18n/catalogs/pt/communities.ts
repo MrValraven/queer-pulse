@@ -277,6 +277,7 @@ export const communities: Catalog = {
   "detail.thread.replies_one": "{count} resposta",
   "detail.thread.replies_other": "{count} respostas",
   "detail.thread.replyPlaceholder": "Responde a este tópico…",
+  "detail.thread.replyAria": "Escreve uma resposta a este tópico",
   "detail.thread.replyCta": "Responder",
   "detail.thread.replyToast": "Resposta publicada.",
   "detail.thread.editedMark": "(editado)",
@@ -342,8 +343,10 @@ export const communities: Catalog = {
   "detail.modtools.nav.requests": "Pedidos",
   "detail.modtools.nav.reports": "Denúncias",
   "detail.modtools.nav.members": "Pessoas",
+  "detail.modtools.nav.ratifications": "Segunda assinatura",
   "detail.modtools.nav.invites": "Convites",
   "detail.modtools.nav.support": "Apoio",
+  "detail.modtools.nav.history": "Histórico",
   "detail.modtools.nav.card": "Cartão de membro",
   "detail.modtools.nav.danger": "Zona de risco",
   "detail.modtools.overview.attention.label": "A precisar de ti",
@@ -381,6 +384,9 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.requestedAgo": "Pedido enviado há {time}",
   "detail.modtools.joinRequests.approveCta": "Aprovar",
   "detail.modtools.joinRequests.declineCta": "Recusar",
+  // ENG-41: a fila é paginada, para uma pessoa da moderação chegar a quem
+  // pediu para entrar depois da primeira página.
+  "detail.modtools.joinRequests.loadMoreCta": "Carregar mais pedidos",
   // O cartão de quem se candidata. Contexto para uma decisão humana: sem
   // totais, sem ordenação, sem recomendação.
   "detail.modtools.joinRequests.applicant.since": "No QueerPulse desde {date}",
@@ -411,6 +417,79 @@ export const communities: Catalog = {
     "O que gostarias que essa pessoa soubesse.",
   "detail.modtools.joinRequests.decline.confirmCta": "Enviar a recusa",
   "detail.modtools.joinRequests.decline.cancelCta": "Cancelar",
+  // PRD-31: o sinal de fuga a bloqueio numa linha da fila de pedidos, e o
+  // encaminhamento por trás dele. A COPY NÃO PODE DIZER MAIS DO QUE O SINAL
+  // DIZ. Diz que esta pessoa corresponde a alguém que ESTA comunidade barrou,
+  // e diz isso como um convite a olhar. Não há pontuação, nível, grau de
+  // certeza, conta anterior nem data por trás, um bloqueio noutro sítio do
+  // QueerPulse responde não, e nada aqui pode soar a veredito. Os três
+  // desfechos são: corresponde, não corresponde, e não deu para verificar. Uma
+  // verificação falhada nunca é escrita como sossego.
+  "detail.modtools.joinRequests.banEvasion.checking":
+    "A verificar a lista de pessoas barradas desta comunidade.",
+  "detail.modtools.joinRequests.banEvasion.matched.title":
+    "Esta pessoa corresponde a alguém barrade desta comunidade",
+  "detail.modtools.joinRequests.banEvasion.matched.body":
+    "Trata isto como um convite a olhar, e decide por ti. Uma correspondência destas pode estar errada, e quem reconhece alguém que barrou és tu. Não aconteceu nada ao pedido desta pessoa.",
+  "detail.modtools.joinRequests.banEvasion.matched.scope":
+    "Isto só abrange os bloqueios que a vossa própria comunidade colocou. Um bloqueio em qualquer outro sítio do QueerPulse responde não aqui, e quem consegue ver esses é a equipa da plataforma.",
+  "detail.modtools.joinRequests.banEvasion.unavailable.title":
+    "Não conseguimos fazer esta verificação",
+  "detail.modtools.joinRequests.banEvasion.unavailable.body":
+    "A verificação não deu resposta para esta pessoa, por isso a pergunta continua em aberto. Isto não é um sinal verde. Tenta outra vez, e diz-nos se continuar a acontecer.",
+  "detail.modtools.joinRequests.banEvasion.unavailable.retryCta":
+    "Tentar outra vez",
+  "detail.modtools.joinRequests.banEvasion.unavailable.retryAria":
+    "Tentar outra vez para {name}",
+  // Encaminhar. Quem modera a comunidade reconhece, a equipa da plataforma
+  // investiga: o botão é a forma de pedir o quadro completo em vez de o
+  // receber sem pedir.
+  "detail.modtools.joinRequests.banEvasion.escalateHint":
+    "A equipa da plataforma vê todas as comunidades e a lista de bloqueios da plataforma, que é o quadro que aqui vos falta. Perguntar não trava nada e não custa nada a quem está a pedir para entrar.",
+  "detail.modtools.joinRequests.banEvasion.escalateCta":
+    "Pedir à equipa da plataforma para ver",
+  "detail.modtools.joinRequests.banEvasion.escalateAria":
+    "Pedir à equipa da plataforma para ver {name}",
+  "detail.modtools.joinRequests.banEvasion.reEscalateCta":
+    "Pedir à equipa para ver de novo",
+  "detail.modtools.joinRequests.banEvasion.reEscalateAria":
+    "Pedir à equipa para ver de novo {name}",
+  "detail.modtools.joinRequests.banEvasion.note.label":
+    "Algo que a equipa deva saber (opcional)",
+  "detail.modtools.joinRequests.banEvasion.note.hint":
+    "Quem lê isto é a equipa da plataforma. A pessoa que pediu para entrar nunca lê. Enviar sem nota nenhuma já é um pedido completo.",
+  "detail.modtools.joinRequests.banEvasion.note.placeholder":
+    "O que te fez olhar.",
+  "detail.modtools.joinRequests.banEvasion.note.sendCta":
+    "Enviar à equipa da plataforma",
+  "detail.modtools.joinRequests.banEvasion.note.cancelCta": "Cancelar",
+  "detail.modtools.joinRequests.banEvasion.escalated.title":
+    "Com a equipa da plataforma",
+  "detail.modtools.joinRequests.banEvasion.escalated.open":
+    "Encaminhado para a equipa da plataforma a {date}",
+  // Nada avisa quem modera quando a equipa fecha um caso, por isso a copy diz
+  // onde voltar a olhar em vez de prometer que vos chega.
+  "detail.modtools.joinRequests.banEvasion.escalated.openNote":
+    "A partir daqui é com elas. Nada vos vai avisar, por isso voltem a esta fila para ver se já foi fechado.",
+  "detail.modtools.joinRequests.banEvasion.escalated.resolved":
+    "A equipa fechou o encaminhamento que fizeram a {date}",
+  // O que a equipa encontrou é o juízo entre comunidades que o sinal de um só
+  // bit existe para não revelar: "fechado" quer dizer que alguém olhou, e mais
+  // nada.
+  "detail.modtools.joinRequests.banEvasion.escalated.resolvedNote":
+    "Alguém olhou. O que essa pessoa encontrou fica com a equipa, e a decisão sobre este pedido continua a ser vossa. Voltem a pedir se aparecer algo novo.",
+  "detail.modtools.joinRequests.banEvasion.escalated.storedNoteLabel":
+    "A nota que a equipa tem",
+  "detail.modtools.joinRequests.banEvasion.escalation.checking":
+    "A verificar se isto já foi encaminhado.",
+  "detail.modtools.joinRequests.banEvasion.escalation.unavailable":
+    "Não conseguimos saber se isto já tinha sido encaminhado. Enviar outra vez é seguro: a equipa fica com um caso aberto por pessoa.",
+  // Encaminhar duas vezes com um caso aberto devolve a PRIMEIRA nota, por isso
+  // dizemos a quem modera que as palavras ficaram onde as escreveu.
+  "detail.modtools.joinRequests.banEvasion.noteReplaced":
+    "Esta pessoa já tinha sido encaminhada, por isso a nota que a equipa tem é a primeira. A vossa não foi acrescentada.",
+  "detail.modtools.joinRequests.banEvasion.sendFailed":
+    "Não conseguimos enviar isso à equipa da plataforma. Tenta outra vez.",
   "detail.modtools.reports.label": "Publicações denunciadas",
   "detail.modtools.reports.empty.title": "Tudo em ordem",
   "detail.modtools.queueError.title": "Não foi possível carregar esta fila",
@@ -471,8 +550,10 @@ export const communities: Catalog = {
     "{name} deixou de ser cotitular e continua na comunidade como membro.",
   "detail.modtools.toast.removed": "{name} foi removide.",
   "detail.modtools.confirm.removeMember.title": "Remover {name} da comunidade?",
+  // Uma remoção barra o regresso, e uma remoção sem prazo é um pedido de
+  // bloqueio PERMANENTE, que passa a precisar de duas assinaturas (PRD-25).
   "detail.modtools.confirm.removeMember.body":
-    "Perde o acesso às publicações, encontros e pessoas daqui. Pode voltar a pedir para entrar mais tarde.",
+    "Perde o acesso às publicações, encontros e pessoas daqui e fica barrade de voltar durante um período. Remover alguém não a barra para sempre por si só: isso precisa de uma segunda assinatura de quem é responsável, cotitular ou modera, e vais saber em que ficou esta remoção.",
   "detail.modtools.confirm.removeMember.confirmCta": "Remover pessoa",
   "detail.modtools.confirm.grantCoOwner.title": "Tornar {name} cotitular?",
   "detail.modtools.confirm.grantCoOwner.body":
@@ -599,6 +680,146 @@ export const communities: Catalog = {
   "detail.modtools.bans.liftedToast": "O bloqueio de {name} foi levantado.",
   "detail.modtools.bans.errorToast":
     "Não foi possível levantar esse bloqueio. Tenta novamente.",
+  // PRD-25. Um bloqueio com data de fim e uma proposta de permanência aberta
+  // é uma decisão diferente de um bloqueio já fechado.
+  "detail.modtools.bans.pendingRatificationNote":
+    "Alguém pediu que este bloqueio passe a permanente e está à espera de uma segunda assinatura de quem é responsável, cotitular ou modera. Até alguém assinar, o prazo acima é o bloqueio em vigor.",
+  "detail.modtools.bans.openRatificationCta": "Ver a proposta",
+
+  // ── Ferramentas de moderação · duração de um bloqueio e revisão ───────────
+  "detail.modtools.ban.term.permanent": "Permanente",
+  "detail.modtools.ban.term.until": "Até {date}",
+  "detail.modtools.ban.term.served": "Cumprido · terminou a {date}",
+  "detail.modtools.ban.term.pendingRatification": "Permanência proposta",
+  "detail.modtools.ban.editCta": "Editar bloqueio",
+  "detail.modtools.ban.edit.title": "O bloqueio de {name}",
+  "detail.modtools.ban.edit.sub":
+    "Define quanto tempo dura, indica a regra da casa em que assenta e reescreve o motivo registado.",
+  "detail.modtools.ban.edit.durationLegend": "Quanto tempo dura",
+  "detail.modtools.ban.edit.days_one": "{count} dia",
+  "detail.modtools.ban.edit.days_other": "{count} dias",
+  "detail.modtools.ban.edit.permanent": "Permanente",
+  "detail.modtools.ban.edit.durationHint":
+    "Um bloqueio com data de fim levanta-se sozinho quando o tempo acabar, por isso ninguém tem de se lembrar de o levantar.",
+  "detail.modtools.ban.edit.reasonLegend": "Motivo registado",
+  "detail.modtools.ban.edit.reasonPlaceholder":
+    "O que aconteceu, por tuas palavras.",
+  "detail.modtools.ban.edit.reasonHint":
+    "Até 500 caracteres. Fica junto à decisão, para que quem a rever mais tarde perceba em que assentou.",
+  "detail.modtools.ban.edit.cancel": "Cancelar",
+  "detail.modtools.ban.edit.saveCta": "Guardar alterações",
+  "detail.modtools.ban.edit.savedToast": "O bloqueio de {name} foi atualizado.",
+  "detail.modtools.ban.edit.errorToast":
+    "Não foi possível guardar essa alteração. Tenta novamente.",
+  // PRD-25. Escolher Permanente já não torna nada permanente: pede uma
+  // segunda assinatura de quem é responsável, cotitular ou modera, e a data
+  // de fim fica onde está até alguém assinar.
+  "detail.modtools.ban.edit.permanentPropose":
+    "Permanente (pede uma segunda assinatura)",
+  "detail.modtools.ban.edit.permanentHint":
+    "Um bloqueio permanente precisa de duas pessoas. Ao guardar, pedes a outra pessoa responsável, cotitular ou moderadora que assine, e a data de fim fica exatamente onde está até isso acontecer.",
+  "detail.modtools.ban.edit.proposedToast":
+    "Pediste que o bloqueio de {name} passe a permanente. Fica à espera de uma segunda assinatura e a data de fim mantém-se.",
+  "detail.modtools.ban.edit.noSecondSignatoryToast":
+    "Um bloqueio permanente precisa de uma segunda assinatura e esta comunidade não tem mais ninguém que a possa dar. O bloqueio mantém a data de fim. Define um prazo mais longo.",
+
+  // ── Ferramentas de moderação · bloqueios permanentes à espera de uma
+  //    segunda assinatura (PRD-25) ─────────────────────────────────────────
+  // A pessoa é removida e barrada pelo prazo de recurso desde o primeiro
+  // segundo. Só a PERMANÊNCIA espera, e todas as frases aqui têm de o dizer:
+  // quem pensar que não fazer nada readmite a pessoa recusa por omissão.
+  "detail.modtools.ratifications.label":
+    "Bloqueios permanentes à espera de uma segunda assinatura",
+  "detail.modtools.ratifications.intro":
+    "Um bloqueio permanente precisa de duas pessoas. Quem o pediu não o pode assinar, por isso fica aqui à espera de outra pessoa responsável, cotitular ou moderadora. A pessoa já saiu da comunidade e já está barrada, e isso mantém-se decida-se o que se decidir aqui.",
+  "detail.modtools.ratifications.windowNote":
+    "Uma proposta tem {hours} horas. Se ninguém assinar nesse tempo, caduca e o bloqueio fica em {days} dias, terminando sozinho. Nada nesta secção readmite alguém mais cedo.",
+  "detail.modtools.ratifications.error.title":
+    "Não conseguimos carregar o que está à espera",
+  "detail.modtools.ratifications.error.description":
+    "Isto é uma falha a carregar, por isso lê-a como desconhecido e não como uma lista vazia: pode estar um bloqueio permanente à tua espera agora mesmo. Tenta novamente.",
+  "detail.modtools.ratifications.error.retry": "Tentar novamente",
+  "detail.modtools.ratifications.empty.title":
+    "Não há nada à espera de assinatura",
+  "detail.modtools.ratifications.empty.description":
+    "Quando alguém aqui pedir um bloqueio permanente, ele fica nesta secção à espera de uma segunda pessoa responsável, cotitular ou moderadora que o assine.",
+  "detail.modtools.ratifications.title": "Bloqueio permanente de {name}",
+  "detail.modtools.ratifications.lapsed": "Caducou",
+  "detail.modtools.ratifications.lapsesAt": "Caduca a {date}",
+  "detail.modtools.ratifications.askedBy": "{name} pediu isto a {date}.",
+  "detail.modtools.ratifications.askedByGone":
+    "Pedido a {date}. Quem pediu já saiu.",
+  "detail.modtools.ratifications.noNote": "Não ficou escrito nenhum motivo.",
+  "detail.modtools.ratifications.serving":
+    "Neste momento: removide da comunidade e barrade de voltar até {date}.",
+  "detail.modtools.ratifications.servingPermanent":
+    "Neste momento: removide da comunidade e barrade sem data de fim.",
+  "detail.modtools.ratifications.ifNobodySigns":
+    "Se ninguém assinar, isto caduca e o bloqueio fica em {days} dias, terminando sozinho. Deixar ficar não readmite a pessoa mais cedo.",
+  "detail.modtools.ratifications.lapsedNote":
+    "Ninguém assinou a tempo, por isso esta proposta caducou. O bloqueio fica em {days} dias e termina sozinho.",
+  "detail.modtools.ratifications.ownProposal":
+    "Foste tu que pediste este bloqueio, por isso não podes ser tu a assiná-lo. Precisa de outra pessoa responsável, cotitular ou moderadora.",
+  "detail.modtools.ratifications.ratifyCta": "Confirmar o bloqueio permanente",
+  "detail.modtools.ratifications.declineCta": "Recusar",
+  "detail.modtools.ratifications.ratifiedToast":
+    "O bloqueio de {name} é agora permanente.",
+  "detail.modtools.ratifications.declinedToast":
+    "Recusaste o bloqueio permanente de {name}. O bloqueio fica em {days} dias.",
+  "detail.modtools.ratifications.errorToast":
+    "Não foi possível registar essa decisão. Tenta novamente.",
+  "detail.modtools.ratifications.refusal.ownProposal":
+    "Foste tu que pediste este bloqueio, por isso não podes ser tu a assiná-lo.",
+  "detail.modtools.ratifications.refusal.alreadyDecided":
+    "Este já foi decidido, caducou, ou o bloqueio foi levantado entretanto.",
+  "detail.modtools.ratifications.refusal.gone":
+    "Esta proposta já não está aqui.",
+  "detail.modtools.ratifications.confirm.ratifyTitle":
+    "Tornar permanente o bloqueio de {name}?",
+  "detail.modtools.ratifications.confirm.declineTitle":
+    "Recusar o bloqueio permanente de {name}?",
+  "detail.modtools.ratifications.confirm.ratifyBody":
+    "A tua é a segunda das duas assinaturas necessárias. O bloqueio perde a data de fim e {name} não pode voltar a esta comunidade. Levantá-lo mais tarde é uma decisão à parte, que qualquer pessoa responsável, cotitular ou moderadora pode tomar.",
+  "detail.modtools.ratifications.confirm.declineBody":
+    "{name} continua removide e continua barrade. O bloqueio mantém a data de fim que já tem, {days} dias a contar de quando foi aplicado, e termina sozinho nessa data. Escreve porquê, para quem pediu poder ler.",
+  "detail.modtools.ratifications.confirm.noteLabel": "A tua nota",
+  "detail.modtools.ratifications.confirm.ratifyNotePlaceholder":
+    "Opcional. O que quiseres que fique junto à decisão.",
+  "detail.modtools.ratifications.confirm.declineNotePlaceholder":
+    "Porque é que não assinas isto.",
+  "detail.modtools.ratifications.confirm.noteHint":
+    "Até 2000 caracteres. Fica registado com a tua decisão e quem pediu pode lê-lo.",
+  "detail.modtools.ratifications.confirm.cancel": "Cancelar",
+
+  // ── Ferramentas de moderação · o que a remoção fez mesmo (PRD-25) ─────────
+  // A rota responde com a sua própria frase e o diálogo mostra-a sem editar,
+  // porque é o servidor que sabe em qual dos três resultados a remoção caiu.
+  "detail.modtools.removalOutcome.pending.title":
+    "À espera de uma segunda assinatura",
+  "detail.modtools.removalOutcome.pending.body":
+    "A remoção está feita e o bloqueio já está em vigor. A parte permanente continua em aberto: tem de assinar outra pessoa responsável, cotitular ou moderadora, e não podes assinar a tua própria proposta. Se ninguém assinar, o bloqueio mantém a data de fim e termina sozinho.",
+  "detail.modtools.removalOutcome.pending.lapsesAt":
+    "A proposta caduca a {date} se ninguém a tiver assinado até lá.",
+  "detail.modtools.removalOutcome.noSecond.title":
+    "Este bloqueio não pode ficar permanente aqui",
+  "detail.modtools.removalOutcome.noSecond.body":
+    "Um bloqueio permanente precisa de duas assinaturas e esta comunidade não tem mais ninguém que possa dar a segunda. A remoção mantém-se e o bloqueio também, até à data abaixo. Para barrar alguém permanentemente, esta comunidade precisa de outra pessoa responsável, cotitular ou moderadora.",
+  "detail.modtools.removalOutcome.servingUntil":
+    "Barrade de voltar até {date}.",
+  "detail.modtools.removalOutcome.closeCta": "Fechar",
+  "detail.modtools.removalOutcome.openQueueCta": "Abrir a lista",
+
+  // ── Ferramentas de moderação · a regra da casa citada numa ação ───────────
+  "detail.modtools.rule.legend": "Regra da casa citada",
+  "detail.modtools.rule.noneWritten":
+    "Esta comunidade ainda não escreveu regras da casa, por isso não há nada para citar.",
+  "detail.modtools.rule.noneOption": "Sem regra citada",
+  "detail.modtools.rule.option": "Regra {number}: {text}",
+  "detail.modtools.rule.hint":
+    "Citar uma regra é opcional. Escolhe aquela em que esta decisão assenta, quando houver uma que sirva.",
+  "detail.modtools.rule.citation": "Regra da casa {number}",
+  "detail.modtools.rule.stale":
+    "As regras mudaram desde então. Esta é a regra {number} tal como estava na versão {version}.",
 
   // ── Ferramentas de moderação · convidar pessoas ───────────────────────────
   "detail.modtools.invites.label": "Convidar pessoas",
@@ -627,6 +848,139 @@ export const communities: Catalog = {
   "detail.modtools.invites.skip.banned": "Está barrade desta comunidade.",
 
   // ── Zona de perigo · o teu papel + ausência de quem é responsável ─────────
+
+  // ── Ferramentas de moderação · histórico de governação (PRD-26) ───────────
+  "detail.modtools.history.label": "Histórico de governação",
+  "detail.modtools.history.intro":
+    "Todas as ações de governação registadas nesta comunidade, das mais recentes para as mais antigas. Estas entradas são escritas pelo servidor e ninguém as pode editar ou apagar, aqui ou em qualquer outro sítio.",
+  "detail.modtools.history.filterLabel": "Filtrar por ação",
+  "detail.modtools.history.allActions": "Todas as ações",
+  "detail.modtools.history.staffOnly.title":
+    "Só a equipa desta comunidade lê isto",
+  "detail.modtools.history.staffOnly.description":
+    "O histórico de governação é para quem é responsável, cotitular ou modera esta comunidade.",
+  "detail.modtools.history.error.title":
+    "Não foi possível carregar o histórico",
+  "detail.modtools.history.error.description":
+    "Algo correu mal ao carregar o histórico. O que esta comunidade tem registado continua desconhecido até isto carregar. Tenta novamente e avisa-nos se continuar a acontecer.",
+  "detail.modtools.history.error.retry": "Tentar novamente",
+  "detail.modtools.history.empty.title": "Ainda não há nada registado",
+  "detail.modtools.history.empty.description":
+    "Mudanças de papel, remoções, banimentos, transferências de titularidade, congelamentos e alterações de definições aparecem aqui no momento em que acontecem.",
+  "detail.modtools.history.emptyFiltered.title": "Nada deste tipo",
+  "detail.modtools.history.emptyFiltered.description":
+    "Esta comunidade tem histórico de governação e nada corresponde à ação que escolheste. Limpa o filtro para ler o histórico todo.",
+  "detail.modtools.history.clearFilterCta": "Limpar o filtro",
+  "detail.modtools.history.pagerMeta": "{start} a {end} de {total}",
+  "detail.modtools.history.pagerPage": "Página {page} de {pageCount}",
+  "detail.modtools.history.prevPage": "Página anterior",
+  "detail.modtools.history.nextPage": "Página seguinte",
+
+  "detail.modtools.history.action.role_changed": "Papel alterado",
+  "detail.modtools.history.action.member_removed": "Membro removido",
+  "detail.modtools.history.action.member_banned": "Membro banido",
+  "detail.modtools.history.action.member_ban_proposed":
+    "Barramento permanente proposto",
+  "detail.modtools.history.action.member_ban_ratified":
+    "Barramento permanente assinado",
+  "detail.modtools.history.action.member_ban_declined":
+    "Barramento permanente recusado",
+  "detail.modtools.history.action.member_ban_hold_expired":
+    "Barramento permanente caducou sem assinatura",
+  "detail.modtools.history.action.ban_lifted": "Banimento levantado",
+  "detail.modtools.history.action.ownership_transferred":
+    "Titularidade transferida",
+  "detail.modtools.history.action.owner_auto_promoted":
+    "Nova pessoa responsável automaticamente",
+  "detail.modtools.history.action.frozen": "Congelada",
+  "detail.modtools.history.action.unfrozen": "Descongelada",
+  "detail.modtools.history.action.archived": "Arquivada",
+  "detail.modtools.history.action.unarchived": "Desarquivada",
+  "detail.modtools.history.action.settings_changed": "Definições alteradas",
+  "detail.modtools.history.action.card_program_enabled":
+    "Programa de cartão ativado",
+  "detail.modtools.history.action.card_program_disabled":
+    "Programa de cartão desativado",
+  "detail.modtools.history.action.card_suspended": "Cartão suspenso",
+  "detail.modtools.history.action.card_revoked": "Cartão revogado",
+  "detail.modtools.history.action.card_reinstated": "Cartão reposto",
+  "detail.modtools.history.action.card_replaced": "Cartão reemitido",
+  "detail.modtools.history.action.support_offered": "Apoio oferecido",
+  "detail.modtools.history.action.support_offer_answered": "Apoio respondido",
+
+  "detail.modtools.history.summary.role_changed": "O papel de {name} mudou",
+  "detail.modtools.history.summary.member_removed":
+    "{name} foi removida da lista de pessoas",
+  "detail.modtools.history.summary.member_left": "{name} saiu da comunidade",
+  "detail.modtools.history.summary.member_banned":
+    "{name} foi banida desta comunidade",
+  "detail.modtools.history.summary.ban_lifted":
+    "O banimento de {name} foi levantado",
+  "detail.modtools.history.summary.ownership_transferred":
+    "{name} passou a ser responsável pela comunidade",
+  "detail.modtools.history.summary.owner_auto_promoted":
+    "{name} passou a ser responsável pela comunidade automaticamente",
+  "detail.modtools.history.summary.frozen": "A comunidade foi congelada",
+  "detail.modtools.history.summary.unfrozen": "O congelamento foi levantado",
+  "detail.modtools.history.summary.archived": "A comunidade foi arquivada",
+  "detail.modtools.history.summary.unarchived":
+    "A comunidade foi recuperada do arquivo",
+  "detail.modtools.history.summary.settings_changed":
+    "As definições da comunidade mudaram",
+  "detail.modtools.history.summary.card_program_enabled":
+    "O programa de cartão de membro foi ativado",
+  "detail.modtools.history.summary.card_program_disabled":
+    "O programa de cartão de membro foi desativado",
+  "detail.modtools.history.summary.card_suspended":
+    "O cartão de membro de {name} foi suspenso",
+  "detail.modtools.history.summary.card_revoked":
+    "O cartão de membro de {name} foi revogado",
+  "detail.modtools.history.summary.card_reinstated":
+    "O cartão de membro de {name} foi reposto",
+  "detail.modtools.history.summary.card_replaced":
+    "O cartão de membro de {name} foi reemitido",
+  "detail.modtools.history.summary.support_offered":
+    "A equipa da QueerPulse ofereceu apoio a esta comunidade",
+  "detail.modtools.history.summary.support_offer_answered":
+    "A moderação respondeu a uma oferta de apoio",
+  "detail.modtools.history.summary.unknown": "{action}",
+  "detail.modtools.history.summary.unknownWithTarget": "{action}: {name}",
+
+  "detail.modtools.history.formerMember": "Uma pessoa que já não está aqui",
+  "detail.modtools.history.byLine": "por {name}",
+  "detail.modtools.history.byPlatform": "pela equipa da plataforma QueerPulse",
+  "detail.modtools.history.unattributed": "Sem pessoa identificada",
+  "detail.modtools.history.onDate": "a {date} às {time}",
+  "detail.modtools.history.platform.label": "Ação da plataforma",
+  "detail.modtools.history.platform.note":
+    "Foi a equipa da QueerPulse que fez isto, do lado da plataforma, por cima de quem é responsável e de quem modera esta comunidade.",
+
+  "detail.modtools.history.detail.role": "Papel",
+  "detail.modtools.history.detail.note": "Nota",
+  "detail.modtools.history.detail.reason": "Motivo",
+  "detail.modtools.history.detail.bannedAt": "Banimento aplicado",
+  "detail.modtools.history.detail.cardSerial": "Cartão",
+  "detail.modtools.history.role.owner": "Responsável",
+  "detail.modtools.history.role.coOwner": "Cotitular",
+  "detail.modtools.history.role.mod": "Moderação",
+  "detail.modtools.history.role.member": "Membro",
+  "detail.modtools.history.value.fromTo": "{from} para {to}",
+  "detail.modtools.history.value.on": "Ligado",
+  "detail.modtools.history.value.off": "Desligado",
+  "detail.modtools.history.value.empty": "Vazio",
+  "detail.modtools.history.value.notSet": "Sem valor",
+  "detail.modtools.history.field.name": "Nome",
+  "detail.modtools.history.field.purpose": "Propósito",
+  "detail.modtools.history.field.type": "Tipo",
+  "detail.modtools.history.field.whoFor": "Para quem é",
+  "detail.modtools.history.field.tagline": "Frase de apresentação",
+  "detail.modtools.history.field.accessTier": "Quem pode entrar",
+  "detail.modtools.history.field.rosterVisible": "Lista de pessoas visível",
+  "detail.modtools.history.field.features": "Funcionalidades",
+  "detail.modtools.history.field.rules": "Regras",
+  "detail.modtools.history.field.tags": "Etiquetas",
+  "detail.modtools.history.field.coverImageUrl": "Imagem de capa",
+
   "detail.dangerZone.yourRole.owner": "Esta comunidade é tua.",
   "detail.dangerZone.yourRole.coOwner":
     "És cotitular desta comunidade. Transferir a titularidade e arquivar continuam a caber a quem é responsável.",
@@ -905,6 +1259,7 @@ export const communities: Catalog = {
   "start.missing.consent": "a tua confirmação",
   "start.thread.backTo": "Voltar a {thread}",
   "start.thread.stepOf": "Passo {step} de {total} · <b>{thread}</b>",
+  "start.thread.stepOfAriaLabel": "Passo {step} de {total} · {thread}",
 
   // ── Texto dos painéis do fio condutor (PANELS) ────────────────────────────
   "start.panel.open.thread": "Abrir",
@@ -1296,7 +1651,7 @@ export const communities: Catalog = {
   "tag.polyamory-enm": "Poliamor & Não-Monogamia",
   "tag.leather-kink": "Couro & Kink",
   "tag.bear-cub": "Ursos & Cubs",
-  "tag.drag-performance": "Drag & Performance",
+  "tag.drag-performance": "Drag & Artes Performativas",
   "tag.beginner-friendly": "Para Iniciantes",
   "tag.in-person-meetups": "Encontros Presenciais",
   "tag.virtual-online": "Virtual/Online",

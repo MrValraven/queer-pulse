@@ -260,7 +260,7 @@ export const gatherings: Catalog = {
     "O estúdio sabia exatamente quem vinha. Não há mais nada a fazer.",
   "cancelled.rescheduleTitle": "A visita de {date} está aberta a confirmações",
   "cancelled.rescheduleBody":
-    "Podes garantir já o dia {date}. Normalmente {host} abre isto mais tarde, mas adiantámos por causa disto. <a>Salta para lá ↓</a>",
+    "Podes garantir já o dia {date}. Normalmente {host} abre isto mais tarde, mas adiantámos por causa disto. <a>Salta para lá</a>",
   "cancelled.concernTitle": "Algo não parece bem?",
   "cancelled.concernBody":
     "Se tens preocupações sobre o cancelamento ou queres assinalar um padrão, fala com a equipa",
@@ -429,7 +429,7 @@ export const gatherings: Catalog = {
   "create.hood.online": "Online",
   "create.hood.otherInLisbon": "Outro local em Lisboa",
 
-  // createGathering.data.ts — event languages
+  // createGathering.data.ts — gathering languages
   "create.lang.bilingual": "PT / EN bilingue",
   "create.lang.ptOnly": "Só português",
   "create.lang.enOnly": "Só inglês",
@@ -444,10 +444,10 @@ export const gatherings: Catalog = {
     "As informações de acessibilidade que forneci são exatas, tanto quanto sei.",
 
   // CreateGatheringPage.tsx
-  "create.eyebrow": "Publica o teu evento",
+  "create.eyebrow": "Publica o teu convívio",
   "create.title": "Cria o teu <em>convívio.</em>",
   "create.lead":
-    "Preenche os detalhes abaixo e o teu evento fica visível de imediato no quadro de convívios da QueerPulse.",
+    "Preenche os detalhes abaixo e o teu convívio fica visível de imediato no quadro de convívios da QueerPulse.",
   "create.toast.publishError":
     "Não foi possível publicar o teu convívio. Tenta novamente.",
   "create.toast.published": "O teu convívio está no ar",
@@ -457,7 +457,7 @@ export const gatherings: Catalog = {
   "create.success.accessLabel":
     "Acessibilidade mostrada às pessoas participantes",
   "create.success.viewCta": "Ver no quadro",
-  "create.success.eventCta": "Ver a página do teu evento",
+  "create.success.eventCta": "Ver a página do teu convívio",
   "create.nav.cancel": "Cancelar",
   "create.nav.back": "Voltar",
   "create.nav.publishHint": "Confirma as três caixas acima para publicar",
@@ -480,7 +480,7 @@ export const gatherings: Catalog = {
   "create.step1.sub":
     "Escolhe o formato. Isto determina alguns dos campos seguintes.",
   "create.step1.typeRequired": "Escolhe um formato para começar.",
-  "create.step1.titleLabel": "Título do evento",
+  "create.step1.titleLabel": "Título do convívio",
   "create.step1.titlePlaceholder":
     "Um título claro e específico que diz exatamente o que é",
   "create.step1.titleRequired":
@@ -511,7 +511,7 @@ export const gatherings: Catalog = {
   // RepeatsStep.tsx — step 2b: repetições (MSG-10)
   "create.step2b.title": "Isto <em>repete-se?</em>",
   "create.step2b.sub":
-    "Um convívio fixo, semanal ou mensal, em vez de um evento único. Cada data é publicada como o seu próprio convívio, com confirmação de presença e edição independentes.",
+    "Um convívio fixo que se repete todas as semanas ou todos os meses. Cada data é publicada como o seu próprio convívio, com confirmação de presença e edição independentes.",
   "create.step2b.toggle": "Este convívio repete-se",
   "create.step2b.cadenceLabel": "Com que frequência",
   "create.step2b.endTypeLabel": "Termina",
@@ -1141,6 +1141,10 @@ export const gatherings: Catalog = {
   "door.checkInsNotKept": "Já não guardamos",
   "door.checkInsNotKeptNote":
     "As entradas já não são guardadas em convívios passados. Apagamo-las 30 dias depois de o convívio terminar.",
+  // Ver a nota em EN: a mesma ausência, dita onde estavam os filtros de
+  // chegada da lista de convidados, com outras palavras.
+  "door.checkInsNotKeptFilters":
+    "Os filtros de chegada desapareceram porque apagámos as entradas deste convívio, por isso a lista mostra toda a gente.",
   // Ver a nota em EN: mostrado quando o servidor recusa um check-in num
   // convívio que já passou a janela de presenças.
   "door.checkInClosedNotice":

@@ -14,6 +14,12 @@ export interface PressKitResult {
   coverage: PressCoverageDTO[];
   contacts: PressContactDTO[];
   isLoading: boolean;
+  /** True when the press-kit read failed (DES-22). Each section must tell an
+   *  outage apart from an unpublished section, which is what an empty array
+   *  means here. */
+  isError: boolean;
+  /** Re-run the failed read, for the error state's retry. */
+  refetch: () => void;
 }
 
 /**
@@ -45,5 +51,7 @@ export function usePressKit(): PressKitResult {
     coverage: query.data?.coverage ?? [],
     contacts: query.data?.contacts ?? [],
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

@@ -105,7 +105,7 @@ export const forum: Catalog = {
   "search.ariaLabel": "Pesquisar no fórum",
   "search.clearAria": "Limpar pesquisa",
   "search.hint":
-    "Pesquisa nos títulos dos tópicos, não no texto das publicações e respostas.",
+    "Pesquisa apenas nos títulos dos tópicos. O texto das publicações e respostas fica de fora.",
 
   // ── ForumThreadList ─────────────────────────────────────────────────────
   "threadList.top": "Melhores",
@@ -157,6 +157,7 @@ export const forum: Catalog = {
   // ── ThreadComposer ──────────────────────────────────────────────────────
   "threadComposer.replyingTo": "A responder a <strong>{name}</strong>",
   "threadComposer.placeholder": "Escreve uma resposta…",
+  "threadComposer.textareaAria": "Escreve uma resposta a este tópico",
   "threadComposer.postReplyCta": "Publicar resposta",
 
   // ── ThreadOpCard ────────────────────────────────────────────────────────

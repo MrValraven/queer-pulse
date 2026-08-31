@@ -1,17 +1,11 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { submitIntake } from "../../shared/api/intakes";
-import { useScrollLock } from "../../shared/hooks";
+import { useDismiss } from "../../shared/components/ui";
 import { TOTAL_STEPS, type BudgetRow } from "./microGrants.data";
 import {
   AboutStep,
@@ -72,7 +66,10 @@ function useGrantAdvance(args: {
 export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  useScrollLock();
+  // Shared dialog behaviour: scroll lock, initial focus into the sheet, a Tab
+  // trap so a keyboard user cannot reach the page behind, focus restore to the
+  // trigger on close, and modal-stack-aware Escape.
+  const dialogRef = useDismiss(onClose);
   const [step, setStep] = useState(1);
   const [cat, setCat] = useState<number | null>(null);
   const [projName, setProjName] = useState("");
@@ -82,14 +79,6 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
     { id: 1, item: "", amount: "" },
   ]);
   const [checks, setChecks] = useState<Set<number>>(new Set());
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
 
   const total = useMemo(
     () => rows.reduce((acc, r) => acc + (parseFloat(r.amount) || 0), 0),
@@ -144,6 +133,8 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
       }}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={styles.sheet}
         role="dialog"
         aria-modal="true"

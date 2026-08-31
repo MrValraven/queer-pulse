@@ -1,6 +1,11 @@
 import { FiArrowRight, FiHeart } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, EmptyState, Reveal } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  LoadErrorState,
+  Reveal,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -17,7 +22,10 @@ export function TherapistsSection() {
   // surfaces the demo therapist persona(s); live mode queries the real
   // persona directory. `comingSoon` is only true live+empty — never surface
   // bookable fake therapists against the real API.
-  const { cards, comingSoon } = useTherapistPersonas();
+  // A failed fetch is its own state (DES-22). `comingSoon` is now reserved
+  // for a request that succeeded and came back empty, so an outage no longer
+  // reads as "this directory is still being built".
+  const { cards, comingSoon, isError, refetch } = useTherapistPersonas();
   return (
     <section
       className={`${styles.section} ${styles.sectionPaper}`}
@@ -36,7 +44,18 @@ export function TherapistsSection() {
             components={{ a: <Link to={routes.contact} /> }}
           />
         </Reveal>
-        {comingSoon ? (
+        {isError && cards.length === 0 ? (
+          <LoadErrorState
+            onRetry={refetch}
+            title={
+              <Translation
+                i18nKey="resources:therapists.loadError.title"
+                components={{ em: <em /> }}
+              />
+            }
+            description={t("resources:therapists.loadError.body")}
+          />
+        ) : comingSoon ? (
           <EmptyState
             icon={<FiHeart />}
             title={t("resources:therapistProfilePage.live.title")}

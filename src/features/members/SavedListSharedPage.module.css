@@ -7,7 +7,7 @@
 .panel {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 32px 34px;
 }
 @media (--xs) {
@@ -17,7 +17,7 @@
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -35,7 +35,7 @@
   overflow-wrap: anywhere;
 }
 .count {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin: 0 0 24px;
 }
@@ -52,16 +52,16 @@
   align-items: start;
   padding: 14px 16px;
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 .rowBadge {
   width: 30px;
   height: 30px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 800;
   letter-spacing: 0.04em;
   background: rgba(var(--plum-rgb), 0.08);
@@ -69,21 +69,21 @@
 }
 .rowTitle {
   display: block;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
   overflow-wrap: anywhere;
 }
 .rowMeta {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-top: 2px;
   overflow-wrap: anywhere;
 }
 .rowBlurb {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
   margin-top: 6px;
@@ -93,7 +93,7 @@
   margin: 26px 0 0;
   padding-top: 18px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -116,7 +116,7 @@
   margin: 0 0 10px;
 }
 .goneBody {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.7;
   max-width: 46ch;
@@ -127,6 +127,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }

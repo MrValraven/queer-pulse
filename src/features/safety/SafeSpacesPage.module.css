@@ -36,7 +36,7 @@
   pointer-events: none;
 }
 .cat {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -60,7 +60,7 @@
   font-weight: 400;
 }
 .lead {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 54ch;
   margin-top: 22px;
@@ -82,7 +82,7 @@
   line-height: 1;
 }
 .stat .l {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.52);
   margin-top: 3px;
 }
@@ -130,7 +130,7 @@
 }
 .bvName {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -138,13 +138,13 @@
   line-height: 1.2;
 }
 .bvSub {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--text-11);
+  color: rgba(var(--cream-rgb), 0.7);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 .badgeCaption {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   text-align: center;
   margin-top: 20px;
@@ -165,7 +165,7 @@
   color: var(--jade);
 }
 .beText p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.7;
   margin-bottom: 22px;
@@ -188,12 +188,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: var(--text-11);
   flex: none;
   margin-top: 2px;
 }
 .critText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.5;
 }
@@ -224,7 +224,7 @@
   color: var(--jade);
 }
 .dirUpdated {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   margin-top: 6px;
 }
@@ -240,7 +240,7 @@
   text-align: center;
 }
 .browseCtaLead {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.6;
   max-width: 56ch;
@@ -270,7 +270,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 38px -20px rgba(var(--plum-rgb), 0.34);
+    box-shadow: var(--shadow-lift);
   }
 }
 @media (hover: hover) {
@@ -285,12 +285,12 @@
   gap: 12px;
 }
 .venueType {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   align-self: flex-start;
 }
 .typeBar,
@@ -321,7 +321,7 @@
   line-height: 1.15;
 }
 .hood {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -335,7 +335,7 @@
   flex: none;
 }
 .desc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   flex: 1;
@@ -346,10 +346,10 @@
   gap: 6px;
 }
 .tag {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 4px 10px;
   font-weight: 500;
 }
@@ -362,14 +362,14 @@
   margin-top: auto;
 }
 .reviews {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 .reviews strong {
   color: var(--jade);
 }
 .flag {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   cursor: pointer;
   transition: color 0.2s var(--ease);
@@ -407,7 +407,7 @@
 .howCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px;
 }
 .howNum {
@@ -419,13 +419,13 @@
   margin-bottom: 12px;
 }
 .howTitle {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 7px;
 }
 .howDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
 }
@@ -435,7 +435,7 @@
 }
 .nomBox {
   background: var(--plum);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 48px;
   color: rgba(var(--cream-rgb), 1);
   display: grid;
@@ -461,13 +461,13 @@
   color: var(--jade);
 }
 .nomBox p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.68;
 }
 .nomFlagNote {
   margin-top: 24px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.5);
   line-height: 1.65;
 }
@@ -480,10 +480,10 @@
 .nomSelect,
 .nomTextarea {
   border: 1.5px solid rgba(var(--cream-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 16px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   outline: none;
@@ -495,7 +495,7 @@
 .nomSelect:focus,
 .nomTextarea:focus {
   border-color: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.22);
+  box-shadow: var(--ring-jade);
 }
 .nomInput::placeholder,
 .nomTextarea::placeholder {
@@ -515,7 +515,7 @@
   line-height: 1.55;
 }
 .nomError {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   /* `--coral` has never existed: the coral token is `--accent`, so this error
      text was falling back to inherited ink and reading as ordinary body copy.
@@ -524,10 +524,10 @@
 }
 .nomBtn {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   padding: 13px 26px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--jade);
   color: rgba(var(--cream-rgb), 1);
   border: none;
@@ -570,7 +570,7 @@
   color: var(--accent);
 }
 .removedHead p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.7;
 }
@@ -594,9 +594,9 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-left: 3px solid var(--accent);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 16px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -614,7 +614,7 @@
 .removedCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
   display: flex;
   flex-direction: column;
@@ -630,7 +630,7 @@
 @media (hover: hover) {
   .removedCard:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 36px -22px rgba(var(--plum-rgb), 0.34);
+    box-shadow: var(--shadow-lift);
     border-color: rgba(var(--accent-rgb), 0.4);
   }
 }
@@ -641,20 +641,20 @@
   gap: 12px;
 }
 .rcType {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-40);
 }
 .rcBadge {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.12);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 3px 9px;
 }
 .rcName {
@@ -673,7 +673,7 @@
   }
 }
 .rcReason {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   flex: 1;
@@ -685,7 +685,7 @@
   gap: 12px;
   padding-top: 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .rcLink {
@@ -736,7 +736,7 @@
   color: var(--jade);
 }
 .nomThanks .nomThanksText {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.7;
   margin-bottom: 14px;
@@ -747,7 +747,7 @@
   font-weight: 600;
 }
 .nomThanks .nomThanksSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.55);
   line-height: 1.65;
   margin-bottom: 26px;

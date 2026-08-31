@@ -70,3 +70,50 @@
      the HIT AREA, not the ink: see the `tap-target` helper in base.css. */
   --tap-min: 44px;
 }
+
+/* ── Corner radius scale (numeric primitives) ───────────────────────────────
+   Same story as the type scale: the six named radii above describe the roles
+   the design has names for, and the app shipped 2,724 literal radii over 31
+   distinct values against 597 token uses — 12px in 358 places, 14px in 322,
+   18px in 210, 16px in 210, 10px in 200. Sibling surfaces rounded differently
+   for no reason, and `src/shared/components/ui` alone carried 16 different
+   literal radii, so the primitives did not agree with each other.
+
+   One token per step actually in use, at the value that was already shipping.
+   Prefer a role name (--radius-card, --radius-panel, --radius-tag, --radius-pill)
+   when one fits; the numeric steps exist for the sizes no role covers.
+
+   Anything above 30px is an organic blob shape, not a corner: those stay
+   literal and are budgeted in scripts/check-css-scale.mjs. */
+:root {
+  --radius-1: 1px;
+  --radius-1-5: 1.5px;
+  --radius-2: 2px;
+  --radius-3: 3px;
+  --radius-4: 4px;
+  --radius-5: 5px;
+  --radius-6: 6px;
+  --radius-7: 7px;
+  --radius-8: 8px;
+  --radius-9: 9px;
+  --radius-10: 10px;
+  --radius-11: 11px;
+  --radius-12: 12px;
+  --radius-13: 13px;
+  --radius-14: 14px;
+  --radius-15: 15px;
+  --radius-16: 16px;
+  --radius-18: 18px;
+  --radius-20: 20px;
+  --radius-22: 22px;
+  --radius-24: 24px;
+  --radius-26: 26px;
+  --radius-28: 28px;
+  --radius-30: 30px;
+
+  /* The role names re-pointed at the scale. Values unchanged. */
+  --radius-tag: var(--radius-7);
+  --radius-badge: var(--radius-14);
+  --radius-panel: var(--radius-20);
+  --radius-card: var(--radius-22);
+}

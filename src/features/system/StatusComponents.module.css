@@ -11,7 +11,7 @@
   gap: 12px;
   background: rgba(var(--jade-rgb), 0.1);
   border: 1.5px solid rgba(var(--jade-rgb), 0.28);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 11px 24px;
   margin-bottom: 36px;
 }
@@ -28,7 +28,7 @@
 @keyframes opPulse {
   0%,
   100% {
-    box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.2);
+    box-shadow: var(--ring-jade);
   }
   50% {
     box-shadow: 0 0 0 7px rgba(var(--jade-rgb), 0);
@@ -37,7 +37,7 @@
 
 .overallLabel {
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--jade);
   letter-spacing: -0.01em;
 }
@@ -58,7 +58,7 @@
 }
 
 .heroSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   margin-top: 14px;
 }
@@ -74,7 +74,7 @@
 .svcCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px 20px;
   display: flex;
   align-items: center;
@@ -88,18 +88,18 @@
 @media (hover: hover) {
   .svcCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 28px -14px rgba(var(--plum-rgb), 0.16);
+    box-shadow: var(--shadow-lift);
   }
 }
 
 .svcName {
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
 }
 
 .svcDesc {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 2px;
 }
@@ -108,9 +108,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
   white-space: nowrap;
   flex: none;
@@ -149,12 +149,12 @@
 
 .uptimeName {
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
 .uptimePct {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--jade);
 }
@@ -168,7 +168,7 @@
 
 .ubar {
   flex: 1;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   background: rgba(var(--jade-rgb), 0.65);
   position: relative;
   transition: opacity 0.15s;
@@ -201,20 +201,20 @@
     transform: translateX(-50%);
     background: var(--plum);
     color: rgba(var(--cream-rgb), 1);
-    font-size: 11px;
+    font-size: var(--text-11);
     font-weight: 600;
     padding: 4px 9px;
-    border-radius: 7px;
+    border-radius: var(--radius-7);
     white-space: nowrap;
     pointer-events: none;
-    z-index: 10;
+    z-index: var(--z-lightbox);
   }
 }
 
 .uptimeAxis {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   font-weight: 500;
   margin-top: -18px;
@@ -270,7 +270,7 @@
 }
 
 .incDate {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -281,14 +281,14 @@
 .incTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
 
 .incText {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   margin-bottom: 10px;
@@ -299,12 +299,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .incTagResolved {
@@ -340,7 +340,7 @@
 }
 
 .subStrip p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.52);
 }
 
@@ -353,10 +353,10 @@
 .subInput {
   border: 1.5px solid rgba(var(--cream-rgb), 0.2);
   background: rgba(var(--cream-rgb), 0.08);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 11px 18px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 1);
   min-width: 210px;
   transition: border-color 0.2s var(--ease);
@@ -369,13 +369,13 @@
 .subInput:focus-visible {
   outline: none;
   border-color: rgba(var(--cream-rgb), 0.48);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
+  box-shadow: var(--ring-accent-strong);
 }
 
 /* ── Outro CTA ── */
 /* ── Shared ── */
 .sectionEye {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;

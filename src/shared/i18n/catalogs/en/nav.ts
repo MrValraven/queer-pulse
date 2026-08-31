@@ -25,7 +25,6 @@ export const nav: Catalog = {
 
   // Primary destinations
   members: "Members",
-  gatherings: "Gatherings",
   forum: "Forum",
   calendar: "Calendar",
   communities: "Communities & Collectives",
@@ -36,4 +35,5 @@ export const nav: Catalog = {
   messages: "Messages",
   places: "Places",
   resources: "Resources",
+  about: "About",
 };

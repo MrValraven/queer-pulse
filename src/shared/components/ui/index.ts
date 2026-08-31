@@ -8,6 +8,7 @@ export { SectionHead } from "./SectionHead";
 export { VisibilityBadge, type VisibilityMode } from "./VisibilityBadge";
 export { SkeletonLine, SkeletonAvatar, SkeletonCard } from "./Skeleton";
 export { EmptyState } from "./EmptyState";
+export { LoadErrorState, type LoadErrorStateProps } from "./LoadErrorState";
 export { ImageSlot, type ImageSlotTint } from "./ImageSlot";
 export { Reveal } from "./Reveal";
 export { FadeIn } from "./FadeIn";

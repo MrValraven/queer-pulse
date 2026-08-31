@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
@@ -25,7 +26,18 @@ export interface SearchDataResult {
   signInRequired: boolean;
   /** True while a live search request is in flight. */
   loading: boolean;
+  /**
+   * True when the live search request failed. A failed request must be
+   * presented as an outage with a retry, never as `0 results for "maria"`
+   * (DES-23): the query was fine, the request never landed.
+   */
+  isError: boolean;
+  /** Re-runs the failed search. Wire it to the error state's retry button. */
+  refetch: () => void;
 }
+
+/** Stable no-op retry for the modes that never issue a request. */
+const noRetry = () => {};
 
 const matchesStatic = (item: SearchItem, needle: string) =>
   `${item.name} ${item.sub} ${item.kw}`.toLowerCase().includes(needle);
@@ -86,19 +98,43 @@ export function useSearchData(
     queryFn: getTopics,
   });
 
+  // `refetch` off react-query is referentially stable, so the retry handed to
+  // the error panel stays stable too.
+  const { refetch: refetchSearch } = searchQuery;
+  const refetch = useCallback(() => {
+    void refetchSearch();
+  }, [refetchSearch]);
+
   if (demoMode) {
+    // Demo serves the mock corpus synchronously: there is no request to fail.
     return {
       data: SEARCH_DATA,
       recents: RECENTS,
       signInRequired: false,
       loading: false,
+      isError: false,
+      refetch: noRetry,
     };
   }
   if (checking) {
-    return { data: [], recents: [], signInRequired: false, loading: true };
+    return {
+      data: [],
+      recents: [],
+      signInRequired: false,
+      loading: true,
+      isError: false,
+      refetch: noRetry,
+    };
   }
   if (!loggedIn) {
-    return { data: [], recents: [], signInRequired: true, loading: false };
+    return {
+      data: [],
+      recents: [],
+      signInRequired: true,
+      loading: false,
+      isError: false,
+      refetch: noRetry,
+    };
   }
 
   const staticHits = needle
@@ -119,5 +155,10 @@ export function useSearchData(
     recents: readRecents(),
     signInRequired: false,
     loading: searchQuery.isFetching,
+    // Gated on `needle` as well as the query's own flag: while the debounce
+    // catches up with a just-cleared input, the failed keystroke's query entry
+    // is still the active one, and the browse view must not wear its error.
+    isError: Boolean(needle) && searchQuery.isError,
+    refetch,
   };
 }

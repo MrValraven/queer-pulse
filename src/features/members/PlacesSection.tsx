@@ -5,7 +5,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDirectoryListings } from "../marketing/listBusiness/api/useDirectoryListings";
 import { CoManagerInvitesInbox } from "../marketing/listBusiness/coManagers/CoManagerInvitesInbox";
 import { routes } from "../../app/routeMap";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { submittedToPlace } from "../marketing/api/directory.adapters";
 import { useMemberListings } from "./api/useMemberListings";
 import { PlacesGrid } from "./PlacesGrid";
@@ -33,9 +33,23 @@ export function PlacesSection({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const { submitted, withdrawListing } = useDirectoryListings();
+  const {
+    submitted,
+    withdrawListing,
+    isError: hasOwnListingsFetchFailed,
+    refetch: refetchOwnListings,
+  } = useDirectoryListings();
   // Visitor source: demo → static registry, live → GET /directory/by-member/:slug.
-  const visitorPlaces = useMemberListings(memberSlug);
+  const visitorListings = useMemberListings(memberSlug);
+  const visitorPlaces = visitorListings.places;
+  // A failed visitor fetch gets its own panel. Rendering nothing here would
+  // tell everyone who lands on the profile that this member runs no places,
+  // which is a claim about them made out of our own outage (DES-22).
+  const hasVisitorFetchFailed = !isSelf && visitorListings.isError;
+  // The owner's own grid has the same failure shape: a failed GET /listings/mine
+  // renders as "you have no places" over a "list your business" CTA, telling an
+  // owner their listing is gone when the request merely failed (DES-22).
+  const hasOwnFetchFailed = isSelf && hasOwnListingsFetchFailed;
   // Owner source: this member's own submissions from GET /listings/mine, which
   // also returns the listings they were invited to help run. A co-managed one
   // belongs to somebody else, so it matches neither the submitter test nor the
@@ -63,7 +77,7 @@ export function PlacesSection({
   // Visitors see nothing rather than an empty shell; the owner gets a prompt.
   // An owner with no places of their own may still have an invitation waiting,
   // so the section stays for them either way.
-  if (places.length === 0 && !isSelf) return null;
+  if (places.length === 0 && !isSelf && !hasVisitorFetchFailed) return null;
 
   // A live listing addresses its own ref for edit and delete; both need the
   // same owner + live-mode + real-ref gate.
@@ -84,7 +98,20 @@ export function PlacesSection({
     <section id="places" className={`${styles.section} wrap`}>
       {isSelf && <CoManagerInvitesInbox />}
 
-      {places.length === 0 ? (
+      {hasVisitorFetchFailed || hasOwnFetchFailed ? (
+        <LoadErrorState
+          onRetry={
+            hasOwnFetchFailed ? refetchOwnListings : visitorListings.refetch
+          }
+          title={
+            <Translation
+              i18nKey="members:places.loadError.title"
+              components={{ em: <em /> }}
+            />
+          }
+          description={t("members:places.loadError.body")}
+        />
+      ) : places.length === 0 ? (
         <EmptyState
           title={t("members:places.empty.title")}
           description={t("members:places.empty.description")}

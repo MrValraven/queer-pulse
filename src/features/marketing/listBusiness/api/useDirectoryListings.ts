@@ -25,7 +25,8 @@ export function useDirectoryListings() {
   const { demoMode } = useDemoMode();
   const { local, withdrawn, addListing, withdrawListing } =
     useDirectoryListingsActions();
-  const { items: serverItems } = useAllMyListings().data ?? {
+  const myListingsQuery = useAllMyListings();
+  const { items: serverItems } = myListingsQuery.data ?? {
     items: [],
     total: 0,
   };
@@ -55,5 +56,15 @@ export function useDirectoryListings() {
     return merged;
   }, [demoMode, local, serverItems, withdrawn]);
 
-  return { submitted, addListing, withdrawListing };
+  return {
+    submitted,
+    addListing,
+    withdrawListing,
+    /** True when the server read of the member's own listings failed (DES-22).
+     *  A grid that branches on `submitted.length === 0` alone tells an owner
+     *  they have no places when the request merely failed. */
+    isError: myListingsQuery.isError,
+    /** Re-run the failed read, for the error state's retry. */
+    refetch: () => void myListingsQuery.refetch(),
+  };
 }

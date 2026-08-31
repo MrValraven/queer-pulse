@@ -107,7 +107,7 @@
   .feature:hover {
     border-color: color-mix(in srgb, var(--accent-tint) 45%, transparent);
     transform: translateY(-3px);
-    box-shadow: 0 12px 30px -20px rgba(var(--line-rgb), 0.5);
+    box-shadow: var(--shadow-lift);
   }
 }
 /* Reduced motion: `transition: none` drops the --accent-tint/--accent-on
@@ -267,7 +267,7 @@
 .featureLink:focus-visible {
   outline: 2px solid var(--accent-tint);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 
 .featureTagline {
@@ -470,8 +470,9 @@ a.featuredStripLink:focus-visible {
   border-color: var(--plum);
 }
 .chip:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 @media (prefers-reduced-motion: reduce) {
   .chip {
@@ -495,7 +496,7 @@ a.featuredStripLink:focus-visible {
   text-align: left;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
   color: var(--ink);
   font-family: var(--sans);
@@ -519,7 +520,7 @@ a.featuredStripLink:focus-visible {
   top: 0;
   bottom: 0;
   width: 4px;
-  border-radius: 12px 0 0 12px;
+  border-radius: var(--radius-12) 0 0 var(--radius-12);
   background: var(--accent-tint);
 }
 @media (hover: hover) {
@@ -541,8 +542,16 @@ a.featuredStripLink:focus-visible {
     color-mix(in srgb, var(--accent-tint) 45%, transparent);
 }
 .row:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* The selected row's inset ring lives at the same specificity above, so the
+   focus rule would otherwise erase it for as long as the row holds focus. */
+.row[aria-selected="true"]:focus-visible {
+  box-shadow:
+    var(--ring-cream),
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-tint) 45%, transparent);
 }
 /* Reduced motion: only border-color keeps a (subtle, non-transform) transition;
    this shorthand replaces the base list, so --accent-tint/--accent-on also
@@ -673,9 +682,10 @@ a.featuredStripLink:focus-visible {
   }
 }
 .more:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
 }
 @media (prefers-reduced-motion: reduce) {
   .more {
@@ -754,8 +764,16 @@ a.featuredStripLink:focus-visible {
     color-mix(in srgb, var(--accent-tint) 45%, transparent);
 }
 .mobileSummary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* The expanded row's inset ring out-specifies the rule above, so the halo needs
+   its own rule at matching specificity to survive on an open row. */
+.mobileRow[data-expanded="true"] .mobileSummary:focus-visible {
+  box-shadow:
+    var(--ring-cream),
+    inset 0 0 0 1px color-mix(in srgb, var(--accent-tint) 45%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {
   .mobileSummary {
@@ -814,6 +832,43 @@ a.featuredStripLink:focus-visible {
   from {
     opacity: 0;
     transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Local copies of shared keyframes ──
+   CSS Modules rewrites every animation NAME it sees here into a file-scoped
+   hash, including names whose @keyframes lives in global effects.css. The
+   reference then resolves to nothing and the animation silently never runs,
+   with no error anywhere. A keyframe used from a module has to be declared in
+   that module. Keep these in step with src/styles/tokens/effects.css. */
+@keyframes qpPersonaInDown {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes qpPersonaInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes qpGridIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
   to {
     opacity: 1;

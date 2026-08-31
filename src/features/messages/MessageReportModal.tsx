@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
@@ -57,7 +58,7 @@ export function MessageReportModal({
           // rolling flood cap answers with its own member-facing explanation,
           // which `describeReportError` shows in place of the generic line.
           showToast(
-            describeReportError(error, t("safety:flag.error")),
+            describeReportError(error, t("safety:reportPerson.error")),
             "error",
           );
         },
@@ -68,15 +69,20 @@ export function MessageReportModal({
   if (done) {
     return (
       <Modal
-        title={t("safety:flag.success.title")}
+        title={
+          <Translation
+            i18nKey="safety:reportPerson.success.title"
+            components={{ em: <em /> }}
+          />
+        }
         onClose={onClose}
         footer={
           <Button variant="ghost" onClick={onClose}>
-            {t("safety:flag.success.doneCta")}
+            {t("safety:reportPerson.success.doneCta")}
           </Button>
         }
       >
-        <p>{t("safety:flag.success.body")}</p>
+        <p>{t("safety:reportPerson.success.body")}</p>
       </Modal>
     );
   }
@@ -85,11 +91,11 @@ export function MessageReportModal({
     <Modal
       title={t("messages:report.title")}
       onClose={onClose}
-      sub={t("safety:flag.form.lead")}
+      sub={t("safety:reportPerson.form.lead")}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            {t("safety:flag.form.cancelCta")}
+            {t("safety:reportPerson.form.cancelCta")}
           </Button>
           <Button
             variant="primary"
@@ -97,14 +103,14 @@ export function MessageReportModal({
             disabled={!canSubmit || createReport.isPending}
           >
             {createReport.isPending
-              ? t("safety:flag.form.submitting")
-              : t("safety:flag.form.submitCta")}
+              ? t("safety:reportPerson.form.submitting")
+              : t("safety:reportPerson.form.submitCta")}
           </Button>
         </>
       }
     >
       <div className={styles.reportLabel}>
-        {t("safety:flag.form.concernLabel")}
+        {t("safety:reportPerson.form.reasonLabel")}
       </div>
       <div className={styles.reportOpts}>
         {reasons.map((option) => (
@@ -129,19 +135,21 @@ export function MessageReportModal({
         ))}
       </div>
       <label className={styles.reportLabel} htmlFor={detailFieldId}>
-        {t("safety:flag.form.detailLabel")}
+        {t("safety:reportPerson.form.detailLabel")}
       </label>
       <textarea
         id={detailFieldId}
         className={styles.reportTextarea}
-        placeholder={t("safety:flag.form.detailPlaceholder")}
+        placeholder={t("safety:reportPerson.form.detailPlaceholder")}
         value={detail}
         onChange={(event) => setDetail(event.target.value)}
       />
       <div className={styles.reportCounter}>
         {charsLeft > 0
-          ? t("safety:flag.form.charsRemaining", { count: charsLeft })
-          : t("safety:flag.form.charsCount", { count: detail.trim().length })}
+          ? t("safety:reportPerson.form.charsRemaining", { count: charsLeft })
+          : t("safety:reportPerson.form.charsCount", {
+              count: detail.trim().length,
+            })}
       </div>
     </Modal>
   );

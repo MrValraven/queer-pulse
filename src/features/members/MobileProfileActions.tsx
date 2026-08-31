@@ -5,6 +5,7 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
+import { useIncomingRequestActions } from "../connect/useIncomingRequestActions";
 import { useVouch } from "../../app/providers/useVouch";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
@@ -33,7 +34,14 @@ export function MobileProfileActions({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { connected, contact } = useMemberContact(profile.slug);
+  const { connected, hasIncomingRequest, contact } = useMemberContact(
+    profile.slug,
+  );
+  // PRD-03, the same three states the desktop hero branches on.
+  const { accept, decline, isAnswering } = useIncomingRequestActions(
+    profile.slug,
+    profile.first,
+  );
   const { openVouch, hasVouched, removeVouch } = useVouch();
   const vouched = hasVouched(profile.slug);
   const [helloOpen, setHelloOpen] = useState(false);
@@ -58,6 +66,12 @@ export function MobileProfileActions({
     <Button size="lg" disabled>
       {t("members:profile.hero.sayHelloCta")}
     </Button>
+  ) : hasIncomingRequest ? (
+    // They asked first: the primary answers them. Decline sits in the second
+    // row below, where this layout already keeps its secondary controls.
+    <Button size="lg" onClick={() => void accept()} disabled={isAnswering}>
+      {t("members:profile.hero.acceptRequestCta", { first: profile.first })}
+    </Button>
   ) : (
     <Button
       size="lg"
@@ -78,7 +92,16 @@ export function MobileProfileActions({
       <div className={styles.actionStack}>
         <div className={styles.primaryRow}>{primary}</div>
         <div className={styles.secondaryRow}>
-          {vouched ? (
+          {hasIncomingRequest && !asVisitor ? (
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => void decline()}
+              disabled={isAnswering}
+            >
+              {t("members:profile.hero.declineRequestCta")}
+            </Button>
+          ) : vouched ? (
             <span className={styles.vouchedPill}>
               <FiCheck aria-hidden />
               {t("members:profile.hero.vouchedShort")}

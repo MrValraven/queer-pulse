@@ -24,11 +24,11 @@
   width: 100%;
   font-family: var(--sans);
   /* >=16px so iOS Safari never zooms the viewport on focus. */
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 11px 16px 11px 40px;
   outline: none;
   transition:
@@ -40,7 +40,7 @@
 }
 .input:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
 }
 
 .clear {
@@ -71,5 +71,16 @@
   .input,
   .clear {
     transition: none;
+  }
+}
+
+/* Dark theme — see Calendar.module.css: the clear chip's disc is a --plum-rgb
+   tint, which does not flip. */
+:global([data-theme="dark"]) .clear {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .clear:hover {
+    background: rgba(var(--cream-rgb), 0.18);
   }
 }

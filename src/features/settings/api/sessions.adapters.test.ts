@@ -179,7 +179,20 @@ describe("sessionResponseToSession", () => {
       deviceType: "desktop",
       signedIn: "3 hours ago",
       lastActivity: undefined,
+      // The raw UA travels alongside the human `device` label on purpose: the
+      // card keeps it inside its collapsed technical-detail disclosure, for a
+      // member telling apart two devices that share one coarse label.
+      userAgent: MAC_SAFARI,
     });
+  });
+
+  it("carries no user agent at all when the client sent none", () => {
+    // An empty string would open the card's disclosure onto nothing, so the
+    // field is dropped rather than passed through blank.
+    expect(
+      sessionResponseToSession(response({ userAgent: "" }), t, fmt, now)
+        .userAgent,
+    ).toBeUndefined();
   });
 
   it("shows last activity when the device came back after signing in", () => {

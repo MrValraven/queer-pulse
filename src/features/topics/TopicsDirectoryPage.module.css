@@ -11,7 +11,7 @@
   margin-bottom: 24px;
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -31,7 +31,7 @@
   margin: 0;
 }
 .sub {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 60ch;
@@ -69,7 +69,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+    box-shadow: var(--shadow-lift);
   }
   .card:hover .cardName {
     color: var(--accent-ink);
@@ -103,7 +103,7 @@
 .cardName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -111,7 +111,7 @@
 }
 
 .cardDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-top: 8px;
@@ -132,7 +132,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .cardCount {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
   font-weight: 600;
 }

@@ -1,0 +1,67 @@
+/**
+ * The on-demand ban-evasion check in the admin member drawer.
+ *
+ * Everything here is a quiet status line under the section's own hint. The
+ * assessment itself is rendered by `AdminBanEvasionFlag`, which owns its own
+ * panel styling, so this module only dresses the states around it: waiting,
+ * cleared, and failed.
+ */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.status {
+  margin: 10px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+
+/* A cleared result is a stated outcome, so it gets a jade rule rather than
+   simply disappearing into the hint above it. */
+.clear {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-left: 3px solid var(--jade);
+  border-radius: var(--radius-10);
+  background: rgba(var(--line-rgb), 0.04);
+  font-size: var(--text-13);
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+/*
+ * A failed check must never read like a clean result. It gets the loudest
+ * treatment on this section on purpose: coral rule, coral icon, and copy that
+ * says plainly that nothing was checked.
+ */
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-left: 3px solid var(--accent-ink);
+  border-radius: var(--radius-10);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.errorIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+
+.errorText {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink);
+  line-height: 1.55;
+}

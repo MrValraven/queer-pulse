@@ -1,5 +1,6 @@
 import { FiMapPin } from "react-icons/fi";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState, LoadErrorState } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useResourceListings } from "./api/useResourceListings";
 import { contactHrefForListing } from "./api/resources.adapters";
@@ -10,20 +11,44 @@ import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
  * `ResourceListing` rows, or the honest "coming soon" empty state when the
  * admins have not published any yet. The demo-mode mock clinic directory
  * lives in `SexualHealthTestingClinics`.
+ *
+ * Three states, told apart on purpose (DES-24). Loading is skeletons. A
+ * failed request is `LoadErrorState`, which says the directory did not load
+ * and offers a retry. Only a request that came back with zero rows gets the
+ * "coming soon" copy. Before this split, a failed fetch told someone looking
+ * for HIV or STI testing that the clinic directory did not exist yet.
  */
 export function TestingListings({ onSuggest }: { onSuggest: () => void }) {
   const { t } = useTranslation();
-  const { listings, isLoading: listingsLoading } = useResourceListings(
-    "sexual_health_testing",
-  );
+  const {
+    listings,
+    isLoading: isLoadingListings,
+    isError: hasListingsError,
+    refetch: refetchListings,
+  } = useResourceListings("sexual_health_testing");
 
-  if (listingsLoading) {
+  if (isLoadingListings) {
     return (
       <CardGrid busy>
         {Array.from({ length: 3 }).map((_, index) => (
           <ResourceCardSkeleton key={index} />
         ))}
       </CardGrid>
+    );
+  }
+
+  if (hasListingsError && listings.length === 0) {
+    return (
+      <LoadErrorState
+        onRetry={refetchListings}
+        title={
+          <Translation
+            i18nKey="resources:sexualHealth.testing.loadError.title"
+            components={{ em: <em /> }}
+          />
+        }
+        description={t("resources:sexualHealth.testing.loadError.body")}
+      />
     );
   }
 

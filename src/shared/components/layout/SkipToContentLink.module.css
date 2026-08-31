@@ -15,7 +15,7 @@
   font-size: var(--text-body);
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 10px 30px rgba(var(--plum-rgb), 0.28);
+  box-shadow: var(--shadow-e2);
   /* Parked above the viewport rather than clipped, so focus brings it in. */
   transform: translateY(calc(-100% - 24px));
   transition: transform 0.2s var(--ease);
@@ -29,6 +29,9 @@
    the fallback is gone and only true keyboard traversal brings the pill in. */
 .link:focus-visible {
   transform: translateY(0);
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  /* The halo is listed first so it paints over the resting shadow, which is
+     restated here because this rule out-specifies the base one. */
+  box-shadow: var(--ring-cream), var(--shadow-e2);
 }

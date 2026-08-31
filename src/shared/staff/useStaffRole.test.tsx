@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { useStaffRole } from "./useStaffRole";
+import { useStaffBadgedRoles, useStaffRole } from "./useStaffRole";
 
 const mockAuth = vi.hoisted(() => ({ loggedIn: true }));
 const mockDemo = vi.hoisted(() => ({ demoMode: true }));
@@ -43,6 +43,37 @@ describe("useStaffRole", () => {
     mockDemo.demoMode = true;
     const { result } = renderHook(() => useStaffRole("sofia"), { wrapper });
     await waitFor(() => expect(result.current).toBeNull());
+  });
+
+  it("keeps a grant off the tier answer", async () => {
+    // A grant is not an account tier. Inês runs the housing queue on the
+    // ordinary member tier, so this hook stays null for her and the grants come
+    // back from `useStaffBadgedRoles` instead.
+    mockAuth.loggedIn = true;
+    mockDemo.demoMode = true;
+    const { result } = renderHook(() => useStaffRole("ines"), { wrapper });
+    await waitFor(() => expect(result.current).toBeNull());
+  });
+
+  it("resolves the badged grants a member holds", async () => {
+    mockAuth.loggedIn = true;
+    mockDemo.demoMode = true;
+    const { result } = renderHook(() => useStaffBadgedRoles("ines"), {
+      wrapper,
+    });
+    await waitFor(() => expect(result.current).toEqual(["housing_moderator"]));
+  });
+
+  it("leaves an unbadged grant out of the badged grants", async () => {
+    // `partnerships` decides about organisations and about third-party
+    // changemaker nominations, so it earns no badge; Ana is on the roster for
+    // her moderator tier alone.
+    mockAuth.loggedIn = true;
+    mockDemo.demoMode = true;
+    const { result } = renderHook(() => useStaffBadgedRoles("ana"), {
+      wrapper,
+    });
+    await waitFor(() => expect(result.current).toEqual([]));
   });
 
   it("returns null for an undefined slug", async () => {

@@ -19,7 +19,7 @@
   flex: none;
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,7 +36,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.4;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -48,7 +48,7 @@
   color: var(--accent);
 }
 .body {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.7;
   color: var(--ink-60);
   max-width: 66ch;
@@ -65,10 +65,10 @@
   gap: 10px;
   margin-bottom: 18px;
   padding: 12px 15px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--plum-rgb), 0.05);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-60);
   max-width: 70ch;

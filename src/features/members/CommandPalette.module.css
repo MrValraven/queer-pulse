@@ -11,8 +11,8 @@
      useVisualViewportKeyboard), keeping the 20px gutter as the floor. */
   padding: 12svh 20px 20px;
   padding-block-end: max(20px, var(--keyboard-inset, 0px));
-  background: rgba(var(--plum-rgb), 0.42);
-  backdrop-filter: blur(3px);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   animation: cmdFade 0.16s var(--ease);
 }
 
@@ -22,7 +22,7 @@
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-card);
-  box-shadow: 0 24px 60px -18px rgba(var(--plum-rgb), 0.5);
+  box-shadow: var(--shadow-e4);
   overflow: hidden;
   animation: cmdRise 0.18s var(--ease);
 }
@@ -37,7 +37,7 @@
 
 .inputIcon {
   color: var(--ink-40);
-  font-size: 18px;
+  font-size: var(--text-18);
   flex-shrink: 0;
 }
 
@@ -61,7 +61,7 @@
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 2px 7px;
 }
 /* The Esc hint is meaningless without a physical keyboard — hide it on touch,
@@ -81,7 +81,7 @@
   margin: -6px -6px -6px 0;
   border: none;
   background: transparent;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   color: var(--ink-40);
   font-size: 1.15rem;
   cursor: pointer;
@@ -109,7 +109,7 @@
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--ink-60);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
   font-size: 0.82rem;
   cursor: pointer;
@@ -165,7 +165,7 @@
   color: var(--accent);
   background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid rgba(var(--accent-rgb), 0.22);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 12px;
 }
 
@@ -191,7 +191,7 @@
   padding: 10px 12px;
   border: none;
   background: transparent;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
   text-align: left;
 }
@@ -205,7 +205,7 @@
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--plum-rgb), 0.07);
   color: var(--text-strong);
   flex-shrink: 0;

@@ -11,6 +11,9 @@ export interface MyAppealsResult {
   isLoading: boolean;
   /** True when the fetch failed (drives the error state). */
   isError: boolean;
+  /** Re-runs the failed fetch. A member checking whether their appeal was
+   *  heard must be able to try again rather than be told they filed none. */
+  refetch: () => void;
 }
 
 /**
@@ -33,5 +36,6 @@ export function useMyAppeals(): MyAppealsResult {
     appeals: query.data ?? [],
     isLoading: !demoMode && query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

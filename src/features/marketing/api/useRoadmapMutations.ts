@@ -17,12 +17,38 @@ import {
  * local-only behavior), so it resolves an empty set without a network call.
  */
 export function useMyRoadmapVotes(): Set<string> {
+  return useMyRoadmapVotesQuery().votedIds;
+}
+
+export interface MyRoadmapVotesResult {
+  votedIds: Set<string>;
+  isLoading: boolean;
+  /** True when the read failed (DES-22). A failed read leaves every card
+   *  looking unvoted, so a caller that cares must be able to tell that apart
+   *  from "you have voted for nothing yet". */
+  isError: boolean;
+  /** Re-run the failed read. */
+  refetch: () => void;
+}
+
+/**
+ * The same read as `useMyRoadmapVotes`, with the query state attached
+ * (DES-22). `useMyRoadmapVotes` stays the Set-returning convenience for the
+ * vote buttons, which fail quietly: a missing vote list only costs a member a
+ * refused duplicate vote, never a wrong page of content.
+ */
+export function useMyRoadmapVotesQuery(): MyRoadmapVotesResult {
   const { demoMode } = useDemoMode();
   const query = useQuery({
     queryKey: ["roadmap-my-votes", demoMode],
     queryFn: async () => (demoMode ? [] : await getMyRoadmapVotes()),
   });
-  return new Set(query.data ?? []);
+  return {
+    votedIds: new Set(query.data ?? []),
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 export function useRoadmapVote() {

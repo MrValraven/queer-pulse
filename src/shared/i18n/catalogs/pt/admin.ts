@@ -732,6 +732,21 @@ export const admin: Catalog = {
   "members.timeline.title": "Histórico de moderação: a favor e contra",
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
 
+  // ── Verificação de conta que regressa (gaveta de membro) — PRD-27 ─────────
+  "members.banEvasion.title": "Verificação de conta que regressa",
+  "members.banEvasion.hint":
+    "Pergunta se esta conta tem correspondência com uma conta que foi removida. Só corre quando pedes, e não altera nada por si.",
+  "members.banEvasion.checkCta": "Verificar sinais de fuga a banimento",
+  "members.banEvasion.recheckCta": "Verificar outra vez",
+  "members.banEvasion.retryCta": "Tentar a verificação outra vez",
+  "members.banEvasion.checking": "A verificar…",
+  "members.banEvasion.clear":
+    "Verificado. Nada nesta conta corresponde a uma conta que tenha sido removida.",
+  "members.banEvasion.errorBody":
+    "A verificação não chegou a correr, por isso nada foi verificado. Isto não é um resultado limpo. Tenta outra vez antes de tirares qualquer conclusão.",
+  "members.banEvasion.note":
+    "Isto é um sinal para verificar. Lê primeiro a conta removida e depois avalia este membro pelo que fez de facto aqui.",
+
   "members.sealed.sectionTitle": "Identidade e privacidade",
   "members.sealed.title": "Nenhum nome anterior é guardado",
   "members.sealed.body":
@@ -840,6 +855,9 @@ export const admin: Catalog = {
   "adminSafeSpaces.header.sub":
     "Marca um espaço como seguro e verificado, edita o perfil público, ou remove um que já não merece essa confiança.",
   "adminSafeSpaces.empty": "Ainda não há espaços para rever.",
+  "adminSafeSpaces.loadError.title": "Os locais não carregaram",
+  "adminSafeSpaces.loadError.body":
+    "A falha é do nosso lado, por isso nada aparece porque nada chegou. Tenta de novo.",
   "adminSafeSpaces.status.none": "Por rever",
   "adminSafeSpaces.status.verified": "Verificado",
   "adminSafeSpaces.status.removed": "Removido",
@@ -889,6 +907,9 @@ export const admin: Catalog = {
   "adminInvites.header.sub":
     "Todo o grafo de convites vouched: quem enviou o quê, quem aceitou, e o que ainda está aberto. Filtra por estado para auditar as ligações da rede.",
   "adminInvites.empty": "Nenhum convite corresponde a este filtro ainda.",
+  "adminInvites.loadError.title": "Os convites não carregaram",
+  "adminInvites.loadError.body":
+    "A falha é do nosso lado, por isso a lista está vazia porque nada chegou. Tenta de novo.",
   "adminInvites.emptyForInviter": "Ainda não há convites deste membro.",
   "adminInvites.filterByInviter": "Enviado por",
   "adminInvites.allInviters": "Qualquer pessoa",
@@ -1040,6 +1061,10 @@ export const admin: Catalog = {
   "adminGuideFeedback.empty": "Ainda não há avaliações de guias.",
   "adminGuideFeedback.error":
     "Não foi possível carregar o feedback dos guias. Tenta novamente.",
+  "adminGuideFeedback.loadError.title":
+    "As avaliações dos guias não carregaram",
+  "adminGuideFeedback.loadError.body":
+    "A falha é do nosso lado. Podem existir avaliações que esta página não conseguiu ler. Tenta de novo.",
   "adminGuideFeedback.row.counts": "{helpful} úteis · {notHelpful} não úteis",
 
   "adminConcerns.title": "Preocupações <em>levantadas</em>",
@@ -1469,6 +1494,9 @@ export const admin: Catalog = {
 
   // ── Sugestões de edição ──────────────────────────────────────────────────────
   "editSuggestions.empty": "Sem correções neste filtro, por agora.",
+  "editSuggestions.loadError.title": "As correções não carregaram",
+  "editSuggestions.loadError.body":
+    "A falha é do nosso lado, por isso nada aparece porque nada chegou. Pode haver pessoas à espera de uma correção. Tenta de novo.",
   "editSuggestions.field.hours": "Horário",
   "editSuggestions.field.address": "Morada",
   "editSuggestions.field.phone": "Número de telefone",
@@ -2130,9 +2158,12 @@ export const admin: Catalog = {
   "governance.proposals.header.eyebrow": "Propostas",
   "governance.proposals.header.title": "Pôr a <em>votos</em>",
   "governance.proposals.header.sub":
-    "Encerrar um lugar no conselho e mudanças de política de financiamento são decididas por voto das pessoas da comunidade, não por decisão administrativa. Abre a proposta aqui; a votação acontece na página pública de Governação.",
+    "Encerrar um lugar no conselho e mudanças de política de financiamento são decididas por voto das pessoas da comunidade. Abre a proposta aqui; a votação acontece na página pública de Governação.",
   "governance.proposals.createCta": "Nova proposta",
   "governance.proposals.empty": "Ainda não foi aberta nenhuma proposta.",
+  "governance.proposals.loadError.title": "As propostas não carregaram",
+  "governance.proposals.loadError.body":
+    "A falha é do nosso lado. Pode haver propostas abertas que esta lista não conseguiu ler. Tenta de novo.",
   "governance.proposals.list.status.passed": "Aprovada",
   "governance.proposals.list.status.failed": "Não aprovada",
   "governance.proposals.list.type.council_removal":
@@ -2399,6 +2430,9 @@ export const admin: Catalog = {
   "modPanel.requests.searchPlaceholder": "Procurar por nome…",
   "modPanel.requests.approveAllCta": "Aprovar todos ({count})",
   "modPanel.requests.sectionLabel": "Pedidos",
+  // ENG-41: chegar a um pedido para além da primeira página da fila.
+  "modPanel.requests.loadMore": "Carregar mais pedidos",
+  "modPanel.requests.loadingMore": "A carregar…",
   "modPanel.requests.emptyTitle": "Sem pedidos à espera",
   "modPanel.requests.emptyDesc":
     "Está tudo em dia. Os novos pedidos vão aparecer aqui.",
@@ -2488,6 +2522,9 @@ export const admin: Catalog = {
 
   // ── Rede de votos de confiança (visualização da rede de confiança) ─────────
   "vouchGraph.modes.network": "Rede",
+  "vouchGraph.loadError.title": "A rede de confiança não carregou",
+  "vouchGraph.loadError.body":
+    "A falha é do nosso lado, por isso o grafo está vazio porque nada chegou. Tenta de novo.",
   "vouchGraph.modes.scenes": "Cenas",
   "vouchGraph.modes.safety": "Segurança",
   "vouchGraph.pathbar.stepPath_one": "caminho de confiança de {count} passo:",
@@ -2729,7 +2766,9 @@ export const admin: Catalog = {
   "settings.history.on": "ligado",
   "settings.history.off": "desligado",
   "settings.history.cleared": "vazio",
-  "settings.history.changed": "{setting}: {from} → {to}",
+  "settings.history.changed": "{setting}: de {from} para {to}",
+  "settings.history.truncatedNotice":
+    "A mostrar {shown} de {total} alterações, das mais recentes para as mais antigas. As entradas mais antigas não estão nesta página.",
 
   "settings.key.registrationEnabled": "Registo",
   "settings.key.joinRequestsEnabled": "Pedidos de convite",
@@ -2935,6 +2974,12 @@ export const admin: Catalog = {
   "housingRequests.householdSize": "{size} no agregado",
   "housingRequests.declineCta": "Recusar",
   "housingRequests.acceptCta": "Aceitar",
+  // ENG-41: a fila é paginada, por isso o número de pessoas à espera e o
+  // número de linhas no ecrã são coisas diferentes.
+  "housingRequests.pendingCount_one": "{count} pessoa à espera",
+  "housingRequests.pendingCount_other": "{count} pessoas à espera",
+  "housingRequests.loadMore": "Carregar mais pedidos",
+  "housingRequests.loadingMore": "A carregar…",
 
   // ── Grupos de habitação (/admin/housing-groups) — triagem + normas ─────────
   "housingGroups.title": "Grupos de <em>habitação</em>",
@@ -2952,6 +2997,12 @@ export const admin: Catalog = {
   "housingGroups.requests.declineCta": "Recusar",
   "housingGroups.requests.approveCta": "Aprovar",
   "housingGroups.requests.error": "Não foi possível guardar essa decisão",
+  // ENG-41: a fila é paginada, por isso o número de pessoas à espera e o
+  // número de linhas no ecrã são coisas diferentes.
+  "housingGroups.requests.pendingCount_one": "{count} pessoa à espera",
+  "housingGroups.requests.pendingCount_other": "{count} pessoas à espera",
+  "housingGroups.requests.loadMore": "Carregar mais pedidos",
+  "housingGroups.requests.loadingMore": "A carregar…",
   "housingGroups.listings.title": "Anúncios",
   "housingGroups.listings.loadError":
     "Os anúncios não carregaram de momento. Tenta novamente.",
@@ -3056,7 +3107,7 @@ export const admin: Catalog = {
   // subtítulos, estados vazios/WIP, dicas das etiquetas, avisos, menu.
   "roadmap.board.column.backlog": "Backlog",
   "roadmap.board.column.subtitle.backlog": "Estacionado, mas com intenção",
-  "roadmap.board.column.subtitle.planned": "Assumido, ainda por começar",
+  "roadmap.board.column.subtitle.planned": "Assumido, na fila",
   "roadmap.board.column.subtitle.building": "A mexer nisso",
   "roadmap.board.column.subtitle.shipped": "Ativo para os membros",
   "roadmap.board.addToColumnAriaLabel": "Adicionar a {column}",
@@ -3077,6 +3128,12 @@ export const admin: Catalog = {
   "roadmap.board.alert.waitingOn": "À espera de {name}",
   "roadmap.board.alert.waitingOnMore": "À espera de {name} +{count}",
   "roadmap.board.alert.staleUntouched": "Sem tocar há {days} dias",
+  "roadmap.board.reorder.movedAnnouncement":
+    "{name} passou para a posição {position} de {total}",
+  "roadmap.board.menu.moveUp": "Mover para cima",
+  "roadmap.board.menu.moveDown": "Mover para baixo",
+  "roadmap.board.menu.moveUpAriaLabel": "Mover para cima: {name}",
+  "roadmap.board.menu.moveDownAriaLabel": "Mover para baixo: {name}",
   "roadmap.board.menu.moveTo": "Mover para {column}",
   "roadmap.board.menu.editDetails": "Editar detalhes",
   "roadmap.board.menu.showPublic": "Mostrar publicamente",
@@ -3487,8 +3544,9 @@ export const admin: Catalog = {
   "roadmap.publicPreview.committedTag": "Assumido",
   "roadmap.publicPreview.noPublicNoteFallback":
     "Ainda sem nota pública. Os membros não vão ver nada aqui até adicionares uma.",
-  "roadmap.publicPreview.movedOnce": "Adiada uma vez: {from} → {to}.",
-  "roadmap.publicPreview.movedMultiple": "Adiada {count}×: {from} → {to}.",
+  "roadmap.publicPreview.movedOnce": "Adiada uma vez: de {from} para {to}.",
+  "roadmap.publicPreview.movedMultiple":
+    "Adiada {count} vezes: de {from} para {to}.",
   "roadmap.publicPreview.noDateHonest": "Sem data, sinceramente",
   "roadmap.publicPreview.liveLabel": "Ativo",
   "roadmap.publicPreview.editItemTooltip": "Editar este item",
@@ -3608,6 +3666,9 @@ export const admin: Catalog = {
     "Ainda sem texto. Adiciona algum para ficar bem na página inicial.",
   "landing.list.unknownTarget": "Este perfil já não existe",
   "landing.list.empty.member.title": "Ainda sem pessoas em destaque",
+  "landing.list.loadError.title": "A lista em destaque não carregou",
+  "landing.list.loadError.body":
+    "A falha é do nosso lado. Pode haver destaques publicados que esta lista não conseguiu ler. Tenta de novo.",
   "landing.list.empty.member.body":
     "Procura uma pessoa pública à esquerda e adiciona-a. A citação dela vai aparecer aqui, pronta a editar.",
   "landing.list.empty.community.title": "Ainda sem comunidades em destaque",
@@ -3692,6 +3753,9 @@ export const admin: Catalog = {
   "pressKit.add.team.error": "Não foi possível adicionar. Tenta de novo",
 
   "pressKit.list.inactivePill": "Oculto por ti",
+  "pressKit.list.loadError.title": "O kit de imprensa não carregou",
+  "pressKit.list.loadError.body":
+    "A falha é do nosso lado, por isso nada aparece porque nada chegou. Tenta de novo.",
   "pressKit.list.previewEmpty": "Ainda sem detalhe.",
   "pressKit.list.moveUpAria": "Mover {name} para cima",
   "pressKit.list.moveDownAria": "Mover {name} para baixo",
@@ -3726,7 +3790,7 @@ export const admin: Catalog = {
 
   "pressKit.facts.title": "Factos (auto)",
   "pressKit.facts.sub":
-    "Derivados dos dados da plataforma. Mostrados no kit público, não editáveis aqui.",
+    "Derivados dos dados da plataforma. Mostrados no kit público, e só de leitura aqui.",
   "pressKit.facts.empty": "Ainda sem factos disponíveis.",
 
   // ── Integridade dos anúncios de habitação (Wave B1) — fila por risco ──
@@ -3870,6 +3934,9 @@ export const admin: Catalog = {
   "adminListings.queerOwned.toast.unverified":
     "Retirámos o selo de negócio queer verificado a {name}.",
   "listingClaims.empty": "Sem reivindicações neste filtro, por agora.",
+  "listingClaims.loadError.title": "A fila de reivindicações não carregou",
+  "listingClaims.loadError.body":
+    "A falha é do nosso lado, por isso a fila está vazia porque nada chegou. Pode haver reivindicações pendentes. Tenta de novo.",
   "listingClaims.claimedBy": "Reivindicado por {name}",
   "listingClaims.unknownClaimant": "um membro desconhecido",
   "listingClaims.approveCta": "Aprovar",
@@ -4020,6 +4087,12 @@ export const admin: Catalog = {
   "listingClaims.toast.approved":
     "{name} passou a pertencer a quem o reivindicou.",
   "listingClaims.toast.declined": "A reivindicação de {name} foi recusada.",
+  // ENG-41: a fila de pendentes é paginada, por isso a sua dimensão real e as
+  // linhas já carregadas são números diferentes.
+  "listingClaims.pendingCount_one": "{count} reivindicação à espera",
+  "listingClaims.pendingCount_other": "{count} reivindicações à espera",
+  "listingClaims.loadMore": "Carregar mais reivindicações",
+  "listingClaims.loadingMore": "A carregar…",
   "governance.overview.health.stat.activeMembers": "Pessoas ativas",
   "governance.overview.health.stat.retention": "Taxa de retenção de pessoas",
   "governance.overview.health.stat.reportsFiled":
@@ -4990,4 +5063,302 @@ export const admin: Catalog = {
   // deixar vazia (tarefa B).
   "partners.emptyFiltered":
     "Nada corresponde a este filtro. Volta a Tudo para veres a fila inteira.",
+
+  // ── Recuperação de conta: as três alavancas que impedem que um acidente
+  // deixe alguém de fora para sempre (PRD-06/11/13). Aparecem na gaveta do
+  // membro só quando há algo a recuperar, mais a ferramenta da lista de
+  // supressão no cabeçalho da página, que não pertence a nenhum membro porque
+  // a conta que protegia foi apagada.
+  //
+  // As frases de `blockedReason` não estão aqui. É o servidor que as escreve,
+  // porque é o único sítio que sabe qual das recusas se aplica, e uma cópia
+  // traduzida seria um segundo conjunto de salvaguardas livre de divergir das
+  // que são realmente aplicadas.
+  "recovery.sectionTitle": "Recuperação de conta",
+  "recovery.sectionHint":
+    "Reparações para membros que não conseguem voltar a entrar sozinhos. Tudo o que fizeres aqui fica registado em teu nome.",
+  "recovery.loadError":
+    "Não foi possível carregar o estado de recuperação deste membro. Recarrega antes de assumires que não há nada aqui.",
+  "recovery.reasonLabel": "Porque estás a fazer isto?",
+  "recovery.reasonHint":
+    "Fica no registo permanente de auditoria. Escreve o que um colega precisaria de saber daqui a um ano.",
+  "recovery.missingReasonToast": "Escreve um motivo antes de confirmar.",
+
+  "recovery.reactivate.label": "Desativação sem registo",
+  "recovery.reactivate.body":
+    "Esta conta está desativada sem qualquer registo de alguém o ter pedido, por isso iniciar sessão não a traz de volta sozinho.",
+  "recovery.reactivate.cta": "Reativar conta",
+  "recovery.reactivate.blockedFallback":
+    "A reativação não está disponível para este membro.",
+  "recovery.reactivate.confirmTitle": "Reativar {name}?",
+  "recovery.reactivate.confirmBody":
+    "{name} volta a ficar ativo e reaparece na plataforma. Não restaura mais nada: nenhuma sanção é levantada e nenhuma eliminação é cancelada.",
+  "recovery.reactivate.confirmCta": "Reativar",
+  "recovery.reactivate.reasonPlaceholder":
+    "ex.: pedido de apoio 412: desativado sem linha no registo depois da migração de junho",
+  "recovery.reactivate.doneToast": "{name} está ativo outra vez.",
+
+  "recovery.relink.label": "Identidade de início de sessão",
+  "recovery.relink.body":
+    "Uma conta Google com o endereço verificado deste membro foi recusada ao iniciar sessão. Isso acontece quando a conta Google é recriada, o que gera uma identidade nova para o mesmo endereço.",
+  "recovery.relink.blockedFallback":
+    "A religação não está disponível para este membro.",
+  "recovery.relink.candidateLabel": "Identidade Google terminada em {tail}",
+  "recovery.relink.candidateMeta":
+    "{attempts} tentativas, a primeira a {first}, a mais recente a {last}",
+  "recovery.relink.status.pending": "À espera",
+  "recovery.relink.status.applied": "Ligada",
+  "recovery.relink.status.dismissed": "Recusada",
+  "recovery.relink.status.superseded": "Retirada",
+  "recovery.relink.applyCta": "Religar",
+  "recovery.relink.dismissCta": "Recusar",
+  "recovery.relink.relinkConfirmTitle":
+    "Entregar a conta de {name} a esta identidade?",
+  "recovery.relink.relinkConfirmBody":
+    "A partir de agora, quem tiver a conta Google terminada em {tail} inicia sessão como {name}. Todas as sessões que {name} tem neste momento terminam de imediato. Só faz isto quando tiveres a certeza de que essa conta é mesmo dele.",
+  "recovery.relink.relinkConfirmCta": "Religar início de sessão",
+  "recovery.relink.relinkReasonPlaceholder":
+    "ex.: pedido de apoio 987: confirmado por videochamada que a conta Google de trabalho foi recriada",
+  "recovery.relink.relinkDoneToast":
+    "{name} já pode iniciar sessão com a conta Google nova. As sessões antigas foram terminadas.",
+  "recovery.relink.dismissConfirmTitle": "Recusar esta identidade?",
+  "recovery.relink.dismissConfirmBody":
+    "A conta Google terminada em {tail} deixa de ser oferecida como forma de voltar à conta de {name}. Fica registada, e voltar a tentar não a devolve à fila.",
+  "recovery.relink.dismissConfirmCta": "Recusar identidade",
+  "recovery.relink.dismissReasonPlaceholder":
+    "ex.: o membro confirmou que esta conta não é dele",
+  "recovery.relink.dismissDoneToast":
+    "Essa identidade não será oferecida outra vez.",
+
+  "recovery.suppression.openCta": "Lista de supressão",
+  "recovery.suppression.title": "Lista de supressão de eliminações",
+  "recovery.suppression.body":
+    "Quando alguém apaga a conta, o endereço entra numa lista permanente para que iniciar sessão outra vez não a recrie em silêncio. Procura aqui um endereço e levanta-o quando a pessoa mudou de ideias ou a eliminação foi um engano.",
+  "recovery.suppression.emailLabel": "Endereço de email",
+  "recovery.suppression.emailPlaceholder":
+    "o endereço que a pessoa está a tentar usar",
+  "recovery.suppression.lookupCta": "Verificar endereço",
+  "recovery.suppression.missingEmailToast":
+    "Escreve um endereço para verificar.",
+  "recovery.suppression.notSuppressed":
+    "{email} não está na lista de supressão. O que os está a bloquear é outra coisa.",
+  "recovery.suppression.found":
+    "{email} foi suprimido a {date}. Entrada {hash}.",
+  "recovery.suppression.liftWarning":
+    "Levantar não restaura nada. A conta apagada e tudo o que tinha desapareceram de vez. Isto só deixa de recusar uma conta nova neste endereço.",
+  "recovery.suppression.reasonPlaceholder":
+    "ex.: pedido de apoio 233: pediu para voltar e recomeçar",
+  "recovery.suppression.liftCta": "Levantar supressão",
+  "recovery.suppression.liftedToast": "Supressão levantada.",
+  "recovery.suppression.liftedBody":
+    "Levantada. Esse endereço já pode criar uma conta nova. Nada da antiga volta.",
+
+  // ── PRD-32: registo de exigências legais e do Estado ──────────────────────
+  "legalRequests.navLabel": "Pedidos legais",
+  "legalRequests.title": "Exigências <em>legais e do Estado</em>",
+  "legalRequests.eyebrow": "Registo de transparência",
+  "legalRequests.headerSub":
+    "Todas as exigências de dados de membros vindas de um tribunal, de uma força policial, de um ministério ou de qualquer outro braço do Estado. O relatório público de transparência conta estas linhas e não publica nenhum dos seus campos.",
+  "legalRequests.recordCta": "Registar uma exigência",
+  "legalRequests.demoNotice":
+    "O modo de demonstração mostra linhas de exemplo. Nada aqui foi registado e nada é enviado.",
+  "legalRequests.countLine":
+    "Registos que correspondem a estes filtros: {count}.",
+  "legalRequests.empty":
+    "Nenhum registo corresponde a estes filtros. Alarga-os para ver o resto do registo.",
+  "legalRequests.loadError":
+    "Não conseguimos ler o registo. Tenta outra vez antes de tratares isto como um registo vazio.",
+  "legalRequests.forbidden":
+    "A tua conta não pode ler este registo. Está aberto apenas a administração.",
+  "legalRequests.loadMore": "Carregar mais",
+  "legalRequests.loadingMore": "A carregar…",
+  "legalRequests.voidedChip": "Anulado",
+  "legalRequests.gagOrderChip": "Ordem de silêncio",
+  "legalRequests.row.openAriaLabel":
+    "Abrir a exigência de {body}, recebida a {date}",
+  "legalRequests.row.meta": "{jurisdiction}, recebida a {date}",
+  "legalRequests.row.accounts":
+    "{affected} contas nomeadas, {notified} avisadas",
+  "legalRequests.type.subpoena": "Intimação",
+  "legalRequests.type.court_order": "Ordem judicial",
+  "legalRequests.type.police_request": "Pedido policial",
+  "legalRequests.type.emergency_disclosure_request":
+    "Exigência de divulgação de emergência",
+  "legalRequests.type.preservation_request": "Pedido de preservação",
+  "legalRequests.type.takedown_demand": "Exigência de remoção",
+  "legalRequests.type.other": "Outro",
+  "legalRequests.outcome.complied_in_full": "Cumprida na íntegra",
+  "legalRequests.outcome.complied_in_part": "Cumprida em parte",
+  "legalRequests.outcome.narrowed": "Reduzida e depois cumprida",
+  "legalRequests.outcome.refused": "Recusada",
+  "legalRequests.outcome.withdrawn": "Retirada",
+  "legalRequests.outcome.pending": "Pendente",
+  "legalRequests.dataCategory.account_identifiers": "Identificadores de conta",
+  "legalRequests.dataCategory.contact_details": "Dados de contacto",
+  "legalRequests.dataCategory.account_metadata": "Metadados da conta",
+  "legalRequests.dataCategory.connection_logs": "Registos de ligação",
+  "legalRequests.dataCategory.profile_content": "Conteúdo do perfil",
+  "legalRequests.dataCategory.posts_and_comments": "Publicações e comentários",
+  "legalRequests.dataCategory.private_messages": "Mensagens privadas",
+  "legalRequests.dataCategory.uploaded_media": "Ficheiros carregados",
+  "legalRequests.dataCategory.membership_records": "Registos de adesão",
+  "legalRequests.dataCategory.other": "Outro",
+  "legalRequests.filter.stateLabel": "Registos",
+  "legalRequests.filter.state.all": "Todos os registos",
+  "legalRequests.filter.state.active": "Em vigor",
+  "legalRequests.filter.state.voided": "Anulados",
+  "legalRequests.filter.typeLabel": "Tipo de exigência",
+  "legalRequests.filter.anyType": "Qualquer tipo",
+  "legalRequests.filter.outcomeLabel": "Desfecho",
+  "legalRequests.filter.anyOutcome": "Qualquer desfecho",
+  "legalRequests.field.requestingBody": "Quem exigiu",
+  "legalRequests.field.requestingBodyHint":
+    "O organismo que fez a exigência, com o nome que usa no próprio documento.",
+  "legalRequests.field.jurisdiction": "Jurisdição",
+  "legalRequests.field.requestType": "Tipo de exigência",
+  "legalRequests.field.receivedOn": "Recebida a",
+  "legalRequests.field.accountsAffected": "Contas nomeadas",
+  "legalRequests.field.accountsAffectedHint":
+    "Quantas contas de membros a exigência abrangia, seja o que for que tenha sido entregue no fim.",
+  "legalRequests.field.outcome": "Desfecho",
+  "legalRequests.field.outcomeHint":
+    "Deixa pendente se a exigência chegou hoje. Volta e completa quando a equipa tiver respondido.",
+  "legalRequests.field.dataDisclosed": "O que foi entregue",
+  "legalRequests.field.dataDisclosedHint":
+    "Não marques nada quando nada saiu da plataforma. Estas categorias são só para a equipa, em qualquer nível de agregação.",
+  "legalRequests.field.memberNotifiedOn": "Membros avisados a",
+  "legalRequests.field.memberNotifiedOnHint":
+    "O dia em que os membros nomeados foram avisados. Isto regista o que a equipa fez: a QueerPulse não envia nada a partir deste ecrã.",
+  "legalRequests.field.accountsNotified": "Contas avisadas",
+  "legalRequests.field.accountsNotifiedHint":
+    "Quantas das contas nomeadas foram avisadas. Nunca pode ser mais do que o número de contas nomeadas.",
+  "legalRequests.field.withheldReason": "Porque não foram avisados",
+  "legalRequests.field.withheldReasonHint":
+    "Opcional enquanto não houver ninguém a avisar.",
+  "legalRequests.field.withheldReasonRequired":
+    "Porque não foram avisados (obrigatório)",
+  "legalRequests.field.withheldReasonRequiredHint":
+    "Saíram dados da plataforma e ninguém foi avisado, por isso a razão tem de ficar em ficha. Um espaço em branco aqui é recusado.",
+  "legalRequests.field.gagOrder": "Sob ordem de silêncio",
+  "legalRequests.field.gagOrderHint":
+    "Ligado quando o documento proíbe avisar os membros que nomeia.",
+  "legalRequests.field.internalNote": "Nota interna",
+  "legalRequests.field.internalNoteHint":
+    "Só para a equipa, em qualquer nível de agregação. Não chega a nenhum membro nem a nenhum número publicado.",
+  "legalRequests.form.drawerLabel": "Editor de exigências legais",
+  "legalRequests.form.createEyebrow": "Novo registo",
+  "legalRequests.form.createTitle": "Registar uma exigência",
+  "legalRequests.form.editEyebrow": "Alterar",
+  "legalRequests.form.editTitle": "Alterar este registo",
+  "legalRequests.action.cancel": "Cancelar",
+  "legalRequests.action.record": "Registar",
+  "legalRequests.action.save": "Guardar alterações",
+  "legalRequests.action.amend": "Alterar",
+  "legalRequests.action.void": "Anular este registo",
+  "legalRequests.problem.requestingBodyRequired":
+    "Nomeia o organismo que fez a exigência.",
+  "legalRequests.problem.jurisdictionRequired": "Nomeia a jurisdição.",
+  "legalRequests.problem.receivedOnRequired":
+    "Indica o dia em que a exigência chegou.",
+  "legalRequests.problem.accountsAffectedInvalid":
+    "Contas nomeadas tem de ser um número inteiro, até 100000.",
+  "legalRequests.problem.accountsNotifiedInvalid":
+    "Contas avisadas tem de ser um número inteiro, até 100000.",
+  "legalRequests.problem.notifiedExceedsAffected":
+    "Foram avisadas mais contas do que as que a exigência nomeou. Só uma conta nomeada pode ser avisada.",
+  "legalRequests.problem.notifiedCountNeedsDate":
+    "Indica o dia em que os membros foram avisados, ou volta a pôr a contagem a zero.",
+  "legalRequests.problem.notifiedDateNeedsCount":
+    "Indica quantas contas foram avisadas nesse dia, ou limpa a data.",
+  "legalRequests.problem.withheldReasonRequired":
+    "Foram entregues dados e ninguém foi avisado. Diz porquê.",
+  "legalRequests.detail.drawerLabel": "Exigência registada",
+  "legalRequests.detail.eyebrow": "Registo",
+  "legalRequests.detail.untitled": "A carregar este registo",
+  "legalRequests.detail.loadError":
+    "Não conseguimos ler este registo. Lê-o outra vez antes de agires sobre ele.",
+  "legalRequests.detail.voidedOn": "Retirado dos números publicados a {date}.",
+  "legalRequests.detail.noVoidReason": "Não ficou nenhuma razão guardada.",
+  "legalRequests.detail.nothingDisclosed": "Não foi entregue nada.",
+  "legalRequests.detail.nobodyNotified": "Ainda não foi avisado ninguém.",
+  "legalRequests.detail.noWithheldReason": "Nada em ficha.",
+  "legalRequests.detail.gagOrderYes":
+    "Sim. O documento proíbe avisar os membros que nomeia.",
+  "legalRequests.detail.gagOrderNo": "Não.",
+  "legalRequests.detail.noInternalNote": "Sem nota.",
+  "legalRequests.detail.recordedBy": "Registado por",
+  "legalRequests.detail.recorderErased": "Essa conta foi entretanto apagada.",
+  "legalRequests.detail.lastUpdated": "Última alteração",
+  "legalRequests.void.eyebrow": "Retirar um registo",
+  "legalRequests.void.title": "Anular este registo",
+  "legalRequests.void.warning":
+    "Isto não pode ser desfeito. A linha fica no registo e continua legível, todos os números publicados deixam de a contar, e a contagem de registos anulados é ela própria publicada.",
+  "legalRequests.void.body":
+    "A exigência de {body} sai dos números publicados assim que fizeres isto.",
+  "legalRequests.void.reasonLabel": "Porque está a ser anulado",
+  "legalRequests.void.reasonPlaceholder":
+    "ex.: introduzido duas vezes, e o registo que fica é o de 11 de maio",
+  "legalRequests.void.reasonHint":
+    "Obrigatório. Um registo que não consegue dizer porque é que uma linha saiu dos números vale menos do que um que nunca a deixasse sair.",
+  "legalRequests.toast.created": "Registado.",
+  "legalRequests.toast.updated": "Registo alterado.",
+  "legalRequests.toast.voided":
+    "Registo anulado. Continua no registo, fora dos números publicados.",
+  "legalRequests.error.save": "Não conseguimos guardar esse registo.",
+  "legalRequests.error.voidedConflict":
+    "Este registo foi anulado, e um registo anulado fica congelado.",
+  "legalRequests.error.void": "Não conseguimos anular esse registo.",
+  "legalRequests.error.alreadyVoided": "Alguém já anulou este registo.",
+
+  // ── PRD-31: fila de escalamentos de evasão a banimentos ───────────────────
+  "banEvasionEscalations.navLabel": "Escalamentos de evasão",
+  "banEvasionEscalations.title": "Escalamentos de <em>evasão a banimentos</em>",
+  "banEvasionEscalations.eyebrow": "Fila da equipa",
+  "banEvasionEscalations.headerSub":
+    "Quem modera uma comunidade sabe uma coisa sobre quem se candidata: se corresponde a alguém que essa comunidade barrou. Escalar é a forma de pedir o resto do quadro, e é aqui que ele é lido.",
+  "banEvasionEscalations.demoNotice":
+    "O modo de demonstração mostra escalamentos de exemplo. Nada aqui é uma candidatura real, e resolver um não envia nada.",
+  "banEvasionEscalations.status.open": "Abertos",
+  "banEvasionEscalations.status.resolved": "Resolvidos",
+  "banEvasionEscalations.emptyOpen":
+    "Não há nenhum escalamento à espera. Todas as perguntas levantadas por moderação de comunidade estão fechadas.",
+  "banEvasionEscalations.emptyResolved":
+    "Ainda não foi fechado nenhum escalamento.",
+  "banEvasionEscalations.loadError":
+    "Não conseguimos ler a fila. Pode haver alguém à espera, por isso lê outra vez antes de tratares isto como resolvido.",
+  "banEvasionEscalations.forbidden":
+    "A tua conta não pode ler esta fila. Está aberta a moderação e administração.",
+  "banEvasionEscalations.subjectErased": "Quem se candidatou apagou a conta",
+  "banEvasionEscalations.moderatorErased":
+    "alguém da moderação que entretanto apagou a conta",
+  "banEvasionEscalations.resolverErased":
+    "uma colega que entretanto apagou a conta",
+  "banEvasionEscalations.raisedBy": "Levantado por {name} a {date}",
+  "banEvasionEscalations.moderatorNote": "O que a moderação escreveu",
+  "banEvasionEscalations.assessmentNote":
+    "Isto é um sinal para ler, e o juízo é teu. Nada na plataforma age sobre ele, e nada disto volta para a comunidade que perguntou.",
+  "banEvasionEscalations.assessmentClear":
+    "Verificado em todas as comunidades e na lista de banimentos da plataforma. Nada correspondeu a uma conta removida.",
+  "banEvasionEscalations.assessmentUnavailable":
+    "A conta de quem se candidatou foi apagada, por isso já não há nada para cruzar. Não é possível fazer nenhuma avaliação.",
+  "banEvasionEscalations.outcomeTerm": "O que a equipa encontrou",
+  "banEvasionEscalations.resolvedBy": "Fechado por {name} a {date}",
+  "banEvasionEscalations.resolvedUnknownDate": "Fechado por {name}",
+  "banEvasionEscalations.noResolutionNote": "Ninguém escreveu nenhuma nota.",
+  "banEvasionEscalations.action.resolve": "Resolver",
+  "banEvasionEscalations.action.cancel": "Cancelar",
+  "banEvasionEscalations.resolve.eyebrow": "Fechar a pergunta",
+  "banEvasionEscalations.resolve.title": "Resolver este escalamento",
+  "banEvasionEscalations.resolve.body":
+    "Isto regista que olhaste, e permite que {community} volte a perguntar se a pessoa aparecer outra vez. Não bane ninguém: o que decidires fazer acontece nas superfícies que já existem para isso.",
+  "banEvasionEscalations.resolve.noteLabel": "Nota (opcional)",
+  "banEvasionEscalations.resolve.notePlaceholder":
+    "O que verificaste e o que encontraste",
+  "banEvasionEscalations.resolve.noteHint":
+    "Só para a equipa. Quem escalou fica a saber que alguém fechou a pergunta, e nada sobre o que encontraste.",
+  "banEvasionEscalations.toast.resolved": "Escalamento resolvido.",
+  "banEvasionEscalations.error.resolve":
+    "Não conseguimos resolver esse escalamento.",
+  "banEvasionEscalations.error.alreadyResolved":
+    "Alguém já resolveu este escalamento.",
 };

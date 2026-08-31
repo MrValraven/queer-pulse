@@ -1,6 +1,6 @@
 import { FiInbox } from "react-icons/fi";
 import { useQueryClient } from "@tanstack/react-query";
-import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { EmptyState, FadeIn, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { IncomingCard } from "../connect/ConnectionCards";
 import { useConnectionActions } from "../connect/api/useConnectionActions";
@@ -26,7 +26,7 @@ const stagger = (index: number) => Math.min(index, 8) * 60;
 export function MessagesRequestsPanel() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { views, loading } = useConnectionsList("incoming");
+  const { views, loading, isError, refetch } = useConnectionsList("incoming");
   const { acceptRequest, declineRequest } = useConnectionActions();
 
   function handleAccept(view: ConnectionView) {
@@ -42,6 +42,18 @@ export function MessagesRequestsPanel() {
 
   if (loading) {
     return <ConnectionsGridSkeleton count={3} />;
+  }
+
+  // A request someone sent must never be lost to an outage: the empty state
+  // here would tell them nobody has written.
+  if (isError) {
+    return (
+      <LoadErrorState
+        compact
+        onRetry={refetch}
+        description={t("messages:requests.loadErrorBody")}
+      />
+    );
   }
 
   if (views.length === 0) {

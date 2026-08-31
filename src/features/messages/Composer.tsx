@@ -187,6 +187,7 @@ export function Composer({
         onKeyDown={handleComposerKeyDown}
         onSend={handleSend}
         sendLabel={t("messages:conversation.send")}
+        messageFieldLabel={t("messages:conversation.composeAria")}
       />
     </div>
   );

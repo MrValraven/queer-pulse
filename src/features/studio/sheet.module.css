@@ -2,7 +2,7 @@
   padding: 24px 0 28px;
 }
 .eb {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -22,7 +22,7 @@
   color: var(--accent);
 }
 .dek {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.6;
   max-width: 60ch;
@@ -49,7 +49,7 @@
 .sheetCv {
   width: 130px;
   aspect-ratio: 0.77;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   overflow: hidden;
   position: relative;
   flex: none;
@@ -69,7 +69,7 @@
   color: var(--accent);
 }
 .sheetBy {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.6);
   margin: 6px 0 14px;
 }
@@ -82,15 +82,15 @@
   gap: 6px;
 }
 .spec {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.7);
   background: rgba(var(--cream-rgb), 0.06);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 10px;
 }
 
 .previewLbl {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -103,7 +103,7 @@
 }
 .pdf {
   background: var(--cream);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 36px 40px 0;
   position: relative;
   overflow: hidden;
@@ -113,7 +113,7 @@
   position: absolute;
   top: 14px;
   right: 16px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.12em;
   color: rgba(var(--ink-rgb), 0.18);
@@ -126,7 +126,7 @@
   text-align: center;
 }
 .pdfSub {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   text-align: center;
   margin: 4px 0 24px;
@@ -179,7 +179,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -195,7 +195,7 @@
   margin-top: 20px;
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
 }
 .transcriber .av {
@@ -208,11 +208,11 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 14px;
+  font-size: var(--text-14);
   flex: none;
 }
 .transcriber h5 {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
 }
@@ -220,7 +220,7 @@
   font-style: italic;
 }
 .transcriber p {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 2px;
 }
@@ -232,7 +232,7 @@
 .checkout {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 26px 28px;
   position: sticky;
   top: 88px;
@@ -248,7 +248,7 @@
   color: var(--accent);
 }
 .chSub {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.5);
   margin: 4px 0 18px;
 }
@@ -258,12 +258,12 @@
   align-items: flex-start;
   padding: 10px 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.7);
 }
 .line .k small {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 2px;
 }
@@ -279,7 +279,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .lineTotal .v {
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 .lineTotal .v em {
   font-style: normal;
@@ -288,12 +288,12 @@
 
 .splitViz {
   background: rgba(var(--cream-rgb), 0.03);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 16px 18px;
   margin: 14px 0;
 }
 .sl {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -302,7 +302,7 @@
 }
 .splitBar {
   height: 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
   display: flex;
   margin-bottom: 12px;
@@ -320,7 +320,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.6);
   padding: 5px 0;
 }
@@ -341,7 +341,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .splitFoot {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   line-height: 1.55;
   margin-top: 10px;
@@ -364,7 +364,7 @@
   align-items: center;
   gap: 12px;
   border: 1.5px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   cursor: pointer;
 }
@@ -385,13 +385,13 @@
   box-shadow: inset 0 0 0 3px var(--studio-bg);
 }
 .pn {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
 }
 .pn small {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 400;
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 2px;
@@ -399,12 +399,12 @@
 .chBtn {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--studio-bg);
   background: var(--jade-light, var(--jade-light));
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 13px;
   cursor: pointer;
 }
@@ -413,7 +413,7 @@
   cursor: default;
 }
 .chNote {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   font-style: italic;
   font-family: var(--serif);

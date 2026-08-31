@@ -43,8 +43,9 @@
 }
 
 .trigger:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -105,14 +106,14 @@
 .intro {
   margin: 0;
   color: var(--ink);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: var(--lh-body, 1.6);
 }
 
 .useHeading {
   margin: 18px 0 8px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: var(--ls-eyebrow, 0.08em);
   text-transform: uppercase;
@@ -125,7 +126,7 @@
   display: grid;
   gap: 7px;
   color: var(--ink);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
 }
 
@@ -141,7 +142,7 @@
   border: 1px solid rgba(var(--jade-rgb), 0.28);
   border-radius: var(--radius-card, 14px);
   color: var(--ink);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
 }
 
@@ -149,9 +150,25 @@
   display: block;
   margin-bottom: 3px;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: var(--ls-eyebrow, 0.08em);
   text-transform: uppercase;
   color: var(--jade-ink, var(--jade));
+}
+
+/* Dark theme — the icon button's hover/active chip and the "how to use it"
+   eyebrow both ride --plum-rgb, which does not flip. The eyebrow is the worse
+   of the two: plum text at 66% on the dark sheet is unreadable. The `.trigger`
+   variant above already solved this with currentColor and needs nothing. */
+@media (hover: hover) and (pointer: fine) {
+  :global([data-theme="dark"]) .iconTrigger:hover {
+    background: rgba(var(--cream-rgb), 0.09);
+  }
+}
+:global([data-theme="dark"]) .iconTrigger:active {
+  background: rgba(var(--cream-rgb), 0.14);
+}
+:global([data-theme="dark"]) .useHeading {
+  color: var(--ink-60);
 }

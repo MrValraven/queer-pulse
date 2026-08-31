@@ -18,8 +18,9 @@
 .scrim {
   position: fixed;
   inset: 0;
-  z-index: 65;
-  background: rgba(0, 0, 0, 0.44);
+  z-index: var(--z-modal);
+  background: var(--scrim-soft);
+  backdrop-filter: var(--blur-sm);
   animation: axScrimIn 0.2s var(--ease, ease);
 }
 @keyframes axScrimIn {
@@ -69,7 +70,7 @@
 }
 .brandName {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 500;
   letter-spacing: -0.01em;
 }
@@ -80,8 +81,8 @@
 .brandBadge {
   margin-left: auto;
   padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -116,7 +117,7 @@
   width: 100%;
   padding: 9px 10px;
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--cream-rgb), 0.05);
   color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
@@ -131,14 +132,22 @@
 .switchAv {
   width: 30px;
   height: 30px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   display: grid;
   place-items: center;
   flex: none;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   background: rgba(var(--accent-rgb), 0.22);
   color: var(--accent-soft);
+}
+/* Neutral stand-in when the viewer's own monogram can't be derived. The icon
+   inherits 1em, so the chip's own font-size would render it at 12px; bump it so
+   the mark fills the square the way two letters do. */
+.switchAvBlank {
+  font-size: var(--text-16);
+  color: rgba(var(--cream-rgb), 0.7);
+  background: rgba(var(--cream-rgb), 0.12);
 }
 .switchTx {
   display: flex;
@@ -147,11 +156,11 @@
   flex: 1;
 }
 .switchRole {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
 }
 .switchScope {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.6);
 }
 .switchChev {
@@ -168,9 +177,9 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  z-index: 60;
+  z-index: var(--z-popover);
   padding: 6px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--plum-deep);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
@@ -193,7 +202,7 @@
 }
 .switchSep {
   padding: 8px 10px 4px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -206,7 +215,7 @@
   width: 100%;
   padding: 8px 10px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: transparent;
   color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
@@ -224,20 +233,20 @@
 .switchOptAv {
   width: 30px;
   height: 30px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   display: grid;
   place-items: center;
   flex: none;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
 }
 .switchOptName {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   display: block;
 }
 .switchOptMeta {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.55);
   display: block;
 }
@@ -272,10 +281,10 @@
   width: 100%;
   padding: 8px 12px 7px;
   border: 0;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: none;
   font-family: inherit;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -359,10 +368,10 @@
   align-items: center;
   gap: 11px;
   padding: 10px 12px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   color: rgba(var(--cream-rgb), 0.78);
   text-decoration: none;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   transition:
     background var(--dur, 0.18s) var(--ease, ease),
@@ -398,8 +407,8 @@
   flex: none;
   min-width: 22px;
   padding: 1px 7px;
-  border-radius: 999px;
-  font-size: 11px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
   font-weight: 700;
   text-align: center;
 }
@@ -423,10 +432,10 @@
   align-items: center;
   gap: 9px;
   padding: 9px 12px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   color: rgba(var(--cream-rgb), 0.7);
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   transition:
     background var(--dur, 0.18s) var(--ease, ease),
@@ -471,7 +480,7 @@
   width: 100%;
   padding: 10px;
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   background: transparent;
   color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
@@ -490,7 +499,7 @@
   flex: 1;
 }
 .meName {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -498,7 +507,7 @@
 }
 /* The account address. Long ones must ellipsis rather than widen the rail. */
 .meRole {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.55);
   white-space: nowrap;
   overflow: hidden;
@@ -523,9 +532,9 @@
   bottom: calc(100% + 6px);
   left: 0;
   right: 0;
-  z-index: 60;
+  z-index: var(--z-popover);
   padding: 6px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--plum-deep);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
@@ -560,14 +569,14 @@
   margin-bottom: 4px;
 }
 .meMenuAccessLabel {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(var(--cream-rgb), 0.5);
 }
 .meMenuAccessValue {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.86);
   overflow-wrap: anywhere;
 }
@@ -578,8 +587,8 @@
   gap: 10px;
   width: 100%;
   padding: 9px 10px;
-  border-radius: 10px;
-  font-size: 13px;
+  border-radius: var(--radius-10);
+  font-size: var(--text-13);
   text-decoration: none;
   color: rgba(var(--cream-rgb), 1);
   transition: background var(--dur, 0.18s) var(--ease, ease);
@@ -621,7 +630,7 @@
   background: var(--cream);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: var(--z-nav);
 }
 .crumb {
   display: flex;
@@ -630,7 +639,7 @@
   align-items: center;
   gap: 8px;
   flex: none;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   white-space: nowrap;
 }
@@ -681,7 +690,7 @@
   margin: 0 auto 0 12px;
   padding: 8px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--paper);
   color: var(--ink-40);
   transition: border-color var(--dur, 0.18s) var(--ease, ease);
@@ -697,7 +706,7 @@
   border: none;
   background: transparent;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   outline: none;
 }
@@ -713,7 +722,7 @@
   height: 44px;
   flex: none;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: var(--paper);
   color: var(--ink-60);
   cursor: pointer;
@@ -745,7 +754,7 @@
   width: 38px;
   height: 38px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: var(--paper);
   color: var(--ink-60);
   cursor: pointer;
@@ -765,14 +774,14 @@
   right: 9px;
   width: 7px;
   height: 7px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   border: 2px solid var(--paper);
 }
 
 .content {
   padding: 26px 30px 64px;
-  max-width: 1240px;
+  max-width: var(--maxw);
   width: 100%;
 }
 
@@ -782,13 +791,15 @@
   }
 
   /* The dock leaves `display: contents` and becomes a fixed slide-in panel off
-     the left edge. It sits above the topbar (z-50) and the scrim (z-65). */
+     the left edge. It shares the modal tier with the scrim and comes after it
+     in the DOM, so it paints on top — the same arrangement the shared Modal
+     uses for its own scrim and dialog. */
   .sidebarDock {
     display: block;
     position: fixed;
     inset-block: 0;
     inset-inline-start: 0;
-    z-index: 70;
+    z-index: var(--z-modal);
     width: min(84vw, 300px);
     transform: translateX(-100%);
     transition: transform var(--dur, 0.24s) var(--ease, ease);

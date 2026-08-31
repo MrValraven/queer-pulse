@@ -1,13 +1,13 @@
 .toolbar {
   position: fixed;
-  z-index: 60;
+  z-index: var(--z-popover);
   transform: translate(-50%, calc(-100% - 8px));
   display: flex;
   gap: 0.25rem;
   padding: 0.25rem;
   background: var(--plum);
   border-radius: var(--radius-pill);
-  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.28);
+  box-shadow: var(--shadow-e2);
 }
 .toolbar button {
   display: inline-flex;

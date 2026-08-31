@@ -1,5 +1,5 @@
 .wrap {
-  max-width: 640px;
+  max-width: var(--maxw-text);
   margin: 0 auto;
   padding: clamp(64px, 12vh, 128px) 24px;
 }

@@ -1,0 +1,154 @@
+/* Ban-evasion escalations queue (PRD-31). Tokens only: no raw hex, no raw
+   plum/line channels. */
+
+.notice {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* A queue that could not be read is never a clear queue. Louder than .notice so
+   a failed fetch cannot be skimmed as "nobody is waiting". */
+.errorNotice {
+  color: var(--accent-text);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: rgba(var(--accent-rgb), 0.28);
+}
+
+.noticeIcon {
+  margin-right: 8px;
+  vertical-align: -2px;
+}
+
+.cards {
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  padding: 18px;
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cardHeadText {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.subject {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.subjectLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.meta {
+  margin: 4px 0 0;
+  font-size: 0.84rem;
+  color: var(--ink-40);
+  overflow-wrap: anywhere;
+}
+
+.chipRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.section {
+  margin-top: 14px;
+}
+
+.sectionTerm {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.sectionBody {
+  margin: 3px 0 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* Stated results the assessment panel itself does not render: a cleared check,
+   and an applicant whose account is gone. Both are answers, not blanks. */
+.assessmentState {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--jade-rgb), 0.1);
+  border: 1px solid rgba(var(--jade-rgb), 0.24);
+  color: var(--jade-ink);
+  font-size: 0.88rem;
+}
+
+.assessmentUnknown {
+  background: rgba(var(--line-rgb), 0.06);
+  border-color: rgba(var(--line-rgb), 0.14);
+  color: var(--ink-60);
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.textInput,
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 10px;
+}
+
+.fieldHint {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  color: var(--ink-40);
+}

@@ -142,4 +142,56 @@ describe("notificationDtoToView", () => {
       expect(view.icon).toBeDefined();
     });
   });
+
+  // PRD-15. "Someone wants to connect" carries its two answers, so a member
+  // never has to go and find `/account/connections` to say yes.
+  describe("connection request actions", () => {
+    const actor = {
+      slug: "ines",
+      firstName: "Inês",
+      lastName: "Tavares",
+      avatarUrl: null,
+    };
+
+    it("offers accept and decline when the row names a connection and an actor", () => {
+      const view = notificationDtoToView(
+        dto({
+          type: "connection_request",
+          payload: { connectionId: "c-1" },
+          actor,
+        }),
+        t,
+        fmt,
+      );
+      expect(view.actions).toHaveLength(2);
+      expect(view.actions?.[0]?.connectionResponse).toEqual({
+        connectionId: "c-1",
+        memberSlug: "ines",
+        action: "accept",
+        toast: "notifications:actions.acceptedToast",
+      });
+      expect(view.actions?.[1]?.connectionResponse?.action).toBe("decline");
+      // Both still point at a real page, so a row whose mutation cannot run
+      // never renders a dead control.
+      expect(view.actions?.[0]?.href).toBe("/members/ines");
+    });
+
+    it("offers no buttons when the connection id is missing", () => {
+      const view = notificationDtoToView(
+        dto({ type: "connection_request", payload: {}, actor }),
+        t,
+        fmt,
+      );
+      expect(view.actions).toBeUndefined();
+    });
+
+    it("offers no buttons when the actor could not be resolved", () => {
+      const view = notificationDtoToView(
+        dto({ type: "connection_request", payload: { connectionId: "c-1" } }),
+        t,
+        fmt,
+      );
+      expect(view.actions).toBeUndefined();
+    });
+  });
 });

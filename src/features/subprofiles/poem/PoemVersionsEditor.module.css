@@ -42,7 +42,7 @@
   min-width: 0;
   padding: 0 0.6rem;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--paper);
   color: color-mix(in srgb, var(--ink) 55%, transparent);
 }

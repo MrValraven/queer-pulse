@@ -1,5 +1,5 @@
 .intro {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
   margin: 0 0 18px;
@@ -17,7 +17,7 @@
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 7px 13px;
   cursor: pointer;
   transition:
@@ -33,8 +33,9 @@
 }
 
 .reasonBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .reasonBtn[aria-pressed="true"] {
@@ -50,7 +51,7 @@
 }
 
 .note {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
   margin: -4px 0 20px;

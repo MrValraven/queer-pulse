@@ -45,19 +45,23 @@ export type PublicSubprofileResult =
   | { state: "loading" }
   | { state: "ok"; data: PublicSubprofileView }
   | { state: "restricted"; restricted: RestrictedState }
-  | { state: "not-found" };
+  | { state: "not-found" }
+  /** The request itself fell over. Its own state because collapsing it into
+   *  `not-found` told a visitor that a persona which exists does not (DES-22),
+   *  and told its owner their page had vanished. `retry` re-runs the read. */
+  | { state: "error"; retry: () => void };
 
 /** `PublicSubprofileResult` minus the `loading` branch — what the react-query
  *  `queryFn` itself resolves to. Restricted/not-found are legitimate business
  *  outcomes of a public read, not query failures, so the query never enters
  *  its error state for them (no pointless retry, no `isError` branch the page
  *  would have to special-case). A genuine fault (network/5xx/anything not
- *  carrying a `restrictedState` body) still `throw`s and IS a query error —
- *  collapsed to `not-found` below, matching this hook's pre-Phase-1b
- *  behaviour of never surfacing a distinct "error" page state. */
+ *  carrying a `restrictedState` body) still `throw`s and IS a query error,
+ *  which the hook now returns as its own `error` state rather than folding
+ *  into `not-found`. */
 export type PublicSubprofileOutcome = Exclude<
   PublicSubprofileResult,
-  { state: "loading" }
+  { state: "loading" } | { state: "error" }
 >;
 
 /** Read a 403 body's `restrictedState`, or `undefined` if it isn't shaped
@@ -177,6 +181,11 @@ export function usePublicSubprofile(
   });
 
   if (query.isLoading) return { state: "loading" };
+  // A fault is its own answer. "No such persona" is a claim about the world,
+  // and a request that never landed is no basis for making it.
+  if (query.isError) {
+    return { state: "error", retry: () => void query.refetch() };
+  }
   return query.data ?? { state: "not-found" };
 }
 

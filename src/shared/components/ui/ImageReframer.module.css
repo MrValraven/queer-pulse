@@ -28,7 +28,9 @@
 }
 
 .frame:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .dragging {
@@ -127,4 +129,13 @@
   .resetButton {
     transition: none;
   }
+}
+
+/* Dark theme — the zoom slider's track is a --plum-rgb tint, which does not
+   flip, so the track disappears and only the thumb remains. */
+:global([data-theme="dark"]) .zoomRange::-webkit-slider-runnable-track {
+  background: rgba(var(--cream-rgb), 0.2);
+}
+:global([data-theme="dark"]) .zoomRange::-moz-range-track {
+  background: rgba(var(--cream-rgb), 0.2);
 }

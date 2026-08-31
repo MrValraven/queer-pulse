@@ -2,7 +2,7 @@
    that already have a label style (the profile editor, Settings → Interests)
    pass `headingClassName` and never see these. */
 .head {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--ink);
   margin: 0 0 8px;
@@ -16,7 +16,7 @@
 }
 
 .prompt {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-40);
   font-style: italic;

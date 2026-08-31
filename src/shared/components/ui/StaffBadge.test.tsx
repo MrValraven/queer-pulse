@@ -32,6 +32,26 @@ describe("StaffBadge", () => {
     expect(screen.getByText("Mod")).toBeInTheDocument();
   });
 
+  it("names a badged staff grant in plain words at sm size", () => {
+    render(<StaffBadge role="housing_moderator" size="sm" />, {
+      wrapper: I18nProvider,
+    });
+    expect(screen.getByText("Housing Moderator")).toBeInTheDocument();
+  });
+
+  it("keeps the same grant label at lg size", () => {
+    // A grant has one label at both sizes: it is already the shortest plain way
+    // to say what the person does, so there is no long form to expand into.
+    const { container } = render(<StaffBadge role="communities" size="lg" />, {
+      wrapper: I18nProvider,
+    });
+    expect(screen.getByText("Communities Team")).toBeInTheDocument();
+    expect(container.firstElementChild).toHaveAttribute(
+      "title",
+      "Communities Team",
+    );
+  });
+
   it("keeps the long form available as a tooltip at sm size", () => {
     const { container } = render(<StaffBadge role="admin" size="sm" />, {
       wrapper: I18nProvider,

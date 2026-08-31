@@ -14,7 +14,7 @@
   color: rgba(var(--cream-rgb), 1);
   text-align: center;
   padding: 48px 40px 40px;
-  border-radius: 28px;
+  border-radius: var(--radius-28);
   max-width: 34rem;
   animation: panelIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
@@ -44,7 +44,7 @@
 }
 
 .body {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 0.82);
   margin: 0 auto 24px;
@@ -60,7 +60,7 @@
 
 .ref {
   margin: 18px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.02em;
   color: rgba(var(--cream-rgb), 0.6);
 }

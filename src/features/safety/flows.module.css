@@ -11,18 +11,18 @@
   display: inline-flex;
   gap: 2px;
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px;
   margin-bottom: 28px;
 }
 .stateBtn {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 15px;
   cursor: pointer;
   transition:
@@ -39,9 +39,9 @@
   max-width: 480px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 36px 40px;
-  box-shadow: 0 6px 40px -8px rgba(var(--plum-rgb), 0.12);
+  box-shadow: var(--shadow-e3);
 }
 
 /* Entrance for a screen swapped in by a state change. Applied to each
@@ -71,7 +71,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   margin-bottom: 18px;
@@ -100,7 +100,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.7;
   margin-bottom: 24px;
@@ -144,22 +144,22 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
 }
 .memName {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--text-strong);
 }
 .memMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 
 .cardHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
 }
 .cardHead em {
@@ -167,7 +167,7 @@
   color: var(--accent);
 }
 .cardSub {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin: 4px 0 18px;
 }
@@ -175,7 +175,7 @@
 /* Option cards (block/mute) */
 .optionCard {
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
   margin-bottom: 12px;
   cursor: pointer;
@@ -207,8 +207,9 @@
   white-space: nowrap;
 }
 .ocRadioInput:focus-visible + .ocRadio {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .ocRadio {
   width: 18px;
@@ -234,12 +235,12 @@
   opacity: 1;
 }
 .ocTitle {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
 }
 .ocDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
   margin-top: 8px;
@@ -250,7 +251,7 @@
   border-top: 1px dashed rgba(var(--line-rgb), 0.12);
 }
 .subLabel {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -261,7 +262,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   margin-bottom: 6px;
 }
@@ -272,12 +273,12 @@
 }
 .durBtn {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 12px;
   cursor: pointer;
 }
@@ -287,10 +288,10 @@
   border-color: var(--line-strong);
 }
 .warnBox {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   background: rgba(var(--accent-rgb), 0.07);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 12px 14px;
   line-height: 1.55;
 }
@@ -310,7 +311,7 @@
 }
 .cancelLink {
   text-align: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink-40);
   cursor: pointer;
@@ -327,7 +328,7 @@
 /* Summary rows */
 .summary {
   background: rgba(var(--plum-rgb), 0.03);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   padding: 16px 18px;
   margin: 6px 0 20px;
 }
@@ -335,7 +336,7 @@
   display: flex;
   justify-content: space-between;
   padding: 7px 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
 }
 .csLabel {
   color: var(--ink-60);
@@ -347,7 +348,7 @@
 .manageLink {
   display: block;
   text-align: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
   cursor: pointer;
@@ -361,7 +362,7 @@
   padding: 0;
   font: inherit;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   cursor: pointer;
 }
@@ -372,7 +373,7 @@
 }
 .reportNote {
   text-align: center;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 16px;
   padding-top: 16px;
@@ -386,12 +387,12 @@
 /* Loss / preserve list (leave) */
 .lossCard {
   background: rgba(var(--plum-rgb), 0.03);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
   margin-bottom: 24px;
 }
 .lcLabel {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -402,7 +403,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   padding: 5px 0;
 }
@@ -414,7 +415,7 @@
   flex: none;
 }
 .privacyNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.6;
   margin-top: 14px;
@@ -426,7 +427,7 @@
   font-weight: 600;
 }
 .altLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--text-strong);
@@ -436,27 +437,27 @@
   display: flex;
   gap: 14px;
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
   margin-bottom: 12px;
 }
 .altIcon {
   width: 38px;
   height: 38px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   display: flex;
   align-items: center;
   justify-content: center;
   flex: none;
 }
 .altTitle {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .altDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 12px;
@@ -467,7 +468,7 @@
   margin: 24px 0;
 }
 .stillWant {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 12px;
@@ -475,10 +476,10 @@
 .reasonTa {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   background: var(--cream);
   outline: none;
@@ -489,17 +490,17 @@
 }
 .reasonTa:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+  box-shadow: var(--ring-accent);
 }
 .deleteBtn {
   width: 100%;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   background: var(--danger);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 13px;
   cursor: pointer;
 }
@@ -516,7 +517,7 @@
   align-items: center;
   gap: 12px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 18px;
   cursor: pointer;
 }
@@ -525,12 +526,12 @@
   background: rgba(var(--accent-rgb), 0.04);
 }
 .durTitle {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .durDesc {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -560,14 +561,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
 }
 .tlActive,
 .tlCurrent {
   background: var(--accent);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.18);
+  box-shadow: var(--ring-accent);
 }
 .tlDone,
 .tlSuccess {
@@ -579,7 +580,7 @@
   color: var(--ink-40);
 }
 .tlLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-60);
   text-align: center;
   max-width: 76px;
@@ -598,14 +599,14 @@
 /* Reference / info boxes (appeal) */
 .refBox {
   background: rgba(var(--plum-rgb), 0.03);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
   margin: 6px 0 4px;
 }
 .infoBox {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   padding: 14px 18px;
   margin-top: 18px;
 }
@@ -629,7 +630,7 @@
 .govLink {
   text-align: center;
   margin-top: 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
 }
 .govLink a {
@@ -670,7 +671,7 @@
   margin: 0 auto 20px;
 }
 .pausedSub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.7;
   max-width: 42ch;
@@ -682,12 +683,12 @@
   gap: 4px;
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 28px;
   margin-bottom: 26px;
 }
 .pausedReturnLbl {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -696,7 +697,7 @@
 .pausedReturnVal {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--accent);
 }
 .pausedActions {

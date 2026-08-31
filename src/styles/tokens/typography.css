@@ -50,3 +50,57 @@
     ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas,
     monospace;
 }
+
+/* ── UI type scale (numeric primitives) ─────────────────────────────────────
+   The semantic names above cover the roles the design has NAMES for. They did
+   not cover the sizes the app actually ships: a scan on 2026-08-31 found 7,650
+   literal `font-size` values against 89 token uses, and 6,995 of those literals
+   sat between 8px and 20px across the 22 steps below. That is not four bad
+   files, it is the whole UI range written by hand, which is why type could not
+   be retuned globally.
+
+   These are PRIMITIVES: one token per step actually in use, at the exact pixel
+   value that was already shipping, so adopting them changed no rendered output.
+   The half-steps are real and deliberate-looking in context (13.5 and 14.5 both
+   appear hundreds of times), so they are preserved rather than snapped — snapping
+   would have moved thousands of sites by half a pixel with no way to review it.
+
+   Reach for a SEMANTIC name first (--text-body, --text-caption, --text-label):
+   those alias into this scale and say what the type is FOR. Use a numeric step
+   only when no role name fits. Never write a literal px font-size: scripts/check-css-scale.mjs
+   fails the build on new ones. */
+:root {
+  --text-8: 8px;
+  --text-9: 9px;
+  --text-9-5: 9.5px;
+  --text-10: 10px;
+  --text-10-5: 10.5px;
+  --text-11: 11px;
+  --text-11-5: 11.5px;
+  --text-12: 12px;
+  --text-12-5: 12.5px;
+  --text-13: 13px;
+  --text-13-5: 13.5px;
+  --text-14: 14px;
+  --text-14-5: 14.5px;
+  --text-15: 15px;
+  --text-15-5: 15.5px;
+  --text-16: 16px;
+  --text-16-5: 16.5px;
+  --text-17: 17px;
+  --text-17-5: 17.5px;
+  --text-18: 18px;
+  --text-19: 19px;
+  --text-20: 20px;
+
+  /* The semantic names re-pointed at the scale, so retuning a step moves both
+     the role and every numeric consumer of that size together. Values are
+     unchanged from their original literals. */
+  --text-body-lg: var(--text-17);
+  --text-body: var(--text-15);
+  --text-body-sm: var(--text-14);
+  --text-caption: var(--text-13);
+  --text-label: var(--text-12-5);
+  --text-eyebrow: var(--text-13);
+  --text-subhead: var(--text-20);
+}

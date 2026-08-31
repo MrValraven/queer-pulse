@@ -15,7 +15,7 @@
   flex-wrap: wrap;
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -36,7 +36,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 54ch;
@@ -62,7 +62,7 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 26px;
   color: inherit;
   transition:
@@ -82,7 +82,7 @@
   .card:hover {
     transform: translateY(-3px);
     border-color: rgba(var(--line-rgb), 0.18);
-    box-shadow: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-e3);
   }
 }
 
@@ -104,7 +104,7 @@
   overflow-wrap: anywhere;
 }
 .meta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -116,7 +116,7 @@
   margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 
@@ -140,7 +140,7 @@
 .newCard {
   background: transparent;
   border: 1.5px dashed rgba(var(--line-rgb), 0.2);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px;
   cursor: pointer;
   text-align: center;
@@ -181,16 +181,16 @@
 .newCard b {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
 }
 .newCard span {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
 .secH {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -219,7 +219,7 @@
   padding: 14px 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   align-items: center;
   color: inherit;
   transition: border-color 0.2s;
@@ -236,11 +236,11 @@
 .recentKind {
   width: 30px;
   height: 30px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 800;
   letter-spacing: 0.04em;
   background: rgba(var(--plum-rgb), 0.08);
@@ -248,18 +248,18 @@
 }
 .recentInfo b {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
   font-weight: 600;
   margin-bottom: 2px;
   overflow-wrap: anywhere;
 }
 .recentInfo span {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 .recentAdd {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-strong);
   font-weight: 600;
   white-space: nowrap;

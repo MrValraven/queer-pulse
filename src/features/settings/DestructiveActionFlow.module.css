@@ -3,9 +3,9 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
-  background: rgba(var(--plum-rgb), 0.5);
-  backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,14 +22,14 @@
   max-width: 440px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 30px 60px -20px rgba(var(--plum-rgb), 0.4);
+  box-shadow: var(--shadow-e4);
   animation: dafPop 0.4s var(--ease) both;
 }
 
 .icon {
   width: 56px;
   height: 56px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -67,7 +67,7 @@
   color: var(--accent);
 }
 .body {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
   margin: 12px auto 24px;
@@ -95,7 +95,7 @@
   animation: dafSpin 0.8s linear infinite;
 }
 .loadingText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -109,7 +109,7 @@
   max-width: 460px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 30px 60px -20px rgba(var(--plum-rgb), 0.5);
+  box-shadow: var(--shadow-e4);
   position: relative;
   overflow: hidden;
   animation: dafPop 0.4s var(--ease) both;
@@ -128,7 +128,7 @@
 .resultIcon {
   width: 58px;
   height: 58px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,7 +152,7 @@
   color: var(--accent);
 }
 .resultBody {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   margin: 12px auto 26px;

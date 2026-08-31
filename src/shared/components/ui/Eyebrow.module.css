@@ -15,6 +15,6 @@
   height: 7px;
   border-radius: var(--radius-avatar);
   background: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.18);
+  box-shadow: var(--ring-jade);
   flex-shrink: 0;
 }

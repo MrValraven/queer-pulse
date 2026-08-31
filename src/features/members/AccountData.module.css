@@ -21,14 +21,14 @@
 .heading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   margin-bottom: var(--gap-xs);
 }
 
 .subheading {
   composes: heading;
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 
 .body {
@@ -38,7 +38,7 @@
 
 .hint {
   color: var(--ink-60);
-  font-size: 13px;
+  font-size: var(--text-13);
   margin-top: var(--gap-xs);
 }
 
@@ -134,5 +134,5 @@
 
 .pastRowMeta {
   color: var(--ink-60);
-  font-size: 13px;
+  font-size: var(--text-13);
 }

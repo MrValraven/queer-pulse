@@ -147,6 +147,7 @@ export const messages: Catalog = {
   "conversation.leftGroupNotice":
     "You left this group. Its history stays here, but you can't send new messages.",
   "conversation.send": "Send",
+  "conversation.composeAria": "Write a message",
   "conversation.backToList": "Back to conversations",
   "conversation.emptyPanelTitle": "Your messages live here",
   "conversation.emptyPanelBody":
@@ -256,6 +257,8 @@ export const messages: Catalog = {
   // "Requests" inbox tab (incoming message requests with accept/decline)
   "requests.tabLabel": "Requests",
   "requests.emptyTitle": "No message requests",
+  "requests.loadErrorBody":
+    "We couldn't load your message requests. Any waiting for you are still there. Try again in a moment.",
   "requests.emptyDescription":
     "When someone who isn't connected with you sends a first message, it appears here to accept or decline.",
 

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiCheck, FiAtSign } from "react-icons/fi";
-import { EmptyState, FadeIn, Tabs } from "../../shared/components/ui";
+import {
+  EmptyState,
+  FadeIn,
+  LoadErrorState,
+  Tabs,
+} from "../../shared/components/ui";
 import { useFocusOnMount } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { relativeAgo } from "../../shared/lib/relativeAgo";
@@ -230,7 +235,12 @@ function MentionRow({
 export function MentionsPanel() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { data: mentionDays = [], isLoading: loading } = useMentions();
+  const {
+    data: mentionDays = [],
+    isLoading: loading,
+    isError,
+    refetch,
+  } = useMentions();
   const [activeTabId, setActiveTabId] = useState<MentionTabId>("all");
   const {
     readIds,
@@ -317,6 +327,14 @@ export function MentionsPanel() {
 
       {loading ? (
         <MentionsListSkeleton count={3} />
+      ) : isError ? (
+        /* "Nothing has mentioned you" is the wrong thing to tell someone whose
+           request simply never landed. */
+        <LoadErrorState
+          compact
+          onRetry={() => void refetch()}
+          description={t("notifications:mentions.loadErrorBody")}
+        />
       ) : filteredDays.length === 0 ? (
         <EmptyState
           compact

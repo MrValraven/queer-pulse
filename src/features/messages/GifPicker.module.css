@@ -2,7 +2,7 @@
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  z-index: 20;
+  z-index: var(--z-popover);
   width: min(340px, calc(100vw - 32px));
   max-height: 360px;
   display: flex;
@@ -10,9 +10,7 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-card);
-  /* Fixed plum shadow (matches --shadow-* tokens) — NOT --ink-rgb, which flips
-     to a light channel in dark mode and would cast a white glow around the panel. */
-  box-shadow: 0 4px 14px rgba(var(--plum-rgb), 0.22);
+  box-shadow: var(--shadow-e3);
   overflow: hidden;
   animation: gifPanelIn var(--dur-fast) var(--ease);
 }

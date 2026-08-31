@@ -31,7 +31,7 @@
   width: 32px;
   height: 32px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: none;
   color: var(--ink-60);
   cursor: pointer;
@@ -48,7 +48,7 @@
 }
 .navButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--ring-plum);
 }
 
 .selectGroup {
@@ -75,7 +75,7 @@
 
 .weekdayHeader {
   padding: 4px 0 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -102,7 +102,7 @@
   border-radius: 50%;
   background: none;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-variant-numeric: tabular-nums;
   color: var(--ink);
   cursor: pointer;
@@ -118,7 +118,7 @@
 }
 .dayButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--ring-plum);
 }
 
 /* Today: a coral ring, not a fill, so it stays legible layered under .selected. */
@@ -172,7 +172,7 @@
 .sm .dayButton {
   width: 30px;
   height: 30px;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 
 /* ── DatePicker (Task 6) ──────────────────────────────────────────────────
@@ -194,7 +194,7 @@
   width: 44px;
   height: 44px;
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--cream);
   color: var(--ink-60);
   cursor: pointer;
@@ -214,7 +214,7 @@
 .trigger:focus-visible {
   outline: none;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
 }
 .trigger[aria-expanded="true"] {
   border-color: var(--line-strong);
@@ -227,7 +227,7 @@
 .container.sm .trigger {
   width: 38px;
   height: 38px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 .container.sm .trigger svg {
   width: 16px;
@@ -263,10 +263,10 @@
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  z-index: 40;
+  z-index: var(--z-popover);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   box-shadow: var(--shadow-panel);
   padding: 12px;
   transform-origin: top right;
@@ -291,7 +291,7 @@
 }
 .monthGridYear {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
@@ -304,10 +304,10 @@
 .monthGridButton {
   padding: 10px 6px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   background: none;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   cursor: pointer;
   transition:
@@ -321,7 +321,7 @@
 }
 .monthGridButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--ring-plum);
 }
 .monthGridButtonSelected {
   background: var(--accent-fill);
@@ -423,10 +423,10 @@
 .presetButton {
   padding: 6px 12px;
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -442,7 +442,7 @@
 .presetButton:focus-visible {
   outline: none;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--ring-plum);
 }
 
 .pickerFooter {
@@ -454,10 +454,10 @@
 .todayButton {
   padding: 8px 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: none;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-deep);
   cursor: pointer;
@@ -470,5 +470,38 @@
 }
 .todayButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--ring-plum);
+}
+
+/* ── Local copies of shared keyframes ──
+   CSS Modules rewrites every animation NAME it sees here into a file-scoped
+   hash, including names whose @keyframes lives in global effects.css. The
+   reference then resolves to nothing and the animation silently never runs,
+   with no error anywhere. A keyframe used from a module has to be declared in
+   that module. Keep these in step with src/styles/tokens/effects.css. */
+@keyframes qpMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Dark theme — the clear chip's disc and the provisional range preview are
+   drawn only by a --plum-rgb tint, which does not flip, so on the dark popover
+   both disappear. The preview tint is the only signal that a second endpoint is
+   being hovered, so it has to survive the theme. */
+:global([data-theme="dark"]) .clear {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .clear:hover {
+    background: rgba(var(--cream-rgb), 0.18);
+  }
+}
+:global([data-theme="dark"]) .previewRange:not(.rangeStart):not(.rangeEnd) {
+  background: rgba(var(--cream-rgb), 0.1);
 }

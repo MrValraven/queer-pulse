@@ -402,7 +402,7 @@ export const marketing: Catalog = {
   "activism.mobilise.p2":
     "<b>Document what you see.</b> Photos and notes from an action matter later, for accountability and for history.",
   "activism.mobilise.p3":
-    "<b>Follow up, don't just attend.</b> The work after the march is where most of the actual change happens.",
+    "<b>Keep going after the march.</b> The work that follows a demonstration is where most of the actual change happens.",
   "activism.feel.title": "How it <em>feels</em>",
   "activism.feel.p1":
     "Burnout is real. Activism that only takes and never restores isn't sustainable, for you or for the movement.",
@@ -733,8 +733,8 @@ export const marketing: Catalog = {
     "What's shared in a gathering, a support space, or a private community stays there unless the person says otherwise.",
   "guidelines.clause04.p2":
     "This includes screenshots. Ask before you share anything that came from inside QueerPulse.",
-  "guidelines.clause05.titlePre": "Repair, don't just ",
-  "guidelines.clause05.titleEm": "apologise",
+  "guidelines.clause05.titlePre": "Repair beyond the ",
+  "guidelines.clause05.titleEm": "apology",
   "guidelines.clause05.p1":
     "A good apology names what happened, acknowledges the impact, and changes the behaviour going forward.",
   "guidelines.clause05.p2":
@@ -819,17 +819,17 @@ export const marketing: Catalog = {
   "help.qa.free.a": "Yes, QueerPulse is free to join and use.",
   "help.qa.changeName.q": "How do I change my name or pronouns?",
   "help.qa.changeName.a":
-    "Head to <settingsLink>Settings</settingsLink> → Profile. Changes apply everywhere immediately.",
+    "Head to <settingsLink>Settings</settingsLink>, then Profile. Changes apply everywhere immediately.",
   "help.qa.privateProfile.q": "Can I make my profile private?",
   "help.qa.privateProfile.a":
-    "Yes, in <settingsLink>Settings</settingsLink> → Privacy. A private profile is still visible to people you're connected with. It just <strong>won't appear in search or the public directory</strong>.",
+    "Yes, in <settingsLink>Settings</settingsLink>, then Privacy. A private profile is still visible to people you're connected with. It just <strong>won't appear in search or the public directory</strong>.",
   "help.qa.unknownSession.q":
     "I don't recognise a device in my active sessions. What now?",
   "help.qa.unknownSession.a":
     "Sign that session out from <sessionsLink>your active sessions</sessionsLink>. Signing in runs through Google, so review your Google account's security too, since anyone with access to it can get in here. Then <contactLink>tell us what happened</contactLink> and we'll help you lock things down.",
   "help.qa.deleteAccount.q": "How do I delete my account?",
   "help.qa.deleteAccount.a":
-    "In <settingsLink>Settings</settingsLink> → Account, at the bottom. This is permanent. See the Privacy Policy for what's retained and for how long.",
+    "In <settingsLink>Settings</settingsLink>, then Account, at the bottom. This is permanent. See the Privacy Policy for what's retained and for how long.",
   "help.qa.levels.q": "What do the different member levels mean?",
   "help.qa.levels.a":
     "Levels reflect how long you've been vouched into the community and your activity. They are a trust signal, and everything stays free.",
@@ -868,7 +868,7 @@ export const marketing: Catalog = {
     "Early access to events, a supporter badge, and the knowledge that your membership keeps the platform ad-free.",
   "help.qa.emailNotifications.q": "How do I control notifications?",
   "help.qa.emailNotifications.a":
-    "In <settingsLink>Settings</settingsLink> → Notifications, toggle each category independently. QueerPulse notifies you in the app and, if you allow it, by push. It sends no email.",
+    "In <settingsLink>Settings</settingsLink>, then Notifications, toggle each category independently. QueerPulse notifies you in the app and, if you allow it, by push. It sends no email.",
   "help.qa.browserSupport.q": "Which browsers does QueerPulse support?",
   "help.qa.browserSupport.a":
     "Current versions of Chrome, Firefox, Safari, and Edge. Older browsers may have display issues.",
@@ -1325,7 +1325,7 @@ export const marketing: Catalog = {
   "imprint.meta.lastReviewed": "Last reviewed 1 June 2026",
   "imprint.title": "Legal <em>notice</em>",
   "imprint.plain.text":
-    "The plain version: QueerPulse is built and run by a group of volunteers, not a registered company. This page tells you who's behind it, how to reach us, and the law we answer to.",
+    "The plain version: QueerPulse is built and run by a group of volunteers, acting in a personal capacity. This page tells you who's behind it, how to reach us, and the law we answer to.",
   "imprint.operator.title": "Who runs QueerPulse",
   "imprint.operator.p1":
     "QueerPulse is built and run by a group of volunteers. There's no company or registered organisation behind it yet. If that changes, we'll publish the registration details here.",
@@ -2249,6 +2249,172 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Improvement",
   "changelog.badge.infrastructure": "Infrastructure",
   "changelog.badge.fix": "Fix",
+  "changelog.tag.report": "Open the report form",
+  // Section 11, core member journeys (PRD-01..PRD-18).
+  "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.title":
+    "An outage no longer looks like an empty page",
+  "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.body":
+    'When a request failed, the page used to shrug and show its empty state. A failed search told you there were no results for your word. A failed listings fetch on the sexual-health tab said the clinic directory was still coming. The local directory said Lisbon had no queer-owned places, and your own cards, connections and applications could all report that you had none. Every one of those was the platform blaming you for its own outage. Screens across the app now tell you plainly when something failed to load and give you a Try again button, and they keep saying "nothing here yet" only when that is actually true.',
+  "changelog.entries.onboarding-never-guesses-your-visibility.title":
+    "Onboarding never guesses your visibility",
+  "changelog.entries.onboarding-never-guesses-your-visibility.body":
+    "On the intentions step, if we failed to load the choices you had saved before, the form quietly assumed your intentions were public and could save them that way. Since intentions can say you are looking for dating, housing or flatmates, that was a real outing risk. The step now tells you when it could not load, offers a retry, and will never write a visibility setting it did not successfully read.",
+  "changelog.entries.reporting-a-person-says-what-actually-happens.title":
+    "Reporting a person says what actually happens",
+  "changelog.entries.reporting-a-person-says-what-actually-happens.body":
+    "The confirmation after reporting someone from a DM or a connection was written for flagging a venue's safe-space badge. It talked about badge suspension and promised we would never contact the venue, when there was no badge and no venue anywhere in sight, and it printed its formatting tags on screen. Reporting a person now has its own confirmation that describes what a moderator will actually do.",
+  "changelog.entries.mod-tools-bans-read-in-words-again.title":
+    "Mod tools bans read in words again",
+  "changelog.entries.mod-tools-bans-read-in-words-again.body":
+    'Opening Mod tools and then Bans showed raw internal codes instead of text: a ban\'s length read as a key rather than "Permanent", and the rule citation and the edit-ban editor were codes from top to bottom. The missing wording has been written in English and Portuguese.',
+  "changelog.entries.offline-no-longer-clears-what-youre-typing.title":
+    "Losing signal no longer clears what you were typing",
+  "changelog.entries.offline-no-longer-clears-what-youre-typing.body":
+    "Walking into a tunnel or switching from wifi to data used to replace the whole page with the offline screen, which threw away a half-written message, an unsent gathering form or a draft in progress. The page now stays exactly where it was and a small bar tells you the connection dropped. The full offline screen is still there for when you open the app with no connection at all.",
+  "changelog.entries.back-button-leaves-an-editor-cleanly.title":
+    "Back leaves an editor in one press",
+  "changelog.entries.back-button-leaves-an-editor-cleanly.body":
+    "Pages that warn you about unsaved edits left a hidden extra step in your browser history. After leaving one, Back would bring you to the editor a second time before it took you anywhere else. That step is now cleaned up whichever way you leave the page.",
+  "changelog.entries.signed-out-tab-bar-is-whole-again.title":
+    "The signed-out tab bar is whole again",
+  "changelog.entries.signed-out-tab-bar-is-whole-again.body":
+    "On a phone, a visitor without an account saw a tab bar with a single tab in it. Two of its three destinations had become member-only, so they were being filtered out of the bar without being replaced. It now offers the resource library, the safe-spaces guide and About, all of which open without an account.",
+  "changelog.entries.installing-the-app-takes-one-tap-again.title":
+    "Installing the app takes one tap again",
+  "changelog.entries.installing-the-app-takes-one-tap-again.body":
+    "The browser offers an app one chance to capture its install prompt, and whichever part of QueerPulse asked first was keeping it to itself. The install page and the install dialog were left showing manual step-by-step instructions on browsers that support installing in a single tap. All three now share the same offer.",
+  "changelog.entries.notification-taps-land-on-the-right-screen.title":
+    "Tapping a notification lands on the right screen",
+  "changelog.entries.notification-taps-land-on-the-right-screen.body":
+    "In the installed app, tapping a message notification could raise QueerPulse on whichever screen it was last showing instead of opening the conversation, because the app could be put to sleep mid-jump. It now finishes opening the notification before anything else can interrupt it.",
+  "changelog.entries.the-installed-app-keeps-itself-current.title":
+    "The installed app keeps itself current",
+  "changelog.entries.the-installed-app-keeps-itself-current.body":
+    "An installed app left open for days could keep running an old version until it was closed and reopened, and would sometimes reload itself abruptly when it reached for a part of the app that had since changed. It now checks for a new version about once an hour and offers you the usual update pill instead.",
+  "changelog.entries.pausing-your-account-now-pauses-it.title":
+    "Pausing your account now actually pauses it",
+  "changelog.entries.pausing-your-account-now-pauses-it.body":
+    "The pause button in Settings used to show you a success screen without doing anything: your profile stayed visible, you stayed messageable, and your session stayed open. It now runs the real thing, and the screen that confirms it can only appear once the account has genuinely been paused.",
+  "changelog.entries.pause-and-delete-live-in-one-place.title":
+    "Pausing and deleting live in one place",
+  "changelog.entries.pause-and-delete-live-in-one-place.body":
+    "Both used to exist on three separate screens with three separate confirmations, which is how the broken one went unnoticed. There is now a single page that explains what each does, and everywhere else takes you to it.",
+  "changelog.entries.content-settings-actually-filter-your-feed.title":
+    "The content settings on Interests work now",
+  "changelog.entries.content-settings-actually-filter-your-feed.body":
+    "Dating, mental health, and sexuality and identity were switches with nothing behind them. Turning one off now hides that kind of community from your feed. It never touches your access to those spaces, and it deliberately does not filter health, disability or race, because those are people rather than content.",
+  "changelog.entries.you-can-stop-being-suggested-to-strangers.title":
+    "You can stop being suggested to people you have not met",
+  "changelog.entries.you-can-stop-being-suggested-to-strangers.body":
+    "Under Visibility. You still see suggestions yourself, and you stay in the member directory. It only takes you out of other people's suggestion strip.",
+  "changelog.entries.the-activity-switch-is-one-switch.title":
+    "The activity switch is the same switch in both places",
+  "changelog.entries.the-activity-switch-is-one-switch.body":
+    "Settings advertised the recently-active opt-out as coming soon while the working one already shipped on your profile. They are now one control on one setting: flip it in either place and it holds in both, and each tells you what you currently read as.",
+  "changelog.entries.answer-a-connection-request-where-you-read-it.title":
+    "You can answer a connection request where you read it",
+  "changelog.entries.answer-a-connection-request-where-you-read-it.body":
+    "If someone had already asked to connect, their profile still offered to say hello, then refused the message and told you it was waiting with them, which was the opposite of what happened. The profile now offers to accept, the notification carries accept and decline, and anything you had typed comes with you into the conversation instead of being thrown away.",
+  "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.title":
+    "A gathering can tell you when it is down to the last few spots",
+  "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.body":
+    "For gatherings you saved or said maybe to. It is off unless you want it, it is one notification per gathering, and it goes quiet again if seats free up.",
+  "changelog.entries.blocked-and-muted-in-one-place.title":
+    "Blocked and muted people are in one list",
+  "changelog.entries.blocked-and-muted-in-one-place.body":
+    "Muting someone was easy and reviewing it was impossible: nothing anywhere listed who you had muted, so undoing it meant remembering the name. The pane now shows both, with the date and a one-tap undo.",
+  "changelog.entries.your-join-request-shows-its-deadline.title":
+    "Your join request shows its deadline, and a lapsed invite is not the end",
+  "changelog.entries.your-join-request-shows-its-deadline.body":
+    "An approved request used to hold an invite that quietly expired seven days later. The clock now starts when you are told rather than when the decision is made, the status page shows the deadline while there is still time to use it, and an invite that did lapse can be revived from that page. If you lost the link entirely, signing in with Google gets you back to your own request.",
+  "changelog.entries.losing-your-google-account-is-no-longer-final.title":
+    "Losing your Google account no longer means losing your membership",
+  "changelog.entries.losing-your-google-account-is-no-longer-final.body":
+    "It used to be permanent, with no way back short of us editing the database by hand. An admin can now reconnect your membership to a new Google account, but only to one that has already proved it controls your address, and never by typing an identity in by hand.",
+  "changelog.entries.vouching-has-a-front-door.title":
+    "Vouching for someone has a way in",
+  "changelog.entries.vouching-has-a-front-door.body":
+    "The page existed and nothing linked to it. It now sits in your account menu and beside your connections, and the getting-started step takes you there instead of to the member list.",
+  "changelog.entries.recognition-counts-people-not-volume.title":
+    "Recognition counts people rather than volume",
+  "changelog.entries.recognition-counts-people-not-volume.body":
+    "Posting into a community you made by yourself, or turning up to your own gatherings, could carry you most of the way to the levels that grant extra invitations. Points now come from things another person was part of. Badges you can earn alone are still yours to earn and still shown.",
+  "changelog.tag.vouch": "Vouch for someone",
+
+  "changelog.entries.declining-a-connection-request-now-holds.title":
+    "Declining a connection request now holds",
+  "changelog.entries.declining-a-connection-request-now-holds.body":
+    "When you declined a connection request, the person who sent it could send another one straight away, with a new written message attached, as many times as they liked. The request note was effectively a way to keep writing to someone who had already said no, and the only thing that actually stopped it was blocking, which you have no reason to think you need yet. A decline now holds on its own. A repeat request has to wait, the wait gets longer each time you decline the same person, and after enough refusals they cannot ask again at all. None of this tells them how many times you have declined.",
+
+  "changelog.entries.you-can-report-a-whole-community.title":
+    "You can report a whole community",
+  "changelog.entries.you-can-report-a-whole-community.body":
+    "You could report a post, and a reply, and a person, but never the community itself. If a community was organised around doing harm, the only thing you could do was report its posts one at a time, and none of that ever put the community in front of a moderator as a community. You can now report one from its own page, and the reasons you can pick from include the serious ones: outing, sharing someone personal details, harassment, hate speech and discrimination. Before this, the worst thing you could say about a community was that it was spam.",
+
+  "changelog.entries.housing-reports-can-reach-the-urgent-queue.title":
+    "Housing reports can reach the urgent queue",
+  "changelog.entries.housing-reports-can-reach-the-urgent-queue.body":
+    "Two things kept the most serious housing reports out of the fastest queue. The first was that no housing report, about a listing, a flatmate or a landlord, offered outing or doxxing as a reason. A landlord threatening to tell your family, or a flatmate posting your address or the fact that you are trans, is the central danger in queer housing, and there was no word for it on the form. Those reasons now exist on all three. The second was that after three reports about the same subject in a week, a fourth was refused, and that refusal was applied before we looked at what the report was about. So the one kind of report we promise to answer within an hour was the one kind that could be turned away. Urgent reports are now never refused for that reason, and the message you get if a limit does apply points somewhere real.",
+
+  "changelog.entries.hiding-a-housing-profile-now-hides-it.title":
+    "Hiding a housing profile now hides it",
+  "changelog.entries.hiding-a-housing-profile-now-hides-it.body":
+    "When a moderator hid or removed a flatmate profile or a landlord after a report, the report closed as dealt with, you were told it had been actioned, and the profile stayed exactly where it was. It was still in browse, still in search, still there if you had the link. Every other part of QueerPulse already checked for this and housing did not. It does now, on every way in.",
+
+  "changelog.entries.you-choose-whether-a-report-is-anonymous.title":
+    "You choose whether a report is anonymous",
+  "changelog.entries.you-choose-whether-a-report-is-anonymous.body":
+    "The report form worked out whether you wanted to be anonymous by looking at whether you had filled in the optional email field. Leaving it blank made your report anonymous, and nothing on the page said so. That matters more than it sounds: an anonymous report reaches the moderator without your name and without the record of your previous reports, which is part of how they weigh what you are telling them. So a member who filled in the form expecting the team to know who they were was quietly not identified. It is now a choice you make, it says what each option costs you, and the email field is only an email field.",
+
+  "changelog.entries.barring-someone-forever-needs-two-people.title":
+    "Barring someone forever needs two people",
+  "changelog.entries.barring-someone-forever-needs-two-people.body":
+    "Removing a member from a community barred them from coming back, and unless an end date was set, that bar was permanent. One owner or one moderator could do it alone. A permanent ban from QueerPulse itself already needed a second moderator to agree, on the reasoning that barring a person forever is too much for one person to decide, and the community version, which is the one most people actually meet, had no such check. It does now. The removal still happens immediately and the bar starts at thirty days, so nobody stays in a room they were just removed from. Making it permanent waits for a second owner or moderator to agree, and the person who proposed it cannot be the one who agrees. If nobody signs within three days the bar simply stays at thirty days. In a community with nobody else who could sign, a permanent bar is not available at all.",
+
+  "changelog.entries.a-community-can-read-its-own-history.title":
+    "A community can read its own history",
+  "changelog.entries.a-community-can-read-its-own-history.body":
+    "Every community already kept a record of who removed a member, who changed a role, who froze or unfroze the room and who switched it between public and private. Only QueerPulse staff could read it. The community own owners and moderators, the people that record exists to hold to account, could not. They can now, from Mod tools. Anything platform staff did is labelled as such, so an override is never mistaken for a decision somebody in the community made.",
+
+  "changelog.entries.we-now-publish-government-data-requests.title":
+    "We now publish government and legal data requests",
+  "changelog.entries.we-now-publish-government-data-requests.body":
+    "The transparency report counted reports, appeals and moderator decisions, and said nothing at all about how often a court, a police force or a government body had asked us to hand over information about a member. It did not report the number and it did not mention that it was missing, which for a platform whose whole point is queer safety is the line that matters most. There is now a section for it. It counts the demands we received, what they asked for, what we did about each one, how many accounts were named and how many of those people we told. Small numbers are withheld, because a demand naming one or two accounts is a specific person to anyone who knows them, and zero is published as a real zero. Records struck from the register are counted too, so it cannot be quietly emptied.",
+
+  "changelog.entries.dark-mode-gives-feedback-again.title":
+    "Dark mode gives feedback again",
+  "changelog.entries.dark-mode-gives-feedback-again.body":
+    "If you use QueerPulse in dark mode, a lot of the app had stopped answering you. The tint that shows a row is under your cursor, or that a dropdown option is the one your keyboard is currently on, was built from a colour that never switched for the dark theme, so on a dark page it painted almost exactly the page itself. Sixty-nine surfaces used it. In practice that meant hovering a calendar day showed nothing, and arrowing through a dropdown gave you no way to see where you were. The same problem was hiding other things: the selected option in a menu, chart axis labels, the shimmer that shows a link preview or a housing card is still loading, the coloured circle behind someone initials, and the focus edge on a date field. All of it is fixed, and light mode looks exactly as it did before.",
+
+  "changelog.entries.persona-pages-had-text-you-could-barely-read.title":
+    "Persona pages had text you could barely read",
+  "changelog.entries.persona-pages-had-text-you-could-barely-read.body":
+    "Every persona skin restyles your page to suit it, and part of that is picking its own ink colour. Thirteen of those skins were also making the faintest text fainter than the rest of QueerPulse allows, going back to a setting we corrected everywhere else after a contrast review. The text it affected was the quiet kind that still matters: dates and metadata, placeholder text in a field, and the helper line under a form question. On some skins it measured under 3 to 1 against its own background, where the floor is 4.5. Every skin has been remeasured against the actual colour it sits on and raised until it clears, and a note in the file records the floor so a new skin starts from it.",
+
+  "changelog.entries.things-that-were-meant-to-move-now-move.title":
+    "Things that were meant to move now move",
+  "changelog.entries.things-that-were-meant-to-move-now-move.body":
+    "Eleven animations in the app had been silently doing nothing. They were written correctly and referred to motion defined elsewhere, but the way stylesheets are packaged renamed them on the way out, so the reference pointed at nothing and no error was ever raised. Dropdowns and date pickers appeared instantly instead of easing open, the live dot on a featured community never pulsed, switching between your personas cut rather than crossfaded, and a control you cannot use yet stayed still when you clicked it instead of giving the small shake that says so. Separately, a handful of headings had been asking for a typeface by a name that did not exist, so they quietly rendered in the body font rather than the serif they were meant to have, including the one on the printed membership card sheet.",
+
+  "changelog.entries.your-identity-details-now-reach-only-real-matches.title":
+    "Your identity details now reach only real matches",
+  "changelog.entries.your-identity-details-now-reach-only-real-matches.body":
+    'On a flatmate profile you can share gender identity, safe-space needs and how you want your household to work around being trans. Those are the most sensitive things the platform holds, and the setting guarding them offered an option labelled "Only people I could share a home with". It did not mean that. It meant anyone whose profile was set to the opposite of yours, and that is a box a person ticks on their own profile, so in practice any member could tick it and read that half of the board, no like and no match required. It now means what it says: your details reach someone only once the two of you have liked each other. The option is relabelled "Only people I have matched with" so nobody has to guess. Two other things changed with it. Profiles on that setting no longer carry these details in the board listing at all, so they cannot be collected in bulk, and they appear on a profile\'s own page once you match. If you chose "Anyone on the board" or "Any member" instead, nothing changes for you: that was a deliberate choice to be visible, and the cards and the discovery deck still show it.',
+
+  "changelog.entries.review-queues-no-longer-hide-people-who-are-waiting.title":
+    "Review queues no longer hide people who are waiting",
+  "changelog.entries.review-queues-no-longer-hide-people-who-are-waiting.body":
+    "If you moderate a community, review claims on a directory listing, look after a housing group, or review who is joining a housing co-op, your review queue had a limit nobody told you about. It loaded the first 200 requests and stopped, and it said nothing about the ones it left out, so a busy queue quietly ended at 200 and the requests it dropped were the ones that had waited least. Every one of these queues now loads a page at a time, tells you how many people are waiting altogether, and gives you a way to reach the rest. The two housing queues had a second problem underneath that one: each fetched the 200 most recent requests in any state and then hid the decided ones in your browser, so a group or co-op with 200 recently approved or declined requests showed you an empty queue while someone was still waiting in it. Both now ask for pending requests specifically, so what you see is what is actually outstanding.",
+
+  "changelog.entries.press-kit-photos-can-be-uploaded-again.title":
+    "Press kit photos can be uploaded",
+  "changelog.entries.press-kit-photos-can-be-uploaded-again.body":
+    "The photo on a press contact could only ever be a link to an image hosted somewhere else. An uploaded one was refused, which meant the only way to fill the field was to point it at another site, and whoever ran that site could then see the address and browser of everyone who read our press kit. Uploads work now, and links are limited to the handful of places we already serve images from. Photos already uploaded elsewhere on QueerPulse are also safe from being tidied away by mistake: the cleanup that removes unused images now knows a press kit photo counts as in use.",
+
+  "changelog.entries.a-mistyped-address-says-not-found.title":
+    "A mistyped address says not found",
+  "changelog.entries.a-mistyped-address-says-not-found.body":
+    "Some addresses on QueerPulse end in a long identifier, the kind a link carries rather than something you would type. If that identifier arrived damaged, from a truncated link in a message, a copy that lost its last characters, or an old bookmark, the page answered with a server error rather than telling you the thing was not there. Around twenty of those addresses now recognise a malformed identifier for what it is and answer not found, which is what the page always promised to do.",
   "changelog.tag.about": "Read where we stand",
   "changelog.tag.partners": "See our partners",
   "changelog.tag.aboutCommunities": "See how communities work",
@@ -2308,7 +2474,6 @@ export const marketing: Catalog = {
   "changelog.tag.appealOutcome": "Check your appeal status",
   "changelog.tag.hateCrime": "Read hate crime resources",
   "changelog.tag.changemakers": "See our Changemakers",
-  "changelog.tag.vouch": "Vouch for someone",
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
@@ -2687,7 +2852,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-banner-framing.title":
     "Persona banners, framed the way you framed them",
   "changelog.entries.persona-banner-framing.body":
-    "Persona banners now reframe at 3:1 — the shape they actually paint at — instead of the 2:1 used for magazine covers, and the page keeps whatever you centred in the frame rather than slicing an arbitrary strip out of the middle. Banners upload at a higher resolution too, so they stay sharp edge to edge on a big screen, and they now run all the way up to the top of the page.",
+    "Persona banners now reframe at 3:1, the shape they actually paint at, in place of the 2:1 used for magazine covers, and the page keeps whatever you centred in the frame rather than slicing an arbitrary strip out of the middle. Banners upload at a higher resolution too, so they stay sharp edge to edge on a big screen, and they now run all the way up to the top of the page.",
   "changelog.entries.card-check-page-rebuild.title":
     "The card check page now shows the member\u2019s photo",
   "changelog.entries.card-check-page-rebuild.body":
@@ -5139,7 +5304,7 @@ export const marketing: Catalog = {
   "roadmap.card.mostWanted": "Most wanted",
   "roadmap.card.votesSuffix": "votes",
   "roadmap.card.committed": "Committed",
-  "roadmap.card.slipNote": "Moved {from} → {to}, {reason}",
+  "roadmap.card.slipNote": "Moved from {from} to {to}: {reason}",
   "roadmap.card.plannedFeatures": "Planned features",
   "roadmap.shape.title": "Have an <em>idea?</em>",
   "roadmap.shape.sub":
@@ -5667,9 +5832,9 @@ export const marketing: Catalog = {
     'Tell us about your organisation in a paragraph. We read every message within 5 working days and reply personally, even if the answer is "this isn\'t right for us right now."',
   "forOrgs.cta.list1": "For partnerships, we usually call before we write",
   "forOrgs.cta.list2": "Grant applications: include a one-pager",
-  "forOrgs.cta.pressInquiry": "Press inquiries → <a>Press Kit</a>",
+  "forOrgs.cta.pressInquiry": "Press inquiries: <a>Press Kit</a>",
   "forOrgs.cta.partnerQuestion":
-    "Already a partner with a question → <a>Contact</a>",
+    "Already a partner with a question? <a>Contact us</a>",
   "forOrgs.form.nameLabel": "Your name",
   "forOrgs.form.namePlaceholder": "Filipa Mendes",
   "forOrgs.form.orgLabel": "Organisation",
@@ -5726,6 +5891,12 @@ export const marketing: Catalog = {
   "directory.noListings.title": "No places listed yet",
   "directory.noListings.body":
     "This directory grows from the community. If you run or know a queer-owned or queer-friendly place in Lisbon, be the first to add it.",
+  // Shown when the directory read itself failed. Kept firmly separate from
+  // `noListings` above: an outage rendered as an empty state would tell a
+  // member Lisbon has no queer-owned places (DES-25).
+  "directory.loadError.title": "We couldn't load the <em>directory</em>",
+  "directory.loadError.body":
+    "The places didn't come back this time. Your filters are still set, so try again in a moment.",
   "directory.clearFilters": "Clear filters",
   "directory.clearAll": "Clear all",
   "directory.activeFilters": "Filtered by",
@@ -6843,7 +7014,7 @@ export const marketing: Catalog = {
   "constitution.art6.toc": "VI · Money",
   "constitution.art6.title": "Money",
   "constitution.art6.clause1":
-    "<strong>At least 90% of every euro received</strong> must be spent on community programmes, staff, and infrastructure, not on overheads. The target is 96% and has been met every year since 2024.",
+    "<strong>At least 90% of every euro received</strong> must be spent on community programmes, staff, and infrastructure, leaving overheads a ceiling of 10%. The target is 96% and has been met every year since 2024.",
   "constitution.art6.clause2":
     "The annual budget is approved by the Assembly. The finance circle may rebalance within categories during the year without re-approval, up to 10% per category.",
   "constitution.art6.clause3":
@@ -6888,7 +7059,7 @@ export const marketing: Catalog = {
   "constitution.art11.toc": "XI · Dissolution",
   "constitution.art11.title": "Dissolution",
   "constitution.art11.clause1":
-    "The collective may be wound down only by Assembly resolution requiring a <strong>75% supermajority</strong> of all active members, not merely of those voting.",
+    "The collective may be wound down only by Assembly resolution carrying a <strong>75% supermajority</strong> measured against the full active membership.",
   "constitution.art11.clause2":
     "On winding down, any remaining funds must be transferred to a registered LGBTQ+ rights organisation chosen by the dissolving Assembly. No funds may be distributed to individuals.",
 
@@ -7055,7 +7226,7 @@ export const marketing: Catalog = {
     "Real resource listings for Legal Aid & Sexual Health Testing",
   "changelog.entries.resource-listings-and-suggestions.body":
     'Legal Aid and Sexual Health Testing now show a real, admin-vetted directory when one exists — and a "Suggest a resource" form feeding an admin review queue when it doesn\'t. No fabricated listings, ever.',
-  "changelog.tag.legal": "See Legal Aid →",
+  "changelog.tag.legal": "See Legal Aid",
 
   "changelog.tag.guideRating": "See the Legal guides",
   "changelog.entries.resources-guide-rating.title":
@@ -7090,6 +7261,36 @@ export const marketing: Catalog = {
     "The nomination form becomes a form",
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
+
+  "changelog.entries.signing-a-device-out-now-signs-it-out.title":
+    "Signing a device out now signs it out",
+  "changelog.entries.signing-a-device-out-now-signs-it-out.body":
+    "Your account settings list the devices you are signed in on, and two things about that page were wrong. None of the devices was marked as the one in your hand, so there was no way to tell which row was the phone you were holding. Worse, Sign out all other devices signed you out of every device including the one you were using, which is the opposite of what it promises and a bad surprise for anyone reaching for it because they think an account has been taken. Both are fixed: the device you are on is labelled, and signing the others out leaves you exactly where you are. Signing a device out is also immediate now. Before, a device that had just been signed out kept working for up to fifteen minutes, so it could still read your messages and post in that window, and it could reconnect for live updates on top. That gap is closed on every part of the platform at once.",
+
+  "changelog.entries.names-that-speak-for-queerpulse-are-reserved.title":
+    "Names that speak for QueerPulse are reserved",
+  "changelog.entries.names-that-speak-for-queerpulse-are-reserved.body":
+    "Staff here are identified by a badge, and a username carries no such weight, which left a gap: names like support, moderator, official, security and safety were free for anyone to take. A member holding one could open a message that reads as though the platform itself had sent it. Around thirty such names are now kept for the platform, alongside the ones already reserved for matching a page address. This binds at every point a username is set, including the one at sign-up, where a name was previously taken straight from your Google account with no check at all. If your name happens to match one of the reserved words you get it with a number after it, and nobody already using one loses their name.",
+
+  "changelog.entries.badges-for-the-people-who-run-each-part.title":
+    "Badges for the people who run each part",
+  "changelog.entries.badges-for-the-people-who-run-each-part.body":
+    "Some parts of QueerPulse are run by members who have been trusted with one area of it: housing, the directory, the resource library, the magazine, communities. They make real decisions about other members work, and until now they carried no badge anywhere, so a person whose listing was declined or whose piece was spiked saw an ordinary account. Those six roles now appear on the staff page and wherever a member name is shown, each with a plain label saying what the person looks after. Two roles stay unbadged on purpose: a magazine writer, who only ever works on their own pieces, and partnerships, which decides nothing about a member.",
+
+  "changelog.entries.staying-signed-in-on-shared-wifi.title":
+    "Staying signed in on shared wifi",
+  "changelog.entries.staying-signed-in-on-shared-wifi.body":
+    "Sessions renew quietly in the background, and the limit on how often that could happen counted everyone sharing one internet connection as a single person. At a venue, a cafe or on a home connection where a provider puts many households behind one address, the eleventh renewal in a minute across everyone present was refused, and the people it hit had done nothing but be in the same room. The limit now counts each session on its own, so a busy room is just a busy room.",
+
+  "changelog.entries.clearer-keyboard-focus-across-the-platform.title":
+    "Clearer keyboard focus across the platform",
+  "changelog.entries.clearer-keyboard-focus-across-the-platform.body":
+    "If you move around QueerPulse with the keyboard, the ring that marks where you are had a problem. On the cream and white parts of the site it was a single coral outline that barely separated from the page behind it. The ring is two-toned now, a dark line with a pale halo just inside it, so one of the two always stands clear whatever colour it lands on. Most of the site already worked this way, and around 170 individual controls quietly overrode it back to the old thin outline. They all share the one ring now, so it looks the same on a button, a card, a photo and a persona page, whatever background you have chosen. Three places had no ring at all and now do: the article writing canvas, the comment box under an article, and the search field on Find members. The faintest text in Studio, the one used for timestamps, day headers and row details, was also too pale against the dark background at the small sizes it appears in, and has been lifted until it reads.",
+
+  "changelog.entries.screen-readers-follow-along-in-more-places.title":
+    "Screen readers follow along in more places",
+  "changelog.entries.screen-readers-follow-along-in-more-places.body":
+    "Parts of the site were changing without saying so. Five panels, the resource sheets, the grant application, the mentor match, the print order and the Studio tip, opened without moving you into them, so the next thing you tabbed to was a control on the page behind. They now place you inside, keep you there while they are open, close on Escape, and hand you back to the button you came from. Reordering the pieces in a magazine issue, and moving a roadmap card up or down its column, now announce the title and the new position, and a roadmap card can be moved without a mouse at all. Stepping through the photos on a home listing says which photo you are on and what is in it. The message box, the forum reply box and the community reply box carry proper names now, in place of a placeholder that disappeared the moment you started typing. Lists of choices built out of buttons answer the arrow keys the way a list of choices should. The close button on a pop-up message is easier to hit on a phone, and the mute menu on your badge case closes with Escape.",
 
   "changelog.entries.see-your-persona-the-way-a-visitor-does.title":
     "See your persona the way a visitor does",

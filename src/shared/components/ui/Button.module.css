@@ -1,7 +1,7 @@
 .button {
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   border: none;
   cursor: pointer;
   border-radius: var(--radius-pill);
@@ -28,12 +28,12 @@
 
 .lg {
   padding: 15px 30px;
-  font-size: 16px;
+  font-size: var(--text-16);
 }
 
 .sm {
   padding: 8px 16px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   min-height: 40px;
 }
 
@@ -52,7 +52,7 @@
   width: 44px;
   min-width: 44px;
   /* Sizes the react-icons <svg>, which inherits `1em`. */
-  font-size: 18px;
+  font-size: var(--text-18);
   gap: 0;
 }
 @media (hover: hover) {
@@ -64,7 +64,7 @@
 /* Icon + sm: still square, still at the 44px floor on touch. Only the glyph
    shrinks, so the target never drops below the minimum. */
 .icon.sm {
-  font-size: 16px;
+  font-size: var(--text-16);
   padding: 0;
 }
 /* On a plum/dark ground the ink tokens disappear; follow ghost-dark's cream. */
@@ -101,7 +101,7 @@
      See docs/production-readiness/contrast-audit.md §4. */
   background: var(--accent-fill);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 8px 22px -10px rgba(var(--accent-rgb), 0.8);
+  box-shadow: var(--shadow-accent);
 }
 @media (hover: hover) {
   .primary:hover:not(:disabled):not([aria-disabled="true"]) {

@@ -11,7 +11,7 @@
   border-radius: var(--radius-card);
   padding: 14px 20px;
   margin: 16px auto 0;
-  max-width: 1080px;
+  max-width: var(--maxw-page);
 }
 
 .dot {
@@ -26,12 +26,12 @@
 .message {
   flex: 1 1 220px;
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
 }
 
 .readiness {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.75);
   white-space: nowrap;
 }

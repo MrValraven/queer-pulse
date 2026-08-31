@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { FiCheck, FiArrowRight } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { FiCheck, FiArrowRight, FiX } from "react-icons/fi";
+import { Button, useDismiss } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -24,7 +23,10 @@ export function StudioTipModal({
   recipient: string;
   onClose: () => void;
 }) {
-  useScrollLock();
+  // `aria-modal` hides the page behind from screen readers, so focus has to
+  // move in with it: scroll lock, initial focus, a Tab trap, focus restore to
+  // the trigger on close, and modal-stack-aware Escape.
+  const dialogRef = useDismiss(onClose);
   const { t } = useTranslation();
   const fmt = useFormat();
   const [phase, setPhase] = useState<Phase>("pick");
@@ -54,6 +56,8 @@ export function StudioTipModal({
       }}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={[styles.modal, success && styles.modalSuccess]
           .filter(Boolean)
           .join(" ")}
@@ -68,7 +72,7 @@ export function StudioTipModal({
           onClick={onClose}
           aria-label={t("studio:tipModal.closeAria")}
         >
-          ×
+          <FiX aria-hidden />
         </button>
 
         {success ? (

@@ -1,5 +1,6 @@
 import {
   FiActivity,
+  FiArchive,
   FiAward,
   FiBarChart2,
   FiBookOpen,
@@ -30,6 +31,7 @@ import {
   FiThumbsUp,
   FiUserCheck,
   FiUserPlus,
+  FiUserX,
   FiUsers,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
@@ -59,6 +61,19 @@ export interface AdminNavItem {
    * means "account tier only", which is most of the console.
    */
   capabilities?: StaffRoleId[];
+  /**
+   * Hide this entry from a moderator (PRD-32). Set it only where the backend
+   * controller is `@Roles(Admin)` alone AND the path is absent from
+   * `MOD_ACCESSIBLE_ADMIN_PATTERNS` in `app/authGate.ts`, so the rail never
+   * offers a link the route gate then bounces.
+   *
+   * Most of the console is already admin-only and carries no flag, because a
+   * moderator is bounced by the blanket `/admin/*` match anyway. It matters
+   * here because a moderator DOES see the whole rail today, and the legal
+   * register is the one entry whose mere presence in a moderator's sidebar
+   * says something the register itself is meant to keep narrow.
+   */
+  isAdminOnly?: boolean;
 }
 
 export interface AdminNavSection {
@@ -131,6 +146,20 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "admin:adminDsar.navLabel",
         to: routes.adminDsar,
         icon: FiFileText,
+      },
+      {
+        // PRD-31: the ban-evasion escalation queue. A community moderator can
+        // only be told whether an applicant matches somebody THEIR community
+        // banned; escalating is how they ask staff for the cross-community
+        // picture, and this is where that question is answered. Filed under
+        // Trust & safety beside the queues it comes out of.
+        //
+        // No `badge`: `AdminNavBadge` is a closed union of the five queues
+        // `useAdminNavBadges` resolves, and none of them counts escalations, so
+        // any number here would be borrowed from another queue and would lie.
+        labelKey: "admin:banEvasionEscalations.navLabel",
+        to: routes.adminBanEvasion,
+        icon: FiUserX,
       },
       {
         labelKey: "shared:adminNav.items.verifications",
@@ -371,6 +400,21 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiAward,
       },
       {
+        // PRD-32: the legal and government request register. Filed under
+        // Platform beside Governance rather than under Trust & safety: what it
+        // feeds is the public Transparency Report, and a register of state
+        // demands is not operational moderation work.
+        //
+        // `isAdminOnly` because `AdminLegalRequestsController` is
+        // `@Roles(Admin)` alone. Every row names a state body, a jurisdiction
+        // and a number of members it came for, and the moderation rota is a
+        // much wider group than the people who should read a police file.
+        labelKey: "admin:legalRequests.navLabel",
+        to: routes.adminLegalRequests,
+        icon: FiArchive,
+        isAdminOnly: true,
+      },
+      {
         labelKey: "shared:adminNav.items.reports",
         to: routes.adminReports,
         icon: FiBarChart2,
@@ -432,15 +476,26 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
 export function visibleAdminNavSections(options: {
   /** True for a viewer who sees the whole console: admin, moderator, or demo. */
   isFullConsole: boolean;
+  /** True for an admin (or demo). A moderator sees the full rail MINUS the
+   *  `isAdminOnly` entries, whose backends refuse them outright. */
+  isAdmin: boolean;
   staffRoles: readonly StaffRoleId[];
 }): AdminNavSection[] {
-  if (options.isFullConsole) return ADMIN_NAV_SECTIONS;
+  if (options.isFullConsole) {
+    if (options.isAdmin) return ADMIN_NAV_SECTIONS;
+    return ADMIN_NAV_SECTIONS.map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.isAdminOnly),
+    })).filter((section) => section.items.length > 0);
+  }
   return ADMIN_NAV_SECTIONS.map((section) => ({
     ...section,
-    items: section.items.filter((item) =>
-      (item.capabilities ?? []).some((capability) =>
-        options.staffRoles.includes(capability),
-      ),
+    items: section.items.filter(
+      (item) =>
+        !item.isAdminOnly &&
+        (item.capabilities ?? []).some((capability) =>
+          options.staffRoles.includes(capability),
+        ),
     ),
   })).filter((section) => section.items.length > 0);
 }
@@ -480,15 +535,26 @@ export const STEWARDED: StewardedCommunity[] = [
 ];
 
 /**
- * The DEMO admin persona, kept only as a fallback for surfaces that greet the
- * viewer by name before a live session resolves.
+ * The DEMO admin persona. Every field here comes from the mock member registry,
+ * so NO live code path may read it: rendering one puts a fictional member's name
+ * or monogram in a real admin's console. Demo-only surfaces, and branches
+ * already guarded by the demo flag, are the only legitimate readers.
+ *
+ * For anything a live session can also reach, use `useAccountIdentity`
+ * (`shared/components/layout/useAccountIdentity.ts`): it resolves the real
+ * signed-in member and returns this persona ONLY in demo mode.
  *
  * It used to carry `name` and an invented `role` ("Trust & Safety lead") that
- * the sidebar's account button rendered verbatim — so a real signed-in admin
- * was shown the mock persona's name and a job title with no backend
- * counterpart. Those fields are gone: `AdminAccountMenu` reads the real
- * identity through `useAccountIdentity` and the real grants through
- * `useMyStaffRoles`. Anything added back here is demo-only by definition.
+ * the sidebar's account button rendered verbatim, so a real signed-in admin was
+ * shown the mock persona's name and a job title with no backend counterpart.
+ * Those fields are gone. `AdminRoleSwitcher` then leaked `initials` the same
+ * way, through a "no profile loaded" fallback on its live branch; it now reads
+ * `useAccountIdentity` and draws a neutral mark when there is no identity yet.
+ *
+ * Known remaining readers that are NOT demo-guarded, and should move to
+ * `useAccountIdentity` with name-less copy: `AdminDashboardPage` (the greeting
+ * in `admin:dashboard.title`) and `AdminMemberModals` (the "send as" option in
+ * `admin:members.message.sendAsSelf`). Do not add more.
  */
 export const ADMIN_PROFILE = {
   initials: currentUser.initials,

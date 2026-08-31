@@ -16,7 +16,7 @@
 }
 .sub {
   margin: 6px 0 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -24,7 +24,7 @@
 .status {
   margin: 0;
   padding: 8px 4px 16px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
 }
 
@@ -84,7 +84,7 @@
 }
 
 .rowName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
   overflow-wrap: anywhere;
@@ -97,7 +97,7 @@
   padding-inline-start: 11px;
   border-inline-start: 2px solid rgba(var(--accent-rgb), 0.4);
   font-family: var(--serif);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink);
   overflow-wrap: anywhere;
@@ -106,7 +106,7 @@
 /* The "endorsed without a note" case stays visually quiet — a small muted
    label, not a full quote block. */
 .noNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   letter-spacing: 0.01em;
   color: var(--ink-60);
 }

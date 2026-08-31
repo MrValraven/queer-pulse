@@ -106,10 +106,10 @@
   min-width: 17px;
   height: 17px;
   padding: 0 4px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 9px;
+  font-size: var(--text-9);
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -164,7 +164,7 @@
   gap: 30px;
 }
 .link {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   font-weight: 500;
   position: relative;
@@ -199,7 +199,7 @@
 
 .signIn {
   color: var(--text-strong);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   text-decoration: none;
   padding: 8px 6px;
@@ -255,7 +255,7 @@
 }
 
 .drawerLink {
-  font-size: 18px;
+  font-size: var(--text-18);
   font-family: var(--serif);
   color: var(--text-strong);
   padding: 14px 0;
@@ -301,11 +301,11 @@
 }
 
 :global([data-theme="dark"]) .nav {
-  background: rgba(14, 8, 32, 0.82);
+  background: color-mix(in srgb, var(--cream) 82%, transparent);
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 :global([data-theme="dark"]) .scrolled {
-  background: rgba(14, 8, 32, 0.94);
+  background: color-mix(in srgb, var(--cream) 94%, transparent);
 }
 :global([data-theme="dark"]) .brand,
 :global([data-theme="dark"]) .themeToggle,

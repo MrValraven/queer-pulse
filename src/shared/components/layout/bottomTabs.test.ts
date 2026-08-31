@@ -11,6 +11,18 @@ describe("tab sets", () => {
     expect(PUBLIC_TABS.some((tab) => tab.key === "signIn")).toBe(false);
   });
 
+  it("keeps every public tab reachable by a signed-out visitor", () => {
+    // The set is derived through authGate's own isGatedLink, so a gated
+    // destination would be filtered out and the length check above would fail.
+    // Asserting the destinations too says WHICH pages the signed-out bar owes a
+    // visitor, so a silent swap to a gated one is caught by name.
+    expect(PUBLIC_TABS.map((tab) => tab.href)).toEqual([
+      "/resources",
+      "/local/safe-spaces",
+      "/about",
+    ]);
+  });
+
   it("uses unique keys within each set", () => {
     const memberKeys = MEMBER_TABS.map((tab) => tab.key);
     expect(new Set(memberKeys).size).toBe(memberKeys.length);
@@ -45,7 +57,7 @@ describe("activeTabKey", () => {
     expect(activeTabKey("/local/directory/cafes", tabs)).toBe("long");
   });
 
-  it("matches the public set's directory tab", () => {
-    expect(activeTabKey("/local/directory", PUBLIC_TABS)).toBe("places");
+  it("matches the public set's places tab", () => {
+    expect(activeTabKey("/local/safe-spaces", PUBLIC_TABS)).toBe("places");
   });
 });

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiCheck } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button, StatusCard } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
@@ -158,10 +159,22 @@ export function AccountSuspendedPage() {
         <div className={styles.whatStays}>
           <h4>{t("system:accountSuspended.whatStays.title")}</h4>
           <ul>
-            <li>{t("system:accountSuspended.whatStays.item1")}</li>
-            <li>{t("system:accountSuspended.whatStays.item2")}</li>
-            <li>{t("system:accountSuspended.whatStays.item3")}</li>
-            <li>{t("system:accountSuspended.whatStays.item4")}</li>
+            <li>
+              <FiCheck className={styles.stayMark} aria-hidden />
+              {t("system:accountSuspended.whatStays.item1")}
+            </li>
+            <li>
+              <FiCheck className={styles.stayMark} aria-hidden />
+              {t("system:accountSuspended.whatStays.item2")}
+            </li>
+            <li>
+              <FiCheck className={styles.stayMark} aria-hidden />
+              {t("system:accountSuspended.whatStays.item3")}
+            </li>
+            <li>
+              <FiCheck className={styles.stayMark} aria-hidden />
+              {t("system:accountSuspended.whatStays.item4")}
+            </li>
           </ul>
         </div>
       </StatusCard>

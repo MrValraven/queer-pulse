@@ -7,7 +7,7 @@
   color: rgba(var(--cream-rgb), 1);
   text-align: center;
   padding: 48px 40px 40px;
-  border-radius: 28px;
+  border-radius: var(--radius-28);
   animation: panelIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
 
@@ -46,7 +46,7 @@
 }
 
 .panel .body {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 0.82);
   margin: 0 auto 24px;
@@ -67,7 +67,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: rgba(var(--cream-rgb), 0.9);
 }
@@ -84,7 +84,7 @@
 
 .footer {
   margin-top: 16px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.7);
 }
 

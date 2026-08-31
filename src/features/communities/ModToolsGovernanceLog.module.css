@@ -1,0 +1,123 @@
+/* The community-side governance trail (Mod tools -> History). Row chrome is
+   deliberately the same shape as the ban and support panes next door: one
+   bordered paper card per entry on the cream pane. */
+
+.filterRow {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 14px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  background: var(--paper);
+}
+
+.entryHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.entryHead svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+
+.summary {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* A platform action is the one fact on this pane a moderator most needs to
+   spot, so it is stated in words under the chip rather than left to a tooltip
+   nobody on a phone can open. */
+.platformNote {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.byline {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-40);
+  overflow-wrap: anywhere;
+}
+
+.details {
+  margin: 2px 0 0;
+  display: grid;
+  gap: 6px;
+}
+
+.detailRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+.detailLabel {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-40);
+  min-width: 120px;
+}
+
+.detailValue {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+  flex: 1 1 200px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.pagerMeta {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+
+.pagerNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagerPage {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+}

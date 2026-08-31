@@ -1,0 +1,34 @@
+/* A quiet text affordance sized for the PLUM community hero, which is why it
+   cannot reuse ReportSubjectControl.module.css: that one is `--ink-40` on a
+   cream aside and would be all but invisible here. Tone matches the hero's
+   own breadcrumb (cream at 50%, lifting on hover), so it reads as hero chrome
+   rather than a fifth call to action beside Join / Save / Share. */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  /* Vertical padding grows the tap target toward the ~44px comfortable
+     minimum without enlarging the (deliberately quiet) text itself. */
+  padding: 13px 8px;
+  font-family: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.5);
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .trigger:hover {
+    color: rgba(var(--cream-rgb), 0.85);
+  }
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-8);
+}

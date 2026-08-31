@@ -15,6 +15,24 @@ export interface NotifAction {
    * list) instead of navigating, showing this confirmation toast.
    */
   resolve?: { toast: string };
+  /**
+   * When set, the action ANSWERS a connection request from the row itself
+   * (PRD-15): `PATCH /connections/:id`, then resolve the row with `toast`.
+   *
+   * "Someone wants to connect" used to deep-link to a profile and nothing else,
+   * so answering meant finding `/account/connections` on your own. This is the
+   * same mechanism the persona-credit row proved out, with a mutation behind it
+   * rather than a destination.
+   *
+   * `href` stays required and points at the member's profile, so a row whose
+   * mutation cannot run (no connection id) still reaches somewhere real.
+   */
+  connectionResponse?: {
+    connectionId: string;
+    memberSlug: string;
+    action: "accept" | "decline";
+    toast: string;
+  };
 }
 
 export interface Notification {

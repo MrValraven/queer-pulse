@@ -11,6 +11,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -292,9 +293,11 @@ export function SessionsPage() {
           {loading ? (
             Array.from({ length: 3 }).map((_, i) => <SessionSkeleton key={i} />)
           ) : failed ? (
-            <EmptyState
+            // A failed read gets a retry, not just a sentence: the member's
+            // only other move is a full page reload (DES-22).
+            <LoadErrorState
               compact
-              icon={<FiMonitor />}
+              onRetry={refetch}
               title={t("settings:sessions.empty.error.title")}
               description={t("settings:sessions.empty.error.desc")}
             />

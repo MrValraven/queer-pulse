@@ -1,14 +1,14 @@
 /* Shared dark styles for Studio council/governance tools */
 .wrap {
   padding: 8px 0 60px;
-  max-width: 1120px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
 }
 .pageH {
   padding: 24px 0 24px;
 }
 .eb {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -31,7 +31,7 @@
   color: var(--accent);
 }
 .dek {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.6;
   max-width: 64ch;
@@ -46,13 +46,13 @@
 .intro {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 28px 30px;
   margin-bottom: 24px;
 }
 .lede {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.5;
   max-width: 64ch;
@@ -81,7 +81,7 @@
   color: var(--accent);
 }
 .fact .l {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 4px;
 }
@@ -94,7 +94,7 @@
 .cur {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 26px;
 }
 .curHead {
@@ -111,7 +111,7 @@
   flex: none;
 }
 .seat {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -128,7 +128,7 @@
   font-style: italic;
 }
 .where {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   display: flex;
   align-items: center;
@@ -143,7 +143,7 @@
   background: rgba(var(--cream-rgb), 0.3);
 }
 .curBio {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.6;
 }
@@ -154,12 +154,12 @@
 .curNote {
   background: rgba(var(--accent-rgb), 0.06);
   border-left: 3px solid var(--accent);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
   padding: 14px 16px;
   margin: 16px 0;
 }
 .nl {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -168,7 +168,7 @@
 }
 .curNote p {
   font-family: var(--serif);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.55;
   font-style: italic;
@@ -177,7 +177,7 @@
   color: var(--accent);
 }
 .slLbl {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -190,7 +190,7 @@
   gap: 12px;
   padding: 7px 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.07);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 .slRow:last-child {
   border-bottom: none;
@@ -224,7 +224,7 @@
   border-top: 1px solid rgba(var(--cream-rgb), 0.1);
 }
 .curStat {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
 }
 .curStat em {
@@ -236,12 +236,12 @@
 /* Buttons */
 .bt {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
   text-align: center;
@@ -269,7 +269,7 @@
   flex-wrap: wrap;
 }
 .trH .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.55);
   line-height: 1.6;
   max-width: 56ch;
@@ -286,7 +286,7 @@
 .kpiMini {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 18px;
   text-align: center;
 }
@@ -304,7 +304,7 @@
   color: var(--jade-light, var(--jade-light));
 }
 .kpiMini .l {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 4px;
   white-space: nowrap;
@@ -318,7 +318,7 @@
 }
 .trTab {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.5);
   background: none;
@@ -336,7 +336,7 @@
   color: var(--accent-soft);
 }
 .ctNum {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.35);
 }
 .trBody {
@@ -353,7 +353,7 @@
 .subRow {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
   cursor: pointer;
 }
@@ -370,13 +370,13 @@
 .srCov {
   width: 48px;
   height: 48px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   overflow: hidden;
 }
 .subTop h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
 }
 .subTop h3 em {
@@ -384,7 +384,7 @@
   color: var(--accent);
 }
 .subWho {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 2px;
 }
@@ -399,10 +399,10 @@
   margin-top: 8px;
 }
 .badges span {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   color: rgba(var(--cream-rgb), 0.55);
   background: rgba(var(--cream-rgb), 0.07);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 3px 8px;
 }
 .badges .first {
@@ -415,7 +415,7 @@
 }
 .deadline {
   text-align: right;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.5);
   white-space: nowrap;
 }
@@ -423,11 +423,11 @@
   display: block;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
 }
 .subNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.6;
   margin: 12px 0;
@@ -438,7 +438,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   padding-top: 10px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.07);
@@ -454,7 +454,7 @@
   top: 88px;
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
 }
 .aside h2 {
@@ -468,13 +468,13 @@
   color: var(--accent);
 }
 .asideWho {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin: 4px 0 16px;
 }
 .playerMini {
   background: rgba(var(--cream-rgb), 0.04);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 16px;
   margin-bottom: 16px;
 }
@@ -488,7 +488,7 @@
 .pmWf span {
   flex: 1;
   background: rgba(var(--cream-rgb), 0.16);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   min-height: 3px;
 }
 .pmWf .played {
@@ -519,7 +519,7 @@
 .pmTimes {
   display: flex;
   gap: 8px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
 }
 .pmTimes .e {
@@ -531,7 +531,7 @@
   gap: 10px;
   background: rgba(var(--jade-rgb), 0.06);
   border: 1px solid rgba(var(--jade-rgb), 0.22);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 12px 14px;
   margin-bottom: 16px;
 }
@@ -545,11 +545,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: var(--text-12);
   flex: none;
 }
 .claimRow .text {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.78);
   font-family: var(--serif);
   font-style: italic;
@@ -563,14 +563,14 @@
   font-style: normal;
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 1);
 }
 .detailBlock {
   margin-bottom: 16px;
 }
 .detailBlock h4 {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -578,7 +578,7 @@
   margin-bottom: 8px;
 }
 .detailBlock p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.6;
 }
@@ -590,7 +590,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 6px 16px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 .dGrid .k {
   color: rgba(var(--cream-rgb), 0.5);
@@ -605,7 +605,7 @@
 .shortlistH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
   margin: 20px 0 12px;
 }
@@ -614,7 +614,7 @@
   color: var(--accent);
 }
 .decision h4 {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 8px;
@@ -623,16 +623,16 @@
   width: 100%;
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 11px 13px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 1);
   resize: vertical;
   min-height: 70px;
 }
 .decision .hint {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   font-family: var(--serif);
   font-style: italic;
@@ -657,7 +657,7 @@
 .flag {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
 }
 .flagResolved {
@@ -671,7 +671,7 @@
 .flagCv {
   width: 46px;
   height: 46px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   overflow: hidden;
   flex: none;
 }
@@ -681,7 +681,7 @@
 .flagTi h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
 }
 .flagTi h3 em {
@@ -689,7 +689,7 @@
   color: var(--accent);
 }
 .flagTi .who {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
 }
 .flagPlay {
@@ -713,17 +713,17 @@
   margin: 14px 0;
 }
 .flagCat {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--accent-soft);
   background: rgba(var(--accent-rgb), 0.14);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 3px 9px;
 }
 .flagReason p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   margin-top: 10px;
@@ -734,7 +734,7 @@
   color: var(--accent);
 }
 .rmeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 8px;
 }
@@ -742,7 +742,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.6);
   padding: 12px 0;
 }
@@ -760,12 +760,12 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 11px;
+  font-size: var(--text-11);
   flex: none;
 }
 .flagClaim .dl {
   margin-left: auto;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
 }
 .flagActions {
@@ -780,13 +780,13 @@
   flex: 1;
 }
 .flagResolvedTag {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--jade-light, var(--jade-light));
   background: rgba(var(--jade-rgb), 0.16);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 10px;
 }
 
@@ -806,7 +806,7 @@
 
 /* ── Loading skeletons (light-on-dark, for the dark council surface) ── */
 .skel {
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: linear-gradient(
     90deg,
     rgba(var(--cream-rgb), 0.05) 25%,

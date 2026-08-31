@@ -12,7 +12,7 @@
   flex-wrap: wrap;
   gap: 8px 20px;
   align-items: center;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
 }
 

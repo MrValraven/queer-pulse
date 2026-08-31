@@ -25,6 +25,18 @@ const BACKEND_QUESTION_REASONS = [
   "other",
 ];
 
+/** Mirrors `SUBJECT_REASONS[ReportSubjectType.Community]`. */
+const BACKEND_COMMUNITY_REASONS = [
+  "outing",
+  "doxxing",
+  "harassment",
+  "hate_speech",
+  "discrimination",
+  "spam",
+  "off_topic",
+  "other",
+];
+
 /** Mirrors `SUBJECT_REASONS[ReportSubjectType.Review]`. */
 const BACKEND_REVIEW_REASONS = [
   "harassment",
@@ -41,6 +53,51 @@ describe("SUBJECT_REASONS", () => {
       BACKEND_QUESTION_REASONS,
     );
   });
+
+  it("mirrors the backend catalogue for a whole community", () => {
+    expect(SUBJECT_REASONS.community).toEqual(BACKEND_COMMUNITY_REASONS);
+  });
+
+  // A community organised around harm is the case this subject exists for, and
+  // the two codes that reach the one-hour emergency band are the two it used
+  // to be missing.
+  it.each(["outing", "doxxing"])(
+    "lets somebody report %s about a community, so it derives emergency severity",
+    (code) => {
+      expect(SUBJECT_REASONS.community).toContain(code);
+    },
+  );
+
+  // Reporting a PERSON for a slur used to have no code, so it was filed as
+  // `discrimination` and the taxonomy read as though no hate speech was ever
+  // reported about people.
+  it("lets somebody report a member for hate speech", () => {
+    expect(SUBJECT_REASONS.member).toContain("hate_speech");
+  });
+
+  // The three housing subjects were the last ones that could not reach the
+  // one-hour emergency band. A landlord threatening to tell a tenant's family,
+  // or a flatmate posting somebody's address or transition status, is the
+  // central physical danger in queer housing, and until these codes were added
+  // the reporter had no word for it.
+  it.each(["housing", "flatmate", "landlord"] as const)(
+    "lets somebody report outing and doxxing about %s",
+    (subjectType) => {
+      expect(SUBJECT_REASONS[subjectType]).toContain("outing");
+      expect(SUBJECT_REASONS[subjectType]).toContain("doxxing");
+    },
+  );
+
+  // Every subject whose report is about a PERSON rather than a piece of
+  // content. `hate_speech` reached these one at a time, and each time it was
+  // added to the backend catalogue first, so this asserts the whole class at
+  // once rather than waiting for the next one to be noticed.
+  it.each(["member", "flatmate", "landlord"] as const)(
+    "lets somebody report %s for hate speech",
+    (subjectType) => {
+      expect(SUBJECT_REASONS[subjectType]).toContain("hate_speech");
+    },
+  );
 
   it("mirrors the backend catalogue for a listing review", () => {
     expect(SUBJECT_REASONS.review).toEqual(BACKEND_REVIEW_REASONS);

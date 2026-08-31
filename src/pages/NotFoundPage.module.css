@@ -66,7 +66,7 @@
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -91,7 +91,7 @@
 }
 
 .sub {
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   color: var(--ink-60);
   line-height: 1.72;
   margin-bottom: 36px;
@@ -109,7 +109,7 @@
 }
 
 .linksTitle {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -132,7 +132,7 @@
   padding: 14px 16px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   text-decoration: none;
   color: inherit;
   transition:
@@ -148,18 +148,18 @@
 }
 
 .linkIcon {
-  font-size: 18px;
+  font-size: var(--text-18);
   margin-bottom: 2px;
 }
 
 .linkLabel {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 
 .linkSub {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -173,12 +173,12 @@
 .searchInput {
   flex: 1;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   padding: 12px 16px;
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-right: none;
-  border-radius: 11px 0 0 11px;
+  border-radius: var(--radius-11) 0 0 var(--radius-11);
   color: var(--ink);
   outline: none;
   transition: border-color 0.2s;
@@ -196,7 +196,7 @@
    type, focus ring and hover; only the joined-to-the-input geometry is
    overridden here, at a specificity the primitive's own class cannot beat. */
 .search .searchBtn {
-  border-radius: 0 11px 11px 0;
+  border-radius: 0 var(--radius-11) var(--radius-11) 0;
   padding: 0 20px;
 }
 

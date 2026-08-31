@@ -1,7 +1,10 @@
 .wrap {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
@@ -42,7 +45,7 @@
   width: 160px;
   height: 160px;
   margin: 0 auto 28px;
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   background: var(--surface);
   border: 1px solid var(--line);
   display: flex;
@@ -72,7 +75,7 @@
   z-index: 1;
 }
 .eb {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -92,7 +95,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-60);
   line-height: 1.6;
   max-width: 52ch;
@@ -107,7 +110,7 @@
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 28px 30px;
   margin: 0 auto 20px;
   max-width: 640px;
@@ -125,7 +128,7 @@
   color: var(--accent);
 }
 .card p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--text-60);
   line-height: 1.65;
 }
@@ -135,7 +138,7 @@
   gap: 12px;
   background: rgba(var(--jade-rgb), 0.07);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 16px;
   margin-top: 18px;
 }
@@ -147,7 +150,7 @@
   margin-top: 1px;
 }
 .jadeLine span {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.55;
 }
@@ -186,7 +189,7 @@
   color: var(--accent);
 }
 .rowH .subLine {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-40);
   margin-top: 8px;
 }
@@ -207,7 +210,7 @@
 }
 .cardCov {
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   overflow: hidden;
   position: relative;
   transition:
@@ -224,13 +227,13 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 4px 8px;
-  border-radius: 6px;
-  backdrop-filter: blur(8px);
+  border-radius: var(--radius-6);
+  backdrop-filter: var(--blur-md);
   z-index: 2;
 }
 .tagFree {
@@ -280,7 +283,7 @@
   margin-left: 1px;
 }
 .byCur {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--text-40);
   font-family: var(--serif);
   font-style: italic;
@@ -288,7 +291,7 @@
 .tcard h4 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text);
   line-height: 1.18;
   letter-spacing: -0.01em;
@@ -298,7 +301,7 @@
   color: var(--accent);
 }
 .meta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
 }
 .meta .who {

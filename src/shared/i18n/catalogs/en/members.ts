@@ -144,6 +144,10 @@ export const members: Catalog = {
   "profile.hero.editCta": "Edit profile",
   "profile.hero.previewCta": "View as visitor",
   "profile.hero.sayHelloCta": "Say hello",
+  // PRD-03. When this member has already asked to connect, the hero answers
+  // them instead of offering another hello the server would refuse.
+  "profile.hero.acceptRequestCta": "Accept {first}'s request",
+  "profile.hero.declineRequestCta": "Politely decline",
   "profile.hero.vouchedFor": "Vouched for {first}",
   "profile.hero.vouchedShort": "Vouched",
   "profile.hero.withdrawVouchCta": "Withdraw vouch",
@@ -674,6 +678,9 @@ export const members: Catalog = {
   "search.empty.title": "Nothing found",
   "search.empty.body":
     "Try a different word: member name, neighbourhood, skill, or type of gathering.",
+  "search.loadError.title": "We couldn't run <em>that search</em>",
+  "search.loadError.body":
+    "The request didn't come back. This is on our side, and your words were fine. Try again in a moment.",
   "search.hero.label": "Search",
   "search.hero.title": "Find anyone, anything <em>in the community.</em>",
   "search.hero.placeholder": "Members, gatherings, communities, board posts…",
@@ -1210,6 +1217,9 @@ export const members: Catalog = {
   "places.empty.description":
     "Run a studio, shop, clinic or space in Lisbon? List it in the directory. Once it's live, it'll show up here too.",
   "places.empty.action": "List my business",
+  "places.loadError.title": "We couldn't load <em>these places</em>",
+  "places.loadError.body":
+    "The list didn't come back. This is on our side. Try again in a moment.",
 
   "places.quickEdit.title": "Quick edit",
   "places.quickEdit.sub": "Update the basics for {name}.",
@@ -1254,7 +1264,8 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.profileDesc":
     "A photo and a bio on your profile.",
   "badges.xpBreakdown.sources.communities": "Communities joined",
-  "badges.xpBreakdown.sources.communitiesDesc": "Joining a community.",
+  "badges.xpBreakdown.sources.communitiesDesc":
+    "Joining a community that other people are in.",
   "badges.xpBreakdown.sources.personas": "Personas published",
   "badges.xpBreakdown.sources.personasDesc": "Publishing a persona.",
   "badges.xpBreakdown.sources.vouches": "Vouches given",
@@ -1263,9 +1274,11 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.connectionsDesc":
     "Connecting with another member.",
   "badges.xpBreakdown.sources.events": "Gatherings attended",
-  "badges.xpBreakdown.sources.eventsDesc": "Attending a gathering.",
+  "badges.xpBreakdown.sources.eventsDesc":
+    "Attending a gathering someone else is hosting.",
   "badges.xpBreakdown.sources.posts": "Community posts",
-  "badges.xpBreakdown.sources.postsDesc": "Posting in a community.",
+  "badges.xpBreakdown.sources.postsDesc":
+    "Posting where other people are, or replying to someone.",
   "badges.xpBreakdown.sources.endorsements": "Endorsements received",
   "badges.xpBreakdown.sources.endorsementsDesc":
     "Being endorsed by another member.",
@@ -1286,7 +1299,7 @@ export const members: Catalog = {
     "A volunteer session confirmed by the person who posted it.",
   "badges.xpBreakdown.sources.hosting": "Gatherings hosted",
   "badges.xpBreakdown.sources.hostingDesc":
-    "Hosting or co-hosting an open gathering.",
+    "Hosting a gathering that happened and drew people.",
   "badges.xpBreakdown.sources.magazine": "Magazine pieces published",
   "badges.xpBreakdown.sources.magazineDesc":
     "A piece of yours published in the magazine.",

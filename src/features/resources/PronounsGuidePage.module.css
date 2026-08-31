@@ -18,7 +18,7 @@
 }
 
 .proseEye {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -42,7 +42,7 @@
   margin-bottom: 52px;
 }
 .proseBody {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.78;
   max-width: 64ch;
@@ -61,7 +61,7 @@
 /* Name table */
 .table {
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   margin: 20px 0;
 }
@@ -73,7 +73,7 @@
 }
 .tHeadCell {
   padding: 13px 18px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -90,7 +90,7 @@
 }
 .tCell {
   padding: 14px 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -122,13 +122,13 @@
 .whereCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 20px;
 }
 .whereIcon {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,17 +151,17 @@
 }
 .whereTitle {
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
   margin-bottom: 5px;
 }
 .whereText {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
 }
 .whereTiming {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--jade);
   margin-top: 8px;
@@ -193,11 +193,11 @@
 }
 .faqQText {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
 }
 .faqArrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   transition: transform 0.25s var(--ease);
 }
@@ -225,7 +225,7 @@
   transform: translateY(0);
 }
 .faqA {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.7;
   padding: 0 0 18px;
@@ -248,13 +248,13 @@
 .sidebarCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 22px;
 }
 .sidebarCard h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
@@ -264,7 +264,7 @@
   color: var(--accent);
 }
 .sidebarCard p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 14px;
@@ -272,17 +272,17 @@
 .commitment {
   background: rgba(var(--jade-rgb), 0.07);
   border: 1.5px solid rgba(var(--jade-rgb), 0.22);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 26px;
 }
 .commitment h4 {
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--jade);
   margin-bottom: 8px;
 }
 .commitment p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }

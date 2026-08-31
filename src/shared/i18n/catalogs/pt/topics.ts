@@ -65,6 +65,9 @@ export const topics: Catalog = {
   "error.retryCta": "Tentar novamente",
 
   "directory.eyebrow": "Tópicos",
+  "directory.loadError.title": "Não conseguimos carregar <em>os tópicos</em>",
+  "directory.loadError.body":
+    "A lista não chegou de volta. Os tópicos continuam todos lá. Tenta outra vez daqui a pouco.",
   "directory.title": "Cada conversa, pela etiqueta.",
   "directory.sub":
     "Segue um tópico e ficas a saber assim que alguém publicar nele.",

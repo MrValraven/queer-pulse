@@ -275,3 +275,89 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Elevation scale ────────────────────────────────────────────────────────
+   The role shadows above are correct and stayed. What was missing was a SCALE:
+   the app shipped 503 literal `box-shadow` values over 335 distinct strings
+   against 60 token uses, and the documented 4px card lift was only the fourth
+   most common value behind 2px, 3px and 1px. Cards on adjacent pages rose by
+   different amounts under the cursor, which reads as unfinished.
+
+   Four resting steps and one hover lift. e1 is the same value --shadow-card
+   already carried, so nothing moved when the role names were re-pointed here.
+   Pick by how far off the page the surface is meant to sit, and pair a resting
+   step with --shadow-lift on hover rather than inventing a hover value. */
+:root {
+  --shadow-e1: 0 1px 2px rgba(var(--plum-rgb), 0.04); /* hairline: resting card */
+  --shadow-e2: 0 8px 22px -14px rgba(var(--plum-rgb), 0.28); /* raised: chip, pill, sticky bar */
+  --shadow-e3: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4); /* floating: dropdown, popover */
+  --shadow-e4: 0 24px 60px -20px rgba(var(--plum-rgb), 0.38); /* overlay: modal, sheet */
+  --shadow-lift: 0 22px 44px -26px rgba(var(--plum-rgb), 0.4); /* the 4px hover lift */
+
+  /* Role names re-pointed at the scale. Values unchanged. */
+  --shadow-card: var(--shadow-e1);
+  --shadow-card-hover: var(--shadow-lift);
+
+  /* ── Focus and selection rings ──
+     A ring is a `box-shadow` with no offset and no blur, and it is a different
+     thing from elevation: it carries STATE, not depth. Roughly a third of the
+     literal shadows above were rings written by hand in a dozen near-identical
+     opacities. Use these, and never a bare outline colour for focus — the ring
+     has to clear the surface it sits on in both themes. */
+  --ring-accent: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+  --ring-accent-strong: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
+  --ring-accent-soft: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+  --ring-jade: 0 0 0 3px rgba(var(--jade-rgb), 0.2);
+  --ring-danger: 0 0 0 3px rgba(var(--danger-rgb), 0.2);
+  --ring-plum: 0 0 0 3px rgba(var(--plum-rgb), 0.16);
+  --ring-plum-soft: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  --ring-paper: 0 0 0 2px var(--paper); /* punch-out ring: avatar over a card */
+  --ring-cream: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+
+  /* The global keyboard focus ring, as tokens, so the 170-odd component rules
+     that out-specify `:focus-visible` in base.css can restate it without
+     copying its numbers. A component-scoped rule always beats the global one on
+     specificity, and a single-colour coral ring there silently reintroduces the
+     2.63:1 failure the two-tone ring exists to fix. Spell an override as:
+
+       outline: var(--focus-ring);
+       outline-offset: var(--focus-ring-offset);
+       box-shadow: var(--ring-cream);
+
+     The offset and the halo spread are both 3px on purpose: the cream halo
+     fills the outline's offset gap. See styles/base.css for the contrast
+     rationale and docs/production-readiness/contrast-audit.md §8. */
+  --focus-ring: 3px solid var(--accent-deep);
+  --focus-ring-offset: 3px;
+
+  /* ── Scrim ──
+     There was no scrim token, so 41 stylesheets hand-rolled a modal overlay
+     across 19 distinct treatments: nine base colours, ten opacities,
+     backdrop-filter on some and not others. Opening a dialog dimmed the page
+     by a visibly different amount per feature.
+
+     The base triple is the near-black the shared Modal already used. It is
+     deliberately NOT --plum-rgb: a scrim is the absence of the page, and it
+     does not flip with the theme, because a dark scrim over a dark page is
+     still what "the page is behind this" looks like. */
+  --scrim-rgb: 26, 26, 31;
+  --scrim-soft: rgba(
+    var(--scrim-rgb),
+    0.4
+  ); /* a sheet that still shows context */
+  --scrim: rgba(var(--scrim-rgb), 0.55); /* the default: dialogs, sheets */
+  --scrim-strong: rgba(
+    var(--scrim-rgb),
+    0.72
+  ); /* lightbox, full-screen media */
+
+  /* ── Blur scale ──
+     94 backdrop-filter declarations shipped 17 distinct values from 2px to
+     18px, so glass surfaces beside each other frosted by different amounts.
+     --blur-overlay was 5px with two consumers while 35 sites wrote blur(4px)
+     by hand; it now aliases the step those 35 were already using. */
+  --blur-sm: blur(4px);
+  --blur-md: blur(8px);
+  --blur-lg: blur(14px);
+  --blur-overlay: var(--blur-sm);
+}

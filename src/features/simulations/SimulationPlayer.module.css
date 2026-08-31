@@ -21,7 +21,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   text-decoration: none;
@@ -41,7 +41,7 @@
 
 .title {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   flex: 1;
   text-align: center;
@@ -51,7 +51,7 @@
   display: inline-flex;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px;
 }
 
@@ -61,10 +61,10 @@
   gap: 6px;
   border: none;
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 12px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   cursor: pointer;
@@ -88,7 +88,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   text-decoration: none;
@@ -120,7 +120,7 @@
 
 .notFound p {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   max-width: 420px;
 }

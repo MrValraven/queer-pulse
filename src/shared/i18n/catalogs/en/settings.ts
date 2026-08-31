@@ -28,7 +28,7 @@ export const settings: Catalog = {
   "nav.item.profileTheme": "Profile theme",
   "nav.item.accessibility": "Accessibility",
   "nav.item.interests": "Interests",
-  "nav.item.blockedUsers": "Blocked members",
+  "nav.item.blockedUsers": "Blocked and muted",
   "nav.item.uploads": "My uploads",
   "nav.item.deleteAccount": "Delete account",
 
@@ -173,11 +173,21 @@ export const settings: Catalog = {
   "interests.readingPref.resourcesGuides": "Resources & guides",
   "interests.readingPref.communityThreads": "Community threads & discussions",
 
-  // ── interests.data.ts — content settings (same: UI-only toggles) ────────
+  // ── interests.data.ts — content settings. Persisted since PRD-10 through
+  // `GET|PUT /me/content-sensitivity`. Each `.desc` names what the switch
+  // takes away, because these now really remove things from the feed and a
+  // member should see the cost before they flip one. ──────────────────────
   "interests.contentSetting.dating": "Dating & relationship content",
+  "interests.contentSetting.dating.desc":
+    "Hides posts and gatherings from dating, relationship and kink communities",
   "interests.contentSetting.mentalHealth": "Mental health & wellbeing content",
+  "interests.contentSetting.mentalHealth.desc":
+    "Hides posts and gatherings from mental health, wellbeing and recovery communities",
   "interests.contentSetting.sexualityIdentity":
     "Sexuality & identity exploration content",
+  "interests.contentSetting.sexualityIdentity.desc":
+    "Hides posts and gatherings from sexuality, gender and coming-out communities",
+  "interests.content.toastError": "We couldn't save that setting. Try again.",
 
   // ── SettingsPanes.tsx — NotificationsPane ────────────────────────────────
   "notifications.title": "Notification <em>preferences.</em>",
@@ -205,12 +215,15 @@ export const settings: Catalog = {
   "notifications.volume.eventActivity.title": "Activity on gatherings you run",
   "notifications.volume.eventActivity.desc":
     "New RSVPs, and invitations to co-host",
+  "notifications.volume.eventCapacity.title": "Last few spots",
+  "notifications.volume.eventCapacity.desc":
+    "When a gathering you saved, or said maybe to, is nearly full",
   "notifications.volume.newMessages.title": "New message",
   "notifications.volume.newMessages.desc":
     "When someone sends you a direct message",
   "notifications.volume.connections.title": "Connection requests",
   "notifications.volume.connections.desc":
-    "When someone asks to connect, or accepts your request",
+    "When someone asks to connect, sends a hello with their request, or accepts yours",
   "notifications.volume.vouches.title": "Vouches",
   "notifications.volume.vouches.desc":
     "When someone vouches for you, or for a space you run",
@@ -262,11 +275,6 @@ export const settings: Catalog = {
     "Hold your phone notifications during these hours, read on your own clock. Nothing is lost: everything still arrives in your notifications, it just does not buzz.",
   "notifications.delivery.quietHours.none": "No quiet hours",
 
-  "notifications.gatherings.lastFewSpots.title": "Last few spots",
-  "notifications.gatherings.lastFewSpots.desc":
-    "When a gathering you saved is almost full",
-  "notifications.messages.sayHello.title": '"Say hello" received',
-  "notifications.messages.sayHello.desc": "When someone waves at your profile",
   "notifications.phonePush.title": "Phone notifications",
   "notifications.phonePush.desc":
     "Get a nudge on your phone when someone messages you, even when QueerPulse is closed. Add QueerPulse to your home screen first.",
@@ -373,11 +381,23 @@ export const settings: Catalog = {
   "visibility.newArrivals.desc":
     "Let the community know you've recently joined",
   "visibility.suggestedConnections.title": "Appear in suggested connections",
+  // States the one-directional part plainly, at the switch: turning this off
+  // stops you being offered to other people and changes nothing about what
+  // you are offered, or about the member directory.
   "visibility.suggestedConnections.desc":
-    "Allow the platform to suggest you to members with shared interests",
+    "Let the platform offer you to members with shared interests. Turn it off and you still see suggestions yourself, and you stay in the member directory.",
+  "visibility.suggestedConnections.toastError":
+    "We couldn't save that setting. Try again.",
   "visibility.activityStatus.title": "Show activity status",
+  // The same opt-out the profile's "Who sees what" sheet offers. The second
+  // line is used when there is a band to name: a privacy switch you can't see
+  // the effect of is a switch nobody trusts.
   "visibility.activityStatus.desc":
-    "Let people see when you were last active (approximate)",
+    "Let people see roughly how recently you were here. We keep the month and nothing finer.",
+  "visibility.activityStatus.descWithBand":
+    "Let people see roughly how recently you were here. Right now you read as: {band}.",
+  "visibility.activityStatus.toastError":
+    "We couldn't save that setting. Try again.",
 
   // ── SettingsPanes.tsx — AccountPane ────────────────────────────────────────
   "account.title": "Account <em>settings.</em>",
@@ -389,8 +409,12 @@ export const settings: Catalog = {
   "account.emailAddress.notSet": "Not set yet",
   "account.section.security": "Security",
   "account.twoFactor.title": "Two-factor authentication",
+  // You sign in with Google, so QueerPulse has no password and no second
+  // factor of its own to add. Google's is the one that protects this account,
+  // and since account re-linking landed it protects the way back in too.
   "account.twoFactor.desc":
-    "Adds a second step when logging in from a new device",
+    "You sign in with Google, so your Google account's own 2-step verification is what protects QueerPulse. It also protects the way back in if you ever lose access.",
+  "account.twoFactor.cta": "Set it up at Google",
   "account.loginAlerts.title": "Login alerts",
   // Names the two channels that exist. The previous line said "Email me",
   // which QueerPulse has never been able to do and never will.
@@ -479,7 +503,7 @@ export const settings: Catalog = {
   "accountSecurity.notYet.twoFactor":
     "A second factor. Your Google account's own two-step verification is what protects the sign-in today.",
   "accountSecurity.notYet.recovery":
-    "A second way in. Lose access to your Google account and you lose access to QueerPulse, so write to us before that happens.",
+    "A second way in that does not go through Google. Losing your Google account is no longer the end of it: write to us and we can re-link your QueerPulse account to a Google identity holding the same verified address.",
 
   "accountSecurity.compromised":
     "<strong>Think somebody else is in your account?</strong> <sessions>End every other session</sessions> first, which leaves only the browser you are reading this on signed in, then <contact>tell us</contact> so we can look at what happened.",
@@ -680,7 +704,7 @@ export const settings: Catalog = {
     "Rather than show you a list we can't stand behind, we've shown you nothing. Try again in a moment.",
   "sessions.empty.none.title": "No active sessions",
   "sessions.empty.none.desc":
-    "Nothing is signed in right now, not even this device, which usually means your session is about to be refreshed.",
+    "Every device is signed out right now, this one included, which usually means your session is about to be refreshed.",
   "sessions.toast.signedOut":
     "Session ended. If that wasn't you, review your active sessions and sign out anything you don't recognise.",
   "sessions.toast.signedOutError":
@@ -719,9 +743,9 @@ export const settings: Catalog = {
 
   // ── BlockedUsersPane.tsx — chrome (demo mock blocked members stay English,
   // matching the mock-session-record convention above) ─────────────────────
-  "blockedUsers.title": "Members you've <em>blocked</em>.",
+  "blockedUsers.title": "Members you've <em>silenced</em>.",
   "blockedUsers.sub":
-    "Blocked members can't see your profile, message you, or find you in search. Unblocking restores none of that automatically. It just opens the door again.",
+    "Blocked members can't see your profile, message you, or find you in search. Muted members simply go quiet for you, and were never told. Both are listed here and both can be undone.",
   "blockedUsers.section.blocked": "Blocked",
   "blockedUsers.row.blockedOn": "Blocked {date}",
   "blockedUsers.row.deletedMember": "Deleted member",
@@ -1104,4 +1128,22 @@ export const settings: Catalog = {
   "themeStudio.badge.sustainer": "Sustainer (Rare)",
   "themeStudio.badge.regular": "Regular (Rare)",
   "themeStudio.badge.vouch": "Vouch (Rare)",
+
+  // ── AccountDataSheet.tsx — the profile's "Your data" sheet, which now
+  // signposts the one page that owns each account-lifecycle action instead of
+  // building a second copy of all four. PRD-09. ───────────────────────────
+  "accountData.download.title": "Download your data",
+  "accountData.download.desc":
+    "Pick what to include and get a machine-readable archive of it. GDPR Article 20.",
+  "accountData.download.cta": "Open data export",
+  "accountData.stepAway.title": "Pause or delete your account",
+  "accountData.stepAway.desc":
+    "Hide your profile for a while, or ask for everything to be erased. Both take a typed confirmation and a fresh sign-in with Google. GDPR Article 17.",
+  "accountData.stepAway.cta": "Open pause and delete",
+  "accountData.dsar.title": "Make a data request",
+  "accountData.dsar.desc":
+    "Ask what we hold about you, have something corrected, or object to how it is used. GDPR Articles 15, 16 and 21.",
+  "accountData.dsar.cta": "Open the request form",
+  "accountData.note":
+    "Each of these opens as a full page, so you can read exactly what it does before you commit to anything.",
 };

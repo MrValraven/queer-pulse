@@ -53,13 +53,13 @@
 
 .cardTitle {
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.35;
   color: var(--text-strong);
 }
 
 .cardDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink-60);
   flex: 1;
@@ -70,7 +70,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -86,6 +86,6 @@
 }
 
 .empty {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
 }

@@ -39,7 +39,7 @@
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  z-index: 20;
+  z-index: var(--z-popover);
   width: min(260px, calc(100vw - 32px));
   /* Never taller than the space above the composer, so opening upward can't
      cover the conversation header / app nav — scroll instead of overlapping. */
@@ -50,9 +50,7 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-card);
-  /* Fixed plum shadow (matches --shadow-* tokens) — NOT --ink-rgb, which flips
-     to a light channel in dark mode and would cast a white glow around the panel. */
-  box-shadow: 0 4px 14px rgba(var(--plum-rgb), 0.22);
+  box-shadow: var(--shadow-e3);
   animation: hintPanelIn var(--dur-fast) var(--ease);
 }
 
@@ -64,7 +62,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-soft, var(--ink));
+  color: var(--ink-60);
   opacity: 0.7;
 }
 
@@ -126,7 +124,7 @@
   font-family: var(--sans);
   font-size: 0.76rem;
   line-height: 1.35;
-  color: var(--text-soft, var(--ink));
+  color: var(--ink-60);
   opacity: 0.7;
 }
 

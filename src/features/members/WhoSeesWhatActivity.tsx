@@ -1,16 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Toggle } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useAuth } from "../../app/providers/authContext";
-import {
-  getActivityVisibility,
-  setActivityVisibility,
-  type ActivityVisibilityDTO,
-} from "./api/activityVisibility.api";
-import { ACTIVITY_BAND_LABEL_KEY, toActivityBand } from "./activityBand";
-import { DEMO_ACTIVITY_VISIBILITY } from "./activityBand.data";
+import { useActivityVisibility } from "../settings/api/useActivityVisibility";
+import { ACTIVITY_BAND_LABEL_KEY } from "./activityBand";
 import styles from "./WhoSeesWhatSheet.module.css";
 
 /**
@@ -20,8 +12,10 @@ import styles from "./WhoSeesWhatSheet.module.css";
  * It does NOT go through `useInstantVisibilitySave` like the four switches
  * above it: those are fields of the profile draft and save through
  * `PATCH /profiles/me`, while this preference lives on its own row and its own
- * endpoint. Owning its query and mutation here matches the sheet's stated
- * shape, where every section fetches its own data.
+ * endpoint. That endpoint is reached through `useActivityVisibility`, shared
+ * with the Settings Visibility pane, so the two surfaces sit on one query key
+ * and cannot disagree about the switch. The copy stays here: the hook carries
+ * no strings, and each call site toasts in its own namespace.
  *
  * The section always states the member's CURRENT band, including while it is
  * hidden. A privacy switch you cannot see the effect of is a switch nobody
@@ -30,31 +24,18 @@ import styles from "./WhoSeesWhatSheet.module.css";
  */
 export function WhoSeesWhatActivity() {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const { loggedIn } = useAuth();
   const { showToast } = useToast();
-  const queryClient = useQueryClient();
 
-  const query = useQuery<ActivityVisibilityDTO>({
-    queryKey: ["activityVisibility", demoMode],
-    enabled: !demoMode && loggedIn,
-    queryFn: getActivityVisibility,
+  // PRD-04. The fetch and the mutation used to be written out here, and the
+  // Settings Visibility pane advertised the same opt-out as "coming soon".
+  // Both surfaces now go through one hook on one query key, so the switch
+  // cannot read one way here and another way in Settings.
+  const { band, isHidden, setHidden, isDemoMode } = useActivityVisibility({
+    onSaved: () =>
+      showToast(t("members:profile.whoSeesWhat.toast.saved"), "success"),
+    onError: () =>
+      showToast(t("members:profile.whoSeesWhat.activity.error"), "error"),
   });
-  const visibility = demoMode ? DEMO_ACTIVITY_VISIBILITY : query.data;
-
-  const mutation = useMutation({
-    mutationFn: setActivityVisibility,
-    onSuccess: (next) => {
-      queryClient.setQueryData(["activityVisibility", demoMode], next);
-      showToast(t("members:profile.whoSeesWhat.toast.saved"), "success");
-    },
-    onError: () => {
-      showToast(t("members:profile.whoSeesWhat.activity.error"), "error");
-    },
-  });
-
-  const band = toActivityBand(visibility?.band ?? null);
-  const isHidden = Boolean(visibility?.isHidden);
 
   return (
     <section className={styles.section}>
@@ -84,14 +65,14 @@ export function WhoSeesWhatActivity() {
           <Toggle
             checked={isHidden}
             onChange={(next) => {
-              if (demoMode) {
+              if (isDemoMode) {
                 showToast(
                   t("members:profile.whoSeesWhat.activity.demo"),
                   "info",
                 );
                 return;
               }
-              mutation.mutate(next);
+              setHidden(next);
             }}
             label={t("members:profile.whoSeesWhat.activity.hideLabel")}
             tone="coral"

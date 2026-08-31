@@ -2,7 +2,7 @@
 .rail {
   position: fixed;
   inset: 0 auto 0 0;
-  z-index: 90;
+  z-index: var(--z-nav);
   width: var(--rail-w, 264px);
   display: flex;
   flex-direction: column;
@@ -60,7 +60,7 @@
 }
 .brandName {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 500;
   letter-spacing: -0.01em;
 }
@@ -84,11 +84,11 @@
   gap: 6px;
   padding: 5px 11px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.06);
   color: rgba(var(--cream-rgb), 0.62);
   font: inherit;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -98,7 +98,7 @@
 }
 .collapseAllIcon {
   flex: none;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 @media (hover: hover) {
   .collapseAll:hover {
@@ -107,8 +107,9 @@
   }
 }
 .collapseAll:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 /* Keyframe defined locally: a global one referenced from a CSS module gets its
    animation-name hashed with no matching @keyframes and silently no-ops. */
@@ -161,11 +162,11 @@
   width: 100%;
   padding: 10px 12px;
   border: none;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: transparent;
   color: rgba(var(--cream-rgb), 0.82);
   font: inherit;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   cursor: pointer;
   text-align: left;
@@ -184,12 +185,13 @@
   }
 }
 .groupBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .groupIcon {
   flex: none;
-  font-size: 19px;
+  font-size: var(--text-19);
 }
 .groupLabel {
   flex: 1;
@@ -197,7 +199,7 @@
 }
 .chevron {
   flex: none;
-  font-size: 16px;
+  font-size: var(--text-16);
   opacity: 0.6;
   transition: transform var(--dur-base) var(--ease, ease);
 }
@@ -270,7 +272,7 @@
 }
 .groupSubhead {
   padding: 4px 12px 3px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -279,10 +281,10 @@
 .link {
   display: block;
   padding: 7px 12px 7px 34px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   color: rgba(var(--cream-rgb), 0.72);
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--text-13);
   transition:
     background var(--dur, 0.18s) var(--ease, ease),
     color var(--dur, 0.18s) var(--ease, ease);
@@ -294,8 +296,9 @@
   }
 }
 .link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .linkActive {
   background: var(--cream);
@@ -318,7 +321,7 @@
   max-height: min(70vh, 520px);
   overflow-y: auto;
   padding: 10px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--plum-deep, var(--plum));
   border: 1px solid rgba(var(--cream-rgb), 0.12);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
@@ -328,7 +331,7 @@
   transition:
     opacity var(--dur, 0.18s) var(--ease, ease),
     transform var(--dur, 0.18s) var(--ease, ease);
-  z-index: 120;
+  z-index: var(--z-popover);
 }
 .flyout .link {
   padding-left: 12px;
@@ -365,7 +368,7 @@
 .flyoutHead {
   padding: 2px 6px 8px;
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 1);
 }
 
@@ -407,12 +410,12 @@
   width: 38px;
   height: 38px;
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: rgba(var(--cream-rgb), 0.05);
   color: rgba(var(--cream-rgb), 0.8);
   cursor: pointer;
   text-decoration: none;
-  font-size: 18px;
+  font-size: var(--text-18);
   transition:
     background var(--dur, 0.18s) var(--ease, ease),
     color var(--dur, 0.18s) var(--ease, ease);
@@ -424,8 +427,9 @@
   }
 }
 .utilBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .bellBadge {
   position: absolute;
@@ -436,10 +440,10 @@
   padding: 0 3px;
   display: grid;
   place-items: center;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: var(--text-strong);
-  font-size: 9px;
+  font-size: var(--text-9);
   font-weight: 700;
 }
 
@@ -455,10 +459,10 @@
 }
 .signIn {
   padding: 8px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   color: rgba(var(--cream-rgb), 0.82);
   text-decoration: none;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   text-align: center;
 }
@@ -477,11 +481,11 @@
   width: 100%;
   padding: 9px 12px;
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: transparent;
   color: rgba(var(--cream-rgb), 0.7);
   font: inherit;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -495,6 +499,7 @@
   }
 }
 .collapseBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }

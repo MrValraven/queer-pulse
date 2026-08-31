@@ -16,7 +16,11 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   const partnerApplications = usePartnerApplications();
   // OPS-06: the cross-co-op join-request queue on /admin/housing. Same query
   // key the page itself uses, so this is served from cache rather than a
-  // second request.
+  // second request. The hook asks the server for pending requests only and
+  // hands back the queue `total`, so the badge is the real number waiting
+  // (ENG-41): it used to count the pending rows inside whatever the newest 200
+  // requests in every status happened to be, which under-counted a busy queue
+  // and could read zero while people waited.
   const housingCoopJoinRequests = useAdminJoinRequests();
 
   // Phase 2's review queue is live, so the badge counts the actual review-queue
@@ -43,9 +47,6 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
       partnerApplications.data?.filter((a) => a.status === "pending").length ??
       0,
     verifications: pendingRequestCount,
-    housingCoops:
-      housingCoopJoinRequests.data?.filter(
-        (request) => request.status === "pending",
-      ).length ?? 0,
+    housingCoops: housingCoopJoinRequests.total,
   };
 }

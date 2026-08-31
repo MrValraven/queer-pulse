@@ -39,8 +39,20 @@ export function BadgesCaseControls({
   const { t } = useTranslation();
   const [mutePopoverOpen, setMutePopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
-  useOutsideDismiss(mutePopoverOpen, popoverRef, () =>
-    setMutePopoverOpen(false),
+  const muteTriggerRef = useRef<HTMLButtonElement>(null);
+  // `onEscape` is opt-in on this hook, so without it a keyboard user has no
+  // way out of the popover. Escape closes it and returns focus to the trigger,
+  // matching the menu-button contract used by AccountMenu and Select.
+  useOutsideDismiss(
+    mutePopoverOpen,
+    popoverRef,
+    () => setMutePopoverOpen(false),
+    {
+      onEscape: () => {
+        setMutePopoverOpen(false);
+        muteTriggerRef.current?.focus();
+      },
+    },
   );
 
   return (
@@ -89,6 +101,7 @@ export function BadgesCaseControls({
         </button>
         <div className={styles.pop} ref={popoverRef}>
           <button
+            ref={muteTriggerRef}
             type="button"
             className={styles.tbtn}
             aria-haspopup="true"

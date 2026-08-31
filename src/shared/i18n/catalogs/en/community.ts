@@ -558,7 +558,7 @@ export const community: Catalog = {
   "family.tab.coparenting.card.legalFrameworks.body":
     "In Portugal, both parents can be legally registered at birth if they are known donors or co-parents and have a prior legal agreement. A parenting agreement (acordo de co-parentalidade) is strongly recommended. Get a family law solicitor involved early.",
   "family.tab.coparenting.card.legalFrameworks.note":
-    "Do this before conception, not after",
+    "Put this in place before conception",
   "family.tab.coparenting.card.international.eyebrow":
     "International situations",
   "family.tab.coparenting.card.international.title": "Cross-border families",

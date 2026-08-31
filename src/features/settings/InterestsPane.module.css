@@ -9,7 +9,7 @@
   padding-bottom: 0;
 }
 .psHead {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 4px;
@@ -19,12 +19,12 @@
   gap: 10px;
 }
 .psHeadNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 400;
 }
 .psHelper {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.55;
   margin-bottom: 14px;
@@ -36,7 +36,7 @@
   margin-top: 12px;
 }
 .psSkip {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--accent-ink);
   font-weight: 600;
   cursor: pointer;
@@ -67,7 +67,7 @@
   gap: 5px;
 }
 .field label {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   letter-spacing: 0.05em;
@@ -77,16 +77,16 @@
   font-weight: 400;
   text-transform: none;
   letter-spacing: 0;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
 }
 .field input {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 10px 14px;
   transition: border-color 0.22s var(--ease);
 }
@@ -108,12 +108,12 @@
 .ageLabelRow {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-top: 4px;
 }
 .ageVal {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 700;
   color: var(--text-strong);
   text-align: center;
@@ -122,7 +122,7 @@
 
 /* Sub-heading inside a section */
 .subHead {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--ink);
   margin: 20px 0 0;
@@ -141,7 +141,7 @@
   align-items: flex-start;
   padding: 12px 16px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
   background: none;
   text-align: left;
@@ -183,18 +183,18 @@
   opacity: 1;
 }
 .foTitle {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 700;
   color: var(--text-strong);
 }
 .foDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 2px;
 }
 
 .legalNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.55;
   margin-top: 20px;
@@ -207,7 +207,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
   overflow: hidden;
 }
@@ -223,19 +223,19 @@
   border-bottom: none;
 }
 .discoverTitle {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
 }
 .discoverDesc {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
   margin-top: 2px;
 }
 .discoverEmpty,
 .discoverNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.55;
 }
@@ -243,12 +243,12 @@
   margin-top: 12px;
 }
 .discoverError {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   line-height: 1.55;
   padding: 10px 14px;
   margin-bottom: 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   background: var(--paper);
 }

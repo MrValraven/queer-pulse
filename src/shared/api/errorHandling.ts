@@ -107,9 +107,44 @@ function messageFor(error: unknown): string | null {
   return resolve(reasonFor(error) ?? COPY.genericRetry);
 }
 
-/** QueryCache onError: log always; toast only unexpected 5xx (pages own the rest).
- *  Param types are kept structurally loose so they satisfy the cache callback
- *  contract without importing react-query's deep generics. */
+/**
+ * A 401 is the backend saying "you are signed out", which is an answer rather
+ * than a fault. Member-scoped queries also run for anonymous visitors, so
+ * reporting these spent monitoring quota on every signed-out page load. The
+ * auth refresh / `onAuthLost` path owns the real session-loss experience.
+ */
+function isSignedOutFailure(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 401;
+}
+
+/**
+ * Read failures the classification above already calls expected, so they must
+ * never reach error monitoring: the signed-out 401, plus a 404 for a resource
+ * that is genuinely gone (the page owns its empty state, and a member opening
+ * a deleted thread is normal traffic).
+ *
+ * A PLATFORM_LOCKED 503 is deliberately absent. It is silent on screen only
+ * because the maintenance screen replaces the toast, and an event telling us a
+ * lockdown is being hit is worth having (asserted in errorHandling.test.ts).
+ */
+function isExpectedQueryFailure(error: unknown): boolean {
+  if (isSignedOutFailure(error)) return true;
+  return error instanceof ApiError && error.status === 404;
+}
+
+/**
+ * QueryCache onError: classify first, report only the unexpected, toast only an
+ * unexpected 5xx (pages own the rest).
+ *
+ * The order is the contract. `isExpectedQueryFailure` runs before `logError`,
+ * so an outcome this module already declines to show anyone files no monitoring
+ * event either. Everything after that call is the member-facing half and is
+ * untouched by the gate: the toast decisions read the same error and the same
+ * query state they always did.
+ *
+ * Param types are kept structurally loose so they satisfy the cache callback
+ * contract without importing react-query's deep generics.
+ */
 export function handleQueryError(
   error: unknown,
   query: {
@@ -118,26 +153,39 @@ export function handleQueryError(
     meta?: Record<string, unknown>;
   },
 ): void {
-  logError(error, { queryKey: query.queryKey });
+  if (!isExpectedQueryFailure(error)) {
+    logError(error, { queryKey: query.queryKey });
+  }
   if (demo.current) return;
   // Opt-out for queries whose failure is not the visitor's problem: they fail
   // soft by design and the page renders identically either way (see
-  // usePlatformStatus). Logged above, never toasted.
+  // usePlatformStatus). Reported above when unexpected, never toasted.
   if (query.meta?.silentError) return;
   // Background-refetch failure vs first-load failure. If the query already holds
   // cached data, that (stale-but-valid) data is still on screen and the page is
   // unchanged by this failure — a toast here would nag on every transient blip
   // behind an intact page (a tab regains focus, a poll fires on a flaky
   // connection). Only an *initial* load with no data yet leaves the user facing
-  // an error/empty state that needs explaining. Logged above either way.
+  // an error/empty state that needs explaining. Reported above either way when
+  // the failure was unexpected.
   if (query.state?.data !== undefined) return;
   if (error instanceof ApiError && error.status < 500) return;
   const msg = messageFor(error);
   if (msg) emit?.(msg, "error", 6000);
 }
 
-/** MutationCache onError: a failing write must always be visible. Signature is
- *  positional per react-query: (error, variables, onMutateResult, mutation). */
+/**
+ * MutationCache onError: a failing write must always be visible to the member.
+ * Same contract as the query handler on the monitoring side: classify first,
+ * report only the unexpected.
+ *
+ * Only the signed-out 401 is excluded here. A 404 stays reportable on a write,
+ * where it usually means a wrong endpoint path or a resource that vanished
+ * under an action the member could still see, both of which are defects.
+ *
+ * Signature is positional per react-query:
+ * (error, variables, onMutateResult, mutation).
+ */
 export function handleMutationError(
   error: unknown,
   _variables: unknown,
@@ -146,7 +194,9 @@ export function handleMutationError(
     options: { mutationKey?: unknown; meta?: { silentError?: boolean } };
   },
 ): void {
-  logError(error, { mutationKey: mutation.options.mutationKey });
+  if (!isSignedOutFailure(error)) {
+    logError(error, { mutationKey: mutation.options.mutationKey });
+  }
   if (demo.current) return;
   if (mutation.options.meta?.silentError) return; // a component owns this write's error UI
   const msg = messageFor(error);

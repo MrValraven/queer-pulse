@@ -2,7 +2,7 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-inline-start: 3px solid var(--accent);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 16px 18px;
   margin-bottom: 16px;
 }
@@ -11,7 +11,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-strong);
   margin-bottom: 10px;
 }
@@ -30,7 +30,7 @@
 .rule {
   display: flex;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -59,7 +59,7 @@
   padding: 0;
   font-family: inherit;
   cursor: pointer;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 500;
   color: var(--accent);
   text-decoration: underline;

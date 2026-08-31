@@ -3,7 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { FiLock, FiUserMinus, FiUsers } from "react-icons/fi";
 import { initialsFromName } from "../../shared/lib/initials";
-import { Avatar, Button, EmptyState } from "../../shared/components/ui";
+import {
+  Avatar,
+  Button,
+  EmptyState,
+  LoadErrorState,
+} from "../../shared/components/ui";
 import { ModalSheet } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -132,16 +137,23 @@ export function SubprofilePeopleModal({
   const viewerSlug = user?.profile.slug ?? null;
   const isOwner = persona.viewerIsMember && !asVisitor;
 
-  const { data: endorsersResult, isLoading: endorsersLoading } = useEndorsers(
-    persona.id,
-    mode === "endorsements",
-  );
+  const {
+    data: endorsersResult,
+    isLoading: endorsersLoading,
+    isError: haveEndorsersFailed,
+    refetch: refetchEndorsers,
+  } = useEndorsers(persona.id, mode === "endorsements");
   const endorsers = endorsersResult?.endorsers ?? [];
 
   // Followers are owner-only. LIVE hits the 403-guarded endpoint, so we never
   // enable the query for a non-owner. DEMO mirrors that gate so the two modes
   // behave identically.
-  const { data: followersResult, isLoading: followersLoading } = useQuery({
+  const {
+    data: followersResult,
+    isLoading: followersLoading,
+    isError: haveFollowersFailed,
+    refetch: refetchFollowers,
+  } = useQuery({
     queryKey: ["subprofile", "followers", persona.id],
     queryFn: ({
       signal,
@@ -191,6 +203,12 @@ export function SubprofilePeopleModal({
           <p className={styles.status}>
             {t("subprofiles:peopleModal.loading")}
           </p>
+        ) : haveEndorsersFailed ? (
+          /* A failed fetch must not read as "nobody has endorsed this
+             persona" (DES-22). */
+          <div className={styles.stateWrap}>
+            <LoadErrorState compact onRetry={() => void refetchEndorsers()} />
+          </div>
         ) : endorsers.length === 0 ? (
           <div className={styles.stateWrap}>
             <EmptyState title={t("subprofiles:peopleModal.noEndorsements")} />
@@ -240,6 +258,10 @@ export function SubprofilePeopleModal({
           <p className={styles.status}>
             {t("subprofiles:peopleModal.loading")}
           </p>
+        ) : haveFollowersFailed ? (
+          <div className={styles.stateWrap}>
+            <LoadErrorState compact onRetry={() => void refetchFollowers()} />
+          </div>
         ) : followers.length === 0 ? (
           // An empty list with a POSITIVE count is not "no followers yet" — it's
           // the count-only/anonymity-preserving reality of live following: the

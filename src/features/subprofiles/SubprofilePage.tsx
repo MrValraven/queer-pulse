@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
+import { LoadErrorState } from "../../shared/components/ui";
 import { PageMeta, JsonLd, buildPersonProfileSchema } from "../../shared/seo";
 import { socialHref } from "../../shared/social/socialPlatforms";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -110,6 +111,15 @@ export function SubprofilePage() {
     return (
       <PageShell>
         <SubprofilePageSkeleton />
+      </PageShell>
+    );
+  }
+
+  if (result.state === "error") {
+    return (
+      <PageShell>
+        <PageMeta title={t("subprofiles:page.notFoundMetaTitle")} noIndex />
+        <LoadErrorState onRetry={result.retry} />
       </PageShell>
     );
   }

@@ -1,5 +1,9 @@
 import { FiUsers } from "react-icons/fi";
-import { EmptyState, SkeletonLine } from "../../../../shared/components/ui";
+import {
+  EmptyState,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ManagedListingDTO } from "../api/listings.api";
@@ -33,7 +37,9 @@ export function ListingCoManagersSection({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const isCoManagerView = listing.managementRole === "co_manager";
-  const { coManagers, isLoading } = useListingCoManagers(listing.ref);
+  const { coManagers, isLoading, isError, refetch } = useListingCoManagers(
+    listing.ref,
+  );
   const remove = useRemoveCoManager(listing.ref);
 
   // Ended places (declined, revoked, left) belong to the history of the
@@ -63,6 +69,10 @@ export function ListingCoManagersSection({
 
       {isLoading ? (
         <SkeletonLine width="100%" height={56} style={{ marginTop: 18 }} />
+      ) : isError ? (
+        /* DES-22: a failed roster read must not tell an owner that nobody
+           helps them run the place. */
+        <LoadErrorState compact onRetry={refetch} />
       ) : roster.length === 0 ? (
         <EmptyState
           compact

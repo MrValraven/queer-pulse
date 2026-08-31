@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, FadeIn } from "../../shared/components/ui";
+import { useConnectionActions } from "../connect/api/useConnectionActions";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { linkToPath } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Notification } from "./data";
+import type { NotifAction } from "./notifications.types";
 import styles from "./NotificationsPage.module.css";
 
 /** Opaque row id: a uuid in live mode, a number in the demo mock. */
@@ -25,6 +28,32 @@ export function NotificationItem({
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  // PRD-15. A "wants to connect" row answers the request from here, so the
+  // mutations the connections page uses are wired straight into its buttons.
+  // Every other row leaves these untouched.
+  const { acceptRequest, declineRequest } = useConnectionActions();
+  const [isAnswering, setIsAnswering] = useState(false);
+
+  /**
+   * Answer a connection request from the row. Resolves the row (removing it,
+   * with a confirming toast) only once the server has agreed; a refusal has
+   * already toasted its own reason and rolled the local move back, so the row
+   * stays where it is and the member can try again.
+   */
+  async function answerConnection(
+    response: NonNullable<NotifAction["connectionResponse"]>,
+  ) {
+    if (isAnswering) return;
+    setIsAnswering(true);
+    const respond =
+      response.action === "accept" ? acceptRequest : declineRequest;
+    const didSucceed = await respond({
+      slug: response.memberSlug,
+      id: response.connectionId,
+    });
+    setIsAnswering(false);
+    if (didSucceed) onResolve(notification.id, response.toast);
+  }
 
   // Where the whole row navigates on click/keypress. A specific source
   // deep-link (thread/post/event) wins; otherwise an actor-driven row
@@ -138,8 +167,9 @@ export function NotificationItem({
               // with no resolve handler would be a dead button — so we render
               // it as plain, non-interactive text instead of a fake affordance.
               const canResolve = Boolean(action.resolve);
+              const canAnswer = Boolean(action.connectionResponse);
               const canNavigate = Boolean(action.href) && action.href !== "#";
-              if (!canResolve && !canNavigate) {
+              if (!canResolve && !canAnswer && !canNavigate) {
                 return (
                   <span key={action.label} className={styles.meta}>
                     {action.label}
@@ -156,9 +186,12 @@ export function NotificationItem({
                       ? styles.btnPrimary
                       : styles.btnGhost,
                   ].join(" ")}
+                  disabled={canAnswer && isAnswering}
                   onClick={(event) => {
                     event.stopPropagation();
-                    if (action.resolve) {
+                    if (action.connectionResponse) {
+                      void answerConnection(action.connectionResponse);
+                    } else if (action.resolve) {
                       onResolve(notification.id, action.resolve.toast);
                     } else {
                       void navigate(linkToPath(action.href));

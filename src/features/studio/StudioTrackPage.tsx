@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiChevronRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -28,9 +28,13 @@ export function StudioTrackPage() {
     <StudioShell>
       <div className={trackStyles.crumb}>
         <Link to={routes.studioArtist}>{ARTIST_NAME}</Link>
-        <span>›</span>
+        <span aria-hidden>
+          <FiChevronRight />
+        </span>
         <Link to={routes.studioAlbum}>{ALBUM_TITLE}</Link>
-        <span>›</span>
+        <span aria-hidden>
+          <FiChevronRight />
+        </span>
         <em>{t("studio:track.page.crumbLabel", { number: TRACK_NUMBER })}</em>
       </div>
 

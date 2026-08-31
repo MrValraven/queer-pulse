@@ -64,7 +64,8 @@ export function GroupAddMembersModal({
         name: view.name,
         avatarUrl: view.photo,
         pronouns: view.pron,
-        staffRole: staffMap[view.slug],
+        staffRole: staffMap[view.slug]?.tier ?? undefined,
+        staffBadgedRoles: staffMap[view.slug]?.badgedStaffRoles,
       })),
     [candidates, staffMap],
   );

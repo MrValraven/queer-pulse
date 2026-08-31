@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { Button, Modal } from "../../shared/components/ui";
+import { Button, Modal, RadioCardGroup } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { EVENT_REPORT_REASONS } from "./reportEventModal.data";
+import type { ReasonCode } from "../safety/reportReasons";
 
 /** Report-an-event flow: pick a reason, add context, send to the safety team. */
 export function ReportEventModal() {
   const { t } = useTranslation();
   const { report, byId, submitReport, closeReport } = useMyEvents();
-  const [reason, setReason] = useState<number | null>(null);
+  // The picked reason is held as its stable server code (never the option
+  // index), so it is what the submit sends and what the radiogroup matches on.
+  const [reason, setReason] = useState<ReasonCode | null>(null);
   const [note, setNote] = useState("");
   const ev = report.eventId ? byId(report.eventId) : undefined;
 
@@ -38,7 +41,7 @@ export function ReportEventModal() {
             disabled={reason === null}
             onClick={() => {
               if (reason === null) return;
-              submitReport(EVENT_REPORT_REASONS[reason]!.code, note);
+              submitReport(reason, note);
             }}
           >
             {t("myevents:reportModal.sendCta")}
@@ -50,25 +53,24 @@ export function ReportEventModal() {
         <label className={sx("field-label")} id="report-reason-label">
           {t("myevents:reportModal.whyReporting")}
         </label>
-        <div
+        <RadioCardGroup<ReasonCode>
           className={sx("report-reasons")}
-          role="radiogroup"
-          aria-labelledby="report-reason-label"
-        >
-          {EVENT_REPORT_REASONS.map((option, index) => (
-            <button
-              key={option.key}
-              type="button"
-              role="radio"
-              aria-checked={reason === index}
-              className={sx(`report-reason${reason === index ? " on" : ""}`)}
-              onClick={() => setReason(index)}
-            >
-              <span className={sx("report-radio")} aria-hidden="true" />
-              <span>{t(option.key)}</span>
-            </button>
-          ))}
-        </div>
+          optionClassName={sx("report-reason")}
+          checkedClassName={sx("on")}
+          ariaLabel={t("myevents:reportModal.whyReporting")}
+          ariaLabelledBy="report-reason-label"
+          value={reason ?? ""}
+          onChange={setReason}
+          options={EVENT_REPORT_REASONS.map((option) => ({
+            id: option.code,
+            render: (
+              <>
+                <span className={sx("report-radio")} aria-hidden="true" />
+                <span>{t(option.key)}</span>
+              </>
+            ),
+          }))}
+        />
       </div>
       <div className={sx("field")}>
         <label className={sx("field-label")} htmlFor="report-note">

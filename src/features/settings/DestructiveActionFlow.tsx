@@ -28,10 +28,18 @@ export interface DestructiveActionContent {
  * and the phase machine unconditionally.
  *
  * `action` performs the real request (re-auth + deletion/deactivation, or a
- * demo-simulated success). A rejected promise lands on an honest error phase —
- * never the success panel. When omitted, the flow falls back to a short
- * simulated delay (legacy callers). `onDone` fires when the member leaves the
- * result (used to kill the session on success).
+ * demo-simulated success). A rejected promise lands on an honest error phase,
+ * never the success panel. `onDone` fires when the member leaves the result
+ * (used to kill the session on success).
+ *
+ * `action` is REQUIRED, and PRD-01 is why. It used to be optional, with a
+ * 1.4-second `setTimeout` standing in when a caller left it out. The Settings
+ * Data pane left it out: a member who paused their account watched the loading
+ * spinner and then the success panel while no request was ever made, their
+ * `users.status` never changed, their session was never killed and they stayed
+ * fully visible and messageable. A dialog that can show a success panel for a
+ * request that did not happen is a dialog that eventually will, so the
+ * fallback is gone and omitting the action is now a compile error.
  */
 export function DestructiveActionFlow({
   content,
@@ -40,7 +48,7 @@ export function DestructiveActionFlow({
   onClose,
 }: {
   content: DestructiveActionContent;
-  action?: () => Promise<void>;
+  action: () => Promise<void>;
   onDone?: () => void;
   onClose: () => void;
 }) {
@@ -71,8 +79,7 @@ export function DestructiveActionFlow({
   const run = useCallback(async () => {
     setPhase("loading");
     try {
-      if (action) await action();
-      else await new Promise((resolve) => setTimeout(resolve, 1400));
+      await action();
       setPhase("done");
     } catch (err) {
       logError(err, {

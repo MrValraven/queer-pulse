@@ -5,7 +5,7 @@
   display: inline-flex;
   padding: 3px;
   gap: 2px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }
@@ -17,11 +17,11 @@
   gap: 7px;
   padding: 6px 14px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink-60);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   /* Labels stay on one line — a segment must never break word-by-word. */
   white-space: nowrap;
@@ -45,7 +45,7 @@
 }
 .segIcon {
   display: inline-flex;
-  font-size: 15px;
+  font-size: var(--text-15);
   /* Nudge optical alignment: icon glyphs sit slightly low against the label. */
   margin-top: -1px;
 }
@@ -66,7 +66,7 @@
 .segOn {
   background: var(--paper);
   color: var(--text-strong);
-  box-shadow: 0 2px 8px -3px rgba(var(--plum-rgb), 0.25);
+  box-shadow: var(--shadow-e2);
 }
 @media (hover: hover) {
   .segOn:hover {
@@ -77,11 +77,11 @@
 .segFull {
   display: flex;
   width: 100%;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
 }
 .segFull .segBtn {
   flex: 1;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 
 /* ── Toggle switch ───────────────────────────────────────────────────────── */
@@ -91,7 +91,7 @@
   height: 26px;
   padding: 0;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.18);
   cursor: pointer;
   position: relative;
@@ -139,7 +139,7 @@
   width: 100%;
   padding: 13px 15px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
   cursor: pointer;
   text-align: left;
@@ -161,7 +161,7 @@
   width: 22px;
   height: 22px;
   margin-top: 1px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   border: 1.5px solid rgba(var(--line-rgb), 0.22);
   display: grid;
   place-items: center;
@@ -185,12 +185,12 @@
   min-width: 0;
 }
 .checkTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 .checkSub {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.45;
 }
@@ -203,4 +203,14 @@
   .checkBox {
     transition: none;
   }
+}
+
+/* Dark theme — the segmented track's ground and the toggle's OFF fill are both
+   --plum-rgb tints, which do not flip. On the dark surface the track loses its
+   ground and the toggle loses its pill entirely, leaving the knob floating. */
+:global([data-theme="dark"]) .seg {
+  background: rgba(var(--cream-rgb), 0.08);
+}
+:global([data-theme="dark"]) .toggle:not(.toggleOn) {
+  background: rgba(var(--cream-rgb), 0.22);
 }

@@ -11,7 +11,7 @@
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -32,7 +32,7 @@
 .setCov {
   width: 36px;
   height: 36px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
 }
 
 /* A card that mirrors studio.module.css .card → square cover + title + meta. */
@@ -43,7 +43,7 @@
 }
 .cardCov {
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 
 /* Local copies of shared keyframes — see src/styles/tokens/effects.css.

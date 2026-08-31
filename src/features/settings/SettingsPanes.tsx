@@ -5,10 +5,12 @@ import { useAuth } from "../../app/providers/authContext";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useConsent } from "../../app/providers/useConsent";
 import { routes } from "../../app/routeMap";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Language } from "../../shared/i18n/types";
-import { TERMS } from "./settings.data";
+import { ACTIVITY_BAND_LABEL_KEY } from "../members/activityBand";
+import { GOOGLE_TWO_STEP_VERIFICATION_URL, TERMS } from "./settings.data";
 import { VISIBILITY_OPTIONS } from "./SettingsPanes.data";
 import { PushNotificationRow } from "../push/PushNotificationRow";
 import { useNotificationDelivery } from "./api/useNotificationDelivery";
@@ -19,8 +21,8 @@ import {
   QuietHoursSection,
 } from "./NotificationVolumeSections";
 import { useLoginAlerts } from "./api/useLoginAlerts";
-import { DestructiveActionFlow } from "./DestructiveActionFlow";
-import { buildDestructiveFlow } from "./destructiveFlows.data";
+import { useActivityVisibility } from "./api/useActivityVisibility";
+import { useSuggestionVisibility } from "./api/useSuggestionVisibility";
 import {
   DataCard,
   Pane,
@@ -31,7 +33,16 @@ import {
 } from "./SettingsControls";
 import styles from "./SettingsPage.module.css";
 
-export function NotificationsPane({ onChange }: { onChange: () => void }) {
+/**
+ * Every control in this pane is a genuinely persisted preference that saves the
+ * moment it is flipped, so the pane takes no `onChange` and never marks the
+ * page dirty. It used to take one for two inert rows in the phone-push section:
+ * "Last few spots", which now exists as the real `event_capacity` category in
+ * the gatherings group, and "Say hello", which was always a duplicate of the
+ * `connections` category one group below (one switch there already governs both
+ * the bell and the phone). PRD-18.
+ */
+export function NotificationsPane() {
   const { t } = useTranslation();
   const { delivery, setDelivery } = useNotificationDelivery();
   return (
@@ -48,28 +59,14 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
       sub={t("settings:notifications.sub")}
     >
       {/* Every category switch, grouped. All of them are genuinely persisted
-          and save on flip, so none participates in the pane's dirty/save flow
-          (`onChange`): that stays for the still-cosmetic rows below. */}
+          and save on flip. */}
       <NotificationCategorySections />
       <Section label={t("settings:notifications.section.phonePush")}>
         <ToggleList>
+          {/* Permission and device registration only. WHAT gets pushed is
+              decided by the category switches above, which govern the bell and
+              the phone together, so nothing per-type belongs down here. */}
           <PushNotificationRow />
-          {/* No "spots almost full" notification exists yet — still cosmetic. */}
-          <ToggleRow
-            title={t("settings:notifications.gatherings.lastFewSpots.title")}
-            description={t(
-              "settings:notifications.gatherings.lastFewSpots.desc",
-            )}
-            comingSoon
-            onChange={onChange}
-          />
-          {/* No "wave"/"say hello" notification type exists yet — cosmetic. */}
-          <ToggleRow
-            title={t("settings:notifications.messages.sayHello.title")}
-            description={t("settings:notifications.messages.sayHello.desc")}
-            comingSoon
-            onChange={onChange}
-          />
         </ToggleList>
         <div className={styles.dataCards}>
           <DataCard
@@ -143,18 +140,29 @@ export function LanguagePane() {
   );
 }
 
-/** Controlled consent row bound to real state (not the cosmetic ToggleRow). */
+/**
+ * Controlled consent row bound to real state (not the cosmetic ToggleRow).
+ *
+ * PRD-09: the danger zone here ROUTES, it never performs. Pausing and erasing
+ * both belong to `DeleteAccountSection` (`/account/delete`, and the "delete"
+ * pane of this same page), which is the one place that collects a typed
+ * confirmation, takes the Google step-up token and calls the endpoint. This
+ * pane used to carry its own copy of that flow for pausing, mounted with no
+ * request behind it, so a member who paused their account watched a success
+ * panel while `users.status` never changed and their profile stayed fully
+ * visible and messageable. Both cards below now hand off.
+ */
 export function DataPane({
   onChange,
+  onPauseClick,
   onDeleteClick,
 }: {
   onChange: () => void;
+  onPauseClick: () => void;
   onDeleteClick: () => void;
 }) {
   const { t } = useTranslation();
   const { consent, setConsent, openPreferences } = useConsent();
-  const [deactivateOpen, setDeactivateOpen] = useState(false);
-  const destructiveFlow = useMemo(() => buildDestructiveFlow(t), [t]);
   return (
     <Pane
       title={
@@ -250,7 +258,7 @@ export function DataPane({
             <Button
               variant="ghost"
               className={`${styles.dcBtn} ${styles.danger}`}
-              onClick={() => setDeactivateOpen(true)}
+              onClick={onPauseClick}
             >
               {t("settings:data.deactivate.cta")}
             </Button>
@@ -275,12 +283,6 @@ export function DataPane({
         </div>
         <div className={styles.fineprint}>{t("settings:data.fineprint")}</div>
       </Section>
-      {deactivateOpen && (
-        <DestructiveActionFlow
-          content={destructiveFlow.deactivate}
-          onClose={() => setDeactivateOpen(false)}
-        />
-      )}
     </Pane>
   );
 }
@@ -291,7 +293,29 @@ export function VisibilityPane({
   onChange: (key?: string) => void;
 }) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const { draft, updateDraft } = useProfileEdit();
+  // Both of these save the moment they are flipped, so neither calls
+  // `onChange`: raising the save bar for something already stored would make
+  // the member press Save for a change that had nothing left to save, and then
+  // toast "Saved!" a second time. The rows above them are profile-draft fields
+  // and genuinely do need the bar.
+  const {
+    isAppearingInSuggestions,
+    setAppearingInSuggestions,
+    isLoading: isSuggestionVisibilityLoading,
+  } = useSuggestionVisibility();
+  const {
+    band: activityBand,
+    isHidden: isActivityHidden,
+    setHidden: setActivityHidden,
+    isLoading: isActivityVisibilityLoading,
+    isSaving: isActivitySaving,
+    isDemoMode,
+  } = useActivityVisibility({
+    onError: () =>
+      showToast(t("settings:visibility.activityStatus.toastError"), "error"),
+  });
   return (
     <Pane
       title={
@@ -361,17 +385,44 @@ export function VisibilityPane({
             comingSoon
             onChange={onChange}
           />
-          <ToggleRow
+          {/* PRD-16. Checked means APPEARING: the hook owns the single
+              inversion against the stored `hideFromSuggestions`, so this must
+              never invert again. One-directional by design, which the
+              description says out loud. */}
+          <ConsentToggleRow
             title={t("settings:visibility.suggestedConnections.title")}
             description={t("settings:visibility.suggestedConnections.desc")}
-            comingSoon
-            onChange={onChange}
+            checked={isAppearingInSuggestions}
+            disabled={isSuggestionVisibilityLoading}
+            onChange={setAppearingInSuggestions}
           />
-          <ToggleRow
+          {/* PRD-04. The same opt-out the profile's "Who sees what" sheet
+              offers, on the same endpoint and the same cache key, so a flip on
+              either surface is immediately true on the other. This row was an
+              inert coming-soon toggle while that one worked. The label reads
+              "show", the stored field reads "hidden", so this is the one place
+              the two meet. */}
+          <ConsentToggleRow
             title={t("settings:visibility.activityStatus.title")}
-            description={t("settings:visibility.activityStatus.desc")}
-            comingSoon
-            onChange={onChange}
+            description={
+              activityBand
+                ? t("settings:visibility.activityStatus.descWithBand", {
+                    band: t(ACTIVITY_BAND_LABEL_KEY[activityBand]),
+                  })
+                : t("settings:visibility.activityStatus.desc")
+            }
+            checked={!isActivityHidden}
+            disabled={isActivityVisibilityLoading || isActivitySaving}
+            onChange={(isShown) => {
+              if (isDemoMode) {
+                showToast(
+                  t("members:profile.whoSeesWhat.activity.demo"),
+                  "info",
+                );
+                return;
+              }
+              setActivityHidden(!isShown);
+            }}
           />
         </ToggleList>
       </Section>
@@ -379,7 +430,12 @@ export function VisibilityPane({
   );
 }
 
-export function AccountPane({ onChange }: { onChange: () => void }) {
+/**
+ * Login and security. Nothing here joins the page's dirty/save flow: the one
+ * switch saves on flip, and everything else is a link to the surface that owns
+ * the thing (sessions, the security hub, Google's own two-step verification).
+ */
+export function AccountPane() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { isEnabled: isLoginAlertsEnabled, setEnabled: setLoginAlertsEnabled } =
@@ -416,12 +472,6 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
       </Section>
       <Section label={t("settings:account.section.security")}>
         <ToggleList>
-          <ToggleRow
-            title={t("settings:account.twoFactor.title")}
-            description={t("settings:account.twoFactor.desc")}
-            comingSoon
-            onChange={onChange}
-          />
           {/* Genuinely wired since ID-06: `GET|PUT /me/login-alerts` backs it,
               and `AuthService.issueTokens` reads it before emitting the
               `security_new_sign_in` notification. It saves on flip, so it does
@@ -435,6 +485,21 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
           />
         </ToggleList>
         <div className={styles.dataCards}>
+          {/* PRD-12. This was a "two-factor authentication, coming soon"
+              toggle, on a platform with no password and no second factor of
+              its own to build. Sign-in is Google OAuth only, so the second
+              factor that protects a QueerPulse account is the one on the
+              member's Google account, and since ID re-linking landed that is
+              also what protects the way back in: the recovery lever only ever
+              offers an identity Google confirms holds the member's verified
+              address. Pointing at the real control beats promising a copy of
+              it. */}
+          <DataCard
+            title={t("settings:account.twoFactor.title")}
+            description={t("settings:account.twoFactor.desc")}
+            button={t("settings:account.twoFactor.cta")}
+            href={GOOGLE_TWO_STEP_VERIFICATION_URL}
+          />
           <DataCard
             title={t("settings:account.sessions.title")}
             description={t("settings:account.sessions.desc")}

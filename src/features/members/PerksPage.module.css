@@ -8,7 +8,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   margin-bottom: 16px;
@@ -21,7 +21,7 @@
   }
 }
 .phEyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -53,14 +53,14 @@
   gap: 6px;
   background: rgba(var(--jade-rgb), 0.1);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 14px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--jade);
 }
 .perksAvail {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 
@@ -80,7 +80,7 @@
 
 /* Group label */
 .groupLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -104,7 +104,7 @@
 .perkCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   margin-bottom: 10px;
   display: flex;
@@ -136,7 +136,7 @@
   padding: 20px 22px;
 }
 .pcCat {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -163,7 +163,7 @@
   color: var(--ink-60);
 }
 .pcDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.7;
   margin-bottom: 18px;
@@ -186,7 +186,7 @@
   flex-wrap: wrap;
 }
 .autoChip {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -196,11 +196,11 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-40);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
 }
 .claimedChip {
@@ -208,14 +208,14 @@
   align-items: center;
   gap: 5px;
   background: rgba(var(--jade-rgb), 0.1);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--jade);
 }
 .claimedDate {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -230,11 +230,11 @@
 .sbCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
 }
 .sbTitle {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -243,7 +243,7 @@
 }
 .miniLevel {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   font-weight: 400;
   margin-bottom: 10px;
@@ -255,21 +255,21 @@
 .miniXpBar {
   height: 5px;
   background: rgba(var(--plum-rgb), 0.1);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
   margin-bottom: 5px;
 }
 .miniXpFill {
   height: 100%;
   background: var(--jade);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .miniXpLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .nextPerkNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 12px;
   padding-top: 12px;
@@ -277,7 +277,7 @@
   line-height: 1.55;
 }
 .sbLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   display: block;
@@ -287,14 +287,14 @@
 
 /* Explain */
 .explainText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.75;
 }
 
 /* Suggest */
 .suggestLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 10px;
@@ -302,10 +302,10 @@
 .suggestTa {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 13px;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   background: var(--cream);
   outline: none;

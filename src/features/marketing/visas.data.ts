@@ -48,7 +48,7 @@ export const ROUTES: {
     nameKey: "marketing:visas.routePicker.euCitizen.name",
     descKey: "marketing:visas.routePicker.euCitizen.desc",
     ctaKey: "marketing:visas.routePicker.euCitizen.cta",
-    to: "EU Citizens →",
+    to: "EU Citizens",
     tab: "eu",
   },
   {
@@ -56,7 +56,7 @@ export const ROUTES: {
     nameKey: "marketing:visas.routePicker.remoteWorker.name",
     descKey: "marketing:visas.routePicker.remoteWorker.desc",
     ctaKey: "marketing:visas.routePicker.remoteWorker.cta",
-    to: "D7 Visa →",
+    to: "D7 Visa",
     tab: "d7",
   },
   {
@@ -64,7 +64,7 @@ export const ROUTES: {
     nameKey: "marketing:visas.routePicker.digitalNomad.name",
     descKey: "marketing:visas.routePicker.digitalNomad.desc",
     ctaKey: "marketing:visas.routePicker.digitalNomad.cta",
-    to: "Digital Nomad (D8) →",
+    to: "Digital Nomad (D8)",
     tab: "d8",
   },
   {
@@ -72,7 +72,7 @@ export const ROUTES: {
     nameKey: "marketing:visas.routePicker.jobOffer.name",
     descKey: "marketing:visas.routePicker.jobOffer.desc",
     ctaKey: "marketing:visas.routePicker.jobOffer.cta",
-    to: "Work Visas →",
+    to: "Work Visas",
     tab: "work",
   },
   {
@@ -80,7 +80,7 @@ export const ROUTES: {
     nameKey: "marketing:visas.routePicker.partner.name",
     descKey: "marketing:visas.routePicker.partner.desc",
     ctaKey: "marketing:visas.routePicker.partner.cta",
-    to: "Bringing a Partner →",
+    to: "Bringing a Partner",
     tab: "partner",
   },
 ];

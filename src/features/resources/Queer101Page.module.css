@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 .dot {
@@ -44,7 +44,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 60ch;
@@ -74,7 +74,7 @@
   font-family: var(--sans);
 }
 .faqQText {
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 600;
   color: var(--text-strong);
   line-height: 1.3;
@@ -87,7 +87,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   flex: none;
   transition:
@@ -101,7 +101,7 @@
 }
 .faqA {
   padding: 0 4px 24px;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.72;
   max-width: 68ch;
@@ -117,12 +117,12 @@
 }
 .glossEditBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.08);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
 }
@@ -134,10 +134,10 @@
 .glossSearch {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 18px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.25s var(--ease);
@@ -155,7 +155,7 @@
 .glossCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
   transition: border-color 0.2s var(--ease);
 }
@@ -167,18 +167,18 @@
 .glossTerm {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
 .glossDef {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
 }
 .glossNotice {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   margin-top: 18px;
   line-height: 1.6;
@@ -192,7 +192,7 @@
 .resCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
   display: flex;
   flex-direction: column;
@@ -204,16 +204,16 @@
 @media (hover: hover) {
   .resCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px -16px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-lift);
   }
 }
 .resType {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   align-self: flex-start;
 }
 .typeBook {
@@ -235,17 +235,17 @@
 .resTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 .resBy {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .resDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   flex: 1;
@@ -253,7 +253,7 @@
 
 .talkBox {
   background: var(--plum);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 48px;
   color: rgba(var(--cream-rgb), 1);
 }
@@ -271,7 +271,7 @@
   color: var(--accent);
 }
 .talkBox p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.68;
   max-width: 52ch;
@@ -290,7 +290,7 @@
 .talkOpt {
   background: rgba(var(--cream-rgb), 0.07);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
   transition: background 0.2s var(--ease);
 }
@@ -300,19 +300,19 @@
   }
 }
 .talkOptTitle {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 5px;
 }
 .talkOptDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.58);
   line-height: 1.55;
   margin-bottom: 14px;
 }
 .talkOptLink {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent);
   text-decoration: none;

@@ -32,9 +32,13 @@ export function AdminSidebar({
   // A grant holder who is neither admin nor moderator sees only the sections
   // their grants open (OPS-03); every tier keeps the rail it had.
   const isFullConsole = demoMode || role === "admin" || role === "moderator";
+  // A moderator sees the full rail minus the entries whose backend is
+  // `@Roles(Admin)` alone (PRD-32's legal register), so the rail never offers a
+  // link the route gate then bounces.
+  const isAdmin = demoMode || role === "admin";
   const sections = useMemo(
-    () => visibleAdminNavSections({ isFullConsole, staffRoles }),
-    [isFullConsole, staffRoles],
+    () => visibleAdminNavSections({ isFullConsole, isAdmin, staffRoles }),
+    [isFullConsole, isAdmin, staffRoles],
   );
 
   const navRef = useRef<HTMLElement>(null);

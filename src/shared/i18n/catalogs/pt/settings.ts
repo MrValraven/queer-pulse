@@ -24,7 +24,7 @@ export const settings: Catalog = {
   "nav.item.profileTheme": "Tema do perfil",
   "nav.item.accessibility": "Acessibilidade",
   "nav.item.interests": "Interesses",
-  "nav.item.blockedUsers": "Membros bloqueados",
+  "nav.item.blockedUsers": "Bloqueados e silenciados",
   "nav.item.uploads": "As minhas imagens",
   "nav.item.deleteAccount": "Eliminar conta",
 
@@ -173,10 +173,18 @@ export const settings: Catalog = {
 
   // ── interests.data.ts — definições de conteúdo (idem) ────────────────────
   "interests.contentSetting.dating": "Conteúdo sobre convívios e relações",
+  "interests.contentSetting.dating.desc":
+    "Esconde publicações e encontros de comunidades de encontros, relações e kink",
   "interests.contentSetting.mentalHealth":
     "Conteúdo sobre saúde mental e bem-estar",
+  "interests.contentSetting.mentalHealth.desc":
+    "Esconde publicações e encontros de comunidades de saúde mental, bem-estar e recuperação",
   "interests.contentSetting.sexualityIdentity":
     "Conteúdo sobre exploração da sexualidade e identidade",
+  "interests.contentSetting.sexualityIdentity.desc":
+    "Esconde publicações e encontros de comunidades de sexualidade, género e assumir-se",
+  "interests.content.toastError":
+    "Não conseguimos guardar essa definição. Tenta novamente.",
 
   // ── SettingsPanes.tsx — NotificationsPane ────────────────────────────────
   "notifications.title": "Preferências de <em>notificações.</em>",
@@ -204,12 +212,15 @@ export const settings: Catalog = {
     "Atividade nos convívios que organizas",
   "notifications.volume.eventActivity.desc":
     "Novas confirmações e convites para co-organizar",
+  "notifications.volume.eventCapacity.title": "Últimos lugares",
+  "notifications.volume.eventCapacity.desc":
+    "Quando um convívio que guardaste, ou a que respondeste talvez, está quase cheio",
   "notifications.volume.newMessages.title": "Nova mensagem",
   "notifications.volume.newMessages.desc":
     "Quando alguém te envia uma mensagem direta",
   "notifications.volume.connections.title": "Pedidos de ligação",
   "notifications.volume.connections.desc":
-    "Quando alguém pede para se ligar, ou aceita o teu pedido",
+    "Quando alguém pede para se ligar, envia um olá com o pedido, ou aceita o teu",
   "notifications.volume.vouches.title": "Abonações",
   "notifications.volume.vouches.desc":
     "Quando alguém abona por ti, ou por um espaço que geres",
@@ -262,11 +273,6 @@ export const settings: Catalog = {
     "Segura as notificações no telemóvel durante estas horas, lidas pelo teu próprio relógio. Nada se perde: chega tudo às tuas notificações, apenas não vibra.",
   "notifications.delivery.quietHours.none": "Sem horas de silêncio",
 
-  "notifications.gatherings.lastFewSpots.title": "Últimas vagas",
-  "notifications.gatherings.lastFewSpots.desc":
-    "Quando um convívio que guardaste está quase esgotado",
-  "notifications.messages.sayHello.title": "Recebeste um «Olá»",
-  "notifications.messages.sayHello.desc": "Quando alguém te acena no perfil",
   "notifications.phonePush.title": "Notificações no telemóvel",
   "notifications.phonePush.desc":
     "Recebe um aviso no telemóvel quando alguém te envia mensagem, mesmo com o QueerPulse fechado. Adiciona primeiro o QueerPulse ao ecrã principal.",
@@ -376,10 +382,16 @@ export const settings: Catalog = {
     "Diz à comunidade que te juntaste recentemente",
   "visibility.suggestedConnections.title": "Aparecer em ligações sugeridas",
   "visibility.suggestedConnections.desc":
-    "Permite à plataforma sugerir-te a pessoas com interesses em comum",
+    "Permite à plataforma sugerir-te a pessoas com interesses em comum. Se desligares, continuas a ver sugestões e permaneces no diretório de membros.",
+  "visibility.suggestedConnections.toastError":
+    "Não conseguimos guardar essa definição. Tenta novamente.",
   "visibility.activityStatus.title": "Mostrar estado de atividade",
   "visibility.activityStatus.desc":
-    "Deixa as pessoas verem a tua última atividade (aproximada)",
+    "Deixa as pessoas verem há quanto tempo estiveste por cá, por alto. Guardamos o mês e nada mais fino.",
+  "visibility.activityStatus.descWithBand":
+    "Deixa as pessoas verem há quanto tempo estiveste por cá, por alto. Neste momento lês-te como: {band}.",
+  "visibility.activityStatus.toastError":
+    "Não conseguimos guardar essa definição. Tenta novamente.",
 
   // ── SettingsPanes.tsx — AccountPane ────────────────────────────────────────
   "account.title": "Definições da <em>conta.</em>",
@@ -392,7 +404,8 @@ export const settings: Catalog = {
   "account.section.security": "Segurança",
   "account.twoFactor.title": "Autenticação de dois fatores",
   "account.twoFactor.desc":
-    "Adiciona um segundo passo ao iniciar sessão num novo dispositivo",
+    "Entras com a Google, por isso é a verificação em dois passos da tua conta Google que protege o QueerPulse. Também protege o caminho de volta se perderes o acesso.",
+  "account.twoFactor.cta": "Ativar na Google",
   "account.loginAlerts.title": "Alertas de início de sessão",
   // Nomeia os dois canais que existem. A linha anterior dizia "por email", que
   // a QueerPulse nunca conseguiu enviar e nunca vai.
@@ -484,7 +497,7 @@ export const settings: Catalog = {
   "accountSecurity.notYet.twoFactor":
     "Um segundo fator. Hoje, quem protege o início de sessão é a verificação em dois passos da tua própria conta Google.",
   "accountSecurity.notYet.recovery":
-    "Uma segunda forma de entrar. Se perderes o acesso à tua conta Google, perdes o acesso ao QueerPulse, por isso escreve-nos antes que isso aconteça.",
+    "Uma segunda forma de entrar que não passe pela Google. Perder a conta Google já não é o fim: escreve-nos e podemos voltar a ligar a tua conta QueerPulse a uma identidade Google com o mesmo endereço verificado.",
 
   "accountSecurity.compromised":
     "<strong>Achas que mais alguém está na tua conta?</strong> <sessions>Termina todas as outras sessões</sessions> primeiro, o que deixa apenas o navegador onde estás a ler isto com sessão iniciada, e depois <contact>diz-nos</contact> para podermos ver o que aconteceu.",
@@ -691,7 +704,7 @@ export const settings: Catalog = {
     "Em vez de te mostrarmos uma lista em que não podemos confiar, não mostrámos nada. Tenta novamente dentro de momentos.",
   "sessions.empty.none.title": "Sem sessões ativas",
   "sessions.empty.none.desc":
-    "Não há sessão iniciada em lado nenhum agora, nem mesmo neste dispositivo, o que normalmente significa que a tua sessão está prestes a ser renovada.",
+    "Todos os dispositivos têm sessão terminada neste momento, incluindo este, o que normalmente significa que a tua sessão está prestes a ser renovada.",
   "sessions.toast.signedOut":
     "Sessão terminada. Se não foste tu, revê as tuas sessões ativas e termina qualquer dispositivo que não reconheças.",
   "sessions.toast.signedOutError":
@@ -734,9 +747,9 @@ export const settings: Catalog = {
 
   // ── BlockedUsersPane.tsx — chrome (registos mock de membros bloqueados
   // ficam em inglês, seguindo a convenção das sessões mock acima) ──────────
-  "blockedUsers.title": "Membros que <em>bloqueaste</em>.",
+  "blockedUsers.title": "Membros que <em>silenciaste</em>.",
   "blockedUsers.sub":
-    "Membros bloqueados não conseguem ver o teu perfil, enviar-te mensagens nem encontrar-te na pesquisa. Desbloquear não repõe nada disso automaticamente, só volta a abrir a porta.",
+    "Membros bloqueados não conseguem ver o teu perfil, enviar-te mensagens nem encontrar-te na pesquisa. Membros silenciados apenas ficam em silêncio para ti e nunca foram avisados. Estão os dois aqui e podes desfazer os dois.",
   "blockedUsers.section.blocked": "Bloqueados",
   "blockedUsers.row.blockedOn": "Bloqueado {date}",
   "blockedUsers.row.deletedMember": "Membro eliminado",
@@ -1116,4 +1129,22 @@ export const settings: Catalog = {
   "themeStudio.badge.sustainer": "Apoiante (Raro)",
   "themeStudio.badge.regular": "Regular (Raro)",
   "themeStudio.badge.vouch": "Voto de confiança (Raro)",
+
+  // ── AccountDataSheet.tsx — o painel "Os teus dados" do perfil, que agora
+  // encaminha para a página que trata de cada ação em vez de construir uma
+  // segunda cópia das quatro. PRD-09. ─────────────────────────────────────
+  "accountData.download.title": "Descarregar os teus dados",
+  "accountData.download.desc":
+    "Escolhe o que incluir e recebe um arquivo legível por máquina. RGPD, artigo 20.",
+  "accountData.download.cta": "Abrir exportação de dados",
+  "accountData.stepAway.title": "Pausar ou apagar a tua conta",
+  "accountData.stepAway.desc":
+    "Esconde o teu perfil durante uns tempos, ou pede que tudo seja apagado. Ambos exigem uma confirmação escrita e uma nova entrada com a Google. RGPD, artigo 17.",
+  "accountData.stepAway.cta": "Abrir pausar e apagar",
+  "accountData.dsar.title": "Fazer um pedido sobre os teus dados",
+  "accountData.dsar.desc":
+    "Pergunta o que guardamos sobre ti, pede uma correção, ou opõe-te à forma como é usado. RGPD, artigos 15, 16 e 21.",
+  "accountData.dsar.cta": "Abrir o formulário",
+  "accountData.note":
+    "Cada um destes abre numa página completa, para leres exatamente o que faz antes de avançares.",
 };

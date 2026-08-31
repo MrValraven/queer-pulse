@@ -5,10 +5,18 @@ export const cards: Catalog = {
   "page.title": "Membership cards",
   "page.dek":
     "Each community you belong to can issue you a card. Show it to prove you are a member.",
+  "page.loadError.title": "We couldn't load <em>your cards</em>",
+  "page.loadError.body":
+    "Your cards are still there. The request didn't come back, so try again in a moment.",
 
   "empty.title": "No cards yet",
   "empty.body":
-    "When a community you belong to starts a card programme, your card appears here.",
+    "Membership cards come from communities. An owner or moderator of a community you belong to issues them, and yours lands here.",
+  "empty.issuers.title": "Your communities that issue cards",
+  "empty.issuers.hint": "Ask an owner or moderator there about getting yours.",
+  "empty.noIssuers":
+    "None of the communities you belong to run a card programme yet.",
+  "empty.cta": "Your communities",
 
   "remove.cta": "Remove this card",
   "remove.ctaAria": "Remove your {community} card",
@@ -158,6 +166,8 @@ export const cards: Catalog = {
   "verify.checking": "Checking this card…",
 
   "designer.ariaLabel": "Design your community's membership card",
+  "designer.loadErrorBody":
+    "We couldn't load your card programme, so the designer is holding back rather than saving over it. Try again in a moment.",
   "designer.defaultCardName": "Member",
   "designer.cardNameLabel": "What the card calls a member",
   "designer.cardNamePlaceholder": "Member, Sócie, Companheire",
@@ -259,6 +269,8 @@ export const cards: Catalog = {
   "validity.twoYears": "Two years",
 
   "holders.title": "Card holders",
+  "holders.loadErrorBody":
+    "We couldn't load the card holders. Try again in a moment.",
   "holders.searchLabel": "Search card holders",
   "holders.searchPlaceholder": "Name or card number",
   "holders.suspend": "Pause",
@@ -305,6 +317,8 @@ export const cards: Catalog = {
   "holders.card.close": "Close",
 
   "print.metaTitle": "Print membership cards · QueerPulse",
+  "print.loadErrorBody":
+    "We couldn't load this community's cards, so there is nothing to lay out yet. Try again in a moment.",
   "print.title_one": "One card to print",
   "print.title_other": "{count} cards to print",
   "print.print": "Print",

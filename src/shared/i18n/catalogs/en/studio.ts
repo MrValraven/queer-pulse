@@ -239,7 +239,7 @@ export const studio: Catalog = {
 
   "signin.in.title": "Welcome <em>back.</em>",
   "signin.in.lede":
-    "Studio is a tab on your QueerPulse account, not a new login. Sign in with the member account you already have.",
+    "Studio is a tab on your QueerPulse account. Sign in with the member account you already have.",
   "signin.emailLabel": "Email",
   "signin.emailPlaceholder": "you@example.com",
   "signin.in.submitCta": "Sign in",
@@ -318,7 +318,7 @@ export const studio: Catalog = {
   "about.sec.whatItIs.heading":
     "A listening platform, run as a <em>co-op</em>.",
   "about.sec.whatItIs.p1":
-    "QueerPulse Studio is owned by the people who use it, listeners and artists together, not by shareholders or a label. <strong>Eighty cents of every euro a listen generates goes to the artist.</strong> Every cent of every tip. The split is public, the catalogue is curated by an elected council of six, and the masters never leave the artist's hands.",
+    "QueerPulse Studio is owned by the people who use it: listeners and artists hold every share between them. <strong>Eighty cents of every euro a listen generates goes to the artist.</strong> Every cent of every tip. The split is public, the catalogue is curated by an elected council of six, and the masters never leave the artist's hands.",
   "about.sec.whatItIs.p2":
     "It is the third room of the QueerPulse co-op, after the Magazine and Cinema. One membership covers all of it. You can be a member for the writing and never open Studio; you can be here only for the music and never read a word.",
   "about.sec.whatItIs.pull":
@@ -432,7 +432,7 @@ export const studio: Catalog = {
   "accessibility.item.interfaceLang.heading":
     "Interface in <em>your language</em>",
   "accessibility.item.interfaceLang.body":
-    "Studio's chrome ships in Portuguese, English, Spanish and French, with more added as members translate them. Set it in Settings → Captions & lyrics.",
+    "Studio's chrome ships in Portuguese, English, Spanish and French, with more added as members translate them. Set it in Settings, then Captions & lyrics.",
 
   "accessibility.group.lowVision.heading":
     "For low-vision & <em>keyboard</em> navigation",
@@ -508,7 +508,7 @@ export const studio: Catalog = {
     "<strong>€7/mo</strong> is Studio only. <strong>€11/mo</strong> is the whole QueerPulse co-op: Studio plus Cinema, the Magazine, Gatherings, reading groups, and a vote at the annual assembly. One membership, every surface. Change tiers any month.",
   "help.faq.cancel.q": "How do I cancel?",
   "help.faq.cancel.a":
-    'One click in <a>Settings → Erase & exit</a>. No retention call, no "are you sure" loop, no winback emails. We think leaving should be as easy as arriving. That\'s the only honest way to ask you to stay.',
+    'One click in <a>Settings, then Erase & exit</a>. No retention call, no "are you sure" loop, no winback emails. We think leaving should be as easy as arriving. That\'s the only honest way to ask you to stay.',
   "help.faq.dataSold.q": "Is my data sold or used to train anything?",
   "help.faq.dataSold.a":
     "<strong>Never.</strong> We don't sell, share, or train on what you listen to. Aggregate play counts feed the public ledger, but nothing that identifies you. Full detail in the <a>trust & terms</a> page.",
@@ -603,7 +603,7 @@ export const studio: Catalog = {
     "No platform cut on tips, ever. This one isn't up for a vote. It's a founding term.",
   "terms.deal.data.title": "Your data is <em>never</em> sold",
   "terms.deal.data.body":
-    "Not sold, not shared, not used to train anything. History is off by default and erasable in one tap.",
+    "It stays inside the co-op and does exactly one job: paying artists. History is off by default and erasable in one tap.",
   "terms.deal.leaving.title": "Leaving is <em>one page</em>",
   "terms.deal.leaving.body":
     "Take down work in 14 days, close your account in one click. Past plays stay paid either way.",
@@ -644,7 +644,7 @@ export const studio: Catalog = {
   "terms.sec.privacy.p1":
     "We hold your account, your saves, your receipts, and whatever you explicitly turn on. We do <strong>not</strong> hold a profile of your taste to sell, a history you didn't ask us to keep, or anything we'd hand to an advertiser, because we don't have advertisers.",
   "terms.sec.privacy.footnote":
-    "Aggregate, de-identified play counts feed the public ledger so artists get paid and the numbers are auditable. You can export everything we hold, or erase it, from <a>Settings → Erase & exit</a>: instantly, no modal, no undo needed because we mean it.",
+    "Aggregate, de-identified play counts feed the public ledger so artists get paid and the numbers are auditable. You can export everything we hold, or erase it, from <a>Settings, then Erase & exit</a>: instantly, no modal, no undo needed because we mean it.",
 
   "terms.longVersions.title": "The long versions",
   "terms.longVersions.meta":
@@ -685,7 +685,7 @@ export const studio: Catalog = {
 
   "rights.leavingCoop.title": "Leaving the co-op <em>entirely</em>?",
   "rights.leavingCoop.body":
-    "This page only removes individual releases. To close your artist account, end your sustainer membership, and request a full data export, that lives in <a>Settings → Erase & exit</a>. <em>Even then, past payouts are yours to keep</em> and we'll keep paying out any plays that already happened.",
+    "This page only removes individual releases. To close your artist account, end your sustainer membership, and request a full data export, that lives in <a>Settings, then Erase & exit</a>. <em>Even then, past payouts are yours to keep</em> and we'll keep paying out any plays that already happened.",
 
   "rights.takedownStartedToast": '"{title}" enters its 14-day removal window',
   "rights.removalCancelledToast": "Removal cancelled. Release stays up",
@@ -1162,7 +1162,7 @@ export const studio: Catalog = {
   "upload.side.lyrics.list.autoTranscribe.label": "Auto-transcribe",
   "upload.side.lyrics.list.autoTranscribe.value": "free · ~94%",
   "upload.side.lyrics.list.communityTranslation.label": "Community translation",
-  "upload.side.lyrics.list.communityTranslation.value": "€40 → translator",
+  "upload.side.lyrics.list.communityTranslation.value": "€40 to the translator",
   "upload.side.lyrics.list.approval.label": "Your approval",
   "upload.side.lyrics.list.approval.value": "before publish",
 
@@ -1202,7 +1202,7 @@ export const studio: Catalog = {
   "payouts.summary.fromAlbumBuys": "From album buys",
   "payouts.summary.directSubs": "Direct €3/mo subs",
   "payouts.summary.splitsRouted": "Splits routed to others",
-  "payouts.summary.toYourIban": "→ to your IBAN",
+  "payouts.summary.toYourIban": "To your IBAN",
 
   "payouts.list.heading": "Recent <em>payouts</em>",
   "payouts.list.exportCsv": "Export CSV",
@@ -1220,7 +1220,7 @@ export const studio: Catalog = {
   "payouts.sidebar.method.sepa.label": "SEPA: IBAN",
   "payouts.sidebar.method.sepa.badge": "Active",
   "payouts.sidebar.method.stripe.label": "Stripe Connect",
-  "payouts.sidebar.method.stripe.hint": "connected · backup, not primary",
+  "payouts.sidebar.method.stripe.hint": "connected · backup route",
   "payouts.sidebar.method.stripe.switchCta": "Switch",
   "payouts.sidebar.method.coopCredit.label": "Co-op credit",
   "payouts.sidebar.method.coopCredit.hint":
@@ -1484,7 +1484,7 @@ export const studio: Catalog = {
   "sheet.preview.transcribedBy": "Transcribed by <em>{name}</em>",
   "sheet.preview.transcriberRole": "Community transcriber",
   "sheet.preview.transcriberNote":
-    "<em>paid from your purchase, not the fund, when you buy</em>",
+    "<em>your purchase pays the transcriber directly</em>",
 
   "sheet.checkout.title": "Your <em>download</em>",
   "sheet.checkout.subtitle": "One sheet · clean PDF · yours to keep & print",
@@ -1723,7 +1723,7 @@ export const studio: Catalog = {
     "Paste your tracklist · timecode · artist · title",
   "setSubmission.matcher.pasteHint":
     "One line per track. We accept most formats. <em>Re-run the matcher</em> whenever you edit.",
-  "setSubmission.matcher.runCta": "▸ Run the matcher",
+  "setSubmission.matcher.runCta": "Run the matcher",
   "setSubmission.matcher.matchingCta": "Matching…",
   "setSubmission.matcher.resultsLabel":
     "Matcher results · <em>resolved against the catalogue + PRO database</em>",

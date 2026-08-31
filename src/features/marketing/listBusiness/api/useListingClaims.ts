@@ -72,5 +72,10 @@ export function useListingClaimPolicy() {
     queryFn: getListingClaimPolicy,
     staleTime: CLAIM_POLICY_STALE_TIME_MS,
   });
-  return { policy: query.data ?? null, isLoading: query.isLoading };
+  return {
+    policy: query.data ?? null,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

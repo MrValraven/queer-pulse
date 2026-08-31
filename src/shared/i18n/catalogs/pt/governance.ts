@@ -65,12 +65,15 @@ export const governance: Catalog = {
   "health.stat.gatheringsHosted.label": "Convívios realizados",
   "health.stat.appealUpheld.label": "Contestação de moderação aceite",
 
-  "health.trend.upThisQuarter": "↑ {count} este trimestre",
+  "health.trend.upThisQuarter": "{count} este trimestre",
   "health.trend.steady": "Estável",
   "health.trend.allResolved": "Todas resolvidas",
   "health.trend.cocViolations": "Violações do Código de Cuidado",
-  "health.trend.upVsQ1": "↑ {count} vs T1",
+  "health.trend.upVsQ1": "{count} vs T1",
   "health.trend.ofFiled": "de {count} apresentadas",
+  /** Prefixo para leitores de ecrã numa tendência a subir; o ícone de seta
+   *  ao lado é `aria-hidden`, por isso é isto que transporta a direção. */
+  "health.trend.upDirection": "Subiu:",
 
   // ── Moderação ───────────────────────────────────────────────────────────
   "sections.moderation.eyebrow": "Como funciona a moderação",
@@ -94,7 +97,7 @@ export const governance: Catalog = {
     "Resultados possíveis: nenhuma ação (com explicação), comunicação direta, aviso, suspensão temporária, remoção permanente. A pessoa denunciada é informada do resultado, mas quem denunciou não.",
   "steps.appeal.title": "Direito a contestar",
   "steps.appeal.text":
-    "Qualquer pessoa da comunidade pode contestar uma decisão de moderação no prazo de 14 dias. As contestações são revistas pelo conselho consultivo, não pela equipa original. O resultado é final.",
+    "Qualquer pessoa da comunidade pode contestar uma decisão de moderação no prazo de 14 dias. As contestações são revistas pelo conselho consultivo, de forma independente da equipa que tomou a decisão original. O resultado é final.",
 
   // ── Conselho consultivo ─────────────────────────────────────────────────
   "sections.council.eyebrow": "Conselho consultivo",
@@ -165,7 +168,7 @@ export const governance: Catalog = {
   "sections.proposals.eyebrow": "Propostas e votações",
   "sections.proposals.title": "Pomos isso a <em>votos.</em>",
   "sections.proposals.intro":
-    "Há duas coisas nesta página decididas por voto da comunidade, não por decisão administrativa: encerrar um lugar no conselho consultivo exige dois terços dos votos, e aceitar financiamento fora das nossas fontes habituais exige maioria. Todas as propostas em aberto estão listadas aqui, e as anteriores continuam visíveis com o respetivo resultado.",
+    "Há duas coisas nesta página decididas por voto da comunidade: encerrar um lugar no conselho consultivo exige dois terços dos votos, e aceitar financiamento fora das nossas fontes habituais exige maioria. Todas as propostas em aberto estão listadas aqui, e as anteriores continuam visíveis com o respetivo resultado.",
   "sections.proposals.type.council_removal": "Lugar no conselho",
   "sections.proposals.type.funding_change": "Mudança de financiamento",
   "sections.proposals.type.member_motion": "Moção da comunidade",
@@ -324,7 +327,7 @@ export const governance: Catalog = {
   "transparency.meta.title":
     "Relatório de Transparência: números da moderação da QueerPulse",
   "transparency.meta.description":
-    "Contado a cada trimestre: denúncias apresentadas e sobre o quê, quanto tempo demorou uma resposta, o que a moderação fez, recursos apresentados e quantas decisões foram revertidas.",
+    "Contado a cada trimestre: denúncias apresentadas e sobre o quê, quanto tempo demorou uma resposta, o que a moderação fez, recursos apresentados, quantas decisões foram revertidas, e todas as exigências que um tribunal, uma força policial ou um organismo governamental fez por informação sobre membros.",
 
   "transparency.hero.eyebrow": "Relatório de Transparência",
   "transparency.hero.title": "O que a moderação <em>fez mesmo.</em>",
@@ -409,6 +412,72 @@ export const governance: Catalog = {
 
   "transparency.suppressed.value": "Menos de {floor}",
   "transparency.suppressed.unavailable": "Indisponível",
+
+  // ── Exigências legais, governamentais e policiais (PRD-32) ─────────────
+  // O registo que o relatório omitia por completo. A secção é sempre
+  // apresentada, um registo vazio publica um zero real, e `neverAsked` é a
+  // única frase da página que fala por todo o tempo e não apenas pelo trimestre
+  // escolhido. As chaves `legal.type.*` / `legal.outcome.*` etiquetam os
+  // identificadores estáveis que `LEGAL_REQUEST_TYPES` / `LEGAL_REQUEST_OUTCOMES`
+  // enviam.
+  "transparency.legal.title": "Exigências de <em>tribunais e polícia</em>",
+  "transparency.legal.lead":
+    "Um pedido legal é uma exigência de um tribunal, de uma força policial, de um organismo governamental ou de outro braço de um Estado: entregar informação sobre um membro, preservá-la, ou retirar algo. Cada exigência que nos chega é escrita num registo no momento em que chega, e esta secção é esse registo contado.",
+  "transparency.legal.neverAsked":
+    "Nenhum tribunal, força policial ou organismo governamental alguma vez pediu à QueerPulse informação sobre um membro. Esta frase cobre toda a vida do registo, todos os trimestres em que foi mantido, e a página lê-a do registo sempre que carrega.",
+  "transparency.legal.hasBeenAsked":
+    "A QueerPulse já recebeu exigências de informação sobre membros. Os números abaixo contam as exigências que chegaram dentro deste período, por isso um período de zeros significa que nenhuma chegou nele.",
+
+  "transparency.legal.unavailable.body":
+    "Não conseguimos carregar estes números. É um problema a carregar esta página e não significa que nunca nos tenham pedido nada. Nada aqui deve ser lido como um zero.",
+
+  "transparency.legal.received": "Exigências recebidas",
+  "transparency.legal.accountsAffected": "Contas de membros nomeadas",
+  "transparency.legal.accountsNotified": "Contas nomeadas informadas",
+  "transparency.legal.recordsVoided": "Registos anulados",
+
+  "transparency.legal.typeTableCaption":
+    "Exigências recebidas durante o período, por aquilo que chegou",
+  "transparency.legal.typeColumn": "Tipo de exigência",
+  "transparency.legal.typeCountColumn": "Exigências",
+
+  "transparency.legal.type.subpoena": "Intimação",
+  "transparency.legal.type.court_order": "Ordem de tribunal",
+  "transparency.legal.type.police_request":
+    "Pedido policial feito sem ordem de tribunal",
+  "transparency.legal.type.emergency_disclosure_request":
+    "Exigência de divulgação de emergência",
+  "transparency.legal.type.preservation_request":
+    "Exigência de preservação de dados",
+  "transparency.legal.type.takedown_demand": "Exigência de remoção de conteúdo",
+  "transparency.legal.type.other": "Tudo o resto",
+
+  "transparency.legal.outcomeTitle": "O que fizemos quanto a elas",
+  "transparency.legal.outcomeTableCaption":
+    "Exigências recebidas durante o período, por aquilo que a QueerPulse fez",
+  "transparency.legal.outcomeColumn": "O que fizemos",
+  "transparency.legal.outcomeCountColumn": "Exigências",
+
+  "transparency.legal.outcome.complied_in_full": "Cumprimos na totalidade",
+  "transparency.legal.outcome.complied_in_part": "Cumprimos em parte",
+  "transparency.legal.outcome.narrowed":
+    "Contestámos e reduzimos antes de entregar seja o que for",
+  "transparency.legal.outcome.refused": "Recusámos",
+  "transparency.legal.outcome.withdrawn": "Retirada por quem a enviou",
+  "transparency.legal.outcome.pending": "Ainda a ser respondida",
+
+  "transparency.legal.registerTitle": "O próprio registo",
+
+  "transparency.legal.notes.voided":
+    "Um registo pode ser anulado, por ter sido introduzido duas vezes ou por erro de introdução. Um registo anulado sai de todos os números acima e passa a ser contado aqui, por isso exigências recebidas mais registos anulados é tudo o que o registo guarda para este período. Esvaziar o registo apareceria como um número nesta página.",
+  "transparency.legal.notes.notified":
+    "Informar um membro de que a sua conta foi nomeada é algo que a equipa faz à mão, e o número acima é a contagem que a equipa registou ter feito. Uma exigência pode chegar com uma ordem que nos proíbe de informar seja quem for, e enquanto essa ordem se mantiver ninguém pode ser informado.",
+  "transparency.legal.notes.gagOrders":
+    "Algumas exigências chegam com uma ordem que nos proíbe de as descrever. Essas são contadas em todos os números acima exatamente como qualquer outra exigência, e nada nesta página marca quais são. Contar uma exigência não a descreve.",
+  "transparency.legal.notes.contents":
+    "Esta secção publica contagens. Não publica quem pediu, nem o país, nem o processo, nem datas, nem contas, nem qualquer descrição do que tenha sido entregue. Isso fica no registo.",
+  "transparency.legal.notes.suppression":
+    "Uma exigência que nomeia uma ou duas contas é, para quem conhece as pessoas envolvidas, uma pessoa concreta. Por isso qualquer número aqui abaixo de <b>{floor}</b> é retido e mostrado como menos de {floor}. O zero é publicado como zero real, porque um zero não identifica ninguém. Um número retido significa que fomos questionados e estamos a reter a contagem, e nunca significa que nada aconteceu.",
 
   "transparency.method.title": "Como estes números são <em>feitos</em>",
   "transparency.method.counted":

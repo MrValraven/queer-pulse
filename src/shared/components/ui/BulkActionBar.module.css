@@ -16,12 +16,12 @@
   bottom: calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 160;
+  z-index: var(--z-popover);
   flex-wrap: nowrap;
   gap: 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 11px 12px 11px 22px;
-  box-shadow: 0 18px 44px -14px rgba(36, 20, 48, 0.6);
+  box-shadow: var(--shadow-e3);
   animation: bulkBarIn 0.26s var(--ease) both;
 }
 
@@ -33,13 +33,13 @@
 }
 
 .count {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   white-space: nowrap;
 }
 
 .capNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.7);
 }
@@ -57,7 +57,7 @@
   color: rgba(var(--cream-rgb), 0.7);
   cursor: pointer;
   /* Sizes the react-icons <svg>, which inherits `1em`. */
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1;
   padding: 0 6px;
   display: inline-flex;
@@ -73,7 +73,7 @@
 .clear:focus-visible {
   outline: 2px solid rgba(var(--cream-rgb), 0.7);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 
 @keyframes bulkBarIn {

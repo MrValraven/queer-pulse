@@ -3,10 +3,12 @@ import { FiHash } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   EmptyState,
+  LoadErrorState,
   SearchInput,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTopics } from "./api/useTopics";
 import { TopicCard } from "./TopicCard";
 import styles from "./TopicsDirectoryPage.module.css";
@@ -36,7 +38,7 @@ function TopicCardSkeleton() {
  */
 export function TopicsDirectoryPage() {
   const { t } = useTranslation();
-  const { items: topics, isLoading } = useTopics();
+  const { items: topics, isLoading, isError, refetch } = useTopics();
   const [searchInput, setSearchInput] = useState("");
 
   const visible = useMemo(() => {
@@ -70,7 +72,20 @@ export function TopicsDirectoryPage() {
             ariaLabel={t("topics:directory.search.ariaLabel")}
           />
 
-          {!isLoading && visible.length === 0 ? (
+          {isError ? (
+            /* A failed directory is not an empty directory: "no topics yet"
+               would send someone away from a place that is full. */
+            <LoadErrorState
+              onRetry={refetch}
+              title={
+                <Translation
+                  i18nKey="topics:directory.loadError.title"
+                  components={{ em: <em /> }}
+                />
+              }
+              description={t("topics:directory.loadError.body")}
+            />
+          ) : !isLoading && visible.length === 0 ? (
             searchInput ? (
               <EmptyState
                 icon={<FiHash />}

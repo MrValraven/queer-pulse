@@ -82,6 +82,17 @@ const KINDS: NotificationKind[] = [
   // reason: its flat form has to read as a sentence when the row carries
   // neither a day count nor a community name.
   "card_expiring",
+  // "Last few spots" (PRD-18). Listed with an empty payload for the same
+  // reason as the two above: its flat form has to read as a sentence when the
+  // row carries no seat count.
+  "event_nearly_full",
+  // PRD-31, both halves of a ban-evasion escalation. Listed with an empty
+  // payload for the same reason as the rows above: each interpolates the
+  // community it is about, and a row whose payload never arrived has to read
+  // as a whole sentence rather than leaving `{communityName}` in front of
+  // somebody being asked to act.
+  "ban_evasion_escalation_raised",
+  "ban_evasion_escalation_resolved",
 ];
 
 describe("formatNotification", () => {

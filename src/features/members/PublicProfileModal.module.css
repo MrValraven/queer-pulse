@@ -4,7 +4,7 @@
 
 /* Honest scope note — quiet reassurance, jade rule (unlocked state). */
 .notYet {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.65;
   color: rgba(var(--plum-rgb), 0.7);
   max-width: 60ch;
@@ -30,12 +30,12 @@
   gap: 4px;
 }
 .switchLabel {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--plum);
 }
 .status {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -190,7 +190,7 @@
   min-width: 0;
 }
 .critLabel {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink-60);
 }
@@ -198,7 +198,7 @@
   color: var(--plum);
 }
 .critHint {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-40);
   text-wrap: pretty;
@@ -247,12 +247,12 @@
 }
 .familyLabel {
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   min-width: 0;
 }
 .familyHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.4;
   color: var(--ink-40);
   text-wrap: pretty;
@@ -318,7 +318,7 @@
 .actionLabel {
   flex: 1;
   min-width: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   text-wrap: pretty;
 }
@@ -326,7 +326,7 @@
   flex: none;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade-ink);
   background: color-mix(in srgb, var(--jade) 14%, transparent);
   padding: 3px 10px;

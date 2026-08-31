@@ -138,6 +138,7 @@ export const messages: Catalog = {
   "conversation.leftGroupNotice":
     "Saíste deste grupo. O histórico fica aqui, mas já não podes enviar mensagens novas.",
   "conversation.send": "Enviar",
+  "conversation.composeAria": "Escreve uma mensagem",
   "conversation.backToList": "Voltar às conversas",
   "conversation.emptyPanelTitle": "As tuas mensagens ficam aqui",
   "conversation.emptyPanelBody":
@@ -251,6 +252,8 @@ export const messages: Catalog = {
   // com aceitar/recusar)
   "requests.tabLabel": "Pedidos",
   "requests.emptyTitle": "Sem pedidos de mensagem",
+  "requests.loadErrorBody":
+    "Não conseguimos carregar os teus pedidos de mensagem. Os que estiverem à tua espera continuam lá. Tenta outra vez daqui a pouco.",
   "requests.emptyDescription":
     "Quando alguém sem ligação contigo te envia uma primeira mensagem, ela aparece aqui para aceitares ou recusares.",
 

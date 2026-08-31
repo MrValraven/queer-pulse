@@ -27,8 +27,12 @@ export interface GifSearchPage {
 }
 
 export interface GifProvider {
-  featured(page?: number): Promise<GifSearchPage>;
-  search(query: string, page?: number): Promise<GifSearchPage>;
+  featured(page?: number, signal?: AbortSignal): Promise<GifSearchPage>;
+  search(
+    query: string,
+    page?: number,
+    signal?: AbortSignal,
+  ): Promise<GifSearchPage>;
 }
 
 const KLIPY_KEY = import.meta.env.VITE_KLIPY_KEY;
@@ -134,9 +138,15 @@ function toGifResult(item: unknown): GifResult | null {
   };
 }
 
+/** Both provider methods funnel through here. The optional `signal` is the
+ *  caller's cancellation handle (the GIF picker's debounced search creates one
+ *  per query, see `useGifSearch`): without it an abandoned keystroke's request
+ *  keeps running to completion against KLIPY and still spends a slot of its
+ *  rate limit, even though nothing will read the response. */
 async function fetchKlipyPage(
   path: "trending" | "search",
   extraParams: Record<string, string>,
+  signal?: AbortSignal,
 ): Promise<GifSearchPage> {
   if (!KLIPY_KEY) {
     throw new Error("VITE_KLIPY_KEY is not set");
@@ -149,6 +159,7 @@ async function fetchKlipyPage(
   // KLIPY carries the api key in the URL PATH, not a query param or header.
   const response = await fetch(
     `${KLIPY_BASE}/${KLIPY_KEY}/gifs/${path}?${params.toString()}`,
+    { signal },
   );
   if (!response.ok) {
     throw new Error(`KLIPY request failed: ${response.status}`);
@@ -165,11 +176,12 @@ async function fetchKlipyPage(
 }
 
 export const gifProvider: GifProvider = {
-  featured: (page) =>
-    fetchKlipyPage("trending", page ? { page: String(page) } : {}),
-  search: (query, page) =>
+  featured: (page, signal) =>
+    fetchKlipyPage("trending", page ? { page: String(page) } : {}, signal),
+  search: (query, page, signal) =>
     fetchKlipyPage(
       "search",
       page ? { q: query, page: String(page) } : { q: query },
+      signal,
     ),
 };

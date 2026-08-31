@@ -5,8 +5,8 @@
   --jade: #4a8c6f;
   --jade-rgb: 74, 140, 111;
   --cream: var(--cream);
-  --cream-60: rgba(247, 243, 238, 0.62);
-  --cream-40: rgba(247, 243, 238, 0.4);
+  --cream-60: rgba(var(--cream-rgb), 0.62);
+  --cream-40: rgba(var(--cream-rgb), 0.4);
   --serif: "Fraunces Variable", "Fraunces", Georgia, serif;
   --sans: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
   --mono: "JetBrains Mono", monospace;
@@ -68,7 +68,7 @@
 }
 
 .chair line {
-  stroke: rgba(247, 243, 238, 0.07);
+  stroke: rgba(var(--cream-rgb), 0.07);
   stroke-width: 1;
 }
 
@@ -133,7 +133,7 @@
 .bar {
   width: 5px;
   flex: none;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   background: var(--accent);
   opacity: 0.85;
 }
@@ -237,9 +237,9 @@
   align-items: center;
   gap: 26px;
   padding: 18px 34px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--jade);
-  background: rgba(74, 140, 111, 0.12);
+  background: rgba(var(--jade-rgb), 0.12);
 }
 
 .pay {
@@ -266,7 +266,7 @@
 .div {
   width: 1px;
   align-self: stretch;
-  background: rgba(74, 140, 111, 0.4);
+  background: rgba(var(--jade-rgb), 0.4);
 }
 
 .per {

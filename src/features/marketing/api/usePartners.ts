@@ -17,6 +17,14 @@ export interface PartnersResult {
   isFetchingNextPage: boolean;
   /** True while the first page is in flight. */
   isLoading: boolean;
+  /**
+   * True when the list read failed (DES-22). The page MUST branch on this
+   * before it branches on `items.length === 0`: an outage rendered as "no
+   * partners" tells a visitor nobody stands with us.
+   */
+  isError: boolean;
+  /** Re-run the failed read, for the error state's retry. */
+  refetch: () => void;
 }
 
 interface PartnersPageVM {
@@ -67,5 +75,7 @@ export function usePartners(params: { region?: Region } = {}): PartnersResult {
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

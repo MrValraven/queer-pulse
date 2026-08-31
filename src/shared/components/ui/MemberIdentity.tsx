@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, type AvatarTint } from "./Avatar";
 import { StaffBadge, type StaffRole } from "./StaffBadge";
+import { staffBadgeRolesFor } from "../../staff/badgedStaffRoles";
 import { initialsFromName } from "../../lib/initials";
 import { tintForSlug } from "../../api/refs";
 import styles from "./MemberIdentity.module.css";
@@ -10,8 +11,16 @@ export interface MemberIdentityPerson {
   slug?: string;
   name: string;
   avatarUrl?: string;
-  /** Platform role — only "admin"/"moderator" earn a StaffBadge. */
+  /** Platform account tier: only "admin"/"moderator" earn a StaffBadge. */
   staffRole?: string;
+  /**
+   * The additive staff grants this person holds that earn a badge (ENG-28).
+   * Read straight off `useStaffMap()`, same as `staffRole`. Someone handed the
+   * housing queue or the magazine desk decides on other members' listings and
+   * pieces, so they are badged here too, and used to show up in these rows as
+   * an ordinary account.
+   */
+  staffBadgedRoles?: readonly string[];
 }
 
 export interface MemberIdentityProps {
@@ -55,7 +64,11 @@ export function MemberIdentity({
   const initials = initialsFromName(person.name, "?");
   const tint =
     tintOverride ?? (person.slug ? tintForSlug(person.slug) : "default");
-  const staffRole = showStaffBadge ? asStaffRole(person.staffRole) : null;
+  // The tier wins where there is one; grants badge the people who have no tier
+  // to speak for them. `staffBadgeRolesFor` owns that rule for every surface.
+  const badgeRoles = showStaffBadge
+    ? staffBadgeRolesFor(asStaffRole(person.staffRole), person.staffBadgedRoles)
+    : [];
 
   const avatar = (
     <Avatar
@@ -88,7 +101,9 @@ export function MemberIdentity({
               person.name
             )}
           </span>
-          {staffRole && <StaffBadge role={staffRole} />}
+          {badgeRoles.map((badgeRole) => (
+            <StaffBadge key={badgeRole} role={badgeRole} />
+          ))}
         </span>
         {secondary != null && secondary !== "" && (
           <span className={styles.secondary}>{secondary}</span>

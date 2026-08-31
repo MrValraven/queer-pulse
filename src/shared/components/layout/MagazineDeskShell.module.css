@@ -16,8 +16,9 @@
 .scrim {
   position: fixed;
   inset: 0;
-  z-index: 65;
-  background: rgba(0, 0, 0, 0.44);
+  z-index: var(--z-modal);
+  background: var(--scrim-soft);
+  backdrop-filter: var(--blur-sm);
   animation: axScrimIn 0.2s var(--ease, ease);
 }
 @keyframes axScrimIn {
@@ -49,7 +50,7 @@
   background: var(--cream);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: var(--z-nav);
 }
 
 .menuBtn {
@@ -58,7 +59,7 @@
   width: 44px;
   height: 44px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: var(--paper);
   color: var(--ink-60);
   cursor: pointer;
@@ -84,13 +85,15 @@
 
 @media (--wide) {
   /* The dock leaves `display: contents` and becomes a fixed slide-in panel
-     off the left edge, above the mobile bar (z-50) and the scrim (z-65). */
+     off the left edge. It shares the modal tier with the scrim and comes after
+     it in the DOM, so it paints on top — the same arrangement the shared Modal
+     uses for its own scrim and dialog. */
   .sidebarDock {
     display: block;
     position: fixed;
     inset-block: 0;
     inset-inline-start: 0;
-    z-index: 70;
+    z-index: var(--z-modal);
     width: min(84vw, 300px);
     transform: translateX(-100%);
     transition: transform var(--dur, 0.24s) var(--ease, ease);

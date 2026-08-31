@@ -12,7 +12,7 @@
 
 .icon {
   flex: none;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--accent);
 }
 
@@ -20,7 +20,7 @@
   flex: 1;
   min-width: 220px;
   margin: 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -41,7 +41,7 @@
   background: none;
   border: none;
   padding: 6px 4px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   cursor: pointer;
 }

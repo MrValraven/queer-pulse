@@ -1,6 +1,7 @@
-import { FiAlertCircle, FiFileText } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import {
   EmptyState,
+  LoadErrorState,
   SkeletonLine,
   type DetailRow,
 } from "../../shared/components/ui";
@@ -98,14 +99,17 @@ function buildLiveRefRows(
 export function AppealOutcomeLive() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { appeals, isLoading, isError } = useMyAppeals();
+  const { appeals, isLoading, isError, refetch } = useMyAppeals();
 
   if (isLoading) return <AppealLoadingSkeleton />;
 
+  // Checked BEFORE the "no appeals filed" branch below, and with a retry: a
+  // member asking whether their appeal was heard must never be told they
+  // filed none because the request failed (DES-22).
   if (isError) {
     return (
-      <EmptyState
-        icon={<FiAlertCircle />}
+      <LoadErrorState
+        onRetry={refetch}
         title={t("safety:appeal.live.error.title")}
         description={t("safety:appeal.live.error.desc")}
       />

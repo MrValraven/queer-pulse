@@ -3,12 +3,14 @@ import {
   FiActivity,
   FiAlertOctagon,
   FiAlertTriangle,
+  FiArchive,
   FiBell,
   FiCalendar,
   FiCheckCircle,
   FiFlag,
   FiInbox,
   FiShield,
+  FiUserX,
   FiUsers,
 } from "react-icons/fi";
 import {
@@ -142,6 +144,34 @@ function moderationQueueAlertIconFor(
     return { Glyph: FiCheckCircle, background: "rgba(var(--jade-rgb), .18)" };
   }
   return { Glyph: FiActivity, background: KIND_ICON_BACKGROUND.platform };
+}
+
+/**
+ * The icon a PRD-31 ban-evasion escalation row renders with, or `undefined`
+ * for every other kind. The fifth and last override of the three-icon category
+ * map, on the reasoning `reportIconFor` set out: a moderator's bell is a wall
+ * of identical platform bells, and these two rows are work.
+ *
+ * The two halves get different glyphs because they are opposite ends of one
+ * case. A raised escalation is somebody barred being asked about, so it takes
+ * the person glyph; a closed one is a case put away, so it takes the archive
+ * glyph. Deliberately NOT a tick on a jade wash: a green check would read as
+ * "cleared", and what staff found is exactly what this row does not say.
+ *
+ * Both stay on the ordinary platform ground rather than a coral or danger
+ * wash. Neither is an emergency, and an escalation is a question rather than
+ * an accusation.
+ */
+function banEvasionEscalationIconFor(
+  kind: NotificationKind | null,
+): { Glyph: IconType; background: string } | undefined {
+  if (kind === "ban_evasion_escalation_raised") {
+    return { Glyph: FiUserX, background: KIND_ICON_BACKGROUND.platform };
+  }
+  if (kind === "ban_evasion_escalation_resolved") {
+    return { Glyph: FiArchive, background: KIND_ICON_BACKGROUND.platform };
+  }
+  return undefined;
 }
 
 /**
@@ -280,9 +310,62 @@ export function notificationDtoToView(
   const queueHealthIcon = moderationQueueAlertIconFor(kind, dto.payload);
   if (queueHealthIcon) view.icon = queueHealthIcon;
 
-  // `subprofile_credit` (Personas discovery Phase 5, Decision §3): the FIRST
-  // live notification kind to populate `.actions` — every other kind above
-  // leaves it `undefined`, which `NotificationItem` already renders fine
+  // Same placement, same reason as the four overrides above: a ban-evasion
+  // escalation carries no actor on either side (the staff row never names the
+  // moderator who raised it, and the moderator's row never names the staff
+  // member who closed it), so this has to be the last word on its glyph.
+  const banEvasionIcon = banEvasionEscalationIconFor(kind);
+  if (banEvasionIcon) view.icon = banEvasionIcon;
+
+  // PRD-15. "Someone wants to connect" carries the two answers themselves,
+  // through the exact mechanism `subprofile_credit` below proved out: a
+  // populated `.actions` on the view-model, rendered by `NotificationItem`.
+  // The difference is that these two run a mutation rather than navigate, so
+  // answering no longer means finding `/account/connections` on your own.
+  //
+  // Gated on BOTH ids being present: the connection id (allowlisted onto this
+  // type's payload for exactly this) and the actor's slug, which is what the
+  // optimistic local move is keyed by. A row missing either keeps its plain
+  // deep-link to the profile rather than showing buttons that cannot act.
+  const connectionId = (dto.payload as { connectionId?: unknown } | null)
+    ?.connectionId;
+  if (
+    dto.type === "connection_request" &&
+    typeof connectionId === "string" &&
+    connectionId &&
+    dto.actor
+  ) {
+    const memberSlug = dto.actor.slug;
+    const firstName = dto.actor.firstName.trim() || actorName(dto.actor);
+    view.actions = [
+      {
+        label: t("notifications:actions.accept"),
+        variant: "primary",
+        href: `${routes.members}/${memberSlug}`,
+        connectionResponse: {
+          connectionId,
+          memberSlug,
+          action: "accept",
+          toast: t("notifications:actions.acceptedToast", { name: firstName }),
+        },
+      },
+      {
+        label: t("notifications:actions.decline"),
+        variant: "ghost",
+        href: `${routes.members}/${memberSlug}`,
+        connectionResponse: {
+          connectionId,
+          memberSlug,
+          action: "decline",
+          toast: t("notifications:actions.declinedToast"),
+        },
+      },
+    ];
+  }
+
+  // `subprofile_credit` (Personas discovery Phase 5, Decision §3): the first
+  // live notification kind to populate `.actions`, and the pattern the
+  // connection-request block above follows. `NotificationItem` renders it fine
   // (its `{notification.actions && …}` guard has no demo-only condition, it
   // was simply never given a live value before this). The deep link comes
   // straight from `payload.deepLink` (the persona's own page, resolved
@@ -350,6 +433,27 @@ function sourceHrefFromPayload(
   // so it opens the reading rather than one of the queues it summarises.
   if (type === "moderation_queue_alert") {
     return `${routes.adminModeration}?tab=health`;
+  }
+  // PRD-31, both halves of a ban-evasion escalation. Keyed on `type` for the
+  // same reason the two report kinds above are: each payload carries a
+  // `source` (`moderation` and `community`) whose generic branch further down
+  // resolves somewhere else entirely (the appeal form, and the community's
+  // public page), and neither is where the recipient can act.
+  //
+  // A raised escalation goes to the staff queue that holds it. No slug needed:
+  // this row only ever reaches platform staff, and the queue is the one place
+  // the case can be read in full and closed.
+  if (type === "ban_evasion_escalation_raised") return routes.adminBanEvasion;
+  // A closed escalation goes back to the community's own join queue, with the
+  // requests pane already open: the moderator still has the decision to make,
+  // and that queue is where they make it. No slug means no destination rather
+  // than a fallback into the platform console, which this recipient cannot
+  // open. The row still reads.
+  if (type === "ban_evasion_escalation_resolved") {
+    const communitySlug = payload?.communitySlug;
+    return typeof communitySlug === "string" && communitySlug
+      ? `${communityPath(communitySlug)}?tab=modtools&mod=requests`
+      : undefined;
   }
   if (type === "community_report_filed") {
     const communitySlug = payload?.communitySlug;

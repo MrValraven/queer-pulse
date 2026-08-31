@@ -60,7 +60,7 @@ export const system: Catalog = {
   "accountBanned.whatNow.row2.title":
     "Your data is removed from the platform within 30 days",
   "accountBanned.whatNow.row2.body":
-    "Per our <a>privacy policy</a>. Posts you authored are anonymised, not deleted, unless you specifically request deletion below.",
+    "Per our <a>privacy policy</a>. Posts you authored stay up with your name removed, unless you specifically request deletion below.",
   "accountBanned.whatNow.row3.title":
     "Public records of this action are not kept",
   "accountBanned.whatNow.row3.body":
@@ -225,6 +225,10 @@ export const system: Catalog = {
   "offline.status": "Listening for signal",
   "offline.retryCta": "Try again",
   "offline.retryingCta": "Still offline",
+  // Mid-session drop: OfflineGate keeps the routed page mounted and shows this
+  // in the shared banner, so nothing half-typed is lost while the signal is gone.
+  "offline.sessionBanner":
+    "You're offline. Your page stays as it is. Anything you send won't go through until the connection is back.",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Add to home screen · no app store needed",

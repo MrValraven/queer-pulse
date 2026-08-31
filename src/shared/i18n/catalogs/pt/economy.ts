@@ -352,6 +352,9 @@ export const economy: Catalog = {
   "jobs.safetyBanner.showAll": "Mostrar todas",
   "jobs.safetyBanner.showAllCount": "Mostrar todas (mais {count})",
 
+  "jobs.loadError.title": "Não foi possível carregar o quadro de vagas",
+  "jobs.loadError.description":
+    "As vagas continuam lá. Tenta de novo daqui a um instante.",
   "jobs.empty.title": "Nenhuma vaga corresponde neste momento",
   "jobs.empty.verifiedDescription":
     "Ainda não há nada verificado como seguro nesta categoria. Mostra todas as vagas ou escolhe outra categoria.",
@@ -372,7 +375,7 @@ export const economy: Catalog = {
   // ── Distintivos de segurança (vocabulário partilhado) ──────────────────
   "safetyBadge.verified.label": "Verificada como segura",
   "safetyBadge.verified.blurb":
-    "Conquistado. Confirmamos as políticas inclusivas no papel e cruzamos com pelo menos três avaliações anónimas",
+    "Este selo é conquistado. Confirmamos as políticas inclusivas no papel e cruzamos com pelo menos três avaliações anónimas de quem lá trabalha ou trabalhou. Reverificado todos os anos.",
   "safetyBadge.trans.label": "Amiga de pessoas trans",
   "safetyBadge.trans.blurb":
     "Prática documentada de inclusão trans: cuidados de saúde de afirmação de género no plano, um processo de mudança de nome e pronomes, e instalações neutras quanto ao género, confirmado por avaliações de quem lá trabalha.",
@@ -381,7 +384,7 @@ export const economy: Catalog = {
     'A comunidade avalia esta empresa com 8+/10 em "seguro para te assumires no trabalho", ser aberte sobre quem és aqui é um não-acontecimento.',
   "safetyBadge.affiliation.run.label": "Gerida por pessoas queer",
   "safetyBadge.affiliation.run.blurb":
-    "Liderada ou detida por pessoas queer, decisões, cultura e dinheiro ficam dentro da comunidade. Verificado durante a validação, não auto-declarado.",
+    "Liderada ou detida por pessoas queer, decisões, cultura e dinheiro ficam dentro da comunidade. Verificado por nós durante a validação.",
   "safetyBadge.affiliation.friendly.label": "Amiga da comunidade queer",
   "safetyBadge.affiliation.friendly.blurb":
     "Uma empresa acolhedora, com políticas inclusivas e uma presença LGBTQ+ real, mas não liderada por pessoas queer. Bem-vinda, apenas não é detida pela comunidade.",
@@ -430,6 +433,7 @@ export const economy: Catalog = {
   // ── ShareToCommunityModal ───────────────────────────────────────────────
   "shareToCommunity.eyebrow": "Passa a palavra",
   "shareToCommunity.title": "Partilha numa <em>comunidade.</em>",
+  "shareToCommunity.ariaLabel": "Partilha numa comunidade",
   "shareToCommunity.sub":
     "Publica isto numa das tuas salas. Aparece no mural da sala e no feed, sob as regras dessa comunidade.",
   "shareToCommunity.communityLabel": "Que comunidade",
@@ -479,6 +483,9 @@ export const economy: Catalog = {
   "housing.filter.short": "Curta duração",
   "housing.filter.studio": "Estúdio / apartamento inteiro",
   "housing.listSpaceCta": "+ Anunciar o teu espaço",
+  "housing.loadError.title": "Não foi possível carregar o quadro de habitação",
+  "housing.loadError.description":
+    "As casas continuam lá. Tenta de novo daqui a um instante.",
   "housing.loadMore": "Ver mais casas",
   "housing.loadingMore": "A carregar mais casas…",
   "housing.filterBar.area": "Bairro",
@@ -847,6 +854,7 @@ export const economy: Catalog = {
   "housingGallery.photoAlt": "{title}, foto {index} de {total}",
   "housingGallery.openAt": "Abrir fotos de {title}, foto {index} de {total}",
   "housingGallery.counter": "{index} / {total}",
+  "housingGallery.slideAnnouncement": "Foto {index} de {total}, {label}",
   "housingGallery.close": "Fechar fotos",
   "housingGallery.prev": "Foto anterior",
   "housingGallery.next": "Foto seguinte",
@@ -955,13 +963,13 @@ export const economy: Catalog = {
   // redirecionar em silêncio.
   "housingListing.error.title": "Não conseguimos carregar este espaço",
   "housingListing.error.body":
-    "Algo correu mal do nosso lado, não do teu. Tenta de novo daqui a um instante.",
+    "Algo correu mal do nosso lado. Tenta de novo daqui a um instante.",
   "housingListing.error.retry": "Tentar de novo",
 
   // ── Selo de anúncio verificado (P2.3) ──────────────────────────────────
   "verifiedListing.label": "Anúncio verificado",
   "verifiedListing.tooltip":
-    "Quem anuncia tem identidade verificada, este anúncio passou na nossa revisão e não levantou alertas. É uma verificação real. Não é uma garantia de segurança nem um voto de confiança.",
+    "Quem anuncia tem identidade verificada, este anúncio passou na nossa revisão e não levantou alertas. É uma verificação real. Fica aquém de ser uma garantia de segurança ou um voto de confiança.",
 
   // ── Pedir uma visita (P2.3) ────────────────────────────────────────────
   "housingViewing.request.cta": "Pedir uma visita",
@@ -997,6 +1005,10 @@ export const economy: Catalog = {
   "housingViewing.list.title": "As tuas <em>visitas</em>",
   "housingViewing.list.sub":
     "Todos os sítios que pediste para ver, e todos os pedidos para ver o teu. Aceita uma hora, sugere outra, ou deixa uma avaliação depois de se conhecerem.",
+  "housingViewing.list.loadError.title":
+    "Não foi possível carregar as tuas visitas",
+  "housingViewing.list.loadError.description":
+    "As tuas visitas continuam lá. Tenta de novo daqui a um instante.",
   "housingViewing.list.empty":
     "Ainda não há visitas. Quando pedires uma a partir de um anúncio, aparece aqui.",
   "housingViewing.list.group.needsResponse": "À tua espera",
@@ -1181,6 +1193,10 @@ export const economy: Catalog = {
   "flatmates.count_one": "{count} perfil ativo esta semana",
   "flatmates.count_other": "{count} perfis ativos esta semana",
   "flatmates.loadMore": "Ver mais pessoas",
+  "flatmates.loadError.title":
+    "Não foi possível carregar o quadro de colegas de casa",
+  "flatmates.loadError.description":
+    "Os perfis continuam lá. Tenta de novo daqui a um instante.",
   "flatmates.loadingMore": "A carregar mais pessoas…",
   "flatmates.postProfileCta": "Publicar o teu perfil",
 
@@ -1297,10 +1313,13 @@ export const economy: Catalog = {
   "postProfileForm.visibilityLabel": "Quem pode ver isto",
   "postProfileForm.visibility.public": "Qualquer pessoa no quadro",
   "postProfileForm.visibility.members": "Qualquer membro",
-  "postProfileForm.visibility.matches": "Só quem poderia partilhar casa comigo",
+  "postProfileForm.visibility.matches": "Só quem deu match comigo",
   "postProfileForm.visibility.hidden": "Só eu",
 
   // ── CompanyPage (+ Cover / Sidebar / Tabs) ──────────────────────────────
+  "company.loadError.title": "Não foi possível carregar esta empresa",
+  "company.loadError.description":
+    "O perfil continua lá. Tenta de novo daqui a um instante.",
   "company.notFound.title": "Empresa não encontrada",
   "company.notFound.description":
     "Este perfil de empresa não existe ou foi retirado. Explora o quadro de vagas para encontrar empregadores geridos por pessoas queer e verificados como inclusivos.",
@@ -1339,6 +1358,9 @@ export const economy: Catalog = {
   "company.reviews.outOf5_one": "/ 5 · {count} avaliação",
   "company.reviews.outOf5_other": "/ 5 · {count} avaliações",
   "company.reviews.writeReview": "Escrever uma avaliação",
+  "company.reviews.loadError.title": "Não foi possível carregar as avaliações",
+  "company.reviews.loadError.description":
+    "As avaliações continuam lá. Tenta de novo daqui a um instante.",
   "company.reviews.empty.title": "Ainda sem avaliações",
   "company.reviews.empty.description":
     "Já trabalhaste aqui ou com esta empresa? Sê a primeira pessoa a contar à próxima pessoa queer como é mesmo.",
@@ -1399,7 +1421,7 @@ export const economy: Catalog = {
 
   "employerReviews.how.title": "Como <em>funciona</em>",
   "employerReviews.how.sub":
-    "Anónimo, verificado por adesão à comunidade, não editável por empresas.",
+    "Anónimo, verificado por adesão à comunidade, e as empresas nunca o podem editar.",
   "employerReviews.how.write.title": "Escreve de forma anónima",
   "employerReviews.how.write.desc":
     "A tua identidade nunca é associada à tua avaliação. Verificamos que és uma pessoa membro, mais nada fica registado.",
@@ -1415,6 +1437,10 @@ export const economy: Catalog = {
     "Escritas por pessoas membro · anónimas · atualizadas continuamente",
   "employerReviews.recent.browseCta": "Ver vagas inclusivas para pessoas queer",
   "employerReviews.recent.writeCta": "Escrever uma avaliação",
+  "employerReviews.loadError.title":
+    "Não foi possível carregar os empregadores",
+  "employerReviews.loadError.description":
+    "A lista continua lá. Tenta de novo daqui a um instante.",
   "employerReviews.emptyLive.title": "Ainda sem empregadores avaliados",
   "employerReviews.emptyLive.description":
     "Ainda não há avaliações publicadas. Sê a primeira pessoa a partilhar como é realmente trabalhar num sítio.",
@@ -1659,7 +1685,7 @@ export const economy: Catalog = {
     "Uma bolsa de trocas estruturada, competências por competências, saber por saber. Sem dinheiro, sem comissões da plataforma. Publica o que podes oferecer e o que esperas receber em troca.",
   "barter.principle.noMoney.title": "Sem dinheiro",
   "barter.principle.noMoney.body":
-    "Cada troca é entre pessoas. O valor é definido por quem participa, não pela plataforma.",
+    "Cada troca é entre pessoas. O valor é definido entre quem participa.",
   "barter.principle.reputation.title": "Com reputação",
   "barter.principle.reputation.body":
     "As ofertas vêm de pessoas verificadas. O teu voto de confiança na comunidade é o teu histórico de fiabilidade.",
@@ -1906,7 +1932,7 @@ export const economy: Catalog = {
   "postJob.option.seniority.entry": "Iniciante",
   "postJob.option.seniority.mid": "Intermédio",
   "postJob.option.seniority.senior": "Sénior",
-  "postJob.option.seniority.leadPrincipal": "Lead / Principal",
+  "postJob.option.seniority.leadPrincipal": "Liderança / Principal",
 
   "postJob.option.format.remote": "Remoto",
   "postJob.option.format.inPersonLisbon": "Presencial (Lisboa)",
@@ -2223,7 +2249,8 @@ export const economy: Catalog = {
   "applicationStatus.legend.key": "Legenda",
   "applicationStatus.legend.done": "Concluído. Este passo está feito",
   "applicationStatus.legend.active": "Estás aqui, passo atual",
-  "applicationStatus.legend.upcoming": "Por vir, ainda não começou",
+  "applicationStatus.legend.upcoming":
+    "Por vir. Este passo ainda está à frente",
   "applicationStatus.legend.closed": "Fechado, terminado ou retirado",
 
   "applicationStatus.group.offers.title": "Ofertas, a tua decisão",
@@ -2653,7 +2680,7 @@ export const economy: Catalog = {
   "scopeTool.preview.total": "Total",
   "scopeTool.preview.validUntil": "Válido até {date}",
   "scopeTool.disclaimer":
-    "Este documento é um âmbito de trabalho. Só um contrato assinado cria obrigações vinculativas. Tudo o que não conste em “O que está incluído” fica fora do âmbito e é orçamentado à parte.",
+    "Este documento é um âmbito de trabalho. Só um contrato assinado cria obrigações vinculativas. Tudo o que fique de fora de “O que está incluído” cai fora do âmbito e é orçamentado à parte.",
   "scopeTool.plainText.quote": "ORÇAMENTO",
   "scopeTool.plainText.scopeOfWork": "ÂMBITO DE TRABALHO",
   "scopeTool.plainText.from": "De: {name}",
@@ -3055,7 +3082,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.title": "Acordo de honestidade",
   "coopTemplate.doc.financial-honesty.titleEm": "financeira",
   "coopTemplate.doc.financial-honesty.intro":
-    "As cooperativas de habitação falham mais vezes por problemas de dinheiro não ditos do que por qualquer questão jurídica. Este acordo existe para que um membro que esteja com dificuldades o diga logo na segunda semana, e para que ninguém tenha de adivinhar quanto os outros ganham, devem ou receiam. Adapta os pormenores ao vosso grupo; mantém o princípio de que todos veem os mesmos números.",
+    "As cooperativas de habitação falham mais vezes por problemas de dinheiro não ditos do que por qualquer questão jurídica. Este acordo existe para que quem esteja com dificuldades o diga logo na segunda semana, enquanto o problema ainda é pequeno, e para que ninguém tenha de adivinhar quanto as outras pessoas ganham, devem ou receiam. Adapta os pormenores ao vosso grupo; mantém o princípio de que toda a gente vê os mesmos números.",
   "coopTemplate.doc.financial-honesty.s0.h":
     "O que significa aqui total transparência",
   "coopTemplate.doc.financial-honesty.s0.b0":
@@ -3073,7 +3100,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.s1.b1.0":
     "Na entrada: se consegues cobrir o valor total do título de capital, em que calendário, e qualquer apoio que tragas para o fundo de solidariedade do grupo ou de que precises dele.",
   "coopTemplate.doc.financial-honesty.s1.b1.1":
-    "De forma contínua: qualquer mudança que afete a tua capacidade de pagar, perda de emprego, doença, alteração de horário, comunicada a [uma pessoa responsável pelas finanças / todo o grupo] assim que souberes, e não depois de teres falhado um pagamento.",
+    "De forma contínua: qualquer mudança que afete a tua capacidade de pagar, perda de emprego, doença, alteração de horário, comunicada a [uma pessoa responsável pelas finanças / todo o grupo] assim que souberes, bem antes de falhares um pagamento.",
   "coopTemplate.doc.financial-honesty.s1.b1.2":
     "Anualmente: uma revisão conjunta para verificar se as contribuições ainda refletem as circunstâncias reais das pessoas.",
   "coopTemplate.doc.financial-honesty.s2.h": "O livro de contas partilhado",
@@ -3082,7 +3109,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.s2.b1.0":
     "O livro de contas vive em [uma folha de cálculo partilhada, um programa de contabilidade] que qualquer membro pode abrir, ler e exportar a qualquer momento.",
   "coopTemplate.doc.financial-honesty.s2.b1.1":
-    "Um ou dois membros funcionam como responsáveis pelas finanças, com rotação a cada [ano], encarregues de manter os registos abertos a toda a gente.",
+    "Uma ou duas pessoas funcionam como responsáveis pelas finanças, com rotação a cada [ano], encarregues de manter os registos atualizados e abertos a todo o grupo.",
   "coopTemplate.doc.financial-honesty.s2.b1.2":
     "Cada pagamento, de entrada ou de saída, é registado no prazo de [uma semana], com uma nota em linguagem simples. Nenhuma rubrica que ninguém saiba explicar.",
   "coopTemplate.doc.financial-honesty.s3.h":
@@ -3092,7 +3119,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.s3.b1.0":
     "Um pagamento em falta dá origem a uma conversa privada e não punitiva no prazo de duas semanas, entre as pessoas diretamente envolvidas.",
   "coopTemplate.doc.financial-honesty.s3.b1.1":
-    "O membro e uma pessoa responsável pelas finanças acordam em conjunto um plano de pagamento; ao grupo diz-se apenas que existe um plano, e os pormenores pessoais ficam com o membro, a menos que este os queira partilhar.",
+    "A pessoa e quem é responsável pelas finanças acordam em conjunto um plano de pagamento; ao grupo diz-se apenas que existe um plano, e os pormenores pessoais ficam com essa pessoa, a menos que os queira partilhar.",
   "coopTemplate.doc.financial-honesty.s3.b1.2":
     "O fundo de solidariedade (abaixo) é oferecido antes de qualquer conversa sobre a saída de um membro.",
   "coopTemplate.doc.financial-honesty.s4.h":
@@ -3173,19 +3200,19 @@ export const economy: Catalog = {
     "Conselho fiscal: um órgão independente que analisa as contas e presta contas à assembleia, mantido separado da direção, para que um pequeno grupo não controle ao mesmo tempo a despesa e a fiscalização.",
   "coopTemplate.doc.crl-statutes.s6.h": "Excedentes, reservas e dissolução",
   "coopTemplate.doc.crl-statutes.s6.b0.0":
-    "Qualquer excedente de exploração é afeto a reservas ou reinvestido no imóvel, e não distribuído como lucro. É isto que mantém a cooperativa não especulativa.",
+    "Qualquer excedente de exploração fica na cooperativa, afeto a reservas ou reinvestido no imóvel. É isto que mantém a cooperativa não especulativa.",
   "coopTemplate.doc.crl-statutes.s6.b0.1":
     "Um fundo de reserva legal mínimo, constituído ao longo do tempo, para reparações imprevistas ou faltas de tesouraria.",
   "coopTemplate.doc.crl-statutes.s6.b0.2":
     "Em caso de dissolução, os bens que restarem depois de saldadas as dívidas são transferidos para outra cooperativa ou entidade de fim social, nunca distribuídos aos membros como ganho inesperado. Isto é tanto uma exigência legal como um compromisso de valores.",
   "coopTemplate.doc.crl-statutes.s6.b1":
-    "Isto é um esboço em linguagem simples, não estatutos registáveis. Leva-o, juntamente com a tua carta de valores fundadores, a um advogado ou notário que trabalhe com direito cooperativo antes de redigires o documento que vais efetivamente depositar.",
+    "Isto é um esboço em linguagem simples. Os estatutos registáveis são um documento formal à parte: leva isto, juntamente com a tua carta de valores fundadores, a um advogado ou notário que trabalhe com direito cooperativo antes de redigires o documento que vais efetivamente depositar.",
   // share-agreement
   "coopTemplate.doc.share-agreement.tag": "Fase 2 · jurídico",
   "coopTemplate.doc.share-agreement.title": "Acordo de quota do",
   "coopTemplate.doc.share-agreement.titleEm": "sócio",
   "coopTemplate.doc.share-agreement.intro":
-    "Um acordo de quota do sócio é o contrato individual entre a cooperativa e um membro. Transforma os estatutos, que são do grupo, num documento que uma pessoa concreta assina, com números concretos ao lado do seu nome. Lê-o como um modelo para preencher em conjunto e verificar com um advogado, não como um formulário para assinar tal como está.",
+    "Um acordo de quota do sócio é o contrato individual entre a cooperativa e uma pessoa associada. Transforma os estatutos, que são do grupo, num documento que uma pessoa concreta assina, com números concretos ao lado do seu nome. Lê-o como um modelo para preencher em conjunto e verificar com um advogado antes de alguém assinar.",
   "coopTemplate.doc.share-agreement.s0.h": "A que dá direito a quota",
   "coopTemplate.doc.share-agreement.s0.b0":
     "Diz com clareza a que é que a adesão dá direito, e a que não dá.",
@@ -3194,7 +3221,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.share-agreement.s0.b1.1":
     "Uma quota não é a propriedade de uma fração ou de um metro quadrado específicos. É a adesão à cooperativa, que detém o imóvel coletivamente.",
   "coopTemplate.doc.share-agreement.s0.b1.2":
-    "A quota não valoriza com o valor de mercado do imóvel; à saída é reembolsada pelo seu valor nominal ajustado (ver abaixo).",
+    "A quota mantém-se no seu valor nominal enquanto o valor de mercado do imóvel se move; à saída é reembolsada por esse valor nominal ajustado (ver abaixo).",
   "coopTemplate.doc.share-agreement.s1.h": "Calendário de pagamento",
   "coopTemplate.doc.share-agreement.s1.b0":
     "Define como a quota é paga, já que poucos membros conseguem pagar o valor total à cabeça.",
@@ -3213,7 +3240,7 @@ export const economy: Catalog = {
     "Não se aplica qualquer penalização de saída aos membros que saem em situação regular; as saídas motivadas por dificuldades passam primeiro pelo fundo de solidariedade.",
   "coopTemplate.doc.share-agreement.s3.h": "Quem pode deter uma quota",
   "coopTemplate.doc.share-agreement.s3.b0.0":
-    "As quotas são detidas por membros individuais e maiores de idade, e a sua transmissão por herança, venda ou doação carece de aprovação da assembleia. Isto mantém a adesão ligada à participação real.",
+    "As quotas são detidas por pessoas associadas individuais e maiores de idade, e a sua transmissão por herança, venda ou doação carece de aprovação da assembleia. Isto mantém a adesão ligada à participação real.",
   "coopTemplate.doc.share-agreement.s3.b0.1":
     "O agregado de um membro, parceiros, filhos, família escolhida que viva com essa pessoa, não precisa de uma quota separada para cada um, mas indica com clareza quem conta como vivendo ao abrigo de uma só adesão.",
   "coopTemplate.doc.share-agreement.s4.h": "Proteção do valor entregue",
@@ -3298,7 +3325,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s5.b1.4":
     "Custo corrente mensal estimado por agregado, incluindo reserva: 420–480 € (ilustrativo)",
   "coopTemplate.doc.finance-model.s5.b2":
-    "Trata este modelo como uma estrutura de partida. Constrói os teus números reais com o teu financiador, o teu município e, para tudo o que for vinculativo, um contabilista ou advogado.",
+    "Trata este modelo como uma estrutura de partida. Os números aqui são ilustrativos. Constrói os teus números reais com o teu financiador, o teu município e, para tudo o que for vinculativo, um contabilista ou advogado.",
   // conflict-resolution
   "coopTemplate.doc.conflict-resolution.tag": "Fase 5 · governação",
   "coopTemplate.doc.conflict-resolution.title": "Processo de resolução de",
@@ -3310,7 +3337,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s0.b0":
     "Define o tom antes dos passos. Um processo que só existe para punir tende a levar as pessoas a esconder problemas em vez de os levantar.",
   "coopTemplate.doc.conflict-resolution.s0.b1.0":
-    "O objetivo de qualquer passo abaixo é reparar a relação ou a situação o suficiente para que a cooperativa continue a funcionar, e não estabelecer quem tinha razão.",
+    "O objetivo de qualquer passo abaixo é reparar a relação ou a situação o suficiente para que a cooperativa continue a funcionar. Apurar quem tinha razão fica de fora.",
   "coopTemplate.doc.conflict-resolution.s0.b1.1":
     "Qualquer pessoa pode levantar uma preocupação sem que isso seja tratado como uma acusação contra ela por a ter levantado.",
   "coopTemplate.doc.conflict-resolution.s0.b1.2":
@@ -3321,7 +3348,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s1.b1.0":
     "Barulho, tarefas, visitas, uso dos espaços partilhados: levantados diretamente, a sós, o mais próximo possível do momento em que acontecem.",
   "coopTemplate.doc.conflict-resolution.s1.b1.1":
-    "Se começar uma conversa direta sozinho parecer difícil demais, pede a um terceiro membro para estar presente, apenas para que não sejam duas pessoas sozinhas num momento difícil.",
+    "Se começar uma conversa direta sozinho parecer difícil demais, pede a uma terceira pessoa do grupo para estar presente. O papel dela é simplesmente estar ali, para que não sejam duas pessoas sozinhas num momento difícil.",
   "coopTemplate.doc.conflict-resolution.s2.h": "O processo por etapas",
   "coopTemplate.doc.conflict-resolution.s2.b0":
     "Quando uma conversa direta não resolve algo, ou parece inseguro tentá-la sozinho, o processo agrava-se por etapas, cada uma menos exigente do que a seguinte, para que a maioria das coisas se resolva antes de chegar à assembleia.",
@@ -3330,7 +3357,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s2.b1.1":
     "Etapa 2, facilitada: se a etapa 1 não resultar, um terceiro membro, escolhido por acordo e não designado, facilita uma conversa entre as pessoas envolvidas.",
   "coopTemplate.doc.conflict-resolution.s2.b1.2":
-    "Etapa 3, assembleia: se continuar por resolver, ou afetar toda a casa, é levado a todo o grupo como um ponto de agenda claro e acordado, não como uma emboscada.",
+    "Etapa 3, assembleia: se continuar por resolver, ou afetar toda a casa, é levado a todo o grupo como um ponto de agenda claro e acordado com antecedência.",
   "coopTemplate.doc.conflict-resolution.s2.b1.3":
     "Etapa 4, mediação externa: para tudo o que o grupo não consiga resolver internamente, chama-se uma pessoa mediadora externa, a expensas da cooperativa, antes de se considerar qualquer decisão sobre a saída de alguém.",
   "coopTemplate.doc.conflict-resolution.s3.h": "Questões de dano e segurança",
@@ -3734,8 +3761,7 @@ export const economy: Catalog = {
   "sayHello.cancel": "Cancelar",
   "sayHello.send": "Enviar olá",
   "sayHello.sending": "A enviar…",
-  "sayHello.success.title": "O teu olá está a <em>caminho</em>",
-  "sayHello.success.em": "caminho",
+  "sayHello.success.title": "O teu olá está a <em>caminho.</em>",
   "sayHello.success.body":
     "{name} vai ver a tua mensagem na caixa de entrada. Terás resposta por lá se quiser falar.",
   "sayHello.success.bodyWithPronouns":
@@ -3807,8 +3833,7 @@ export const economy: Catalog = {
   "joinGroup.sending": "A enviar…",
   "joinGroup.sendCta": "Enviar pedido",
   "joinGroup.error": "Não foi possível enviar. Tenta daqui a pouco.",
-  "joinGroup.success.title": "O teu pedido está <em>feito</em>",
-  "joinGroup.success.em": "feito",
+  "joinGroup.success.title": "O teu pedido está <em>feito.</em>",
   "joinGroup.success.closeLabel": "Concluído",
   "joinGroup.success.body":
     "Alguém da equipa de <strong>{name}</strong> vai analisá-lo e responder-te. Terás notícias na tua caixa de entrada.",

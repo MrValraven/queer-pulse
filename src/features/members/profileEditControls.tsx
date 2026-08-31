@@ -6,6 +6,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { FiGrid, FiPlus, FiX } from "react-icons/fi";
+import { RadioCardGroup } from "../../shared/components/ui";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_PRESETS } from "../../shared/identity/pronouns";
@@ -354,59 +355,24 @@ export function VisibilityPicker({
 }) {
   const { t } = useTranslation();
   const active = VISIBILITY_OPTIONS.find((option) => option.value === value);
-  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // Arrow keys move selection between radio options (wrapping around) and carry
-  // focus with them — the standard ARIA radiogroup keyboard model.
-  function handleKey(
-    event: KeyboardEvent<HTMLButtonElement>,
-    currentIndex: number,
-  ) {
-    let nextIndex = -1;
-    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-      nextIndex = (currentIndex + 1) % VISIBILITY_OPTIONS.length;
-    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-      nextIndex =
-        (currentIndex - 1 + VISIBILITY_OPTIONS.length) %
-        VISIBILITY_OPTIONS.length;
-    }
-    const nextOption = VISIBILITY_OPTIONS[nextIndex];
-    if (!nextOption) return;
-    event.preventDefault();
-    onChange(nextOption.value);
-    optionRefs.current[nextIndex]?.focus();
-  }
-
+  // The radiogroup semantics, the roving tabindex and the arrow/Home/End
+  // keyboard model all come from the shared primitive, so this control and
+  // every other single-select group behave identically.
   return (
     <div>
-      <div
+      <RadioCardGroup<VisibilityMode>
         className={styles.segmented}
-        role="radiogroup"
-        aria-label={t("members:profileEdit.visibilityGroupLabel")}
-      >
-        {VISIBILITY_OPTIONS.map((option, index) => {
-          const isChecked = value === option.value;
-          return (
-            <button
-              key={option.value}
-              ref={(element) => {
-                optionRefs.current[index] = element;
-              }}
-              type="button"
-              role="radio"
-              aria-checked={isChecked}
-              // Roving tabindex: only the checked option is in the tab order;
-              // a fallback keeps the first option reachable if none matches.
-              tabIndex={isChecked || (!active && index === 0) ? 0 : -1}
-              className={`${styles.segment} ${isChecked ? styles.segmentActive : ""}`}
-              onClick={() => onChange(option.value)}
-              onKeyDown={(event) => handleKey(event, index)}
-            >
-              {t(option.labelKey)}
-            </button>
-          );
-        })}
-      </div>
+        optionClassName={styles.segment}
+        checkedClassName={styles.segmentActive}
+        ariaLabel={t("members:profileEdit.visibilityGroupLabel")}
+        value={value}
+        onChange={onChange}
+        options={VISIBILITY_OPTIONS.map((option) => ({
+          id: option.value,
+          render: t(option.labelKey),
+        }))}
+      />
       {active && <p className={styles.visHint}>{t(active.hintKey)}</p>}
     </div>
   );

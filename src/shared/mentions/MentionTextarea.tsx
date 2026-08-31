@@ -12,7 +12,10 @@ interface MentionTextareaProps {
   placeholder?: string;
   className?: string;
   rows?: number;
-  "aria-label"?: string;
+  /** Required: the textarea's accessible name. A placeholder disappears the
+   *  moment someone starts typing, so every call site has to say what this
+   *  particular box writes into (a direct message, a forum reply, and so on). */
+  "aria-label": string;
   textareaRef?: RefObject<HTMLTextAreaElement | null>;
   id?: string;
   wrapClassName?: string;
@@ -157,7 +160,11 @@ export function MentionTextarea(props: MentionTextareaProps) {
           id={listboxId}
         >
           {matches.map((item, index) => (
-            <li key={`${item.kind}-${item.slug}`}>
+            // `role="presentation"` strips the <li>'s implicit `listitem`
+            // role, which `listbox` does not allow between itself and its
+            // options: without it several screen readers report the popup as
+            // empty and drop the option count.
+            <li key={`${item.kind}-${item.slug}`} role="presentation">
               <button
                 type="button"
                 role="option"

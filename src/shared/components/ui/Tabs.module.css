@@ -12,12 +12,12 @@
   align-items: center;
   gap: 8px;
   padding: 8px 15px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid transparent;
   background: transparent;
   color: var(--ink-60);
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -57,8 +57,8 @@
 .tabCount {
   min-width: 20px;
   padding: 1px 6px;
-  border-radius: 999px;
-  font-size: 11px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
   font-weight: 700;
   text-align: center;
   background: rgba(var(--plum-rgb), 0.1);
@@ -79,7 +79,7 @@
   border: none;
   border-bottom: 2px solid transparent;
   background: transparent;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   padding: 10px 24px;
 }
 @media (hover: hover) {
@@ -122,4 +122,17 @@
   .tab {
     transition: none;
   }
+}
+
+/* Dark theme — the pill variant's hover wash and count-pill ground are
+   --plum-rgb tints, which do not flip. Scoped away from `.underline`, whose
+   tabs and counts are deliberately transparent: without the guard these rules
+   out-specify that variant and paint a ground back onto it. */
+@media (hover: hover) {
+  :global([data-theme="dark"]) .tabs:not(.underline) .tab:not(.tabOn):hover {
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+:global([data-theme="dark"]) .tabs:not(.underline) .tab:not(.tabOn) .tabCount {
+  background: rgba(var(--cream-rgb), 0.12);
 }

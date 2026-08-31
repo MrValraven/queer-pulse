@@ -78,3 +78,14 @@
 .stack .avatar {
   border: 2px solid var(--paper);
 }
+
+/* Dark theme — the plum tints above are the only thing drawing the initials
+   circle, and --plum-rgb deliberately does not flip, so on dark --paper they
+   disappear and the initials float with no disc. Same channel swap as
+   Tag/Badge. */
+:global([data-theme="dark"]) .default {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+:global([data-theme="dark"]) .plum {
+  background: rgba(var(--cream-rgb), 0.14);
+}

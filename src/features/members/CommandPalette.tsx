@@ -66,7 +66,13 @@ export function CommandPalette() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
-  const { data: searchData, recents, signInRequired } = useSearchData(query);
+  const {
+    data: searchData,
+    recents,
+    signInRequired,
+    isError: hasSearchFailed,
+    refetch: retrySearch,
+  } = useSearchData(query);
 
   const q = query.trim().toLowerCase();
   const results = useMemo(() => {
@@ -184,6 +190,8 @@ export function CommandPalette() {
         ) : (
           <CommandPaletteResults
             q={q}
+            hasFailed={hasSearchFailed}
+            onRetry={retrySearch}
             recents={recents}
             setQuery={setQuery}
             results={results}

@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text60);
   padding: 16px 0 4px;
 }
@@ -25,10 +25,10 @@
   gap: 12px;
   background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid rgba(var(--accent-rgb), 0.22);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 18px;
   margin: 8px 0 32px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text60);
 }
 .inSet .live {
@@ -63,7 +63,7 @@
 .lyrCard {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid var(--line, rgba(var(--cream-rgb), 0.08));
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 28px 30px;
 }
 .lyrH {
@@ -75,7 +75,7 @@
 .lyrH h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
 }
 .lyrH h3 em {
@@ -86,17 +86,17 @@
   display: flex;
   gap: 2px;
   background: rgba(var(--cream-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px;
 }
 .lyrLang button {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.5);
   background: transparent;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
   cursor: pointer;
 }
@@ -105,7 +105,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .lyric .annot {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-style: italic;
   font-family: var(--serif);
   color: var(--accent);
@@ -116,7 +116,7 @@
 }
 .lyric p {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.7;
 }
@@ -140,7 +140,7 @@
   margin-top: 24px;
   padding-top: 18px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.1);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.5);
   font-style: italic;
   font-family: var(--serif);
@@ -160,11 +160,11 @@
 .sCard {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
 }
 .sEb {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -188,19 +188,19 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .noteName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
 }
 .noteRole {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
 }
 .sCard p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.72);
   line-height: 1.65;
   font-family: var(--serif);
@@ -211,7 +211,7 @@
 }
 .splitLead {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 14px;
 }
@@ -221,7 +221,7 @@
 }
 .splitBar {
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
   display: flex;
   margin-bottom: 16px;
@@ -235,7 +235,7 @@
   gap: 10px;
   padding: 8px 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .splRow:last-child {
   border-bottom: none;
@@ -253,7 +253,7 @@
 .splK b {
   display: block;
   color: rgba(var(--cream-rgb), 1);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .splV {
   font-family: var(--serif);
@@ -269,7 +269,7 @@
   gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .credRow:last-child {
   border-bottom: none;
@@ -283,7 +283,7 @@
 .credRow .role {
   color: var(--text40, rgba(var(--cream-rgb), 0.5));
   white-space: nowrap;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .sheetMini {
   display: flex;
@@ -291,13 +291,13 @@
   gap: 14px;
   background: rgba(var(--jade-rgb), 0.06);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
 }
 .sheetMini .icon {
   width: 40px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--jade-rgb), 0.14);
   color: var(--jade-light, var(--jade-light));
   display: flex;
@@ -310,7 +310,7 @@
   height: 20px;
 }
 .sheetMini .nm b {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 1);
 }
 .sheetMini .nm b em {
@@ -318,13 +318,13 @@
 }
 .sheetMini .nm small {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 3px;
 }
 .sheetMini > a {
   margin-left: auto;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--jade-light, var(--jade-light));
   white-space: nowrap;

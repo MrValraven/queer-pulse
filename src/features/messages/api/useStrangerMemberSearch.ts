@@ -42,7 +42,14 @@ function initialsFor(name: string): string {
 export function useStrangerMemberSearch(
   query: string,
   excludeSlugs: ReadonlySet<string>,
-): { results: StrangerMemberResult[]; loading: boolean } {
+): {
+  results: StrangerMemberResult[];
+  loading: boolean;
+  /** True when the live lookup failed. A typeahead fails quietly, but the flag
+   *  is surfaced so a caller never reads "nobody by that name" off an outage
+   *  (DES-22). */
+  isError: boolean;
+} {
   const { demoMode } = useDemoMode();
   const trimmed = query.trim();
   const debounced = useDebouncedValue(trimmed, 200);
@@ -92,5 +99,6 @@ export function useStrangerMemberSearch(
   return {
     results: results.filter((result) => !excludeSlugs.has(result.slug)),
     loading: enabled && !demoMode && liveQuery.isFetching,
+    isError: enabled && !demoMode && liveQuery.isError,
   };
 }

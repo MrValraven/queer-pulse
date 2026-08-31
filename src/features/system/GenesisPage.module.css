@@ -2,18 +2,18 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 46px 44px 36px;
   width: 100%;
   max-width: 500px;
-  box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--shadow-e3);
   position: relative;
   z-index: 1;
   text-align: center;
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -32,7 +32,7 @@
 }
 
 .lead {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 42ch;
@@ -43,7 +43,7 @@
   margin-top: 22px;
   padding-top: 20px;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 

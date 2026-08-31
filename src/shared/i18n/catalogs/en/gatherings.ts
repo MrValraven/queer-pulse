@@ -263,7 +263,7 @@ export const gatherings: Catalog = {
     "The studio knew exactly who was coming. Nothing else to do.",
   "cancelled.rescheduleTitle": "{date} visit is open for RSVPs",
   "cancelled.rescheduleBody":
-    "You can lock in {date} right now. {host} usually opens it later, but we're early because of this. <a>Skip to it ↓</a>",
+    "You can lock in {date} right now. {host} usually opens it later, but we're early because of this. <a>Skip to it</a>",
   "cancelled.concernTitle": "Something feels off?",
   "cancelled.concernBody":
     "If you have concerns about the cancellation or want to flag a pattern, talk to the team",
@@ -429,7 +429,7 @@ export const gatherings: Catalog = {
   "create.hood.online": "Online",
   "create.hood.otherInLisbon": "Other in Lisbon",
 
-  // createGathering.data.ts — event languages
+  // createGathering.data.ts — gathering languages
   "create.lang.bilingual": "PT / EN bilingual",
   "create.lang.ptOnly": "Portuguese only",
   "create.lang.enOnly": "English only",
@@ -444,10 +444,10 @@ export const gatherings: Catalog = {
     "The accessibility information I've provided is accurate to the best of my knowledge.",
 
   // CreateGatheringPage.tsx
-  "create.eyebrow": "List your event",
+  "create.eyebrow": "List your gathering",
   "create.title": "Create your <em>gathering.</em>",
   "create.lead":
-    "Fill in the details below and your event will be live on the QueerPulse gatherings board immediately.",
+    "Fill in the details below and your gathering will be live on the QueerPulse gatherings board immediately.",
   "create.toast.publishError": "Couldn't publish your gathering. Try again.",
   "create.toast.published": "Your gathering is live",
   "create.success.title": "Your gathering <em>is live.</em>",
@@ -455,7 +455,7 @@ export const gatherings: Catalog = {
     "It's now visible on the QueerPulse gatherings board. Members can see it and RSVP. Each new attendee shows up in your gathering's guest list.",
   "create.success.accessLabel": "Accessibility shown to attendees",
   "create.success.viewCta": "View on board",
-  "create.success.eventCta": "See your event page",
+  "create.success.eventCta": "See your gathering page",
   "create.nav.cancel": "Cancel",
   "create.nav.back": "Back",
   "create.nav.publishHint": "Confirm all three boxes above to publish",
@@ -477,7 +477,7 @@ export const gatherings: Catalog = {
   "create.step1.sub":
     "Choose the format. This determines some of the fields that follow.",
   "create.step1.typeRequired": "Pick a format to get started.",
-  "create.step1.titleLabel": "Event title",
+  "create.step1.titleLabel": "Gathering title",
   "create.step1.titlePlaceholder":
     "A clear, specific title that says exactly what it is",
   "create.step1.titleRequired":
@@ -508,7 +508,7 @@ export const gatherings: Catalog = {
   // RepeatsStep.tsx — step 2b: repeats (MSG-10)
   "create.step2b.title": "Does this <em>repeat?</em>",
   "create.step2b.sub":
-    "A standing weekly or monthly meetup, not a one-off. Each date publishes as its own gathering, RSVPable and editable on its own.",
+    "A standing meetup that comes back every week or every month. Each date publishes as its own gathering, RSVPable and editable on its own.",
   "create.step2b.toggle": "This gathering repeats",
   "create.step2b.cadenceLabel": "How often",
   "create.step2b.endTypeLabel": "Ends",
@@ -1119,6 +1119,12 @@ export const gatherings: Catalog = {
   "door.checkInsNotKept": "No longer kept",
   "door.checkInsNotKeptNote":
     "Check-ins are no longer kept for past gatherings. We clear them 30 days after a gathering ends.",
+  // The same absence, said once more where the guest list's arrival filters
+  // used to be. Deliberately different wording from the note above it: the
+  // two sit on one screen, so repeating that sentence verbatim would read as
+  // a rendering fault rather than an explanation.
+  "door.checkInsNotKeptFilters":
+    "The arrival filters are gone because we cleared this gathering's check-ins, so everyone on the list shows below.",
   // Shown in place when the server refuses a check-in on a gathering past its
   // attendance window. The host did nothing wrong, so it states what the
   // platform did rather than reading as a failure, and it offers no retry.

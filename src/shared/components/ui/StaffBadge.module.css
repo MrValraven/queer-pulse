@@ -5,7 +5,7 @@
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-family: var(--sans);
   font-weight: 600;
   line-height: 1.3;
@@ -20,12 +20,22 @@
   background: rgba(var(--violet-rgb), 0.13);
   color: var(--violet);
 }
+/* Every badged staff grant shares one tone. They are peers of each other, and
+   six tones beside a name would read as a colour taxonomy the member is
+   expected to decode; the label already says which one it is. Jade also keeps
+   the grants visibly distinct from the two account tiers above without ranking
+   them, since these pairings are the same contrast-audited ones as
+   Badge.module.css. */
+.grant {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade-ink);
+}
 
 /* --- sizes --- */
 .sm {
   gap: 5px;
   padding: 3px 9px 3px 7px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   letter-spacing: 0.03em;
 }
 .sm svg {
@@ -37,7 +47,7 @@
 .lg {
   gap: 7px;
   padding: 6px 14px 6px 11px;
-  font-size: 13px;
+  font-size: var(--text-13);
   letter-spacing: 0.02em;
 }
 .lg svg {

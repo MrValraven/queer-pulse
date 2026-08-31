@@ -132,7 +132,7 @@
   white-space: nowrap;
 }
 .pinAddress {
-  color: rgba(247, 243, 238, 0.72);
+  color: rgba(var(--cream-rgb), 0.72);
   font-size: 0.66rem;
   font-weight: 500;
 }
@@ -147,9 +147,13 @@
   }
 }
 
+/* z-index 2/3/4 across hover/focus/selected below are a self-contained local
+   order among sibling pins on the same map, not app-chrome layers, so they
+   stay literal rather than reaching for a shared z-* tier token. */
 .pin:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   border-radius: var(--radius-badge);
   z-index: 3;
 }
@@ -188,7 +192,7 @@
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 3px 10px -3px rgba(var(--plum-rgb), 0.5);
+  box-shadow: var(--shadow-e2);
   transition:
     transform var(--dur-fast) var(--ease),
     box-shadow var(--dur-fast) var(--ease);

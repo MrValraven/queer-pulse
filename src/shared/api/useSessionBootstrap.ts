@@ -67,14 +67,42 @@ function seedFromBootstrap(
   }
 }
 
+/**
+ * The cache key for the session bootstrap payload, carrying BOTH isolating
+ * segments: the demo/live mode every sibling key already carries, and the id of
+ * the member the payload belongs to.
+ *
+ * That second segment is the point. The payload is one member's blocks, mutes,
+ * saved items and profile, held at `staleTime: Infinity`, so on a shared device
+ * the next member signing in must not be able to read it. Keying on the member
+ * makes that true by construction: a different member is a different cache
+ * entry, and nothing has to be remembered to keep it that way. The
+ * `queryClient.clear()` in `AuthProvider`'s `signOut()` still runs, and stays
+ * worth having as a backstop covering every other authenticated key.
+ *
+ * `memberId` is `null` while signed out or still checking, which is also
+ * exactly when the query is disabled, so that entry never holds anything.
+ *
+ * The member id is available here without a chicken-and-egg: `AuthProvider`
+ * resolves `GET /auth/me` first and sets `user` and `loggedIn` together, and
+ * this query only enables once `loggedIn` is true.
+ */
+export function sessionBootstrapQueryKey(
+  demoMode: boolean,
+  memberId: string | null,
+) {
+  return ["bootstrap", demoMode, memberId] as const;
+}
+
 export function useSessionBootstrap() {
   const { demoMode } = useDemoMode();
   const { loggedIn, user } = useAuth();
   const queryClient = useQueryClient();
   const slug = user?.profile.slug;
+  const memberId = user?.id ?? null;
 
   return useQuery<NormalizedBootstrap>({
-    queryKey: ["bootstrap"],
+    queryKey: sessionBootstrapQueryKey(demoMode, memberId),
     enabled: !demoMode && loggedIn,
     // One shot per session. Refetching would defeat the point — the individual
     // hooks own staleness for their own slice from here on.

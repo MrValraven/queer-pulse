@@ -17,6 +17,11 @@ export interface LocalPlacesResult {
   /** Server-reported grand total matching the current query/safe filter. */
   total: number;
   isLoading: boolean;
+  /** True when the businesses read failed (DES-25). Callers must render an
+   *  error state rather than "no places listed yet". */
+  isError: boolean;
+  /** Re-run the failed read, for the error state's retry. */
+  refetch: () => void;
   hasNextPage: boolean;
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
@@ -44,6 +49,8 @@ export function useLocalPlaces(
     places: businesses,
     total,
     isLoading,
+    isError,
+    refetch,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -62,6 +69,8 @@ export function useLocalPlaces(
     places,
     total,
     isLoading,
+    isError,
+    refetch,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,

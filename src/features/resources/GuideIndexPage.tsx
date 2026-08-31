@@ -2,7 +2,11 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiCheckCircle, FiClock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Reveal, SkeletonLine } from "../../shared/components/ui";
+import {
+  LoadErrorState,
+  Reveal,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { formatDate } from "../../shared/lib/date";
 import { Translation } from "../../shared/i18n/Translation";
@@ -37,7 +41,7 @@ interface CategoryGroup {
  */
 export function GuideIndexPage() {
   const { t } = useTranslation();
-  const { entries, isLoading } = useGuideIndex();
+  const { entries, isLoading, isError, refetch } = useGuideIndex();
   const pageTitle = t("resources:guideIndex.meta.title");
   const pageDescription = t("resources:guideIndex.meta.description");
 
@@ -103,7 +107,25 @@ export function GuideIndexPage() {
             </div>
           )}
 
-          {!isLoading && groups.length === 0 && (
+          {/* The editorial gate and a failed request both end up with zero
+              groups, and they mean opposite things. "No guide has been
+              reviewed yet" is a true, deliberate state of this index, so it
+              stays exactly as it was, and only a real request failure is
+              allowed to replace it. */}
+          {!isLoading && isError && groups.length === 0 && (
+            <LoadErrorState
+              onRetry={refetch}
+              title={
+                <Translation
+                  i18nKey="resources:guideIndex.loadError.title"
+                  components={{ em: <em /> }}
+                />
+              }
+              description={t("resources:guideIndex.loadError.body")}
+            />
+          )}
+
+          {!isLoading && !isError && groups.length === 0 && (
             <p className={styles.empty}>{t("resources:guideIndex.empty")}</p>
           )}
 

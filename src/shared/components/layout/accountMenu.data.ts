@@ -16,6 +16,7 @@ import {
   FiDownload,
   FiCreditCard,
   FiKey,
+  FiHeart,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 
@@ -104,6 +105,19 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       labelKey: "shared:accountMenu.items.invite",
       to: routes.invite,
       icon: FiKey,
+    },
+    // PRD-08 — `/vouch` is a real surface posting to `POST /members/:slug/vouch`,
+    // and until now nothing in the product linked to it: only the dev
+    // simulations index and two changelog entries did, so a member who knew
+    // they wanted to vouch for someone had to already be standing on that
+    // person's profile. It belongs in this cluster and directly after Invite:
+    // connecting, inviting and vouching are the same move at three depths of
+    // commitment. `FiHeart` matches the getting-started vouch step, so the
+    // action carries one anchor wherever a member meets it.
+    {
+      labelKey: "shared:accountMenu.items.vouch",
+      to: routes.vouch,
+      icon: FiHeart,
     },
     { labelKey: "nav:communities", to: routes.communities, icon: FiUsers },
     {

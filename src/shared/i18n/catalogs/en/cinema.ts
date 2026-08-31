@@ -228,7 +228,7 @@ export const cinema: Catalog = {
   "film.facts.captions": "Captions",
 
   "film.poster.trailerCta": "Press play · trailer {duration}",
-  "film.tipjar.heading": "↳ tip the filmmaker",
+  "film.tipjar.heading": "tip the filmmaker",
   "film.tipjar.note": "100% goes to {name}. No fees skimmed.",
   "film.tipjar.footnote_one":
     "<strong>{count} member</strong> has tipped this week.",
@@ -354,7 +354,7 @@ export const cinema: Catalog = {
   "filmmaker.outro.title": "Make something. <em>Get paid.</em>",
   "filmmaker.outro.sub":
     "Submit your film to the cinema. The split is the same for everyone.",
-  "filmmaker.hero.tipCta": "↳ Tip {name} · 100% goes directly to them",
+  "filmmaker.hero.tipCta": "Tip {name} · 100% goes directly to them",
   "filmmaker.hero.requestScreeningCta": "Request a screening",
   "filmmaker.hero.connectCta": "Connect on QueerPulse",
   "filmmaker.main.filmographyTitle": "Filmography <em>on Cinema</em>",
@@ -436,7 +436,7 @@ export const cinema: Catalog = {
   "shorts.catalog.languageLabel": "Language",
   "shorts.catalog.sortLabel": "Sort",
   "shorts.catalog.surpriseCta": "Surprise me",
-  "shorts.catalog.surpriseToast": "Try this one → {title}",
+  "shorts.catalog.surpriseToast": "Try this one: {title}",
   "shorts.catalog.allFilmsChip": "All films",
   "shorts.catalog.empty.title": "Nothing matches, yet",
   "shorts.catalog.empty.body":
@@ -675,7 +675,7 @@ export const cinema: Catalog = {
   "openCalls.outro.title": "Fund the <em>next</em> call.",
   "openCalls.outro.sub":
     "Sustainers fund the commissions. Every new sustainer grows the next season's pool.",
-  "openCalls.outro.cta": "Become a sustainer → {price}/mo",
+  "openCalls.outro.cta": "Become a sustainer for {price}/mo",
 
   // ── Membership (CinemaMembershipPage.tsx + Pays.tsx) — pricing/plans page
   // chrome. Tier names/descriptions/feature bullets are platform-authored
@@ -720,7 +720,8 @@ export const cinema: Catalog = {
   "membership.tier.patron.feature2": "Name on the patron wall (opt-in)",
   "membership.tier.patron.feature3": "Direct input on future open calls",
   "membership.tier.patron.feature4": "Invite to annual co-op assembly",
-  "membership.tier.patron.feature5": "~{poolShare}/mo → commissioning pool",
+  "membership.tier.patron.feature5":
+    "~{poolShare}/mo to the commissioning pool",
   "membership.tier.patron.feature6": "Advance screeners before public",
   "membership.tier.patron.feature7": "Two guest passes per year",
   "membership.tier.patron.cta": "Become a patron · {price}/mo",

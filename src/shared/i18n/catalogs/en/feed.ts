@@ -135,8 +135,22 @@ export const feed: Catalog = {
   "moderation.blockDialog.submitCta": "Block {name}",
 
   "moderation.reportConfirm.title": "Thank you, <em>we're on it</em>",
+  // This used to end by pointing anyone with something urgent at the general
+  // hello@ mailbox, which has no triage path and is the same inbox as press,
+  // rights and the 500 page. Severity and the review deadline are derived
+  // server-side from the reason code, so the honest thing to show is the band
+  // the report actually landed in. The band lines mirror `SLA_WINDOW_MS` in
+  // the backend's `report-severity.ts`.
   "moderation.reportConfirm.body":
-    "Our moderation team will review this post about {name}. For anything urgent, reach us directly at {email}.",
+    "Our moderation team will review this post about {name}.",
+  "moderation.reportConfirm.band.emergency":
+    "It went to the emergency band: the reason you picked is one of the two that gets looked at within the hour.",
+  "moderation.reportConfirm.band.high":
+    "It went to the high-priority band, which is reviewed within 24 hours.",
+  "moderation.reportConfirm.band.medium":
+    "It is in the standard queue, which is reviewed within three days.",
+  "moderation.reportConfirm.band.low":
+    "It is in the standard queue, which is reviewed within seven days.",
   "moderation.reportDialog.title": "Report this post",
   "moderation.reportDialog.sub":
     "Tell us what's wrong. Reports are confidential and reviewed by our safety team.",

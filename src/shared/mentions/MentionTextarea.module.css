@@ -6,14 +6,14 @@
   left: 0;
   right: 0;
   top: calc(100% + 4px);
-  z-index: 30;
+  z-index: var(--z-popover);
   margin: 0;
   padding: 4px;
   list-style: none;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(var(--plum-rgb), 0.12);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
   max-height: 260px;
   overflow-y: auto;
   /* Grow gently down from the anchored top edge rather than popping in. */
@@ -37,7 +37,7 @@
   width: 100%;
   padding: 8px 10px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   cursor: pointer;
   text-align: left;
@@ -57,18 +57,18 @@
   object-fit: cover;
   background: var(--plum);
   color: var(--cream);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   flex: 0 0 auto;
 }
 .name {
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .handle {
   margin-left: auto;
-  color: var(--muted-ink, var(--plum));
-  font-size: 12px;
+  color: var(--ink-60);
+  font-size: var(--text-12);
   opacity: 0.7;
 }
 .menuAbove {

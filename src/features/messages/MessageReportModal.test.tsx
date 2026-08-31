@@ -58,21 +58,25 @@ afterEach(() => {
 const DAILY_CAP_MESSAGE =
   "You have filed a lot of reports in the last day. The ones you already sent are with the moderation team. Please try again tomorrow, and reach out to a moderator directly if something urgent is happening.";
 
-/** The generic failure line every report surface falls back to. */
+/** The generic failure line this surface falls back to
+ *  (`safety:reportPerson.error`). This modal used to fall back to
+ *  `safety:flag.error`, which is safe-space BADGE copy and wrong for a DM. */
 const GENERIC_MESSAGE =
-  "Couldn't send that flag. It didn't reach us. Check your connection and try again.";
+  "We couldn't send that report. Nothing has been submitted yet. Check your connection and try again.";
 
 function refuseWith(error: Error) {
   mutate.mockImplementation((_input, opts) => opts?.onError?.(error));
 }
 
 /** Fill the detail field past its 10-character minimum and submit. Awaiting the
- *  CTA also proves the lazily loaded `safety` catalog has arrived. */
+ *  CTA also proves the lazily loaded `safety` catalog has arrived. The labels
+ *  are `safety:reportPerson.form.*`: this modal no longer borrows the
+ *  safe-space badge copy under `safety:flag.*`. */
 async function fillAndSubmit() {
   const submitButton = await screen.findByRole("button", {
-    name: "Submit flag",
+    name: "Send report",
   });
-  fireEvent.change(screen.getByLabelText("Tell us what happened"), {
+  fireEvent.change(screen.getByLabelText("What should the moderator know?"), {
     target: { value: "They kept messaging me after I asked them to stop." },
   });
   fireEvent.click(submitButton);

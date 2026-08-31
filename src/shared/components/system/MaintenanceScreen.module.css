@@ -10,11 +10,11 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.85);
   background: rgba(var(--jade-rgb), 0.12);
   border: 1px solid rgba(var(--jade-rgb), 0.25);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   margin: 0 auto 28px;
 }

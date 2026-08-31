@@ -30,7 +30,7 @@
 }
 
 .label {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--ink-rgb), 0.7);
 }
 

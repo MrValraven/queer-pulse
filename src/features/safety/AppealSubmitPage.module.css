@@ -2,13 +2,13 @@
   width: min(560px, 92vw);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 34px 34px 30px;
-  box-shadow: 0 6px 40px -8px rgba(var(--plum-rgb), 0.12);
+  box-shadow: var(--shadow-e3);
 }
 
 .kicker {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -29,9 +29,9 @@
 }
 
 .lead {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.65;
-  color: var(--text);
+  color: var(--ink-60);
   margin: 0 0 22px;
 }
 
@@ -47,18 +47,18 @@
 }
 
 .charCount {
-  font-size: 12px;
-  color: var(--text-soft);
+  font-size: var(--text-12);
+  color: var(--ink-60);
   font-weight: 600;
 }
 
 .notice {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
-  color: var(--text-soft);
+  color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
 }
 
@@ -71,8 +71,8 @@
 }
 
 .foot {
-  font-size: 13px;
-  color: var(--text-soft);
+  font-size: var(--text-13);
+  color: var(--ink-60);
   margin: 18px 0 0;
   text-align: center;
 }
@@ -86,7 +86,7 @@
   width: min(560px, 92vw);
   background: var(--plum);
   border: none;
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 40px 34px 34px;
   text-align: center;
   color: rgba(var(--cream-rgb), 1);
@@ -115,7 +115,7 @@
   color: var(--accent);
 }
 .successSub {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.7;
   color: rgba(var(--cream-rgb), 0.82);
   max-width: 44ch;
@@ -127,12 +127,12 @@
   gap: 4px;
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 26px;
   margin-bottom: 26px;
 }
 .refLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -141,7 +141,7 @@
 .refVal {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--accent);
 }
 .successActions {

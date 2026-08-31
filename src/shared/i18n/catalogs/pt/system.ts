@@ -62,7 +62,7 @@ export const system: Catalog = {
   "accountBanned.whatNow.row2.title":
     "Os teus dados são removidos da plataforma no prazo de 30 dias",
   "accountBanned.whatNow.row2.body":
-    "Consulta a nossa <a>política de privacidade</a>. As publicações que escreveste são anonimizadas, não eliminadas, a menos que peças especificamente a eliminação abaixo.",
+    "Consulta a nossa <a>política de privacidade</a>. As publicações que escreveste ficam no lugar sem o teu nome, a menos que peças especificamente a eliminação abaixo.",
   "accountBanned.whatNow.row3.title": "Não ficam registos públicos desta ação",
   "accountBanned.whatNow.row3.body":
     "O processo existe internamente durante 36 meses. As tuas ligações foram notificadas de que saíste, sem motivo dado. Ninguém saberá que a tua conta foi encerrada, a menos que sejas tu a contar.",
@@ -231,6 +231,8 @@ export const system: Catalog = {
   "offline.status": "À escuta de sinal",
   "offline.retryCta": "Tentar outra vez",
   "offline.retryingCta": "Ainda offline",
+  "offline.sessionBanner":
+    "Estás offline. A página fica como está. O que enviares só segue quando a ligação voltar.",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Adicionar ao ecrã principal · sem loja de aplicações",

@@ -19,7 +19,7 @@
   padding: 9px 10px;
   border: none;
   background: transparent;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
   text-align: left;
   transition: background 0.16s var(--ease);
@@ -55,7 +55,7 @@
   flex: none;
   width: 22px;
   height: 22px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   border: 1.5px solid rgba(var(--line-rgb), 0.28);
   display: grid;
   place-items: center;
@@ -76,6 +76,14 @@
   margin: 0;
   padding: 24px 10px;
   text-align: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
+}
+
+/* Dark theme — the row hover wash is a --plum-rgb tint, which does not flip,
+   so the row gives no hover feedback at all on the dark surface. */
+@media (hover: hover) {
+  :global([data-theme="dark"]) .row:hover:not(:disabled) {
+    background: rgba(var(--cream-rgb), 0.07);
+  }
 }

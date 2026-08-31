@@ -280,6 +280,7 @@ export const communities: Catalog = {
   "detail.thread.replies_one": "{count} reply",
   "detail.thread.replies_other": "{count} replies",
   "detail.thread.replyPlaceholder": "Reply to this thread…",
+  "detail.thread.replyAria": "Write a reply to this thread",
   "detail.thread.replyCta": "Reply",
   "detail.thread.replyToast": "Reply posted.",
   "detail.thread.editedMark": "(edited)",
@@ -344,8 +345,10 @@ export const communities: Catalog = {
   "detail.modtools.nav.requests": "Requests",
   "detail.modtools.nav.reports": "Reports",
   "detail.modtools.nav.members": "Members",
+  "detail.modtools.nav.ratifications": "Second signature",
   "detail.modtools.nav.invites": "Invites",
   "detail.modtools.nav.support": "Support",
+  "detail.modtools.nav.history": "History",
   "detail.modtools.nav.card": "Member card",
   "detail.modtools.nav.danger": "Danger zone",
   "detail.modtools.overview.attention.label": "Needs attention",
@@ -382,6 +385,9 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.requestedAgo": "Requested {time} ago",
   "detail.modtools.joinRequests.approveCta": "Approve",
   "detail.modtools.joinRequests.declineCta": "Decline",
+  // ENG-41: the queue is paginated, so a moderator can reach an applicant
+  // past the first page instead of the queue quietly ending there.
+  "detail.modtools.joinRequests.loadMoreCta": "Load more requests",
   // The applicant card. Context for a human decision: no totals, no ranking,
   // no recommendation.
   "detail.modtools.joinRequests.applicant.since": "On QueerPulse since {date}",
@@ -412,6 +418,77 @@ export const communities: Catalog = {
     "What you would like them to know.",
   "detail.modtools.joinRequests.decline.confirmCta": "Send the decline",
   "detail.modtools.joinRequests.decline.cancelCta": "Cancel",
+  // PRD-31: the ban-evasion flag on a join-queue row, and the escalation
+  // behind it. THE COPY MUST NOT SAY MORE THAN THE ONE BIT DOES. It says this
+  // applicant matches somebody THIS community barred, and it says so as a
+  // prompt to look. There is no score, no tier, no confidence, no prior
+  // account and no date behind it, a ban anywhere else on QueerPulse answers
+  // no, and nothing here may read as a verdict or as certainty. The three
+  // outcomes are matched, no match, and could-not-check: a check that failed
+  // is never written as reassurance.
+  "detail.modtools.joinRequests.banEvasion.checking":
+    "Checking this community's ban list.",
+  "detail.modtools.joinRequests.banEvasion.matched.title":
+    "This applicant matches someone barred from this community",
+  "detail.modtools.joinRequests.banEvasion.matched.body":
+    "Treat it as a prompt to look, and decide for yourself. A match like this can be wrong, and you are the person who would recognise someone you barred. Nothing has happened to their request.",
+  "detail.modtools.joinRequests.banEvasion.matched.scope":
+    "This only ever covers bans your own community has placed. A ban anywhere else on QueerPulse answers no here, and platform staff are the people who can see those.",
+  "detail.modtools.joinRequests.banEvasion.unavailable.title":
+    "We couldn't run this check",
+  "detail.modtools.joinRequests.banEvasion.unavailable.body":
+    "The check gave no answer for this applicant, so the question is still open. This is not an all-clear. Try again, and tell us if it keeps happening.",
+  "detail.modtools.joinRequests.banEvasion.unavailable.retryCta": "Try again",
+  "detail.modtools.joinRequests.banEvasion.unavailable.retryAria":
+    "Try again for {name}",
+  // Escalating. The community moderator recognises, platform staff
+  // investigates: the button is how a moderator asks for the wider picture
+  // instead of being handed it.
+  "detail.modtools.joinRequests.banEvasion.escalateHint":
+    "Platform staff can see every community and the platform ban list, which is the picture you are missing here. Asking holds up nothing and costs the applicant nothing.",
+  "detail.modtools.joinRequests.banEvasion.escalateCta":
+    "Ask platform staff to look",
+  "detail.modtools.joinRequests.banEvasion.escalateAria":
+    "Ask platform staff to look at {name}",
+  "detail.modtools.joinRequests.banEvasion.reEscalateCta":
+    "Ask staff to look again",
+  "detail.modtools.joinRequests.banEvasion.reEscalateAria":
+    "Ask staff to look again at {name}",
+  "detail.modtools.joinRequests.banEvasion.note.label":
+    "Anything staff should know (optional)",
+  "detail.modtools.joinRequests.banEvasion.note.hint":
+    "Platform staff read this. The applicant never does. Sending with no note at all is a complete request.",
+  "detail.modtools.joinRequests.banEvasion.note.placeholder":
+    "What made you look.",
+  "detail.modtools.joinRequests.banEvasion.note.sendCta":
+    "Send to platform staff",
+  "detail.modtools.joinRequests.banEvasion.note.cancelCta": "Cancel",
+  "detail.modtools.joinRequests.banEvasion.escalated.title":
+    "With platform staff",
+  "detail.modtools.joinRequests.banEvasion.escalated.open":
+    "Escalated to platform staff on {date}",
+  // Nothing notifies a moderator when staff close a case, so the copy tells
+  // them where to look instead of promising to reach them.
+  "detail.modtools.joinRequests.banEvasion.escalated.openNote":
+    "It sits with them now. Nothing will notify you, so come back to this queue to see whether it has been closed.",
+  "detail.modtools.joinRequests.banEvasion.escalated.resolved":
+    "Staff closed the escalation you raised on {date}",
+  // What staff found is the cross-community judgement the one-bit flag exists
+  // to withhold, so "resolved" means somebody looked, and that is all.
+  "detail.modtools.joinRequests.banEvasion.escalated.resolvedNote":
+    "Somebody looked. What they found stays with them, and the decision on this request is still yours. Ask again if something new comes up.",
+  "detail.modtools.joinRequests.banEvasion.escalated.storedNoteLabel":
+    "The note staff have",
+  "detail.modtools.joinRequests.banEvasion.escalation.checking":
+    "Checking whether this was escalated already.",
+  "detail.modtools.joinRequests.banEvasion.escalation.unavailable":
+    "We couldn't tell whether this was escalated already. Sending again is safe: staff hold one open case per applicant.",
+  // Escalating twice while a case is open returns the FIRST note, so the
+  // moderator is told their words stayed where they typed them.
+  "detail.modtools.joinRequests.banEvasion.noteReplaced":
+    "This applicant was already escalated, so the first note is the one staff have. Yours was not added.",
+  "detail.modtools.joinRequests.banEvasion.sendFailed":
+    "We couldn't send that to platform staff. Try again.",
   "detail.modtools.reports.label": "Reported posts",
   "detail.modtools.reports.empty.title": "All clear",
   // Shown when a mod queue could not be loaded at all (a 403 on the reports
@@ -479,8 +556,11 @@ export const communities: Catalog = {
   "detail.modtools.toast.removed": "{name} has been removed.",
   "detail.modtools.confirm.removeMember.title":
     "Remove {name} from the community?",
+  // A removal bars the return, and a removal with no term set is a request
+  // for a PERMANENT bar, which now takes two signatures (PRD-25). The old
+  // "they can ask to join again later" was false in every case.
   "detail.modtools.confirm.removeMember.body":
-    "They lose access to the posts, events and members here. They can ask to join again later.",
+    "They lose access to the posts, events and members here, and they are barred from coming back for a set term. Removing someone does not bar them for good on its own: that takes a second owner, co-owner or moderator, and you will be told what this removal ended up as.",
   "detail.modtools.confirm.removeMember.confirmCta": "Remove member",
   "detail.modtools.confirm.grantCoOwner.title": "Make {name} a co-owner?",
   "detail.modtools.confirm.grantCoOwner.body":
@@ -606,6 +686,154 @@ export const communities: Catalog = {
   "detail.modtools.bans.confirm.confirmCta": "Lift ban",
   "detail.modtools.bans.liftedToast": "The ban on {name} has been lifted.",
   "detail.modtools.bans.errorToast": "We could not lift that ban. Try again.",
+  // PRD-25. A bar showing an end date with a permanent proposal open on it is
+  // a different decision from a settled one, and the term badge alone cannot
+  // tell the two apart.
+  "detail.modtools.bans.pendingRatificationNote":
+    "Somebody has asked for this bar to be permanent, and it is waiting on a second owner, co-owner or moderator. Until one signs, the term above is the bar in force.",
+  "detail.modtools.bans.openRatificationCta": "See the proposal",
+
+  // ── Mod tools · the term of a ban, and revising one ───────────────────────
+  "detail.modtools.ban.term.permanent": "Permanent",
+  "detail.modtools.ban.term.until": "Until {date}",
+  "detail.modtools.ban.term.served": "Served · ended {date}",
+  "detail.modtools.ban.term.pendingRatification": "Permanent bar proposed",
+  "detail.modtools.ban.editCta": "Edit ban",
+  "detail.modtools.ban.edit.title": "The ban on {name}",
+  "detail.modtools.ban.edit.sub":
+    "Set how long it lasts, cite the house rule it rests on, and rewrite the reason on the record.",
+  "detail.modtools.ban.edit.durationLegend": "How long it lasts",
+  "detail.modtools.ban.edit.days_one": "{count} day",
+  "detail.modtools.ban.edit.days_other": "{count} days",
+  "detail.modtools.ban.edit.permanent": "Permanent",
+  "detail.modtools.ban.edit.durationHint":
+    "A ban with an end date lifts itself when the time is up, so nobody has to remember to lift it.",
+  "detail.modtools.ban.edit.reasonLegend": "Reason recorded",
+  "detail.modtools.ban.edit.reasonPlaceholder":
+    "What happened, in your own words.",
+  "detail.modtools.ban.edit.reasonHint":
+    "Up to 500 characters. It stays with the decision, so anyone reviewing it later can see what it rested on.",
+  "detail.modtools.ban.edit.cancel": "Cancel",
+  "detail.modtools.ban.edit.saveCta": "Save changes",
+  "detail.modtools.ban.edit.savedToast": "The ban on {name} has been updated.",
+  "detail.modtools.ban.edit.errorToast":
+    "We could not save that change. Try again.",
+  // PRD-25. Picking Permanent no longer makes anything permanent: it asks a
+  // second owner, co-owner or moderator to sign, and the end date stays where
+  // it is until one of them does. The option reads as the request it is.
+  "detail.modtools.ban.edit.permanentPropose":
+    "Permanent (asks for a second signature)",
+  "detail.modtools.ban.edit.permanentHint":
+    "A permanent bar takes two people. Saving this asks another owner, co-owner or moderator to sign it, and the end date stays exactly where it is until one of them does.",
+  "detail.modtools.ban.edit.proposedToast":
+    "Asked for the bar on {name} to be permanent. It waits on a second signature, and the end date stays as it was.",
+  "detail.modtools.ban.edit.noSecondSignatoryToast":
+    "A permanent bar needs a second signature, and this community has nobody else who could give one. The bar keeps its end date. Set a longer one instead.",
+
+  // ── Mod tools · permanent bars waiting on a second signature (PRD-25) ─────
+  // A community permanent bar used to be one person's decision, while the
+  // platform equivalent had needed a second moderator since TS-12. It takes
+  // two people here as well now. The member is removed and barred for the
+  // fallback term straight away either way, and only the PERMANENCE waits, so
+  // every line here has to keep saying so: a reader who thinks inaction lets
+  // the member back in would decline by walking away.
+  //
+  // The window and the fallback term come from the API ({hours}, {days}) and
+  // are never written into the copy, so the numbers cannot drift from the
+  // server's.
+  "detail.modtools.ratifications.label":
+    "Permanent bars waiting on a second signature",
+  "detail.modtools.ratifications.intro":
+    "A permanent bar takes two people. Whoever asked for one cannot sign it, so it waits here for another owner, co-owner or moderator. The member is already off the roster and already barred, and that stands whatever is decided here.",
+  "detail.modtools.ratifications.windowNote":
+    "A proposal has {hours} hours. If nobody signs in that time it lapses, and the bar stays at {days} days and ends by itself. Nothing on this pane lets anybody back in early.",
+  "detail.modtools.ratifications.error.title":
+    "We couldn't load what is waiting",
+  "detail.modtools.ratifications.error.description":
+    "This is a load failure, so read it as unknown rather than as an empty queue: a permanent bar may be waiting on you right now. Try again.",
+  "detail.modtools.ratifications.error.retry": "Try again",
+  "detail.modtools.ratifications.empty.title": "Nothing waiting on a signature",
+  "detail.modtools.ratifications.empty.description":
+    "When somebody here asks for a permanent bar, it waits in this pane for a second owner, co-owner or moderator to sign it.",
+  "detail.modtools.ratifications.title": "Permanent bar on {name}",
+  "detail.modtools.ratifications.lapsed": "Lapsed",
+  "detail.modtools.ratifications.lapsesAt": "Lapses {date}",
+  "detail.modtools.ratifications.askedBy": "{name} asked for this on {date}.",
+  "detail.modtools.ratifications.askedByGone":
+    "Asked for on {date}. The person who asked has since left.",
+  "detail.modtools.ratifications.noNote": "No reason was written.",
+  "detail.modtools.ratifications.serving":
+    "Serving now: removed from the community and barred from coming back until {date}.",
+  "detail.modtools.ratifications.servingPermanent":
+    "Serving now: removed from the community and barred with no end date.",
+  "detail.modtools.ratifications.ifNobodySigns":
+    "If nobody signs, this lapses and the bar stays at {days} days, ending on its own. Leaving it alone does not let them back in early.",
+  "detail.modtools.ratifications.lapsedNote":
+    "Nobody signed in time, so this proposal has lapsed. The bar stays at {days} days and ends on its own.",
+  "detail.modtools.ratifications.ownProposal":
+    "You asked for this bar, so you cannot be the one who signs it. It needs another owner, co-owner or moderator.",
+  "detail.modtools.ratifications.ratifyCta": "Confirm the permanent bar",
+  "detail.modtools.ratifications.declineCta": "Decline",
+  "detail.modtools.ratifications.ratifiedToast":
+    "The bar on {name} is now permanent.",
+  "detail.modtools.ratifications.declinedToast":
+    "You declined the permanent bar on {name}. The bar stays at {days} days.",
+  "detail.modtools.ratifications.errorToast":
+    "We could not record that decision. Try again.",
+  "detail.modtools.ratifications.refusal.ownProposal":
+    "You asked for this bar, so you cannot be the one who signs it.",
+  "detail.modtools.ratifications.refusal.alreadyDecided":
+    "This one has already been decided, it has lapsed, or the bar was lifted underneath it.",
+  "detail.modtools.ratifications.refusal.gone":
+    "This proposal is not here any more.",
+  "detail.modtools.ratifications.confirm.ratifyTitle":
+    "Make the bar on {name} permanent?",
+  "detail.modtools.ratifications.confirm.declineTitle":
+    "Decline the permanent bar on {name}?",
+  "detail.modtools.ratifications.confirm.ratifyBody":
+    "Yours is the second of the two signatures this needs. The bar loses its end date, and {name} cannot come back to this community. Lifting it later is a separate decision, and any owner, co-owner or moderator can make it.",
+  "detail.modtools.ratifications.confirm.declineBody":
+    "{name} stays removed and stays barred. The bar keeps the end date it already has, {days} days from when it was applied, and it ends by itself then. Say why, so the moderator who asked can read it.",
+  "detail.modtools.ratifications.confirm.noteLabel": "Your note",
+  "detail.modtools.ratifications.confirm.ratifyNotePlaceholder":
+    "Optional. Anything you want kept with the decision.",
+  "detail.modtools.ratifications.confirm.declineNotePlaceholder":
+    "Why you would not sign this.",
+  "detail.modtools.ratifications.confirm.noteHint":
+    "Up to 2000 characters. It goes on the record with your decision, and the moderator who asked can read it.",
+  "detail.modtools.ratifications.confirm.cancel": "Cancel",
+
+  // ── Mod tools · what a removal actually did (PRD-25) ──────────────────────
+  // The route answers with its own sentence and the dialog shows it unedited,
+  // because the server is the authority on which of the three outcomes a
+  // removal got. These lines add what that sentence cannot: that a proposer
+  // may never sign their own bar, and where the proposal now lives.
+  "detail.modtools.removalOutcome.pending.title":
+    "Waiting on a second signature",
+  "detail.modtools.removalOutcome.pending.body":
+    "The removal is done and the bar is already in force. The permanent part of it is still open: another owner, co-owner or moderator has to sign, and you cannot sign your own proposal. If nobody signs, the bar keeps its end date and ends by itself.",
+  "detail.modtools.removalOutcome.pending.lapsesAt":
+    "The proposal lapses on {date} if nobody has signed it by then.",
+  "detail.modtools.removalOutcome.noSecond.title":
+    "This bar cannot be made permanent here",
+  "detail.modtools.removalOutcome.noSecond.body":
+    "A permanent bar takes two signatures, and this community has nobody else who could give the second one. The removal stands and so does the bar, until the date below. To bar somebody permanently, this community needs another owner, co-owner or moderator.",
+  "detail.modtools.removalOutcome.servingUntil":
+    "Barred from coming back until {date}.",
+  "detail.modtools.removalOutcome.closeCta": "Close",
+  "detail.modtools.removalOutcome.openQueueCta": "Open the queue",
+
+  // ── Mod tools · the house rule a moderation action cites ──────────────────
+  "detail.modtools.rule.legend": "House rule cited",
+  "detail.modtools.rule.noneWritten":
+    "This community has not written any house rules yet, so there is nothing to cite.",
+  "detail.modtools.rule.noneOption": "No rule cited",
+  "detail.modtools.rule.option": "Rule {number}: {text}",
+  "detail.modtools.rule.hint":
+    "Citing a rule is optional. Pick the one this decision rests on when there is a fit.",
+  "detail.modtools.rule.citation": "House rule {number}",
+  "detail.modtools.rule.stale":
+    "The rules have changed since. This is rule {number} as it read in version {version}.",
 
   // ── Mod tools · invite members ────────────────────────────────────────────
   "detail.modtools.invites.label": "Invite members",
@@ -632,6 +860,141 @@ export const communities: Catalog = {
   "detail.modtools.invites.skip.pendingRequest":
     "Already asked to join. Answer them in the requests queue above.",
   "detail.modtools.invites.skip.banned": "Barred from this community.",
+
+  // ── Mod tools · governance history (PRD-26) ───────────────────────────────
+  // This community's own read of `community_governance_log`. The trail had one
+  // reader for a long time, the platform admin console, so a community's own
+  // owner could not answer "who removed her" without asking QueerPulse staff.
+  // A platform action is labelled as one: the server withholds the staff
+  // member's name and this copy says plainly where the change came from.
+  "detail.modtools.history.label": "Governance history",
+  "detail.modtools.history.intro":
+    "Every governance action recorded against this community, newest first. The server writes these entries, and nobody can edit or delete them, here or anywhere else.",
+  "detail.modtools.history.filterLabel": "Filter by action",
+  "detail.modtools.history.allActions": "All actions",
+  "detail.modtools.history.staffOnly.title":
+    "Only this community's staff read this",
+  "detail.modtools.history.staffOnly.description":
+    "The governance trail is for this community's owner, co-owners and moderators.",
+  "detail.modtools.history.error.title": "We couldn't load the history",
+  "detail.modtools.history.error.description":
+    "Something went wrong loading the trail. What this community has recorded stays unknown until it loads. Try again, and tell us if it keeps happening.",
+  "detail.modtools.history.error.retry": "Try again",
+  "detail.modtools.history.empty.title": "Nothing recorded yet",
+  "detail.modtools.history.empty.description":
+    "Role changes, removals, bans, ownership handovers, freezes and settings edits all land here the moment they happen.",
+  "detail.modtools.history.emptyFiltered.title": "Nothing of this kind",
+  "detail.modtools.history.emptyFiltered.description":
+    "This community has governance history, and none of it matches the action you picked. Clear the filter to read the whole trail.",
+  "detail.modtools.history.clearFilterCta": "Clear the filter",
+  "detail.modtools.history.pagerMeta": "{start} to {end} of {total}",
+  "detail.modtools.history.pagerPage": "Page {page} of {pageCount}",
+  "detail.modtools.history.prevPage": "Previous page",
+  "detail.modtools.history.nextPage": "Next page",
+
+  // One label per value of the backend's `GovernanceLogAction` enum. A value
+  // added after this shipped falls back to a humanized version of the raw key.
+  "detail.modtools.history.action.role_changed": "Role changed",
+  "detail.modtools.history.action.member_removed": "Member removed",
+  "detail.modtools.history.action.member_banned": "Member barred",
+  "detail.modtools.history.action.member_ban_proposed":
+    "Permanent bar proposed",
+  "detail.modtools.history.action.member_ban_ratified": "Permanent bar signed",
+  "detail.modtools.history.action.member_ban_declined": "Permanent bar refused",
+  "detail.modtools.history.action.member_ban_hold_expired":
+    "Permanent bar lapsed unsigned",
+  "detail.modtools.history.action.ban_lifted": "Ban lifted",
+  "detail.modtools.history.action.ownership_transferred":
+    "Ownership transferred",
+  "detail.modtools.history.action.owner_auto_promoted": "Owner auto-promoted",
+  "detail.modtools.history.action.frozen": "Frozen",
+  "detail.modtools.history.action.unfrozen": "Unfrozen",
+  "detail.modtools.history.action.archived": "Archived",
+  "detail.modtools.history.action.unarchived": "Unarchived",
+  "detail.modtools.history.action.settings_changed": "Settings changed",
+  "detail.modtools.history.action.card_program_enabled": "Card programme on",
+  "detail.modtools.history.action.card_program_disabled": "Card programme off",
+  "detail.modtools.history.action.card_suspended": "Card suspended",
+  "detail.modtools.history.action.card_revoked": "Card revoked",
+  "detail.modtools.history.action.card_reinstated": "Card reinstated",
+  "detail.modtools.history.action.card_replaced": "Card reissued",
+  "detail.modtools.history.action.support_offered": "Support offered",
+  "detail.modtools.history.action.support_offer_answered": "Support answered",
+
+  "detail.modtools.history.summary.role_changed": "{name}'s role changed",
+  "detail.modtools.history.summary.member_removed":
+    "{name} was removed from the roster",
+  // A removal the member made themselves. Told apart from a moderator's
+  // removal because the trail exists to answer which of the two happened.
+  "detail.modtools.history.summary.member_left": "{name} left the roster",
+  "detail.modtools.history.summary.member_banned":
+    "{name} was barred from this community",
+  "detail.modtools.history.summary.ban_lifted": "The bar on {name} was lifted",
+  "detail.modtools.history.summary.ownership_transferred":
+    "{name} became the owner",
+  "detail.modtools.history.summary.owner_auto_promoted":
+    "{name} was promoted to owner automatically",
+  "detail.modtools.history.summary.frozen": "The community was frozen",
+  "detail.modtools.history.summary.unfrozen": "The freeze was lifted",
+  "detail.modtools.history.summary.archived": "The community was archived",
+  "detail.modtools.history.summary.unarchived":
+    "The community was restored from the archive",
+  "detail.modtools.history.summary.settings_changed":
+    "Community settings changed",
+  "detail.modtools.history.summary.card_program_enabled":
+    "The membership card programme was turned on",
+  "detail.modtools.history.summary.card_program_disabled":
+    "The membership card programme was turned off",
+  "detail.modtools.history.summary.card_suspended":
+    "{name}'s membership card was suspended",
+  "detail.modtools.history.summary.card_revoked":
+    "{name}'s membership card was revoked",
+  "detail.modtools.history.summary.card_reinstated":
+    "{name}'s membership card was reinstated",
+  "detail.modtools.history.summary.card_replaced":
+    "{name}'s membership card was reissued",
+  "detail.modtools.history.summary.support_offered":
+    "QueerPulse staff offered this community support",
+  "detail.modtools.history.summary.support_offer_answered":
+    "The moderators answered an offer of support",
+  // The fallback sentence for an action this client has no copy for yet.
+  "detail.modtools.history.summary.unknown": "{action}",
+  "detail.modtools.history.summary.unknownWithTarget": "{action}: {name}",
+
+  "detail.modtools.history.formerMember": "A former member",
+  "detail.modtools.history.byLine": "by {name}",
+  "detail.modtools.history.byPlatform": "by QueerPulse platform staff",
+  "detail.modtools.history.unattributed": "No named actor",
+  "detail.modtools.history.onDate": "on {date} at {time}",
+  "detail.modtools.history.platform.label": "Platform action",
+  "detail.modtools.history.platform.note":
+    "QueerPulse staff took this action from the platform side, over this community's own owner and moderators.",
+
+  "detail.modtools.history.detail.role": "Role",
+  "detail.modtools.history.detail.note": "Note",
+  "detail.modtools.history.detail.reason": "Reason",
+  "detail.modtools.history.detail.bannedAt": "Ban placed",
+  "detail.modtools.history.detail.cardSerial": "Card",
+  "detail.modtools.history.role.owner": "Owner",
+  "detail.modtools.history.role.coOwner": "Co-owner",
+  "detail.modtools.history.role.mod": "Moderator",
+  "detail.modtools.history.role.member": "Member",
+  "detail.modtools.history.value.fromTo": "{from} to {to}",
+  "detail.modtools.history.value.on": "On",
+  "detail.modtools.history.value.off": "Off",
+  "detail.modtools.history.value.empty": "Empty",
+  "detail.modtools.history.value.notSet": "Not set",
+  "detail.modtools.history.field.name": "Name",
+  "detail.modtools.history.field.purpose": "Purpose",
+  "detail.modtools.history.field.type": "Type",
+  "detail.modtools.history.field.whoFor": "Who it is for",
+  "detail.modtools.history.field.tagline": "Tagline",
+  "detail.modtools.history.field.accessTier": "Who can join",
+  "detail.modtools.history.field.rosterVisible": "Roster visible",
+  "detail.modtools.history.field.features": "Features",
+  "detail.modtools.history.field.rules": "Rules",
+  "detail.modtools.history.field.tags": "Tags",
+  "detail.modtools.history.field.coverImageUrl": "Cover image",
 
   // ── Danger zone · your standing + owner-absence escalation ────────────────
   "detail.dangerZone.yourRole.owner": "You own this community.",
@@ -905,6 +1268,7 @@ export const communities: Catalog = {
   "start.missing.consent": "your confirmation",
   "start.thread.backTo": "Back to {thread}",
   "start.thread.stepOf": "Step {step} of {total} · <b>{thread}</b>",
+  "start.thread.stepOfAriaLabel": "Step {step} of {total} · {thread}",
 
   // ── Founding-thread panel copy (PANELS) ────────────────────────────────────
   "start.panel.open.thread": "Open",

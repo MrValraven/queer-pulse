@@ -108,6 +108,12 @@ export function useTopicFollow(tag: string) {
   return {
     isFollowing,
     isPending: toggle.isPending,
+    // The follow list failing means "Follow" is shown to someone who already
+    // follows the topic, so the state is surfaced rather than swallowed
+    // (DES-22). The button stays usable: the toggle is idempotent server-side
+    // and its own failure is already reported by the toast above.
+    isFollowStateUnknown: followsQuery.isError,
+    refetchFollows: () => void followsQuery.refetch(),
     toggle: () => toggle.mutate(!isFollowing),
   };
 }

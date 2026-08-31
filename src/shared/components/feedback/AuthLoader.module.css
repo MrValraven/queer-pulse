@@ -57,7 +57,7 @@
   position: relative;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
 }
 

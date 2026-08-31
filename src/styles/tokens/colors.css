@@ -146,7 +146,13 @@
      src/shared/components/ui (e.g. Avatar.module.css border, 0.14;
      MemberSelectList.module.css hover wash, 0.05). */
   --line: rgba(var(--line-rgb), 0.14);
-  --wash: rgba(var(--plum-rgb), 0.05);
+  /* The app-wide hover/active wash. This read --plum-rgb until 2026-08-31,
+     which does not flip: in dark mode it composited to under one channel of
+     difference, so all 69 surfaces using it gave no hover and no keyboard-active
+     feedback at all. Worst case was the Select dropdown, where it IS the
+     keyboard cursor. --line-rgb resolves to --plum-rgb in light, so light mode
+     renders byte-identically; only the broken dark case changes. */
+  --wash: rgba(var(--line-rgb), 0.05);
   /* A slightly stronger hairline than --line, for hover/active borders that
      need to read as a step up (Phase 2 persona create-flow: .fam/.kind/.choice
      hover states). Derived from the same --line-rgb channel, so it flips

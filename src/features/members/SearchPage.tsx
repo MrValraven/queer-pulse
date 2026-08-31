@@ -25,6 +25,8 @@ export function SearchPage() {
     recents,
     signInRequired,
     loading,
+    isError: hasSearchFailed,
+    refetch: retrySearch,
   } = useSearchData(query, tab);
   // The prototype's fake fetch delay is DEMO-ONLY. In live mode `useSearchData`
   // reports real loading, so OR-ing this in only added 600ms of skeleton to
@@ -106,6 +108,8 @@ export function SearchPage() {
             onSelectTab={setTab}
             signInRequired={signInRequired}
             loading={showLoading}
+            hasFailed={hasSearchFailed}
+            onRetry={retrySearch}
             searchData={searchData}
             recents={recents}
           />

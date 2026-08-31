@@ -10,7 +10,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
   font-family: var(--sans);
@@ -21,8 +21,9 @@
 }
 
 .sourceBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .sourceBtn:disabled {
@@ -61,7 +62,7 @@
   height: 100%;
   padding: 0;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   cursor: pointer;
   background: transparent;
@@ -69,8 +70,9 @@
 }
 
 .thumbBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .thumbBtn:disabled {
@@ -93,7 +95,7 @@
   justify-content: center;
   width: 26px;
   height: 26px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--cream);
   background: var(--accent);
 }
@@ -103,7 +105,7 @@
   left: 6px;
   bottom: 6px;
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-family: var(--sans);
   font-size: 0.7rem;
   font-weight: 600;

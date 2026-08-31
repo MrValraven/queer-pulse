@@ -1,0 +1,227 @@
+/* The one-bit ban-evasion flag on a join-queue row (PRD-31), and the escalate
+   action under it. Tokens only.
+
+   Colour is never the signal here. Each of the three states carries its own
+   icon and its own sentence, so the flag reads the same to a screen reader, in
+   dark mode and in greyscale as it does to a sighted moderator in light mode.
+   The tint only tells the eye where to land first. */
+
+.panel {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  background: rgba(var(--plum-rgb), 0.04);
+}
+
+/* A match: the one row on the queue worth reading first. Coral is
+   var(--accent); there is no --coral. */
+.panelMatched {
+  border-color: rgba(var(--accent-rgb), 0.35);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+/* Could not check. Deliberately its own look: it must never be mistaken for
+   the quiet all-clear of a row that renders nothing at all. */
+.panelUnknown {
+  border-color: rgba(var(--line-rgb), 0.24);
+  border-style: dashed;
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+/* A row whose flag says nothing, kept only because somebody escalated it. */
+.panelQuiet {
+  background: rgba(var(--plum-rgb), 0.04);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--text-13-5);
+  font-weight: 700;
+  color: var(--text-strong);
+  line-height: 1.4;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--accent);
+}
+
+.body {
+  margin: 6px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 62ch;
+}
+
+/* What the bit does NOT cover. Stated on the surface rather than left to a
+   moderator's assumption, because assuming it is platform-wide is the one
+   misreading that would do real harm. */
+.scope {
+  margin: 6px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+  max-width: 62ch;
+}
+
+/* While the answer is still coming. Not an answer, and it does not pretend to
+   be one. */
+.checking {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.checking svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+/* ---- escalation state ---- */
+.escalation {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+
+.escalationLine {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.escalationNote {
+  margin: 5px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-width: 62ch;
+}
+
+.storedNote {
+  margin: 8px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+  max-width: 62ch;
+}
+.storedNoteLabel {
+  display: block;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 2px;
+}
+
+/* ---- asking staff ---- */
+.actionArea {
+  margin-top: 10px;
+}
+
+.escalateHint {
+  margin: 0 0 8px;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-width: 62ch;
+}
+
+.quietLine {
+  margin: 0 0 6px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+
+/* Something the moderator has to weigh before they act on the row: a failed
+   read, or a note that did not land. */
+.warn {
+  margin: 8px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--accent-ink);
+  max-width: 62ch;
+}
+
+/* Applied to a shared <Button variant="ghost" size="sm">; these overrides only
+   restore the quieter outlined mod-row scale. The primitive keeps the focus
+   ring, the disabled treatment and the tap-target floor. */
+.quietBtn {
+  gap: 6px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  background: transparent;
+  padding: 8px 14px;
+  min-height: 40px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+}
+.quietBtn svg {
+  width: 13px;
+  height: 13px;
+}
+@media (hover: hover) {
+  .quietBtn:hover {
+    background: transparent;
+    border-color: rgba(var(--line-rgb), 0.32);
+    color: var(--ink);
+  }
+}
+
+/* ---- the note ---- */
+.compose {
+  margin-top: 10px;
+}
+.composeLabel {
+  display: block;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.composeHint {
+  margin: 0 0 8px;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-width: 62ch;
+}
+.noteField {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  resize: vertical;
+  line-height: 1.55;
+  transition: border-color 0.25s var(--ease);
+}
+.noteField:focus {
+  border-color: var(--accent);
+}
+.composeActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}

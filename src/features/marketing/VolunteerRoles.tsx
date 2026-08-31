@@ -1,5 +1,5 @@
 import { FiHeart } from "react-icons/fi";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { VolunteerOpportunity } from "./volunteerOpportunities.types";
@@ -17,6 +17,12 @@ export interface VolunteerRolesProps {
    *  posted yet" apart from "nothing matches this chip". */
   loadedCount: number;
   isLoading: boolean;
+  /** True when the opportunities read failed (DES-22). It takes precedence
+   *  over both empty states: an outage must never read as "nobody needs help
+   *  right now". */
+  isError: boolean;
+  /** Re-runs the failed read, for the error panel's retry. */
+  onRetry: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   onLoadMore: () => void;
@@ -29,6 +35,8 @@ export function VolunteerRoles({
   visibleOpportunities,
   loadedCount,
   isLoading,
+  isError,
+  onRetry,
   hasNextPage,
   isFetchingNextPage,
   onLoadMore,
@@ -53,7 +61,9 @@ export function VolunteerRoles({
           ))}
         </div>
 
-        {!isLoading && visibleOpportunities.length === 0 ? (
+        {isError ? (
+          <LoadErrorState onRetry={onRetry} />
+        ) : !isLoading && visibleOpportunities.length === 0 ? (
           loadedCount === 0 ? (
             <EmptyState
               icon={<FiHeart />}
@@ -91,7 +101,7 @@ export function VolunteerRoles({
           </div>
         )}
 
-        {hasNextPage && (
+        {hasNextPage && !isError && (
           <div className={s.loadMore}>
             <Button
               type="button"

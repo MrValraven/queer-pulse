@@ -31,7 +31,7 @@
   flex-wrap: wrap;
 }
 .name {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
   min-width: 0;
@@ -49,7 +49,7 @@
   }
 }
 .secondary {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   overflow: hidden;
   text-overflow: ellipsis;

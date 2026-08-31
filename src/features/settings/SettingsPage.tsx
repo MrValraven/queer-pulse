@@ -11,6 +11,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NAV, type PaneId } from "./settings.data";
 import { BlockedUsersPane } from "./BlockedUsersPane";
 import { DeleteAccountSection } from "./DeleteAccountSection";
+import type { DeleteOption } from "./deleteAccount.data";
 import { EditProfilePane } from "./EditProfilePane";
 import { MyUploadsPane } from "./MyUploadsPane";
 import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
@@ -46,6 +47,12 @@ export function SettingsPage() {
   // controls elsewhere still mark the page dirty but report nothing here.
   const [changedKeys, setChangedKeys] = useState<string[]>([]);
   const [showDelete, setShowDelete] = useState(false);
+  // Which off-ramp the member asked for on the way into the "delete" pane, so
+  // "Pause my account" and "Delete permanently" both land on the option they
+  // named. PRD-09: the Data pane's danger zone hands off here rather than
+  // running a second copy of the confirm-and-step-up flow.
+  const [lifecycleOption, setLifecycleOption] =
+    useState<DeleteOption>("deactivate");
   const sidebarRef = useRef<HTMLElement>(null);
   const openedRef = useRef(false);
   const cancelEditingRef = useRef(cancelEditing);
@@ -163,13 +170,15 @@ export function SettingsPage() {
 
         <div className={styles.main}>
           <FadeIn key={pane}>
-            {pane === "notifications" && (
-              <NotificationsPane onChange={markChanged} />
-            )}
+            {pane === "notifications" && <NotificationsPane />}
             {pane === "language" && <LanguagePane />}
             {pane === "data" && (
               <DataPane
                 onChange={markChanged}
+                onPauseClick={() => {
+                  setLifecycleOption("deactivate");
+                  setPane("delete");
+                }}
                 onDeleteClick={() => setShowDelete(true)}
               />
             )}
@@ -185,10 +194,11 @@ export function SettingsPage() {
             {pane === "accessibility" && <AccessibilityPane />}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "blockedUsers" && <BlockedUsersPane />}
-            {pane === "account" && <AccountPane onChange={markChanged} />}
+            {pane === "account" && <AccountPane />}
             {pane === "uploads" && <MyUploadsPane />}
             {pane === "delete" && (
               <DeleteAccountSection
+                initialOption={lifecycleOption}
                 onOpenNotificationSettings={() => setPane("notifications")}
               />
             )}
@@ -235,6 +245,7 @@ export function SettingsPage() {
             // Funnel to the real, re-auth-gated deletion flow rather than
             // firing a fake "we emailed you" toast that nothing backs.
             setShowDelete(false);
+            setLifecycleOption("delete");
             setPane("delete");
           }}
         />

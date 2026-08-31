@@ -99,7 +99,7 @@ export const forum: Catalog = {
   "search.ariaLabel": "Search the forum",
   "search.clearAria": "Clear search",
   "search.hint":
-    "Searches thread titles, not the text inside posts and replies.",
+    "Searches thread titles only. Post and reply text stays out of the match.",
 
   // ── ForumThreadList ─────────────────────────────────────────────────────
   "threadList.top": "Top",
@@ -151,6 +151,7 @@ export const forum: Catalog = {
   // ── ThreadComposer ──────────────────────────────────────────────────────
   "threadComposer.replyingTo": "Replying to <strong>{name}</strong>",
   "threadComposer.placeholder": "Write a reply…",
+  "threadComposer.textareaAria": "Write a reply to this thread",
   "threadComposer.postReplyCta": "Post reply",
 
   // ── ThreadOpCard ────────────────────────────────────────────────────────

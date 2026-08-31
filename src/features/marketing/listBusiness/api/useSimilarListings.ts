@@ -21,6 +21,30 @@ export function useSimilarListings(
    *  itself when the wizard re-checks its own (unchanged) name. */
   excludeRef?: string,
 ): SimilarListing[] {
+  return useSimilarListingsQuery(name, coords, excludeRef).listings;
+}
+
+export interface SimilarListingsResult {
+  listings: SimilarListing[];
+  isLoading: boolean;
+  /** True when the look-alike read failed (DES-22). The wizard's hint fails
+   *  quietly — it is a courtesy, never the member's answer — but the flag has
+   *  to exist so "no look-alikes" is never a disguised outage. */
+  isError: boolean;
+  /** Re-run the failed read. */
+  refetch: () => void;
+}
+
+/**
+ * The same read as `useSimilarListings`, with the query state attached
+ * (DES-22). `useSimilarListings` stays the array-returning convenience for the
+ * wizard hint.
+ */
+export function useSimilarListingsQuery(
+  name: string,
+  coords?: { latitude: number; longitude: number } | null,
+  excludeRef?: string,
+): SimilarListingsResult {
   const { demoMode } = useDemoMode();
   const debouncedName = useDebouncedValue(name.trim(), 300);
   const enabled = debouncedName.length >= 3;
@@ -49,17 +73,31 @@ export function useSimilarListings(
       ),
   });
 
-  if (!enabled) return [];
+  const refetch = () => void query.refetch();
 
-  if (demoMode) {
-    return findDuplicates(debouncedName).map((seed) => ({
-      name: seed.name,
-      cat: seed.cat,
-      hood: seed.hood,
-      slug: "",
-      distanceM: null,
-    }));
+  if (!enabled) {
+    return { listings: [], isLoading: false, isError: false, refetch };
   }
 
-  return query.data ?? [];
+  if (demoMode) {
+    return {
+      listings: findDuplicates(debouncedName).map((seed) => ({
+        name: seed.name,
+        cat: seed.cat,
+        hood: seed.hood,
+        slug: "",
+        distanceM: null,
+      })),
+      isLoading: false,
+      isError: false,
+      refetch,
+    };
+  }
+
+  return {
+    listings: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch,
+  };
 }

@@ -1,12 +1,14 @@
 import {
   FiAlertTriangle,
+  FiArchive,
   FiAward,
   FiClipboard,
   FiHome,
   FiStar,
   FiTag,
+  FiUserX,
 } from "react-icons/fi";
-import { routes } from "../../app/routeMap";
+import { communityPath, routes } from "../../app/routeMap";
 import { memberName } from "../members/data/members";
 import { Translation } from "../../shared/i18n/Translation";
 import type { Formatters } from "../../shared/i18n/format";
@@ -45,7 +47,7 @@ function agoIso(amount: number, unit: keyof typeof UNIT_MS): string {
  * Ids 4, 5, 6, 7 live in `buildUnreadActivityNotifications`
  * (`notificationsListActivity.data.tsx`), split out to keep this function
  * under the per-function line limit. The two halves are spread together
- * below in id order.
+ * below: ids 2, 3, 13, 14, 15, 16 here, then 4 through 7.
  */
 function buildUnreadNotifications(
   t: TFunction,
@@ -198,6 +200,54 @@ function buildUnreadNotifications(
         },
       ],
     },
+    {
+      // The demo counterpart of the live `ban_evasion_escalation_raised` row
+      // (PRD-31). Staff-only in live mode. Copy, icon and destination are the
+      // live ones verbatim (`formatNotification` + `notifications.adapters`):
+      // the person glyph on the ordinary platform ground, and the staff
+      // escalations queue. The community name is an interpolation value, the
+      // way every other proper noun in this file is.
+      id: 15,
+      type: "platform",
+      unread: true,
+      icon: { Glyph: FiUserX, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.ban_evasion_escalation_raised.text", {
+        communityName: "Trans Hub",
+      }),
+      meta: t("notifications:type.ban_evasion_escalation_raised.meta"),
+      time: fmt.relativeTime(-4, "hour"),
+      createdAtIso: agoIso(4, "hour"),
+      actions: [
+        {
+          label: t("notifications:actions.seeDetails"),
+          variant: "ghost",
+          href: routes.adminBanEvasion,
+        },
+      ],
+    },
+    {
+      // The demo counterpart of the live `ban_evasion_escalation_resolved`
+      // row (PRD-31), which reaches only the moderator who raised the
+      // escalation. The action opens their own join queue, because the
+      // decision on the request is still theirs, and the copy says so.
+      id: 16,
+      type: "platform",
+      unread: true,
+      icon: { Glyph: FiArchive, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.ban_evasion_escalation_resolved.text", {
+        communityName: "Trans Hub",
+      }),
+      meta: t("notifications:type.ban_evasion_escalation_resolved.meta"),
+      time: fmt.relativeTime(-5, "hour"),
+      createdAtIso: agoIso(5, "hour"),
+      actions: [
+        {
+          label: t("notifications:actions.openRequestsQueue"),
+          variant: "ghost",
+          href: `${communityPath("trans-hub")}?tab=modtools&mod=requests`,
+        },
+      ],
+    },
     ...buildUnreadActivityNotifications(t, fmt),
   ];
 }
@@ -303,8 +353,8 @@ function buildReadNotifications(t: TFunction, fmt: Formatters): Notification[] {
 
 /**
  * Composes the demo feed from its two order-preserving sections — the unread
- * rows (ids 2-7, 13, 14) followed by the already-read rows (ids 8, 9, 11, 12).
- * Splitting the builder by read-state keeps each section small. (Ids 1 and 10
+ * rows (ids 2-7, 13, 14, 15, 16) followed by the already-read rows (ids 8, 9,
+ * 11, 12). Splitting the builder by read-state keeps each section small. (Ids 1 and 10
  * were private-message rows, removed when the "messages" category was retired.)
  */
 export function buildNotifications(
@@ -319,4 +369,4 @@ export function buildNotifications(
 
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
-export const DEMO_UNREAD_IDS = [2, 3, 13, 14, 4, 5, 6, 7];
+export const DEMO_UNREAD_IDS = [2, 3, 13, 14, 15, 16, 4, 5, 6, 7];

@@ -5,7 +5,7 @@
 .empty {
   display: flex;
   justify-content: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   padding: 20px 8px;
   text-align: center;
@@ -34,7 +34,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--wash);
 }
 
@@ -43,7 +43,7 @@
   align-items: flex-start;
   gap: 10px;
   padding: 2px 4px 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: var(--ink-60);
   cursor: pointer;

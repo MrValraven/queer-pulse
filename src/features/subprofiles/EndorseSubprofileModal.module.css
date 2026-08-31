@@ -4,7 +4,7 @@
    rendered as its children. Simpler than vouch — note only, no
    relationship/anonymous/skill blocks. */
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -25,7 +25,7 @@
   color: var(--accent-text);
 }
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 22px;
@@ -38,18 +38,18 @@
   gap: 14px;
   padding: 14px 16px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--cream);
   margin-bottom: 24px;
 }
 .candName {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 10px;
@@ -65,10 +65,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 16px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -85,7 +85,7 @@
   opacity: 0.6;
 }
 .counter {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   text-align: right;
   margin-bottom: 18px;
@@ -110,7 +110,7 @@
   border: none;
   background: transparent;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--danger);
   cursor: pointer;
@@ -272,7 +272,7 @@
   color: var(--accent);
 }
 .successSub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   margin: 0 auto 26px;

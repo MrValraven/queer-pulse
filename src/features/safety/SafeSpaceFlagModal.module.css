@@ -1,9 +1,9 @@
 .privacyNote {
   margin: 0 0 18px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--jade-rgb), 0.08);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink);
 }
@@ -14,7 +14,7 @@
 
 .label {
   margin-bottom: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
 }
@@ -32,7 +32,7 @@
   min-width: 0;
   padding: 12px 14px;
   text-align: start;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   cursor: pointer;
@@ -47,13 +47,13 @@
 }
 
 .reasonTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 
 .reasonDesc {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.45;
   color: var(--ink-60);
 }
@@ -62,23 +62,24 @@
   inline-size: 100%;
   min-block-size: 92px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--ink);
   font-family: inherit;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   resize: vertical;
 }
 
 .textarea:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .error {
   margin: 14px 0 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--accent);
 }

@@ -10,7 +10,7 @@
   margin-top: 14px;
 }
 .label {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -22,12 +22,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid rgba(var(--accent-rgb), 0.22);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 10px;
   cursor: pointer;
   transition:
@@ -57,7 +57,7 @@
 .clearAll {
   position: relative;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: none;
@@ -96,7 +96,7 @@
    "Clear all" by a middot drawn here so no catalog value carries punctuation. */
 .trailing {
   margin-inline-start: 4px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .trailing::after {

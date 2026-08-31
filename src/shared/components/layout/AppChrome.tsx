@@ -23,12 +23,19 @@ import { BottomTabBar } from "./BottomTabBar";
  */
 export function AppChrome() {
   // Hold the realtime socket open for the whole signed-in session rather than
-  // for one route. AppChrome is mounted once, above the route switch and inside
-  // DataProviders (so RealtimeProvider is in scope), which makes it the only
-  // place where the socket's lifetime follows the SESSION instead of whichever
-  // page happens to be open. Without this the notification bell only updates on
-  // the Messages page, since that controller used to be the single caller.
-  // Inert in demo / logged-out / no-backend runs.
+  // for one route. AppChrome is mounted once, above the route switch, which
+  // makes it the only place where the socket's lifetime follows the SESSION
+  // instead of whichever page happens to be open. Without this the notification
+  // bell only updates on the Messages page, since that controller used to be
+  // the single caller. Inert in demo / logged-out / no-backend runs.
+  //
+  // RealtimeProvider is NOT what pins this component's position: it sits in
+  // RootProviders, above the router, and useRealtime() falls back to an inert
+  // default context anyway. What forces AppChrome to render INSIDE
+  // DataProviders (see App.tsx) is the Navbar it returns below: its DM unread
+  // badge calls useUnreadMessages -> useDeletedConversations, which throws
+  // "must be used within DeletedConversationsProvider", and that provider is in
+  // DataProviders. Rendered above it, every page load throws on render.
   useRealtimeConnection();
   const { active } = useShellFrame();
   if (!active) return null;

@@ -1,5 +1,5 @@
 import { Avatar, MemberIdentity } from "../../shared/components/ui";
-import type { StaffRole } from "../../shared/components/ui/StaffBadge";
+import type { StaffIdentity } from "../../shared/staff/staff.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StrangerMemberResult } from "./api/useStrangerMemberSearch";
 import type { Conversation } from "./data";
@@ -46,7 +46,8 @@ interface NewMessagePickListProps {
   /** MSG-1 fall-through: members found who aren't an accepted connection yet
    *  (empty in forward mode). */
   strangers: StrangerMemberResult[];
-  staffMap: Record<string, StaffRole>;
+  /** The roster map from `useStaffMap()`: account tier plus badged grants. */
+  staffMap: Record<string, StaffIdentity>;
   loading: boolean;
   /** Total accepted connections before the query filter — distinguishes "no
    *  connections at all" from "no connections match this search". */
@@ -91,7 +92,12 @@ export function NewMessagePickList({
                 slug: person.slug,
                 name: person.name,
                 avatarUrl: person.avatarUrl,
-                staffRole: person.slug ? staffMap[person.slug] : undefined,
+                staffRole: person.slug
+                  ? (staffMap[person.slug]?.tier ?? undefined)
+                  : undefined,
+                staffBadgedRoles: person.slug
+                  ? staffMap[person.slug]?.badgedStaffRoles
+                  : undefined,
               }}
               secondary={person.pronouns}
             />
@@ -123,7 +129,8 @@ export function NewMessagePickList({
                 slug: stranger.slug,
                 name: stranger.name,
                 avatarUrl: stranger.avatarUrl,
-                staffRole: staffMap[stranger.slug],
+                staffRole: staffMap[stranger.slug]?.tier ?? undefined,
+                staffBadgedRoles: staffMap[stranger.slug]?.badgedStaffRoles,
               }}
               secondary={t("messages:newMessage.strangerSub")}
             />

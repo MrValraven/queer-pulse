@@ -126,10 +126,17 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
  * server-side — the reporter never chooses it.
  */
 export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
+  // `hate_speech` sits beside `harassment` here for the same reason it does on
+  // `post`: reporting a PERSON for a slur had no code of its own, so it had to
+  // be filed as `discrimination`. Severity lands the same either way, but the
+  // taxonomy the transparency report and the moderator queue read then said
+  // the platform receives no hate-speech reports about people, only about
+  // their posts, which is a false picture of what members are living through.
   member: [
     "outing",
     "doxxing",
     "harassment",
+    "hate_speech",
     "unwanted_contact",
     "impersonation",
     "discrimination",
@@ -171,8 +178,34 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "spam",
     "other",
   ],
-  community: ["hate_speech", "spam", "other"],
+  // A whole community, reported by a member or by somebody looking in from
+  // outside. Shaped on `post`, the closest analogue: a community is a body of
+  // member-authored posting, and the harms it can carry are the harms a post
+  // can carry. `outing` and `doxxing` are the load-bearing additions. A
+  // community whose culture is to name who turned up, or to circulate
+  // somebody's address, transition status or old name, is exactly the shape
+  // that needs the one-hour emergency band, and while this list held three
+  // codes the worst a reporter could say about it was `hate_speech`, which
+  // tops out at medium.
+  community: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
+    "discrimination",
+    "spam",
+    "off_topic",
+    "other",
+  ],
+  // `outing` and `doxxing` lead all three housing subjects for the reason they
+  // lead `member` and `message`: a landlord threatening to tell somebody's
+  // family, or a flatmate posting their address, transition status or old
+  // name, is the central physical danger in queer housing, and it is the only
+  // thing here that earns the one-hour emergency band. Without them a housing
+  // report topped out at high.
   housing: [
+    "outing",
+    "doxxing",
     "housing_scam",
     "housing_unsafe",
     "not_affirming",
@@ -182,7 +215,10 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "other",
   ],
   flatmate: [
+    "outing",
+    "doxxing",
     "harassment",
+    "hate_speech",
     "not_affirming",
     "discrimination",
     "impersonation",
@@ -190,9 +226,12 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "other",
   ],
   landlord: [
+    "outing",
+    "doxxing",
     "not_affirming",
     "discrimination",
     "harassment",
+    "hate_speech",
     "impersonation",
     "spam",
     "other",

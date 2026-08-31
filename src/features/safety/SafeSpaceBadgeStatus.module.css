@@ -41,7 +41,7 @@
   inline-size: 38px;
   block-size: 38px;
   flex-shrink: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink);
 }
@@ -71,7 +71,7 @@
 .title {
   margin: 0;
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 500;
   line-height: 1.25;
   color: inherit;
@@ -79,7 +79,7 @@
 
 .lead {
   margin: 6px 0 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   max-inline-size: 62ch;
   color: var(--ink-60);
@@ -87,14 +87,14 @@
 
 .panel[data-tone="suspended"] .lead,
 .panel[data-tone="removed"] .lead {
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
 }
 
 .reason {
   margin: 10px 0 0;
   padding: 10px 12px;
-  border-radius: 10px;
-  font-size: 13.5px;
+  border-radius: var(--radius-10);
+  font-size: var(--text-13-5);
   line-height: 1.5;
   background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink);
@@ -102,7 +102,7 @@
 
 .panel[data-tone="suspended"] .reason,
 .panel[data-tone="removed"] .reason {
-  background: rgba(247, 243, 238, 0.1);
+  background: rgba(var(--cream-rgb), 0.1);
   color: var(--cream);
 }
 
@@ -118,7 +118,7 @@
 }
 
 .fact dt {
-  font-size: 11px;
+  font-size: var(--text-11);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -126,13 +126,13 @@
 
 .fact dd {
   margin: 2px 0 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
 }
 
 .panel[data-tone="suspended"] .fact dt,
 .panel[data-tone="removed"] .fact dt {
-  color: rgba(247, 243, 238, 0.5);
+  color: rgba(var(--cream-rgb), 0.5);
 }
 
 .panel[data-tone="suspended"] .fact dd,
@@ -159,7 +159,7 @@
 .flagNote {
   flex: 1 1 22ch;
   min-width: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }

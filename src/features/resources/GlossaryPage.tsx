@@ -3,7 +3,12 @@ import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { ResourceHero } from "./ResourceHero";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -87,7 +92,12 @@ export function GlossaryPage() {
   const { t } = useTranslation();
   const [lang, setLang] = useState<Lang>("en");
   const [query, setQuery] = useState("");
-  const { blocks: allBlocks, loading: dataLoading } = useGlossaryData();
+  const {
+    blocks: allBlocks,
+    loading: dataLoading,
+    isError: hasGlossaryError,
+    refetch: refetchGlossary,
+  } = useGlossaryData();
   const loading = useSimulatedLoad() || dataLoading;
   const q = query.trim().toLowerCase();
   const copy = GLOSSARY_COPY[lang];
@@ -207,6 +217,22 @@ export function GlossaryPage() {
           </div>
 
           {loading && <GlossarySkeleton />}
+
+          {/* A failed term fetch used to render as an alphabet with nothing
+              under it, which reads as an empty glossary. It now says the
+              glossary did not load and offers a retry (DES-22). */}
+          {!loading && hasGlossaryError && allBlocks.length === 0 && (
+            <LoadErrorState
+              onRetry={refetchGlossary}
+              title={
+                <Translation
+                  i18nKey="resources:glossary.loadError.title"
+                  components={{ em: <em /> }}
+                />
+              }
+              description={t("resources:glossary.loadError.body")}
+            />
+          )}
 
           {!loading &&
             blocks.map((b, bi) => (

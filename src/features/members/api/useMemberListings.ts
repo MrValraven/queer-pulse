@@ -1,8 +1,22 @@
+import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { cardDtoToPlace } from "../../marketing/api/directory.adapters";
 import { getListingsByMember } from "../../marketing/api/directory.api";
 import { registryPlacesForMember, type MemberPlace } from "../places.data";
+
+export interface MemberListingsResult {
+  /** The member's public places. Empty until the fetch lands. */
+  places: MemberPlace[];
+  /**
+   * True when the live fetch failed. A failure has to be told apart from a
+   * member who genuinely runs nothing (DES-22): the caller shows a retryable
+   * error panel instead of the "no places" silence.
+   */
+  isError: boolean;
+  /** Re-runs the failed fetch. Wire it to the error panel's retry button. */
+  refetch: () => void;
+}
 
 /**
  * The public places a member runs, for the visitor view of `PlacesSection`.
@@ -13,12 +27,12 @@ import { registryPlacesForMember, type MemberPlace } from "../places.data";
  * `MemberPlace` view model — so a real member's places show for visitors too,
  * not just for the owner (whose own listings come from `GET /listings/mine`).
  *
- * Returns a plain array so it stays a drop-in for the previous synchronous
- * `registryPlacesForMember(slug)` read point.
+ * Returns the places alongside an `isError`/`refetch` pair: an outage must not
+ * render as "this member runs nothing" (DES-22).
  */
-export function useMemberListings(memberSlug: string): MemberPlace[] {
+export function useMemberListings(memberSlug: string): MemberListingsResult {
   const { demoMode } = useDemoMode();
-  const query = useQuery<MemberPlace[]>({
+  const listingsQuery = useQuery<MemberPlace[]>({
     queryKey: ["memberListings", demoMode, memberSlug],
     enabled: !demoMode && memberSlug.length > 0,
     initialData: demoMode ? registryPlacesForMember(memberSlug) : undefined,
@@ -33,5 +47,18 @@ export function useMemberListings(memberSlug: string): MemberPlace[] {
       }));
     },
   });
-  return query.data ?? [];
+
+  // `refetch` off react-query is referentially stable, so the retry handed to
+  // the error panel stays stable too.
+  const { refetch: refetchListings } = listingsQuery;
+  const refetch = useCallback(() => {
+    void refetchListings();
+  }, [refetchListings]);
+
+  return {
+    places: listingsQuery.data ?? [],
+    // Demo resolves synchronously off the static registry: nothing to fail.
+    isError: !demoMode && listingsQuery.isError,
+    refetch,
+  };
 }

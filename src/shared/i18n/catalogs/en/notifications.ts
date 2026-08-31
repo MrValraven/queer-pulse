@@ -104,6 +104,19 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> invited you to co-host a gathering.",
   "type.event_cohost_invite.meta": "Co-host invitation",
 
+  // PRD-18. Reaches members who saved a gathering or said maybe, never anyone
+  // who already holds a seat. Pluralised on `count`, mirrored from the
+  // payload's `seatsRemaining`.
+  // Flat form for a row that arrived without a seat count: it still has to
+  // read as a sentence rather than leaving "{seatsRemaining}" on screen.
+  "type.event_nearly_full.text":
+    "A gathering you were looking at is nearly full.",
+  "type.event_nearly_full.text_one":
+    "A gathering you were looking at has 1 spot left.",
+  "type.event_nearly_full.text_other":
+    "A gathering you were looking at has {seatsRemaining} spots left.",
+  "type.event_nearly_full.meta": "Last few spots",
+
   "type.event_reminder.text": "A gathering you're going to is coming up.",
   "type.event_reminder.meta": "Gathering reminder",
 
@@ -196,6 +209,34 @@ export const notifications: Catalog = {
   "type.community_report_filed.emergency.text":
     "An urgent report in {communityName} needs a decision within the hour.",
   "type.community_report_filed.emergency.meta": "Urgent report",
+
+  // ── Ban-evasion escalations (PRD-31) ─────────────────────────────────────
+  // The two rows that close the loop on a community moderator asking platform
+  // staff to look at a join request. THE SAME RULE GOVERNS BOTH AS GOVERNS THE
+  // FLAG ITSELF: neither may say more than it knows.
+  //
+  // The staff row is a work item. It names the community and says a moderator
+  // asked. It never names the applicant and never hints at an answer, because
+  // nobody has looked yet.
+  //
+  // The moderator's row says the escalation is closed and stops. What staff
+  // found is the cross-community judgement the one-bit flag exists to withhold,
+  // and the payload deliberately carries no note, no resolver and no verdict,
+  // so the copy must not fill that silence with an implication. The second
+  // sentence exists to say the obvious thing out loud: closing the escalation
+  // decided nothing about the request, and the moderator still decides.
+  //
+  // Both are in-app only. QueerPulse sends no email, so neither may say
+  // anything is on its way by any other channel.
+  "type.ban_evasion_escalation_raised.text":
+    "A moderator has asked platform staff to look at a join request in {communityName}.",
+  "type.ban_evasion_escalation_raised.meta": "Ban evasion escalation",
+  "type.ban_evasion_escalation_raised.communityFallback": "a community",
+  "type.ban_evasion_escalation_resolved.text":
+    "Platform staff have closed the escalation you raised in {communityName}. The decision on the join request is still yours.",
+  "type.ban_evasion_escalation_resolved.meta": "Escalation closed",
+  "type.ban_evasion_escalation_resolved.communityFallback":
+    "the community you moderate",
 
   // ── Removed from a community (TS-10) ─────────────────────────────────────
   // The payload names no moderator, so this copy does not either. It does
@@ -535,8 +576,16 @@ export const notifications: Catalog = {
   "actions.viewProfile": "View profile",
   "actions.accept": "Accept",
   "actions.decline": "Decline",
+  // PRD-15. Confirmations for the two answers the "wants to connect" row now
+  // carries. The row is removed once the server agrees, so these say what
+  // actually happened rather than what was attempted.
+  "actions.acceptedToast": "Connected with {name}",
+  "actions.declinedToast": "Politely declined",
   "actions.readNow": "Read now",
   "actions.seeDetails": "See details",
+  // PRD-31: the demo ban-evasion row sends its moderator back to their own
+  // join queue, which is where the decision on the request still waits.
+  "actions.openRequestsQueue": "Open the requests queue",
   "actions.seeBarterBoard": "See barter board",
   "actions.viewReplies": "View replies",
   "actions.readReport": "Read report",
@@ -606,6 +655,8 @@ export const notifications: Catalog = {
   "mentions.markAllRead": "Mark all read",
   "mentions.markAllReadToast": "All marked as read",
   "mentions.empty.title": "No mentions here",
+  "mentions.loadErrorBody":
+    "We couldn't load your mentions. Anything waiting for you is still there. Try again in a moment.",
   "mentions.empty.description":
     "Nothing in this view right now. When someone tags you, it’ll show up here. No need to go looking.",
   // Live has no mentions inbox endpoint yet — shown instead of a silent empty

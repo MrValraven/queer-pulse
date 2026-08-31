@@ -578,7 +578,7 @@ export const community: Catalog = {
   "family.tab.coparenting.card.legalFrameworks.body":
     "Em Portugal, ambos os progenitores podem ser registados legalmente à nascença se forem dadores conhecidos ou coparentes e tiverem um acordo legal prévio. Um acordo de coparentalidade é fortemente recomendado. Envolve um ou uma advogada de direito da família desde cedo.",
   "family.tab.coparenting.card.legalFrameworks.note":
-    "Faz isto antes da conceção, não depois",
+    "Deixa isto tratado antes da conceção",
   "family.tab.coparenting.card.international.eyebrow":
     "Situações internacionais",
   "family.tab.coparenting.card.international.title":

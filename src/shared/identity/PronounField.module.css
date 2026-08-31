@@ -6,11 +6,11 @@
 }
 .label {
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .helper {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin: 0 0 8px;
 }
@@ -21,12 +21,12 @@
 }
 .chip {
   padding: 7px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--plum-rgb), 0.18);
   background: var(--paper);
   color: var(--ink);
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   cursor: pointer;
   transition:
     background 0.15s var(--ease),
@@ -40,7 +40,7 @@
 .writeOwn {
   margin-top: 10px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .customList {
@@ -54,17 +54,17 @@
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--ink);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
 }
 .customRemove {
   background: none;
   border: 0;
   cursor: pointer;
   color: var(--ink-40);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1;
 }
 .inputRow {
@@ -75,10 +75,10 @@
 .input {
   flex: 1;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--plum-rgb), 0.18);
   background: var(--paper);
   font: inherit;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }

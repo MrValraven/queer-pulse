@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiCheck, FiInfo } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiInfo, FiPlus } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -127,7 +127,9 @@ export function PrepTab() {
               onClick={() => setOpenFaq(openFaq === i ? null : i)}
             >
               <span className={styles.faqQText}>{f.q}</span>
-              <span className={styles.faqArrow}>+</span>
+              <span className={styles.faqArrow} aria-hidden>
+                <FiPlus />
+              </span>
             </button>
             {openFaq === i && <div className={styles.faqA}>{f.a}</div>}
           </div>

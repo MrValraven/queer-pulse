@@ -11,6 +11,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -155,9 +156,10 @@ export function PushDevicesPage() {
           {loading ? (
             Array.from({ length: 2 }).map((_, i) => <DeviceSkeleton key={i} />)
           ) : failed ? (
-            <EmptyState
+            // A failed read gets a retry, not just a sentence (DES-22).
+            <LoadErrorState
               compact
-              icon={<FiBellOff />}
+              onRetry={refetch}
               title={t("settings:pushDevices.empty.error.title")}
               description={t("settings:pushDevices.empty.error.desc")}
             />

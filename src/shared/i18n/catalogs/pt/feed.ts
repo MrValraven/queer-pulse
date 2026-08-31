@@ -141,8 +141,18 @@ export const feed: Catalog = {
   "moderation.blockDialog.submitCta": "Bloquear {name}",
 
   "moderation.reportConfirm.title": "Obrigade, <em>estamos a tratar disso</em>",
+  // Ver o comentário na versão EN: as linhas de banda espelham o
+  // `SLA_WINDOW_MS` do `report-severity.ts` do backend.
   "moderation.reportConfirm.body":
-    "A nossa equipa de moderação vai rever esta publicação sobre {name}. Para algo urgente, contacta-nos diretamente em {email}.",
+    "A nossa equipa de moderação vai rever esta publicação sobre {name}.",
+  "moderation.reportConfirm.band.emergency":
+    "Foi para a banda de emergência: o motivo que escolheste é um dos dois que são vistos dentro de uma hora.",
+  "moderation.reportConfirm.band.high":
+    "Foi para a banda de prioridade alta, que é revista dentro de 24 horas.",
+  "moderation.reportConfirm.band.medium":
+    "Está na fila normal, que é revista dentro de três dias.",
+  "moderation.reportConfirm.band.low":
+    "Está na fila normal, que é revista dentro de sete dias.",
   "moderation.reportDialog.title": "Denunciar esta publicação",
   "moderation.reportDialog.sub":
     "Diz-nos o que está errado. As denúncias são confidenciais e revistas pela nossa equipa de segurança.",

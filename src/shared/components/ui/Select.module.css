@@ -26,11 +26,11 @@
   min-height: 48px;
   font-family: var(--sans);
   /* >=16px so iOS Safari never zooms on focus. */
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 15px;
   text-align: left;
   cursor: pointer;
@@ -43,7 +43,7 @@
   outline: none;
   border-color: var(--line-strong);
   background: var(--paper);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
 }
 .trigger[aria-expanded="true"] {
   border-color: var(--line-strong);
@@ -62,9 +62,9 @@
 .trigger.sm {
   min-height: 40px;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--text-14);
   border-width: 1px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 8px 12px;
 }
 .trigger.sm .chevron {
@@ -146,10 +146,10 @@
      180px clears the widest real option row seen so far ("By neighbourhood"
      needs ~167px including its check-icon lane). */
   min-width: 180px;
-  z-index: 40;
+  z-index: var(--z-popover);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   box-shadow: var(--shadow-panel);
   padding: 8px;
   transform-origin: top;
@@ -164,11 +164,11 @@
 .container .search {
   width: 100%;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   padding: 9px 12px;
   margin-bottom: 6px;
   outline: none;
@@ -181,7 +181,7 @@
 }
 .container .search:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum);
 }
 
 /* ── Options ── */
@@ -201,10 +201,10 @@
   width: 100%;
   padding: 9px 11px;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   background: none;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   text-align: left;
   color: var(--ink);
   cursor: pointer;
@@ -217,7 +217,7 @@
   cursor: not-allowed;
 }
 .optionSelected {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }
 .optionLabel {
@@ -226,12 +226,12 @@
 }
 .check {
   flex-shrink: 0;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .groupLabel {
   padding: 10px 11px 4px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -245,5 +245,33 @@
   gap: 8px;
   padding: 18px 12px;
   color: var(--ink-60);
-  font-size: 14px;
+  font-size: var(--text-14);
+}
+
+/* ── Local copies of shared keyframes ──
+   CSS Modules rewrites every animation NAME it sees here into a file-scoped
+   hash, including names whose @keyframes lives in global effects.css. The
+   reference then resolves to nothing and the animation silently never runs,
+   with no error anywhere. A keyframe used from a module has to be declared in
+   that module. Keep these in step with src/styles/tokens/effects.css. */
+@keyframes qpMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Dark theme — see Calendar.module.css: the clear chip's disc is a --plum-rgb
+   tint, which does not flip. */
+:global([data-theme="dark"]) .clear {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .clear:hover {
+    background: rgba(var(--cream-rgb), 0.18);
+  }
 }

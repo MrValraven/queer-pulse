@@ -18,7 +18,7 @@
   font-weight: 400;
 }
 .sub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.62);
   max-width: 48ch;
   margin: 20px auto 28px;

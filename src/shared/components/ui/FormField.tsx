@@ -17,7 +17,11 @@ interface FormFieldProps {
   helper?: ReactNode;
   /** Error message — shown in coral and sets `aria-invalid` on the control. */
   error?: ReactNode;
-  /** Success message — shown in jade (e.g. "Username available"). */
+  /**
+   * Success message — shown in jade (e.g. "Username available"). Announced
+   * politely, so keep it to real text: a live region has nothing to read out of
+   * an icon-only node.
+   */
   ok?: ReactNode;
   /** Optional trailing label content, e.g. a live character count. */
   labelAside?: ReactNode;
@@ -70,10 +74,10 @@ function wireableControl(
  * the CSS module, so callers don't add a className to the input itself.
  *
  * When that child is a native control, this component owns its accessibility
- * wiring — `id` + `htmlFor`, `aria-describedby` for the helper/error text,
- * `aria-invalid`, `aria-required` — so no call site has to repeat it. A caller
- * that passes its own `id` keeps it; the label follows the caller's id rather
- * than clobbering it.
+ * wiring — `id` + `htmlFor`, `aria-describedby` for the helper/error/success
+ * text, `aria-invalid`, `aria-required` — so no call site has to repeat it. A
+ * caller that passes its own `id` keeps it; the label follows the caller's id
+ * rather than clobbering it.
  */
 export function FormField({
   label,
@@ -90,8 +94,13 @@ export function FormField({
   const controlId = `${uid}-control`;
   const helperId = `${uid}-helper`;
   const errorId = `${uid}-error`;
+  const okId = `${uid}-ok`;
 
   const control = wireableControl(children);
+  // An error takes the status slot over a success message, so the same flag
+  // drives both the description below and the render: an id in
+  // `aria-describedby` must always point at an element that is on the page.
+  const isShowingOk = !error && Boolean(ok);
   // The helper stays visible alongside an error rather than being replaced by
   // it: the hint is what tells you how to fix the thing that just failed.
   const describedBy =
@@ -99,6 +108,7 @@ export function FormField({
       control?.props["aria-describedby"],
       helper ? helperId : null,
       error ? errorId : null,
+      isShowingOk ? okId : null,
     ]
       .filter(Boolean)
       .join(" ") || undefined;
@@ -146,7 +156,17 @@ export function FormField({
           {error}
         </span>
       ) : (
-        ok && <span className={styles.ok}>{ok}</span>
+        // Polite, so a confirmation never cuts across what the user is typing.
+        isShowingOk && (
+          <span
+            className={styles.ok}
+            id={okId}
+            role="status"
+            aria-live="polite"
+          >
+            {ok}
+          </span>
+        )
       )}
     </div>
   );

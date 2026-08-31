@@ -5,7 +5,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -16,8 +16,8 @@
     var(--keyboard-inset, 0px),
     env(safe-area-inset-bottom)
   );
-  background: rgba(var(--plum-rgb), 0.5);
-  backdrop-filter: blur(3px);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   animation: fade 0.2s var(--ease);
 }
 @media (min-width: 720px) {
@@ -52,7 +52,7 @@
     max-width: 520px;
     max-height: 86svh;
     border-radius: var(--radius-card);
-    box-shadow: 0 30px 80px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-e4);
   }
 }
 @keyframes rise {
@@ -89,7 +89,7 @@
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -110,7 +110,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   line-height: 1.5;
   margin-bottom: 22px;
@@ -134,7 +134,7 @@
 }
 .renameLabel {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 7px;
@@ -149,10 +149,10 @@
   flex: 1 1 180px;
   min-width: 0;
   border: 1px solid rgba(var(--line-rgb), 0.18);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 10px 13px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
   background: var(--paper);
   outline: none;
@@ -164,7 +164,7 @@
 /* Quiet explanation shown where the privacy select sits in demo mode. */
 .fieldNote {
   margin: -4px 0 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-40);
 }
@@ -174,7 +174,7 @@
 }
 .field label {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 7px;
@@ -183,10 +183,10 @@
 .field select {
   width: 100%;
   border: 1px solid rgba(var(--line-rgb), 0.18);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 12px 14px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
   background: var(--paper);
   outline: none;
@@ -207,7 +207,7 @@
   background: none;
   border: none;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink-40);
   cursor: pointer;
@@ -230,17 +230,17 @@
   gap: 12px;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
 }
 .rowBadge {
   flex: none;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.12);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 6px 8px;
 }
 .rowInfo {
@@ -250,7 +250,7 @@
   min-width: 0;
 }
 .rowTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
   text-decoration: none;
@@ -261,7 +261,7 @@
   }
 }
 .rowMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .rowRemove {
@@ -272,7 +272,7 @@
   width: 30px;
   height: 30px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   color: var(--ink-40);
   cursor: pointer;
@@ -295,7 +295,7 @@
   text-align: center;
   padding: 40px 20px;
   color: var(--ink-40);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .empty svg {
   width: 30px;
@@ -317,7 +317,7 @@
   text-align: left;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
   cursor: pointer;
   font-family: var(--sans);
@@ -334,10 +334,10 @@
   height: 36px;
   display: grid;
   place-items: center;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   background: rgba(var(--plum-rgb), 0.07);
   font-weight: 700;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-strong);
 }
 .pickInfo {
@@ -347,12 +347,12 @@
   flex: 1;
 }
 .pickName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .pickMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .pickAdd {
@@ -399,7 +399,7 @@
   color: var(--accent);
 }
 .success p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.55;
   max-width: 380px;

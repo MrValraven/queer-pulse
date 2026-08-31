@@ -1,5 +1,6 @@
 // src/shared/identity/PronounField.tsx
 import { useId, useState, type ReactNode } from "react";
+import { FiX } from "react-icons/fi";
 import { PRONOUN_PRESETS } from "./pronouns";
 import styles from "./PronounField.module.css";
 
@@ -81,7 +82,7 @@ export function PronounField({ value, onChange, labels }: PronounFieldProps) {
                 aria-label={labels.removeAria(entry)}
                 onClick={() => onChange(value.filter((item) => item !== entry))}
               >
-                ×
+                <FiX aria-hidden />
               </button>
             </span>
           ))}

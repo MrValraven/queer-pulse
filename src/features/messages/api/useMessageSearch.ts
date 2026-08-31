@@ -45,6 +45,11 @@ export interface MessageSearchState {
   isLoading: boolean;
   /** True once the (trimmed) query is long enough to have searched. */
   enabled: boolean;
+  /** True when the live search request failed. Surfaced rather than swallowed
+   *  (DES-22) so "no matches" is never printed over an outage. */
+  isError: boolean;
+  /** Re-runs the failed search. */
+  refetch: () => void;
 }
 
 const OFFICIAL_NAME = "QueerPulse Team";
@@ -248,5 +253,7 @@ export function useMessageSearch(
     totalHits,
     isLoading: enabled && !demoMode && liveQuery.isLoading,
     enabled,
+    isError: enabled && !demoMode && liveQuery.isError,
+    refetch: () => void liveQuery.refetch(),
   };
 }

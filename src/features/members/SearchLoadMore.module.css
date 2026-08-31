@@ -9,7 +9,7 @@
 .loadMoreError {
   margin: 0;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   text-align: center;
 }
 .loadMoreEnd {

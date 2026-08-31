@@ -12,7 +12,7 @@
 .icon {
   display: flex;
   flex: none;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--accent-ink);
 }
 
@@ -25,13 +25,13 @@
 }
 
 .title {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .meta {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60, var(--ink));
   overflow-wrap: anywhere;

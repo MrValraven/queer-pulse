@@ -3,13 +3,21 @@
   align-items: center;
   gap: 5px;
   padding: 2px 9px;
-  border-radius: 999px;
-  font-size: 11.5px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--plum);
-  background: var(--jade-10, rgba(var(--plum-rgb), 0.06));
+  background: rgba(var(--line-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   white-space: nowrap;
+}
+
+/* Dark theme — the badge painted plum text on a plum tint, and neither flips,
+   so on the dark surface the label went dark-on-dark and the chip read as an
+   empty outline. */
+:global([data-theme="dark"]) .badge {
+  background: rgba(var(--cream-rgb), 0.08);
+  color: var(--ink);
 }

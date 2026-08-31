@@ -7,6 +7,12 @@ import type { OrgTier } from "../orgTiers.data";
 export interface OrgTiersResult {
   tiers: OrgTier[];
   isLoading: boolean;
+  /** True when the tiers read failed (DES-22). The section renders the shared
+   *  error panel rather than vanishing, which would read as "we offer no
+   *  partnership tiers". */
+  isError: boolean;
+  /** Re-run the failed read, for the error state's retry. */
+  refetch: () => void;
 }
 
 /** Partnership tiers for the For Organisations page. Demo → ORG_TIERS_DEMO;
@@ -24,5 +30,10 @@ export function useOrgTiers(): OrgTiersResult {
       return dtos.map(dtoToOrgTier);
     },
   });
-  return { tiers: query.data ?? [], isLoading: query.isLoading };
+  return {
+    tiers: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

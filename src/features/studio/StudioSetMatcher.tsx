@@ -1,4 +1,4 @@
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiPlay } from "react-icons/fi";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -72,14 +72,19 @@ export function StudioSetMatcher({
       </div>
       <button
         type="button"
-        className={`${s.bt} ${s.btP}`}
+        className={`${s.bt} ${s.btP} ${s.btWithIcon}`}
         style={{ marginTop: 14 }}
         onClick={onRun}
         disabled={running}
       >
-        {running
-          ? t("studio:setSubmission.matcher.matchingCta")
-          : t("studio:setSubmission.matcher.runCta")}
+        {running ? (
+          t("studio:setSubmission.matcher.matchingCta")
+        ) : (
+          <>
+            <FiPlay aria-hidden />
+            {t("studio:setSubmission.matcher.runCta")}
+          </>
+        )}
       </button>
 
       {ran && (

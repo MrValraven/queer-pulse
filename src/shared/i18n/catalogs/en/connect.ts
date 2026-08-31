@@ -21,10 +21,14 @@ export const connect: Catalog = {
   "page.lead":
     "Your main profile doesn't do followers. You connect with people once you've met them: at a gathering, through someone, or because they vouched for you. Quality over count.",
   "page.inviteCta": "Invite a friend",
+  "page.vouchCta": "Vouch for someone",
   "page.note":
     "<b>No follower counts here, on purpose.</b> Looking to follow a persona's updates without connecting first? That's what personas are for. Connections are a two-way thing: they unlock messaging and tagged updates.",
   "page.loadMoreLoading": "Loading…",
   "page.loadMore": "Load more",
+  "page.loadError.title": "We couldn't load <em>your connections</em>",
+  "page.loadError.body":
+    "Everyone you are connected to is still there. The request didn't come back, so try again in a moment.",
 
   // Toasts fired from ConnectionsPage actions
   "toast.connected": "Connected with {name}",
@@ -173,6 +177,25 @@ export const connect: Catalog = {
   // Terminal notice panels (ConnectNoticePanel) — shown when a reach-out can't
   // go through and retrying won't help. Copy stays warm and never reveals a
   // block we weren't explicitly told about (see cannotConnect).
+  // "They asked you first" panel (ConnectIncomingPanel, PRD-03). Reached from
+  // the store's own `incoming` list, or from the 409 for a request that landed
+  // between the page loading and the send. Two real answers, and the words the
+  // member had already written ride into the conversation an accept opens.
+  "incoming.title": "{name} asked <em>you</em> first.",
+  "incoming.body":
+    "{name} sent you a connection request and it's still waiting. Accept it and you can both message each other, or decline and they're never told anything beyond that it went quiet.",
+  "incoming.bodyWithDraft":
+    "{name} sent you a connection request and it's still waiting. Accept it and what you just wrote goes straight into the conversation, ready for you to look over before you send it.",
+  "incoming.accept": "Accept",
+  "incoming.acceptAndSend": "Accept and take my message",
+  "incoming.decline": "Politely decline",
+  "incoming.later": "Decide later",
+  // Keeping a composed message when a reach-out can't go through (PRD-03).
+  "notice.draftKept": "Your message is still here. Take it with you.",
+  "notice.copyDraft": "Copy my message",
+  "notice.draftCopied": "Copied. Your message is on your clipboard.",
+  "notice.draftCopyFailed":
+    "Your browser wouldn't let us copy. Select the text and copy it yourself.",
   "notice.close": "Close",
   "notice.alreadyPending.title": "You've already <em>reached out.</em>",
   "notice.alreadyPending.body":

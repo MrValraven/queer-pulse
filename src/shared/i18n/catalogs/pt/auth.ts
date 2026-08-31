@@ -333,11 +333,18 @@ export const auth: Catalog = {
     "Este código é a forma de consultares o teu pedido. Guarda-o num sítio onde o voltes a encontrar: não enviamos nada por email, e não conseguimos emitir o código uma segunda vez.",
   "requestInvite.reference.checkCta": "Consultar o meu pedido",
   // O caso 409: já existe um pedido em aberto, por isso não há linha nova nem
-  // código novo. Nunca mostrar um espaço vazio; apontar para o que já têm.
+  // código novo. Nunca mostrar um espaço vazio; mostrar os dois caminhos de
+  // volta. Não há aqui nenhum "escreve o teu email e nós procuramos": sem
+  // serviço de email, esse formulário teria de responder a quem escreve, o que
+  // significa dizer a qualquer estranho se uma dada morada já se candidatou.
+  "requestInvite.reference.backTitle": "Voltar ao teu pedido",
   "requestInvite.reference.noCode":
     "O teu primeiro pedido já tem um código, do dia em que o enviaste. Não há um novo aqui, porque não há um pedido novo.",
   "requestInvite.reference.enterCodeCta":
     "Consultar o meu pedido com esse código",
+  "requestInvite.reference.signInBody":
+    "Perdeste o código? Entra com a conta Google da morada que usaste no pedido. É provares que a morada é tua que nos permite levar-te de volta ao teu pedido.",
+  "requestInvite.reference.signInCta": "Continuar com o Google",
 
   // Estados antecipados, mostrados a partir de GET /platform-status ANTES do
   // envio, para ninguém preencher o formulário todo só para ser rejeitade ao
@@ -399,25 +406,78 @@ export const auth: Catalog = {
   "joinRequestStatus.approved.copiedToast": "Link de convite copiado.",
   "joinRequestStatus.approved.copyErrorToast":
     "Não conseguimos copiar. Seleciona o link e copia à mão.",
+  // PRD-02. O prazo do convite, no ecrã que entrega o convite. Nada vai
+  // lembrar a pessoa: não se envia email nenhum, e ela não tem conta onde
+  // receber notificações. O relógio destas linhas começa na primeira vez que
+  // abre esta página, por isso a data é sempre uma que já lhe foi mostrada.
+  "joinRequestStatus.approved.deadline": "Este link funciona até {date}.",
+  "joinRequestStatus.approved.deadlineDays_one":
+    "Este link funciona mais {count} dia, até {date}.",
+  "joinRequestStatus.approved.deadlineDays_other":
+    "Este link funciona mais {count} dias, até {date}.",
+  "joinRequestStatus.approved.deadlineToday":
+    "Este link deixa de funcionar hoje. Abre-o agora.",
   "joinRequestStatus.approved.cta": "Abrir o meu convite",
   "joinRequestStatus.approved.note":
     "Este convite traz uma pessoa, e essa pessoa és tu. Guarda o link só para ti.",
   "joinRequestStatus.approved.foot":
     "Problemas a abri-lo? <a>Falar connosco</a>",
 
-  // Aprovado, mas o convite já foi usado, revogado ou expirou. Um estado real,
-  // com o seu próprio caminho de recuperação, nunca misturado com o anterior.
-  "joinRequestStatus.approvedSpent.eyebrow": "Aprovado",
-  "joinRequestStatus.approvedSpent.title":
-    "O teu convite <em>já não está válido.</em>",
-  "joinRequestStatus.approvedSpent.lead":
-    "Foste aprovade a {date}, mas o convite por trás deste código já foi usado ou expirou. Diz-nos e emitimos um novo.",
-  "joinRequestStatus.approvedSpent.leadNoDate":
-    "Foste aprovade, mas o convite por trás deste código já foi usado ou expirou. Diz-nos e emitimos um novo.",
-  "joinRequestStatus.approvedSpent.cta": "Pedir um novo convite",
+  // Aprovado, mas o convite já não está lá. TRÊS situações diferentes, que
+  // antes partilhavam um só ecrã sem saída. Só a que expirou é que a pessoa
+  // pode resolver sozinha, por isso só essa tem botão.
   "joinRequestStatus.approvedSpent.signInCta": "Já criei a minha conta",
-  "joinRequestStatus.approvedSpent.foot":
+
+  // Expirado. O caso recuperável: o botão abre uma nova janela no mesmo
+  // convite, para que uma aprovação não possa expirar para o nada.
+  "joinRequestStatus.approvedSpent.expired.eyebrow": "Aprovado",
+  "joinRequestStatus.approvedSpent.expired.title":
+    "O teu link <em>precisa de ser renovado.</em>",
+  "joinRequestStatus.approvedSpent.expired.lead":
+    "Foste aprovade a {date}, e o sim mantém-se. O link é que ficou sem uso tempo suficiente para expirar, e isso resolve-se aqui mesmo.",
+  "joinRequestStatus.approvedSpent.expired.leadNoDate":
+    "Foste aprovade, e o sim mantém-se. O link é que ficou sem uso tempo suficiente para expirar, e isso resolve-se aqui mesmo.",
+  "joinRequestStatus.approvedSpent.expired.cta": "Dá-me um link novo",
+  "joinRequestStatus.approvedSpent.expired.refreshing": "A obter o teu link",
+  "joinRequestStatus.approvedSpent.expired.foot":
     "O sim mantém-se. Só o link é que expirou.",
+
+  // Já usado. Alguém criou uma conta com este convite, por isso não há nada
+  // para reemitir e oferecê-lo seria mentira.
+  "joinRequestStatus.approvedSpent.used.eyebrow": "Aprovado",
+  "joinRequestStatus.approvedSpent.used.title":
+    "Este convite <em>já foi usado.</em>",
+  "joinRequestStatus.approvedSpent.used.lead":
+    "Foste aprovade a {date}, e entretanto foi criada uma conta com este convite. Se foste tu, entra. Se não foste, diz-nos já.",
+  "joinRequestStatus.approvedSpent.used.leadNoDate":
+    "Foste aprovade, e entretanto foi criada uma conta com este convite. Se foste tu, entra. Se não foste, diz-nos já.",
+  "joinRequestStatus.approvedSpent.used.foot":
+    "Um convite traz uma pessoa, e este já foi usado.",
+
+  // Retirado por moderação. Não é a pessoa que o pode desfazer, e nenhum botão
+  // finge o contrário. Fica antes alguém com quem falar.
+  "joinRequestStatus.approvedSpent.revoked.eyebrow": "Aprovado",
+  "joinRequestStatus.approvedSpent.revoked.title":
+    "Este convite <em>já não está aberto.</em>",
+  "joinRequestStatus.approvedSpent.revoked.lead":
+    "Foste aprovade a {date}, mas este convite foi entretanto retirado. Não conseguimos reativá-lo daqui, e preferimos que ouças o motivo de uma pessoa.",
+  "joinRequestStatus.approvedSpent.revoked.leadNoDate":
+    "Foste aprovade, mas este convite foi entretanto retirado. Não conseguimos reativá-lo daqui, e preferimos que ouças o motivo de uma pessoa.",
+  "joinRequestStatus.approvedSpent.revoked.foot":
+    "Escreve-nos e alguém vai ler.",
+
+  // Porque é que uma renovação foi recusada. Uma frase para cada caso, nunca
+  // um código em bruto.
+  "joinRequestStatus.approvedSpent.refusal.INVITE_ALREADY_USED":
+    "Já foi criada uma conta com este convite, por isso não há nada para renovar.",
+  "joinRequestStatus.approvedSpent.refusal.INVITE_REVOKED":
+    "Este convite foi retirado, por isso não o conseguimos renovar daqui.",
+  "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_LIMIT":
+    "Este link já foi renovado as vezes que podia. Fala connosco e uma pessoa trata disto.",
+  "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_UNAVAILABLE":
+    "Não há nenhum convite neste pedido para renovar. Fala connosco e uma pessoa trata disto.",
+  "joinRequestStatus.approvedSpent.refusal.unknown":
+    "Isso não passou. Tenta mais uma vez, e fala connosco se continuar a não dar.",
 
   // Recusado. O estado que exige mais cuidado: dizer o que aconteceu, manter a
   // limitação do nosso lado sempre que isso for honesto, e deixar sempre uma
@@ -576,6 +636,10 @@ export const auth: Catalog = {
   "onboarding.stepIntents.back": "Voltar",
   "onboarding.stepIntents.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
+  "onboarding.stepIntents.loadError.title":
+    "Não conseguimos carregar <em>as tuas respostas</em>",
+  "onboarding.stepIntents.loadError.body":
+    "As intenções que guardaste antes, e a definição de visibilidade delas, não carregaram. Tenta novamente, ou salta este passo e define isso mais tarde nas Definições.",
   "onboarding.stepIntents.visibility.title": "Mostrar isto no meu perfil",
   "onboarding.stepIntents.visibility.descPublic":
     "Outros membros vão ver no teu perfil o que procuras.",
@@ -696,7 +760,7 @@ export const auth: Catalog = {
     "Avaliza alguém em quem confias. É assim que a rede se mantém genuína.",
   "gettingStarted.steps.vouch.done":
     "Avalizaste. Obrigade por manteres tudo genuíno.",
-  "gettingStarted.steps.vouch.cta": "Ver membros",
+  "gettingStarted.steps.vouch.cta": "Encontrar alguém para avalizar",
   "gettingStarted.steps.connect.title": "Liga-te a alguém",
   "gettingStarted.steps.connect.desc":
     "Fala com alguém que gostavas de conhecer. Ligares-te abre as mensagens.",

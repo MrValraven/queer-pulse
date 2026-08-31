@@ -1,4 +1,5 @@
-import { useRef, type KeyboardEvent, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import { useRovingRadioGroup } from "../../hooks/useRovingRadioGroup";
 import styles from "./RadioCardGroup.module.css";
 
 export interface RadioCardOption<OptionId extends string> {
@@ -69,53 +70,18 @@ export function RadioCardGroup<OptionId extends string>({
   columns,
   id,
 }: RadioCardGroupProps<OptionId>) {
-  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
   const selectedIndex = options.findIndex((option) => option.id === value);
-  // Roving-tabindex home: the selected option, or the first option when
-  // nothing is selected yet — so the group is always exactly one tab stop.
-  const tabStopIndex = selectedIndex >= 0 ? selectedIndex : 0;
-
-  const focusAndSelect = (nextIndex: number) => {
-    const nextOption = options[nextIndex];
-    if (!nextOption) return;
-    onChange(nextOption.id);
-    buttonRefs.current[nextIndex]?.focus();
-  };
-
-  const handleKeyDown = (
-    event: KeyboardEvent<HTMLButtonElement>,
-    currentIndex: number,
-  ) => {
-    const lastIndex = options.length - 1;
-    switch (event.key) {
-      case "ArrowDown":
-      case "ArrowRight":
-        event.preventDefault();
-        focusAndSelect(currentIndex === lastIndex ? 0 : currentIndex + 1);
-        break;
-      case "ArrowUp":
-      case "ArrowLeft":
-        event.preventDefault();
-        focusAndSelect(currentIndex === 0 ? lastIndex : currentIndex - 1);
-        break;
-      case "Home":
-        event.preventDefault();
-        focusAndSelect(0);
-        break;
-      case "End":
-        event.preventDefault();
-        focusAndSelect(lastIndex);
-        break;
-      case " ":
-      case "Enter":
-        event.preventDefault();
-        focusAndSelect(currentIndex);
-        break;
-      default:
-        break;
-    }
-  };
+  // Roving tabindex, arrow/Home/End movement and Space/Enter selection all
+  // come from the shared hook, so this primitive and the handful of groups
+  // whose visuals it cannot carry stay one keyboard behaviour.
+  const { getRadioProps } = useRovingRadioGroup<HTMLButtonElement>({
+    optionCount: options.length,
+    checkedIndex: selectedIndex,
+    onSelect: (index) => {
+      const nextOption = options[index];
+      if (nextOption) onChange(nextOption.id);
+    },
+  });
 
   return (
     <div
@@ -134,13 +100,10 @@ export function RadioCardGroup<OptionId extends string>({
         return (
           <button
             key={option.id}
-            ref={(node) => {
-              buttonRefs.current[index] = node;
-            }}
+            {...getRadioProps(index)}
             type="button"
             role="radio"
             aria-checked={checked}
-            tabIndex={index === tabStopIndex ? 0 : -1}
             data-checked={checked || undefined}
             className={[
               styles.option,
@@ -150,7 +113,6 @@ export function RadioCardGroup<OptionId extends string>({
               .filter(Boolean)
               .join(" ")}
             onClick={() => onChange(option.id)}
-            onKeyDown={(event) => handleKeyDown(event, index)}
           >
             {option.render}
           </button>

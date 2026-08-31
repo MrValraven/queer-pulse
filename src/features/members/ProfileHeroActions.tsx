@@ -5,6 +5,7 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
+import { useIncomingRequestActions } from "../connect/useIncomingRequestActions";
 import { useVouch } from "../../app/providers/useVouch";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type MemberProfile } from "./data/memberProfiles";
@@ -35,7 +36,15 @@ export function ProfileHeroActions({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { connected, contact } = useMemberContact(profile.slug);
+  const { connected, hasIncomingRequest, contact } = useMemberContact(
+    profile.slug,
+  );
+  // PRD-03. When this member has already asked, the hero answers them instead
+  // of offering to say hello into a request that would be refused.
+  const { accept, decline, isAnswering } = useIncomingRequestActions(
+    profile.slug,
+    profile.first,
+  );
   const { openVouch, hasVouched } = useVouch();
   const vouched = hasVouched(profile.slug);
   const [helloOpen, setHelloOpen] = useState(false);
@@ -95,19 +104,48 @@ export function ProfileHeroActions({
           </>
         ) : (
           <>
-            <Button
-              size="lg"
-              onClick={() =>
-                connected
-                  ? setHelloOpen(true)
-                  : contact({ slug: profile.slug, name: fullName })
-              }
-            >
-              {connected
-                ? t("connect:contact.message")
-                : t("members:profile.hero.sayHelloCta")}
-            </Button>
+            {hasIncomingRequest ? (
+              // They asked first. Two real answers, the same two the
+              // connections page offers, so the request can be settled where
+              // it is read.
+              <>
+                <Button
+                  size="lg"
+                  onClick={() => void accept()}
+                  disabled={isAnswering}
+                >
+                  {t("members:profile.hero.acceptRequestCta", {
+                    first: profile.first,
+                  })}
+                </Button>
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  onClick={() => void decline()}
+                  disabled={isAnswering}
+                >
+                  {t("members:profile.hero.declineRequestCta")}
+                </Button>
+              </>
+            ) : (
+              <Button
+                size="lg"
+                onClick={() =>
+                  connected
+                    ? setHelloOpen(true)
+                    : contact({ slug: profile.slug, name: fullName })
+                }
+              >
+                {connected
+                  ? t("connect:contact.message")
+                  : t("members:profile.hero.sayHelloCta")}
+              </Button>
+            )}
+            {/* Vouching steps aside while a request is waiting: three large
+                buttons is not an action row, and the vouch CTA comes straight
+                back the moment the request is answered either way. */}
             {!realSelf &&
+              !hasIncomingRequest &&
               (vouched ? (
                 <span className={styles.vouchedTag}>
                   <FiCheck aria-hidden />{" "}

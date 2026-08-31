@@ -1,7 +1,10 @@
 .wrap {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
@@ -16,7 +19,7 @@
   padding: 28px 0 20px;
 }
 .eb {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -36,7 +39,7 @@
   color: var(--accent);
 }
 .lede {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-60);
   line-height: 1.6;
   margin-top: 18px;
@@ -51,13 +54,13 @@
 .statement {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 26px 30px;
   margin: 28px 0 40px;
 }
 .statement p {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.65;
 }
@@ -86,7 +89,7 @@
   color: var(--accent);
 }
 .dek {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-60);
   line-height: 1.6;
   margin: 10px 0 22px;
@@ -106,13 +109,13 @@
   align-items: start;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
 }
 .ic {
   width: 46px;
   height: 46px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent);
   display: flex;
@@ -127,7 +130,7 @@
 .ai h4 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
@@ -136,7 +139,7 @@
   color: var(--accent);
 }
 .ai p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-60);
   line-height: 1.6;
   margin-top: 6px;
@@ -148,11 +151,11 @@
 
 /* ── Status pill ── */
 .st {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 11px;
   white-space: nowrap;
   display: inline-flex;
@@ -178,7 +181,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
 }
 .kbdRow {
@@ -193,7 +196,7 @@
   border-top: 1px solid var(--line);
 }
 .desc {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.82);
 }
 .desc em {
@@ -206,13 +209,13 @@
 }
 .kbd {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.16);
   border-bottom-width: 2px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   min-width: 30px;
   height: 28px;
   padding: 0 9px;
@@ -227,7 +230,7 @@
   overflow: hidden;
   background: var(--plum);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   padding: 40px 40px 34px;
   margin-top: 8px;
   text-align: center;
@@ -262,7 +265,7 @@
   color: var(--accent);
 }
 .contact p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.65;
   max-width: 56ch;
@@ -273,7 +276,7 @@
   color: var(--jade-light);
 }
 .meta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 22px;
   line-height: 1.6;

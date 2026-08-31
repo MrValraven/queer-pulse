@@ -8,7 +8,7 @@
   justify-content: space-between;
   gap: 14px;
   padding: 7px 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   border-bottom: 1px dashed rgba(var(--line-rgb), 0.1);
 }
 .row:last-child {

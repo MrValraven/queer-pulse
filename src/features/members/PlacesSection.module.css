@@ -22,7 +22,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-top: 6px;
@@ -81,12 +81,12 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 5px 11px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
   background: var(--paper);
   box-shadow: 0 2px 8px rgba(var(--plum-rgb), 0.18);
@@ -115,7 +115,7 @@
    page yet. */
 .pending {
   margin-inline-start: auto;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-style: italic;
 }
@@ -133,7 +133,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .ref {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -164,7 +164,7 @@
 
 .editLink,
 .quickEditBtn {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--text-strong);
   text-decoration: none;
@@ -183,7 +183,7 @@
   }
 }
 .deleteBtn {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--danger);
   background: none;
@@ -208,7 +208,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .confirmText {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-strong);
   margin: 0;
   flex: 1 1 200px;

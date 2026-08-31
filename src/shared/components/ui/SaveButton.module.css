@@ -29,15 +29,15 @@
 
 /* Pill (with label) */
 .pill {
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .pill.md {
   padding: 8px 16px;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .pill.sm {
   padding: 6px 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 .pill.md svg {
   width: 15px;

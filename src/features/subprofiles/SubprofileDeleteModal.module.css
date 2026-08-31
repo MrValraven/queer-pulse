@@ -19,7 +19,7 @@
 }
 .sub {
   margin: 6px 0 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
 }

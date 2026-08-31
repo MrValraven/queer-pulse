@@ -8,8 +8,8 @@
   position: fixed;
   inset: 0;
   z-index: 99;
-  background: rgba(var(--plum-rgb), 0.4);
-  backdrop-filter: var(--blur-overlay);
+  background: var(--scrim-soft);
+  backdrop-filter: var(--blur-sm);
 }
 .panel {
   position: fixed;
@@ -17,7 +17,7 @@
   right: 0;
   bottom: 0;
   max-height: 85svh;
-  border-radius: 20px 20px 0 0;
+  border-radius: var(--radius-20) var(--radius-20) 0 0;
   background: var(--cream);
   padding: 4px 12px max(16px, env(safe-area-inset-bottom));
   display: flex;
@@ -70,7 +70,7 @@
 .grabber {
   width: 36px;
   height: 4px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   background: rgba(var(--line-rgb), 0.2);
 }
 
@@ -90,7 +90,7 @@
   border-radius: 50%;
   background: rgba(var(--line-rgb), 0.12);
   color: var(--text-strong);
-  font-size: 18px;
+  font-size: var(--text-18);
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease);
 }
@@ -129,14 +129,14 @@
 .headerName {
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .viewProfile {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: none;
@@ -148,9 +148,10 @@
   }
 }
 .viewProfile:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
 }
 
 :global([data-theme="dark"]) .panel {

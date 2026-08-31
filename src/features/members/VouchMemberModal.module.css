@@ -1,19 +1,19 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 26, 31, 0.55);
-  z-index: 200;
+  background: var(--scrim);
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
   /* Lift the sheet above the on-screen keyboard on iOS (see
      useVisualViewportKeyboard) so the submit button isn't hidden behind it. */
   padding-block-end: var(--keyboard-inset, 0px);
 }
 .modal {
   background: var(--paper);
-  border-radius: 28px 28px 0 0;
+  border-radius: var(--radius-28) var(--radius-28) 0 0;
   width: 100%;
   max-width: 540px;
   position: relative;
@@ -38,14 +38,14 @@
   gap: 10px;
   padding: 48px 4px;
   color: var(--ink-60);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 @media (min-width: 620px) {
   .overlay {
     align-items: center;
   }
   .modal {
-    border-radius: 28px;
+    border-radius: var(--radius-28);
   }
 }
 @keyframes vouchUp {
@@ -71,7 +71,7 @@
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -86,7 +86,7 @@
 }
 
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -107,7 +107,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 22px;
@@ -120,13 +120,13 @@
   gap: 14px;
   padding: 14px 16px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--cream);
   margin-bottom: 24px;
 }
 .candName {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
 }
 .nameRow {
@@ -136,13 +136,13 @@
   flex-wrap: wrap;
 }
 .candRole {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 2px;
 }
 
 .label {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 10px;
@@ -165,9 +165,9 @@
   gap: 11px;
   padding: 12px 14px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   transition:
     border-color 0.2s var(--ease),
@@ -190,11 +190,11 @@
   gap: 14px;
   padding: 12px 14px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   margin-bottom: 22px;
 }
 .anonLabel {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   line-height: 1.5;
 }
@@ -207,10 +207,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 16px;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -224,14 +224,14 @@
   border-color: var(--accent);
 }
 .counter {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   text-align: right;
   margin-bottom: 18px;
 }
 
 .error {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--danger);
   margin: 0 0 14px;
 }
@@ -393,7 +393,7 @@
   color: var(--accent);
 }
 .successSub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   margin: 0 auto 26px;

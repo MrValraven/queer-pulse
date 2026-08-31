@@ -24,13 +24,13 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   padding: 11px 12px 11px 20px;
-  border-radius: 999px;
-  box-shadow: 0 16px 40px -16px rgba(var(--plum-rgb), 0.8);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-e3);
   animation: personaPreviewSlideUp 0.3s var(--ease);
 }
 
 .text {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
 }
 .text strong {

@@ -10,7 +10,7 @@
 }
 
 .prompt {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -24,13 +24,13 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   cursor: pointer;
   background: transparent;
   color: var(--text-strong);
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 14px;
   transition:
     background 0.2s var(--ease),
@@ -61,12 +61,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
 }
 
 .changeCta {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   background: none;

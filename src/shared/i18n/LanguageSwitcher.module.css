@@ -9,13 +9,13 @@
   gap: 2px;
   padding: 3px;
   border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: inherit;
 }
 
 .icon {
   margin: 0 3px 0 5px;
-  font-size: 14px;
+  font-size: var(--text-14);
   flex: none;
   opacity: 0.6;
 }
@@ -23,14 +23,14 @@
 .switch button {
   padding: 4px 10px;
   font: inherit;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1;
   color: color-mix(in srgb, currentColor 62%, transparent);
   background: transparent;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   transition:
     color var(--dur-base) var(--ease),
@@ -49,6 +49,7 @@
 }
 
 .switch button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }

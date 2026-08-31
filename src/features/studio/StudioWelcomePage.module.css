@@ -2,7 +2,10 @@
 .page {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   background: var(--studio-bg);
@@ -55,14 +58,14 @@
 .wordmark {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 19px;
+  font-size: var(--text-19);
   letter-spacing: -0.01em;
 }
 .wordmark .q {
   color: var(--accent);
 }
 .product {
-  font-size: 12px;
+  font-size: var(--text-12);
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--text-40);
@@ -80,7 +83,7 @@
   z-index: 1;
 }
 .eyebrow {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--accent);
@@ -102,7 +105,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.55;
   color: var(--text-60);
   max-width: 460px;
@@ -119,7 +122,7 @@
 .stepDot {
   width: 8px;
   height: 8px;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   background: var(--line);
   transition:
     width 0.35s var(--ease),
@@ -134,7 +137,7 @@
 .stepCard {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 30px 28px;
   text-align: left;
   animation: welFadeUp 0.42s var(--ease) both;
@@ -147,7 +150,7 @@
   margin: 0 0 8px;
 }
 .scDek {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--text-60);
   margin-bottom: 22px;
@@ -172,7 +175,7 @@
   gap: 8px;
   padding: 14px 8px 12px;
   border: 1.5px solid transparent;
-  border-radius: 15px;
+  border-radius: var(--radius-15);
   background: transparent;
   color: inherit;
   cursor: pointer;
@@ -200,11 +203,11 @@
 }
 .artName {
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.2;
 }
 .artPlace {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-40);
   line-height: 1.2;
 }
@@ -244,7 +247,7 @@
   gap: 3px;
   padding: 20px 8px;
   border: 1.5px solid var(--line);
-  border-radius: 15px;
+  border-radius: var(--radius-15);
   background: transparent;
   color: inherit;
   cursor: pointer;
@@ -270,7 +273,7 @@
 .tipChip small {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-40);
 }
 .tipChip.on small {
@@ -293,12 +296,12 @@
   flex: 1;
 }
 .optText h4 {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   margin: 0 0 4px;
 }
 .optText p {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--text-60);
   margin: 0;
@@ -307,7 +310,7 @@
   flex-shrink: 0;
   width: 44px;
   height: 26px;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   background: var(--line);
   border: 0;
   padding: 0;
@@ -342,7 +345,7 @@
   margin-top: 26px;
 }
 .count {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text-60);
 }
 .count em {
@@ -351,7 +354,7 @@
   color: var(--accent);
 }
 .skip {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text-40);
   background: none;
   border: 0;
@@ -369,8 +372,9 @@
 .tipChip:focus-visible,
 .tgSw:focus-visible,
 .skip:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 /* ── Keyframes ── */

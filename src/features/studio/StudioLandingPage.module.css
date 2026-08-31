@@ -4,7 +4,10 @@
 .page {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.04);
   --rail: var(--studio-rail);
@@ -33,9 +36,9 @@
 .top {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: var(--z-sticky);
   background: rgba(26, 16, 40, 0.85);
-  backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: var(--blur-nav);
   border-bottom: 1px solid var(--line);
   padding: 18px 36px;
   padding-block-start: max(18px, env(safe-area-inset-top));
@@ -65,13 +68,13 @@
   flex: none;
 }
 .product {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
   padding: 4px 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   background: rgba(var(--accent-rgb), 0.14);
 }
 .topNav {
@@ -81,7 +84,7 @@
 }
 .topNav a {
   color: var(--text-60);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   text-decoration: none;
 }
@@ -143,7 +146,7 @@
   grid-template-columns: 1.3fr 1fr;
   gap: 60px;
   align-items: center;
-  max-width: 1240px;
+  max-width: var(--maxw);
   margin: 0 auto;
 }
 @media (max-width: 1000px) {
@@ -156,14 +159,14 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 30px;
   padding: 8px 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--accent-rgb), 0.32);
   background: rgba(var(--accent-rgb), 0.1);
 }
@@ -172,7 +175,7 @@
   height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.24);
+  box-shadow: var(--ring-accent);
   position: relative;
   flex: none;
 }
@@ -195,7 +198,7 @@
   letter-spacing: 0;
   color: rgba(var(--cream-rgb), 0.7);
   font-weight: 400;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 .hero h1 {
   font-family: var(--serif);
@@ -237,10 +240,10 @@
 .demoCard {
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   padding: 30px 32px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 0.65);
+  backdrop-filter: var(--blur-md);
+  box-shadow: var(--shadow-e4);
   position: relative;
   overflow: hidden;
 }
@@ -264,7 +267,7 @@
   z-index: 1;
 }
 .demoEb {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -289,7 +292,7 @@
 .demoMeta {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-60);
   margin-top: 6px;
 }
@@ -303,7 +306,7 @@
 .demoArt {
   width: 104px;
   aspect-ratio: 1;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   background: rgba(var(--cream-rgb), 0.08);
   position: relative;
@@ -319,7 +322,7 @@
 .wf span {
   flex: 1;
   background: rgba(var(--cream-rgb), 0.22);
-  border-radius: 1.5px;
+  border-radius: var(--radius-1-5);
   transition: height 0.3s var(--ease);
 }
 .wf span.played {
@@ -350,7 +353,7 @@
   justify-content: space-between;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   margin-top: 6px;
 }
@@ -377,7 +380,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 10px 20px -8px rgba(var(--accent-rgb), 0.65);
+  box-shadow: var(--shadow-accent);
   flex: none;
 }
 .demoPlay svg {
@@ -387,7 +390,7 @@
 .demoInfo .t {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text);
   line-height: 1.2;
 }
@@ -398,7 +401,7 @@
 .demoInfo .a {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-60);
   margin-top: 2px;
 }
@@ -410,9 +413,9 @@
   padding: 12px 16px;
   background: rgba(var(--jade-rgb), 0.08);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text);
   line-height: 1.5;
 }
@@ -433,10 +436,10 @@
   padding: 12px 16px;
   background: rgba(var(--cream-rgb), 0.04);
   border-left: 2px solid var(--accent);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--radius-8) var(--radius-8) 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text);
   line-height: 1.5;
 }
@@ -456,7 +459,7 @@
   margin-bottom: 48px;
 }
 .promisesH .ebPlain {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -488,7 +491,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  max-width: 1240px;
+  max-width: var(--maxw);
   margin: 0 auto;
 }
 @media (max-width: 1100px) {
@@ -504,7 +507,7 @@
 .promise {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 30px 28px;
 }
 .promise .num {
@@ -532,7 +535,7 @@
 }
 .promise p {
   font-family: var(--serif);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--text-60);
   line-height: 1.62;
   margin: 0;
@@ -566,7 +569,7 @@
   z-index: 1;
 }
 .counterEb {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -581,7 +584,7 @@
   height: 7px;
   border-radius: 50%;
   background: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.22);
+  box-shadow: var(--ring-jade);
 }
 .counter h2 {
   font-family: var(--serif);
@@ -614,7 +617,7 @@
 .counterSub {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-60);
   margin-top: 16px;
 }
@@ -624,7 +627,7 @@
   font-weight: 600;
   font-style: normal;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-left: 10px;
@@ -644,7 +647,7 @@
 .cs {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 18px 22px;
 }
 .cs .v {
@@ -660,7 +663,7 @@
   color: var(--accent);
 }
 .cs .l {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-40);
   font-family: var(--serif);
   font-style: italic;
@@ -699,7 +702,7 @@
 .cmp {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 24px 26px;
   text-align: center;
 }
@@ -713,7 +716,7 @@
   transform: scale(1.05);
 }
 .cmp .lbl {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -739,7 +742,7 @@
   color: var(--accent);
 }
 .cmp .ctx {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   font-family: var(--serif);
   font-style: italic;
@@ -749,7 +752,7 @@
 
 /* CTA */
 .ctaBand {
-  padding: 120px 36px 100px;
+  padding: var(--section-y-lg) 36px var(--section-y);
   text-align: center;
 }
 .ctaBand h2 {
@@ -761,7 +764,7 @@
 .ctaBand p {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-60);
   margin: 24px auto 36px;
   max-width: 42ch;
@@ -781,7 +784,7 @@
 .ctaSecondary {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-40);
   margin-top: 22px;
 }
@@ -794,7 +797,7 @@
   text-decoration: none;
   font-style: normal;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -808,7 +811,7 @@
   border-top: 1px solid var(--line);
 }
 .footInner {
-  max-width: 1240px;
+  max-width: var(--maxw);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.4fr 2fr;
@@ -824,7 +827,7 @@
 .footBrand p {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-60);
   margin-top: 14px;
   line-height: 1.6;
@@ -841,7 +844,7 @@
   }
 }
 .footCol h4 {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -850,7 +853,7 @@
 }
 .footCol a {
   display: block;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text-60);
   padding: 4px 0;
   text-decoration: none;
@@ -859,11 +862,11 @@
   color: var(--text);
 }
 .footBase {
-  max-width: 1240px;
+  max-width: var(--maxw);
   margin: 24px auto 0;
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   flex-wrap: wrap;
   gap: 14px;

@@ -14,12 +14,12 @@
   align-items: center;
   gap: 6px;
   padding: 8px 15px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--ink-60);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
@@ -111,7 +111,7 @@
    thing being read. `aria-hidden` in the markup — the chip carries the whole
    phrase as its accessible name instead. */
 .chipCount {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   opacity: 0.55;

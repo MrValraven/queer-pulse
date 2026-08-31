@@ -5,10 +5,19 @@ export const cards: Catalog = {
   "page.title": "Cartões de sócio",
   "page.dek":
     "Cada comunidade a que pertences pode emitir-te um cartão. Mostra-o para provares que és membro.",
+  "page.loadError.title": "Não conseguimos carregar <em>os teus cartões</em>",
+  "page.loadError.body":
+    "Os teus cartões continuam lá. O pedido não chegou de volta, tenta outra vez daqui a pouco.",
 
   "empty.title": "Ainda não tens cartões",
   "empty.body":
-    "Quando uma comunidade a que pertences criar um cartão, ele aparece aqui.",
+    "Os cartões de sócio vêm das comunidades. Um done ou moderador de uma comunidade a que pertences emite-os, e o teu aparece aqui.",
+  "empty.issuers.title": "As tuas comunidades que emitem cartões",
+  "empty.issuers.hint":
+    "Fala com um done ou moderador de lá para pedires o teu.",
+  "empty.noIssuers":
+    "Ainda nenhuma das comunidades a que pertences tem um cartão de sócio.",
+  "empty.cta": "As tuas comunidades",
 
   "remove.cta": "Remover este cartão",
   "remove.ctaAria": "Remover o teu cartão de {community}",
@@ -162,6 +171,8 @@ export const cards: Catalog = {
   "verify.checking": "A verificar este cartão…",
 
   "designer.ariaLabel": "Desenhar o cartão de sócio da tua comunidade",
+  "designer.loadErrorBody":
+    "Não conseguimos carregar o programa de cartões, por isso o editor fica à espera em vez de escrever por cima. Tenta outra vez daqui a pouco.",
   "designer.defaultCardName": "Sócie",
   "designer.cardNameLabel": "Como o cartão trata quem é membro",
   "designer.cardNamePlaceholder": "Sócie, sócio, sócia, companheire",
@@ -268,6 +279,8 @@ export const cards: Catalog = {
   "validity.twoYears": "Dois anos",
 
   "holders.title": "Quem tem cartão",
+  "holders.loadErrorBody":
+    "Não conseguimos carregar quem tem cartão. Tenta outra vez daqui a pouco.",
   "holders.searchLabel": "Procurar quem tem cartão",
   "holders.searchPlaceholder": "Nome ou número do cartão",
   "holders.suspend": "Suspender",
@@ -314,6 +327,8 @@ export const cards: Catalog = {
   "holders.card.close": "Fechar",
 
   "print.metaTitle": "Imprimir cartões de membro · QueerPulse",
+  "print.loadErrorBody":
+    "Não conseguimos carregar os cartões desta comunidade, por isso ainda não há nada para compor. Tenta outra vez daqui a pouco.",
   "print.title_one": "Um cartão para imprimir",
   "print.title_other": "{count} cartões para imprimir",
   "print.print": "Imprimir",

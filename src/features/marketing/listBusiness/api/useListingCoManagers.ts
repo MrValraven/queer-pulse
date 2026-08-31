@@ -50,6 +50,7 @@ export function useListingCoManagers(listingRef: string) {
     coManagers: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 
@@ -65,7 +66,12 @@ export function useCoManagerInvites() {
     enabled: !demoMode && loggedIn,
     queryFn: getCoManagerInvites,
   });
-  return { invites: query.data ?? [], isLoading: query.isLoading };
+  return {
+    invites: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 /**

@@ -341,6 +341,71 @@ function safeNotificationPath(raw: unknown): string {
   }
 }
 
+/**
+ * Raise the app on `targetUrl` after a notification tap.
+ *
+ * Every step is awaited, and the whole thing is handed to `event.waitUntil` as
+ * one promise, because a browser is free to suspend the worker the moment that
+ * promise settles. A fire-and-forget `navigate()` / `focus()` is then dropped
+ * on the floor and the member lands on whatever screen the app happened to be
+ * showing instead of the conversation the notification was about.
+ *
+ * `navigate()` and `focus()` both reject for legitimate reasons (a window this
+ * worker does not control, an engine that refuses focus without user
+ * activation), so every call is handled rather than left to become an unhandled
+ * rejection inside the worker.
+ *
+ * `includeUncontrolled: true` matters on the first load after a deploy: a
+ * freshly activated worker does not control tabs that were opened under the
+ * previous build, and without it those windows are invisible here and every tap
+ * would open a duplicate window.
+ */
+async function openNotificationTarget(targetUrl: string): Promise<void> {
+  const clientList = await self.clients.matchAll({
+    type: "window",
+    includeUncontrolled: true,
+  });
+  // Any open window will do: the app is single-window in practice, and the
+  // first match is the most recently focused one.
+  const existingWindow = clientList[0];
+
+  if (existingWindow) {
+    let windowToFocus = existingWindow;
+    // Guarded at runtime as well as by the type: WindowClient.navigate is not
+    // implemented everywhere the rest of this handler works.
+    if ("navigate" in existingWindow) {
+      try {
+        // Route first, then focus, so the window is already on the conversation
+        // when it comes up. navigate() resolves with the client that ended up
+        // at the URL, which can be a different object than the one we started
+        // from, so focus whatever it hands back.
+        const navigatedWindow = await existingWindow.navigate(targetUrl);
+        if (navigatedWindow) windowToFocus = navigatedWindow;
+      } catch {
+        // Uncontrolled or mid-navigation window: its navigation is not ours to
+        // drive. Raising it anyway beats doing nothing, so fall through to
+        // focus() with the client we already have.
+      }
+    }
+    try {
+      await windowToFocus.focus();
+      return;
+    } catch {
+      // Some engines refuse focus() without user activation, and a window can
+      // close between matchAll() and here. Fall through and open a fresh one.
+    }
+  }
+
+  try {
+    await self.clients.openWindow(targetUrl);
+  } catch {
+    // Nothing left to try: there was no window to raise and the engine refused
+    // to open one (a notification tap outside a user-activation window, on
+    // engines that require it). Swallowed on purpose so the handler resolves
+    // instead of logging an unhandled rejection the member cannot act on.
+  }
+}
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   // Every action ("view") and a plain body tap deep-link to the same safe
@@ -349,19 +414,5 @@ self.addEventListener("notificationclick", (event) => {
   // multi-destination action (e.g. "mark as read" vs. "view") would read
   // event.action here and choose a different target/behaviour per action id.
   const targetUrl = safeNotificationPath(event.notification.data?.url);
-  event.waitUntil(
-    self.clients
-      .matchAll({ type: "window", includeUncontrolled: true })
-      .then((clientList) => {
-        for (const client of clientList) {
-          // Focus an already-open PWA window and route it to the conversation.
-          client.focus();
-          if ("navigate" in client) {
-            void (client as WindowClient).navigate(targetUrl);
-          }
-          return;
-        }
-        return self.clients.openWindow(targetUrl);
-      }),
-  );
+  event.waitUntil(openNotificationTarget(targetUrl));
 });

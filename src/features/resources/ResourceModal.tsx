@@ -1,8 +1,7 @@
-import { useEffect, type ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { FiCheck, FiClock, FiX } from "react-icons/fi";
-import { useScrollLock } from "../../shared/hooks";
-import { Button } from "../../shared/components/ui";
+import { Button, useDismiss } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ResourceModal.module.css";
 
@@ -16,16 +15,15 @@ export function ResourceModal({
   onClose: () => void;
   children: ReactNode;
 }) {
-  useScrollLock();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  // Shared dialog behaviour: scroll lock, initial focus into the sheet, a Tab
+  // trap so a keyboard user cannot reach the page behind, focus restore to the
+  // trigger on close, and modal-stack-aware Escape.
+  const dialogRef = useDismiss(onClose);
+  const titleId = useId();
+  // The success and coming-soon panels are rendered with an empty title, so the
+  // dialog falls back to a name of its own instead of announcing as unnamed.
+  const hasTitle = Boolean(title);
 
   return createPortal(
     <div
@@ -35,10 +33,20 @@ export function ResourceModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className={styles.sheet} role="dialog" aria-modal="true">
-        {title ? (
+      <div
+        ref={dialogRef}
+        tabIndex={-1}
+        className={styles.sheet}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={hasTitle ? titleId : undefined}
+        aria-label={hasTitle ? undefined : t("resources:modal.resultAriaLabel")}
+      >
+        {hasTitle ? (
           <div className={styles.head}>
-            <div className={styles.title}>{title}</div>
+            <h2 id={titleId} className={styles.title}>
+              {title}
+            </h2>
             <button
               type="button"
               className={styles.close}

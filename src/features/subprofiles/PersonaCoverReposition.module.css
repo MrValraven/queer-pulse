@@ -10,11 +10,11 @@
 
 .pill,
 .bar {
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--cream-rgb), 0.5);
   background: rgba(var(--plum-rgb), 0.62);
-  -webkit-backdrop-filter: blur(10px) saturate(1.1);
-  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: var(--blur-md) saturate(1.1);
+  backdrop-filter: var(--blur-md) saturate(1.1);
   /* Dark ring first (it paints outside the border), then the drop shadow. */
   box-shadow:
     0 0 0 1px rgba(var(--plum-rgb), 0.45),
@@ -38,7 +38,7 @@
   gap: 8px;
   padding: 8px 15px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   line-height: 1;
   cursor: pointer;
@@ -48,7 +48,7 @@
 }
 /* Sizes the react-icons <svg>, which inherits `1em`. */
 .pill svg {
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 .pill:disabled {
   cursor: not-allowed;
@@ -109,7 +109,7 @@
   left: 50%;
   bottom: 12px;
   transform: translateX(-50%);
-  z-index: 4;
+  z-index: 1;
   pointer-events: auto;
   display: flex;
   align-items: center;
@@ -120,7 +120,7 @@
 
 .hint {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.85);
   white-space: nowrap;
 }

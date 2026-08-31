@@ -52,6 +52,7 @@ export const NOTIFICATION_CATEGORY_GROUPS: NotificationCategoryGroup[] = [
       row(NOTIFICATION_PREFERENCE_CATEGORY.eventInvites, "eventInvites"),
       row(NOTIFICATION_PREFERENCE_CATEGORY.eventReminders, "eventReminders"),
       row(NOTIFICATION_PREFERENCE_CATEGORY.eventActivity, "eventActivity"),
+      row(NOTIFICATION_PREFERENCE_CATEGORY.eventCapacity, "eventCapacity"),
     ],
   },
   {

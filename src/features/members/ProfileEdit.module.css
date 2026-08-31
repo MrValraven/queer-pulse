@@ -12,7 +12,7 @@
   line-height: inherit;
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--plum-rgb), 0.03);
   padding: 8px 12px;
   outline: none;
@@ -33,7 +33,7 @@
 .inlineInput:focus {
   border-color: var(--line-strong);
   background: var(--paper);
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+  box-shadow: var(--ring-accent-soft);
 }
 
 /* Field scaffolding: a tiny uppercase label above each editable region. */
@@ -41,7 +41,7 @@
   margin-top: 18px;
 }
 .fieldLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -72,7 +72,7 @@
 
 /* A quiet sentence under a field label, explaining where the value shows up. */
 .fieldHelp {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
   max-width: 52ch;
@@ -81,7 +81,7 @@
 }
 
 .shortBioInput {
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 500;
   color: var(--ink);
   line-height: 1.5;
@@ -92,7 +92,7 @@
 
 /* Soft length hint — only appears near the two-line limit. */
 .counter {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin: 7px 0 0;
   font-variant-numeric: tabular-nums;
@@ -120,7 +120,7 @@
   max-width: 320px;
 }
 .previewCaption {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -129,19 +129,19 @@
   display: block;
 }
 .previewNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
   margin: 9px 0 0;
   text-wrap: pretty;
 }
 .hoodInput {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   max-width: 280px;
 }
 .bioInput {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink);
   line-height: 1.65;
   max-width: 56ch;
@@ -151,7 +151,7 @@
 
 /* ---- Now status + Open to ------------------------------------------------- */
 .nowInput {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.6;
   max-width: 56ch;
@@ -161,7 +161,7 @@
 /* A second label inside the same field block — the chips belong to the status,
    so they sit under it rather than starting a field of their own. */
 .subFieldLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -176,10 +176,10 @@
 }
 .openToChip {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
   color: var(--ink-60);
@@ -202,9 +202,9 @@
 }
 .openToInput {
   width: 190px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   padding: 7px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 /* ---- Pronoun picker ------------------------------------------------------- */
@@ -216,10 +216,10 @@
 }
 .chip {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
   color: var(--ink-60);
@@ -242,7 +242,7 @@
 }
 .customPronoun {
   width: 120px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   padding: 6px 12px;
 }
 
@@ -264,11 +264,11 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 8px 6px 14px;
   color: var(--ink);
 }
@@ -310,9 +310,9 @@
 }
 .tagInput {
   width: 170px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   padding: 7px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 /* Type-ahead suggestion dropdown of curated tags. */
@@ -320,7 +320,7 @@
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  z-index: 20;
+  z-index: var(--z-popover);
   min-width: 200px;
   max-width: 260px;
   display: flex;
@@ -329,8 +329,8 @@
   padding: 5px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
-  box-shadow: 0 16px 34px -18px rgba(var(--plum-rgb), 0.55);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
 }
 .tagSuggestItem {
   display: flex;
@@ -339,12 +339,12 @@
   width: 100%;
   text-align: left;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink);
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 8px 10px;
   cursor: pointer;
   transition: background 0.15s var(--ease);
@@ -370,7 +370,7 @@
   gap: 8px;
 }
 .tagPopularLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -382,12 +382,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: 1.5px dashed rgba(var(--line-rgb), 0.28);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 13px;
   cursor: pointer;
   transition:
@@ -432,15 +432,15 @@
   gap: 4px;
   padding: 4px;
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   flex-wrap: wrap;
 }
 .segment {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
   color: var(--ink-60);
@@ -455,7 +455,7 @@
 .segmentActive {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 6px 16px -10px rgba(var(--plum-rgb), 0.7);
+  box-shadow: var(--shadow-e2);
 }
 @media (hover: hover) {
   .segmentActive:hover {
@@ -463,7 +463,7 @@
   }
 }
 .visHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 8px;
 }
@@ -502,15 +502,15 @@
   align-items: center;
   gap: 7px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 15px;
   cursor: pointer;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 8px 22px -10px rgba(var(--plum-rgb), 0.9);
+  box-shadow: var(--shadow-e2);
   transition:
     transform 0.18s var(--ease),
     background 0.18s var(--ease);
@@ -587,17 +587,17 @@
   width: 34px;
   height: 34px;
   flex: none;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--plum-rgb), 0.06);
   color: var(--accent);
 }
 .linkSelect {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
   padding: 8px 10px;
   cursor: pointer;
@@ -607,7 +607,7 @@
 .linkSelect:focus {
   outline: none;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+  box-shadow: var(--ring-accent-soft);
 }
 .linkInput {
   /* Zero flex-basis (not `auto`) so the input ignores its inherited
@@ -616,7 +616,7 @@
      line and the whole row cascades downward. */
   flex: 1 1 0;
   min-width: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .linkRemove {
   position: relative;
@@ -659,12 +659,12 @@
   align-items: center;
   gap: 7px;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
   background: transparent;
   border: 1.5px dashed rgba(var(--line-rgb), 0.28);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
   transition:
@@ -690,7 +690,7 @@
   gap: 8px;
 }
 .workCatInput {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--accent);
@@ -700,18 +700,18 @@
 .workTitleInput {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   line-height: 1.18;
   margin-bottom: 8px;
 }
 .workLinkInput {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-bottom: 8px;
 }
 .workLinkNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   font-style: italic;
   margin-bottom: 8px;
@@ -750,7 +750,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--accent-ink);
   background: transparent;
@@ -771,7 +771,7 @@
   gap: 10px;
 }
 .workYearInput {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   width: 110px;
   flex: none;
@@ -782,7 +782,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-40);
   background: transparent;
@@ -806,12 +806,12 @@
   gap: 10px;
   min-height: 200px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.03);
   border: 1.5px dashed rgba(var(--line-rgb), 0.28);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   cursor: pointer;
   transition:
     border-color 0.18s var(--ease),
@@ -844,7 +844,7 @@
      breakpoint, so the home indicator is already cleared by the tab bar and
      must not be added to this bar's padding again. */
   bottom: var(--bottom-inset, 0px);
-  z-index: 95;
+  z-index: var(--z-sticky);
   padding: 16px clamp(20px, 5vw, 64px) 16px;
   display: flex;
   align-items: center;
@@ -862,7 +862,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
 }
@@ -901,12 +901,12 @@
   border-radius: 50%;
   background: var(--jade);
   color: var(--text-strong);
-  font-size: 17px;
+  font-size: var(--text-17);
   flex: none;
   animation: pop 0.35s var(--ease);
 }
 .savedText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.85);
 }
 .savedText strong {
@@ -934,7 +934,7 @@
   width: max-content;
   max-width: calc(100% - 24px);
   margin-inline: auto;
-  z-index: 95;
+  z-index: var(--z-sticky);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -942,12 +942,12 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   padding: 11px 12px 11px 20px;
-  border-radius: 999px;
-  box-shadow: 0 16px 40px -16px rgba(var(--plum-rgb), 0.8);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-toast);
   animation: barSlideUp 0.3s var(--ease);
 }
 .previewText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
 }
 .previewText strong {
@@ -1059,7 +1059,7 @@
   .workCatInput,
   .workLinkInput,
   .workYearInput {
-    font-size: 16px;
+    font-size: var(--text-16);
   }
 }
 
@@ -1087,7 +1087,7 @@
 .workLinkRemoveBtn:focus-visible,
 .workAddLinkBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+  box-shadow: var(--ring-accent-soft);
 }
 
 /* ---- Mobile edit layout (MobileEditableProfileHero) ----------------------- */

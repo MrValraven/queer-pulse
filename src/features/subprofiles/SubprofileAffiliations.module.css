@@ -21,7 +21,7 @@
   padding: 0;
   margin-top: 2px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--sk-tint, var(--accent-ink));
   cursor: pointer;

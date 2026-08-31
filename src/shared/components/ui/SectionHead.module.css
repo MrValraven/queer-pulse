@@ -36,7 +36,7 @@
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   max-width: 46ch;
   line-height: var(--lh-body);
@@ -44,7 +44,7 @@
 }
 
 .link {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent-ink);
   white-space: nowrap;

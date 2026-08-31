@@ -1,7 +1,10 @@
 .wrap {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
@@ -17,7 +20,7 @@
   text-align: center;
 }
 .eb {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -37,7 +40,7 @@
   color: var(--accent);
 }
 .dek {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-60);
   line-height: 1.6;
   max-width: 56ch;
@@ -54,7 +57,7 @@
   gap: 10px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 8px 8px 22px;
   margin-bottom: 36px;
 }
@@ -64,16 +67,17 @@
   border: none;
   outline: none;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 1);
 }
 .search input::placeholder {
   color: var(--text-40);
 }
 .search input:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-  border-radius: 4px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
 }
 
 /* Category cards */
@@ -89,7 +93,7 @@
   width: 100%;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 22px 20px;
   cursor: pointer;
   font-family: var(--sans);
@@ -104,8 +108,9 @@
   }
 }
 .cat:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .catIcon {
   width: 24px;
@@ -116,7 +121,7 @@
 .cat h4 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
@@ -125,7 +130,7 @@
   color: var(--accent);
 }
 .cat p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-40);
   margin-top: 6px;
   line-height: 1.5;
@@ -168,14 +173,15 @@
   padding: 20px 4px;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .faqQ:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 6px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-6);
 }
 .faqIcon {
   flex: none;
@@ -209,7 +215,7 @@
 }
 .faqAInner {
   padding: 0 4px 22px;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-60);
   line-height: 1.7;
   max-width: 66ch;
@@ -240,7 +246,7 @@
 .cc {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 24px 22px;
   text-align: center;
 }
@@ -260,7 +266,7 @@
 .cc h4 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
 }
 .cc h4 em {
@@ -271,7 +277,7 @@
   color: var(--jade-light);
 }
 .cc p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-60);
   line-height: 1.55;
   margin: 8px 0 16px;
@@ -284,12 +290,12 @@
 .bt {
   display: inline-block;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
   text-align: center;
@@ -301,8 +307,9 @@
   }
 }
 .bt:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .ccJade .bt {
   color: var(--jade-light);
@@ -317,7 +324,7 @@
   justify-content: center;
   gap: 8px;
   margin-top: 22px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-40);
 }
 .status a {
@@ -333,7 +340,7 @@
   height: 8px;
   border-radius: 50%;
   background: var(--jade-light);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.22);
+  box-shadow: var(--ring-jade);
 }
 
 @media (--lg) {

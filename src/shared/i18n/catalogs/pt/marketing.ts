@@ -23,7 +23,7 @@ export const marketing: Catalog = {
   "about.hero.eyebrow": "Sobre",
   "about.hero.title": "Uma plataforma construída <em>de propósito.</em>",
   "about.hero.sub":
-    "Não é mais um feed a competir pela tua atenção. Um espaço pequeno e deliberado, feito para acolher esta comunidade, não para a explorar.",
+    "Um espaço calmo que respeita a tua atenção. Um lugar pequeno e deliberado, feito para acolher esta comunidade e para lhe devolver algo.",
   "about.why.eyebrow": "Porque existimos",
   "about.why.title": "Construímos aquilo <em>de que precisávamos.</em>",
   "about.why.p1":
@@ -414,14 +414,14 @@ export const marketing: Catalog = {
   "activism.mobilise.p1":
     "<b>Mobiliza em conjunto.</b> Traz alguém contigo. Os números mudam o que é politicamente possível.",
   "activism.mobilise.p2":
-    "<b>Documenta, não sejas só testemunha.</b> Fotografias e notas de uma ação importam mais tarde, para responsabilização e para a história.",
+    "<b>Documenta o que vês.</b> Fotografias e notas de uma ação importam mais tarde, para responsabilização e para a história.",
   "activism.mobilise.p3":
-    "<b>Continua depois, não fiques só na marcha.</b> O trabalho depois da manifestação é onde acontece a maior parte da mudança real.",
+    "<b>Continua o trabalho depois da marcha.</b> O trabalho que se segue a uma manifestação é onde acontece a maior parte da mudança real.",
   "activism.feel.title": "Como se <em>sente</em>",
   "activism.feel.p1":
     "O esgotamento é real. Um ativismo que só exige e nunca repõe não é sustentável, nem para ti nem para o movimento.",
   "activism.feel.p2":
-    "Está tudo bem em recuar. Está tudo bem em fazer menos do que achas que devias. Descansar faz parte do trabalho, não é uma traição a ele.",
+    "Está tudo bem em recuar. Está tudo bem em fazer menos do que achas que devias. Descansar faz parte do trabalho.",
   "activism.feel.banner.title": "Se estás perto do esgotamento",
   "activism.feel.banner.body":
     "Fala com o apoio entre pares antes de desapareceres de vez. Recuar com um plano é melhor do que desaparecer sem nenhum.",
@@ -481,10 +481,10 @@ export const marketing: Catalog = {
   "coc.pact.item04.title": "Ocupamos o espaço na medida certa",
   "coc.pact.item04.body":
     "Repara quando estás a dominar uma conversa. Abre espaço para vozes mais discretas.",
-  "coc.pact.item05.title": "Reparamos, não só pedimos desculpa",
+  "coc.pact.item05.title": "Reparamos o dano",
   "coc.pact.item05.body":
     "Um pedido de desculpa a sério muda o comportamento. As palavras sozinhas não bastam.",
-  "coc.pact.item06.title": "Denunciamos o dano, não só comentamos sobre ele",
+  "coc.pact.item06.title": "Levamos o dano a quem pode agir",
   "coc.pact.item06.body":
     "Se algo estiver errado, avisa alguém que possa agir.",
   "coc.pact.closing":
@@ -521,7 +521,7 @@ export const marketing: Catalog = {
   "coc.harm.friction.politicalViews.rest":
     "Desde que não visem a identidade ou a segurança de outra pessoa.",
   "coc.harm.closing":
-    "A linha é o <em>impacto</em>, não a intenção. “Não foi essa a intenção” não anula o dano causado.",
+    "O que conta é o <em>impacto</em>. “Não foi essa a intenção” não anula o dano causado.",
   "coc.enforce.title": "§04 <em>Aplicação</em>",
   "coc.enforce.lead":
     "Uma escada gradual: a maioria das denúncias resolve-se no primeiro ou segundo degrau.",
@@ -726,7 +726,7 @@ export const marketing: Catalog = {
   "guidelines.clause02.titlePre": "Presume ",
   "guidelines.clause02.titleEm": "boa-fé",
   "guidelines.clause02.p1":
-    "A maior parte do atrito aqui vem de mal-entendidos, não de má intenção. Pergunta antes de presumir o pior.",
+    "A maior parte do atrito aqui vem de mal-entendidos. Pergunta antes de presumir o pior.",
   "guidelines.clause02.li1":
     "Lê uma mensagem duas vezes antes de reagir a ela.",
   "guidelines.clause02.li2":
@@ -753,8 +753,8 @@ export const marketing: Catalog = {
     "O que se partilha num convívio, num espaço de apoio, ou numa comunidade privada, fica lá, a menos que a pessoa diga o contrário.",
   "guidelines.clause04.p2":
     "Isto inclui capturas de ecrã. Pergunta antes de partilhares algo que veio de dentro da QueerPulse.",
-  "guidelines.clause05.titlePre": "Repara, não peças só ",
-  "guidelines.clause05.titleEm": "desculpa",
+  "guidelines.clause05.titlePre": "Repara para além do ",
+  "guidelines.clause05.titleEm": "pedido de desculpa",
   "guidelines.clause05.p1":
     "Um bom pedido de desculpa nomeia o que aconteceu, reconhece o impacto e muda o comportamento daí em diante.",
   "guidelines.clause05.p2":
@@ -844,17 +844,17 @@ export const marketing: Catalog = {
   "help.qa.free.a": "Sim, a QueerPulse é gratuita para aderir e usar.",
   "help.qa.changeName.q": "Como mudo o meu nome ou pronomes?",
   "help.qa.changeName.a":
-    "Vai a <settingsLink>Definições</settingsLink> → Perfil. As alterações aplicam-se em todo o lado de imediato.",
+    "Vai a <settingsLink>Definições</settingsLink> e depois a Perfil. As alterações aplicam-se em todo o lado de imediato.",
   "help.qa.privateProfile.q": "Posso tornar o meu perfil privado?",
   "help.qa.privateProfile.a":
-    "Sim, em <settingsLink>Definições</settingsLink> → Privacidade. Um perfil privado continua visível para as tuas ligações. Só <strong>não aparece na pesquisa nem no diretório público</strong>.",
+    "Sim, em <settingsLink>Definições</settingsLink> e depois Privacidade. Um perfil privado continua visível para as tuas ligações. Só <strong>não aparece na pesquisa nem no diretório público</strong>.",
   "help.qa.unknownSession.q":
     "Não reconheço um dispositivo nas minhas sessões ativas. E agora?",
   "help.qa.unknownSession.a":
     "Termina essa sessão em <sessionsLink>sessões ativas</sessionsLink>. O início de sessão é feito através da Google, por isso revê também a segurança da tua conta Google, já que quem tiver acesso a ela consegue entrar aqui. Depois <contactLink>conta-nos o que aconteceu</contactLink> e ajudamos-te a proteger a tua conta.",
   "help.qa.deleteAccount.q": "Como elimino a minha conta?",
   "help.qa.deleteAccount.a":
-    "Em <settingsLink>Definições</settingsLink> → Conta, mais abaixo. Isto é permanente. Vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
+    "Em <settingsLink>Definições</settingsLink> e depois Conta, mais abaixo. Isto é permanente. Vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
   "help.qa.levels.q":
     "O que significam os diferentes níveis de pessoa da comunidade?",
   "help.qa.levels.a":
@@ -895,7 +895,7 @@ export const marketing: Catalog = {
     "Acesso antecipado a eventos, um distintivo de apoiante, e a certeza de que a tua adesão mantém a plataforma sem anúncios.",
   "help.qa.emailNotifications.q": "Como controlo as notificações?",
   "help.qa.emailNotifications.a":
-    "Em <settingsLink>Definições</settingsLink> → Notificações, ativa ou desativa cada categoria em separado. A QueerPulse avisa-te dentro da aplicação e, se autorizares, por push. Não envia email.",
+    "Em <settingsLink>Definições</settingsLink> e depois Notificações, ativa ou desativa cada categoria em separado. A QueerPulse avisa-te dentro da aplicação e, se autorizares, por push. Não envia email.",
   "help.qa.browserSupport.q": "Que navegadores é que a QueerPulse suporta?",
   "help.qa.browserSupport.a":
     "Versões atuais do Chrome, Firefox, Safari e Edge. Navegadores mais antigos podem ter problemas de visualização.",
@@ -1029,7 +1029,7 @@ export const marketing: Catalog = {
   "communitiesAbout.what.title": "O que é aqui uma comunidade",
   "communitiesAbout.what.rooms.title": "Salas com propósito",
   "communitiesAbout.what.rooms.body":
-    "Uma comunidade é uma sala com um propósito e alguém que a cuida, não um feed sem fim ordenado por um algoritmo. Sabes sempre em que espaço estás.",
+    "Uma comunidade é uma sala com um propósito e alguém que a cuida. Sabes sempre em que espaço estás.",
   "communitiesAbout.what.kept.title": "Cuidadas por pessoas reais",
   "communitiesAbout.what.kept.body":
     "Cada comunidade tem alguém que a cuida, que define o tom, acolhe novas caras e zela pela sala.",
@@ -1361,7 +1361,7 @@ export const marketing: Catalog = {
   "imprint.meta.lastReviewed": "Revisto pela última vez a 1 de junho de 2026",
   "imprint.title": "Informação <em>legal</em>",
   "imprint.plain.text":
-    "A versão simples: a QueerPulse é construída e mantida por um grupo de voluntários, não é uma empresa registada. Esta página diz-te quem está por trás dela, como nos contactar, e a lei que nos rege.",
+    "A versão simples: a QueerPulse é construída e mantida por um grupo de pessoas voluntárias, a título pessoal. Esta página diz-te quem está por trás dela, como nos contactar, e a lei que nos rege.",
   "imprint.operator.title": "Quem gere a QueerPulse",
   "imprint.operator.p1":
     "A QueerPulse é construída e mantida por um grupo de voluntários. Ainda não existe nenhuma empresa ou organização registada por trás dela. Quando isso mudar, publicaremos aqui os dados de registo.",
@@ -1570,7 +1570,7 @@ export const marketing: Catalog = {
   "listBusiness.step1.owned.title": "Gerido ou liderado pela nossa comunidade",
   "listBusiness.step1.owned.desc":
     "Tu, quem partilha a propriedade contigo, ou a liderança são LGBTQ+.",
-  "listBusiness.step1.friendly.tag": "LGBTQ+ friendly",
+  "listBusiness.step1.friendly.tag": "Acolhe pessoas LGBTQ+",
   "listBusiness.step1.friendly.title": "Um lugar que nos acolhe",
   "listBusiness.step1.friendly.desc":
     "Não é queer-owned, mas é ativamente seguro e afirmativo.",
@@ -2311,6 +2311,171 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Melhoria",
   "changelog.badge.infrastructure": "Infraestrutura",
   "changelog.badge.fix": "Correção",
+  "changelog.tag.report": "Abrir o formulário de denúncia",
+  // Section 11, core member journeys (PRD-01..PRD-18).
+  "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.title":
+    "Uma falha já não parece uma página vazia",
+  "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.body":
+    'Quando um pedido falhava, a página encolhia os ombros e mostrava o seu estado vazio. Uma pesquisa falhada dizia-te que não havia resultados para a tua palavra. Uma falha ao carregar os anúncios no separador de saúde sexual dizia que o diretório de clínicas ainda estava para chegar. O diretório local dizia que Lisboa não tinha lugares queer, e os teus cartões, contactos e candidaturas podiam todos indicar que não tinhas nenhum. Em todos esses casos, a plataforma culpava-te pela sua própria falha. Agora os ecrãs dizem-te claramente quando algo não carregou e dão-te um botão para tentar outra vez, e só dizem "ainda não há nada aqui" quando isso é mesmo verdade.',
+  "changelog.entries.onboarding-never-guesses-your-visibility.title":
+    "As boas-vindas nunca adivinham a tua visibilidade",
+  "changelog.entries.onboarding-never-guesses-your-visibility.body":
+    "No passo das intenções, se não conseguíssemos carregar as escolhas que já tinhas guardado, o formulário assumia em silêncio que as tuas intenções eram públicas e podia guardá-las assim. Como as intenções podem dizer que procuras namoro, casa ou colegas de casa, isso era um risco real de exposição. O passo passa a avisar-te quando não conseguiu carregar, oferece tentar outra vez, e nunca escreve uma definição de visibilidade que não tenha conseguido ler.",
+  "changelog.entries.reporting-a-person-says-what-actually-happens.title":
+    "Denunciar uma pessoa diz o que acontece mesmo",
+  "changelog.entries.reporting-a-person-says-what-actually-happens.body":
+    "A confirmação depois de denunciares alguém a partir de uma mensagem ou de um contacto tinha sido escrita para sinalizar o selo de espaço seguro de um espaço físico. Falava em suspender o selo e prometia que nunca contactaríamos o espaço, quando não havia selo nem espaço nenhum à vista, e mostrava as etiquetas de formatação no ecrã. Denunciar uma pessoa passa a ter a sua própria confirmação, que descreve o que uma pessoa moderadora vai fazer de facto.",
+  "changelog.entries.mod-tools-bans-read-in-words-again.title":
+    "As expulsões nas ferramentas de moderação voltam a ler-se por palavras",
+  "changelog.entries.mod-tools-bans-read-in-words-again.body":
+    'Abrir as Ferramentas de moderação e depois Expulsões mostrava códigos internos em vez de texto: a duração de uma expulsão aparecia como uma chave em vez de "Permanente", e a citação da regra e o editor de expulsões eram códigos de uma ponta à outra. O texto em falta foi escrito em inglês e em português.',
+  "changelog.entries.offline-no-longer-clears-what-youre-typing.title":
+    "Perder rede já não apaga o que estavas a escrever",
+  "changelog.entries.offline-no-longer-clears-what-youre-typing.body":
+    "Entrar num túnel ou trocar de wi-fi para dados substituía a página inteira pelo ecrã offline, o que deitava fora uma mensagem a meio, um formulário de encontro por enviar ou um rascunho em curso. A página fica agora exatamente onde estava e uma pequena barra avisa-te que a ligação caiu. O ecrã offline completo continua a aparecer quando abres a app sem ligação nenhuma.",
+  "changelog.entries.back-button-leaves-an-editor-cleanly.title":
+    "Voltar atrás sai do editor num só toque",
+  "changelog.entries.back-button-leaves-an-editor-cleanly.body":
+    "As páginas que te avisam sobre edições por guardar deixavam um passo escondido no histórico do navegador. Depois de saíres de uma delas, o botão de voltar levava-te ao editor uma segunda vez antes de te levar a qualquer outro sítio. Esse passo é agora limpo, saias por onde saíres.",
+  "changelog.entries.signed-out-tab-bar-is-whole-again.title":
+    "A barra de separadores sem sessão está completa outra vez",
+  "changelog.entries.signed-out-tab-bar-is-whole-again.body":
+    "No telemóvel, quem visitava sem conta via uma barra de separadores com um único separador. Dois dos seus três destinos tinham passado a ser só para membros, por isso eram removidos da barra sem serem substituídos. Passa a oferecer a biblioteca de recursos, o guia de espaços seguros e o Sobre, que abrem todos sem conta.",
+  "changelog.entries.installing-the-app-takes-one-tap-again.title":
+    "Instalar a app volta a ser um toque",
+  "changelog.entries.installing-the-app-takes-one-tap-again.body":
+    "O navegador dá a uma app uma única oportunidade de captar o convite de instalação, e a primeira parte da QueerPulse a pedi-lo ficava com ele. A página de instalação e a janela de instalação mostravam instruções passo a passo em navegadores que instalam com um só toque. As três partilham agora o mesmo convite.",
+  "changelog.entries.notification-taps-land-on-the-right-screen.title":
+    "Tocar numa notificação abre o ecrã certo",
+  "changelog.entries.notification-taps-land-on-the-right-screen.body":
+    "Na app instalada, tocar na notificação de uma mensagem podia trazer a QueerPulse para o ecrã onde estava em vez de abrir a conversa, porque a app podia adormecer a meio do salto. Agora termina de abrir a notificação antes que algo a possa interromper.",
+  "changelog.entries.the-installed-app-keeps-itself-current.title":
+    "A app instalada mantém-se atualizada",
+  "changelog.entries.the-installed-app-keeps-itself-current.body":
+    "Uma app instalada e deixada aberta durante dias podia continuar a correr uma versão antiga até ser fechada e reaberta, e às vezes recarregava-se de repente ao procurar uma parte da app entretanto alterada. Passa a verificar se há versão nova cerca de uma vez por hora e a oferecer-te a habitual pastilha de atualização.",
+  "changelog.entries.pausing-your-account-now-pauses-it.title":
+    "Pausar a tua conta agora pausa mesmo",
+  "changelog.entries.pausing-your-account-now-pauses-it.body":
+    "O botão de pausa nas Definições mostrava um ecrã de sucesso sem fazer nada: o teu perfil continuava visível, continuavas contactável e a tua sessão continuava aberta. Agora executa a ação real, e o ecrã de confirmação só aparece depois de a conta estar mesmo pausada.",
+  "changelog.entries.pause-and-delete-live-in-one-place.title":
+    "Pausar e apagar num só sítio",
+  "changelog.entries.pause-and-delete-live-in-one-place.body":
+    "Existiam em três ecrãs diferentes com três confirmações diferentes, e foi assim que o que estava avariado passou despercebido. Há agora uma única página que explica o que cada um faz, e todos os outros sítios levam-te até lá.",
+  "changelog.entries.content-settings-actually-filter-your-feed.title":
+    "As definições de conteúdo em Interesses já funcionam",
+  "changelog.entries.content-settings-actually-filter-your-feed.body":
+    "Encontros, saúde mental, e sexualidade e identidade eram interruptores sem nada por trás. Desligar um esconde agora esse tipo de comunidade do teu feed. Nunca afeta o teu acesso a esses espaços, e deliberadamente não filtra saúde, deficiência ou raça, porque isso são pessoas e não conteúdo.",
+  "changelog.entries.you-can-stop-being-suggested-to-strangers.title":
+    "Podes deixar de ser sugerido a quem não conheces",
+  "changelog.entries.you-can-stop-being-suggested-to-strangers.body":
+    "Em Visibilidade. Continuas a ver sugestões e continuas no diretório de membros. Só sais da faixa de sugestões das outras pessoas.",
+  "changelog.entries.the-activity-switch-is-one-switch.title":
+    "O interruptor de atividade é o mesmo nos dois sítios",
+  "changelog.entries.the-activity-switch-is-one-switch.body":
+    "As Definições anunciavam a opção de esconder a atividade recente como “em breve” enquanto a versão funcional já existia no teu perfil. Passou a ser um só controlo: mudas num lado e vale nos dois, e cada um diz-te como apareces neste momento.",
+  "changelog.entries.answer-a-connection-request-where-you-read-it.title":
+    "Podes responder a um pedido de ligação onde o lês",
+  "changelog.entries.answer-a-connection-request-where-you-read-it.body":
+    "Se alguém já te tinha pedido para ligar, o perfil dessa pessoa continuava a oferecer-te dizer olá, depois recusava a mensagem e dizia-te que ela estava à espera do outro lado, o oposto do que acontecia. O perfil oferece agora aceitar, a notificação traz aceitar e recusar, e aquilo que tinhas escrito vai contigo para a conversa em vez de se perder.",
+  "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.title":
+    "Um convívio pode avisar-te quando faltam poucos lugares",
+  "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.body":
+    "Para convívios que guardaste ou a que respondeste talvez. Está desligado a menos que o queiras, é um aviso por convívio, e cala-se outra vez se abrirem lugares.",
+  "changelog.entries.blocked-and-muted-in-one-place.title":
+    "Pessoas bloqueadas e silenciadas na mesma lista",
+  "changelog.entries.blocked-and-muted-in-one-place.body":
+    "Silenciar alguém era fácil e rever era impossível: nada listava quem tinhas silenciado, por isso desfazer implicava lembrares-te do nome. O painel mostra agora ambos, com a data e um toque para desfazer.",
+  "changelog.entries.your-join-request-shows-its-deadline.title":
+    "O teu pedido de adesão mostra o prazo, e um convite expirado não é o fim",
+  "changelog.entries.your-join-request-shows-its-deadline.body":
+    "Um pedido aprovado guardava um convite que expirava em silêncio sete dias depois. O prazo começa agora quando és avisado e não quando a decisão é tomada, a página de estado mostra-o enquanto ainda dá para usar, e um convite que expirou pode ser reativado a partir dessa página. Se perdeste o link, entrar com o Google leva-te de volta ao teu pedido.",
+  "changelog.entries.losing-your-google-account-is-no-longer-final.title":
+    "Perder a conta Google já não significa perder a tua adesão",
+  "changelog.entries.losing-your-google-account-is-no-longer-final.body":
+    "Antes era permanente, sem retorno a não ser editarmos a base de dados à mão. Um administrador pode agora religar a tua adesão a uma nova conta Google, mas apenas a uma que já provou controlar o teu endereço, e nunca escrevendo uma identidade à mão.",
+  "changelog.entries.vouching-has-a-front-door.title":
+    "Avalizar alguém passou a ter porta de entrada",
+  "changelog.entries.vouching-has-a-front-door.body":
+    "A página existia e nada lhe apontava. Está agora no menu da tua conta e ao lado das tuas ligações, e o passo de início leva-te até lá em vez de te levar à lista de membros.",
+  "changelog.entries.recognition-counts-people-not-volume.title":
+    "O reconhecimento conta pessoas e não volume",
+  "changelog.entries.recognition-counts-people-not-volume.body":
+    "Publicar numa comunidade criada por ti, ou apareceres nos teus próprios convívios, podia levar-te quase até aos níveis que dão convites extra. Os pontos vêm agora de coisas em que outra pessoa participou. Os emblemas que se ganham sozinho continuam a ser teus e continuam à vista.",
+
+  "changelog.entries.declining-a-connection-request-now-holds.title":
+    "Recusar um pedido de ligação passa a valer",
+  "changelog.entries.declining-a-connection-request-now-holds.body":
+    "Quando recusavas um pedido de ligação, quem o enviou podia enviar outro logo a seguir, com uma nova mensagem escrita, tantas vezes quantas quisesse. A nota do pedido era, na prática, uma forma de continuar a escrever a alguém que já tinha dito que não, e a única coisa que travava mesmo isso era bloquear, que nessa altura ainda não tens motivo para achar que precisas. Uma recusa passa a valer por si. Um novo pedido tem de esperar, a espera aumenta de cada vez que recusas a mesma pessoa, e ao fim de recusas suficientes deixa de ser possível voltar a pedir. Nada disto revela à outra pessoa quantas vezes recusaste.",
+
+  "changelog.entries.you-can-report-a-whole-community.title":
+    "Podes denunciar uma comunidade inteira",
+  "changelog.entries.you-can-report-a-whole-community.body":
+    "Podias denunciar uma publicação, uma resposta e uma pessoa, mas nunca a própria comunidade. Se uma comunidade estava organizada à volta de fazer mal, a única coisa que podias fazer era denunciar as publicações uma a uma, e nada disso punha alguma vez a comunidade à frente de quem modera enquanto comunidade. Passas a poder denunciá-la a partir da página dela, e os motivos disponíveis incluem os graves: expor a identidade de alguém, divulgar dados pessoais, assédio, discurso de ódio e discriminação. Até agora, o pior que podias dizer de uma comunidade era que era spam.",
+
+  "changelog.entries.housing-reports-can-reach-the-urgent-queue.title":
+    "As denúncias de habitação chegam à fila urgente",
+  "changelog.entries.housing-reports-can-reach-the-urgent-queue.body":
+    "Havia duas coisas a manter as denúncias de habitação mais graves fora da fila mais rápida. A primeira era que nenhuma denúncia de habitação, sobre um anúncio, sobre quem partilha casa ou sobre quem arrenda, oferecia expor a identidade ou divulgar dados pessoais como motivo. Alguém que arrenda ameaçar contar à tua família, ou quem partilha casa contigo publicar a tua morada ou o facto de seres trans, é o perigo central na habitação queer, e não havia palavra para isso no formulário. Esses motivos passam a existir nos três. A segunda era que, depois de três denúncias sobre o mesmo alvo numa semana, a quarta era recusada, e essa recusa era aplicada antes de olharmos para o que a denúncia dizia. Ou seja, o único tipo de denúncia a que prometemos responder em uma hora era o único que podia ser recusado. As denúncias urgentes deixam de ser recusadas por esse motivo, e a mensagem que recebes quando um limite se aplica aponta para um sítio que existe mesmo.",
+
+  "changelog.entries.hiding-a-housing-profile-now-hides-it.title":
+    "Esconder um perfil de habitação passa a escondê-lo",
+  "changelog.entries.hiding-a-housing-profile-now-hides-it.body":
+    "Quando quem modera escondia ou removia um perfil de quem partilha casa, ou de quem arrenda, na sequência de uma denúncia, a denúncia fechava como tratada, era-te dito que tinha sido resolvida, e o perfil ficava exactamente onde estava. Continuava a aparecer ao navegar, continuava na pesquisa, e continuava lá se tivesses o link. Todas as outras partes da QueerPulse já verificavam isto e a habitação não verificava. Passa a verificar, em todas as formas de lá chegar.",
+
+  "changelog.entries.you-choose-whether-a-report-is-anonymous.title":
+    "És tu que escolhes se uma denúncia é anónima",
+  "changelog.entries.you-choose-whether-a-report-is-anonymous.body":
+    "O formulário de denúncia decidia se querias ser anónime olhando para o campo de email opcional. Deixá-lo em branco tornava a denúncia anónima, e nada na página o dizia. Isto pesa mais do que parece: uma denúncia anónima chega a quem modera sem o teu nome e sem o registo das tuas denúncias anteriores, que faz parte da forma como se avalia o que estás a contar. Alguém que preenchesse o formulário a contar que a equipa soubesse quem era ficava, sem saber, por identificar. Passa a ser uma escolha tua, diz-te o que cada opção te custa, e o campo de email volta a ser apenas um campo de email.",
+
+  "changelog.entries.barring-someone-forever-needs-two-people.title":
+    "Barrar alguém para sempre passa a precisar de duas pessoas",
+  "changelog.entries.barring-someone-forever-needs-two-people.body":
+    "Remover um membro de uma comunidade barrava-lhe o regresso e, se não fosse definida uma data de fim, esse barramento era permanente. Uma pessoa dona ou uma pessoa que modera podia fazê-lo sozinha. Um banimento permanente da própria QueerPulse já precisava da concordância de uma segunda pessoa da moderação, por se entender que barrar alguém para sempre é decisão a mais para uma pessoa só, e a versão da comunidade, que é aquela com que a maioria das pessoas se cruza, não tinha essa verificação. Passa a ter. A remoção continua a acontecer de imediato e o barramento começa em trinta dias, para que ninguém fique numa sala de onde acabou de ser removide. Torná-lo permanente fica à espera da concordância de uma segunda pessoa dona ou que modera, e quem propôs não pode ser quem concorda. Se ninguém assinar em três dias, o barramento fica simplesmente nos trinta dias. Numa comunidade sem mais ninguém que pudesse assinar, o barramento permanente não está sequer disponível.",
+
+  "changelog.entries.a-community-can-read-its-own-history.title":
+    "Uma comunidade passa a poder ler a sua própria história",
+  "changelog.entries.a-community-can-read-its-own-history.body":
+    "Todas as comunidades já guardavam o registo de quem removeu um membro, quem mudou um papel, quem congelou ou descongelou a sala e quem a passou de pública a privada. Só a equipa da QueerPulse o podia ler. Quem é dono da comunidade e quem lá modera, as pessoas que esse registo existe para responsabilizar, não podiam. Passam a poder, a partir das ferramentas de moderação. Tudo o que a equipa da plataforma fez está identificado como tal, para que uma intervenção nossa nunca seja confundida com uma decisão de alguém da comunidade.",
+
+  "changelog.entries.we-now-publish-government-data-requests.title":
+    "Passamos a publicar os pedidos de dados de tribunais e governos",
+  "changelog.entries.we-now-publish-government-data-requests.body":
+    "O relatório de transparência contava denúncias, recursos e decisões de moderação, e não dizia absolutamente nada sobre quantas vezes um tribunal, uma força policial ou um organismo do Estado nos pediu para entregar informação sobre um membro. Não publicava o número nem mencionava que faltava, o que, numa plataforma cujo propósito é a segurança de pessoas queer, é precisamente a linha que mais importa. Passa a haver uma secção para isso. Conta os pedidos que recebemos, o que pediam, o que fizemos em cada um, quantas contas foram nomeadas e a quantas dessas pessoas contámos. Os números pequenos são retidos, porque um pedido que nomeia uma ou duas contas é uma pessoa concreta para quem a conheça, e o zero é publicado como zero verdadeiro. Os registos riscados também são contados, para que o registo não possa ser esvaziado em silêncio.",
+
+  "changelog.entries.dark-mode-gives-feedback-again.title":
+    "O modo escuro volta a responder-te",
+  "changelog.entries.dark-mode-gives-feedback-again.body":
+    "Se usas a QueerPulse em modo escuro, boa parte da aplicação tinha deixado de te responder. O tom que mostra que uma linha está sob o teu cursor, ou que uma opção de uma lista é aquela onde o teclado está neste momento, era feito a partir de uma cor que nunca mudava no tema escuro, por isso numa página escura pintava quase exactamente a própria página. Havia sessenta e nove superfícies a usá-lo. Na prática, passar o rato por um dia do calendário não mostrava nada, e percorrer uma lista com as setas não te dava forma de veres onde estavas. O mesmo problema escondia outras coisas: a opção escolhida num menu, as legendas dos eixos dos gráficos, o brilho que indica que a pré-visualização de um link ou um cartão de habitação ainda está a carregar, o círculo colorido por trás das iniciais de alguém e a moldura de foco de um campo de data. Está tudo corrigido, e o modo claro ficou exactamente como estava.",
+
+  "changelog.entries.persona-pages-had-text-you-could-barely-read.title":
+    "As páginas de persona tinham texto quase ilegível",
+  "changelog.entries.persona-pages-had-text-you-could-barely-read.body":
+    "Cada aparência de persona reestiliza a tua página à sua maneira, e parte disso é escolher a sua própria cor de tinta. Treze dessas aparências estavam também a tornar o texto mais ténue ainda mais fraco do que o resto da QueerPulse permite, voltando a um valor que corrigimos em todo o lado depois de uma revisão de contraste. O texto afectado era o do tipo discreto que continua a importar: datas e metadados, o texto de exemplo dentro de um campo e a linha de ajuda por baixo de uma pergunta de formulário. Nalgumas aparências media menos de 3 para 1 contra o próprio fundo, quando o mínimo é 4,5. Todas as aparências foram medidas de novo contra a cor real onde assentam e subidas até cumprirem, e uma nota no ficheiro regista esse mínimo para que uma aparência nova comece já a partir dele.",
+
+  "changelog.entries.things-that-were-meant-to-move-now-move.title":
+    "O que era suposto mexer volta a mexer",
+  "changelog.entries.things-that-were-meant-to-move-now-move.body":
+    "Onze animações da aplicação estavam há muito a não fazer nada. Estavam escritas correctamente e remetiam para movimento definido noutro sítio, mas a forma como as folhas de estilo são empacotadas mudava-lhes o nome pelo caminho, pelo que a referência apontava para o vazio sem nunca dar erro. As listas pendentes e os selectores de data apareciam de repente em vez de abrirem suavemente, o ponto de directo de uma comunidade em destaque nunca pulsava, mudar de persona cortava em vez de fazer transição, e um controlo que ainda não podes usar ficava imóvel ao ser clicado em vez de dar o pequeno abanão que o diz. Além disso, alguns títulos pediam um tipo de letra por um nome que não existia, e por isso apareciam discretamente na letra do corpo em vez da serifada que lhes era devida, incluindo o título da folha impressa do cartão de membro.",
+
+  "changelog.entries.your-identity-details-now-reach-only-real-matches.title":
+    "Os teus detalhes de identidade chegam agora só a matches reais",
+  "changelog.entries.your-identity-details-now-reach-only-real-matches.body":
+    'Num perfil de partilha de casa podes indicar identidade de género, necessidades de espaço seguro e como queres que a casa funcione em relação a seres trans. São as informações mais sensíveis que a plataforma guarda, e a definição que as protegia tinha uma opção com o nome "Só quem poderia partilhar casa comigo". Não era isso que significava. Significava qualquer pessoa cujo perfil estivesse definido como o oposto do teu, e isso é uma escolha que cada pessoa faz no seu próprio perfil, por isso na prática qualquer membro podia escolhê-la e ler essa metade do quadro, sem like e sem match. Passa a significar o que diz: os teus detalhes chegam a alguém só depois de as duas pessoas terem dado like uma na outra. A opção passa a chamar-se "Só quem deu match comigo" para ninguém ter de adivinhar. Mudaram mais duas coisas com isto. Os perfis nessa definição deixam de levar estes detalhes na listagem do quadro, para não poderem ser recolhidos em massa, e passam a aparecer na página do próprio perfil depois do match. Se escolheste "Qualquer pessoa no quadro" ou "Qualquer membro", nada muda para ti: foi uma decisão deliberada de ficares visível, e os cartões e o baralho de descoberta continuam a mostrá-la.',
+
+  "changelog.entries.review-queues-no-longer-hide-people-who-are-waiting.title":
+    "As filas de revisão já não escondem quem está à espera",
+  "changelog.entries.review-queues-no-longer-hide-people-who-are-waiting.body":
+    "Se moderas uma comunidade, revês reivindicações de um espaço no diretório cuidas de um grupo de habitação ou revês quem entra numa cooperativa de habitação, a tua fila de revisão tinha um limite que ninguém te dizia. Carregava os primeiros 200 pedidos e parava, sem dizer nada sobre os que ficavam de fora, por isso uma fila movimentada terminava em silêncio nos 200 e os pedidos que desapareciam eram os que tinham esperado menos. Todas estas filas passam agora a carregar uma página de cada vez, dizem-te quantas pessoas estão à espera no total e dão-te forma de chegar às restantes. As duas filas de habitação tinham um segundo problema por baixo desse: cada uma buscava os 200 pedidos mais recentes em qualquer estado e depois escondia os já decididos no teu navegador, pelo que um grupo ou uma cooperativa com 200 pedidos aprovados ou recusados recentemente mostrava-te uma fila vazia enquanto alguém continuava à espera nela. Ambas passam a pedir especificamente os pedidos pendentes, por isso o que vês é o que está realmente em aberto.",
+
+  "changelog.entries.press-kit-photos-can-be-uploaded-again.title":
+    "As fotografias do kit de imprensa podem ser carregadas",
+  "changelog.entries.press-kit-photos-can-be-uploaded-again.body":
+    "A fotografia de um contacto de imprensa só podia ser um link para uma imagem alojada noutro sítio. Uma fotografia carregada era recusada, o que significava que a única forma de preencher o campo era apontá-lo para outro site, e quem geria esse site passava a ver o endereço e o navegador de todas as pessoas que liam o nosso kit de imprensa. O carregamento passa a funcionar, e os links ficam limitados aos poucos sítios de onde já servimos imagens. As fotografias já carregadas noutras partes do QueerPulse também estão protegidas de serem removidas por engano: a limpeza que apaga imagens sem uso passa a saber que uma fotografia do kit de imprensa está em uso.",
+
+  "changelog.entries.a-mistyped-address-says-not-found.title":
+    "Um endereço mal escrito diz que não existe",
+  "changelog.entries.a-mistyped-address-says-not-found.body":
+    "Alguns endereços do QueerPulse terminam num identificador longo, do tipo que um link transporta e não algo que escreverias. Se esse identificador chegasse danificado, por um link cortado numa mensagem, uma cópia que perdeu os últimos caracteres ou um marcador antigo, a página respondia com um erro de servidor em vez de te dizer que aquilo não existia. Cerca de vinte desses endereços passam a reconhecer um identificador malformado pelo que é e respondem que não foi encontrado, que é o que a página sempre prometeu fazer.",
   "changelog.tag.about": "L\u00ea onde nos posicionamos",
   "changelog.tag.partners": "Vê os nossos parceiros",
   "changelog.tag.aboutCommunities": "Ver como funcionam as comunidades",
@@ -5709,7 +5874,7 @@ export const marketing: Catalog = {
   "forOrgs.hero.eyebrow": "Para organizações · parcerias",
   "forOrgs.hero.title": "Trabalha <em>connosco,</em> não <em>sobre nós.</em>",
   "forOrgs.hero.dek":
-    "As parcerias da QueerPulse são <b>operacionais, não promocionais</b>. Não vendemos acesso, não fazemos conteúdo patrocinado, nem co-branding pelo simples efeito. <em>Construímos ligações entre organizações que já fazem este trabalho.</em> Abaixo: como são essas ligações na prática, com quem já trabalhamos, e como começar uma conversa.",
+    "As parcerias da QueerPulse são <b>operacionais e práticas</b>. Não vendemos acesso, não fazemos conteúdo patrocinado, nem co-branding pelo simples efeito. <em>Construímos ligações entre organizações que já fazem este trabalho.</em> Abaixo: como são essas ligações na prática, com quem já trabalhamos, e como começar uma conversa.",
   "forOrgs.hero.notDoTitle": "O que não fazemos",
   "forOrgs.notDo.prideCampaigns":
     "<b>Campanhas no mês do Orgulho.</b> Nunca as fazemos, em junho ou em qualquer mês. As pessoas da comunidade sairiam, e com razão.",
@@ -5776,9 +5941,9 @@ export const marketing: Catalog = {
   "forOrgs.cta.list1": "Para parcerias, normalmente ligamos antes de escrever",
   "forOrgs.cta.list2":
     "Candidaturas a financiamento: inclui uma página de resumo",
-  "forOrgs.cta.pressInquiry": "Pedidos de imprensa → <a>Kit de Imprensa</a>",
+  "forOrgs.cta.pressInquiry": "Pedidos de imprensa: <a>Kit de Imprensa</a>",
   "forOrgs.cta.partnerQuestion":
-    "Já és parceiro e tens uma pergunta → <a>Contacto</a>",
+    "Já tens uma parceria connosco e alguma pergunta? <a>Contacta-nos</a>",
   "forOrgs.form.nameLabel": "O teu nome",
   "forOrgs.form.namePlaceholder": "Filipa Mendes",
   "forOrgs.form.orgLabel": "Organização",
@@ -5836,6 +6001,12 @@ export const marketing: Catalog = {
   "directory.noListings.title": "Ainda não há lugares",
   "directory.noListings.body":
     "Este diretório cresce a partir da comunidade. Se tens ou conheces um lugar queer-owned ou queer-friendly em Lisboa, sê o primeiro a adicioná-lo.",
+  // Mostrado quando a leitura do diretório falhou. Separado do `noListings`
+  // acima: uma falha apresentada como estado vazio diria a quem lê que Lisboa
+  // não tem lugares queer-owned (DES-25).
+  "directory.loadError.title": "Não foi possível carregar o <em>diretório</em>",
+  "directory.loadError.body":
+    "Os lugares não chegaram desta vez. Os teus filtros continuam ativos, por isso tenta novamente daqui a pouco.",
   "directory.clearFilters": "Limpar filtros",
   "directory.clearAll": "Limpar tudo",
   "directory.activeFilters": "Filtrado por",
@@ -5850,7 +6021,7 @@ export const marketing: Catalog = {
   "directory.sort.hood": "Por bairro",
   "directory.badge.queerOwnedVerified": "Negócio queer verificado",
   "directory.badge.queerOwned": "Negócio queer",
-  "directory.badge.friendly": "LGBTQ+ friendly",
+  "directory.badge.friendly": "Acolhe pessoas LGBTQ+",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
@@ -5908,7 +6079,7 @@ export const marketing: Catalog = {
   "directory.detail.relatedTitle": "Mais {category} por perto",
   "directory.detail.badge.verifiedOwned": "Negócio queer verificado",
   "directory.detail.badge.owned": "Negócio queer",
-  "directory.detail.badge.friendly": "LGBTQ+ friendly",
+  "directory.detail.badge.friendly": "Acolhe pessoas LGBTQ+",
   "directory.detail.reviewsCount": "· {count} avaliações",
   "directory.detail.newBadge": "Novo",
   "directory.detail.onlineBusiness": "Só online",
@@ -6971,7 +7142,7 @@ export const marketing: Catalog = {
   "constitution.art6.toc": "VI · Dinheiro",
   "constitution.art6.title": "Dinheiro",
   "constitution.art6.clause1":
-    "<strong>Pelo menos 90% de cada euro recebido</strong> tem de ser gasto em programas comunitários, equipa e infraestrutura, e não em custos indiretos. A meta é 96% e tem sido cumprida todos os anos desde 2024.",
+    "<strong>Pelo menos 90% de cada euro recebido</strong> tem de ser gasto em programas comunitários, equipa e infraestrutura, deixando um teto de 10% para custos indiretos. A meta é 96% e tem sido cumprida todos os anos desde 2024.",
   "constitution.art6.clause2":
     "O orçamento anual é aprovado pela Assembleia. O círculo de finanças pode reequilibrar entre categorias ao longo do ano sem nova aprovação, até 10% por categoria.",
   "constitution.art6.clause3":
@@ -7016,7 +7187,7 @@ export const marketing: Catalog = {
   "constitution.art11.toc": "XI · Dissolução",
   "constitution.art11.title": "Dissolução",
   "constitution.art11.clause1":
-    "O coletivo só pode ser encerrado por resolução da Assembleia que exija uma <strong>maioria qualificada de 75%</strong> de todas as pessoas-membro ativas, e não apenas das que votam.",
+    "O coletivo só pode ser encerrado por resolução da Assembleia que reúna uma <strong>maioria qualificada de 75%</strong> calculada sobre a totalidade das pessoas-membro ativas.",
   "constitution.art11.clause2":
     "Em caso de encerramento, quaisquer fundos remanescentes têm de ser transferidos para uma organização de direitos LGBTQ+ registada escolhida pela Assembleia dissolvente. Nenhum fundo pode ser distribuído a indivíduos.",
 
@@ -7123,7 +7294,7 @@ export const marketing: Catalog = {
   "submitPartner.success.step1":
     "Está pendente de revisão pela equipa de parcerias",
   "submitPartner.success.step2":
-    "Lemos todas as candidaturas, não só as mais arrumadas",
+    "Lemos todas as candidaturas, por mais toscas que sejam",
   "submitPartner.success.step3":
     "Entraremos em contacto: um sim, um ainda não, ou uma pergunta",
   "submitPartner.success.body":
@@ -7189,7 +7360,7 @@ export const marketing: Catalog = {
     "Recursos reais para Apoio Jurídico e Testagem de Saúde Sexual",
   "changelog.entries.resource-listings-and-suggestions.body":
     'Apoio Jurídico e Testagem de Saúde Sexual mostram agora um diretório real, verificado por administradores, quando existe, e um formulário "Sugerir um recurso" que alimenta uma fila de revisão administrativa quando não existe. Nunca com recursos fabricados.',
-  "changelog.tag.legal": "Ver Apoio Jurídico →",
+  "changelog.tag.legal": "Ver Apoio Jurídico",
 
   "changelog.tag.guideRating": "Ver os guias de Legal",
   "changelog.entries.resources-guide-rating.title":
@@ -7225,6 +7396,36 @@ export const marketing: Catalog = {
     "O formulário de nomeação passa a ser um formulário",
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nomear um Agente de Mudança eram duas caixas em forma de comprimido lado a lado por baixo do título: sem etiquetas, sem noção de quanto podias escrever na segunda e com um botão que ficava morto até as duas terem alguma coisa, sem nunca o dizer. O texto passa a ficar ao lado de um cartão a sério. Os dois campos têm etiqueta e uma pista, a caixa do porquê tem espaço para escrever e uma contagem de 500 caracteres, e carregar no botão com um campo vazio diz-te qual deles falta. Ao lado do formulário, três linhas explicam o que acontece a seguir: alguém da moderação lê, recebes uma notificação com a decisão e a pessoa nomeada nunca é avisada.",
+
+  "changelog.entries.signing-a-device-out-now-signs-it-out.title":
+    "Terminar sessão num dispositivo termina mesmo",
+  "changelog.entries.signing-a-device-out-now-signs-it-out.body":
+    "As definições da conta mostram os dispositivos onde tens sessão iniciada, e havia duas coisas erradas nessa página. Nenhum dispositivo estava marcado como aquele que tens na mão, por isso não havia forma de saber qual das linhas era o telemóvel que estavas a usar. Pior: Terminar sessão nos outros dispositivos terminava a sessão em todos, incluindo aquele onde estavas, o contrário do que promete e uma má surpresa para quem recorre a essa opção por achar que a conta foi comprometida. Ambos os problemas estão resolvidos: o dispositivo onde estás fica identificado, e terminar a sessão nos outros deixa-te exactamente onde estavas. Terminar a sessão num dispositivo passa também a ser imediato. Antes, um dispositivo cuja sessão tinha acabado de ser terminada continuava a funcionar até quinze minutos, por isso ainda conseguia ler as tuas mensagens e publicar nesse intervalo, e ainda podia voltar a ligar-se às actualizações em tempo real. Essa janela fica fechada em toda a plataforma ao mesmo tempo.",
+
+  "changelog.entries.names-that-speak-for-queerpulse-are-reserved.title":
+    "Nomes que falam pela QueerPulse ficam reservados",
+  "changelog.entries.names-that-speak-for-queerpulse-are-reserved.body":
+    "Aqui a equipa é identificada por um distintivo, e um nome de utilizador não tem esse peso, o que deixava uma falha: nomes como support, moderator, official, security e safety estavam livres para qualquer pessoa. Quem ficasse com um deles podia abrir uma conversa que parecia vir da própria plataforma. Cerca de trinta nomes destes passam a estar reservados para a plataforma, a juntar aos que já estavam reservados por coincidirem com endereços de páginas. A regra aplica-se em todos os pontos onde um nome de utilizador é definido, incluindo no registo, onde o nome era retirado directamente da conta Google sem qualquer verificação. Se o teu nome calhar coincidir com uma das palavras reservadas, recebes o mesmo nome com um número a seguir, e ninguém que já use um deles perde o seu.",
+
+  "changelog.entries.badges-for-the-people-who-run-each-part.title":
+    "Distintivos para quem cuida de cada área",
+  "changelog.entries.badges-for-the-people-who-run-each-part.body":
+    "Algumas áreas da QueerPulse são geridas por pessoas da comunidade a quem foi confiada uma área dela: habitação, o directório, a biblioteca de recursos, a revista, as comunidades. Tomam decisões reais sobre o trabalho de outras pessoas e, até agora, não tinham distintivo nenhum, por isso quem via um anúncio recusado ou um texto travado tinha à frente uma conta comum. Estas seis funções passam a aparecer na página da equipa e em qualquer sítio onde apareça o nome de um membro, cada uma com uma etiqueta simples a dizer de que área a pessoa cuida. Duas funções ficam de propósito sem distintivo: quem escreve para a revista, que trabalha apenas nos seus próprios textos, e parcerias, que não decide nada sobre um membro.",
+
+  "changelog.entries.staying-signed-in-on-shared-wifi.title":
+    "Manter a sessão em wifi partilhado",
+  "changelog.entries.staying-signed-in-on-shared-wifi.body":
+    "As sessões renovam-se discretamente em segundo plano, e o limite de quantas vezes isso podia acontecer contava toda a gente que partilha uma ligação à internet como se fosse uma só pessoa. Num espaço, num café, ou numa ligação em que o operador coloca muitas casas atrás do mesmo endereço, a décima primeira renovação num minuto entre todos os presentes era recusada, e quem era afectado nada tinha feito além de estar na mesma sala. O limite passa a contar cada sessão por si, por isso uma sala cheia é apenas uma sala cheia.",
+
+  "changelog.entries.clearer-keyboard-focus-across-the-platform.title":
+    "Foco de teclado mais claro em toda a plataforma",
+  "changelog.entries.clearer-keyboard-focus-across-the-platform.body":
+    "Se te moves pelo QueerPulse com o teclado, o anel que marca onde estás tinha um problema. Nas zonas creme e brancas do site era um único contorno coral que quase não se separava da página por trás. O anel passa a ter dois tons, uma linha escura com um halo claro logo por dentro, para que um dos dois se destaque sempre, seja qual for a cor onde calha. A maior parte do site já funcionava assim, e cerca de 170 controlos individuais voltavam discretamente ao contorno fino antigo. Passam todos a partilhar o mesmo anel, por isso fica igual num botão, num cartão, numa foto e numa página de persona, seja qual for o fundo que escolheste. Três sítios não tinham anel nenhum e passam a ter: a tela de escrita de artigos, a caixa de comentários por baixo de um artigo e o campo de pesquisa em Encontrar pessoas. O texto mais ténue do Studio, o das horas, dos cabeçalhos de dia e dos detalhes de linha, também estava demasiado pálido contra o fundo escuro nos tamanhos pequenos em que aparece, e foi clareado até se ler.",
+
+  "changelog.entries.screen-readers-follow-along-in-more-places.title":
+    "Os leitores de ecrã acompanham em mais sítios",
+  "changelog.entries.screen-readers-follow-along-in-more-places.body":
+    "Havia partes do site que mudavam sem o dizer. Cinco painéis, as fichas de recursos, a candidatura a bolsa, o encontro com mentores, o pedido de impressão e a gorjeta do Studio, abriam sem te levar lá para dentro, por isso o elemento seguinte no teclado era um controlo da página de trás. Passam a colocar-te dentro, a manter-te lá enquanto estão abertos, a fechar com Escape e a devolver-te ao botão de onde vieste. Reordenar as peças de uma edição da revista, e mover um cartão do roteiro para cima ou para baixo na coluna, passam a anunciar o título e a nova posição, e um cartão do roteiro pode ser movido sem rato nenhum. Percorrer as fotos de um anúncio de casa diz em que foto estás e o que ela mostra. A caixa de mensagem, a de resposta no fórum e a de resposta na comunidade passam a ter nomes próprios, em vez de um marcador que desaparecia mal começavas a escrever. As listas de opções feitas de botões respondem às setas como uma lista de opções deve responder. O botão de fechar de uma mensagem instantânea é mais fácil de acertar no telemóvel, e o menu de silenciar da tua vitrina de distintivos fecha com Escape.",
 
   "changelog.entries.see-your-persona-the-way-a-visitor-does.title":
     "Vê a tua persona como um visitante a vê",

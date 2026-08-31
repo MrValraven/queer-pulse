@@ -359,6 +359,7 @@ export const magazine: Catalog = {
   "issues.current.eyebrow": "Current issue · published {date}",
   "issues.current.coverPlaceholder": "Issue {number} cover",
   "issues.archiveHeading": "The full <em>archive</em>",
+  "issues.archiveAriaLabel": "The full archive",
   "issues.viewCoversCta": "Covers",
   "issues.viewListCta": "List",
   "issues.archiveErrorTitle": "We couldn't load the archive.",
@@ -617,7 +618,7 @@ export const magazine: Catalog = {
   // ── New issue modal ──────────────────────────────────────────────────────
   "desk.newIssue.title": "Create a magazine issue",
   "desk.newIssue.sub":
-    "Everything else — the cover, the running order, the digest — is set up on the issue's own page once it exists.",
+    "Everything else (the cover, the running order, the digest) is set up on the issue's own page once it exists.",
   "desk.newIssue.numberLabel": "Number",
   "desk.newIssue.numberHelper":
     "Digits only. \u201c1\u201d becomes \u201c01\u201d.",
@@ -1574,6 +1575,8 @@ export const magazine: Catalog = {
     "Move “{title}” earlier in the running order",
   "issue.runOrder.moveLaterAria": "Move “{title}” later in the running order",
   "issue.runOrder.open": "Open",
+  "issue.runOrder.movedAnnouncement":
+    "Moved “{title}” to position {position} of {total}",
 
   // ── CoverContentsTab ─────────────────────────────────────────────────────
   "issue.cover.heading": "Cover",

@@ -20,7 +20,7 @@
 }
 
 .title {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -36,15 +36,20 @@
   display: block;
   line-height: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px var(--paper);
+  box-shadow: var(--ring-paper);
   transition: transform 0.18s var(--ease);
 }
 .face:not(:first-child) {
   margin-left: -10px;
 }
 .face:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  /* The halo is listed first so it paints over the resting shadow, which is
+     restated here because this rule out-specifies the base one. */
+  box-shadow:
+    var(--ring-cream),
+    0 0 0 2px var(--paper);
   z-index: 1;
 }
 @media (hover: hover) {
@@ -54,7 +59,7 @@
 }
 
 .text {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.5;
 }

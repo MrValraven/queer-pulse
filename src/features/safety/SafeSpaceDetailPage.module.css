@@ -4,7 +4,7 @@
   padding: 40px 28px 80px;
 }
 .back {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   text-decoration: none;
@@ -28,7 +28,7 @@
   padding: 18px 22px;
   background: rgba(var(--jade-rgb), 0.08);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   margin-bottom: 28px;
 }
 .seal {
@@ -53,13 +53,13 @@
 .trustBanner h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--jade);
   letter-spacing: -0.01em;
   margin-bottom: 3px;
 }
 .trustBanner p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   line-height: 1.55;
   max-width: 60ch;
@@ -85,7 +85,7 @@
   }
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -106,7 +106,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.65;
   max-width: 54ch;
@@ -118,11 +118,11 @@
   margin-top: 22px;
 }
 .pill {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 5px 11px;
 }
 .pillAccent {
@@ -137,7 +137,7 @@
   display: flex;
   align-items: flex-end;
   padding: 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
 }
@@ -177,7 +177,7 @@
   color: var(--accent);
 }
 .secSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 18px;
 }
@@ -194,7 +194,7 @@
   border: none;
   color: var(--text-strong);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   vertical-align: baseline;
 }
 @media (hover: hover) {
@@ -210,7 +210,7 @@
   flex-direction: column;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
 }
 .promise {
@@ -245,13 +245,13 @@
 }
 .promise b {
   display: block;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
 .promise span {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -266,7 +266,7 @@
   padding: 18px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   flex: 1 1 280px;
 }
 .vouchHead {
@@ -281,14 +281,14 @@
   border-radius: 50%;
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 12px;
+  font-size: var(--text-12);
   display: flex;
   align-items: center;
   justify-content: center;
   flex: none;
 }
 .vouchName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -297,17 +297,17 @@
   text-decoration: none;
 }
 .vouchByline {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 .vouchText {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.6;
   text-wrap: pretty;
 }
 .vouchWhen {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 8px;
 }
@@ -317,7 +317,7 @@
   padding: 22px 24px;
   background: rgba(var(--accent-rgb), 0.06);
   border-left: 3px solid var(--accent);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 .incidentPlum {
   margin-top: 14px;
@@ -327,12 +327,12 @@
 .incident h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   margin-bottom: 8px;
 }
 .incident p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   margin-bottom: 10px;
@@ -363,11 +363,11 @@
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
 }
 .sideCard h4 {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -375,7 +375,7 @@
   margin-bottom: 14px;
 }
 .addr {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.55;
   margin-bottom: 8px;
@@ -385,7 +385,7 @@
   color: var(--text-strong);
   font-weight: 700;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   margin-bottom: 3px;
 }
 .sideRow {
@@ -393,7 +393,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 9px 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
@@ -421,7 +421,7 @@
   color: rgba(var(--cream-rgb), 0.6);
 }
 .sharePlum p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.6;
   margin-bottom: 14px;
@@ -485,7 +485,7 @@
   stroke-linecap: round;
 }
 .removedEyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -508,7 +508,7 @@
   color: var(--accent);
 }
 .removedReason {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.85);
   line-height: 1.6;
   max-width: 56ch;
@@ -524,14 +524,14 @@
   position: relative;
 }
 .removedMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.55);
 }
 .removedMeta b {
   display: block;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 3px;
   letter-spacing: -0.01em;
@@ -574,7 +574,7 @@
   border: 2px solid var(--cream);
 }
 .tlDate {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -582,7 +582,7 @@
   margin-bottom: 4px;
 }
 .tlEvent {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.55;
 }
@@ -590,23 +590,23 @@
 .whatNowCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
 }
 .whatNowCard h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   margin-bottom: 10px;
 }
 .whatNowCard p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.7;
 }
 .reasonP {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.75;
   max-width: 62ch;

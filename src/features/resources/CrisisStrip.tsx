@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiAlertCircle, FiPhone } from "react-icons/fi";
+import { FiAlertCircle, FiArrowDown, FiPhone } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CRISIS_LINES } from "./crisisStrip.data";
@@ -54,7 +54,7 @@ export function CrisisStrip() {
 
           <div className={styles.actions}>
             <Link className={styles.jump} to="#crisis">
-              {t("resources:crisis.jumpCta")}
+              {t("resources:crisis.jumpCta")} <FiArrowDown aria-hidden />
             </Link>
           </div>
         </div>

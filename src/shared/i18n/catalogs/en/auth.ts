@@ -341,10 +341,17 @@ export const auth: Catalog = {
     "This code is how you check back on your request. Save it somewhere you'll find it again: nothing gets emailed, and we can't issue the code a second time.",
   "requestInvite.reference.checkCta": "Check on my request",
   // The 409 branch: an open request already exists, so no new row and no new
-  // token. Never show an empty code slot; point at the code they already have.
+  // token. Never show an empty code slot; show the two ways back in.
+  // There is deliberately no "type your email and we'll look it up" here: with
+  // no email service, that form would have to answer the person typing, which
+  // means telling any stranger whether a given address has applied.
+  "requestInvite.reference.backTitle": "Getting back to your request",
   "requestInvite.reference.noCode":
     "Your first request already has a code, from the day you sent it. There's no new one here, because there's no new request.",
   "requestInvite.reference.enterCodeCta": "Check on my request with that code",
+  "requestInvite.reference.signInBody":
+    "Lost the code? Sign in with the Google account for the address you applied with. Proving the address is yours is what lets us take you back to your own request.",
+  "requestInvite.reference.signInCta": "Continue with Google",
 
   // Pre-emptive states, rendered from GET /platform-status BEFORE submit so
   // nobody fills in the whole form only to be rejected on submit.
@@ -403,23 +410,77 @@ export const auth: Catalog = {
   "joinRequestStatus.approved.copiedToast": "Invite link copied.",
   "joinRequestStatus.approved.copyErrorToast":
     "We couldn't copy it. Select the link and copy it by hand.",
+  // PRD-02. The invite's deadline, on the screen that hands the invite over.
+  // Nothing will chase the applicant about it: no email is ever sent, and they
+  // have no account to be notified in. The clock behind these lines starts the
+  // first time they open this page, so the date is always one they have been
+  // shown before it matters.
+  "joinRequestStatus.approved.deadline": "This link works until {date}.",
+  "joinRequestStatus.approved.deadlineDays_one":
+    "This link works for {count} more day, until {date}.",
+  "joinRequestStatus.approved.deadlineDays_other":
+    "This link works for {count} more days, until {date}.",
+  "joinRequestStatus.approved.deadlineToday":
+    "This link stops working today. Open it now.",
   "joinRequestStatus.approved.cta": "Open my invite",
   "joinRequestStatus.approved.note":
     "This invite brings one person in, and that person is you. Keep the link to yourself.",
   "joinRequestStatus.approved.foot": "Trouble opening it? <a>Get in touch</a>",
 
-  // Approved, but the invite behind it has since been used, revoked or expired.
-  // A real state with its own recovery path, never folded into the live one.
-  "joinRequestStatus.approvedSpent.eyebrow": "Approved",
-  "joinRequestStatus.approvedSpent.title": "Your invite <em>has run out.</em>",
-  "joinRequestStatus.approvedSpent.lead":
-    "You were approved on {date}, but the invite behind this code has since been used or has expired. Tell us and we'll issue a fresh one.",
-  "joinRequestStatus.approvedSpent.leadNoDate":
-    "You were approved, but the invite behind this code has since been used or has expired. Tell us and we'll issue a fresh one.",
-  "joinRequestStatus.approvedSpent.cta": "Ask for a new invite",
+  // Approved, but the invite behind it is gone. THREE different situations,
+  // which used to share one dead-end screen. Only the lapsed one is the
+  // applicant's to undo, so only that one is offered a button.
   "joinRequestStatus.approvedSpent.signInCta": "I already made my account",
-  "joinRequestStatus.approvedSpent.foot":
-    "The yes still stands. Only the link expired.",
+
+  // Lapsed. The recoverable one: the button mints a fresh window on the same
+  // invite, so an approval can no longer expire into nothing.
+  "joinRequestStatus.approvedSpent.expired.eyebrow": "Approved",
+  "joinRequestStatus.approvedSpent.expired.title":
+    "Your link <em>needs refreshing.</em>",
+  "joinRequestStatus.approvedSpent.expired.lead":
+    "You were approved on {date}, and the yes still stands. The link just sat unused long enough to lapse, which we can fix right here.",
+  "joinRequestStatus.approvedSpent.expired.leadNoDate":
+    "You were approved, and the yes still stands. The link just sat unused long enough to lapse, which we can fix right here.",
+  "joinRequestStatus.approvedSpent.expired.cta": "Give me a fresh link",
+  "joinRequestStatus.approvedSpent.expired.refreshing": "Getting your link",
+  "joinRequestStatus.approvedSpent.expired.foot":
+    "The yes still stands. Only the link lapsed.",
+
+  // Already redeemed. Someone made an account with this invite, so there is
+  // nothing to reissue and offering it would be a lie.
+  "joinRequestStatus.approvedSpent.used.eyebrow": "Approved",
+  "joinRequestStatus.approvedSpent.used.title":
+    "This invite is <em>already spent.</em>",
+  "joinRequestStatus.approvedSpent.used.lead":
+    "You were approved on {date}, and an account has since been made with this invite. If that was you, sign in. If it wasn't, tell us straight away.",
+  "joinRequestStatus.approvedSpent.used.leadNoDate":
+    "You were approved, and an account has since been made with this invite. If that was you, sign in. If it wasn't, tell us straight away.",
+  "joinRequestStatus.approvedSpent.used.foot":
+    "One invite brings one person in, and this one has been used.",
+
+  // Withdrawn by a moderator. Not the applicant's to undo, and no button
+  // pretends otherwise. A person to talk to instead.
+  "joinRequestStatus.approvedSpent.revoked.eyebrow": "Approved",
+  "joinRequestStatus.approvedSpent.revoked.title":
+    "This invite <em>is no longer open.</em>",
+  "joinRequestStatus.approvedSpent.revoked.lead":
+    "You were approved on {date}, but this invite has since been withdrawn. We can't turn it back on from here, and we'd rather you heard why from a person.",
+  "joinRequestStatus.approvedSpent.revoked.leadNoDate":
+    "You were approved, but this invite has since been withdrawn. We can't turn it back on from here, and we'd rather you heard why from a person.",
+  "joinRequestStatus.approvedSpent.revoked.foot":
+    "Write to us and someone will read it.",
+
+  // Why a refresh was turned down. One sentence each, never a raw code.
+  "joinRequestStatus.approvedSpent.refusal.INVITE_ALREADY_USED":
+    "An account has already been made with this invite, so there's nothing to refresh.",
+  "joinRequestStatus.approvedSpent.refusal.INVITE_REVOKED":
+    "This invite has been withdrawn, so we can't refresh it from here.",
+  "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_LIMIT":
+    "This link has been refreshed as many times as it can be. Get in touch and a person will sort it out.",
+  "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_UNAVAILABLE":
+    "There's no invite on this request to refresh. Get in touch and a person will sort it out.",
+  "joinRequestStatus.approvedSpent.refusal.unknown":
+    "That didn't go through. Try once more, and get in touch if it still won't.",
 
   // Declined. The state that needs the most care: say what happened, keep the
   // limitation on our side of the table wherever that is honest, and always
@@ -572,6 +633,10 @@ export const auth: Catalog = {
   "onboarding.stepIntents.back": "Back",
   "onboarding.stepIntents.saveError":
     "We couldn't save that just now. Please try again.",
+  "onboarding.stepIntents.loadError.title":
+    "We couldn't load <em>your answers</em>",
+  "onboarding.stepIntents.loadError.body":
+    "The intentions you saved before, and their visibility setting, didn't load. Try again, or skip this step and set them later in Settings.",
   "onboarding.stepIntents.visibility.title": "Show this on my profile",
   "onboarding.stepIntents.visibility.descPublic":
     "Other members will see what you're looking for on your profile.",
@@ -691,7 +756,7 @@ export const auth: Catalog = {
     "Vouch for someone you trust. It's how the network stays warm and real.",
   "gettingStarted.steps.vouch.done":
     "You've vouched. Thank you for keeping it real.",
-  "gettingStarted.steps.vouch.cta": "Browse members",
+  "gettingStarted.steps.vouch.cta": "Find someone to vouch for",
   "gettingStarted.steps.connect.title": "Connect with someone",
   "gettingStarted.steps.connect.desc":
     "Reach out to someone you'd like to know. Connecting opens up messaging.",

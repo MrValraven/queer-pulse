@@ -2,7 +2,10 @@
 .wrap {
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
-  --text-40: rgba(var(--cream-rgb), 0.4);
+  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
+     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
+     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
+  --text-40: rgba(var(--cream-rgb), 0.52);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
@@ -16,7 +19,7 @@
   padding: 24px 0 24px;
 }
 .eb {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -36,7 +39,7 @@
   color: var(--accent);
 }
 .dek {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-60);
   line-height: 1.6;
   max-width: 64ch;
@@ -66,12 +69,12 @@
 }
 .ntChip {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-60);
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 15px;
   cursor: pointer;
   transition:
@@ -92,7 +95,7 @@
 }
 .ntRead {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-60);
   background: none;
@@ -110,7 +113,7 @@
 
 /* Day group header */
 .ntDay {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -125,7 +128,7 @@
   align-items: flex-start;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 16px 18px;
   position: relative;
   text-decoration: none;
@@ -164,7 +167,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 500;
 }
 .ntIc.av {
@@ -195,7 +198,7 @@
 }
 .ntBody h4 {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   color: var(--text);
   line-height: 1.45;
@@ -211,17 +214,17 @@
 .reply {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.5;
   background: rgba(var(--cream-rgb), 0.05);
   border-left: 2px solid rgba(var(--accent-rgb), 0.5);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--radius-8) var(--radius-8) 0;
   padding: 9px 12px;
   margin: 9px 0 6px;
 }
 .meta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-40);
   margin-top: 6px;
   line-height: 1.5;
@@ -235,12 +238,12 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 14px;
   cursor: pointer;
   transition: background 0.18s var(--ease);
@@ -251,8 +254,9 @@
   }
 }
 .bt:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .btP {
   background: var(--accent);
@@ -267,7 +271,7 @@
 
 /* Time */
 .ntTime {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-40);
   white-space: nowrap;
   flex: none;
@@ -277,14 +281,14 @@
 /* Per-filter empty state */
 .empty {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-60);
   line-height: 1.6;
   text-align: center;
   padding: 48px 24px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   margin-top: 8px;
 }
 .empty em {

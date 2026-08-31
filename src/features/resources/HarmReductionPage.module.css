@@ -34,7 +34,7 @@
   );
 }
 .eye {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -58,7 +58,7 @@
   font-weight: 400;
 }
 .sub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.55);
   max-width: 54ch;
   line-height: 1.65;
@@ -71,9 +71,9 @@
   gap: 12px;
   background: rgba(var(--accent-rgb), 0.12);
   border: 1px solid rgba(var(--accent-rgb), 0.3);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.8);
   position: relative;
 }
@@ -94,7 +94,7 @@
   justify-content: center;
 }
 .esItem {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   display: flex;
@@ -103,7 +103,7 @@
 }
 .esNum {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 
 .body {
@@ -124,7 +124,7 @@
 .section {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   overflow: hidden;
 }
 .sectionHead {
@@ -132,7 +132,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .hrsLabel {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -158,13 +158,13 @@
   border-bottom: none;
 }
 .itemTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .itemBody {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.65;
 }
@@ -172,32 +172,32 @@
 .alert {
   background: rgba(var(--accent-rgb), 0.07);
   border: 1px solid rgba(var(--accent-rgb), 0.22);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   padding: 16px 18px;
   margin-bottom: 16px;
 }
 .alertHead {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--accent-ink);
   margin-bottom: 6px;
 }
 .alertBody {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.62;
 }
 
 .sectionBtn {
   margin-top: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   display: inline-block;
 }
 
 .naloxoneCard {
   grid-column: 1 / -1;
   background: var(--plum);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 32px 36px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -222,7 +222,7 @@
   color: var(--accent);
 }
 .ncBody {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.68;
 }
@@ -235,7 +235,7 @@
   gap: 10px;
 }
 .ncStepsLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -253,7 +253,7 @@
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
   color: var(--accent);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -261,7 +261,7 @@
   flex: none;
 }
 .ncStepBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.75);
   line-height: 1.6;
 }

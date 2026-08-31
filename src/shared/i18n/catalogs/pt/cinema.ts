@@ -235,7 +235,7 @@ export const cinema: Catalog = {
   "film.facts.captions": "Legendas",
 
   "film.poster.trailerCta": "Reproduzir · trailer {duration}",
-  "film.tipjar.heading": "↳ dar gorjeta a quem fez o filme",
+  "film.tipjar.heading": "dar gorjeta a quem fez o filme",
   "film.tipjar.note": "100% vai para {name}. Sem taxas.",
   "film.tipjar.footnote_one":
     "<strong>{count} pessoa</strong> deu gorjeta esta semana.",
@@ -362,7 +362,7 @@ export const cinema: Catalog = {
   "filmmaker.outro.sub":
     "Submete o teu filme ao Cinema. A divisão é igual para todas as pessoas.",
   "filmmaker.hero.tipCta":
-    "↳ Dar gorjeta a {name} · 100% vai diretamente para essa pessoa",
+    "Dar gorjeta a {name} · 100% vai diretamente para essa pessoa",
   "filmmaker.hero.requestScreeningCta": "Pedir uma exibição",
   "filmmaker.hero.connectCta": "Ligar-te na QueerPulse",
   "filmmaker.main.filmographyTitle": "Filmografia <em>no Cinema</em>",
@@ -447,7 +447,7 @@ export const cinema: Catalog = {
   "shorts.catalog.languageLabel": "Idioma",
   "shorts.catalog.sortLabel": "Ordenar",
   "shorts.catalog.surpriseCta": "Surpreende-me",
-  "shorts.catalog.surpriseToast": "Experimenta este → {title}",
+  "shorts.catalog.surpriseToast": "Experimenta este: {title}",
   "shorts.catalog.allFilmsChip": "Todos os filmes",
   "shorts.catalog.empty.title": "Nada corresponde, ainda",
   "shorts.catalog.empty.body":
@@ -692,7 +692,7 @@ export const cinema: Catalog = {
   "openCalls.outro.title": "Financia a <em>próxima</em> chamada.",
   "openCalls.outro.sub":
     "Os sustentadores financiam as encomendas. Cada novo sustentador faz crescer o fundo da próxima temporada.",
-  "openCalls.outro.cta": "Torna-te sustentador → {price}/mês",
+  "openCalls.outro.cta": "Torna-te sustentador por {price}/mês",
 
   // ── Adesão (CinemaMembershipPage.tsx + Pays.tsx) — página de preços/planos.
   // Nomes de escalão, descrições e pontos de funcionalidades são copy de
@@ -747,7 +747,8 @@ export const cinema: Catalog = {
     "Contributo direto nas próximas chamadas abertas",
   "membership.tier.patron.feature4":
     "Convite para a assembleia anual da cooperativa",
-  "membership.tier.patron.feature5": "~{poolShare}/mês → fundo de encomendas",
+  "membership.tier.patron.feature5":
+    "~{poolShare}/mês para o fundo de encomendas",
   "membership.tier.patron.feature6":
     "Cópias antecipadas antes do público em geral",
   "membership.tier.patron.feature7": "Dois convites de convidado por ano",

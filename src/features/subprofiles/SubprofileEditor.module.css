@@ -34,7 +34,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   text-decoration: none;
   width: fit-content;
@@ -45,9 +45,10 @@
   }
 }
 .backLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 6px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-6);
 }
 
 /* ── Page header ─────────────────────────────────────────────────────────── */
@@ -108,7 +109,7 @@
   margin: 0;
 }
 .cardNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin: 4px 0 18px;
   line-height: 1.5;
@@ -116,7 +117,7 @@
 
 /* ── Meta form ───────────────────────────────────────────────────────────── */
 .linkHelp {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 8px 0 0;
@@ -157,12 +158,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 13px;
   cursor: pointer;
   transition: border-color 0.2s var(--ease);
@@ -177,11 +178,12 @@
   }
 }
 .smallBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .imgError {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-ink);
   font-weight: 600;
   margin: 0;
@@ -206,12 +208,12 @@
   align-items: center;
   gap: 8px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent-ink);
   background: color-mix(in srgb, var(--accent) 8%, transparent);
   border: 1.5px dashed color-mix(in srgb, var(--accent) 40%, transparent);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 11px 18px;
   cursor: pointer;
   transition: background 0.2s var(--ease);
@@ -229,15 +231,16 @@
   }
 }
 .addBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .capHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .emptySection {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 0 0 4px;
@@ -256,7 +259,7 @@
   align-items: center;
   padding: 4px 6px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--cream);
   transition: border-color 0.2s var(--ease);
 }
@@ -269,7 +272,7 @@
   position: relative;
   z-index: 1;
   border-color: var(--line-strong);
-  box-shadow: 0 8px 22px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--shadow-e2);
 }
 .lineGrip {
   display: inline-grid;
@@ -290,7 +293,7 @@
   background: transparent;
   padding: 8px 4px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .lineInput:focus {
@@ -306,7 +309,7 @@
   width: 32px;
   height: 32px;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   color: var(--ink-60);
   cursor: pointer;
@@ -325,8 +328,9 @@
   }
 }
 .lineOps button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .lineAddBar {
   display: flex;
@@ -338,12 +342,12 @@
   align-items: center;
   gap: 8px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent-ink);
   background: color-mix(in srgb, var(--accent) 8%, transparent);
   border: 1.5px dashed color-mix(in srgb, var(--accent) 40%, transparent);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 9px 16px;
   cursor: pointer;
   transition: background 0.2s var(--ease);
@@ -354,15 +358,16 @@
   }
 }
 .lineAddBar button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 /* ── Item editor ─────────────────────────────────────────────────────────── */
 .itemCard {
   background: color-mix(in srgb, var(--plum) 2.5%, var(--cream));
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: var(--card-pad);
 }
 .itemHead {
@@ -373,7 +378,7 @@
   margin-bottom: var(--gap-sm);
 }
 .itemNum {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--ink-40);
@@ -389,7 +394,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--ink-60);
@@ -407,26 +412,28 @@
   }
 }
 .toolBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .removeBtn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   background: none;
   border: none;
   padding: 6px 8px;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 .removeBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .featureBtn {
   display: inline-flex;
@@ -434,12 +441,12 @@
   gap: 6px;
   height: 32px;
   padding: 0 10px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   cursor: pointer;
   transition:
@@ -454,8 +461,9 @@
   }
 }
 .featureBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .featureBtnActive {
   border-color: transparent;
@@ -472,7 +480,7 @@
   gap: 14px;
 }
 .publishCopy {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 0;
@@ -506,7 +514,7 @@
   gap: var(--gap-grid);
 }
 .availHelp {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
   margin: 0;
@@ -516,7 +524,7 @@
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-40);
   text-align: center;
@@ -532,18 +540,19 @@
   align-items: center;
   justify-content: center;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   cursor: pointer;
   transition: background 0.2s var(--ease);
 }
 .availCell:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .avail_open {
   background: color-mix(in srgb, var(--jade) 16%, var(--cream));

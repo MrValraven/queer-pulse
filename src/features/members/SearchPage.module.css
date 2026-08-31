@@ -21,7 +21,7 @@
   pointer-events: none;
 }
 .label {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -48,10 +48,24 @@
   display: flex;
   align-items: center;
   background: var(--paper);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
-  box-shadow: 0 12px 32px -16px rgba(var(--plum-rgb), 0.55);
+  box-shadow: var(--shadow-e3);
   position: relative;
+}
+/* Keyboard focus for the search bar (DES-47). The wrapper carries it because
+   `.barWrap` clips its children (`overflow: hidden`, for the rounded corners),
+   which would cut the input's own offset ring away entirely. Two-tone, same
+   construction as the global ring in base.css: the bar sits on the --plum
+   hero, where the cream halo in the outline's offset gap is the carrier
+   (12.6:1 on plum, against --accent-deep's 2.75:1 there), and the dark ring
+   outside it is what reads wherever the hero's coral radial lightens the
+   ground. The existing drop shadow is restated so adding the halo does not
+   drop it. */
+.barWrap:focus-within {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream), var(--shadow-e3);
 }
 .barWrap svg {
   margin-left: 18px;
@@ -61,18 +75,21 @@
 .barInput {
   flex: 1;
   border: none;
+  /* The ring lives on `.barWrap` (see `:focus-within` above): this element's
+     own would be clipped away by the wrapper's `overflow: hidden`, and
+     suppressing it here keeps a single indicator rather than two. */
   outline: none;
   font-family: var(--sans);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink);
   padding: 18px 16px;
   background: transparent;
 }
 .shortcut {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   background: rgba(var(--plum-rgb), 0.07);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 4px 8px;
   margin-right: 14px;
   font-weight: 600;
@@ -96,13 +113,13 @@
 }
 .tab {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 17px;
   transition:
     color 0.25s var(--ease),
@@ -133,7 +150,7 @@
   gap: 14px;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 22px;
   margin-bottom: 22px;
   text-decoration: none;
@@ -144,28 +161,28 @@
 @media (hover: hover) {
   .jump:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 30px -18px rgba(var(--plum-rgb), 0.55);
+    box-shadow: var(--shadow-lift);
   }
 }
 .jumpText {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 500;
 }
 .jumpText b {
   font-family: var(--serif);
   font-weight: 400;
   font-style: italic;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--accent);
 }
 .jumpArrow {
   margin-left: auto;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--accent);
 }
 
 .count {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   margin-bottom: 28px;
 }
@@ -178,7 +195,7 @@
   margin-bottom: 52px;
 }
 .secHead {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -207,7 +224,7 @@
   background: none;
   border: none;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent);
   cursor: pointer;
@@ -218,7 +235,7 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px;
   display: flex;
   gap: 14px;
@@ -232,18 +249,18 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px -18px rgba(var(--plum-rgb), 0.32);
+    box-shadow: var(--shadow-lift);
     border-color: rgba(var(--line-rgb), 0.16);
   }
 }
 .cardIcon {
   width: 42px;
   height: 42px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: var(--text-18);
   flex: none;
 }
 .cardBody {
@@ -251,7 +268,7 @@
   min-width: 0;
 }
 .cardType {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -265,13 +282,13 @@
   flex-wrap: wrap;
 }
 .cardName {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--ink);
   line-height: 1.25;
 }
 .cardSub {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 3px;
 }
@@ -293,7 +310,7 @@
   margin-bottom: 10px;
 }
 .empty p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   max-width: 38ch;
   margin: 0 auto;
@@ -308,14 +325,14 @@
   padding: 72px 24px 88px;
 }
 .comingSoonBadge {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--accent);
   background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid rgba(var(--accent-rgb), 0.22);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 14px;
   margin-bottom: 22px;
 }
@@ -331,7 +348,7 @@
   color: var(--accent);
 }
 .comingSoonText {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   max-width: 46ch;
   margin: 0 auto;
@@ -342,7 +359,7 @@
   margin-bottom: 40px;
 }
 .recentLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -356,11 +373,11 @@
 }
 .chip {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   cursor: pointer;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   background: transparent;
   transition:

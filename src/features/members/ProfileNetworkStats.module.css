@@ -16,7 +16,7 @@
 }
 
 .zoneTitle {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -35,7 +35,7 @@
   gap: 3px;
   padding: 6px 10px;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: transparent;
   font: inherit;
   text-align: left;
@@ -44,7 +44,7 @@
 }
 
 .statValue {
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 700;
   line-height: 1.1;
   color: var(--text-strong);
@@ -55,7 +55,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: var(--ink-60);
 }
@@ -74,8 +74,9 @@
 }
 
 .stat:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 /* Comfortable ≥44px hit target on touch pointers; desktop density unchanged. */
@@ -92,7 +93,7 @@
   width: 30px;
   height: 30px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink-60);
   cursor: pointer;
@@ -113,6 +114,7 @@
   }
 }
 .explain:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }

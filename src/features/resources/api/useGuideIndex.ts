@@ -5,6 +5,12 @@ import { getResourceIndex, type ResourceIndexEntryDTO } from "./resources.api";
 export interface GuideIndexResult {
   entries: ResourceIndexEntryDTO[];
   isLoading: boolean;
+  /** True when the index request failed. The page must say so rather than
+   *  reuse the editorial-gate empty copy, which claims something different
+   *  and untrue: that no guide has been reviewed yet. */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 /** Stable empty array so the "no data yet" case keeps its identity across
@@ -19,6 +25,12 @@ const EMPTY_ENTRIES: ResourceIndexEntryDTO[] = [];
  * built to fix. Demo mode returns the local manifest, code-split out of the
  * live bundle through a demo-gated dynamic import, so the index still lists
  * every guide route for a reviewer browsing the demo.
+ *
+ * An empty `entries` array is a real, correct answer here: guides stay hidden
+ * until an editor stamps `last_reviewed_on`, so "nothing reviewed yet" is
+ * something the index is meant to be able to say. That is exactly why
+ * `isError` is separate. A failed request is not an editorial state, and the
+ * page has to be able to tell the two apart (DES-22).
  */
 export function useGuideIndex(): GuideIndexResult {
   const { demoMode } = useDemoMode();
@@ -34,5 +46,10 @@ export function useGuideIndex(): GuideIndexResult {
     },
   });
 
-  return { entries: query.data ?? EMPTY_ENTRIES, isLoading: query.isPending };
+  return {
+    entries: query.data ?? EMPTY_ENTRIES,
+    isLoading: query.isPending,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

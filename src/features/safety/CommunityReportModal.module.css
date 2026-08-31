@@ -1,0 +1,88 @@
+/* The <ModalSheet> supplies the grabber/close/padding; this modal draws its
+   own heading + footer inside the sheet body. Mirrors
+   subprofiles/SubprofileReportModal.module.css, the closest sibling flow, so
+   every bespoke report modal reads the same. */
+.head {
+  margin-bottom: 18px;
+  padding-inline-end: 34px;
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 25px);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.sub {
+  margin: 6px 0 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.label {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+
+.reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.reason {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  font-size: var(--text-14);
+  color: var(--ink);
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+.reasonChecked {
+  border-color: var(--danger);
+  background: rgba(var(--danger-rgb), 0.06);
+}
+.reason input {
+  accent-color: var(--danger);
+  flex: none;
+}
+
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  padding: 13px 16px;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.55;
+  transition: border-color 0.25s var(--ease);
+}
+.textarea:focus {
+  border-color: var(--danger);
+  box-shadow: var(--ring-danger);
+}

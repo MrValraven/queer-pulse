@@ -36,7 +36,8 @@ export type MediaReferenceType =
   | "collection" // Collection.cover
   | "magazine-article" // MagazineArticle.blocks[].src / .socialImage
   | "magazine-deck" // MagazineDeck.cover / .slides[] image refs
-  | "message-photo"; // Message.attachment (a photo sent in a conversation)
+  | "message-photo" // Message.attachment (a photo sent in a conversation)
+  | "press-contact"; // PressContact.avatarUrl
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -142,6 +143,13 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
       return slug ? `${routes.article}?id=${slug}` : null;
     case "magazine-deck":
       return slug ? `${routes.deck}?id=${slug}` : null;
+    // A press contact has no page of its own: contacts render as cards inside
+    // the one public press-kit page, and `press_contact` has no slug column, so
+    // the backend source sends these slugless. The page itself is still the
+    // right destination, and it is public, so link to it directly rather than
+    // dropping to a label.
+    case "press-contact":
+      return routes.pressKit;
     // group-avatar (private conversation), community-post (no single-post
     // route), story-cover (issue route has no per-issue param yet), collection
     // (the owner-only /account/collections list has no per-collection page),

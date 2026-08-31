@@ -27,6 +27,9 @@ interface ComposerInputRowProps {
   onKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onSend: () => void;
   sendLabel: string;
+  /** Accessible name for the message textarea. The placeholder vanishes as
+   *  soon as someone types, so the field needs a name of its own. */
+  messageFieldLabel: string;
 }
 
 /**
@@ -51,6 +54,7 @@ export function ComposerInputRow({
   onKeyDown,
   onSend,
   sendLabel,
+  messageFieldLabel,
 }: ComposerInputRowProps) {
   return (
     <div className={styles.composerRow}>
@@ -75,6 +79,7 @@ export function ComposerInputRow({
         wrapClassName={styles.composerTaWrap}
         className={styles.composerTa}
         placeholder={placeholder}
+        aria-label={messageFieldLabel}
         value={draft}
         rows={1}
         textareaRef={textareaRef}

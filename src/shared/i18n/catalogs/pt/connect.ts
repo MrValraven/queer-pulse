@@ -22,10 +22,14 @@ export const connect: Catalog = {
   "page.lead":
     "O teu perfil principal não faz seguidores. Ligas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
+  "page.vouchCta": "Avalizar alguém",
   "page.note":
     "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te ligares primeiro? É para isso que servem as personas. As ligações são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
   "page.loadMoreLoading": "A carregar…",
   "page.loadMore": "Carregar mais",
+  "page.loadError.title": "Não conseguimos carregar <em>as tuas ligações</em>",
+  "page.loadError.body":
+    "Quem está ligado a ti continua lá. O pedido não chegou de volta, tenta outra vez daqui a pouco.",
 
   // Toasts das ações da ConnectionsPage
   "toast.connected": "Ligaste-te a {name}",
@@ -176,6 +180,23 @@ export const connect: Catalog = {
   // contacto não pode seguir e voltar a tentar não ajuda. O tom mantém-se
   // caloroso e nunca revela um bloqueio que não nos foi indicado (ver
   // cannotConnect).
+  // "Pediram-te primeiro" (ConnectIncomingPanel, PRD-03).
+  "incoming.title": "{name} pediu-te <em>a ti</em> primeiro.",
+  "incoming.body":
+    "{name} enviou-te um pedido de ligação e continua à espera. Se aceitares, podem trocar mensagens; se recusares, a pessoa só saberá que ficou sem resposta.",
+  "incoming.bodyWithDraft":
+    "{name} enviou-te um pedido de ligação e continua à espera. Se aceitares, o que acabaste de escrever segue para a conversa, pronto para reveres antes de enviar.",
+  "incoming.accept": "Aceitar",
+  "incoming.acceptAndSend": "Aceitar e levar a minha mensagem",
+  "incoming.decline": "Recusar com delicadeza",
+  "incoming.later": "Decidir mais tarde",
+  // Guardar uma mensagem escrita quando o contacto não pode seguir (PRD-03).
+  "notice.draftKept": "A tua mensagem continua aqui. Leva-a contigo.",
+  "notice.copyDraft": "Copiar a minha mensagem",
+  "notice.draftCopied":
+    "Copiada. A tua mensagem está na área de transferência.",
+  "notice.draftCopyFailed":
+    "O teu navegador não deixou copiar. Seleciona o texto e copia-o tu.",
   "notice.close": "Fechar",
   "notice.alreadyPending.title": "Já <em>lhe escreveste.</em>",
   "notice.alreadyPending.body":

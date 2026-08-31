@@ -15,14 +15,14 @@
 
 .currently {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .currentlyLabel {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
 }
 .currentlySince {
@@ -72,7 +72,7 @@
 
 .stateIcon {
   display: inline-flex;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--jade);
 }
 /* Permanently closed is the one state that takes the business out of
@@ -83,11 +83,11 @@
 
 .stateLabel {
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
 }
 .stateDesc {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.45;
   color: var(--ink-60);
 }
@@ -98,7 +98,7 @@
 
 .failure {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.08);
@@ -113,7 +113,7 @@
   gap: 12px;
 }
 .applyHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -131,14 +131,14 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
 .consequenceIcon {
   flex: none;
   margin-top: 2px;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--accent-ink);
 }
 
@@ -194,7 +194,7 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-avatar);
-  font-size: 16px;
+  font-size: var(--text-16);
 }
 
 .confirmText {
@@ -203,13 +203,13 @@
 }
 .confirmTitle {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
 }
 .confirmSub {
   margin: 2px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 

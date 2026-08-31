@@ -50,7 +50,7 @@ export const safety: Catalog = {
     "Via the button on any profile, message, or forum post, or directly through this page. You can report anonymously if needed.",
   "report.flow.step2.title": "Immediate acknowledgement",
   "report.flow.step2.desc":
-    "You receive a confirmation within 1 hour. A real person is assigned to your report, not an automated queue.",
+    "You receive a confirmation within 1 hour. A real person is assigned to your report.",
   "report.flow.step3.title": "Review within 24 hours",
   "report.flow.step3.desc":
     "We review the evidence, context, and history. For serious cases, the reported member's access is temporarily suspended during review.",
@@ -69,6 +69,9 @@ export const safety: Catalog = {
   "report.category.outing": "Someone shared that I'm LGBTQ+ without my consent",
   "report.category.doxxing": "Someone shared my personal details or location",
   "report.category.harassment": "Harassment or threats",
+  // Backend label wording (`reason-catalogue.ts` REASON_LABELS.hate_speech),
+  // localized. Reporting a person for a slur had no code of its own here.
+  "report.category.hateSpeech": "Hate speech or a slur",
   "report.category.unwantedContact": "Unwanted contact or messages",
   "report.category.impersonation": "Misrepresentation or impersonation",
   "report.category.discrimination": "Discrimination",
@@ -86,10 +89,24 @@ export const safety: Catalog = {
     "Tell us what happened, with as much detail as you're comfortable sharing. There are no wrong answers.",
   "report.form.emailLabel": "Your contact email (optional, for follow-up)",
   "report.form.emailPlaceholder": "you@email.com",
+  // An EXPLICIT choice, because this form used to infer it: leaving the
+  // optional email blank filed the report anonymously, and a signed-in member
+  // who expected the team to know who they were was invisible to the
+  // moderator instead. The helper spells out the cost, since anonymity here is
+  // a real trade rather than a privacy freebie.
+  "report.form.identityLegend": "How this reaches the moderator",
+  "report.form.identity.named": "With my name on it",
+  "report.form.identity.namedHelper":
+    "The moderator sees who filed this, and the record of the reports you have filed before. That record is part of how they weigh what you are telling them.",
+  "report.form.identity.anonymous": "Anonymously",
+  "report.form.identity.anonymousHelper":
+    "The moderator sees the report without your name, and without that prior-report record. QueerPulse still stores the link between you and this report internally, so it can be traced if it has to be.",
+  "report.form.identity.signedOutNote":
+    "You are not signed in, so the moderator sees this report without a name and without any prior-report record to weigh it against. Sign in first if you want it filed as you.",
   "report.form.submitting": "Submitting…",
   "report.form.submitCta": "Submit report",
   "report.form.fineprint":
-    "Anonymous reports are accepted. If you leave an email, we'll follow up with you directly.",
+    "Every report is read by the moderation team. Severity and the review deadline are worked out from the category you pick, so choose the closest match to what happened.",
 
   "report.principles.eyebrow": "Our principles",
   "report.principles.believeReporter.strong": "We believe the reporter first.",
@@ -133,6 +150,62 @@ export const safety: Catalog = {
   "report.tooFast":
     "You're sending reports faster than we can take them in. Wait a moment, then send this one again.",
 
+  // ── CommunityReportControl / CommunityReportModal ───────────────────────
+  // Reporting a WHOLE community, from the community detail hero. The backend
+  // has carried a `community` report subject end to end for a long time (its
+  // reason set, the takedown read path, the admin freeze); nothing on the
+  // frontend filed one, so a community organised around harm could only be
+  // reported one post at a time and never reached a moderator as itself.
+  "report.community.trigger": "Report this community",
+  "report.community.triggerAria": "Report the community {name}",
+  "report.community.title": "Report {name}",
+  "report.community.lead":
+    "This reports the community itself. Use it when the problem is the space: what it is organised around, what it lets stand, or what its organisers do.",
+  "report.community.reasonLabel": "What is wrong here?",
+  "report.community.detailLabel": "What should the moderator know? (optional)",
+  "report.community.detailPlaceholder":
+    "Links, dates, whose posts, whatever you have. A moderator reads this before they open the community.",
+  "report.community.cancelCta": "Cancel",
+  "report.community.submitCta": "Send report",
+  "report.community.submitting": "Sending…",
+  "report.community.error":
+    "We couldn't send that report. Nothing has been submitted yet. Check your connection and try again.",
+  "report.community.success.title": "The report is with the moderation team",
+  "report.community.success.body":
+    "A moderator will review {name} as a whole. Severity and the review deadline are set from the reason you picked, so this is already in the right queue.",
+  "report.community.success.doneCta": "Done",
+
+  // ── ConversationReportModal / MessageReportModal / ConnectionReportModal ─
+  // Reporting a PERSON, or one message they sent, from a DM or a connection.
+  // These three modals used to reuse `flag.*`, which is safe-space BADGE copy:
+  // it promised badge suspension at three independent flags and told the
+  // reporter "we may contact you, but never the venue". There is no badge and
+  // no venue on this surface, and QueerPulse sends no email at all, so nothing
+  // here promises a follow-up message. What IS true and what this copy says:
+  // every report is read by the moderation team (report.form.fineprint), the
+  // backend derives severity and the review deadline from the reason code
+  // (api/useCreateReport.ts), and Block is available on both surfaces
+  // (ConversationSafetyMenu, ConnectionMoreMenu) independently of the review.
+  "reportPerson.success.title": "Your report is <em>with a moderator.</em>",
+  "reportPerson.success.body":
+    "Someone on the moderation team reads every report. The severity and the review deadline are set from the reason you picked, so this is already in the right queue. If you want distance in the meantime, blocking takes effect straight away and is independent of the review.",
+  "reportPerson.success.doneCta": "Done",
+  "reportPerson.error":
+    "We couldn't send that report. Nothing has been submitted yet. Check your connection and try again.",
+  "reportPerson.form.lead":
+    "A moderator reads what you write here. Specifics help: what happened, when, and where on the platform. Pick the reason closest to what happened, because it sets how quickly this gets reviewed.",
+  "reportPerson.form.reasonLabel": "What is this about?",
+  "reportPerson.form.detailLabel": "What should the moderator know?",
+  "reportPerson.form.detailPlaceholder":
+    "What happened, when, and anything that helps a moderator find it. Be as specific as you're comfortable with.",
+  "reportPerson.form.charsRemaining_one": "{count} more character to send",
+  "reportPerson.form.charsRemaining_other": "{count} more characters to send",
+  "reportPerson.form.charsCount_one": "{count} character",
+  "reportPerson.form.charsCount_other": "{count} characters",
+  "reportPerson.form.cancelCta": "Cancel",
+  "reportPerson.form.submitting": "Sending…",
+  "reportPerson.form.submitCta": "Send report",
+
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
   "reason.outing": "Outing / sharing private identity without consent",
@@ -157,7 +230,16 @@ export const safety: Catalog = {
   "reason.listingOwnerNotify": "Owner outreach: friendly or suggested listing",
   "reason.other": "Something else, explained in detail",
 
-  // ── FlagModal.tsx ──────────────────────────────────────────────────────
+  // ── Safe-space BADGE flag copy ─────────────────────────────────────────
+  // Venue-only wording: it names the three-flag threshold, the badge
+  // suspension, and "never the venue". The live safe-space flag flow
+  // (SafeSpaceFlagModal / SafeSpaceFlagControl) reads `flag.modal.*`,
+  // `flag.reason.*`, `flag.done.*` and `flag.errorToast` further down, and
+  // `flag.error` is still read by myevents/useMyEventsSafety.ts. The
+  // `flag.success.*` / `flag.form.*` keys below are currently unreferenced:
+  // the three report-a-person modals used to borrow them and now use
+  // `reportPerson.*`. Kept for the badge flow; never point a person report at
+  // them again.
   "flag.success.title": "Flag <em>received.</em>",
   "flag.success.body":
     "Thank you. A moderator will read your report. <b>Three independent flags trigger an immediate review and temporary suspension of the badge</b>. Your report counts toward that. We may contact you for detail, but never the venue.",
@@ -542,7 +624,7 @@ export const safety: Catalog = {
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Verified LGBTQ+ safe spaces in Lisbon",
   "spaces.meta.description":
-    "A community-reviewed directory of venues in Lisbon verified as genuinely LGBTQ+ safe, not self-declared, with member reviews, a verification badge, and a way to flag or nominate a space.",
+    "A community-reviewed directory of venues in Lisbon verified as genuinely LGBTQ+ safe, with member reviews, a verification badge, and a way to flag or nominate a space.",
   "spaces.hero.category": "Community verified",
   "spaces.hero.title": "Spaces that are actually <em>safe.</em>",
   "spaces.hero.lead":
@@ -783,6 +865,15 @@ export const safety: Catalog = {
   "governance.summary.reReview_other":
     "{count} badges are past their yearly check.",
   "governance.empty": "Nothing in this view right now.",
+  "governance.loadError.nominations.title": "The nomination queue didn't load",
+  "governance.loadError.nominations.body":
+    "This is an outage on our side, so the queue below is blank because nothing arrived. Places may still be waiting. Try again.",
+  "governance.loadError.flags.title": "The flag queue didn't load",
+  "governance.loadError.flags.body":
+    "This is an outage on our side, so the queue below is blank because nothing arrived. Flags may still be open. Try again.",
+  "governance.loadError.reReview.title": "The re-review list didn't load",
+  "governance.loadError.reReview.body":
+    "This is an outage on our side. Badges may still be past their yearly check. Try again.",
   "governance.status.pending": "Waiting",
   "governance.status.acknowledged": "Acknowledged",
   "governance.status.in_review": "In review",
@@ -911,7 +1002,7 @@ export const safety: Catalog = {
     "Whether a member deserves rights is not a debate we host. Do not dismiss a report on the grounds that the other side deserves a hearing.",
   "moderationStance.rule.neverProveGender":
     "Never ask a member to prove their gender, and close any report that amounts to that request. Self-identification is the standard.",
-  "moderationStance.applicantHead": "Reviewing a person, not a profile",
+  "moderationStance.applicantHead": "You are reviewing a person",
   "moderationStance.applicantRule.neverProveIdentity":
     "Never ask an applicant to prove their gender, their queerness, or their identity, and never decline someone because you doubt it. Self-identification is the standard here as everywhere else.",
   "moderationStance.applicantRule.politicsNotAScreen":
@@ -965,4 +1056,28 @@ export const safety: Catalog = {
   "moderationStance.digest.stand.point.whenWeSpeak.body":
     "That test is why these positions are published at all, and it is the standard to hold your own decision to.",
   "moderationStance.digest.stand.cta": "Read the full position",
+
+  // ── Muted-members list (PRD-07) / BlockedUsersPane.tsx ───────────────────
+  // Person mutes were stored server-side (`GET /mutes`) and hydrated app-wide
+  // long before anything showed them back to the member who placed them. This
+  // group is that list, living beside the blocked list in the same settings
+  // pane. It is `safety:` rather than `settings:` because mute is a safety
+  // primitive and this copy is owned with the rest of the block/mute flow.
+  "blockedMembers.row.unblockLabel": "Unblock {name}",
+  "mutedMembers.section.muted": "Muted",
+  "mutedMembers.note":
+    "Muting is one-way and silent. Nobody here was told, nobody here was removed from anything, and you can bring any of them back with one tap.",
+  "mutedMembers.row.mutedOn": "Muted {date}",
+  "mutedMembers.row.deletedMember": "Deleted member",
+  "mutedMembers.row.unmuteCta": "Unmute",
+  "mutedMembers.row.unmuteLabel": "Unmute {name}",
+  "mutedMembers.empty.none.title": "You haven't muted anyone",
+  "mutedMembers.empty.none.desc":
+    "Mute someone and their posts and comments go quiet for you, while they are never told. Everyone you mute is listed here so you can undo it.",
+  "mutedMembers.empty.error.title": "We couldn't load your muted members",
+  "mutedMembers.empty.error.desc":
+    "Rather than show you a list we can't trust, we showed you nothing. Try again in a moment.",
+  "mutedMembers.toast.unmuted": "{name} is unmuted.",
+  "mutedMembers.toast.unmutedError":
+    "We couldn't unmute that member. Try again.",
 };

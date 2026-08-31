@@ -104,9 +104,28 @@ let csrfToken: string | null = null;
 let onAuthLost: (() => void) | null = null;
 let onPlatformLocked: ((message: string | null) => void) | null = null;
 
-/** Register a callback fired when a 401 cannot be recovered by refresh. */
-export function setOnAuthLost(cb: () => void): void {
-  onAuthLost = cb;
+/**
+ * Register a callback fired when a 401 cannot be recovered by refresh. Pass
+ * `null` to disarm it outright.
+ *
+ * The callback is module-global while its owner is a mounted effect, so the
+ * owner MUST hand it back to `clearOnAuthLost` on teardown. Otherwise a
+ * live-mode reconcile closure stays armed after the provider that owns it has
+ * gone (flipping into demo mode is the way this happens), and a stray 401 drives
+ * `setUser(null)` against a session nobody is managing any more.
+ */
+export function setOnAuthLost(callback: (() => void) | null): void {
+  onAuthLost = callback;
+}
+
+/**
+ * Disarm a callback previously passed to `setOnAuthLost`, and only that one.
+ * The identity check is what makes this safe to call from an effect cleanup: if
+ * a newer owner has already installed its own callback, this teardown leaves it
+ * alone instead of blanking the live handler out from under it.
+ */
+export function clearOnAuthLost(callback: () => void): void {
+  if (onAuthLost === callback) onAuthLost = null;
 }
 
 /** Register a callback fired when the backend reports a platform lockdown. */

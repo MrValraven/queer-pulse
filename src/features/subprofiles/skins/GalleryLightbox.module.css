@@ -1,8 +1,10 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 500;
-  background: rgba(var(--plum-rgb), 0.94);
+  z-index: var(--z-lightbox);
+  background: var(--scrim-strong);
+  -webkit-backdrop-filter: var(--blur-sm);
+  backdrop-filter: var(--blur-sm);
   display: grid;
   place-items: center;
   padding: clamp(16px, 5vw, 56px);
@@ -48,8 +50,8 @@
   height: auto;
   /* Show the WHOLE photo whatever its shape — no crop. */
   object-fit: contain;
-  border-radius: 6px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius-6);
+  box-shadow: var(--shadow-e4);
 }
 
 .close {
@@ -112,7 +114,7 @@
   bottom: clamp(14px, 3vw, 24px);
   left: 50%;
   transform: translateX(-50%);
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.16em;
   color: rgba(var(--cream-rgb), 0.55);
 }

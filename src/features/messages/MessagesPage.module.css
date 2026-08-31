@@ -262,7 +262,7 @@
   min-width: 0;
 }
 .trName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
   white-space: nowrap;
@@ -270,7 +270,7 @@
   text-overflow: ellipsis;
 }
 .trTime {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   flex: none;
 }
@@ -287,7 +287,7 @@
 .trMutedIcon,
 .trArchivedIcon {
   display: inline-flex;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .trPinnedIcon {
   color: var(--ink-40);
@@ -309,7 +309,7 @@
 .trPreview {
   flex: 1;
   min-width: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   white-space: nowrap;
   overflow: hidden;
@@ -424,7 +424,7 @@
 }
 .ctbName {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1.2;
   color: var(--text-strong);
   letter-spacing: -0.01em;
@@ -441,7 +441,7 @@
   white-space: nowrap;
 }
 .ctbMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   display: flex;
   align-items: center;
@@ -733,16 +733,12 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.07);
   color: var(--ink);
-  box-shadow:
-    0 1px 1px rgba(var(--plum-rgb), 0.04),
-    0 4px 12px -8px rgba(var(--plum-rgb), 0.14);
+  box-shadow: var(--shadow-card);
 }
 .sent {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 0.97);
-  box-shadow:
-    0 1px 2px rgba(var(--plum-rgb), 0.24),
-    0 6px 16px -10px rgba(var(--plum-rgb), 0.5);
+  box-shadow: var(--shadow-e2);
 }
 
 /* ── Grouped-run corner shaping ──
@@ -899,7 +895,7 @@
   padding: 5px 10px;
   border: none;
   border-inline-start: 3px solid var(--plum);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   background: rgba(var(--plum-rgb), 0.07);
   text-align: start;
   cursor: pointer;
@@ -975,7 +971,7 @@
   position: absolute;
   inset: 0;
   border-radius: var(--radius-badge);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.4);
+  box-shadow: var(--ring-plum);
   opacity: 1;
   pointer-events: none;
   animation: messageHighlightFlash 1.2s var(--ease-out) forwards;
@@ -1079,7 +1075,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 15px;
+  font-size: var(--text-15);
   transition:
     background var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease);
@@ -1099,7 +1095,7 @@
   position: absolute;
   bottom: calc(100% + 6px);
   inset-inline-start: 0;
-  z-index: 4;
+  z-index: var(--z-popover);
 }
 .reactionPicker {
   display: flex;
@@ -1117,7 +1113,7 @@
   border-radius: 50%;
   border: none;
   background: none;
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1;
   display: flex;
   align-items: center;
@@ -1169,7 +1165,7 @@
   color: var(--ink-60);
   cursor: pointer;
   touch-action: manipulation;
-  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.06);
+  box-shadow: var(--shadow-card);
   transition:
     background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease),
@@ -1343,7 +1339,7 @@
   gap: 8px;
   margin-block-end: 8px;
   padding: 9px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--amber-rgb), 0.12);
   border: 1px solid rgba(var(--amber-rgb), 0.3);
   color: var(--amber-ink);
@@ -1643,7 +1639,7 @@
   border: none;
   background: none;
   color: var(--ink-40);
-  font-size: 12px;
+  font-size: var(--text-12);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1689,11 +1685,9 @@
   padding: 13px 15px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.07);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   border-end-start-radius: 7px;
-  box-shadow:
-    0 1px 1px rgba(var(--plum-rgb), 0.04),
-    0 4px 12px -8px rgba(var(--plum-rgb), 0.14);
+  box-shadow: var(--shadow-card);
   animation: msgBubbleIn var(--dur-base) var(--ease) both;
   transform-origin: bottom left;
 }
@@ -1725,7 +1719,7 @@
 }
 /* Group typing label (WHO is typing) shown before the dots inside the bubble. */
 .typingLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-40);
   margin-inline-end: 2px;
@@ -1737,7 +1731,7 @@
   display: block;
   margin: 2px 4px 4px auto;
   font: inherit;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   color: var(--jade);
   background: none;
@@ -1750,9 +1744,10 @@
   text-decoration: underline;
 }
 .groupSeenByLine:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 6px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-6);
 }
 
 .officialBar {
@@ -1760,7 +1755,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 
@@ -1956,7 +1951,7 @@
   width: 108px;
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--cream);
   pointer-events: none;
 }
@@ -1990,7 +1985,7 @@
   width: 44px;
   height: 44px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink);
   opacity: 0;
@@ -2031,9 +2026,9 @@
   max-width: min(280px, calc(100vw - 32px));
   padding: 6px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
-  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.16);
+  box-shadow: var(--shadow-e3);
   /* Grows from the trigger it hangs off, so it reads as attached to this row
      rather than snapping on top of the next one. */
   transform-origin: top right;
@@ -2064,7 +2059,7 @@
   width: 100%;
   padding: 9px 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   color: var(--text-strong);
   font: inherit;
@@ -2083,7 +2078,7 @@
   width: 100%;
   padding: 9px 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   color: var(--danger);
   font: inherit;
@@ -2104,9 +2099,12 @@
 .overlayBackdrop {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  /* Same tier as the shared Modal, since this full-screen action sheet plays
+     the same role: anything opened from its menu (Report, for instance) must
+     never render underneath it. */
+  z-index: var(--z-modal);
   display: flex;
-  background: rgba(var(--plum-rgb), 0.45);
+  background: var(--scrim-soft);
   animation: overlayBackdropFade var(--dur-fast) var(--ease);
 }
 .overlayBackdrop[data-reduced-motion="true"] {
@@ -2165,7 +2163,7 @@
   padding: 8px 14px;
   font-size: 0.9375rem;
   line-height: 1.42;
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   overflow-wrap: break-word;
   animation: msgBubbleIn var(--dur-fast) var(--ease-out) both;
 }
@@ -2212,7 +2210,7 @@
    backdrop and no lifted bubble clone — the page stays visible behind it. */
 .contextMenu {
   position: fixed;
-  z-index: 60;
+  z-index: var(--z-popover);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -2357,7 +2355,7 @@
 .searchMark {
   background: rgba(var(--accent-rgb), 0.22);
   color: inherit;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   padding: 0 1px;
   font-weight: 600;
 }
@@ -2439,13 +2437,13 @@
 }
 .pinnedBannerLabel {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--text-strong);
 }
 .pinnedBannerSnippet {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   white-space: nowrap;
   overflow: hidden;
@@ -2467,7 +2465,7 @@
   background: rgba(var(--plum-rgb), 0.05);
   color: var(--text-strong);
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   letter-spacing: 0.01em;
 }
@@ -2501,7 +2499,7 @@
 /* "Forwarded" label above a forwarded bubble's body. */
 .forwardedLabel {
   display: block;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-style: italic;
   font-weight: 600;
   opacity: 0.7;

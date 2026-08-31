@@ -96,12 +96,12 @@
 }
 .cal-today-btn {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.08);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
   transition: background 0.2s;
@@ -144,19 +144,19 @@
   display: flex;
   gap: 2px;
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px;
   margin-bottom: 16px;
 }
 .cal-view-btn {
   flex: 1;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   border: none;
   background: transparent;
   color: var(--ink-60);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 0;
   cursor: pointer;
   transition:
@@ -167,7 +167,7 @@
 .cal-view-btn.on {
   background: var(--paper);
   color: var(--text-strong);
-  box-shadow: 0 1px 5px -2px rgba(var(--plum-rgb), 0.3);
+  box-shadow: var(--shadow-card);
 }
 
 .cal-grid {
@@ -177,7 +177,7 @@
 }
 .cal-dow {
   text-align: center;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -191,7 +191,7 @@
      but on very narrow screens (7 cols under ~320px) it would dip below the
      touch minimum — pin a floor so day cells stay tappable. */
   min-height: 44px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
@@ -200,7 +200,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 8px 0 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink-60);
   transition:
@@ -266,7 +266,7 @@
 button.cal-cell {
   width: 100%;
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
 }
 button.cal-cell.has {
@@ -289,7 +289,7 @@ button.cal-cell.has {
   gap: 12px;
   align-items: flex-start;
   padding: 10px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.08);
   background: rgba(var(--plum-rgb), 0.015);
   cursor: pointer;
@@ -318,7 +318,7 @@ button.cal-cell.has {
   text-align: center;
 }
 .cw-dow {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -343,7 +343,7 @@ button.cal-cell.has {
   padding-top: 2px;
 }
 .cw-ev {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -353,7 +353,7 @@ button.cal-cell.has {
   flex: none;
 }
 .cw-none {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   padding-top: 6px;
 }
@@ -366,7 +366,7 @@ button.cal-cell.has {
 }
 .cy-m {
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 8px;
   cursor: pointer;
   background: rgba(var(--plum-rgb), 0.015);
@@ -386,7 +386,7 @@ button.cal-cell.has {
   border-color: rgba(var(--accent-rgb), 0.4);
 }
 .cy-name {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 6px;
@@ -407,7 +407,7 @@ button.cal-cell.has {
 .cy-empty {
   width: 10px;
   height: 2px;
-  border-radius: 1px;
+  border-radius: var(--radius-1);
   background: var(--ink-40);
 }
 
@@ -423,7 +423,7 @@ button.cal-cell.has {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .cal-leg .ld {
@@ -457,12 +457,12 @@ button.cal-cell.has {
   gap: 11px;
   width: 100%;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   background: rgba(var(--plum-rgb), 0.035);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 13px;
   cursor: pointer;
   transition:
@@ -488,7 +488,7 @@ button.cal-cell.has {
 }
 .cal-sub-btn .csb-sub {
   display: block;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 500;
   color: var(--ink-40);
   margin-top: 1px;
@@ -499,7 +499,7 @@ button.cal-cell.has {
   margin-top: 16px;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
   position: relative;
   overflow: hidden;
@@ -520,7 +520,7 @@ button.cal-cell.has {
   pointer-events: none;
 }
 .ins-eyebrow {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -542,7 +542,7 @@ button.cal-cell.has {
   font-weight: 400;
 }
 .ins-sub {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.5;
   margin-top: 6px;
@@ -558,12 +558,12 @@ button.cal-cell.has {
 }
 .ins-item .ins-n {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
   overflow-wrap: anywhere;
 }
 .ins-item .ins-l {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.55);
   margin-top: 2px;
 }
@@ -582,11 +582,11 @@ button.cal-cell.has {
 }
 .pill {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 17px;
   cursor: pointer;
   color: var(--ink-60);
@@ -611,7 +611,7 @@ button.cal-cell.has {
   border-color: var(--line-strong);
 }
 .pill .pc {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   opacity: 0.7;
 }
@@ -652,10 +652,10 @@ button.cal-cell.has {
 .ev-search {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 14px 10px 40px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -672,11 +672,11 @@ button.cal-cell.has {
 }
 .fchip {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 13px;
   cursor: pointer;
   color: var(--ink-60);
@@ -709,12 +709,12 @@ button.cal-cell.has {
 }
 .ev-sort {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 12px;
   cursor: pointer;
   outline: none;
@@ -724,12 +724,12 @@ button.cal-cell.has {
 }
 .ctrl-btn {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 13px;
   cursor: pointer;
   display: inline-flex;
@@ -759,7 +759,7 @@ button.cal-cell.has {
   flex: 1;
 }
 .tz-note {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   white-space: nowrap;
 }
@@ -775,7 +775,7 @@ button.cal-cell.has {
   display: flex;
 }
 .dayfilter-label {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .dayfilter-label strong {
@@ -784,12 +784,12 @@ button.cal-cell.has {
 }
 .dayfilter-clear {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.08);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
   cursor: pointer;
   display: inline-flex;
@@ -808,7 +808,7 @@ button.cal-cell.has {
   margin-top: 26px;
 }
 .grp-label {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -837,7 +837,7 @@ button.cal-cell.has {
   position: relative;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px 20px;
   display: flex;
   gap: 18px;
@@ -849,7 +849,7 @@ button.cal-cell.has {
 }
 @media (hover: hover) {
   .ev-card:hover {
-    box-shadow: 0 8px 26px -14px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-lift);
     transform: translateY(-1px);
   }
 }
@@ -891,7 +891,7 @@ button.cal-cell.has {
   font-size: 22px;
 }
 .ev-layout.compact .ev-name {
-  font-size: 17px;
+  font-size: var(--text-17);
 }
 .ev-layout.compact .ev-list {
   gap: 8px;
@@ -901,7 +901,7 @@ button.cal-cell.has {
   flex: none;
   width: 62px;
   text-align: center;
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   background: rgba(var(--plum-rgb), 0.04);
   padding: 10px 0 11px;
   border: 1px solid rgba(var(--line-rgb), 0.06);
@@ -911,7 +911,7 @@ button.cal-cell.has {
   border-color: rgba(var(--accent-rgb), 0.16);
 }
 .ev-tile .et-dow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -930,7 +930,7 @@ button.cal-cell.has {
   letter-spacing: -0.02em;
 }
 .ev-tile .et-mon {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -943,7 +943,7 @@ button.cal-cell.has {
   flex: none;
   width: 22px;
   height: 22px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   border: 1.5px solid rgba(var(--line-rgb), 0.25);
   background: var(--paper);
   cursor: pointer;
@@ -992,11 +992,11 @@ button.cal-cell.has {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.02em;
   padding: 4px 11px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .status-pill .sd {
   width: 7px;
@@ -1063,18 +1063,18 @@ button.cal-cell.has {
   border-color: rgba(var(--accent-rgb), 0.32);
 }
 .ev-count {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 500;
 }
 
 /* urgency chip */
 .urgent {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.12);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px 10px;
   display: inline-flex;
   align-items: center;
@@ -1089,14 +1089,14 @@ button.cal-cell.has {
 
 .ev-name {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 5px;
 }
 .ev-meta {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
   display: flex;
@@ -1117,7 +1117,7 @@ button.cal-cell.has {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--jade);
   margin-top: 10px;
@@ -1156,7 +1156,7 @@ button.cal-cell.has {
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 500;
   border: 2px solid var(--paper);
   margin-left: -8px;
@@ -1174,7 +1174,7 @@ button.cal-cell.has {
   border-color: color-mix(in srgb, var(--accent) 5%, var(--paper));
 }
 .ev-foot-text {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .ev-foot-text strong {
@@ -1198,11 +1198,11 @@ button.cal-cell.has {
   align-items: flex-end;
 }
 .ev-actions .btn {
-  font-size: 13px;
+  font-size: var(--text-13);
   padding: 8px 16px;
 }
 .ev-link {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
   white-space: nowrap;
@@ -1256,11 +1256,11 @@ button.cal-cell.has {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.09);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 11px;
   transition: filter 0.18s;
   border: none;
@@ -1303,10 +1303,10 @@ button.cal-cell.has {
   gap: 9px;
   background: rgba(var(--accent-rgb), 0.07);
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 9px 13px;
   margin-top: 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--accent-ink);
   line-height: 1.5;
 }
@@ -1332,10 +1332,10 @@ button.cal-cell.has {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 9px 13px;
   margin-top: 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
 }
 .ev-edge svg {
@@ -1375,12 +1375,12 @@ button.cal-cell.has {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   margin-top: 11px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
   transition: background 0.18s;
   cursor: pointer;
@@ -1403,7 +1403,7 @@ button.cal-cell.has {
 .dayof {
   margin-top: 11px;
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   padding: 14px 16px;
   background: rgba(var(--accent-rgb), 0.04);
   display: none;
@@ -1419,7 +1419,7 @@ button.cal-cell.has {
   margin-bottom: 0;
 }
 .dof-h {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1427,7 +1427,7 @@ button.cal-cell.has {
   margin-bottom: 7px;
 }
 .dof-row {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   line-height: 1.6;
   display: flex;
@@ -1445,15 +1445,15 @@ button.cal-cell.has {
   gap: 6px;
 }
 .dof-tag {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px 10px;
 }
 .dof-info {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -1464,11 +1464,11 @@ button.cal-cell.has {
 
 /* ---------- Price chip ---------- */
 .ev-price {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px 10px;
 }
 
@@ -1489,12 +1489,12 @@ button.cal-cell.has {
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: 1px solid rgba(var(--line-rgb), 0.13);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 13px;
   cursor: pointer;
   transition:
@@ -1530,12 +1530,12 @@ button.cal-cell.has {
 /* ---------- Overflow "More" menu ---------- */
 .more-menu {
   position: fixed;
-  z-index: 180;
+  z-index: var(--z-popover);
   min-width: 208px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 14px;
-  box-shadow: 0 22px 54px -18px rgba(var(--plum-rgb), 0.42);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e3);
   padding: 6px;
   opacity: 0;
   transform: translateY(-6px);
@@ -1555,12 +1555,12 @@ button.cal-cell.has {
   gap: 10px;
   width: 100%;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink);
   background: none;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   padding: 9px 11px;
   cursor: pointer;
   text-align: left;
@@ -1594,7 +1594,7 @@ button.cal-cell.has {
   text-align: center;
   padding: 58px 24px;
   border: 1.5px dashed rgba(var(--line-rgb), 0.16);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   background: rgba(var(--plum-rgb), 0.015);
   animation: qpTabIn 0.3s var(--ease) both;
 }
@@ -1642,7 +1642,7 @@ button.cal-cell.has {
   color: var(--accent);
 }
 .empty-sub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 40ch;
@@ -1667,19 +1667,19 @@ button.cal-cell.has {
   display: none;
   gap: 3px;
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px;
   margin-bottom: 20px;
   width: fit-content;
 }
 .mview-btn {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   border: none;
   background: transparent;
   color: var(--ink-60);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 20px;
   cursor: pointer;
   transition:
@@ -1693,7 +1693,7 @@ button.cal-cell.has {
 .mview-btn.on {
   background: var(--paper);
   color: var(--text-strong);
-  box-shadow: 0 2px 8px -3px rgba(var(--plum-rgb), 0.2);
+  box-shadow: var(--shadow-card);
 }
 .mview-btn svg {
   width: 14px;
@@ -1703,16 +1703,16 @@ button.cal-cell.has {
 /* ---------- Calendar hover-peek ---------- */
 .cal-peek {
   position: absolute;
-  z-index: 60;
+  z-index: var(--z-popover);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 13px;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   width: max-content;
   max-width: 210px;
-  box-shadow: 0 14px 34px -14px rgba(36, 20, 48, 0.65);
+  box-shadow: var(--shadow-e3);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.15s var(--ease);
@@ -1761,10 +1761,10 @@ button.cal-cell.has {
   gap: 9px;
   flex-wrap: wrap;
   background: rgba(var(--accent-rgb), 0.1);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 8px 13px;
   margin-bottom: 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--accent-ink);
 }
@@ -1800,7 +1800,7 @@ button.cal-cell.has {
   background: none;
   border: none;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   padding: 0;
 }
 
@@ -1816,7 +1816,7 @@ button.cal-cell.has {
   border-left: none;
   border-right: none;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   padding: 0;
 }
 @media (hover: hover) {
@@ -1831,10 +1831,10 @@ button.cal-cell.has {
   align-items: flex-start;
   gap: 9px;
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 8px 13px;
   margin-top: 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -1865,7 +1865,7 @@ button.cal-cell.has {
 .sk-card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px 20px;
   display: flex;
   gap: 18px;
@@ -1873,7 +1873,7 @@ button.cal-cell.has {
 .sk-tile {
   width: 62px;
   height: 62px;
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   flex: none;
 }
 .sk-lines {
@@ -1884,7 +1884,7 @@ button.cal-cell.has {
 }
 .sk-line {
   height: 13px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
 }
 .sk-line.tall {
   height: 18px;
@@ -1898,10 +1898,10 @@ button.cal-cell.has {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
-  background: rgba(36, 20, 48, 0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1916,12 +1916,12 @@ button.cal-cell.has {
 }
 .modal {
   background: var(--cream);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   max-width: 480px;
   width: 100%;
   max-height: 90svh;
   overflow-y: auto;
-  box-shadow: 0 40px 90px -30px rgba(36, 20, 48, 0.6);
+  box-shadow: var(--shadow-e4);
   transform: translateY(12px) scale(0.98);
   transition: transform 0.3s var(--ease);
 }
@@ -1935,7 +1935,7 @@ button.cal-cell.has {
   padding: 26px 28px 0;
 }
 .modal-eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1955,7 +1955,7 @@ button.cal-cell.has {
   color: var(--accent);
 }
 .modal-evname {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin-top: 8px;
 }
@@ -1969,14 +1969,14 @@ button.cal-cell.has {
   margin-bottom: 0;
 }
 .field-label {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 8px;
   display: block;
 }
 .field-hint {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 500;
   margin: -4px 0 8px;
@@ -1986,10 +1986,10 @@ button.cal-cell.has {
 .field select {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 11px 13px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -2011,7 +2011,7 @@ button.cal-cell.has {
   gap: 12px;
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   padding: 13px 15px;
   cursor: pointer;
   width: 100%;
@@ -2021,7 +2021,7 @@ button.cal-cell.has {
 .guest-cb {
   width: 21px;
   height: 21px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   border: 1.5px solid rgba(var(--line-rgb), 0.25);
   flex: none;
   display: flex;
@@ -2051,13 +2051,13 @@ button.cal-cell.has {
   opacity: 1;
 }
 .guest-txt {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   font-weight: 600;
 }
 .guest-txt span {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 500;
   margin-top: 1px;
@@ -2079,7 +2079,7 @@ button.cal-cell.has {
   align-items: center;
 }
 .modal-privacy {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   line-height: 1.45;
   flex: 1;
@@ -2102,12 +2102,12 @@ button.cal-cell.has {
   border: none;
 }
 .set-info .set-t {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 .set-info .set-d {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 2px;
   line-height: 1.45;
@@ -2119,7 +2119,7 @@ button.cal-cell.has {
   gap: 12px;
   padding: 13px 15px;
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
   cursor: pointer;
   margin-bottom: 9px;
@@ -2134,13 +2134,13 @@ button.cal-cell.has {
   }
 }
 .slr-t {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
 }
 .slr-t span {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 500;
   color: var(--ink-40);
   margin-top: 1px;
@@ -2155,10 +2155,10 @@ button.cal-cell.has {
 .confirm-overlay {
   position: fixed;
   inset: 0;
-  z-index: 200;
-  background: rgba(36, 20, 48, 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2174,14 +2174,14 @@ button.cal-cell.has {
 .confirm-panel {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: 26px;
+  border-radius: var(--radius-26);
   padding: 44px 40px 38px;
   max-width: 460px;
   width: 100%;
   text-align: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 40px 90px -30px rgba(36, 20, 48, 0.7);
+  box-shadow: var(--shadow-e4);
   transform: translateY(14px) scale(0.97);
   transition: transform 0.34s var(--ease);
 }
@@ -2214,7 +2214,7 @@ button.cal-cell.has {
   margin: 0 auto 22px;
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 0 8px rgba(var(--jade-rgb), 0.18);
+  box-shadow: var(--ring-jade);
 }
 .confirm-check svg {
   width: 28px;
@@ -2226,7 +2226,7 @@ button.cal-cell.has {
   stroke-linejoin: round;
 }
 .confirm-eyebrow {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -2251,14 +2251,14 @@ button.cal-cell.has {
   font-weight: 400;
 }
 .confirm-name {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.78);
   margin-bottom: 6px;
   position: relative;
   z-index: 1;
 }
 .confirm-meta {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 28px;
   position: relative;
@@ -2279,16 +2279,16 @@ button.cal-cell.has {
   bottom: calc(max(28px, env(safe-area-inset-bottom)) + var(--bottom-inset));
   left: 50%;
   transform: translateX(-50%) translateY(12px);
-  z-index: 9998;
+  z-index: var(--z-toast);
   display: flex;
   align-items: center;
   gap: 14px;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   padding: 11px 13px 11px 20px;
-  border-radius: 999px;
-  box-shadow: 0 14px 36px -12px rgba(var(--plum-rgb), 0.55);
-  font-size: 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-toast);
+  font-size: var(--text-14);
   font-weight: 500;
   opacity: 0;
   pointer-events: none;
@@ -2303,12 +2303,12 @@ button.cal-cell.has {
 }
 .undo-btn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.16);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 16px;
   cursor: pointer;
   transition: background 0.2s;
@@ -2340,11 +2340,11 @@ button.cal-cell.has {
   gap: 11px;
   text-align: left;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 14px;
   cursor: pointer;
   transition:
@@ -2411,7 +2411,7 @@ button.cal-cell.has {
 .undo-btn:focus-visible {
   outline: 2.5px solid var(--line-strong);
   outline-offset: 2px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 .undo-btn:focus-visible {
   outline-color: rgba(var(--cream-rgb), 1);

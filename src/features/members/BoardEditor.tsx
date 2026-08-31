@@ -1,5 +1,5 @@
 import { FiPlus, FiTrash2 } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, RadioCardGroup } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { slugify } from "../subprofiles/subprofile-kinds";
 import type { BoardItem } from "./data/members";
@@ -53,26 +53,18 @@ export function BoardEditor({
       <div className={styles.rows}>
         {board.map((item, index) => (
           <div className={styles.row} key={keys[index]}>
-            <div
+            <RadioCardGroup
               className={`${editStyles.segmented} ${styles.rowLead}`}
-              role="radiogroup"
-              aria-label={t("members:profileEdit.board.kindLabel")}
-            >
-              {BOARD_KIND_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={item.kind === option.value}
-                  className={`${editStyles.segment} ${
-                    item.kind === option.value ? editStyles.segmentActive : ""
-                  }`}
-                  onClick={() => update(index, { kind: option.value })}
-                >
-                  {t(option.labelKey)}
-                </button>
-              ))}
-            </div>
+              optionClassName={editStyles.segment}
+              checkedClassName={editStyles.segmentActive}
+              ariaLabel={t("members:profileEdit.board.kindLabel")}
+              value={item.kind}
+              onChange={(kind) => update(index, { kind })}
+              options={BOARD_KIND_OPTIONS.map((option) => ({
+                id: option.value,
+                render: t(option.labelKey),
+              }))}
+            />
             <input
               className={`${editStyles.inlineInput} ${styles.grow}`}
               value={item.title}

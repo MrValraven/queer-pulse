@@ -43,6 +43,11 @@ export const shared: Catalog = {
   "feedback.errorFallback.tryAgain": "Tentar outra vez",
   "feedback.errorFallback.reference": "Referência: {referenceId}",
 
+  "loadError.title": "Não conseguimos <em>carregar</em>",
+  "loadError.body":
+    "O pedido não voltou. A falha é nossa. Tenta outra vez daqui a um momento.",
+  "loadError.retryCta": "Tentar outra vez",
+
   "feedback.roomLoader.ariaLabel": "A preparar a sala",
   "feedback.roomLoader.title": "A preparar a tua <em>sala</em>",
   "feedback.roomLoader.caption": "A servir o café, a baixar as luzes…",
@@ -72,6 +77,7 @@ export const shared: Catalog = {
   // ACQ-08 — o convite feito por quem já é membro, com a contagem de convites
   // por usar colada pelo `useInviteQuotaBadge`.
   "accountMenu.items.invite": "Convidar alguém",
+  "accountMenu.items.vouch": "Avalizar alguém",
   "accountMenu.items.messages": "Mensagens",
   "accountMenu.items.work": "Trabalho",
   // Descoberta de personas, Fase 5, Momento 3 — a linha "As tuas personas"
@@ -125,6 +131,7 @@ export const shared: Catalog = {
   "accountMenu.controls.navSidebar": "Barra lateral",
 
   // AdminRoleSwitcher
+  "adminRoleSwitcher.avatarPlaceholderAria": "Avatar da conta",
   "adminRoleSwitcher.roleStaffAdmin": "Admin da equipa",
   "adminRoleSwitcher.roleCommunityMod": "Moderação de comunidade",
   "adminRoleSwitcher.scopeAll": "Todas as comunidades",
@@ -293,6 +300,15 @@ export const shared: Catalog = {
   "staffBadge.admin.short": "Equipa",
   "staffBadge.moderator.long": "Moderação QueerPulse",
   "staffBadge.moderator.short": "Moderação",
+  // Papéis de equipa com distintivo: quem recebeu um domínio da plataforma
+  // para gerir. Uma etiqueta para cada um, nos dois tamanhos, a dizer em
+  // palavras simples o que a pessoa decide.
+  "staffBadge.grant.magazineEditor": "Edição da revista",
+  "staffBadge.grant.housingModerator": "Moderação de habitação",
+  "staffBadge.grant.directoryModerator": "Moderação do diretório",
+  "staffBadge.grant.resourceCurator": "Curadoria de recursos",
+  "staffBadge.grant.editorial": "Equipa editorial",
+  "staffBadge.grant.communities": "Equipa de comunidades",
 
   // ImageSlot
   "imageSlot.placeholder": "Imagem",
@@ -484,6 +500,7 @@ export const shared: Catalog = {
   "mediaRef.magazine-article": "Matéria da revista",
   "mediaRef.magazine-deck": "Deck da revista",
   "mediaRef.message-photo": "Conversa",
+  "mediaRef.press-contact": "Contacto de imprensa",
 
   // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
   // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,

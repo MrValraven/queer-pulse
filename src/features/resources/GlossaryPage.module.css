@@ -8,8 +8,8 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   position: sticky;
   top: 0;
-  z-index: 20;
-  backdrop-filter: blur(10px);
+  z-index: var(--z-sticky);
+  backdrop-filter: var(--blur-md);
   margin-top: 32px;
 }
 .searchInner {
@@ -28,11 +28,11 @@
 .searchInput input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 14px 11px 40px;
   transition:
     border-color 0.2s var(--ease),
@@ -41,7 +41,7 @@
 }
 .searchInput input:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
+  box-shadow: var(--ring-plum);
 }
 .searchInput svg {
   position: absolute;
@@ -57,7 +57,7 @@
 .langToggle {
   display: flex;
   background: var(--cream);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 4px;
   gap: 2px;
 }
@@ -66,11 +66,11 @@
   border: none;
   padding: 7px 14px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   cursor: pointer;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   transition:
     background 0.2s var(--ease),
     color 0.2s var(--ease);
@@ -99,9 +99,9 @@
   justify-content: center;
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   text-decoration: none;
   transition:
     background 0.2s var(--ease),
@@ -164,13 +164,13 @@
   letter-spacing: -0.01em;
 }
 .termType {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-40);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 2px 7px;
   margin-left: auto;
 }
@@ -187,7 +187,7 @@
   background: rgba(var(--plum-rgb), 0.08);
 }
 .termDef {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   line-height: 1.65;
   max-width: 54ch;
@@ -202,7 +202,7 @@
   font-weight: 600;
 }
 .termMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 8px;
   line-height: 1.5;
@@ -225,7 +225,7 @@
   margin-bottom: 8px;
 }
 .noResults p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   max-width: 42ch;
   margin: 0 auto 18px;
@@ -256,7 +256,7 @@
   color: var(--accent);
 }
 .foot p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
   margin: 0 auto 18px;

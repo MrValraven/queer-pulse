@@ -17,7 +17,7 @@
 }
 .sub {
   margin: 6px 0 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -49,7 +49,7 @@
   background: transparent;
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   text-align: left;
   cursor: pointer;
@@ -65,8 +65,9 @@
   background: color-mix(in srgb, var(--ink) 10%, transparent);
 }
 .rowBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   background: color-mix(in srgb, var(--ink) 6%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {

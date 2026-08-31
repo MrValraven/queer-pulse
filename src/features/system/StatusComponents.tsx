@@ -4,6 +4,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   SERVICES,
@@ -47,7 +48,12 @@ export function StatusHero() {
           </span>
         </div>
       )}
-      <h1 className={styles.heroTitle}>{t("system:status.hero.title")}</h1>
+      <h1 className={styles.heroTitle}>
+        <Translation
+          i18nKey="system:status.hero.title"
+          components={{ em: <em /> }}
+        />
+      </h1>
       <p className={styles.heroSub}>
         {demoMode
           ? t("system:status.hero.sub")

@@ -17,6 +17,17 @@ import { useEffect, useRef, type RefObject } from "react";
  * @param options  `onEscape` also closes on the Escape key and hands the caller
  *                 the chance to restore focus to the trigger. Menus that were
  *                 hand-rolling both listeners together can now use one hook.
+ *
+ * Escape stays opt-in on purpose, and every surface still owes its keyboard
+ * users a way out: pass `onEscape` here, or handle Escape locally the way
+ * `Select`/`VenuePicker`/`ProfileSettingsMenu` do on their own subtree. Two
+ * reasons it cannot simply default on. First, this listener sits on
+ * `document`, and so does the modal Escape handler in
+ * `components/ui/useDismiss.ts`, which has no `defaultPrevented` guard: a
+ * defaulted-on Escape would close a `Select` popover AND the form modal
+ * around it on one press, throwing away whatever was typed. Second, only the
+ * caller knows where focus should land afterwards, and `onDismiss` is usually
+ * a bare `setOpen(false)` that would drop the trigger focus restore.
  */
 export function useOutsideDismiss(
   active: boolean,

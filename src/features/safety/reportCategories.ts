@@ -21,6 +21,13 @@ export const CATEGORIES: { code: ReasonCode; labelKey: string }[] = [
   { code: "outing", labelKey: "safety:report.category.outing" },
   { code: "doxxing", labelKey: "safety:report.category.doxxing" },
   { code: "harassment", labelKey: "safety:report.category.harassment" },
+  // Reporting a slur had no code of its own here, so it had to be filed as
+  // `discrimination`. Severity lands in the same band either way, but the
+  // taxonomy the transparency report and the moderator queue read then said
+  // the platform receives no hate-speech reports about people. It routes to a
+  // `member` subject, which is why `SUBJECT_REASONS.member` had to offer it
+  // too (the test below asserts exactly that pairing).
+  { code: "hate_speech", labelKey: "safety:report.category.hateSpeech" },
   {
     code: "unwanted_contact",
     labelKey: "safety:report.category.unwantedContact",

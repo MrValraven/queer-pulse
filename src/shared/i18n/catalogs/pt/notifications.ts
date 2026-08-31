@@ -103,6 +103,18 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> convidou-te para coanfitriar um convívio.",
   "type.event_cohost_invite.meta": "Convite para coanfitriar",
 
+  // PRD-18. Chega a quem guardou o convívio ou respondeu talvez, nunca a quem
+  // já tem lugar. Plural em `count`, espelhado de `seatsRemaining`.
+  // Forma simples para uma linha sem contagem de lugares: tem de continuar a
+  // ler-se como uma frase em vez de deixar "{seatsRemaining}" no ecrã.
+  "type.event_nearly_full.text":
+    "Um convívio que estavas a ponderar está quase cheio.",
+  "type.event_nearly_full.text_one":
+    "Um convívio que estavas a ponderar tem 1 lugar livre.",
+  "type.event_nearly_full.text_other":
+    "Um convívio que estavas a ponderar tem {seatsRemaining} lugares livres.",
+  "type.event_nearly_full.meta": "Últimos lugares",
+
   "type.event_reminder.text":
     "Está a aproximar-se um convívio em que vais estar.",
   "type.event_reminder.meta": "Lembrete de convívio",
@@ -198,6 +210,32 @@ export const notifications: Catalog = {
   "type.community_report_filed.emergency.text":
     "Uma denúncia urgente em {communityName} precisa de uma decisão dentro de uma hora.",
   "type.community_report_filed.emergency.meta": "Denúncia urgente",
+
+  // ── Encaminhamentos por fuga a bloqueio (PRD-31) ─────────────────────────
+  // As duas linhas que fecham o ciclo de quem modera uma comunidade a pedir à
+  // equipa da plataforma para ver um pedido para entrar. VALE PARA AS DUAS A
+  // MESMA REGRA QUE VALE PARA O SINAL: nenhuma pode dizer mais do que sabe.
+  //
+  // A linha da equipa é trabalho. Nomeia a comunidade e diz que alguém pediu.
+  // Nunca nomeia quem pediu para entrar nem sugere uma resposta, porque ainda
+  // ninguém olhou.
+  //
+  // A linha de quem modera diz que o encaminhamento foi fechado e para por
+  // aí. O que a equipa encontrou é o juízo entre comunidades que o sinal de um
+  // só bit existe para não revelar, e o payload não traz nota, nem quem
+  // fechou, nem veredito. A segunda frase existe para dizer o óbvio em voz
+  // alta: fechar o encaminhamento não decidiu nada sobre o pedido.
+  //
+  // As duas vivem só na aplicação. A QueerPulse não envia e-mail nenhum.
+  "type.ban_evasion_escalation_raised.text":
+    "Quem modera {communityName} pediu à equipa da plataforma para ver um pedido para entrar.",
+  "type.ban_evasion_escalation_raised.meta":
+    "Encaminhamento por fuga a bloqueio",
+  "type.ban_evasion_escalation_raised.communityFallback": "uma comunidade",
+  "type.ban_evasion_escalation_resolved.text":
+    "A equipa da plataforma fechou o encaminhamento que fizeste na comunidade {communityName}. A decisão sobre o pedido continua a ser tua.",
+  "type.ban_evasion_escalation_resolved.meta": "Encaminhamento fechado",
+  "type.ban_evasion_escalation_resolved.communityFallback": "que moderas",
 
   // ── Remoção de uma comunidade (TS-10) ────────────────────────────────────
   // O payload não nomeia nenhum moderador, por isso esta cópia também não o
@@ -538,8 +576,15 @@ export const notifications: Catalog = {
   "actions.viewProfile": "Ver perfil",
   "actions.accept": "Aceitar",
   "actions.decline": "Recusar",
+  // PRD-15. Confirmações das duas respostas que a linha "quer ligar-se" passa
+  // a oferecer.
+  "actions.acceptedToast": "Ligaste-te a {name}",
+  "actions.declinedToast": "Recusado com delicadeza",
   "actions.readNow": "Ler agora",
   "actions.seeDetails": "Ver detalhes",
+  // PRD-31: a linha de demonstração devolve quem modera à sua própria fila de
+  // pedidos, que é onde a decisão sobre o pedido continua à espera.
+  "actions.openRequestsQueue": "Abrir a fila de pedidos",
   "actions.seeBarterBoard": "Ver quadro de trocas",
   "actions.viewReplies": "Ver respostas",
   "actions.readReport": "Ler relatório",
@@ -606,6 +651,8 @@ export const notifications: Catalog = {
   "mentions.markAllRead": "Marcar tudo como lido",
   "mentions.markAllReadToast": "Tudo marcado como lido",
   "mentions.empty.title": "Sem menções por aqui",
+  "mentions.loadErrorBody":
+    "Não conseguimos carregar as tuas menções. O que estiver à tua espera continua lá. Tenta outra vez daqui a pouco.",
   "mentions.empty.description":
     "Não há nada nesta vista por agora. Quando alguém te mencionar, aparece aqui. Não precisas de andar à procura.",
   // Live ainda não tem endpoint de caixa de menções — mostrado em vez de uma

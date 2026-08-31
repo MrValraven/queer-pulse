@@ -1,6 +1,6 @@
 /* Hero migrated to the shared <ResourceHero /> (plum tone). */
 .disclaimer {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.38);
   max-width: 58ch;
   line-height: 1.6;
@@ -13,7 +13,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   position: sticky;
   top: 62px;
-  z-index: 50;
+  z-index: var(--z-sticky);
 }
 .pbInner {
   display: flex;
@@ -29,10 +29,10 @@
   display: none;
 }
 .pathBtn {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   padding: 9px 20px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   border: 1.5px solid rgba(var(--line-rgb), 0.15);
   cursor: pointer;
   background: transparent;
@@ -118,7 +118,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 500;
   color: var(--text-strong);
   background: var(--cream);
@@ -128,18 +128,18 @@
 .stepBody {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
   margin-bottom: 6px;
 }
 .stepTitle {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 6px;
 }
 .stepDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
 }
@@ -150,10 +150,10 @@
   margin-top: 12px;
 }
 .metaPill {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   padding: 4px 10px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
 }
 .pillTime {
   background: rgba(var(--plum-rgb), 0.06);
@@ -165,7 +165,7 @@
 }
 .stepTip {
   margin-top: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   font-style: italic;
   border-left: 2px solid rgba(var(--accent-rgb), 0.3);
@@ -183,11 +183,11 @@
 .sbCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 20px 22px;
 }
 .sbcTitle {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -205,39 +205,39 @@
   border-bottom: none;
 }
 .sbcOrg {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 .sbcRole {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 .sbcContact {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-ink);
   margin-top: 2px;
 }
 .sbcLink {
   color: var(--text-strong);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   text-decoration: none;
 }
 .sbAlert {
   background: rgba(var(--accent-rgb), 0.07);
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
 }
 .sbAlertTitle {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--accent-ink);
   margin-bottom: 7px;
 }
 .sbAlertBody {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
 }

@@ -39,6 +39,18 @@ describe("staff badge on member surfaces", () => {
     await waitFor(() => expect(screen.getByText("Mod")).toBeInTheDocument());
   });
 
+  it("marks a grant holder who is on the ordinary member tier", async () => {
+    renderInApp(
+      <div>
+        <span>Inês</span>
+        <MemberStaffBadge slug="ines" />
+      </div>,
+    );
+    await waitFor(() =>
+      expect(screen.getByText("Housing Moderator")).toBeInTheDocument(),
+    );
+  });
+
   it("leaves a plain member unmarked", async () => {
     renderInApp(
       <div>
@@ -50,5 +62,6 @@ describe("staff badge on member surfaces", () => {
       expect(screen.queryByText("Mod")).not.toBeInTheDocument(),
     );
     expect(screen.queryByText("Staff")).not.toBeInTheDocument();
+    expect(screen.queryByText("Housing Moderator")).not.toBeInTheDocument();
   });
 });

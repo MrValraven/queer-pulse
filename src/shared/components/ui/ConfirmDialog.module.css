@@ -1,7 +1,7 @@
 /* ConfirmDialog — body spacing on top of the shared Modal. Tokens only. */
 .description {
   margin: 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -18,6 +18,6 @@
   display: block;
   margin-top: 6px;
   text-align: right;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }

@@ -1,0 +1,6 @@
+{
+  "//": "Committed floor for scripts/check-design-tokens.mjs. Every number here is debt to pay down. `hex-in-modules` is a genuine zero and must stay one: that sweep finished on 2026-08-21. Lower a number with `node scripts/check-design-tokens.mjs --update-budget` after a cleanup; raising one is a hand edit that needs a written reason in the commit.",
+  "hex-in-modules": 0,
+  "hex-in-global-css": 139,
+  "rgb-triple": 179
+}
