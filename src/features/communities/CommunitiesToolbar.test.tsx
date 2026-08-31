@@ -75,7 +75,7 @@ describe("CommunitiesToolbar", () => {
   });
 
   it("puts the count on the chip row once a refinement is on", async () => {
-    renderToolbar({
+    const { container } = renderToolbar({
       searchInput: "art",
       q: "art",
       hasActiveRefinement: true,
@@ -83,7 +83,15 @@ describe("CommunitiesToolbar", () => {
       visible: [stubCommunity("a")],
     });
 
-    expect(await screen.findByText("1 community")).toBeInTheDocument();
+    // The count now has two homes at once, on purpose: the chip row shows it,
+    // and the polite live region still announces it (a live region only speaks
+    // on change, so visible text cannot replace it). So this filters the
+    // announcement out and asserts the VISIBLE one, which is what this test is
+    // about — the announcement has its own test above.
+    const counts = await screen.findAllByText("1 community");
+    const live = container.querySelector('[aria-live="polite"]');
+    const visibleCounts = counts.filter((node) => !live?.contains(node));
+    expect(visibleCounts).toHaveLength(1);
     expect(screen.getByText("Clear all")).toBeInTheDocument();
   });
 

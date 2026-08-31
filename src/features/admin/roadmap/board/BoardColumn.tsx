@@ -95,6 +95,7 @@ export function BoardColumn({
               itemsById={itemsById}
               maxSortOrderByColumn={maxSortOrderByColumn}
               dragProps={dnd.getCardDragProps(item, column, index)}
+              moveProps={dnd.getCardMoveProps(item, column, index)}
             />
           </Fragment>
         ))}

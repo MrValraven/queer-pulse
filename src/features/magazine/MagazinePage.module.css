@@ -7,7 +7,7 @@
   flex-wrap: wrap;
 }
 .inIssueLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -20,7 +20,7 @@
   gap: 4px 18px;
 }
 .inIssueLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   text-decoration: none;
   white-space: nowrap;
@@ -45,7 +45,7 @@
   position: relative;
   z-index: 2;
   padding: 24px 28px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -62,7 +62,7 @@
   border-left: 2px solid var(--line-strong);
 }
 .csKicker {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -83,12 +83,12 @@
   font-weight: 400;
 }
 .csByline {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-bottom: 14px;
 }
 .csExcerpt {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.75;
   max-width: 52ch;
@@ -98,7 +98,7 @@
   align-items: center;
   gap: 7px;
   margin-top: 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   transition:
@@ -156,7 +156,7 @@
   color: var(--accent);
 }
 .asSeeAll {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -184,12 +184,12 @@
   }
 }
 .acImg {
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
   aspect-ratio: 3/2;
 }
 .acKicker {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -198,7 +198,7 @@
 .acTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   line-height: 1.18;
   letter-spacing: -0.01em;
@@ -207,7 +207,7 @@
   font-style: italic;
 }
 .acExcerpt {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -215,17 +215,17 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   flex-wrap: wrap;
 }
 .rv {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .essential {
   background: rgba(var(--plum-rgb), 0.08);
@@ -247,7 +247,7 @@
   gap: 10px;
   color: inherit;
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 26px;
   background: var(--paper);
   transition:
@@ -258,12 +258,12 @@
 @media (hover: hover) {
   .ec:hover {
     border-color: rgba(var(--line-rgb), 0.22);
-    box-shadow: 0 10px 30px -18px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-lift);
     transform: translateY(-2px);
   }
 }
 .ecKicker {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -272,7 +272,7 @@
 .ecTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   line-height: 1.15;
   letter-spacing: -0.015em;
@@ -292,7 +292,7 @@
   align-items: center;
 }
 .feKicker {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -313,12 +313,12 @@
   color: var(--accent);
 }
 .feByline {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 20px;
 }
 .feExcerpt {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.72;
 }
@@ -327,7 +327,7 @@
   align-items: center;
   gap: 7px;
   margin-top: 20px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--accent);
   transition: gap 0.2s;
@@ -354,7 +354,7 @@
   align-items: center;
 }
 .fdMedia {
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
 }
 .fdTitle {
@@ -398,7 +398,7 @@
   border-bottom: none;
 }
 .letterBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.7;
   font-style: italic;
@@ -406,7 +406,7 @@
 /* The attribution dash is decoration, so it lives in CSS rather than in the
    data string a screen reader would read out as "em dash" (FE-CNT-19). */
 .letterFrom {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 7px;
 }
@@ -428,7 +428,7 @@
 }
 .aiCover {
   aspect-ratio: 3/4;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -437,12 +437,12 @@
 .aiCoverTitle {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.3;
 }
 .aiMonth {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -452,14 +452,14 @@
   }
 }
 .aiCount {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 
 .submit {
   background: rgba(var(--plum-rgb), 0.04);
   border: 2px solid var(--line-strong);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 36px 40px;
   display: flex;
   align-items: center;
@@ -480,7 +480,7 @@
   color: var(--accent);
 }
 .ssBody p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   max-width: 46ch;
   line-height: 1.62;

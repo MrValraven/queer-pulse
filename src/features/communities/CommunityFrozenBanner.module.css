@@ -7,13 +7,13 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-left: 3px solid var(--amber);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 
 .icon {
   display: flex;
   flex-shrink: 0;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--amber);
 }
 
@@ -84,12 +84,12 @@
   gap: 10px;
   background: rgba(var(--line-rgb), 0.05);
   border: 1.5px dashed rgba(var(--line-rgb), 0.14);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 12px 16px;
 }
 .composerNoticeText {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.5;
 }

@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { FadeIn, SearchInput, SkeletonLine } from "../../shared/components/ui";
+import {
+  FadeIn,
+  LoadErrorState,
+  SearchInput,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminSeg, AdminToggle } from "./ui";
 import { NOMINATION_SCOPE_OPTIONS } from "./adminSafeSpaceGovernance.data";
@@ -30,7 +35,13 @@ export function AdminSafeSpaceNominationsPanel() {
   const [openNomination, setOpenNomination] =
     useState<AdminSafeSpaceNominationDTO | null>(null);
 
-  const { nominations, total, isLoading } = useAdminSafeSpaceNominations({
+  const {
+    nominations,
+    total,
+    isLoading,
+    isError: hasNominationsError,
+    refetch: refetchNominations,
+  } = useAdminSafeSpaceNominations({
     scope,
     sort,
     breachedOnly: isBreachedOnly || undefined,
@@ -103,12 +114,21 @@ export function AdminSafeSpaceNominationsPanel() {
       </FadeIn>
 
       <FadeIn delay={110}>
+        {/* An outage must not read as "no nominations waiting": a place
+            promised acknowledgement within 48 hours is still waiting whether
+            or not the queue reached the browser (DES-22). */}
         {isLoading ? (
           <div className={styles.rows}>
             <SkeletonLine width="100%" height={78} />
             <SkeletonLine width="100%" height={78} />
             <SkeletonLine width="100%" height={78} />
           </div>
+        ) : hasNominationsError ? (
+          <LoadErrorState
+            onRetry={() => void refetchNominations()}
+            title={t("safety:governance.loadError.nominations.title")}
+            description={t("safety:governance.loadError.nominations.body")}
+          />
         ) : (
           <AdminSafeSpaceNominationRows
             nominations={nominations}

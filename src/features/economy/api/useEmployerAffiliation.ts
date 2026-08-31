@@ -22,6 +22,15 @@ export interface EmployerAffiliationResult extends EmployerAffiliationActions {
    * had an instant answer, right or wrong.
    */
   isLoading: boolean;
+  /**
+   * True when the server read failed and no local overlay answers the question.
+   * `affiliation` falls back to `null` in that case, which is indistinguishable
+   * from "this member has no employer" — consumers that act on the difference
+   * must check this first (DES-22).
+   */
+  isError: boolean;
+  /** Re-runs the failed read. */
+  refetch: () => void;
 }
 
 /**
@@ -67,6 +76,14 @@ export function useEmployerAffiliation(): EmployerAffiliationResult {
 
   const affiliation = overlay !== undefined ? overlay : (query.data ?? null);
   const isLoading = overlay === undefined && query.isLoading;
+  const isError = overlay === undefined && query.isError;
 
-  return { affiliation, affiliate, clearAffiliation, isLoading };
+  return {
+    affiliation,
+    affiliate,
+    clearAffiliation,
+    isLoading,
+    isError,
+    refetch: () => void query.refetch(),
+  };
 }

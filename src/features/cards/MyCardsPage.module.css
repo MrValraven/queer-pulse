@@ -60,6 +60,58 @@
   margin: 0;
 }
 
+/* The communities of yours that actually issue cards. Only rendered when there
+   is at least one, so it never draws an empty frame. */
+.emptyIssuers {
+  display: grid;
+  justify-items: center;
+  gap: var(--gap-xs);
+  margin-top: var(--gap-xs);
+  padding-top: var(--gap-sm);
+  border-top: 1px solid var(--line);
+  width: 100%;
+  max-width: 44ch;
+}
+
+.emptyIssuersTitle {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin: 0;
+}
+
+.emptyIssuerList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emptyIssuerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: var(--plum);
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.emptyIssuerLink:hover,
+.emptyIssuerLink:focus-visible {
+  border-color: var(--line-2);
+  color: var(--accent);
+}
+
 .statusNotice {
   display: flex;
   align-items: center;

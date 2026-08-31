@@ -16,7 +16,7 @@
 .csHead {
   margin-bottom: 18px;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -24,7 +24,7 @@
 
 .csSelectedDay {
   margin-bottom: 14px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -37,7 +37,7 @@
 
 .emptyDay {
   padding: 12px 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
 }
 
@@ -52,7 +52,7 @@
 .subStrip h3 {
   margin-bottom: 10px;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -60,7 +60,7 @@
 
 .subStrip p {
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
 }

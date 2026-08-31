@@ -2,7 +2,7 @@
    the toolbar and their breathing room, so this is just the gap down to the
    first card. */
 .body {
-  padding: var(--gap-sm) 0 120px;
+  padding: var(--gap-sm) 0 var(--section-y-lg);
 }
 
 /* "Open to all" / "Busy this week" — pill toggles, same border/radius/padding
@@ -17,13 +17,13 @@
   align-items: center;
   gap: 7px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 16px 9px 13px;
   white-space: nowrap;
   transition:
@@ -73,13 +73,13 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 17px;
   transition:
     color var(--dur-base) var(--ease),
@@ -113,10 +113,10 @@
    pool has fully loaded so it never flashes a wrong partial number. */
 .chipCount {
   margin-left: 7px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 1px 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--line-rgb), 0.12);
   color: var(--ink-60);
 }
@@ -179,7 +179,7 @@
   gap: 7px;
 }
 .tagsNoMatch {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin: 0;
 }
@@ -249,7 +249,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+    box-shadow: var(--shadow-lift);
   }
 }
 
@@ -303,8 +303,10 @@
 .hasPhoto .inBadge {
   color: rgb(var(--cream-rgb));
   background: rgba(var(--plum-rgb), 0.58);
-  backdrop-filter: blur(8px) saturate(1.1);
-  -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  backdrop-filter: var(--blur-md) saturate(1.1);
+  -webkit-backdrop-filter: var(--blur-md) saturate(1.1);
+  /* Inset punch-out highlight, not a ring: no ring token has an inset
+     variant, and this is a fixed legibility treatment rather than state. */
   box-shadow: inset 0 0 0 1px rgba(var(--cream-rgb), 0.24);
 }
 .social {
@@ -338,7 +340,7 @@
   gap: 10px;
 }
 .type {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -358,7 +360,7 @@
    and the footer instead (`.foot` is `margin-top: auto`), so the footer always
    sits on the card's bottom edge. */
 .desc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   flex: none;
@@ -376,7 +378,7 @@
   align-items: center;
   gap: 5px;
   flex: none;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -401,7 +403,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--jade);
 }
@@ -428,7 +430,7 @@
   margin-left: -7px;
   line-height: 0;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px var(--paper);
+  box-shadow: var(--ring-paper);
 }
 .cardAv:first-child {
   margin-left: 0;
@@ -444,26 +446,26 @@
   margin-top: auto;
 }
 .meta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
   font-weight: 600;
 }
 /* Inside the stack the count is the headline and the activity line carries
    the jade, so the two don't compete. */
 .metaStack .meta {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
   font-weight: 700;
 }
 .joinBtn {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   cursor: pointer;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 18px;
   display: inline-flex;
   align-items: center;
@@ -517,7 +519,7 @@
   .joinedCard:hover {
     box-shadow:
       0 0 0 1px rgba(var(--jade-rgb), 0.28),
-      0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+      var(--shadow-lift);
   }
 }
 
@@ -578,13 +580,13 @@
 }
 .outroBody {
   margin: 0 0 28px;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.65;
   color: rgba(var(--cream-rgb), 0.72);
 }
 .outroBodyLead {
   margin: 0 0 12px;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.65;
   color: rgba(var(--cream-rgb), 0.72);
 }

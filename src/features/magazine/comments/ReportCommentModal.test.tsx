@@ -43,9 +43,13 @@ function renderModal(
   return { onClose };
 }
 
+/** Pick a reason, then submit. Both labels are lazy i18n: the reason labels
+ *  come from `useReportReasons`, which renders the LOCAL TRANSLATED label
+ *  (`safety:reason.*`), so they arrive with the `safety` catalog rather than on
+ *  first render. */
 async function pickReasonAndSubmit() {
   fireEvent.click(
-    screen.getByRole("radio", { name: "Spam or self-promotion" }),
+    await screen.findByRole("radio", { name: "Spam or self-promotion" }),
   );
   fireEvent.click(await screen.findByRole("button", { name: "Send report" }));
 }

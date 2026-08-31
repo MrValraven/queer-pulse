@@ -1,3 +1,4 @@
+import { FiChevronDown } from "react-icons/fi";
 import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
@@ -30,6 +31,7 @@ export function PostOpportunityRichFields({
   return (
     <details className={styles.optional}>
       <summary className={styles.optionalSummary}>
+        <FiChevronDown className={styles.optionalChevron} aria-hidden />
         {t("marketing:postOpportunity.rich.summary")}
       </summary>
 

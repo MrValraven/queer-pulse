@@ -26,6 +26,11 @@ export interface ChangemakersResult {
   featured: ChangemakerStory | undefined;
   stats: HeroStat[];
   isLoading: boolean;
+  /** True when the directory request failed. Without it an outage renders as
+   *  the "no changemakers yet" empty state (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 export function useChangemakers(): ChangemakersResult {
@@ -76,6 +81,8 @@ export function useChangemakers(): ChangemakersResult {
       featured: CHANGEMAKERS[0],
       stats: DEMO_STATS,
       isLoading: false,
+      isError: false,
+      refetch: () => {},
     };
   }
 
@@ -88,5 +95,7 @@ export function useChangemakers(): ChangemakersResult {
     featured: query.data?.featured,
     stats: query.data?.stats ?? [],
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

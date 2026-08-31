@@ -7,8 +7,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 26, 31, 0.55);
-  z-index: 200;
+  background: var(--scrim);
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -16,7 +16,7 @@
   /* Lift the bottom-anchored sheet above the on-screen keyboard on iOS
      (published app-wide by useVisualViewportKeyboard; 0px when no keyboard). */
   padding-block-end: var(--keyboard-inset, 0px);
-  backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
   animation: overlayIn 0.3s var(--ease) both;
 }
 @media (min-width: 720px) {
@@ -49,7 +49,10 @@
   overflow-y: auto;
   /* Keep an over-scroll from chaining to the page behind the sheet. */
   overscroll-behavior: contain;
-  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
+  /* Upward-cast sheet shadow (separates the bottom sheet from the page above
+     it); shape stays directional rather than snapping to a downward
+     elevation step, but the channel now points at the plum shadow ramp. */
+  box-shadow: 0 -18px 50px rgba(var(--plum-rgb), 0.28);
   animation: modalUp 0.4s var(--ease);
 }
 @media (min-width: 720px) {
@@ -91,7 +94,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: var(--text-18);
   transition: background 0.2s var(--ease);
 }
 @media (hover: hover) {
@@ -101,7 +104,7 @@
 }
 
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -122,7 +125,7 @@
   font-style: italic;
 }
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 22px;
@@ -157,7 +160,10 @@
   padding: 40px 38px max(38px, env(safe-area-inset-bottom));
   position: relative;
   text-align: left;
-  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
+  /* Upward-cast sheet shadow (separates the bottom sheet from the page above
+     it); shape stays directional rather than snapping to a downward
+     elevation step, but the channel now points at the plum shadow ramp. */
+  box-shadow: 0 -18px 50px rgba(var(--plum-rgb), 0.28);
   animation: modalUp 0.4s var(--ease);
 }
 @media (min-width: 720px) {
@@ -200,7 +206,7 @@
   font-style: italic;
 }
 .successSub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   margin-bottom: 26px;
@@ -210,7 +216,7 @@
   font-weight: 600;
 }
 .successMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 24px;
 }
@@ -228,7 +234,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: var(--text-18);
   transition: background 0.2s var(--ease);
 }
 @media (hover: hover) {
@@ -250,7 +256,10 @@
   /* Clear the iOS home indicator on the flush-to-bottom sheet. */
   padding: 48px 38px max(48px, env(safe-area-inset-bottom));
   text-align: center;
-  box-shadow: 0 -18px 50px rgba(26, 26, 31, 0.28);
+  /* Upward-cast sheet shadow (separates the bottom sheet from the page above
+     it); shape stays directional rather than snapping to a downward
+     elevation step, but the channel now points at the plum shadow ramp. */
+  box-shadow: 0 -18px 50px rgba(var(--plum-rgb), 0.28);
   animation: modalUp 0.4s var(--ease);
 }
 @media (min-width: 720px) {
@@ -295,7 +304,7 @@
   margin-bottom: 8px;
 }
 .loadingSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.6;
 }
@@ -304,7 +313,7 @@
    needs a sentence of context before the form (barring somebody from a
    gathering, for instance). */
 .note {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.65;
   color: var(--ink-60);
   margin: 0;

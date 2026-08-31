@@ -51,11 +51,11 @@ export function FoundingThread({
           size="sm"
           marker="check"
           onStepClick={(index) => onJump(visibleIndices[index] ?? 0)}
-          ariaLabel={t("communities:start.thread.stepOf", {
+          ariaLabel={t("communities:start.thread.stepOfAriaLabel", {
             step: railPosition + 1,
             total,
             thread: currentThread,
-          }).replace(/<[^>]*>/g, "")}
+          })}
         />
       </div>
       <div className={styles.threadMobile}>

@@ -48,5 +48,10 @@ export function useEditorDecks() {
     },
   });
 
-  return { decks: query.data ?? [], isLoading: query.isLoading };
+  return {
+    decks: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

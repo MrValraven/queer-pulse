@@ -90,8 +90,11 @@ describe("DoorGuestList arrival chips", () => {
   it("explains in plain words why the arrival counts are absent", async () => {
     renderList(null);
 
+    // Its own sentence rather than the retention note the door's headline
+    // count carries: the two render on one screen, so repeating one of them
+    // word for word would read as a rendering fault.
     const note = await screen.findByText(
-      "Check-ins are no longer kept for past gatherings. We clear them 30 days after a gathering ends.",
+      "The arrival filters are gone because we cleared this gathering's check-ins, so everyone on the list shows below.",
     );
     expect(note).toBeInTheDocument();
   });

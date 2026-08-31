@@ -22,7 +22,14 @@ export type ConnectErrorView =
       titleKey: string;
       bodyKey: string;
       icon: ConnectNoticeIcon;
-    };
+    }
+  /**
+   * `incoming` (PRD-03) — they asked YOU first, so the answer is an accept
+   * rather than a message. Its own mode instead of a third panel copy pair:
+   * this outcome has real actions behind it, and the notice panel is by
+   * definition the terminal one with nothing left to do.
+   */
+  | { mode: "incoming" };
 
 /**
  * Exact messages thrown by the backend for `POST /connections`
@@ -32,6 +39,8 @@ export type ConnectErrorView =
  */
 const MESSAGE = {
   alreadyPending: "A request is already pending",
+  /** They asked you, so this member's own request cannot be sent (PRD-03). */
+  theyAskedYou: "This member has already asked to connect with you",
   alreadyConnected: "You are already connected",
   youBlocked: "Unblock this member before sending a request",
   notAccepting: "This member is not accepting connections",
@@ -52,9 +61,12 @@ const GENERIC_INLINE: ConnectErrorView = {
  * error, which is never worse than today's behaviour.
  *
  * Note on privacy: the backend deliberately reports a block *by the other
- * party* as `alreadyPending`, so that case renders "you've already reached out"
- * and never reveals the block. `cannotConnect` (a block in either direction)
- * stays intentionally vague for the same reason.
+ * party*, and a decline cooldown or cap (PRD-20), as `alreadyPending`, so all
+ * three render "you've already reached out" and none of them is distinguishable
+ * from the others. `cannotConnect` (a block in either direction) stays
+ * intentionally vague for the same reason. Only `theyAskedYou` was split out,
+ * and it discloses nothing: the member is the addressee of that request, so it
+ * is already in their bell and on their connections page.
  */
 export function describeConnectError(error: unknown): ConnectErrorView {
   if (!(error instanceof ApiError)) return GENERIC_INLINE;
@@ -64,6 +76,13 @@ export function describeConnectError(error: unknown): ConnectErrorView {
   }
 
   if (error.status === 409) {
+    // PRD-03. A pending request pointing the OTHER way is the one 409 whose
+    // old copy said the opposite of what happened: "you have already reached
+    // out" for a message this member never sent. It now hands the modal the
+    // request waiting for THEM, with an accept and a decline on it.
+    if (error.message === MESSAGE.theyAskedYou) {
+      return { mode: "incoming" };
+    }
     if (error.message === MESSAGE.alreadyConnected) {
       return {
         mode: "panel",

@@ -14,7 +14,7 @@
   margin-bottom: 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 
 /* Role and commitment are both one-line picks. Pairing them keeps all four

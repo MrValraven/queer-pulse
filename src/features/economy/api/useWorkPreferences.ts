@@ -12,6 +12,14 @@ export interface WorkPreferencesResult {
   data: WorkPreferencesDTO | undefined;
   /** True while the first read is in flight (live mode only). */
   isLoading: boolean;
+  /**
+   * True when the read failed. The provider falls back to
+   * `DEFAULT_WORK_PREFERENCES` either way, so this exists so a consumer can
+   * tell "never saved anything" apart from "we could not reach the server".
+   */
+  isError: boolean;
+  /** Re-runs the failed read. */
+  refetch: () => void;
 }
 
 /**
@@ -42,5 +50,10 @@ export function useWorkPreferences(): WorkPreferencesResult {
     queryFn: getWorkPreferences,
   });
 
-  return { data: query.data, isLoading: live && query.isLoading };
+  return {
+    data: query.data,
+    isLoading: live && query.isLoading,
+    isError: live && query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

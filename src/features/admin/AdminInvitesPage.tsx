@@ -3,6 +3,7 @@ import { FiSliders } from "react-icons/fi";
 import {
   Button,
   FadeIn,
+  LoadErrorState,
   Select,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -134,8 +135,15 @@ export function AdminInvitesPage() {
   // it narrows the whole invite graph, not just the loaded pages, and its
   // options come from a dedicated inviters list covering every sender platform-
   // wide (not only those already fetched).
-  const { invites, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
-    useAdminInvites(filter, inviterSlug);
+  const {
+    invites,
+    isLoading,
+    isError,
+    refetch,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAdminInvites(filter, inviterSlug);
   const { inviters } = useAdminInviteInviters();
 
   const inviterOptions = useMemo(
@@ -216,8 +224,16 @@ export function AdminInvitesPage() {
       )}
 
       <FadeIn delay={80}>
+        {/* An outage read as "no invites match this filter", which invites an
+            admin to loosen a filter that was never the problem (DES-22). */}
         {isLoading ? (
           <InviteRowsSkeleton />
+        ) : isError ? (
+          <LoadErrorState
+            onRetry={() => void refetch()}
+            title={t("admin:adminInvites.loadError.title")}
+            description={t("admin:adminInvites.loadError.body")}
+          />
         ) : invites.length === 0 ? (
           <p className={styles.emptyLine}>
             {inviterSlug

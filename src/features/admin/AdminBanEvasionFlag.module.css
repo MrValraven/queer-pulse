@@ -12,7 +12,7 @@
   padding: 10px 12px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-left: 3px solid var(--amber-ink);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--amber-rgb), 0.08);
 }
 
@@ -48,14 +48,14 @@
 
 .title {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
 }
 
 .tier {
   margin-left: auto;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-60);
@@ -77,13 +77,13 @@
 }
 
 .reasonLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   overflow-wrap: anywhere;
 }
 
 .reasonContext {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   overflow-wrap: anywhere;
 }
@@ -95,7 +95,7 @@
 
 .note {
   margin: 9px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-style: italic;
   color: var(--ink-60);
   line-height: 1.55;

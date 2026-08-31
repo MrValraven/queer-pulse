@@ -28,8 +28,27 @@
   font: inherit;
   color: var(--text-strong);
 }
+/* The textarea is borderless and transparent and sits flush inside the card,
+   so a ring on the field itself would float unattached in the composer's
+   padding. The wrapper carries the indicator instead: `.composer:focus-within`
+   below. Suppressing it here also stops a second ring being drawn inside the
+   wrapper's one. */
 .textarea:focus {
   outline: none;
+}
+
+/* Keyboard focus for the composer (DES-46). Same two-tone construction as the
+   global ring in base.css, so it is never less visible than the rule it stands
+   in for. The card is --paper on the article's cream page, and there the dark
+   --accent-deep ring is the carrier (5.94:1 on paper, 5.38:1 on cream); the
+   cream halo in the outline's offset gap is what carries it if the composer
+   ever sits on a plum panel (12.6:1). The hairline only changes colour and the
+   outline and box-shadow take no space, so nothing moves. */
+.composer:focus-within {
+  border-color: var(--line-strong);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .composerActions {
   display: flex;
@@ -68,16 +87,16 @@
 .commentName {
   font-weight: 600;
   color: var(--text-strong);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .commentTime {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .commentText {
   margin-top: 2px;
   color: var(--text-strong);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.5;
 }
 .editedMark {
@@ -110,7 +129,7 @@
 }
 .empty {
   color: var(--ink-40);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .skeletonList {
   display: flex;
@@ -121,12 +140,12 @@
 /* Report modal (mirrors ReportReplyModal.module.css) */
 .title {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
 }
 .sub {
   color: var(--ink-60);
-  font-size: 14px;
+  font-size: var(--text-14);
   margin: 4px 0 18px;
 }
 .reasons {
@@ -177,13 +196,13 @@
 .confirmTitle,
 .errorTitle {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   margin: 10px 0 6px;
 }
 .confirmBody,
 .errorBody {
   color: var(--ink-60);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .confirmActions,
 .errorActions {

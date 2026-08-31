@@ -7,7 +7,7 @@
   padding: 12px 14px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 
 .pickerHead {
@@ -21,7 +21,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -34,11 +34,11 @@
   gap: 5px;
   padding: 3px 10px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-text);
   background: rgba(var(--accent-rgb), 0.1);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
 }
 
@@ -59,13 +59,13 @@
   max-width: 100%;
   padding: 6px 12px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.3;
   text-align: left;
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   overflow-wrap: anywhere;
 }
@@ -84,7 +84,7 @@
 
 .pickerNote {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -97,13 +97,13 @@
   gap: 10px;
   padding: 10px 12px;
   background: rgba(var(--accent-rgb), 0.08);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 
 .replaceBody {
   flex: 1 1 220px;
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -118,8 +118,8 @@
 .replaceConfirmCta {
   padding: 5px 12px;
   font-family: var(--sans);
-  font-size: 13px;
-  border-radius: 999px;
+  font-size: var(--text-13);
+  border-radius: var(--radius-pill);
   cursor: pointer;
 }
 
@@ -171,14 +171,14 @@
 
 .rowName {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 600;
   color: var(--ink);
 }
 
 .rowBody {
   margin: 6px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
   overflow-wrap: anywhere;
@@ -186,10 +186,10 @@
 
 .keyTag {
   padding: 3px 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-text);
   background: rgba(var(--accent-rgb), 0.1);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .rowActions {
@@ -209,7 +209,7 @@
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   cursor: pointer;
 }
 
@@ -238,7 +238,7 @@
   max-width: 60ch;
   margin: 0;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -258,7 +258,7 @@
 .fieldLabel {
   display: block;
   margin: 16px 0 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -267,7 +267,7 @@
 
 .fieldHint {
   margin: 6px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -276,10 +276,10 @@
   width: 100%;
   padding: 10px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
@@ -287,10 +287,10 @@
   width: 100%;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink);
   resize: vertical;
@@ -311,12 +311,12 @@
 .select {
   width: 100%;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   padding: 10px 30px 10px 14px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   cursor: pointer;
   appearance: none;
   background-image:
@@ -340,7 +340,7 @@
 
 .deleteConfirmBody {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
 }

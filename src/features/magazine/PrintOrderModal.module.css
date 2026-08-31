@@ -1,17 +1,17 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 26, 31, 0.55);
-  z-index: 200;
+  background: var(--scrim);
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
   padding: 0;
 }
 .modal {
   background: var(--paper);
-  border-radius: 28px 28px 0 0;
+  border-radius: var(--radius-28) var(--radius-28) 0 0;
   width: 100%;
   max-width: 520px;
   padding: 36px 40px 44px;
@@ -27,7 +27,7 @@
     align-items: center;
   }
   .modal {
-    border-radius: 28px;
+    border-radius: var(--radius-28);
   }
 }
 @keyframes poModalUp {
@@ -55,7 +55,7 @@
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -69,7 +69,7 @@
 }
 
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -90,7 +90,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.65;
   margin: 0 0 24px;
@@ -108,11 +108,11 @@
   padding: 14px 16px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   margin-bottom: 22px;
 }
 .qtyLabel {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
 }
@@ -125,11 +125,11 @@
 .stepper button {
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--text-strong);
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -155,16 +155,16 @@
   min-width: 28px;
   text-align: center;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
 }
 .total {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .total b {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   font-weight: 400;
 }
@@ -177,7 +177,7 @@
   margin-top: 6px;
 }
 .back {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   font-weight: 500;
   background: none;
@@ -260,7 +260,7 @@
   color: var(--accent);
 }
 .success p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.78);
   margin: 16px 0 28px;
   line-height: 1.65;

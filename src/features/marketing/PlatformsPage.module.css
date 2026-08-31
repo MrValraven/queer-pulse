@@ -8,12 +8,12 @@
 }
 .chip {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: rgba(var(--cream-rgb), 0.7);
   background: transparent;
   border: 1px solid rgba(var(--cream-rgb), 0.22);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
   transition:
@@ -38,7 +38,7 @@
   gap: 12px;
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 20px;
   margin: 24px 0 8px;
 }
@@ -51,7 +51,7 @@
   margin-top: 6px;
 }
 .note p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0;
@@ -81,7 +81,7 @@
   gap: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
   color: inherit;
   transition:
@@ -91,23 +91,23 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 30px -20px rgba(var(--plum-rgb), 0.3);
+    box-shadow: var(--shadow-lift);
   }
 }
 .icon {
   width: 46px;
   height: 46px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   flex: none;
 }
 .pCat {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -116,18 +116,18 @@
 .pName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 2px 0 5px;
 }
 .pDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
 }
 .pUrl {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--jade);
   margin-top: 8px;

@@ -14,8 +14,15 @@ export function useCommunityDiscussions(slug: string | undefined): {
   threads: Thread[];
   paging: PulsePaging;
 } {
-  const { pinned, pulse, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useCommunityPosts(slug);
+  const {
+    pinned,
+    pulse,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isError,
+    refetch,
+  } = useCommunityPosts(slug);
 
   const threads = useMemo<Thread[]>(
     () => [...pinned, ...pulse].map(postToThread),
@@ -24,6 +31,14 @@ export function useCommunityDiscussions(slug: string | undefined): {
 
   return {
     threads,
-    paging: { hasNextPage, fetchNextPage, isFetchingNextPage },
+    // The post read's failure travels with the paging, so the tab can say the
+    // discussions did not load instead of painting "no discussions yet".
+    paging: {
+      hasNextPage,
+      fetchNextPage,
+      isFetchingNextPage,
+      isError,
+      refetch,
+    },
   };
 }

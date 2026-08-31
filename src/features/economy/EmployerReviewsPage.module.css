@@ -36,7 +36,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -97,7 +97,7 @@
   color: var(--accent);
 }
 .secHead .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-top: 6px;
 }
@@ -105,7 +105,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 @media (--lg) {
@@ -132,12 +132,12 @@
 .howTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
 .howDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.62;
 }
@@ -170,13 +170,13 @@
 .coAv {
   width: 44px;
   height: 44px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 16px;
+  font-size: var(--text-16);
   flex: none;
 }
 .coName {
@@ -188,7 +188,7 @@
   line-height: 1.1;
 }
 .coIndustry {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 3px;
 }
@@ -204,14 +204,14 @@
   line-height: 1;
 }
 .coLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 600;
 }
 .coConfidence {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
   font-weight: 500;
   margin-top: 5px;
@@ -226,7 +226,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 .barLabel {
@@ -237,27 +237,27 @@
   flex: 1;
   height: 5px;
   background: rgba(var(--plum-rgb), 0.08);
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   overflow: hidden;
 }
 .barFill {
   height: 100%;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   background: var(--jade);
 }
 .coQuote {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.55;
   padding: 14px 16px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border-left: 3px solid var(--accent);
 }
 .coMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   display: flex;
   gap: 12px;
@@ -270,14 +270,14 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .coBtn {
-  font-size: 13px;
+  font-size: var(--text-13);
   padding: 8px 16px;
 }
 
 .verifyBox {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 32px 36px;
   margin-top: 56px;
 }
@@ -292,10 +292,10 @@
   place-items: center;
   width: 38px;
   height: 38px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
-  font-size: 18px;
+  font-size: var(--text-18);
   flex: none;
 }
 .verifyHead h3 {
@@ -321,20 +321,20 @@
   }
 }
 .verifyLabel {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 6px;
 }
 .verifyDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
 
 .writeBox {
   background: var(--cream);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 48px;
   margin-top: 80px;
   display: grid;
@@ -360,7 +360,7 @@
   color: var(--accent);
 }
 .writeBox p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
   margin-top: 12px;
@@ -369,7 +369,7 @@
   margin-top: 28px;
 }
 .writeNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 12px;
 }
@@ -379,7 +379,7 @@
   gap: 10px;
 }
 .rulesTitle {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -390,7 +390,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -429,18 +429,18 @@
 .coReview {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 16px;
 }
 .coReviewText {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.55;
 }
 .coReviewMeta {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 8px;
   display: flex;

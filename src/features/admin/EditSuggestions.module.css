@@ -7,7 +7,7 @@
 }
 
 .emptyLine {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin: 20px 0;
 }
@@ -36,24 +36,24 @@
 
 .rowName {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 600;
   color: var(--ink);
 }
 
 .rowMeta {
   margin-top: 4px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
 .rowMessage {
   margin-top: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
   background: var(--cream);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 12px;
 }
 
@@ -62,7 +62,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -71,4 +71,17 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+}
+
+/* ── Paginated queue chrome (ENG-41: the listing-claim queue) ──────────── */
+.queueCount {
+  margin: 20px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 20px;
 }

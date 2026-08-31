@@ -7,6 +7,7 @@ import type { LivingCommunity } from "./community.model";
 import { ModJoinRequestRow } from "./ModJoinRequestRow";
 import { ModToolsReportRow } from "./ModToolsReportRow";
 import type { JoinRequestDecision } from "./joinRequestReview.data";
+import { useCommunityBanEvasion } from "./api/useCommunityBanEvasion";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { ModMemberRow, type ModMemberRowActions } from "./ModMemberRow";
 import type { AssignableRole } from "./api/communities.api";
@@ -73,27 +74,53 @@ function ModQueueStatus({
   return <>{children}</>;
 }
 
+/**
+ * The community's pending join-request queue.
+ *
+ * `total` is the size of the WHOLE pending queue and is deliberately separate
+ * from `requests.length`, which is only what has been loaded so far (ENG-41).
+ * The count beside the label used to be `requests.length` against an endpoint
+ * that capped its array at 200 rows, so a community past that cap understated
+ * its own backlog and, because the queue is oldest-first, quietly hid its NEWEST
+ * requests. The load-more button is how a moderator reaches them.
+ */
 export function ModJoinRequests({
   requests,
+  slug,
+  total,
   state,
+  paging,
   isPending = false,
   onResolve,
 }: {
   requests: JoinRequest[];
+  /** The community this queue belongs to: the ban-evasion answers are scoped
+   *  to it, and to it alone. */
+  slug: string;
+  /** Every pending request in the community, not just the loaded ones. */
+  total: number;
   state: ModQueueState;
+  /** The queue's own pagination, same shape as the roster's. */
+  paging: RosterPaging;
   /** True while a decision for this queue is in flight (keeps the decline
    *  step's confirm button from firing twice). */
   isPending?: boolean;
   onResolve: (id: string, name: string, decision: JoinRequestDecision) => void;
 }) {
   const { t } = useTranslation();
+  // One call for the whole loaded page, plus one for this community's
+  // escalations (PRD-31). Batched at the queue rather than per row: a triage
+  // screen is exactly where an N+1 is felt, and the endpoint takes up to 60 ids
+  // in a call for that reason.
+  const banEvasion = useCommunityBanEvasion(
+    slug,
+    requests.map((request) => request.id),
+  );
   return (
     <>
       <div className={detail.secLbl}>
         {t("communities:detail.modtools.joinRequests.label")}{" "}
-        {requests.length > 0 && (
-          <span className={detail.tabCount}>{requests.length}</span>
-        )}
+        {total > 0 && <span className={detail.tabCount}>{total}</span>}
       </div>
       <ModerationStanceNote variant="applicants" />
       <ModQueueStatus state={state}>
@@ -106,14 +133,30 @@ export function ModJoinRequests({
             )}
           />
         ) : (
-          requests.map((request) => (
-            <ModJoinRequestRow
-              key={request.id}
-              request={request}
-              isPending={isPending}
-              onResolve={onResolve}
-            />
-          ))
+          <>
+            {requests.map((request) => (
+              <ModJoinRequestRow
+                key={request.id}
+                request={request}
+                isPending={isPending}
+                banEvasion={banEvasion}
+                onResolve={onResolve}
+              />
+            ))}
+            {paging.hasNextPage && (
+              <div className={styles.loadMoreRoster}>
+                <Button
+                  variant="ghost"
+                  disabled={paging.isFetchingNextPage}
+                  onClick={paging.fetchNextPage}
+                >
+                  {paging.isFetchingNextPage
+                    ? t("communities:common.loading")
+                    : t("communities:detail.modtools.joinRequests.loadMoreCta")}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </ModQueueStatus>
     </>

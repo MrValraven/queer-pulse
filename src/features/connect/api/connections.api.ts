@@ -147,7 +147,32 @@ export interface ConnectionNoteDTO {
 export const setConnectionNote = (id: string, body: string) =>
   apiPut<ConnectionNoteDTO>(`/connections/${id}/note`, { body });
 
-/** GET /connections/accepted — bare slugs of the viewer's accepted connections.
- *  The lightweight signal that flips a member's "Say hello" to "Message". */
-export const getAcceptedConnections = () =>
-  apiGet<string[]>("/connections/accepted");
+/** One request waiting for your answer: whose profile it sits on, and which
+ *  connection `PATCH /connections/:id` should accept or decline. */
+export interface IncomingConnectionRefDTO {
+  slug: string;
+  connectionId: string;
+}
+
+/**
+ * Every relationship you hold with another member, as bare slugs (PRD-03).
+ *
+ * Supersedes `GET /connections/accepted`, which only ever reported the accepted
+ * half: a member looking at the profile of somebody who had ALREADY asked to
+ * connect with them was still offered "Say hello", and sending it was refused.
+ * `incoming` carries the connection id too, so a profile can answer the request
+ * where it is read instead of sending the member off to find it.
+ *
+ * Declined and blocked pairs are deliberately absent: a decline hold is silent
+ * by design (backend `assertRequestNotOnDeclineHold`) and a block by the other
+ * party is masked, so neither may be inferable from this.
+ */
+export interface ConnectionRelationshipsDTO {
+  connected: string[];
+  incoming: IncomingConnectionRefDTO[];
+  sent: string[];
+}
+
+/** GET /connections/relationships — connected, incoming and sent in one call. */
+export const getConnectionRelationships = () =>
+  apiGet<ConnectionRelationshipsDTO>("/connections/relationships");

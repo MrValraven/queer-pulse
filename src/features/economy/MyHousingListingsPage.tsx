@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { ConfirmDialog, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyHousingListings } from "./api/useMyHousingListings";
 import {
@@ -77,7 +78,10 @@ export function MyHousingListingsPage() {
             {t("economy:myHousingListings.eyebrow")}
           </div>
           <h1 className={styles.title}>
-            {t("economy:myHousingListings.title")}
+            <Translation
+              i18nKey="economy:myHousingListings.title"
+              components={{ em: <em /> }}
+            />
           </h1>
           <p className={styles.sub}>{t("economy:myHousingListings.sub")}</p>
         </div>

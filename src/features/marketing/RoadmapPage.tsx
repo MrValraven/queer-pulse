@@ -1,6 +1,11 @@
 import { FiCheck, FiTrendingUp } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { FadeIn, SkeletonCard, SubpageIndex } from "../../shared/components/ui";
+import {
+  FadeIn,
+  LoadErrorState,
+  SkeletonCard,
+  SubpageIndex,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -27,6 +32,8 @@ export function RoadmapPage() {
     topIdeas,
     notBuilding,
     loading,
+    isError,
+    refetch,
   } = useRoadmap();
   const pageTitle = t("marketing:roadmap.meta.title");
   const pageDescription = t("marketing:roadmap.meta.description");
@@ -68,62 +75,67 @@ export function RoadmapPage() {
 
       <div className={styles.body}>
         <div className="wrap">
-          <div className={styles.kanban}>
-            <section className={styles.col}>
-              <div className={styles.colHeader}>
-                <span className={`${styles.colChip} ${styles.shipped}`}>
-                  <FiCheck aria-hidden /> {t("marketing:roadmap.col.done")}
-                </span>
-              </div>
-              {loading
-                ? Array.from({ length: 3 }).map((_, i) => (
-                    <SkeletonCard key={i} />
-                  ))
-                : shipped.map((item, i) => (
-                    <FadeIn key={item.id} delay={i * 60}>
-                      <ShippedCard item={item} />
-                    </FadeIn>
-                  ))}
-            </section>
+          {/* DES-22: a failed read would otherwise draw three empty columns,
+              which says nothing is shipped, being built, or planned. */}
+          {isError && <LoadErrorState onRetry={refetch} />}
+          {!isError && (
+            <div className={styles.kanban}>
+              <section className={styles.col}>
+                <div className={styles.colHeader}>
+                  <span className={`${styles.colChip} ${styles.shipped}`}>
+                    <FiCheck aria-hidden /> {t("marketing:roadmap.col.done")}
+                  </span>
+                </div>
+                {loading
+                  ? Array.from({ length: 3 }).map((_, i) => (
+                      <SkeletonCard key={i} />
+                    ))
+                  : shipped.map((item, i) => (
+                      <FadeIn key={item.id} delay={i * 60}>
+                        <ShippedCard item={item} />
+                      </FadeIn>
+                    ))}
+              </section>
 
-            <section className={styles.col}>
-              <div className={styles.colHeader}>
-                <span className={`${styles.colChip} ${styles.building}`}>
-                  <span className={styles.pulseDot} aria-hidden />{" "}
-                  {t("marketing:roadmap.col.buildingNow")}
-                </span>
-              </div>
-              {loading
-                ? Array.from({ length: 3 }).map((_, i) => (
-                    <SkeletonCard key={i} />
-                  ))
-                : building.map((item, i) => (
-                    <FadeIn key={item.id} delay={i * 60}>
-                      <BuildingCard item={item} />
-                    </FadeIn>
-                  ))}
-            </section>
+              <section className={styles.col}>
+                <div className={styles.colHeader}>
+                  <span className={`${styles.colChip} ${styles.building}`}>
+                    <span className={styles.pulseDot} aria-hidden />{" "}
+                    {t("marketing:roadmap.col.buildingNow")}
+                  </span>
+                </div>
+                {loading
+                  ? Array.from({ length: 3 }).map((_, i) => (
+                      <SkeletonCard key={i} />
+                    ))
+                  : building.map((item, i) => (
+                      <FadeIn key={item.id} delay={i * 60}>
+                        <BuildingCard item={item} />
+                      </FadeIn>
+                    ))}
+              </section>
 
-            <section className={styles.col}>
-              <div className={styles.colHeader}>
-                <span className={`${styles.colChip} ${styles.planned}`}>
-                  <FiTrendingUp aria-hidden />{" "}
-                  {t("marketing:roadmap.col.planned")}
-                </span>
-              </div>
-              {loading
-                ? Array.from({ length: 3 }).map((_, i) => (
-                    <SkeletonCard key={i} />
-                  ))
-                : planned.map((item, i) => (
-                    <FadeIn key={item.id} delay={i * 60}>
-                      <PlannedCard item={item} />
-                    </FadeIn>
-                  ))}
-            </section>
-          </div>
+              <section className={styles.col}>
+                <div className={styles.colHeader}>
+                  <span className={`${styles.colChip} ${styles.planned}`}>
+                    <FiTrendingUp aria-hidden />{" "}
+                    {t("marketing:roadmap.col.planned")}
+                  </span>
+                </div>
+                {loading
+                  ? Array.from({ length: 3 }).map((_, i) => (
+                      <SkeletonCard key={i} />
+                    ))
+                  : planned.map((item, i) => (
+                      <FadeIn key={item.id} delay={i * 60}>
+                        <PlannedCard item={item} />
+                      </FadeIn>
+                    ))}
+              </section>
+            </div>
+          )}
 
-          {!loading && <SomedaySection items={backlog} />}
+          {!loading && !isError && <SomedaySection items={backlog} />}
 
           <section className={styles.shapeSection}>
             <h2 className={styles.sectionHead}>
@@ -143,7 +155,7 @@ export function RoadmapPage() {
 
           <HowWeDecide />
 
-          {!loading && <NotBuildingSection items={notBuilding} />}
+          {!loading && !isError && <NotBuildingSection items={notBuilding} />}
         </div>
       </div>
 

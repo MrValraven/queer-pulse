@@ -10,7 +10,7 @@
   display: grid;
   place-items: center;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   color: var(--ink-40);
   cursor: pointer;
@@ -48,11 +48,11 @@
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
-  z-index: 20;
+  z-index: var(--z-popover);
   min-width: 180px;
   padding: 6px;
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
   box-shadow: var(--shadow-card-hover);
 }
@@ -61,11 +61,11 @@
   width: 100%;
   padding: 8px 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   color: var(--ink);
   font: inherit;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   text-align: left;
   cursor: pointer;
@@ -90,5 +90,20 @@
 @media (hover: hover) and (pointer: fine) {
   .itemDanger:hover {
     background: rgba(var(--danger-rgb), 0.08);
+  }
+}
+
+/* "Move up"/"Move down" at an end of the column. `aria-disabled` rather than
+   the `disabled` attribute (see CardMenu.tsx): the item must stay focusable
+   so a keyboard editor stepping a card to the top of the column keeps focus
+   where it was instead of dropping it to the body. */
+.item[aria-disabled="true"] {
+  color: var(--ink-40);
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item[aria-disabled="true"]:hover {
+    background: transparent;
   }
 }

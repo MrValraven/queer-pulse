@@ -34,7 +34,7 @@
 }
 
 .eyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 600;
@@ -42,13 +42,13 @@
 }
 
 .tiny {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
 .muted {
   color: var(--ink-60);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
 }
 
 .actions {
@@ -65,7 +65,7 @@
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
   border-radius: var(--radius-pill);
   padding: 5px 6px 5px 12px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink-60);
 }
@@ -81,7 +81,7 @@
   background: none;
   min-height: auto;
   padding: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--plum);
 }

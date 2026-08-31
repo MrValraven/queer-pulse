@@ -6,10 +6,10 @@
   width: fit-content;
   margin: 0 0 16px;
   padding: 7px 8px 7px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -22,7 +22,7 @@
   width: 22px;
   height: 22px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: none;
   color: var(--ink-60);
   cursor: pointer;
@@ -61,12 +61,12 @@
 }
 .filter {
   padding: 7px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--ink-60);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -97,7 +97,7 @@
 .filterEmpty {
   margin: 18px 2px;
   color: var(--ink-60);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .loadMoreRow {
   display: flex;
@@ -125,7 +125,7 @@
   height: 40px;
   display: grid;
   place-items: center;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--danger);
   color: var(--cream);
 }
@@ -136,7 +136,7 @@
 .emergTitle {
   margin: 2px 0 0;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 400;
   line-height: 1.15;
   color: var(--text-strong);
@@ -150,14 +150,14 @@
 }
 .emergTitleSub {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   line-height: 1.5;
   color: var(--ink-60);
 }
 .emergSub {
   margin: 6px 0 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: var(--ink-60);
   max-width: 540px;
@@ -170,7 +170,7 @@
 
 /* ── Section label ──────────────────────────────────────────────────────── */
 .sectionLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -208,7 +208,7 @@
 @media (hover: hover) {
   .report:hover {
     border-color: rgba(var(--line-rgb), 0.2);
-    box-shadow: 0 16px 34px -24px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-lift);
     transform: translateY(-1px);
   }
 }
@@ -271,7 +271,7 @@ button.reportMain {
   text-align: left;
   cursor: pointer;
   color: inherit;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   transition:
     opacity 0.18s var(--ease),
     transform 0.18s var(--ease);
@@ -297,7 +297,7 @@ button.reportMain:focus-visible {
   display: block;
   margin: 0 0 7px;
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 400;
   line-height: 1.2;
   color: var(--text-strong);
@@ -312,7 +312,7 @@ button.reportMain:focus-visible {
 .reportPreview {
   display: block;
   margin: 0 0 12px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -321,7 +321,7 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 7px;
   flex-wrap: wrap;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .reportMeta strong {
@@ -340,11 +340,11 @@ button.reportMain:focus-visible {
   gap: 5px;
   margin-left: 4px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--amber-rgb), 0.16);
   color: var(--amber-ink);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }
 .priorFlag svg {
   width: 11px;
@@ -384,11 +384,11 @@ button.reportMain:focus-visible {
   gap: 5px;
   margin-left: 4px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade-ink);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }
 .assignedFlag svg {
   width: 11px;
@@ -404,11 +404,11 @@ button.reportMain:focus-visible {
   gap: 5px;
   margin-left: 4px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--violet-rgb), 0.16);
   color: var(--violet);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }
 .reporterFlag svg {
   width: 11px;
@@ -427,7 +427,7 @@ button.reportMain:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   white-space: nowrap;
 }
@@ -448,7 +448,7 @@ button.reportMain:focus-visible {
   margin-top: 2px;
   display: grid;
   place-items: center;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   border: 1.5px solid rgba(var(--line-rgb), 0.28);
   background: var(--paper);
   color: rgba(var(--cream-rgb), 1);
@@ -478,7 +478,7 @@ button.reportMain:focus-visible {
 .bulkBar {
   position: sticky;
   top: 12px;
-  z-index: 20;
+  z-index: var(--z-sticky);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -489,11 +489,11 @@ button.reportMain:focus-visible {
   border-radius: var(--radius-pill, 999px);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.7);
+  box-shadow: var(--shadow-lift);
 }
 .bulkCount {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 500;
 }
 .bulkActions {
@@ -504,7 +504,7 @@ button.reportMain:focus-visible {
 
 .countNote {
   margin: -4px 2px 14px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .supportFlag {
@@ -513,11 +513,11 @@ button.reportMain:focus-visible {
   gap: 5px;
   margin-left: 4px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--jade-rgb), 0.14);
   color: var(--jade);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }
 .supportFlag svg {
   width: 11px;
@@ -537,7 +537,7 @@ button.reportMain:focus-visible {
   place-items: center;
   width: 56px;
   height: 56px;
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   background: rgba(var(--jade-rgb), 0.22);
   color: var(--jade);
   margin-bottom: 22px;
@@ -561,7 +561,7 @@ button.reportMain:focus-visible {
 .caughtSub {
   margin: 0 auto 26px;
   max-width: 460px;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
 }
 .caughtActions {
@@ -612,7 +612,7 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 10px;
   margin-top: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .dAssignmentCta {
@@ -631,7 +631,7 @@ button.reportMain:focus-visible {
 }
 .dAge {
   margin: 8px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -640,7 +640,7 @@ button.reportMain:focus-visible {
 }
 .dSecLabel {
   margin: 0 0 12px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -649,7 +649,7 @@ button.reportMain:focus-visible {
 
 .dContentAuthor {
   margin: 0 0 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
 }
@@ -657,10 +657,10 @@ button.reportMain:focus-visible {
   margin: 0;
   padding: 16px 18px;
   border-left: 3px solid var(--danger);
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 var(--radius-14) var(--radius-14) 0;
   background: rgba(var(--danger-rgb), 0.05);
   font-family: var(--serif);
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   font-style: italic;
   line-height: 1.55;
   color: var(--text-strong);
@@ -673,7 +673,7 @@ button.reportMain:focus-visible {
   align-items: flex-start;
   gap: 8px;
   margin: 12px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -694,7 +694,7 @@ button.reportMain:focus-visible {
   align-items: flex-start;
   gap: 8px;
   margin: 12px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -713,9 +713,9 @@ button.reportMain:focus-visible {
   margin: 0;
   padding: 14px 16px;
   border-left: 3px solid var(--plum);
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 var(--radius-14) var(--radius-14) 0;
   background: rgba(var(--plum-rgb), 0.05);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   white-space: pre-wrap;
   color: var(--text-strong);
@@ -735,7 +735,7 @@ button.reportMain:focus-visible {
   display: flex;
   gap: 11px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }
@@ -756,21 +756,21 @@ button.reportMain:focus-visible {
 }
 .dMsgAuthor {
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-strong);
 }
 [data-theme="dark"] .dMsgAuthor {
   color: var(--ink);
 }
 .dMsgTime {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 .dMsgFlagTag {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   color: var(--danger);
 }
@@ -780,7 +780,7 @@ button.reportMain:focus-visible {
 }
 .dMsgText {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -795,7 +795,7 @@ button.reportMain:focus-visible {
   display: flex;
   gap: 11px;
   padding: 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }
@@ -810,19 +810,19 @@ button.reportMain:focus-visible {
   align-items: baseline;
   gap: 7px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
 }
 [data-theme="dark"] .dPersonName {
   color: var(--ink);
 }
 .dPersonPronoun {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 500;
   color: var(--ink-40);
 }
 .dPersonMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.45;
   color: var(--ink-60);
 }
@@ -850,7 +850,7 @@ button.reportMain:focus-visible {
   gap: 3px;
   text-align: left;
   padding: 13px 15px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   cursor: pointer;
@@ -867,14 +867,14 @@ button.reportMain:focus-visible {
 }
 .dActionLabel {
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
 }
 [data-theme="dark"] .dActionLabel {
   color: var(--ink);
 }
 .dActionDesc {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   line-height: 1.4;
   color: var(--ink-60);
 }
@@ -922,10 +922,10 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 10px;
   padding: 11px 14px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   background: var(--paper);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   cursor: pointer;
   transition: border-color 0.16s var(--ease);
@@ -946,7 +946,7 @@ button.reportMain:focus-visible {
 }
 .dNoteLabel {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   margin-bottom: 7px;
@@ -955,11 +955,11 @@ button.reportMain:focus-visible {
   width: 100%;
   resize: vertical;
   padding: 12px 14px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   font: inherit;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -973,7 +973,7 @@ button.reportMain:focus-visible {
   align-items: flex-start;
   gap: 8px;
   margin: 12px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -999,7 +999,7 @@ button.reportMain:focus-visible {
   grid-template-columns: 16px 1fr;
   gap: 4px 8px;
   align-items: start;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -1015,7 +1015,7 @@ button.reportMain:focus-visible {
 }
 .dAuditRow time {
   grid-column: 2;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
 }
 
@@ -1031,7 +1031,7 @@ button.reportMain:focus-visible {
 .appealsIntro {
   margin: 0 2px 18px;
   max-width: 720px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -1045,7 +1045,7 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 8px;
   margin-top: 12px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -1055,7 +1055,7 @@ button.reportMain:focus-visible {
 
 .appealOrig {
   padding: 16px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px solid rgba(var(--line-rgb), 0.08);
 }
@@ -1067,12 +1067,12 @@ button.reportMain:focus-visible {
   margin-bottom: 10px;
 }
 .appealOrigBy {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .appealOrigReason {
   margin: 0 0 12px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-style: italic;
   line-height: 1.55;
   color: var(--ink-60);
@@ -1081,7 +1081,7 @@ button.reportMain:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: none;
@@ -1100,10 +1100,10 @@ button.reportMain:focus-visible {
   margin: 0;
   padding: 16px 18px;
   border-left: 3px solid var(--accent);
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 var(--radius-14) var(--radius-14) 0;
   background: rgba(var(--accent-rgb), 0.07);
   font-family: var(--serif);
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   font-style: italic;
   line-height: 1.6;
   color: var(--text-strong);
@@ -1122,10 +1122,10 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 8px;
   padding: 6px 12px 6px 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -1134,7 +1134,7 @@ button.reportMain:focus-visible {
 }
 .appealNoSupport {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -1156,7 +1156,7 @@ button.reportMain:focus-visible {
   gap: 12px;
   text-align: left;
   padding: 16px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   cursor: pointer;
@@ -1177,7 +1177,7 @@ button.reportMain:focus-visible {
   height: 38px;
   display: grid;
   place-items: center;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--text-strong);
 }
@@ -1196,14 +1196,14 @@ button.reportMain:focus-visible {
 }
 .decTitle {
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
 }
 [data-theme="dark"] .decTitle {
   color: var(--ink);
 }
 .decSub {
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.4;
   color: var(--ink-60);
 }
@@ -1239,11 +1239,11 @@ button.reportMain:focus-visible {
   gap: 5px;
   margin-left: 4px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--line-rgb), 0.1);
   color: var(--ink-60);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }
 .communityFlag svg {
   width: 11px;
@@ -1306,7 +1306,7 @@ button.reportMain:focus-visible {
 }
 .clusterTitle {
   font-weight: 650;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   overflow-wrap: anywhere;
 }
 .clusterFacts {
@@ -1320,11 +1320,11 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 5px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--line-rgb), 0.1);
   color: var(--ink-60);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }
 .clusterReporters svg {
   width: 11px;
@@ -1337,11 +1337,11 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 5px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--amber-rgb), 0.16);
   color: var(--amber-ink);
   font-weight: 700;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }
 .clusterSurge svg {
   width: 11px;
@@ -1350,7 +1350,7 @@ button.reportMain:focus-visible {
 .clusterHint {
   margin: 10px 0 0;
   color: var(--ink-60);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
 }
 .clusterBody {
@@ -1362,7 +1362,7 @@ button.reportMain:focus-visible {
 .clusterNote {
   margin: 0;
   color: var(--ink-60);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 
 /* ── Appeal deadlines (TS-11) ───────────────────────────────────────────── */
@@ -1378,11 +1378,11 @@ button.reportMain:focus-visible {
   align-items: center;
   gap: 5px;
   padding: 2px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--line-rgb), 0.5);
   color: var(--ink-60);
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   white-space: nowrap;
 }
 .appealDueLate {
@@ -1399,7 +1399,7 @@ button.reportMain:focus-visible {
   gap: 7px;
   margin: -6px 2px 14px;
   color: var(--ink-40);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
 }
 .appealsWindow svg {
@@ -1420,7 +1420,7 @@ button.reportMain:focus-visible {
      severity stripe: this is the most consequential row in the console. */
   border-left: 3px solid var(--danger);
   border-radius: var(--radius-card, 18px);
-  background: var(--surface);
+  background: var(--paper);
 }
 .ratifyHead {
   display: flex;
@@ -1435,7 +1435,7 @@ button.reportMain:focus-visible {
   gap: 5px;
   color: var(--ink-60);
   font-weight: 600;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .ratifyLapse svg {
   width: 12px;
@@ -1446,7 +1446,7 @@ button.reportMain:focus-visible {
 }
 .ratifyTitle {
   margin: 0;
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   font-weight: 700;
   line-height: 1.35;
   color: var(--ink);
@@ -1454,17 +1454,17 @@ button.reportMain:focus-visible {
 .ratifyMeta {
   margin: 0;
   color: var(--ink-60);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 /* The first moderator's own words, quoted rather than summarized. */
 .ratifyReason {
   margin: 4px 0;
   padding: 12px 14px;
   border-left: 2px solid rgba(var(--accent-rgb), 0.55);
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 var(--radius-10) var(--radius-10) 0;
   background: rgba(var(--line-rgb), 0.35);
   color: var(--ink);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -1475,7 +1475,7 @@ button.reportMain:focus-visible {
   gap: 7px;
   margin: 0;
   color: var(--ink-40);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
 }
 .ratifyInterim svg,

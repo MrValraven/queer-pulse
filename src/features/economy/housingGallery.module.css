@@ -32,8 +32,9 @@
   }
 }
 .cell:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: -3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .cellImg {
   position: absolute;
@@ -44,7 +45,7 @@
 }
 .cap {
   position: relative;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 600;
 }
@@ -58,7 +59,7 @@
   background: rgba(var(--plum-rgb), 0.55);
   color: var(--cream);
   font-weight: 700;
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 @media (--lg) {
   .gallery {
@@ -79,8 +80,9 @@
 .scrim {
   position: fixed;
   inset: 0;
-  z-index: 100;
-  background: rgba(20, 10, 26, 0.92);
+  z-index: var(--z-lightbox);
+  background: var(--scrim-strong);
+  backdrop-filter: var(--blur-sm);
   display: flex;
   padding: max(env(safe-area-inset-top), 12px) 12px
     max(env(safe-area-inset-bottom), 12px);
@@ -100,9 +102,9 @@
   min-height: 44px;
 }
 .counter {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
-  color: rgba(247, 243, 238, 0.8);
+  color: rgba(var(--cream-rgb), 0.8);
 }
 .iconBtn {
   display: inline-flex;
@@ -110,7 +112,7 @@
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: none;
   background: transparent;
   color: var(--cream);
@@ -119,7 +121,7 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .iconBtn:hover {
-    background: rgba(247, 243, 238, 0.14);
+    background: rgba(var(--cream-rgb), 0.14);
   }
 }
 .iconBtn:focus-visible {
@@ -147,7 +149,7 @@
   width: min(100%, 720px);
   aspect-ratio: 3 / 2;
   border-radius: var(--radius-card);
-  background: rgba(247, 243, 238, 0.08);
+  background: rgba(var(--cream-rgb), 0.08);
   color: var(--cream);
   font-weight: 600;
   padding: 24px;
@@ -157,6 +159,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  /* Photographic dark chip on the lightbox stage, not a scrim: doesn't match
+     any surface token's channel triple, so it stays literal. */
   background: rgba(20, 10, 26, 0.5);
 }
 .navPrev {
@@ -166,9 +170,9 @@
   inset-inline-end: 4px;
 }
 .caption {
-  color: rgba(247, 243, 238, 0.85);
+  color: rgba(var(--cream-rgb), 0.85);
   text-align: center;
-  font-size: 14px;
+  font-size: var(--text-14);
   min-height: 20px;
   padding: 8px 12px 0;
 }

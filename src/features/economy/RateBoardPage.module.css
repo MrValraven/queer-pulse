@@ -15,7 +15,7 @@
 }
 .formHint {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
   margin: 0 0 22px;
@@ -39,7 +39,7 @@
 }
 .label {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -50,10 +50,10 @@
 .input,
 .select {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 14px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.25s var(--ease);
@@ -74,11 +74,11 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .compare .label {
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .compareHint {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.55;
   color: var(--ink-40);
   margin: 10px 0 0;
@@ -106,7 +106,7 @@
 
 .overall {
   background: var(--plum);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 26px;
   display: flex;
   flex-direction: column;
@@ -114,7 +114,7 @@
 }
 .overallLabel {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.6);
 }
 .overallVal {
@@ -127,14 +127,14 @@
 }
 .overallMeta {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.55);
 }
 
 .percentile {
   background: rgba(var(--jade-rgb), 0.1);
   border: 1px solid rgba(var(--jade-rgb), 0.28);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 22px;
   display: flex;
   flex-direction: column;
@@ -142,7 +142,7 @@
 }
 .pctLabel {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .pctVal {
@@ -154,7 +154,7 @@
 }
 .pctMeta {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -180,26 +180,26 @@
 }
 .barRole {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--ink);
 }
 .barMed {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 500;
   color: var(--accent-ink);
 }
 .barTrack {
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
 }
 .barFill {
   height: 100%;
   width: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   transform-origin: left;
   transition: transform 0.6s var(--ease);
@@ -210,13 +210,13 @@
   justify-content: space-between;
   gap: 12px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
 .disclaimer {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.6;
   color: var(--ink-40);
   margin: 4px 0 0;
@@ -225,7 +225,7 @@
 /* ── Empty state ────────────────────────────────────────────────────────── */
 .statsEmpty {
   background: var(--plum);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 40px 34px;
 }
 .emptyTitle {
@@ -241,7 +241,7 @@
 }
 .emptyBody {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 0.8);
   margin: 0;

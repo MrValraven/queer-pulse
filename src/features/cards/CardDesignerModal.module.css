@@ -71,7 +71,7 @@
 
 .previewCaption {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -102,7 +102,7 @@
 }
 
 .groupLabel {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -112,13 +112,13 @@
 
 .groupHelper {
   margin: -4px 0 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }
 
 .counter {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-variant-numeric: tabular-nums;
 }
@@ -283,7 +283,7 @@
 }
 
 .chipLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   text-align: center;
   /* base.css sets `overflow-wrap: anywhere` app-wide (the mobile

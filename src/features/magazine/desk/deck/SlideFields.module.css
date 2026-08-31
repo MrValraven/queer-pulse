@@ -20,11 +20,11 @@
   padding: 13px 15px;
   font-family: var(--sans);
   /* >=16px so iOS Safari never zooms the viewport on focus. */
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   outline: none;
   transition:
     border-color 0.22s var(--ease),
@@ -46,14 +46,14 @@
 .textarea:focus,
 .select:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
   background: var(--paper);
 }
 
 .input:focus-visible,
 .textarea:focus-visible,
 .select:focus-visible {
-  box-shadow: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+  box-shadow: var(--ring-cream);
 }
 
 .slideGroup {
@@ -63,12 +63,12 @@
   padding: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 
 .slideGroupTitle {
   margin: 0;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -81,7 +81,7 @@
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 

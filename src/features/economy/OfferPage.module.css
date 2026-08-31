@@ -7,7 +7,7 @@
   margin-bottom: 32px;
 }
 .backLink a {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink-60);
   display: inline-flex;
@@ -30,12 +30,12 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 8px 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   margin-bottom: 28px;
 }
 .looking {
@@ -62,7 +62,7 @@
   color: var(--accent);
 }
 .body {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   line-height: 1.72;
   max-width: 58ch;
@@ -89,7 +89,7 @@
   }
 }
 .sh {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -113,23 +113,23 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 19px;
+  font-size: var(--text-19);
   flex: none;
 }
 .posterName {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   font-weight: 500;
 }
 .posterMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 3px;
 }
 .sidebarNote {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -169,7 +169,7 @@
 .offerItem {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px;
   display: flex;
   flex-direction: column;
@@ -182,18 +182,18 @@
 @media (hover: hover) {
   .offerItem:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 32px -22px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-lift);
   }
 }
 .ok {
   display: inline-flex;
   align-self: flex-start;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .okLooking {
   color: var(--accent-ink);
@@ -206,12 +206,12 @@
 .offerItem h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   line-height: 1.22;
   letter-spacing: -0.01em;
 }
 .offerItem .by {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }

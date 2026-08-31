@@ -4,7 +4,7 @@
    listBusiness verify-option row (icon + title + description). */
 
 .label {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -14,7 +14,7 @@
 }
 
 .hint {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.6;
   margin-bottom: 12px;
@@ -34,7 +34,7 @@
   padding: 12px 14px;
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   cursor: pointer;
   text-align: left;
   width: 100%;
@@ -64,7 +64,7 @@
   justify-content: center;
   background: rgba(var(--line-rgb), 0.08);
   color: var(--ink-60);
-  font-size: 15px;
+  font-size: var(--text-15);
   transition:
     background 0.2s var(--ease),
     color 0.2s var(--ease);
@@ -81,12 +81,12 @@
   min-width: 0;
 }
 .text b {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 .text span {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }

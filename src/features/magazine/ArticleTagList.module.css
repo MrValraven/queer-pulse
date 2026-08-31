@@ -16,7 +16,7 @@
 
 .tag {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 500;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);

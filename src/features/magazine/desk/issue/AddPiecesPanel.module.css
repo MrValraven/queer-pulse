@@ -20,7 +20,7 @@
 
 .title {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 400;
   color: var(--text-strong);
 }
@@ -28,7 +28,7 @@
 .sub {
   margin-top: 3px;
   color: var(--ink-40);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 
 .list {
@@ -72,9 +72,9 @@
   width: 18px;
   height: 18px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   color: var(--paper);
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 
 .mark[data-on="true"] {
@@ -94,7 +94,7 @@
   overflow: hidden;
   color: var(--text-strong);
   font-family: var(--serif);
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -104,13 +104,13 @@
   align-items: center;
   gap: 6px;
   color: var(--ink-40);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 
 .noMatches {
   padding: 10px 2px;
   color: var(--ink-40);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 
 @media (prefers-reduced-motion: reduce) {

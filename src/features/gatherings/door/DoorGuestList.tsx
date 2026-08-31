@@ -50,7 +50,9 @@ export function DoorGuestList({
   // Once a gathering's check-ins are no longer kept, "arrived" and "expected"
   // have no honest answer: the per-person arrival stamps were cleared along
   // with the count, so both filters would read everyone as still to come.
-  // They are withdrawn, and the roster falls back to the whole list.
+  // They are withdrawn, and the roster falls back to the whole list. The note
+  // under the filter bar says so in its own words; the retention rule itself
+  // is stated once, up beside the headline count (see `DoorShell`).
   const isCheckInKept = checkedInCount !== null;
   const activeFilter: DoorFilter = isCheckInKept ? filter : "all";
 
@@ -115,7 +117,7 @@ export function DoorGuestList({
         </div>
         {isCheckInKept ? null : (
           <p className={styles.doorRetentionNote}>
-            {t("gatherings:door.checkInsNotKeptNote")}
+            {t("gatherings:door.checkInsNotKeptFilters")}
           </p>
         )}
         <input

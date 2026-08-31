@@ -26,12 +26,12 @@
   color: var(--jade);
 }
 .statLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: rgba(var(--cream-rgb), 0.7);
 }
 .statNote {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-style: italic;
   color: rgba(var(--cream-rgb), 0.45);
 }
@@ -64,10 +64,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   padding: 5px 13px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   letter-spacing: 0.04em;
 }
 .colChip svg {
@@ -98,7 +98,7 @@
 .rmCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
   margin-bottom: 8px;
   position: relative;
@@ -117,7 +117,7 @@
   border-left: 4px solid var(--line-strong);
 }
 .rcCat {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -127,14 +127,14 @@
 .rcName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
   line-height: 1.2;
 }
 .rcDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 10px;
@@ -143,7 +143,7 @@
   margin-bottom: 12px;
 }
 .featureLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -158,7 +158,7 @@
   list-style: disc;
 }
 .featureList li {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -170,10 +170,10 @@
   flex-wrap: wrap;
 }
 .rcDate {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 3px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--jade-rgb), 0.08);
   color: var(--jade);
 }
@@ -181,10 +181,10 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 3px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--accent-rgb), 0.08);
   color: var(--accent-ink);
 }
@@ -199,10 +199,10 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 3px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--plum);
 }
@@ -219,10 +219,10 @@
   gap: 6px;
   margin: 8px 0 0;
   padding: 8px 10px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   background: rgba(var(--amber-rgb), 0.1);
   color: var(--amber-ink);
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.55;
 }
 .slipNote svg {
@@ -239,19 +239,19 @@
 .progLabel {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   margin-bottom: 4px;
 }
 .progBar {
   height: 3px;
   background: rgba(var(--plum-rgb), 0.08);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 .progFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   animation: progPulse 2.4s ease infinite;
 }
@@ -271,10 +271,10 @@
   gap: 5px;
   background: none;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--text-strong);
   cursor: pointer;
@@ -305,10 +305,10 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 3px 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
 }
@@ -349,13 +349,13 @@
 .shapeCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 26px;
 }
 .shapeHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 14px;
@@ -363,10 +363,10 @@
 .ideaTa {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 12px 14px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   background: var(--cream);
   outline: none;
@@ -390,7 +390,7 @@
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   transition: background 0.18s var(--ease);
 }
 @media (hover: hover) {
@@ -400,11 +400,11 @@
 }
 .ideaText {
   flex: 1;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .ideaVotes {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--ink-40);
 }
@@ -413,10 +413,10 @@
   align-items: center;
   gap: 4px;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   background: transparent;
   color: var(--text-strong);
@@ -456,7 +456,7 @@
 .howCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px;
   display: flex;
   gap: 11px;
@@ -477,13 +477,13 @@
   opacity: 0.4;
 }
 .hcTitle {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .hcDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -502,14 +502,14 @@
 .notBuildingCard {
   background: rgba(var(--plum-rgb), 0.02);
   border: 1.5px dashed rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
 }
 .nbReason {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--ink-60);
   margin-bottom: 6px;
@@ -520,7 +520,7 @@
   flex: none;
 }
 .nbVotes {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 4px;
 }
@@ -539,7 +539,7 @@
   color: var(--accent);
 }
 .sectionSub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   margin-bottom: 24px;
 }

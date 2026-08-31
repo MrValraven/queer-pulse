@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { ConnectionSort } from "./api/connections.api";
@@ -46,6 +47,8 @@ export function ConnectionsPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isError,
+    refetch,
   } = useConnectionsList(tab, { searchTerm: debouncedTerm, sort });
   const loading = simulating || fetching;
 
@@ -108,17 +111,33 @@ export function ConnectionsPage() {
           onSortChange={setSort}
         />
 
-        <ConnectionsTabPanels
-          tab={tab}
-          loading={loading}
-          views={views}
-          searchTerm={debouncedTerm}
-          sort={sort}
-          onClearSearch={clearSearch}
-          actions={{ onAccept, onDecline, onWithdraw, onUnblock }}
-        />
+        {isError && !loading ? (
+          /* Someone's own connections must never be reported as none because
+             a request failed: the empty panel here reads as "nobody accepted
+             you", which is the cruellest possible way to render an outage. */
+          <LoadErrorState
+            onRetry={refetch}
+            title={
+              <Translation
+                i18nKey="connect:page.loadError.title"
+                components={{ em: <em /> }}
+              />
+            }
+            description={t("connect:page.loadError.body")}
+          />
+        ) : (
+          <ConnectionsTabPanels
+            tab={tab}
+            loading={loading}
+            views={views}
+            searchTerm={debouncedTerm}
+            sort={sort}
+            onClearSearch={clearSearch}
+            actions={{ onAccept, onDecline, onWithdraw, onUnblock }}
+          />
+        )}
 
-        {!loading && hasNextPage && (
+        {!loading && !isError && hasNextPage && (
           <div className={styles.loadMore}>
             <Button
               type="button"

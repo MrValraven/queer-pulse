@@ -36,6 +36,11 @@ export interface AdminAuditResult {
   moderators: { id: string; name: string }[];
   pageCount: number;
   loading: boolean;
+  /** True when the fetch failed, so the tab can tell an outage apart from an
+   *  audit trail that genuinely has no rows for these filters (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch — wire to the error state's retry. */
+  refetch: () => void;
 }
 
 type RawAuditFeed =
@@ -198,6 +203,8 @@ export function useAdminAudit(
       moderators: [],
       pageCount: 1,
       loading: query.isPending,
+      isError: query.isError,
+      refetch: () => void query.refetch(),
     };
   }
 
@@ -212,5 +219,7 @@ export function useAdminAudit(
     moderators: query.data.moderators,
     pageCount: Math.max(1, Math.ceil(query.data.total / effectivePageSize)),
     loading: false,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

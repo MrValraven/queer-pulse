@@ -32,7 +32,7 @@ function contactToRowVM(contact: AdminPressContactDTO): PressRowVM {
 export function AdminPressContactList() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { contacts, isLoading } = useAdminPressContacts();
+  const { contacts, isLoading, isError, refetch } = useAdminPressContacts();
   const createContact = useCreatePressContact();
   const updateContact = useUpdatePressContact();
   const deleteContact = useDeletePressContact();
@@ -43,6 +43,8 @@ export function AdminPressContactList() {
       kind="team"
       rows={contacts.map(contactToRowVM)}
       isLoading={isLoading}
+      isError={isError}
+      onRetry={() => void refetch()}
       creating={createContact.isPending}
       deleting={deleteContact.isPending}
       onCreate={(value, done) =>

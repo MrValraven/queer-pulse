@@ -27,7 +27,7 @@
   pointer-events: none;
 }
 .cat {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -56,7 +56,7 @@
   color: var(--accent);
 }
 .hero p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 60ch;
   margin-top: 16px;
@@ -79,7 +79,7 @@
   line-height: 1;
 }
 .stat .l {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.55);
   margin-top: 6px;
   line-height: 1.4;
@@ -91,7 +91,7 @@
   padding: 48px 0 72px;
 }
 .featLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -111,7 +111,7 @@
   padding: 36px 40px 36px 0;
 }
 .featCause {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -126,7 +126,7 @@
   margin: 8px 0 14px;
 }
 .featBio {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.7;
   margin-bottom: 18px;
@@ -138,7 +138,7 @@
   margin-bottom: 22px;
 }
 .impactRow {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   padding-left: 18px;
   position: relative;
@@ -189,7 +189,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 18px 40px -24px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-lift);
   }
 }
 .cardBody {
@@ -200,7 +200,7 @@
   flex: 1;
 }
 .cardCause {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -214,7 +214,7 @@
   letter-spacing: -0.01em;
 }
 .cardBio {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   flex: 1;
@@ -225,10 +225,10 @@
   flex-wrap: wrap;
 }
 .cardTag {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 9px;
   font-weight: 500;
 }
@@ -236,7 +236,7 @@
   padding: 0 22px 20px;
 }
 .read {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -270,7 +270,7 @@
   pointer-events: none;
 }
 .nomEye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -294,7 +294,7 @@
   color: var(--accent);
 }
 .nominate p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.62);
   max-width: 46ch;
   margin: 20px 0 0;
@@ -332,7 +332,7 @@
   grid-template-columns: 26px minmax(0, 1fr);
   gap: 13px;
   align-items: start;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.72);
 }
@@ -346,7 +346,7 @@
   background: rgba(var(--accent-rgb), 0.16);
   border: 1px solid rgba(var(--accent-rgb), 0.4);
   color: var(--accent);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   font-family: var(--sans);
 }
@@ -356,9 +356,9 @@
 .nomCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   padding: 28px 28px 24px;
-  box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.3);
+  box-shadow: var(--shadow-e4);
 }
 .nomCardTitle {
   font-family: var(--serif);
@@ -381,7 +381,7 @@
   margin-bottom: 16px;
 }
 .nomPickerLabel {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -395,7 +395,7 @@
   min-width: 0;
 }
 .nomPickedName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
   overflow: hidden;
@@ -403,7 +403,7 @@
   white-space: nowrap;
 }
 .nomPickedSlug {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -415,7 +415,7 @@
 .nominate .nomPickerHelper {
   max-width: none;
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-40);
 }
@@ -425,7 +425,7 @@
   gap: 10px;
   padding: 8px 10px;
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--cream);
 }
 .nomPickedClear {
@@ -438,7 +438,7 @@
   border-radius: 50%;
   background: none;
   color: var(--ink-60);
-  font-size: 15px;
+  font-size: var(--text-15);
   cursor: pointer;
   transition:
     background 0.18s var(--ease),
@@ -458,7 +458,7 @@
 .nominate .nomNote {
   max-width: none;
   margin: 14px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
   text-align: center;

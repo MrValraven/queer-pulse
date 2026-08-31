@@ -31,7 +31,16 @@ import styles from "./ModToolsPanels.module.css";
  * Every ban written before timed bans existed is permanent, and that dialog is
  * how one of them stops being a life sentence.
  */
-export function ModToolsBans({ slug }: { slug: string }) {
+export function ModToolsBans({
+  slug,
+  onOpenRatifications,
+}: {
+  slug: string;
+  /** Opens the second-signature queue (PRD-25). A bar with a permanent
+   *  proposal open on it says so, and this is how a moderator gets from that
+   *  row to the proposal itself. */
+  onOpenRatifications: () => void;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
@@ -105,6 +114,7 @@ export function ModToolsBans({ slug }: { slug: string }) {
               ban={ban}
               onLift={(memberSlug, name) => setConfirming({ memberSlug, name })}
               onEdit={(edited, name) => setEditing({ ban: edited, name })}
+              onOpenRatifications={onOpenRatifications}
               formatDate={(iso) => fmt.date(new Date(iso))}
             />
           ))}

@@ -33,7 +33,7 @@
   background: var(--plum);
 }
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -64,7 +64,7 @@
   color: var(--jade);
 }
 .intro {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.7;
   max-width: 58ch;
   margin-bottom: 44px;
@@ -89,12 +89,12 @@
   gap: 12px;
 }
 .hoodTag {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   align-self: flex-start;
 }
 .hoodName {
@@ -106,14 +106,14 @@
   letter-spacing: -0.01em;
 }
 .hoodDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   flex: 1;
 }
 .hoodNote {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-style: italic;
   color: var(--ink-40);
   padding-top: 10px;
@@ -145,28 +145,28 @@
 .icIcon {
   width: 40px;
   height: 40px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: var(--text-18);
   flex: none;
 }
 .icTitle {
   margin: 0;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .icBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
 }
 .icLink {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
   display: inline-flex;
@@ -193,7 +193,7 @@
   align-items: flex-start;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
   text-decoration: none;
   transition:
@@ -203,19 +203,19 @@
 @media (hover: hover) {
   .org:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px -18px rgba(var(--plum-rgb), 0.32);
+    box-shadow: var(--shadow-lift);
   }
 }
 .orgAv {
   width: 46px;
   height: 46px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--text-14);
   flex: none;
 }
 .orgBody {
@@ -224,14 +224,14 @@
 }
 .orgName {
   display: block;
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 4px;
 }
 .orgDesc {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -239,7 +239,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--accent-ink);
   font-weight: 600;
   margin-top: 6px;
@@ -285,7 +285,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .fgDate .m {
-  font-size: 13px;
+  font-size: var(--text-13);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--jade);
@@ -307,19 +307,19 @@
 }
 .fgMeta {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.62);
 }
 .fgGo {
   display: inline-flex;
   align-items: center;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--jade);
   transition: transform 0.3s var(--ease);
 }
 .fgBadge {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -335,7 +335,7 @@
 .cqCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
   display: flex;
   flex-direction: column;
@@ -348,30 +348,30 @@
 @media (hover: hover) {
   .cqCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 22px -14px rgba(var(--plum-rgb), 0.3);
+    box-shadow: var(--shadow-lift);
   }
 }
 .cqType {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   padding: 4px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   align-self: flex-start;
 }
 .cqName {
   display: block;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
 .cqReason {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -408,7 +408,7 @@
 /* Some destinations sit behind the member gate. Saying so beside the link is
    cheaper for the reader than a sign-in wall they didn't expect. */
 .memberOnly {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -417,7 +417,7 @@
 
 /* A quiet paragraph used for the honest empty / signed-out lines. */
 .plainNote {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.7;
   max-width: 56ch;
   color: var(--ink-60);
@@ -437,7 +437,7 @@
   gap: 18px;
 }
 .fgNotice p {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.65;
   max-width: 52ch;
   color: rgba(var(--cream-rgb), 0.78);
@@ -482,7 +482,7 @@
 }
 .checklistProgress {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -523,7 +523,7 @@
   gap: 4px;
 }
 .checkTitle {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -533,7 +533,7 @@
 }
 .checkNote {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -551,7 +551,7 @@
   margin: 16px 0 0;
   padding-top: 16px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
   color: var(--ink-40);
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../../../shared/components/ui";
+import { Button, LoadErrorState } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useArticleComments } from "../../api/useArticleComments";
 import { useCommentMutations } from "../../api/useCommentMutations";
@@ -26,7 +26,7 @@ export interface NotesRailProps {
  */
 export function NotesRail({ pieceId, blockId }: NotesRailProps) {
   const { t } = useTranslation();
-  const { comments, isLoading } = useArticleComments(pieceId);
+  const { comments, isLoading, isError, refetch } = useArticleComments(pieceId);
   const { addComment, reply, toggleResolve } = useCommentMutations(pieceId);
   const [noteText, setNoteText] = useState("");
 
@@ -41,7 +41,9 @@ export function NotesRail({ pieceId, blockId }: NotesRailProps) {
     <div className={styles.card}>
       <h3>{t("magazine:write.notes.title")}</h3>
 
-      {isLoading ? (
+      {isError ? (
+        <LoadErrorState onRetry={refetch} compact />
+      ) : isLoading ? (
         <span className={styles.tiny}>{t("magazine:write.notes.loading")}</span>
       ) : comments.length === 0 ? (
         <span className={styles.tiny}>{t("magazine:write.notes.empty")}</span>

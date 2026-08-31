@@ -29,13 +29,13 @@
 
 .rowName {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 600;
   color: var(--ink);
 }
 
 .rowHandle {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -49,7 +49,7 @@
   max-width: 60ch;
   margin: 0;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -65,7 +65,7 @@
 }
 
 .rowGrantsLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-60);

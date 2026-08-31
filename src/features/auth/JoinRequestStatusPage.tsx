@@ -6,6 +6,8 @@ import { AuthLayout } from "./AuthLayout";
 import {
   isUnresolvableStatusToken,
   isWellFormedStatusToken,
+  joinRequestInviteRefreshRefusal,
+  type JoinRequestInviteRefreshRefusal,
   type JoinRequestStatusDTO,
 } from "./api/joinRequest.api";
 import {
@@ -13,10 +15,13 @@ import {
   rememberJoinRequestStatus,
 } from "./api/joinRequestStatusToken";
 import { useJoinRequestStatus } from "./api/useJoinRequestStatus";
+import { useRefreshJoinRequestInvite } from "./api/useRefreshJoinRequestInvite";
 import { JoinRequestStatusForm } from "./JoinRequestStatusForm";
 import {
   ApprovedInviteSpentState,
   ApprovedState,
+} from "./JoinRequestApprovedStates";
+import {
   CodeNotFoundState,
   DeclinedState,
   StatusUnavailableState,
@@ -24,21 +29,43 @@ import {
 } from "./JoinRequestStatusStates";
 import styles from "./JoinRequestStatus.module.css";
 
-/** The four decided/undecided display states, from one DTO. */
-function ResolvedStatus({ status }: { status: JoinRequestStatusDTO }) {
+/** The decided/undecided display states, from one DTO plus the refresh action
+ *  the "your invite lapsed" screen needs. */
+function ResolvedStatus({
+  status,
+  onRefreshInvite,
+  isRefreshingInvite,
+  refreshRefusal,
+}: {
+  status: JoinRequestStatusDTO;
+  onRefreshInvite: () => void;
+  isRefreshingInvite: boolean;
+  refreshRefusal: JoinRequestInviteRefreshRefusal | "unknown" | null;
+}) {
   if (status.status === "under_review") {
     return <UnderReviewState submittedAt={status.submittedAt} />;
   }
   if (status.status === "approved") {
     // Approved with no code is not an error and not the same screen: the
-    // invite was used, revoked or expired since the decision.
+    // invite was used, revoked or expired since the decision. `inviteStatus`
+    // says which, so the spent screen can offer the one recovery that exists
+    // (a fresh window on a lapsed invite) and none of the ones that do not.
     return status.inviteCode ? (
       <ApprovedState
         inviteCode={status.inviteCode}
         decidedAt={status.decidedAt}
+        expiresAt={status.inviteExpiresAt}
       />
     ) : (
-      <ApprovedInviteSpentState decidedAt={status.decidedAt} />
+      <ApprovedInviteSpentState
+        decidedAt={status.decidedAt}
+        inviteStatus={
+          status.inviteStatus === "valid" ? null : status.inviteStatus
+        }
+        onRefresh={onRefreshInvite}
+        isRefreshing={isRefreshingInvite}
+        refusal={refreshRefusal}
+      />
     );
   }
   return (
@@ -79,6 +106,17 @@ export function JoinRequestStatusPage() {
   const hasUsableToken =
     activeToken.length > 0 && isWellFormedStatusToken(activeToken);
   const statusQuery = useJoinRequestStatus(hasUsableToken ? activeToken : null);
+  // The applicant reviving their own lapsed approval invite. Keyed on the same
+  // token the read uses, and it writes the fresh status straight into that
+  // query's cache rather than spending one of the read's 20 hourly requests.
+  const refreshInvite = useRefreshJoinRequestInvite(activeToken);
+  // The backend's typed reason for a refusal, resolved once here so the state
+  // component renders a sentence rather than sniffing an error itself.
+  // "unknown" covers a network failure or an unrecognised code: still an
+  // honest "that did not work", never a raw value on screen.
+  const refreshRefusal = refreshInvite.error
+    ? (joinRequestInviteRefreshRefusal(refreshInvite.error) ?? "unknown")
+    : null;
 
   /** Drop `?token=` from the address bar, leaving the history entry rewritten
    *  rather than stacked. */
@@ -146,7 +184,12 @@ export function JoinRequestStatusPage() {
           <StatusUnavailableState onRetry={() => void statusQuery.refetch()} />
         )
       ) : (
-        <ResolvedStatus status={statusQuery.data} />
+        <ResolvedStatus
+          status={statusQuery.data}
+          onRefreshInvite={() => refreshInvite.mutate()}
+          isRefreshingInvite={refreshInvite.isPending}
+          refreshRefusal={refreshRefusal}
+        />
       )}
     </AuthLayout>
   );

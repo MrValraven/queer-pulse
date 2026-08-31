@@ -13,7 +13,9 @@ import {
 import { AdminMemberDrawerHeader } from "./AdminMemberDrawerHeader";
 import { AdminMemberDrawerActions } from "./AdminMemberDrawerActions";
 import { AdminMemberDrawerSkeleton } from "./AdminMemberDrawerSkeleton";
+import { AdminMemberBanEvasionCheck } from "./AdminMemberBanEvasionCheck";
 import { AdminMemberSuspensionControl } from "./AdminMemberSuspensionControl";
+import { AdminMemberAccountRecovery } from "./AdminMemberAccountRecovery";
 import { MessageModal, RestrictModal } from "./AdminMemberModals";
 import {
   RESTRICT_DURATION_TO_API,
@@ -68,12 +70,17 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           <>
             <RolesAndAccessSection member={member} detail={detail} />
             <AdminMemberSuspensionControl member={member} detail={detail} />
+            {/* Renders nothing unless this member has a locked-out sign-in
+                identity waiting or is stranded in `deactivated`. */}
+            <AdminMemberAccountRecovery member={member} />
             <MemberOverviewSections
               detail={detail}
               memberName={member.name}
               onOpenNetwork={() => setModal("network")}
             />
             <ModerationTimeline entries={detail.moderationTimeline} />
+            {/* On demand, never on open: see AdminMemberBanEvasionCheck. */}
+            <AdminMemberBanEvasionCheck memberId={member.id} />
           </>
         )}
 

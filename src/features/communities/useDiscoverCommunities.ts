@@ -64,6 +64,8 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     fetchNextPage,
     isFetchingNextPage,
     isLoading: isFetchingFirstPage,
+    isError: hasListFailed,
+    refetch: retryList,
   } = useCommunities({
     filter: isMineScope ? "mine" : undefined,
     q: q || undefined,
@@ -175,6 +177,10 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     isFetchingNextPage,
     visible,
     gridItems,
+    // Kept apart from "nothing matched": a failed directory read must not be
+    // rendered as an empty result set (DES-22).
+    hasListFailed,
+    retryList,
     categoryCounts,
     hasActiveRefinement,
     resetRefinements,

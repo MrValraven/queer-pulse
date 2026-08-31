@@ -318,8 +318,8 @@
   padding: var(--card-plate-pad) calc(var(--card-plate-pad) * 1.5);
   border-radius: var(--radius-badge);
   background: var(--card-plate);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
 }
 
 /* The name's plate. The control cluster's reservation has to become a MARGIN
@@ -331,8 +331,8 @@
   margin-right: var(--card-controls-reserve);
   border-radius: var(--radius-badge);
   background: var(--card-plate);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
 }
 
 /* Overrides whichever skin class is also on the element: with a ground, the
@@ -435,8 +435,8 @@
   background: rgba(var(--plum-rgb), 0.5);
   color: rgb(var(--cream-rgb));
   border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(7px) saturate(1.4);
-  -webkit-backdrop-filter: blur(7px) saturate(1.4);
+  backdrop-filter: var(--blur-md) saturate(1.4);
+  -webkit-backdrop-filter: var(--blur-md) saturate(1.4);
 }
 
 @media (hover: hover) {

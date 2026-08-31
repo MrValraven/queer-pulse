@@ -5,7 +5,7 @@
 .row {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px;
   margin-bottom: 10px;
 }
@@ -29,7 +29,7 @@
 }
 .name,
 .nameLink {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -44,7 +44,7 @@
   }
 }
 .pronouns {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   font-weight: 500;
 }
@@ -61,10 +61,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 5px 10px;
 }
 .signal svg {
@@ -75,13 +75,13 @@
 }
 
 .line {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin-top: 10px;
   line-height: 1.55;
 }
 .lineLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -96,7 +96,7 @@
   max-width: 70ch;
 }
 .requested {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 10px;
 }
@@ -114,7 +114,7 @@
    ring, the disabled treatment and the tap-target floor. */
 .declineBtn {
   gap: 5px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   background: transparent;
   padding: 8px 14px;
@@ -141,14 +141,14 @@
 }
 .declineTitle {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 500;
   color: var(--text-strong);
   margin-bottom: 12px;
 }
 .declineLabel {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -157,7 +157,7 @@
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
   margin: 0 0 8px;
@@ -186,7 +186,7 @@
   text-align: left;
   background: transparent;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   cursor: pointer;
   font-family: var(--sans);
@@ -200,13 +200,13 @@
 }
 .kindLabel {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 .kindDesc {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-top: 3px;
   line-height: 1.45;
@@ -216,10 +216,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 14px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   background: var(--paper);
   outline: none;

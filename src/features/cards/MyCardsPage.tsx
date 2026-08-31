@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { FiCreditCard, FiTrash2 } from "react-icons/fi";
+import { FiTrash2 } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import {
   Button,
   Eyebrow,
+  LoadErrorState,
   SectionHead,
   SkeletonCard,
 } from "../../shared/components/ui";
@@ -11,6 +12,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { useDeleteMyCard, useMyCards, useUpdateMyCard } from "./api/useMyCards";
 import type { MyCardDTO } from "./api/cards.api";
 import { isCardSelfRenewable } from "./cardExpiry";
@@ -20,6 +22,7 @@ import { CardRenewAction } from "./CardRenewAction";
 import { CardStatusNotice } from "./CardStatusNotice";
 import { DiscreetGate } from "./DiscreetGate";
 import { MembershipCardFace } from "./MembershipCardFace";
+import { MyCardsEmpty } from "./MyCardsEmpty";
 import { RemoveMyCardModal } from "./RemoveMyCardModal";
 import styles from "./MyCardsPage.module.css";
 
@@ -35,7 +38,7 @@ import styles from "./MyCardsPage.module.css";
 export function MyCardsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { cards, isLoading } = useMyCards();
+  const { cards, isLoading, isError, refetch } = useMyCards();
   const { demoMode } = useDemoMode();
   const [revealedCardId, setRevealedCardId] = useState<string | null>(null);
   // Demo mode writes nothing, so a renewal there has to be remembered here or
@@ -87,12 +90,22 @@ export function MyCardsPage() {
             <SkeletonCard />
             <SkeletonCard />
           </div>
+        ) : isError ? (
+          /* A wallet that failed to load must never read as an empty wallet:
+             the member would take it as their community having withdrawn the
+             card. */
+          <LoadErrorState
+            onRetry={refetch}
+            title={
+              <Translation
+                i18nKey="cards:page.loadError.title"
+                components={{ em: <em /> }}
+              />
+            }
+            description={t("cards:page.loadError.body")}
+          />
         ) : visibleCards.length === 0 ? (
-          <div className={styles.empty}>
-            <FiCreditCard className={styles.emptyIcon} aria-hidden="true" />
-            <p className={styles.emptyTitle}>{t("cards:empty.title")}</p>
-            <p className={styles.emptyBody}>{t("cards:empty.body")}</p>
-          </div>
+          <MyCardsEmpty />
         ) : (
           <ul className={styles.grid}>
             {visibleCards.map((card) => (

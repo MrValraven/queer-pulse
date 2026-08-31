@@ -28,7 +28,7 @@
 .headline {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 18px 20px;
 }
 
@@ -44,14 +44,14 @@
 
 .headlineLabel {
   margin-top: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
 
 .note {
   margin: 0 0 22px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
   color: var(--ink-60);
   max-width: 62ch;
@@ -68,20 +68,20 @@
 .tableWrap {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow-x: auto;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 
 .table caption {
   text-align: left;
   padding: 16px 20px 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -96,7 +96,7 @@
 }
 
 .table thead th {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-40);
   white-space: nowrap;
@@ -116,7 +116,7 @@
 .rowSub {
   display: block;
   margin-top: 2px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 400;
   color: var(--ink-40);
 }
@@ -132,7 +132,7 @@
 .capped {
   margin: 0;
   padding: 10px 20px 14px;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-40);
 }
@@ -140,7 +140,7 @@
 .emptyLine {
   margin: 0;
   padding: 14px 20px 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 

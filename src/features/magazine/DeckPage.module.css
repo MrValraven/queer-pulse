@@ -73,7 +73,7 @@
   border-radius: var(--radius-avatar);
   background: var(--plum);
   color: var(--cream);
-  font-size: 20px;
+  font-size: var(--text-20);
   line-height: 1;
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-std);
@@ -84,8 +84,9 @@
   }
 }
 .arrow:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .arrow:disabled {
   opacity: 0.35;
@@ -122,8 +123,9 @@
   transition: background var(--dur-fast) var(--ease-std);
 }
 .dot:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   border-radius: var(--radius-avatar);
 }
 .dotOn::before {
@@ -132,7 +134,7 @@
 
 .counter {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   min-width: 44px;
   text-align: center;
@@ -147,7 +149,7 @@
 }
 .back {
   margin-bottom: 28px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-40);
   display: inline-flex;
@@ -163,7 +165,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -191,12 +193,12 @@
   flex-wrap: wrap;
 }
 .author {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 .role {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 .pills {
@@ -206,7 +208,7 @@
   margin-left: auto;
 }
 .pill {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 500;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.06);
@@ -238,7 +240,7 @@
 .present {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: var(--z-lightbox);
   display: flex;
   flex-direction: column;
   background: var(--ink);
@@ -257,7 +259,7 @@
 }
 .presentTitle {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--cream);
   overflow: hidden;
@@ -276,7 +278,7 @@
   border-radius: var(--radius-avatar);
   background: rgba(var(--cream-rgb), 0.12);
   color: var(--cream);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1;
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-std);
@@ -287,8 +289,9 @@
   }
 }
 .presentClose:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .presentStage {
@@ -307,7 +310,7 @@
 
 .endHint {
   text-align: center;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .endHint a {

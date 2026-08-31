@@ -52,16 +52,16 @@
   width: 22px;
   height: 22px;
   place-items: center;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   background: var(--plum);
   color: var(--cream);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
 }
 
 .eyebrow {
   overflow: hidden;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ink);
@@ -82,7 +82,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--ink-60);
@@ -113,8 +113,9 @@
 .controls button:focus-visible,
 .headerMain:focus-visible,
 .summary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .sbody {
@@ -130,7 +131,7 @@
   width: 100%;
   padding: 12px 14px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   text-align: left;
   text-overflow: ellipsis;

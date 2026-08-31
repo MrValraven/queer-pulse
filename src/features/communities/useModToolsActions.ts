@@ -2,11 +2,16 @@ import { useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { LivingCommunity, ModReport } from "./community.model";
-import { useJoinRequests } from "./api/useJoinRequests";
+import type { TFunction } from "../../shared/i18n/types";
+import type { LivingCommunity, ModReport, ModRequest } from "./community.model";
+import {
+  useJoinRequests,
+  type JoinRequestsResult,
+} from "./api/useJoinRequests";
 import { memberKey, useModMemberRoles } from "./useModMemberRoles";
 import { useCommunityReports } from "./api/useCommunityReports";
 import { useRemoveMember } from "./api/useCommunityMutations";
+import type { CommunityRemovalOutcomeDTO } from "./api/communities.api";
 import { useActOnCommunityReport } from "./api/useCommunityReportActions";
 import type { ReasonCode } from "../safety/reportReasons";
 import { useTriageJoinRequest } from "./api/useCommunityJoin";
@@ -25,6 +30,65 @@ export type ModConfirmTarget =
   | { kind: "grantCoOwner"; memberSlug?: string; name: string }
   | { kind: "revokeCoOwner"; memberSlug?: string; name: string }
   | { kind: "removeReport"; report: ModReport };
+
+/**
+ * The join-request rows to show, and how many people are waiting altogether.
+ *
+ * They are two different numbers once the queue runs past one page (ENG-41):
+ * `requests` is what has been loaded minus what this moderator has already
+ * decided this session, while `requestTotal` is the server's count of the whole
+ * pending queue with those same decisions taken off it. So the rail badge and
+ * the pane heading say how many people are actually waiting, and still shrink as
+ * the moderator works rather than being contradicted by the rows below them.
+ *
+ * The total is floored at the loaded count, so a stale total can never report
+ * fewer waiting than are visibly on screen.
+ */
+function undecidedJoinRequests(
+  queue: JoinRequestsResult,
+  decidedThisSession: Set<string>,
+): { requests: ModRequest[]; requestTotal: number } {
+  const requests = queue.items.filter(
+    (request) => !decidedThisSession.has(request.id),
+  );
+  return {
+    requests,
+    requestTotal: Math.max(
+      queue.total - decidedThisSession.size,
+      requests.length,
+    ),
+  };
+}
+
+/**
+ * Which removal outcomes get a dialog rather than a toast (PRD-25): a
+ * permanent bar now waiting on a second owner, co-owner or moderator, and one
+ * this community can never have because nobody else could sign it.
+ *
+ * A moderator who believes they barred somebody forever, and did not, has been
+ * actively misled, and a toast that scrolls away is not where you tell
+ * somebody that.
+ */
+function isRemovalOutcomeNotable(
+  outcome: CommunityRemovalOutcomeDTO | null,
+): outcome is CommunityRemovalOutcomeDTO {
+  return Boolean(
+    outcome?.isPendingRatification || outcome?.hasNoSecondSignatory,
+  );
+}
+
+/** The line an ordinary removal toasts. The server's own sentence when there
+ *  is one (it is the authority on what the removal did), and the old fixed
+ *  wording in demo mode, where there is no server to have said anything. */
+function removalMessage(
+  outcome: CommunityRemovalOutcomeDTO | null,
+  name: string,
+  t: TFunction,
+): string {
+  return (
+    outcome?.message ?? t("communities:detail.modtools.toast.removed", { name })
+  );
+}
 
 /**
  * Every mod-tools queue and action in one hook, so `ModToolsTab` stays layout
@@ -58,8 +122,9 @@ export function useModToolsActions(living: LivingCommunity) {
   const [resolvedRequests, setResolvedRequests] = useState<Set<string>>(
     new Set(),
   );
-  const requests = joinRequests.items.filter(
-    (request) => !resolvedRequests.has(request.id),
+  const { requests, requestTotal } = undecidedJoinRequests(
+    joinRequests,
+    resolvedRequests,
   );
 
   // Reports mirror the same pattern, now backed by GET /communities/:slug/reports
@@ -75,6 +140,9 @@ export function useModToolsActions(living: LivingCommunity) {
 
   const [removed, setRemoved] = useState<string[]>([]);
   const [confirming, setConfirming] = useState<ModConfirmTarget | null>(null);
+  // The removal outcomes worth a dialog (PRD-25). Null for an ordinary one.
+  const [removalOutcome, setRemovalOutcome] =
+    useState<CommunityRemovalOutcomeDTO | null>(null);
 
   const failed = () => showToast(t("communities:common.error"), "error");
   const hideRequest = (id: string) =>
@@ -135,22 +203,24 @@ export function useModToolsActions(living: LivingCommunity) {
     confirmRevokeCoOwner,
   } = useModMemberRoles(living.slug, () => setConfirming(null));
 
-  /** Taking a member off the roster: confirmed first, never straight off a tap. */
+  /** Taking a member off the roster: confirmed first, never straight off a
+   *  tap. The route now answers with what the removal actually did (PRD-25),
+   *  so the server's own sentence replaces the old fixed "{name} has been
+   *  removed", and the two outcomes that are not what the moderator asked for
+   *  go to `CommunityRemovalOutcomeDialog` instead of a toast. */
   const confirmRemoveMember = (
     memberSlug: string | undefined,
     name: string,
   ) => {
     const key = memberKey(memberSlug, name);
-    const done = () => {
+    const done = (outcome: CommunityRemovalOutcomeDTO | null) => {
       setConfirming(null);
-      showToast(
-        t("communities:detail.modtools.toast.removed", { name }),
-        "info",
-      );
+      if (isRemovalOutcomeNotable(outcome)) setRemovalOutcome(outcome);
+      else showToast(removalMessage(outcome, name, t), "info");
     };
     setRemoved((p) => [...p, key]);
     if (demoMode || !memberSlug) {
-      done();
+      done(null);
       return;
     }
     removeMember.mutate(memberSlug, {
@@ -261,14 +331,15 @@ export function useModToolsActions(living: LivingCommunity) {
 
   return {
     requests,
+    /** The whole pending queue's size, page one or not. See `requestTotal`. */
+    requestTotal,
     // The queues' own load/failure signals, so a 403 or a dropped connection
     // renders as "we could not load this" instead of an empty queue that reads
-    // as "nothing to review".
-    requestsState: {
-      isLoading: joinRequests.isLoading,
-      isError: joinRequests.isError,
-      retry: joinRequests.refetch,
-    },
+    // as "nothing to review". The join queue builds its own (`useJoinRequests`).
+    requestsState: joinRequests.state,
+    // The join queue's own pagination, so a moderator can reach an applicant
+    // past page one to approve or decline them.
+    requestsPaging: joinRequests.paging,
     reports,
     reportsState: {
       isLoading: communityReports.isLoading,
@@ -290,6 +361,9 @@ export function useModToolsActions(living: LivingCommunity) {
     escalateReportRow,
     confirming,
     setConfirming,
+    /** The removal outcome worth a dialog, or null. See `confirmRemoveMember`. */
+    removalOutcome,
+    dismissRemovalOutcome: () => setRemovalOutcome(null),
     confirmRemoveMember,
     confirmRemoveReport,
     isConfirmPending:

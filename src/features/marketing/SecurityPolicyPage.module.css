@@ -24,7 +24,7 @@
   pointer-events: none;
 }
 .heroEye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -46,7 +46,7 @@
   font-weight: 400;
 }
 .heroSub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.6);
   max-width: 54ch;
   margin-top: 22px;
@@ -71,7 +71,7 @@
 
 /* Prose sections */
 .proseEye {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -92,7 +92,7 @@
   color: var(--accent);
 }
 .prose {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.78;
   margin-bottom: 14px;
@@ -115,7 +115,7 @@
   }
 }
 .scopeCard {
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 20px;
   border: 1px solid rgba(var(--line-rgb), 0.1);
 }
@@ -132,7 +132,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 700;
-  font-size: 13px;
+  font-size: var(--text-13);
   margin-bottom: 10px;
 }
 .scopeDot {
@@ -160,7 +160,7 @@
   gap: 5px;
 }
 .scopeList li {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   padding-left: 12px;
   position: relative;
@@ -179,13 +179,13 @@
 }
 .stepText {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
 }
 .stepNote {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-ink);
   font-weight: 600;
   margin-top: 4px;
@@ -212,7 +212,7 @@
 .hallCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px;
   text-align: center;
 }
@@ -226,18 +226,18 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
   margin: 0 auto 10px;
 }
 .hallName {
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   margin-bottom: 3px;
 }
 .hallNote {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 
@@ -251,13 +251,13 @@
 }
 .reportCard {
   background: var(--plum);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 28px 26px;
 }
 .reportCard h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
@@ -267,7 +267,7 @@
   color: var(--accent);
 }
 .reportCard p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.55);
   line-height: 1.6;
   margin-bottom: 20px;
@@ -277,11 +277,11 @@
 .pgpCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 24px;
 }
 .pgpLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -289,7 +289,7 @@
   margin-bottom: 12px;
 }
 .pgpUnavailable {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-60);
   margin: 0;
@@ -297,12 +297,12 @@
 .pgpBlock {
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 14px;
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   color: var(--ink-60);
   line-height: 1.5;
   overflow-x: auto;

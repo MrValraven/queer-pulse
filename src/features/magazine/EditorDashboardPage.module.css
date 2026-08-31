@@ -1,5 +1,5 @@
 .page {
-  max-width: 1240px;
+  max-width: var(--maxw);
   margin: 0;
   padding: 40px 28px 120px;
 }
@@ -16,7 +16,7 @@
   flex-wrap: wrap;
 }
 .edEyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -37,7 +37,7 @@
   color: var(--accent);
 }
 .edMeta {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
 }
 .edMeta b {
@@ -54,17 +54,17 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .viewing select {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--text-strong);
   border: 1.5px solid rgba(var(--line-rgb), 0.18);
   background: var(--paper);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 12px;
   cursor: pointer;
 }
@@ -75,7 +75,7 @@
 }
 .needsHead {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   margin-bottom: 12px;
 }
@@ -94,7 +94,7 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   border-left: 3px solid var(--ink-40);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 16px;
   cursor: pointer;
   transition:
@@ -113,7 +113,7 @@
   border-left-color: var(--jade);
 }
 .needsTag {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -125,16 +125,16 @@
 .needsTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
   line-height: 1.2;
 }
 .needsReason {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 .needsCta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--text-strong);
   margin-top: 2px;
@@ -145,9 +145,9 @@
 .needsClear {
   background: rgba(var(--jade-rgb), 0.08);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 16px 20px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .needsClear span {
@@ -171,7 +171,7 @@
   padding: 16px 20px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 .stat b {
   display: block;
@@ -188,7 +188,7 @@
   color: var(--accent);
 }
 .stat span {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 
@@ -208,11 +208,11 @@
 .searchBox input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 11px 40px 11px 40px;
   transition: border-color 0.2s;
 }
@@ -247,23 +247,23 @@
 }
 .tbSel {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: var(--ink);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 14px;
   cursor: pointer;
 }
 .tbToggle {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: 1.5px solid rgba(var(--line-rgb), 0.18);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 15px;
   cursor: pointer;
   transition: all 0.2s;
@@ -278,7 +278,7 @@
   border-color: var(--line-strong);
 }
 .kbdHint {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-left: auto;
   cursor: pointer;
@@ -294,9 +294,9 @@
   font-family: var(--sans);
   background: rgba(var(--plum-rgb), 0.07);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 1px 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
 }
 
@@ -333,7 +333,7 @@
 }
 .secH2 .ct {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   font-weight: 600;
 }
@@ -342,7 +342,7 @@
 .pieces {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
 }
 .pieceRow,
@@ -355,7 +355,7 @@
 }
 .pieceHead {
   background: rgba(var(--plum-rgb), 0.04);
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -364,7 +364,7 @@
 }
 .pieceRow {
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   transition: background 0.15s;
 }
 .pieceRow:hover {
@@ -377,7 +377,7 @@
 .pieceTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
   letter-spacing: -0.005em;
   line-height: 1.25;
@@ -387,7 +387,7 @@
   color: var(--accent);
 }
 .pieceBy {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
   margin-top: 3px;
 }
@@ -406,12 +406,12 @@
   align-items: center;
   gap: 5px;
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 4px 8px;
   cursor: pointer;
   transition: all 0.18s;
@@ -436,11 +436,11 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 500;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.045);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 4px 8px;
 }
 .artDot {
@@ -471,12 +471,12 @@
 }
 .pieceStatus {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   padding: 4px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   white-space: nowrap;
   cursor: pointer;
   border: none;
@@ -517,20 +517,20 @@
   background: var(--jade);
 }
 .lateFlag {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(var(--cream-rgb), 1);
   background: var(--accent);
   padding: 3px 7px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 .blk {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-60);
   line-height: 1.35;
 }
@@ -546,7 +546,7 @@
   color: var(--accent-ink);
 }
 .pcDue {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   white-space: nowrap;
@@ -572,7 +572,7 @@
   padding-top: 1px;
 }
 .pieceAction {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
@@ -590,7 +590,7 @@
   color: var(--ink-40);
   cursor: pointer;
   padding: 2px 4px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   display: inline-flex;
   align-items: center;
 }
@@ -640,18 +640,18 @@
 }
 .empty b {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   font-weight: 500;
 }
 .empty span {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
 /* ── Decks section ── */
 .deckStatus {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -695,7 +695,7 @@
   background: rgba(var(--accent-rgb), 0.045);
   margin: 0 -12px;
   padding: 13px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border-color: transparent;
 }
 .pitchRow.leaving {
@@ -714,7 +714,7 @@
   border-radius: 50%;
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 11px;
+  font-size: var(--text-11);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -734,7 +734,7 @@
 }
 .pitchInfo b {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
   font-weight: 600;
   margin-bottom: 2px;
@@ -742,10 +742,10 @@
 .pitchInfo b .nv {
   color: var(--jade);
   font-weight: 600;
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 .pitchInfo span {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 .pitchQuick {
@@ -757,10 +757,10 @@
   border: 1px solid rgba(var(--line-rgb), 0.14);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   padding: 5px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   cursor: pointer;
   transition: all 0.18s;
 }
@@ -781,7 +781,7 @@
 .pitchFoot {
   padding: 12px 22px;
   background: rgba(var(--plum-rgb), 0.03);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   text-align: center;
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
@@ -793,7 +793,7 @@
   border: none;
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 
 /* ── Sidebar ── */
@@ -807,11 +807,11 @@
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 17px 19px;
 }
 .sideCard h4 {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -835,7 +835,7 @@
 .issueBarRow {
   display: flex;
   justify-content: space-between;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .issueBarRow b {
@@ -845,14 +845,14 @@
 .bar {
   height: 6px;
   background: rgba(var(--plum-rgb), 0.08);
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   overflow: hidden;
 }
 .bar span {
   display: block;
   height: 100%;
   background: linear-gradient(90deg, var(--accent), var(--jade));
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   transition: width 0.5s var(--ease);
 }
 .loadRow {
@@ -865,7 +865,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-bottom: 5px;
 }
@@ -891,7 +891,7 @@
   background: var(--accent);
 }
 .loadHint {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   line-height: 1.4;
   margin-top: 4px;
@@ -902,7 +902,7 @@
   gap: 10px;
   align-items: center;
   padding: 6px 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
 }
 .secRow:last-child {
@@ -919,7 +919,7 @@
 .slot {
   width: 8px;
   height: 8px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   background: rgba(var(--plum-rgb), 0.12);
 }
 .slot.on {
@@ -929,7 +929,7 @@
   background: rgba(var(--accent-rgb), 0.35);
 }
 .secCount {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   color: var(--jade);
   min-width: 42px;
@@ -956,7 +956,7 @@
   line-height: 1;
 }
 .mixRow span {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   line-height: 1.35;
 }
@@ -968,7 +968,7 @@
 }
 .mixCell {
   background: rgba(var(--plum-rgb), 0.03);
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   padding: 10px 12px;
 }
 .mixCell b {
@@ -984,7 +984,7 @@
   color: var(--jade);
 }
 .mixCell span {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
 }
 .pay {
@@ -992,7 +992,7 @@
   padding-top: 13px;
 }
 .payHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1002,7 +1002,7 @@
 .payBar {
   display: flex;
   height: 8px;
-  border-radius: 4px;
+  border-radius: var(--radius-4);
   overflow: hidden;
   margin-bottom: 8px;
 }
@@ -1019,7 +1019,7 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-60);
   margin-bottom: 9px;
 }
@@ -1031,7 +1031,7 @@
 .payKey i {
   width: 9px;
   height: 9px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   display: inline-block;
 }
 .payKey i.paid {
@@ -1044,10 +1044,10 @@
   background: rgba(var(--plum-rgb), 0.14);
 }
 .payFlag {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.06);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 8px 10px;
 }
 .payFlag button {
@@ -1057,23 +1057,23 @@
   border: none;
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .geo {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
   margin-top: 11px;
   padding-top: 11px;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .contribMatch {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--text-strong);
   margin-top: 8px;
   font-weight: 500;
 }
 .contribLink {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--text-strong);
   text-decoration: none;
@@ -1106,7 +1106,7 @@
   background: var(--plum);
 }
 .actTxt {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.4;
   display: block;
@@ -1120,7 +1120,7 @@
   color: var(--ink);
 }
 .actWhen {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
 }
 .qaCard {
@@ -1134,7 +1134,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .qa a,
 .qa button {
@@ -1145,7 +1145,7 @@
   border: none;
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   text-align: left;
   padding: 0;
 }
@@ -1161,11 +1161,11 @@
 }
 .pop {
   position: fixed;
-  z-index: 500;
+  z-index: var(--z-popover);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
-  box-shadow: 0 18px 44px -16px rgba(var(--plum-rgb), 0.4);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
   padding: 6px;
   min-width: 210px;
   max-width: 280px;
@@ -1182,7 +1182,7 @@
   }
 }
 .popHead {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1196,11 +1196,11 @@
   width: 100%;
   text-align: left;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 8px 10px;
   cursor: pointer;
   text-decoration: none;
@@ -1215,7 +1215,7 @@
 .popItem em {
   font-style: normal;
   color: var(--ink-40);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   margin-left: auto;
 }
 .popItem .popNum {
@@ -1224,7 +1224,7 @@
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -1241,7 +1241,7 @@
 
 /* ── Modal inner content (uses shared Modal shell) ── */
 .mEyebrow {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1259,16 +1259,16 @@
   margin-top: 5px;
 }
 .mHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.08);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 8px 11px;
   margin-bottom: 12px;
 }
 .mLabel {
   display: block;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1279,11 +1279,11 @@
 .mSelect {
   width: 100%;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 11px 13px;
   line-height: 1.5;
   resize: vertical;
@@ -1300,7 +1300,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   cursor: pointer;
 }
@@ -1322,17 +1322,17 @@
 .kbK {
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.07);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 9px;
   text-align: center;
   white-space: nowrap;
 }
 .kbD {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -1342,7 +1342,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 400;
+  z-index: var(--z-nav);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   transform: translateY(110%);
@@ -1352,7 +1352,7 @@
   transform: translateY(0);
 }
 .bulkInner {
-  max-width: 1240px;
+  max-width: var(--maxw);
   margin: 0 auto;
   padding: 14px 28px;
   display: flex;
@@ -1362,7 +1362,7 @@
 }
 .bulkCount {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 500;
 }
 .bulkActions {
@@ -1373,12 +1373,12 @@
 }
 .bulkBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 16px;
   cursor: pointer;
-  border: 1.5px solid rgba(247, 243, 238, 0.28);
+  border: 1.5px solid rgba(var(--cream-rgb), 0.28);
   background: transparent;
   color: rgba(var(--cream-rgb), 1);
   transition: all 0.2s;
@@ -1396,11 +1396,11 @@
 }
 .bulkBtn.clear {
   border-color: transparent;
-  color: rgba(247, 243, 238, 0.6);
+  color: rgba(var(--cream-rgb), 0.6);
 }
 .bulkNote {
-  font-size: 12px;
-  color: rgba(247, 243, 238, 0.6);
+  font-size: var(--text-12);
+  color: rgba(var(--cream-rgb), 0.6);
   width: 100%;
 }
 
@@ -1419,7 +1419,7 @@
 .skelCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 22px;
   margin-bottom: 14px;
 }

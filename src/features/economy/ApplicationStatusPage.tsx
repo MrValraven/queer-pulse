@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FiAlertCircle, FiFileText } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useMyApplications } from "./api/useMyApplications";
@@ -27,7 +27,7 @@ export function ApplicationStatusPage() {
   // applications (GET /me/applications). A local copy backs the demo modals'
   // optimistic patching; it reseeds whenever the source array changes (demo/live
   // toggle, language switch, or the live fetch resolving).
-  const { applications, isLoading, isError } = useMyApplications();
+  const { applications, isLoading, isError, refetch } = useMyApplications();
   const [apps, setApps] = useState<Application[]>(applications);
   const [prevSource, setPrevSource] = useState(applications);
   if (prevSource !== applications) {
@@ -125,14 +125,13 @@ export function ApplicationStatusPage() {
         />
 
         {isError ? (
-          <EmptyState
-            icon={<FiAlertCircle />}
+          // A failed fetch must never be rendered as "you have no
+          // applications": a member checking whether theirs landed would read
+          // an outage as a lost application. Retry, rather than a way out.
+          <LoadErrorState
             title={t("economy:applicationStatus.error.title")}
             description={t("economy:applicationStatus.error.description")}
-            action={{
-              label: t("economy:applicationStatus.empty.browseCta"),
-              to: routes.jobs,
-            }}
+            onRetry={refetch}
           />
         ) : !isLoading && apps.length === 0 ? (
           <EmptyState

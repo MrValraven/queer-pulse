@@ -18,19 +18,19 @@
 .panelTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .panelDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
   max-width: 46ch;
   margin-top: 4px;
 }
 .empty {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -51,7 +51,7 @@
 }
 .roleSelect {
   margin-left: auto;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .removeBtn {
   display: flex;

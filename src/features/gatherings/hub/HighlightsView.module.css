@@ -59,7 +59,7 @@
   block-size: 38px;
   flex-shrink: 0;
   border-radius: var(--radius-badge);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--accent);
   background: rgba(var(--accent-rgb), 0.1);
 }

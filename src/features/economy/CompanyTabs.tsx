@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   Button,
   EmptyState,
+  LoadErrorState,
   Stars,
   Tabs,
   type Tab,
@@ -89,6 +90,8 @@ function ReviewsPane({
   hasMore,
   onLoadMore,
   isLoadingMore,
+  hasError,
+  onRetry,
 }: {
   profile: CompanyProfile;
   reviews: CompanyReview[];
@@ -97,6 +100,8 @@ function ReviewsPane({
   hasMore: boolean;
   onLoadMore: () => void;
   isLoadingMore: boolean;
+  hasError: boolean;
+  onRetry: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -132,7 +137,16 @@ function ReviewsPane({
           <FiEdit3 aria-hidden /> {t("economy:company.reviews.writeReview")}
         </Button>
       </div>
-      {reviews.length === 0 ? (
+      {hasError && reviews.length === 0 ? (
+        // The reviews list is this tab's whole content, so a failed fetch says
+        // so rather than "no reviews yet", which reads as an employer nobody
+        // has reviewed (DES-22).
+        <LoadErrorState
+          title={t("economy:company.reviews.loadError.title")}
+          description={t("economy:company.reviews.loadError.description")}
+          onRetry={onRetry}
+        />
+      ) : reviews.length === 0 ? (
         <EmptyState
           icon={<FiStar />}
           title={t("economy:company.reviews.empty.title")}
@@ -210,6 +224,8 @@ export function CompanyTabs({
   hasMoreReviews,
   onLoadMoreReviews,
   isLoadingMoreReviews,
+  hasReviewsError,
+  onRetryReviews,
   tab,
   setTab,
 }: {
@@ -221,6 +237,8 @@ export function CompanyTabs({
   hasMoreReviews: boolean;
   onLoadMoreReviews: () => void;
   isLoadingMoreReviews: boolean;
+  hasReviewsError: boolean;
+  onRetryReviews: () => void;
   tab: TabId;
   setTab: (t: TabId) => void;
 }) {
@@ -262,6 +280,8 @@ export function CompanyTabs({
           hasMore={hasMoreReviews}
           onLoadMore={onLoadMoreReviews}
           isLoadingMore={isLoadingMoreReviews}
+          hasError={hasReviewsError}
+          onRetry={onRetryReviews}
         />
       )}
       {tab === "work" && profile.work && <WorkPane work={profile.work} />}

@@ -12,8 +12,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background: rgba(26, 26, 31, 0.62);
-  backdrop-filter: blur(4px);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   padding-block-end: var(--keyboard-inset, 0px);
 }
 @media (min-width: 720px) {
@@ -31,20 +31,20 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--cream);
-  border-radius: 28px 28px 0 0;
+  border-radius: var(--radius-28) var(--radius-28) 0 0;
   padding: 40px 28px max(36px, env(safe-area-inset-bottom));
   box-shadow: 0 -20px 60px -30px rgba(0, 0, 0, 0.5);
 }
 @media (min-width: 720px) {
   .sheet {
-    border-radius: 28px;
+    border-radius: var(--radius-28);
     padding: 44px 44px 40px;
     box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.55);
   }
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -66,7 +66,7 @@
 }
 .lede {
   margin: 14px 0 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.65;
   color: var(--ink-60);
 }
@@ -88,7 +88,7 @@
   gap: 12px;
   padding: 16px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: rgba(var(--line-rgb), 0.03);
 }
 .documentIcon {
@@ -97,23 +97,23 @@
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--line-rgb), 0.08);
   color: var(--accent);
-  font-size: 17px;
+  font-size: var(--text-17);
 }
 .documentBody {
   min-width: 0;
 }
 .documentName {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 650;
   color: var(--text-strong);
 }
 .documentVersions {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -122,7 +122,7 @@
   align-items: center;
   gap: 6px;
   margin-top: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent);
   text-decoration: underline;
@@ -132,10 +132,10 @@
 .error {
   margin: 18px 0 0;
   padding: 12px 14px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--danger-rgb, 200, 60, 60), 0.28);
   background: rgba(var(--danger-rgb, 200, 60, 60), 0.07);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: var(--text-strong);
 }
@@ -159,7 +159,7 @@
   background: none;
   padding: 6px 2px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink-60);
   cursor: pointer;

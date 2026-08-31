@@ -1,12 +1,13 @@
 /* magazine desk stage palette — not in global tokens
    The design's "Deck" violet doesn't match any repo token exactly (repo
-   --violet is a different, more saturated hue). Centralized here once. */
+   --violet is a different, more saturated hue). The violet itself is
+   `--desk-violet`/`--desk-violet-rgb` from styles/tokens/colors.css. */
 .badge {
-  --desk-violet-soft: rgba(92, 62, 146, 0.14);
+  --desk-violet-soft: rgba(var(--desk-violet-rgb), 0.14);
 
   display: inline-flex;
   align-items: center;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;

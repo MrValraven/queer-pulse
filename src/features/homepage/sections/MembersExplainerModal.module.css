@@ -15,7 +15,7 @@
   width: 36px;
   height: 36px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.12);
   color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
@@ -27,7 +27,7 @@
 
 .eyebrow {
   display: inline-block;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -50,7 +50,7 @@
 }
 
 .lede {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 0.82);
   margin: 0 0 24px;
@@ -76,10 +76,10 @@
   width: 38px;
   height: 38px;
   flex: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.12);
   color: var(--accent);
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 .pillarText {
   display: grid;
@@ -87,11 +87,11 @@
 }
 .pillarTitle {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 1);
 }
 .pillarBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.78);
 }

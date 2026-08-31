@@ -38,7 +38,7 @@
   text-align: right;
 }
 .mmIssue {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -46,12 +46,12 @@
 }
 .mmDate {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   margin-top: 4px;
 }
 .mmTagline {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-top: 6px;
   font-style: italic;
@@ -66,7 +66,7 @@
   overflow-x: auto;
 }
 .mnLink {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;

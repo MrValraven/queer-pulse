@@ -30,13 +30,13 @@
 
 .labelName {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 400;
   color: var(--text-strong);
 }
 
 .tiny {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -45,7 +45,7 @@
   margin-top: 4px;
   display: inline-flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   padding: 4px 9px;
   border-radius: var(--radius-tag);
@@ -59,7 +59,7 @@
   margin-top: 4px;
   display: inline-flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   padding: 4px 9px;
   border-radius: var(--radius-tag);
@@ -76,7 +76,7 @@
 
 .slot {
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -97,7 +97,7 @@
 
 .slotTitle {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 400;
   line-height: 1.2;
   color: var(--text-strong);
@@ -105,7 +105,7 @@
 
 .slotEmpty {
   border: 1px dashed rgba(var(--line-rgb), 0.3);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -127,7 +127,7 @@
 }
 
 .slotEmptyLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
 }
 

@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  FadeIn,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminTabs } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEditSuggestions } from "./api/useEditSuggestions";
@@ -23,7 +27,7 @@ const FILTERS: StatusFilter[] = ["pending", "accepted", "dismissed", "all"];
 export function EditSuggestionsSection() {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<StatusFilter>("pending");
-  const { rows, isLoading } = useEditSuggestions();
+  const { rows, isLoading, isError, refetch } = useEditSuggestions();
   const [statusOverrides, setStatusOverrides] = useState<
     Record<string, EditSuggestionStatus>
   >({});
@@ -56,8 +60,17 @@ export function EditSuggestionsSection() {
       </FadeIn>
 
       <FadeIn delay={100}>
+        {/* Without this branch a failed fetch rendered the rows component's
+            "no corrections in this filter" line, which reads as a cleared
+            queue rather than an outage (DES-22). */}
         {isLoading ? (
           <SuggestionRowsSkeleton />
+        ) : isError ? (
+          <LoadErrorState
+            onRetry={() => void refetch()}
+            title={t("admin:editSuggestions.loadError.title")}
+            description={t("admin:editSuggestions.loadError.body")}
+          />
         ) : (
           <EditSuggestionRows
             suggestions={visibleRows}

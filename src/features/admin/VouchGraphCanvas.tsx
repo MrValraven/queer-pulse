@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from "react";
-import { FiMaximize, FiRotateCcw } from "react-icons/fi";
+import { FiMaximize, FiRotateCcw, FiMinus, FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useTrustGraph } from "./trustGraph/useTrustGraph";
 import { TONE } from "./trustGraph/trustGraphModel";
@@ -205,14 +205,14 @@ export function VouchGraphCanvas({
           onClick={() => c.zoomCenter(1.25)}
           aria-label={t("admin:vouchGraph.canvas.zoomIn")}
         >
-          +
+          <FiPlus aria-hidden />
         </button>
         <button
           type="button"
           onClick={() => c.zoomCenter(0.8)}
           aria-label={t("admin:vouchGraph.canvas.zoomOut")}
         >
-          −
+          <FiMinus aria-hidden />
         </button>
         <button
           type="button"

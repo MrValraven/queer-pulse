@@ -6,6 +6,7 @@ import {
   EmptyState,
   FadeIn,
   ImageSlot,
+  LoadErrorState,
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -31,7 +32,8 @@ function MakerCardSkeleton() {
 }
 
 export function ChangemakersPage() {
-  const { profiles, featured, stats, isLoading } = useChangemakers();
+  const { profiles, featured, stats, isLoading, isError, refetch } =
+    useChangemakers();
   const { t } = useTranslation();
 
   const makers = featured
@@ -132,7 +134,10 @@ export function ChangemakersPage() {
 
       <section className={styles.profiles}>
         <div className="wrap">
-          {!loading && makers.length === 0 ? (
+          {!loading && isError ? (
+            // A failed directory read is not "no changemakers yet" (DES-22).
+            <LoadErrorState onRetry={refetch} />
+          ) : !loading && makers.length === 0 ? (
             <EmptyState
               icon={<FiHeart />}
               title={t("community:changemakers.empty.title")}

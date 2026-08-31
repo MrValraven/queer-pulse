@@ -41,6 +41,12 @@ export interface LandingFeaturesResult {
   communities: LandingCommunityFeatureDTO[];
   changemakers: LandingChangemakerFeatureDTO[];
   isLoading: boolean;
+  /** True when the request failed. Each `Live*` section renders nothing on an
+   *  empty slice, so without this an outage and "nothing curated yet" would be
+   *  the same fact to a caller (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request, for a caller that chooses to offer a retry. */
+  refetch: () => void;
 }
 
 /**
@@ -141,5 +147,7 @@ export function useLandingFeaturesPublic(): LandingFeaturesResult {
     communities: query.data?.communities ?? [],
     changemakers: query.data?.changemakers ?? [],
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

@@ -6,7 +6,7 @@
 }
 
 .emptyLine {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin: 20px 0;
 }
@@ -19,7 +19,7 @@
 }
 
 .filterLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -61,13 +61,13 @@
 
 .row:hover {
   border-color: rgba(var(--plum-rgb), 0.28);
-  box-shadow: 0 6px 20px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--shadow-e2);
 }
 
 .row:focus-visible {
   outline: none;
   border-color: rgba(var(--plum-rgb), 0.4);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.18);
+  box-shadow: var(--ring-plum);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -89,24 +89,24 @@
 }
 
 .rowName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--text-strong);
   padding: 2px 8px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   background: rgba(var(--plum-rgb), 0.05);
 }
 
 .rowMeta {
   margin-top: 7px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
 .rowDates {
   margin-top: 3px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -135,7 +135,7 @@
 }
 
 .drawerCodeText {
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--text-strong);
@@ -147,7 +147,7 @@
   justify-content: center;
   width: 30px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink);
@@ -164,7 +164,7 @@
 
 .copyButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.2);
+  box-shadow: var(--ring-plum);
 }
 
 .drawerChips {
@@ -185,7 +185,7 @@
 }
 
 .detailLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -199,12 +199,12 @@
 }
 
 .detailPlain {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
 }
 
 .detailCaption {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -215,7 +215,7 @@
 }
 
 .personName {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 500;
   color: var(--text-strong);
 }
@@ -225,13 +225,13 @@
   flex-direction: column;
   gap: 7px;
   padding: 14px 16px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--plum-rgb), 0.05);
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .messageLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -240,7 +240,7 @@
 
 .messageText {
   margin: 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -260,7 +260,7 @@
 
 .quotaHint {
   margin: 0 0 16px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -280,7 +280,7 @@
   padding: 12px 14px;
   background: rgba(var(--plum-rgb), 0.05);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 
 .quotaRowInfo {
@@ -291,13 +291,13 @@
 }
 
 .quotaRowName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 
 .quotaRowCount {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -314,7 +314,7 @@
 }
 
 .quotaFieldLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -325,18 +325,18 @@
 .quotaInput {
   width: 5.5rem;
   padding: 7px 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-family: inherit;
   color: var(--text-strong);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
 }
 
 .quotaInput:focus-visible {
   outline: none;
   border-color: rgba(var(--plum-rgb), 0.4);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.18);
+  box-shadow: var(--ring-plum);
 }
 
 .quotaClearButton {
@@ -345,7 +345,7 @@
   justify-content: center;
   width: 30px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
   color: var(--ink-60);
@@ -362,7 +362,7 @@
 
 .quotaClearButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.2);
+  box-shadow: var(--ring-plum);
 }
 
 @media (prefers-reduced-motion: reduce) {

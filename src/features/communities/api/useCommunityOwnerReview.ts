@@ -20,6 +20,8 @@ export interface CommunityOwnerReviewResult {
   state: CommunityOwnerReviewStateDTO | null;
   isLoading: boolean;
   isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 /**
@@ -42,12 +44,18 @@ export function useCommunityOwnerReview(
   });
 
   if (demoMode) {
-    return { state: DEMO_STATE, isLoading: false, isError: false };
+    return {
+      state: DEMO_STATE,
+      isLoading: false,
+      isError: false,
+      refetch: () => {},
+    };
   }
   return {
     state: query.data ?? null,
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

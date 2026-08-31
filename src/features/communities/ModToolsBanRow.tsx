@@ -32,11 +32,14 @@ export function BanRow({
   ban,
   onLift,
   onEdit,
+  onOpenRatifications,
   formatDate,
 }: {
   ban: CommunityBanDTO;
   onLift: (memberSlug: string, name: string) => void;
   onEdit: (ban: CommunityBanDTO, name: string) => void;
+  /** Opens the second-signature queue (PRD-25). */
+  onOpenRatifications: () => void;
   formatDate: (iso: string) => string;
 }) {
   const { t } = useTranslation();
@@ -86,7 +89,20 @@ export function BanRow({
               {t("communities:detail.modtools.ban.term.permanent")}
             </Badge>
           )}
+          {/* A 30-day bar with a permanent proposal open on it is a different
+              thing from a settled 30-day bar, and the term badge alone cannot
+              tell them apart (PRD-25). */}
+          {ban.isPendingRatification && (
+            <Badge tone="amber" dot>
+              {t("communities:detail.modtools.ban.term.pendingRatification")}
+            </Badge>
+          )}
         </div>
+        {ban.isPendingRatification && (
+          <p className={styles.hint}>
+            {t("communities:detail.modtools.bans.pendingRatificationNote")}
+          </p>
+        )}
         <p className={styles.reason}>
           {ban.reason
             ? t("communities:detail.modtools.bans.reason", {
@@ -97,6 +113,11 @@ export function BanRow({
         {ban.rule && <CommunityRuleCitation rule={ban.rule} />}
       </div>
       <div className={styles.actions}>
+        {ban.isPendingRatification && (
+          <Button variant="ghost" size="sm" onClick={onOpenRatifications}>
+            {t("communities:detail.modtools.bans.openRatificationCta")}
+          </Button>
+        )}
         {ban.member ? (
           <>
             <Button

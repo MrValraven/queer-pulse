@@ -1,6 +1,6 @@
 .fullPageLink {
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   margin-top: 8px;
 }
 

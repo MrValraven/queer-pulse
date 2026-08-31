@@ -36,7 +36,7 @@
   pointer-events: none;
 }
 .cat {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -60,7 +60,7 @@
   font-weight: 400;
 }
 .lede {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 22px;
@@ -75,10 +75,10 @@
   position: relative;
 }
 .htype {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.7);
   border: 1px solid rgba(var(--cream-rgb), 0.22);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 15px;
 }
 
@@ -152,7 +152,7 @@
   color: var(--accent);
 }
 .stepContent p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   line-height: 1.7;
   margin-bottom: 14px;
@@ -170,7 +170,7 @@
   margin: 14px 0;
 }
 .list li {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   padding-left: 18px;
   position: relative;
@@ -189,12 +189,12 @@
 .tip {
   background: rgba(var(--jade-rgb), 0.08);
   border: 1px solid rgba(var(--jade-rgb), 0.22);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
   margin: 18px 0;
 }
 .tipHead {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -202,7 +202,7 @@
   margin-bottom: 7px;
 }
 .tip p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0;
@@ -216,7 +216,7 @@
 .typeCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
 }
 .tcIcon {
@@ -226,13 +226,13 @@
 .typeCard h4 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
 .typeCard p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -247,7 +247,7 @@
 .sidebarCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 26px;
 }
 .sidebarCard h3 {
@@ -259,7 +259,7 @@
   margin-bottom: 10px;
 }
 .sidebarCard p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -277,23 +277,23 @@
 .spaceRow {
   padding: 10px 12px;
   background: rgba(var(--plum-rgb), 0.03);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 .spaceHood {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);
 }
 .spaceName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
   margin-top: 2px;
 }
 .spaceNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 

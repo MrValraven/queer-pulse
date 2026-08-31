@@ -8,7 +8,7 @@
 
 .group {
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 20px 6px;
   margin: 0 0 18px;
   background: var(--paper);
@@ -16,7 +16,7 @@
 
 .groupLegend {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -30,7 +30,7 @@
 
 .rcLabel {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -54,10 +54,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.25s var(--ease);
@@ -83,7 +83,7 @@
 }
 
 .clausesLegend {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 12px;
@@ -96,15 +96,15 @@
   padding: 4px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .langBtn {
   border: none;
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 18px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   cursor: pointer;
@@ -128,10 +128,10 @@
   align-items: center;
   gap: 8px;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px 8px 12px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: var(--ink-60);
   background: var(--paper);
@@ -160,7 +160,7 @@
   justify-content: center;
   width: 18px;
   height: 18px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
   color: rgba(var(--cream-rgb), 1);
   transition:
@@ -185,7 +185,7 @@
 }
 
 .parties {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   margin: 0 0 28px;
   padding-bottom: 18px;
@@ -203,7 +203,7 @@
 .docHeading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 17px;
+  font-size: var(--text-17);
   margin: 0 0 6px;
   color: var(--ink);
 }
@@ -214,14 +214,14 @@
 }
 
 .docProject {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   margin: 0 0 6px;
   color: var(--ink);
 }
 
 .docBody {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink);
   margin: 0 0 8px;
@@ -263,19 +263,19 @@
 }
 
 .signLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
 }
 
 .signMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   margin-top: 4px;
 }
 
 .footnote {
-  font-size: 11px;
+  font-size: var(--text-11);
   line-height: 1.5;
   color: var(--ink-60);
   margin: 0;

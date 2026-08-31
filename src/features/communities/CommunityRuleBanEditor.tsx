@@ -8,6 +8,7 @@ import type {
   UpdateCommunityBanInput,
 } from "./api/communityBans.api";
 import { useUpdateCommunityBan } from "./api/useCommunityBans";
+import { isNoSecondSignatoryError } from "./api/communityBanRatifications.api";
 import { CommunityRulePicker } from "./CommunityRulePicker";
 import styles from "./CommunityRuleCitation.module.css";
 
@@ -18,9 +19,16 @@ const PERMANENT_VALUE = "permanent";
 const BAN_DAY_OPTIONS = [1, 3, 7, 14, 30, 90, 180, 365] as const;
 
 /**
- * Revise a ban that is already in place: give it an end date, make it
- * permanent again, rewrite what the member was told, or cite the house rule it
+ * Revise a ban that is already in place: give it an end date, ask for it to be
+ * made permanent, rewrite what the member was told, or cite the house rule it
  * rests on.
+ *
+ * Asking for permanence is a REQUEST here (PRD-25), and the copy says so.
+ * Picking Permanent leaves the end date exactly where it is and opens a hold
+ * for a second owner, co-owner or moderator to sign. On a community with
+ * nobody else who could sign, the server refuses outright and the bar keeps
+ * its end date, which is a specific outcome the moderator is told rather than
+ * a generic failure.
  *
  * This is the rung the community ladder was missing. A community ban had no
  * expiry column at all, so a moderator dealing with someone having a bad week
@@ -60,12 +68,21 @@ export function CommunityRuleBanEditor({
   const [reason, setReason] = useState(ban.reason ?? "");
 
   const memberSlug = ban.member?.slug;
+  // A bar with no end date is already permanent: it was signed, or it predates
+  // the requirement. Re-proposing it would ask somebody to sign a decision
+  // already made, and the server refuses it as "already permanent", so the
+  // flag is simply not sent.
+  const isAlreadyPermanent = ban.expiresAt === null;
+  const isProposingPermanent =
+    durationValue === PERMANENT_VALUE && !isAlreadyPermanent;
 
   const submit = () => {
     if (!memberSlug) return;
     const input: UpdateCommunityBanInput = {
       ...(durationValue === PERMANENT_VALUE
-        ? { makePermanent: true }
+        ? isProposingPermanent
+          ? { makePermanent: true }
+          : {}
         : { banDays: Number(durationValue) }),
       ...(ruleIndex === null ? { clearRule: true } : { ruleIndex }),
       reason,
@@ -73,18 +90,27 @@ export function CommunityRuleBanEditor({
     updateBan.mutate(
       { memberSlug, input },
       {
-        onSuccess: () => {
+        onSuccess: (updated) => {
+          // The bar is NOT permanent yet when a proposal was opened: the end
+          // date is exactly where it was, and saying "updated" here would tell
+          // the moderator they did the thing they only asked for.
           showToast(
-            t("communities:detail.modtools.ban.edit.savedToast", {
-              name: memberName,
-            }),
-            "success",
+            updated?.isPendingRatification
+              ? t("communities:detail.modtools.ban.edit.proposedToast", {
+                  name: memberName,
+                })
+              : t("communities:detail.modtools.ban.edit.savedToast", {
+                  name: memberName,
+                }),
+            updated?.isPendingRatification ? "info" : "success",
           );
           onClose();
         },
-        onError: () =>
+        onError: (error) =>
           showToast(
-            t("communities:detail.modtools.ban.edit.errorToast"),
+            isNoSecondSignatoryError(error, isProposingPermanent)
+              ? t("communities:detail.modtools.ban.edit.noSecondSignatoryToast")
+              : t("communities:detail.modtools.ban.edit.errorToast"),
             "error",
           ),
       },
@@ -132,13 +158,26 @@ export function CommunityRuleBanEditor({
               })),
               {
                 value: PERMANENT_VALUE,
-                label: t("communities:detail.modtools.ban.edit.permanent"),
+                label: t(
+                  isAlreadyPermanent
+                    ? "communities:detail.modtools.ban.edit.permanent"
+                    : "communities:detail.modtools.ban.edit.permanentPropose",
+                ),
               },
             ]}
           />
           <p className={styles.editorHint}>
             {t("communities:detail.modtools.ban.edit.durationHint")}
           </p>
+          {/* Picking Permanent no longer makes anything permanent (PRD-25).
+              It asks a second owner, co-owner or moderator to sign, and the
+              end date stays where it is until one of them does. Saying so
+              here, before the click, rather than only in the toast after it. */}
+          {isProposingPermanent && (
+            <p className={styles.editorHint}>
+              {t("communities:detail.modtools.ban.edit.permanentHint")}
+            </p>
+          )}
         </div>
 
         <CommunityRulePicker

@@ -1,3 +1,4 @@
+import { FiCornerDownRight } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -42,6 +43,7 @@ export function FilmmakerHero({ filmmaker, onTip }: FilmmakerHeroProps) {
 
           <div className={styles.actions}>
             <Button variant="primary" onClick={onTip}>
+              <FiCornerDownRight aria-hidden />
               {t("cinema:filmmaker.hero.tipCta", { name: filmmaker.nameEm })}
             </Button>
             <Button variant="ghost" to={routes.studioCalls}>

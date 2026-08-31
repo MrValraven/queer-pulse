@@ -174,6 +174,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Drop every authenticated query (conversations, messages, profile, blocks,
     // the Infinity-staleTime bootstrap) so a shared device cannot render the
     // previous member's data from cache after they sign out.
+    //
+    // Treat this as the backstop. The primary guarantee for cross-member
+    // isolation lives in the keys themselves: `sessionBootstrapQueryKey` (see
+    // `src/shared/api/useSessionBootstrap.ts`) carries the member id, so the
+    // next member reads a different cache entry whether or not this line ever
+    // runs. Keep the clear anyway, for every key that is not yet member-scoped
+    // and for the memory it frees.
     queryClient.clear();
     void postLogout();
   }, [demoMode]);

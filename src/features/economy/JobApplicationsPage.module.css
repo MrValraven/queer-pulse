@@ -13,7 +13,7 @@
   margin-block-end: 28px;
 }
 .eyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -32,7 +32,7 @@
 .sub {
   margin-block-start: 10px;
   max-width: 62ch;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -41,14 +41,14 @@
 .notifyNote {
   margin-block-start: 8px;
   max-width: 62ch;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-40);
 }
 .backLink {
   display: inline-block;
   margin-block-start: 14px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: underline;
@@ -57,7 +57,7 @@
 .backLink:focus-visible {
   outline: 2px solid var(--accent-ink);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 
 .list {
@@ -87,7 +87,7 @@
 .cardName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.2;
   color: var(--text-strong);
 }
@@ -102,11 +102,11 @@
 }
 .cardWhen {
   margin-block-start: 3px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .cardNote {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.65;
   color: var(--ink);
   text-wrap: pretty;
@@ -118,7 +118,7 @@
   gap: 12px;
   padding: 14px 16px;
   background: var(--cream);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 .answer {
   display: flex;
@@ -126,14 +126,14 @@
   gap: 4px;
 }
 .answerQuestion {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--ink-60);
 }
 .answerText {
   margin: 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.6;
   color: var(--ink);
   text-wrap: pretty;
@@ -142,14 +142,14 @@
 .cardError {
   padding: 10px 14px;
   background: rgba(var(--accent-rgb), 0.09);
-  border-radius: 12px;
-  font-size: 13.5px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-13-5);
   line-height: 1.55;
   font-weight: 600;
   color: var(--accent-ink);
 }
 .cardFinal {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 

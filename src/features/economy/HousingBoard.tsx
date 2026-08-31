@@ -3,6 +3,7 @@ import { FiArrowRight, FiList, FiMap } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import {
   Button,
+  LoadErrorState,
   Outro,
   Reveal,
   SubpageIndex,
@@ -61,6 +62,8 @@ export function HousingBoard() {
   const {
     listings: visible,
     isFetching,
+    isError: hasListingsError,
+    refetch: refetchListings,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -166,7 +169,15 @@ export function HousingBoard() {
             </div>
           </div>
 
-          {view === "list" ? (
+          {hasListingsError && !loading ? (
+            // The directory is this page's main content, so a failed fetch says
+            // so instead of "nothing matches your filters" (DES-22).
+            <LoadErrorState
+              title={t("economy:housing.loadError.title")}
+              description={t("economy:housing.loadError.description")}
+              onRetry={() => void refetchListings()}
+            />
+          ) : view === "list" ? (
             <HousingListingGrid
               loading={loading}
               visible={visible}

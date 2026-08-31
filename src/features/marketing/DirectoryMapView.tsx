@@ -10,11 +10,18 @@ import s from "./localMap.module.css";
 export function DirectoryMapView({
   places,
   loading,
+  isError = false,
+  onRetry,
   hasActiveFilters,
   onClearFilters,
 }: {
   places: LocalPlace[];
   loading: boolean;
+  /** True when the directory read failed (DES-25), passed through to the
+   *  sidebar so an outage never reads as an empty map. */
+  isError?: boolean;
+  /** Re-run the failed read, for the sidebar's retry. */
+  onRetry?: () => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
 }) {
@@ -50,6 +57,8 @@ export function DirectoryMapView({
         <DirectoryMapSidebar
           {...state}
           loading={loading}
+          isError={isError}
+          onRetry={onRetry}
           hasActiveFilters={hasActiveFilters}
           onClearFilters={onClearFilters}
         />

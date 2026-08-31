@@ -40,7 +40,7 @@
   z-index: 1;
 }
 .breadcrumb {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 22px;
@@ -61,9 +61,9 @@
   gap: 7px;
   background: rgba(var(--jade-rgb), 0.2);
   border: 1px solid rgba(var(--jade-rgb), 0.35);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 13px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -93,7 +93,7 @@
   line-height: 0.97;
 }
 .heroSub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.58);
   margin-bottom: 20px;
   max-width: 52ch;
@@ -104,7 +104,7 @@
   gap: 6px;
   flex-wrap: wrap;
   align-items: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.5);
   font-weight: 500;
   margin-bottom: 28px;
@@ -138,12 +138,12 @@
 }
 .heroAv:focus-visible {
   transform: translateY(-3px);
-  z-index: 20;
+  z-index: var(--z-raised);
 }
 @media (hover: hover) {
   .heroAv:hover {
     transform: translateY(-3px);
-    z-index: 20;
+    z-index: var(--z-raised);
   }
 }
 .heroAvTip {
@@ -154,18 +154,18 @@
   background: var(--cream);
   color: var(--text-strong);
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   pointer-events: none;
   opacity: 0;
   transition:
     opacity 0.18s var(--ease),
     transform 0.18s var(--ease);
-  z-index: 30;
+  z-index: var(--z-popover);
 }
 .heroAvTip::after {
   content: "";
@@ -195,7 +195,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 600;
   overflow: hidden;
   flex: none;
@@ -206,13 +206,13 @@
   object-fit: cover;
 }
 .stripNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.5);
   margin-left: 10px;
 }
 
 .body {
-  padding: 52px 0 100px;
+  padding: 52px 0 var(--section-y);
   background: var(--cream);
 }
 .layout {
@@ -248,7 +248,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin: -8px 0 18px;
 }
@@ -259,14 +259,14 @@
 }
 
 .aboutP {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   line-height: 1.75;
   max-width: 60ch;
   margin-bottom: 14px;
 }
 .secLbl {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -288,7 +288,7 @@
   margin-top: 7px;
 }
 .bullet span {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
 }
@@ -296,7 +296,7 @@
 .gCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
   display: flex;
   gap: 16px;
@@ -326,7 +326,7 @@
   letter-spacing: -0.02em;
 }
 .gDm {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -334,13 +334,13 @@
   margin-top: 3px;
 }
 .gTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 3px;
 }
 .gMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .tagRow {
@@ -348,14 +348,14 @@
 }
 .tag {
   display: inline-block;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   /* --line-rgb flips to light channels in dark mode; --plum-rgb does not, so a
      plum tint at 6% vanished on the dark page. This keeps a legible chip fill
      in both themes. */
   background: rgba(var(--line-rgb), 0.08);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 6px 12px;
   color: var(--ink-60);
   margin: 4px 4px 0 0;
@@ -374,7 +374,7 @@
 .mCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 14px;
   text-align: center;
   text-decoration: none;
@@ -386,7 +386,7 @@
 @media (hover: hover) {
   .mCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 22px -14px rgba(var(--plum-rgb), 0.3);
+    box-shadow: var(--shadow-lift);
   }
 }
 .mAv {
@@ -398,7 +398,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--text-16);
   margin: 0 auto 10px;
   overflow: hidden;
 }
@@ -408,18 +408,18 @@
   object-fit: cover;
 }
 .mName {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 3px;
 }
 .mRole {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   line-height: 1.35;
 }
 .showing {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-top: 18px;
   text-align: center;
@@ -428,7 +428,7 @@
 .thread {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   margin-bottom: 14px;
   overflow: hidden;
 }
@@ -470,10 +470,10 @@
   width: 34px;
   min-width: 34px;
   height: 34px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 @media (hover: hover) {
   .vbtn:hover {
@@ -487,7 +487,7 @@
   border-color: var(--accent);
 }
 .vnum {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--ink-60);
 }
@@ -498,7 +498,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -512,7 +512,7 @@
 .thTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
@@ -543,7 +543,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   flex-wrap: wrap;
 }
@@ -554,7 +554,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
+  font-size: var(--text-8);
   font-weight: 700;
   flex: none;
 }
@@ -564,7 +564,7 @@
 }
 .thReplies {
   margin-left: auto;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -573,7 +573,7 @@
   padding: 0 22px;
 }
 .postText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.7;
   padding: 16px 0 12px;
@@ -591,19 +591,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: var(--text-9);
   font-weight: 700;
   flex: none;
   margin-top: 2px;
 }
 .rName {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 2px;
 }
 .rText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -622,10 +622,10 @@
 .replyTa {
   flex: 1;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   padding: 9px 13px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   resize: none;
   min-height: 38px;
   color: var(--ink);
@@ -647,7 +647,7 @@
 .newPost {
   background: rgba(var(--line-rgb), 0.05);
   border: 1.5px dashed rgba(var(--line-rgb), 0.14);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 20px;
   display: flex;
   gap: 12px;
@@ -657,7 +657,7 @@
 .npTa {
   flex: 1;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   border: none;
   background: transparent;
   outline: none;
@@ -674,11 +674,11 @@
 .sbC {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px;
 }
 .sbLbl {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -694,11 +694,11 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   margin-bottom: 10px;
 }
 .sbOrgName {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 4px;
@@ -713,18 +713,18 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.1);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 3px 8px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 9px;
 }
 .sbOrgBio {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 14px;
@@ -735,7 +735,7 @@
 }
 .sbEvDate {
   background: var(--plum);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 16px;
   text-align: center;
   margin-bottom: 12px;
@@ -766,7 +766,7 @@
   position: relative;
 }
 .sbEDm {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -775,13 +775,13 @@
   position: relative;
 }
 .sbETitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 3px;
 }
 .sbEMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-bottom: 8px;
 }
@@ -789,7 +789,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--jade);
 }
@@ -813,22 +813,22 @@
 .sbRelIc {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--text-13);
   flex: none;
 }
 .sbRelName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .sbRelCt {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -865,7 +865,7 @@
   width: 100%;
   padding: 10px 12px;
   border: 1px solid rgba(var(--line-rgb), 0.18);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--cream);
   color: var(--ink);
   font: inherit;

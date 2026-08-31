@@ -63,11 +63,14 @@ function renderModal(
   return { onClose };
 }
 
-/** Pick a reason (labels are plain English from REASON_LABELS, present on first
- *  render) then submit (the CTA label is lazy i18n, so await it). */
+/** Pick a reason, then submit. Both labels are lazy i18n now, so both are
+ *  awaited: the reason labels come from `useReportReasons`, which renders the
+ *  LOCAL TRANSLATED label (`safety:reason.*`) rather than the plain-English
+ *  `REASON_LABELS` this modal used to read, so they arrive with the `safety`
+ *  catalog rather than on first render. */
 async function pickReasonAndSubmit() {
   fireEvent.click(
-    screen.getByRole("radio", { name: "Spam or self-promotion" }),
+    await screen.findByRole("radio", { name: "Spam or self-promotion" }),
   );
   fireEvent.click(await screen.findByRole("button", { name: "Send report" }));
 }

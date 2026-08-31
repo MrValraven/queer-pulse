@@ -29,7 +29,7 @@
   z-index: 1;
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -52,7 +52,7 @@
   color: var(--accent);
 }
 .dek {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   line-height: 1.7;
   max-width: 54ch;
@@ -62,13 +62,13 @@
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .metaRow b {
   color: var(--text-strong);
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 400;
   letter-spacing: -0.01em;
   display: block;
@@ -123,15 +123,15 @@
   width: 100%;
   aspect-ratio: 3 / 4;
   background: rgba(var(--cream-rgb), 0.08);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   display: flex;
   align-items: flex-end;
   padding: 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.6);
 }
 .curEyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -165,7 +165,7 @@
   color: var(--accent);
 }
 .curDek {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   max-width: 50ch;
@@ -174,7 +174,7 @@
 .curMeta {
   display: flex;
   gap: 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.6);
   margin-bottom: 24px;
   flex-wrap: wrap;
@@ -240,12 +240,12 @@
 }
 @media (hover: hover) {
   .tile:hover .tileCover {
-    box-shadow: 0 24px 50px -28px rgba(var(--plum-rgb), 0.5);
+    box-shadow: var(--shadow-lift);
   }
 }
 .tileCover {
   aspect-ratio: 3 / 4;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
   margin-bottom: 16px;
   transition: box-shadow 0.3s var(--ease);
@@ -253,7 +253,7 @@
   display: flex;
   align-items: flex-end;
   padding: 14px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .tintA {
@@ -269,7 +269,7 @@
   background: rgba(var(--accent-rgb), 0.18);
 }
 .tileNum {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -293,7 +293,7 @@
   color: var(--accent);
 }
 .tileDate {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 
@@ -356,14 +356,14 @@
   color: var(--accent);
 }
 .listDek {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-top: 4px;
   line-height: 1.5;
   max-width: 60ch;
 }
 .listMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   text-align: right;
   white-space: nowrap;

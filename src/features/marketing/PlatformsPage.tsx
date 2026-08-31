@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -342,7 +342,9 @@ export function PlatformsPage() {
                                 <p className={s.pDesc}>
                                   {platform.description}
                                 </p>
-                                <div className={s.pUrl}>↗ {platform.url}</div>
+                                <div className={s.pUrl}>
+                                  <FiArrowUpRight aria-hidden /> {platform.url}
+                                </div>
                               </div>
                             </a>
                           </FadeIn>

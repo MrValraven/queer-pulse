@@ -1,8 +1,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(var(--plum-rgb), 0.45);
-  backdrop-filter: blur(3px);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,7 @@
   letter-spacing: -0.02em;
 }
 .dialogSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 6px 0 18px;
@@ -62,7 +62,7 @@
 
 .fieldLabel {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -80,12 +80,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 13px;
   cursor: pointer;
   transition:
@@ -107,10 +107,10 @@
 .input {
   width: 100%;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 14px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   outline: none;
@@ -155,7 +155,7 @@
   color: var(--accent);
 }
 .confirmBody {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   max-width: 38ch;

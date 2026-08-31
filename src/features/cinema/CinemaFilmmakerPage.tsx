@@ -2,7 +2,12 @@ import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
-import { FiArrowLeft, FiArrowRight, FiFilm } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiFilm,
+  FiChevronRight,
+} from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, EmptyState, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -50,7 +55,9 @@ function DemoCinemaFilmmakerPage() {
         <div className="wrap">
           <div className={styles.crumbRow}>
             <Link to={routes.cinema}>{t("cinema:brand.tag")}</Link>
-            <span className={styles.sep}>›</span>
+            <span className={styles.sep} aria-hidden>
+              <FiChevronRight />
+            </span>
             <span className={styles.cur}>
               {filmmaker.namePre}
               {filmmaker.nameEm}

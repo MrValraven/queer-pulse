@@ -13,9 +13,10 @@ export const ADMIN_STAFF_ROSTER_KEY = "admin-staff-roster";
 export const ADMIN_STAFF_GRANTS_KEY = "admin-staff-grants";
 
 /**
- * Every moderator/admin on the platform, for the admin staff-roster page.
- * Same underlying data `useStaffMap` badges with — fetched here as the raw
- * rows since the page renders every one of them, not a single-slug lookup.
+ * Every moderator and admin on the platform, plus every member holding a
+ * badge-earning grant, for the admin staff-roster page. Same underlying data
+ * `useStaffMap` badges with, fetched here as the raw rows since the page
+ * renders every one of them rather than a single-slug lookup.
  */
 export function useAdminStaffRoster() {
   const { demoMode } = useDemoMode();
@@ -27,11 +28,12 @@ export function useAdminStaffRoster() {
 }
 
 /**
- * Everyone holding an additive staff grant, for the same page. Separate from
- * the roster above because it answers a different question from a different
- * endpoint: the roster is the account tiers (`/platform/staff`), this is the
- * delegated domains (`/admin/members/staff-roles`), and a grant holder need
- * not be on the roster at all.
+ * Everyone holding an additive staff grant, for the same page. Still separate
+ * from the roster above, because it answers a wider question from an admin-only
+ * endpoint: the roster carries only the grants that earn a public badge, while
+ * this carries EVERY grant a person holds, including the ones deliberately left
+ * unbadged (`magazine_writer`, `partnerships`), which the console still has to
+ * administer.
  */
 export function useAdminStaffRoleHolders() {
   const { demoMode } = useDemoMode();

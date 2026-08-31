@@ -69,6 +69,7 @@ export function usePieceMessages(pieceId: string, side: PieceThreadSide) {
     messages: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

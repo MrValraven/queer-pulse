@@ -9,7 +9,13 @@
 # Sources of truth:
 #   - public-vs-gated: GATED_PATTERNS in src/app/authGate.ts
 #   - the indexed list: QUIET_PUBLIC_PATHS in scripts/publicPaths.mjs
-# Keep the Disallow list below in sync with both.
+#
+# This file is static and cannot import either, so `scripts/check-robots.mjs`
+# holds it to them: it runs in the build gates (`pnpm check:robots` to run it
+# alone) and fails the build when a gated prefix is missing from the Disallow
+# list, when a path the sitemap advertises is blocked, or when a Disallow blocks
+# a page authGate calls public. A deliberate block of a public page (the
+# de-indexed surfaces below) is declared in ACCEPTED_EXTRA_DISALLOWS there.
 #
 # See docs/superpowers/specs/2026-07-20-seo-and-ai-discoverability-design.md
 
@@ -49,12 +55,30 @@ Disallow: /forum
 Disallow: /thread
 Disallow: /changemaker
 Disallow: /changemakers
-Disallow: /coming-out
 Disallow: /parents
 Disallow: /caregivers
 Disallow: /vouch
 Disallow: /qr-scanner
 Disallow: /magazine/submit-story
+Disallow: /magazine/apply-to-write
+# The editorial desk, the writer workspace and the pitch tracker. Blanket
+# `Disallow: /magazine` further down covers these today; they are named here so
+# they stay blocked on the day the magazine stops being de-indexed.
+Disallow: /magazine/editor
+Disallow: /magazine/writer
+Disallow: /magazine/pitches
+# Organiser-side volunteer surfaces. The listing (/about/volunteer) and each
+# opportunity's detail page stay public; posting, editing and triaging do not.
+# The `*` in the edit rule is the widely supported wildcard extension: a crawler
+# without it simply matches nothing, which is the behaviour before this line.
+Disallow: /about/volunteer/post
+Disallow: /about/volunteer/manage
+Disallow: /about/volunteer/opportunity/*/edit
+# Block & mute is account settings living under the public /safety prefix.
+Disallow: /safety/block-mute
+# The one-time onboarding wizard and its legacy alias.
+Disallow: /auth/onboarding
+Disallow: /auth/welcome
 Disallow: /local/directory
 # Individual therapist profiles (/resources/therapists/:id) are still MOCK
 # fixture data. Indexing fabricated clinician listings on a health-resource
@@ -62,6 +86,11 @@ Disallow: /local/directory
 # when the directory is backed by real, consented practitioner data.
 Disallow: /resources/therapists
 Disallow: /local/map
+Disallow: /local/venue
+Disallow: /local/housing
+# ...except the housing co-ops, which authGate keeps public (their backend
+# browse is @Public). A longer Allow beats a shorter Disallow.
+Allow: /local/housing/coop
 Disallow: /business-directory
 Disallow: /spaces-map
 Disallow: /cinema/watch
@@ -147,11 +176,20 @@ Disallow: /forum
 Disallow: /thread
 Disallow: /changemaker
 Disallow: /changemakers
-Disallow: /coming-out
 Disallow: /parents
 Disallow: /caregivers
 Disallow: /vouch
 Disallow: /qr-scanner
+# Organiser-side volunteer surfaces (the listing and each opportunity's detail
+# page stay public).
+Disallow: /about/volunteer/post
+Disallow: /about/volunteer/manage
+Disallow: /about/volunteer/opportunity/*/edit
+# Block & mute is account settings living under the public /safety prefix.
+Disallow: /safety/block-mute
+# The one-time onboarding wizard and its legacy alias.
+Disallow: /auth/onboarding
+Disallow: /auth/welcome
 Disallow: /local/directory
 # Individual therapist profiles (/resources/therapists/:id) are still MOCK
 # fixture data. Indexing fabricated clinician listings on a health-resource
@@ -159,6 +197,11 @@ Disallow: /local/directory
 # when the directory is backed by real, consented practitioner data.
 Disallow: /resources/therapists
 Disallow: /local/map
+Disallow: /local/venue
+Disallow: /local/housing
+# ...except the housing co-ops, which authGate keeps public (their backend
+# browse is @Public). A longer Allow beats a shorter Disallow.
+Allow: /local/housing/coop
 Disallow: /business-directory
 Disallow: /spaces-map
 Disallow: /magazine

@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  FadeIn,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminSafeSpaceRows } from "./AdminSafeSpaceRows";
 import { AdminSafeSpaceModal } from "./AdminSafeSpaceModal";
 import { useAdminSafeSpaces } from "./api/useAdminSafeSpaces";
@@ -21,7 +26,8 @@ import styles from "./AdminSafeSpacesPage.module.css";
  * queue next door.
  */
 export function AdminSafeSpaceListingsPanel() {
-  const { candidates, isLoading } = useAdminSafeSpaces();
+  const { t } = useTranslation();
+  const { candidates, isLoading, isError, refetch } = useAdminSafeSpaces();
   const [editingCandidate, setEditingCandidate] =
     useState<SafeSpaceCandidate | null>(null);
   // Demo mode's mutation resolves without ever touching the static fixture
@@ -46,8 +52,16 @@ export function AdminSafeSpaceListingsPanel() {
   return (
     <>
       <FadeIn delay={80}>
+        {/* Without this branch the rows component's "no listings" line stood
+            in for a failed fetch (DES-22). */}
         {isLoading ? (
           <SafeSpaceRowsSkeleton />
+        ) : isError ? (
+          <LoadErrorState
+            onRetry={() => void refetch()}
+            title={t("admin:adminSafeSpaces.loadError.title")}
+            description={t("admin:adminSafeSpaces.loadError.body")}
+          />
         ) : (
           <AdminSafeSpaceRows
             candidates={visibleCandidates}

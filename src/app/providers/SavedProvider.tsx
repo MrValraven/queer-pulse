@@ -47,7 +47,7 @@ export function SavedProvider({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
 
   // Live-only: hydrate the store from the session bootstrap payload. Shares the
-  // one ["bootstrap"] request mounted by SessionBootstrapProvider — this hook
+  // one session-bootstrap request mounted by SessionBootstrapProvider: this hook
   // call adds a subscriber, not a request. Demo mode and logged-out both leave
   // the query disabled, so this never fires there.
   const { data: bootstrap, isError: bootstrapErrored } = useSessionBootstrap();

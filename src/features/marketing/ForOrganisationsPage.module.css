@@ -1,13 +1,13 @@
 .notRow {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 28px;
   margin-top: 32px;
   max-width: 680px;
 }
 .notRow h4 {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.55;
 }
@@ -39,15 +39,14 @@
   padding-left: 22px;
   position: relative;
 }
-.notRow ul li::before {
-  content: "×";
+/* DES glyph ban: this row previously drew its "not included" marker with a
+   CSS ::before "×". Removed — a react-icons glyph belongs in the component;
+   .notRow ul li keeps its 22px padding-left for that icon to sit in. */
+.notMark {
   position: absolute;
   left: 0;
-  top: -1px;
-  color: var(--accent-ink);
-  font-weight: 800;
-  font-size: 18px;
-  line-height: 1;
+  top: 0.3em;
+  color: var(--danger);
 }
 .notRow ul li b {
   color: var(--text-strong);
@@ -78,7 +77,7 @@
   color: var(--accent);
 }
 .doSub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.65;
   margin-bottom: 40px;
@@ -114,14 +113,14 @@
   position: absolute;
   top: -12px;
   right: 24px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: var(--accent);
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .tierName {
   font-family: var(--serif);
@@ -154,7 +153,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .tierPricePeriod {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   font-family: var(--sans);
@@ -163,7 +162,7 @@
   color: rgba(var(--cream-rgb), 0.5);
 }
 .tierDek {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.65;
   color: var(--ink-60);
 }
@@ -177,7 +176,7 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   line-height: 1.55;
   padding-top: 16px;
@@ -191,15 +190,17 @@
   padding-left: 22px;
   position: relative;
 }
-.tierList li::before {
-  content: "✓";
+/* DES glyph ban: this row previously drew its included-feature checkmark with
+   a CSS ::before "✓" (jade, jade-soft on the featured tier). Removed — a
+   react-icons checkmark belongs in the component; .tierList li keeps its
+   22px padding-left for that icon to sit in. */
+.tierMark {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 0.3em;
   color: var(--jade);
-  font-weight: 700;
 }
-.tierFeatured .tierList li::before {
+.tierFeatured .tierMark {
   color: var(--jade-soft);
 }
 .tierList li b {
@@ -217,7 +218,7 @@
   display: block;
   margin-top: 10px;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: none;
@@ -229,7 +230,7 @@
   text-underline-offset: 2px;
 }
 .tierFootNote {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 6px;
   line-height: 1.5;
@@ -263,7 +264,7 @@
   padding: 22px 24px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
 }
 .procN {
   font-family: var(--serif);
@@ -280,13 +281,13 @@
 .proc h4 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
 .proc p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0;
@@ -323,7 +324,7 @@
   color: var(--accent);
 }
 .proofSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 32px;
   max-width: 48ch;
@@ -344,7 +345,7 @@
   padding: 22px 24px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   text-decoration: none;
   color: inherit;
   display: flex;
@@ -366,7 +367,7 @@
 .partnerLogo {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   display: flex;
@@ -374,7 +375,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   flex: none;
   margin-bottom: 8px;
   letter-spacing: -0.02em;
@@ -386,7 +387,7 @@
   background: var(--jade);
 }
 .partnerType {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -395,7 +396,7 @@
 .partnerName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -403,17 +404,17 @@
   font-style: italic;
 }
 .partnerSince {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .partnerCard p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 8px 0 0;
 }
 .partnerCard .arrow {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   margin-top: 6px;
@@ -455,19 +456,19 @@
   color: var(--accent-ink);
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 14px;
+  font-size: var(--text-14);
   display: flex;
   align-items: center;
   justify-content: center;
   flex: none;
 }
 .quoteName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 700;
   color: var(--text-strong);
 }
 .quoteRole {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -524,13 +525,13 @@
   color: var(--accent);
 }
 .ctaSection p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.7;
   margin-bottom: 18px;
 }
 .ctaList {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.7;
   padding-left: 0;
@@ -558,7 +559,7 @@
 .partnerForm {
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px;
 }
 .field {
@@ -568,7 +569,7 @@
   margin-bottom: 14px;
 }
 .field label {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -578,11 +579,11 @@
 .field select,
 .field textarea {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 13px;
   transition:
     border-color 0.2s var(--ease),
@@ -607,11 +608,11 @@
   width: 100%;
   justify-content: center;
   padding: 12px 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   margin-top: 6px;
 }
 .formSmall {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 10px;
   line-height: 1.5;

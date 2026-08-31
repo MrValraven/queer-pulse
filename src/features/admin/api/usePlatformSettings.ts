@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import type { Paginated } from "../../../shared/api/refs";
 import {
   DEMO_PLATFORM_SETTINGS,
   DEMO_PLATFORM_SETTING_CHANGES,
@@ -34,10 +35,18 @@ export function usePlatformSettings() {
   });
 }
 
-/** The audit trail, newest first. */
+/**
+ * The audit trail, newest first, as the `Paginated` envelope the endpoint now
+ * answers with (ENG-50). The envelope, not just its `items`: `total` is the
+ * whole row count, and it is the only thing that lets the History tab say
+ * whether what an admin is looking at is all of it. A bare array left them
+ * unable to tell a last page from a truncated one, which on an audit trail is
+ * the difference between "nobody else touched this" and "somebody did and you
+ * cannot see it".
+ */
 export function usePlatformSettingChanges() {
   const { demoMode } = useDemoMode();
-  return useQuery<PlatformSettingChangeDTO[]>({
+  return useQuery<Paginated<PlatformSettingChangeDTO>>({
     queryKey: [CHANGES_KEY, demoMode],
     initialData: demoMode ? DEMO_PLATFORM_SETTING_CHANGES : undefined,
     queryFn: async () => {

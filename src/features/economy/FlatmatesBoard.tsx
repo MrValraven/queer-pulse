@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, FeatureHelp, Outro } from "../../shared/components/ui";
+import {
+  Button,
+  FeatureHelp,
+  LoadErrorState,
+  Outro,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
@@ -49,6 +54,8 @@ export function FlatmatesBoard() {
   const {
     profiles: source,
     isFetching,
+    isError: hasProfilesError,
+    refetch: refetchProfiles,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -96,6 +103,23 @@ export function FlatmatesBoard() {
     setMovein("all");
     setTags([]);
   };
+
+  // A failed fetch leaves `source` empty, which the board would otherwise read
+  // as "nobody has posted a profile yet" and answer with the post-your-profile
+  // CTA. Say the board could not load, and offer a retry instead (DES-22).
+  if (hasProfilesError && !loading) {
+    return (
+      <div className={styles.body}>
+        <div className="wrap">
+          <LoadErrorState
+            title={t("economy:flatmates.loadError.title")}
+            description={t("economy:flatmates.loadError.description")}
+            onRetry={() => void refetchProfiles()}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -15,10 +15,17 @@ import { ModToolsOverview } from "./ModToolsOverview";
 import { ModToolsInvites } from "./ModToolsInvites";
 import { ModToolsBans } from "./ModToolsBans";
 import { ModToolsSupport } from "./ModToolsSupport";
+import { ModToolsGovernanceLog } from "./ModToolsGovernanceLog";
+import { ModToolsBanRatifications } from "./ModToolsBanRatifications";
+import { CommunityRemovalOutcomeDialog } from "./CommunityRemovalOutcomeDialog";
 import { ModToolsConfirmDialog } from "./ModToolsConfirmDialog";
 import { CommunityDangerZone } from "./CommunityDangerZone";
 import { useModToolsActions } from "./useModToolsActions";
 import { useCommunitySupportOffers } from "./api/useCommunitySupportOffers";
+import {
+  signableRatificationCount,
+  useCommunityBanRatifications,
+} from "./api/useCommunityBanRatifications";
 import { MOD_NAV, isModSection, type ModSection } from "./modToolsNav.data";
 import styles from "./ModToolsShell.module.css";
 
@@ -64,6 +71,13 @@ export function ModToolsTab({
   const { openCount: openSupportCount } = useCommunitySupportOffers(
     living.slug,
   );
+  // Same reasoning for the permanent bars waiting on a second signature
+  // (PRD-25), and one more reason on top: a hold lapses on its own after a
+  // fixed window and settles the bar at the fallback term, so a queue nobody
+  // is told about is a decision made by nobody. Same query key the pane uses,
+  // so this is one request rather than two.
+  const { data: ratificationQueue } = useCommunityBanRatifications(living.slug);
+  const signableRatifications = signableRatificationCount(ratificationQueue);
 
   // The open section lives in the URL beside the tab (?tab=modtools&mod=…),
   // so a pane is deep-linkable, survives a refresh, and the back button walks
@@ -85,9 +99,15 @@ export function ModToolsTab({
     );
 
   const counts: Partial<Record<ModSection, number>> = {
-    requests: actions.requests.length,
+    // The whole pending queue, not just the loaded page (ENG-41): a rail badge
+    // reading "20" on a 60-deep queue is a worse signal than no badge at all.
+    requests: actions.requestTotal,
     reports: actions.reports.length,
     support: openSupportCount,
+    // Only what THIS viewer can sign. A proposer cannot sign their own, and a
+    // badge on work only somebody else can do is a number they can never
+    // clear.
+    ratifications: signableRatifications,
   };
 
   return (
@@ -132,6 +152,20 @@ export function ModToolsTab({
         </div>
       </div>
 
+      {/* What the removal actually did, when it is not what the moderator
+          asked for: a permanent bar waiting on a second signature, or one this
+          community can never have because nobody else could sign it. */}
+      {actions.removalOutcome && (
+        <CommunityRemovalOutcomeDialog
+          outcome={actions.removalOutcome}
+          onClose={actions.dismissRemovalOutcome}
+          onOpenRatifications={() => {
+            actions.dismissRemovalOutcome();
+            openSection("ratifications");
+          }}
+        />
+      )}
+
       {actions.confirming && (
         <ModToolsConfirmDialog
           confirming={actions.confirming}
@@ -175,7 +209,7 @@ function ModToolsPane({
     return (
       <ModToolsOverview
         slug={living.slug}
-        requestCount={actions.requests.length}
+        requestCount={actions.requestTotal}
         reportCount={actions.reports.length}
         supportCount={supportCount}
         onOpenSection={onOpenSection}
@@ -186,7 +220,10 @@ function ModToolsPane({
     return (
       <ModJoinRequests
         requests={actions.requests}
+        slug={living.slug}
+        total={actions.requestTotal}
         state={actions.requestsState}
+        paging={actions.requestsPaging}
         onResolve={actions.resolveRequest}
         isPending={actions.isRequestPending}
       />
@@ -227,15 +264,24 @@ function ModToolsPane({
         />
         {/* A ban is a member's state, so it answers the same question this
             pane is already open to answer. */}
-        <ModToolsBans slug={living.slug} />
+        <ModToolsBans
+          slug={living.slug}
+          onOpenRatifications={() => onOpenSection("ratifications")}
+        />
       </>
     );
+  }
+  if (section === "ratifications") {
+    return <ModToolsBanRatifications slug={living.slug} />;
   }
   if (section === "invites") {
     return <ModToolsInvites slug={living.slug} />;
   }
   if (section === "support") {
     return <ModToolsSupport slug={living.slug} />;
+  }
+  if (section === "history") {
+    return <ModToolsGovernanceLog slug={living.slug} viewerRole={role} />;
   }
   if (section === "card") {
     return (

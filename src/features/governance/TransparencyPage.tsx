@@ -17,6 +17,7 @@ import { useTransparencyReport } from "./api/useTransparencyReport";
 import {
   ActionsSection,
   AppealsSection,
+  LegalRequestsSection,
   MethodSection,
   ReportsSection,
   TimingSection,
@@ -43,7 +44,8 @@ const PERIOD_SELECTORS: readonly TransparencyPeriodSelector[] = [
 export function TransparencyPage() {
   const { t } = useTranslation();
   const [period, setPeriod] = useState<TransparencyPeriodSelector>("current");
-  const { report, isLoading, hasError, retry } = useTransparencyReport(period);
+  const { report, legalRequests, isLoading, hasError, retry } =
+    useTransparencyReport(period);
   const pageTitle = t("governance:transparency.meta.title");
   const pageDescription = t("governance:transparency.meta.description");
 
@@ -129,6 +131,11 @@ export function TransparencyPage() {
             <TimingSection report={report} />
             <ActionsSection report={report} />
             <AppealsSection report={report} />
+            <LegalRequestsSection
+              report={report}
+              legalRequests={legalRequests}
+              onRetry={retry}
+            />
             <MethodSection report={report} />
           </div>
           <div className={styles.footerLinks}>

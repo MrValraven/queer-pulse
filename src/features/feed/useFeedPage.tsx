@@ -234,6 +234,8 @@ export function useFeedPage() {
       tint: connection.tint,
       src: connection.photo,
     })),
+    hasFailed: connectionsList.isError,
+    onRetry: connectionsList.refetch,
   };
 
   const selectTab = (tab: FeedTab) => {

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiEdit2 } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useEditorDecks, type EditorDeckRow } from "./api/useEditorDecks";
@@ -10,7 +10,7 @@ import styles from "./EditorDashboardPage.module.css";
 /** The "Decks" section: interactive slide-deck pieces, separate from the prose pipeline. */
 export function EditorDecksSection() {
   const { t } = useTranslation();
-  const { decks, isLoading } = useEditorDecks();
+  const { decks, isLoading, isError, refetch } = useEditorDecks();
 
   return (
     <section className={styles.sec}>
@@ -21,7 +21,7 @@ export function EditorDecksSection() {
         </span>
       </h2>
       <div className={styles.pieces}>
-        {decks.length > 0 && (
+        {!isError && decks.length > 0 && (
           <div className={styles.pieceHead}>
             <span>{t("magazine:editor.decks.columnTitle")}</span>
             <span>{t("magazine:editor.decks.columnSection")}</span>
@@ -29,7 +29,9 @@ export function EditorDecksSection() {
             <span />
           </div>
         )}
-        {!isLoading && decks.length === 0 ? (
+        {isError ? (
+          <LoadErrorState onRetry={refetch} compact />
+        ) : !isLoading && decks.length === 0 ? (
           <div className={styles.empty}>
             <div className={styles.emptyMark} />
             <b>{t("magazine:editor.decks.emptyTitle")}</b>

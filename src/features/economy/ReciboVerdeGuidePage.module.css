@@ -38,7 +38,7 @@
 }
 .heroLead {
   font-family: var(--sans);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.72);
   max-width: 58ch;
   margin-top: 22px;
@@ -51,7 +51,7 @@
   padding: 72px 24px 110px;
 }
 .column {
-  max-width: 680px;
+  max-width: var(--maxw-text);
   margin: 0 auto;
 }
 
@@ -76,7 +76,7 @@
 .blockBody {
   font-family: var(--sans);
   color: var(--ink-60);
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   line-height: 1.75;
 }
 .blockBody p {
@@ -137,7 +137,7 @@
 }
 .ctaText {
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 52ch;
@@ -201,7 +201,7 @@
 }
 .disclaimerText {
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.7;
   max-width: 56ch;

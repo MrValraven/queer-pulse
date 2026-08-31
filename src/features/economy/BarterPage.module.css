@@ -21,7 +21,7 @@
   pointer-events: none;
 }
 .cat {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -43,7 +43,7 @@
   font-weight: 400;
 }
 .hero p {
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 20px;
@@ -62,13 +62,13 @@
 }
 .principleItem strong {
   display: block;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 4px;
 }
 .principleItem span {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.52);
   line-height: 1.55;
 }
@@ -94,12 +94,12 @@
   flex: 1;
   min-width: 220px;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 16px;
   font-family: var(--sans);
   /* >=16px so iOS Safari never zooms on focus (this class out-specifies the
      global input floor, so it must set 16px itself). */
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.2s;
@@ -111,17 +111,17 @@
   display: flex;
   gap: 2px;
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px;
 }
 .modeTab {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
   transition:
@@ -134,7 +134,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .count {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
 }
 .count b {
@@ -147,13 +147,13 @@
 }
 .chip {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   transition:
     background var(--dur-base) var(--ease),
@@ -194,7 +194,7 @@
   .bc:hover {
     transform: translateY(-2px);
     border-color: rgba(var(--line-rgb), 0.18);
-    box-shadow: 0 14px 32px -22px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-e3);
   }
 }
 @media (hover: hover) {
@@ -218,21 +218,21 @@
   flex-wrap: wrap;
 }
 .bcName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .bcHood {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .bcBadge {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 4px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   white-space: nowrap;
 }
 .offering {
@@ -248,7 +248,7 @@
   background: rgba(var(--plum-rgb), 0.08);
 }
 .bcBlock {
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 16px;
 }
 .bcOffer {
@@ -258,7 +258,7 @@
   background: rgba(var(--accent-rgb), 0.06);
 }
 .bcLabel {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -273,14 +273,14 @@
 .bcSkill {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 4px;
 }
 .bcDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -290,10 +290,10 @@
   flex-wrap: wrap;
 }
 .btag {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 3px 9px;
 }
 .bcFoot {
@@ -304,11 +304,11 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .bcDays {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .bcReach {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   background: none;
@@ -343,7 +343,7 @@
   color: var(--accent);
 }
 .postStrip > div > p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.6;
   margin-top: 10px;
@@ -355,10 +355,10 @@
 }
 .psInput {
   border: 1.5px solid rgba(var(--cream-rgb), 0.18);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 14px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.08);
 }
@@ -385,7 +385,7 @@
    the muted body colour of the paragraph beside it. */
 .postStrip .psError {
   margin-top: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--accent);
 }
 
@@ -437,7 +437,7 @@
   color: var(--accent);
 }
 .psSuccess p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.6;
   max-width: 420px;
@@ -457,7 +457,7 @@
    Pushed to the end of the row so the search + tabs keep the reading order. */
 .myProposalsLink {
   margin-inline-start: auto;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: underline;
@@ -466,7 +466,7 @@
 .myProposalsLink:focus-visible {
   outline: 2px solid var(--accent-ink);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 
 /* "Show more" for the server-paginated board, matching the housing + flatmate

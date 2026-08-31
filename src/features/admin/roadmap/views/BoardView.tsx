@@ -70,7 +70,7 @@ export function BoardView({ items }: { items: AdminRoadmapItemDTO[] }) {
     return result;
   }, [items, filters]);
 
-  const dnd = useBoardDnd(columns);
+  const dnd = useBoardDnd(columns, filters.sort === "manual");
 
   return (
     <div
@@ -89,6 +89,12 @@ export function BoardView({ items }: { items: AdminRoadmapItemDTO[] }) {
           dnd={dnd}
         />
       ))}
+      {/* One region for the whole board rather than one per card: it must
+          survive the card being re-rendered into its new slot, and two live
+          regions firing at once would talk over each other. */}
+      <p className="visuallyHidden" role="status" aria-live="polite">
+        {dnd.reorderAnnouncement}
+      </p>
     </div>
   );
 }

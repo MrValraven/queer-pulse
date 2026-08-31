@@ -69,6 +69,37 @@ const CURRENT: TransparencyReportDTO = {
   communities: {
     frozen: { value: 0, isSuppressed: false },
   },
+  // A quarter in which nothing arrived, on a register that HAS held records
+  // before. It is the subtle state the section has to render well: every count
+  // is a real zero, and the all-time flag still says we have been asked, so the
+  // page must not print "we have never been asked" off a window of zeroes.
+  legalRequests: {
+    hasEverReceivedRequest: true,
+    received: { value: 0, isSuppressed: false },
+    byType: [
+      { key: "subpoena", count: { value: 0, isSuppressed: false } },
+      { key: "court_order", count: { value: 0, isSuppressed: false } },
+      { key: "police_request", count: { value: 0, isSuppressed: false } },
+      {
+        key: "emergency_disclosure_request",
+        count: { value: 0, isSuppressed: false },
+      },
+      { key: "preservation_request", count: { value: 0, isSuppressed: false } },
+      { key: "takedown_demand", count: { value: 0, isSuppressed: false } },
+      { key: "other", count: { value: 0, isSuppressed: false } },
+    ],
+    byOutcome: [
+      { key: "complied_in_full", count: { value: 0, isSuppressed: false } },
+      { key: "complied_in_part", count: { value: 0, isSuppressed: false } },
+      { key: "narrowed", count: { value: 0, isSuppressed: false } },
+      { key: "refused", count: { value: 0, isSuppressed: false } },
+      { key: "withdrawn", count: { value: 0, isSuppressed: false } },
+      { key: "pending", count: { value: 0, isSuppressed: false } },
+    ],
+    accountsAffected: { value: 0, isSuppressed: false },
+    accountsNotified: { value: 0, isSuppressed: false },
+    recordsVoided: { value: 0, isSuppressed: false },
+  },
 };
 
 const PREVIOUS: TransparencyReportDTO = {
@@ -129,7 +160,60 @@ const PREVIOUS: TransparencyReportDTO = {
   communities: {
     frozen: { value: 0, isSuppressed: false },
   },
+  // 14 demands, already through the same suppression the backend applies:
+  // two type buckets and two outcome buckets sat below the floor of 5 and are
+  // withheld, the rest publish real numbers, and every bucket is listed even at
+  // zero so the table's shape is never itself a signal. `recordsVoided` is
+  // withheld too, which is the state that proves a struck record still shows up
+  // as something rather than vanishing.
+  legalRequests: {
+    hasEverReceivedRequest: true,
+    received: { value: 14, isSuppressed: false },
+    byType: [
+      { key: "subpoena", count: { value: 6, isSuppressed: false } },
+      { key: "court_order", count: { value: 5, isSuppressed: false } },
+      { key: "police_request", count: { value: null, isSuppressed: true } },
+      {
+        key: "emergency_disclosure_request",
+        count: { value: 0, isSuppressed: false },
+      },
+      {
+        key: "preservation_request",
+        count: { value: null, isSuppressed: true },
+      },
+      { key: "takedown_demand", count: { value: 0, isSuppressed: false } },
+      { key: "other", count: { value: 0, isSuppressed: false } },
+    ],
+    byOutcome: [
+      { key: "complied_in_full", count: { value: 0, isSuppressed: false } },
+      { key: "complied_in_part", count: { value: null, isSuppressed: true } },
+      { key: "narrowed", count: { value: 5, isSuppressed: false } },
+      { key: "refused", count: { value: 6, isSuppressed: false } },
+      { key: "withdrawn", count: { value: null, isSuppressed: true } },
+      { key: "pending", count: { value: 0, isSuppressed: false } },
+    ],
+    accountsAffected: { value: 9, isSuppressed: false },
+    accountsNotified: { value: 5, isSuppressed: false },
+    recordsVoided: { value: null, isSuppressed: true },
+  },
 };
+
+/**
+ * Serve a report the way a backend one deploy behind serves it: every other
+ * section intact, `legalRequests` gone.
+ *
+ * The cast mirrors the live failure exactly. The contract says the field is
+ * always there, so the type says so too, and the server that has not shipped
+ * PRD-32 yet disagrees. Keeping a fixture for that disagreement is the only
+ * way the section's unavailable state can be looked at before it is needed.
+ */
+function stripLegalRequests(
+  report: TransparencyReportDTO,
+): TransparencyReportDTO {
+  const stripped: Partial<TransparencyReportDTO> = { ...report };
+  delete stripped.legalRequests;
+  return stripped as TransparencyReportDTO;
+}
 
 export const TRANSPARENCY_DEMO_REPORT: Record<
   TransparencyPeriodSelector,
@@ -137,4 +221,22 @@ export const TRANSPARENCY_DEMO_REPORT: Record<
 > = {
   current: CURRENT,
   previous: PREVIOUS,
+};
+
+/**
+ * The same two periods with the legal-request register missing, reached in
+ * demo mode with `?demo=legal-requests-unavailable` on
+ * `/about/governance/transparency`.
+ *
+ * It exists so the state can be SEEN. The section renders as explicitly
+ * unavailable while every other section of the report renders normally, which
+ * is the whole point of degrading per section: a stale backend must never
+ * print a zero, and it must never take the page down either.
+ */
+export const TRANSPARENCY_DEMO_REPORT_WITHOUT_LEGAL_REQUESTS: Record<
+  TransparencyPeriodSelector,
+  TransparencyReportDTO
+> = {
+  current: stripLegalRequests(CURRENT),
+  previous: stripLegalRequests(PREVIOUS),
 };

@@ -3,6 +3,7 @@ import { FiArchive } from "react-icons/fi";
 import {
   Button,
   EmptyState,
+  LoadErrorState,
   SearchInput,
   SkeletonLine,
 } from "../../../../shared/components/ui";
@@ -24,10 +25,13 @@ export function ArchiveTab() {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
-  const { entries, isLoading } = useArchive(debouncedQuery);
+  const { entries, isLoading, isError, refetch } = useArchive(debouncedQuery);
   const hasQuery = query.trim().length > 0;
 
   function renderResults() {
+    // A failed archive search must not read as "nothing matched".
+    if (isError) return <LoadErrorState onRetry={refetch} compact />;
+
     if (isLoading && entries.length === 0) {
       return (
         <div className={styles.stack} aria-hidden>

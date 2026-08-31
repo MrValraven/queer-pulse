@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
-import { TagRow } from "../../shared/components/ui";
+import { RadioCardGroup, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useProfileData } from "../../app/providers/useProfile";
@@ -159,26 +159,18 @@ export function ShowUpAtWorkSection({
         <div className={styles.fieldLabel}>
           {t("economy:workProfile.showUp.outAtWork")}
         </div>
-        <div
+        <RadioCardGroup
           className={styles.seg}
-          role="radiogroup"
-          aria-label={t("economy:workProfile.showUp.outAtWorkAriaLabel")}
-        >
-          {OUT_AT_WORK.map((o) => (
-            <button
-              key={o.value}
-              type="button"
-              role="radio"
-              aria-checked={outChoice === o.value}
-              className={[styles.segBtn, outChoice === o.value && styles.segOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => onOut(o.value)}
-            >
-              {t(o.labelKey)}
-            </button>
-          ))}
-        </div>
+          optionClassName={styles.segBtn}
+          checkedClassName={styles.segOn}
+          ariaLabel={t("economy:workProfile.showUp.outAtWorkAriaLabel")}
+          value={outChoice}
+          onChange={onOut}
+          options={OUT_AT_WORK.map((o) => ({
+            id: o.value,
+            render: t(o.labelKey),
+          }))}
+        />
         {activeOut && <p className={styles.segDesc}>{t(activeOut.descKey)}</p>}
       </div>
 

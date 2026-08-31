@@ -5,6 +5,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  LoadErrorState,
   Outro,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -56,6 +57,8 @@ export function PartnersPage() {
   const {
     items: partners,
     isLoading,
+    isError,
+    refetch,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -66,7 +69,9 @@ export function PartnersPage() {
   const loading = useSimulatedLoad() || isLoading;
   // An empty roster is a real state, not a bug: nothing has been approved yet.
   // It replaces the grid with a way in rather than leaving a blank band.
-  const isRosterEmpty = !loading && partners.length === 0;
+  // DES-22: a failed read is not an empty roster. The error panel takes
+  // precedence over both the grid and the "nobody has been approved yet" copy.
+  const isRosterEmpty = !loading && !isError && partners.length === 0;
   const pageTitle = t("marketing:partners.meta.title");
   const pageDescription = t("marketing:partners.meta.description");
 
@@ -102,9 +107,13 @@ export function PartnersPage() {
                 components={{ em: <em /> }}
               />
             </h2>
-            {!isRosterEmpty && <p>{t("marketing:partners.section.sub")}</p>}
+            {!isRosterEmpty && !isError && (
+              <p>{t("marketing:partners.section.sub")}</p>
+            )}
           </div>
-          {isRosterEmpty ? (
+          {isError ? (
+            <LoadErrorState onRetry={refetch} />
+          ) : isRosterEmpty ? (
             <EmptyState
               className={s.emptyRoster}
               icon={<FiUsers />}

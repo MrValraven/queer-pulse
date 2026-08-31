@@ -33,5 +33,6 @@ export function useArticleComments(pieceId: string) {
     comments: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

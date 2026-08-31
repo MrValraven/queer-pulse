@@ -2,7 +2,7 @@
 .callout {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px;
   display: flex;
   gap: 16px;
@@ -11,14 +11,14 @@
 .icon {
   width: 42px;
   height: 42px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade);
-  font-size: 20px;
+  font-size: var(--text-20);
 }
 .body {
   min-width: 0;
@@ -36,7 +36,7 @@
   color: var(--accent);
 }
 .text {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.68);
   line-height: 1.6;
   margin-top: 8px;

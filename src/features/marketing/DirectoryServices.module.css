@@ -28,13 +28,13 @@
 }
 .name {
   display: block;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   line-height: 1.4;
 }
 .note {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin-top: 3px;
@@ -43,7 +43,7 @@
 }
 .price {
   flex: none;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
   text-align: end;

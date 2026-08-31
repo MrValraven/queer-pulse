@@ -1,4 +1,5 @@
 import { apiGet, apiPatch } from "../../../shared/api/client";
+import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 
 /**
  * The three runtime platform kill switches (admin-only). Backed by a singleton
@@ -23,15 +24,19 @@ export interface PlatformSettingsDTO {
   announcementExpiresAt: string | null;
   /** Bumped to a fresh UUID whenever `announcementMessage` changes. */
   announcementVersion: string;
+  /** ISO 8601. When the row was last written, by anyone. */
   updatedAt: string;
-  updatedBy: string | null;
 }
 
 /** One changed field. A save that flips two switches produces two of these. */
 export interface PlatformSettingChangeDTO {
   id: string;
-  /** NULL once the acting admin has erased their account — the trail outlives them. */
-  actorId: string | null;
+  /**
+   * Who made the change, already resolved to a name by the backend. NULL when
+   * there is no name left to give: the acting admin erased their account (the
+   * trail deliberately outlives them), or they never had a profile row.
+   */
+  actor: MemberRefDTO | null;
   settingKey: string;
   oldValue: string | null;
   newValue: string | null;
@@ -60,7 +65,14 @@ export const getPlatformSettings = () =>
 export const updatePlatformSettings = (body: UpdatePlatformSettingsInput) =>
   apiPatch<PlatformSettingsDTO>("/admin/platform-settings", body);
 
+/**
+ * The audit trail, newest first, in the standard `Paginated` envelope. This
+ * endpoint is queried by `limit`/`offset` rather than `page` (it predates the
+ * shared page-based convention); the envelope's `page`/`pageSize` are derived
+ * from those by the backend, and `total` is the whole row count, which is what
+ * lets the History tab say whether what it is showing is all of it.
+ */
 export const getPlatformSettingChanges = (limit = 50, offset = 0) =>
-  apiGet<PlatformSettingChangeDTO[]>(
+  apiGet<Paginated<PlatformSettingChangeDTO>>(
     `/admin/platform-settings/changes?limit=${limit}&offset=${offset}`,
   );

@@ -4,14 +4,14 @@
   align-items: center;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 14px 16px;
   margin-bottom: 20px;
 }
 .composerTa {
   flex: 1;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   border: none;
   background: transparent;
   outline: none;
@@ -21,16 +21,16 @@
 }
 .composerTa:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
-  border-radius: 8px;
+  box-shadow: var(--ring-accent-strong);
+  border-radius: var(--radius-8);
 }
 .joinHint {
   /* line-rgb flips in dark mode; plum-rgb doesn't (see tag/ruleNum fixes). */
   background: rgba(var(--line-rgb), 0.05);
   border: 1.5px dashed rgba(var(--line-rgb), 0.14);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 18px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin-bottom: 20px;
 }
@@ -38,7 +38,7 @@
 .post {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px 20px;
   margin-bottom: 14px;
 }
@@ -50,7 +50,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -82,7 +82,7 @@
   gap: 2px;
 }
 .pName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   display: flex;
@@ -91,20 +91,20 @@
   flex-wrap: wrap;
 }
 .pTime {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 1px;
 }
 .pBody {
-  font-size: 14.5px;
-  color: var(--ink-80, var(--ink));
+  font-size: var(--text-14-5);
+  color: var(--ink);
   line-height: 1.65;
   margin: 12px 0 0;
   white-space: pre-wrap;
 }
 .pImg {
   margin-top: 12px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
   aspect-ratio: 16 / 9;
   background: rgba(var(--line-rgb), 0.06);
@@ -128,10 +128,10 @@
    comes from the primitive. */
 .replyBtn {
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   padding: 4px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border-color: transparent;
   background: transparent;
 }
@@ -150,7 +150,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-40);
   padding: 4px 10px;
@@ -185,7 +185,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: var(--text-9);
   font-weight: 700;
   flex: none;
   margin-top: 2px;
@@ -204,16 +204,16 @@
   flex: none;
 }
 .rName {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
 }
 .rTime {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
 }
 .rText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-top: 2px;
@@ -229,10 +229,10 @@
 .replyTa {
   flex: 1;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   padding: 9px 13px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   resize: none;
   min-height: 38px;
   color: var(--ink);
@@ -256,7 +256,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   padding: 10px 18px;
   margin-bottom: 14px;
@@ -287,7 +287,7 @@
 }
 .searchCount {
   margin: 0 0 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -303,13 +303,13 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.14);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 3px 9px;
   margin-bottom: 8px;
 }

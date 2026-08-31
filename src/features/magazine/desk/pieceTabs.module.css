@@ -9,7 +9,7 @@
 
 .card {
   padding: 18px;
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
@@ -18,7 +18,7 @@
 }
 
 .card h3 {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   font-weight: 700;
@@ -44,19 +44,19 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 
 .kv span {
   color: var(--ink-40);
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-weight: 700;
 }
 
 .kv b {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--plum);
   font-weight: 600;
 }
@@ -67,7 +67,7 @@
 
 .lede {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.45;
   font-weight: 300;
   color: var(--plum);
@@ -79,9 +79,9 @@
   gap: 9px;
   align-items: flex-start;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--plum-rgb), 0.035);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -119,7 +119,7 @@
   display: flex;
   gap: 9px;
   align-items: flex-start;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -152,7 +152,7 @@
 
 .simrow b {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 400;
   color: var(--plum);
 }
@@ -162,7 +162,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 14px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: rgba(var(--plum-rgb), 0.035);
 }
@@ -175,7 +175,7 @@
 }
 
 .subjHead b {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--plum);
 }
 
@@ -188,8 +188,8 @@
 
 .chip {
   padding: 5px 11px;
-  font-size: 12.5px;
-  border-radius: 999px;
+  font-size: var(--text-12-5);
+  border-radius: var(--radius-pill);
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
   background: var(--paper);
   color: var(--ink-60);
@@ -209,7 +209,7 @@
 }
 
 .readHead b {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--plum);
 }
 
@@ -226,7 +226,7 @@
 }
 
 .flagrow b {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--plum);
 }
 
@@ -249,7 +249,7 @@
 .prog {
   width: 100%;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.06);
   overflow: hidden;
 }
@@ -258,7 +258,7 @@
   display: block;
   height: 100%;
   background: var(--jade);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transition: width 0.2s linear;
 }
 
@@ -276,7 +276,7 @@
   margin-left: 4px;
   padding-left: 16px;
   position: relative;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -295,9 +295,9 @@
   flex-direction: column;
   gap: 8px;
   padding: 12px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--plum-rgb), 0.035);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
 }
 
 .letterHead {
@@ -307,7 +307,7 @@
 }
 
 .letterHead b {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--plum);
 }
 
@@ -342,8 +342,8 @@
   align-items: center;
   gap: 4px;
   padding: 2px 9px;
-  border-radius: 999px;
-  font-size: 11px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -357,7 +357,7 @@
 
 .field textarea {
   border: 1.5px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 12px;
   background: var(--paper);
   width: 100%;
@@ -368,7 +368,7 @@
 }
 
 .tiny {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
 }
@@ -382,7 +382,7 @@
   display: flex;
   gap: 9px;
   align-items: flex-start;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.45;
 }
 
@@ -413,7 +413,7 @@
   display: flex;
   gap: 9px;
   align-items: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
 }
 

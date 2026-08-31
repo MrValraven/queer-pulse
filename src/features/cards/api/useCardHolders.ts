@@ -8,10 +8,23 @@ import {
 } from "./cards.api";
 import { DEMO_CARD_HOLDERS } from "../cards.data";
 
-export function useCardHolders(slug: string | undefined): {
+export interface CardHoldersResult {
   holders: IssuerCardDTO[];
   isLoading: boolean;
-} {
+  /** True when the request failed, so the issuer panel can say so instead of
+   *  reporting that the programme has no holders (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
+}
+
+/**
+ * Every card this community has issued. `isError` is surfaced rather than
+ * swallowed: an outage and a programme nobody has joined yet both used to
+ * arrive as the same empty array, and an owner would read the first as the
+ * second.
+ */
+export function useCardHolders(slug: string | undefined): CardHoldersResult {
   const { demoMode } = useDemoMode();
   const query = useQuery({
     queryKey: ["card-holders", slug, demoMode],
@@ -19,8 +32,20 @@ export function useCardHolders(slug: string | undefined): {
     queryFn: () => getCardHolders(slug!),
   });
 
-  if (demoMode) return { holders: DEMO_CARD_HOLDERS, isLoading: false };
-  return { holders: query.data ?? [], isLoading: query.isLoading };
+  if (demoMode) {
+    return {
+      holders: DEMO_CARD_HOLDERS,
+      isLoading: false,
+      isError: false,
+      refetch: () => {},
+    };
+  }
+  return {
+    holders: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 export function useSetCardHolderStatus(slug: string | undefined) {

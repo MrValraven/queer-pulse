@@ -74,14 +74,14 @@
 
 .featureRowName {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--ink);
 }
 
 .featureRowPreview {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
   overflow-wrap: anywhere;
@@ -108,7 +108,7 @@
   display: grid;
   place-items: center;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--paper);
   color: var(--ink-60);
   cursor: pointer;
@@ -142,7 +142,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -194,14 +194,14 @@
 .factsTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 600;
   color: var(--ink);
 }
 
 .factsSub {
   margin: 0 0 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -224,7 +224,7 @@
 
 .factLabel {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.4;
   color: var(--ink-60);
   min-width: 0;
@@ -234,14 +234,14 @@
   margin: 0;
   flex: none;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--ink);
 }
 
 .factsEmpty {
   margin: 2px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-40);
 }

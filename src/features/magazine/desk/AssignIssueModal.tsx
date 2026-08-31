@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
-import { Button, Modal } from "../../../shared/components/ui";
+import { Button, Modal, RadioCardGroup } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { IssueSummary } from "../data/desk.data";
 import styles from "./AssignIssueModal.module.css";
@@ -100,36 +100,32 @@ export function AssignIssueModal({
         </div>
       }
     >
-      <div
+      <RadioCardGroup
         className={styles.options}
-        role="radiogroup"
-        aria-label={t("magazine:desk.assignIssue.title")}
-      >
-        {options.map((option) => (
-          <button
-            key={option.value || "unassigned"}
-            type="button"
-            role="radio"
-            aria-checked={choice === option.value}
-            className={styles.option}
-            data-selected={choice === option.value}
-            onClick={() => setChoice(option.value)}
-          >
-            <span className={styles.optionMark} aria-hidden>
-              {choice === option.value && <FiCheck />}
-            </span>
-            <span className={styles.optionText}>
-              <span className={styles.optionLabel}>{option.label}</span>
-              <span className={styles.optionMeta}>
-                {option.meta}
-                {option.isCurrent && (
-                  <> · {t("magazine:desk.assignIssue.currentSuffix")}</>
-                )}
+        optionClassName={styles.option}
+        ariaLabel={t("magazine:desk.assignIssue.title")}
+        value={choice}
+        onChange={setChoice}
+        options={options.map((option) => ({
+          id: option.value,
+          render: (
+            <>
+              <span className={styles.optionMark} aria-hidden>
+                {choice === option.value && <FiCheck />}
               </span>
-            </span>
-          </button>
-        ))}
-      </div>
+              <span className={styles.optionText}>
+                <span className={styles.optionLabel}>{option.label}</span>
+                <span className={styles.optionMeta}>
+                  {option.meta}
+                  {option.isCurrent && (
+                    <> · {t("magazine:desk.assignIssue.currentSuffix")}</>
+                  )}
+                </span>
+              </span>
+            </>
+          ),
+        }))}
+      />
     </Modal>
   );
 }

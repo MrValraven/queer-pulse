@@ -4,6 +4,7 @@ import {
   apiPatch,
   apiPost,
 } from "../../../shared/api/client";
+import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { HousingCoopDTO } from "../../economy/api/housingCoop.api";
 
 /**
@@ -12,12 +13,14 @@ import type { HousingCoopDTO } from "../../economy/api/housingCoop.api";
  * an admin-only shape — the admin surface reads/writes the same coop record,
  * just via admin-only endpoints that also expose unpublished coops.
  */
+export type CoopJoinRequestStatus = "pending" | "accepted" | "declined";
+
 export interface AdminJoinRequestDTO {
   id: string;
   name: string;
   householdSize: string;
   note: string | null;
-  status: "pending" | "accepted" | "declined";
+  status: CoopJoinRequestStatus;
   createdAt: string;
   coop: { slug: string; name: string } | null;
 }
@@ -42,9 +45,42 @@ export const updateAdminCoop = (id: string, body: Partial<CoopWriteBody>) =>
 export const deleteAdminCoop = (id: string) =>
   apiDelete<void>(`/admin/housing/coops/${id}`);
 
-/** Every join request across all coops, for the admin triage queue. */
-export const getAdminJoinRequests = () =>
-  apiGet<AdminJoinRequestDTO[]>("/admin/housing/join-requests");
+export interface AdminJoinRequestsParameters {
+  page?: number;
+  /** Omitted returns every status. The console asks for `pending`. */
+  status?: CoopJoinRequestStatus;
+  /** A co-op slug to narrow to. */
+  coop?: string;
+}
+
+/**
+ * GET /admin/housing/join-requests?page&status&coop, one page of the cross-co-op
+ * join-request triage queue, newest first.
+ *
+ * This route used to answer with a flat array of the newest 200 requests in
+ * EVERY status, and this console filtered to the pending ones in the browser
+ * (ENG-41). So a platform carrying 200 already-decided requests newer than one
+ * pending request showed an admin an empty queue while somebody waited. The
+ * status filter now lives in the query, and the response is the
+ * `{ items, total, page, pageSize }` envelope with `total` counting the whole
+ * filtered queue. Wrapped in `toItemsPage` so a deploy where the backend is
+ * still on the old array shape reads as one full page instead of throwing on
+ * `.items`. Mirrors `getAdminGroupJoinRequests` for the sibling housing-groups
+ * queue.
+ */
+export const getAdminJoinRequests = async (
+  parameters: AdminJoinRequestsParameters = {},
+) => {
+  const searchParams = new URLSearchParams();
+  if (parameters.page) searchParams.set("page", String(parameters.page));
+  if (parameters.status) searchParams.set("status", parameters.status);
+  if (parameters.coop) searchParams.set("coop", parameters.coop);
+  const querySuffix = searchParams.toString();
+  const response = await apiGet<
+    AdminJoinRequestDTO[] | ItemsPage<AdminJoinRequestDTO>
+  >(`/admin/housing/join-requests${querySuffix ? `?${querySuffix}` : ""}`);
+  return toItemsPage(response);
+};
 
 export const triageAdminJoinRequest = (
   id: string,

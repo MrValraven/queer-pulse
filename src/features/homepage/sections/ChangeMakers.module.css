@@ -32,7 +32,7 @@
   flex: 1 1 420px;
 }
 .eyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -59,7 +59,7 @@
   align-items: flex-start;
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.65;
   max-width: 52ch;
@@ -98,7 +98,7 @@
   flex: 1;
 }
 .cause {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -113,7 +113,7 @@
   line-height: 1.1;
 }
 .blurb {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.62;
   flex: 1;
@@ -125,10 +125,10 @@
   margin-top: 6px;
 }
 .tag {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   background: rgba(var(--cream-rgb), 0.08);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 9px;
   font-weight: 500;
 }

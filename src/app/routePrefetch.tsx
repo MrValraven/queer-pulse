@@ -134,6 +134,14 @@ export function RoutePrefetcher(): null {
     // The installed tab bar's destinations are the ones nearly every session
     // visits, and on touch there is no hover to trigger the fetch. Warm them
     // once the browser is otherwise idle, so the first tab press is instant too.
+    //
+    // The two sets are the bar's own, so this warms exactly what this visitor's
+    // chrome offers and nothing else. That matters most signed out: `PUBLIC_TABS`
+    // is derived from `authGate`'s `isGatedLink` (see `bottomTabs.ts`), so a
+    // logged-out session can no longer spend bytes on a member-only chunk it
+    // would never be allowed to open. Read the set here rather than re-listing
+    // the public paths, or this becomes the next copy to drift.
+    //
     // `requestIdleCallback` is absent on Safari <16.4; there the tabs simply keep
     // the old behaviour rather than competing with the app's own boot work.
     const warmTabs = () => {

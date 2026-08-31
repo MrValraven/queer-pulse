@@ -4,18 +4,28 @@
  *
  * The full pipeline (see package.json `build`) is:
  *   node scripts/build-gates.mjs && vite build && pnpm prerender
- * and the four steps below all (a) depend on nothing but the source tree and
+ * and the steps below all (a) depend on nothing but the source tree and
  * (b) must finish before `vite build` / `pnpm prerender`. Running them serially
  * summed their wall times; running them together collapses that to the slowest.
  *
  * The steps:
  *   - lint:a11y          — the jsx-a11y ratchet gate (must pass before we build)
  *   - tokens             — the design-token ratchet: no raw hex and no raw
- *                          plum channels in CSS Modules (see
- *                          scripts/check-design-tokens.mjs)
+ *                          rgb()/rgba() channel triples in any stylesheet under
+ *                          src/ (see scripts/check-design-tokens.mjs)
+ *   - css-scale          – the CSS scale ratchet: no new literal font-size,
+ *                          border-radius, box-shadow or high z-index, held
+ *                          against a committed per-category budget (see
+ *                          scripts/check-css-scale.mjs). Colour had a gate and
+ *                          the other four scales did not, which is how 8,573
+ *                          literal font sizes accumulated
  *   - typecheck (tsc -b) — the type gate (must pass before we build)
  *   - sitemap            — writes public/sitemap.xml, which `vite build` copies
  *                          into dist/, so it has to land before the bundle
+ *   - robots             — public/robots.txt is static and cannot import
+ *                          authGate.ts, so this proves it still matches: every
+ *                          gated prefix Disallowed, every sitemap path
+ *                          crawlable (see scripts/check-robots.mjs)
  *   - prerender:browser  — `playwright install chromium`. Idempotent and ~0s
  *                          when the browser is already cached, but on a COLD
  *                          CI/Vercel cache it downloads the ~100MB browser.
@@ -44,8 +54,10 @@ const childEnv = {
 const STEPS = [
   { name: "lint:a11y", command: "pnpm lint:a11y" },
   { name: "tokens", command: "node scripts/check-design-tokens.mjs" },
+  { name: "css-scale", command: "node scripts/check-css-scale.mjs" },
   { name: "typecheck", command: "tsc -b" },
   { name: "sitemap", command: "pnpm sitemap" },
+  { name: "robots", command: "node scripts/check-robots.mjs" },
   { name: "browser", command: "pnpm prerender:browser" },
 ];
 

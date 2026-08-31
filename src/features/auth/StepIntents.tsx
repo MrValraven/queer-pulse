@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Button,
   ChipSelect,
+  LoadErrorState,
   SkeletonLine,
   Toggle,
   useChipSet,
@@ -42,9 +43,32 @@ export function StepIntents(props: StepProps) {
     },
   });
 
-  if (!demoMode && Boolean(ownSlug) && existingIntents.isPending) {
+  const shouldLoadOwnIntents = !demoMode && Boolean(ownSlug);
+
+  if (shouldLoadOwnIntents && existingIntents.isPending) {
     return <StepIntentsLoading stepLabel={props.stepLabel} />;
   }
+
+  // A failed load leaves the step unable to say what the member already chose,
+  // so it offers a retry in place of the form. Skip and Back stay available so
+  // an outage can never trap someone in onboarding.
+  if (shouldLoadOwnIntents && existingIntents.isError) {
+    return (
+      <StepIntentsLoadError
+        stepLabel={props.stepLabel}
+        onRetry={() => void existingIntents.refetch()}
+        onSkip={props.onNext}
+        onBack={props.onBack}
+      />
+    );
+  }
+
+  // The member's saved visibility choice is only known once the profile has
+  // actually loaded. Demo mode has no stored value to widen (the save no-ops),
+  // so it keeps the signed-off "on" default; every other unresolved case starts
+  // the toggle private and leaves `lookingForPublic` out of the save entirely,
+  // so a load we never completed can never widen who sees the list.
+  const hasKnownVisibility = demoMode || existingIntents.isSuccess;
 
   return (
     <StepIntentsForm
@@ -52,7 +76,12 @@ export function StepIntents(props: StepProps) {
       initialSelection={existingIntents.data?.lookingFor ?? []}
       // A member who already turned this off in Settings keeps it off; everyone
       // else starts on, which is the signed-off onboarding default.
-      initialIsPublic={existingIntents.data?.lookingForPublic ?? true}
+      initialIsPublic={
+        hasKnownVisibility
+          ? (existingIntents.data?.lookingForPublic ?? true)
+          : false
+      }
+      hasKnownVisibility={hasKnownVisibility}
     />
   );
 }
@@ -63,35 +92,50 @@ function StepIntentsForm({
   stepLabel,
   initialSelection,
   initialIsPublic,
+  hasKnownVisibility,
 }: StepProps & {
   initialSelection: readonly string[];
   initialIsPublic: boolean;
+  hasKnownVisibility: boolean;
 }) {
   const { t } = useTranslation();
   const updateProfile = useUpdateProfile();
-  const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const { selected: selectedIntents, toggle: toggleIntent } =
     useChipSet(initialSelection);
-  const [isPublic, setIsPublic] = useState(initialIsPublic);
+  const [isLookingForPublic, setIsLookingForPublic] = useState(initialIsPublic);
+  // Whether the member moved the toggle during this step. Their own deliberate
+  // choice is always worth saving, even when we couldn't read the stored one.
+  const [hasChosenVisibility, setHasChosenVisibility] = useState(false);
   // At least one intent is required so we can actually personalize the experience.
   const hasSelection = selectedIntents.size > 0;
 
+  function handleVisibilityChange(nextIsLookingForPublic: boolean) {
+    setHasChosenVisibility(true);
+    setIsLookingForPublic(nextIsLookingForPublic);
+  }
+
   async function handleContinue() {
-    setError(null);
+    setSaveError(null);
     try {
       // Intents have no dedicated backend field; they persist as the profile's
       // free-text `lookingFor` list (PATCH /profiles/me). Demo mode no-ops.
       // Visibility is the member's own call and is stated on the step: the list
       // can name Dating, Housing or Finding flatmates, so it must never be
       // published on their behalf, and a member who already set it to private
-      // must never have it flipped back by a replay of onboarding.
+      // must never have it flipped back by a replay of onboarding. When the
+      // stored value never loaded and the member left the toggle alone, the
+      // field is omitted from the PATCH so the server keeps whatever it holds.
+      const shouldSaveVisibility = hasKnownVisibility || hasChosenVisibility;
       await updateProfile.mutateAsync({
         lookingFor: [...selectedIntents],
-        lookingForPublic: isPublic,
+        ...(shouldSaveVisibility
+          ? { lookingForPublic: isLookingForPublic }
+          : {}),
       });
       onNext();
     } catch {
-      setError(t("auth:onboarding.stepIntents.saveError"));
+      setSaveError(t("auth:onboarding.stepIntents.saveError"));
     }
   }
 
@@ -126,21 +170,21 @@ function StepIntentsForm({
             {t("auth:onboarding.stepIntents.visibility.title")}
           </div>
           <div className={styles.notifyDesc}>
-            {isPublic
+            {isLookingForPublic
               ? t("auth:onboarding.stepIntents.visibility.descPublic")
               : t("auth:onboarding.stepIntents.visibility.descPrivate")}
           </div>
         </div>
         <Toggle
           tone="coral"
-          checked={isPublic}
-          onChange={setIsPublic}
+          checked={isLookingForPublic}
+          onChange={handleVisibilityChange}
           label={t("auth:onboarding.stepIntents.visibility.title")}
         />
       </div>
-      {error && (
+      {saveError && (
         <p className={styles.chipHint} role="alert">
-          {error}
+          {saveError}
         </p>
       )}
       <div className={styles.nav}>
@@ -182,6 +226,53 @@ function StepIntentsLoading({ stepLabel }: { stepLabel: string }) {
         <SkeletonLine height={38} width="46%" style={{ borderRadius: 999 }} />
         <SkeletonLine height={38} width="60%" style={{ borderRadius: 999 }} />
         <SkeletonLine height={38} width="52%" style={{ borderRadius: 999 }} />
+      </div>
+    </>
+  );
+}
+
+/** Shown when the member's saved intents and their visibility setting fail to
+ *  load. Continue is withheld here on purpose: writing `lookingForPublic` from
+ *  a guess could publish that someone is looking for Dating or Housing. */
+function StepIntentsLoadError({
+  stepLabel,
+  onRetry,
+  onSkip,
+  onBack,
+}: {
+  stepLabel: string;
+  onRetry: () => void;
+  onSkip: () => void;
+  onBack: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <div className={styles.eye}>{stepLabel}</div>
+      <div className={styles.h} id="onboarding-intents-heading">
+        <Translation
+          i18nKey="auth:onboarding.stepIntents.heading"
+          components={{ em: <em /> }}
+        />
+      </div>
+      <LoadErrorState
+        onRetry={onRetry}
+        title={
+          <Translation
+            i18nKey="auth:onboarding.stepIntents.loadError.title"
+            components={{ em: <em /> }}
+          />
+        }
+        description={t("auth:onboarding.stepIntents.loadError.body")}
+      />
+      <div className={styles.nav}>
+        <SkipLink
+          onSkip={onSkip}
+          label={t("auth:onboarding.stepIntents.skip")}
+        />
+        <button type="button" className={styles.back} onClick={onBack}>
+          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepIntents.back")}
+        </button>
       </div>
     </>
   );

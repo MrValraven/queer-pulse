@@ -11,6 +11,12 @@ const HOMEPAGE_GATHERING_LIMIT = 4;
 export interface HomepageGatheringsResult {
   gatherings: CalendarEvent[];
   isLoading: boolean;
+  /** True when the request failed. The row renders nothing either way, so this
+   *  exists to keep "no gatherings on the board" and "the request fell over"
+   *  from being the same fact to a caller (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request, for a caller that chooses to offer a retry. */
+  refetch: () => void;
 }
 
 /**
@@ -47,5 +53,10 @@ export function useHomepageGatherings(): HomepageGatheringsResult {
     .sort((first, second) => first.date.getTime() - second.date.getTime())
     .slice(0, HOMEPAGE_GATHERING_LIMIT);
 
-  return { gatherings, isLoading: isEnabled && query.isPending };
+  return {
+    gatherings,
+    isLoading: isEnabled && query.isPending,
+    isError: isEnabled && query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

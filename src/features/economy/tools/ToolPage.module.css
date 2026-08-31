@@ -10,7 +10,7 @@
   align-items: center;
   gap: 8px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink-60);
   text-decoration: none;
@@ -41,7 +41,7 @@
 }
 .sub {
   font-family: var(--sans);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.6;
   color: var(--ink-60);
   max-width: 620px;

@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { FiChevronRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CollectionDetail } from "./cinemaCollection.data";
 import styles from "./CinemaCollectionPage.module.css";
@@ -15,11 +16,11 @@ export function CinemaCollectionHeader({ data }: { data: CollectionDetail }) {
         <div className={styles.crumb}>
           <Link to={routes.cinema}>{t("cinema:brand.tag")}</Link>
           <span className={styles.sep} aria-hidden>
-            ›
+            <FiChevronRight />
           </span>
           <Link to={routes.cinemaBrowse}>{t("cinema:nav.collections")}</Link>
           <span className={styles.sep} aria-hidden>
-            ›
+            <FiChevronRight />
           </span>
           <span className={styles.cur}>{data.crumbTitle}</span>
         </div>

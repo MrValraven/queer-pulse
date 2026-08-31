@@ -11,16 +11,16 @@
   flex-direction: column;
   gap: 6px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--plum-rgb), 0.035);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
 }
 
 .statusChip {
   align-self: flex-start;
   padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 11px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -53,7 +53,7 @@
 }
 
 .textLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-40);

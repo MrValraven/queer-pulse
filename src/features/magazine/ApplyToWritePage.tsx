@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
+import { LoadErrorState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -16,7 +17,7 @@ export function ApplyToWritePage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const isWriter = useHasStaffRole("magazine_writer");
-  const { application, isLoading } = useMyWriterApplication();
+  const { application, isLoading, isError, refetch } = useMyWriterApplication();
   const [reapplying, setReapplying] = useState(false);
 
   // Demo mode's `useHasStaffRole` grants every staff role (it's the "show
@@ -42,7 +43,9 @@ export function ApplyToWritePage() {
       <MagazineMasthead active="write" />
       <section className={styles.page}>
         <div className="wrap">
-          {!showForm && application ? (
+          {isError ? (
+            <LoadErrorState onRetry={refetch} />
+          ) : !showForm && application ? (
             <WriterApplicationStatus
               application={application}
               onReapply={() => setReapplying(true)}

@@ -40,7 +40,7 @@
   position: fixed;
   top: max(24px, env(safe-area-inset-top));
   left: 28px;
-  z-index: 10;
+  z-index: var(--z-raised);
   display: flex;
   align-items: center;
   gap: 9px;
@@ -112,12 +112,12 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 46px 42px 42px;
   width: 100%;
   max-width: 428px;
   box-shadow:
-    0 6px 52px -10px rgba(var(--plum-rgb), 0.16),
+    var(--shadow-e4),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   position: relative;
   z-index: 1;
@@ -139,7 +139,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 32px;
@@ -148,7 +148,7 @@
 /* Plum "community" illustration tile at the top of the sign-in card. */
 .artTile {
   background: var(--plum);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px 24px 20px;
   margin-bottom: 28px;
   overflow: hidden;
@@ -289,7 +289,7 @@
   margin: 14px 0 0;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: rgba(var(--cream-rgb), 0.92);
@@ -299,7 +299,7 @@
   color: var(--accent);
 }
 .eyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -314,7 +314,7 @@
   gap: 11px;
   background: rgba(var(--accent-rgb), 0.08);
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 13px 15px;
   margin-bottom: 24px;
 }
@@ -329,12 +329,12 @@
   gap: 3px;
 }
 .noticeText strong {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 .noticeText span {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -353,7 +353,7 @@
   margin-bottom: 16px;
 }
 .field label {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   color: var(--ink-60);
   letter-spacing: 0.07em;
@@ -370,11 +370,11 @@
 .field textarea,
 .field select {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 15px;
   width: 100%;
   outline: none;
@@ -392,7 +392,7 @@
 .field textarea:focus,
 .field select:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
   background: var(--paper);
 }
 .field input:disabled {
@@ -400,7 +400,7 @@
   cursor: not-allowed;
 }
 .helper {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   line-height: 1.5;
 }
@@ -409,12 +409,12 @@
   font-weight: 700;
 }
 .requiredLegend {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin: 10px 0 0;
 }
 .fieldError {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-ink);
   line-height: 1.45;
   font-weight: 600;
@@ -450,9 +450,9 @@
 .authBtn {
   width: 100%;
   justify-content: center;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   padding: 15px 20px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   margin-top: 6px;
 }
 
@@ -465,7 +465,7 @@
   text-align: center;
 }
 .footer a {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   font-weight: 500;
 }
@@ -485,7 +485,7 @@
   gap: 14px;
   margin: 24px 0;
   color: var(--ink-40);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -505,10 +505,10 @@
   gap: 10px;
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.15);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 20px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -535,7 +535,7 @@
   gap: 12px;
   background: rgba(var(--accent-rgb), 0.07);
   border: 1px solid rgba(var(--accent-rgb), 0.18);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 12px 14px;
   margin-bottom: 24px;
 }
@@ -550,11 +550,11 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   flex: none;
 }
 .vouchText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -566,7 +566,7 @@
   margin-bottom: 26px;
 }
 .sectionLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -581,11 +581,11 @@
 .strengthSeg {
   flex: 1;
   height: 4px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.1);
 }
 .strengthLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 6px;
 }
@@ -597,12 +597,12 @@
 }
 .pChip {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
   cursor: pointer;
   transition:
@@ -626,7 +626,7 @@
   gap: 12px;
   padding: 14px 16px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
   transition:
     border-color 0.2s,
@@ -642,19 +642,19 @@
   width: auto;
 }
 .visOptText span {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
   display: block;
 }
 .visOptText small {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-top: 2px;
   display: block;
 }
 .legalNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   text-align: center;
   line-height: 1.55;
@@ -666,7 +666,7 @@
 }
 .signinLink {
   text-align: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin-top: 12px;
 }
@@ -680,7 +680,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
   margin: 4px 0 18px;
@@ -709,7 +709,7 @@
   align-items: center;
   gap: 5px;
   margin: 6px 0 18px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -737,7 +737,7 @@
   color: var(--accent-ink);
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -748,12 +748,12 @@
   gap: 2px;
 }
 .nextTitle {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
 }
 .nextBody {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -787,7 +787,7 @@
   content: "";
   position: absolute;
   inset: -10px;
-  border-radius: 26px;
+  border-radius: var(--radius-26);
   border: 2px solid rgba(var(--jade-rgb), 0.2);
   animation: qpRipple 2.2s ease-out infinite;
 }
@@ -837,5 +837,26 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+/* ── Local copies of shared keyframes ──
+   CSS Modules rewrites every animation NAME it sees here into a file-scoped
+   hash, including names whose @keyframes lives in global effects.css. The
+   reference then resolves to nothing and the animation silently never runs,
+   with no error anywhere. A keyframe used from a module has to be declared in
+   that module. Keep these in step with src/styles/tokens/effects.css. */
+@keyframes qpShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
   }
 }

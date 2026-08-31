@@ -35,7 +35,7 @@
 
 .switchText h2 {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -47,7 +47,7 @@
 
 .switchText p {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -60,7 +60,7 @@
 }
 
 .fieldLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -69,7 +69,7 @@
 
 .fieldHint {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -82,7 +82,7 @@
 }
 
 .presetHint {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-40);
   margin-right: 2px;
@@ -90,12 +90,12 @@
 
 .presetBtn {
   padding: 6px 13px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--cream);
   color: var(--ink-60);
   font: inherit;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -113,10 +113,10 @@
   width: 100%;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
   resize: vertical;
@@ -165,10 +165,10 @@
 .error {
   margin: 0;
   padding: 16px 18px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--danger-rgb), 0.08);
   color: var(--danger);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
 }
 
@@ -191,12 +191,12 @@
   min-width: 0;
 }
 .bannerText strong {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: rgba(var(--cream-rgb), 1);
 }
 .bannerText span {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.75);
 }
 
@@ -223,7 +223,7 @@
   min-width: 0;
 }
 .historyMain strong {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -232,7 +232,7 @@
 }
 .historyNote {
   margin: 4px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
   /* Admin-authored free text, up to 1000 chars — a pasted URL or ID is a
@@ -245,7 +245,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   white-space: nowrap;
 }
@@ -253,21 +253,34 @@
   margin: 0;
   padding: 32px 20px;
   text-align: center;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
+}
+/* Shown only when the audit list is a window onto a longer trail (ENG-50).
+   Informational, not an error, so it borrows the same dashed-panel language as
+   .truncatedNotice on the communities console rather than the error red: the
+   history is correct, there is simply more of it than this page holds. */
+.historyTruncated {
+  margin: 0 0 14px;
+  padding: 12px 16px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-card, 22px);
 }
 
 /* ── Confirm modal body ───────────────────────────────────── */
 .confirmBody {
   margin: 0 0 14px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.6;
   color: var(--ink);
 }
 
 .confirmLabel {
   margin: 0 0 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -279,17 +292,17 @@
   padding: 14px 18px;
   border-left: 3px solid var(--accent);
   background: rgba(var(--accent-rgb), 0.06);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.5;
   color: var(--ink);
 }
 
 .confirmNote {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }

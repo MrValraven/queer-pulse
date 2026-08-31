@@ -5,6 +5,7 @@ import {
 } from "react";
 import { FiStar } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useRovingRadioGroup } from "../../shared/hooks";
 import styles from "./WriteReviewModal.module.css";
 
 const STAR_VALUES = [1, 2, 3, 4, 5];
@@ -19,6 +20,17 @@ export function ReviewStarRating({
 }) {
   const { t } = useTranslation();
   const [hoveredRating, setHoveredRating] = useState(0);
+  // Roving tabindex + arrow/Home/End movement, shared with every other
+  // radiogroup on the platform. The picker keeps its own hover/focus preview:
+  // the hook only supplies `ref`, `tabIndex` and `onKeyDown`.
+  const { getRadioProps } = useRovingRadioGroup({
+    optionCount: STAR_VALUES.length,
+    checkedIndex: STAR_VALUES.indexOf(value),
+    onSelect: (index) => {
+      const nextRating = STAR_VALUES[index];
+      if (nextRating !== undefined) onChange(nextRating);
+    },
+  });
   /* What the row draws: the rating under the cursor while one is being
      considered, the committed one otherwise. `aria-checked` stays on the
      committed value - a preview is not a choice. */
@@ -45,9 +57,10 @@ export function ReviewStarRating({
       role="radiogroup"
       aria-label={t("economy:companyReview.overallRatingAriaLabel")}
     >
-      {STAR_VALUES.map((starValue) => (
+      {STAR_VALUES.map((starValue, index) => (
         <button
           key={starValue}
+          {...getRadioProps(index)}
           type="button"
           role="radio"
           aria-checked={value === starValue}

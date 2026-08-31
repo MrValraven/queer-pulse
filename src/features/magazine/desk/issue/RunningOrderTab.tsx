@@ -1,4 +1,4 @@
-import { useState, type DragEvent } from "react";
+import { useEffect, useRef, useState, type DragEvent } from "react";
 import { FiChevronDown, FiChevronUp, FiMoreVertical } from "react-icons/fi";
 import { Button, Tag } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
@@ -50,6 +50,48 @@ export function RunningOrderTab({
 }: RunningOrderTabProps) {
   const { t } = useTranslation();
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [moveAnnouncement, setMoveAnnouncement] = useState("");
+  const announcementFrameRef = useRef(0);
+
+  useEffect(
+    () => () => window.cancelAnimationFrame(announcementFrameRef.current),
+    [],
+  );
+
+  /**
+   * Writes the polite live region below the list. A move re-renders the rows in
+   * place under a focus that never leaves the button that was pressed, so
+   * without this a keyboard editor gets no confirmation that anything happened
+   * and has to re-read the whole list after every step.
+   *
+   * The region is cleared first and written back on the next frame, so the two
+   * writes land in separate commits and the text is GUARANTEED to change. The
+   * position alone almost always differs between consecutive moves, but two
+   * pieces that share a title can land on the same position one after the
+   * other, and a live region handed identical text is never re-read.
+   */
+  function announceMove(title: string, position: number) {
+    const total = runOrder.length;
+    window.cancelAnimationFrame(announcementFrameRef.current);
+    setMoveAnnouncement("");
+    announcementFrameRef.current = window.requestAnimationFrame(() => {
+      setMoveAnnouncement(
+        t("magazine:issue.runOrder.movedAnnouncement", {
+          title,
+          position,
+          total,
+        }),
+      );
+    });
+  }
+
+  /** The single reorder path: persist the new array, then announce the move. */
+  function applyMove(fromIndex: number, toIndex: number) {
+    const moved = runOrder[fromIndex];
+    if (moved === undefined) return;
+    onReorder(moveItem(runOrder, fromIndex, toIndex));
+    announceMove(moved.piece.title, toIndex + 1);
+  }
 
   function handleDragStart(sourceIndex: number) {
     return (event: DragEvent<HTMLDivElement>) => {
@@ -71,14 +113,14 @@ export function RunningOrderTab({
         draggedIndex ?? Number(event.dataTransfer.getData("text/plain"));
       setDraggedIndex(null);
       if (Number.isNaN(sourceIndex) || sourceIndex === targetIndex) return;
-      onReorder(moveItem(runOrder, sourceIndex, targetIndex));
+      applyMove(sourceIndex, targetIndex);
     };
   }
 
   function moveByStep(index: number, direction: "up" | "down") {
     const targetIndex = direction === "up" ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= runOrder.length) return;
-    onReorder(moveItem(runOrder, index, targetIndex));
+    applyMove(index, targetIndex);
   }
 
   return (
@@ -144,6 +186,9 @@ export function RunningOrderTab({
           </div>
         </div>
       ))}
+      <p className="visuallyHidden" role="status" aria-live="polite">
+        {moveAnnouncement}
+      </p>
     </div>
   );
 }

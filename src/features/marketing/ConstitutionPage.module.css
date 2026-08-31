@@ -5,7 +5,7 @@
   margin-top: 20px;
 }
 .dek {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   line-height: 1.7;
   max-width: 54ch;
@@ -25,7 +25,7 @@
   text-decoration: none;
 }
 .meta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-top: 16px;
   padding-top: 16px;
@@ -42,7 +42,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: var(--z-sticky);
 }
 .tocInner {
   max-width: 920px;
@@ -58,11 +58,11 @@
 }
 .tocInner a {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   padding: 8px 11px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   transition:
     color 0.2s var(--ease),
     background 0.2s var(--ease);
@@ -92,7 +92,7 @@
 .artNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--accent);
   letter-spacing: 0.04em;
   margin-bottom: 6px;
@@ -115,7 +115,7 @@
   color: var(--accent);
 }
 .clause {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.75;
   margin-bottom: 1em;
@@ -137,13 +137,13 @@
 .num {
   display: inline-block;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--accent);
   background: rgba(var(--accent-rgb), 0.1);
   padding: 2px 7px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   margin-right: 8px;
   vertical-align: 2px;
 }
@@ -151,7 +151,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   line-height: 1.55;
   border-left: 3px solid var(--accent);
@@ -167,7 +167,7 @@
   max-width: 760px;
   margin: 0 auto;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.65;
 }

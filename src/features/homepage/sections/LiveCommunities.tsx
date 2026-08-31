@@ -50,7 +50,7 @@ function EmptySpotlight({ onClear }: { onClear: () => void }) {
 export function LiveCommunities() {
   const { t } = useTranslation();
   const { openModal, modalElement } = useHowCommunitiesWorkModal();
-  const { communities, isLoading } = useLandingFeaturesPublic();
+  const { communities, isLoading, isError } = useLandingFeaturesPublic();
 
   const views = useMemo(
     () => communities.map(landingCommunityToView),
@@ -79,7 +79,12 @@ export function LiveCommunities() {
   const selected = visible.find((v) => v.key === activeKey) ?? null;
   const shown = visible.length;
 
-  if (isLoading || total === 0) return null;
+  // A failed fetch renders nothing, like an empty slice does. This is the
+  // marketing homepage: a visitor has no stake in this teaser row and cannot
+  // act on a failure here, and an alert panel between the curated plum and
+  // cream sections would cost more than the row is worth. The flag is read
+  // explicitly so the choice is a decision rather than an accident.
+  if (isLoading || isError || total === 0) return null;
 
   return (
     <section className={styles.section} id="communities">

@@ -9,10 +9,24 @@ import {
 } from "./cards.api";
 import { DEMO_CARD_PROGRAM } from "../cards.data";
 
-export function useCardProgram(slug: string | undefined): {
+export interface CardProgramResult {
   program: CardProgramDTO | null;
   isLoading: boolean;
-} {
+  /** True when the request failed, so callers can tell an outage apart from a
+   *  community that runs no card programme (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
+}
+
+/**
+ * One community's card programme, or `null` where it runs none.
+ *
+ * `isError` matters here because `null` is a real answer: without the flag a
+ * failed fetch reads as "this community has no card programme", which is the
+ * one thing an owner setting one up must never be told by mistake.
+ */
+export function useCardProgram(slug: string | undefined): CardProgramResult {
   const { demoMode } = useDemoMode();
   const query = useQuery({
     queryKey: ["card-program", slug, demoMode],
@@ -20,8 +34,20 @@ export function useCardProgram(slug: string | undefined): {
     queryFn: () => getCardProgram(slug!),
   });
 
-  if (demoMode) return { program: DEMO_CARD_PROGRAM, isLoading: false };
-  return { program: query.data ?? null, isLoading: query.isLoading };
+  if (demoMode) {
+    return {
+      program: DEMO_CARD_PROGRAM,
+      isLoading: false,
+      isError: false,
+      refetch: () => {},
+    };
+  }
+  return {
+    program: query.data ?? null,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 export function useUpsertCardProgram(slug: string | undefined) {

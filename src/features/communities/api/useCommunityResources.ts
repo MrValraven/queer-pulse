@@ -37,6 +37,8 @@ export interface CommunityResourcesResult {
   maxResources: number | null;
   isLoading: boolean;
   isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 const dtoToShelfResource = (dto: CommunityResourceDTO): ShelfResource => ({
@@ -70,6 +72,7 @@ export function useCommunityResources(
       maxResources: null,
       isLoading: false,
       isError: false,
+      refetch: () => {},
     };
   }
   return {
@@ -77,6 +80,7 @@ export function useCommunityResources(
     maxResources: query.data?.maxResources ?? null,
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

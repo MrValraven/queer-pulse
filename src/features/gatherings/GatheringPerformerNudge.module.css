@@ -8,7 +8,7 @@
   align-items: flex-start;
   background: rgba(var(--jade-rgb), 0.08);
   border: 1px solid rgba(var(--jade-rgb), 0.25);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 .icon {
   flex: none;
@@ -21,7 +21,7 @@
   min-width: 0;
 }
 .text {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.55;
 }
@@ -36,7 +36,7 @@
   background: none;
   border: none;
   padding: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   text-decoration: underline;
   cursor: pointer;

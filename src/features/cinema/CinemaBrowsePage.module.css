@@ -3,7 +3,7 @@
   border-bottom: 2px solid rgba(var(--cream-rgb), 0.16);
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -23,7 +23,7 @@
   color: var(--accent);
 }
 .hero p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.6);
   max-width: 52ch;
   margin-top: 18px;
@@ -52,7 +52,7 @@
 .sfHead h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
 }
 .sfHead h3 em {
@@ -60,7 +60,7 @@
   color: var(--accent);
 }
 .clear {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.5);
   cursor: pointer;
@@ -74,7 +74,7 @@
   margin-bottom: 22px;
 }
 .gLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -89,7 +89,7 @@
   margin-bottom: 20px;
 }
 .afLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.5);
   font-weight: 600;
 }
@@ -97,11 +97,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--cream-rgb), 0.1);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
 }
 .afChip .x {
@@ -119,7 +119,7 @@
   flex-wrap: wrap;
 }
 .results {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.6);
 }
 .results strong {
@@ -134,12 +134,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.66);
   background: transparent;
   border: 1px solid rgba(var(--cream-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
   transition:
@@ -156,14 +156,14 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  z-index: 20;
+  z-index: var(--z-popover);
   min-width: 180px;
   list-style: none;
   margin: 0;
   padding: 6px;
   background: var(--plum);
   border: 1px solid rgba(var(--cream-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.7);
   animation: sortIn 0.18s var(--ease);
 }
@@ -182,12 +182,12 @@
   width: 100%;
   text-align: left;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: rgba(var(--cream-rgb), 0.72);
   background: transparent;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   padding: 9px 12px;
   cursor: pointer;
   transition:
@@ -223,7 +223,7 @@
 }
 .fcPoster {
   aspect-ratio: 3/4;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
   border: 1px solid rgba(var(--cream-rgb), 0.08);
   position: relative;
@@ -243,13 +243,13 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 5px 10px;
-  border-radius: 7px;
-  backdrop-filter: blur(8px);
+  border-radius: var(--radius-7);
+  backdrop-filter: var(--blur-md);
   z-index: 2;
 }
 .free {
@@ -272,7 +272,7 @@
   height: 30px;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.6);
-  backdrop-filter: blur(8px);
+  backdrop-filter: var(--blur-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,7 +284,7 @@
   height: 14px;
 }
 .fcEb {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -293,7 +293,7 @@
 .fcTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.14;
   letter-spacing: -0.01em;
@@ -304,7 +304,7 @@
 .fcMeta {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.5);
 }
 .fcTags {
@@ -313,14 +313,14 @@
   flex-wrap: wrap;
 }
 .fcTag {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.55);
   background: rgba(var(--cream-rgb), 0.07);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 3px 8px;
 }
 .fcCurator {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.55);
   font-style: italic;
   font-family: var(--serif);

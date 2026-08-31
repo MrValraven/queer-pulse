@@ -33,5 +33,6 @@ export function useAdminVolunteerHours(period: VolunteerHoursPeriod) {
     report: query.data,
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

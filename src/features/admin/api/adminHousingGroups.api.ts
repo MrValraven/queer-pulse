@@ -1,4 +1,5 @@
 import { apiGet, apiPatch } from "../../../shared/api/client";
+import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 
 /**
  * Admin housing-groups console (`/admin/housing-groups`, moderator/admin only).
@@ -45,9 +46,43 @@ export interface AdminGroupListingDTO {
 
 export type GroupTriageAction = "approved" | "declined";
 
-/** Every group join request across all groups, for the triage queue. */
-export const getAdminGroupJoinRequests = () =>
-  apiGet<AdminGroupJoinRequestDTO[]>("/admin/housing-groups/join-requests");
+export interface AdminGroupJoinRequestsParameters {
+  page?: number;
+  /** Omitted returns every status. The console asks for `pending`. */
+  status?: GroupJoinRequestStatus;
+  /** A group slug to narrow to. */
+  group?: string;
+}
+
+/**
+ * GET /admin/housing-groups/join-requests?page&status&group — one page of the
+ * group join-request triage queue, newest first.
+ *
+ * This route used to answer with a flat array of the newest 200 requests in
+ * EVERY status, and this console filtered to the pending ones in the browser
+ * (ENG-41). So a group carrying 200 already-decided requests newer than one
+ * pending request showed a moderator an empty queue while somebody waited. The
+ * status filter now lives in the query, and the response is the
+ * `{ items, total, page, pageSize }` envelope with `total` counting the whole
+ * filtered queue. Wrapped in `toItemsPage` so a deploy where the backend is
+ * still on the old array shape reads as one full page instead of throwing on
+ * `.items`.
+ */
+export const getAdminGroupJoinRequests = async (
+  parameters: AdminGroupJoinRequestsParameters = {},
+) => {
+  const searchParams = new URLSearchParams();
+  if (parameters.page) searchParams.set("page", String(parameters.page));
+  if (parameters.status) searchParams.set("status", parameters.status);
+  if (parameters.group) searchParams.set("group", parameters.group);
+  const querySuffix = searchParams.toString();
+  const response = await apiGet<
+    AdminGroupJoinRequestDTO[] | ItemsPage<AdminGroupJoinRequestDTO>
+  >(
+    `/admin/housing-groups/join-requests${querySuffix ? `?${querySuffix}` : ""}`,
+  );
+  return toItemsPage(response);
+};
 
 export const triageAdminGroupJoinRequest = (
   id: string,

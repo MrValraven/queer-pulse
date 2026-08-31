@@ -10,6 +10,11 @@ import { changemakerDtoToStory } from "./changemakers.adapters";
 export interface ChangemakerResult {
   changemaker: ChangemakerStory | undefined;
   isLoading: boolean;
+  /** True when the profile request failed. Without it a failed read is
+   *  indistinguishable from "no such changemaker" (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 export function useChangemaker(slug: string | undefined): ChangemakerResult {
@@ -31,11 +36,15 @@ export function useChangemaker(slug: string | undefined): ChangemakerResult {
     return {
       changemaker: slug ? getChangemaker(slug) : undefined,
       isLoading: false,
+      isError: false,
+      refetch: () => {},
     };
   }
 
   return {
     changemaker: query.data,
     isLoading: shouldFetch && query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

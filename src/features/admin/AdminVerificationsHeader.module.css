@@ -23,7 +23,7 @@
   flex: none;
 }
 .sortLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -31,12 +31,12 @@
 }
 .sortSelect {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 12px;
   cursor: pointer;
   transition: border-color 0.18s var(--ease);

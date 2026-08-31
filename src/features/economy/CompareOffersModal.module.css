@@ -1,5 +1,5 @@
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -20,7 +20,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 26px;
@@ -37,7 +37,7 @@
 .rowHead {
   text-align: left;
   vertical-align: top;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -56,7 +56,7 @@
 .colCo {
   display: block;
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 500;
   color: var(--text-strong);
   letter-spacing: -0.01em;
@@ -64,14 +64,14 @@
 }
 .colRole {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-top: 3px;
 }
 .cell {
   vertical-align: top;
   padding: 14px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.5;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
@@ -88,7 +88,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   line-height: 1.45;
 }
@@ -103,7 +103,7 @@
   justify-content: flex-start;
 }
 .back {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   font-weight: 500;
   background: none;

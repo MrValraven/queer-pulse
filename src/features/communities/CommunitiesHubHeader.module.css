@@ -19,7 +19,7 @@
 /* The page name on the "My communities" tab, where the greeting takes the h1. */
 .eyebrow {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;

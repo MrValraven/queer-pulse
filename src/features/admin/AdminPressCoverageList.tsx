@@ -32,7 +32,7 @@ function coverageToRowVM(coverage: AdminPressCoverageDTO): PressRowVM {
 export function AdminPressCoverageList() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { coverage, isLoading } = useAdminPressCoverage();
+  const { coverage, isLoading, isError, refetch } = useAdminPressCoverage();
   const createCoverage = useCreatePressCoverage();
   const updateCoverage = useUpdatePressCoverage();
   const deleteCoverage = useDeletePressCoverage();
@@ -43,6 +43,8 @@ export function AdminPressCoverageList() {
       kind="coverage"
       rows={coverage.map(coverageToRowVM)}
       isLoading={isLoading}
+      isError={isError}
+      onRetry={() => void refetch()}
       creating={createCoverage.isPending}
       deleting={deleteCoverage.isPending}
       onCreate={(value, done) =>

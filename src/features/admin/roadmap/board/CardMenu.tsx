@@ -5,6 +5,7 @@ import type {
   AdminRoadmapItemDTO,
   RoadmapColumn,
 } from "../../api/roadmapAdmin.types";
+import type { CardMoveProps } from "./useBoardDnd";
 import styles from "./CardMenu.module.css";
 
 const COLUMN_ORDER: RoadmapColumn[] = [
@@ -17,6 +18,7 @@ const COLUMN_ORDER: RoadmapColumn[] = [
 interface CardMenuProps {
   item: AdminRoadmapItemDTO;
   ariaLabel: string;
+  moveProps: CardMoveProps;
   onMoveTo: (column: RoadmapColumn) => void;
   onEdit: () => void;
   onTogglePublic: () => void;
@@ -27,16 +29,35 @@ interface CardMenuProps {
 }
 
 /**
- * Board card kebab (`admin:roadmap.board.menu.*`) — move / edit / toggle
- * public / duplicate / notify voters / archive / delete. The APG
- * menu-button pattern, mirroring `ListingModerationActions`' own
- * `OverflowMenu`: outside-click + Escape close, first item focused on open.
- * Purely presentational — every action is a callback the caller (the card)
- * owns; this component knows nothing about mutations.
+ * Board card kebab (`admin:roadmap.board.menu.*`) — reorder within the
+ * column / move to another column / edit / toggle public / duplicate /
+ * notify voters / archive / delete. The APG menu-button pattern, mirroring
+ * `ListingModerationActions`' own `OverflowMenu`: outside-click + Escape
+ * close, first item focused on open. Purely presentational — every action is
+ * a callback the caller (the card) owns; this component knows nothing about
+ * mutations.
+ *
+ * "Move up"/"Move down" are the keyboard half of the board's drag reorder,
+ * shaped like the magazine desk's running order (one step at a time, named
+ * with the card, unavailable at the ends of the column). They live in this
+ * menu rather than as a pair of buttons on the card because the card head row
+ * already carries a checkbox, grip, two chips, the flag strip and this
+ * trigger, and shrinks again in dense mode — two more controls per card would
+ * crowd it and add two tab stops to every card across four columns. The kebab
+ * is already where "move" lives.
+ *
+ * Two deliberate departures from the rest of the menu, both so a keyboard
+ * editor can step a card several slots without re-opening anything:
+ * activating a move does NOT close the menu (focus stays on the pressed
+ * item, so repeating is one key), and the pair is rendered as long as the
+ * column can be reordered at all, with the unavailable direction
+ * `aria-disabled` rather than dropped — an item that unmounted under the
+ * focus sitting on it would drop that focus to the body.
  */
 export function CardMenu({
   item,
   ariaLabel,
+  moveProps,
   onMoveTo,
   onEdit,
   onTogglePublic,
@@ -49,11 +70,13 @@ export function CardMenu({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const firstItemRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
-    firstItemRef.current?.focus();
+    // Queried rather than held on a ref, because which item comes first now
+    // depends on whether this column can be reordered at all.
+    menuRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
     const onPointerDown = (event: MouseEvent) => {
       if (
         containerRef.current &&
@@ -82,6 +105,7 @@ export function CardMenu({
   }
 
   const moveTargets = COLUMN_ORDER.filter((column) => column !== item.column);
+  const canReorder = moveProps.canMoveUp || moveProps.canMoveDown;
 
   return (
     <div className={styles.wrap} ref={containerRef}>
@@ -98,11 +122,42 @@ export function CardMenu({
       </button>
 
       {open && (
-        <div className={styles.menu} role="menu">
-          {moveTargets.map((column, index) => (
+        <div className={styles.menu} role="menu" ref={menuRef}>
+          {canReorder && (
+            <>
+              <button
+                type="button"
+                role="menuitem"
+                className={styles.item}
+                aria-disabled={!moveProps.canMoveUp}
+                aria-label={t("admin:roadmap.board.menu.moveUpAriaLabel", {
+                  name: item.name,
+                })}
+                onClick={() => {
+                  if (moveProps.canMoveUp) moveProps.moveUp();
+                }}
+              >
+                {t("admin:roadmap.board.menu.moveUp")}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                className={styles.item}
+                aria-disabled={!moveProps.canMoveDown}
+                aria-label={t("admin:roadmap.board.menu.moveDownAriaLabel", {
+                  name: item.name,
+                })}
+                onClick={() => {
+                  if (moveProps.canMoveDown) moveProps.moveDown();
+                }}
+              >
+                {t("admin:roadmap.board.menu.moveDown")}
+              </button>
+            </>
+          )}
+          {moveTargets.map((column) => (
             <button
               key={column}
-              ref={index === 0 ? firstItemRef : undefined}
               type="button"
               role="menuitem"
               className={styles.item}

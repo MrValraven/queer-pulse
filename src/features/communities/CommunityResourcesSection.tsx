@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCheck, FiSettings } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { CommunityRole } from "./membership.types";
@@ -40,6 +40,21 @@ export function CommunityResourcesSection({
   const canEditShelf = !demoMode && isCommunityStaff(role);
 
   const hasResources = shelf.resources.length > 0;
+  // A failed shelf read used to hide the whole section from a member and show
+  // staff the "empty shelf" hint, both of which claim the shelf is empty when
+  // it never loaded (DES-22).
+  if (!hasResources && shelf.isError) {
+    return (
+      <>
+        <div className={styles.head}>
+          <div className={detail.secLbl}>
+            {t("communities:detail.aboutResources.resources")}
+          </div>
+        </div>
+        <LoadErrorState compact onRetry={shelf.refetch} />
+      </>
+    );
+  }
   if (!hasResources && !canEditShelf) return null;
 
   return (

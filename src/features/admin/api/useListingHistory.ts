@@ -48,5 +48,6 @@ export function useListingHistory(ref: string | undefined) {
     history: query.data ?? EMPTY_HISTORY,
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

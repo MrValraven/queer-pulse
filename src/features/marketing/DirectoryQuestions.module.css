@@ -12,26 +12,26 @@
   margin-bottom: 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 /* Label above the field, always visible. The placeholder is only an example;
    the label carries the meaning. */
 .askLabel {
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
 }
 .askInput {
   width: 100%;
   padding: 12px 14px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.6;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   resize: vertical;
 }
 .askInput:focus {
@@ -48,25 +48,25 @@
 .askHint {
   flex: 1 1 20ch;
   min-width: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-40);
 }
 /* The refusal, where the member is looking. Icon-free but colour-plus-text:
    the words carry the meaning on their own. */
 .askError {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--danger);
 }
 .signIn {
   padding: 16px 18px;
   margin-bottom: 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 .signIn a {
   color: var(--accent-ink);
@@ -77,11 +77,11 @@
 .ownerNote {
   padding: 14px 18px;
   margin-bottom: 18px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 
 /* ── The list ─────────────────────────────────────────────────────────────── */
@@ -94,7 +94,7 @@
   padding: 20px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 .questionHead {
   display: flex;
@@ -110,14 +110,15 @@
   min-width: 0;
   text-decoration: none;
   color: inherit;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 .asker:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .askerName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   transition: color 0.18s var(--ease);
@@ -130,11 +131,11 @@
 .questionDate {
   margin-inline-start: auto;
   flex: none;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .questionBody {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   line-height: 1.6;
   color: var(--ink);
@@ -155,7 +156,7 @@
    business. */
 .awaiting {
   margin-top: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-40);
 }
@@ -166,7 +167,7 @@
 .answerModerator {
   margin-top: 12px;
   padding: 14px 16px;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
 }
 .answerOwner {
   background: rgba(var(--plum-rgb), 0.06);
@@ -192,7 +193,7 @@
   gap: 6px;
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--plum);
 }
 .answerModerator .answerBy {
@@ -204,18 +205,18 @@
 }
 .answerDate {
   flex: none;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .answerText {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
   text-wrap: pretty;
 }
 .answerNote {
   margin-top: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -224,7 +225,7 @@
 .answerToggle {
   margin-top: 12px;
   padding: 8px 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .answerComposer {
   display: flex;
@@ -236,12 +237,12 @@
   width: 100%;
   padding: 10px 12px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.6;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   resize: vertical;
 }
 .answerInput:focus {
@@ -260,7 +261,7 @@
   align-items: flex-start;
   gap: 9px;
   padding: 18px 4px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-40);
 }

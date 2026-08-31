@@ -18,6 +18,11 @@ export interface AdminGovernanceProposalsResult {
   proposals: GovernanceProposalDTO[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /** True when the fetch failed, so the tab can tell an outage apart from a
+   *  board that genuinely has no open proposals (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch; wire to the error state's retry. */
+  refetch: () => void;
 }
 
 /** The admin Proposals tab's list — same data the public page's Proposals
@@ -32,7 +37,12 @@ export function useAdminGovernanceProposalsList(): AdminGovernanceProposalsResul
             .DEMO_GOVERNANCE_PROPOSALS
         : getGovernanceProposals(),
   });
-  return { proposals: query.data ?? [], loading: query.isPending };
+  return {
+    proposals: query.data ?? [],
+    loading: query.isPending,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 /**

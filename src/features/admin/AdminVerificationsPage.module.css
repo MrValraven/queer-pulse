@@ -11,7 +11,7 @@
    power-user stumbles into. Touch-only reviewers can simply ignore it. */
 .keyboardHint {
   margin: 10px 0 4px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -23,7 +23,10 @@
   left: 50%;
   bottom: max(20px, calc(env(safe-area-inset-bottom) + 14px));
   transform: translateX(-50%);
-  z-index: 40;
+  /* Persistent floating chrome, same tier as the app's other fixed bars.
+     Below --z-popover on purpose: a row's open overflow menu must never be
+     clipped by this bar if the two ever overlap near the viewport edge. */
+  z-index: var(--z-nav);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,7 +38,7 @@
   border-radius: var(--radius-pill, 999px);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 18px 44px -16px rgba(var(--plum-rgb), 0.6);
+  box-shadow: var(--shadow-lift);
   animation: verificationBulkBarRise 0.2s var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -55,12 +58,12 @@
 }
 .bulkCount {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 500;
   flex: none;
 }
 .bulkCapNote {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.7);
   flex: none;
 }
@@ -105,7 +108,7 @@
 }
 .provenanceLine {
   margin: 6px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .provenanceLabel {
@@ -129,7 +132,7 @@
   flex: 1 1 160px;
 }
 .footFieldLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -139,11 +142,11 @@
 .footInput {
   height: 40px;
   padding: 0 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--text-strong);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-family: inherit;
 }
 [data-theme="dark"] .footSelect,
@@ -153,7 +156,7 @@
 .footHint {
   flex-basis: 100%;
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--danger);
 }
 
@@ -168,7 +171,7 @@
 }
 .historySectionTitle {
   margin: 14px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -189,7 +192,7 @@
   padding: 10px 12px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 .historyRowHead {
   display: flex;
@@ -199,7 +202,7 @@
   flex-wrap: wrap;
 }
 .historyRowLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -208,7 +211,7 @@
 }
 .historyRowMeta {
   flex: none;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   white-space: nowrap;
 }
@@ -218,11 +221,11 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 4px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 .historyArrow {
-  font-size: 10px;
+  font-size: var(--text-10);
   color: var(--ink-40);
 }
 .historyActor {
@@ -230,7 +233,7 @@
 }
 .historyReason {
   margin: 6px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
   /* Moderator-authored free text — a pasted URL/ID is realistic and must not
@@ -241,11 +244,11 @@
   margin: 0;
   padding: 14px 12px;
   text-align: center;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 
 /* Signals placeholder (drawer body, below history) — Phase 3 fills this in;
@@ -255,6 +258,6 @@
 }
 .signalsNote {
   margin: 6px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }

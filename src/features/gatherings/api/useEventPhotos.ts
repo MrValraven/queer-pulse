@@ -23,7 +23,12 @@ export function useEventPhotos(slug: string) {
       return photos;
     },
   });
-  return { photos: query.data ?? [], isLoading: query.isLoading };
+  return {
+    photos: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 /** Attach an uploaded photo (organizers only, enforced server-side). */

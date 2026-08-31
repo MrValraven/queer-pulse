@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiFilm } from "react-icons/fi";
+import { FiFilm, FiX } from "react-icons/fi";
 import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { SplitTitle, PosterSlot } from "./CinemaAtoms";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -264,7 +264,7 @@ function DemoCinemaBrowsePage() {
                           }
                         }}
                       >
-                        ×
+                        <FiX aria-hidden />
                       </span>
                     </span>
                   ))}

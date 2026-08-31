@@ -3,21 +3,21 @@
 }
 
 .progressLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60, rgba(var(--plum-rgb), 0.6));
   margin-bottom: 6px;
 }
 
 .track {
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.09);
   overflow: hidden;
 }
 
 .bar {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--jade);
   transition: width 0.2s var(--ease, ease-out);
 }
@@ -30,6 +30,6 @@
 
 .error {
   margin-top: 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--accent);
 }

@@ -11,8 +11,13 @@
 
 // --- Mirror of src/app/authGate.ts (keep in sync) ---------------------------
 
-/** Gated (member-only) path patterns. `/prefix/*` = prefix match. */
-const GATED_PATTERNS = [
+/**
+ * Gated (member-only) path patterns. `/prefix/*` = prefix match.
+ *
+ * Exported for `check-robots.mjs`, which walks the list to prove every gated
+ * prefix is Disallowed in `public/robots.txt`.
+ */
+export const GATED_PATTERNS = [
   "/account",
   "/account/*",
   "/work",

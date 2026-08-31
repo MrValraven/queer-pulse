@@ -33,6 +33,13 @@ export interface CompaniesResult {
   total: number;
   /** True while the first page is in flight. */
   isLoading: boolean;
+  /**
+   * True when the fetch failed, so a consumer can tell an outage apart from a
+   * genuinely empty employer list rather than rendering both as nothing.
+   */
+  isError: boolean;
+  /** Re-runs the failed fetch. Wire it to the error state's retry. */
+  refetch: () => void;
   /** True when another page is available (always false in demo). */
   hasNextPage: boolean;
   /** Fetch and append the next page. */
@@ -92,6 +99,8 @@ export function useCompanies(): CompaniesResult {
     items: pages.flatMap((p) => p.items),
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,

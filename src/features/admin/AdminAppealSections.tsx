@@ -6,10 +6,15 @@ import {
   FiInfo,
 } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useRovingRadioGroup } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
 import styles from "./AdminModerationPage.module.css";
 
 export type AppealDecision = "uphold" | "overturn";
+
+/** The decision tiles in the order the drawer renders them, so the radiogroup
+ *  keyboard model can move between them by index. */
+const APPEAL_DECISIONS: AppealDecision[] = ["uphold", "overturn"];
 
 /**
  * The published decision deadline, at the top of the drawer (TS-11).
@@ -68,6 +73,20 @@ export function AppealDecisionSection({
   originalBy: string;
 }) {
   const { t } = useTranslation();
+  // The two tiles carry different "chosen" classes (uphold reads jade,
+  // overturn reads coral), which is why this group runs on the shared keyboard
+  // hook directly rather than through `RadioCardGroup`'s single
+  // `checkedClassName`. They are radios, so they announce and behave as one
+  // choice: previously they were `aria-pressed` toggles inside a radiogroup,
+  // with no arrow keys and two tab stops.
+  const { getRadioProps } = useRovingRadioGroup({
+    optionCount: APPEAL_DECISIONS.length,
+    checkedIndex: decision ? APPEAL_DECISIONS.indexOf(decision) : -1,
+    onSelect: (index) => {
+      const nextDecision = APPEAL_DECISIONS[index];
+      if (nextDecision) onDecide(nextDecision);
+    },
+  });
 
   return (
     <section className={styles.dSec}>
@@ -80,8 +99,10 @@ export function AppealDecisionSection({
         aria-label={t("admin:moderation.appealDrawer.decisionAriaLabel")}
       >
         <button
+          {...getRadioProps(0)}
           type="button"
-          aria-pressed={decision === "uphold"}
+          role="radio"
+          aria-checked={decision === "uphold"}
           className={[
             styles.decOption,
             decision === "uphold" && styles.decUpholdOn,
@@ -103,8 +124,10 @@ export function AppealDecisionSection({
           </span>
         </button>
         <button
+          {...getRadioProps(1)}
           type="button"
-          aria-pressed={decision === "overturn"}
+          role="radio"
+          aria-checked={decision === "overturn"}
           className={[
             styles.decOption,
             decision === "overturn" && styles.decOverturnOn,

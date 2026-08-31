@@ -45,7 +45,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   margin-bottom: 28px;
   flex-wrap: wrap;
@@ -68,7 +68,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -80,7 +80,7 @@
   height: 6px;
   border-radius: 50%;
   background: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.22);
+  box-shadow: var(--ring-jade);
 }
 
 .title {
@@ -113,7 +113,7 @@
   gap: 2px;
 }
 .statK {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -153,18 +153,18 @@
   background: rgba(var(--accent-rgb), 0.22);
   color: var(--accent-soft);
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .curName {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.82);
 }
 .curRole {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.5);
   font-family: var(--serif);
   font-style: italic;
@@ -199,7 +199,7 @@
   margin-top: 24px;
 }
 .body p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 16px;
@@ -216,11 +216,11 @@
 .detailsCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 26px 28px;
 }
 .detailsHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -239,12 +239,12 @@
   padding-bottom: 0;
 }
 .detailsK {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .detailsV {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -253,7 +253,7 @@
   color: var(--accent);
 }
 .detailsNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   font-family: var(--serif);
   font-style: italic;
@@ -287,7 +287,7 @@
   padding: 24px 28px;
   background: rgba(var(--jade-rgb), 0.06);
   border: 1px solid rgba(var(--jade-rgb), 0.18);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   margin-bottom: 40px;
   display: flex;
   gap: 16px;
@@ -302,7 +302,7 @@
 }
 .orderNote p {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   line-height: 1.52;
   letter-spacing: -0.005em;
@@ -347,17 +347,17 @@
 }
 .poster {
   aspect-ratio: 3 / 4;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   background: var(--plum);
   position: relative;
-  box-shadow: 0 8px 24px -16px rgba(var(--plum-rgb), 0.32);
+  box-shadow: var(--shadow-e2);
 }
 .kicker {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -389,7 +389,7 @@
 .entryMeta {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   margin-top: 8px;
 }
@@ -398,9 +398,9 @@
   padding: 14px 18px 14px 22px;
   border-left: 3px solid var(--accent);
   background: rgba(var(--accent-rgb), 0.05);
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 var(--radius-10) var(--radius-10) 0;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
   line-height: 1.52;
   max-width: 56ch;
@@ -411,7 +411,7 @@
 }
 .who {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -426,9 +426,9 @@
   margin-top: 12px;
 }
 .entryTag {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   padding: 3px 8px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   background: rgba(var(--plum-rgb), 0.06);
   color: var(--ink-60);
 }
@@ -441,7 +441,7 @@
 }
 .price {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -449,7 +449,7 @@
   color: var(--jade);
 }
 .entryBtn {
-  font-size: 13px;
+  font-size: var(--text-13);
   white-space: nowrap;
 }
 
@@ -459,7 +459,7 @@
   text-align: center;
 }
 .showNote {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 16px;
 }
@@ -472,12 +472,12 @@
 .asideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 22px 24px;
   margin-bottom: 18px;
 }
 .asideHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -486,7 +486,7 @@
 }
 .progHint {
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-bottom: 6px;
   font-style: italic;
@@ -494,7 +494,7 @@
 .prog {
   height: 6px;
   background: rgba(var(--plum-rgb), 0.1);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
   margin: 8px 0;
 }
@@ -502,10 +502,10 @@
   height: 100%;
   width: 8%;
   background: var(--accent);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .progNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   font-family: var(--serif);
   font-style: italic;
@@ -528,20 +528,20 @@
 .rcAv {
   width: 40px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--plum-rgb), 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
   font-style: italic;
   flex: none;
 }
 .rcTitle {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
   line-height: 1.2;
   letter-spacing: -0.008em;
@@ -554,7 +554,7 @@
   color: var(--accent);
 }
 .rcBy {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 3px;
 }
@@ -583,7 +583,7 @@
   font-weight: 400;
 }
 .outroSub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.7);
   margin: 16px 0 28px;
   line-height: 1.6;
@@ -594,7 +594,7 @@
   background: var(--cream);
 }
 .back {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   transition: color 0.2s var(--ease);
 }
@@ -621,7 +621,7 @@
   color: var(--accent);
 }
 .notFound p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   line-height: 1.7;
   max-width: 46ch;

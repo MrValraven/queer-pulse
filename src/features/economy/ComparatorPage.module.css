@@ -16,7 +16,7 @@
 
 .rcLabel {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -36,10 +36,10 @@
 .rcInput,
 .rcSelect {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.25s var(--ease);
@@ -82,7 +82,8 @@
     border-color 0.3s var(--ease),
     box-shadow 0.3s var(--ease);
 }
-/* The richer side gets a subtle jade lift. */
+/* The richer side gets a subtle jade lift: a deliberate colour-coded glow,
+   not neutral elevation, so it stays off the plum --shadow-e* scale. */
 .colHi {
   border-color: rgba(var(--jade-rgb), 0.5);
   box-shadow: 0 8px 28px rgba(var(--jade-rgb), 0.14);
@@ -93,7 +94,7 @@
   align-items: center;
   gap: 8px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink-60);
   margin: 0 0 14px;
@@ -108,7 +109,7 @@
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent-ink);
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 .colHi .colIcon {
   background: rgba(var(--jade-rgb), 0.18);
@@ -127,7 +128,7 @@
 
 .colMonthly {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin: 8px 0 18px;
 }
@@ -154,12 +155,12 @@
   border-bottom: none;
 }
 .colRow dt {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin: 0;
 }
 .colRow dd {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
   margin: 0;
@@ -190,7 +191,7 @@
 
 .diffLabel {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: rgba(var(--cream-rgb), 0.6);
@@ -212,7 +213,7 @@
 
 .diffSub {
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.8);
   margin: 12px 0 0;
@@ -253,7 +254,7 @@
   align-items: flex-start;
   gap: 12px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -266,7 +267,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  font-size: 14px;
+  font-size: var(--text-14);
   margin-top: 1px;
 }
 .costNeg .costIcon {
@@ -280,7 +281,7 @@
 
 .disclaimer {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.6;
   color: var(--ink-40);
   margin: 0;

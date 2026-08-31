@@ -11,7 +11,7 @@
 }
 
 .emptyLine {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin: 20px 0;
 }
@@ -36,7 +36,7 @@
 @media (hover: hover) {
   .row:hover {
     border-color: rgba(var(--line-rgb), 0.22);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-e2);
   }
 }
 
@@ -74,20 +74,20 @@
      references lines up; STYLE-RULES bans monospace in the product UI. */
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .rowMeta {
   margin-top: 6px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
 }
 
 .rowDetails {
   margin-top: 6px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.5;
   display: -webkit-box;
@@ -98,7 +98,7 @@
 
 .rowDates {
   margin-top: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -139,7 +139,7 @@
 }
 
 .detailLabel {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -147,7 +147,7 @@
 }
 
 .detailValue {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--text-strong);
   line-height: 1.55;
   overflow-wrap: anywhere;
@@ -167,7 +167,7 @@
 }
 
 .outcomeLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -176,22 +176,23 @@
   width: 100%;
   min-height: 92px;
   padding: 10px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text-strong);
   resize: vertical;
 }
 
 .outcomeInput:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .outcomeHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }

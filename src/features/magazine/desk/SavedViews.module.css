@@ -16,7 +16,7 @@
   border: 1.5px dashed rgba(var(--line-rgb), 0.2);
   background: transparent;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   cursor: pointer;

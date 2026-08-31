@@ -9,7 +9,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
-import { SkeletonLine } from "../../shared/components/ui";
+import { LoadErrorState, SkeletonLine } from "../../shared/components/ui";
 import {
   pushModal,
   popModal,
@@ -453,7 +453,12 @@ export function AdminVouchGraphModal({
   // `focus` pins `activeFocus` into the fetched node set even when their join
   // date falls outside the graph's cap, so both the initial member and any
   // member-finder pick always resolve (ADM-10).
-  const { data, isLoading } = useTrustNetwork(activeFocus);
+  const {
+    data,
+    isLoading,
+    isError: hasTrustNetworkError,
+    refetch: refetchTrustNetwork,
+  } = useTrustNetwork(activeFocus);
 
   // Stable per-instance id so the graph registers itself on the shared modal
   // stack (`shared/components/ui/modalStack`), same as `AdminDrawer` and
@@ -477,6 +482,21 @@ export function AdminVouchGraphModal({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose, graphModalId]);
+
+  // Checked before the loading branch below. `isLoading` goes false on a
+  // failure while `data` stays undefined, so without this the modal held its
+  // loading skeleton forever and never said anything had gone wrong (DES-22).
+  if (hasTrustNetworkError && !data) {
+    return (
+      <GraphModalShell onClose={onClose}>
+        <LoadErrorState
+          onRetry={() => void refetchTrustNetwork()}
+          title={t("admin:vouchGraph.loadError.title")}
+          description={t("admin:vouchGraph.loadError.body")}
+        />
+      </GraphModalShell>
+    );
+  }
 
   if (isLoading || !data) {
     return (

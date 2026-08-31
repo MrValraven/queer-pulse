@@ -2,8 +2,18 @@
    `.rich` (mag-write.css) with repo tokens in place of the prototype-local
    --ink-40/--wash placeholders (both already exist as real repo tokens). */
 
+/* Deliberately NO `outline: none` (DES-45). Each `.rich` is one block-level
+   textbox, not the whole canvas: it carries role="textbox" with its own
+   accessible name, and the desk mounts one per headline, standfirst,
+   paragraph, heading, pull quote, question, answer and caption. That makes it
+   field-sized, so the global two-tone ring in base.css is the right indicator
+   for it, and it is the only cue a keyboard writer gets that the caret landed
+   in this block rather than the one above.
+   The classes callers pass in (`.title`, `.standfirst`, `.paragraph`,
+   `.heading`, `.pullQuote`, `.q`, `.caption`) declare no `outline` and no
+   `border-radius`, so nothing in this lazy chunk out-specifies the global
+   rule. Keep it that way. */
 .rich {
-  outline: none;
   white-space: pre-wrap;
   word-break: break-word;
 }

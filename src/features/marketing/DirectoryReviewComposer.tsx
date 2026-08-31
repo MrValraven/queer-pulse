@@ -8,6 +8,7 @@ import {
 import { FiInfo, FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useRovingRadioGroup } from "../../shared/hooks";
 import { DirectoryReviewPhotoField } from "./DirectoryReviewPhotoField";
 import s from "./DirectorySpacePage.module.css";
 
@@ -65,6 +66,18 @@ export function DirectoryReviewComposer({
     initialPhotoUrl,
   );
 
+  // Roving tabindex + arrow/Home/End movement for the star radiogroup, shared
+  // with every other radiogroup on the platform. The picker keeps its own
+  // hover/focus preview: the hook only supplies `ref`, `tabIndex`, `onKeyDown`.
+  const { getRadioProps } = useRovingRadioGroup({
+    optionCount: STAR_VALUES.length,
+    checkedIndex: STAR_VALUES.indexOf(stars),
+    onSelect: (index) => {
+      const nextStars = STAR_VALUES[index];
+      if (nextStars !== undefined) setStars(nextStars);
+    },
+  });
+
   const shownStars = hoveredStars || stars;
   const canSubmit = stars >= 1 && text.trim().length > 0 && !isPending;
   /* Someone who has written their review but not touched the stars sees only a
@@ -105,15 +118,17 @@ export function DirectoryReviewComposer({
         role="radiogroup"
         aria-label={t("marketing:directory.detail.review.starsAria")}
       >
-        {STAR_VALUES.map((value) => (
+        {STAR_VALUES.map((value, index) => (
           <button
             key={value}
+            {...getRadioProps(index)}
             type="button"
+            role="radio"
             className={s.starBtn}
             aria-label={t("marketing:directory.detail.review.starAria", {
               count: value,
             })}
-            aria-pressed={value <= stars}
+            aria-checked={value === stars}
             onMouseEnter={() => setHoveredStars(value)}
             onMouseLeave={handleStarExit}
             onFocus={() => setHoveredStars(value)}

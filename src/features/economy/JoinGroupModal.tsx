@@ -67,8 +67,12 @@ export function JoinGroupModal({
     >
       {done ? (
         <SuccessPanel
-          title={t("economy:joinGroup.success.title")}
-          em={t("economy:joinGroup.success.em")}
+          title={
+            <Translation
+              i18nKey="economy:joinGroup.success.title"
+              components={{ em: <em /> }}
+            />
+          }
           onClose={onClose}
           closeLabel={t("economy:joinGroup.success.closeLabel")}
         >

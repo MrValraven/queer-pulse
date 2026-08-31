@@ -10,7 +10,7 @@
   position: relative;
   padding: 5px 0;
   margin: 0 -12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
 }
 
 .blkIn {
@@ -52,13 +52,13 @@
   min-width: 26px;
   height: 26px;
   min-height: 26px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   display: grid;
   place-items: center;
   color: var(--ink-40);
   background: var(--paper);
   border: 1px solid var(--line);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 
 .blkTools button:hover:not(:disabled) {
@@ -82,7 +82,7 @@
   position: absolute;
   right: -96px;
   top: 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 700;
@@ -106,13 +106,13 @@
 
 /* per-kind content */
 .paragraph {
-  font-size: 17.5px;
+  font-size: var(--text-17-5);
   line-height: 1.68;
   color: var(--ink);
 }
 
 .paragraph.lead {
-  font-size: 20px;
+  font-size: var(--text-20);
   line-height: 1.55;
   color: var(--plum);
 }
@@ -140,11 +140,11 @@
 }
 
 .quote {
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.6;
   color: var(--ink);
   background: var(--wash);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
 }
 
@@ -153,7 +153,7 @@
   align-items: baseline;
   gap: 2px;
   margin-top: 9px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 
@@ -181,7 +181,7 @@
 
 .q {
   font-weight: 700;
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   line-height: 1.5;
   color: var(--plum);
 }
@@ -189,7 +189,7 @@
 .a {
   display: flex;
   gap: 11px;
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   line-height: 1.6;
 }
 
@@ -207,7 +207,7 @@
   background: transparent;
   font: inherit;
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   outline: none;
   padding: 2px 0;
@@ -223,7 +223,7 @@
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 16px;
   padding: 20px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--wash);
   margin: 8px 0;
 }
@@ -253,7 +253,7 @@
 }
 
 .statLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   border: none;
   background: transparent;
@@ -272,7 +272,7 @@
   height: 22px;
   display: grid;
   place-items: center;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   color: var(--ink-40);
 }
 
@@ -284,7 +284,7 @@
 .statAdd {
   grid-column: 1 / -1;
   justify-self: start;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--accent-ink);
   padding: 6px 2px;

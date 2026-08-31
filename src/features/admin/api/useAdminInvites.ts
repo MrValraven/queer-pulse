@@ -118,7 +118,12 @@ export function useAdminInviteInviters() {
       return getAdminInviteInviters();
     },
   });
-  return { inviters: query.data ?? [], isLoading: query.isLoading };
+  return {
+    inviters: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 /** `["admin-invite-inviters", demoMode]`'s cache holds a plain array (not a

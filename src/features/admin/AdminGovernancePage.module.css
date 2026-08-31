@@ -28,7 +28,7 @@
 @media (hover: hover) {
   .statCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+    box-shadow: var(--shadow-lift);
   }
 }
 .statLabel {
@@ -36,7 +36,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .statNum {
@@ -50,13 +50,13 @@
   color: var(--jade);
 }
 .statNum small {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 500;
   color: var(--ink-60);
   margin-left: 1px;
 }
 .statFoot {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 
@@ -80,7 +80,7 @@
   margin: 22px 0 0;
   padding-top: 18px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -112,7 +112,7 @@
   font-style: italic;
 }
 .cardSub {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
   margin: 6px 0 0;
@@ -140,13 +140,13 @@
   gap: 12px;
 }
 .meterLabel {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 .meterAmount {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 500;
   color: var(--text-strong);
 }
@@ -160,14 +160,14 @@
 }
 .notVerifiedDash {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-40);
 }
 .notVerifiedCta {
   border: 0;
   background: none;
   padding: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--amber-ink);
   text-decoration: underline;
@@ -175,13 +175,13 @@
 }
 .meterTrack {
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
 }
 .meterFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transform-origin: left center;
   animation: meterGrow 0.7s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1)) both;
 }
@@ -225,7 +225,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -239,7 +239,7 @@
   height: 7px;
   border-radius: 50%;
   background: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.25);
+  box-shadow: var(--ring-jade);
 }
 .panelNum {
   font-family: var(--serif);
@@ -262,7 +262,7 @@
   cursor: pointer;
 }
 .panelLead {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 1);
   opacity: 0.86;
@@ -296,12 +296,12 @@
 }
 .panelStatVal {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 500;
   color: rgba(var(--cream-rgb), 1);
 }
 .panelStatLbl {
-  font-size: 10px;
+  font-size: var(--text-10);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(var(--cream-rgb), 1);
@@ -311,8 +311,11 @@
 @keyframes govPulse {
   0%,
   100% {
-    box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.25);
+    box-shadow: var(--ring-jade);
   }
+  /* Expanded, fading companion frame for the pulse's outer edge: not a
+     resting ring, so it stays a literal value (same pattern as
+     adminUi.module.css's adminPulse and AdminDashboardPage's dashPulse). */
   50% {
     box-shadow: 0 0 0 6px rgba(var(--jade-rgb), 0.05);
   }
@@ -354,7 +357,7 @@
 .tlDotOn {
   background: var(--jade);
   border-color: var(--jade);
-  box-shadow: 0 0 0 4px rgba(var(--jade-rgb), 0.16);
+  box-shadow: var(--ring-jade);
 }
 .tlItemOn .tlNote {
   color: var(--ink);
@@ -368,7 +371,7 @@
 }
 .tlVersion {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 500;
   color: var(--text-strong);
 }
@@ -376,12 +379,12 @@
   color: var(--ink);
 }
 .tlDate {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-left: auto;
 }
 .tlNote {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
   margin: 0;
@@ -408,7 +411,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   flex: none;
 }
@@ -425,12 +428,12 @@
   align-items: center;
   gap: 5px;
   flex: none;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .motionActions {
   display: flex;
@@ -460,7 +463,7 @@
   display: flex;
   align-items: flex-start;
   gap: 11px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -494,7 +497,7 @@
   margin-top: 1px;
 }
 .transpText {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
   margin: 0;
@@ -510,7 +513,7 @@
   flex-wrap: wrap;
 }
 .auditMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .auditCard {
@@ -530,7 +533,7 @@
   padding: 12px 14px;
 }
 .auditRowHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -538,8 +541,8 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .auditRow {
-  border-radius: 12px;
-  font-size: 13.5px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-13-5);
   color: var(--ink);
   cursor: pointer;
   transition: background 0.16s var(--ease);
@@ -568,12 +571,12 @@
   color: var(--ink);
 }
 .auditReason {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.4;
 }
 .auditWhen {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   white-space: nowrap;
 }
@@ -603,14 +606,14 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
 }
 .legSwatch {
   width: 11px;
   height: 11px;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   flex: none;
 }
 .legIncome {
@@ -624,7 +627,7 @@
 }
 .legDashed {
   border: 1px dashed var(--ink-40);
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   background: rgba(var(--jade-rgb), 0.16);
 }
 /* The positioned plot box for the tooltip portal. An explicit aspect-ratio
@@ -642,12 +645,12 @@
 }
 .chartAxis {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   fill: var(--ink-40);
 }
 .chartLabel {
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   fill: var(--ink-60);
 }
 .chartBar {
@@ -704,7 +707,7 @@
 .searchInput {
   width: 100%;
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   padding: 9px 12px 9px 36px;
   background: var(--paper);
@@ -721,7 +724,7 @@
 }
 .select {
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   padding: 9px 30px 9px 14px;
   background: var(--paper);
@@ -757,7 +760,7 @@
   margin-top: 6px;
 }
 .pagerMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .pagerNav {
@@ -774,9 +777,9 @@
   padding: 0 6px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   cursor: pointer;
   transition:
@@ -831,7 +834,7 @@
 }
 .auditEmptyTitle {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 400;
   color: var(--text-strong);
   margin: 0;
@@ -840,7 +843,7 @@
   color: var(--ink);
 }
 .auditEmptyText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
   max-width: 380px;
@@ -863,12 +866,12 @@
   margin-right: auto;
 }
 .entryModName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
 }
 .entryModWhen {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .entryDl {
@@ -878,7 +881,7 @@
   gap: 6px;
 }
 .entryDt {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -887,7 +890,7 @@
 }
 .entryDd {
   margin: 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -899,10 +902,10 @@
   padding: 14px 18px;
   border-left: 3px solid var(--accent);
   background: rgba(var(--accent-rgb), 0.06);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -913,8 +916,8 @@
   margin: 18px 0 4px;
   padding: 14px 16px;
   background: rgba(var(--jade-rgb), 0.08);
-  border-radius: 12px;
-  font-size: 12.5px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -933,7 +936,7 @@
   background: none;
   padding: 0;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   cursor: pointer;
@@ -945,7 +948,7 @@
 }
 .diffIntro {
   margin: 0 0 16px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -966,8 +969,8 @@
   display: flex;
   gap: 12px;
   padding: 11px 14px;
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: var(--radius-10);
+  font-size: var(--text-14);
   line-height: 1.5;
 }
 .diffSign {
@@ -1008,8 +1011,8 @@
   margin: 18px 0 4px;
   padding: 14px 16px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 12px;
-  font-size: 12.5px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -1049,7 +1052,7 @@
     gap: 6px;
     padding: 14px;
     border: 1px solid rgba(var(--line-rgb), 0.08);
-    border-radius: 14px;
+    border-radius: var(--radius-14);
     margin-bottom: 8px;
   }
   .auditWhen {
@@ -1109,7 +1112,7 @@
   margin-block-end: 16px;
 }
 .finToolbarMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -1126,7 +1129,7 @@
 .editLegend {
   padding: 0;
   margin-block-end: 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
 }
@@ -1144,7 +1147,7 @@
 .editSurplus {
   display: block;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 500;
   color: var(--jade);
   padding-block: 8px;
@@ -1159,7 +1162,7 @@
   flex-direction: column;
   gap: 10px;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   transition: opacity 0.15s var(--ease, ease);
 }
 .editLineRowDisabled {
@@ -1173,14 +1176,14 @@
 }
 .editLineHint {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 /* Says why the save button is being held back, so a disabled button is never
    unexplained. Same colour as FormField's own error text. */
 .editBlockedNote {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   line-height: 1.45;
   color: var(--accent-text);
@@ -1191,7 +1194,7 @@
   gap: 10px;
 }
 .editLineLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: var(--ink);
 }
@@ -1223,13 +1226,13 @@
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
   position: relative;
 }
 .ovRowDragging {
-  box-shadow: 0 6px 18px rgba(var(--plum-rgb), 0.14);
+  box-shadow: var(--shadow-e2);
   z-index: 1;
 }
 .ovGrip {
@@ -1257,14 +1260,14 @@
   min-width: 120px;
 }
 .ovFieldLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 500;
   color: var(--ink);
 }
 /* Explains a read-only computed field (e.g. the live active-members count,
    COM-4) sitting inline with otherwise-editable health-stat fields. */
 .ovFieldHint {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   margin: 2px 0 0;
   line-height: 1.4;
@@ -1311,7 +1314,7 @@
 }
 .ovRemoveBtn:hover {
   color: var(--accent);
-  background: rgba(224, 122, 95, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
 }
 .ovAddBtn {
   align-self: flex-start;

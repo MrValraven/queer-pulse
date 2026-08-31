@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import {
   Button,
+  LoadErrorState,
   PhotoReframeModal,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -36,7 +37,7 @@ export function GatheringPhotosLive({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { photos, isLoading } = useEventPhotos(slug);
+  const { photos, isLoading, isError, refetch } = useEventPhotos(slug);
   const attachPhoto = useAttachEventPhoto(slug);
   const uploadImage = useUploadImage("gathering-photo");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -102,46 +103,50 @@ export function GatheringPhotosLive({
         </div>
       )}
 
-      <div className={styles.mosaic}>
-        {isLoading ? (
-          Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className={styles.pic} aria-hidden>
-              <SkeletonLine
-                width="100%"
-                height="100%"
-                style={{ borderRadius: 8 }}
-              />
-            </div>
-          ))
-        ) : photos.length === 0 ? (
-          <p>{t("gatherings:photos.emptyLive")}</p>
-        ) : (
-          photos.map((photo) => (
-            <a
-              key={photo.id}
-              className={styles.pic}
-              href={safeHref(photo.url) ?? undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src={photo.url}
-                alt={photo.caption ?? ""}
-                loading="lazy"
-                // The API never returns intrinsic dimensions for an uploaded
-                // photo, so this is a fallback intrinsic-size hint (matches
-                // the tile's 1:1 `.pic` aspect-ratio in the CSS module) —
-                // belt-and-suspenders on top of the real CLS guard, which is
-                // `.pic`'s CSS `aspect-ratio` reserving the box before the
-                // absolutely-positioned (IMG_FILL) image ever paints.
-                width={400}
-                height={400}
-                style={IMG_FILL}
-              />
-            </a>
-          ))
-        )}
-      </div>
+      {isError ? (
+        <LoadErrorState onRetry={refetch} />
+      ) : (
+        <div className={styles.mosaic}>
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className={styles.pic} aria-hidden>
+                <SkeletonLine
+                  width="100%"
+                  height="100%"
+                  style={{ borderRadius: 8 }}
+                />
+              </div>
+            ))
+          ) : photos.length === 0 ? (
+            <p>{t("gatherings:photos.emptyLive")}</p>
+          ) : (
+            photos.map((photo) => (
+              <a
+                key={photo.id}
+                className={styles.pic}
+                href={safeHref(photo.url) ?? undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={photo.url}
+                  alt={photo.caption ?? ""}
+                  loading="lazy"
+                  // The API never returns intrinsic dimensions for an uploaded
+                  // photo, so this is a fallback intrinsic-size hint (matches
+                  // the tile's 1:1 `.pic` aspect-ratio in the CSS module) —
+                  // belt-and-suspenders on top of the real CLS guard, which is
+                  // `.pic`'s CSS `aspect-ratio` reserving the box before the
+                  // absolutely-positioned (IMG_FILL) image ever paints.
+                  width={400}
+                  height={400}
+                  style={IMG_FILL}
+                />
+              </a>
+            ))
+          )}
+        </div>
+      )}
 
       {pendingFile && (
         <PhotoReframeModal

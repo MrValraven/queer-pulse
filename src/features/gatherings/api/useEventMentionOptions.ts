@@ -22,7 +22,7 @@ export interface EventMentionOption {
  * maps `EventCardDTO` directly (NOT via `cardToCalendarEvent`, which drops
  * the slug). Never calls the live API in demo mode.
  */
-export function useEventMentionOptions(): EventMentionOption[] {
+export function useEventMentionOptionsQuery() {
   const { demoMode } = useDemoMode();
   const query = useQuery<EventMentionOption[]>({
     queryKey: ["event-mention-options", demoMode],
@@ -37,5 +37,16 @@ export function useEventMentionOptions(): EventMentionOption[] {
       return page.items.map((dto) => ({ slug: dto.slug, name: dto.title }));
     },
   });
-  return query.data ?? [];
+  return {
+    options: query.data ?? [],
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
+}
+
+/** The event mention corpus on its own, for `useMentionSuggestions`. A failed corpus
+ *  fetch degrades to an empty typeahead rather than an error panel inside a
+ *  dropdown; callers that need the failure read `useEventMentionOptionsQuery`. */
+export function useEventMentionOptions(): EventMentionOption[] {
+  return useEventMentionOptionsQuery().options;
 }

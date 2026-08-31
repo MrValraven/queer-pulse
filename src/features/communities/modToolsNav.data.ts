@@ -14,13 +14,15 @@ export type ModSection =
   | "requests"
   | "reports"
   | "members"
+  | "ratifications"
   | "invites"
   | "support"
+  | "history"
   | "card"
   | "danger";
 
 /** Which queue's pending count rides on a rail item, when it has one. */
-export type ModNavBadge = "requests" | "reports" | "support";
+export type ModNavBadge = "requests" | "reports" | "support" | "ratifications";
 
 export interface ModNavItem {
   id: ModSection;
@@ -42,6 +44,19 @@ export const MOD_NAV: ModNavItem[] = [
     badge: "reports",
   },
   { id: "members", labelKey: "communities:detail.modtools.nav.members" },
+  {
+    // Permanent bars waiting on a second owner, co-owner or moderator
+    // (PRD-25). Directly under Members, because a hold is a member's state in
+    // exactly the sense a ban is, and the ban list next door is where the
+    // other half of the story lives.
+    //
+    // Badged, and the badge counts only what THIS viewer can sign: a hold
+    // lapses after a fixed window and settles the bar at the fallback term, so
+    // a queue nobody notices is a decision made by nobody.
+    id: "ratifications",
+    labelKey: "communities:detail.modtools.nav.ratifications",
+    badge: "ratifications",
+  },
   { id: "invites", labelKey: "communities:detail.modtools.nav.invites" },
   {
     // What platform staff have offered this community (OPS-05). Badged like
@@ -50,6 +65,14 @@ export const MOD_NAV: ModNavItem[] = [
     id: "support",
     labelKey: "communities:detail.modtools.nav.support",
     badge: "support",
+  },
+  {
+    // The community's own governance audit trail (PRD-26). It reads the same
+    // table the platform admin console reads, scoped to this community and
+    // narrowed to what its own staff may see, so "who removed her" and "who
+    // unfroze the room" stop being questions only QueerPulse staff can answer.
+    id: "history",
+    labelKey: "communities:detail.modtools.nav.history",
   },
   { id: "card", labelKey: "communities:detail.modtools.nav.card" },
   { id: "danger", labelKey: "communities:detail.modtools.nav.danger" },

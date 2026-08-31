@@ -3,6 +3,7 @@ import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
+  LoadErrorState,
   Outro,
   SkeletonAvatar,
   SkeletonLine,
@@ -52,13 +53,24 @@ function ChangemakerStorySkeleton() {
 export function ChangemakerStoryPage() {
   const { slug } = useParams();
   const { t } = useTranslation();
-  const { changemaker, isLoading } = useChangemaker(slug);
+  const { changemaker, isLoading, isError, refetch } = useChangemaker(slug);
   const { profiles } = useChangemakers();
 
   if (isLoading) {
     return (
       <PageShell>
         <ChangemakerStorySkeleton />
+      </PageShell>
+    );
+  }
+  // A failed read used to bounce the visitor back to the index, which reads as
+  // "this person is not here" rather than "the request did not land" (DES-22).
+  if (isError) {
+    return (
+      <PageShell>
+        <div className="wrap" style={{ padding: "60px 0" }}>
+          <LoadErrorState onRetry={refetch} />
+        </div>
       </PageShell>
     );
   }

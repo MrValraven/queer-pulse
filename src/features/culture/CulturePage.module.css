@@ -37,7 +37,7 @@
   pointer-events: none;
 }
 .cat {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -59,7 +59,7 @@
   font-weight: 400;
 }
 .lead {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 22px;
@@ -74,7 +74,7 @@
 }
 .tab {
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.5);
   padding: 14px 22px;
@@ -115,7 +115,7 @@
 .pickCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   transition:
     transform 0.3s var(--ease),
@@ -125,7 +125,7 @@
 @media (hover: hover) {
   .pickCard:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 36px -18px rgba(var(--plum-rgb), 0.38);
+    box-shadow: var(--shadow-lift);
   }
 }
 .pickCover {
@@ -161,12 +161,12 @@
   position: absolute;
   top: 11px;
   left: 11px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .badge_book {
   background: rgba(var(--jade-rgb), 0.18);
@@ -186,13 +186,13 @@
 .pickTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   line-height: 1.2;
   margin-bottom: 4px;
 }
 .pickAuthor {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-bottom: 10px;
 }
@@ -200,7 +200,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .pickDisc {
@@ -236,7 +236,7 @@
 .threadItem {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 20px;
   display: flex;
   gap: 14px;
@@ -254,18 +254,18 @@
   min-width: 0;
 }
 .threadQ {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 4px;
   line-height: 1.35;
 }
 .threadMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .threadReplies {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
   font-weight: 600;
   white-space: nowrap;
@@ -290,16 +290,16 @@
 @media (hover: hover) {
   .projCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 32px -18px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-lift);
   }
 }
 .pcPill {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   display: inline-block;
   margin-bottom: 12px;
 }
@@ -323,20 +323,20 @@
 .pcTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 8px;
 }
 .pcDesc {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.62;
   margin-bottom: 12px;
 }
 .pcSeeking {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 9px;
@@ -348,10 +348,10 @@
   margin-bottom: 16px;
 }
 .pcTag {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 4px 10px;
 }
 .pcFoot {
@@ -367,7 +367,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -384,7 +384,7 @@
   }
 }
 .galItem {
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
   aspect-ratio: 1;
   cursor: pointer;
@@ -437,12 +437,12 @@
 .goTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.2;
 }
 .goArtist {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.65);
   margin-top: 2px;
 }
@@ -464,7 +464,7 @@
   }
 }
 .curatorLabel {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -484,12 +484,12 @@
   font-style: italic;
 }
 .curatedBy {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.55);
   margin-bottom: 22px;
 }
 .curatorQuote {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.5);
   line-height: 1.7;
   max-width: 42ch;
@@ -504,12 +504,12 @@
 .curatorLinks a,
 .curatorLinks button {
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.6);
   background: transparent;
   border: 1px solid rgba(var(--cream-rgb), 0.18);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   text-decoration: none;
   cursor: pointer;
@@ -527,14 +527,14 @@
 .radioPlayer {
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 28px 30px;
 }
 .radioNow {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -557,21 +557,21 @@
   margin-bottom: 4px;
 }
 .radioArtist {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.6);
   margin-bottom: 22px;
 }
 .radioBar {
   height: 4px;
   background: rgba(var(--cream-rgb), 0.14);
-  border-radius: 4px;
+  border-radius: var(--radius-4);
   margin-bottom: 18px;
   overflow: hidden;
 }
 .radioProg {
   height: 100%;
   background: var(--accent);
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 .radioCtrls {
   display: flex;
@@ -589,7 +589,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: var(--text-18);
   transition: transform 0.2s var(--ease);
 }
 @media (hover: hover) {
@@ -612,7 +612,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 1);
   transition: background 0.2s var(--ease);
 }
@@ -622,12 +622,12 @@
   }
 }
 .radioTime {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.38);
   font-variant-numeric: tabular-nums;
 }
 .radioNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.4);
   margin-bottom: 22px;
 }
@@ -636,7 +636,7 @@
   padding-top: 18px;
 }
 .rqLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -650,7 +650,7 @@
   padding: 7px 0;
 }
 .rqN {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.28);
   width: 16px;
   text-align: right;
@@ -659,16 +659,16 @@
   flex: 1;
 }
 .rqTrack {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.76);
 }
 .rqArtist {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
 }
 .rqDur {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.32);
   font-variant-numeric: tabular-nums;
 }

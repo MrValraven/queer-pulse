@@ -135,6 +135,9 @@ export function useSuggestedPeople(limit = 6) {
     people,
     isLoading: query.isLoading,
     isError: query.isError,
+    /** Re-runs the failed request, so a caller can offer a retry rather than
+     *  only hiding the strip. */
+    refetch: () => void query.refetch(),
     dismiss,
   };
 }

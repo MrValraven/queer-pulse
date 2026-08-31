@@ -47,7 +47,7 @@
   border: none;
   background: transparent;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
   outline: none;
 }
@@ -66,7 +66,7 @@
   padding: 7px 16px;
   border-radius: var(--radius-pill, 999px);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   color: var(--ink-60);
   background: var(--paper);
@@ -116,7 +116,7 @@
 }
 
 .emptyLine {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin: 8px 0;
 }
@@ -139,7 +139,7 @@
 @media (hover: hover) {
   .row:hover {
     border-color: rgba(var(--line-rgb), 0.2);
-    box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
+    box-shadow: var(--shadow-e2);
   }
 }
 
@@ -191,7 +191,7 @@
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   text-decoration: none;
@@ -225,14 +225,14 @@
 
 .rowName {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 600;
   color: var(--ink);
 }
 
 .rowHandle {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--ink);
 }
@@ -244,13 +244,13 @@
   border-radius: var(--radius-pill, 999px);
   background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 500;
 }
 
 .rowMeta {
   margin-top: 5px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -272,7 +272,7 @@
   display: inline-flex;
   margin-left: -8px;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px var(--paper);
+  box-shadow: var(--ring-paper);
 }
 
 .stackItem:first-child {
@@ -290,13 +290,13 @@
   border-radius: var(--radius-pill, 999px);
   background: rgba(var(--plum-rgb), 0.1);
   color: var(--text-strong);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
-  box-shadow: 0 0 0 2px var(--paper);
+  box-shadow: var(--ring-paper);
 }
 
 .vouchLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   letter-spacing: 0.02em;
 }
@@ -306,7 +306,7 @@
   max-width: 60ch;
   margin: 0 0 8px;
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -315,7 +315,7 @@
   max-width: 60ch;
   margin: 0 0 22px;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.5;
   color: var(--accent-ink);
 }
@@ -356,7 +356,7 @@
 
 .queueName {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 600;
   color: var(--ink);
   display: flex;
@@ -366,13 +366,13 @@
 
 .queueVouch {
   margin-top: 4px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
 .queueApplied {
   margin-top: 2px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -381,9 +381,9 @@
   align-items: center;
   gap: 4px;
   margin-top: 6px;
-  font-size: 12px;
+  font-size: var(--text-12);
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .queueWaiting--neutral {
@@ -405,20 +405,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--amber-ink);
   margin: 4px 0 0;
 }
 
 .queueHistory {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin: 2px 0 0;
 }
 
 .queueMsg {
   margin: 12px 0 4px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-style: italic;
   color: var(--ink-60);
   line-height: 1.6;
@@ -426,7 +426,7 @@
 
 .queueReminder {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-style: italic;
   color: var(--ink-40);
 }
@@ -475,7 +475,7 @@
   gap: 6px;
   flex-shrink: 0;
   min-width: 78px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -490,7 +490,7 @@
 .queueFactValue {
   margin: 0;
   min-width: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   overflow-wrap: anywhere;
 }
@@ -509,7 +509,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--jade);
 }
 
@@ -531,7 +531,7 @@
   justify-content: center;
   width: 20px;
   height: 20px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade);
 }
@@ -549,9 +549,9 @@
   gap: 9px;
   margin: 0;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--jade-rgb), 0.07);
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -566,7 +566,7 @@
 
 .queueNoCode {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -602,7 +602,7 @@
 
 .dHeading {
   margin: 0 0 12px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -611,7 +611,7 @@
 
 .dHint {
   margin: -4px 0 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -622,7 +622,7 @@
 .subGroupLabel {
   display: block;
   margin: 0 0 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink);
 }
@@ -636,7 +636,7 @@
 }
 
 .roleCurrentLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -649,7 +649,7 @@
 
 .roleConfirmBody {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
 }
@@ -679,7 +679,7 @@
   padding: 12px 14px;
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px solid rgba(var(--line-rgb), 0.07);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 
 .staffRoleText {
@@ -687,7 +687,7 @@
 }
 
 .staffRoleLabel {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -699,7 +699,7 @@
 .staffRoleDesc {
   display: block;
   margin-top: 2px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.45;
   color: var(--ink-60);
 }
@@ -715,7 +715,7 @@
   padding: 14px 12px;
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px solid rgba(var(--line-rgb), 0.07);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   text-align: center;
 }
 
@@ -729,7 +729,7 @@
 
 .glanceLabel {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-60);
 }
 
@@ -755,19 +755,19 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
 .contribWhen {
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
 .reportsNote {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   font-style: italic;
 }
@@ -787,20 +787,20 @@
   padding: 16px;
   background: rgba(var(--danger-rgb), 0.06);
   border: 1px solid rgba(var(--danger-rgb), 0.22);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 
 .removeTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--danger);
 }
 
 .removeText {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink);
 }
@@ -815,7 +815,7 @@
 .graphWrap {
   background: rgba(var(--plum-rgb), 0.03);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 8px;
   cursor: pointer;
   transition:
@@ -825,13 +825,13 @@
 
 .graphWrap:focus-visible {
   border-color: rgba(var(--line-rgb), 0.2);
-  box-shadow: 0 14px 30px -24px rgba(var(--plum-rgb), 0.5);
+  box-shadow: var(--shadow-e3);
   outline: none;
 }
 @media (hover: hover) {
   .graphWrap:hover {
     border-color: rgba(var(--line-rgb), 0.2);
-    box-shadow: 0 14px 30px -24px rgba(var(--plum-rgb), 0.5);
+    box-shadow: var(--shadow-e3);
     outline: none;
   }
 }
@@ -853,7 +853,7 @@
   margin: 4px 0 14px;
   background: rgba(var(--plum-rgb), 0.03);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 8px;
 }
 
@@ -909,7 +909,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 .legendSwatch {
@@ -942,12 +942,12 @@
 }
 
 .graphNodeText {
-  font-size: 11px;
+  font-size: var(--text-11);
   fill: var(--ink);
 }
 
 .graphCenterText {
-  font-size: 15px;
+  font-size: var(--text-15);
   fill: var(--cream);
 }
 
@@ -990,7 +990,7 @@
 .queueShowing {
   max-width: 70ch;
   margin: 0 0 22px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -1016,7 +1016,7 @@
 /* ── Modal shared bits ───────────────────────────────────── */
 .modalIntro {
   margin: 0 0 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
 }
@@ -1024,7 +1024,7 @@
 .fieldLabel {
   display: block;
   margin: 18px 0 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1040,10 +1040,10 @@
   margin-top: 12px;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
   resize: vertical;
@@ -1061,9 +1061,9 @@
 .transparency {
   margin: 16px 0 0;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--plum-rgb), 0.05);
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -1082,7 +1082,7 @@
   gap: 12px;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
 }
 
@@ -1095,13 +1095,13 @@
 
 .voucherName {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--ink);
 }
 
 .voucherMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   margin-top: 2px;
 }
@@ -1112,8 +1112,8 @@
   align-items: flex-start;
   gap: 10px;
   padding: 12px 14px;
-  border-radius: 14px;
-  font-size: 13px;
+  border-radius: var(--radius-14);
+  font-size: var(--text-13);
   line-height: 1.5;
   margin-bottom: 12px;
 }
@@ -1196,13 +1196,13 @@
 }
 
 .timelineTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 
 .timelineMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 
@@ -1214,14 +1214,14 @@
 
 .timelineNote {
   margin-top: 4px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-style: italic;
   color: var(--ink-60);
 }
 
 .auditLink {
   display: inline-block;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   text-decoration: none;
@@ -1239,7 +1239,7 @@
   display: flex;
   gap: 14px;
   padding: 16px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: rgba(var(--plum-rgb), 0.05);
   border: 1px solid rgba(var(--line-rgb), 0.1);
 }
@@ -1251,22 +1251,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 17px;
+  font-size: var(--text-17);
 }
 
 .sealedTitle {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--ink);
 }
 
 .sealedBody {
   margin: 6px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -1283,7 +1283,7 @@
   height: 20px;
   margin: 0;
   border: 1.6px solid rgba(var(--line-rgb), 0.28);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   background: var(--paper);
   cursor: pointer;
   position: relative;
@@ -1316,7 +1316,10 @@
   left: 50%;
   bottom: max(20px, calc(env(safe-area-inset-bottom) + 14px));
   transform: translateX(-50%);
-  z-index: 40;
+  /* Persistent floating chrome, same tier as the app's other fixed bars.
+     Below --z-popover on purpose: a row's open overflow menu must never be
+     clipped by this bar if the two ever overlap near the viewport edge. */
+  z-index: var(--z-nav);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1328,7 +1331,7 @@
   border-radius: var(--radius-pill, 999px);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 18px 44px -16px rgba(var(--plum-rgb), 0.6);
+  box-shadow: var(--shadow-lift);
   animation: joinRequestBulkBarRise 0.2s var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1348,12 +1351,12 @@
 }
 .bulkCount {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 500;
   flex: none;
 }
 .bulkCapNote {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: rgba(var(--cream-rgb), 0.7);
   flex: none;
 }

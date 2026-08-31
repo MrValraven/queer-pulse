@@ -26,7 +26,7 @@
 .blurb {
   margin: 6px 0 0;
   max-width: 60ch;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
 }

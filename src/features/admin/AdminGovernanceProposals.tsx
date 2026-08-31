@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { FiCheckCircle, FiPlus, FiXCircle } from "react-icons/fi";
-import { Button, FormField, Modal, Select } from "../../shared/components/ui";
+import {
+  Button,
+  FormField,
+  LoadErrorState,
+  Modal,
+  Select,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -208,7 +214,8 @@ function ProposalRow({ proposal }: { proposal: GovernanceProposalDTO }) {
 
 export function AdminGovernanceProposals() {
   const { t } = useTranslation();
-  const { proposals, loading } = useAdminGovernanceProposalsList();
+  const { proposals, loading, isError, refetch } =
+    useAdminGovernanceProposalsList();
   const [showForm, setShowForm] = useState(false);
 
   return (
@@ -229,8 +236,17 @@ export function AdminGovernanceProposals() {
         }
       />
       <div className={styles.proposalAdminList}>
+        {/* Checked before the empty line: a failed fetch used to say no
+            proposal had ever been opened (DES-22). */}
         {loading ? (
           <p className={styles.cardSub}>…</p>
+        ) : isError ? (
+          <LoadErrorState
+            compact
+            onRetry={refetch}
+            title={t("admin:governance.proposals.loadError.title")}
+            description={t("admin:governance.proposals.loadError.body")}
+          />
         ) : proposals.length === 0 ? (
           <p className={styles.cardSub}>
             {t("admin:governance.proposals.empty")}

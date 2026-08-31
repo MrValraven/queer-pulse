@@ -15,6 +15,7 @@ import {
   apiPatch,
   apiPost,
 } from "../../../shared/api/client";
+import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 import type { JoinRequestStatus, RosterRole } from "./communities.api";
 
@@ -87,8 +88,37 @@ export const joinCommunityWithRules = (
 export const getCommunityRules = (slug: string) =>
   apiGet<CommunityRulesDTO>(`/communities/${slug}`);
 
-export const getJoinRequestsForReview = (slug: string) =>
-  apiGet<CommunityJoinRequestReviewDTO[]>(`/communities/${slug}/join-requests`);
+/**
+ * GET /communities/:slug/join-requests?page — one page of the community's
+ * PENDING join-request queue, oldest first.
+ *
+ * The route used to answer with a flat array capped at 200 rows. Oldest-first
+ * plus a hard cap means the requests that fell off the end were the NEWEST
+ * arrivals, so a gated community with 201 pending requests hid the most recent
+ * one from every moderator and said nothing about it (ENG-41). It now answers
+ * with the `{ items, total, page, pageSize }` envelope; `total` is the size of
+ * the whole pending queue, not of this page. Wrapped in `toItemsPage` so a
+ * deploy where the backend is still on the old array shape reads as one full
+ * page instead of throwing on `.items`.
+ */
+export const getJoinRequestsForReview = async (
+  slug: string,
+  page?: number,
+  signal?: AbortSignal,
+) => {
+  const searchParams = new URLSearchParams();
+  if (page) searchParams.set("page", String(page));
+  const querySuffix = searchParams.toString();
+  const response = await apiGet<
+    CommunityJoinRequestReviewDTO[] | ItemsPage<CommunityJoinRequestReviewDTO>
+  >(
+    `/communities/${slug}/join-requests${querySuffix ? `?${querySuffix}` : ""}`,
+    undefined,
+    undefined,
+    signal,
+  );
+  return toItemsPage(response);
+};
 
 export interface TriageJoinRequestPayload {
   action: "approve" | "decline";

@@ -4,7 +4,7 @@
   padding: 44px 28px 100px;
 }
 .back {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   text-decoration: none;
@@ -27,7 +27,7 @@
   border-bottom: 2px solid var(--line-strong);
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -60,7 +60,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   font-style: italic;
   font-family: var(--serif);
@@ -78,7 +78,7 @@
   padding: 18px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   margin-bottom: 32px;
 }
 @media (--sm) {
@@ -93,12 +93,12 @@
 .provName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .provRole {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 2px;
 }
@@ -107,7 +107,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 .now {
   display: inline-flex;
@@ -124,7 +124,7 @@
   background: var(--jade);
 }
 .provLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   text-decoration: none;
@@ -166,7 +166,7 @@
 }
 .block {
   padding: 20px 22px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }
@@ -179,7 +179,7 @@
   border-color: rgba(var(--accent-rgb), 0.16);
 }
 .blockLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -189,13 +189,13 @@
 .blockSkill {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
 .blockText {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.7;
   max-width: 60ch;
@@ -216,7 +216,7 @@
   padding: 20px 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 .stepN {
   font-family: var(--serif);
@@ -231,13 +231,13 @@
   font-style: italic;
 }
 .stepCard h4 {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .stepCard p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 0;
@@ -259,11 +259,11 @@
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px;
 }
 .sideCard h4 {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -303,10 +303,10 @@
 .proposeTextarea {
   width: 100%;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   padding: 10px 13px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   color: var(--ink);
   background: rgba(var(--plum-rgb), 0.02);
   resize: vertical;
@@ -324,7 +324,7 @@
   gap: 8px;
 }
 .proposeFoot {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   line-height: 1.55;
   margin-top: 10px;
@@ -333,7 +333,7 @@
 /* Standing confirmation that a proposal is already with the poster, shown above
    the box so a second message reads as a follow-up rather than a first try. */
 .proposeSent {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
   line-height: 1.5;
   margin-bottom: 10px;
@@ -345,7 +345,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 9px 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
@@ -364,10 +364,10 @@
   gap: 6px;
 }
 .tag {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 11px;
 }

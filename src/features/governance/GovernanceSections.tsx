@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiArrowUp } from "react-icons/fi";
 import {
   Button,
   Reveal,
@@ -79,6 +79,14 @@ export function HealthSection() {
                       stat.up ? styles.trendUp : styles.trendOk,
                     ].join(" ")}
                   >
+                    {stat.up && (
+                      <>
+                        <span className="visuallyHidden">
+                          {t("governance:health.trend.upDirection")}{" "}
+                        </span>
+                        <FiArrowUp aria-hidden />
+                      </>
+                    )}
                     {t(stat.trendKey, stat.trendValues)}
                   </div>
                 </div>

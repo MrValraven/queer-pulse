@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import {
   ApiError,
+  clearOnAuthLost,
   refreshSession,
   setOnAuthLost,
   setSessionState,
@@ -125,13 +126,14 @@ export function useLiveSessionBootstrap({
   useEffect(() => {
     if (demoMode) return;
     let active = true;
-    setOnAuthLost(() => {
-      // Don't declare defeat on a single failed refresh — reconcile once and
+    const handleAuthLost = () => {
+      // Don't declare defeat on a single failed refresh: reconcile once and
       // stay silent if the session comes back (the common returning-member
       // case). Only a failed reconcile logs out and surfaces `expired`, so a
       // user-initiated signOut() and a genuine involuntary loss stay distinct.
       void reconcileSession();
-    });
+    };
+    setOnAuthLost(handleAuthLost);
     // Reset before the async /auth/me bootstrap round trip resolves below.
     setAuthError(null);
     setChecking(true);
@@ -172,6 +174,12 @@ export function useLiveSessionBootstrap({
       });
     return () => {
       active = false;
+      // The callback is module-global in `client.ts`, so leaving it installed
+      // outlives this effect. Flipping demo mode on tears the effect down while
+      // the reconcile closure stays armed, and a stray 401 then drives
+      // `setUser(null)` against a session this provider no longer manages.
+      // Clearing by identity means a newer owner's callback is left alone.
+      clearOnAuthLost(handleAuthLost);
     };
   }, [
     demoMode,

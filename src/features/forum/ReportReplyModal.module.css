@@ -10,7 +10,7 @@
 }
 
 .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 8px 0 18px;
@@ -28,8 +28,8 @@
   gap: 11px;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-14);
   font-weight: 500;
   color: var(--ink);
   cursor: pointer;
@@ -108,7 +108,7 @@
 }
 
 .confirmBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   max-width: 38ch;
@@ -151,7 +151,7 @@
 }
 
 .errorBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 40ch;

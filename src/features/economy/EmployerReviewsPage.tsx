@@ -2,7 +2,13 @@ import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
-import { Button, EmptyState, FadeIn, Outro } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  LoadErrorState,
+  Outro,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { FiArrowRight, FiShield } from "react-icons/fi";
@@ -138,6 +144,14 @@ export function EmployerReviewsPage() {
                     </FadeIn>
                   ))}
             </div>
+          ) : liveEmployers.isError ? (
+            // The employer grid is this section's whole content, so a failed
+            // fetch says so instead of "no employers reviewed yet" (DES-22).
+            <LoadErrorState
+              title={t("economy:employerReviews.loadError.title")}
+              description={t("economy:employerReviews.loadError.description")}
+              onRetry={liveEmployers.refetch}
+            />
           ) : liveEmployers.items.length === 0 ? (
             <EmptyState
               icon={<FiShield />}

@@ -95,8 +95,9 @@ function QueryProvider({ children }: { children: ReactNode }) {
 // App-wide context, available everywhere including outside the router.
 const RootProviders = composeProviders([
   ThemeProvider,
-  // motion's LazyMotion (domAnimation feature bundle) + the shared
-  // reduced-motion flag consumed by useMotionPrefs(). A display/prefs
+  // motion's LazyMotion (domMax feature bundle, which adds `drag` on top of
+  // domAnimation for the edge-swipe-back and sheet drag-to-dismiss gestures)
+  // + the shared reduced-motion flag consumed by useMotionPrefs(). A display/prefs
   // concern like ThemeProvider/AccessibilityProvider, needs nothing above
   // it, and must be above the router so route-level transitions and
   // gestures (later tasks) can read it.
@@ -233,9 +234,13 @@ export function App() {
                       (inside BrowserRouter) but not member/session state, so it
                       only needs to wrap the routed content, not AppChrome. */}
                   <NavDirectionProvider>
-                    {/* Offline fallback: in live mode a dead network swaps the routed
-                      UI for the branded OfflinePage (paired with the SW navigation
-                      catch handler). No-op in demo mode, which needs no network. */}
+                    {/* Offline handling (live mode only, no-op in demo). A COLD BOOT
+                      with no network renders the branded OfflinePage instead of the
+                      routed UI (paired with the SW navigation catch handler). Once
+                      the routed content has rendered online it stays mounted for the
+                      rest of the session, and a later drop only raises the shared
+                      offline banner, so a wifi flap never wipes a half-typed DM,
+                      gathering form or draft. */}
                     <OfflineGate>
                       {/* Edge-swipe-to-go-back (mobile only; inert/unwrapped on
                         desktop) wraps the transition so a committed swipe's

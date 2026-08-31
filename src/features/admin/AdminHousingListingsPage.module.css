@@ -17,7 +17,7 @@
   gap: 10px;
 }
 .sortLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -25,13 +25,13 @@
 }
 .keyHint {
   margin: 0 0 18px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
 .queueCount {
   margin: 0 0 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -67,7 +67,7 @@
 .cardFocused {
   outline: none;
   border-color: rgba(var(--accent-rgb), 0.6);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
+  box-shadow: var(--ring-accent);
 }
 .cardTop {
   display: flex;
@@ -77,7 +77,7 @@
   margin-block-end: 12px;
 }
 .cardRef {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.04em;
   color: var(--ink-40);
 }
@@ -86,7 +86,7 @@
   align-items: center;
   gap: 5px;
   margin-inline-start: auto;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .cardTitle {
@@ -104,7 +104,7 @@
   align-items: center;
   gap: 5px;
   margin: 0 0 16px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -114,17 +114,17 @@
   align-items: baseline;
   gap: 7px;
   padding: 4px 11px 5px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid transparent;
   line-height: 1;
 }
 .riskPillScore {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 .riskPillBand {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -148,13 +148,13 @@
 .riskBlock {
   margin-block: 4px 16px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .riskHead {
   margin: 0 0 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -172,7 +172,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.45;
 }
 .riskItem svg {
@@ -191,7 +191,7 @@
 }
 .riskItemWeight {
   margin-inline-start: auto;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-variant-numeric: tabular-nums;
   color: var(--ink-40);
   white-space: nowrap;
@@ -201,7 +201,7 @@
   align-items: center;
   gap: 8px;
   margin-block: 4px 16px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--jade);
 }
 
@@ -219,7 +219,7 @@
 }
 .listerName {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--ink);
 }
@@ -236,7 +236,7 @@
   align-items: center;
   gap: 5px;
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .listerChips {
@@ -247,7 +247,7 @@
 }
 .listerGone {
   margin: 0 0 14px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -264,7 +264,7 @@
   position: relative;
   display: block;
   aspect-ratio: 4 / 3;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   border: 1px solid rgba(var(--line-rgb), 0.12);
 }
@@ -282,7 +282,7 @@
   place-items: center;
   inline-size: 24px;
   block-size: 24px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--cream);
   background: rgba(var(--plum-rgb), 0.7);
 }
@@ -291,7 +291,7 @@
   align-items: center;
   gap: 7px;
   margin: 0 0 14px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -306,7 +306,7 @@
   align-items: center;
   gap: 7px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   list-style: none;
@@ -329,14 +329,14 @@
 .detailsQuote {
   margin: 0;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.5;
   color: var(--ink);
   overflow-wrap: anywhere;
 }
 .detailsText {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
   max-width: 70ch;
@@ -345,7 +345,7 @@
 }
 .detailsMuted {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .detailsGrid {
@@ -355,7 +355,7 @@
   margin: 0;
 }
 .detailsGrid dt {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -364,7 +364,7 @@
 }
 .detailsGrid dd {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
   overflow-wrap: anywhere;
@@ -376,7 +376,7 @@
 }
 .priorDecision {
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
@@ -385,7 +385,7 @@
 }
 .priorDecisionHead {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -403,7 +403,7 @@
 .reasonListing {
   margin: 0 0 16px;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.35;
   color: var(--ink);
   overflow-wrap: anywhere;
@@ -411,7 +411,7 @@
 .reasonLabel {
   display: block;
   margin-block-end: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--ink-60);
@@ -419,12 +419,12 @@
 .reasonInput {
   width: 100%;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.55;
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 15px;
   resize: vertical;
   transition:
@@ -434,12 +434,12 @@
 .reasonInput:focus {
   outline: none;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
   background: var(--paper);
 }
 .reasonHint {
   margin: 8px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }

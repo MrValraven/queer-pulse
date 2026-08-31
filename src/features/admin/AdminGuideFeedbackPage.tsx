@@ -1,4 +1,8 @@
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  FadeIn,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader, AdminChip, type AdminTone } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -60,7 +64,7 @@ function RowsSkeleton() {
  */
 export function AdminGuideFeedbackPage() {
   const { t } = useTranslation();
-  const { rows, isLoading, isError } = useAdminGuideFeedback();
+  const { rows, isLoading, isError, refetch } = useAdminGuideFeedback();
 
   return (
     <AdminShell
@@ -91,9 +95,14 @@ export function AdminGuideFeedbackPage() {
         {isLoading ? (
           <RowsSkeleton />
         ) : isError ? (
-          <p className={styles.emptyLine}>
-            {t("admin:adminGuideFeedback.error")}
-          </p>
+          // A one-line error was easy to skim past next to the equally quiet
+          // "no guide ratings yet" line. The panel + retry makes the two
+          // states impossible to confuse (DES-22).
+          <LoadErrorState
+            onRetry={refetch}
+            title={t("admin:adminGuideFeedback.loadError.title")}
+            description={t("admin:adminGuideFeedback.loadError.body")}
+          />
         ) : rows.length === 0 ? (
           <p className={styles.emptyLine}>
             {t("admin:adminGuideFeedback.empty")}

@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   flex-wrap: wrap;
 }
@@ -70,11 +70,11 @@
 }
 .photo {
   aspect-ratio: 3 / 4;
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   overflow: hidden;
   background: var(--plum);
   position: relative;
-  box-shadow: 0 24px 60px -28px rgba(var(--plum-rgb), 0.38);
+  box-shadow: var(--shadow-e4);
 }
 .statStrip {
   display: grid;
@@ -82,7 +82,7 @@
   margin-top: 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 .stat {
@@ -97,7 +97,7 @@
   border-bottom: none;
 }
 .stat .k {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -129,7 +129,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -166,7 +166,7 @@
 }
 .pron {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-40);
   font-style: italic;
   margin-top: 10px;
@@ -178,10 +178,10 @@
   margin-top: 14px;
 }
 .identity span {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   padding: 5px 11px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   color: var(--text-strong);
 }
@@ -190,7 +190,7 @@
   color: var(--accent-ink);
 }
 .bio {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   line-height: 1.75;
   max-width: 58ch;
@@ -205,18 +205,18 @@
   padding: 22px 26px 22px 30px;
   border-left: 3px solid var(--accent);
   background: rgba(var(--accent-rgb), 0.05);
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 var(--radius-14) var(--radius-14) 0;
 }
 .statement p {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   line-height: 1.52;
   letter-spacing: -0.005em;
 }
 .statement .who {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -276,7 +276,7 @@
   color: var(--accent);
 }
 .sbAll {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -302,7 +302,7 @@ a.sbAll:hover {
 }
 .fgPoster {
   aspect-ratio: 3 / 4;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   background: var(--plum);
   position: relative;
@@ -314,19 +314,19 @@ a.sbAll:hover {
 @media (hover: hover) {
   .fgCard:hover .fgPoster {
     transform: translateY(-3px);
-    box-shadow: 0 18px 36px -24px rgba(var(--plum-rgb), 0.32);
+    box-shadow: var(--shadow-lift);
   }
 }
 .fgBadge {
   position: absolute;
   top: 10px;
   left: 10px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 4px 8px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   z-index: 2;
 }
 .fgbFree {
@@ -342,7 +342,7 @@ a.sbAll:hover {
   color: rgba(var(--cream-rgb), 1);
 }
 .fgEb {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -351,7 +351,7 @@ a.sbAll:hover {
 .fgTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   line-height: 1.16;
   letter-spacing: -0.01em;
@@ -362,11 +362,11 @@ a.sbAll:hover {
 .fgMeta {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .fgEarn {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--jade);
   font-weight: 600;
 }
@@ -401,7 +401,7 @@ a.sbAll:hover {
 .festName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -410,7 +410,7 @@ a.sbAll:hover {
   color: var(--accent);
 }
 .festDetail {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 4px;
   font-family: var(--serif);
@@ -418,10 +418,10 @@ a.sbAll:hover {
 }
 .festAward {
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   text-align: center;
   white-space: nowrap;
@@ -440,7 +440,7 @@ a.sbAll:hover {
   padding: 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   transition:
     transform 0.25s var(--ease),
     box-shadow 0.25s var(--ease);
@@ -448,7 +448,7 @@ a.sbAll:hover {
 @media (hover: hover) {
   .ev:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 28px -22px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-lift);
   }
 }
 .evDate {
@@ -465,7 +465,7 @@ a.sbAll:hover {
   letter-spacing: -0.02em;
 }
 .evDate .m {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -476,7 +476,7 @@ a.sbAll:hover {
   flex: 1;
 }
 .evKind {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -486,7 +486,7 @@ a.sbAll:hover {
 .evMain h4 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -495,7 +495,7 @@ a.sbAll:hover {
   font-style: italic;
 }
 .evSub {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-top: 5px;
 }
@@ -515,11 +515,11 @@ a.sbAll:hover {
 .asideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
 }
 .acHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -527,7 +527,7 @@ a.sbAll:hover {
   margin-bottom: 14px;
 }
 .acBody {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.65;
 }
@@ -535,7 +535,7 @@ a.sbAll:hover {
   color: var(--text-strong);
 }
 .acLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent);
   display: inline-block;
@@ -549,11 +549,11 @@ a.sbAll:hover {
 .tipjar {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
 }
 .tjHead {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -561,7 +561,7 @@ a.sbAll:hover {
   margin-bottom: 8px;
 }
 .tjSub {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 14px;
@@ -578,10 +578,10 @@ a.sbAll:hover {
   flex: 1;
   min-width: 44px;
   padding: 8px 0;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   background: var(--cream);
@@ -592,8 +592,9 @@ a.sbAll:hover {
     border-color 0.2s var(--ease);
 }
 .tjChip:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 @media (hover: hover) {
   .tjChip:hover {
@@ -612,7 +613,7 @@ a.sbAll:hover {
   margin-bottom: 10px;
 }
 .tjNote {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   text-align: center;
   font-family: var(--serif);

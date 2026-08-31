@@ -91,6 +91,10 @@ export function useThreads(category: string, options?: GetThreadsOptions) {
     threads,
     isPending: query.isPending,
     isLoading: query.isLoading,
+    // A failed list fetch must not read as "no threads yet" — ForumPage swaps
+    // the empty state for a retry panel on this flag (DES-22).
+    isError: query.isError,
+    refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
@@ -120,7 +124,13 @@ export function usePinnedThreads(category: string) {
     [query.data, t, fmt],
   );
 
-  return { pinned, isLoading: !demoMode && query.isLoading };
+  return {
+    pinned,
+    isLoading: !demoMode && query.isLoading,
+    // Surfaced so a caller can react; the page deliberately does not, since a
+    // missing sticky bucket is not worth a panel above the thread list.
+    isError: query.isError,
+  };
 }
 
 /**
@@ -171,6 +181,9 @@ export function useForumCounts(q?: string, tag?: string) {
     hasPosted: !demoMode && !!query.data?.hasPosted,
     // Demo resolves synchronously; only the live fetch has a pending phase.
     isPending: !demoMode && query.isPending,
+    // Sidebar tallies degrade to zeroes on their own; surfaced for callers that
+    // want to distinguish "no threads" from "counts didn't load".
+    isError: query.isError,
   };
 }
 

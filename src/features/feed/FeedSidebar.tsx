@@ -3,6 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 import {
   Avatar,
   AvatarStack,
+  LoadErrorState,
   SkeletonAvatar,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -223,6 +224,10 @@ export function FeedSidebar({
         </div>
         {loading ? (
           <ConnectionsSkeleton />
+        ) : connections.hasFailed ? (
+          /* Never the empty line on a failed lookup: "no connections yet" is
+             the exact claim SOC-06 removed from this widget. */
+          <LoadErrorState compact onRetry={connections.onRetry} />
         ) : connections.count === 0 ? (
           <p className={styles.sbEmpty}>{t("feed:sidebar.connectionsEmpty")}</p>
         ) : (

@@ -85,8 +85,19 @@ export function HeadlineText({ value, label, isPublished }: HeadlineTextProps) {
   );
 }
 
-export function HeadlineRow({ children }: { children: ReactNode }) {
-  return <div className={styles.headlines}>{children}</div>;
+interface HeadlineRowProps {
+  children: ReactNode;
+  /** Caps the tracks so a row holding one figure reads as a single tile rather
+   *  than as a number stretched across the whole measure. */
+  isNarrow?: boolean;
+}
+
+export function HeadlineRow({ children, isNarrow = false }: HeadlineRowProps) {
+  return (
+    <div className={isNarrow ? styles.headlinesNarrow : styles.headlines}>
+      {children}
+    </div>
+  );
 }
 
 interface CountTableProps {

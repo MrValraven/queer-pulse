@@ -95,7 +95,7 @@ export function ShareToCommunityModal({
   return (
     <ModalShell
       onClose={onClose}
-      ariaLabel={t("economy:shareToCommunity.title")}
+      ariaLabel={t("economy:shareToCommunity.ariaLabel")}
     >
       <div className={styles.eyebrow}>
         {t("economy:shareToCommunity.eyebrow")}

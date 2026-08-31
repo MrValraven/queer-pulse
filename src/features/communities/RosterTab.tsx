@@ -1,7 +1,12 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck, FiMessageCircle } from "react-icons/fi";
-import { Avatar, Button, SearchInput } from "../../shared/components/ui";
+import {
+  Avatar,
+  Button,
+  LoadErrorState,
+  SearchInput,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMemberContact } from "../connect/useMemberContact";
@@ -82,6 +87,13 @@ export function RosterTab({
         .includes(term),
     );
   }, [roster, q]);
+
+  // A failed roster read reaches this tab as the organiser alone (the detail
+  // page's fallback), which reads as a community of one. Say the list did not
+  // load instead (DES-22).
+  if (paging.isError) {
+    return <LoadErrorState onRetry={paging.refetch} />;
+  }
 
   return (
     <div>

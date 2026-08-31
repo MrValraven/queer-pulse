@@ -21,7 +21,7 @@
   width: 100%;
   padding: 10px 12px;
   border: 1px solid rgba(var(--line-rgb), 0.18);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--cream);
   color: var(--ink);
   font: inherit;
@@ -40,7 +40,7 @@
 .historyItem {
   padding: 12px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--cream);
 }
 .historyMeta {

@@ -87,6 +87,22 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
   },
 ];
 
+/**
+ * The demo sandbox's answer to "which of my communities issue cards?", which
+ * is what the wallet's empty state names. Mirrors the two demo issuers above,
+ * so demo and live tell the same story about where a card comes from.
+ *
+ * `DEMO_MY_CARDS` is non-empty, so the demo wallet normally shows cards and
+ * never reaches the empty state. This exists so the empty branch still has a
+ * truthful demo fallback the moment it is reachable (an emptied fixture, a
+ * component test), instead of silently claiming the sandbox member belongs to
+ * nowhere that issues cards.
+ */
+export const DEMO_CARD_COMMUNITIES: { slug: string; name: string }[] = [
+  { slug: "lisboa-queer-collective", name: "Lisboa Queer Collective" },
+  { slug: "azores-queer", name: "Azores Queer" },
+];
+
 export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
   {
     id: "demo-card-1",

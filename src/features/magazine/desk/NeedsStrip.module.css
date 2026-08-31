@@ -36,7 +36,7 @@
 }
 
 .eyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 600;
@@ -49,14 +49,14 @@
 
 .title {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 400;
   line-height: 1.15;
   color: var(--text-strong);
 }
 
 .tiny {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 

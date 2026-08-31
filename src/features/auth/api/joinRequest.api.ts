@@ -174,6 +174,28 @@ export interface JoinRequestStatusDTO {
    * state: approved, but the invite has since been used, revoked or expired.
    */
   inviteCode: string | null;
+  /**
+   * WHY the code above is or is not there. `expired` is the recoverable one:
+   * the applicant can revive it themselves with
+   * {@link refreshJoinRequestInvite}. `used` means an account already
+   * exists on it, and `revoked` was a moderator's deliberate act. Null when the
+   * approval minted no invite, and on every non-approved request.
+   *
+   * Before this existed the page collapsed all three into one "your invite has
+   * run out" dead end, which was wrong for two of them and unrecoverable for
+   * the third.
+   */
+  inviteStatus: "valid" | "used" | "expired" | "revoked" | null;
+  /**
+   * ISO 8601 deadline of that invite, present whenever there is an invite at
+   * all (including a lapsed one, where it is the moment it lapsed).
+   *
+   * The clock behind it starts at the applicant's FIRST status read, not at
+   * approval: approval is a moment only the reviewer knows about, since
+   * QueerPulse sends the applicant nothing. So this date is always one the
+   * applicant has been shown before it matters, and the page must show it.
+   */
+  inviteExpiresAt: string | null;
 }
 
 /**
@@ -232,6 +254,61 @@ export function isUnresolvableStatusToken(err: unknown): boolean {
 }
 
 /**
+ * Revive the lapsed invite an approval handed this applicant, keyed on the same
+ * status token the read uses. **Public route, no session**: this is the
+ * applicant acting for themselves, holding nothing else.
+ *
+ * It exists because approval used to expire into a dead end. Nothing carries an
+ * approval to the applicant, so they learn of it only by coming back to look;
+ * if they came back after the window closed, the page said the invite was gone
+ * and offered no way to get another.
+ *
+ * Failures the UI must tell apart:
+ * - `404`: the same indistinguishable miss the read answers with
+ *   ({@link isUnresolvableStatusToken}), so this route is no more of an oracle
+ *   than that one.
+ * - `409 { code }`: `INVITE_ALREADY_USED`, `INVITE_REVOKED`,
+ *   `INVITE_REFRESH_LIMIT` or `INVITE_REFRESH_UNAVAILABLE`
+ *   ({@link joinRequestInviteRefreshRefusal}). Each is a real state with its
+ *   own sentence; none of them is a retry.
+ *
+ * A still-valid invite is NOT an error: it comes back `200` with the live code,
+ * because that is what the applicant was asking for.
+ */
+export const refreshJoinRequestInvite = (token: string) =>
+  apiPost<JoinRequestStatusDTO>("/join-requests/status/invite/refresh", {
+    token,
+  });
+
+/** The closed set of reasons a refresh can be refused. */
+export type JoinRequestInviteRefreshRefusal =
+  | "INVITE_ALREADY_USED"
+  | "INVITE_REVOKED"
+  | "INVITE_REFRESH_LIMIT"
+  | "INVITE_REFRESH_UNAVAILABLE";
+
+const REFRESH_REFUSALS: readonly JoinRequestInviteRefreshRefusal[] = [
+  "INVITE_ALREADY_USED",
+  "INVITE_REVOKED",
+  "INVITE_REFRESH_LIMIT",
+  "INVITE_REFRESH_UNAVAILABLE",
+];
+
+/**
+ * The typed reason behind a refused refresh, or null for anything else (a
+ * network failure, a 404, an unrecognised code from a newer backend). Callers
+ * must fall back to their generic message on null rather than rendering a raw
+ * code.
+ */
+export function joinRequestInviteRefreshRefusal(
+  err: unknown,
+): JoinRequestInviteRefreshRefusal | null {
+  if (!(err instanceof ApiError) || err.status !== 409) return null;
+  const code = (err.data as { code?: string } | null | undefined)?.code;
+  return REFRESH_REFUSALS.find((refusal) => refusal === code) ?? null;
+}
+
+/**
  * Submit a join request. **Public route — no session required**: the applicant
  * has no account yet (the old flow wrongly demanded a signed-in "pending" user,
  * which could never exist). Body carries name/email/city/message plus the 18+
@@ -252,6 +329,11 @@ export const createJoinRequest = (input: CreateJoinRequestInput) =>
 /**
  * True when the backend says this email already has an open request. Not a
  * failure on the applicant's part — the UI confirms rather than scolds.
+ *
+ * The backend labels it `JOIN_REQUEST_PENDING`, which is what lets the
+ * confirmation screen offer the way BACK to that request instead of ending the
+ * journey on "you already asked". Older backends send a bare 409, so the status
+ * alone still decides.
  */
 export function isDuplicateJoinRequest(err: unknown): boolean {
   return err instanceof ApiError && err.status === 409;

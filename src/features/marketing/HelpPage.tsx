@@ -1,6 +1,7 @@
 import { useState, type ReactElement } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { Link, useLocation } from "react-router-dom";
+import { FiChevronRight } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
@@ -271,7 +272,7 @@ export function HelpPage() {
                         .filter(Boolean)
                         .join(" ")}
                     >
-                      ›
+                      <FiChevronRight aria-hidden />
                     </span>
                   </button>
                   <AnimatePresence initial={false}>

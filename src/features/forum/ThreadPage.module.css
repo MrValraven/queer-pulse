@@ -8,7 +8,7 @@
   gap: 14px;
   padding: 14px 0 18px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .back {
   display: inline-flex;
@@ -69,7 +69,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--text-16);
   flex: none;
 }
 .opName {
@@ -77,13 +77,13 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
 }
 .modBy {
   margin-top: 3px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .modByLink {
@@ -100,7 +100,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 2px;
   flex-wrap: wrap;
@@ -131,7 +131,7 @@
   margin-bottom: 16px;
 }
 .opBody p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink);
   line-height: 1.75;
   margin-bottom: 14px;
@@ -143,10 +143,10 @@
   margin: 18px 0;
 }
 .opTag {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 10px;
 }
 /* Re-file the thread. Sits with the chips it edits, deliberately quieter than
@@ -156,11 +156,11 @@
   align-items: center;
   gap: 5px;
   font: inherit;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--accent-ink);
   background: none;
   border: 1px dashed rgba(var(--line-rgb), 0.2);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 10px;
   cursor: pointer;
 }
@@ -179,12 +179,12 @@
   align-items: center;
   gap: 7px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 14px;
   cursor: pointer;
   transition:
@@ -214,7 +214,7 @@
 }
 .report {
   margin-left: auto;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   background: none;
   border: none;
@@ -231,24 +231,24 @@
 }
 .replyCount {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
 }
 .replySort {
   display: flex;
   gap: 4px;
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px;
 }
 .sortBtn {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   background: none;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 14px;
   cursor: pointer;
 }
@@ -266,7 +266,7 @@
 }
 .replyHighlighted {
   background: rgba(var(--jade-rgb), 0.05);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 20px 18px;
   border-bottom: none;
 }
@@ -279,7 +279,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--text-14);
   flex: none;
 }
 .replyTop {
@@ -289,22 +289,22 @@
   margin-bottom: 6px;
 }
 .replyName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 .opBadge {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.14);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 2px 6px;
 }
 .helpfulBadge {
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -316,13 +316,13 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--jade);
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 2px 6px;
 }
 .replyAcceptOn {
@@ -352,13 +352,13 @@
   min-width: 24px;
   min-height: 24px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   line-height: 1;
   color: var(--ink-40);
   background: none;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   cursor: pointer;
   transition:
     color var(--dur-fast) var(--ease),
@@ -371,7 +371,7 @@
   }
 }
 .collapsedCount {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -382,7 +382,7 @@
   width: 100%;
   padding: 10px 12px;
   border: 1px solid rgba(var(--line-rgb), 0.18);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: var(--cream);
   color: var(--ink);
   font: inherit;
@@ -395,13 +395,13 @@
   margin-top: 8px;
 }
 .replyTime {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-family: var(--serif);
   font-style: italic;
 }
 .replyBody p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.65;
   margin-bottom: 10px;
@@ -413,7 +413,7 @@
   border-left: 3px solid rgba(var(--line-rgb), 0.2);
   padding: 4px 0 4px 14px;
   margin-bottom: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   font-style: italic;
 }
@@ -422,7 +422,7 @@
   font-style: normal;
   font-weight: 600;
   color: var(--text-strong);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   margin-bottom: 3px;
 }
 /* Wraps the like + reply actions with `gap` (not per-child margins) so the
@@ -437,7 +437,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   font-family: var(--sans);
   color: var(--ink-40);
@@ -466,7 +466,7 @@
   transform: scale(1.12);
 }
 .replyReplyBtn {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   font-family: var(--sans);
   color: var(--ink-40);
@@ -486,7 +486,7 @@
   margin-top: 28px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
 }
 
@@ -499,7 +499,7 @@
   gap: 14px;
   margin-top: 28px;
   background: var(--plum);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 22px;
 }
 .lockedIcon {
@@ -510,12 +510,12 @@
 }
 .lockedTitle {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--cream);
   margin-bottom: 2px;
 }
 .lockedBody {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: rgba(var(--cream-rgb), 0.8);
 }
@@ -524,7 +524,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .crAv {
@@ -537,7 +537,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 11px;
+  font-size: var(--text-11);
   overflow: hidden;
   flex: none;
 }
@@ -575,17 +575,17 @@
   width: 100%;
   min-height: 90px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   resize: vertical;
   outline: none;
 }
 .crTextarea:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.28);
+  box-shadow: var(--ring-accent-strong);
 }
 .crFooter {
   display: flex;
@@ -606,11 +606,11 @@
   align-items: center;
   gap: 6px;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   background: none;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 6px 10px;
   cursor: pointer;
   transition: color 0.18s var(--ease);
@@ -630,7 +630,7 @@
   display: block;
   max-height: 96px;
   max-width: 160px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   object-fit: cover;
 }
@@ -641,12 +641,12 @@
 }
 .attachError {
   flex: 1 0 100%;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--danger);
   margin: 0;
 }
 .draftStatus {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 /* A published photo, under an opening post or a reply. */
@@ -654,7 +654,7 @@
   display: block;
   max-width: 100%;
   max-height: 420px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   margin: 12px 0 4px;
   object-fit: contain;
@@ -738,12 +738,12 @@
   margin: 4px 0 4px 54px;
   padding: 8px 12px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   background: none;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   cursor: pointer;
   transition:
     background var(--dur-fast) var(--ease),

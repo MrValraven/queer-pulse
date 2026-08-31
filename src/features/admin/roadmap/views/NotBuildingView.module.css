@@ -16,7 +16,7 @@
 
 .banner p {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--jade-ink);
 }
@@ -64,7 +64,7 @@
 }
 
 .reasonTag {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   padding: 5px 10px;
   border-radius: var(--radius-tag, 7px);
@@ -73,14 +73,14 @@
 }
 
 .metaItem {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
 .title {
   margin: 0 0 6px;
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   font-weight: 600;
   color: var(--ink);
 }
@@ -89,14 +89,14 @@
   margin: 0 0 10px;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
 
 .hadAsked {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 

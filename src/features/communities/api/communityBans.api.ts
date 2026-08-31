@@ -20,6 +20,14 @@ export interface CommunityBanDTO {
   isExpired: boolean;
   rule: CommunityBanRuleCitationDTO | null;
   createdAt: string;
+  /** PRD-25. True when somebody has asked for this bar to be permanent and it
+   *  is waiting on a second owner, co-owner or moderator. The bar in force is
+   *  still the one `expiresAt` describes: the hold changes nothing until it is
+   *  signed. Without this a 30-day bar with a permanent proposal open on it
+   *  would be indistinguishable from a settled 30-day bar. */
+  isPendingRatification: boolean;
+  /** That hold, so the list can link straight to it. Null when none is open. */
+  ratificationId: string | null;
 }
 
 /**
@@ -58,6 +66,12 @@ export interface CommunityBanListDTO {
  *
  * `banDays` and `makePermanent` contradict each other, as do `ruleIndex` and
  * `clearRule`; the server refuses a request carrying both of a pair.
+ *
+ * `makePermanent` NO LONGER MAKES ANYTHING PERMANENT BY ITSELF (PRD-25). It
+ * proposes the permanent bar to a second owner, co-owner or moderator and
+ * leaves the end date exactly where it is; the response carries
+ * `isPendingRatification` and `ratificationId`. On a community with nobody
+ * else who could sign, the server refuses with a 400 and writes nothing.
  */
 export interface UpdateCommunityBanInput {
   banDays?: number;
@@ -80,8 +94,9 @@ export const liftCommunityBan = (slug: string, memberSlug: string) =>
 
 /**
  * `PATCH /communities/:slug/bans/:memberSlug` — revise a ban in place: put an
- * end date on it, make it permanent again, rewrite the reason, or cite the
- * house rule it rests on. The barred member is notified of the new terms.
+ * end date on it, propose that it become permanent, rewrite the reason, or
+ * cite the house rule it rests on. The barred member is notified of the new
+ * terms.
  */
 export const updateCommunityBan = (
   slug: string,

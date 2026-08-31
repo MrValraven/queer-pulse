@@ -1,14 +1,14 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 26, 31, 0.55);
-  z-index: 200;
+  background: var(--scrim);
+  z-index: var(--z-modal);
   display: flex;
   /* Bottom sheet on mobile (in the thumb arc); centered dialog on wider
      viewports — matching the shared <Modal>/<ModalSheet> pattern. */
   align-items: flex-end;
   justify-content: center;
-  backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
   padding: 24px 16px 0;
   /* Lift the sheet above the on-screen keyboard on iOS (see
      useVisualViewportKeyboard) so the submit button isn't hidden behind it. */
@@ -22,7 +22,7 @@
 }
 .modal {
   background: var(--paper);
-  border-radius: 28px 28px 0 0;
+  border-radius: var(--radius-28) var(--radius-28) 0 0;
   width: 100%;
   max-width: 560px;
   padding: 44px 48px 48px;
@@ -47,7 +47,7 @@
   width: 40px;
   height: 5px;
   margin: -32px auto 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.18);
   /* The sheet owns this vertical gesture; don't let it scroll the sheet body. */
   touch-action: none;
@@ -55,7 +55,7 @@
 }
 @media (min-width: 720px) {
   .modal {
-    border-radius: 28px;
+    border-radius: var(--radius-28);
   }
   .grabber {
     display: none;
@@ -93,7 +93,7 @@
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -152,12 +152,12 @@
   font-weight: 500;
 }
 .toRole {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin-top: 3px;
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -178,7 +178,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 26px;
@@ -192,7 +192,7 @@
   margin-bottom: 18px;
 }
 .field label {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   letter-spacing: 0.02em;
@@ -201,11 +201,11 @@
 .field textarea,
 .field select {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 15px;
   transition:
     border-color var(--dur-base) var(--ease),
@@ -221,7 +221,7 @@
 .field textarea:focus,
 .field select:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
   background: var(--paper);
 }
 .fieldRow {
@@ -245,7 +245,7 @@
 }
 .salaryDash {
   color: var(--ink-40);
-  font-size: 16px;
+  font-size: var(--text-16);
   flex: none;
 }
 .checkRow {
@@ -256,7 +256,7 @@
   text-align: left;
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px 15px;
   margin-bottom: 18px;
   cursor: pointer;
@@ -278,7 +278,7 @@
   flex: none;
   width: 22px;
   height: 22px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   border: 1.5px solid rgba(var(--line-rgb), 0.24);
   background: var(--paper);
   display: grid;
@@ -302,18 +302,18 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
 }
 .checkHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
 
 .note {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
   margin-bottom: 24px;
@@ -325,12 +325,12 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink);
   background: rgba(var(--accent-rgb), 0.08);
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 12px;
   margin: 0 0 18px;
 }
@@ -348,7 +348,7 @@
   gap: 6px;
   margin: 10px 0 0;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.4;
   color: var(--ink-60);
   text-align: right;
@@ -378,7 +378,7 @@
   justify-content: flex-end;
 }
 .back {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   font-weight: 500;
   background: none;
@@ -396,7 +396,7 @@
 .panel {
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 20px;
   margin-bottom: 22px;
 }
@@ -411,7 +411,7 @@
   gap: 16px;
   padding: 11px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .row:last-child {
   border-bottom: none;
@@ -437,7 +437,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.5;
 }
@@ -463,12 +463,12 @@
   text-align: left;
   cursor: pointer;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text-strong);
   font-weight: 500;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 13px;
   margin-bottom: 8px;
   text-decoration: none;
@@ -486,7 +486,7 @@
 
 .quote {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1.6;
   color: var(--ink);
   font-style: italic;
@@ -503,7 +503,7 @@
 .stat {
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 14px;
   text-align: center;
 }
@@ -514,7 +514,7 @@
   line-height: 1;
 }
 .statL {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-60);
   margin-top: 6px;
   letter-spacing: 0.02em;
@@ -523,7 +523,7 @@
 /* ── Draft progress ──────────────────────────────────────────────────── */
 .progress {
   height: 8px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   background: rgba(var(--plum-rgb), 0.1);
   overflow: hidden;
   margin-bottom: 8px;
@@ -531,13 +531,13 @@
 .progressFill {
   height: 100%;
   width: 100%;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   background: var(--accent);
   transform-origin: left;
   transition: transform 0.5s var(--ease);
 }
 .progressL {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-bottom: 22px;
 }
@@ -563,7 +563,7 @@
   background: rgba(var(--cream-rgb), 0.22);
 }
 .readEyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -572,13 +572,13 @@
 }
 .readBody {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.65;
   color: rgba(var(--cream-rgb), 1);
   font-style: italic;
 }
 .readFrom {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.7);
   margin-top: 22px;
   font-weight: 600;
@@ -631,7 +631,7 @@
   color: var(--accent);
 }
 .success p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.78);
   margin: 16px auto 28px;
   line-height: 1.65;
@@ -644,7 +644,7 @@
 .successLink {
   display: inline-block;
   margin-top: 16px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.78);
   text-decoration: underline;
@@ -664,12 +664,12 @@
   animation: riseIn 0.5s var(--ease) 0.44s both;
 }
 .undoText {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.62);
 }
 .undoBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--accent);
   background: none;
@@ -746,7 +746,7 @@
 .thread {
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 16px;
   max-height: 300px;
   overflow-y: auto;
@@ -769,37 +769,37 @@
   align-items: flex-end;
 }
 .msgMeta {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   margin: 0 4px 4px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 .bubble {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   padding: 10px 14px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 .msgThem .bubble {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
   color: var(--ink);
-  border-bottom-left-radius: 5px;
+  border-bottom-left-radius: var(--radius-5);
 }
 .msgYou .bubble {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-bottom-right-radius: 5px;
+  border-bottom-right-radius: var(--radius-5);
 }
 .event {
   align-self: center;
   text-align: center;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 4px 13px;
 }
 .msgNew {
@@ -812,10 +812,10 @@
   gap: 12px;
   background: rgba(var(--jade-rgb), 0.1);
   border: 1px solid rgba(var(--jade-rgb), 0.25);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 16px;
   margin-bottom: 24px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.5;
 }
@@ -831,12 +831,12 @@
   margin-bottom: 26px;
 }
 .lever {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 7px 14px;
   cursor: pointer;
   transition:
@@ -866,7 +866,7 @@
   width: 100%;
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 16px;
   cursor: pointer;
   transition:
@@ -886,7 +886,7 @@
 .angleOn {
   border-color: var(--line-strong);
   background: var(--paper);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.07);
+  box-shadow: var(--ring-plum-soft);
 }
 .angleRadio {
   width: 18px;
@@ -919,13 +919,13 @@
 .angleName {
   display: block;
   font-weight: 700;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--text-strong);
   line-height: 1.3;
 }
 .angleBlurb {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.45;
 }

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -46,6 +47,7 @@ export function ForOrganisationsPage() {
           <ul>
             {NOT_DO_KEYS.map((notDoKey) => (
               <li key={notDoKey}>
+                <FiX className={styles.notMark} aria-hidden />
                 <Translation i18nKey={notDoKey} components={{ b: <b /> }} />
               </li>
             ))}

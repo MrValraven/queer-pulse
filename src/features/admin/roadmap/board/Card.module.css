@@ -2,10 +2,12 @@
    (CardProgressMeter.tsx / CardMeta.tsx) — three files, one visual unit, so
    they share this module rather than each guessing the others' spacing.
 
-   `.card` itself never gets a `transform`: the delete-confirm `AdminModal`
-   renders as its literal DOM child (not a portal — see `AdminModal.tsx`),
-   and a `transform` on an ancestor would create a new containing block that
-   traps the modal's `position: fixed` scrim inside the card's own bounds.
+   `.card` itself never gets a `transform`. `AdminModal` portals to
+   document.body (`AdminModal.tsx:59`), so the delete-confirm dialog is already
+   safe from the classic trap where a `transform` on an ancestor creates a new
+   containing block and pins a `position: fixed` scrim inside the card's own
+   bounds. The rule stays anyway: it costs nothing, and it keeps the card safe
+   for any future descendant that is NOT portalled.
    Hover/drag feedback here is shadow/opacity only, never translate/scale —
    which also means there is nothing to disable under reduced motion. */
 
@@ -14,7 +16,7 @@
   flex-direction: column;
   gap: 8px;
   padding: 14px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   box-shadow: var(--shadow-card);
@@ -42,8 +44,9 @@
 /* The `j`/`k` roving-focus ring (useBoardDnd) — a distinct accent color so
    it reads separately from the native Tab `:focus-visible` ring above. */
 .cardFocused {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .cardDragging {
@@ -94,18 +97,18 @@
 .grip {
   flex: none;
   color: var(--ink-40);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1;
   cursor: grab;
   user-select: none;
 }
 
 .categoryChip {
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 
 .priorityChip {
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 
 .menuSlot {
@@ -116,14 +119,14 @@
 .title {
   margin: 0;
   font-family: var(--serif);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.35;
   color: var(--ink);
 }
 
 .progressTrack {
   height: 5px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--line-rgb), 0.12);
   overflow: hidden;
 }
@@ -144,10 +147,10 @@
 .alert {
   margin: 0;
   padding: 6px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: rgba(var(--amber-rgb), 0.16);
   color: var(--amber-ink);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
 }
 
@@ -159,7 +162,7 @@
 }
 
 .metaQuarter {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   font-weight: 600;
 }
@@ -168,12 +171,12 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
 }
 
 .metaConfidence {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
 }
 
 .metaOwner {
@@ -182,6 +185,6 @@
 
 .metaUnassigned {
   margin-inline-start: auto;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
 }

@@ -7,7 +7,7 @@
 .bar {
   height: 3px;
   background: rgba(var(--plum-rgb), 0.1);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   overflow: hidden;
   margin-bottom: 8px;
 }
@@ -16,7 +16,7 @@
   width: 100%;
   transform-origin: left;
   background: var(--accent);
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   transition: transform 0.4s var(--ease);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -25,14 +25,14 @@
   }
 }
 .progressLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -49,13 +49,13 @@
   margin-bottom: 14px;
 }
 .meta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--jade);
   font-weight: 600;
   margin-bottom: 20px;
 }
 .desc {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
   margin-bottom: 16px;
@@ -71,14 +71,14 @@
   margin-bottom: 24px;
 }
 .tag {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   padding: 5px 11px;
 }
 .hint {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   margin-bottom: 20px;
   line-height: 1.5;
@@ -92,10 +92,10 @@
 .input,
 .textarea {
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 13px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -112,7 +112,7 @@
   min-height: 84px;
 }
 .invLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 12px;
@@ -128,7 +128,7 @@
   gap: 12px;
   padding: 14px 16px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
   touch-action: manipulation;
   transition:
@@ -144,14 +144,14 @@
   accent-color: var(--accent);
 }
 .opt span {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
   display: block;
 }
 .opt small {
   display: block;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-top: 2px;
 }
@@ -186,7 +186,7 @@
    produced it rather than in a toast that outlives the modal. */
 .error {
   margin-top: 12px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: var(--danger);
 }
@@ -204,11 +204,11 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   margin-bottom: 16px;
 }

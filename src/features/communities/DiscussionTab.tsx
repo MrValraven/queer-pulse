@@ -4,6 +4,7 @@ import {
   FadeIn,
   EmptyState,
   FeatureHelp,
+  LoadErrorState,
   SearchInput,
   FilterChips,
 } from "../../shared/components/ui";
@@ -145,7 +146,10 @@ export function DiscussionTab({
         onChange={(value) => setChip(value as Chip)}
       />
 
-      {shown.length === 0 ? (
+      {shown.length === 0 && paging.isError ? (
+        // A failed post read must not read as "no discussions yet" (DES-22).
+        <LoadErrorState onRetry={paging.refetch} />
+      ) : shown.length === 0 ? (
         <EmptyState
           title={t("communities:detail.discussion.empty.title")}
           description={t(

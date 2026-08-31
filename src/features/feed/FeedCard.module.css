@@ -1,7 +1,7 @@
 .shell {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -13,7 +13,7 @@
 }
 @media (hover: hover) {
   .shell:hover {
-    box-shadow: 0 4px 16px rgba(var(--plum-rgb), 0.07);
+    box-shadow: var(--shadow-lift);
   }
 }
 
@@ -105,7 +105,7 @@
 .dateBlock {
   width: 46px;
   height: 46px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--line-rgb), 0.06);
   display: flex;
   flex-direction: column;
@@ -183,13 +183,13 @@
 }
 .meterTrack {
   height: 5px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--line-rgb), 0.12);
   overflow: hidden;
 }
 .meterFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
 }
 
@@ -279,7 +279,7 @@
   min-height: 62px;
   resize: vertical;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--paper);
   color: var(--ink);
@@ -287,8 +287,9 @@
   font-size: 0.9rem;
 }
 .inlineComposerField:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .inlineComposerRow {
   display: flex;

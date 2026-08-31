@@ -30,19 +30,19 @@
 .columnTitle {
   margin: 0 0 4px;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
 }
 
 .columnCount {
   margin: 0 0 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 
 .meter {
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--line-rgb), 0.14);
   overflow: hidden;
 }
@@ -50,8 +50,8 @@
 .meterFill {
   height: 100%;
   background: var(--jade);
-  border-radius: 999px;
-  transition: width var(--dur-med, 0.3s) var(--ease);
+  border-radius: var(--radius-pill);
+  transition: width var(--dur-base) var(--ease);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -72,7 +72,7 @@
   gap: 8px;
   width: 100%;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   text-align: left;
@@ -110,8 +110,9 @@
    mirroring `useBoardDnd`) — a distinct accent color so it reads separately
    from the native Tab `:focus-visible` ring above. */
 .cardFocused {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .cardTopRow {
@@ -157,12 +158,12 @@
   gap: 5px;
   margin-inline-start: auto;
   color: var(--ink-40);
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 
 .cardTitle {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   line-height: 1.35;
   color: var(--ink);
@@ -177,9 +178,9 @@
 
 .emptyNote {
   padding: 18px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1px dashed rgba(var(--line-rgb), 0.18);
   text-align: center;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }

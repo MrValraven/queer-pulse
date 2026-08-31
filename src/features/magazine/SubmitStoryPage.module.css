@@ -13,7 +13,7 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -40,7 +40,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.7;
   color: var(--text-strong);
   opacity: 0.78;
@@ -65,11 +65,11 @@
 }
 .lookTitle {
   font-weight: 700;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--text-strong);
 }
 .lookBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--text-strong);
   opacity: 0.74;
@@ -80,7 +80,7 @@
   padding-top: 22px;
 }
 .stepsH {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -91,7 +91,7 @@
 .step {
   display: flex;
   gap: 11px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--text-strong);
   opacity: 0.8;
@@ -128,14 +128,14 @@
   gap: 14px;
   background: rgba(var(--plum-rgb), 0.05);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 16px 20px;
   margin-bottom: 20px;
 }
 .resumeText {
   margin: 0;
-  font-size: 14px;
-  color: var(--ink-70);
+  font-size: var(--text-14);
+  color: var(--ink-60);
   min-width: 0;
 }
 .resumeActions {
@@ -148,7 +148,7 @@
 .metaCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 28px 30px;
   margin-bottom: 20px;
 }
@@ -162,7 +162,7 @@
 .metaTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -172,7 +172,7 @@
 }
 .fieldLabel {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -180,7 +180,7 @@
   margin-bottom: 8px;
 }
 .optional {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
@@ -190,10 +190,10 @@
 .select {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.13);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 16px;
   font: inherit;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: rgba(var(--plum-rgb), 0.02);
   transition: border-color var(--ease);
@@ -213,7 +213,7 @@
 .select:focus-visible {
   outline: 2px solid transparent;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.14);
+  box-shadow: var(--ring-plum);
 }
 .fieldRow {
   display: grid;
@@ -231,7 +231,7 @@
 .writeCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   overflow: hidden;
   margin-bottom: 20px;
 }
@@ -251,7 +251,7 @@
 .tbBtn {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: none;
   background: transparent;
   cursor: pointer;
@@ -259,7 +259,7 @@
   align-items: center;
   justify-content: center;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink-60);
   transition:
@@ -284,7 +284,7 @@
 }
 .autosave {
   margin-left: auto;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .headlineInput,
@@ -306,14 +306,14 @@
   padding: 24px 28px 8px;
 }
 .deckInput {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   line-height: 1.6;
   padding: 0 28px 16px;
 }
 .bodyInput {
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.8;
   padding: 20px 28px;
@@ -336,7 +336,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 .wordCount {
@@ -348,7 +348,7 @@
   display: block;
   width: 100%;
   border: 2px dashed rgba(var(--line-rgb), 0.18);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 36px 24px;
   text-align: center;
   cursor: pointer;
@@ -374,17 +374,17 @@
   margin-bottom: 10px;
 }
 .coverDrop p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin: 0 0 4px;
 }
 .coverDrop span {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .coverPreview {
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
   margin-bottom: 20px;
   background: var(--paper);
@@ -403,7 +403,7 @@
   padding: 12px 16px;
 }
 .coverName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
   overflow: hidden;
@@ -423,14 +423,14 @@
   background: none;
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
 }
 .coverLink:focus-visible {
   outline: 2px solid var(--line-strong);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 
 /* ---- Actions ---- */
@@ -445,9 +445,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 12px;
 }
 .statusDraft {
@@ -470,7 +470,7 @@
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px;
 }
 .sideMuted {
@@ -478,7 +478,7 @@
 }
 .sideTitle {
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
   margin-bottom: 10px;
 }
@@ -504,7 +504,7 @@
   background: var(--jade);
 }
 .sideText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -520,29 +520,29 @@
   gap: 10px;
   background: rgba(var(--accent-rgb), 0.07);
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   margin-bottom: 16px;
 }
 .issueBadge {
   background: var(--accent);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
   flex: none;
 }
 .issueName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .issueDeadline {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 2px;
 }
@@ -551,7 +551,7 @@
 .panel {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: clamp(40px, 6vw, 72px);
   text-align: center;
   max-width: 620px;
@@ -579,7 +579,7 @@
   color: var(--accent);
 }
 .panelSub {
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.65;
   color: rgba(var(--cream-rgb), 0.7);
   max-width: 46ch;
@@ -596,7 +596,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.7);
 }

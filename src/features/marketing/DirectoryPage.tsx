@@ -65,6 +65,8 @@ export function DirectoryPage() {
     places,
     total: serverTotal,
     isLoading: placesLoading,
+    isError: hasPlacesError,
+    refetch: refetchPlaces,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -168,6 +170,7 @@ export function DirectoryPage() {
         total={serverTotal}
         mappableCount={mappableCount}
         loading={loading}
+        isError={hasPlacesError}
         view={view}
         nearMeSlot={isMobile ? nearMe : undefined}
         activeFiltersSlot={isMobile ? activeFilterChips : undefined}
@@ -179,6 +182,8 @@ export function DirectoryPage() {
           distanceById={distanceById}
           total={serverTotal}
           loading={loading}
+          isError={hasPlacesError}
+          onRetry={refetchPlaces}
           hasActiveFilters={hasActiveFilters}
           onClearFilters={clearFilters}
           hasMoreFromServer={hasNextPage}
@@ -196,6 +201,8 @@ export function DirectoryPage() {
           <DirectoryMapView
             places={filtered}
             loading={loading}
+            isError={hasPlacesError}
+            onRetry={refetchPlaces}
             hasActiveFilters={hasActiveFilters}
             onClearFilters={clearFilters}
           />

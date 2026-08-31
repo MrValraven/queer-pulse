@@ -12,7 +12,7 @@
   padding: 6px;
   list-style: none;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
 }
 
@@ -23,7 +23,7 @@
   width: 100%;
   padding: 8px 10px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -42,19 +42,19 @@
 }
 
 .name {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   overflow-wrap: anywhere;
 }
 
 .handle {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   overflow-wrap: anywhere;
 }
 
 .empty {
   margin: 4px 2px 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }

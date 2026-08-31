@@ -18,7 +18,7 @@ import { CardMeta } from "./CardMeta";
 import { CardProgressMeter } from "./CardProgressMeter";
 import { getCardAlert } from "./cardAlert";
 import { useRoadmapCardActions } from "./useRoadmapCardActions";
-import type { CardDragProps } from "./useBoardDnd";
+import type { CardDragProps, CardMoveProps } from "./useBoardDnd";
 import styles from "./Card.module.css";
 
 const PRIORITY_TONE: Record<RoadmapPriority, "danger" | "amber" | "ghost"> = {
@@ -50,6 +50,7 @@ interface RoadmapCardProps {
   itemsById: Map<string, AdminRoadmapItemDTO>;
   maxSortOrderByColumn: Record<RoadmapColumn, number>;
   dragProps: CardDragProps;
+  moveProps: CardMoveProps;
 }
 
 function isInteractiveTarget(target: EventTarget | null): boolean {
@@ -76,6 +77,7 @@ export function RoadmapCard({
   itemsById,
   maxSortOrderByColumn,
   dragProps,
+  moveProps,
 }: RoadmapCardProps) {
   const { t } = useTranslation();
   const itemDrawer = useItemDrawer();
@@ -171,6 +173,7 @@ export function RoadmapCard({
           <CardMenu
             item={item}
             ariaLabel={item.name}
+            moveProps={moveProps}
             onMoveTo={actions.moveTo}
             onEdit={() => itemDrawer.open(item.id)}
             onTogglePublic={actions.togglePublic}

@@ -16,7 +16,7 @@
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -24,7 +24,7 @@
 }
 .chevron {
   flex: none;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1;
   transition: transform 0.2s var(--ease);
   transform: rotate(-90deg);
@@ -52,7 +52,7 @@
   gap: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   padding: 14px 16px;
 }
 .main {
@@ -63,42 +63,42 @@
 }
 .code {
   align-self: flex-start;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--text-strong);
   letter-spacing: 0.05em;
   padding: 2px 8px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   background: rgba(var(--plum-rgb), 0.05);
 }
 /* Pinned invite: the address it is bound to is the row's title. */
 .recipient {
   min-width: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   overflow-wrap: anywhere;
 }
 /* The code, demoted to a secondary line once the address carries the title. */
 .codeSecondary {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   letter-spacing: 0.04em;
   overflow-wrap: anywhere;
 }
 /* Unpinned invite: a quiet marker so a bearer link is legible at a glance. */
 .bearer {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .note {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-style: italic;
   color: var(--ink-60);
   line-height: 1.5;
 }
 .detail {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -112,12 +112,12 @@
 .revoke {
   /* Compact inline row action — the Button primitive only ships md/lg. */
   padding: 5px 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 /* Same compact sizing as .revoke, with room for the copy/check icon. */
 .copy {
   padding: 5px 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -127,8 +127,8 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 11px;
-  border-radius: 999px;
-  font-size: 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
   font-weight: 700;
   white-space: nowrap;
 }

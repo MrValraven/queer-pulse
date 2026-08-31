@@ -299,6 +299,7 @@ function ThreadReplyBar({
         className={styles.replyTa}
         rows={1}
         placeholder={t("communities:detail.thread.replyPlaceholder")}
+        aria-label={t("communities:detail.thread.replyAria")}
         value={value}
         onChange={onChange}
       />

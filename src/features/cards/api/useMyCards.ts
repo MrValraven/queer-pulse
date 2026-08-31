@@ -10,8 +10,25 @@ import {
 } from "./cards.api";
 import { DEMO_MY_CARDS } from "../cards.data";
 
-/** Every card the member holds, newest first. */
-export function useMyCards(): { cards: MyCardDTO[]; isLoading: boolean } {
+export interface MyCardsResult {
+  cards: MyCardDTO[];
+  isLoading: boolean;
+  /** True when the request failed, so the wallet can say so instead of
+   *  telling the member they hold no cards (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
+}
+
+/**
+ * Every card the member holds, newest first.
+ *
+ * `isError` is part of the contract because a failed fetch here used to land
+ * in the same empty array as a successful one: a member opening their wallet
+ * during an outage was told their community had never issued them a card.
+ * Callers must branch on it before rendering the empty state.
+ */
+export function useMyCards(): MyCardsResult {
   const { demoMode } = useDemoMode();
   const query = useQuery({
     queryKey: ["my-cards", demoMode],
@@ -19,8 +36,20 @@ export function useMyCards(): { cards: MyCardDTO[]; isLoading: boolean } {
     queryFn: getMyCards,
   });
 
-  if (demoMode) return { cards: DEMO_MY_CARDS, isLoading: false };
-  return { cards: query.data ?? [], isLoading: query.isLoading };
+  if (demoMode) {
+    return {
+      cards: DEMO_MY_CARDS,
+      isLoading: false,
+      isError: false,
+      refetch: () => {},
+    };
+  }
+  return {
+    cards: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 /** Permanently removes one of the member's own cards from their wallet

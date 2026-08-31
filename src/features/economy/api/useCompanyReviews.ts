@@ -12,6 +12,13 @@ export interface CompanyReviewsResult {
   total: number;
   /** True while the first page is in flight. */
   isLoading: boolean;
+  /**
+   * True when the fetch failed. The reviews tab must say so rather than show
+   * "no reviews yet", which reads as an employer nobody has reviewed.
+   */
+  isError: boolean;
+  /** Re-runs the failed fetch. Wire it to the error state's retry. */
+  refetch: () => void;
   /** True when another page is available (always false in demo/disabled). */
   hasNextPage: boolean;
   /** Fetch and append the next page. */
@@ -73,6 +80,8 @@ export function useCompanyReviews(
     reviews: pages.flatMap((p) => p.items),
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,

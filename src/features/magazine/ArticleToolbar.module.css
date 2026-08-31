@@ -1,7 +1,7 @@
 .toolbar {
   position: sticky;
   top: 76px;
-  z-index: 20;
+  z-index: var(--z-sticky);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -11,7 +11,7 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-pill);
-  box-shadow: 0 10px 30px -22px rgba(var(--plum-rgb), 0.4);
+  box-shadow: var(--shadow-e3);
 }
 
 .spacer {
@@ -32,7 +32,7 @@
 .sizeReadout {
   min-width: 26px;
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--text-strong);
   font-family: var(--sans);
@@ -79,7 +79,7 @@
   background: var(--cream);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -107,7 +107,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--jade);
 }
@@ -120,7 +120,7 @@
   .toolbar {
     top: 64px;
     flex-wrap: wrap;
-    border-radius: 18px;
+    border-radius: var(--radius-18);
   }
   .savedHint {
     display: none;

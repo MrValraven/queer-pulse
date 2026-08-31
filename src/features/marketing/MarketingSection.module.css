@@ -26,7 +26,7 @@
 
 /* Header */
 .eyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.7;
   max-width: 60ch;
   color: var(--ink-60);
@@ -77,7 +77,7 @@
   margin-bottom: 18px;
 }
 .flow p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 14px;

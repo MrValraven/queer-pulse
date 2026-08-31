@@ -71,5 +71,6 @@ export function usePieces(filters: PieceFilters = {}) {
     pieces: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

@@ -8,7 +8,7 @@
   padding: 0 28px;
 }
 .back {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   text-decoration: none;
@@ -23,7 +23,7 @@
   }
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -52,7 +52,7 @@
   color: var(--accent);
 }
 .dek {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 54ch;
@@ -64,7 +64,7 @@
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   padding-top: 14px;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
@@ -101,9 +101,9 @@
   border: 1px solid rgba(var(--line-rgb), 0.14);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 7px 14px;
   cursor: pointer;
   transition:
@@ -135,11 +135,11 @@
   border: none;
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   cursor: pointer;
   padding: 7px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   transition:
     background 0.2s var(--ease),
     color 0.2s var(--ease);
@@ -171,7 +171,7 @@
 }
 .pic {
   aspect-ratio: 1 / 1;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s var(--ease);
@@ -179,7 +179,7 @@
   display: flex;
   align-items: flex-end;
   padding: 10px;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-60);
   border: none;
   text-align: left;
@@ -222,7 +222,7 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -231,8 +231,8 @@
   color: var(--plum);
   background: rgba(var(--cream-rgb), 0.85);
   padding: 3px 9px;
-  border-radius: 5px;
-  backdrop-filter: blur(6px);
+  border-radius: var(--radius-5);
+  backdrop-filter: var(--blur-sm);
 }
 .tagAccent {
   color: var(--accent-ink);
@@ -262,7 +262,7 @@
   color: var(--accent);
 }
 .foot p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.7;
   margin-bottom: 0.8em;
@@ -300,8 +300,8 @@
   padding: 5px 11px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 999px;
-  font-size: 12.5px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12-5);
   color: var(--ink);
   text-decoration: none;
 }
@@ -313,7 +313,7 @@
   color: var(--accent-ink);
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 9.5px;
+  font-size: var(--text-9-5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -324,5 +324,5 @@
 }
 .pill .ct {
   color: var(--ink-40);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
 }

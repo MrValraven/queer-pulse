@@ -4,7 +4,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .cat {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -25,7 +25,7 @@
   color: var(--accent);
 }
 .hero p {
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   color: var(--ink-60);
   max-width: 58ch;
   margin-top: 20px;
@@ -49,11 +49,11 @@
   gap: 2px;
 }
 .navItem {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink-60);
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border-left: 2px solid transparent;
   transition: all 0.18s;
   background: none;
@@ -84,7 +84,7 @@
   scroll-margin-top: 96px;
 }
 .eye {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -105,7 +105,7 @@
   color: var(--accent);
 }
 .prose p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 14px;
@@ -125,10 +125,10 @@
   margin-bottom: 28px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 .sectionError p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0;
@@ -144,7 +144,7 @@
 .statCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
 }
 .statN {
@@ -156,13 +156,16 @@
   line-height: 1;
 }
 .statL {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 8px;
   line-height: 1.4;
 }
 .statTrend {
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-12);
   font-weight: 600;
   margin-top: 8px;
 }
@@ -197,17 +200,17 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 500;
 }
 .stepTitle {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .stepText {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -225,7 +228,7 @@
   gap: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
 }
 .acAv {
@@ -237,16 +240,16 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-15);
   flex: none;
 }
 .acName {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
 }
 .acRole {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -261,7 +264,7 @@
   gap: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
 }
 .prinIcon {
@@ -269,13 +272,13 @@
   flex: none;
 }
 .prinTitle {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 5px;
 }
 .prinText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
 }
@@ -289,12 +292,12 @@
 }
 .finColHead {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .finHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-bottom: 14px;
 }
@@ -321,7 +324,7 @@
   gap: 14px;
 }
 .finLineLabel {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -332,32 +335,32 @@
 }
 .finLineAmount {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
 }
 .finChevron {
   color: var(--ink-40);
-  font-size: 11px;
+  font-size: var(--text-11);
   transition: transform 0.2s var(--ease);
 }
 .finLineOpen .finChevron {
   transform: rotate(180deg);
 }
 .finLineNote {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
   margin: 6px 0 10px;
 }
 .finTrack {
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
 }
 .finFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .finDetailWrap {
   display: grid;
@@ -391,7 +394,7 @@
   display: grid;
   grid-template-columns: 1fr auto auto;
   gap: 12px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   padding: 6px 0;
   border-bottom: 1px dashed rgba(var(--line-rgb), 0.08);
@@ -408,7 +411,7 @@
 .finDetailTotal {
   display: flex;
   justify-content: space-between;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--text-strong);
   padding-top: 8px;
@@ -422,7 +425,7 @@
   border-top: 2px solid var(--line-strong);
 }
 .finTotalLabel {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -435,20 +438,20 @@
 .eventsCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 26px 28px;
   margin-top: 32px;
 }
 .fecTitle {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   margin-bottom: 10px;
 }
 .fecRow {
   display: flex;
   gap: 12px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   padding: 8px 0;
@@ -466,7 +469,7 @@
 }
 .reserveBar {
   height: 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
   margin: 8px 0 4px;
@@ -477,10 +480,10 @@
 .reserveFill {
   height: 100%;
   background: var(--jade);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .reserveCap {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin: 0 0 16px;
 }
@@ -490,12 +493,12 @@
   margin-bottom: 12px;
 }
 .partnerName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .partnerBody {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin-top: 3px;
@@ -505,18 +508,18 @@
 .raiseCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 28px 30px;
   margin-top: 8px;
 }
 .rcTitle {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   margin-bottom: 6px;
 }
 .rcText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 18px;
@@ -530,10 +533,10 @@
 .rcInput,
 .rcTextarea {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   background: var(--cream);
   outline: none;
@@ -557,7 +560,7 @@
   margin-top: 6px;
 }
 .proposalResolvedHead {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -565,13 +568,13 @@
   margin: 28px 0 12px;
 }
 .proposalEmpty {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 .proposalCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
 }
 .proposalCardHead {
@@ -582,20 +585,20 @@
   margin-bottom: 10px;
 }
 .proposalType {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 .proposalStatus {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
 }
 .proposalStatusPassed {
@@ -606,18 +609,18 @@
 }
 .proposalTitle {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   margin-bottom: 6px;
 }
 .proposalDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 10px;
 }
 .proposalTarget {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 14px;
@@ -628,13 +631,13 @@
 .proposalTrack {
   position: relative;
   height: 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
 }
 .proposalFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--jade);
 }
 /* Marks the two-thirds line the page's copy promises as the passing
@@ -649,13 +652,13 @@
   z-index: 1;
 }
 .proposalTallyCaption {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 6px;
 }
 .proposalCloses,
 .proposalClosed {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-bottom: 10px;
 }
@@ -668,7 +671,7 @@
   gap: 10px;
 }
 .proposalVotedNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 8px;
 }
@@ -684,7 +687,7 @@
   margin: 18px 0 4px;
 }
 .proposalComposeHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin: 0;
 }
@@ -699,14 +702,14 @@
   color: var(--ink-40);
 }
 .proposalProposer {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-bottom: 12px;
 }
 /* Labels the for/against bar so the quorum reading below it reads as a
    second, separate figure rather than a restatement of the same one. */
 .proposalTallyLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -719,13 +722,13 @@
 .proposalQuorumTrack {
   position: relative;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
 }
 .proposalQuorumFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--violet);
 }
 .proposalQuorumFillShort {
@@ -735,7 +738,7 @@
   display: flex;
   align-items: flex-start;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 6px;
   line-height: 1.5;
@@ -751,7 +754,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 8px;
@@ -759,21 +762,21 @@
 .proposalCosignTrack {
   position: relative;
   height: 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
   margin-bottom: 10px;
 }
 .proposalCosignFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--jade);
 }
 .proposalCosignNote {
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.55;
   margin: 8px 0 0;
@@ -781,7 +784,7 @@
 .proposalScreeningNote {
   margin-top: 14px;
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: rgba(var(--plum-rgb), 0.04);
 }
@@ -789,7 +792,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -797,7 +800,7 @@
   margin-bottom: 6px;
 }
 .proposalScreeningNote p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0;

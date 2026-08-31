@@ -57,11 +57,11 @@
 }
 
 .quote {
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.6;
   color: var(--ink);
   background: var(--wash);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
   margin: 36px 0;
 }
@@ -71,7 +71,7 @@
 .cite {
   display: block;
   margin-top: 9px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-style: normal;
 }
@@ -80,7 +80,7 @@
   margin: 36px 0;
 }
 .figCaption {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
   margin-top: 10px;
@@ -91,7 +91,7 @@
 }
 .credit {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 2px;
 }
@@ -102,12 +102,12 @@
   gap: 14px;
   margin: 36px 0;
   padding: 20px 22px;
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   background: var(--wash);
 }
 .q {
   font-weight: 700;
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   line-height: 1.5;
   color: var(--plum);
   margin: 0;
@@ -121,7 +121,7 @@
   min-width: 0;
 }
 .who {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -129,7 +129,7 @@
   margin-bottom: 4px;
 }
 .answer {
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   line-height: 1.6;
   color: var(--ink-60);
   margin: 0;
@@ -140,7 +140,7 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 16px;
   padding: 20px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: var(--wash);
   margin: 32px 0;
 }
@@ -158,7 +158,7 @@
 }
 .statLabel {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 6px;
   line-height: 1.4;

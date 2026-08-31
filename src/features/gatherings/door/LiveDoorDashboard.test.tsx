@@ -141,6 +141,24 @@ afterEach(() => {
   checkInState.rejectWith = null;
 });
 
+/**
+ * The door's own in-place refusal.
+ *
+ * Queried out of every announced region rather than by `findByRole("alert")`
+ * alone, because the app shell keeps an assertive toast live region mounted
+ * from first paint (see `ToastProvider`), and an empty live region is an alert
+ * too. The role still has to be on the notice itself: this is copy the host
+ * must hear, so a plain `findByText` would not be asserting enough.
+ */
+async function findClosedNotice() {
+  const announced = await screen.findAllByRole("alert");
+  const notice = announced.find((element) =>
+    element.textContent?.includes(CLOSED_NOTICE),
+  );
+  expect(notice).toBeDefined();
+  return notice as HTMLElement;
+}
+
 function renderDoor(checkedInCount: number | null) {
   eventState.gathering = GATHERING;
   rosterState.roster = roster(checkedInCount);
@@ -223,8 +241,7 @@ describe("LiveDoorDashboard when the window closes under an open tab", () => {
       await screen.findByRole("button", { name: "Check in Bo Neves" }),
     );
 
-    const notice = await screen.findByRole("alert");
-    expect(notice).toHaveTextContent(CLOSED_NOTICE);
+    expect(await findClosedNotice()).toHaveTextContent(CLOSED_NOTICE);
   });
 
   it("shows its own copy rather than the server's message", async () => {
@@ -235,7 +252,7 @@ describe("LiveDoorDashboard when the window closes under an open tab", () => {
       await screen.findByRole("button", { name: "Check in Bo Neves" }),
     );
 
-    await screen.findByRole("alert");
+    await findClosedNotice();
     // The server's prose carries a number from a configurable window, so the
     // code is the contract and the message never reaches the host.
     expect(
@@ -251,7 +268,7 @@ describe("LiveDoorDashboard when the window closes under an open tab", () => {
       await screen.findByRole("button", { name: "Check in Bo Neves" }),
     );
 
-    await screen.findByRole("alert");
+    await findClosedNotice();
     await waitFor(() =>
       expect(
         screen.queryByRole("button", { name: /^Check in / }),

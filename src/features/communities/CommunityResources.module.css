@@ -13,10 +13,10 @@
 .manageCta {
   gap: 6px;
   flex: none;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   padding: 5px 11px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
 }
@@ -33,7 +33,7 @@
 
 .emptyHint {
   margin: 0 0 8px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -59,14 +59,14 @@
   gap: 12px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 11px 13px;
 }
 
 .rowDragging {
   z-index: 2;
   border-color: rgba(var(--accent-rgb), 0.4);
-  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.12);
+  box-shadow: var(--shadow-e2);
 }
 
 .grip {
@@ -91,7 +91,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
 }
@@ -107,7 +107,7 @@
 
 .rowTitle {
   display: block;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 700;
   color: var(--text-strong);
   overflow-wrap: anywhere;
@@ -115,7 +115,7 @@
 
 .rowUrl {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 1px;
   overflow: hidden;
@@ -137,7 +137,7 @@
   width: 30px;
   height: 30px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: transparent;
   color: var(--ink-60);
   cursor: pointer;
@@ -155,7 +155,7 @@
 }
 .rowAction:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
+  box-shadow: var(--ring-accent-strong);
 }
 
 .addRow {
@@ -167,7 +167,7 @@
 
 .capNote {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -177,7 +177,7 @@
 }
 
 .kindLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--ink-60);
   margin-bottom: 6px;

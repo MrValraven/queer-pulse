@@ -1,4 +1,5 @@
-import { FiArrowRight } from "react-icons/fi";
+import type { ReactNode } from "react";
+import { FiArrowDown, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -153,6 +154,18 @@ export function CancelledEventCard() {
   );
 }
 
+/** In-page jump to the rescheduled date. `<Translation>` clones this with the
+ *  link text as its children, so the arrow affordance is an icon here rather
+ *  than a glyph baked into the catalog string. */
+function SkipToRescheduleLink({ children }: { children?: ReactNode }) {
+  return (
+    <a href="#july">
+      {children}
+      <FiArrowDown aria-hidden />
+    </a>
+  );
+}
+
 /** The "what happens now" list: refund, headcount, reschedule, concern. */
 export function CancelledRefundInfo() {
   const { t } = useTranslation();
@@ -207,8 +220,7 @@ export function CancelledRefundInfo() {
                 }),
                 host: HOST_NAME,
               }}
-              // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- element template; <Translation> clones it with the link text at render time.
-              components={{ a: <a href="#july" /> }}
+              components={{ a: <SkipToRescheduleLink /> }}
             />
           </span>
         </div>

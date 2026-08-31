@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
@@ -28,12 +29,10 @@ import {
  * live DTO is a real backend slug and has no business in this registry.
  */
 
-// `../..` from this file is `src/`. The trailing slash is trimmed so the
-// paths this test reports back read as `/features/...` rather than `//...`.
-const SOURCE_ROOT = fileURLToPath(new URL("../..", import.meta.url)).replace(
-  /\/$/,
-  "",
-);
+// `../..` from this file is `src/`. Resolved through `node:path` rather than
+// `new URL(..., import.meta.url)`, because Vite rewrites that form as an ASSET
+// reference and under vitest it no longer yields a `file:` URL at all.
+const SOURCE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 
 /** The path helpers whose first argument is a gathering slug. */
 const SLUG_HELPERS = [

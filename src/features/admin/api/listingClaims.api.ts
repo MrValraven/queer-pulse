@@ -1,4 +1,5 @@
 import { apiGet, apiPatch } from "../../../shared/api/client";
+import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 
 export type ListingClaimStatus = "pending" | "approved" | "declined";
@@ -39,10 +40,26 @@ export interface ListingClaimDTO {
   ageDays: number;
 }
 
-/** GET /admin/listings/claims — the pending claim review queue, oldest first.
- *  Moderator/Admin only. */
-export const getListingClaims = () =>
-  apiGet<ListingClaimDTO[]>("/admin/listings/claims");
+/**
+ * GET /admin/listings/claims?page — one page of the pending claim review queue,
+ * oldest first. Moderator/Admin only.
+ *
+ * The route used to answer with a flat array capped at 200 rows, so a desk with
+ * more pending claims than that hid the newest of them and said nothing about it
+ * (ENG-41). It now answers with the `{ items, total, page, pageSize }` envelope:
+ * `total` is the size of the whole pending queue, not of this page. Wrapped in
+ * `toItemsPage` so a deploy where the backend is still on the old array shape
+ * reads as one full page instead of throwing on `.items`.
+ */
+export const getListingClaims = async (page?: number) => {
+  const searchParams = new URLSearchParams();
+  if (page) searchParams.set("page", String(page));
+  const querySuffix = searchParams.toString();
+  const response = await apiGet<ListingClaimDTO[] | ItemsPage<ListingClaimDTO>>(
+    `/admin/listings/claims${querySuffix ? `?${querySuffix}` : ""}`,
+  );
+  return toItemsPage(response);
+};
 
 /** PATCH /admin/listings/claims/:id — approve or decline a claim. On
  *  approval the backend reassigns the listing's owner to the claimant.

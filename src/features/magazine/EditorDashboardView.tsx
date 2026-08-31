@@ -19,7 +19,7 @@ import type { useDeskWriteAction } from "./desk/useDeskWriteAction";
 
 export interface EditorDashboardViewProps {
   isLoading: boolean;
-  piecesError: boolean;
+  hasDeskLoadError: boolean;
   isEmpty: boolean;
   issue: DeskViewProps["issue"];
   issues: DeskViewProps["issues"];
@@ -54,7 +54,7 @@ export interface EditorDashboardViewProps {
  */
 export function EditorDashboardView({
   isLoading,
-  piecesError,
+  hasDeskLoadError,
   isEmpty,
   issue,
   issues,
@@ -86,10 +86,13 @@ export function EditorDashboardView({
     <MagazineDeskShell>
       <DeskView
         loading={isLoading}
-        showError={piecesError}
-        onRetry={() =>
-          void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] })
-        }
+        showError={hasDeskLoadError}
+        onRetry={() => {
+          void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] });
+          void queryClient.invalidateQueries({
+            queryKey: ["magazine-pitches"],
+          });
+        }}
         isEmpty={isEmpty}
         issue={issue}
         issues={issues}

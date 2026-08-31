@@ -5,6 +5,7 @@ import {
   Button,
   ConfirmDialog,
   EmptyState,
+  LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -35,6 +36,11 @@ export interface AdminPressKitListProps {
   kind: PressKitKind;
   rows: PressRowVM[];
   isLoading: boolean;
+  /** True when the tab's fetch failed. Rendered instead of the "nothing
+   *  published yet" empty state, which an outage must never borrow (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch. */
+  onRetry: () => void;
   creating: boolean;
   deleting: boolean;
   onCreate: (value: PressKitFieldsValue, done: () => void) => void;
@@ -58,6 +64,8 @@ export function AdminPressKitList({
   kind,
   rows,
   isLoading,
+  isError,
+  onRetry,
   creating,
   deleting,
   onCreate,
@@ -90,6 +98,12 @@ export function AdminPressKitList({
           <SkeletonLine height={84} style={{ borderRadius: 22 }} />
           <SkeletonLine height={84} style={{ borderRadius: 22 }} />
         </>
+      ) : isError ? (
+        <LoadErrorState
+          onRetry={onRetry}
+          title={t("admin:pressKit.list.loadError.title")}
+          description={t("admin:pressKit.list.loadError.body")}
+        />
       ) : rows.length === 0 ? (
         <EmptyState
           title={t(`admin:pressKit.list.empty.${kind}.title`)}

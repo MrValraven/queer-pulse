@@ -3,7 +3,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn } from "../../shared/components/ui";
+import { FadeIn, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useMyHousingViewings } from "./api/useHousingViewings";
@@ -17,7 +17,7 @@ import v from "./housingViewings.module.css";
  * review after it's done. */
 export function HousingViewingsPage() {
   const { t } = useTranslation();
-  const { data = [] } = useMyHousingViewings();
+  const { data = [], isError, refetch } = useMyHousingViewings();
   const [reviewing, setReviewing] = useState<HousingViewingDTO | null>(null);
 
   const needsResponse = data.filter(
@@ -52,7 +52,15 @@ export function HousingViewingsPage() {
         </h1>
         <p className={v.pageSub}>{t("economy:housingViewing.list.sub")}</p>
 
-        {data.length === 0 ? (
+        {isError ? (
+          // Someone checking whether a viewing was accepted must never be told
+          // they have none because the request failed (DES-22).
+          <LoadErrorState
+            title={t("economy:housingViewing.list.loadError.title")}
+            description={t("economy:housingViewing.list.loadError.description")}
+            onRetry={() => void refetch()}
+          />
+        ) : data.length === 0 ? (
           <div className={v.empty}>
             {t("economy:housingViewing.list.empty")}
           </div>

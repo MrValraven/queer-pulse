@@ -5,25 +5,25 @@
   gap: 6px;
   width: 100%;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 8px 10px;
   background: var(--cream);
   transition: border-color 0.18s var(--ease);
 }
 .tagsInput:focus-within {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.28);
+  box-shadow: var(--ring-accent-strong);
 }
 
 .tagChip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--plum);
   background: rgba(var(--plum-rgb), 0.08);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 6px 4px 10px;
 }
 
@@ -50,8 +50,9 @@
   }
 }
 .tagChipRemove:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .tagsEntry {
@@ -62,13 +63,13 @@
   outline: none;
   padding: 4px 2px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
 }
 
 .tagsHint {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   /* --ink-60 (4.72:1 on cream) for headroom over the 4.5:1 floor on this
      small helper text. */
   color: var(--ink-60);

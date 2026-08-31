@@ -9,7 +9,7 @@
   gap: 14px;
   padding: 18px 20px;
   margin-bottom: 20px;
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   border: 1px solid rgba(var(--accent-rgb), 0.22);
   background: linear-gradient(
     135deg,
@@ -41,7 +41,7 @@
   display: flex;
   flex: none;
   margin-top: 2px;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--accent-ink);
 }
 
@@ -52,16 +52,16 @@
 
 .greeting {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .message {
   margin: 6px 0 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.65;
-  color: var(--ink-80, var(--ink));
+  color: var(--ink);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }

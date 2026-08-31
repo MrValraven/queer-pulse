@@ -1,4 +1,4 @@
-import { Button } from "../../../../shared/components/ui";
+import { Button, LoadErrorState } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../../shared/i18n/format";
 import { formatRelative } from "../../../../shared/lib/date";
@@ -26,7 +26,10 @@ export function EditorMessageCard({
   const { t } = useTranslation();
   const formatters = useFormat();
   const current = assignment;
-  const { messages, isLoading } = usePieceMessages(current?.id ?? "", "writer");
+  const { messages, isLoading, isError, refetch } = usePieceMessages(
+    current?.id ?? "",
+    "writer",
+  );
   const latestFromEditor = [...messages]
     .reverse()
     .find((message) => !message.fromMe);
@@ -38,6 +41,8 @@ export function EditorMessageCard({
         <p className={pieceStyles.tiny}>
           {t("magazine:writer.editorMessage.emptyState")}
         </p>
+      ) : isError ? (
+        <LoadErrorState onRetry={refetch} compact />
       ) : isLoading ? (
         <p className={pieceStyles.tiny}>
           {t("magazine:writer.editorMessage.loading")}

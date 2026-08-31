@@ -14,7 +14,8 @@ import { AdminStaffRows, type StaffRosterRow } from "./AdminStaffRows";
 import styles from "./AdminStaffPage.module.css";
 
 /**
- * `/admin/staff` — every moderator and admin on the platform, in one place.
+ * `/admin/staff` — every moderator, admin and staff-grant holder on the
+ * platform, in one place.
  * Before this page, seeing who holds staff access meant paging through the
  * full member directory. Reads `GET /platform/staff` directly (the same
  * roster the member-facing `StaffBadge` already uses) rather than the
@@ -44,8 +45,16 @@ export function AdminStaffPage() {
     const rosterSlugs = new Set((data ?? []).map((member) => member.slug));
     return [
       ...(data ?? []).map((member) => ({
-        ...member,
-        staffRoles: grantsBySlug.get(member.slug) ?? [],
+        slug: member.slug,
+        firstName: member.firstName,
+        lastName: member.lastName,
+        // The roster sends null for someone on the ordinary member tier who is
+        // there for their grants alone; this page has a label for that tier.
+        platformRole: member.platformRole ?? ("member" as const),
+        // Prefer the admin grants endpoint, which carries EVERY grant a person
+        // holds; the roster row only carries the ones that earn a public badge.
+        // Falling back to those keeps the page truthful when that query fails.
+        staffRoles: grantsBySlug.get(member.slug) ?? member.badgedStaffRoles,
       })),
       ...holders
         .filter((holder) => !rosterSlugs.has(holder.slug))

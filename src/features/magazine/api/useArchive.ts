@@ -46,5 +46,6 @@ export function useArchive(q: string) {
     entries: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

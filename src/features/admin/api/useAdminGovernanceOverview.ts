@@ -160,6 +160,11 @@ export interface AdminGovernanceOverviewResult {
   overview: AdminOverviewResponseDTO | null;
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /** True when the fetch failed, so the tab can tell an outage apart from a
+   *  section that genuinely has no rows yet (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch; wire to the error state's retry. */
+  refetch: () => void;
 }
 
 /**
@@ -177,9 +182,19 @@ export function useAdminGovernanceOverview(): AdminGovernanceOverviewResult {
   });
 
   if (!query.data) {
-    return { overview: null, loading: query.isPending };
+    return {
+      overview: null,
+      loading: query.isPending,
+      isError: query.isError,
+      refetch: () => void query.refetch(),
+    };
   }
-  return { overview: query.data, loading: false };
+  return {
+    overview: query.data,
+    loading: false,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 /**

@@ -16,10 +16,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useSocial } from "../../app/providers/useSocial";
 import { useFeedMutes, type FeedMuteTarget } from "./api/useFeedMutes";
-import { SAFETY_EMAIL } from "./feed.data";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
+import type { ReportDTO } from "../safety/api/reports.api";
 import type { ReportSubjectType } from "../safety/reportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./FeedPage.module.css";
@@ -296,6 +296,31 @@ export function BlockConfirmModal({
   );
 }
 
+/**
+ * Severity band → the line that tells the reporter where their report landed.
+ *
+ * The band is the backend's own decision (`deriveSeverity` in
+ * `report-severity.ts`, from the reason code alone) and it rides back on the
+ * created `ReportDTO`, so this renders a fact rather than a promise. It
+ * replaced a line pointing anyone with something urgent at the general
+ * `hello@` mailbox, which has no triage path and is the same inbox as press,
+ * rights and the 500 page: a report already in the emergency band was being
+ * sent to a general inbox instead of being told the band exists.
+ *
+ * The DTO also carries the backend's own `acknowledgement` string, which is
+ * NOT rendered here: it is server-authored English with no localization, so
+ * showing it verbatim would put an English line under a Portuguese
+ * confirmation. Same call `useReportReasons` makes for reason labels. The
+ * `acknowledgement` is the fallback below, used only when the response carries
+ * a severity this build cannot name.
+ */
+const SEVERITY_BAND_KEYS: Record<ReportDTO["severity"], string> = {
+  emergency: "feed:moderation.reportConfirm.band.emergency",
+  high: "feed:moderation.reportConfirm.band.high",
+  medium: "feed:moderation.reportConfirm.band.medium",
+  low: "feed:moderation.reportConfirm.band.low",
+};
+
 interface ReportModalProps {
   authorName: string;
   /** Content id of the reported post/reply — the report's `subjectId`. */
@@ -316,7 +341,9 @@ export function ReportModal({
   useScrollLock();
   const [reason, setReason] = useState<string>("");
   const [detail, setDetail] = useState("");
-  const [sent, setSent] = useState(false);
+  // The created report itself, not a boolean: the confirmation reads the
+  // server-derived severity band off it. Null until the write lands.
+  const [sentReport, setSentReport] = useState<ReportDTO | null>(null);
   // A report that FAILED must never render the "we received your report"
   // confirmation: the reporter would believe moderators had it when nothing was
   // persisted. Failure keeps the form (and their reason/detail) on screen with
@@ -353,7 +380,7 @@ export function ReportModal({
         detail: detail.trim(),
       },
       {
-        onSuccess: () => setSent(true),
+        onSuccess: (report) => setSentReport(report),
         onError: (err) => {
           logError(err, { scope: "feed.report" });
           setFailureMessage(
@@ -377,13 +404,15 @@ export function ReportModal({
     >
       <div
         className={
-          sent ? `${styles.dialog} ${styles.dialogConfirm}` : styles.dialog
+          sentReport
+            ? `${styles.dialog} ${styles.dialogConfirm}`
+            : styles.dialog
         }
         role="dialog"
         aria-modal="true"
         aria-labelledby="report-title"
       >
-        {sent ? (
+        {sentReport ? (
           <div className={styles.confirm}>
             <span className={styles.confirmIcon} aria-hidden>
               <FiCheck />
@@ -395,10 +424,10 @@ export function ReportModal({
               />
             </h2>
             <p className={styles.confirmBody}>
-              {t("feed:moderation.reportConfirm.body", {
-                name: authorName,
-                email: SAFETY_EMAIL,
-              })}
+              {t("feed:moderation.reportConfirm.body", { name: authorName })}{" "}
+              {SEVERITY_BAND_KEYS[sentReport.severity]
+                ? t(SEVERITY_BAND_KEYS[sentReport.severity])
+                : sentReport.acknowledgement}
             </p>
             <div className={styles.confirmActions}>
               <Button variant="ghost-dark" onClick={onClose}>

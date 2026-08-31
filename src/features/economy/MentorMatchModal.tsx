@@ -1,8 +1,7 @@
-import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { FiClock } from "react-icons/fi";
-import { Button, Stepper } from "../../shared/components/ui";
-import { useScrollLock, useWizardForm } from "../../shared/hooks";
+import { FiClock, FiX } from "react-icons/fi";
+import { Button, Stepper, useDismiss } from "../../shared/components/ui";
+import { useWizardForm } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -20,12 +19,10 @@ export function MentorMatchModal({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  useScrollLock();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  // Shared dialog behaviour: scroll lock, initial focus into the dialog, a Tab
+  // trap so a keyboard user cannot reach the page behind, focus restore to the
+  // trigger on close, and modal-stack-aware Escape.
+  const dialogRef = useDismiss(onClose);
 
   const flow = MATCH_FLOWS[mode];
   const wizard = useWizardForm({ stepCount: flow.steps.length });
@@ -45,6 +42,8 @@ export function MentorMatchModal({
       }}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
@@ -60,7 +59,7 @@ export function MentorMatchModal({
           onClick={onClose}
           aria-label={t("economy:mentorship.match.closeAria")}
         >
-          ×
+          <FiX aria-hidden />
         </button>
         {!demoMode ? (
           // No mentor-matching endpoint yet — an honest coming-soon rather than

@@ -40,5 +40,6 @@ export function useMagazineEditors() {
     editors: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

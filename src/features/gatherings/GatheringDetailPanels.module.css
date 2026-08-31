@@ -6,8 +6,8 @@
 }
 
 .heading {
-  font-family: var(--font-display, "Fraunces", serif);
-  font-size: 20px;
+  font-family: var(--serif);
+  font-size: var(--text-20);
   font-weight: 400;
   line-height: 1.3;
   color: var(--ink);
@@ -15,7 +15,7 @@
 }
 
 .lead {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
   margin: 0 0 14px;
@@ -34,7 +34,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
 }
@@ -43,7 +43,7 @@
   flex: none;
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,7 +62,7 @@
 
 .rowLabel {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -72,7 +72,7 @@
 
 .rowValue {
   display: block;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.55;
   color: var(--ink);
   max-width: 62ch;
@@ -107,7 +107,7 @@
   border-radius: var(--radius-badge);
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
 }
 
@@ -118,7 +118,7 @@
 
 .costNote {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
   color: var(--ink-60);
   margin-top: 6px;
@@ -136,7 +136,7 @@
 
 .announcement {
   padding: 15px 17px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-inline-start: 3px solid var(--accent);
   background: var(--paper);
@@ -146,13 +146,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-bottom: 6px;
 }
 
 .announcementBody {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: var(--ink);
   margin: 0;

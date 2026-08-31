@@ -17,7 +17,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }
@@ -37,14 +37,14 @@
 
 .rowTitle {
   margin: 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--ink);
 }
 
 .rowDesc {
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.45;
   color: var(--ink-60);
   overflow: hidden;
@@ -57,7 +57,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 

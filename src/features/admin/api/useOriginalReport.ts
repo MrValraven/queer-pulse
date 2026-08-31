@@ -19,6 +19,12 @@ import type { ReportDetail } from "../adminModeration.data";
 export function useOriginalReport(reportId: string | undefined): {
   detail: ReportDetail | undefined;
   loading: boolean;
+  /** True when the original report failed to load. An appeal reviewer must be
+   *  able to tell "this appeal has no linked report" from "we could not read
+   *  the report you are deciding against" (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch. */
+  refetch: () => void;
 } {
   const { demoMode } = useDemoMode();
   const enabled = !demoMode && reportId != null;
@@ -31,5 +37,7 @@ export function useOriginalReport(reportId: string | undefined): {
   return {
     detail: query.data ?? undefined,
     loading: enabled && query.isLoading,
+    isError: enabled && query.isError,
+    refetch: () => void query.refetch(),
   };
 }

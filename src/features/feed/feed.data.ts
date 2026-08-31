@@ -181,6 +181,12 @@ export interface SidebarGathering {
 export interface SidebarConnections {
   count: number;
   avatars: { initials: string; tint: AvatarTint; src?: string }[];
+  /** True when the lookup failed. Without it a failed request collapses back
+   *  into `count: 0` and the widget reprints the very claim SOC-06 removed
+   *  (DES-22): that the member has no connections. */
+  hasFailed?: boolean;
+  /** Re-runs the failed lookup. */
+  onRetry?: () => void;
 }
 
 export const NEW_THIS_WEEK: SidebarMember[] = NEW_SLUGS.map((slug) => {

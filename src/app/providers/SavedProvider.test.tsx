@@ -3,6 +3,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 
+/**
+ * The signed-in member the auth mock below reports. The session-bootstrap cache
+ * key carries it (see `sessionBootstrapQueryKey`), so the pre-seeded entry has
+ * to be written under the same id the provider will read with.
+ */
+const MEMBER_ID = "member-tiago";
+
 const savedPage = {
   items: [
     {
@@ -30,7 +37,7 @@ async function loadLiveSaved(client: QueryClient) {
   vi.doMock("./authContext", () => ({
     useAuth: () => ({
       loggedIn: true,
-      user: { profile: { slug: "tiago-costa" } },
+      user: { id: MEMBER_ID, profile: { slug: "tiago-costa" } },
     }),
   }));
 
@@ -55,7 +62,7 @@ async function loadLiveSaved(client: QueryClient) {
 }
 
 /**
- * Variant of `loadLiveSaved` for the fallback path: no `["bootstrap"]` data is
+ * Variant of `loadLiveSaved` for the fallback path: no bootstrap data is
  * pre-seeded, and `getBootstrap` itself is mocked to reject, so
  * `useSessionBootstrap`'s query runs for real and settles with `isError: true`
  * and no data — simulating a 404 (frontend ahead of backend), a 500, or a
@@ -78,7 +85,7 @@ async function loadLiveSavedBootstrapError(client: QueryClient) {
   vi.doMock("./authContext", () => ({
     useAuth: () => ({
       loggedIn: true,
-      user: { profile: { slug: "tiago-costa" } },
+      user: { id: MEMBER_ID, profile: { slug: "tiago-costa" } },
     }),
   }));
 
@@ -111,7 +118,7 @@ describe("SavedProvider (live mode)", () => {
     const client = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
-    client.setQueryData(["bootstrap"], {
+    client.setQueryData(["bootstrap", false, MEMBER_ID], {
       profile: { slug: "tiago-costa", limited: false },
       saved: savedPage,
       blocks: { items: [], total: 0, page: 1, pageSize: 20 },
@@ -130,7 +137,7 @@ describe("SavedProvider (live mode)", () => {
     const client = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
-    // No ["bootstrap"] data seeded: the real (mocked-to-reject) getBootstrap
+    // No bootstrap data seeded: the real (mocked-to-reject) getBootstrap
     // runs, so the query settles with isError: true and no data — this is what
     // must trigger the fallback. Without it, `items` would stay empty forever
     // and this assertion would time out.

@@ -20,7 +20,7 @@
 }
 .cardTitle {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -30,7 +30,7 @@
   color: var(--ink);
 }
 .cardSub {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
   margin: 6px 0 0;
@@ -59,8 +59,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px 20px;
-  font-size: 13.5px;
-  color: var(--ink-70);
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
   margin-bottom: 16px;
 }
 
@@ -75,7 +75,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -86,7 +86,7 @@
 .healthTable {
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }
@@ -99,7 +99,7 @@
   padding: 11px 14px;
 }
 .healthRowHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -107,7 +107,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .healthRow {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }

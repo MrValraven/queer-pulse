@@ -15,7 +15,7 @@
   flex-wrap: wrap;
 }
 .eye {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -37,7 +37,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 50ch;
@@ -48,7 +48,7 @@
 .stats {
   display: flex;
   gap: 24px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   flex-wrap: wrap;
 }
@@ -82,11 +82,11 @@
 .search input {
   width: 100%;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 10px 14px 10px 36px;
   box-sizing: border-box;
 }
@@ -109,9 +109,9 @@
   border: 1px solid rgba(var(--line-rgb), 0.14);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 12px;
   cursor: pointer;
   transition:
@@ -149,7 +149,7 @@
 }
 .year .ct {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   margin-left: 14px;
@@ -188,7 +188,7 @@
 .date {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.005em;
   min-width: 88px;
@@ -199,7 +199,7 @@
 }
 .date span {
   display: block;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   font-family: var(--sans);
   font-weight: 600;
@@ -207,7 +207,7 @@
   margin-top: 2px;
 }
 .source {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -224,7 +224,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.005em;
   line-height: 1.25;
@@ -235,7 +235,7 @@
   font-style: italic;
 }
 .meta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 4px;
 }
@@ -244,19 +244,19 @@
   font-weight: 600;
 }
 .out {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   white-space: nowrap;
 }
 .pin {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
   padding: 3px 8px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   margin-right: 8px;
 }
 .loadMore {
@@ -264,12 +264,12 @@
   padding-top: 24px;
 }
 .end {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   font-style: italic;
 }
 .empty {
   padding: 40px 4px;
   color: var(--ink-60);
-  font-size: 15px;
+  font-size: var(--text-15);
 }

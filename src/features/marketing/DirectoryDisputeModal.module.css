@@ -4,7 +4,7 @@
  * report flows; the fields themselves are styled by <FormField>. */
 .eyebrow {
   margin-bottom: 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -27,7 +27,7 @@
 
 .sub {
   margin-bottom: 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -40,7 +40,7 @@
 
 .note {
   margin-top: 14px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.55;
   color: var(--ink-40);
 }

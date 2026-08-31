@@ -126,11 +126,27 @@ export function HousingGalleryLightbox({
         tabIndex={-1}
       >
         <div className={styles.bar}>
-          <span className={styles.counter}>
-            {t("economy:housingGallery.counter", {
-              index: index + 1,
-              total,
-            })}
+          {/* The counter IS the live region: stepping through the photos only
+              swaps this number and the <img alt> in place, which is silent, so
+              the visible position doubles as the polite announcement. The
+              digits read badly out loud ("3 / 8"), so they are hidden from the
+              reader and a worded equivalent carrying the photo's own label sits
+              beside them. Its text changes on every step, since the position
+              always does. */}
+          <span className={styles.counter} role="status">
+            <span aria-hidden="true">
+              {t("economy:housingGallery.counter", {
+                index: index + 1,
+                total,
+              })}
+            </span>
+            <span className="visuallyHidden">
+              {t("economy:housingGallery.slideAnnouncement", {
+                index: index + 1,
+                total,
+                label: photo?.caption ?? title,
+              })}
+            </span>
           </span>
           <button
             type="button"

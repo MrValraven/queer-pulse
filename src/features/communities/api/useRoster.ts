@@ -61,6 +61,8 @@ export function useRoster(slug: string | undefined): RosterResult {
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
+      isError: false,
+      refetch: () => {},
     };
   }
   return {
@@ -68,5 +70,10 @@ export function useRoster(slug: string | undefined): RosterResult {
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    // A failed roster read used to collapse to `[]`, which the detail page
+    // then backfilled with the organiser alone — a community that looks like
+    // it has one member (DES-22).
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

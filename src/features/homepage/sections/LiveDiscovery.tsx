@@ -30,11 +30,16 @@ import styles from "./LiveSections.module.css";
  */
 export function LiveDiscovery() {
   const { t } = useTranslation();
-  const { members, isLoading } = useLandingFeaturesPublic();
+  const { members, isLoading, isError } = useLandingFeaturesPublic();
   const cardRef = useRef<FeaturedSpotlightCardHandle>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  if (isLoading || members.length === 0) return null;
+  // A failed fetch renders nothing, like an empty slice does. This is the
+  // marketing homepage: a visitor has no stake in this teaser row and cannot
+  // act on a failure here, and an alert panel between the curated plum and
+  // cream sections would cost more than the row is worth. The flag is read
+  // explicitly so the choice is a decision rather than an accident.
+  if (isLoading || isError || members.length === 0) return null;
 
   const views = members.map(memberFeatureToSpotlightView);
 

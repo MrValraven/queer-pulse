@@ -80,8 +80,12 @@ export function SayHelloModal({
         ariaLabel={t("economy:sayHello.ariaLabel", { name: profile.name })}
       >
         <SuccessPanel
-          title={t("economy:sayHello.success.title")}
-          em={t("economy:sayHello.success.em")}
+          title={
+            <Translation
+              i18nKey="economy:sayHello.success.title"
+              components={{ em: <em /> }}
+            />
+          }
           onClose={onClose}
           closeLabel={t("economy:sayHello.success.close")}
         >

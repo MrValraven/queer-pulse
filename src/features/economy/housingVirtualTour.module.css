@@ -27,6 +27,6 @@
 .linkNote {
   margin: 0;
   color: var(--ink-60);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.5;
 }

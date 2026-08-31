@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FiCheck, FiAlertTriangle } from "react-icons/fi";
-import { Button, ModalSheet, Sending } from "../../shared/components/ui";
+import {
+  Button,
+  ModalSheet,
+  RadioCardGroup,
+  Sending,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
@@ -136,30 +141,23 @@ export function ReportReplyModal({
       <p className={styles.sub}>
         {t("forum:reportReply.sub", { name: firstName })}
       </p>
-      <div
+      <RadioCardGroup
         className={styles.reasons}
-        role="radiogroup"
-        aria-label={t("forum:reportReply.reasonGroupAria")}
-      >
-        {REASONS.map((r) => {
-          const on = reason === r.code;
-          return (
-            <button
-              key={r.code}
-              type="button"
-              role="radio"
-              aria-checked={on}
-              className={[styles.reason, on && styles.reasonOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setReason(r.code)}
-            >
+        optionClassName={styles.reason}
+        checkedClassName={styles.reasonOn}
+        ariaLabel={t("forum:reportReply.reasonGroupAria")}
+        value={reason ?? ""}
+        onChange={setReason}
+        options={REASONS.map((r) => ({
+          id: r.code,
+          render: (
+            <>
               <span className={styles.radio} aria-hidden />
               {r.label}
-            </button>
-          );
-        })}
-      </div>
+            </>
+          ),
+        }))}
+      />
       <div className={styles.actions}>
         <Button
           variant="ghost"

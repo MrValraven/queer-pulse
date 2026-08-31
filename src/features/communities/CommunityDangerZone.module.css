@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -33,7 +33,7 @@
 }
 
 .rowText {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 0;
@@ -44,7 +44,7 @@
    owner-only rows are not there. */
 .roleLine {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-40);
   max-width: 60ch;

@@ -1,5 +1,7 @@
+import { useId } from "react";
 import { FiInfo } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useRovingRadioGroup } from "../../shared/hooks";
 import { AdminSeg, type AdminSegOption } from "./ui";
 import {
   MOD_REASONS,
@@ -49,28 +51,51 @@ export function ReportDrawerActionGrid({
 }) {
   const { t } = useTranslation();
   const actions = modActionsFor(subjectType);
+  const decisionTitleId = useId();
+  // One decision, so the tiles are radios. They used to be `aria-pressed`
+  // toggles in a plain div: nothing announced them as a single choice, every
+  // tile was its own tab stop, and the arrow keys did nothing. Each tile also
+  // carries its own `dAction_<kind>` class, which is why this group runs on the
+  // shared keyboard hook directly rather than through `RadioCardGroup`'s single
+  // `optionClassName`. The existing section heading is the group's name.
+  const { getRadioProps } = useRovingRadioGroup({
+    optionCount: actions.length,
+    checkedIndex: actions.findIndex((modAction) => modAction.id === action),
+    onSelect: (index) => {
+      const nextAction = actions[index];
+      if (nextAction) onSelectAction(nextAction.id);
+    },
+  });
   return (
     <section className={styles.dSec}>
-      <h3 className={styles.dSecLabel}>
+      <h3 className={styles.dSecLabel} id={decisionTitleId}>
         {t("admin:moderation.reportDrawer.decisionTitle")}
       </h3>
-      <div className={styles.dActions}>
-        {actions.map((a) => (
+      <div
+        className={styles.dActions}
+        role="radiogroup"
+        aria-labelledby={decisionTitleId}
+      >
+        {actions.map((modAction, index) => (
           <button
-            key={a.id}
+            key={modAction.id}
+            {...getRadioProps(index)}
             type="button"
-            aria-pressed={action === a.id}
+            role="radio"
+            aria-checked={action === modAction.id}
             className={[
               styles.dAction,
-              styles[`dAction_${a.kind}`],
-              action === a.id && styles.dActionOn,
+              styles[`dAction_${modAction.kind}`],
+              action === modAction.id && styles.dActionOn,
             ]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => onSelectAction(a.id)}
+            onClick={() => onSelectAction(modAction.id)}
           >
-            <span className={styles.dActionLabel}>{t(a.labelKey)}</span>
-            <span className={styles.dActionDesc}>{t(a.descriptionKey)}</span>
+            <span className={styles.dActionLabel}>{t(modAction.labelKey)}</span>
+            <span className={styles.dActionDesc}>
+              {t(modAction.descriptionKey)}
+            </span>
           </button>
         ))}
       </div>

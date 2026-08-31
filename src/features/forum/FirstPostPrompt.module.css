@@ -26,7 +26,7 @@
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink-40);
-  font-size: 17px;
+  font-size: var(--text-17);
   cursor: pointer;
   transition:
     color var(--dur-fast) var(--ease),
@@ -56,7 +56,7 @@
 
 .eyebrow {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -78,7 +78,7 @@
 }
 
 .body {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: var(--ink-60);
   max-width: 60ch;
@@ -98,7 +98,7 @@
   background: var(--paper);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   cursor: pointer;
   transition:
     border-color var(--dur-fast) var(--ease),

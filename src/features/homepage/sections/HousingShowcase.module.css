@@ -103,9 +103,7 @@
   background: var(--paper);
   border: 1px solid rgba(var(--plum-rgb), 0.1);
   border-radius: var(--radius-card);
-  box-shadow:
-    0 30px 60px -34px rgba(var(--plum-rgb), 0.34),
-    0 1px 2px rgba(var(--plum-rgb), 0.05);
+  box-shadow: var(--shadow-e4), var(--shadow-e1);
   overflow: hidden;
   transition:
     transform var(--dur-slow) var(--ease),
@@ -130,8 +128,11 @@
 }
 .lst[data-position="back"]:focus-visible {
   opacity: 0.86;
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  /* The halo is listed first so it paints over the resting shadow, which is
+     restated here because this rule out-specifies the base one. */
+  box-shadow: var(--ring-cream), var(--shadow-e4), var(--shadow-e1);
 }
 .lstIn {
   display: flex;
@@ -208,7 +209,7 @@ span.lt {
   height: 6px;
   border-radius: 50%;
   background: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.18);
+  box-shadow: var(--ring-jade);
 }
 
 .panelIn {
@@ -235,7 +236,7 @@ span.lt {
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.82);
   color: var(--cream);
-  backdrop-filter: blur(8px);
+  backdrop-filter: var(--blur-md);
 }
 .chipAccent {
   background: var(--accent);
@@ -389,7 +390,7 @@ span.lt {
   gap: 11px;
   margin-top: 20px;
   padding: 13px 16px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: rgba(var(--jade-rgb), 0.09);
   font-family: var(--sans);
   font-size: var(--text-body-sm);
@@ -404,7 +405,7 @@ span.lt {
 }
 .quote p {
   font-family: var(--serif);
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   line-height: 1.45;
   color: var(--ink);
 }
@@ -433,13 +434,13 @@ span.lt {
 .empty {
   margin-top: 20px;
   padding: 22px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   border: 1.5px dashed rgba(var(--plum-rgb), 0.18);
   background: rgba(var(--plum-rgb), 0.02);
 }
 .emptyTitle {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--plum);
 }
 .emptyBody {
@@ -535,5 +536,22 @@ span.lt {
   }
   .lstNote {
     display: none;
+  }
+}
+
+/* ── Local copies of shared keyframes ──
+   CSS Modules rewrites every animation NAME it sees here into a file-scoped
+   hash, including names whose @keyframes lives in global effects.css. The
+   reference then resolves to nothing and the animation silently never runs,
+   with no error anywhere. A keyframe used from a module has to be declared in
+   that module. Keep these in step with src/styles/tokens/effects.css. */
+@keyframes qpTabIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -1,7 +1,13 @@
+import { FiCheck } from "react-icons/fi";
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { Button, Reveal, Select } from "../../shared/components/ui";
+import {
+  Button,
+  LoadErrorState,
+  Reveal,
+  Select,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -13,7 +19,19 @@ import styles from "./ForOrganisationsPage.module.css";
 
 export function TiersSection() {
   const { t } = useTranslation();
-  const { tiers } = useOrgTiers();
+  const { tiers, isError, refetch } = useOrgTiers();
+
+  // DES-22: the tiers ARE this section. A failed read that returned nothing
+  // would hide the whole thing, reading as "we offer no partnerships".
+  if (isError) {
+    return (
+      <section className={styles.doSection}>
+        <div className={styles.doInner}>
+          <LoadErrorState onRetry={refetch} />
+        </div>
+      </section>
+    );
+  }
 
   if (tiers.length === 0) return null;
 
@@ -48,7 +66,10 @@ export function TiersSection() {
               <p className={styles.tierDek}>{tier.dek}</p>
               <ul className={styles.tierList}>
                 {tier.bullets.map((bullet) => (
-                  <li key={bullet}>{bullet}</li>
+                  <li key={bullet}>
+                    <FiCheck className={styles.tierMark} aria-hidden />
+                    {bullet}
+                  </li>
                 ))}
               </ul>
               <p className={styles.tierFootNote}>{tier.footnote}</p>

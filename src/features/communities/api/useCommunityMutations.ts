@@ -26,6 +26,7 @@ import {
   updatePost,
   type AssignableRole,
   type CommunityDetailDTO,
+  type CommunityRemovalOutcomeDTO,
   type CommunityReplyDTO,
   type CreateCommunityDto,
   type CreatePostDto,
@@ -225,24 +226,46 @@ export function useReviewJoinRequest(slug: string) {
   });
 }
 
-/** DELETE /communities/:slug/members/:memberSlug — mod removes a member. */
+/**
+ * DELETE /communities/:slug/members/:memberSlug — mod removes a member.
+ *
+ * The route answers with what the removal actually did (PRD-25), and the
+ * mutation hands that straight back rather than throwing it away. A removal
+ * with no `banDays` is a request for a PERMANENT bar, which now means the
+ * member is barred for the fallback term at once while a second owner,
+ * co-owner or moderator is asked to sign the permanence. The caller has to be
+ * able to say which of the three outcomes it got, so this resolves to the
+ * server's own `CommunityRemovalOutcomeDTO`.
+ *
+ * Demo mode resolves to null: there is no server sentence to show, and
+ * inventing one would put words in the backend's mouth.
+ *
+ * The ratification queue is invalidated alongside the roster, because a
+ * removal is one of the two things that opens a hold on it.
+ */
 export function useRemoveMember(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
+  return useMutation<CommunityRemovalOutcomeDTO | null, Error, string>({
     // The mod-tools callers own the error UI (they roll their optimistic row
     // back and toast the specific reason), so the app-wide MutationCache
     // handler must not stack a second generic toast on top: during a bulk
     // approve that would fire once per request.
     meta: { silentError: true },
     mutationFn: async (memberSlug) => {
-      if (demoMode) return;
-      await removeMember(slug, memberSlug);
+      if (demoMode) return null;
+      return removeMember(slug, memberSlug);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-ban-ratifications", slug],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-bans", slug],
+      });
     },
   });
 }

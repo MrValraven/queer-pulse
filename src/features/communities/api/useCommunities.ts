@@ -22,6 +22,14 @@ export interface CommunitiesResult {
   isFetchingNextPage: boolean;
   /** True while the first page is in flight. */
   isLoading: boolean;
+  /**
+   * True when the list request failed. Without it an outage renders as the
+   * "no communities match" empty state, which reads as an answer rather than
+   * as a directory that never loaded (DES-22).
+   */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 interface CommunitiesPageVM {
@@ -165,5 +173,7 @@ export function useCommunities(
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

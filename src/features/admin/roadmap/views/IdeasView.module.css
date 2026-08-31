@@ -33,7 +33,7 @@
 .title {
   margin: 0 0 6px;
   font-family: var(--sans);
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   font-weight: 600;
   color: var(--ink);
 }
@@ -42,7 +42,7 @@
   margin: 0 0 10px;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -55,7 +55,7 @@
 }
 
 .metaItem {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -65,7 +65,7 @@
   border-radius: var(--radius-badge, 14px);
   background: rgba(var(--amber-rgb), 0.12);
   color: var(--ink-60);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 
 .duplicateAction {
@@ -83,7 +83,7 @@
 .duplicateAction:focus-visible {
   outline: 2px solid var(--line-strong);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
 }
 
 .rowSide {
@@ -110,7 +110,7 @@
 }
 
 .voteCount span {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 

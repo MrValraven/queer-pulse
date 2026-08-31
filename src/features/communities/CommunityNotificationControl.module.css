@@ -4,10 +4,10 @@
 .trigger {
   gap: 7px;
   flex: none;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   padding: 6px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
 }
@@ -42,7 +42,7 @@
 }
 
 .groupLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -51,7 +51,7 @@
 
 .groupHint {
   margin: 6px 0 14px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -68,7 +68,7 @@
   width: 100%;
   text-align: left;
   padding: 13px 15px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   background: var(--paper);
   color: var(--ink);
@@ -92,7 +92,7 @@
   display: flex;
   flex: none;
   margin-top: 2px;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-40);
 }
 .optionChecked .optionIcon {
@@ -107,13 +107,13 @@
 }
 
 .optionTitle {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .optionDescription {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }

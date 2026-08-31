@@ -22,7 +22,7 @@ export interface ThreadMentionOption {
  * mode maps the `THREADS` mock, keying by `String(id)` per the slug/id split
  * above. Never calls the live API in demo mode.
  */
-export function useThreadMentionOptions(): ThreadMentionOption[] {
+export function useThreadMentionOptionsQuery() {
   const { demoMode } = useDemoMode();
   const query = useQuery<ThreadMentionOption[]>({
     queryKey: ["thread-mention-options", demoMode],
@@ -37,5 +37,16 @@ export function useThreadMentionOptions(): ThreadMentionOption[] {
       return page.data.map((dto) => ({ slug: dto.slug, name: dto.title }));
     },
   });
-  return query.data ?? [];
+  return {
+    options: query.data ?? [],
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
+}
+
+/** The thread mention corpus on its own, for `useMentionSuggestions`. A failed corpus
+ *  fetch degrades to an empty typeahead rather than an error panel inside a
+ *  dropdown; callers that need the failure read `useThreadMentionOptionsQuery`. */
+export function useThreadMentionOptions(): ThreadMentionOption[] {
+  return useThreadMentionOptionsQuery().options;
 }

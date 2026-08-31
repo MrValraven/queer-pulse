@@ -16,7 +16,7 @@
 
 .rcLabel {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -36,10 +36,10 @@
 .rcInput,
 .rcSelect {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.25s var(--ease);
@@ -85,7 +85,7 @@
 
 .netLabel {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.7);
   margin: 0 0 8px;
 }
@@ -102,7 +102,7 @@
 
 .netMonthly {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.8);
   margin: 12px 0 0;
 }
@@ -114,7 +114,7 @@
 /* Visual "what you keep" bar. */
 .bar {
   height: 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.14);
   overflow: hidden;
   margin: 24px 0 12px;
@@ -122,7 +122,7 @@
 .barKept {
   height: 100%;
   width: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--jade);
   transform-origin: left;
   transition: transform 0.45s var(--ease);
@@ -130,7 +130,7 @@
 
 .barCaption {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.65);
   margin: 0;
@@ -163,12 +163,12 @@
   border-bottom: none;
 }
 .row dt {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   margin: 0;
 }
 .row dd {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   color: var(--ink);
   margin: 0;
@@ -189,7 +189,7 @@
   border-top: 2px solid rgba(var(--line-rgb), 0.12);
 }
 .total dt {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -203,7 +203,7 @@
 
 .disclaimer {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.6;
   color: var(--ink-40);
   margin: 0;

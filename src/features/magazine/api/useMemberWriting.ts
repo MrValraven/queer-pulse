@@ -47,5 +47,9 @@ export function useMemberWriting(memberSlug: string | undefined) {
   return {
     writing: query.data ?? null,
     isLoading: query.isLoading && !demoMode && Boolean(memberSlug),
+    // Surfaced so a caller can tell "this member has no byline" (the common,
+    // legitimate case this section hides on) from "the byline lookup failed".
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

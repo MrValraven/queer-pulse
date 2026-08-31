@@ -8,7 +8,7 @@ import {
   LANGUAGES,
 } from "./cinemaSubmit.data";
 import type { SubmitForm } from "./useSubmitForm";
-import { FbHead, FieldLabel } from "./CinemaSubmitParts";
+import { FbHead, FieldLabel, RadioGrid } from "./CinemaSubmitParts";
 import { ContentNotesBuilder, PosterUpload } from "./CinemaSubmitWidgets";
 import styles from "./CinemaSubmitPage.module.css";
 
@@ -109,37 +109,12 @@ function Step1FilmDetails({ form }: { form: SubmitForm }) {
       </div>
 
       <FormField label={t("cinema:submit.form.step1.format.label")}>
-        <div
-          className={styles.radioGrid}
-          role="radiogroup"
-          aria-label={t("cinema:submit.form.step1.format.ariaLabel")}
-        >
-          {FORMATS.map((formatOption) => {
-            const on = formatOption.value === draft.format;
-            return (
-              <button
-                key={formatOption.value}
-                type="button"
-                role="radio"
-                aria-checked={on}
-                onClick={() => set("format", formatOption.value)}
-                className={[styles.rOpt, on && styles.rOptOn]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <span className={styles.rDot} aria-hidden />
-                <span className={styles.rText}>
-                  {t(formatOption.labelKey)}
-                  {formatOption.subKey && (
-                    <span className={styles.rSub}>
-                      {t(formatOption.subKey)}
-                    </span>
-                  )}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <RadioGrid
+          options={FORMATS}
+          value={draft.format}
+          onChange={(formatValue) => set("format", formatValue)}
+          ariaLabel={t("cinema:submit.form.step1.format.ariaLabel")}
+        />
       </FormField>
     </>
   );

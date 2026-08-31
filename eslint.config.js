@@ -56,11 +56,58 @@ export const controlHasAssociatedLabelOptions = {
   includeRoles: ["alert", "dialog"],
 };
 
+// Typography that is DELIBERATELY legal and must never be swept up by a range
+// widening below. The house rule is "an icon is a react-icons component, never a
+// Unicode glyph". It was never "no character above U+007F": a middot separator,
+// real curly quotes, an ellipsis, a bullet, an en/em dash, a degree sign, a
+// section mark and the numero sign are all genuine punctuation doing a
+// punctuation job, and replacing any of them with an icon would make the copy
+// worse. The guillemets « » are Portuguese quotation marks and appear in 19
+// places in the PT catalogs; the command glyph ⌘ is a keycap label in a shortcut
+// hint, which no icon set spells correctly. Every glyph rule below strips this
+// set before it tests, so the allowlist survives a future widening.
+const TYPOGRAPHIC_ALLOWLIST =
+  /[\u{00AB}\u{00BB}\u{00B0}\u{00B7}\u{00A7}\u{2018}\u{2019}\u{201C}\u{201D}\u{2013}\u{2014}\u{2022}\u{2026}\u{2116}\u{2318}]/gu;
+
 // Local rule: ban emoji glyphs in source — the platform uses react-icons instead
 // of emoji (see CLAUDE.md). Country flags have no react-icons equivalent and are
 // exempted per-file in the override block below.
+//
+// U+2039 / U+203A (‹ ›) were added on 2026-08-31: single guillemets are being
+// used as chevron affordances, they read as an arrow rather than as quotation
+// marks in an English/Portuguese UI, and the codebase had zero of them in a
+// string literal, so the widening cost nothing.
 const EMOJI =
-  /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
+  /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2039}\u{203A}\u{FE0F}]/u;
+
+// Local rule: the OTHER glyph blocks that get pressed into service as icons.
+// Split from `no-emoji` for one reason: five files still carry a hit that only
+// their owner can fix (see the override block at the bottom of this config), and
+// scoping `no-emoji` off for those files would also stop guarding them against
+// actual emoji. Two separate rules means the exemption is surgical.
+//
+//   U+2300-23FF  Miscellaneous Technical: ⏱ ⏸ ⌫ ⎋. Icon shapes.
+//   U+25A0-25FF  Geometric Shapes: ▸ ▾ ● ■ ▪ ◇. Chevrons and bullets-as-icons.
+//   U+2460-24FF  Enclosed Alphanumerics: ⓘ ① ⓐ. Info and step markers.
+//
+// WHAT IS DELIBERATELY ABSENT, and why. Both were candidates on 2026-08-31 and
+// both were measured before being rejected:
+//
+//   ×  U+00D7 appears 66 times in string literals and every single one is the
+//      multiplication sign doing its actual job: "4×22 min", "2400 × 2400",
+//      "min 2× rental", "moved {count}×", "6 households × €8,000". Banning it
+//      would trade correct typography for an icon that means something else.
+//   ←→ U+2190-21FF appears 104 times, and the overwhelming majority are prose
+//      arrows meaning "to": "{from} → {to}", "Settings → Profile", "sl→pt",
+//      "Arabic ↔ Portuguese interpreting", plus ← → ↑ ↓ used as arrow-KEY
+//      labels in two keyboard-shortcut tables. A lexical rule cannot separate
+//      those from "→" used as a next-affordance, and the affordance uses are a
+//      handful against a hundred legitimate ones.
+//
+// Both are worth a human pass; neither is worth a rule that is wrong 95% of the
+// time. Note also that no ESLint rule can see a CSS `content: "›"`. Five of
+// those exist and are listed in docs/STYLE-RULES.md.
+const GLYPH_ICON = /[\u{2300}-\u{23FF}\u{25A0}-\u{25FF}\u{2460}-\u{24FF}]/u;
 const localPlugin = {
   rules: {
     "no-emoji": {
@@ -76,8 +123,47 @@ const localPlugin = {
       },
       create(context) {
         const report = (node, text) => {
-          if (typeof text === "string" && EMOJI.test(text)) {
+          if (typeof text !== "string") return;
+          if (EMOJI.test(text.replace(TYPOGRAPHIC_ALLOWLIST, ""))) {
             context.report({ node, messageId: "emoji" });
+          }
+        };
+        return {
+          Literal(node) {
+            if (typeof node.value === "string") report(node, node.value);
+          },
+          JSXText(node) {
+            report(node, node.value);
+          },
+          TemplateElement(node) {
+            report(node, node.value?.raw);
+          },
+        };
+      },
+    },
+    // Local rule: the glyph blocks in GLYPH_ICON above, banned for the same
+    // reason as emoji: a Unicode character standing in for an icon does not
+    // inherit the icon set's stroke weight, does not follow currentColor
+    // predictably, and renders as a different shape on every platform. Same
+    // node coverage as no-emoji (string literals, JSX text, template chunks),
+    // same typography allowlist.
+    "no-glyph-icon": {
+      meta: {
+        type: "problem",
+        docs: {
+          description:
+            "Disallow technical, geometric and enclosed glyphs used as icons; use a react-icons icon instead.",
+        },
+        messages: {
+          glyph:
+            "Avoid using a Unicode glyph as an icon. Use a react-icons icon (react-icons/fi) instead.",
+        },
+      },
+      create(context) {
+        const report = (node, text) => {
+          if (typeof text !== "string") return;
+          if (GLYPH_ICON.test(text.replace(TYPOGRAPHIC_ALLOWLIST, ""))) {
+            context.report({ node, messageId: "glyph" });
           }
         };
         return {
@@ -510,6 +596,12 @@ export default defineConfig([
       // Conventions from CLAUDE.md, enforced in CI:
       // 1. Icons over emoji (hard error — protects the icon sweep).
       "local/no-emoji": "error",
+      // 1a. Icons over technical/geometric/enclosed glyphs (⏱ ▸ ⓘ). Also a hard
+      //     error: five known sites are exempted by name at the bottom of this
+      //     config, so everything else is held at zero and new code cannot add
+      //     one. See the GLYPH_ICON comment for the two blocks (× and the
+      //     arrows) that were measured and deliberately left out.
+      "local/no-glyph-icon": "error",
       // 1b. Reverse-tabnabbing hardening: target="_blank" links must carry
       //     rel="noopener noreferrer". Hard error — the codebase is at zero
       //     violations (every occurrence was audited), so a new blank-target
@@ -517,8 +609,20 @@ export default defineConfig([
       //     the rule can't resolve statically are left alone, so no per-file
       //     overrides are needed.
       "local/require-noopener-on-blank": "error",
-      // 2. Components stay small. Warn (non-breaking) — promote to error once the
-      //    remaining oversized components are decomposed.
+      // 2. Components stay small. Still "warn", and the promotion to "error" was
+      //    checked on 2026-08-31 rather than assumed: the tree is at FOUR
+      //    violations, not zero, so flipping it would break the build.
+      //      src/features/communities/useModToolsActions.ts  useModToolsActions  208
+      //      src/features/gatherings/steps/ReviewStep.tsx    ReviewStep          202
+      //      src/features/resources/GlossaryPage.tsx         GlossaryPage        208
+      //      src/features/resources/LegalPage.tsx            LegalPage           215
+      //    All four are 2 to 15 lines over a 200-line limit, so each is one
+      //    extracted section away from clearing it (the `component-decomposition`
+      //    skill covers the split). Re-measure before acting: the list moves as
+      //    components are edited. Decompose them, confirm
+      //    `npx eslint . --format json` reports zero max-lines-per-function
+      //    messages, then promote this to "error", at which point the ratchet
+      //    is self-maintaining and this note can go.
       "max-lines-per-function": [
         "warn",
         { max: 200, skipBlankLines: true, skipComments: true, IIFEs: true },
@@ -585,6 +689,26 @@ export default defineConfig([
   {
     files: ["src/features/messages/reactionKeys.ts"],
     rules: { "local/no-emoji": "off" },
+  },
+  // The five glyph-as-icon sites that predate `local/no-glyph-icon` (measured
+  // 2026-08-31). Each is a real violation the rule is right about, and each
+  // lives in a file this sweep did not own. Replace the glyph with a
+  // react-icons component, then DELETE that file's line here. The rule is a
+  // hard error everywhere else, so these entries are the entire remaining debt:
+  //   en/studio.ts, pt/studio.ts        ▸ used as a chevron in a step label
+  //   en/marketing.ts, pt/marketing.ts  ⓘ used as an info marker
+  //   TransHealthcareSections.tsx       ⏱ used as a duration icon on a meta pill
+  // `local/no-emoji` deliberately stays ON for all five: this exemption is for
+  // the glyph blocks only, not a licence to add emoji to a catalog.
+  {
+    files: [
+      "src/shared/i18n/catalogs/en/studio.ts",
+      "src/shared/i18n/catalogs/pt/studio.ts",
+      "src/shared/i18n/catalogs/en/marketing.ts",
+      "src/shared/i18n/catalogs/pt/marketing.ts",
+      "src/features/resources/TransHealthcareSections.tsx",
+    ],
+    rules: { "local/no-glyph-icon": "off" },
   },
   // Magazine article HTML is stored unsanitized and only sanitized at each
   // render call site (see the rule's own doc comment above, next to

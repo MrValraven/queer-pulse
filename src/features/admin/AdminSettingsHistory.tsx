@@ -40,9 +40,18 @@ function HistoryRow({ change }: { change: PlatformSettingChangeDTO }) {
   const setting = settingLabel(change.settingKey, t);
   const from = formatValue(change.oldValue, t);
   const to = formatValue(change.newValue, t);
-  // The audit row deliberately outlives an erased admin account (the backend
-  // FK is ON DELETE SET NULL) so the trail survives the person.
-  const actor = change.actorId ?? t("admin:settings.history.unknownActor");
+  // The backend resolves the acting admin to a name before it ships the row
+  // (ENG-43); this tab used to print the raw `actorId` uuid, so the meta line
+  // read "by 6f2c1a94-..." and answered nobody's question.
+  //
+  // `actor` is null in the two cases that leave no name to give: the admin
+  // erased their account (the audit FK is ON DELETE SET NULL precisely so the
+  // trail outlives the person) and an admin with no profile row. One fallback
+  // label covers both, because to a reader they are the same fact.
+  const actorName = change.actor
+    ? `${change.actor.firstName} ${change.actor.lastName}`.trim()
+    : "";
+  const actor = actorName || t("admin:settings.history.unknownActor");
   const created = new Date(change.createdAt);
 
   return (
@@ -77,9 +86,14 @@ function HistoryRow({ change }: { change: PlatformSettingChangeDTO }) {
 export function AdminSettingsHistory() {
   const { t } = useTranslation();
   const { data, isLoading, isError } = usePlatformSettingChanges();
-  const changes = [...(data ?? [])].sort((a, b) =>
+  const changes = [...(data?.items ?? [])].sort((a, b) =>
     b.createdAt.localeCompare(a.createdAt),
   );
+  // `total` is the whole row count, not this window's (ENG-50). Without it a
+  // truncated first page and a complete history look identical, and an admin
+  // asking "who turned lockdown on" would conclude nobody had.
+  const total = data?.total ?? changes.length;
+  const isTruncated = total > changes.length;
 
   if (isLoading) return <div className={styles.loading} aria-busy="true" />;
   if (isError)
@@ -92,10 +106,20 @@ export function AdminSettingsHistory() {
   }
 
   return (
-    <ul className={styles.historyList}>
-      {changes.map((change) => (
-        <HistoryRow key={change.id} change={change} />
-      ))}
-    </ul>
+    <>
+      {isTruncated && (
+        <p className={styles.historyTruncated}>
+          {t("admin:settings.history.truncatedNotice", {
+            shown: String(changes.length),
+            total: String(total),
+          })}
+        </p>
+      )}
+      <ul className={styles.historyList}>
+        {changes.map((change) => (
+          <HistoryRow key={change.id} change={change} />
+        ))}
+      </ul>
+    </>
   );
 }

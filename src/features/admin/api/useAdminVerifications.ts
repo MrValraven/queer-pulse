@@ -120,7 +120,12 @@ export function useVerificationHistory(userId: string) {
         : getVerificationHistory(userId),
     enabled: Boolean(userId),
   });
-  return { events: query.data ?? [], isLoading: query.isLoading };
+  return {
+    events: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 /** Manual override — live only (demo has no real record to change; the
@@ -247,7 +252,12 @@ export function useVerificationRequestDetail(id: string) {
         : getAdminVerificationRequestDetail(id),
     enabled: Boolean(id),
   });
-  return { detail: query.data ?? null, isLoading: query.isLoading };
+  return {
+    detail: query.data ?? null,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
+  };
 }
 
 const STATUS_BY_DECISION_ACTION: Record<

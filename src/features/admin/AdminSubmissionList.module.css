@@ -11,7 +11,7 @@
 }
 
 .emptyLine {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin: 20px 0;
 }
@@ -39,27 +39,27 @@
 }
 
 .rowName {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .rowMeta {
   margin-top: 7px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
 .rowNote {
   margin-top: 7px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   line-height: 1.5;
 }
 
 .rowDates {
   margin-top: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -72,7 +72,7 @@
   width: 100%;
   max-width: 320px;
   height: auto;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   object-fit: cover;
 }
@@ -98,16 +98,17 @@
   width: 100%;
   min-width: 180px;
   padding: 8px 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-strong);
 }
 
 .rowNoteInput:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .loadMore {
@@ -129,7 +130,7 @@
   align-items: center;
   gap: 10px;
   padding: 2px 4px 4px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-40);
   letter-spacing: 0.02em;
@@ -144,7 +145,7 @@
   height: 20px;
   margin-top: 2px;
   border: 1.6px solid rgba(var(--line-rgb), 0.28);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   background: var(--paper);
   cursor: pointer;
   position: relative;
@@ -181,7 +182,7 @@
   top: 8.5px;
   height: 2px;
   background: var(--paper);
-  border-radius: 1px;
+  border-radius: var(--radius-1);
 }
 .rowCheckbox:focus-visible {
   outline: 2px solid var(--jade);
@@ -232,9 +233,9 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
+  font-size: var(--text-12);
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
 }
 
@@ -272,7 +273,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
 }
 
@@ -292,7 +293,7 @@
 
 .payloadEmpty {
   margin: 8px 0 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   font-style: italic;
 }
@@ -300,14 +301,14 @@
 /* An inquiry's own subject line, above its body. */
 .rowSubject {
   margin-top: 7px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 
 /* Cross-link out of a confidential stub row into the concerns worklist. */
 .rowCrossLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-text);
   text-decoration: underline;
@@ -315,9 +316,10 @@
 }
 
 .rowCrossLink:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 6px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-6);
 }
 
 /* Kind + status selects above a browse list. */
@@ -331,7 +333,7 @@
 
 .filterNote {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -339,7 +341,7 @@
    platform delivers no email, and the console must never imply otherwise. */
 .noEmailNote {
   margin: 6px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   max-width: 60ch;
 }
@@ -357,14 +359,14 @@
 
 .sectionHeading {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--text-strong);
 }
 
 .sectionNote {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -374,7 +376,7 @@
   align-items: center;
   gap: 8px;
   margin: 24px 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 

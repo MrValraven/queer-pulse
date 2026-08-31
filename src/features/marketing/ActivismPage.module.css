@@ -14,7 +14,7 @@
   margin-bottom: 6px;
 }
 .convItem .l {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.55;
 }
@@ -24,7 +24,7 @@
   align-items: center;
   gap: 7px;
   margin-top: 28px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   text-decoration: none;
@@ -55,7 +55,7 @@
   gap: 2px;
 }
 .navLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -63,11 +63,11 @@
   margin-bottom: 8px;
 }
 .navItem {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink-60);
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border-left: 2px solid transparent;
   background: none;
   border-top: none;
@@ -110,7 +110,7 @@
   color: var(--accent);
 }
 .section p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 14px;
@@ -134,7 +134,7 @@
 .actionCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
   color: inherit;
 }
@@ -146,13 +146,13 @@
   margin-bottom: 8px;
 }
 .acTitle {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   font-weight: 600;
   color: var(--text-strong);
   margin-bottom: 6px;
 }
 .acBody {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   display: -webkit-box;
@@ -163,7 +163,7 @@
 .acLink {
   display: inline-block;
   margin-top: 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
 }
@@ -174,12 +174,12 @@
   gap: 12px;
 }
 .acPill {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 4px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.1);
   white-space: nowrap;
@@ -190,7 +190,7 @@
   gap: 16px;
   background: rgba(var(--jade-rgb), 0.06);
   border: 1px solid rgba(var(--jade-rgb), 0.18);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 24px;
   margin: 18px 0;
 }
@@ -210,7 +210,7 @@
   background: var(--accent);
 }
 .ibHead {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--jade);
   margin-bottom: 6px;
@@ -219,7 +219,7 @@
   color: var(--accent-ink);
 }
 .banner p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0;
@@ -249,7 +249,7 @@
 @media (hover: hover) {
   .bannerLink:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 24px -14px rgba(var(--accent-rgb), 0.7);
+    box-shadow: var(--shadow-accent);
     border-color: rgba(var(--accent-rgb), 0.35);
   }
 }
@@ -280,28 +280,28 @@
   align-items: center;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 16px 18px;
   color: inherit;
 }
 .orgAv {
   width: 42px;
   height: 42px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 13px;
+  font-size: var(--text-13);
   flex: none;
 }
 .orgName {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
 }
 .orgDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
   margin-top: 2px;

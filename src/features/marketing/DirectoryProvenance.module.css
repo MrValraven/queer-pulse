@@ -10,7 +10,7 @@
   margin-top: 14px;
   padding: 11px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--jade-rgb), 0.05);
   max-width: 70ch;
 }
@@ -31,7 +31,7 @@
 }
 .body {
   min-width: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
   color: var(--ink-60);
 }

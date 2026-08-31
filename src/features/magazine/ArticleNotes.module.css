@@ -43,7 +43,7 @@
   display: flex;
   flex: none;
   margin-top: 1px;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--amber-ink);
 }
 
@@ -55,7 +55,7 @@
 .notesHeading {
   margin: 0;
   font-family: inherit;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -66,7 +66,7 @@
   margin: 8px 0 0;
   padding-left: 18px;
   list-style: disc;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
   overflow-wrap: anywhere;
@@ -101,7 +101,7 @@
   gap: 8px;
   margin: 0;
   font-family: inherit;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -110,7 +110,7 @@
 
 .correctionsIcon {
   display: flex;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 
 .correctionsList {
@@ -127,14 +127,14 @@
 
 .correctionDate {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-40);
 }
 
 .correctionText {
   margin: 4px 0 0;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.65;
   color: var(--ink-60);
   overflow-wrap: anywhere;

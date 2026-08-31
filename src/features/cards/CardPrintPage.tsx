@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FiPrinter } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Button, EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCommunity } from "../communities/api/useCommunity";
@@ -37,8 +37,18 @@ export function CardPrintPage() {
   const location = useLocation();
   const { slug } = useParams<{ slug: string }>();
   const { community, myRole } = useCommunity(slug);
-  const { program, isLoading: isProgramLoading } = useCardProgram(slug);
-  const { holders, isLoading: areHoldersLoading } = useCardHolders(slug);
+  const {
+    program,
+    isLoading: isProgramLoading,
+    isError: hasProgramFailed,
+    refetch: refetchProgram,
+  } = useCardProgram(slug);
+  const {
+    holders,
+    isLoading: areHoldersLoading,
+    isError: haveHoldersFailed,
+    refetch: refetchHolders,
+  } = useCardHolders(slug);
 
   const selectedIds = (location.state as { selectedIds?: string[] } | null)
     ?.selectedIds;
@@ -50,6 +60,26 @@ export function CardPrintPage() {
     .filter((holder) => !selectedIds || selectedIds.includes(holder.id));
 
   if (isProgramLoading || areHoldersLoading) return null;
+
+  // A failed lookup used to land in the "printing is unavailable" state below,
+  // which reads as the community having switched printing off. Say what
+  // actually happened and offer the request again.
+  if (hasProgramFailed || haveHoldersFailed) {
+    return (
+      <AppShell>
+        <PageMeta title={t("cards:print.metaTitle")} noIndex />
+        <div className={styles.page}>
+          <LoadErrorState
+            onRetry={() => {
+              if (hasProgramFailed) refetchProgram();
+              if (haveHoldersFailed) refetchHolders();
+            }}
+            description={t("cards:print.loadErrorBody")}
+          />
+        </div>
+      </AppShell>
+    );
+  }
 
   const isAllowed =
     program?.allowsPrint === true &&

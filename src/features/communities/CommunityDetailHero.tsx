@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   FiArrowLeft,
   FiBookmark,
@@ -12,6 +12,7 @@ import { routes } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Person } from "./communityDetails";
 import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
+import { CommunityReportControl } from "../safety/CommunityReportControl";
 import styles from "./CommunityDetailPage.module.css";
 
 /** Community detail hero: breadcrumb, title, meta row and the join/edit CTAs. */
@@ -49,6 +50,12 @@ export function CommunityDetailHero({
   onEdit: () => void;
 }) {
   const { t } = useTranslation();
+  // The report subject id for a `community` report IS the slug. Prefer the one
+  // the card DTO carries; fall back to the route param, which this hero only
+  // ever renders under (`/community/:slug`), so a source that does not carry a
+  // slug still gets a working report path.
+  const { slug: routeSlug } = useParams<{ slug: string }>();
+  const communitySlug = community.slug ?? routeSlug;
   return (
     <header
       className={styles.hero}
@@ -130,6 +137,16 @@ export function CommunityDetailHero({
             memberNum={memberNum}
             hasCount={hasCount}
           />
+          {/* Reports the community ITSELF, which until now had no path at all:
+              the only recourse was reporting one post at a time, and that
+              never puts the space in front of a moderator. Signed-in members
+              only, membership not required. */}
+          {communitySlug && (
+            <CommunityReportControl
+              slug={communitySlug}
+              communityName={community.name}
+            />
+          )}
         </div>
       </div>
     </header>

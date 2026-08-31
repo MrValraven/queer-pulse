@@ -17,7 +17,7 @@
   justify-content: center;
   gap: 10px;
   margin-bottom: 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -29,7 +29,7 @@
   flex: none;
   border-radius: 50%;
   background: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.18);
+  box-shadow: var(--ring-jade);
 }
 .title {
   max-width: 25ch;
@@ -48,7 +48,7 @@
 .sub {
   max-width: 60ch;
   margin: 16px auto 0;
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -93,7 +93,7 @@
   padding-right: 14px;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--accent-ink);
   background: var(--cream);
 }
@@ -103,7 +103,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   letter-spacing: 0.01em;
 }
@@ -134,7 +134,7 @@
   align-items: center;
   margin: 20px 0;
   padding: 44px 48px;
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   background: var(--plum);
 }
 .hero::before {
@@ -173,7 +173,7 @@
 }
 .heroEye {
   margin-bottom: 16px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -185,11 +185,12 @@
   margin-bottom: 22px;
   padding: 16px 20px 16px 38px;
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 18px 18px 18px 6px;
+  border-radius: var(--radius-18) var(--radius-18) var(--radius-18)
+    var(--radius-6);
   background: rgba(var(--cream-rgb), 0.06);
   font-family: var(--serif);
   font-style: italic;
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.45;
   color: var(--accent-soft);
 }
@@ -220,7 +221,7 @@
 }
 .heroBody {
   max-width: 44ch;
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   line-height: 1.7;
   color: rgba(var(--cream-rgb), 0.66);
 }
@@ -264,11 +265,12 @@
   max-width: 42ch;
   padding: 20px 24px 20px 40px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px 20px 20px 6px;
+  border-radius: var(--radius-20) var(--radius-20) var(--radius-20)
+    var(--radius-6);
   background: var(--paper);
   font-family: var(--serif);
   font-style: italic;
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.45;
   color: var(--ink-60);
 }
@@ -306,7 +308,7 @@
 .ansBody {
   max-width: 44ch;
   margin: 12px 0 14px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -317,7 +319,7 @@
   /* Grow the touch target ~12px taller without shifting the visual position. */
   padding-block: 6px;
   margin-block: -6px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--accent-ink);
 }
@@ -346,7 +348,8 @@
 }
 .flip .bubble {
   margin-left: auto;
-  border-radius: 20px 20px 6px 20px;
+  border-radius: var(--radius-20) var(--radius-20) var(--radius-6)
+    var(--radius-20);
 }
 
 /* ── Responsive ────────────────────────────────────────────────────── */
@@ -388,7 +391,8 @@
   .bubble,
   .flip .bubble {
     margin-left: 0;
-    border-radius: 16px 16px 16px 6px;
+    border-radius: var(--radius-16) var(--radius-16) var(--radius-16)
+      var(--radius-6);
   }
 }
 

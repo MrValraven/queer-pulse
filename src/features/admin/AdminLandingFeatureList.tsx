@@ -7,6 +7,7 @@ import {
   Button,
   ConfirmDialog,
   EmptyState,
+  LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -50,7 +51,7 @@ export function AdminLandingFeatureList({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { features, isLoading } = useLandingFeatures(section);
+  const { features, isLoading, isError, refetch } = useLandingFeatures(section);
   const reorderFeatures = useReorderLandingFeatures();
   const updateFeature = useUpdateLandingFeature();
   const deleteFeature = useDeleteLandingFeature();
@@ -64,6 +65,18 @@ export function AdminLandingFeatureList({
         <SkeletonLine height={84} style={{ borderRadius: 22 }} />
         <SkeletonLine height={84} style={{ borderRadius: 22 }} />
       </div>
+    );
+  }
+
+  // Before the empty check: a failed fetch used to say nothing was featured
+  // while features stayed live on the public landing page (DES-22).
+  if (isError) {
+    return (
+      <LoadErrorState
+        onRetry={() => void refetch()}
+        title={t("admin:landing.list.loadError.title")}
+        description={t("admin:landing.list.loadError.body")}
+      />
     );
   }
 

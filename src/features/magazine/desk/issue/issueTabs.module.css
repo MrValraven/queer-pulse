@@ -33,7 +33,7 @@
 
 .ordn {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--ink-40);
 }
 
@@ -54,7 +54,7 @@
 
 .pt h4 {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 400;
   color: var(--plum);
   margin: 0;
@@ -66,7 +66,7 @@
 .sub {
   display: flex;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -89,7 +89,7 @@
 .iconButton {
   width: 26px;
   height: 26px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   display: grid;
   place-items: center;
   color: var(--ink-40);
@@ -126,7 +126,7 @@
 }
 
 .card h3 {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   font-weight: 700;
@@ -149,7 +149,7 @@
 
 .coverart {
   position: relative;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
   border: 1px solid var(--line);
   height: 340px;
@@ -167,7 +167,7 @@
 }
 
 .coverlines .ct {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 700;
@@ -183,7 +183,7 @@
 }
 
 .coverlines .cl {
-  font-size: 13px;
+  font-size: var(--text-13);
   opacity: 0.82;
   line-height: 1.35;
 }
@@ -196,7 +196,7 @@
 }
 
 .hint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
 }
@@ -222,7 +222,7 @@
 
 .contentsRow b {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 400;
   color: var(--plum);
 }
@@ -251,14 +251,14 @@
 
 .digrow h4 {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 400;
   color: var(--plum);
   margin: 0 0 2px;
 }
 
 .digrow p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.45;
   margin: 0;
@@ -279,7 +279,7 @@
 .ck {
   width: 18px;
   height: 18px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   border: 1.6px solid var(--line);
   flex: none;
   display: grid;
@@ -306,7 +306,7 @@
   width: 100%;
   min-height: 56px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 8px 10px;
   background: var(--paper);
   font: inherit;
@@ -325,12 +325,12 @@
   flex-direction: column;
   gap: 8px;
   padding: 12px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1px solid var(--line);
 }
 
 .socialcard b {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 400;
   color: var(--plum);
   line-height: 1.2;
@@ -338,7 +338,7 @@
 }
 
 .socialcard p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.4;
   margin: 0;
@@ -358,7 +358,7 @@
 
 .simrow b {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 400;
   color: var(--plum);
 }

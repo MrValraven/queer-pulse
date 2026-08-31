@@ -46,7 +46,7 @@
   padding-bottom: 64px;
 }
 .heroEb {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -61,7 +61,7 @@
   height: 7px;
   border-radius: 50%;
   background: var(--jade);
-  box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.22);
+  box-shadow: var(--ring-jade);
   flex: none;
 }
 .heroTitle {
@@ -78,7 +78,7 @@
   font-weight: 400;
 }
 .heroSub {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.72);
   line-height: 1.7;
   max-width: 54ch;
@@ -91,11 +91,11 @@
 .sidebar {
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.16);
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   padding: 28px 30px;
 }
 .sidebarHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -117,7 +117,7 @@
   padding-bottom: 0;
 }
 .sidebarRow .k {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.7);
 }
 .sidebarRow .v {
@@ -131,7 +131,7 @@
   color: var(--accent);
 }
 .sidebarNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 14px;
   font-family: var(--serif);
@@ -172,11 +172,11 @@
   color: var(--accent);
 }
 .count {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
 }
 .allLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -188,7 +188,7 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   overflow: hidden;
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -202,7 +202,7 @@
 }
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 24px 52px -32px rgba(var(--plum-rgb), 0.28);
+  box-shadow: var(--shadow-lift);
 }
 .cardMain {
   padding: 36px 40px;
@@ -211,7 +211,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -231,7 +231,7 @@
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
   padding: 3px 9px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
 }
 .kickerOpen {
   color: var(--jade);
@@ -250,7 +250,7 @@
   font-weight: 400;
 }
 .cardBody p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.72;
   max-width: 58ch;
@@ -279,7 +279,7 @@
   padding-right: 0;
 }
 .det .k {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -287,7 +287,7 @@
 }
 .det .v {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-top: 4px;
@@ -319,7 +319,7 @@
   font-weight: 400;
 }
 .amountLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -331,10 +331,10 @@
   padding: 14px 16px;
   background: rgba(var(--accent-rgb), 0.08);
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 .dlLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -343,17 +343,17 @@
 }
 .dlDate {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .dlRemain {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   margin-top: 3px;
 }
 .applied {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   font-family: var(--serif);
   font-style: italic;
@@ -376,7 +376,7 @@
 .sc {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 28px 30px;
   display: flex;
   flex-direction: column;
@@ -387,10 +387,10 @@
 }
 .sc:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 38px -26px rgba(var(--plum-rgb), 0.28);
+  box-shadow: var(--shadow-lift);
 }
 .scKicker {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -409,7 +409,7 @@
   color: var(--accent);
 }
 .sc p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 44ch;
@@ -422,12 +422,12 @@
   flex-wrap: wrap;
 }
 .scM {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .scM .v {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   display: block;
   letter-spacing: -0.01em;
@@ -456,7 +456,7 @@
 }
 .pfPoster {
   aspect-ratio: 3 / 4;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   background: var(--plum);
   position: relative;
@@ -466,27 +466,27 @@
 }
 .pf:hover .pfPoster {
   transform: translateY(-3px);
-  box-shadow: 0 18px 36px -24px rgba(var(--plum-rgb), 0.32);
+  box-shadow: var(--shadow-lift);
 }
 .pfGrant {
   position: absolute;
   bottom: 10px;
   left: 10px;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   background: rgba(var(--jade-rgb), 0.28);
   color: var(--jade-light);
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  backdrop-filter: blur(6px);
+  backdrop-filter: var(--blur-sm);
   z-index: 2;
 }
 .pfTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--text-strong);
   line-height: 1.18;
   letter-spacing: -0.01em;
@@ -495,7 +495,7 @@
   font-style: italic;
 }
 .pfMeta {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   font-family: var(--serif);
   font-style: italic;
@@ -563,7 +563,7 @@
 }
 .hwTitle {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
@@ -572,7 +572,7 @@
   color: var(--accent);
 }
 .hwBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.65);
   line-height: 1.65;
 }

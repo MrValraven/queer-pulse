@@ -52,9 +52,15 @@ function Byline({ article }: { article: ArticleListItemDTO }) {
  */
 export function LiveStories() {
   const { t } = useTranslation();
-  const { stories, isLoading } = useHomepageStories();
+  const { stories, isLoading, isError } = useHomepageStories();
 
-  if (isLoading || stories.length === 0) return null;
+  // A failed fetch renders nothing, like an empty slice does. This is the
+  // marketing homepage: a visitor has no stake in this teaser row and cannot
+  // act on a failure here, and an alert panel between the curated plum and
+  // cream sections would cost more than the row is worth. The real board is a
+  // click away in the nav. The flag is read explicitly so the choice is a
+  // decision rather than an accident.
+  if (isLoading || isError || stories.length === 0) return null;
 
   const [feature, ...cards] = stories;
   if (!feature) return null;

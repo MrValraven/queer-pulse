@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Button, ConfirmDialog, Modal } from "../../shared/components/ui";
+import {
+  Button,
+  ConfirmDialog,
+  LoadErrorState,
+  Modal,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -33,7 +38,11 @@ export function CardDesignerModal({
     photo: viewerPhoto,
     pronouns: viewerPronouns,
   } = useAccountIdentity();
-  const { program } = useCardProgram(slug);
+  const {
+    program,
+    isError: hasProgramFailed,
+    refetch: refetchProgram,
+  } = useCardProgram(slug);
   const upsert = useUpsertCardProgram(slug);
   const issueAll = useIssueAllCards(slug);
   const { draft, set, isDirty } = useCardDesignerDraft(program);
@@ -88,6 +97,26 @@ export function CardDesignerModal({
       showToast(t("common:toast.saveFailed"), "error");
     }
   };
+
+  // A failed lookup arrives as `program === null`, which is also how a
+  // community that runs no programme yet arrives. Editing on that footing
+  // would reset a real design to the defaults and, because `isFirstSave`
+  // would be true, issue a card to every member on save. So the editor is
+  // held back until the programme is actually known.
+  if (hasProgramFailed) {
+    return (
+      <Modal
+        title={t("cards:designer.ariaLabel")}
+        onClose={onClose}
+        className={styles.dialog}
+      >
+        <LoadErrorState
+          onRetry={refetchProgram}
+          description={t("cards:designer.loadErrorBody")}
+        />
+      </Modal>
+    );
+  }
 
   return (
     <>

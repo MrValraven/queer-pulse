@@ -30,14 +30,14 @@
 
 .rowName {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 600;
   color: var(--ink);
 }
 
 .rowMeta {
   margin-top: 5px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -50,10 +50,10 @@
 
 .phaseTag {
   padding: 3px 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 /* ── Join-request queue section ──────────────────────────────── */
@@ -64,7 +64,7 @@
 .sectionTitle {
   margin: 0 0 16px;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: 600;
   color: var(--ink);
 }
@@ -80,7 +80,7 @@
   max-width: 60ch;
   margin: 0;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -102,7 +102,7 @@
 .fieldLabel {
   display: block;
   margin: 16px 0 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -115,7 +115,7 @@
 
 .fieldHint {
   margin: 6px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -125,10 +125,10 @@
   width: 100%;
   padding: 10px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
@@ -153,10 +153,10 @@
   width: 100%;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
   resize: vertical;
@@ -165,12 +165,12 @@
 .select {
   width: 100%;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   padding: 10px 30px 10px 14px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   cursor: pointer;
   appearance: none;
   background-image:
@@ -195,7 +195,20 @@
 /* ── Delete confirm modal ─────────────────────────────────────── */
 .deleteConfirmBody {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
+}
+
+/* ── Paginated queue chrome (ENG-41: the group join-request queue) ──────── */
+.queueCount {
+  margin: 0 0 12px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 20px;
 }

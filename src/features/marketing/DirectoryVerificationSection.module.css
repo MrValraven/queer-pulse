@@ -37,7 +37,7 @@
 }
 
 .lead {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.65;
   color: var(--ink-60);
   max-width: 46ch;
@@ -65,20 +65,20 @@
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.14);
   color: var(--jade);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
 .pillarTitle {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 
 .pillarBody {
   margin-top: 3px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
   max-width: 44ch;

@@ -6,7 +6,7 @@
   color: rgba(var(--cream-rgb), 1);
   text-align: center;
   padding: 44px 36px 36px;
-  border-radius: 28px;
+  border-radius: var(--radius-28);
   animation: panelIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
 
@@ -36,7 +36,7 @@
 }
 
 .body {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 0.82);
   margin: 0 auto 16px;
@@ -67,9 +67,10 @@
 }
 
 .links a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-2);
 }
 
 .actions {

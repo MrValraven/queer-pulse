@@ -34,7 +34,7 @@
 .subtitle {
   margin: 0;
   max-width: 62ch;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -42,7 +42,7 @@
 .previewHint {
   flex: none;
   padding-top: 4px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   white-space: nowrap;
 }
@@ -75,11 +75,11 @@
   gap: 10px;
   margin: 0;
   padding: 14px 16px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--jade-rgb), 0.08);
   border: 1px solid rgba(var(--jade-rgb), 0.25);
   color: var(--ink-60);
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
 }
 

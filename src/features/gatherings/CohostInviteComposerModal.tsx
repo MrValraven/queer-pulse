@@ -65,7 +65,8 @@ export function CohostInviteComposerModal({
         name: c.name,
         avatarUrl: c.photo,
         pronouns: c.pron,
-        staffRole: staffMap[c.slug],
+        staffRole: staffMap[c.slug]?.tier ?? undefined,
+        staffBadgedRoles: staffMap[c.slug]?.badgedStaffRoles,
       })),
     [connections, staffMap],
   );

@@ -2,7 +2,7 @@
 .fieldLabel {
   display: block;
   margin: 18px 0 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -18,10 +18,10 @@
   width: 100%;
   padding: 10px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
@@ -33,10 +33,10 @@
   width: 100%;
   padding: 12px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink);
   resize: vertical;
@@ -56,7 +56,7 @@
 
 .hint {
   margin: 6px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -76,7 +76,7 @@
   gap: 8px;
   padding: 12px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
 }
 
@@ -94,7 +94,7 @@
   width: 30px;
   height: 30px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink-40);
   cursor: pointer;

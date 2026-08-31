@@ -1,3 +1,4 @@
+import { FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { FeatureHelp } from "../../shared/components/ui";
@@ -59,11 +60,13 @@ export function DirectorySpaceDetail({ place, ownerRef }: Props) {
                   <Link to={routes.directory}>
                     {t("marketing:directory.detail.breadcrumbHome")}
                   </Link>
+                  <FiChevronRight className={s.crumbSep} aria-hidden />
                 </li>
                 <li>
                   <Link to={`${routes.directory}?cat=${categorySlug}`}>
                     {categoryText}
                   </Link>
+                  <FiChevronRight className={s.crumbSep} aria-hidden />
                 </li>
                 <li aria-current="page">
                   {place.name} <FeatureHelp id="local.directoryDetail" />

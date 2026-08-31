@@ -21,6 +21,8 @@ describe("LiveDiscovery", () => {
       communities: [],
       changemakers: [],
       isLoading: false,
+      isError: false,
+      refetch: () => {},
     });
 
     const { container } = render(<LiveDiscovery />, {
@@ -43,6 +45,8 @@ describe("LiveDiscovery", () => {
       communities: [],
       changemakers: [],
       isLoading: true,
+      isError: false,
+      refetch: () => {},
     });
 
     const { container } = render(<LiveDiscovery />, {
@@ -82,6 +86,8 @@ describe("LiveDiscovery", () => {
       communities: [],
       changemakers: [],
       isLoading: false,
+      isError: false,
+      refetch: () => {},
     });
 
     const { container } = render(<LiveDiscovery />, { wrapper: TestProviders });

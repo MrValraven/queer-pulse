@@ -2,7 +2,11 @@ import { useMemo, useState } from "react";
 import { FiBriefcase } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import {
+  EmptyState,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { usePostedJobs } from "../../app/providers/usePostedJobs";
@@ -64,6 +68,21 @@ export function CompanyPage() {
     );
   }
 
+  // A failed profile fetch must never render as "this employer doesn't exist".
+  if (!profile && !demoMode && companyQuery.isError) {
+    return (
+      <PageShell>
+        <div className={styles.body}>
+          <LoadErrorState
+            title={t("economy:company.loadError.title")}
+            description={t("economy:company.loadError.description")}
+            onRetry={() => void companyQuery.refetch()}
+          />
+        </div>
+      </PageShell>
+    );
+  }
+
   if (!profile) {
     return (
       <PageShell>
@@ -100,6 +119,8 @@ export function CompanyPage() {
             hasMoreReviews={reviewsQuery.hasNextPage}
             onLoadMoreReviews={reviewsQuery.fetchNextPage}
             isLoadingMoreReviews={reviewsQuery.isFetchingNextPage}
+            hasReviewsError={reviewsQuery.isError}
+            onRetryReviews={reviewsQuery.refetch}
             tab={tab}
             setTab={setTab}
           />

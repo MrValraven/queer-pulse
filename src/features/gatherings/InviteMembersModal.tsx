@@ -63,7 +63,8 @@ export function InviteMembersModal({
       name: candidate.name,
       avatarUrl: candidate.photo,
       pronouns: candidate.pron,
-      staffRole: staffMap[candidate.slug],
+      staffRole: staffMap[candidate.slug]?.tier ?? undefined,
+      staffBadgedRoles: staffMap[candidate.slug]?.badgedStaffRoles,
     }));
   }, [demoMode, connections, staffMap]);
 

@@ -4,6 +4,7 @@ import {
   Button,
   EmptyState,
   FadeIn,
+  LoadErrorState,
   SearchInput,
   SkeletonAvatar,
   SkeletonLine,
@@ -191,16 +192,23 @@ export function PulseTab({
         />
       ) : (
         <>
-          {isFeedEmpty && (
-            <EmptyState
-              icon={<FiMessageCircle />}
-              title={t("communities:detail.pulse.empty.title")}
-              description={t(
-                isMember
-                  ? "communities:detail.pulse.empty.description"
-                  : "communities:detail.pulse.empty.visitorDescription",
-              )}
-            />
+          {/* A failed feed read is never the "nothing here yet" empty state:
+              that reads as an answer about the community rather than as a
+              request that did not land (DES-22). */}
+          {isFeedEmpty && paging.isError ? (
+            <LoadErrorState onRetry={paging.refetch} />
+          ) : (
+            isFeedEmpty && (
+              <EmptyState
+                icon={<FiMessageCircle />}
+                title={t("communities:detail.pulse.empty.title")}
+                description={t(
+                  isMember
+                    ? "communities:detail.pulse.empty.description"
+                    : "communities:detail.pulse.empty.visitorDescription",
+                )}
+              />
+            )
           )}
 
           {pinnedPosts.map((post) => (

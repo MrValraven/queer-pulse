@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { FiMapPin, FiSearch } from "react-icons/fi";
-import { EmptyState, SkeletonLine, Sending } from "../../shared/components/ui";
+import {
+  EmptyState,
+  LoadErrorState,
+  SkeletonLine,
+  Sending,
+} from "../../shared/components/ui";
 import { useIncrementalList } from "../../shared/hooks";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { type LocalPlace } from "./localPlaces";
@@ -43,6 +49,8 @@ export function DirectoryListView({
   distanceById,
   total,
   loading,
+  isError = false,
+  onRetry,
   hasActiveFilters,
   onClearFilters,
   hasMoreFromServer = false,
@@ -57,6 +65,11 @@ export function DirectoryListView({
   distanceById?: ReadonlyMap<string, number> | null;
   total: number;
   loading: boolean;
+  /** True when the directory read failed (DES-25). Rendered as its own state,
+   *  so an outage never reads as "no places listed yet". */
+  isError?: boolean;
+  /** Re-run the failed read, wired to the error state's retry. */
+  onRetry?: () => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
   /** True when the backend has more pages beyond what's already loaded into
@@ -106,8 +119,9 @@ export function DirectoryListView({
     setBeen((current) => ({ ...current, [placeId]: currentBeen + 1 }));
   }
 
-  // Two distinct empties: nothing listed yet vs. filtered down to nothing.
-  // The second offers Clear filters as the primary escape hatch.
+  // Three distinct states below: the read failed, nothing is listed yet, and
+  // the filters matched nothing. The second offers "list a business" and the
+  // third offers Clear filters as the primary escape hatch.
   const listBusinessAction = {
     label: t("marketing:directory.submitStrip.cta"),
     to: routes.listBusiness,
@@ -142,6 +156,17 @@ export function DirectoryListView({
               <DirectoryCardSkeleton key={index} />
             ))}
           </div>
+        ) : isError ? (
+          <LoadErrorState
+            onRetry={onRetry}
+            title={
+              <Translation
+                i18nKey="marketing:directory.loadError.title"
+                components={{ em: <em /> }}
+              />
+            }
+            description={t("marketing:directory.loadError.body")}
+          />
         ) : places.length === 0 ? (
           emptyState
         ) : (

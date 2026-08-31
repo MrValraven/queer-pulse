@@ -16,6 +16,12 @@ import { modReportDetailFrom } from "./moderation.adapters";
 export function useModReportDetail(report: ModReport): {
   detail: ReportDetail | undefined;
   loading: boolean;
+  /** True when the single-report fetch failed. The drawer still renders its
+   *  summary fallback, so this exists to say the richer context is missing
+   *  because of an outage rather than because the report has none (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed detail fetch. */
+  refetch: () => void;
 } {
   const { demoMode } = useDemoMode();
   const hasDetail = report.detail != null;
@@ -29,5 +35,7 @@ export function useModReportDetail(report: ModReport): {
   return {
     detail: report.detail ?? query.data ?? undefined,
     loading: !hasDetail && !demoMode && query.isLoading,
+    isError: !hasDetail && query.isError,
+    refetch: () => void query.refetch(),
   };
 }

@@ -23,14 +23,14 @@
 }
 
 .countTile b {
-  font-family: var(--font-display, inherit);
+  font-family: var(--serif);
   font-size: 26px;
   line-height: 1;
   color: var(--ink);
 }
 
 .countTile span {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -57,12 +57,12 @@
 
 .panelHeading {
   margin: 0;
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 
 .panelBlurb {
   margin: 4px 0 16px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -97,7 +97,7 @@
   flex: none;
   padding: 4px 10px;
   border-radius: var(--radius-badge);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -135,7 +135,7 @@
 
 .rowTitle {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   text-decoration: none;
   overflow-wrap: anywhere;
@@ -147,19 +147,19 @@
 }
 
 .rowMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
 .rowNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
   overflow-wrap: anywhere;
 }
 
 .rowReplacement {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--jade-ink);
   text-decoration: none;
@@ -169,7 +169,7 @@
 
 .due {
   flex: none;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-40);
   white-space: nowrap;
@@ -183,7 +183,7 @@
    the reader will be told rather than picking a word. */
 .stateHint {
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--ink-60);
 }

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import {
   Avatar,
+  LoadErrorState,
   SearchInput,
   SkeletonCard,
   Tag,
@@ -120,7 +121,7 @@ export function CardHoldersPanel({
   program: CardProgramDTO;
 }) {
   const { t } = useTranslation();
-  const { holders, isLoading } = useCardHolders(slug);
+  const { holders, isLoading, isError, refetch } = useCardHolders(slug);
   const [query, setQuery] = useState("");
   const [pending, setPending] = useState<PendingCardStatus | null>(null);
   const [openCardId, setOpenCardId] = useState<string | null>(null);
@@ -173,6 +174,22 @@ export function CardHoldersPanel({
           <SkeletonCard />
           <SkeletonCard />
         </div>
+      </section>
+    );
+  }
+
+  // A roster that failed to load is not a programme nobody has joined: an
+  // owner reading the second when the first happened would go looking for a
+  // fault in their own community.
+  if (isError) {
+    return (
+      <section aria-label={t("cards:holders.title")} className={styles.panel}>
+        <h2 className={styles.title}>{t("cards:holders.title")}</h2>
+        <LoadErrorState
+          compact
+          onRetry={refetch}
+          description={t("cards:holders.loadErrorBody")}
+        />
       </section>
     );
   }

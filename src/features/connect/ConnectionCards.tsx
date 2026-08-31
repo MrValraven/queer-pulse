@@ -35,7 +35,8 @@ export function CardHead({
           slug: view.slug,
           name: view.name,
           avatarUrl: view.photo,
-          staffRole: staffMap[view.slug],
+          staffRole: staffMap[view.slug]?.tier ?? undefined,
+          staffBadgedRoles: staffMap[view.slug]?.badgedStaffRoles,
         }}
         secondary={secondary}
         to={profilePath(view.slug)}

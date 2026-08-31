@@ -26,7 +26,12 @@ export function CoHostInviteDetails({
   );
   return (
     <div className={styles.roleCard}>
-      <h3>{t("gatherings:cohostInvite.rolesTitle")}</h3>
+      <h3>
+        <Translation
+          i18nKey="gatherings:cohostInvite.rolesTitle"
+          components={{ em: <em /> }}
+        />
+      </h3>
       {roleOption && (
         <div className={styles.roleRow}>
           <div className={styles.roleText}>

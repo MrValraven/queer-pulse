@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { FiArrowLeft } from "react-icons/fi";
-import { Button, FormField } from "../../shared/components/ui";
+import { FiArrowLeft, FiMinus, FiPlus, FiX } from "react-icons/fi";
+import { Button, FormField, useDismiss } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useScrollLock } from "../../shared/hooks";
 import styles from "./PrintOrderModal.module.css";
 
 type Stage = "compose" | "placing" | "done";
@@ -22,7 +21,10 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
   const [stage, setStage] = useState<Stage>("compose");
   const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState("");
-  useScrollLock();
+  // `aria-modal` hides the page behind from screen readers, so focus has to
+  // move in with it: scroll lock, initial focus, a Tab trap, focus restore to
+  // the trigger on close, and modal-stack-aware Escape.
+  const dialogRef = useDismiss(onClose);
 
   const total = 12 * quantity;
   const valid = /\S+@\S+\.\S+/.test(email);
@@ -44,6 +46,8 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
       }}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={`${styles.modal} ${success ? styles.modalSuccess : ""}`}
         role="dialog"
         aria-modal="true"
@@ -55,7 +59,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
           onClick={onClose}
           aria-label={t("magazine:printOrder.closeAria")}
         >
-          ×
+          <FiX aria-hidden />
         </button>
 
         {success ? (
@@ -114,7 +118,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                   disabled={quantity <= 1 || stage === "placing"}
                   aria-label={t("magazine:printOrder.fewerCopiesAria")}
                 >
-                  −
+                  <FiMinus aria-hidden />
                 </button>
                 <span className={styles.qtyVal} aria-live="polite">
                   {quantity}
@@ -127,7 +131,7 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                   disabled={quantity >= 10 || stage === "placing"}
                   aria-label={t("magazine:printOrder.moreCopiesAria")}
                 >
-                  +
+                  <FiPlus aria-hidden />
                 </button>
               </div>
               <span className={styles.total}>

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { RadioCardGroup } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RadioOption } from "./cinemaSubmit.data";
 import styles from "./CinemaSubmitPage.module.css";
@@ -43,20 +44,17 @@ export function RadioGrid({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={styles.radioGrid} role="radiogroup" aria-label={ariaLabel}>
-      {options.map((option) => {
-        const on = option.value === value;
-        return (
-          <button
-            key={option.value}
-            type="button"
-            role="radio"
-            aria-checked={on}
-            onClick={() => onChange(option.value)}
-            className={[styles.rOpt, on && styles.rOptOn]
-              .filter(Boolean)
-              .join(" ")}
-          >
+    <RadioCardGroup
+      className={styles.radioGrid}
+      optionClassName={styles.rOpt}
+      checkedClassName={styles.rOptOn}
+      ariaLabel={ariaLabel}
+      value={value}
+      onChange={onChange}
+      options={options.map((option) => ({
+        id: option.value,
+        render: (
+          <>
             <span className={styles.rDot} aria-hidden />
             <span className={styles.rText}>
               {t(option.labelKey)}
@@ -64,10 +62,10 @@ export function RadioGrid({
                 <span className={styles.rSub}>{t(option.subKey)}</span>
               )}
             </span>
-          </button>
-        );
-      })}
-    </div>
+          </>
+        ),
+      }))}
+    />
   );
 }
 

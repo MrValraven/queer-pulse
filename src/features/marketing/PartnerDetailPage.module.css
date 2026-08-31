@@ -5,13 +5,13 @@
 }
 .error {
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   line-height: 1.5;
   margin-bottom: 20px;
 }
 .back {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   text-decoration: none;
@@ -69,7 +69,7 @@
   }
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -90,7 +90,7 @@
   color: var(--accent);
 }
 .tagline {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   font-style: italic;
   font-family: var(--serif);
@@ -108,13 +108,13 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 6px 12px;
 }
 .tier::before {
@@ -125,7 +125,7 @@
   background: var(--accent);
 }
 .since {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   font-weight: 500;
 }
@@ -141,7 +141,7 @@
   background: none;
   border: none;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink-60);
   padding: 12px 16px;
@@ -167,11 +167,11 @@
   background: var(--accent);
 }
 .tabCount {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 1px 6px;
   margin-left: 4px;
 }
@@ -189,7 +189,7 @@
 }
 
 .prose {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.75;
   max-width: 62ch;
@@ -222,7 +222,7 @@
   padding: 24px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   margin: 24px 0 32px;
 }
 @media (--sm) {
@@ -231,7 +231,7 @@
   }
 }
 .stat {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .stat b {
@@ -262,12 +262,12 @@
 .collab {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px;
   display: block;
 }
 .collabKicker {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -277,14 +277,14 @@
 .collabTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
   margin-bottom: 6px;
 }
 .collabDek {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -295,7 +295,7 @@
   margin-top: 14px;
   padding-top: 10px;
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .collabFoot b {
@@ -344,7 +344,7 @@
   box-shadow: 0 0 0 1px rgba(var(--plum-rgb), 0.3);
 }
 .tlDate {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -354,7 +354,7 @@
 .tlTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 5px;
@@ -364,7 +364,7 @@
   color: var(--accent);
 }
 .tlBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 54ch;
@@ -373,9 +373,9 @@
 .fundNote {
   background: rgba(var(--jade-rgb), 0.08);
   border-left: 3px solid var(--jade);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 14px 16px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
   margin-top: 24px;
@@ -395,11 +395,11 @@
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 20px 22px;
 }
 .sideCard h4 {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -411,7 +411,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 9px 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
 }
@@ -436,7 +436,7 @@
   gap: 11px;
   padding: 11px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .contactRow:last-child {
@@ -469,7 +469,7 @@
   color: var(--accent-ink);
 }
 .becomeCard p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 14px;

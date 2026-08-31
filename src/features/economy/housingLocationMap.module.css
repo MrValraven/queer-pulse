@@ -46,7 +46,7 @@
 .address {
   margin-block-start: 12px;
   padding: 12px 14px;
-  border-radius: var(--radius-md, 14px);
+  border-radius: var(--radius-14);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }

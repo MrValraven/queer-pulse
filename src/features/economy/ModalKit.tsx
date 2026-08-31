@@ -79,6 +79,31 @@ export function ComingSoonPanel({ onClose }: { onClose: () => void }) {
   );
 }
 
+/**
+ * The two accepted title shapes, deliberately mutually exclusive so a title
+ * that already carries its own emphasis can never also receive an `em`.
+ *
+ * - **Split**: `title` is plain text and `em` is the coral italic tail. The
+ *   panel joins them with a single space: `{title} <em>{em}</em>`. Only use
+ *   this when the catalog holds the two halves as separate plain-text keys.
+ * - **Whole**: `title` is a node that already renders its own `<em>`, e.g.
+ *   `<Translation i18nKey="…" components={{ em: <em /> }} />` over a catalog
+ *   value like `"Your request is <em>in.</em>"`. Pass no `em` at all.
+ *
+ * Passing both would print the emphasised word twice (`"…is in in"`), which is
+ * why the type refuses it rather than leaving it to review.
+ */
+type SuccessPanelTitleProps =
+  { title: string; em: string } | { title: ReactNode; em?: never };
+
+type SuccessPanelProps = SuccessPanelTitleProps & {
+  children: ReactNode;
+  onClose: () => void;
+  closeLabel?: string;
+  /** Optional extra content below the primary action — e.g. an undo affordance. */
+  footer?: ReactNode;
+};
+
 /** Plum-panel confirmation shown after a flow completes. */
 export function SuccessPanel({
   title,
@@ -87,15 +112,7 @@ export function SuccessPanel({
   onClose,
   closeLabel,
   footer,
-}: {
-  title: string;
-  em: string;
-  children: ReactNode;
-  onClose: () => void;
-  closeLabel?: string;
-  /** Optional extra content below the primary action — e.g. an undo affordance. */
-  footer?: ReactNode;
-}) {
+}: SuccessPanelProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.success}>
@@ -103,7 +120,13 @@ export function SuccessPanel({
         <FiCheck size={26} color="var(--jade)" aria-hidden />
       </div>
       <h2>
-        {title} <em>{em}</em>
+        {em ? (
+          <>
+            {title} <em>{em}</em>
+          </>
+        ) : (
+          title
+        )}
       </h2>
       <p>{children}</p>
       <div className={styles.successBtn}>

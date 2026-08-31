@@ -85,6 +85,16 @@ export const routes = {
   /** ID-04: the data-subject request (DSAR) review queue. Statutory 30-day
    *  clock per request, so the queue is sorted by deadline, never by arrival. */
   adminDsar: "/admin/dsar",
+  /** PRD-31: ban-evasion escalations raised by community moderators, each
+   *  carrying the full cross-community assessment their own console withholds.
+   *  `@Roles(Moderator, Admin)`, so it is listed in
+   *  MOD_ACCESSIBLE_ADMIN_PATTERNS. */
+  adminBanEvasion: "/admin/ban-evasion",
+  /** PRD-32: the register of legal, government and law-enforcement demands for
+   *  member data, which the public Transparency Report counts. Admin-only:
+   *  `AdminLegalRequestsController` is `@Roles(Admin)` alone, so this path is
+   *  deliberately absent from MOD_ACCESSIBLE_ADMIN_PATTERNS. */
+  adminLegalRequests: "/admin/legal-requests",
   adminSafeSpaces: "/admin/safe-spaces",
   adminListings: "/admin/listings",
   adminMedia: "/admin/media",

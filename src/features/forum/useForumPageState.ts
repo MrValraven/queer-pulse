@@ -181,6 +181,10 @@ export function useForumPageState() {
 
   const headerCount = cat === "all" ? (counts.all ?? 0) : (counts[cat] ?? 0);
 
+  // Only a failure that leaves nothing on screen becomes a panel: a "Load more"
+  // page that fails still has the loaded threads to show.
+  const hasThreadsError = threadsQuery.isError && threads.length === 0;
+
   return {
     cat,
     setCat,
@@ -213,6 +217,8 @@ export function useForumPageState() {
     totalCount: counts.all ?? 0,
     headerCount,
     threads,
+    hasThreadsError,
+    retryThreads: threadsQuery.refetch,
     pinnedThreads,
     filtered,
     resetFilters,

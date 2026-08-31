@@ -5,7 +5,7 @@
   padding: 28px 28px 80px;
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -27,7 +27,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.7;
   max-width: 54ch;
@@ -44,8 +44,8 @@
 .gdprStrip {
   padding: 14px 20px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 12px;
-  font-size: 13.5px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 32px;
@@ -60,7 +60,7 @@
   text-decoration: none;
 }
 .rightLabel {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -82,7 +82,7 @@
   padding: 18px;
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   cursor: pointer;
   text-align: left;
   font-family: var(--sans);
@@ -100,11 +100,11 @@
 .rightCardSelected {
   border-color: var(--line-strong);
   background: rgba(var(--plum-rgb), 0.04);
-  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.06);
+  box-shadow: var(--ring-plum);
 }
 .art {
   font-family: var(--sans);
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -114,7 +114,7 @@
 .rightCard h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.005em;
   margin-bottom: 5px;
@@ -124,7 +124,7 @@
   color: var(--accent);
 }
 .rightCard p {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -134,7 +134,7 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 32px 36px;
-  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
+  box-shadow: var(--shadow-e1);
 }
 .form h2 {
   font-family: var(--serif);
@@ -149,7 +149,7 @@
   color: var(--accent);
 }
 .formSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 24px;
 }
@@ -163,7 +163,7 @@
    claiming to label a single control. */
 .groupLabel,
 .field label {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -177,16 +177,16 @@
   color: var(--ink-40);
   text-transform: none;
   letter-spacing: 0;
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 .field input,
 .field textarea {
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 12px 14px;
   transition:
     border-color 0.2s var(--ease),
@@ -203,7 +203,7 @@
   line-height: 1.6;
 }
 .fieldHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
   margin-top: 3px;
@@ -221,7 +221,7 @@
   gap: 11px;
   padding: 10px 14px;
   border: 1.5px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   cursor: pointer;
   transition:
     border-color 0.22s var(--ease),
@@ -243,13 +243,13 @@
 }
 .scopeRow b {
   display: block;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 2px;
 }
 .scopeRow span {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -257,8 +257,8 @@
   padding: 16px 20px;
   background: rgba(var(--accent-rgb), 0.05);
   border-left: 3px solid var(--accent);
-  border-radius: 10px;
-  font-size: 13px;
+  border-radius: var(--radius-10);
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.65;
   margin-top: 14px;
@@ -283,7 +283,7 @@
   align-items: center;
 }
 .actions .info {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   line-height: 1.5;
   max-width: 36ch;
@@ -293,7 +293,7 @@
 }
 
 .pastH {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -307,9 +307,9 @@
   padding: 14px 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   margin-bottom: 8px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   align-items: center;
 }
@@ -320,20 +320,20 @@
 .pastRow .num {
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--accent-ink);
   letter-spacing: 0.04em;
   background: rgba(var(--accent-rgb), 0.08);
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .pastRow .status {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 5px;
+  border-radius: var(--radius-5);
 }
 .statusDone {
   color: var(--jade);
@@ -348,11 +348,11 @@
   background: rgba(var(--line-rgb), 0.12);
 }
 .pastNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
   padding: 12px 18px;
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   margin-bottom: 8px;
 }

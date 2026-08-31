@@ -21,7 +21,7 @@
 .legend {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   padding: 0 8px;
   margin-left: -8px;
@@ -36,7 +36,7 @@
 
 .rcLabel {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -63,10 +63,10 @@
   width: 100%;
   box-sizing: border-box;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.25s var(--ease);
@@ -92,7 +92,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   margin-top: 14px;
   cursor: pointer;
@@ -112,7 +112,7 @@
   align-items: center;
 }
 .lineHead {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   text-transform: uppercase;
@@ -124,10 +124,10 @@
 }
 .lineRow .rcInput {
   padding: 9px 12px;
-  font-size: 16px;
+  font-size: var(--text-16);
 }
 .lineTotal {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
   text-align: right;
@@ -212,17 +212,17 @@
 .docLabel {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--accent);
 }
 .docNo {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   margin: 2px 0 6px;
 }
 .docMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -232,7 +232,7 @@
   padding: 24px 0;
 }
 .docPartyLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -241,7 +241,7 @@
 }
 .docPartyName {
   font-weight: 600;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   margin-bottom: 2px;
 }
@@ -259,7 +259,7 @@
   margin: 8px 0 4px;
 }
 .docTh {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -269,7 +269,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.14);
 }
 .docTd {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   padding: 12px 8px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
@@ -290,14 +290,14 @@
 .docTotalRow {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   padding: 6px 8px;
 }
 .docGrand {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   border-top: 2px solid var(--line-strong);
   margin-top: 6px;
@@ -306,7 +306,7 @@
 
 .docNotesLegal {
   margin-top: 24px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-style: italic;
   color: var(--ink-60);
 }
@@ -318,7 +318,7 @@
   margin-top: 24px;
 }
 .docNotes p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   margin: 0;
   white-space: pre-wrap;
@@ -328,7 +328,7 @@
   margin-top: 36px;
   padding-top: 16px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
-  font-size: 11px;
+  font-size: var(--text-11);
   line-height: 1.5;
   color: var(--ink-40);
 }

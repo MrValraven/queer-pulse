@@ -13,7 +13,7 @@
 }
 
 .eyebrow {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 700;

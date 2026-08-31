@@ -23,6 +23,12 @@ export interface PulsePaging {
    *  Optional because the roster/discussion sources fold their first-page
    *  wait into the page's own skeleton. */
   isLoading?: boolean;
+  /** True when the list request failed. A tab that paints its "nothing here
+   *  yet" empty state on an outage tells a member the feed is empty when it
+   *  never loaded (DES-22), so every paginated source reports its failure. */
+  isError?: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch?: () => void;
 }
 
 export interface CommunityPostsResult extends PulsePaging {
@@ -114,6 +120,8 @@ export function useCommunityPosts(
       fetchNextPage: () => {},
       isFetchingNextPage: false,
       isLoading: false,
+      isError: false,
+      refetch: () => {},
     };
   }
   return {
@@ -123,6 +131,8 @@ export function useCommunityPosts(
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

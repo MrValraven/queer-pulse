@@ -35,7 +35,7 @@
 
 .eyebrow {
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
 }
 
 .lead {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.6;
   color: var(--ink-60);
   max-width: 42ch;
@@ -58,7 +58,7 @@
 /* A note under the lead — quieter still, for the "nothing to do" reassurance
    and the "keep this to yourself" warning. */
 .note {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
   max-width: 42ch;
@@ -78,14 +78,14 @@
 .reasonTitle {
   margin: 0 0 8px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
 }
 
 .reasonBody {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -103,9 +103,47 @@
 .inviteLabel {
   margin: 0 0 10px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--ink);
+}
+
+/* PRD-02: when the invite stops working. Nothing else will ever say it.
+   QueerPulse sends the applicant no email and they have no account, so no
+   notification reaches them either. That is why this sits inside the invite
+   panel rather than in a footnote. */
+.deadline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.deadline svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+/* The last couple of days, where "I'll come back to it" stops being a plan
+   that works. Coral rather than a warning red: this is still the good news. */
+.deadlineUrgent {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* Why a refresh was turned down, in a live region under the actions. Empty
+   until something is refused, and it keeps its box so the actions above it do
+   not jump when a sentence arrives. */
+.refusal {
+  min-height: 1.25rem;
+  margin: 0 0 4px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  color: var(--ink-60);
 }
 
 .actions {
@@ -118,7 +156,7 @@
 
 .foot {
   margin: 18px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -154,7 +192,7 @@
   align-items: center;
   gap: 14px;
   padding: 28px 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
 }
 

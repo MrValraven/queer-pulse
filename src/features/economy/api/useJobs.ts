@@ -14,6 +14,13 @@ export interface JobsResult {
   total: number;
   /** True while the first page is in flight. */
   isLoading: boolean;
+  /**
+   * True when the fetch failed. Without it an outage renders as "no jobs
+   * match" — the board must say it could not load instead (DES-22).
+   */
+  isError: boolean;
+  /** Re-runs the failed fetch. Wire it to the error state's retry. */
+  refetch: () => void;
   /** True when another page is available (always false in demo). */
   hasNextPage: boolean;
   /** Fetch and append the next page. */
@@ -74,6 +81,8 @@ export function useJobs(
     jobs: pages.flatMap((p) => p.items),
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,

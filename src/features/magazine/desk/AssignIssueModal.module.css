@@ -33,7 +33,7 @@
   background: var(--wash);
 }
 
-.option[data-selected="true"] {
+.option[data-checked] {
   border-color: var(--accent);
   background: var(--wash);
 }
@@ -47,10 +47,10 @@
   border: 1px solid var(--line);
   border-radius: 50%;
   color: var(--paper);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 
-.option[data-selected="true"] .optionMark {
+.option[data-checked] .optionMark {
   border-color: var(--accent);
   background: var(--accent);
 }
@@ -69,7 +69,7 @@
 
 .optionMeta {
   color: var(--ink-40);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -22,7 +22,7 @@
 @media (hover: hover) {
   .row:hover {
     transform: translateY(-2px);
-    box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+    box-shadow: var(--shadow-lift);
   }
   .row:hover .rowTitle {
     color: var(--accent-ink);
@@ -38,7 +38,7 @@
 .rowTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.25;
@@ -47,14 +47,14 @@
 }
 
 .rowDek {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
   margin-top: 8px;
 }
 
 .rowMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-top: 10px;
 }

@@ -3,13 +3,13 @@
    this module only carries what that sheet has no class for. */
 
 .hint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
 
 .error {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   font-weight: 600;
   color: var(--accent-ink);

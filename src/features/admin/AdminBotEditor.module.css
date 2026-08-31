@@ -12,7 +12,7 @@
 }
 
 .label {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -24,10 +24,10 @@
   width: 100%;
   padding: 10px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 
@@ -44,7 +44,7 @@
 }
 
 .error {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 500;
   color: var(--danger);
 }
@@ -68,7 +68,7 @@
   border-radius: var(--radius-pill);
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--text-strong);
   cursor: pointer;
   transition:
@@ -108,7 +108,7 @@
   gap: 8px;
   padding: 12px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: var(--cream);
 }
 

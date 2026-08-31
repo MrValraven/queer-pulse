@@ -482,8 +482,28 @@ export async function getRoster(slug: string, page?: number) {
 export const joinCommunity = (slug: string, note?: string) =>
   apiPost<JoinResultDTO>(`/communities/${slug}/join`, note ? { note } : {});
 
-export const getJoinRequests = (slug: string) =>
-  apiGet<CommunityJoinRequestDTO[]>(`/communities/${slug}/join-requests`);
+/**
+ * One page of a community's pending join-request queue, oldest first.
+ *
+ * The reviewer-side surfaces read this through
+ * `communityJoin.api.ts#getJoinRequestsForReview`, which carries the extra
+ * applicant-context fields. This narrower call is kept for the plain
+ * `CommunityJoinRequestDTO` shape, and is paginated for the same reason (ENG-41:
+ * the route used to answer with a flat array silently capped at 200 rows, which
+ * hid the newest arrivals). `toItemsPage` also absorbs the old array shape, the
+ * same way `getRoster` above does.
+ */
+export async function getJoinRequests(slug: string, page?: number) {
+  const searchParams = new URLSearchParams();
+  if (page) searchParams.set("page", String(page));
+  const querySuffix = searchParams.toString();
+  const response = await apiGet<
+    CommunityJoinRequestDTO[] | Paginated<CommunityJoinRequestDTO>
+  >(
+    `/communities/${slug}/join-requests${querySuffix ? `?${querySuffix}` : ""}`,
+  );
+  return toItemsPage(response);
+}
 
 export const reviewJoinRequest = (
   slug: string,
@@ -495,8 +515,45 @@ export const reviewJoinRequest = (
     { action },
   );
 
+/**
+ * What a removal actually did (PRD-25).
+ *
+ * `DELETE /communities/:slug/members/:memberSlug` used to answer a bare 204,
+ * which was honest while a removal had one possible outcome. Asking to bar
+ * someone's return now lands in three different places: the bar is waiting on
+ * a second owner, co-owner or moderator; it stands at the fallback term
+ * because this community has nobody else who could sign one; or it is an
+ * ordinary timed bar. A moderator who is told nothing believes they got the
+ * one they asked for, and in two of those three cases they did not.
+ */
+export interface CommunityRemovalOutcomeDTO {
+  /** Always true when this response is returned at all: the removal itself
+   *  never waits on anybody. */
+  isRemoved: true;
+  /** False for a removal that leaves the door open, and for every self-leave. */
+  hasBarredReturn: boolean;
+  /** ISO instant the bar ends by itself. Null when there is no bar, or when
+   *  the bar already on file was permanent. */
+  barExpiresAt: string | null;
+  /** True when a permanent bar was asked for and is now waiting on a second
+   *  owner, co-owner or moderator. */
+  isPendingRatification: boolean;
+  /** That hold, so the caller can link straight to the queue. */
+  ratificationId: string | null;
+  /** ISO instant the hold lapses if nobody signs. */
+  ratificationExpiresAt: string | null;
+  /** True when a permanent bar was asked for and this community has nobody
+   *  else who could sign it, so the bar stands at the fallback term. */
+  hasNoSecondSignatory: boolean;
+  /** One server-owned sentence saying what happened. Shown as-is, so the
+   *  three-way outcome is never reconstructed client-side from booleans. */
+  message: string;
+}
+
 export const removeMember = (slug: string, memberSlug: string) =>
-  apiDelete<void>(`/communities/${slug}/members/${memberSlug}`);
+  apiDelete<CommunityRemovalOutcomeDTO>(
+    `/communities/${slug}/members/${memberSlug}`,
+  );
 
 /**
  * The roles the roster route may assign, mirroring the backend's

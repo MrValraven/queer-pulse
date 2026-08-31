@@ -7,7 +7,7 @@
   margin-top: 20px;
 }
 .dek {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   line-height: 1.7;
   max-width: 56ch;
@@ -35,7 +35,7 @@
 }
 .periodLabel {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -43,7 +43,7 @@
 }
 .periodNote {
   flex-basis: 100%;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 62ch;
@@ -54,7 +54,7 @@
 }
 .generated {
   flex-basis: 100%;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -96,12 +96,45 @@
   max-width: 26ch;
 }
 .lead {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.75;
   max-width: 62ch;
   margin-bottom: 24px;
   text-wrap: pretty;
+}
+
+/* The one sentence a reader of the legal-request section comes for: whether
+   anybody has ever asked. Same paper card as the method notes, given a coral
+   rule and a larger measure so it reads as the section's claim rather than as
+   another footnote. */
+.statement {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-12);
+  padding: 20px 24px;
+  margin-bottom: 26px;
+  font-size: var(--text-17);
+  color: var(--text-strong);
+  line-height: 1.65;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* The same card when the register did not load. It keeps the statement slot,
+   because a reader who came for that sentence has to find a sentence there,
+   and it changes SHAPE the way a withheld figure does: the coral rule goes
+   quiet and the text drops to the muted ink the table's withheld cells use, so
+   it never passes for a published claim. The words carry the meaning; the
+   colour only agrees with them. */
+.statementUnavailable {
+  border-left-color: rgba(var(--line-rgb), 0.25);
+  color: var(--ink-60);
+  margin-bottom: 16px;
+}
+.unavailableActions {
+  margin-bottom: 26px;
 }
 
 /* Headline figures: two or three big numbers above the table they summarise. */
@@ -111,10 +144,19 @@
   gap: 14px;
   margin-bottom: 26px;
 }
+/* A row carrying a single figure. Same tiles, capped tracks, so one number
+   does not stretch across the whole measure and read as a headline of its
+   own. */
+.headlinesNarrow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 280px));
+  gap: 14px;
+  margin-bottom: 26px;
+}
 .headline {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 18px 20px;
 }
 .headlineValue {
@@ -127,7 +169,7 @@
 }
 .headlineValueWithheld {
   font-family: var(--sans);
-  font-size: 19px;
+  font-size: var(--text-19);
   font-weight: 600;
   line-height: 1.3;
   color: var(--ink-40);
@@ -141,7 +183,7 @@
 }
 .headlineLabel {
   margin-top: 8px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -149,18 +191,18 @@
 .tableWrap {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow-x: auto;
 }
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 .table caption {
   text-align: left;
   padding: 16px 20px 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -173,7 +215,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .table thead th {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-40);
   white-space: nowrap;
@@ -204,11 +246,11 @@
 .notes {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 22px 24px;
 }
 .notes p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 12px;
@@ -227,7 +269,7 @@
   margin: 0;
 }
 .notesList li {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.75;
   padding-left: 18px;
@@ -264,7 +306,7 @@
   padding: 64px 28px 80px;
 }
 .stateBody {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.7;
   margin-bottom: 16px;

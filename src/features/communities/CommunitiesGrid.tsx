@@ -1,5 +1,10 @@
 import type { ReactNode } from "react";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { CommunityJoinFlowModal } from "./CommunityJoinFlowModal";
 import { CommunityCard } from "./CommunityCard";
@@ -89,7 +94,9 @@ export function CommunitiesGrid({
         <SuggestedCommunitiesSection excludeSlug={featured?.slug} />
       )}
 
-      {!isShowingSkeletons && discover.visible.length === 0 ? (
+      {!isShowingSkeletons && discover.hasListFailed ? (
+        <LoadErrorState onRetry={discover.retryList} />
+      ) : !isShowingSkeletons && discover.visible.length === 0 ? (
         <CommunitiesDiscoverEmptyState
           q={discover.q}
           filter={discover.filter}

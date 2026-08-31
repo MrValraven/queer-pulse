@@ -2,7 +2,7 @@
   max-width: var(--maxw-text);
 }
 .body p {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 14px;
@@ -17,12 +17,12 @@
 .contrastCol {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 32px 30px;
 }
 .contrastColOurs {
   background: var(--plum);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 32px 30px;
 }
 .contrastLabel,
@@ -52,7 +52,7 @@
 .contrastItemOurs {
   display: flex;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
 }
 .contrastItem {
@@ -83,7 +83,7 @@
 .valCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 24px 26px;
 }
 .valChip {
@@ -103,13 +103,13 @@
 .valTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
 .valText {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.65;
 }
@@ -117,7 +117,7 @@
 .contactStrip {
   background: rgba(var(--plum-rgb), 0.04);
   border: 1.5px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 36px 40px;
   display: flex;
   align-items: center;
@@ -139,7 +139,7 @@
   color: var(--accent);
 }
 .csText p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   max-width: 44ch;
   line-height: 1.6;
@@ -164,7 +164,7 @@
 
 .standPanel {
   background: var(--plum);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 34px 34px 30px;
   margin-top: 28px;
   max-width: var(--maxw-text);
@@ -181,7 +181,7 @@
   margin-bottom: 16px;
 }
 .standPanelBody {
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.75;
   color: rgba(var(--cream-rgb), 0.82);
   margin-bottom: 14px;
@@ -203,7 +203,7 @@
 .standCommitment {
   display: flex;
   gap: 10px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: rgba(var(--cream-rgb), 0.82);
 }
@@ -221,7 +221,7 @@
 .standPosition {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 24px 26px;
 }
 .standPositionChip {
@@ -241,13 +241,13 @@
 .standPositionTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
 .standPositionBody {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.65;
   margin-bottom: 10px;
@@ -262,12 +262,12 @@
 .standPrincipleTitle {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   margin-bottom: 8px;
 }
 .standPrinciple p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.7;
 }

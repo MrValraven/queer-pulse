@@ -81,7 +81,7 @@ export function ArchiveSection({
         <SegmentedControl
           value={view}
           onChange={(next) => onView(next as "grid" | "list")}
-          label={t("magazine:issues.archiveHeading")}
+          label={t("magazine:issues.archiveAriaLabel")}
           options={[
             { value: "grid", label: t("magazine:issues.viewCoversCta") },
             { value: "list", label: t("magazine:issues.viewListCta") },

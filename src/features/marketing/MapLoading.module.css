@@ -155,7 +155,7 @@
   block-size: 560px;
   margin-block: 32px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 @media (--compact) {

@@ -174,9 +174,14 @@ export interface AdminGovernanceFinancesResult {
   history: AdminFinanceHistoryPoint[];
   /** True while the initial live fetch is in flight (demo resolves instantly). */
   loading: boolean;
+  /** True when the fetch failed, so the tab can tell an outage apart from a
+   *  section that genuinely has no rows yet (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed fetch; wire to the error state's retry. */
+  refetch: () => void;
 }
 
-const EMPTY: AdminGovernanceFinancesResult = {
+const EMPTY: Omit<AdminGovernanceFinancesResult, "isError" | "refetch"> = {
   latest: null,
   history: [],
   loading: false,
@@ -200,13 +205,20 @@ export function useAdminGovernanceFinances(): AdminGovernanceFinancesResult {
   });
 
   if (!query.data) {
-    return { ...EMPTY, loading: query.isPending };
+    return {
+      ...EMPTY,
+      loading: query.isPending,
+      isError: query.isError,
+      refetch: () => void query.refetch(),
+    };
   }
 
   return {
     latest: query.data.latest,
     history: query.data.history,
     loading: false,
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

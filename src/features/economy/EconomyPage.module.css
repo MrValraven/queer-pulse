@@ -36,7 +36,7 @@
   pointer-events: none;
 }
 .cat {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -60,7 +60,7 @@
   font-weight: 400;
 }
 .lead {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 54ch;
   margin-top: 22px;
@@ -101,7 +101,7 @@
   }
 }
 .tab {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.5);
   padding: 14px 22px;
@@ -133,7 +133,7 @@
 
 .incHeroBox {
   background: var(--plum);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 44px 48px;
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 48px;
@@ -160,7 +160,7 @@
   color: var(--accent);
 }
 .incP {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.68;
   margin-top: 12px;
@@ -178,7 +178,7 @@
 }
 .incStat {
   background: rgba(var(--cream-rgb), 0.07);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 22px;
 }
 .incStat .n {
@@ -189,7 +189,7 @@
   line-height: 1;
 }
 .incStat .l {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.52);
   margin-top: 3px;
 }
@@ -236,7 +236,7 @@
   background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent-ink);
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -253,18 +253,18 @@
   border-left: none;
 }
 .incStepTitle {
-  font-size: 17px;
+  font-size: var(--text-17);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 5px;
 }
 .incStepDesc {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.65;
 }
 .incStepMeta {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-top: 5px;
 }
@@ -290,7 +290,7 @@
 @media (hover: hover) {
   .mentorCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px -16px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-lift);
   }
 }
 .mentorTop {
@@ -302,7 +302,7 @@
   display: inline-block;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -314,7 +314,7 @@
   }
 }
 .mentorRole {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.4;
 }
@@ -324,22 +324,22 @@
   flex-wrap: wrap;
 }
 .mentorTag {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 3px 9px;
   font-weight: 500;
 }
 .mentorBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   cursor: pointer;
   background: transparent;
   color: var(--text-strong);
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   transition:
     background 0.2s var(--ease),
@@ -374,7 +374,7 @@
   color: var(--accent);
 }
 .econSub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 58ch;
@@ -404,7 +404,7 @@
 @media (hover: hover) {
   .toolCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px -16px rgba(var(--plum-rgb), 0.28);
+    box-shadow: var(--shadow-lift);
   }
 }
 .toolIcon {
@@ -413,25 +413,25 @@
 .toolTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .toolDesc {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.65;
   flex: 1;
 }
 .toolCtaBtn {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   cursor: pointer;
   background: var(--accent);
   color: rgba(var(--cream-rgb), 1);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 9px 18px;
   transition: background 0.2s var(--ease);
   align-self: flex-start;
@@ -462,7 +462,7 @@
   margin-bottom: 14px;
 }
 .rcLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -481,10 +481,10 @@
 .rcInput,
 .rcSelect {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   transition: border-color 0.25s var(--ease);
@@ -500,7 +500,7 @@
 }
 .rcResult {
   background: var(--plum);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 22px 24px;
   color: rgba(var(--cream-rgb), 1);
   display: flex;
@@ -511,7 +511,7 @@
   margin-top: 4px;
 }
 .rcResultLabel {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.6);
 }
 .rcResultVal {
@@ -522,7 +522,7 @@
   letter-spacing: -0.02em;
 }
 .rateNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.6;
 }
@@ -535,13 +535,13 @@
 }
 .salChip {
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 8px 16px;
   transition:
     background 0.25s var(--ease),
@@ -564,7 +564,7 @@
   flex-direction: column;
   gap: 0;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 .salHeader {
@@ -575,7 +575,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .salHcell {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -600,37 +600,37 @@
 .salRole {
   font-weight: 600;
   color: var(--ink);
-  font-size: 15px;
+  font-size: var(--text-15);
   line-height: 1.3;
 }
 .salSector {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 2px;
 }
 .salCell {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   display: flex;
   align-items: center;
 }
 .salMoney {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--jade);
   font-weight: 500;
 }
 .salExp {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .salBadge {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 3px 9px;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
 }
 .badgeFull {
   background: rgba(var(--jade-rgb), 0.1);
@@ -654,7 +654,7 @@
   }
 }
 .salAnon {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 18px;
   line-height: 1.6;
@@ -662,7 +662,7 @@
 .salSubmitBox {
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 28px 32px;
   margin-top: 24px;
   display: flex;
@@ -672,7 +672,7 @@
   flex-wrap: wrap;
 }
 .salSubmitBox p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 46ch;
@@ -684,19 +684,19 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(26, 26, 31, 0.5);
-  z-index: 300;
+  background: var(--scrim);
+  z-index: var(--z-modal);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
   /* Lift the sheet above the on-screen keyboard on iOS (see
      useVisualViewportKeyboard) so the submit button isn't hidden behind it. */
   padding-block-end: var(--keyboard-inset, 0px);
 }
 .modal {
   background: var(--paper);
-  border-radius: 24px 24px 0 0;
+  border-radius: var(--radius-24) var(--radius-24) 0 0;
   width: 100%;
   max-width: 560px;
   padding: 32px 36px 44px;
@@ -733,14 +733,14 @@
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--ink-60);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .modalSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 22px;
@@ -753,10 +753,10 @@
 .modalInput,
 .modalSelect {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   width: 100%;

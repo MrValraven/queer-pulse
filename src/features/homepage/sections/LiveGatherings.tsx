@@ -19,9 +19,15 @@ import styles from "./Gatherings.module.css";
 export function LiveGatherings() {
   const { t } = useTranslation();
   const format = useFormat();
-  const { gatherings, isLoading } = useHomepageGatherings();
+  const { gatherings, isLoading, isError } = useHomepageGatherings();
 
-  if (isLoading || gatherings.length === 0) return null;
+  // A failed fetch renders nothing, like an empty slice does. This is the
+  // marketing homepage: a visitor has no stake in this teaser row and cannot
+  // act on a failure here, and an alert panel between the curated plum and
+  // cream sections would cost more than the row is worth. The real board is a
+  // click away in the nav. The flag is read explicitly so the choice is a
+  // decision rather than an accident.
+  if (isLoading || isError || gatherings.length === 0) return null;
 
   return (
     <section className={styles.gather} id="gather">

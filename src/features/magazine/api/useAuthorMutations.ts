@@ -50,6 +50,10 @@ export function useMemberAuthor(memberSlug: string | undefined) {
   return {
     author: query.data ?? null,
     isLoading: query.isLoading && !demoMode && Boolean(memberSlug),
+    // `null` is the ordinary answer here (most members have no byline), so a
+    // caller needs this flag to tell that apart from a failed lookup.
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

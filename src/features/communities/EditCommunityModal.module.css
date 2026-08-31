@@ -15,7 +15,7 @@
 
 .blockLabel {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -49,7 +49,7 @@
 }
 
 .checkText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -62,7 +62,7 @@
 }
 
 .legend {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -98,7 +98,7 @@
 }
 
 .featureText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
 }
 
@@ -120,14 +120,14 @@
   gap: 10px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 12px;
 }
 
 .ruleText {
   flex: 1 1 auto;
   min-width: 0;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink);
 }
@@ -165,11 +165,11 @@
   flex: 1 1 auto;
   min-width: 0;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
   outline: none;
   transition:
@@ -180,7 +180,7 @@
 
 .ruleAdd input:focus {
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  box-shadow: var(--ring-plum-soft);
   background: var(--paper);
 }
 
@@ -195,7 +195,7 @@
   min-height: 0;
   border: none;
   background: none;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -211,17 +211,17 @@
 .suggestTagTrigger:focus-visible {
   outline: 2px solid var(--plum);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: var(--radius-4);
 }
 
 /* Error alert */
 .alert {
   margin: 0 0 16px;
   padding: 12px 14px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-text);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   line-height: 1.45;
 }
@@ -237,7 +237,7 @@
    visibility): the backend refuses those two from anyone but the owner, so
    they read as owner-only here rather than failing on save. */
 .ownerOnlyHint {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 
@@ -281,7 +281,7 @@
 
 .previewLabel {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -300,7 +300,7 @@
 
 .previewHint {
   margin: 10px 0 16px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-40);
 }

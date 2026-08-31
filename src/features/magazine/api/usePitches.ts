@@ -27,5 +27,6 @@ export function usePitches() {
     pitches: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

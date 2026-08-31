@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
@@ -7,8 +8,14 @@ import {
   assertNoGatedPaths,
 } from "./publicPaths.mjs";
 
+// Resolved through `node:path` rather than `new URL(..., import.meta.url)`:
+// Vite rewrites that form as an ASSET reference (a template literal turns into
+// an `import.meta.glob` lookup that misses and yields `undefined`), so under
+// vitest the same expression tried to read `scripts/undefined`.
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
 const repoFile = (relativePath) =>
-  readFileSync(fileURLToPath(new URL(`../${relativePath}`, import.meta.url)), {
+  readFileSync(resolve(REPO_ROOT, relativePath), {
     encoding: "utf8",
   });
 

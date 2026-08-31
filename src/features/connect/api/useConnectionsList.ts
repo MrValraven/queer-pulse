@@ -51,6 +51,15 @@ export interface ConnectionsListResult {
    * honest number exists yet.
    */
   total: number | undefined;
+  /**
+   * True when the request failed. It exists because it has to (DES-22): a
+   * failed fetch used to arrive as the same empty array a member with no
+   * connections gets, so an outage told someone that nobody had ever accepted
+   * them. Callers must branch on it before rendering any empty state.
+   */
+  isError: boolean;
+  /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
+  refetch: () => void;
 }
 
 interface ConnPageVM {
@@ -176,6 +185,8 @@ export function useConnectionsList(
       fetchNextPage: () => {},
       isFetchingNextPage: false,
       total: blocksQuery.data?.total,
+      isError: blocksQuery.isError,
+      refetch: () => void blocksQuery.refetch(),
     };
   }
 
@@ -188,6 +199,9 @@ export function useConnectionsList(
       fetchNextPage: () => {},
       isFetchingNextPage: false,
       total: demoViews.length,
+      // Local state, so there is no request to fail.
+      isError: false,
+      refetch: () => {},
     };
   }
 
@@ -200,5 +214,10 @@ export function useConnectionsList(
     isFetchingNextPage: query.isFetchingNextPage,
     // Every page echoes the same server total; take the freshest one.
     total: query.data?.pages.at(-1)?.total,
+    // Only a first page that never landed is an error the list must own. A
+    // failed load-MORE leaves the pages already on screen intact, and blanking
+    // them for it would be worse than the missing page.
+    isError: query.isError && views.length === 0,
+    refetch: () => void query.refetch(),
   };
 }

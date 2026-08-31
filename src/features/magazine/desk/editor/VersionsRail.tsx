@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../../../shared/components/ui";
+import { Button, LoadErrorState } from "../../../../shared/components/ui";
 import { cx } from "../../../../shared/lib/cx";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../../shared/i18n/format";
@@ -47,7 +47,7 @@ export function VersionsRail({
 }: VersionsRailProps) {
   const { t } = useTranslation();
   const formatters = useFormat();
-  const { versions, isLoading } = useArticleVersions(pieceId);
+  const { versions, isLoading, isError, refetch } = useArticleVersions(pieceId);
   const { saveVersion, restoreVersion } = useVersionMutations(pieceId);
   const [pendingRestore, setPendingRestore] = useState<PendingRestore | null>(
     null,
@@ -78,7 +78,9 @@ export function VersionsRail({
         </Button>
       </div>
 
-      {isLoading ? (
+      {isError ? (
+        <LoadErrorState onRetry={refetch} compact />
+      ) : isLoading ? (
         <span className={styles.tiny}>
           {t("magazine:write.versions.loading")}
         </span>

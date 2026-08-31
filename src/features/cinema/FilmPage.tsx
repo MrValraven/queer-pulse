@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiChevronRight } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { PageShell } from "../../shared/components/layout";
@@ -32,11 +32,15 @@ function DemoFilmPage() {
         <div className="wrap">
           <div className={styles.crumbRow}>
             <Link to={routes.cinema}>{t("cinema:brand.tag")}</Link>
-            <span className={styles.sep}>›</span>
+            <span className={styles.sep} aria-hidden>
+              <FiChevronRight />
+            </span>
             <Link to={routes.cinemaBrowse}>
               {t("cinema:mast.sectionNav.thisWeek")}
             </Link>
-            <span className={styles.sep}>›</span>
+            <span className={styles.sep} aria-hidden>
+              <FiChevronRight />
+            </span>
             {/* eslint-disable-next-line local/no-literal-string -- this film's own title; content per the scope rule */}
             <span className={styles.cur}>The light between rooms</span>
             <Link to={routes.cinema} className={styles.crumbBack}>

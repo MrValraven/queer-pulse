@@ -22,5 +22,6 @@ export function useMyWriterApplication() {
     application: query.data ?? null,
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

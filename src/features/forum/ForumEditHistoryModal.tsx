@@ -10,7 +10,10 @@ export function ForumEditHistoryModal({
   postId: string | undefined;
   onClose: () => void;
 }) {
-  const { revisions, isLoading } = usePostHistory(postId, true);
+  const { revisions, isLoading, isError, refetch } = usePostHistory(
+    postId,
+    true,
+  );
   const entries: PostRevisionEntry[] = revisions.map((revision) => ({
     id: revision.id,
     authorName: revision.author.displayName,
@@ -22,6 +25,8 @@ export function ForumEditHistoryModal({
     <EditHistoryModal
       revisions={entries}
       isLoading={isLoading}
+      isError={isError}
+      onRetry={refetch}
       onClose={onClose}
     />
   );

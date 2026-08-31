@@ -9,7 +9,7 @@
   margin-bottom: 28px;
 }
 .cat {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -27,7 +27,7 @@
   color: var(--accent-ink);
 }
 .sub {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   max-width: 56ch;
 }
@@ -41,7 +41,7 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
 }
 
@@ -53,7 +53,7 @@
   margin-bottom: 8px;
 }
 .type {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -62,7 +62,7 @@
 
 .cardTitle {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--ink);
   margin-bottom: 6px;
 }
@@ -71,13 +71,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px 14px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin-bottom: 4px;
 }
 
 .cardHint {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   margin-bottom: 14px;
 }
@@ -90,7 +90,7 @@
 }
 
 .viewLink {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
   padding: 0 6px;
@@ -107,7 +107,7 @@
 .decision {
   margin-block: 12px 4px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--amber-rgb), 0.09);
   border: 1px solid rgba(var(--amber-rgb), 0.22);
 }
@@ -116,20 +116,20 @@
   align-items: center;
   gap: 7px;
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
 }
 .decisionBody {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink);
   overflow-wrap: anywhere;
 }
 .decisionHint {
   margin: 6px 0 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }

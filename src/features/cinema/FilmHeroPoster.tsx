@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiCornerDownRight } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
@@ -44,7 +45,10 @@ export function FilmHeroPoster() {
       </div>
 
       <div className={styles.tipjar}>
-        <div className={styles.tipjarH}>{t("cinema:film.tipjar.heading")}</div>
+        <div className={styles.tipjarH}>
+          <FiCornerDownRight aria-hidden />
+          {t("cinema:film.tipjar.heading")}
+        </div>
         {/* eslint-disable local/no-literal-string -- this film's filmmaker's own name; content per the scope rule */}
         <div className={styles.tipjarName}>
           Maria <em>Vasconcelos</em>

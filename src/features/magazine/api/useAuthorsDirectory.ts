@@ -74,6 +74,7 @@ export function useAuthorsDirectory() {
     items: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

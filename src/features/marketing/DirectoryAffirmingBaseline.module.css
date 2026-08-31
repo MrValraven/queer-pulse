@@ -18,7 +18,7 @@
   flex: none;
   width: 34px;
   height: 34px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,7 +35,7 @@
 .lead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 19px;
+  font-size: var(--text-19);
   line-height: 1.45;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -48,7 +48,7 @@
 }
 .detail {
   margin-top: 9px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.7;
   color: var(--ink-60);
   max-width: 68ch;
@@ -64,6 +64,6 @@
     gap: 13px;
   }
   .lead {
-    font-size: 17px;
+    font-size: var(--text-17);
   }
 }

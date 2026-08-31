@@ -15,6 +15,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { server } from "../../../test/msw/server";
 import { API, API_V1 } from "../../../test/msw/handlers";
 import { TestProviders } from "../../../test/TestProviders";
+import type { AuthContextValue } from "../../../app/providers/authContext";
+import type { AuthUser } from "../../auth/api/auth.api";
 import {
   ADMIN_VERIFICATIONS_DEMO,
   ADMIN_VERIFICATION_HISTORY,
@@ -64,6 +66,51 @@ beforeEach(() => {
   window.localStorage.clear();
 });
 
+/**
+ * A fixed signed-in staff session for the live-mode wrapper.
+ *
+ * `useVerificationRequests` reads `useAuth()` (it passes the signed-in id down
+ * as `currentUserId` so demo mode can resolve the "assigned to me" filter,
+ * which live mode never sends), so the hook needs an AuthContext above it or it
+ * throws. The real `AuthProvider` unconditionally fires `/csrf-token` +
+ * `/auth/me` in live mode, network this suite has no reason to serve, so the
+ * context value is supplied directly instead — the same trade `useFeed.live.
+ * test.tsx` makes when it mocks `useSocial` rather than mounting its provider.
+ */
+const LIVE_STAFF_USER: AuthUser = {
+  id: "admin-1",
+  email: "staff@queerpulse.test",
+  status: "active",
+  role: "admin",
+  ageAttestedAt: "2026-01-01T00:00:00.000Z",
+  onboardedAt: "2026-01-01T00:00:00.000Z",
+  suspendedUntil: null,
+  suspension: null,
+  staffRoles: [],
+  profile: {
+    slug: "staff-member",
+    firstName: "Staff",
+    lastName: "Member",
+    avatarUrl: null,
+  },
+};
+
+const LIVE_AUTH: AuthContextValue = {
+  loggedIn: true,
+  checking: false,
+  preparing: false,
+  user: LIVE_STAFF_USER,
+  status: "active",
+  role: "admin",
+  staffRoles: [],
+  authError: null,
+  signIn: () => {},
+  signOut: () => {},
+  endPreparing: () => {},
+  refresh: () => Promise.resolve(),
+  markOnboarded: () => {},
+};
+
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
@@ -85,6 +132,10 @@ async function loadLive() {
   // "useTranslation must be used within an I18nProvider" from inside itself.
   const { ToastProvider } =
     await import("../../../shared/components/feedback/ToastProvider");
+  // Dynamically imported for the same reason again: the freshly imported hooks
+  // resolve their own `AuthContext` instance, so a statically imported one
+  // would be a different context and `useAuth` would still find nothing.
+  const { AuthContext } = await import("../../../app/providers/authContext");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -94,7 +145,11 @@ async function loadLive() {
     <QueryClientProvider client={client}>
       <I18nProvider>
         <ToastProvider>
-          <DemoModeProvider>{children}</DemoModeProvider>
+          <DemoModeProvider>
+            <AuthContext.Provider value={LIVE_AUTH}>
+              {children}
+            </AuthContext.Provider>
+          </DemoModeProvider>
         </ToastProvider>
       </I18nProvider>
     </QueryClientProvider>

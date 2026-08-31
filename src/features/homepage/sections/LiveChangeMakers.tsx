@@ -14,9 +14,15 @@ import styles from "./LiveSections.module.css";
  */
 export function LiveChangeMakers() {
   const { t } = useTranslation();
-  const { changemakers, isLoading } = useLandingFeaturesPublic();
+  const { changemakers, isLoading, isError } = useLandingFeaturesPublic();
 
-  if (isLoading || changemakers.length === 0) return null;
+  // A failed fetch renders nothing, like an empty slice does. This is the
+  // marketing homepage: a visitor has no stake in this teaser row and cannot
+  // act on a failure here, and an alert panel between the curated plum and
+  // cream sections would cost more than the row is worth. The real board is a
+  // click away in the nav. The flag is read explicitly so the choice is a
+  // decision rather than an accident.
+  if (isLoading || isError || changemakers.length === 0) return null;
 
   return (
     <section

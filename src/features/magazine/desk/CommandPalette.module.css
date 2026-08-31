@@ -1,12 +1,12 @@
 .scrim {
   position: fixed;
   inset: 0;
-  z-index: 220;
+  z-index: var(--z-modal);
   display: flex;
   justify-content: center;
   padding: 14vh 24px 24px;
-  background: rgba(var(--plum-rgb), 0.42);
-  backdrop-filter: blur(2px);
+  background: var(--scrim);
+  backdrop-filter: var(--blur-sm);
   animation: paletteScrimIn 0.2s var(--ease, ease);
 }
 
@@ -66,7 +66,7 @@
   border: none;
   background: none;
   outline: none;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
 }
 
@@ -81,9 +81,9 @@
   gap: 12px;
   width: 100%;
   padding: 11px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   color: var(--ink);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   text-align: left;
   transition: background var(--dur-fast) var(--ease);
 }
@@ -99,7 +99,7 @@
   place-items: center;
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--wash);
   color: var(--plum);
 }
@@ -114,7 +114,7 @@
 
 .rowKind {
   flex: none;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -123,5 +123,5 @@
   padding: 24px 12px;
   text-align: center;
   color: var(--ink-60);
-  font-size: 14px;
+  font-size: var(--text-14);
 }

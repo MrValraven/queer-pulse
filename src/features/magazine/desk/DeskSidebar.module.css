@@ -19,7 +19,7 @@
 }
 
 .card h3 {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   font-weight: 700;
@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -76,14 +76,14 @@
 .feedRow {
   display: flex;
   gap: 9px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.45;
 }
 
 .feedRow time {
   color: var(--ink-40);
-  font-size: 12px;
+  font-size: var(--text-12);
   margin-left: 4px;
 }
 
@@ -92,6 +92,6 @@
 }
 
 .emptyNote {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }

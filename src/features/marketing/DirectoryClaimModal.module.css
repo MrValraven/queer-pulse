@@ -4,7 +4,7 @@
  * its own small copy of this recipe rather than a cross-import. */
 .eyebrow {
   margin-bottom: 8px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -27,7 +27,7 @@
 
 .sub {
   margin-bottom: 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -40,7 +40,7 @@
 
 .note {
   margin-top: 14px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.55;
   color: var(--ink-40);
 }
@@ -58,13 +58,13 @@
 .policy {
   margin-bottom: 18px;
   padding: 12px 14px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--cream);
 }
 
 .policyTitle {
   margin: 0 0 4px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -73,14 +73,14 @@
 
 .policyTurnaround {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--text-strong);
 }
 
 .policyHintsLabel {
   margin: 10px 0 4px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -88,7 +88,7 @@
 .policyHints {
   margin: 0;
   padding-left: 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -99,7 +99,7 @@
 
 /* On the plum success panel, so it dims toward cream rather than ink. */
 .trackLink {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--cream);
   text-decoration: underline;

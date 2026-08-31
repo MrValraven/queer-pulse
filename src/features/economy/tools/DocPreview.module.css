@@ -11,10 +11,10 @@
   background: var(--paper);
   color: var(--ink);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 10px;
-  box-shadow: 0 18px 48px rgba(var(--plum-rgb), 0.1);
+  border-radius: var(--radius-10);
+  box-shadow: var(--shadow-e3);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
 }
 

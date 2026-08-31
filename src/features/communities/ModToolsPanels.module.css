@@ -1,6 +1,6 @@
 .intro {
   margin: -4px 0 14px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink-60);
   max-width: 64ch;
@@ -34,13 +34,13 @@
 
 .meta {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
 }
 
 .reason {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: var(--ink-60);
   overflow-wrap: anywhere;
@@ -55,7 +55,7 @@
 
 .hint {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-40);
 }
@@ -82,7 +82,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -131,11 +131,11 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 10px;
   border: 1px solid currentColor;
 }
@@ -169,7 +169,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--ink-60);
   overflow-wrap: anywhere;
@@ -185,7 +185,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--danger-ink);
 }
@@ -201,8 +201,8 @@
   padding: 10px 14px;
   border-left: 3px solid rgba(var(--line-rgb), 0.2);
   background: var(--wash);
-  border-radius: 0 10px 10px 0;
-  font-size: 14px;
+  border-radius: 0 var(--radius-10) var(--radius-10) 0;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink);
   overflow-wrap: anywhere;
@@ -210,7 +210,7 @@
 
 .reportNote {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-40);
 }
@@ -229,11 +229,11 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   background: rgba(var(--ink-rgb), 0.06);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px 10px;
 }
 
@@ -250,7 +250,7 @@
 }
 
 .reportMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   overflow-wrap: anywhere;
 }
@@ -268,7 +268,7 @@
    ring, the disabled treatment and the tap-target floor. */
 .quietBtn {
   gap: 5px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   background: transparent;
   padding: 8px 14px;
@@ -285,7 +285,7 @@
 }
 
 .threadLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: underline;
@@ -303,7 +303,7 @@
   padding-left: 18px;
   display: grid;
   gap: 4px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--ink-60);
   overflow-wrap: anywhere;

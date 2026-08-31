@@ -46,5 +46,6 @@ export function useSectionArticles(section: string) {
     articles: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

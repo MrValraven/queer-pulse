@@ -1,100 +1,14 @@
-import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import {
-  FiCheckCircle,
-  FiClock,
-  FiMessageCircle,
-  FiRotateCcw,
-  FiSearch,
-  FiWifiOff,
-} from "react-icons/fi";
-import { Button, CopyLinkRow } from "../../shared/components/ui";
-import { inviteLink, routes } from "../../app/routeMap";
-import { inviteFullUrlFor } from "../../shared/lib/inviteUrl";
+import { FiClock, FiMessageCircle, FiSearch, FiWifiOff } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { applicantDeclineReasonKey } from "./api/joinRequestDeclineReason";
+import { ContactLink, StatusState } from "./JoinRequestStatusFrame";
+import { useDayLabel, wholeDaysSince } from "./joinRequestStatusFormat";
 import { Under18Notice } from "./Under18Notice";
 import styles from "./JoinRequestStatus.module.css";
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-/** Whole days between `iso` and now, floored at 0. Null for an unparseable
- *  timestamp, so a bad value drops the phrase instead of printing "NaN days". */
-function wholeDaysSince(iso: string): number | null {
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return null;
-  return Math.max(0, Math.floor((Date.now() - then) / DAY_MS));
-}
-
-/**
- * A localized day label, or null when there is no usable timestamp. Every date
- * on this page goes through `useFormat()`; an ISO string must never reach the
- * screen, and neither must "Invalid Date", so an unparseable value falls back
- * to the state's own no-date copy.
- */
-function useDayLabel(): (iso: string | null) => string | null {
-  const fmt = useFormat();
-  return (iso) => {
-    if (!iso) return null;
-    const value = new Date(iso);
-    return Number.isNaN(value.getTime()) ? null : fmt.date(value);
-  };
-}
-
-/** One frame for every state: icon tile, eyebrow, serif heading, lead, body,
- *  actions and a foot line. Keeps six screens visually identical apart from
- *  the words, which is the whole point of a page people arrive at anxious. */
-function StatusState({
-  icon,
-  tone = "accent",
-  eyebrow,
-  title,
-  lead,
-  children,
-  actions,
-  foot,
-}: {
-  icon: ReactNode;
-  tone?: "accent" | "jade" | "quiet";
-  eyebrow: string;
-  /** Rendered as the page's `<h1>`; carries the coral `<em>` idiom. */
-  title: ReactNode;
-  lead?: ReactNode;
-  children?: ReactNode;
-  actions?: ReactNode;
-  foot?: ReactNode;
-}) {
-  const toneClass =
-    tone === "jade"
-      ? styles.iconJade
-      : tone === "quiet"
-        ? styles.iconQuiet
-        : undefined;
-  return (
-    <div className={styles.state}>
-      <div className={[styles.icon, toneClass].filter(Boolean).join(" ")}>
-        {icon}
-      </div>
-      <p className={styles.eyebrow}>{eyebrow}</p>
-      <h1 className={styles.title}>{title}</h1>
-      {lead && <p className={styles.lead}>{lead}</p>}
-      {children}
-      {actions && <div className={styles.actions}>{actions}</div>}
-      {foot && <div className={styles.foot}>{foot}</div>}
-    </div>
-  );
-}
-
-/** "Get in touch" — every state offers one, so nobody is ever left with only
- *  a back button. */
-function ContactLink() {
-  const { t } = useTranslation();
-  return (
-    <Link to={routes.contact}>{t("auth:joinRequestStatus.contactCta")}</Link>
-  );
-}
 
 /** Still with a reviewer. No promised date, because we do not have one. */
 export function UnderReviewState({ submittedAt }: { submittedAt: string }) {
@@ -141,107 +55,6 @@ export function UnderReviewState({ submittedAt }: { submittedAt: string }) {
         {t("auth:joinRequestStatus.underReview.note")}
       </p>
     </StatusState>
-  );
-}
-
-/** Approved, with an invite that still works. The win. */
-export function ApprovedState({
-  inviteCode,
-  decidedAt,
-}: {
-  inviteCode: string;
-  decidedAt: string | null;
-}) {
-  const { t } = useTranslation();
-  const decidedLabel = useDayLabel()(decidedAt);
-  return (
-    <StatusState
-      icon={<FiCheckCircle aria-hidden />}
-      tone="jade"
-      eyebrow={t("auth:joinRequestStatus.approved.eyebrow")}
-      title={
-        <Translation
-          i18nKey="auth:joinRequestStatus.approved.title"
-          components={{ em: <em /> }}
-        />
-      }
-      lead={
-        decidedLabel
-          ? t("auth:joinRequestStatus.approved.lead", { date: decidedLabel })
-          : t("auth:joinRequestStatus.approved.leadNoDate")
-      }
-      actions={
-        <Button to={inviteLink(inviteCode)}>
-          {t("auth:joinRequestStatus.approved.cta")}
-        </Button>
-      }
-      foot={
-        <Translation
-          i18nKey="auth:joinRequestStatus.approved.foot"
-          components={{ a: <ContactLink /> }}
-        />
-      }
-    >
-      <div className={styles.invite}>
-        <p className={styles.inviteLabel}>
-          {t("auth:joinRequestStatus.approved.linkLabel")}
-        </p>
-        {/* The one place invite links are built — never assembled by hand. */}
-        <CopyLinkRow
-          tone="paper"
-          value={inviteFullUrlFor(inviteCode)}
-          fieldLabel={t("auth:joinRequestStatus.approved.linkLabel")}
-          copyLabel={t("auth:joinRequestStatus.approved.copy")}
-          copiedLabel={t("auth:joinRequestStatus.approved.copied")}
-          copiedToast={t("auth:joinRequestStatus.approved.copiedToast")}
-          errorToast={t("auth:joinRequestStatus.approved.copyErrorToast")}
-        />
-      </div>
-      <p className={styles.note}>{t("auth:joinRequestStatus.approved.note")}</p>
-    </StatusState>
-  );
-}
-
-/**
- * Approved, but the invite behind it is gone — used, revoked or expired. A real
- * state with its own recovery path, never collapsed into the live approval.
- */
-export function ApprovedInviteSpentState({
-  decidedAt,
-}: {
-  decidedAt: string | null;
-}) {
-  const { t } = useTranslation();
-  const decidedLabel = useDayLabel()(decidedAt);
-  return (
-    <StatusState
-      icon={<FiRotateCcw aria-hidden />}
-      eyebrow={t("auth:joinRequestStatus.approvedSpent.eyebrow")}
-      title={
-        <Translation
-          i18nKey="auth:joinRequestStatus.approvedSpent.title"
-          components={{ em: <em /> }}
-        />
-      }
-      lead={
-        decidedLabel
-          ? t("auth:joinRequestStatus.approvedSpent.lead", {
-              date: decidedLabel,
-            })
-          : t("auth:joinRequestStatus.approvedSpent.leadNoDate")
-      }
-      actions={
-        <>
-          <Button to={routes.contact}>
-            {t("auth:joinRequestStatus.approvedSpent.cta")}
-          </Button>
-          <Button variant="ghost" to={routes.signIn}>
-            {t("auth:joinRequestStatus.approvedSpent.signInCta")}
-          </Button>
-        </>
-      }
-      foot={t("auth:joinRequestStatus.approvedSpent.foot")}
-    />
   );
 }
 

@@ -13,6 +13,7 @@ import {
   Button,
   EmptyState,
   FeatureHelp,
+  LoadErrorState,
   Reveal,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -169,6 +170,8 @@ export function JobsPage() {
   const {
     jobs: liveJobs,
     isLoading: jobsLoading,
+    isError: hasJobsError,
+    refetch: refetchJobs,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -295,6 +298,14 @@ export function JobsPage() {
           <div className={styles.list}>
             {loading ? (
               Array.from({ length: 4 }).map((_, i) => <JobSkeleton key={i} />)
+            ) : hasJobsError ? (
+              // The board is this page's main content, so a failed fetch says
+              // so instead of "no roles match your filters" (DES-22).
+              <LoadErrorState
+                title={t("economy:jobs.loadError.title")}
+                description={t("economy:jobs.loadError.description")}
+                onRetry={refetchJobs}
+              />
             ) : visible.length === 0 ? (
               <EmptyState
                 icon={<FiBriefcase />}

@@ -1,5 +1,10 @@
 import { Link, useParams } from "react-router-dom";
-import { FiArrowLeft, FiArrowRight, FiFilm } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiFilm,
+  FiChevronRight,
+} from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CinemaComingSoon } from "./CinemaComingSoon";
 import { PageShell } from "../../shared/components/layout";
@@ -53,11 +58,15 @@ function DemoCinemaCuratorPage() {
         <div className="wrap">
           <div className={styles.crumbRow}>
             <Link to={routes.cinema}>{t("cinema:brand.tag")}</Link>
-            <span className={styles.sep}>›</span>
+            <span className={styles.sep} aria-hidden>
+              <FiChevronRight />
+            </span>
             <Link to={routes.cinemaAbout}>
               {t("cinema:curator.crumb.council")}
             </Link>
-            <span className={styles.sep}>›</span>
+            <span className={styles.sep} aria-hidden>
+              <FiChevronRight />
+            </span>
             <span className={styles.cur}>{name}</span>
             <Link to={routes.cinemaAbout} className={styles.crumbBack}>
               <FiArrowLeft aria-hidden /> {t("cinema:curator.crumb.backCta")}

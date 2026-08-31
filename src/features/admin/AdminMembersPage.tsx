@@ -19,6 +19,7 @@ import {
   AdminMembersSearchControls,
   type StatusFilter,
 } from "./AdminMembersSearchControls";
+import { AdminEmailSuppressionModal } from "./AdminEmailSuppressionModal";
 import { useAdminMembers, useAdminFlagged } from "./api/useAdminMembers";
 import { useJoinRequests } from "./api/useJoinRequests";
 import styles from "./AdminMembersPage.module.css";
@@ -44,6 +45,9 @@ export function AdminMembersPage() {
   // page, so its selection is fetched by id instead of resolved from `members`
   // below. Both feed the one drawer at the bottom of this page.
   const flaggedSelection = useAdminMemberCardSelection();
+  // The erasure suppression list belongs to no member (the account it protected
+  // was erased), so it opens from the page header rather than a member drawer.
+  const [isSuppressionOpen, setIsSuppressionOpen] = useState(false);
 
   const {
     members,
@@ -144,9 +148,18 @@ export function AdminMembersPage() {
           }
           sub={t("admin:members.header.sub", { count: pendingCount })}
           actions={
-            <Button variant="ghost" size="md">
-              {t("admin:members.header.exportCta")}
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={() => setIsSuppressionOpen(true)}
+              >
+                {t("admin:recovery.suppression.openCta")}
+              </Button>
+              <Button variant="ghost" size="md">
+                {t("admin:members.header.exportCta")}
+              </Button>
+            </>
           }
         />
       </FadeIn>
@@ -207,6 +220,11 @@ export function AdminMembersPage() {
       )}
       {!drawerMember && flaggedSelection.isPending && (
         <AdminMemberCardLoadingDrawer onClose={closeDrawer} />
+      )}
+      {isSuppressionOpen && (
+        <AdminEmailSuppressionModal
+          onClose={() => setIsSuppressionOpen(false)}
+        />
       )}
     </AdminShell>
   );

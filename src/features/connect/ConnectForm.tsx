@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import {
   Avatar,
@@ -29,28 +29,39 @@ type FormMember = {
   openTo?: OpenToEntry[];
 };
 
-/** The reach-out form. Owns its field state; tells the parent when a valid
- *  message is submitted so the parent can simulate delivery. */
+/**
+ * The reach-out form.
+ *
+ * CONTROLLED, deliberately (PRD-03). The field state used to live here, so a
+ * refusal that replaced this form with a notice panel destroyed whatever the
+ * member had written. It now lives in `ConnectModal`, which outlives every
+ * panel the send can end on, and this component renders it.
+ */
 export function ConnectForm({
   member,
-  initialReason,
+  reason,
+  message,
   sending,
   error,
+  onReasonChange,
+  onMessageChange,
   onSubmit,
   onClose,
 }: {
   member: FormMember;
-  /** Preselects the reason (from an "open to" chip). */
-  initialReason?: string;
+  /** The chosen reason (seeded from an "open to" chip), owned by the parent. */
+  reason: string;
+  /** What the member has written so far, owned by the parent. */
+  message: string;
   sending: boolean;
   /** A failed send message to surface above the footer; null when all is well. */
   error?: string | null;
+  onReasonChange: (reason: string) => void;
+  onMessageChange: (message: string) => void;
   onSubmit: (message: string, reason: string) => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const [reason, setReason] = useState(initialReason ?? "");
-  const [message, setMessage] = useState("");
   const memberOpenTo = member.openTo ?? [];
 
   const canSend = message.trim().length > 0;
@@ -106,7 +117,7 @@ export function ConnectForm({
           id="connect-about"
           placeholder={t("connect:form.reasonPlaceholder")}
           value={reason || null}
-          onChange={(value) => setReason(value ?? "")}
+          onChange={(value) => onReasonChange(value ?? "")}
           disabled={sending}
           options={reasonOptions}
         />
@@ -116,7 +127,7 @@ export function ConnectForm({
           id="connect-msg"
           placeholder={t("connect:form.messagePlaceholder")}
           value={message}
-          onChange={(event) => setMessage(event.target.value)}
+          onChange={(event) => onMessageChange(event.target.value)}
           disabled={sending}
         />
       </FormField>

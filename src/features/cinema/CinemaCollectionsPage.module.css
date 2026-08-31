@@ -29,7 +29,7 @@
   z-index: 2;
 }
 .eyebrow {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -50,7 +50,7 @@
   font-weight: 400;
 }
 .sub {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.72;
   max-width: 52ch;
@@ -59,12 +59,12 @@
 .quote {
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 26px 28px;
 }
 .quoteText {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.48;
   letter-spacing: -0.006em;
@@ -74,7 +74,7 @@
   color: var(--accent);
 }
 .quoteAttr {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -93,7 +93,7 @@
   flex-wrap: wrap;
 }
 .sbLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -101,10 +101,10 @@
   margin-right: 4px;
 }
 .chip {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.7);
   padding: 7px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--cream-rgb), 0.16);
   cursor: pointer;
   background: transparent;
@@ -128,7 +128,7 @@
 }
 .sbRight {
   margin-left: auto;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.5);
 }
 
@@ -139,7 +139,7 @@
   gap: 0;
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   overflow: hidden;
   margin-bottom: 28px;
   transition:
@@ -199,7 +199,7 @@
   justify-content: center;
 }
 .featTag {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -228,7 +228,7 @@
   color: var(--accent);
 }
 .featBody {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.68;
   margin-top: 14px;
@@ -247,7 +247,7 @@
   background: rgba(var(--accent-rgb), 0.22);
   color: var(--accent);
   font-family: var(--serif);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -255,7 +255,7 @@
   flex: none;
 }
 .curatorName {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.62);
 }
 .curatorName strong {
@@ -268,7 +268,7 @@
   margin-top: 20px;
   padding-top: 18px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.12);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.5);
   flex-wrap: wrap;
 }
@@ -287,7 +287,7 @@
 .card {
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   overflow: hidden;
   color: inherit;
   transition:
@@ -340,7 +340,7 @@
   flex: 1;
 }
 .cardTag {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -349,7 +349,7 @@
 .cardTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.14;
   letter-spacing: -0.01em;
@@ -359,7 +359,7 @@
   color: var(--accent);
 }
 .cardDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.6;
   flex: 1;
@@ -379,7 +379,7 @@
   background: rgba(var(--accent-rgb), 0.22);
   color: var(--accent);
   font-family: var(--serif);
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -387,7 +387,7 @@
   flex: none;
 }
 .cardCuratorName {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.62);
 }
 .cardCuratorName strong {
@@ -398,7 +398,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -421,7 +421,7 @@
 .propose {
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 52px 56px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -451,7 +451,7 @@
   z-index: 2;
 }
 .proposeEb {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -471,7 +471,7 @@
   color: var(--accent);
 }
 .proposeBody {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.7;
   max-width: 44ch;
@@ -488,14 +488,14 @@
   z-index: 2;
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 24px 26px;
 }
 .step {
   display: flex;
   gap: 14px;
   margin-bottom: 16px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.5;
   align-items: flex-start;
@@ -509,7 +509,7 @@
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.28);
   color: var(--accent-soft);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   display: flex;
   align-items: center;

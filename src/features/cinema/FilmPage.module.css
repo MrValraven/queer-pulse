@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   padding: 14px 0 18px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
@@ -28,7 +28,7 @@
 }
 .crumbBack {
   margin-left: auto;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 
@@ -66,10 +66,10 @@
 }
 .poster {
   aspect-ratio: 3/4;
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   position: relative;
-  box-shadow: 0 28px 60px -28px rgba(var(--plum-rgb), 0.42);
+  box-shadow: var(--shadow-e4);
 }
 .playFab {
   position: absolute;
@@ -110,7 +110,7 @@
   bottom: 14px;
   left: 14px;
   right: 14px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -121,11 +121,14 @@
   margin-top: 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 18px 20px;
 }
 .tipjarH {
-  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -134,14 +137,14 @@
 }
 .tipjarName {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
 }
 .tipjarName em {
   font-style: italic;
 }
 .tipjarSub {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 4px;
   font-style: italic;
@@ -157,10 +160,10 @@
   flex: 1;
   min-width: 48px;
   padding: 8px 0;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--line-rgb), 0.16);
   text-align: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   cursor: pointer;
@@ -182,7 +185,7 @@
 }
 .tipFoot {
   margin-top: 12px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   text-align: center;
   font-style: italic;
@@ -199,7 +202,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -230,7 +233,7 @@
 .meta {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   margin-top: 16px;
 }
@@ -249,7 +252,7 @@
   padding: 20px 22px;
   border-left: 3px solid var(--accent);
   background: rgba(var(--accent-rgb), 0.05);
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 var(--radius-14) var(--radius-14) 0;
 }
 .cpAv {
   width: 38px;
@@ -259,7 +262,7 @@
   color: var(--accent-ink);
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--text-14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +270,7 @@
 }
 .cpText {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.55;
 }
@@ -278,7 +281,7 @@
   display: block;
   font-family: var(--sans);
   font-style: normal;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 8px;
   font-weight: 600;
@@ -287,7 +290,7 @@
 .watchBlock {
   margin-top: 28px;
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 .wbTabs {
@@ -315,13 +318,13 @@
 }
 .wbTab > span:first-child {
   display: block;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .tw {
   display: block;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 2px;
 }
@@ -338,7 +341,7 @@
 .iconBtn {
   width: 46px;
   height: 46px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   display: flex;
   align-items: center;
@@ -370,7 +373,7 @@
   display: flex;
   gap: 10px;
   padding: 16px 18px 18px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -397,8 +400,8 @@
   padding: 14px 18px;
   background: rgba(var(--accent-rgb), 0.08);
   border: 1px solid rgba(var(--accent-rgb), 0.2);
-  border-radius: 14px;
-  font-size: 13px;
+  border-radius: var(--radius-14);
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .liveStrip .live {
@@ -431,7 +434,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .fact .k {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -439,7 +442,7 @@
   margin-bottom: 5px;
 }
 .fact .v {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   font-weight: 500;
   display: flex;
@@ -482,7 +485,7 @@
 .noteFull {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 28px 30px;
 }
 .nfHead {
@@ -506,17 +509,17 @@
 }
 .nfName {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
 }
 .nfRole {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   font-style: italic;
   font-family: var(--serif);
 }
 .nfBody p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   line-height: 1.75;
   margin-bottom: 14px;
@@ -526,7 +529,7 @@
   color: var(--accent-ink);
 }
 .syn p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.78;
   margin-bottom: 12px;
@@ -535,7 +538,7 @@
   font-style: italic;
 }
 .syn .source {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-style: italic;
   font-family: var(--serif);
@@ -560,7 +563,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 13px;
+  font-size: var(--text-13);
   flex: none;
   background: rgba(var(--plum-rgb), 0.08);
   color: var(--text-strong);
@@ -574,12 +577,12 @@
   color: var(--jade);
 }
 .ccName {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .ccRole {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .ccTags {
@@ -589,10 +592,10 @@
   margin-top: 5px;
 }
 .ccTags span {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   padding: 2px 7px;
 }
 .ccTags span.member {
@@ -610,7 +613,7 @@
 .fmCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 22px 24px;
 }
 .fmHead {
@@ -626,7 +629,7 @@
   color: var(--accent-ink);
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -634,7 +637,7 @@
 }
 .fmName {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   display: inline-block;
   transition: color 0.2s var(--ease);
@@ -646,13 +649,13 @@ a.fmName:hover {
   font-style: italic;
 }
 .fmRole {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-style: italic;
   font-family: var(--serif);
 }
 .fmBio {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.62;
   margin-top: 14px;
@@ -666,12 +669,12 @@ a.fmName:hover {
   border-top: 1px dashed rgba(var(--line-rgb), 0.12);
 }
 .fmStat {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
 }
 .fmStat .n {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   display: block;
 }
@@ -721,7 +724,7 @@ a.fmName:hover {
   align-items: center;
 }
 .splitInner .eb {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -740,7 +743,7 @@ a.fmName:hover {
   color: var(--accent);
 }
 .splitInner p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.7);
   line-height: 1.7;
   margin-top: 20px;
@@ -749,11 +752,11 @@ a.fmName:hover {
 .splitBar {
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 28px 30px;
 }
 .sbTitle {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -775,7 +778,7 @@ a.fmName:hover {
 .sbBar {
   margin-top: 24px;
   height: 36px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   display: flex;
   overflow: hidden;
   border: 1px solid rgba(var(--cream-rgb), 0.14);
@@ -784,7 +787,7 @@ a.fmName:hover {
   display: flex;
   align-items: center;
   padding: 0 12px;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -811,12 +814,12 @@ a.fmName:hover {
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
   margin-top: 18px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.62);
 }
 .sbLegend .v {
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: rgba(var(--cream-rgb), 1);
   display: block;
 }
@@ -843,7 +846,7 @@ a.fmName:hover {
   color: var(--accent);
 }
 .related .sub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   margin-bottom: 32px;
 }
@@ -860,7 +863,7 @@ a.fmName:hover {
 }
 .rfPoster {
   aspect-ratio: 3/4;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   position: relative;
   border: 1px solid rgba(var(--line-rgb), 0.08);
@@ -871,11 +874,11 @@ a.fmName:hover {
 @media (hover: hover) {
   .rf:hover .rfPoster {
     transform: translateY(-3px);
-    box-shadow: 0 16px 32px -22px rgba(var(--plum-rgb), 0.32);
+    box-shadow: var(--shadow-lift);
   }
 }
 .rfEb {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -883,7 +886,7 @@ a.fmName:hover {
 }
 .rfTitle {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   line-height: 1.18;
   letter-spacing: -0.01em;
@@ -892,7 +895,7 @@ a.fmName:hover {
   font-style: italic;
 }
 .rfMeta {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   font-style: italic;
   font-family: var(--serif);
@@ -900,7 +903,7 @@ a.fmName:hover {
 .rfReason {
   align-self: flex-start;
   margin-top: 2px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);

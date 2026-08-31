@@ -26,6 +26,13 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * them. Sourced from moderator/admin-only endpoints that 403 for anyone else;
  * demo mode is an honest empty queue and empty table (see adminHousingGroups.data.ts).
  *
+ * The join-request queue is paginated and asks the server for PENDING requests
+ * (ENG-41). It used to pull the newest 200 requests in every status and filter
+ * to the pending ones here, which meant a group carrying 200 decided requests
+ * newer than one pending request showed an empty queue while somebody waited.
+ * The count line quotes the server's `total`, so the number on screen is how
+ * many people are actually waiting rather than how many rows happened to arrive.
+ *
  * The co-op relocation queue this comment used to defer has been REMOVED, not
  * deferred: `coop_relocation_requests` never had a submission affordance, so no
  * member could ever file one and the table was always empty. Building a console
@@ -35,15 +42,26 @@ import styles from "./AdminHousingCoopsPage.module.css";
 export function AdminHousingGroupsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { data, isLoading, isError, error } = useAdminGroupJoinRequests();
+  const {
+    requests: pendingRequests,
+    total,
+    isLoading,
+    isError,
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAdminGroupJoinRequests();
   const triage = useTriageGroupJoinRequest();
   const [resolved, setResolved] = useState<Set<string>>(new Set());
 
   const forbidden =
     isError && error instanceof ApiError && error.status === 403;
 
-  const requests = (data ?? []).filter(
-    (request) => request.status === "pending" && !resolved.has(request.id),
+  // The status filter now lives in the query (ENG-41), so the only thing left to
+  // drop client-side is what this moderator has already decided this session.
+  const requests = pendingRequests.filter(
+    (request) => !resolved.has(request.id),
   );
 
   function decide(
@@ -96,6 +114,11 @@ export function AdminHousingGroupsPage() {
         <h2 className={styles.sectionTitle}>
           {t("admin:housingGroups.requests.title")}
         </h2>
+        {!isLoading && !isError && total > 0 && (
+          <p className={styles.queueCount} role="status">
+            {t("admin:housingGroups.requests.pendingCount", { count: total })}
+          </p>
+        )}
         {isLoading ? (
           <div className={styles.rows}>
             {[0, 1, 2].map((skeletonIndex) => (
@@ -119,51 +142,67 @@ export function AdminHousingGroupsPage() {
             {t("admin:housingGroups.requests.empty")}
           </p>
         ) : (
-          <div className={styles.rows}>
-            {requests.map((request, index) => (
-              <FadeIn key={request.id} delay={Math.min(index, 8) * 50}>
-                <div className={styles.row}>
-                  <div className={styles.rowMain}>
-                    <div className={styles.rowTop}>
-                      <span className={styles.rowName}>{request.name}</span>
-                      <AdminChip tone="plum" dot>
-                        {request.group?.name ??
-                          t("admin:housingGroups.requests.unknownGroup")}
-                      </AdminChip>
-                      {request.mutualConnections != null &&
-                        request.mutualConnections > 0 && (
-                          <AdminChip tone="jade">
-                            {t("admin:housingGroups.requests.mutuals", {
-                              count: request.mutualConnections,
-                            })}
-                          </AdminChip>
-                        )}
+          <>
+            <div className={styles.rows}>
+              {requests.map((request, index) => (
+                <FadeIn key={request.id} delay={Math.min(index, 8) * 50}>
+                  <div className={styles.row}>
+                    <div className={styles.rowMain}>
+                      <div className={styles.rowTop}>
+                        <span className={styles.rowName}>{request.name}</span>
+                        <AdminChip tone="plum" dot>
+                          {request.group?.name ??
+                            t("admin:housingGroups.requests.unknownGroup")}
+                        </AdminChip>
+                        {request.mutualConnections != null &&
+                          request.mutualConnections > 0 && (
+                            <AdminChip tone="jade">
+                              {t("admin:housingGroups.requests.mutuals", {
+                                count: request.mutualConnections,
+                              })}
+                            </AdminChip>
+                          )}
+                      </div>
+                      <div className={styles.rowMeta}>
+                        {request.relationship}
+                        {request.note ? ` · "${request.note}"` : ""}
+                      </div>
                     </div>
-                    <div className={styles.rowMeta}>
-                      {request.relationship}
-                      {request.note ? ` · "${request.note}"` : ""}
+                    <div className={styles.rowActions}>
+                      <Button
+                        variant="ghost"
+                        size="md"
+                        onClick={() => decide(request, "declined")}
+                      >
+                        {t("admin:housingGroups.requests.declineCta")}
+                      </Button>
+                      <Button
+                        variant="jade"
+                        size="md"
+                        onClick={() => decide(request, "approved")}
+                      >
+                        {t("admin:housingGroups.requests.approveCta")}
+                      </Button>
                     </div>
                   </div>
-                  <div className={styles.rowActions}>
-                    <Button
-                      variant="ghost"
-                      size="md"
-                      onClick={() => decide(request, "declined")}
-                    >
-                      {t("admin:housingGroups.requests.declineCta")}
-                    </Button>
-                    <Button
-                      variant="jade"
-                      size="md"
-                      onClick={() => decide(request, "approved")}
-                    >
-                      {t("admin:housingGroups.requests.approveCta")}
-                    </Button>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+                </FadeIn>
+              ))}
+            </div>
+            {hasNextPage && (
+              <div className={styles.loadMore}>
+                <Button
+                  variant="ghost"
+                  size="md"
+                  disabled={isFetchingNextPage}
+                  onClick={() => void fetchNextPage()}
+                >
+                  {isFetchingNextPage
+                    ? t("admin:housingGroups.requests.loadingMore")
+                    : t("admin:housingGroups.requests.loadMore")}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
 

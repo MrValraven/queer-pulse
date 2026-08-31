@@ -322,3 +322,29 @@ export const replaceCardCode = (slug: string, cardId: string) =>
  *  check it without a QueerPulse account. */
 export const verifyCard = (token: string) =>
   apiGet<CardVerificationDTO>(`/cards/verify/${encodeURIComponent(token)}`);
+
+/**
+ * One of the caller's own communities, seen only through the question the
+ * wallet's empty state asks: is this somewhere a card could come from?
+ *
+ * A narrow read of `GET /me/communities`, whose full row shape lives in
+ * `features/communities/api/communities.api.ts` as `MyCommunityDTO`. Typed
+ * separately here so the cards feature owns the three fields it renders and
+ * nothing more, rather than pulling the whole membership map's type in for a
+ * name and a boolean.
+ *
+ * `hasCardProgram` is resolved server-side in `CommunitiesService.myCommunities`
+ * and is true only while the programme is ENABLED, so a paused one never sends
+ * a member to a community that cannot issue anything today.
+ */
+export interface MyCommunityCardProgramDTO {
+  slug: string;
+  name: string;
+  hasCardProgram: boolean;
+}
+
+/** GET /me/communities, read for `hasCardProgram`. One request for the whole
+ *  membership map: asking `GET /communities/:slug/card` per community would be
+ *  N requests to render a single empty state. */
+export const getMyCommunityCardPrograms = () =>
+  apiGet<MyCommunityCardProgramDTO[]>("/me/communities");

@@ -15,6 +15,7 @@ export function DirectoryResultsHeader({
   total,
   mappableCount,
   loading,
+  isError = false,
   view,
   nearMeSlot,
   activeFiltersSlot,
@@ -23,6 +24,10 @@ export function DirectoryResultsHeader({
   total: number;
   mappableCount: number;
   loading: boolean;
+  /** True when the directory read failed (DES-25). The count is withheld: a
+   *  failed read knows no totals, and "Showing 0 of 0 places" would contradict
+   *  the error panel below it. */
+  isError?: boolean;
   /** Only read for the map view's "N of these are on the map" note. */
   view: string;
   /** The "use my location" control, passed in rather than built here so this
@@ -47,7 +52,7 @@ export function DirectoryResultsHeader({
             <span>
               {loading ? (
                 <>{t("marketing:directory.loading")}</>
-              ) : (
+              ) : isError ? null : (
                 <>
                   <Translation
                     i18nKey="marketing:directory.count"

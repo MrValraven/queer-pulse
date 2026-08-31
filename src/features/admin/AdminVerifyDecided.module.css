@@ -6,7 +6,7 @@
   max-width: 60ch;
   margin: 0 0 16px;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -27,7 +27,7 @@
    reviewer never reads an empty result as "this person never applied". */
 .scopeNote {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.45;
   color: var(--ink-40);
 }
@@ -40,7 +40,7 @@
   gap: 10px;
   margin-top: 12px;
   padding: 12px 14px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   background: rgba(var(--jade-rgb), 0.07);
 }
 
@@ -53,7 +53,7 @@
 
 .inviteNote {
   flex: 1 1 220px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -64,7 +64,7 @@
 
 .inviteError {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--accent-text);
 }

@@ -1,14 +1,14 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(18, 11, 24, 0.92);
-  z-index: 300;
+  background: var(--scrim-strong);
+  z-index: var(--z-lightbox);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  backdrop-filter: blur(6px);
+  backdrop-filter: var(--blur-md);
   animation: fade 0.3s var(--ease);
 }
 @keyframes fade {
@@ -48,7 +48,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .counter {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(var(--cream-rgb), 0.7);
@@ -69,7 +69,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 19px;
+  font-size: var(--text-19);
   transition: background 0.2s var(--ease);
 }
 @media (hover: hover) {
@@ -119,7 +119,7 @@
   padding: 20px 24px;
   color: rgba(var(--cream-rgb), 1);
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   font-weight: 400;
   letter-spacing: -0.01em;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
@@ -128,13 +128,13 @@
   position: absolute;
   top: 16px;
   left: 16px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   padding: 5px 11px;
-  border-radius: 8px;
-  background: rgba(18, 11, 24, 0.55);
+  border-radius: var(--radius-8);
+  background: rgba(var(--scrim-rgb), 0.55);
   color: rgba(var(--cream-rgb), 1);
 }
 .tagAccent {

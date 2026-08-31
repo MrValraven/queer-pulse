@@ -8,9 +8,9 @@
   padding: 12px 14px;
   margin-bottom: 12px;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   cursor: pointer;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.45;
   color: var(--ink);
   transition:
@@ -31,7 +31,7 @@
   gap: 2px;
 }
 .checkHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -39,13 +39,13 @@
 .guide {
   margin-bottom: 14px;
   padding: 12px 14px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--jade-rgb), 0.07);
   border: 1px solid rgba(var(--jade-rgb), 0.16);
 }
 .guideTitle {
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
   color: var(--ink);
 }
@@ -55,18 +55,18 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.45;
   color: var(--ink-60);
 }
 /* Inline field hint + error for the optional virtual-tour link. */
 .fieldHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-block-start: 4px;
 }
 .fieldError {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--danger);
   margin-block-start: 4px;
 }
@@ -75,7 +75,7 @@
  * from ApplicationModals so the chip groups read as ordinary fields. */
 .chipLabel {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   letter-spacing: 0.02em;
@@ -93,7 +93,7 @@
 }
 .photoLabel {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   letter-spacing: 0.02em;
@@ -110,7 +110,7 @@
 .photoItem {
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   overflow: hidden;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   background: var(--cream);
@@ -126,8 +126,8 @@
   inset-block-start: 6px;
   inset-inline-start: 6px;
   padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 11px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -143,7 +143,7 @@
   display: grid;
   place-items: center;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   color: var(--cream);
   background: rgba(var(--plum-rgb), 0.72);

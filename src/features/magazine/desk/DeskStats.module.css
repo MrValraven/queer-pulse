@@ -30,7 +30,7 @@
 }
 
 .stat span {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 

@@ -56,5 +56,6 @@ export function useMagazineSections() {
     sections: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

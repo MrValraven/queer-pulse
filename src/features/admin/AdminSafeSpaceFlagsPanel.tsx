@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  FadeIn,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminSeg, AdminTabs } from "./ui";
 import { FLAG_STATE_OPTIONS } from "./adminSafeSpaceGovernance.data";
@@ -28,10 +32,21 @@ export function AdminSafeSpaceFlagsPanel() {
   const [pane, setPane] = useState<PaneId>("flags");
   const [flagState, setFlagState] = useState<AdminFlagState>("open");
 
-  const { flags, total, isLoading } = useAdminSafeSpaceFlags({
+  const {
+    flags,
+    total,
+    isLoading,
+    isError: hasFlagsError,
+    refetch: refetchFlags,
+  } = useAdminSafeSpaceFlags({
     state: flagState,
   });
-  const { due, isLoading: isReReviewLoading } = useAdminSafeSpaceReReviewDue();
+  const {
+    due,
+    isLoading: isReReviewLoading,
+    isError: hasReReviewError,
+    refetch: refetchReReview,
+  } = useAdminSafeSpaceReReviewDue();
 
   return (
     <>
@@ -74,11 +89,20 @@ export function AdminSafeSpaceFlagsPanel() {
               threshold: 3,
             })}
           </p>
+          {/* A failed fetch used to fall through to the rows component's
+              "nothing in this view" panel, which tells a moderator the queue
+              is clear when it is only unreachable (DES-22). */}
           {isLoading ? (
             <div className={styles.rows}>
               <SkeletonLine width="100%" height={78} />
               <SkeletonLine width="100%" height={78} />
             </div>
+          ) : hasFlagsError ? (
+            <LoadErrorState
+              onRetry={() => void refetchFlags()}
+              title={t("safety:governance.loadError.flags.title")}
+              description={t("safety:governance.loadError.flags.body")}
+            />
           ) : (
             <AdminSafeSpaceFlagRows flags={flags} />
           )}
@@ -93,6 +117,12 @@ export function AdminSafeSpaceFlagsPanel() {
               <SkeletonLine width="100%" height={78} />
               <SkeletonLine width="100%" height={78} />
             </div>
+          ) : hasReReviewError ? (
+            <LoadErrorState
+              onRetry={() => void refetchReReview()}
+              title={t("safety:governance.loadError.reReview.title")}
+              description={t("safety:governance.loadError.reReview.body")}
+            />
           ) : (
             <AdminSafeSpaceReReviewRows spaces={due} />
           )}

@@ -7,9 +7,10 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 300;
-  background: rgba(var(--plum-rgb), 0.5);
-  backdrop-filter: blur(4px);
+  /* Full-screen app-wide takeover, same tier as the lightbox/photo viewer. */
+  z-index: var(--z-lightbox);
+  background: var(--scrim-strong);
+  backdrop-filter: var(--blur-sm);
   animation: vgOverlayIn var(--dur-base) var(--ease-out);
 }
 .shell {
@@ -18,9 +19,9 @@
   display: flex;
   flex-direction: column;
   background: var(--cream);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   overflow: hidden;
-  box-shadow: 0 50px 110px -40px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-e4);
   animation: vgShellIn var(--dur-slow) var(--ease-out);
 }
 @keyframes vgOverlayIn {
@@ -57,7 +58,7 @@
   flex: none;
 }
 .eyebrow {
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -74,7 +75,7 @@
 }
 .pron {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 500;
   color: var(--ink-40);
 }
@@ -87,14 +88,14 @@
   width: 26px;
   height: 26px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-60);
   cursor: pointer;
 }
@@ -122,7 +123,7 @@
   padding: 7px 14px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transition: border-color 0.2s var(--ease);
 }
 /* Visible keyboard focus for the borderless inner input. */
@@ -140,7 +141,7 @@
   outline: none;
   width: 130px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink);
 }
 
@@ -149,16 +150,16 @@
   gap: 3px;
   padding: 3px;
   background: rgba(var(--plum-rgb), 0.05);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
 }
 .mode {
   border: none;
   background: none;
   cursor: pointer;
   padding: 7px 13px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   transition:
@@ -168,7 +169,7 @@
 .modeOn {
   background: var(--paper);
   color: var(--text-strong);
-  box-shadow: 0 2px 6px -2px rgba(var(--plum-rgb), 0.25);
+  box-shadow: var(--shadow-e2);
 }
 
 .close {
@@ -219,7 +220,7 @@
   top: 100%;
   left: 22px;
   right: 22px;
-  z-index: 5;
+  z-index: var(--z-popover);
   max-width: 340px;
   max-height: 260px;
   overflow-y: auto;
@@ -228,8 +229,8 @@
   list-style: none;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 16px;
-  box-shadow: 0 20px 44px -24px rgba(var(--plum-rgb), 0.5);
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-e3);
 }
 .memberFinderResults li + li {
   margin-top: 2px;
@@ -241,7 +242,7 @@
   width: 100%;
   padding: 8px 10px;
   border: none;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: none;
   font: inherit;
   text-align: left;
@@ -262,7 +263,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -270,13 +271,13 @@
   color: var(--ink);
 }
 .memberFinderResultHandle {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 500;
   color: var(--ink-40);
 }
 .memberFinderEmpty {
   padding: 10px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 
@@ -499,15 +500,15 @@
 /* tooltip */
 .tip {
   position: absolute;
-  z-index: 30;
+  z-index: var(--z-popover);
   max-width: 240px;
   padding: 11px 14px;
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   pointer-events: none;
-  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-e3);
   animation: vgTipIn var(--dur-fast) var(--ease-out);
 }
 @keyframes vgTipIn {
@@ -523,11 +524,11 @@
 .tipName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 .tipName span {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.6);
 }
 .tipRole {
@@ -540,7 +541,7 @@
 .tipTag {
   display: inline-block;
   margin-top: 5px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -548,19 +549,19 @@
 }
 .tipMeta {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: rgba(var(--cream-rgb), 0.55);
 }
 .tipMetaWd {
   margin-top: 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--accent-soft);
 }
 .tipHint {
   margin-top: 7px;
   padding-top: 6px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.14);
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   color: rgba(var(--cream-rgb), 0.5);
 }
 
@@ -574,11 +575,11 @@
   align-items: center;
   gap: 10px;
   padding: 9px 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 13px;
-  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.5);
+  font-size: var(--text-13);
+  box-shadow: var(--shadow-e3);
 }
 .pathbar b {
   color: var(--accent-soft);
@@ -588,10 +589,10 @@
   border: none;
   cursor: pointer;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--cream-rgb), 0.16);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 
 .hint {
@@ -599,7 +600,7 @@
   bottom: 14px;
   left: 18px;
   max-width: 54%;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   line-height: 1.4;
   pointer-events: none;
@@ -615,11 +616,11 @@
 .zoom button {
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   background: var(--paper);
   cursor: pointer;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-60);
   display: flex;
   align-items: center;
@@ -658,10 +659,15 @@
     inset: auto 0 0 0;
     width: auto;
     max-height: 78%;
-    z-index: 5;
+    /* This IS the ModalSheet role (a node's details surfacing as a bottom
+       sheet), so it takes the same tier as the shared Modal/ModalSheet. */
+    z-index: var(--z-modal);
     border-left: none;
     border-top: 1px solid rgba(var(--line-rgb), 0.12);
-    border-radius: 20px 20px 0 0;
+    border-radius: var(--radius-20) var(--radius-20) 0 0;
+    /* Upward-cast (negative y-offset), not the elevation scale's
+       downward-only shadows: the sheet is docked to the bottom edge, so its
+       shadow has to fall upward over the canvas it's covering. Kept literal. */
     box-shadow: 0 -20px 50px -26px rgba(0, 0, 0, 0.5);
     padding-top: 30px;
     padding-bottom: max(22px, env(safe-area-inset-bottom));
@@ -713,7 +719,7 @@
     transform: translateX(-50%);
     width: 42px;
     height: 4px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     background: rgba(var(--plum-rgb), 0.22);
   }
   .insSheetClose {
@@ -744,8 +750,9 @@
 }
 .insGrab:focus-visible,
 .insSheetClose:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .insHead {
   display: flex;
@@ -757,25 +764,25 @@
   width: 50px;
   height: 50px;
   flex: none;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 .insN {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--text-strong);
 }
 .insP {
   margin-top: 3px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .sealed {
@@ -785,9 +792,9 @@
   margin-bottom: 14px;
   padding: 9px 12px;
   border: 1px dashed rgba(var(--line-rgb), 0.18);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--plum-rgb), 0.04);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-60);
 }
 .sealed svg {
@@ -799,17 +806,17 @@
 .flag {
   margin-bottom: 10px;
   padding: 11px 13px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 .flag b {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 700;
 }
 .flag span {
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.45;
   color: var(--ink-60);
 }
@@ -847,19 +854,19 @@
 .stat {
   padding: 10px;
   border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: var(--cream);
   text-align: center;
 }
 .statV {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   letter-spacing: -0.01em;
   color: var(--text-strong);
 }
 .statL {
   margin-top: 2px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -869,14 +876,14 @@
 }
 .insT {
   margin-bottom: 9px;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-40);
 }
 .insNone {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .insRow {
@@ -886,7 +893,7 @@
   width: 100%;
   padding: 7px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: none;
   cursor: pointer;
   text-align: left;
@@ -914,19 +921,19 @@
   width: 30px;
   height: 30px;
   flex: none;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 .insRowTx {
   min-width: 0;
 }
 .rn {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -935,13 +942,13 @@
   margin-top: 2px;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   line-height: 1.4;
 }
 .mut {
   margin-left: 6px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -949,7 +956,7 @@
 }
 .tag {
   margin-left: 6px;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -959,12 +966,12 @@
 .affected {
   margin: 6px 0 16px;
   padding: 13px 15px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--plum-rgb), 0.04);
 }
 .affected p {
   margin-top: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -986,7 +993,7 @@
   width: 54px;
   height: 54px;
   margin: 0 auto 14px;
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   background: rgba(var(--plum-rgb), 0.05);
   color: var(--ink-40);
   display: flex;
@@ -997,12 +1004,12 @@
 .insEmpty h4 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--text-strong);
 }
 .insEmpty p {
   margin-top: 7px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
 }
 
@@ -1026,7 +1033,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 500;
   color: var(--ink-60);
   white-space: nowrap;
@@ -1054,21 +1061,21 @@
   width: 18px;
   height: 3px;
   flex: none;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   background: var(--jade);
 }
 .legLineInvite {
   width: 18px;
   height: 3px;
   flex: none;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   background: rgba(var(--amber-rgb), 0.85);
 }
 .legLineVouch {
   width: 18px;
   height: 3px;
   flex: none;
-  border-radius: 2px;
+  border-radius: var(--radius-2);
   background: rgba(var(--plum-rgb), 0.55);
 }
 .legLineWithdrawn {
@@ -1081,7 +1088,7 @@
   width: 12px;
   height: 12px;
   flex: none;
-  border-radius: 3px;
+  border-radius: var(--radius-3);
   background: repeating-linear-gradient(
     45deg,
     rgba(var(--plum-rgb), 0.1),
@@ -1105,7 +1112,7 @@
   min-width: 64px;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .replay {
@@ -1114,11 +1121,11 @@
   gap: 6px;
   padding: 7px 13px;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   cursor: pointer;
 }

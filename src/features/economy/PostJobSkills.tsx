@@ -1,4 +1,5 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
+import { FiPlus, FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SKILL_SUGGESTIONS } from "./postJob.data";
 import type { PostJobForm } from "./usePostJobForm";
@@ -90,7 +91,7 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => add(m)}
               >
-                <span aria-hidden>+</span>
+                <FiPlus aria-hidden />
                 {m}
               </button>
             ))}
@@ -110,7 +111,7 @@ export function PostJobSkills({ form }: { form: PostJobForm }) {
                 })}
                 onClick={() => toggleIn("tags", tag)}
               >
-                ×
+                <FiX aria-hidden />
               </button>
             </span>
           ))}

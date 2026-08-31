@@ -1,5 +1,6 @@
 import { FiCheck } from "react-icons/fi";
 import { ChipSelect, FormField } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   AD_OPTIONS,
@@ -22,7 +23,12 @@ export function CinemaSubmitStep2({ form }: { form: SubmitForm }) {
     <div className={styles.formBlock}>
       <FbHead
         num={2}
-        heading={t("cinema:submit.form.step2.heading")}
+        heading={
+          <Translation
+            i18nKey="cinema:submit.form.step2.heading"
+            components={{ em: <em /> }}
+          />
+        }
         sub={t("cinema:submit.form.step2.sub")}
       />
 
@@ -185,7 +191,12 @@ export function CinemaSubmitStep4({ form }: { form: SubmitForm }) {
     <div className={styles.formBlock}>
       <FbHead
         num={4}
-        heading={t("cinema:submit.form.step4.heading")}
+        heading={
+          <Translation
+            i18nKey="cinema:submit.form.step4.heading"
+            components={{ em: <em /> }}
+          />
+        }
         sub={t("cinema:submit.form.step4.sub")}
       />
 

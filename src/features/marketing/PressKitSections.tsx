@@ -10,6 +10,7 @@ import {
   buildLogos,
   buildSwatches,
 } from "./pressKit.data";
+import { LoadErrorState } from "../../shared/components/ui";
 import { usePressKit } from "./api/usePressKit";
 import { PressKitDownloadModal } from "./PressKitDownloadModal";
 import { PRESS_ASSETS, buildKitPreview } from "./pressKitAssets.data";
@@ -225,8 +226,10 @@ function teamInitials(name: string): string {
 }
 
 export function TeamSection() {
-  const { contacts } = usePressKit();
-  if (contacts.length === 0) return null;
+  const { contacts, isError, refetch } = usePressKit();
+  // DES-22: an unpublished section and a failed read both arrive as an empty
+  // array. Only the first one is allowed to make the section disappear.
+  if (contacts.length === 0 && !isError) return null;
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -244,6 +247,7 @@ export function TeamSection() {
           components={{ em: <em /> }}
         />
       </p>
+      {isError && <LoadErrorState compact onRetry={refetch} />}
       <div className={styles.teamGrid}>
         {contacts.map((contact, index) => {
           const tint =
@@ -283,8 +287,8 @@ export function TeamSection() {
 export function FactsSection() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { facts } = usePressKit();
-  if (facts.length === 0) return null;
+  const { facts, isError, refetch } = usePressKit();
+  if (facts.length === 0 && !isError) return null;
   const asOf = fmt.date(FACTS_AS_OF, {
     day: "numeric",
     month: "long",
@@ -308,6 +312,7 @@ export function FactsSection() {
           components={{ em: <em /> }}
         />
       </p>
+      {isError && <LoadErrorState compact onRetry={refetch} />}
       <div className={styles.factsGrid}>
         {facts.map((fact) => (
           <div className={styles.fact} key={fact.key}>
@@ -321,8 +326,8 @@ export function FactsSection() {
 }
 
 export function CoverageSection() {
-  const { coverage } = usePressKit();
-  if (coverage.length === 0) return null;
+  const { coverage, isError, refetch } = usePressKit();
+  if (coverage.length === 0 && !isError) return null;
   return (
     <section className={styles.sec}>
       <div className={styles.secH}>
@@ -340,6 +345,7 @@ export function CoverageSection() {
           components={{ em: <em /> }}
         />
       </p>
+      {isError && <LoadErrorState compact onRetry={refetch} />}
       <div className={styles.covList}>
         {coverage.map((item) => {
           const body = (

@@ -23,7 +23,7 @@
 }
 
 .tiny {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin: 0;
 }
@@ -40,7 +40,8 @@
 .bubble {
   max-width: 78%;
   padding: 10px 13px;
-  border-radius: 16px 16px 16px 4px;
+  border-radius: var(--radius-16) var(--radius-16) var(--radius-16)
+    var(--radius-4);
   background: rgba(var(--plum-rgb), 0.05);
   display: flex;
   flex-direction: column;
@@ -49,7 +50,8 @@
 
 .bubbleMine {
   background: rgba(var(--accent-rgb), 0.12);
-  border-radius: 16px 16px 4px 16px;
+  border-radius: var(--radius-16) var(--radius-16) var(--radius-4)
+    var(--radius-16);
 }
 
 .bubbleMeta {
@@ -60,19 +62,19 @@
 }
 
 .bubbleAuthor {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--plum);
 }
 
 .bubbleTime {
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
 }
 
 .bubbleBody {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.45;
   color: var(--ink-60);
   white-space: pre-wrap;
@@ -88,7 +90,7 @@
 .composer textarea {
   flex: 1;
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 10px 12px;
   background: var(--paper);
   min-height: 44px;
@@ -98,6 +100,7 @@
 }
 
 .composer textarea:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }

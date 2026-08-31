@@ -12,19 +12,19 @@
   margin-bottom: 16px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 5px 11px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
   background: rgba(var(--plum-rgb), 0.05);
 }
@@ -37,7 +37,7 @@
 
 .body {
   flex: 1 1 260px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
   color: var(--ink-60);
 }
@@ -52,7 +52,7 @@
   margin-bottom: 16px;
   background: rgba(var(--accent-rgb), 0.06);
   border: 1px solid rgba(var(--accent-rgb), 0.18);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
 }
 .badgeNotice svg {
   color: var(--accent-ink);
@@ -60,7 +60,7 @@
   margin-top: 2px;
 }
 .badgeNoticeText {
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.6;
   color: var(--ink);
 }

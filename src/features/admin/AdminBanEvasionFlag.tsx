@@ -97,11 +97,17 @@ function BanEvasionReason({
 
 export function AdminBanEvasionFlag({
   assessment,
+  noteKey = "admin:invites.banEvasion.note",
 }: {
   /** Undefined while the assessment is still loading, or when the queue was
    *  never able to fetch one. Renders nothing in both cases, and in the very
    *  common case of a clear applicant (`tier: "none"`). */
   assessment: BanEvasionAssessmentDTO | undefined;
+  /** Catalogue key for the closing note. Defaults to the invite-queue wording,
+   *  which speaks about an application. The member drawer passes its own,
+   *  because there the subject is already a member and there is no application
+   *  left to judge. */
+  noteKey?: string;
 }) {
   const { t, language } = useTranslation();
   if (!assessment || assessment.tier === "none") return null;
@@ -131,7 +137,7 @@ export function AdminBanEvasionFlag({
         ))}
       </ul>
 
-      <p className={styles.note}>{t("admin:invites.banEvasion.note")}</p>
+      <p className={styles.note}>{t(noteKey)}</p>
     </section>
   );
 }

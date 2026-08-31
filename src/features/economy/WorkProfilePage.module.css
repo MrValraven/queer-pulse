@@ -13,7 +13,7 @@
   border-bottom: 2px solid var(--line-strong);
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -33,7 +33,7 @@
   color: var(--accent);
 }
 .sub {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.6;
   max-width: 52ch;
@@ -46,7 +46,7 @@
   margin-bottom: 20px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
 }
 /* Placeholder for the safety section while the stored preferences load — the
    defaults must never be painted over someone's real disclosure settings. */
@@ -65,7 +65,7 @@
   color: var(--accent);
 }
 .sectionSub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 6px 0 20px;
@@ -81,7 +81,7 @@
   margin-bottom: 16px;
 }
 .fieldLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 7px;
@@ -94,11 +94,11 @@
 .fieldTextarea {
   width: 100%;
   font-family: inherit;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 11px 14px;
   transition: border-color 0.2s var(--ease);
 }
@@ -111,7 +111,7 @@
   border-color: var(--line-strong);
 }
 .fieldHint {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 6px;
   line-height: 1.5;
@@ -124,18 +124,18 @@
   padding: 5px;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   flex-wrap: wrap;
 }
 .segBtn {
   flex: 1 1 auto;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
   border: none;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   padding: 10px 14px;
   cursor: pointer;
   transition:
@@ -152,7 +152,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .segDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
   margin-top: 12px;
@@ -172,7 +172,7 @@
   text-align: left;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   padding: 14px 16px;
   cursor: pointer;
   transition:
@@ -188,7 +188,7 @@
   position: relative;
   width: 38px;
   height: 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.18);
   margin-top: 2px;
   transition: background 0.2s var(--ease);
@@ -215,12 +215,12 @@
   gap: 3px;
 }
 .toggleLabel {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 .toggleDesc {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -231,7 +231,7 @@
   align-items: center;
   gap: 6px;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 500;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.05);
@@ -282,7 +282,7 @@
 /* ---- Visibility matrix ---- */
 .matrix {
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 13px;
+  border-radius: var(--radius-13);
   overflow: hidden;
 }
 .matrixRow {
@@ -300,19 +300,19 @@
 }
 .matrixHead .matrixField,
 .matrixHead .matrixCell {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-40);
 }
 .matrixField {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
 }
 .matrixCell {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
@@ -332,7 +332,7 @@
 }
 .success {
   background: var(--plum);
-  border-radius: 24px;
+  border-radius: var(--radius-24);
   padding: 56px 48px;
   text-align: center;
 }
@@ -360,8 +360,8 @@
   color: var(--accent);
 }
 .successSub {
-  font-size: 15px;
-  color: rgba(253, 248, 240, 0.78);
+  font-size: var(--text-15);
+  color: rgba(var(--cream-rgb), 0.78);
   line-height: 1.6;
   max-width: 46ch;
   margin: 16px auto 32px;
@@ -383,7 +383,7 @@
   }
   .matrixRow {
     grid-template-columns: 1.4fr 1fr 1fr;
-    font-size: 12px;
+    font-size: var(--text-12);
   }
   .success {
     padding: 40px 24px;

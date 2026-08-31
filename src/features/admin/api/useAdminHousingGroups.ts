@@ -1,5 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import type { ItemsPage } from "../../../shared/api/pagination";
 import {
   ADMIN_GROUP_JOIN_REQUESTS_DEMO,
   ADMIN_GROUP_LISTINGS_DEMO,
@@ -20,18 +25,47 @@ export const ADMIN_GROUP_JOIN_REQUESTS_KEY =
 export const ADMIN_GROUP_LISTINGS_KEY = "admin-housing-group-listings";
 
 /**
- * Every group join request across all groups, for the admin triage queue. Demo
- * mode returns the colocated (empty) fixture and never hits the network — this
- * is a moderator/admin-only endpoint that 403s for anyone else.
+ * The PENDING group join requests across all groups, for the admin triage queue,
+ * paginated (ENG-41).
+ *
+ * Two things changed here, and the first one was a correctness bug rather than a
+ * truncation: this hook used to fetch every request in every status and the page
+ * filtered to `status === "pending"` in the browser. The endpoint capped that
+ * fetch at the newest 200 rows, so a group with 200 decided requests newer than
+ * a pending one showed the moderator an EMPTY queue while somebody waited. The
+ * filter now travels in the query, and `total` is the real number of people
+ * waiting rather than the length of whatever arrived. `fetchNextPage` walks the
+ * rest, stopping once `page * pageSize` reaches that total.
+ *
+ * Demo mode returns the colocated (empty) fixture as a single synthetic page and
+ * never hits the network: this is a moderator/admin-only endpoint that 403s for
+ * anyone else. Mirrors `useGroupListingQueue` beside it.
  */
 export function useAdminGroupJoinRequests() {
   const { demoMode } = useDemoMode();
-  return useQuery<AdminGroupJoinRequestDTO[]>({
+  const query = useInfiniteQuery<ItemsPage<AdminGroupJoinRequestDTO>>({
     queryKey: [ADMIN_GROUP_JOIN_REQUESTS_KEY, demoMode],
-    initialData: demoMode ? ADMIN_GROUP_JOIN_REQUESTS_DEMO : undefined,
-    queryFn: () =>
-      demoMode ? ADMIN_GROUP_JOIN_REQUESTS_DEMO : getAdminGroupJoinRequests(),
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) =>
+      demoMode
+        ? Promise.resolve({
+            items: ADMIN_GROUP_JOIN_REQUESTS_DEMO,
+            total: ADMIN_GROUP_JOIN_REQUESTS_DEMO.length,
+            page: 1,
+            pageSize: ADMIN_GROUP_JOIN_REQUESTS_DEMO.length || 1,
+          })
+        : getAdminGroupJoinRequests({
+            page: pageParam as number,
+            status: "pending",
+          }),
+    getNextPageParam: (lastPage) =>
+      lastPage.page * lastPage.pageSize < lastPage.total
+        ? lastPage.page + 1
+        : undefined,
   });
+  const requests = query.data?.pages.flatMap((page) => page.items) ?? [];
+  const total = query.data?.pages[0]?.total ?? 0;
+  return { ...query, requests, total };
 }
 
 /** Every group listing, including hidden ones, for norm enforcement. */

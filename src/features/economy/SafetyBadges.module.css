@@ -12,9 +12,9 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 11px;
   white-space: nowrap;
   cursor: help;
@@ -32,7 +32,7 @@
 .icon {
   display: grid;
   place-items: center;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .info {
   display: grid;
@@ -63,17 +63,17 @@
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  z-index: 20;
+  z-index: var(--z-popover);
   width: max-content;
   max-width: 268px;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 0.86);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 400;
   line-height: 1.5;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 12px 14px;
-  box-shadow: 0 16px 36px -18px rgba(var(--plum-rgb), 0.6);
+  box-shadow: var(--shadow-e3);
   opacity: 0;
   transform: translateY(4px);
   pointer-events: none;
@@ -93,7 +93,7 @@
   display: block;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 4px;
 }
@@ -105,12 +105,12 @@
 
 /* compact (inside cards) */
 .compact .badge {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   padding: 3px 9px;
   gap: 5px;
 }
 .compact .icon {
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -11,7 +11,7 @@
   align-items: center;
   gap: 10px;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 16px;
   background: var(--paper);
 }
@@ -25,7 +25,7 @@
   border: none;
   background: none;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
 }
 :global([data-theme="dark"]) .search {
@@ -47,7 +47,7 @@
 }
 .groupLabel,
 .vibeLabel {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -64,12 +64,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 500;
   color: var(--ink-60);
   background: transparent;
   border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 6px 13px;
   cursor: pointer;
   transition:
@@ -158,7 +158,7 @@
 
 /* "Vibe filters apply to venues" — shown only while a vibe is active. */
 .vibeNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-style: italic;
 }
@@ -205,7 +205,7 @@
   padding: 10px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   background: rgba(var(--cream-rgb), 0.88);
-  backdrop-filter: blur(12px);
+  backdrop-filter: var(--blur-lg);
 }
 :global([data-theme="dark"]) .mobileBar {
   background: rgba(26, 16, 40, 0.86);
@@ -223,12 +223,12 @@
   min-height: 44px;
   padding: 10px 16px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   transition:
     color 0.18s var(--ease),
@@ -244,10 +244,10 @@
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   line-height: 1;
 }
@@ -305,7 +305,7 @@
 .accessNote {
   margin: 0 0 9px;
   max-width: 46ch;
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   line-height: 1.5;
   color: var(--ink-40);
 }

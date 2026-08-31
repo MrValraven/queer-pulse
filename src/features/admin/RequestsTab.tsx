@@ -18,6 +18,13 @@ import styles from "./ModPanel.module.css";
  * parallel PATCHes, marked every row resolved and claimed all of them landed
  * before a single one had — so a partial failure was invisible and the queue
  * looked empty until the next reload brought the unapproved rows back.
+ *
+ * The queue is paginated (ENG-41). The count beside the section label is the
+ * SERVER's pending total, so it says how many people are waiting rather than how
+ * many rows happen to be loaded, and "Load more" reaches the rest. Two things
+ * stay scoped to the loaded rows on purpose: the search box (which filters what
+ * is in hand) and "Approve all", whose own label states the number it will act
+ * on.
  */
 export function RequestsTab({ slug }: { slug: string }) {
   const { t } = useTranslation();
@@ -40,6 +47,12 @@ export function RequestsTab({ slug }: { slug: string }) {
   const [isConfirmingApproveAll, setIsConfirmingApproveAll] = useState(false);
 
   const requests = incoming.items.filter((r) => !resolvedIds.includes(r.id));
+  // Every decision made this session comes off the server's total, so the label
+  // shrinks as the moderator works instead of contradicting the rows on screen.
+  const pendingTotal = Math.max(
+    incoming.total - resolvedIds.length,
+    requests.length,
+  );
   const filtered = requests.filter((r) =>
     r.person.name.toLowerCase().includes(search.toLowerCase()),
   );
@@ -147,8 +160,8 @@ export function RequestsTab({ slug }: { slug: string }) {
       )}
       <div className={styles.secLbl}>
         {t("admin:modPanel.requests.sectionLabel")}{" "}
-        {requests.length > 0 && (
-          <span className={styles.tabCount}>{requests.length}</span>
+        {pendingTotal > 0 && (
+          <span className={styles.tabCount}>{pendingTotal}</span>
         )}
       </div>
       {filtered.length === 0 ? (
@@ -158,15 +171,30 @@ export function RequestsTab({ slug }: { slug: string }) {
           description={t("admin:modPanel.requests.emptyDesc")}
         />
       ) : (
-        filtered.map((r) => (
-          <RequestsTabRow
-            key={r.id}
-            request={r}
-            isBusy={decidingIds.has(r.id) || isApprovingAll}
-            onApprove={() => resolveRequest(r.id, r.person.name, true)}
-            onDecline={() => resolveRequest(r.id, r.person.name, false)}
-          />
-        ))
+        <>
+          {filtered.map((r) => (
+            <RequestsTabRow
+              key={r.id}
+              request={r}
+              isBusy={decidingIds.has(r.id) || isApprovingAll}
+              onApprove={() => resolveRequest(r.id, r.person.name, true)}
+              onDecline={() => resolveRequest(r.id, r.person.name, false)}
+            />
+          ))}
+          {incoming.paging.hasNextPage && (
+            <div className={styles.loadMore}>
+              <Button
+                variant="ghost"
+                disabled={incoming.paging.isFetchingNextPage}
+                onClick={incoming.paging.fetchNextPage}
+              >
+                {incoming.paging.isFetchingNextPage
+                  ? t("admin:modPanel.requests.loadingMore")
+                  : t("admin:modPanel.requests.loadMore")}
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       {isConfirmingApproveAll && (

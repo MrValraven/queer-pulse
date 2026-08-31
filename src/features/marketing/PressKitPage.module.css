@@ -19,7 +19,7 @@
   gap: 24px;
   align-items: center;
   flex-wrap: wrap;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .contactInner b {
@@ -71,12 +71,12 @@
 .secNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--accent);
   letter-spacing: 0.06em;
 }
 .sec p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.75;
   max-width: 62ch;
@@ -101,12 +101,12 @@
   padding: 24px 28px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   margin-bottom: 14px;
   position: relative;
 }
 .boilerH {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -126,10 +126,10 @@
   color: var(--ink-40);
   letter-spacing: 0;
   text-transform: none;
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .boilerText {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink);
   line-height: 1.7;
   text-wrap: pretty;
@@ -150,10 +150,10 @@
   border: 1px solid rgba(var(--line-rgb), 0.16);
   color: var(--ink-60);
   font-family: var(--sans);
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   padding: 5px 11px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   cursor: pointer;
   transition:
     color 0.2s var(--ease),
@@ -188,7 +188,7 @@
 .logoCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 .logoDisplay {
@@ -239,7 +239,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   background: var(--paper);
 }
@@ -253,7 +253,7 @@
   height: auto;
 }
 .markUsageNote {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-top: 18px;
 }
@@ -282,30 +282,30 @@
 }
 .swatch {
   padding: 18px 20px;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .swatchChip {
   width: 100%;
   aspect-ratio: 5 / 3;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   margin-bottom: 14px;
 }
 .swatchName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 4px;
 }
 .swatchHex {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   letter-spacing: 0.04em;
 }
 .swatchMeta {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-top: 4px;
   line-height: 1.4;
@@ -324,7 +324,7 @@
 .teamCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px 24px;
 }
 .teamCard .ph {
@@ -358,7 +358,7 @@
 .teamCard h4 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 3px;
@@ -368,19 +368,19 @@
   color: var(--accent);
 }
 .teamRole {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   margin-bottom: 12px;
 }
 .teamCard p {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
   max-width: none;
   margin-bottom: 12px;
 }
 .teamLangs {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   margin-bottom: 14px;
 }
@@ -391,7 +391,7 @@
 .teamContact {
   display: flex;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
   padding-top: 12px;
@@ -416,7 +416,7 @@
   padding: 18px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 .fact b {
   display: block;
@@ -433,7 +433,7 @@
   color: var(--accent);
 }
 .fact span {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -472,7 +472,7 @@
   }
 }
 .covSource {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -482,7 +482,7 @@
 .covTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.005em;
   line-height: 1.25;
@@ -492,14 +492,14 @@
   font-style: italic;
 }
 .covMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-top: 4px;
 }
 .covDate {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--ink-40);
   white-space: nowrap;
 }
@@ -525,7 +525,7 @@
   padding: 18px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -540,13 +540,13 @@
   .dlCard:hover {
     transform: translateY(-2px);
     border-color: rgba(var(--line-rgb), 0.18);
-    box-shadow: 0 12px 26px -22px rgba(var(--plum-rgb), 0.4);
+    box-shadow: var(--shadow-lift);
   }
 }
 .dlIc {
   width: 44px;
   height: 44px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
@@ -554,7 +554,7 @@
   flex: none;
   font-family: var(--sans);
   font-weight: 800;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--text-strong);
   letter-spacing: 0.04em;
 }
@@ -564,13 +564,13 @@
 }
 .dlInfo b {
   display: block;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 3px;
 }
 .dlInfo span {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   line-height: 1.5;
 }
@@ -579,13 +579,13 @@
   display: flex;
   align-items: center;
   color: var(--ink-40);
-  font-size: 18px;
+  font-size: var(--text-18);
 }
 
 .footerNote {
   padding: 80px 0 40px;
   text-align: center;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.7;
 }

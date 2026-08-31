@@ -148,6 +148,16 @@ export function ConnectionsProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, connected: slugs }));
   }, []);
 
+  // Live hydration of ALL THREE lists from the server (PRD-03). Only
+  // `connected` used to be replaced, so `incoming` stayed permanently empty in
+  // live mode and no surface could know a request was already waiting from the
+  // member whose profile was open. Replaces wholesale, for the same reason
+  // `setConnected` does: the server is authoritative, and a merge would let a
+  // stale optimistic entry outlive the answer it was optimistic about.
+  const setRelationships = useCallback((next: ConnectionsState) => {
+    setState(next);
+  }, []);
+
   // Roll an optimistic move back to a snapshot captured before the action, so a
   // failed accept/decline doesn't leave the member showing as connected locally.
   const restore = useCallback((snapshot: ConnectionsState) => {
@@ -165,9 +175,19 @@ export function ConnectionsProvider({ children }: { children: ReactNode }) {
       withdraw,
       sendRequest,
       setConnected,
+      setRelationships,
       restore,
     }),
-    [state, accept, decline, withdraw, sendRequest, setConnected, restore],
+    [
+      state,
+      accept,
+      decline,
+      withdraw,
+      sendRequest,
+      setConnected,
+      setRelationships,
+      restore,
+    ],
   );
 
   return (

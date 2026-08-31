@@ -14,12 +14,12 @@
 .panelTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
 .panelDesc {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 16px;
@@ -39,7 +39,7 @@
   padding: 12px 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 .cohostInfo {
   flex: 1;
@@ -47,7 +47,7 @@
 }
 .cohostName {
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
 }
 .nameRow {
@@ -57,7 +57,7 @@
   flex-wrap: wrap;
 }
 .cohostRole {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -71,18 +71,18 @@
   gap: 8px;
 }
 .confirmText {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-right: 2px;
 }
 
 .empty {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   padding: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   margin-bottom: 4px;
 }
 
@@ -95,7 +95,7 @@
   overflow-y: auto;
   margin: 6px 0 4px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 6px;
 }
 .pickerRow {
@@ -106,7 +106,7 @@
   padding: 9px 10px;
   border: none;
   background: none;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   cursor: pointer;
   text-align: left;
   transition: background 0.18s var(--ease);
@@ -134,11 +134,11 @@
 }
 .pickerName {
   font-weight: 600;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .pickerRole {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -148,13 +148,13 @@
   flex-shrink: 0;
   width: 22px;
   height: 22px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   border: 1.5px solid rgba(var(--line-rgb), 0.22);
   display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(var(--cream-rgb), 1);
-  font-size: 13px;
+  font-size: var(--text-13);
   transition:
     background 0.18s var(--ease),
     border-color 0.18s var(--ease);
@@ -164,7 +164,7 @@
   border-color: var(--jade);
 }
 .noResults {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   padding: 18px 12px;
   text-align: center;
@@ -178,7 +178,7 @@
   margin: 14px 0 20px;
 }
 .selCount {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .selCount b {

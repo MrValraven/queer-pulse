@@ -28,7 +28,7 @@
 .label {
   display: block;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 8px;
@@ -37,10 +37,10 @@
 .input,
 .select {
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   padding: 11px 16px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   transition: border-color 0.25s var(--ease);
@@ -65,7 +65,7 @@
 
 .resultHead {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -82,7 +82,7 @@
 .card {
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 20px 22px;
 }
 .cardPrimary {
@@ -93,7 +93,7 @@
 
 .cardLabel {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.6);
   margin-bottom: 8px;
 }
@@ -121,7 +121,7 @@
 
 .note {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.8);
   margin: 22px 0 0;
@@ -129,7 +129,7 @@
 
 .disclaimer {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: rgba(var(--cream-rgb), 0.5);
   margin: 12px 0 0;

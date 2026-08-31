@@ -86,6 +86,7 @@ export function ThreadComposer({
         textareaRef={textareaRef}
         className={styles.crTextarea}
         placeholder={t("forum:threadComposer.placeholder")}
+        aria-label={t("forum:threadComposer.textareaAria")}
         value={reply}
         onChange={setReply}
       />

@@ -283,6 +283,14 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // being the one who happens to be online.
   routes.adminDsar,
   `${routes.adminDsar}/*`,
+  // The ban-evasion escalation queue (PRD-31). `BanEvasionController` is
+  // `@Roles(Moderator, Admin)` at class level, and every row is a community
+  // moderator waiting on an answer about an applicant they can only see one bit
+  // about. `routes.adminLegalRequests` is deliberately absent from this list:
+  // its controller is `@Roles(Admin)` alone, so it stays on the blanket
+  // admin-only match below.
+  routes.adminBanEvasion,
+  `${routes.adminBanEvasion}/*`,
   // The status-incident console (ID-16), likewise `@Roles(Moderator, Admin)`.
   // Publishing "we know, we are on it" during an outage is the one job that is
   // useless if it waits: whoever notices first has to be able to post it.

@@ -19,7 +19,7 @@
   gap: 9px;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 19px;
+  font-size: var(--text-19);
   color: rgba(var(--cream-rgb), 1);
   text-decoration: none;
 }
@@ -34,12 +34,12 @@
 }
 .backLink {
   color: rgba(var(--cream-rgb), 0.6);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   text-decoration: none;
 }
 .clock {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: rgba(var(--cream-rgb), 0.5);
   font-variant-numeric: tabular-nums;
@@ -91,9 +91,9 @@
   gap: 7px;
   background: rgba(var(--jade-rgb), 0.2);
   border: 1px solid rgba(var(--jade-rgb), 0.35);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 13px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--jade);
   margin-bottom: 14px;
@@ -153,7 +153,7 @@
   color: var(--accent);
 }
 .hsL {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 4px;
   letter-spacing: 0.04em;
@@ -167,7 +167,7 @@
 .hsUnavailable {
   display: inline-block;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: 0;
@@ -179,7 +179,7 @@
 /* The one line that explains a stat rather than counting it. */
 .heroStatsNote {
   margin: 14px 0 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.58);
   max-width: 56ch;
@@ -215,12 +215,12 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 .cardHead {
   padding: 16px 20px 0;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -241,7 +241,7 @@
     transparent 12px
   );
   border: 1.5px dashed rgba(var(--line-rgb), 0.15);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -264,7 +264,7 @@
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
-  font-size: 11px;
+  font-size: var(--text-11);
   color: var(--ink-40);
   text-align: center;
 }
@@ -285,16 +285,16 @@
   background: rgba(var(--plum-rgb), 0.1);
 }
 .orText {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .nameSearch {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   padding: 9px 14px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   outline: none;
@@ -305,7 +305,7 @@
   border-color: var(--line-strong);
 }
 .searchResult {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   margin-top: 8px;
 }
@@ -326,7 +326,7 @@
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--jade-rgb), 0.05);
   margin-bottom: 4px;
 }
@@ -337,19 +337,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: var(--text-10);
   font-weight: 700;
   font-family: var(--serif);
   flex: none;
 }
 .rrName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
   flex: 1;
 }
 .rrTime {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--jade);
   font-weight: 600;
 }
@@ -362,10 +362,10 @@
 }
 .afBtn {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   padding: 6px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
   color: var(--ink-60);
@@ -380,11 +380,12 @@
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
 }
-/* Same explanation as .heroStatsNote, on the cream card under the guest list's
-   filter bar, where the arrival filters have been withdrawn. */
+/* The guest list's own account of the withdrawn arrival filters, on the cream
+   card under the filter bar. Reads as a companion to .heroStatsNote above it,
+   which carries the retention rule itself. */
 .doorRetentionNote {
   margin: 0 0 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.55;
   color: var(--ink-60);
   max-width: 56ch;
@@ -393,10 +394,10 @@
 .attSearch {
   width: 100%;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 8px 13px;
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
   outline: none;
@@ -412,7 +413,7 @@
   align-items: center;
   gap: 11px;
   padding: 10px 12px;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   transition: background 0.18s var(--ease);
 }
 @media (hover: hover) {
@@ -428,7 +429,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 500;
   flex: none;
 }
@@ -437,19 +438,19 @@
   min-width: 0;
 }
 .attName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 .attMeta {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 1px;
 }
 .checkinChip {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px 9px;
   flex: none;
 }
@@ -464,10 +465,10 @@
 }
 .manualBtn {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   padding: 5px 11px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border: none;
@@ -481,7 +482,7 @@
   }
 }
 .waitlistToggle {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
   padding: 10px 12px;
@@ -494,10 +495,10 @@
 }
 .promoteBtn {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   padding: 5px 11px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   cursor: pointer;
   border: none;
   background: rgba(var(--jade-rgb), 0.1);
@@ -513,7 +514,7 @@
 .sparkLabels {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: var(--text-10);
   color: var(--ink-40);
   margin-top: 4px;
   padding: 0 2px;
@@ -532,7 +533,7 @@
   color: var(--jade);
 }
 .statLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .peakRow {
@@ -544,11 +545,11 @@
   margin-top: 14px;
 }
 .peakLabel {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .peakVal {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -560,17 +561,17 @@
 .qaBtn {
   width: 100%;
   justify-content: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   padding: 10px;
 }
 .endCard {
   background: rgba(var(--plum-rgb), 0.04);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 14px 16px;
 }
 .eeLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -578,7 +579,7 @@
   margin-bottom: 8px;
 }
 .eeText {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 12px;
@@ -586,7 +587,7 @@
 .endBtn {
   width: 100%;
   justify-content: center;
-  font-size: 13px;
+  font-size: var(--text-13);
   padding: 10px;
 }
 .endBtn:disabled {
@@ -594,7 +595,7 @@
   cursor: not-allowed;
 }
 .eeNote {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   text-align: center;
   margin-top: 8px;
@@ -603,7 +604,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   cursor: pointer;
   margin-bottom: 12px;
@@ -618,7 +619,7 @@
 .endedCard {
   background: var(--plum);
   border: 1px solid var(--line-strong);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 18px 16px;
   text-align: center;
   animation: endedIn 0.34s var(--ease) both;
@@ -638,7 +639,7 @@
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.22);
   color: var(--jade);
-  font-size: 20px;
+  font-size: var(--text-20);
   margin-bottom: 10px;
 }
 .endedTitle {
@@ -653,7 +654,7 @@
   color: var(--accent);
 }
 .endedText {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.72);
   line-height: 1.55;
   margin-top: 7px;
@@ -682,7 +683,7 @@
   background: rgba(var(--cream-rgb), 0.3);
 }
 .dfText {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.5);
   text-align: center;
 }
@@ -727,10 +728,10 @@
   margin-bottom: 16px;
   padding: 12px 14px;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: var(--paper);
   color: var(--ink);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.55;
   text-wrap: pretty;
 }
@@ -742,7 +743,7 @@
   color: var(--accent);
 }
 .doorLead {
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.6;
   color: var(--ink-60);
   margin: 0 0 14px;

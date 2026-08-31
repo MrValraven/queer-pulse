@@ -6,7 +6,7 @@
   margin-bottom: 32px;
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -23,7 +23,7 @@
   margin: 0;
 }
 .sub {
-  font-size: 15.5px;
+  font-size: var(--text-15-5);
   color: var(--ink-60);
   line-height: 1.65;
   max-width: 60ch;
@@ -59,7 +59,7 @@
 @media (hover: hover) {
   .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 18px 40px -22px rgba(var(--plum-rgb), 0.38);
+    box-shadow: var(--shadow-lift);
   }
   .card:hover .cardName {
     color: var(--accent-ink);
@@ -69,7 +69,7 @@
 .cardName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -78,7 +78,7 @@
 }
 
 .cardSub {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin-top: 6px;
@@ -100,7 +100,7 @@
   padding-top: 14px;
 }
 .cardCount {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--ink-60);
 }
@@ -108,17 +108,17 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 4px 9px;
 }
 .cardNoBio {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-style: italic;
   line-height: 1.55;

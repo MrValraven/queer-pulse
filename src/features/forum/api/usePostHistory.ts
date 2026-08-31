@@ -9,7 +9,12 @@ import type { ForumPostHistoryEntry } from "../../../shared/contracts/contracts"
 export function usePostHistory(
   postId: string | undefined,
   enabled: boolean,
-): { revisions: ForumPostHistoryEntry[]; isLoading: boolean } {
+): {
+  revisions: ForumPostHistoryEntry[];
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
+} {
   const { demoMode } = useDemoMode();
   const live = !demoMode && enabled && !!postId;
 
@@ -22,5 +27,8 @@ export function usePostHistory(
   return {
     revisions: query.data?.revisions ?? [],
     isLoading: live && query.isLoading,
+    // Without this a failed fetch would claim the post was never edited.
+    isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }

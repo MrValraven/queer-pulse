@@ -4,7 +4,7 @@
   margin-top: 20px;
 }
 .dek {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   line-height: 1.7;
   max-width: 54ch;
@@ -25,7 +25,7 @@
 
 .distinction {
   background: rgba(var(--plum-rgb), 0.04);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 22px 26px;
   margin: 28px auto 0;
   max-width: 920px;
@@ -40,7 +40,7 @@
   }
 }
 .distCol h4 {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
   margin-bottom: 8px;
 }
 .distCol p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.65;
 }
@@ -68,7 +68,7 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: var(--z-sticky);
   margin-top: 40px;
 }
 .tocInner {
@@ -85,11 +85,11 @@
 }
 .tocInner a {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
   padding: 8px 12px;
-  border-radius: 7px;
+  border-radius: var(--radius-7);
   transition:
     background 0.2s var(--ease),
     color 0.2s var(--ease);
@@ -119,7 +119,7 @@
 .secNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--accent);
   letter-spacing: 0.04em;
   margin-bottom: 6px;
@@ -155,7 +155,7 @@
   color: var(--accent);
 }
 .sec p {
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   color: var(--ink);
   line-height: 1.78;
   margin-bottom: 1.1em;
@@ -170,7 +170,7 @@
   font-weight: 700;
 }
 .list {
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   color: var(--ink);
   line-height: 1.7;
   padding-left: 0;
@@ -232,7 +232,7 @@
 }
 .pactRow b {
   display: block;
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   font-weight: 600;
   margin-bottom: 5px;
@@ -240,7 +240,7 @@
   letter-spacing: -0.005em;
 }
 .pactRow p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink);
   line-height: 1.65;
   margin: 0;
@@ -249,7 +249,7 @@
 .ladder {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 8px 0;
   margin: 18px 0 12px;
 }
@@ -267,12 +267,12 @@
 .ladderN {
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-9);
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
   font-weight: 700;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,13 +285,13 @@
 }
 .ladderStep b {
   display: block;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
   font-weight: 700;
   margin-bottom: 4px;
 }
 .ladderStep p {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin: 0;
@@ -322,7 +322,7 @@
   color: var(--accent);
 }
 .reportCta p {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.65;
   margin-bottom: 16px;
@@ -336,7 +336,7 @@
 
 .version {
   padding: 32px 0 80px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.65;
   max-width: 560px;

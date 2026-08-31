@@ -25,7 +25,7 @@
   font-weight: 400;
 }
 .greetingDate {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   margin-top: 5px;
 }
@@ -98,7 +98,7 @@
   max-width: 100%;
   flex-wrap: wrap;
   padding: 8px 14px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--accent) 10%, transparent);
   color: var(--accent-ink);
   font-size: 0.86rem;
@@ -123,7 +123,7 @@
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   transition:
     box-shadow 0.2s,
@@ -143,7 +143,7 @@
 }
 @media (hover: hover) {
   .card:hover {
-    box-shadow: 0 4px 16px rgba(var(--plum-rgb), 0.07);
+    box-shadow: var(--shadow-lift);
   }
 }
 .cardLink {
@@ -192,7 +192,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -200,7 +200,7 @@
 }
 .gcTitle {
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: var(--text-19);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
@@ -210,7 +210,7 @@
   flex-direction: column;
   gap: 3px;
   margin-bottom: 14px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .gcFooter {
@@ -230,7 +230,7 @@
   gap: 4px;
 }
 .attLabel {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }
 .goingChip {
@@ -239,15 +239,15 @@
   gap: 5px;
   background: rgba(var(--jade-rgb), 0.08);
   border: 1px solid rgba(var(--jade-rgb), 0.2);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 5px 11px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: var(--jade);
 }
 
 .tag {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -274,7 +274,7 @@
 }
 .nmName {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 2px;
@@ -286,12 +286,12 @@
   flex-wrap: wrap;
 }
 .nmMeta {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-bottom: 6px;
 }
 .nmBio {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 10px;
@@ -303,11 +303,11 @@
   margin-bottom: 12px;
 }
 .nmChip {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 600;
   color: var(--jade);
   border: 1px solid rgba(var(--jade-rgb), 0.25);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 3px 9px;
 }
 .nmActions {
@@ -317,10 +317,10 @@
 }
 .btnOutline {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   padding: 6px 13px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: 1.5px solid rgba(var(--line-rgb), 0.15);
   background: transparent;
   color: var(--text-strong);
@@ -333,7 +333,7 @@
   }
 }
 .linkBtn {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--accent-ink);
   background: none;
@@ -361,17 +361,17 @@
   flex: none;
 }
 .paName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
 }
 .paTime {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 1px;
 }
 .postBody {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.7;
   margin-bottom: 14px;
@@ -387,7 +387,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   background: none;
   border: none;
@@ -405,7 +405,7 @@
   }
 }
 .postAction svg {
-  font-size: 15px;
+  font-size: var(--text-15);
 }
 .postActionOn {
   color: var(--accent-ink);
@@ -431,12 +431,12 @@
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   border: none;
   background: none;
   color: var(--ink-40);
   cursor: pointer;
-  font-size: 18px;
+  font-size: var(--text-18);
   touch-action: manipulation;
   transition:
     background 0.18s,
@@ -452,12 +452,12 @@
   position: absolute;
   top: 48px;
   right: 0;
-  z-index: 20;
+  z-index: var(--z-popover);
   min-width: 188px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
-  box-shadow: 0 8px 28px rgba(var(--plum-rgb), 0.16);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
   padding: 6px;
   display: flex;
   flex-direction: column;
@@ -469,12 +469,12 @@
   width: 100%;
   text-align: left;
   font-family: var(--sans);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
   background: none;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 8px 10px;
   cursor: pointer;
   transition: background 0.15s;
@@ -488,7 +488,7 @@
   }
 }
 .menuItem svg {
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--ink-40);
 }
 
@@ -514,7 +514,7 @@
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 12px;
   resize: vertical;
   line-height: 1.5;
@@ -535,12 +535,12 @@
   align-items: center;
   gap: 6px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   color: rgba(var(--cream-rgb), 1);
   background: var(--plum);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 7px 14px;
   cursor: pointer;
   transition: opacity 0.18s;
@@ -561,7 +561,7 @@
   gap: 9px;
 }
 .reply {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.55;
 }
 /* Groups a reply's author name with their staff badge (when they have one)
@@ -587,7 +587,7 @@
   inset: 0;
   /* a dialog-class overlay, so it sits at the same tier as the shared Modal */
   z-index: var(--z-modal);
-  background: rgba(var(--plum-rgb), 0.5);
+  background: var(--scrim);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -598,7 +598,7 @@
   max-width: 460px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 26px 26px 22px;
 }
 .dialogConfirm {
@@ -614,7 +614,7 @@
   margin: 0 0 6px;
 }
 .dialogSub {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 0 0 16px;
@@ -629,10 +629,10 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
   padding: 7px 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -651,7 +651,7 @@
   color: var(--ink);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   padding: 10px 12px;
   resize: vertical;
   line-height: 1.5;
@@ -697,7 +697,7 @@
   color: var(--accent);
 }
 .confirmBody {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.8);
   line-height: 1.6;
   margin: 0 auto 20px;
@@ -712,7 +712,7 @@
   justify-content: center;
 }
 .savedEyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -721,24 +721,24 @@
 }
 .savedTitle {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
   line-height: 1.2;
 }
 .savedSource {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-bottom: 12px;
 }
 .savedLink {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
 }
 .recapEyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -756,11 +756,11 @@
 .sbCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 16px 18px;
 }
 .sbTitle {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -768,7 +768,7 @@
   margin-bottom: 12px;
 }
 .sbLink {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   display: block;
@@ -777,12 +777,12 @@
 .sbInlineLink {
   /* Replaces an inline `style` object on the connections widget's manage
      link, so the colour reads from a token like everything else. */
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--accent-ink);
 }
 .sbEmpty {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 2px 0 4px;
@@ -807,22 +807,22 @@
   border-bottom: none;
 }
 .datePill {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   padding: 3px 8px;
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   color: var(--text-strong);
   white-space: nowrap;
   flex: none;
 }
 .upName {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
 .upVenue {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .sbMemberRow {
@@ -851,7 +851,7 @@
 }
 .sbMemberName {
   flex: 1;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text-strong);
 }
@@ -861,7 +861,7 @@
   gap: 10px;
 }
 .connCount {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
 }
@@ -948,9 +948,9 @@
   gap: 8px;
   margin-top: 12px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   background: rgba(var(--danger-rgb), 0.08);
   color: var(--danger);
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
 }

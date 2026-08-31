@@ -12,6 +12,12 @@ const HOMEPAGE_STORY_LIMIT = 3;
 export interface HomepageStoriesResult {
   stories: ArticleListItemDTO[];
   isLoading: boolean;
+  /** True when the request failed. The row renders nothing either way, so this
+   *  exists to keep "nothing published yet" and "the request fell over" from
+   *  being the same fact to a caller (DES-22). */
+  isError: boolean;
+  /** Re-runs the failed request, for a caller that chooses to offer a retry. */
+  refetch: () => void;
 }
 
 /**
@@ -47,5 +53,10 @@ export function useHomepageStories(): HomepageStoriesResult {
     .filter((article) => Boolean(article.publishedAt))
     .slice(0, HOMEPAGE_STORY_LIMIT);
 
-  return { stories, isLoading: isEnabled && query.isPending };
+  return {
+    stories,
+    isLoading: isEnabled && query.isPending,
+    isError: isEnabled && query.isError,
+    refetch: () => void query.refetch(),
+  };
 }

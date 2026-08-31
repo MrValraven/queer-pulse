@@ -38,6 +38,7 @@ export function useArticleVersions(pieceId: string) {
     versions: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    refetch: () => void query.refetch(),
   };
 }
 

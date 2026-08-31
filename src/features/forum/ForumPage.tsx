@@ -1,5 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn } from "../../shared/components/ui";
+import { FadeIn, LoadErrorState } from "../../shared/components/ui";
 import { ComposeThreadModal } from "./ComposeThreadModal";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { EditTitleModal } from "./EditTitleModal";
@@ -43,29 +43,33 @@ export function ForumPage() {
                   />
                 </FadeIn>
               )}
-              <ForumThreadList
-                loading={page.loading}
-                threads={page.threads}
-                pinnedThreads={page.pinnedThreads}
-                sort={page.sort}
-                setSort={page.setSort}
-                headerCount={page.headerCount}
-                activeTag={page.tag}
-                onClearTag={() => page.setTag(null)}
-                onTagClick={page.setTag}
-                onVote={page.onVote}
-                filtered={page.filtered}
-                onShowAll={page.resetFilters}
-                onCompose={() => page.openCompose()}
-                canEditThread={page.canEditThread}
-                onEditTitle={(thread) =>
-                  page.setEditingTitleThreadId(thread.id)
-                }
-                onDelete={moderation.requestDelete}
-                onRestore={moderation.requestRestore}
-                onHistory={moderation.requestHistory}
-                onTogglePin={moderation.requestTogglePin}
-              />
+              {page.hasThreadsError ? (
+                <LoadErrorState onRetry={page.retryThreads} />
+              ) : (
+                <ForumThreadList
+                  loading={page.loading}
+                  threads={page.threads}
+                  pinnedThreads={page.pinnedThreads}
+                  sort={page.sort}
+                  setSort={page.setSort}
+                  headerCount={page.headerCount}
+                  activeTag={page.tag}
+                  onClearTag={() => page.setTag(null)}
+                  onTagClick={page.setTag}
+                  onVote={page.onVote}
+                  filtered={page.filtered}
+                  onShowAll={page.resetFilters}
+                  onCompose={() => page.openCompose()}
+                  canEditThread={page.canEditThread}
+                  onEditTitle={(thread) =>
+                    page.setEditingTitleThreadId(thread.id)
+                  }
+                  onDelete={moderation.requestDelete}
+                  onRestore={moderation.requestRestore}
+                  onHistory={moderation.requestHistory}
+                  onTogglePin={moderation.requestTogglePin}
+                />
+              )}
 
               <ForumLoadMore
                 hasNextPage={page.hasNextPage}

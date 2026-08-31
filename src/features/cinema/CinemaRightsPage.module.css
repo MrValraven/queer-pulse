@@ -28,7 +28,7 @@
   align-items: end;
 }
 .headEb {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -49,7 +49,7 @@
   font-weight: 400;
 }
 .headSub {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: rgba(var(--cream-rgb), 0.72);
   line-height: 1.7;
   max-width: 50ch;
@@ -63,11 +63,11 @@
 .shortCard {
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid rgba(var(--cream-rgb), 0.16);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 26px 28px;
 }
 .shortHead {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -86,12 +86,12 @@
   padding-bottom: 0;
 }
 .shortK {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.7);
 }
 .shortV {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: var(--text-18);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
 }
@@ -117,7 +117,7 @@
   top: 96px;
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -128,7 +128,7 @@
   text-align: left;
   background: none;
   padding: 12px 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-family: var(--sans);
   color: rgba(var(--cream-rgb), 0.62);
   cursor: pointer;
@@ -157,7 +157,7 @@
 .contractCard {
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 22px;
+  border-radius: var(--radius-22);
   padding: 40px 44px;
   margin-bottom: 40px;
   position: relative;
@@ -183,7 +183,7 @@
   z-index: 2;
 }
 .ccEb {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -212,7 +212,7 @@
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.82);
   line-height: 1.5;
 }
@@ -251,7 +251,7 @@
 }
 .faqItem {
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   overflow: hidden;
   margin-bottom: 10px;
   background: rgba(var(--cream-rgb), 0.04);
@@ -267,7 +267,7 @@
   border: none;
   cursor: pointer;
   padding: 18px 22px;
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   font-family: var(--sans);
   color: rgba(var(--cream-rgb), 1);
@@ -290,7 +290,7 @@
 }
 .faqA {
   padding: 20px 22px;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.72);
   line-height: 1.72;
 }
@@ -307,9 +307,9 @@
   margin-top: 14px;
   padding: 14px 18px;
   background: rgba(var(--jade-rgb), 0.1);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   border: 1px solid rgba(var(--jade-rgb), 0.28);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 1);
 }
 .faqA :global(.highlight) strong {
@@ -320,7 +320,7 @@
 .contactCard {
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 28px 30px;
   margin-top: 16px;
   scroll-margin-top: 96px;
@@ -337,7 +337,7 @@
   color: var(--accent);
 }
 .contactBody {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.72);
   line-height: 1.65;
   margin-bottom: 20px;

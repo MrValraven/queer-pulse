@@ -26,10 +26,20 @@ vi.mock("../../app/providers/useConnections", async (importOriginal) => {
   };
 });
 
+/**
+ * The section is mounted inside a `host` wrapper so a "renders nothing" test
+ * can assert on the section's OWN output. `container` is the whole
+ * `TestProviders` tree, and `ToastProvider` keeps its two toast live regions
+ * mounted from the first paint (assistive tech ignores a region inserted at
+ * announce time), so the tree is never empty even when this section renders
+ * null.
+ */
 function renderSection(excludeSlug?: string) {
   return render(
     <TestProviders>
-      <SuggestedCommunitiesSection excludeSlug={excludeSlug} />
+      <div data-testid="host">
+        <SuggestedCommunitiesSection excludeSlug={excludeSlug} />
+      </div>
     </TestProviders>,
   );
 }
@@ -81,11 +91,11 @@ describe("SuggestedCommunitiesSection", () => {
 
   it("renders nothing at all when the viewer has no connections", () => {
     connectedMemberSlugs = [];
-    const { container } = renderSection();
+    renderSection();
 
     // No heading and no empty state: an empty result is the normal answer for
-    // a member with no connections, not something to apologise for.
-    expect(container).toBeEmptyDOMElement();
+    // a member with no connections, and nothing to apologise for.
+    expect(screen.getByTestId("host")).toBeEmptyDOMElement();
   });
 
   it("keeps the join wizard open when joining empties the band", async () => {

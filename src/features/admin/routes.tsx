@@ -30,6 +30,14 @@ const AdminDsarPage = lazyNamed(
   () => import("./AdminDsarPage"),
   "AdminDsarPage",
 );
+const AdminBanEvasionEscalationsPage = lazyNamed(
+  () => import("./AdminBanEvasionEscalationsPage"),
+  "AdminBanEvasionEscalationsPage",
+);
+const AdminLegalRequestsPage = lazyNamed(
+  () => import("./AdminLegalRequestsPage"),
+  "AdminLegalRequestsPage",
+);
 const AdminMembersPage = lazyNamed(
   () => import("./AdminMembersPage"),
   "AdminMembersPage",
@@ -193,6 +201,20 @@ export function adminRoutes() {
       <Route path={routes.adminConcerns} element={<AdminConcernsPage />} />
       <Route path={routes.adminIntakes} element={<AdminIntakesPage />} />
       <Route path={routes.adminDsar} element={<AdminDsarPage />} />
+      {/* PRD-31: the ban-evasion escalations community moderators raise from
+          their own join-request queue. `@Roles(Moderator, Admin)`, so it is
+          listed in MOD_ACCESSIBLE_ADMIN_PATTERNS. */}
+      <Route
+        path={routes.adminBanEvasion}
+        element={<AdminBanEvasionEscalationsPage />}
+      />
+      {/* PRD-32: the register of legal, government and law-enforcement demands
+          for member data. Admin-only, unlike every queue around it, so it is
+          deliberately absent from MOD_ACCESSIBLE_ADMIN_PATTERNS. */}
+      <Route
+        path={routes.adminLegalRequests}
+        element={<AdminLegalRequestsPage />}
+      />
       <Route path={routes.adminMembers} element={<AdminMembersPage />} />
       <Route
         path={routes.adminJoinRequests}

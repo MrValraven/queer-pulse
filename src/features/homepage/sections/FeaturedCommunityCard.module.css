@@ -62,7 +62,7 @@
   letter-spacing: 0.02em;
   background: color-mix(in srgb, var(--plum) 82%, transparent);
   color: var(--cream);
-  backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-sm);
 }
 
 .memberCount {

@@ -21,7 +21,7 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -35,7 +35,7 @@
   background: var(--jade);
 }
 .intro > p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink-60);
   line-height: 1.65;
   margin: 18px 0 28px;
@@ -51,7 +51,7 @@
   gap: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   padding: 18px 20px;
   transition:
     transform 0.25s var(--ease),
@@ -60,32 +60,32 @@
 @media (hover: hover) {
   .route:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 30px -20px rgba(var(--plum-rgb), 0.32);
+    box-shadow: var(--shadow-lift);
   }
 }
 .routeIcon {
   width: 42px;
   height: 42px;
-  border-radius: 11px;
+  border-radius: var(--radius-11);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: var(--text-20);
   flex: none;
 }
 .route h3 {
-  font-size: 15px;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
 }
 .route p {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin: 4px 0 6px;
 }
 .rLink {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--accent-ink);
 }
@@ -93,7 +93,7 @@
 .form {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 20px;
+  border-radius: var(--radius-20);
   padding: 30px 32px;
   position: sticky;
   top: 96px;
@@ -110,7 +110,7 @@
   color: var(--accent);
 }
 .form .sub {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin: 6px 0 20px;
   line-height: 1.55;
@@ -137,7 +137,7 @@
   margin-bottom: 8px;
 }
 .sent p {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 20px;

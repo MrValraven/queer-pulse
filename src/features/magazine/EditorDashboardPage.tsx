@@ -50,7 +50,11 @@ export function EditorDashboardPage() {
     isLoading: piecesLoading,
     isError: piecesError,
   } = usePieces({});
-  const { pitches, isLoading: pitchesLoading } = usePitches();
+  const {
+    pitches,
+    isLoading: pitchesLoading,
+    isError: pitchesError,
+  } = usePitches();
   const { summary } = useDeskSummary();
   const pieceMutations = usePieceMutations();
   const pitchMutations = usePitchMutations();
@@ -165,17 +169,20 @@ export function EditorDashboardPage() {
   });
 
   const isLoading = piecesLoading || pitchesLoading;
+  // Either failed list is enough to make an empty desk a lie, so both feed the
+  // one error panel (DES-22).
+  const hasDeskLoadError = piecesError || pitchesError;
   const isEmpty =
     !demoMode &&
     !isLoading &&
-    !piecesError &&
+    !hasDeskLoadError &&
     pieces.length === 0 &&
     pitches.length === 0;
 
   return (
     <EditorDashboardView
       isLoading={isLoading}
-      piecesError={piecesError}
+      hasDeskLoadError={hasDeskLoadError}
       isEmpty={isEmpty}
       issue={issue}
       issues={issues}

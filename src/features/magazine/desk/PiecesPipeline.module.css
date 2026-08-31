@@ -21,7 +21,7 @@
 }
 
 .phead {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   font-weight: 700;
@@ -63,10 +63,10 @@
   width: 18px;
   height: 18px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: var(--radius-5);
   background: var(--paper);
   color: var(--paper);
-  font-size: 11px;
+  font-size: var(--text-11);
   cursor: pointer;
 }
 
@@ -84,7 +84,7 @@
 
 .title {
   font-family: var(--serif);
-  font-size: 16.5px;
+  font-size: var(--text-16-5);
   font-weight: 400;
   color: var(--text-strong);
   line-height: 1.2;
@@ -97,7 +97,7 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   flex-wrap: wrap;
 }
@@ -105,7 +105,7 @@
 .tagJade {
   display: inline-flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   padding: 4px 9px;
   border-radius: var(--radius-tag);
@@ -118,7 +118,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -139,7 +139,7 @@
 }
 
 .due {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 

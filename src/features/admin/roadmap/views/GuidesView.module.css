@@ -21,13 +21,13 @@
 .title {
   margin: 0;
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   color: var(--ink);
 }
 
 .subtitle {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   max-width: 62ch;
 }
@@ -46,7 +46,7 @@
 
 .reVerifyBanner p {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.5;
 }
 
@@ -116,7 +116,7 @@
   flex: 1 1 auto;
   min-width: 0;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 500;
   color: var(--ink);
 }
@@ -146,7 +146,7 @@
   border-radius: 50%;
   border: 1.5px solid rgba(var(--line-rgb), 0.3);
   color: var(--cream);
-  font-size: 11px;
+  font-size: var(--text-11);
   flex: none;
 }
 
@@ -156,7 +156,7 @@
 }
 
 .checklistLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 
@@ -178,7 +178,7 @@
 
 .cellLabel {
   margin: 0;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -187,7 +187,7 @@
 
 .cellValue {
   margin: 0;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
 }
@@ -202,7 +202,7 @@
 
 .cellSub {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-60);
 }
 
@@ -213,14 +213,14 @@
 
 .cellMuted {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-style: italic;
 }
 
 .meterTrack {
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
   margin-top: 3px;
@@ -228,7 +228,7 @@
 
 .meterFill {
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--jade);
   transform-origin: left center;
   /* The repo's global reduced-motion rule (`src/styles/base.css`) clamps
@@ -245,8 +245,8 @@
 
 .langPill {
   padding: 3px 7px;
-  border-radius: 999px;
-  font-size: 10.5px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.03em;
   background: rgba(var(--line-rgb), 0.08);

@@ -15,16 +15,35 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * useTriageJoinRequest; a decision drops the row locally on success (mirrors
  * AdminPartnerApplicationsPage) so it reads instantly whether or not the
  * mutation actually persisted anywhere (it's a no-op in demo mode).
+ *
+ * The queue is paginated and asks the server for PENDING requests (ENG-41). It
+ * used to pull the newest 200 requests in every status and filter to the pending
+ * ones here, which meant a platform carrying 200 decided requests newer than one
+ * pending request showed an empty queue while somebody waited. The count line
+ * quotes the server's `total`, so the number on screen is how many people are
+ * actually waiting rather than how many rows happened to arrive, and "Load more"
+ * is how an admin reaches past the first page. Mirrors AdminHousingGroupsPage's
+ * queue for the sibling housing-groups surface.
  */
 export function AdminHousingJoinRequests() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { data, isLoading, isError } = useAdminJoinRequests();
+  const {
+    requests: pendingRequests,
+    total,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAdminJoinRequests();
   const triage = useTriageJoinRequest();
   const [resolved, setResolved] = useState<Set<string>>(new Set());
 
-  const requests = (data ?? []).filter(
-    (request) => request.status === "pending" && !resolved.has(request.id),
+  // The status filter now lives in the query (ENG-41), so the only thing left to
+  // drop client-side is what this admin has already decided this session.
+  const requests = pendingRequests.filter(
+    (request) => !resolved.has(request.id),
   );
 
   function decide(
@@ -56,6 +75,11 @@ export function AdminHousingJoinRequests() {
       <h2 className={styles.sectionTitle}>
         {t("admin:housingRequests.title")}
       </h2>
+      {!isError && total > 0 && (
+        <p className={styles.queueCount} role="status">
+          {t("admin:housingRequests.pendingCount", { count: total })}
+        </p>
+      )}
       {isError ? (
         <div className={styles.notice}>
           <p className={styles.noticeText}>
@@ -65,45 +89,61 @@ export function AdminHousingJoinRequests() {
       ) : requests.length === 0 ? (
         <p className={styles.emptyText}>{t("admin:housingRequests.empty")}</p>
       ) : (
-        <div className={styles.rows}>
-          {requests.map((request, i) => (
-            <FadeIn key={request.id} delay={Math.min(i, 8) * 50}>
-              <div className={styles.row}>
-                <div className={styles.rowMain}>
-                  <div className={styles.rowTop}>
-                    <span className={styles.rowName}>{request.name}</span>
-                    <AdminChip tone="plum" dot>
-                      {request.coop?.name ??
-                        t("admin:housingRequests.unknownCoop")}
-                    </AdminChip>
+        <>
+          <div className={styles.rows}>
+            {requests.map((request, index) => (
+              <FadeIn key={request.id} delay={Math.min(index, 8) * 50}>
+                <div className={styles.row}>
+                  <div className={styles.rowMain}>
+                    <div className={styles.rowTop}>
+                      <span className={styles.rowName}>{request.name}</span>
+                      <AdminChip tone="plum" dot>
+                        {request.coop?.name ??
+                          t("admin:housingRequests.unknownCoop")}
+                      </AdminChip>
+                    </div>
+                    <div className={styles.rowMeta}>
+                      {t("admin:housingRequests.householdSize", {
+                        size: request.householdSize,
+                      })}
+                      {request.note ? ` · "${request.note}"` : ""}
+                    </div>
                   </div>
-                  <div className={styles.rowMeta}>
-                    {t("admin:housingRequests.householdSize", {
-                      size: request.householdSize,
-                    })}
-                    {request.note ? ` · "${request.note}"` : ""}
+                  <div className={styles.rowActions}>
+                    <Button
+                      variant="ghost"
+                      size="md"
+                      onClick={() => decide(request, "declined")}
+                    >
+                      {t("admin:housingRequests.declineCta")}
+                    </Button>
+                    <Button
+                      variant="jade"
+                      size="md"
+                      onClick={() => decide(request, "accepted")}
+                    >
+                      {t("admin:housingRequests.acceptCta")}
+                    </Button>
                   </div>
                 </div>
-                <div className={styles.rowActions}>
-                  <Button
-                    variant="ghost"
-                    size="md"
-                    onClick={() => decide(request, "declined")}
-                  >
-                    {t("admin:housingRequests.declineCta")}
-                  </Button>
-                  <Button
-                    variant="jade"
-                    size="md"
-                    onClick={() => decide(request, "accepted")}
-                  >
-                    {t("admin:housingRequests.acceptCta")}
-                  </Button>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
+              </FadeIn>
+            ))}
+          </div>
+          {hasNextPage && (
+            <div className={styles.loadMore}>
+              <Button
+                variant="ghost"
+                size="md"
+                disabled={isFetchingNextPage}
+                onClick={() => void fetchNextPage()}
+              >
+                {isFetchingNextPage
+                  ? t("admin:housingRequests.loadingMore")
+                  : t("admin:housingRequests.loadMore")}
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

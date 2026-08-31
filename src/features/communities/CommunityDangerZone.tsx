@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RosterMember } from "./community.model";
 import type { CommunityRole } from "./membership.types";
@@ -46,7 +46,11 @@ export function CommunityDangerZone({
   const [open, setOpen] = useState<OpenModal>(null);
   const isOwner = isOwnerRole(role);
   const isStaff = isStaffRole(role);
-  const { state: ownerReview } = useCommunityOwnerReview(slug, isStaff);
+  const {
+    state: ownerReview,
+    isError: hasOwnerReviewFailed,
+    refetch: retryOwnerReview,
+  } = useCommunityOwnerReview(slug, isStaff);
 
   if (!isStaff) return null;
 
@@ -72,6 +76,11 @@ export function CommunityDangerZone({
       </div>
       <div className={styles.zone}>
         {roleLabelKey && <p className={styles.roleLine}>{t(roleLabelKey)}</p>}
+        {/* A failed read used to hide an open owner-review request entirely,
+            which is the one thing on this panel an owner has to see (DES-22). */}
+        {hasOwnerReviewFailed && (
+          <LoadErrorState compact onRetry={retryOwnerReview} />
+        )}
         {isReviewRaised && reviewSection}
         <DangerRow
           label={t("communities:detail.dangerZone.freeze.label")}

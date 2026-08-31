@@ -57,14 +57,14 @@
   letter-spacing: -0.02em;
 }
 .date .month {
-  font-size: 12px;
+  font-size: var(--text-12);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
   margin-top: 5px;
 }
 .type {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
@@ -79,7 +79,7 @@
   letter-spacing: -0.01em;
 }
 .meta {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: rgba(var(--cream-rgb), 0.6);
   display: flex;
   gap: 8px;
@@ -102,7 +102,7 @@
   gap: 12px;
 }
 .spots {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.55);
   white-space: nowrap;
 }
@@ -115,7 +115,7 @@
 .cta {
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   border-radius: var(--radius-pill);
   padding: 11px 20px;
   white-space: nowrap;

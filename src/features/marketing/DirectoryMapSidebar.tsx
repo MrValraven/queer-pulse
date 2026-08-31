@@ -1,5 +1,9 @@
 import { FiSearch, FiX } from "react-icons/fi";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import {
+  EmptyState,
+  LoadErrorState,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { type LocalPlace } from "./localPlaces";
@@ -35,6 +39,11 @@ function VenueCardSkeleton() {
 
 interface Props extends DirectoryMapViewState {
   loading: boolean;
+  /** True when the directory read failed (DES-25). The sidebar says so instead
+   *  of reading as "nothing here matches", which the map cannot distinguish. */
+  isError?: boolean;
+  /** Re-run the failed read, wired to the error state's retry. */
+  onRetry?: () => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
 }
@@ -58,6 +67,8 @@ export function DirectoryMapSidebar({
   toggleExpand,
   markBeen,
   loading,
+  isError = false,
+  onRetry,
   hasActiveFilters,
   onClearFilters,
 }: Props) {
@@ -117,7 +128,21 @@ export function DirectoryMapSidebar({
         )}
       </div>
 
-      {!loading && items.length === 0 && (
+      {!loading && isError && (
+        <LoadErrorState
+          compact
+          onRetry={onRetry}
+          title={
+            <Translation
+              i18nKey="marketing:directory.loadError.title"
+              components={{ em: <em /> }}
+            />
+          }
+          description={t("marketing:directory.loadError.body")}
+        />
+      )}
+
+      {!loading && !isError && items.length === 0 && (
         <EmptyState
           compact
           icon={<FiSearch />}

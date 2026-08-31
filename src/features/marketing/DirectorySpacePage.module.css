@@ -9,7 +9,7 @@
   padding-top: 24px;
 }
 .coverInner {
-  max-width: 1180px;
+  max-width: var(--maxw-page);
   margin: 0 auto;
   padding: 18px 16px 0;
 }
@@ -20,7 +20,7 @@
   gap: 12px;
 }
 .back {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-40);
   font-weight: 600;
   text-decoration: none;
@@ -49,7 +49,7 @@
   margin: 0;
   padding: 0 8px;
   list-style: none;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-40);
 }
@@ -59,10 +59,12 @@
   gap: 6px;
   min-width: 0;
 }
-.breadcrumbList li:not(:last-child)::after {
-  content: "›";
+/* DES glyph ban: this row previously drew its breadcrumb separator with a
+   CSS ::after "›". Removed — a react-icons chevron belongs in the component;
+   .breadcrumbList li keeps its 6px gap for that icon to sit in. */
+.crumbSep {
+  flex-shrink: 0;
   color: var(--ink-40);
-  font-weight: 400;
 }
 .breadcrumbList li:last-child {
   color: var(--text-strong);
@@ -81,13 +83,13 @@
   }
 }
 .ownerEdit {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 8px 14px;
   margin-bottom: 14px;
   text-decoration: none;
@@ -126,7 +128,7 @@
   background: rgba(var(--plum-rgb), 0.08);
 }
 .gCap {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   font-weight: 600;
 }
@@ -160,7 +162,7 @@
   letter-spacing: 0.01em;
 }
 .galleryEmptyLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -237,7 +239,7 @@
   width: 100%;
   padding: 0;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   overflow: hidden;
   cursor: zoom-in;
   background: none;
@@ -289,8 +291,9 @@
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(var(--plum-rgb), 0.86);
-  z-index: 300;
+  background: var(--scrim-strong);
+  backdrop-filter: var(--blur-sm);
+  z-index: var(--z-lightbox);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -333,7 +336,7 @@
   padding: 18px 24px;
 }
 .lightboxCounter {
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: rgba(var(--cream-rgb), 0.7);
@@ -350,7 +353,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 19px;
+  font-size: var(--text-19);
   transition: background 0.2s var(--ease);
 }
 @media (hover: hover) {
@@ -370,7 +373,7 @@
   display: block;
   max-width: min(84vw, 1000px);
   max-height: 78svh;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
   object-fit: contain;
 }
@@ -461,7 +464,7 @@
   width: min(320px, 100%);
 }
 .eyebrow {
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -482,7 +485,7 @@
   color: var(--accent);
 }
 .tagline {
-  font-size: 17px;
+  font-size: var(--text-17);
   color: var(--ink-60);
   font-style: italic;
   font-family: var(--serif);
@@ -499,11 +502,11 @@
   flex-wrap: wrap;
 }
 .pill {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 5px 11px;
   display: inline-flex;
   align-items: center;
@@ -515,7 +518,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 .verified::before {
   content: "";
@@ -534,7 +537,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 .friendlyPill {
   background: rgba(var(--accent-rgb), 0.1);
@@ -542,25 +545,25 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: var(--text-11);
 }
 /* Empty-state trust chip: a brand-new listing reads as "New", not as a hollow
    zero-star rating. */
 .newChip {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.1);
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   padding: 5px 11px;
 }
 .rating {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 .rating b {
@@ -579,7 +582,7 @@
 }
 .stars {
   color: var(--accent);
-  font-size: 14px;
+  font-size: var(--text-14);
 }
 
 .sec {
@@ -626,12 +629,12 @@
   color: var(--accent);
 }
 .subLine {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   margin-bottom: 18px;
 }
 .sec p {
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   line-height: 1.7;
   max-width: 62ch;
@@ -662,14 +665,14 @@
   padding: 14px 16px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 12px;
-  font-size: 14px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .featureIc {
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--radius-8);
   background: rgba(var(--jade-rgb), 0.1);
   display: flex;
   align-items: center;
@@ -704,7 +707,7 @@
 .hoursCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
   container: directoryHours / inline-size;
 }
@@ -756,7 +759,7 @@
   gap: 12px;
   padding: 11px 16px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .hoursRow:last-child {
@@ -775,7 +778,7 @@
 }
 .todayTag {
   color: var(--jade);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -789,8 +792,8 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.02em;
   margin: 0 0 12px;
@@ -812,7 +815,7 @@
 /* "Former address" marker beside a closed or moved venue's address block. */
 .formerAddressTag {
   display: block;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -824,8 +827,8 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.02em;
   margin: 0 0 12px;
@@ -839,7 +842,7 @@
   opacity: 0.62;
 }
 .hoursStateNote {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   margin: 0 0 12px;
   max-width: 62ch;
@@ -854,7 +857,7 @@
 }
 .exceptionsTitle {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -873,7 +876,7 @@
   align-items: baseline;
   padding: 9px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
 }
 .exceptionRow:last-child {
@@ -892,7 +895,7 @@
 }
 .exceptionNote {
   grid-column: 1 / -1;
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.5;
   text-wrap: pretty;
@@ -904,7 +907,7 @@
   align-items: flex-start;
   gap: 7px;
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
   text-wrap: pretty;
@@ -924,9 +927,9 @@
 .apptNote {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   padding: 18px 20px;
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   display: flex;
   align-items: center;
@@ -943,7 +946,7 @@
   padding: 20px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   margin-bottom: 18px;
   display: flex;
   flex-direction: column;
@@ -964,7 +967,7 @@
   color: var(--text-strong);
 }
 .ratingDistCount {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .ratingDistBars {
@@ -983,7 +986,7 @@
   gap: 3px;
   width: 26px;
   flex: none;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-60);
 }
@@ -995,14 +998,14 @@
 .ratingDistTrack {
   flex: 1;
   height: 8px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
 }
 .ratingDistFill {
   height: 100%;
   width: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   transform-origin: left;
   transition: transform 0.6s var(--ease);
@@ -1011,7 +1014,7 @@
   width: 22px;
   flex: none;
   text-align: right;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1037,7 +1040,7 @@
   gap: 7px;
 }
 .revSortLabel {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1050,13 +1053,13 @@
   opacity: 0.6;
 }
 .revEmpty {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   padding: 18px 4px;
 }
 .revEmptyReset {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--accent);
   background: none;
@@ -1071,7 +1074,7 @@
   padding: 20px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
   margin-bottom: 12px;
 }
 .revHead {
@@ -1091,14 +1094,15 @@
   min-width: 0;
   text-decoration: none;
   color: inherit;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
 }
 .revAuthor:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .revName {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--text-strong);
   transition: color 0.18s var(--ease);
@@ -1111,17 +1115,17 @@
   }
 }
 .revByline {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .revStars {
   margin-left: auto;
   color: var(--accent);
-  font-size: 13px;
+  font-size: var(--text-13);
   letter-spacing: 0.04em;
 }
 .revText {
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.65;
   text-wrap: pretty;
@@ -1156,7 +1160,7 @@
   border: 0;
   background: none;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent);
   cursor: pointer;
@@ -1174,7 +1178,7 @@
    visually with the reply CTA. */
 .reportToggle {
   padding: 4px 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .reportToggle svg {
@@ -1188,7 +1192,7 @@
   padding: 14px 16px;
   background: rgba(var(--plum-rgb), 0.06);
   border-left: 3px solid var(--plum);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
 }
 .ownerReplyHead {
   display: flex;
@@ -1200,16 +1204,16 @@
 .ownerReplyTitle {
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--plum);
 }
 .ownerReplyDate {
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   flex: none;
 }
 .ownerReplyText {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.6;
   text-wrap: pretty;
@@ -1226,7 +1230,7 @@
 .replyToggle {
   margin-top: 12px;
   padding: 8px 18px;
-  font-size: 13px;
+  font-size: var(--text-13);
 }
 .replyComposer {
   display: flex;
@@ -1238,12 +1242,12 @@
   width: 100%;
   padding: 10px 12px;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.6;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   resize: vertical;
 }
 .replyInput:focus {
@@ -1284,7 +1288,7 @@
   padding: 14px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
 }
 .actionBarBtn {
   flex: 1 1 auto;
@@ -1296,7 +1300,7 @@
     left: 0;
     right: 0;
     bottom: calc(var(--bottom-inset, 0px) + var(--consent-inset, 0px));
-    z-index: 60;
+    z-index: var(--z-sticky);
     gap: 8px;
     padding: 10px 12px max(env(safe-area-inset-bottom), 8px);
     background: var(--paper);
@@ -1337,11 +1341,11 @@
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   padding: 22px;
 }
 .sideCard h4 {
-  font-size: 11.5px;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1378,7 +1382,7 @@
   stroke-width: 1.4;
 }
 .addr {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.55;
 }
@@ -1386,7 +1390,7 @@
   display: block;
   color: var(--text-strong);
   font-family: var(--serif);
-  font-size: 20px;
+  font-size: var(--text-20);
   letter-spacing: -0.01em;
   margin-bottom: 3px;
 }
@@ -1396,9 +1400,9 @@
   gap: 12px;
   padding: 14px 16px;
   border: 1px solid rgba(var(--plum-rgb), 0.09);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   background: rgba(var(--plum-rgb), 0.04);
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink);
   line-height: 1.5;
 }
@@ -1411,7 +1415,7 @@
 .claimLink {
   display: inline-block;
   margin-top: 12px;
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
   text-decoration: none;
@@ -1438,7 +1442,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
   margin-bottom: 10px;
 }
@@ -1453,7 +1457,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   padding: 8px 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
@@ -1502,13 +1506,13 @@
   margin-bottom: 12px;
 }
 .ownerName {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
   color: var(--text-strong);
   margin-bottom: 3px;
 }
 .ownerRole {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
   margin-bottom: 10px;
 }
@@ -1516,11 +1520,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  border-radius: 6px;
+  border-radius: var(--radius-6);
   padding: 4px 9px;
   margin-bottom: 12px;
 }
@@ -1540,7 +1544,7 @@
   background: rgba(var(--plum-rgb), 0.06);
 }
 .ownerBio {
-  font-size: 13px;
+  font-size: var(--text-13);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 14px;
@@ -1555,7 +1559,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink);
 }
 .whoAv {
@@ -1564,7 +1568,7 @@
   border-radius: 50%;
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 10.5px;
+  font-size: var(--text-10-5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1577,12 +1581,12 @@
 }
 .whoWhen {
   color: var(--ink-40);
-  font-size: 12px;
+  font-size: var(--text-12);
   margin-left: auto;
 }
 
 .upRow {
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   line-height: 1.55;
   margin-bottom: 10px;
@@ -1605,7 +1609,7 @@
   gap: 6px;
   margin-top: 4px;
   color: var(--ink-40);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .upCalendarRow svg {
   width: 12px;
@@ -1622,7 +1626,7 @@
   margin: 0;
   color: var(--accent-ink);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
@@ -1658,12 +1662,12 @@
   margin-bottom: 18px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
+  border-radius: var(--radius-16);
 }
 .reviewFormTitle {
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 15px;
+  font-size: var(--text-15);
   color: var(--text-strong);
 }
 .starPick {
@@ -1726,12 +1730,12 @@
   width: 100%;
   padding: 12px 14px;
   font-family: var(--sans);
-  font-size: 14.5px;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.6;
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   resize: vertical;
 }
 .reviewInput:focus {
@@ -1768,7 +1772,7 @@
   margin: 0 4px 0 0;
   max-width: none;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   line-height: 1.4;
   text-align: right;
   color: var(--ink-40);
@@ -1798,11 +1802,11 @@
 .reviewSignIn {
   padding: 16px 18px;
   margin-bottom: 18px;
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-40);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: var(--radius-14);
 }
 .reviewSignIn a {
   color: var(--accent-ink);
@@ -1823,7 +1827,7 @@
    applied everywhere, with a way out to the full explanation. */
 .trustHowLine {
   margin-top: 24px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   line-height: 1.6;
   color: var(--ink-40);
 }
@@ -1893,7 +1897,7 @@
   grid-template-columns: 1fr;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 18px;
+  border-radius: var(--radius-18);
   overflow: hidden;
 }
 @container directoryVisit (min-width: 480px) {
@@ -1942,7 +1946,7 @@
   align-items: center;
   gap: 7px;
   margin-top: 16px;
-  font-size: 13.5px;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink-60);
   text-decoration: none;
@@ -1980,7 +1984,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .nearbySub {
-  font-size: 14px;
+  font-size: var(--text-14);
   color: var(--ink-60);
   line-height: 1.6;
   margin: -12px 0 18px;
@@ -1996,7 +2000,7 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 10px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 /* "edited" is spelled out in words, so the signal never depends on colour. */
@@ -2013,7 +2017,7 @@
   padding: 0;
   background: none;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   cursor: pointer;
   overflow: hidden;
   line-height: 0;
@@ -2024,12 +2028,13 @@
   max-width: 320px;
   max-height: 260px;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: var(--radius-14);
   border: 1px solid rgba(var(--line-rgb), 0.12);
 }
 .revPhotoBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 /* Row under the review body: helpful vote, report, and the author's own edit.
@@ -2043,7 +2048,7 @@
 }
 .revEditToggle {
   padding: 4px 10px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
 }
 .revEditToggle svg {
@@ -2064,13 +2069,13 @@
   min-height: 40px;
   padding: 6px 14px;
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--ink-60);
   background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   text-decoration: none;
 }
 .helpfulBtn {
@@ -2100,8 +2105,9 @@
   color: var(--jade-ink);
 }
 .helpfulBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .helpfulBtnOn {
   color: var(--jade-ink);
@@ -2119,7 +2125,7 @@
   align-items: flex-start;
   gap: 7px;
   margin-top: 8px;
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -2143,7 +2149,7 @@
   max-width: 260px;
   max-height: 200px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: var(--radius-12);
   border: 1px solid rgba(var(--line-rgb), 0.12);
 }
 .reviewPhotoActions {
@@ -2158,12 +2164,12 @@
   min-height: 34px;
   padding: 7px 12px;
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 10px;
+  border-radius: var(--radius-10);
   cursor: pointer;
   transition: border-color 0.15s var(--ease);
 }
@@ -2173,15 +2179,16 @@
   }
 }
 .reviewPhotoBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .reviewPhotoBtn:disabled {
   opacity: 0.6;
   cursor: default;
 }
 .reviewPhotoError {
-  font-size: 12.5px;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--danger);
 }

@@ -1,4 +1,4 @@
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiCheckCircle, FiCircle } from "react-icons/fi";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -143,6 +143,7 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
       ),
     },
   ];
+  const PublishStatusIcon = form.allChecked ? FiCheckCircle : FiCircle;
   const remaining = CONFIRM_CHECK_KEYS.length - form.checkedCount;
   return (
     <div>
@@ -203,6 +204,7 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
           .filter(Boolean)
           .join(" ")}
       >
+        <PublishStatusIcon aria-hidden />
         {form.allChecked ? (
           t("gatherings:create.step5.allSet")
         ) : (

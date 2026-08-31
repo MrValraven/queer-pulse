@@ -1,4 +1,4 @@
-import { Button, Modal } from "../../shared/components/ui";
+import { Button, LoadErrorState, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import styles from "./forumModals.module.css";
@@ -18,10 +18,15 @@ export interface PostRevisionEntry {
 export function EditHistoryModal({
   revisions,
   isLoading,
+  isError = false,
+  onRetry,
   onClose,
 }: {
   revisions: PostRevisionEntry[];
   isLoading: boolean;
+  /** A failed history fetch: shows the retry panel instead of "never edited". */
+  isError?: boolean;
+  onRetry?: () => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -37,8 +42,13 @@ export function EditHistoryModal({
         </Button>
       }
     >
-      {!isLoading && revisions.length === 0 && (
-        <p className={styles.sub}>{t("forum:history.empty")}</p>
+      {isError ? (
+        <LoadErrorState onRetry={onRetry} compact />
+      ) : (
+        !isLoading &&
+        revisions.length === 0 && (
+          <p className={styles.sub}>{t("forum:history.empty")}</p>
+        )
       )}
       <ul className={styles.historyList}>
         {revisions.map((revision) => (

@@ -44,7 +44,7 @@
 
 .eyebrow {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -124,7 +124,7 @@
   background: rgba(var(--plum-rgb), 0.6);
   color: rgba(var(--cream-rgb), 0.9);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 500;
 }
 
@@ -155,7 +155,7 @@
 .statLabel {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 16px;
+  font-size: var(--text-16);
   color: var(--ink);
   max-width: 40ch;
   text-align: center;
@@ -163,7 +163,7 @@
 
 .statSource {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-top: 4px;
 }
@@ -233,7 +233,7 @@
   background: rgba(var(--plum-rgb), 0.62);
   color: var(--cream);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--text-11);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -263,8 +263,9 @@
   cursor: pointer;
 }
 .baRange:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   border-radius: var(--radius-pill);
 }
 .baRange::-webkit-slider-runnable-track {
@@ -324,7 +325,7 @@
   background: var(--plum);
   color: var(--cream);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -336,13 +337,14 @@
   }
 }
 .revealBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .revealAnswer {
   font-family: var(--sans);
-  font-size: 18px;
+  font-size: var(--text-18);
   line-height: 1.6;
   color: var(--ink);
   max-width: 48ch;
