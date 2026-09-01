@@ -121,6 +121,16 @@ export interface ModReportDTO {
     disputeReason?: string;
     listingEvidence?: string;
     contactEmail?: string;
+    /**
+     * The report's raw `evidence` jsonb array, moderator-only. Carries whatever
+     * the reporter attached (`url`, `screenshot`) plus the server snapshots
+     * captured at filing time (`message-snapshot`, `housing-snapshot`,
+     * `photo-snapshot`). Typed `unknown[]` on purpose: the shapes are declared
+     * server-side in `queerpulse-backend/src/reports/report-evidence.ts`, new
+     * ones land without a frontend deploy, and a reader that does not recognise
+     * an entry must leave it alone rather than dropping it.
+     */
+    evidence?: unknown[];
   };
 }
 

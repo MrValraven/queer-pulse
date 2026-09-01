@@ -8,7 +8,7 @@
   border-radius: var(--radius-pill, 999px);
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
-  font-size: 0.74rem;
+  font-size: var(--text-12);
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
@@ -16,7 +16,7 @@
 
 .badgeIcon {
   flex: none;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
 }
 
 /* One-line norm statement for the board header / housing home. */
@@ -28,7 +28,7 @@
   border-radius: var(--radius-card, 14px);
   background: rgba(var(--jade-rgb), 0.09);
   color: var(--ink);
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   line-height: 1.5;
 }
 
@@ -36,7 +36,7 @@
   flex: none;
   margin-block-start: 0.1rem;
   color: var(--jade);
-  font-size: 1rem;
+  font-size: var(--text-16);
 }
 
 .noteText em {

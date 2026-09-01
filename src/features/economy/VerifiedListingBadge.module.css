@@ -5,7 +5,7 @@
   padding-block: 0.28em;
   padding-inline: 0.6em;
   border-radius: var(--radius-pill, 999px);
-  font-size: 0.74rem;
+  font-size: var(--text-12);
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;

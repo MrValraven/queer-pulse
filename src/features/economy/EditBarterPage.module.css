@@ -1,0 +1,97 @@
+.page {
+  max-width: 760px;
+  margin-inline: auto;
+  padding-block: clamp(20px, 5vw, 40px);
+  padding-inline: clamp(16px, 4vw, 24px);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--accent-ink);
+}
+
+.head {
+  margin-block: 24px 20px;
+}
+
+.eyebrow {
+  font-size: var(--text-13);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  line-height: 1.08;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+.sub {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  max-width: 56ch;
+}
+
+/* Says how many people are already waiting on this swap, so a headline change
+   is made with its consequence in view. */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--amber-rgb), 0.22);
+  border-radius: var(--radius-14);
+  background: rgba(var(--amber-rgb), 0.09);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 22px 20px;
+}
+
+.error {
+  margin: 0 0 16px;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--accent-ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+}

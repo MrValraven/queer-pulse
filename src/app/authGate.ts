@@ -125,6 +125,14 @@ const GATED_PATTERNS: string[] = [
   // not ship an ungated player and membership page. CON-03.
   "/cinema/watch",
   "/cinema/membership",
+  // Culture's commission-interest form (PRD-46). The Culture landing page is
+  // public and unlaunched, but this one child route is a live member action:
+  // `POST /commissions/interest` is `ActiveMemberGuard`ed, so a logged-out
+  // visitor could only ever fill the form in and be 401'd on submit. Written as
+  // a literal because `scripts/publicPaths.mjs` mirrors this list by text and
+  // the constant lives in `features/culture/commissionInterest.paths.ts`; the
+  // two must be changed together.
+  "/magazine/culture/commission-interest",
 ];
 
 /**
@@ -235,8 +243,24 @@ const DEMO_ONLY_NAV_PATTERNS: string[] = [
   "/culture",
 ];
 
+/**
+ * Culture paths the `${routes.culture}/*` pattern above would otherwise swallow,
+ * and must not.
+ *
+ * The commission-interest form is live in both modes (PRD-46): it posts to
+ * `POST /commissions/interest` and lands in the staffed
+ * `/admin/commission-interests` queue, so a link to it is an honest link in live
+ * mode and hiding it would put back the dead end this route exists to remove.
+ * Nothing in the nav points here today, and this keeps that true by choice
+ * rather than by luck.
+ */
+const DEMO_ONLY_NAV_EXCEPTIONS: string[] = [
+  "/magazine/culture/commission-interest",
+];
+
 /** True when a path is a demo-only surface hidden from the live-mode nav. */
 export function isDemoOnlyNavPath(pathname: string): boolean {
+  if (matchesAny(pathname, DEMO_ONLY_NAV_EXCEPTIONS)) return false;
   return matchesAny(pathname, DEMO_ONLY_NAV_PATTERNS);
 }
 

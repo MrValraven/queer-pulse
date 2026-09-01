@@ -8,15 +8,20 @@ import styles from "./HousingNeighbourhoodPicker.module.css";
 const OPTIONS = LISBON_HOUSING_NEIGHBOURHOODS.map((entry) => entry.name);
 
 /** Filter-bar dropdown that multi-selects Lisbon housing neighbourhoods. The
- * trigger (named by the filter bar's <label htmlFor={id}>) shows the count; the
- * panel is a tick-able ChipSelect. Selection is a plain string[] of names,
- * matched against a listing's `hood`. */
+ * trigger shows the count; the panel is a tick-able ChipSelect. Selection is a
+ * plain string[] of names, matched against a listing's `hood`. */
 export function HousingNeighbourhoodPicker({
   id,
+  labelledBy,
   selected,
   onChange,
 }: {
   id: string;
+  /** Id of the heading naming this control, when it sits under one (a
+   *  `RefineGroup` label rather than a `<label htmlFor>`). The trigger names
+   *  itself alongside it, so the accessible name stays "Neighbourhood" plus
+   *  whatever is currently chosen. */
+  labelledBy?: string;
   selected: string[];
   onChange: (next: string[]) => void;
 }) {
@@ -70,6 +75,7 @@ export function HousingNeighbourhoodPicker({
         ref={triggerRef}
         type="button"
         className={styles.trigger}
+        aria-labelledby={labelledBy ? `${labelledBy} ${id}` : undefined}
         aria-haspopup="dialog"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}

@@ -1,5 +1,5 @@
 .hero {
-  padding: 140px 0 40px;
+  padding: var(--section-y-144) 0 40px;
 }
 .eye {
   font-size: var(--text-12);
@@ -12,7 +12,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 72px);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -36,7 +36,7 @@
 .stat b {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: var(--text-strong);
   display: block;
   letter-spacing: -0.02em;
@@ -106,7 +106,7 @@
   display: grid;
   grid-template-columns: 1fr 400px;
   gap: 28px;
-  padding: 32px 0 80px;
+  padding: 32px 0 var(--section-y-80);
   align-items: start;
 }
 .mapPanel {
@@ -330,7 +330,7 @@
 .sbHeading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }

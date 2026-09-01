@@ -2,7 +2,7 @@
   max-width: var(--maxw-page);
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 24px 28px 80px;
+  padding: 24px 28px var(--section-y-80);
 }
 .back {
   font-size: var(--text-13);
@@ -53,7 +53,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(34px, 5vw, 54px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -118,7 +118,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 14px;
@@ -172,8 +172,8 @@
   margin-bottom: 10px;
 }
 .recAv {
-  width: 34px;
-  height: 34px;
+  width: 2.833em;
+  height: 2.833em;
   border-radius: 50%;
   font-family: var(--sans);
   font-weight: 700;
@@ -228,6 +228,23 @@
 }
 .recWithdraw {
   margin-inline-start: auto;
+}
+
+/* Someone else's recommendation: the report control sits under the text on the
+   same hairline the withdraw control uses, so the two footers read as one
+   pattern and neither competes with the rating above them. */
+.recReport {
+  margin-block-start: 14px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The byline of a warning that outlived its author. Quieter than a real name,
+   because it is a description of an absence rather than somebody speaking. */
+.recNameGone {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--ink-40);
 }
 
 .side {

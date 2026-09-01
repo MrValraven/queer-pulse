@@ -79,6 +79,44 @@ export function HousingBoard() {
 
   const [view, setView] = useState<"list" | "map">("list");
 
+  // Rendered here rather than inside the filter bar so its styling stays with
+  // the rest of the board's chrome; the bar only decides where on its control
+  // row it sits.
+  const viewSwitcher = (
+    <div
+      className={styles.viewToggle}
+      role="group"
+      aria-label={`${t("economy:housing.map.viewList")} / ${t("economy:housing.map.viewMap")}`}
+    >
+      <button
+        type="button"
+        className={[
+          styles.viewToggleBtn,
+          view === "list" && styles.viewToggleBtnOn,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        aria-pressed={view === "list"}
+        onClick={() => setView("list")}
+      >
+        <FiList aria-hidden /> {t("economy:housing.map.viewList")}
+      </button>
+      <button
+        type="button"
+        className={[
+          styles.viewToggleBtn,
+          view === "map" && styles.viewToggleBtnOn,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        aria-pressed={view === "map"}
+        onClick={() => setView("map")}
+      >
+        <FiMap aria-hidden /> {t("economy:housing.map.viewMap")}
+      </button>
+    </div>
+  );
+
   const toggleNeighbourhood = (name: string) =>
     setFilters((prev) => {
       const current = prev.areas ?? [];
@@ -130,44 +168,13 @@ export function HousingBoard() {
             </div>
           </div>
 
-          <HousingFilterBar filters={filters} onChange={setFilters} />
+          <HousingFilterBar
+            filters={filters}
+            onChange={setFilters}
+            viewSlot={viewSwitcher}
+          />
 
           <HousingSavedSearches onApply={setFilters} />
-
-          <div className={styles.viewRow}>
-            <div
-              className={styles.viewToggle}
-              role="group"
-              aria-label={`${t("economy:housing.map.viewList")} / ${t("economy:housing.map.viewMap")}`}
-            >
-              <button
-                type="button"
-                className={[
-                  styles.viewToggleBtn,
-                  view === "list" && styles.viewToggleBtnOn,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-pressed={view === "list"}
-                onClick={() => setView("list")}
-              >
-                <FiList aria-hidden /> {t("economy:housing.map.viewList")}
-              </button>
-              <button
-                type="button"
-                className={[
-                  styles.viewToggleBtn,
-                  view === "map" && styles.viewToggleBtnOn,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                aria-pressed={view === "map"}
-                onClick={() => setView("map")}
-              >
-                <FiMap aria-hidden /> {t("economy:housing.map.viewMap")}
-              </button>
-            </div>
-          </div>
 
           {hasListingsError && !loading ? (
             // The directory is this page's main content, so a failed fetch says

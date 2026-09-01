@@ -1,6 +1,6 @@
 /* ── Breadcrumb (mirrors filmmaker page) ── */
 .crumb {
-  padding: 96px 0 0;
+  padding: var(--section-y-96) 0 0;
 }
 .crumbRow {
   display: flex;
@@ -33,7 +33,7 @@
 /* ── Hero (dark plum) ── */
 .hero {
   margin-top: 24px;
-  padding: 72px 0;
+  padding: var(--section-y-72) 0;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -124,7 +124,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(52px, 8vw, 108px);
+  font-size: var(--text-hero);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.028em;
   line-height: 0.94;
@@ -202,7 +202,7 @@
 .stat .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 34px;
+  font-size: var(--text-34);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.018em;
   line-height: 1;
@@ -221,7 +221,7 @@
 
 /* ── Body ── */
 .body {
-  padding: 72px 0 100px;
+  padding: var(--section-y-72) 0 var(--section-y-104);
 }
 .bodyGrid {
   display: grid;
@@ -254,7 +254,7 @@
 .s3 h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.012em;
 }
@@ -330,7 +330,7 @@
 .piTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   line-height: 1.14;
   letter-spacing: -0.01em;
@@ -539,8 +539,8 @@
   }
 }
 .ocAv {
-  width: 38px;
-  height: 38px;
+  width: 2.714em; /* 38 / 14 */
+  height: 2.714em;
   border-radius: 50%;
   font-family: var(--serif);
   font-size: var(--text-14);

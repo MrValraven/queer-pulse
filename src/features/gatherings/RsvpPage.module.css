@@ -47,7 +47,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 32px 20px 60px;
+  padding: 32px 20px var(--section-y-64);
   position: relative;
 }
 .page::before {
@@ -129,7 +129,7 @@
 .h {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(36px, 7vw, 52px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -169,8 +169,8 @@
   border-bottom: none;
 }
 .detailIcon {
-  width: 32px;
-  height: 32px;
+  width: 2.133em; /* 32 / 15 */
+  height: 2.133em;
   border-radius: var(--radius-8);
   display: flex;
   align-items: center;
@@ -302,7 +302,7 @@
 
 .coc {
   background: var(--cream);
-  padding: 52px 20px 60px;
+  padding: var(--section-y-56) 20px var(--section-y-64);
   position: relative;
   z-index: 1;
 }
@@ -313,7 +313,7 @@
 .cocTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(22px, 3.5vw, 30px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 22px;

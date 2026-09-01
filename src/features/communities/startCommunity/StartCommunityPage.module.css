@@ -55,7 +55,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 4.4vw, 50px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.05;
@@ -107,7 +107,7 @@
 
 /* ---- page + grid ---- */
 .page {
-  padding: 8px 0 90px;
+  padding: 8px 0 var(--section-y-88);
 }
 .grid {
   display: grid;
@@ -164,7 +164,7 @@
 .chH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(30px, 4vw, 46px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.06;
@@ -464,7 +464,7 @@
 .accName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -575,8 +575,9 @@
   margin-bottom: 8px;
 }
 .trAv {
-  width: 32px;
-  height: 32px;
+  /* 32 / 12, in em so the box scales with its glyph. */
+  width: 2.667em;
+  height: 2.667em;
   border-radius: 50%;
   font-size: var(--text-12);
   font-weight: 700;
@@ -812,8 +813,9 @@
   padding: 10px 0;
 }
 .lsN {
-  width: 26px;
-  height: 26px;
+  /* 26 / 12, in em so the box scales with its glyph. */
+  width: 2.167em;
+  height: 2.167em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.06);
   color: var(--text-strong);
@@ -1229,8 +1231,9 @@
   gap: 9px;
 }
 .signedAv {
-  width: 26px;
-  height: 26px;
+  /* 26 / 10.5, in em so the box scales with its glyph. */
+  width: 2.476em;
+  height: 2.476em;
   border-radius: 50%;
   font-size: var(--text-10-5);
   font-weight: 700;
@@ -1325,7 +1328,7 @@
 
 /* ---- opening / sending ---- */
 .statusPanel {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
   text-align: center;
 }
 .ring {
@@ -1384,7 +1387,7 @@
 .cpvEmpty {
   border: 1.5px dashed rgba(var(--line-rgb), 0.18);
   border-radius: var(--radius-card);
-  padding: 52px 30px;
+  padding: var(--section-y-56) 30px;
   text-align: center;
   background: rgba(var(--plum-rgb), 0.015);
 }
@@ -1466,17 +1469,19 @@
   padding: 0 22px 22px;
 }
 .cpvAvatar {
-  width: 60px;
-  height: 60px;
+  /* 60 / 22, in em so the tile scales with its initials. The pull-up stays
+     exactly half the tile (30 / 22) so the overlap on the cover holds. */
+  width: 2.727em;
+  height: 2.727em;
   border-radius: var(--radius-18);
-  margin-top: -30px;
+  margin-top: -1.364em;
   border: 3px solid var(--paper);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   letter-spacing: -0.01em;
   position: relative;
   z-index: 1;
@@ -1485,7 +1490,7 @@
 .cpvName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.12;

@@ -1,5 +1,5 @@
 .crumb {
-  padding: 110px 0 0;
+  padding: var(--section-y-112) 0 0;
 }
 .crumbRow {
   display: flex;
@@ -33,7 +33,7 @@
 }
 
 .hero {
-  padding: 42px 0 80px;
+  padding: 42px 0 var(--section-y-80);
   position: relative;
   overflow: hidden;
 }
@@ -220,7 +220,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 5.4vw, 76px);
+  font-size: clamp(2.5rem, 5.4vw, 4.75rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -255,8 +255,8 @@
   border-radius: 0 var(--radius-14) var(--radius-14) 0;
 }
 .cpAv {
-  width: 38px;
-  height: 38px;
+  width: 2.714em; /* 38 / 14 */
+  height: 2.714em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.16);
   color: var(--accent-ink);
@@ -459,7 +459,7 @@
 }
 
 .body {
-  padding: 0 0 80px;
+  padding: 0 0 var(--section-y-80);
 }
 .bodyGrid {
   display: grid;
@@ -473,7 +473,7 @@
 .block h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 16px;
@@ -555,8 +555,8 @@
   align-items: flex-start;
 }
 .ccAv {
-  width: 40px;
-  height: 40px;
+  width: 3.077em; /* 40 / 13 */
+  height: 3.077em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -622,8 +622,8 @@
   align-items: center;
 }
 .fmAv {
-  width: 54px;
-  height: 54px;
+  width: 2.842em; /* 54 / 19 */
+  height: 2.842em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
   color: var(--accent-ink);
@@ -694,7 +694,7 @@ a.fmName:hover {
 }
 
 .splitBand {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -734,7 +734,7 @@ a.fmName:hover {
 .splitInner h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.4vw, 52px);
+  font-size: var(--text-display);
   letter-spacing: -0.022em;
   line-height: 1.04;
 }
@@ -765,7 +765,7 @@ a.fmName:hover {
 .sbAmount {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 54px;
+  font-size: var(--text-54);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-top: 6px;
@@ -829,14 +829,14 @@ a.fmName:hover {
 }
 
 .related {
-  padding: 80px 0 100px;
+  padding: var(--section-y-80) 0 var(--section-y-104);
   background: rgba(var(--plum-rgb), 0.03);
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .related h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: var(--text-strong);
   letter-spacing: -0.018em;
   margin-bottom: 8px;

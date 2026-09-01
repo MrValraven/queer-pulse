@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 import { FaLeaf, FaMasksTheater, FaTents } from "react-icons/fa6";
 import type { AvatarTint } from "../../shared/components/ui";
+import type { CommissionCat } from "./commissionCategories";
 
 export type TabKey = "club" | "commission" | "showcase" | "radio";
 
@@ -118,18 +119,15 @@ export const THREADS: Thread[] = [
   },
 ];
 
-export type CommissionCat = "Photo" | "Music" | "Writing" | "Design" | "Film";
-
-/** i18n Pattern A — label-key indirection. `cat` is the canonical id (also
- * the shape the backend's `CreateCommissionInterestDto.commissionCategory`
- * expects, see `api/culture.api.ts`); this map resolves its display label. */
-export const COMMISSION_CAT_LABEL_KEY: Record<CommissionCat, string> = {
-  Photo: "culture:commissions.cat.photo",
-  Music: "culture:commissions.cat.music",
-  Writing: "culture:commissions.cat.writing",
-  Design: "culture:commissions.cat.design",
-  Film: "culture:commissions.cat.film",
-};
+// The commission taxonomy moved to `./commissionCategories`, which carries no
+// fixtures, so the live `CommissionInterestPage` can read it without pulling
+// this file's demo mocks into its chunk. Re-exported here so the demo-mode
+// callers that already import it from `culture.data` keep working.
+export type { CommissionCat } from "./commissionCategories";
+export {
+  COMMISSION_CATS,
+  COMMISSION_CAT_LABEL_KEY,
+} from "./commissionCategories";
 
 export interface Commission {
   category: CommissionCat;

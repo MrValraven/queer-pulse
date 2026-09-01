@@ -1,6 +1,6 @@
 /* ── Header — plum hero with short-version card ── */
 .header {
-  padding: 128px 0 60px;
+  padding: var(--section-y-128) 0 var(--section-y-64);
   position: relative;
   overflow: hidden;
 }
@@ -38,7 +38,7 @@
 .headTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(48px, 7vw, 98px);
+  font-size: clamp(3rem, 7vw, 6.125rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.026em;
   line-height: 0.94;
@@ -102,7 +102,7 @@
 
 /* ── Body layout ── */
 .body {
-  padding: 72px 0 100px;
+  padding: var(--section-y-72) 0 var(--section-y-104);
 }
 .bodyGrid {
   display: grid;
@@ -193,7 +193,7 @@
 .ccTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.018em;
   line-height: 1.04;
@@ -238,7 +238,7 @@
 .faqHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
   margin-bottom: 24px;
@@ -327,7 +327,7 @@
 }
 .contactTitle {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
   margin-bottom: 12px;

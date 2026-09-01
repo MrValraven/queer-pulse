@@ -8,6 +8,7 @@ import type {
   PriorReports,
   Ratification,
   ReportDetail,
+  ReportedPhoto,
   ReporterCredibility,
   ReportChip,
 } from "../adminModeration.data";
@@ -274,7 +275,44 @@ export function modReportDetailFrom(
     detail.listingEvidence = dto.detail.listingEvidence;
   }
   if (dto.detail.contactEmail) detail.contactEmail = dto.detail.contactEmail;
+  // The gathering-photo snapshot out of the raw evidence array. Read defensively
+  // rather than cast: `evidence` is a `jsonb` column written by several deploys,
+  // it holds entry shapes this build has never heard of, and an entry that does
+  // not parse must leave the drawer with no photo section rather than a
+  // half-rendered one.
+  const reportedPhoto = reportedPhotoFrom(dto.detail.evidence);
+  if (reportedPhoto) detail.reportedPhoto = reportedPhoto;
   return detail;
+}
+
+/**
+ * The `photo-snapshot` entry, if this report carries one.
+ *
+ * The server writes exactly one per `event_photo` report
+ * (`ReportsService.buildEvidence`); the first valid one wins. `caption` is
+ * normalised to `null` for anything that is not a string, so the drawer's
+ * "is there a caption" check never has to think about `undefined`.
+ */
+function reportedPhotoFrom(
+  evidence: unknown[] | undefined,
+): ReportedPhoto | undefined {
+  if (!evidence) return undefined;
+  for (const entry of evidence) {
+    if (typeof entry !== "object" || entry === null) continue;
+    const candidate = entry as Record<string, unknown>;
+    if (candidate.type !== "photo-snapshot") continue;
+    if (typeof candidate.photoId !== "string" || !candidate.photoId) continue;
+    if (typeof candidate.uploadedAt !== "string") continue;
+    return {
+      photoId: candidate.photoId,
+      caption:
+        typeof candidate.caption === "string" && candidate.caption
+          ? candidate.caption
+          : null,
+      uploadedAt: candidate.uploadedAt,
+    };
+  }
+  return undefined;
 }
 
 export function appealDtoToView(dto: AppealDTO): AppealView {

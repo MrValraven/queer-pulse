@@ -1640,7 +1640,7 @@ export const admin: Catalog = {
   // matching refusal (`moderation.refusal.ambiguousAuthors`) confirms what
   // they already read instead of contradicting it.
   "moderation.reportDrawer.ambiguousAuthorsNote":
-    "This is a question and the answer under it, and different people can have written them. The report doesn't record which one was reported, so restrict and ban won't go through here.",
+    "This covers what was posted and the answer under it, and two different people can have written them. The report doesn't record which half somebody meant, so restrict and ban can be refused here.",
   "moderation.reportDrawer.accountActionsTarget":
     "Restrict and ban act on whoever posted this. Hide and remove act on the content itself. With no account behind it, an unclaimed listing or an erased one, restrict and ban will not go through.",
   "moderation.reportDrawer.restrictDurationLabel": "Restriction length",
@@ -1785,7 +1785,7 @@ export const admin: Catalog = {
   // refusal saying two people wrote it would otherwise contradict what the
   // moderator just read.
   "moderation.refusal.ambiguousAuthors":
-    "That didn't go through: this report covers a question and the answer under it, and two different people wrote them. The drawer names whoever asked, so open the listing to see who wrote the part you mean and act from their drawer, or act on the content.",
+    "That didn't go through: this report covers what was posted and the answer under it, and two different people wrote them. The drawer names whoever posted first, so open the page it was posted on, see who wrote the half you mean and act from their drawer, or act on the content.",
   "moderation.refusal.houseAccount":
     "That didn't go through: what was reported traces back to the house account, which is never a moderation target. Act on the content, or dismiss the report.",
   "moderation.refusal.staffAccount":
@@ -5331,4 +5331,18 @@ export const admin: Catalog = {
     "That escalation could not be resolved.",
   "banEvasionEscalations.error.alreadyResolved":
     "Somebody has already resolved this escalation.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PHOTO-EVIDENCE — PHOTO-EVIDENCE. The reported gathering photo inside the moderation report drawer (AdminReportPhotoEvidence.tsx). Rendered only for an event_photo report. imageAlt is the image's accessible name and deliberately says what the image IS rather than what is in it: a moderator's screen reader is often audible to whoever is nearby, and describing the person in a photo that may be outing them is the exact harm being judged. unavailable is the honest state for a photo the uploader deleted after filing; the report stays actionable, so the wording never implies the case is over.
+  // PRD-47d — PRD-47d - OVERWRITES two existing keys; adds none. `ambiguous_authors` now answers two subject types: `listing_public_question` (a question and the answer under it) and `review` (a review and the reviewed party's public reply under it, on a directory listing, an employer or a home). Today's copy names a question and a listing, so a moderator refused on an employer-review or housing-review report reads a sentence about a surface they are not looking at. Two further corrections on top of the generalisation. (1) The drawer note said restrict and ban "won't go through here"; the backend only sets `is_author_ambiguous` when a second half actually EXISTS, and nothing on the wire tells the drawer whether it does, so the old sentence was already false on an unanswered question and would be false on most reviews. It now says they CAN be refused. The refusal string keeps its absolute phrasing, because it only ever renders when the flag really fired. (2) It names "whoever posted first" rather than "whoever asked", which is true of a reviewer as well as an asker, and points at "the page it was posted on" rather than "the listing", which is true of a home and an employer as well. This block supersedes the identical pair in PRD-47c.json (see the note in PRD-47D-LANDLORD-TAKEDOWN.md): that manifest is missing `overwrite`, so the merge would have skipped it, and its Portuguese is unaccented where the live catalogue is accented.
+  "moderation.reportDrawer.photoEvidence.title": "Reported photo",
+  "moderation.reportDrawer.photoEvidence.imageAlt":
+    "The photo this report is about, as it was when the report was filed.",
+  "moderation.reportDrawer.photoEvidence.unavailable":
+    "This photo is no longer available. It was taken down after the report was filed, so you are deciding on the details below rather than the image. That the photo is gone does not close the report.",
+  "moderation.reportDrawer.photoEvidence.captionLabel":
+    "Caption written by the uploader",
+  "moderation.reportDrawer.photoEvidence.uploadedAt":
+    "Posted to the album on {date}",
+  "moderation.reportDrawer.photoEvidence.fullSizeCta": "Open at full size",
 };

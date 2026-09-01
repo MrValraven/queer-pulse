@@ -175,7 +175,7 @@
 }
 
 .coverlines b {
-  font-size: 38px;
+  font-size: var(--text-38);
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.02em;

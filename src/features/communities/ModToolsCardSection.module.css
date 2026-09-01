@@ -54,6 +54,6 @@
 
 .pausedNotice {
   margin: var(--gap-sm) 0 0;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }

@@ -5852,13 +5852,13 @@ export const marketing: Catalog = {
   "forOrgs.form.sendingCta": "Sending…",
   "forOrgs.form.sent.title": "Sent to our <em>partnerships team.</em>",
   "forOrgs.form.sent.body":
-    "Thanks. We've got your message. Our partnerships team reads every one and replies personally within 5 working days.",
+    "Thanks, we have your message. Our partnerships team reads every one and replies personally within 5 working days, by email, from hello@queerpulse.com to the address you gave above. Worth adding it to your contacts, so the reply does not land in spam.",
   "forOrgs.form.error":
-    "Something went wrong sending that. Please try again, or email the partnerships team directly.",
+    "Something went wrong sending that. Try again, or write to the partnerships team directly at hello@queerpulse.com.",
   "forOrgs.form.small":
-    "Goes directly to our partnerships team. No sales funnel, no follow-up sequence. Just a reply within 5 working days.",
+    "Goes directly to our partnerships team. No sales funnel, no follow-up sequence. Just a reply from a person, by email, within 5 working days.",
   "forOrgs.form.toast":
-    "Sent to our partnerships team. They'll reply within 5 working days",
+    "Sent to our partnerships team. They will email you back within 5 working days",
 
   // ── Directory — business directory + detail page chrome. Place records
   //    (`directoryPlaces.ts`: names, taglines, reviews, owner bios) are each
@@ -7780,4 +7780,182 @@ export const marketing: Catalog = {
     "<strong>The sectoral regulator, if we ever fall under Article 28.</strong> Decreto-Lei 82/2022 gives enforcement to a different regulator for each category of service rather than to one accessibility body. E-commerce services fall to ANACOM. As set out above, we do not believe QueerPulse is a service the decree-law currently covers, so this route may well not be open to you today. We would rather say that plainly than send you to a regulator who has to turn you away.",
   "accessibilityStatement.enforcement.p2":
     "None of this replaces the courts or any other right you hold. If you want to complain and you are not sure where to start, IDiPD is the right first door.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  "directory.detail.enquiry.cta": "Message this business",
+  "directory.detail.enquiry.deliveryNote":
+    "It arrives as a direct message from your account, and only the people who run this listing can read it.",
+  "directory.detail.enquiry.replyNote":
+    "Your first message gets through. A reply from either side needs an accepted connection.",
+  "directory.detail.enquiry.existingThreadCta":
+    "Open the conversation you already have",
+  "directory.detail.enquiry.signInPrompt":
+    "Signed-in members can write to a business here, without handing over a phone number or an email address.",
+  "directory.detail.enquiry.signInCta": "Sign in",
+  "directory.detail.enquiry.loadErrorTitle":
+    "We could not check whether this business can be messaged",
+  "directory.detail.enquiry.loadErrorBody":
+    "The rest of the listing is fine. Only this one check did not come back.",
+  "directory.detail.enquiry.unavailable.unclaimed":
+    "Nobody has claimed this listing yet, so there is no business inbox behind it. If you run {name}, claim the listing and members will be able to reach you here.",
+  "directory.detail.enquiry.unavailable.noAccount":
+    "This listing is not attached to an account that can receive messages, so the contact details above are the way to reach it.",
+  "directory.detail.enquiry.unavailable.ownListing":
+    "This listing is yours, so there is nobody here for you to write to.",
+  "directory.detail.enquiry.unavailable.blocked":
+    "This business cannot be reached from your account.",
+  "directory.detail.enquiry.ariaLabel": "Write to {name}",
+  "directory.detail.enquiry.eyebrow": "Private message",
+  "directory.detail.enquiry.title": "Write to <em>{name}</em>",
+  "directory.detail.enquiry.sub":
+    "This goes to the people who run this listing as a direct message from your account. It is not published anywhere on the listing.",
+  "directory.detail.enquiry.replyNotice":
+    "You are not connected yet, so this first message gets through and the thread then stays closed to both of you until one of you accepts a connection.",
+  "directory.detail.enquiry.bodyLabel": "Your message",
+  "directory.detail.enquiry.bodyPlaceholder":
+    "What would you like to ask them?",
+  "directory.detail.enquiry.bodyHint": "At least {min} characters.",
+  "directory.detail.enquiry.charactersLeft": "Characters left: {remaining}",
+  "directory.detail.enquiry.cancel": "Cancel",
+  "directory.detail.enquiry.submit": "Send message",
+  "directory.detail.enquiry.submitting": "Sending",
+  "directory.detail.enquiry.error.rateLimited":
+    "You have already written to this business today. Give them a chance to reply first.",
+  "directory.detail.enquiry.error.notAllowed":
+    "This business cannot be reached from your account.",
+  "directory.detail.enquiry.error.unavailable":
+    "This listing can no longer be messaged through QueerPulse. Try the contact details on the page.",
+  "directory.detail.enquiry.error.gone":
+    "This listing is no longer available, so your message was not sent.",
+  "directory.detail.enquiry.error.generic":
+    "Your message did not send. Try again in a moment.",
+  "directory.detail.enquiry.successAriaLabel":
+    "Your message to {name} was sent",
+  "directory.detail.enquiry.successTitle": "Message",
+  "directory.detail.enquiry.successEm": "sent",
+  "directory.detail.enquiry.successBody":
+    "It is in the inbox of whoever runs {name}, as a direct message from you.",
+  "directory.detail.enquiry.successReplyStep":
+    "You are not connected yet, so the thread stays closed to both of you until one of you accepts a connection.",
+  "directory.detail.enquiry.openThreadCta": "Open the conversation",
+  "directory.detail.enquiry.doneCta": "Done",
+  "directory.detail.enquiry.limit.thisBusiness":
+    "You have already written to {name} today. Give them a chance to reply before writing again.",
+  "directory.detail.enquiry.limit.directory":
+    "You have written to a lot of businesses today, so this is paused for now.",
+  "directory.detail.enquiry.limit.clearsIn": "You can write again {when}.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // COORD-CHANGELOG — COORD - deep-scan section 13 (the vertical surfaces), the member-facing half.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  "changelog.entries.take-down-your-flatmate-profile.title":
+    "You can take down your flatmate profile",
+  "changelog.entries.take-down-your-flatmate-profile.body":
+    "A flatmate profile is a personal ad carrying your pronouns, your identity tags, your household details and your budget, and there was no way to remove it. If you found a room, it stayed up. The profile editor now has a take-down button that says plainly what goes with it and what does not: the profile, the likes and any match disappear, and the conversations you already started stay in Messages, because those are yours and the other person's.",
+  "changelog.entries.message-a-business-without-leaving.title":
+    "You can write to a business from its page",
+  "changelog.entries.message-a-business-without-leaving.body":
+    "A business listing offered a website, an email address and a phone number, so a place that had filled none of those in could not be reached at all, and every conversation that did happen left the platform. You can now write to a business from its own page. Before you type, the page tells you whether the owner is reachable, whether your first message will need a connection before they can write back, whether you already have a conversation with them, and whether you have already written today.",
+  "changelog.entries.remove-a-photo-from-a-gathering-album.title":
+    "You can remove a photo from a gathering album",
+  "changelog.entries.remove-a-photo-from-a-gathering-album.body":
+    "A photo of people at a queer event could be uploaded and never taken down, by the person who posted it or by the organizer. Both can now remove one, from the album itself, by keyboard as well as by touch. Removing it also deletes the file from storage, which it did not before: the row went and the image stayed, still reachable by anyone holding the link.",
+  "changelog.entries.your-own-jobs-and-a-way-to-correct-them.title":
+    "The jobs you posted, and a way to correct them",
+  "changelog.entries.your-own-jobs-and-a-way-to-correct-them.body":
+    "Posting a job left you with no index of what you had published and no way to edit it. If you got a salary band wrong, closing the post was the only remedy. There is now a page listing the jobs you posted, with the applications, the close button and an edit form on each one. Housing and volunteering already worked this way.",
+  "changelog.entries.your-own-swap-board.title":
+    "Your own swap board, and word back on what you proposed",
+  "changelog.entries.your-own-swap-board.body":
+    "The swap board had no take-down and no edit, so a completed swap stayed up forever and a typo could never be fixed, and if you proposed a swap you had nowhere to see it and were never told whether it was accepted. All of that now exists in one place: the swaps you posted, with edit and close, and the proposals you sent, each showing what was decided. If a poster materially changes a swap after you proposed, your proposal says so.",
+  "changelog.entries.one-place-for-everything-you-have-sent.title":
+    "One place for everything you have sent us",
+  "changelog.entries.one-place-for-everything-you-have-sent.body":
+    "Applying to partner with us, proposing a swap and suggesting a resource were three separate intakes, and whether you ever heard back was decided one at a time. Two of them never told you anything. There is now a single page under your account listing everything you have submitted and what happened to it, and a decision on any of them reaches your notifications. Where a reviewer wrote a reason, you get to read it.",
+  "changelog.entries.employers-and-listers-can-answer-a-review.title":
+    "Employers and housing listers can answer a review",
+  "changelog.entries.employers-and-listers-can-answer-a-review.body":
+    "A cafe in the directory could answer a review of it, and an employer or a housing lister could not. Both can now reply once, publicly, clearly labelled as the subject of the review. Two rules protect the person who wrote it: the reply is kept if they later edit their review, so nobody can delete a reply by changing a character, and the page says when a review was edited after its reply, so a reply can never appear to agree with words it never saw.",
+  "changelog.entries.register-interest-in-a-commission.title":
+    "You can register interest in a commission",
+  "changelog.entries.register-interest-in-a-commission.body":
+    "The commission board is still being built, and the page said so and offered nothing else, even though the form behind it worked and the queue on our side was staffed. You can now register what you would like commissioned and who you would like to work with. The page is honest about what happens next: it lands in a queue a person reads, and nothing is emailed to you, because this platform sends no email.",
+  "changelog.entries.the-nav-says-what-is-still-being-built.title":
+    "The menu says what is still being built",
+  "changelog.entries.the-nav-says-what-is-still-being-built.body":
+    "Cinema and Studio sat in the Culture menu as highlighted links that landed on a not-yet-built page. Keeping them there was deliberate, so you can see what is coming, but nothing said so and they read as broken links. They now carry a quiet marker, and they are no longer highlighted, because emphasis belongs on the things that work today.",
+  "changelog.entries.search-stops-offering-what-it-cannot-find.title":
+    "Search stops offering what it cannot find",
+  "changelog.entries.search-stops-offering-what-it-cannot-find.body":
+    "Search had a Jobs tab that could never contain anything, because the work area is not open yet, and its results linked to pages that bounced you to the roadmap. Search now asks which areas are actually open and shows only those tabs, so a category you can browse is a category with something in it.",
+  "changelog.entries.a-hidden-review-stays-hidden.title":
+    "A hidden review stays hidden from the person it is about",
+  "changelog.entries.a-hidden-review-stays-hidden.body":
+    "When a moderator hid a review of a home, it disappeared from the public listing and from its rating, and the person it was written about could still read it in full in their own viewing history. That is the one place a takedown most needed to work. It is now withheld there too, and a lister can no longer reply into a review that has been hidden.",
+  "changelog.entries.erasing-your-account-keeps-what-others-rely-on.title":
+    "Erasing your account keeps what other people rely on",
+  "changelog.entries.erasing-your-account-keeps-what-others-rely-on.body":
+    "Erasing an account deleted every image you had ever uploaded, by filename, without checking whether anything still pointed at it. Photos you took at a gathering, a cover image on a community you had handed to a new owner, pictures in a listing gallery: all of it vanished and left broken tiles in other people's pages. Your name comes off those contributions, which is what erasure is for, and the images they belong to now stay. Anything nothing points at any more is still deleted.",
+  "changelog.entries.an-anonymous-owner-stays-anonymous.title":
+    "An anonymous business owner stays anonymous",
+  "changelog.entries.an-anonymous-owner-stays-anonymous.body":
+    "A business page can name nobody, and plenty of owners choose exactly that. When one of them answered a public question, the notification the asker received named them anyway, with their photo and a link to their profile, handing out the identity the page deliberately withholds. That notification now names a person only when the page already does. Notifications already sent have had the name stripped out of them.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // COORD-CHANGELOG-2 — COORD - the six decisions taken after the section 13 build, the member-facing half.
+  // COORD-CHANGELOG — COORD - deep-scan section 13 (the vertical surfaces), the member-facing half.
+  // COORD-FORORGS — COORD - the /about/for-organisations inquiry form. The promise of a personal reply in 5 working days is TRUE: a person answers from hello@queerpulse.com, out of band. What the copy did not say was by WHAT CHANNEL, on a platform that sends no automated email, so somebody could sit waiting on a notification that will never come. It now names the channel, the sending address and the address it goes to. The error state named no address to fall back to, which was a dead end; it names one now.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  "changelog.entries.tag-filters-show-how-many-communities-are-behind-them.title":
+    "Tag filters show how many communities are behind them",
+  "changelog.entries.tag-filters-show-how-many-communities-are-behind-them.body":
+    "The communities page lets you narrow by any of 53 tags, and none of them told you where they led: picking one could empty the grid, and the only way to find out was to try. Every tag now carries a count, read against whatever else you have already narrowed by, so the number answers what you would get if you added this tag as well. A tag with nothing behind it is dimmed and ignores the click, the same treatment the category chips already had. The tray itself now eases open, so you can watch the grid make room for it.",
+  "changelog.entries.housing-filters-fold-away-until-you-need-them.title":
+    "Housing filters fold away until you need them",
+  "changelog.entries.housing-filters-fold-away-until-you-need-them.body":
+    "The housing board opened with a panel of filters standing permanently open, pushing the first homes most of the way down the screen for choices most people make once or never. Those filters now sit behind a \u201CRefine\u201D button, the same one the gatherings board and the communities page use. Whatever you have applied still reads at a glance as a row of chips underneath, and each chip takes its own filter off, so a closed panel never hides what is narrowing your results. The List and Map switch moved up onto the same row, and saving a search now sits beside the chips it would save.",
+  "changelog.entries.empty-category-filters-can-no-longer-be-picked.title":
+    "Category filters with nothing behind them are now inactive",
+  "changelog.entries.empty-category-filters-can-no-longer-be-picked.body":
+    "On the communities page, a category chip reading 0 could still be picked, and picking it emptied the grid, leaving you to work out that the filter was the problem rather than the platform. A category with nothing in it is now dimmed and ignores the click. Its count is still there to read, so you can see at a glance which categories are quiet, and \u201CAll communities\u201D always stays available to go back to.",
+  "changelog.entries.the-app-follows-your-browsers-text-size.title":
+    "The app follows your browser's text size",
+  "changelog.entries.the-app-follows-your-browsers-text-size.body":
+    "If you had set a larger default text size in your browser, most of the app quietly ignored it. Type was pinned to fixed pixel sizes that never moved, so the setting did nothing on almost every page. Every size in the app is now measured against your browser's own setting: raise it and the whole interface grows, lower it and it shrinks. Nothing changes if you have never touched that setting. Boxes that used to be a frozen height, like avatar circles, count badges and card titles, now grow with the words inside them, so larger text is not cut off.",
+  "changelog.entries.faint-outlines-are-visible-again-in-dark-mode.title":
+    "Faint outlines are visible again in dark mode",
+  "changelog.entries.faint-outlines-are-visible-again-in-dark-mode.body":
+    "Sixty borders across the app were drawn in a colour that stays dark in both themes, so on a dark page those hairlines all but disappeared: the edge of a card, the outline of a panel, the box around a reviewer's note on something you submitted. They now use the colour that turns cream in dark mode, which is what every other border in the app already did. In light mode they look exactly as they did before.",
+  "changelog.entries.deep-links-no-longer-flash-the-homepage.title":
+    "Opening a link no longer flashes the homepage first",
+  "changelog.entries.deep-links-no-longer-flash-the-homepage.body":
+    "Every page except the homepage was being handed the homepage's own saved copy while the app loaded, so opening a link to a policy, a guide or somebody's page painted the homepage for a moment before the real page appeared. That same saved copy is what a link preview or a search engine read whenever it did not run the app, so all of those pages described themselves as the homepage and carried its title and description. Pages are now handed an empty frame instead, and each one fills in its own title and description as it loads.",
+  "changelog.entries.report-one-photo-not-the-whole-gathering.title":
+    "You can report one photo, not the whole gathering",
+  "changelog.entries.report-one-photo-not-the-whole-gathering.body":
+    "There was no way to report a single photo in a gathering album. The nearest thing was reporting the whole gathering, and acting on that takes the gathering down over one image, so in practice a photograph of an identifiable person could only be removed by whoever posted it or by an organizer, who are sometimes the people being complained about. Each photo now has its own report control, with outing and doxxing at the top of the list because those are the two reasons that reach the one-hour queue. A moderator sees the photo itself, held only for as long as the report is open and reachable by nobody else.",
+  "changelog.entries.report-one-landlord-warning.title":
+    "You can report one landlord warning, and a takedown can be undone",
+  "changelog.entries.report-one-landlord-warning.body":
+    "Recommendations on a landlord entry are how tenants warn each other, and the only report control named the whole entry, so acting on a complaint about one of them took down every other tenant's warning too. Each recommendation now has its own report control. The moderator's side changed as well: taking one down used to delete it permanently, so a mistake could not be undone. It is now withheld rather than destroyed, and putting it back restores the exact words and the landlord's rating with it.",
+  "changelog.entries.your-landlord-warning-outlives-your-account.title":
+    "A warning you wrote about a landlord outlives your account",
+  "changelog.entries.your-landlord-warning-outlives-your-account.body":
+    "Deleting your account deleted every landlord recommendation you had written, and quietly moved that landlord's rating with them. Every other kind of thing you write here already worked the other way: the words stay and your name comes off. Landlord warnings now do the same, so somebody looking for a home still reads what you found out, credited to a member who has since left.",
+  "changelog.entries.correct-a-review-until-it-goes-public.title":
+    "You can correct a viewing review until it goes public",
+  "changelog.entries.correct-a-review-until-it-goes-public.body":
+    "Reviews after a house viewing are written blind: neither side sees the other's until both have written or the window runs out. There was no way to fix a typo, ever. You can now edit your review right up until it goes public, and not after, so a correction can never become a reaction to what the other person wrote. The form tells you the deadline while you are writing it.",
 };

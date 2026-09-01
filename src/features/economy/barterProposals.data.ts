@@ -1,6 +1,9 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { MEMBERS, memberName } from "../members/data/members";
-import type { BarterProposalStatus } from "./api/barter.api";
+import type {
+  BarterListingStatus,
+  BarterProposalStatus,
+} from "./api/barter.api";
 import type { Mode } from "./barter.data";
 
 /**
@@ -17,6 +20,38 @@ export interface MyBarterListingRow {
   /** Whole days since the swap was posted, floored at 1 (see `daysSince`). */
   days: number;
   pendingProposalCount: number;
+  /** Open or closed. A closed swap stays readable and keeps its proposals; it
+   *  simply takes no new ones. */
+  status: BarterListingStatus;
+}
+
+/**
+ * One proposal the reader SENT (`GET /barter/mine/proposals`), as their own
+ * half of the board lists it: what they offered, where it stands, and which
+ * swap it was against.
+ */
+export interface MySentBarterProposalRow {
+  id: string;
+  listingId: string;
+  /** The swap this was an offer against. `null` when the post is gone, or when
+   *  the reader and its poster have since blocked each other. */
+  listing: {
+    id: string;
+    mode: Mode;
+    category: string;
+    offer: string;
+    want: string;
+    status: BarterListingStatus;
+    /** The poster, empty when their profile could not be resolved. */
+    name: string;
+  } | null;
+  /** What the reader wrote when they proposed. */
+  message: string;
+  createdAt: string;
+  decidedAt: string | null;
+  status: BarterProposalStatus;
+  /** True when the poster changed the swap after this offer was sent. */
+  wasListingEditedAfterProposal: boolean;
 }
 
 /** The line that names one of your swaps in the picker: what you offered, or
@@ -60,6 +95,7 @@ export const DEMO_MY_BARTER_LISTINGS: MyBarterListingRow[] = [
     want: "Portuguese tax return help",
     days: 3,
     pendingProposalCount: 2,
+    status: "open",
   },
   {
     id: "demo-swap-portraits",
@@ -69,6 +105,7 @@ export const DEMO_MY_BARTER_LISTINGS: MyBarterListingRow[] = [
     want: "",
     days: 12,
     pendingProposalCount: 0,
+    status: "closed",
   },
 ];
 
@@ -138,3 +175,80 @@ export const DEMO_BARTER_PROPOSALS: Record<string, BarterProposalRow[]> = {
     },
   ],
 };
+
+/**
+ * Demo fixture: proposals "you" sent on other members' swaps. Covers all three
+ * outcomes plus the two edge shapes the page has to render honestly: a swap
+ * the poster materially changed after the offer went out, and a swap that is
+ * gone entirely. Live mode never reads these.
+ */
+export const DEMO_MY_SENT_BARTER_PROPOSALS: MySentBarterProposalRow[] = [
+  {
+    id: "demo-sent-ceramics",
+    listingId: "demo-swap-ceramics",
+    listing: {
+      id: "demo-swap-ceramics",
+      mode: "both",
+      category: "creative",
+      offer: "Wheel-throwing lessons, four evenings",
+      want: "Help rebuilding a shop website",
+      status: "open",
+      name: memberName("mariana"),
+    },
+    message:
+      "I build small shop sites for a living and yours would take me a weekend. Four evenings at the wheel would be a fair trade for me.",
+    createdAt: "2026-08-28T18:20:00.000Z",
+    decidedAt: null,
+    status: "pending",
+    wasListingEditedAfterProposal: true,
+  },
+  {
+    id: "demo-sent-legal",
+    listingId: "demo-swap-legal",
+    listing: {
+      id: "demo-swap-legal",
+      mode: "offering",
+      category: "legal",
+      offer: "An hour on a rental contract, in plain Portuguese",
+      want: "",
+      status: "open",
+      name: memberName("rui"),
+    },
+    message:
+      "My landlord sent a renewal I do not understand. I can trade a full day of photography, or a set of portraits if that is more useful.",
+    createdAt: "2026-08-22T09:05:00.000Z",
+    decidedAt: "2026-08-23T11:40:00.000Z",
+    status: "accepted",
+    wasListingEditedAfterProposal: false,
+  },
+  {
+    id: "demo-sent-bikes",
+    listingId: "demo-swap-bikes",
+    listing: {
+      id: "demo-swap-bikes",
+      mode: "both",
+      category: "body",
+      offer: "Bike servicing, gears and brakes",
+      want: "Someone to walk a nervous dog",
+      status: "closed",
+      name: memberName("tomas"),
+    },
+    message:
+      "I walk my neighbour's dog most mornings and would happily add yours. My bike is also very much in need of you.",
+    createdAt: "2026-08-11T07:15:00.000Z",
+    decidedAt: "2026-08-12T20:00:00.000Z",
+    status: "declined",
+    wasListingEditedAfterProposal: false,
+  },
+  {
+    id: "demo-sent-gone",
+    listingId: "demo-swap-gone",
+    listing: null,
+    message:
+      "I can trade an evening of translation for the studio time, if that still works for you.",
+    createdAt: "2026-07-30T13:00:00.000Z",
+    decidedAt: null,
+    status: "pending",
+    wasListingEditedAfterProposal: false,
+  },
+];

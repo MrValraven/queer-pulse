@@ -106,10 +106,10 @@
 .body {
   max-width: 780px;
   margin: 0 auto;
-  padding: 64px 28px 0;
+  padding: var(--section-y-64) 28px 0;
 }
 .sec {
-  padding: 48px 0;
+  padding: var(--section-y-48) 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   scroll-margin-top: 70px;
 }
@@ -130,7 +130,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 40px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -144,7 +144,7 @@
 .sec h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-top: 32px;
@@ -221,7 +221,7 @@
 .pactNum {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--accent);
   letter-spacing: -0.01em;
   line-height: 1;
@@ -265,8 +265,8 @@
   border-bottom: none;
 }
 .ladderN {
-  width: 32px;
-  height: 32px;
+  width: 2.286em;
+  height: 2.286em;
   border-radius: var(--radius-9);
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
@@ -311,7 +311,7 @@
 .reportCta h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 10px;
@@ -335,7 +335,7 @@
 }
 
 .version {
-  padding: 32px 0 80px;
+  padding: 32px 0 var(--section-y-80);
   font-size: var(--text-13);
   color: var(--ink-40);
   line-height: 1.65;

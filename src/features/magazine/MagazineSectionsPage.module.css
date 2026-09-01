@@ -1,5 +1,5 @@
 .body {
-  padding: 56px 0 120px;
+  padding: var(--section-y-56) 0 var(--section-y-120);
 }
 
 .head {
@@ -16,7 +16,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 4.5vw, 48px);
+  font-size: clamp(2rem, 4.5vw, 3rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -70,7 +70,7 @@
 .cardName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;

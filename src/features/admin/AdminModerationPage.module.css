@@ -528,7 +528,7 @@ button.reportMain:focus-visible {
 .caughtUp {
   background: var(--plum);
   border-radius: var(--radius-card, 22px);
-  padding: 48px 40px 44px;
+  padding: var(--section-y-48) 40px 44px;
   text-align: center;
   color: rgba(var(--cream-rgb), 0.78);
 }
@@ -549,7 +549,7 @@ button.reportMain:focus-visible {
 .caughtTitle {
   margin: 0 0 12px;
   font-family: var(--serif);
-  font-size: clamp(28px, 4vw, 38px);
+  font-size: var(--text-title);
   font-weight: 400;
   line-height: 1.05;
   color: rgba(var(--cream-rgb), 1);
@@ -595,7 +595,7 @@ button.reportMain:focus-visible {
 .dTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
   line-height: 1.15;
   color: var(--text-strong);

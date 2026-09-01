@@ -60,7 +60,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 4vw, 52px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -128,8 +128,8 @@
   }
 }
 .swAv {
-  width: 26px;
-  height: 26px;
+  width: 2.364em; /* 26 / 11 */
+  height: 2.364em;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -225,8 +225,8 @@
   border: 1px solid rgba(var(--cream-rgb), 0.16);
 }
 .mnAv {
-  width: 34px;
-  height: 34px;
+  width: 2.615em; /* 34 / 13 (--text-caption) */
+  height: 2.615em;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -247,15 +247,20 @@
   margin-top: 2px;
 }
 /* ── Deck ── */
+/* Both the stage and the cards it fans out reserve their space in rem, not
+   px, so the box grows at the same rate as the rem type inside it when a
+   reader raises their font size. 21.125rem = 338px at a 16px root. The cards
+   are absolutely positioned, so the stage cannot measure them; min-height is
+   the floor that keeps the fan clear of the row below. */
 .deck {
   position: relative;
-  height: 338px;
+  min-height: 21.125rem; /* 338 / 16 */
 }
 .pcard {
   position: absolute;
   top: 0;
   width: 200px;
-  height: 316px;
+  min-height: 19.75rem; /* 316 / 16 — a floor, so .pcTag can push it taller */
   border-radius: var(--radius-card);
   padding: 18px 17px;
   background: var(--panel-surface);
@@ -317,8 +322,8 @@
   color: rgba(var(--cream-rgb), 0.4);
 }
 .pcAv {
-  width: 42px;
-  height: 42px;
+  width: 2.8em; /* 42 / 15 */
+  height: 2.8em;
   border-radius: var(--radius-badge);
   margin-top: 14px;
   display: grid;
@@ -431,7 +436,7 @@
 }
 .pvwMark {
   font-family: var(--serif);
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 1);
 }
 .pvwMarkCaps {
@@ -454,8 +459,8 @@
   flex-wrap: wrap;
 }
 .pvwAv {
-  width: 40px;
-  height: 40px;
+  width: 2.963em; /* 40 / 13.5 */
+  height: 2.963em;
   border-radius: var(--radius-badge);
   flex: none;
   display: grid;
@@ -562,8 +567,8 @@
   margin-top: 16px;
 }
 .postAv {
-  width: 34px;
-  height: 34px;
+  width: 2.957em; /* 34 / 11.5 */
+  height: 2.957em;
   border-radius: 50%;
   flex: none;
   display: grid;
@@ -675,6 +680,8 @@
   }
   .deck {
     height: auto;
+    /* Cards are back in flow here, so drop the desktop stage floor. */
+    min-height: 0;
     display: flex;
     gap: 16px;
     overflow-x: auto;

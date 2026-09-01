@@ -11,7 +11,7 @@
 
   max-width: 760px;
   margin: 0 auto;
-  padding: 8px 0 60px;
+  padding: 8px 0 var(--section-y-64);
 }
 
 .pageH {
@@ -34,7 +34,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4.6vw, 46px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.05;
@@ -121,7 +121,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 3.4vw, 34px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -164,7 +164,7 @@
 .pull {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 22px;
+  font-size: var(--text-22);
   font-style: italic;
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.4;

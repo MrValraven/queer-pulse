@@ -27,6 +27,15 @@ const DeleteAccountPage = lazyNamed(
   () => import("./DeleteAccountPage"),
   "DeleteAccountPage",
 );
+// PRD-48: one index of everything the member has submitted and is waiting to
+// hear about. Each vertical grew its own intake with its own status vocabulary
+// and no shared place to read the outcome, which is why three separate "the
+// submitter is never told" gaps (PRD-37, PRD-43, PRD-45) had to be found one
+// at a time instead of being closed once.
+const MySubmissionsPage = lazyNamed(
+  () => import("./MySubmissionsPage"),
+  "MySubmissionsPage",
+);
 
 /** Account settings & the account-hub landing redirect. */
 export function settingsRoutes() {
@@ -42,6 +51,7 @@ export function settingsRoutes() {
       <Route path={routes.sessions} element={<SessionsPage />} />
       <Route path={routes.pushDevices} element={<PushDevicesPage />} />
       <Route path={routes.dataExport} element={<DataExportPage />} />
+      <Route path={routes.mySubmissions} element={<MySubmissionsPage />} />
       <Route path={routes.deleteAccount} element={<DeleteAccountPage />} />
     </>
   );

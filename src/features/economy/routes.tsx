@@ -17,6 +17,10 @@ const JobApplicationsPage = lazyNamed(
   () => import("./JobApplicationsPage"),
   "JobApplicationsPage",
 );
+// PRD-44: a poster had no index of the jobs they published and no way to
+// correct one — a wrong salary band could only be closed, never edited.
+const MyJobsPage = lazyNamed(() => import("./MyJobsPage"), "MyJobsPage");
+const EditJobPage = lazyNamed(() => import("./EditJobPage"), "EditJobPage");
 const HousingPage = lazyNamed(() => import("./HousingPage"), "HousingPage");
 const HousingCoopPage = lazyNamed(
   () => import("./HousingCoopPage"),
@@ -56,6 +60,15 @@ const BarterPage = lazyNamed(() => import("./BarterPage"), "BarterPage");
 const BarterDetailPage = lazyNamed(
   () => import("./BarterDetailPage"),
   "BarterDetailPage",
+);
+// PRD-42/43: the proposer's half of the board. `MyBarterPage` is both the
+// poster's own listings (close, edit) and the proposals they SENT, which had
+// no surface anywhere; `EditBarterPage` is the correction path barter alone
+// lacked while jobs, volunteering and housing all had one.
+const MyBarterPage = lazyNamed(() => import("./MyBarterPage"), "MyBarterPage");
+const EditBarterPage = lazyNamed(
+  () => import("./EditBarterPage"),
+  "EditBarterPage",
 );
 const BarterProposalsPage = lazyNamed(
   () => import("./BarterProposalsPage"),
@@ -140,7 +153,12 @@ export function economyRoutes() {
     <>
       <Route path={routes.jobs} element={<JobsPage />} />
       <Route path={routes.postJob} element={<PostJobPage />} />
+      {/* Static segment before the `:slug` catch, so "mine" is never read as
+          a job slug — the same ordering rule the housing and barter indexes
+          below follow. */}
+      <Route path={routes.myJobs} element={<MyJobsPage />} />
       <Route path={`${routes.jobs}/:slug`} element={<JobDetailPage />} />
+      <Route path={`${routes.jobs}/:slug/edit`} element={<EditJobPage />} />
       <Route path={`${routes.jobs}/:slug/apply`} element={<JobApplyPage />} />
       {/* Poster-side applications console (BE-HSG-16). Static `applications`
           segment under the job slug, matching the backend's own route shape. */}
@@ -186,7 +204,9 @@ export function economyRoutes() {
         path={MY_BARTER_PROPOSALS_PATH}
         element={<BarterProposalsPage />}
       />
+      <Route path={routes.myBarter} element={<MyBarterPage />} />
       <Route path={`${routes.barter}/:id`} element={<BarterDetailPage />} />
+      <Route path={`${routes.barter}/:id/edit`} element={<EditBarterPage />} />
       <Route path={routes.offer} element={<OfferPage />} />
       <Route path={routes.employerReviews} element={<EmployerReviewsPage />} />
       <Route

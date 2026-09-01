@@ -149,6 +149,11 @@ export const routes = {
    *  carrying one tag); the two combine. Tag pills link here. */
   magazineSearch: "/magazine/search",
   barter: "/work/barter",
+  /** PRD-42/43 — the member's own swap board: listings they posted (close,
+   *  edit) and the proposals they SENT, which had no surface at all. Sits
+   *  beside `MY_BARTER_PROPOSALS_PATH`, the inbox for proposals RECEIVED.
+   *  Registered before `${barter}/:id` so "mine" can never be read as an id. */
+  myBarter: "/work/barter/mine",
   businessDirectory: "/business-directory",
   calendar: "/calendar",
   /** Public per-token page a scanned card resolves to (`/cards/verify/:token`,
@@ -252,6 +257,11 @@ export const routes = {
   issues: "/magazine/issues",
   jobs: "/work/jobs",
   postJob: "/work/jobs/post",
+  /** PRD-44 — the poster's own index of the jobs they published, and the only
+   *  way back to a job whose slug they no longer hold. `GET /me/jobs` backs it;
+   *  the edit form at `${jobs}/:slug/edit` hangs off each row. Registered
+   *  before `${jobs}/:slug` so "mine" can never be read as a slug. */
+  myJobs: "/work/jobs/mine",
   legal: "/safety/legal",
   library: "/resources/library",
   listBusiness: "/local/directory/list",
@@ -349,6 +359,11 @@ export const routes = {
   // routes.tsx and linked via the helpers below.
   subprofiles: "/subprofiles",
   subprofilesDashboard: "/account/subprofiles",
+  /** PRD-48 — one index of every "I submitted a thing and am waiting to hear"
+   *  across the platform: partner applications, swap proposals sent, resource
+   *  suggestions. Each vertical grew its own intake with its own status
+   *  vocabulary and no shared place to read the outcome; this is that place. */
+  mySubmissions: "/account/submissions",
   topic: "/topic",
   /** DISC-4 — the topics directory (`TopicsDirectoryPage`), distinct from
    *  `topic` above (the singular per-tag feed, `/topic/:tag`). */

@@ -1,7 +1,7 @@
 .page {
   max-width: 920px;
   margin: 0 auto;
-  padding: 24px 28px 120px;
+  padding: 24px 28px var(--section-y-120);
 }
 
 /* ---------- Head ---------- */
@@ -30,7 +30,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 5vw, 52px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -99,8 +99,8 @@
   box-shadow: var(--ring-cream);
 }
 .ci {
-  width: 30px;
-  height: 30px;
+  width: 2.857em;
+  height: 2.857em;
   border-radius: var(--radius-8);
   display: flex;
   align-items: center;
@@ -420,8 +420,8 @@
 }
 
 .kind {
-  width: 38px;
-  height: 38px;
+  width: 3.619em;
+  height: 3.619em;
   border-radius: var(--radius-10);
   background: rgba(var(--accent-rgb), 0.1);
   display: flex;
@@ -676,14 +676,14 @@
 
 /* ---------- Empty state ---------- */
 .empty {
-  padding: 64px 28px;
+  padding: var(--section-y-64) 28px;
   text-align: center;
   border: 1px dashed rgba(var(--line-rgb), 0.18);
   border-radius: var(--radius-16);
 }
 .emptyIcon {
-  width: 54px;
-  height: 54px;
+  width: 2.25em;
+  height: 2.25em;
   border-radius: var(--radius-14);
   background: rgba(var(--jade-rgb), 0.12);
   display: flex;
@@ -691,12 +691,12 @@
   justify-content: center;
   margin: 0 auto 18px;
   color: var(--jade);
-  font-size: 24px;
+  font-size: var(--text-24);
 }
 .empty h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 23px;
+  font-size: var(--text-23);
   color: var(--text-strong);
   margin-bottom: 8px;
 }

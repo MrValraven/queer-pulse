@@ -32,7 +32,7 @@
   gap: 9px;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   letter-spacing: -0.01em;
   margin-bottom: 20px;
 }
@@ -129,7 +129,7 @@
 .csText h3 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 8px;
@@ -175,7 +175,7 @@
 .standPanelTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 25px;
+  font-size: var(--text-25);
   letter-spacing: -0.015em;
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 16px;

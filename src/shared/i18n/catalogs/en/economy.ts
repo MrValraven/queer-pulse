@@ -495,7 +495,12 @@ export const economy: Catalog = {
   "housing.filterBar.bills": "Bills included",
   "housing.filterBar.accessibility": "Has access info",
   "housing.filterBar.verified": "Verified only",
-  "housing.filterBar.clear": "Clear filters",
+  "housing.filterBar.flagsLabel": "Must have",
+  "housing.filterBar.chip.priceRange": "€{min}–€{max}",
+  "housing.filterBar.chip.priceFrom": "From €{min}",
+  "housing.filterBar.chip.priceUpTo": "Up to €{max}",
+  "housing.filterBar.chip.beds": "{beds} bedrooms",
+  "housing.filterBar.chip.availableBy": "By {date}",
   "housing.map.ariaLabel": "Map of listings by neighbourhood",
   "housing.map.error": "The map could not load. Try the list view.",
   "housing.map.count": "{count} homes",
@@ -4081,4 +4086,328 @@ export const economy: Catalog = {
   "barterProposals.error.description":
     "Something went wrong on our side. Give it another go in a moment.",
   "barterProposals.error.retry": "Try again",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-35 — PRD-35 - taking down your own flatmate profile, from the profile editor's danger zone. The confirm copy states only what DELETE /flatmate-profiles/mine actually does: the profile row goes, every like and pass pointing at it cascades away (so any mutual match ends), and conversations already opened by a say-hello survive as ordinary DMs. pt-PT reuses the catalogue's existing terms: 'quadro de colegas de casa' for the board, 'perfil' for the profile. Also adds the edit-mode heading, lede and submit label for the same form, which said 'Post your profile' over an existing profile.
+  // PRD-42+43 — PRD-42/43 - the barter poster's own index (MyBarterPage), the correction form (EditBarterPage) and its shared fields, plus the board's link into them. Plural keys use the _one/_other pair the rest of this catalog uses.
+  // PRD-44 — PRD-44 - the poster's own jobs index (/work/jobs/mine) and the edit form (/work/jobs/:slug/edit). `myJobs.hub.*` backs the Work hub card, `myJobs.entryLink` the jobs-board link. `myJobs.hub.primary` is a CLDR plural (_one/_other).
+  // PRD-47a — PRD-47a - the employer's right of reply to a review of them. The reply block on the company page reviews tab (CompanyReviewReply.tsx), the owner's compose/edit affordance, the edited-after-reply notice, the per-review report control, and the read-only reply block on the employer reviews page card (EmployerReviewCard.tsx).
+  // PRD-47b — PRD-47b - the lister's right of reply under a review on a housing listing, plus the honest load-failure and edited-after-reply states. Rendered by HousingReviewList / HousingReviewCard / HousingReviewReply. Existing keys under economy:housingViewing.reviews.* (heading, empty, outOf, count, anonymous, ratingAria) are reused unchanged.
+  "flatmateDangerZone.heading": "Danger zone",
+  "flatmateDangerZone.takeDown.label": "Take your profile off the board",
+  "flatmateDangerZone.takeDown.text":
+    "Found a place, or want your pronouns, identity tags, household answers and budget off a members-wide board? You can remove your profile at any time. It cannot be undone.",
+  "flatmateDangerZone.takeDown.cta": "Take profile down",
+  "flatmateDangerZone.confirm.title": "Take down your flatmate profile?",
+  "flatmateDangerZone.confirm.body":
+    "Your profile leaves the flatmate board straight away, with everything on it: pronouns, gender identity, safe-space needs, household answers, neighbourhood and budget. Every like and pass other members made on it goes too, so any match you had ends.",
+  "flatmateDangerZone.confirm.keeps":
+    "Conversations you already started stay in Messages for both of you. You can post a new profile later, and it starts empty.",
+  "flatmateDangerZone.confirm.cta": "Take it down",
+  "flatmateDangerZone.confirm.retryCta": "Try again",
+  "flatmateDangerZone.confirm.error":
+    "We could not take your profile down. It is still on the board. Try again.",
+  "flatmateDangerZone.toast.deleted": "Your flatmate profile is off the board.",
+  "postProfileForm.editTitle": "Your flatmate profile",
+  "postProfileForm.editSub":
+    "Change anything here and save, and the board updates straight away. You can also take the whole profile down at the bottom.",
+  "postProfileForm.editSubmitCta": "Save changes",
+  "barter.hero.mineCta": "Your swaps and the proposals you sent",
+  "myBarter.eyebrow": "Your skill exchange",
+  "myBarter.title": "Your <em>swaps</em>",
+  "myBarter.sub":
+    "The swaps you posted, and the offers you made on other people's.",
+  "myBarter.backToBoard": "Back to the board",
+  "myBarter.posted.heading": "Swaps you posted",
+  "myBarter.posted.status.open": "On the board",
+  "myBarter.posted.status.closed": "Closed",
+  "myBarter.posted.waiting_one": "{count} proposal is waiting on you.",
+  "myBarter.posted.waiting_other": "{count} proposals are waiting on you.",
+  "myBarter.posted.noneWaiting": "No proposals waiting on you.",
+  "myBarter.posted.actions.proposals": "Read proposals",
+  "myBarter.posted.actions.edit": "Edit",
+  "myBarter.posted.actions.view": "View on the board",
+  "myBarter.posted.actions.close": "Take it off the board",
+  "myBarter.posted.empty.title": "You have not posted a swap yet",
+  "myBarter.posted.empty.description":
+    "Post what you can do and what you would like back. The board is where members find each other.",
+  "myBarter.posted.empty.cta": "Go to the board",
+  "myBarter.posted.error.title": "We could not load the swaps you posted",
+  "myBarter.posted.error.body":
+    "The request did not get through. Your swaps are still there.",
+  "myBarter.sent.heading": "Proposals you sent",
+  "myBarter.sent.status.pending": "Waiting for an answer",
+  "myBarter.sent.status.accepted": "Accepted",
+  "myBarter.sent.status.declined": "Declined",
+  "myBarter.sent.sentOn": "Sent {date}",
+  "myBarter.sent.answeredOn": "answered {date}",
+  "myBarter.sent.editedAfter":
+    "The poster changed this swap after you proposed. Check it still works for you before going ahead.",
+  "myBarter.sent.listingGone": "This swap is no longer on the board",
+  "myBarter.sent.unknownPoster": "Member",
+  "myBarter.sent.actions.view": "View the swap",
+  "myBarter.sent.actions.thread": "Open the conversation",
+  "myBarter.sent.empty.title": "You have not proposed a swap yet",
+  "myBarter.sent.empty.description":
+    "When you offer a trade on someone's swap, it shows up here with their answer.",
+  "myBarter.sent.empty.cta": "Browse the board",
+  "myBarter.sent.error.title": "We could not load the proposals you sent",
+  "myBarter.sent.error.body":
+    "The request did not get through. Your proposals are still there.",
+  "myBarter.close.confirmTitle": "Take this swap off the board?",
+  "myBarter.close.confirmBody":
+    "It stops taking new proposals. The proposals it already has stay where they are, and there is no way to put it back up.",
+  "myBarter.close.confirmCta": "Take it off",
+  "myBarter.close.done": "The swap is off the board.",
+  "myBarter.close.errorNotYours":
+    "You did not post this swap, so you cannot close it.",
+  "myBarter.close.errorGone": "This swap is no longer there.",
+  "myBarter.close.errorFailed": "We could not close it. Try again.",
+  "barterEdit.back": "Back to your swaps",
+  "barterEdit.eyebrow": "Your skill exchange",
+  "barterEdit.title": "Edit your <em>swap</em>",
+  "barterEdit.sub":
+    "Fix a typo, sharpen the wording, or change what you are asking for.",
+  "barterEdit.pendingNotice_one":
+    "{count} person has already proposed on this swap. If you change what it offers or asks for, they will see that it changed after they proposed.",
+  "barterEdit.pendingNotice_other":
+    "{count} people have already proposed on this swap. If you change what it offers or asks for, they will see that it changed after they proposed.",
+  "barterEdit.cancel": "Cancel",
+  "barterEdit.saveCta": "Save changes",
+  "barterEdit.saving": "Saving",
+  "barterEdit.field.mode": "What this post is",
+  "barterEdit.field.category": "Category",
+  "barterEdit.field.offer": "What you are offering",
+  "barterEdit.field.offerHelper":
+    "One line. The headline members read on the board.",
+  "barterEdit.field.offerDetail": "More about what you offer",
+  "barterEdit.field.offerDetailHelper":
+    "What is included, how much of it, and what you are like to work with.",
+  "barterEdit.field.want": "What you are looking for",
+  "barterEdit.field.wantHelper":
+    "One line. What a fair trade looks like to you.",
+  "barterEdit.field.wantDetail": "More about what you want",
+  "barterEdit.field.wantDetailHelper":
+    "Detail helps someone decide whether they can actually help.",
+  "barterEdit.field.tags": "Tags",
+  "barterEdit.field.tagsHelper": "Separate with commas. Up to eight.",
+  "barterEdit.save.done": "Your swap is updated.",
+  "barterEdit.save.errorInvalid":
+    "Something in the form does not work yet. Check that each side of the swap says what it advertises.",
+  "barterEdit.save.errorNotYours":
+    "You did not post this swap, so you cannot edit it.",
+  "barterEdit.save.errorGone": "This swap is no longer there.",
+  "barterEdit.save.errorFailed": "We could not save your changes. Try again.",
+  "barterEdit.loadError.title": "We could not load this swap",
+  "barterEdit.loadError.body":
+    "The request did not get through. Your swap is still there.",
+  "barterEdit.gone.title": "This swap is gone",
+  "barterEdit.gone.body":
+    "It is no longer on the board, so there is nothing left to edit.",
+  "barterEdit.gone.cta": "Back to your swaps",
+  "barterEdit.notYours.title": "This swap is not yours",
+  "barterEdit.notYours.body":
+    "Only the member who posted a swap can change it.",
+  "barterEdit.notYours.cta": "Back to the board",
+  "myJobs.eyebrow": "Jobs board",
+  "myJobs.title": "Jobs <em>you posted.</em>",
+  "myJobs.sub":
+    "Everything you have published, open or closed. Fix a detail, read who applied, or take a role down.",
+  "myJobs.postCta": "Post another role",
+  "myJobs.entryLink": "Jobs you posted",
+  "myJobs.noOrganization": "No company",
+  "myJobs.status.open": "Open",
+  "myJobs.status.closed": "Closed",
+  "myJobs.postedOn": "Posted {date}",
+  "myJobs.postedRecently": "Posted recently",
+  "myJobs.closedHint": "no longer on the board",
+  "myJobs.actions.view": "View listing",
+  "myJobs.actions.edit": "Edit",
+  "myJobs.actions.applications": "Applications",
+  "myJobs.actions.close": "Close",
+  "myJobs.close.confirmTitle": "Close this listing?",
+  "myJobs.close.confirmBody":
+    "It leaves the board and stops taking applications. Everyone who already applied keeps their application, and you can still read it.",
+  "myJobs.close.confirmCta": "Close listing",
+  "myJobs.toast.closed": "Listing closed",
+  "myJobs.toast.closeError": "Couldn't close that listing",
+  "myJobs.empty.title": "You haven't posted a role yet",
+  "myJobs.empty.description":
+    "Once you publish a role it shows up here, with the applications it gathers and a way to correct anything you got wrong.",
+  "myJobs.empty.cta": "Post a role",
+  "myJobs.error.title": "Couldn't load your postings",
+  "myJobs.error.description":
+    "Your listings are still there. The request to fetch them is what failed.",
+  "myJobs.loadMore": "Load more",
+  "myJobs.loadingMore": "Loading",
+  "myJobs.hub.label": "Roles you posted",
+  "myJobs.hub.primary_one": "{count} role published",
+  "myJobs.hub.primary_other": "{count} roles published",
+  "myJobs.hub.next": "Edit them, or see who applied",
+  "editJob.eyebrow": "Your posting",
+  "editJob.title": "Edit <em>this role.</em>",
+  "editJob.sub":
+    "Change anything that is wrong. The listing keeps its address, so every link you already shared still works.",
+  "editJob.quietNote":
+    "Saving is quiet. Nothing goes back for review, and nobody who already applied is notified.",
+  "editJob.section.role": "The role",
+  "editJob.section.pay": "Pay",
+  "editJob.section.whatYouOffer": "What you offer",
+  "editJob.section.benefitsSub": "Benefits that come with the role.",
+  "editJob.section.inclusivitySub": "What makes this a safe place to work.",
+  "editJob.section.tagsSub": "Skills you are looking for.",
+  "editJob.section.screening": "Screening questions",
+  "editJob.section.screeningSub":
+    "Up to three questions every applicant answers.",
+  "editJob.section.contact": "How to reach you",
+  "editJob.field.title": "Role title",
+  "editJob.field.description": "What the role is",
+  "editJob.field.descriptionHelper": "This is the blurb on the job card.",
+  "editJob.field.category": "Category",
+  "editJob.field.commitment": "Commitment",
+  "editJob.field.seniority": "Level",
+  "editJob.field.format": "Where the work happens",
+  "editJob.field.city": "City",
+  "editJob.field.timezone": "Timezone overlap",
+  "editJob.field.deadline": "Apply by",
+  "editJob.field.startDate": "Start date",
+  "editJob.field.startDateHelper":
+    "Free text, for example: as soon as you can.",
+  "editJob.field.currency": "Currency",
+  "editJob.field.rateMin": "From",
+  "editJob.field.rateMax": "Up to",
+  "editJob.field.ratePer": "Per",
+  "editJob.field.hidePay": "Hide the numbers",
+  "editJob.field.hidePayHelper":
+    "The card reads Competitive instead of a range.",
+  "editJob.field.barter": "Open to barter",
+  "editJob.field.barterHelper":
+    "You would consider a swap of skills instead of money.",
+  "editJob.field.email": "Email",
+  "editJob.field.link": "External link",
+  "editJob.field.linkHelper": "A full address, starting with https.",
+  "editJob.field.screeningQuestion": "Question {index}",
+  "editJob.screening.add": "Add a question",
+  "editJob.screening.remove": "Remove",
+  "editJob.save": "Save changes",
+  "editJob.saving": "Saving",
+  "editJob.cancel": "Cancel",
+  "editJob.toast.saved": "Listing updated",
+  "editJob.saveFailed": "Couldn't save your changes",
+  "editJob.backToJobs": "Back to your postings",
+  "editJob.forbidden.title": "This posting isn't yours",
+  "editJob.forbidden.description":
+    "Only the person who published a role can edit it.",
+  "editJob.missing.title": "This posting is gone",
+  "editJob.missing.description": "It was taken down, or the address is wrong.",
+  "editJob.error.title": "Couldn't load this posting",
+  "editJob.error.description":
+    "The listing is still there. The request to fetch it is what failed.",
+  "editJob.error.titleRequired": "Give the role a title.",
+  "editJob.error.titleTooLong": "Keep the title under 200 characters.",
+  "editJob.error.descriptionRequired": "Say what the role is.",
+  "editJob.error.descriptionTooLong": "That description is too long.",
+  "editJob.error.cityRequired": "Say which city.",
+  "editJob.error.rateRange": "The upper figure cannot be below the lower one.",
+  "editJob.error.emailRequired":
+    "Add the email address applicants should write to.",
+  "editJob.error.linkRequired": "Add the link applicants should follow.",
+  "company.reviews.reply.employerResponseTitle": "Reply from the employer",
+  "company.reviews.reply.editedAfterReply":
+    "This review was changed after the employer replied, so the reply may be answering different words.",
+  "company.reviews.reply.replyCta": "Reply as the employer",
+  "company.reviews.reply.editReplyCta": "Edit your reply",
+  "company.reviews.reply.placeholder":
+    "Answer this review in public. Everyone reading the page will see it under the employer's name.",
+  "company.reviews.reply.cancel": "Cancel",
+  "company.reviews.reply.save": "Post reply",
+  "company.reviews.reply.savingLabel": "Posting...",
+  "company.reviews.reply.successToast": "Your reply is live on the page.",
+  "company.reviews.reply.errorToast": "That reply did not save. Try again.",
+  "company.reviews.editedOn": "Edited {date}",
+  "company.reviews.report.cta": "Report this review",
+  "company.reviews.report.ariaLabel": "Report the review titled {title}",
+  "employerReviewCard.reply.title": "Reply from the employer",
+  "employerReviewCard.reply.editedAfterReply":
+    "This review was changed after the employer replied, so the reply may be answering different words.",
+  "housingReview.loadError.title":
+    "We could not load the reviews for this home",
+  "housingReview.loadError.body":
+    "The reviews are still there. The request did not come back. Try again in a moment.",
+  "housingReview.editedOn": "Edited on {date}",
+  "housingReview.editedAfterReply":
+    "This review was changed after the reply was written, so the reply may be answering different words.",
+  "housingReview.report.cta": "Report this review",
+  "housingReview.report.subjectName": "the review by {name}",
+  "housingReview.reply.listerResponseTitle": "Reply from the lister",
+  "housingReview.reply.cta": "Reply to this review",
+  "housingReview.reply.editCta": "Edit your reply",
+  "housingReview.reply.placeholder":
+    "Answer in your own words. Everyone who reads this listing will see it.",
+  "housingReview.reply.publicNote":
+    "One reply per review, and it is public. Writing again replaces it.",
+  "housingReview.reply.cancel": "Cancel",
+  "housingReview.reply.save": "Publish reply",
+  "housingReview.reply.savingLabel": "Publishing...",
+  "housingReview.reply.successToast": "Your reply is on the listing.",
+  "housingReview.reply.errorToast":
+    "Your reply did not save. It is still here, so you can try again.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-35 — PRD-35 - taking down your own flatmate profile, from the profile editor's danger zone. The confirm copy states only what DELETE /flatmate-profiles/mine actually does: the profile row goes, every like and pass pointing at it cascades away (so any mutual match ends), and conversations already opened by a say-hello survive as ordinary DMs. pt-PT reuses the catalogue's existing terms: 'quadro de colegas de casa' for the board, 'perfil' for the profile. Also adds the edit-mode heading, lede and submit label for the same form, which said 'Post your profile' over an existing profile.
+  // PRD-42+43 — PRD-42/43 - the barter poster's own index (MyBarterPage), the correction form (EditBarterPage) and its shared fields, plus the board's link into them. Plural keys use the _one/_other pair the rest of this catalog uses.
+  // PRD-44 — PRD-44 - the poster's own jobs index (/work/jobs/mine) and the edit form (/work/jobs/:slug/edit). `myJobs.hub.*` backs the Work hub card, `myJobs.entryLink` the jobs-board link. `myJobs.hub.primary` is a CLDR plural (_one/_other).
+  // PRD-47a — PRD-47a - the employer's right of reply to a review of them. The reply block on the company page reviews tab (CompanyReviewReply.tsx), the owner's compose/edit affordance, the edited-after-reply notice, the per-review report control, and the read-only reply block on the employer reviews page card (EmployerReviewCard.tsx).
+  // PRD-47b — PRD-47b - the lister's right of reply under a review on a housing listing, plus the honest load-failure and edited-after-reply states. Rendered by HousingReviewList / HousingReviewCard / HousingReviewReply. Existing keys under economy:housingViewing.reviews.* (heading, empty, outOf, count, anonymous, ratingAria) are reused unchanged.
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // BLIND-EDIT — BLIND-EDIT: housing reviews close to edits at reveal. ONE key, and it is NOT wired by this agent, because there is no edit affordance anywhere in the housing UI to attach it to (verified: `updateHousingReview` in housingReviews.api.ts has zero callers, and `useHousingReviews.ts` exposes no edit hook). The only correct home for it is the blind note in `ReviewViewingModal.tsx`, which this agent does not own. Land it together with an edit affordance: on its own it promises a correction the UI cannot deliver. The exact insertion is in this agent's report.
+  // LANDLORD-MOD — LANDLORD-MOD (PRD-47d) - the per-recommendation report control on the landlord page, and the byline of a recommendation whose author erased their account. The entry-level report control in the hero keeps its existing copy: this is the narrower one, so acting on it takes down one tenant's warning instead of every warning about that landlord. The formerMember string mirrors marketing:listBusiness.coManagers.formerMember word for word, so the same absence reads the same way wherever a member has left.
+  // PRD-35 — PRD-35 - taking down your own flatmate profile, from the profile editor's danger zone. The confirm copy states only what DELETE /flatmate-profiles/mine actually does: the profile row goes, every like and pass pointing at it cascades away (so any mutual match ends), and conversations already opened by a say-hello survive as ordinary DMs. pt-PT reuses the catalogue's existing terms: 'quadro de colegas de casa' for the board, 'perfil' for the profile. Also adds the edit-mode heading, lede and submit label for the same form, which said 'Post your profile' over an existing profile.
+  // PRD-42+43 — PRD-42/43 - the barter poster's own index (MyBarterPage), the correction form (EditBarterPage) and its shared fields, plus the board's link into them. Plural keys use the _one/_other pair the rest of this catalog uses.
+  // PRD-44 — PRD-44 - the poster's own jobs index (/work/jobs/mine) and the edit form (/work/jobs/:slug/edit). `myJobs.hub.*` backs the Work hub card, `myJobs.entryLink` the jobs-board link. `myJobs.hub.primary` is a CLDR plural (_one/_other).
+  // PRD-47a — PRD-47a - the employer's right of reply to a review of them. The reply block on the company page reviews tab (CompanyReviewReply.tsx), the owner's compose/edit affordance, the edited-after-reply notice, the per-review report control, and the read-only reply block on the employer reviews page card (EmployerReviewCard.tsx).
+  // PRD-47b — PRD-47b - the lister's right of reply under a review on a housing listing, plus the honest load-failure and edited-after-reply states. Rendered by HousingReviewList / HousingReviewCard / HousingReviewReply. Existing keys under economy:housingViewing.reviews.* (heading, empty, outOf, count, anonymous, ratingAria) are reused unchanged.
+  "housingViewing.review.editableUntilPublic":
+    "You can change what you wrote until it goes public. After that it stands as you filed it.",
+  "landlordPage.recommendation.report.cta": "Report this recommendation",
+  "landlordPage.recommendation.report.ariaLabel":
+    "Report the recommendation by {name}",
+  "landlordPage.recommendation.formerMember": "A member who has since left",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // BLIND-EDIT-FE — BLIND-EDIT-FE: the member-facing half of the housing blind-review edit. NOTE: `housingViewing.review.editableUntilPublic` is NOT declared here, it is claimed by the BLIND-EDIT manifest, and this agent wires it exactly where that manifest recommended (appended after `housingViewing.review.blindNote` in the note block, now inside the shared `ReviewViewingForm`, so it shows on both the first submission and the correction). Keys below are new. `housingViewing.reviews.ratingAria` is reused as-is (existing CLDR plural).
+  // BLIND-EDIT — BLIND-EDIT: housing reviews close to edits at reveal. ONE key, and it is NOT wired by this agent, because there is no edit affordance anywhere in the housing UI to attach it to (verified: `updateHousingReview` in housingReviews.api.ts has zero callers, and `useHousingReviews.ts` exposes no edit hook). The only correct home for it is the blind note in `ReviewViewingModal.tsx`, which this agent does not own. Land it together with an edit affordance: on its own it promises a correction the UI cannot deliver. The exact insertion is in this agent's report.
+  // LANDLORD-MOD — LANDLORD-MOD (PRD-47d) - the per-recommendation report control on the landlord page, and the byline of a recommendation whose author erased their account. The entry-level report control in the hero keeps its existing copy: this is the narrower one, so acting on it takes down one tenant's warning instead of every warning about that landlord. The formerMember string mirrors marketing:listBusiness.coManagers.formerMember word for word, so the same absence reads the same way wherever a member has left.
+  // PRD-35 — PRD-35 - taking down your own flatmate profile, from the profile editor's danger zone. The confirm copy states only what DELETE /flatmate-profiles/mine actually does: the profile row goes, every like and pass pointing at it cascades away (so any mutual match ends), and conversations already opened by a say-hello survive as ordinary DMs. pt-PT reuses the catalogue's existing terms: 'quadro de colegas de casa' for the board, 'perfil' for the profile. Also adds the edit-mode heading, lede and submit label for the same form, which said 'Post your profile' over an existing profile.
+  // PRD-42+43 — PRD-42/43 - the barter poster's own index (MyBarterPage), the correction form (EditBarterPage) and its shared fields, plus the board's link into them. Plural keys use the _one/_other pair the rest of this catalog uses.
+  // PRD-44 — PRD-44 - the poster's own jobs index (/work/jobs/mine) and the edit form (/work/jobs/:slug/edit). `myJobs.hub.*` backs the Work hub card, `myJobs.entryLink` the jobs-board link. `myJobs.hub.primary` is a CLDR plural (_one/_other).
+  // PRD-47a — PRD-47a - the employer's right of reply to a review of them. The reply block on the company page reviews tab (CompanyReviewReply.tsx), the owner's compose/edit affordance, the edited-after-reply notice, the per-review report control, and the read-only reply block on the employer reviews page card (EmployerReviewCard.tsx).
+  // PRD-47b — PRD-47b - the lister's right of reply under a review on a housing listing, plus the honest load-failure and edited-after-reply states. Rendered by HousingReviewList / HousingReviewCard / HousingReviewReply. Existing keys under economy:housingViewing.reviews.* (heading, empty, outOf, count, anonymous, ratingAria) are reused unchanged.
+  "housingViewing.review.loading": "Loading your review.",
+  "housingViewing.review.loadError.title": "We couldn't load this review",
+  "housingViewing.review.loadError.description":
+    "Something went wrong on our side. Try again in a moment.",
+  "housingViewing.review.editAriaLabel": "Your review",
+  "housingViewing.review.editEyebrow": "Still private",
+  "housingViewing.review.editTitle": "Change your review of <em>{name}</em>",
+  "housingViewing.review.editBody":
+    "Fix a typo, say it better, move the rating. Nobody has read this yet.",
+  "housingViewing.review.saveChanges": "Save changes",
+  "housingViewing.review.saving": "Saving...",
+  "housingViewing.review.editSavedTitle": "Review <em>updated.</em>",
+  "housingViewing.review.editSavedBody":
+    "Your changes are saved. It stays private until <strong>{name}</strong> leaves theirs, or two weeks pass.",
+  "housingViewing.review.editError":
+    "Couldn't save your change. Give it another try in a moment.",
+  "housingViewing.review.editNotYours":
+    "This review belongs to someone else, so it can't be changed here.",
+  "housingViewing.review.editMissing":
+    "This review is no longer there, so there is nothing to change.",
+  "housingViewing.review.gonePublicEyebrow": "Now public",
+  "housingViewing.review.gonePublicTitle":
+    "This review is <em>public now.</em>",
+  "housingViewing.review.gonePublicBody":
+    "This review has gone public, so it can no longer be changed. A review can be corrected up until the moment it goes public.",
+  "housingViewing.list.yourReview": "Your review",
 };

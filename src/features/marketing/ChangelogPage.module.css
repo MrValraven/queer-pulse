@@ -1,6 +1,6 @@
 .page {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 40px 0 100px;
+  padding: 40px 0 var(--section-y-104);
 }
 .wrap {
   max-width: 900px;
@@ -19,7 +19,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(36px, 5vw, 62px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -44,7 +44,7 @@
 }
 .year {
   font-family: var(--serif);
-  font-size: 32px;
+  font-size: var(--text-32);
   font-weight: 300;
   color: var(--text-strong);
   letter-spacing: -0.02em;

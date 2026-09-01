@@ -142,7 +142,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  height: 300px;
+  min-height: 300px;
   border-radius: var(--radius-card);
   background: rgba(var(--accent-rgb), 0.1);
 }
@@ -150,13 +150,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 76px;
-  height: 76px;
+  width: 2.533em;
+  height: 2.533em;
   border-radius: 50%;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   font-family: var(--serif);
-  font-size: 30px;
+  font-size: var(--text-30);
   font-weight: 600;
   color: var(--text-strong);
   letter-spacing: 0.01em;
@@ -343,8 +343,8 @@
   margin-right: auto;
 }
 .lightboxClose {
-  width: 40px;
-  height: 40px;
+  width: 2.105em;
+  height: 2.105em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
@@ -378,8 +378,8 @@
   object-fit: contain;
 }
 .lightboxNav {
-  width: 48px;
-  height: 48px;
+  width: 2.182em;
+  height: 2.182em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
@@ -388,7 +388,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: var(--text-22);
   flex-shrink: 0;
   transition: background 0.2s var(--ease);
 }
@@ -411,7 +411,7 @@
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 36px 28px 80px;
+  padding: 36px 28px var(--section-y-80);
   /* Query container so the two-column body responds to the width it actually
      has, not the viewport. Without this the layout breaks when embedded in a
      narrow-but-desktop context (the admin moderation preview drawer): the
@@ -474,7 +474,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 5.5vw, 64px);
+  font-size: clamp(2.5rem, 5.5vw, 4rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -569,7 +569,7 @@
 .rating b {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
 }
 .starRow {
@@ -619,7 +619,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 8px;
@@ -963,7 +963,7 @@
 .ratingDistScore {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
 }
 .ratingDistCount {
@@ -1399,7 +1399,7 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-12);
   background: rgba(var(--plum-rgb), 0.04);
   font-size: var(--text-14);
@@ -1436,7 +1436,7 @@
 .notFound {
   max-width: 640px;
   margin: 0 auto;
-  padding: 64px 20px 96px;
+  padding: var(--section-y-64) 20px var(--section-y-96);
 }
 .savedSignal {
   display: flex;
@@ -1563,8 +1563,8 @@
   color: var(--ink);
 }
 .whoAv {
-  width: 28px;
-  height: 28px;
+  width: 2.667em;
+  height: 2.667em;
   border-radius: 50%;
   font-family: var(--sans);
   font-weight: 700;
@@ -1848,13 +1848,13 @@
 .related {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 28px 28px 64px;
+  padding: 28px 28px var(--section-y-64);
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .relatedTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin: 0 0 20px;

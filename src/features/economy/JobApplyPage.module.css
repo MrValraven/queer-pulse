@@ -1,7 +1,7 @@
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 40px 28px 80px;
+  padding: 40px 28px var(--section-y-80);
 }
 
 .back {
@@ -41,7 +41,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(34px, 5vw, 56px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -78,7 +78,7 @@
 .progPct {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 40px;
+  font-size: var(--text-40);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -139,7 +139,7 @@
 .secHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 0 0 4px;
@@ -252,8 +252,8 @@
   background: var(--cream);
 }
 .idLinkIc {
-  width: 34px;
-  height: 34px;
+  width: 2.615em;
+  height: 2.615em;
   border-radius: var(--radius-9);
   background: rgba(var(--plum-rgb), 0.07);
   display: flex;
@@ -397,8 +397,8 @@
   align-items: center;
 }
 .sideLogo {
-  width: 48px;
-  height: 48px;
+  width: 2.667em;
+  height: 2.667em;
   border-radius: var(--radius-12);
   display: flex;
   align-items: center;

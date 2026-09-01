@@ -13,8 +13,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 2.25em; /* 36 / 16 */
+  height: 2.25em;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: 50%;
   background: transparent;
@@ -30,8 +30,8 @@
    same size; only the tappable circle grows. Fine-pointer (desktop) keeps 36px. */
 @media (pointer: coarse) {
   .navBtn {
-    width: 44px;
-    height: 44px;
+    width: 2.75em; /* 44 / 16 */
+    height: 2.75em;
   }
 }
 
@@ -44,7 +44,7 @@
 
 .monthLabel {
   font-family: var(--serif);
-  font-size: 28px;
+  font-size: var(--text-28);
   font-weight: 500;
   color: var(--text-strong);
   letter-spacing: -0.015em;
@@ -192,7 +192,7 @@
 
 .ecD {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   font-weight: 500;
   line-height: 1;
   color: var(--text-strong);
@@ -234,7 +234,7 @@
 .allEvents h3 {
   margin-bottom: 20px;
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--text-strong);

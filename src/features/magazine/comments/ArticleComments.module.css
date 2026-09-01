@@ -1,12 +1,12 @@
 .section {
-  padding: 48px 0 80px;
+  padding: var(--section-y-48) 0 var(--section-y-80);
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
   margin-top: 40px;
 }
 .heading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   margin-bottom: 20px;
 }
@@ -171,7 +171,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 1.5px solid rgba(var(--plum-rgb), 0.4);
+  border: 1.5px solid rgba(var(--line-rgb), 0.4);
   flex: none;
 }
 .actions {
@@ -187,7 +187,7 @@
 }
 .confirmIcon,
 .errorIcon {
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--jade);
 }
 .errorIcon {

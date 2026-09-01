@@ -2,6 +2,7 @@ import { useId, type CSSProperties } from "react";
 import { NavLink } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import type { MegaMenu } from "./navMenus";
+import { NavBuildBadge } from "./NavBuildBadge";
 import { linkToPath } from "../../../app/routeMap";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./Sidebar.module.css";
@@ -63,6 +64,7 @@ export function SidebarGroup({
               }
             >
               {t(link.labelKey)}
+              {link.isBeingBuilt && <NavBuildBadge />}
             </NavLink>
           ))}
         </div>

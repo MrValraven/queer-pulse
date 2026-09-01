@@ -11,8 +11,11 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
-import type { CompanyProfile, CompanyReview } from "./companies.data";
+import type { CompanyProfile } from "./companies.data";
 import type { Job } from "./jobs.data";
+import type { CompanyReviewView } from "./api/companyReviewView";
+import { CompanyReviewReply } from "./CompanyReviewReply";
+import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import { deadlineText } from "./api/jobs.adapters";
 import styles from "./CompanyPage.module.css";
 
@@ -92,9 +95,10 @@ function ReviewsPane({
   isLoadingMore,
   hasError,
   onRetry,
+  isOwner,
 }: {
   profile: CompanyProfile;
-  reviews: CompanyReview[];
+  reviews: CompanyReviewView[];
   reviewCount: number;
   onWrite: () => void;
   hasMore: boolean;
@@ -102,8 +106,12 @@ function ReviewsPane({
   isLoadingMore: boolean;
   hasError: boolean;
   onRetry: () => void;
+  /** The viewer owns this company, so they may write the employer reply. False
+   *  for everyone else and for an unclaimed company, which has no owner. */
+  isOwner: boolean;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <>
       <div className={styles.revSummary}>
@@ -159,7 +167,10 @@ function ReviewsPane({
       ) : (
         <div className={styles.revList}>
           {reviews.map((review, reviewIndex) => (
-            <div key={`${review.title}-${reviewIndex}`} className={styles.rev}>
+            <div
+              key={review.id ?? `${review.title}-${reviewIndex}`}
+              className={styles.rev}
+            >
               <div className={styles.revHead}>
                 <div className={styles.revTitle}>{review.title}</div>
                 <Stars
@@ -175,6 +186,39 @@ function ReviewsPane({
                   <p key={paragraphIndex}>{paragraph}</p>
                 ))}
               </div>
+              {review.editedAt && (
+                <div className={styles.revEdited}>
+                  {t("economy:company.reviews.editedOn", {
+                    date: fmt.date(new Date(review.editedAt), {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    }),
+                  })}
+                </div>
+              )}
+              <CompanyReviewReply
+                review={review}
+                companySlug={profile.slug}
+                isOwner={isOwner}
+              />
+              {/* One report subject covers the review AND the employer reply
+                  under it, exactly as the directory treats its own reviews: a
+                  reply read without the review it answers is not the same
+                  statement. Demo fixtures have no id and so no control. */}
+              {review.id && (
+                <div className={styles.reviewReport}>
+                  <ReportSubjectControl
+                    subjectType="review"
+                    subjectId={review.id}
+                    subjectName={review.title}
+                    label={t("economy:company.reviews.report.cta")}
+                    ariaLabel={t("economy:company.reviews.report.ariaLabel", {
+                      title: review.title,
+                    })}
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -226,12 +270,13 @@ export function CompanyTabs({
   isLoadingMoreReviews,
   hasReviewsError,
   onRetryReviews,
+  isOwner,
   tab,
   setTab,
 }: {
   profile: CompanyProfile;
   jobs: Job[];
-  reviews: CompanyReview[];
+  reviews: CompanyReviewView[];
   reviewCount: number;
   onWriteReview: () => void;
   hasMoreReviews: boolean;
@@ -239,6 +284,7 @@ export function CompanyTabs({
   isLoadingMoreReviews: boolean;
   hasReviewsError: boolean;
   onRetryReviews: () => void;
+  isOwner: boolean;
   tab: TabId;
   setTab: (t: TabId) => void;
 }) {
@@ -282,6 +328,7 @@ export function CompanyTabs({
           isLoadingMore={isLoadingMoreReviews}
           hasError={hasReviewsError}
           onRetry={onRetryReviews}
+          isOwner={isOwner}
         />
       )}
       {tab === "work" && profile.work && <WorkPane work={profile.work} />}

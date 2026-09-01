@@ -1,0 +1,18 @@
+.fields {
+  display: grid;
+  gap: 18px;
+}
+
+/* Mode and category sit side by side on anything wider than a phone: they are
+   both short pickers and the form reads as one decision rather than two. */
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 640px) {
+  .row {
+    grid-template-columns: 1fr 1fr;
+  }
+}

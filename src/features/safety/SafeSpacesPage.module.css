@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 68px 0 96px;
+  padding: var(--section-y-72) 0 var(--section-y-96);
   position: relative;
   overflow: hidden;
 }
@@ -47,7 +47,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 84px);
+  font-size: clamp(2.5rem, 6vw, 5.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -76,7 +76,7 @@
 }
 .stat .n {
   font-family: var(--serif);
-  font-size: 38px;
+  font-size: var(--text-38);
   color: var(--jade);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -89,7 +89,7 @@
 
 .badgeExplainer {
   background: var(--cream);
-  padding: 88px 0;
+  padding: var(--section-y-88) 0;
 }
 .beGrid {
   display: grid;
@@ -110,8 +110,13 @@
   justify-content: center;
 }
 .badgeVisual {
-  width: 200px;
-  height: 200px;
+  /* The three stacked lines inside all set their own font-size, so this one
+     only supplies the em basis: 200 / 36, against the largest of them
+     (`.bvCheck`). The medallion then scales with its type instead of
+     squeezing it. */
+  font-size: var(--text-36);
+  width: 5.556em;
+  height: 5.556em;
   border-radius: 50%;
   background: var(--jade);
   display: flex;
@@ -125,7 +130,7 @@
     0 0 0 16px rgba(var(--jade-rgb), 0.06);
 }
 .bvCheck {
-  font-size: 36px;
+  font-size: var(--text-36);
   color: rgba(var(--cream-rgb), 1);
 }
 .bvName {
@@ -154,7 +159,7 @@
 .beText h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.2vw, 40px);
+  font-size: clamp(1.625rem, 3.2vw, 2.5rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -181,8 +186,9 @@
   align-items: flex-start;
 }
 .critDot {
-  width: 22px;
-  height: 22px;
+  /* 22 / 11, in em so the box scales with its glyph. */
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.14);
   display: flex;
@@ -202,7 +208,7 @@
 }
 
 .body {
-  padding: 80px 0 100px;
+  padding: var(--section-y-80) 0 var(--section-y-104);
 }
 .dirHead {
   display: flex;
@@ -215,7 +221,7 @@
 .dirHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -315,7 +321,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -385,12 +391,12 @@
 
 .howSection {
   background: var(--cream);
-  padding: 88px 0;
+  padding: var(--section-y-88) 0;
 }
 .howSection h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -412,7 +418,7 @@
 }
 .howNum {
   font-family: var(--serif);
-  font-size: 40px;
+  font-size: var(--text-40);
   color: rgba(var(--jade-rgb), 0.25);
   letter-spacing: -0.03em;
   line-height: 1;
@@ -431,7 +437,7 @@
 }
 
 .nomSection {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
 }
 .nomBox {
   background: var(--plum);
@@ -451,7 +457,7 @@
 .nomBox h3 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 3.5vw, 42px);
+  font-size: clamp(1.625rem, 3.5vw, 2.625rem);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 12px;
@@ -550,7 +556,7 @@
 /* ===== Recently removed ===== */
 .removedSection {
   background: var(--cream);
-  padding: 72px 0;
+  padding: var(--section-y-72) 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .removedHead {
@@ -560,7 +566,7 @@
 .removedHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(1.75rem, 4vw, 2.625rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 12px;
@@ -660,7 +666,7 @@
 .rcName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   text-decoration: line-through;
@@ -725,7 +731,7 @@
 .nomThanks .nomThanksTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 42px);
+  font-size: clamp(1.75rem, 3.5vw, 2.625rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;

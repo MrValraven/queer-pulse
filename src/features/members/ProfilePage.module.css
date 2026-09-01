@@ -8,7 +8,7 @@
   justify-content: center;
   gap: 16px;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 68px 28px 80px;
+  padding: var(--section-y-72) 28px var(--section-y-80);
   text-align: center;
   color: var(--ink-60);
 }
@@ -53,7 +53,7 @@ div.backBar {
 }
 
 .phero {
-  padding: 24px 0 64px;
+  padding: 24px 0 var(--section-y-64);
   position: relative;
   /* Clip sideways only. The `::before` glow below hangs past the right edge,
      but a plain `overflow: hidden` also clipped anything hanging past the
@@ -201,7 +201,7 @@ div.backBar {
 .name {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 5.2vw, 70px);
+  font-size: clamp(2.375rem, 5.2vw, 4.375rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -324,7 +324,7 @@ div.backBar {
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--text-body);
   white-space: nowrap;
 }
 .vouchedTag svg {
@@ -419,7 +419,7 @@ div.backBar {
 }
 
 .section {
-  padding: 48px 0;
+  padding: var(--section-y-48) 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
   scroll-margin-top: 96px;
 }
@@ -433,7 +433,7 @@ div.backBar {
 .sectionHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -462,7 +462,7 @@ div.backBar {
 .nowBody p {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 24px;
+  font-size: var(--text-24);
   line-height: 1.42;
   color: var(--text-strong);
   letter-spacing: -0.01em;
@@ -522,7 +522,7 @@ div.backBar {
   margin-top: 16px;
 }
 .lookingForToggleLabel {
-  font-size: 0.92rem;
+  font-size: var(--text-14-5);
   color: var(--ink);
 }
 

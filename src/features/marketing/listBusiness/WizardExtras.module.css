@@ -27,12 +27,12 @@
 
 .serverErrorTitle {
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: var(--text-14-5);
 }
 
 .serverErrorMessage {
   margin-top: 2px;
-  font-size: 0.88rem;
+  font-size: var(--text-body-sm);
   color: var(--ink-60);
   overflow-wrap: anywhere;
 }

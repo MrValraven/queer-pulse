@@ -1,7 +1,7 @@
 /* The roster follows the hero directly now, so it opens with a normal gap
    instead of a full band of air. */
 .section {
-  padding: 36px 0 48px;
+  padding: 36px 0 var(--section-y-48);
 }
 
 /* Labels the roster under a hero that has already named the page, so it sits
@@ -9,7 +9,7 @@
 .head h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 2.8vw, 34px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 6px;
@@ -62,8 +62,8 @@
   justify-content: space-between;
 }
 .av {
-  width: 46px;
-  height: 46px;
+  width: 2.875em;
+  height: 2.875em;
   border-radius: var(--radius-12);
   display: flex;
   align-items: center;
@@ -137,7 +137,7 @@
 .why h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3vw, 36px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
@@ -171,7 +171,7 @@
 .become h3 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }

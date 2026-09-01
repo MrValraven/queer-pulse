@@ -90,6 +90,31 @@ export interface DrawerPerson {
   pronoun?: string;
 }
 
+/**
+ * The ONE gathering photo an `event_photo` report is about, as the server
+ * snapshotted it when the report was filed.
+ *
+ * Mirrors `PhotoSnapshotEvidence` in
+ * `queerpulse-backend/src/reports/report-evidence.ts`, minus the fields the
+ * drawer has no use for. There is deliberately no image URL on it: the bytes
+ * are reached through the staff-only
+ * `GET /mod/report-photo-evidence/<reportId>` route, keyed by the REPORT, so
+ * the drawer builds that address from the report it is already showing and can
+ * never be handed a link to some other member's photo.
+ */
+export interface ReportedPhoto {
+  /** The `event_photos` row id. Shown to nobody; carried so a moderator's note
+   *  or a follow-up can name the exact photo out of an album. */
+  photoId: string;
+  /** The uploader's own words under the image. Rendered as a quote, never as
+   *  the image's alternative text: a caption can name or describe the person in
+   *  the photo, and an accessible name is read aloud to anyone the screen
+   *  reader is speaking to. */
+  caption: string | null;
+  /** When the photo was posted to the album (ISO). */
+  uploadedAt: string;
+}
+
 export interface ReportDetail {
   /** Author byline for the reported content. */
   contentAuthor: string;
@@ -108,6 +133,9 @@ export interface ReportDetail {
   /** Listing-dispute enrichment (listing subjects only): an off-account contact
    *  address the disputer left, so a moderator can reach them. Non-empty only. */
   contactEmail?: string;
+  /** Present only on an `event_photo` report filed after the snapshot existed.
+   *  A report whose whole content is an image needs the image. */
+  reportedPhoto?: ReportedPhoto;
 }
 
 /** Real per-member counts, resolved via `admin:moderation.priorReports.*` at

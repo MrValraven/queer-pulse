@@ -97,8 +97,8 @@
 }
 
 .inviterAvatar {
-  width: 52px;
-  height: 52px;
+  width: 2.889em; /* 52 / 18 */
+  height: 2.889em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -135,7 +135,7 @@
 .heading {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 5.5vw, 40px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   line-height: 1.06;
@@ -459,7 +459,7 @@
 /* Photo stays perfectly still & sharp — only the ring + glow animate around it */
 .sealStatic .sealAvatar {
   inset: 16px;
-  font-size: 46px;
+  font-size: var(--text-46);
   animation: none;
   z-index: 1;
   box-shadow:
@@ -576,7 +576,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--accent-rgb), 0.25);
   border: 2.5px solid rgba(var(--cream-rgb), 0.2);
@@ -599,7 +599,7 @@
 .loaderTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 5vw, 34px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   line-height: 1.1;

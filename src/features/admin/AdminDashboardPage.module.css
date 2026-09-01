@@ -41,7 +41,7 @@
 }
 .h1 {
   font-family: var(--serif);
-  font-size: clamp(30px, 4vw, 42px);
+  font-size: var(--text-title);
   font-weight: 400;
   line-height: 1.04;
   letter-spacing: -0.015em;
@@ -116,7 +116,7 @@
 }
 .statNum {
   font-family: var(--serif);
-  font-size: 30px;
+  font-size: var(--text-30);
   font-weight: 500;
   line-height: 1;
   color: var(--ink);
@@ -200,7 +200,7 @@
 }
 .secTitle {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
   color: var(--text-strong);
   margin: 0;
@@ -294,7 +294,7 @@
 }
 .qCount {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 500;
   color: var(--text-strong);
   flex: none;

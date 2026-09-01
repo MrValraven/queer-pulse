@@ -2,7 +2,7 @@
   background: var(--cream);
 }
 .hero {
-  padding: 140px 0 64px;
+  padding: var(--section-y-144) 0 var(--section-y-64);
   position: relative;
   overflow: hidden;
 }
@@ -39,7 +39,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(56px, 9vw, 128px);
+  font-size: clamp(3.5rem, 9vw, 8rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.92;
@@ -83,7 +83,7 @@
 .current {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
   position: relative;
   overflow: hidden;
 }
@@ -141,7 +141,7 @@
 .curNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 64px;
+  font-size: var(--text-64);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -154,7 +154,7 @@
 .curH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 44px;
+  font-size: var(--text-44);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -188,7 +188,7 @@
 .arch {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 80px 28px 90px;
+  padding: var(--section-y-80) 28px var(--section-y-88);
 }
 .archH {
   display: flex;
@@ -203,7 +203,7 @@
 .archH h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 36px;
+  font-size: var(--text-36);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -282,7 +282,7 @@
 .tileH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;
@@ -333,7 +333,7 @@
 .listNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -345,7 +345,7 @@
 .listH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;

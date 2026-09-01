@@ -2,11 +2,11 @@ import { initialsOf, tintForSlug } from "../../../shared/api/refs";
 import type {
   CompanyBadge,
   CompanyProfile,
-  CompanyReview,
   CompanyReviewBar,
   CompanyStat,
   CompanyTeamAv,
 } from "../companies.data";
+import type { CompanyReviewView } from "./companyReviewView";
 import type {
   CompanyBadges,
   CompanyCardDTO,
@@ -192,12 +192,23 @@ export function companyDetailToProfile(
   };
 }
 
-/** Map a review DTO to the profile's review view-model. */
-export function reviewDtoToReview(dto: CompanyReviewDTO): CompanyReview {
+/**
+ * Map a review DTO to the profile's review view-model.
+ *
+ * The reply fields are carried through verbatim, including
+ * `isEditedAfterOwnerReply`: the server computed it from the two timestamps and
+ * the page must not second-guess it. `id` comes across because the reply
+ * endpoint and the report control both address the review by it.
+ */
+export function reviewDtoToReview(dto: CompanyReviewDTO): CompanyReviewView {
   return {
+    id: dto.id,
     title: dto.title,
     stars: dto.stars,
     byline: dto.byline,
     body: dto.body,
+    editedAt: dto.editedAt,
+    isEditedAfterOwnerReply: dto.isEditedAfterOwnerReply,
+    ownerReply: dto.ownerReply,
   };
 }

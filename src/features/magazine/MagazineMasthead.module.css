@@ -25,7 +25,7 @@
   /* Wordmark still leads the page, one step down from the original
      clamp(42px, 7vw, 96px): at 96px the two lines alone ate ~173px of the
      first screen and pushed the cover story under the fold. */
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   color: var(--text-strong);
   letter-spacing: -0.03em;
   line-height: 0.9;

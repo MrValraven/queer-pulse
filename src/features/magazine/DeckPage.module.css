@@ -144,7 +144,7 @@
 
 .header {
   background: var(--cream);
-  padding: 120px 0 48px;
+  padding: var(--section-y-120) 0 var(--section-y-48);
   border-bottom: 2px solid var(--line-strong);
 }
 .back {
@@ -175,7 +175,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 5.5vw, 72px);
+  font-size: clamp(2rem, 5.5vw, 4.5rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -219,18 +219,18 @@
 .stageWrap {
   max-width: 920px;
   margin: 0 auto;
-  padding: 48px 28px 80px;
+  padding: var(--section-y-48) 28px var(--section-y-80);
 }
 
 .notFound {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 100px;
+  padding: var(--section-y-64) 0 var(--section-y-104);
   text-align: center;
 }
 .notFound h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: var(--text-strong);
   margin-bottom: 16px;
 }

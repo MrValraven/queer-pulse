@@ -60,13 +60,13 @@
 }
 
 .row:hover {
-  border-color: rgba(var(--plum-rgb), 0.28);
+  border-color: rgba(var(--line-rgb), 0.28);
   box-shadow: var(--shadow-e2);
 }
 
 .row:focus-visible {
   outline: none;
-  border-color: rgba(var(--plum-rgb), 0.4);
+  border-color: rgba(var(--line-rgb), 0.4);
   box-shadow: var(--ring-plum);
 }
 
@@ -335,7 +335,7 @@
 
 .quotaInput:focus-visible {
   outline: none;
-  border-color: rgba(var(--plum-rgb), 0.4);
+  border-color: rgba(var(--line-rgb), 0.4);
   box-shadow: var(--ring-plum);
 }
 
@@ -385,4 +385,16 @@
   .quotaRowControls {
     justify-content: space-between;
   }
+}
+
+/* The "Sent by" panel opens DOWN over the invite grid, and its own
+   `z-index: var(--z-popover)` can't reach it: `<FadeIn>` sets
+   `will-change: opacity, transform`, so this wrapper is its own stacking
+   context and the panel only wins INSIDE it — the later-sibling rows FadeIn
+   then paints its opaque cards on top. Lift the whole wrapper, but only while
+   a listbox is open, so nothing else changes. Mirrors
+   `.rowFade:has([role="menu"])` in the communities modules. */
+.filterFade:has([role="listbox"]) {
+  position: relative;
+  z-index: var(--z-raised);
 }

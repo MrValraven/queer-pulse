@@ -1,6 +1,6 @@
 .page {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 40px 0 100px;
+  padding: 40px 0 var(--section-y-104);
 }
 .inner {
   max-width: 780px;
@@ -18,7 +18,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.5vw, 52px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -106,8 +106,8 @@
   background: var(--accent);
 }
 .icon {
-  width: 40px;
-  height: 40px;
+  width: 2.222em; /* 40 / 18 */
+  height: 2.222em;
   border-radius: var(--radius-12);
   display: flex;
   align-items: center;
@@ -213,7 +213,7 @@
 }
 .empty {
   text-align: center;
-  padding: 80px 20px;
+  padding: var(--section-y-80) 20px;
   color: var(--ink-40);
 }
 /* Spacing under the error copy for the shared Retry <Button>. */
@@ -222,7 +222,7 @@
 }
 .emptyTitle {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   font-weight: 300;
   color: var(--text-strong);
   margin: 16px 0 8px;

@@ -54,7 +54,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   line-height: 1.15;
   letter-spacing: -0.015em;
   color: var(--text-strong);
@@ -95,8 +95,9 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  /* 34 / 17, in em so the tile scales with the icon it centres. */
+  width: 2em;
+  height: 2em;
   border-radius: var(--radius-10);
   background: rgba(var(--line-rgb), 0.08);
   color: var(--accent);

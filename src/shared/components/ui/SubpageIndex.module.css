@@ -15,7 +15,7 @@
 
 .title {
   font-family: var(--serif);
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-size: var(--text-heading);
   line-height: 1.15;
   color: var(--ink);
   margin-block-end: 28px;
@@ -71,7 +71,7 @@
   justify-content: space-between;
   gap: 12px;
   font-family: var(--sans);
-  font-size: 1.02rem;
+  font-size: var(--text-16-5);
   font-weight: 600;
   color: var(--ink);
 }
@@ -92,7 +92,7 @@
 
 .blurb {
   font-family: var(--sans);
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink-60);
 }

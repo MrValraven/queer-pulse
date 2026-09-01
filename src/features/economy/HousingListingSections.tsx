@@ -7,7 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { HousingListing } from "./housingListings";
 import { VerificationBadge } from "./VerificationBadge";
 import { AffirmingBaselineBadge } from "./AffirmingBaseline";
-import { ListingReviews } from "./ListingReviews";
+import { HousingReviewList } from "./HousingReviewList";
 import { HousingLocationCard } from "./HousingLocationCard";
 import { HousingVirtualTour } from "./HousingVirtualTour";
 import { GAL_BG } from "./housingListing.data";
@@ -87,7 +87,7 @@ export function HousingListingMain({ listing }: { listing: HousingListing }) {
 
       <section className={s.sec}>
         <h2>{t("economy:housingViewing.reviews.heading")}</h2>
-        <ListingReviews slug={listing.slug} />
+        <HousingReviewList slug={listing.slug} />
       </section>
     </div>
   );

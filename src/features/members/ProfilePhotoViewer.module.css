@@ -36,13 +36,13 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   border: 1px solid rgba(var(--cream-rgb), 0.28);
   background: rgba(var(--cream-rgb), 0.1);
   color: var(--cream);
-  font-size: 22px;
+  font-size: var(--text-22);
   cursor: pointer;
   transition: background 0.15s var(--ease);
 }
@@ -70,7 +70,7 @@
 
 .caption {
   font-family: var(--serif);
-  font-size: clamp(20px, 4vw, 28px);
+  font-size: var(--text-heading);
   color: var(--cream);
   text-align: center;
 }

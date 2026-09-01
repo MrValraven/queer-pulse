@@ -1,0 +1,99 @@
+/* Header + form treatment for the "Message this business" sheet. Same shared
+ * ModalSheet header idiom the claim and dispute sheets use (eyebrow, serif
+ * title with a coral <em>, muted sub), kept as a local copy rather than a
+ * cross-import, exactly as those two do. */
+.eyebrow {
+  margin-bottom: 8px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  margin-bottom: 8px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.sub {
+  margin-bottom: 18px;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* The connection rule, stated before anybody types. The first enquiry lands and
+ * the thread then closes to both sides until a connection is accepted, so
+ * saying it afterwards would be saying it too late. */
+.notice {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: var(--cream);
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-text);
+}
+
+.footRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-40);
+}
+
+.counter {
+  margin: 0;
+  flex: none;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+.error {
+  margin-top: 14px;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--accent-text);
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* On the plum success panel, so it dims toward cream rather than ink. */
+.threadLink {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--cream);
+  text-decoration: underline;
+}

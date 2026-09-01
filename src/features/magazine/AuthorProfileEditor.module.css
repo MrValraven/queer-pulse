@@ -11,7 +11,7 @@
   background: var(--paper);
   color: var(--ink);
   font: inherit;
-  font-size: 0.95rem;
+  font-size: var(--text-body);
 }
 .textarea {
   min-height: 120px;

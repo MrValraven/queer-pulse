@@ -60,7 +60,7 @@
   flex: 1 1 160px;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(30px, 3.6vw, 48px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.04;
@@ -526,7 +526,7 @@
 }
 .avatarError {
   margin-top: 10px;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--accent);
 }
 
@@ -896,8 +896,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 1.765em;
+  height: 1.765em;
   border-radius: 50%;
   background: var(--jade);
   color: var(--text-strong);

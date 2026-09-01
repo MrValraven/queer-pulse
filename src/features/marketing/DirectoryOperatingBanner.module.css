@@ -21,8 +21,8 @@
 
 .icon {
   flex: none;
-  width: 34px;
-  height: 34px;
+  width: 1.889em;
+  height: 1.889em;
   border-radius: var(--radius-10);
   display: grid;
   place-items: center;
@@ -36,7 +36,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   letter-spacing: -0.015em;
   margin: 0 0 4px;
   color: var(--text-strong);

@@ -2,7 +2,7 @@
   max-width: 980px;
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 28px 80px;
+  padding: 28px 28px var(--section-y-80);
 }
 .head {
   padding-bottom: 24px;
@@ -25,7 +25,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(48px, 7vw, 84px);
+  font-size: clamp(3rem, 7vw, 5.25rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -55,7 +55,7 @@
 .stats b {
   color: var(--text-strong);
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
   display: block;
   line-height: 1;
@@ -133,7 +133,7 @@
 .year {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: var(--accent);
   letter-spacing: -0.025em;
   line-height: 1;

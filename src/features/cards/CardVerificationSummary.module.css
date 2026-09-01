@@ -13,7 +13,7 @@
   align-items: center;
   gap: var(--gap-xs);
   margin: 0;
-  font-size: 0.8rem;
+  font-size: var(--text-eyebrow);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -29,26 +29,26 @@
 }
 
 .total {
-  font-size: 1.05rem;
+  font-size: var(--text-17);
   font-weight: 600;
   color: var(--ink);
 }
 
 .recent {
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   color: var(--ink-60);
 }
 
 .last,
 .empty {
   margin: var(--gap-xs) 0 0;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 
 .note {
   margin: var(--gap-sm) 0 0;
-  font-size: 0.78rem;
+  font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-60);
 }

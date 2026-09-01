@@ -5,7 +5,6 @@ import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
 import {
   Button,
-  FadeIn,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -19,7 +18,8 @@ import {
   buildFaqSchema,
   buildBreadcrumbSchema,
 } from "../../shared/seo";
-import { ALPHABET, GLOSSARY_COPY, type TypeKind } from "./glossary.data";
+import { ALPHABET, GLOSSARY_COPY } from "./glossary.data";
+import { GlossaryTermBlocks, type Lang } from "./GlossaryTermBlocks";
 import { useGlossaryData } from "./api/useGlossaryData";
 
 const CONTACT = routes.contact;
@@ -46,15 +46,6 @@ function extractPlainText(node: ReactNode): string {
   }
   return "";
 }
-
-const TYPE_CLASS: Record<TypeKind, string> = {
-  "": "",
-  essential: "typeEssential",
-  med: "typeMed",
-  local: "typeLocal",
-};
-
-type Lang = "en" | "pt";
 
 function TermSkeleton() {
   // Mirrors a .term cell: name + type chip row, then two definition lines.
@@ -234,49 +225,7 @@ export function GlossaryPage() {
             />
           )}
 
-          {!loading &&
-            blocks.map((b, bi) => (
-              <FadeIn
-                as="div"
-                className={styles.letterBlock}
-                id={b.letter}
-                key={b.letter}
-                delay={Math.min(bi, 8) * 60}
-              >
-                <div className={styles.letterH}>{b.letter}</div>
-                <div className={styles.termList}>
-                  {b.terms.map((term) => (
-                    <div className={styles.term} key={term.name}>
-                      <div className={styles.termRow}>
-                        <div className={styles.termName}>{term.name}</div>
-                        <span
-                          className={[
-                            styles.termType,
-                            term.typeKind && styles[TYPE_CLASS[term.typeKind]],
-                          ]
-                            .filter(Boolean)
-                            .join(" ")}
-                        >
-                          {lang === "pt" ? term.typePt : term.type}
-                        </span>
-                      </div>
-                      <div className={styles.termDef}>
-                        {lang === "pt" ? term.defPt : term.def}
-                      </div>
-                      {(lang === "pt"
-                        ? (term.metaPt ?? term.meta)
-                        : term.meta) && (
-                        <div className={styles.termMeta}>
-                          {lang === "pt"
-                            ? (term.metaPt ?? term.meta)
-                            : term.meta}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </FadeIn>
-            ))}
+          {!loading && <GlossaryTermBlocks blocks={blocks} lang={lang} />}
 
           {empty && (
             <div className={styles.noResults}>

@@ -82,13 +82,13 @@
 }
 
 .optionTitle {
-  font-size: 0.9375rem;
+  font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
 }
 
 .optionDesc {
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   line-height: 1.45;
   color: var(--ink-60);
 }

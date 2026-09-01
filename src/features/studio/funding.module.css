@@ -1,6 +1,6 @@
 /* Shared dark styles for Studio funding/community pages (Solidarity Fund, Calls, Set Submission) */
 .wrap {
-  padding: 8px 0 60px;
+  padding: 8px 0 var(--section-y-64);
   max-width: var(--maxw-page);
   margin: 0 auto;
 }
@@ -30,7 +30,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(34px, 5vw, 58px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -57,7 +57,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3.4vw, 36px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
@@ -99,7 +99,7 @@
 .balMain .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 56px;
+  font-size: var(--text-56);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -130,7 +130,7 @@
 .mini .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
@@ -216,7 +216,7 @@
 .dt b {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
   display: block;
   line-height: 1;
@@ -298,7 +298,7 @@
 .apply h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
@@ -414,8 +414,8 @@
   gap: 10px;
 }
 .callCur .av {
-  width: 36px;
-  height: 36px;
+  width: 2.769em;
+  height: 2.769em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
   color: var(--accent-soft);
@@ -506,7 +506,7 @@
 .callAmt .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
 }
 .callAmt .v em {
@@ -644,8 +644,8 @@
   color: rgba(var(--cream-rgb), 0.6);
 }
 .djStep .num {
-  width: 26px;
-  height: 26px;
+  width: 2.167em;
+  height: 2.167em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.1);
   display: flex;

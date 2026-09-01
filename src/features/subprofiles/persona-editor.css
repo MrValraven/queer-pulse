@@ -207,18 +207,18 @@
 }
 
 .ed-main {
-  padding: 34px 34px 90px;
+  padding: 34px 34px var(--section-y-88);
   min-width: 0;
 }
 @container (max-width: 760px) {
   .ed-main {
-    padding: 24px 20px 90px;
+    padding: 24px 20px var(--section-y-88);
   }
 }
 .ed-main h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 32px;
+  font-size: var(--text-32);
   letter-spacing: -0.02em;
   color: var(--text-strong);
   line-height: 1.1;
@@ -723,7 +723,7 @@
 .drawer-head h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 27px;
+  font-size: var(--text-27);
   letter-spacing: -0.02em;
   color: var(--text-strong);
   margin-top: 4px;

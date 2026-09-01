@@ -5,14 +5,11 @@ import { Button, Reveal, Select, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { CATS, type Barter } from "./barter.data";
+import { type Barter } from "./barter.data";
 import type { BarterCategoryKey } from "./api/barter.api";
 import { useCreateBarterListing } from "./api/useBarter";
+import { POSTABLE_CATEGORIES } from "./barterListingForm";
 import styles from "./BarterPage.module.css";
-
-/** The board's real categories: the leading `"all"` chip is a filter, never
- *  something a listing can be posted under. */
-const POSTABLE_CATEGORIES = CATS.filter((category) => category.value !== "all");
 
 /** Post-a-swap strip: a short offer/want form that puts a listing on the board,
  *  with an animated success state. Demo prepends a local card through `onPost`;

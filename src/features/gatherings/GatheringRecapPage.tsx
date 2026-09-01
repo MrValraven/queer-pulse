@@ -96,7 +96,7 @@ function LiveGatheringRecap({ gathering }: { gathering: GatheringDetail }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   // Attach is organizer-only server-side (mirrors GatheringPhotosLive).
-  const canUpload = Boolean(gathering.viewerIsOrganizer);
+  const isOrganizer = Boolean(gathering.viewerIsOrganizer);
   return (
     <AppShell>
       <header className={styles.hero} data-plum>
@@ -116,7 +116,11 @@ function LiveGatheringRecap({ gathering }: { gathering: GatheringDetail }) {
       </header>
       <div className={styles.body}>
         <div className="wrap">
-          <GatheringPhotosLive slug={gathering.slug} canUpload={canUpload} />
+          <GatheringPhotosLive
+            slug={gathering.slug}
+            isOrganizer={isOrganizer}
+            gatheringTitle={gathering.title}
+          />
           <MoreFromHost
             hostSlug={gathering.hostSlug}
             hostName={gathering.host}

@@ -1,7 +1,7 @@
 /* Shared primitives for marketing / content pages.
    The page hero now lives in the shared <PageHero> component. */
 .section {
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
 }
 .sectionEyebrow {
   font-size: var(--text-12);
@@ -14,7 +14,7 @@
 .sectionTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 46px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;

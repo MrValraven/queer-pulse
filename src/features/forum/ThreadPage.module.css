@@ -45,7 +45,7 @@
 }
 
 .layout {
-  padding: 28px 0 90px;
+  padding: 28px 0 var(--section-y-88);
   max-width: 760px;
 }
 .opCard {
@@ -61,8 +61,8 @@
   margin-bottom: 18px;
 }
 .opAv {
-  width: 46px;
-  height: 46px;
+  width: 2.875em; /* 46 / 16 */
+  height: 2.875em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -124,7 +124,7 @@
 .opTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.4vw, 36px);
+  font-size: clamp(1.625rem, 3.4vw, 2.25rem);
   color: var(--text-strong);
   letter-spacing: -0.018em;
   line-height: 1.15;
@@ -271,8 +271,8 @@
   border-bottom: none;
 }
 .replyAv {
-  width: 40px;
-  height: 40px;
+  width: 2.857em; /* 40 / 14 */
+  height: 2.857em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -347,10 +347,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  min-width: 24px;
-  min-height: 24px;
+  width: 1.538em; /* 20 / 13 */
+  height: 1.538em;
+  min-width: 1.846em; /* 24 / 13 */
+  min-height: 1.846em;
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 700;
@@ -528,8 +528,8 @@
   color: var(--ink-60);
 }
 .crAv {
-  width: 30px;
-  height: 30px;
+  width: 2.727em; /* 30 / 11 */
+  height: 2.727em;
   border-radius: 50%;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
@@ -671,7 +671,7 @@
     padding-top: 12px;
   }
   .layout {
-    padding: 22px 0 64px;
+    padding: 22px 0 var(--section-y-64);
   }
   .opCard {
     padding: 22px 18px;

@@ -103,8 +103,9 @@
   position: absolute;
   top: 2px;
   right: 2px;
-  min-width: 17px;
-  height: 17px;
+  /* 17 / 9, in em so the badge grows with the unread count inside it. */
+  min-width: 1.889em;
+  height: 1.889em;
   padding: 0 4px;
   border-radius: var(--radius-pill);
   background: var(--accent);
@@ -123,7 +124,7 @@
   gap: 9px;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 23px;
+  font-size: var(--text-23);
   letter-spacing: -0.01em;
   color: var(--text-strong);
   /* The wordmark is the fixed anchor of the bar: it never shrinks and never

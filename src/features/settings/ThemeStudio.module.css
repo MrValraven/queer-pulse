@@ -1,6 +1,6 @@
 /* ProfileThemePage */
 .page {
-  padding: 96px 0 100px;
+  padding: var(--section-y-96) 0 var(--section-y-104);
 }
 .layout {
   display: grid;
@@ -21,7 +21,7 @@
 }
 .pkHead {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 4px;
@@ -249,8 +249,9 @@
   justify-content: space-between;
 }
 .pclAv {
-  width: 52px;
-  height: 52px;
+  /* 52 / 18, in em so the disc scales with its initials. */
+  width: 2.889em;
+  height: 2.889em;
   border-radius: 50%;
   border: 3px solid var(--paper);
   display: flex;
@@ -335,8 +336,9 @@
   z-index: 1;
 }
 .dcAv {
-  width: 40px;
-  height: 40px;
+  /* 40 / 14, in em so the disc scales with its initials. */
+  width: 2.857em;
+  height: 2.857em;
   border-radius: 50%;
   border: 3px solid var(--paper);
   display: flex;

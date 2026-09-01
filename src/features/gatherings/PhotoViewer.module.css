@@ -59,8 +59,8 @@
   align-items: center;
 }
 .iconBtn {
-  width: 40px;
-  height: 40px;
+  width: 2.105em; /* 40 / 19 */
+  height: 2.105em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
@@ -142,8 +142,8 @@
 }
 
 .nav {
-  width: 48px;
-  height: 48px;
+  width: 2.182em; /* 48 / 22 */
+  height: 2.182em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
@@ -152,7 +152,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: var(--text-22);
   flex-shrink: 0;
   transition: background 0.2s var(--ease);
 }
@@ -187,7 +187,7 @@
     height: 56svh;
   }
   .nav {
-    width: 40px;
-    height: 40px;
+    width: 1.818em; /* 40 / 22 */
+    height: 1.818em;
   }
 }

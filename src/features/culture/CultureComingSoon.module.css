@@ -3,3 +3,30 @@
   margin: 0 auto;
   padding: clamp(48px, 9vh, 104px) 24px;
 }
+
+/* The one live door into Culture: register interest in a commission while the
+   board itself is still being built. Sits below the coming-soon panel so it
+   reads as an offer rather than a correction to it. */
+.commissions {
+  margin-top: 28px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-panel);
+  padding: 26px 24px;
+  text-align: center;
+}
+.commissionsTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  color: var(--text-strong);
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
+.commissionsBody {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 0 auto 20px;
+  max-width: 44ch;
+}

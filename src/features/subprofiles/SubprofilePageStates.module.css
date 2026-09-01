@@ -9,7 +9,7 @@
   justify-content: center;
   gap: 16px;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 68px 28px 80px;
+  padding: var(--section-y-72) 28px var(--section-y-80);
   text-align: center;
   color: var(--ink-60);
 }
@@ -32,14 +32,14 @@
 @media (--mobile) {
   .wrap {
     /* nav band reserved by shell (base.css); this is only breathing room */
-    padding: 24px 24px 64px;
+    padding: 24px 24px var(--section-y-64);
   }
 }
 
 @media (--xs) {
   .wrap {
     /* nav band reserved by shell (base.css); this is only breathing room */
-    padding: 12px var(--gap-sm) 56px;
+    padding: 12px var(--gap-sm) var(--section-y-56);
     gap: var(--gap-xs);
   }
 

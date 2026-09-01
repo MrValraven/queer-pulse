@@ -6,7 +6,7 @@
 .page {
   max-width: 1320px;
   margin: 0;
-  padding: 0 0 80px;
+  padding: 0 0 var(--section-y-80);
 }
 
 .ebar {
@@ -84,7 +84,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 80px 20px;
+  padding: var(--section-y-80) 20px;
 }
 
 @media (max-width: 700px) {

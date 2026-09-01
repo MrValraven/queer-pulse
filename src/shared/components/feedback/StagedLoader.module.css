@@ -37,7 +37,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3.6vw, 32px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.1;

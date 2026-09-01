@@ -609,22 +609,19 @@ export default defineConfig([
       //     the rule can't resolve statically are left alone, so no per-file
       //     overrides are needed.
       "local/require-noopener-on-blank": "error",
-      // 2. Components stay small. Still "warn", and the promotion to "error" was
-      //    checked on 2026-08-31 rather than assumed: the tree is at FOUR
-      //    violations, not zero, so flipping it would break the build.
-      //      src/features/communities/useModToolsActions.ts  useModToolsActions  208
-      //      src/features/gatherings/steps/ReviewStep.tsx    ReviewStep          202
-      //      src/features/resources/GlossaryPage.tsx         GlossaryPage        208
-      //      src/features/resources/LegalPage.tsx            LegalPage           215
-      //    All four are 2 to 15 lines over a 200-line limit, so each is one
-      //    extracted section away from clearing it (the `component-decomposition`
-      //    skill covers the split). Re-measure before acting: the list moves as
-      //    components are edited. Decompose them, confirm
-      //    `npx eslint . --format json` reports zero max-lines-per-function
-      //    messages, then promote this to "error", at which point the ratchet
-      //    is self-maintaining and this note can go.
+      // 2. Components stay small, and this is now a hard error. The tree is at
+      //    ZERO violations as of 2026-09-01, so the rule is self-maintaining:
+      //    a function that grows past 200 lines fails lint rather than adding
+      //    to a warning pile nobody reads. The `component-decomposition` skill
+      //    covers the split when you hit it.
+      //
+      //    History, so nobody has to re-derive it: the promotion was blocked
+      //    for months behind four oversized components. Two (useModToolsActions
+      //    at 208, ReviewStep at 202) cleared during the section-6 frontend
+      //    build; the last two (GlossaryPage 208, LegalPage 215) were
+      //    decomposed on 2026-09-01, which is what let this flip.
       "max-lines-per-function": [
-        "warn",
+        "error",
         { max: 200, skipBlankLines: true, skipComments: true, IIFEs: true },
       ],
       // 3. Design tokens, not hardcoded hex, in inline styles. Warn for now.

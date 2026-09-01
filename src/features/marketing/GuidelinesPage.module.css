@@ -1,7 +1,7 @@
 .content {
   max-width: 760px;
   margin: 0 auto;
-  padding: 48px 0 80px;
+  padding: var(--section-y-48) 0 var(--section-y-80);
 }
 .updated {
   display: inline-flex;
@@ -28,14 +28,14 @@
 .clauseNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: rgba(var(--accent-rgb), 0.4);
   letter-spacing: -0.02em;
 }
 .clause h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 12px;

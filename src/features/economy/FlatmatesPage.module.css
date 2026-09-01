@@ -1,6 +1,6 @@
 .hero {
   background: var(--plum);
-  padding: 148px 0 86px;
+  padding: var(--section-y-144) 0 var(--section-y-88);
   position: relative;
   overflow: hidden;
 }
@@ -46,7 +46,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.8vw, 78px);
+  font-size: clamp(2.375rem, 5.8vw, 4.875rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -216,7 +216,7 @@
 }
 
 .body {
-  padding: 56px 0 108px;
+  padding: var(--section-y-56) 0 var(--section-y-112);
 }
 .top {
   display: flex;
@@ -299,8 +299,8 @@
   margin-bottom: 16px;
 }
 .av {
-  width: 52px;
-  height: 52px;
+  width: 2.737em;
+  height: 2.737em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -323,7 +323,7 @@
 .name {
   display: inline-block;
   font-family: var(--serif);
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   font-weight: 500;
@@ -549,7 +549,7 @@
 .hsStripText h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -584,7 +584,7 @@
   border-radius: var(--radius-26) var(--radius-26) 0 0;
   width: 100%;
   max-width: 580px;
-  padding: 32px 36px 52px;
+  padding: 32px 36px var(--section-y-56);
   /* svh, not vh: vh is the large viewport, so 90vh overflows under mobile
      browser chrome and pushes actions off-screen. */
   max-height: 90svh;
@@ -604,8 +604,8 @@
   position: absolute;
   top: 18px;
   right: 20px;
-  width: 32px;
-  height: 32px;
+  width: 1.882em;
+  height: 1.882em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
@@ -626,7 +626,7 @@
 .modalTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   margin-bottom: 5px;
   letter-spacing: -0.015em;
@@ -882,7 +882,7 @@
 .success h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 34px;
+  font-size: var(--text-34);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -904,13 +904,13 @@
     grid-template-columns: 1fr;
   }
   .modal {
-    padding: 28px 22px 48px;
+    padding: 28px 22px var(--section-y-48);
   }
   .hero {
-    padding: 116px 0 60px;
+    padding: var(--section-y-120) 0 var(--section-y-64);
   }
   .body {
-    padding: 44px 0 80px;
+    padding: 44px 0 var(--section-y-80);
   }
 }
 
@@ -964,7 +964,7 @@
 }
 .helloTitle {
   font-family: var(--serif);
-  font-size: 25px;
+  font-size: var(--text-25);
   line-height: 1.2;
   color: var(--ink);
   margin: 0;
@@ -1063,11 +1063,11 @@
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.1);
   color: var(--jade);
-  font-size: 24px;
+  font-size: var(--text-24);
 }
 .discoveryMatch h3 {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   line-height: 1.2;
   margin: 0;
 }
@@ -1088,4 +1088,59 @@
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 6px;
+}
+
+/* ── Take-down group at the bottom of the profile editor ──────────────────
+   Same shape as the communities danger zone: an uppercase label, then a
+   bordered accent-tinted zone holding one row per irreversible action. */
+.dangerLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin: 32px 0 12px;
+}
+.dangerZone {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  background: rgba(var(--accent-rgb), 0.03);
+}
+.dangerRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+.dangerRowLabel {
+  font-weight: 600;
+  color: var(--ink);
+}
+.dangerRowText {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 60ch;
+}
+/* What the take-down does NOT remove, inside the confirm dialog. Quieter than
+   the description above it, and deliberately still present. */
+.dangerKeeps {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin: 10px 0 0;
+}
+.dangerError {
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--danger);
+  margin: 12px 0 0;
 }

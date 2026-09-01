@@ -15,9 +15,24 @@ export interface LandlordCardDTO {
 }
 
 export interface RecommendationDTO {
+  /**
+   * The recommendation's own uuid, and the handle a member's report is
+   * addressed by (`subjectType: "landlord_recommendation"`). Withheld from this
+   * DTO until the report path existed, which is exactly why no complaint could
+   * reach a single recommendation: the only control on the page named the whole
+   * directory entry, so acting on it took down every other tenant's warning
+   * about that landlord too.
+   */
+  id: string;
+  /** Empty when the author has erased their account, alongside a `null`
+   * `member`. Render a placeholder; never assume a byline. */
   name: string;
   initials: string;
   tint: "coral" | "jade" | "plum";
+  /** `null` once the author erased their account
+   * (`landlord_recommendations.author_user_id` is `ON DELETE SET NULL`), and
+   * for a missing profile row. Both read the same way: the warning stands, the
+   * byline is gone. */
   member: MemberRefDTO | null;
   stars: number;
   text: string;

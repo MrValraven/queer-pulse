@@ -2,13 +2,13 @@
 
 .body {
   background: var(--cream);
-  padding-block: 8px 96px;
+  padding-block: 8px var(--section-y-96);
 }
 
 .heading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(24px, 2.6vw, 32px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: var(--ls-heading);
   margin-block: 0 24px;
@@ -85,7 +85,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin: 0 0 18px;

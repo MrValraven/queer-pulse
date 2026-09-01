@@ -16,12 +16,12 @@
 
 .title {
   font-family: var(--serif);
-  font-size: 1.05rem;
+  font-size: var(--text-17);
   color: var(--text-strong);
 }
 
 .sub {
-  font-size: 0.82rem;
+  font-size: var(--text-caption);
   color: var(--ink-60);
   margin-top: 2px;
 }
@@ -37,7 +37,7 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 10px;
-  font-size: 0.78rem;
+  font-size: var(--text-label);
   color: var(--ink-60);
 }
 
@@ -67,7 +67,7 @@
 }
 
 .notMeasured {
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   font-style: italic;
   padding: 40px 0;
@@ -82,7 +82,7 @@
   background: var(--plum);
   color: var(--cream);
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: var(--text-12);
   line-height: 1.35;
   padding: 6px 9px;
   border-radius: var(--radius-8);
@@ -94,7 +94,7 @@
 
 .tipStrong {
   font-family: var(--serif);
-  font-size: 0.82rem;
+  font-size: var(--text-13);
 }
 
 /* Focusable data mark (see markFocusProps): keyboard users tab to it and the

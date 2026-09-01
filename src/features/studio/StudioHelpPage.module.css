@@ -9,7 +9,7 @@
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
 
-  padding: 8px 0 60px;
+  padding: 8px 0 var(--section-y-64);
   max-width: 860px;
   margin: 0 auto;
 }
@@ -30,7 +30,7 @@
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 5vw, 56px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -144,7 +144,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3.5vw, 34px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
@@ -185,13 +185,13 @@
 }
 .faqIcon {
   flex: none;
-  width: 26px;
-  height: 26px;
+  width: 1.182em;
+  height: 1.182em;
   display: grid;
   place-items: center;
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 22px;
+  font-size: var(--text-22);
   line-height: 1;
   color: var(--accent);
   transition: transform 0.28s var(--ease);
@@ -209,7 +209,9 @@
     opacity 0.28s var(--ease);
 }
 .faqAOpen {
-  max-height: 480px;
+  /* 480px at a 16px root. Root-relative so the collapse cap grows with the
+     answer text instead of clipping a long answer at a raised font size. */
+  max-height: 30rem;
   opacity: 1;
   animation: helpFadeUp 0.32s var(--ease);
 }

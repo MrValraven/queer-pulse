@@ -63,7 +63,7 @@
 .value {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 34px;
+  font-size: var(--text-34);
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--text-strong);

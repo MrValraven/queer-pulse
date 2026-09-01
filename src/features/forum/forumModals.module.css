@@ -13,7 +13,7 @@
 .fieldLabel {
   display: block;
   margin-bottom: 6px;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--plum);
 }
 .input,
@@ -48,7 +48,7 @@
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 6px;
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   color: var(--plum);
 }
 .historyTitleChange {

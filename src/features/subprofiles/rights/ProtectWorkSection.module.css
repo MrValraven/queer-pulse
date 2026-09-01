@@ -9,13 +9,13 @@
 .heading {
   margin: 0;
   font-family: var(--sans);
-  font-size: 0.95rem;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--ink);
 }
 .blurb {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .actions {

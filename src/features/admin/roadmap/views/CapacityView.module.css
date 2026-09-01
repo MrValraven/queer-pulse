@@ -193,7 +193,7 @@
 .panelValue {
   margin: 0;
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--ink);
 }
 

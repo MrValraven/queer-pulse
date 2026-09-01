@@ -1,7 +1,7 @@
 /* ── Hero ── */
 .hero {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 60px;
+  padding: var(--section-y-64) 0 var(--section-y-64);
   text-align: center;
 }
 
@@ -45,7 +45,7 @@
 .heroTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(44px, 6vw, 80px);
+  font-size: clamp(2.75rem, 6vw, 5rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -333,7 +333,7 @@
 .subStrip h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 4px;

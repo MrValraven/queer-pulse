@@ -1,6 +1,6 @@
 .hero {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 48px;
+  padding: var(--section-y-64) 0 var(--section-y-48);
 }
 .eyebrow {
   display: inline-flex;
@@ -22,7 +22,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 76px);
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -43,13 +43,13 @@
 }
 
 .section {
-  padding: 56px 0;
+  padding: var(--section-y-56) 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .section h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -80,7 +80,7 @@
 .flowN {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--accent);
   margin-bottom: 10px;
 }
@@ -108,7 +108,7 @@
 .formBox h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }
@@ -215,7 +215,7 @@
 .modLog h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
 }
 .modLog h3 em {
@@ -235,7 +235,7 @@
 .logStat .n {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 38px;
+  font-size: var(--text-38);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;

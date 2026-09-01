@@ -51,12 +51,12 @@
 .meta {
   margin: 0.5rem 0 0;
   color: color-mix(in srgb, var(--ink) 62%, transparent);
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
 }
 .collab {
   margin: 0.25rem 0 0;
   color: color-mix(in srgb, var(--ink) 62%, transparent);
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
 }
 .actions {
   display: flex;
@@ -75,7 +75,7 @@
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--text-strong);
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   cursor: pointer;
 }
 .actionButton:hover {

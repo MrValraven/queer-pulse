@@ -4,7 +4,7 @@
   align-items: center;
   text-align: center;
   gap: 12px;
-  padding: 56px 32px;
+  padding: var(--section-y-56) 32px;
   background: linear-gradient(
     180deg,
     rgba(var(--accent-rgb), 0.05),
@@ -21,19 +21,20 @@
 .icon {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
+  /* 56 / 24, in em so the disc scales with the icon it centres. */
+  width: 2.333em;
+  height: 2.333em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.14);
   color: var(--jade);
-  font-size: 24px;
+  font-size: var(--text-24);
   margin-bottom: 4px;
 }
 
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 1.35rem;
+  font-size: var(--text-22);
   color: var(--ink);
   margin: 0;
 }

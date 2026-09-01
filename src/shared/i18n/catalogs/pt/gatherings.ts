@@ -1299,4 +1299,30 @@ export const gatherings: Catalog = {
   "hub.browse.cost.any": "Qualquer custo",
   "hub.browse.cost.free": "Gratuito",
   "hub.browse.cost.paid": "Tem entrada paga",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.
+  "photos.removeAriaLabel": "Remover esta foto do álbum",
+  "photos.removeConfirmTitle": "Remover esta foto?",
+  "photos.removeConfirmBody":
+    "Isto tira a foto do álbum para toda a gente que a consegue ver. Não dá para anular.",
+  "photos.removeConfirmCta": "Remover foto",
+  "photos.removedToast": "Foto removida do álbum.",
+  "photos.removeError":
+    "Não foi possível remover essa foto. Continua no álbum, por isso tenta novamente.",
+  "photos.openPhotoAriaLabel": "Abrir esta foto num separador novo",
+  "photos.openCaptionedPhotoAriaLabel":
+    "Abrir esta foto num separador novo: {caption}",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PHOTO-REPORT — PHOTO-REPORT - the per-photo report control on a gathering album tile (live mode only). Sits beside the existing photos.removeAriaLabel take-down control. The captioned variant gives each tile a distinct accessible name; the plain one covers a photo with no caption. reportSubjectName is what the report modal calls the subject when the photo carries no caption of its own.
+  // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.
+  "photos.reportCta": "Denunciar",
+  "photos.reportAriaLabel": "Denunciar esta fotografia",
+  "photos.reportCaptionedAriaLabel":
+    "Denunciar a fotografia com a legenda {caption}",
+  "photos.reportSubjectName": "Fotografia de {gathering}",
 };

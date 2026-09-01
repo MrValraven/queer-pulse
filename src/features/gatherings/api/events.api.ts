@@ -580,7 +580,12 @@ export interface EventPhotoDTO {
   createdAt: string;
 }
 
-/** GET /events/:slug/photos — participants only (host/cohosts/going). */
+/**
+ * GET /events/:slug/photos: participants only (host/cohosts/going). Any photo a
+ * moderator has taken down under the `event_photo` report subject is already
+ * absent from this list for every viewer, organizers included, so the client
+ * never has to filter and a count taken off `photos.length` is honest.
+ */
 export const getEventPhotos = (slug: string) =>
   apiGet<{ photos: EventPhotoDTO[] }>(`/events/${slug}/photos`);
 
@@ -589,6 +594,15 @@ export const attachEventPhoto = (
   slug: string,
   body: { key: string; caption?: string },
 ) => apiPost<EventPhotoDTO>(`/events/${slug}/photos`, body);
+
+/**
+ * DELETE /events/:slug/photos/:photoId: the take-down path for one album
+ * photo. The backend (`EventPhotosService.remove`) allows the photo's own
+ * uploader or an organizer of the gathering (host or co-host), and answers 404
+ * for a photo that is already gone, so a repeat delete is NOT a silent 200.
+ */
+export const removeEventPhoto = (slug: string, photoId: string) =>
+  apiDelete<{ ok: true }>(`/events/${slug}/photos/${photoId}`);
 
 // ── Event lineup ("who performed") ──────────────────────────────────────────
 // Backend `EventLineupEntryView`/`EventLineupDTO` (Personas Phase 5, Moment 5).

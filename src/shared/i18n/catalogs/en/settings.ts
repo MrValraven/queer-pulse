@@ -1146,4 +1146,69 @@ export const settings: Catalog = {
   "accountData.dsar.cta": "Open the request form",
   "accountData.note":
     "Each of these opens as a full page, so you can read exactly what it does before you commit to anything.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-48-FE — PRD-48 - the member's own submissions index at /account/submissions (MySubmissionsPage), plus the Settings > Account card that leads to it. Three intakes on one page: partner applications, swap proposals sent, resource suggestions. Each keeps its own status vocabulary on purpose. `resource.status.archived` is queue tidying rather than a verdict, so its copy must never read as a refusal. Nothing here may promise an email: QueerPulse sends none.
+  "account.submissions.title": "Things you sent in",
+  "account.submissions.desc":
+    "Partner applications, swap proposals and resource suggestions, each with where it stands and what was decided.",
+  "account.submissions.cta": "Open your submissions",
+  "mySubmissions.backToAccount": "Account",
+  "mySubmissions.eyebrow": "Your account · Submissions",
+  "mySubmissions.h1": "What you <em>sent in</em>, and what came of it.",
+  "mySubmissions.lead":
+    "Everything you have submitted for someone to look at, and where each one stands. Answers land here and in your notifications. QueerPulse sends no email, so this page is where a decision stays once you have cleared the bell.",
+  "mySubmissions.footNote":
+    "Only submissions that go to a review queue appear here. Posts, gatherings and listings you publish yourself go live straight away, so there is nothing to wait on.",
+  "mySubmissions.emptyAll.title": "You have not sent anything in yet",
+  "mySubmissions.emptyAll.description":
+    "Apply to list an organisation as a partner, propose a swap on the skill exchange, or suggest an entry for the resources directory, and it will appear here with its answer.",
+  "mySubmissions.row.sentOn": "Sent {date}",
+  "mySubmissions.row.decidedOn": "Answered {date}",
+  "mySubmissions.partner.heading": "Partner applications",
+  "mySubmissions.partner.kind": "Partner application",
+  "mySubmissions.partner.status.pending": "With the partnerships team",
+  "mySubmissions.partner.status.approved": "Approved",
+  "mySubmissions.partner.status.rejected": "Not approved",
+  "mySubmissions.partner.noteLabel": "From the partnerships team",
+  "mySubmissions.partner.noReason": "No reason was recorded for this one.",
+  "mySubmissions.partner.empty.title": "No partner applications",
+  "mySubmissions.partner.empty.description":
+    "You have not applied to list an organisation as a QueerPulse partner.",
+  "mySubmissions.partner.error.title":
+    "We could not load your partner applications",
+  "mySubmissions.partner.error.description":
+    "The rest of this page still works. Try this section again.",
+  "mySubmissions.barter.heading": "Swap proposals you sent",
+  "mySubmissions.barter.kind": "Swap proposal",
+  "mySubmissions.barter.status.pending": "With the poster",
+  "mySubmissions.barter.status.accepted": "Accepted by the poster",
+  "mySubmissions.barter.status.declined": "Turned down by the poster",
+  "mySubmissions.barter.listingGone": "This swap is no longer on the board",
+  "mySubmissions.barter.editedAfter":
+    "The poster changed this swap after your offer went out, so it may not read the way it did when you proposed.",
+  "mySubmissions.barter.link": "Open your swaps",
+  "mySubmissions.barter.empty.title": "No swap proposals",
+  "mySubmissions.barter.empty.description":
+    "You have not offered a swap on anyone else's listing yet.",
+  "mySubmissions.barter.error.title": "We could not load your swap proposals",
+  "mySubmissions.barter.error.description":
+    "The rest of this page still works. Try this section again.",
+  "mySubmissions.resource.heading": "Resources you suggested",
+  "mySubmissions.resource.kind": "Resource suggestion",
+  "mySubmissions.resource.status.pending": "Waiting for review",
+  "mySubmissions.resource.status.approved": "Added to the directory",
+  "mySubmissions.resource.status.declined": "Not added",
+  "mySubmissions.resource.status.archived": "Closed with no decision",
+  "mySubmissions.resource.archivedNote":
+    "Nobody turned this down. The queue closed it without a verdict either way, usually because the resource is already listed or the suggestion had gone out of date.",
+  "mySubmissions.resource.noteLabel": "From the reviewer",
+  "mySubmissions.resource.noReason": "No reason was recorded for this one.",
+  "mySubmissions.resource.empty.title": "No resource suggestions",
+  "mySubmissions.resource.empty.description":
+    "You have not suggested an entry for the resources directory yet.",
+  "mySubmissions.resource.error.title":
+    "We could not load your resource suggestions",
+  "mySubmissions.resource.error.description":
+    "The rest of this page still works. Try this section again.",
 };

@@ -3,7 +3,7 @@
    this page no longer hand-rolls its own crisis markup. */
 
 .sec {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
 }
 .alt {
   background: rgba(var(--plum-rgb), 0.025);
@@ -14,7 +14,7 @@
 .secHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 46px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -241,7 +241,7 @@
 }
 .snsNum {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--ink-rgb), 0.12);
   line-height: 1;
 }
@@ -271,7 +271,7 @@
 .peerStrip h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }

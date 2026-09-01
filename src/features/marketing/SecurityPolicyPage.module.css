@@ -4,7 +4,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 90px;
+  padding: var(--section-y-64) 0 var(--section-y-88);
   position: relative;
   overflow: hidden;
 }
@@ -34,7 +34,7 @@
 .heroH {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 5.5vw, 76px);
+  font-size: clamp(2.5rem, 5.5vw, 4.75rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
@@ -55,7 +55,7 @@
 
 /* Body */
 .body {
-  padding: 80px 0 120px;
+  padding: var(--section-y-80) 0 var(--section-y-120);
 }
 .layout {
   display: grid;
@@ -81,7 +81,7 @@
 .proseH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.5vw, 38px);
+  font-size: clamp(1.625rem, 3.5vw, 2.375rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -217,8 +217,8 @@
   text-align: center;
 }
 .hallInit {
-  width: 40px;
-  height: 40px;
+  width: 2.667em;
+  height: 2.667em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   display: flex;

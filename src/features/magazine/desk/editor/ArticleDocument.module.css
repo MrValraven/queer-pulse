@@ -11,7 +11,7 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  padding: 52px 0 60px;
+  padding: var(--section-y-56) 0 var(--section-y-64);
   position: relative;
 }
 
@@ -32,7 +32,7 @@
 
 .title {
   font-family: var(--serif);
-  font-size: 44px;
+  font-size: var(--text-44);
   line-height: 1.03;
   font-weight: 400;
   letter-spacing: -0.025em;
@@ -42,7 +42,7 @@
 
 .standfirst {
   font-family: var(--serif);
-  font-size: 21px;
+  font-size: var(--text-21);
   line-height: 1.4;
   font-weight: 300;
   color: var(--ink-60);
@@ -83,7 +83,7 @@
 
 /* reader mode (Read-mode preview + the public reader share this look) */
 .reader {
-  padding: 44px 0 70px;
+  padding: 44px 0 var(--section-y-72);
 }
 
 .reader .docwrap {

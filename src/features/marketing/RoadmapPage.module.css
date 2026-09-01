@@ -18,7 +18,7 @@
 .statValue {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.4vw, 38px);
+  font-size: clamp(1.75rem, 3.4vw, 2.375rem);
   line-height: 1;
   color: rgba(var(--cream-rgb), 1);
 }
@@ -38,7 +38,7 @@
 
 /* ── Body ───────────────────────────────────────────────── */
 .body {
-  padding: 64px 0 100px;
+  padding: var(--section-y-64) 0 var(--section-y-104);
   background: var(--cream);
 }
 
@@ -529,7 +529,7 @@
 .sectionHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.5vw, 36px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 8px;

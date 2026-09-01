@@ -41,7 +41,7 @@
 
 .bannerTitle {
   font-family: var(--serif);
-  font-size: 1.15rem;
+  font-size: var(--text-18);
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 4px;
@@ -54,7 +54,7 @@
 
 .bannerBody {
   font-family: var(--sans);
-  font-size: 0.875rem;
+  font-size: var(--text-body-sm);
   line-height: 1.5;
   color: var(--ink-60);
   margin: 0;
@@ -103,14 +103,14 @@
 .prefTitle {
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--text-15);
   color: var(--ink);
   margin-bottom: 3px;
 }
 
 .prefDesc {
   font-family: var(--sans);
-  font-size: 0.82rem;
+  font-size: var(--text-caption);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -119,12 +119,13 @@
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  /* 34 / 15, in em so the disc scales with the icon it centres. */
+  width: 2.267em;
+  height: 2.267em;
   border-radius: var(--radius-pill);
   background: rgba(var(--jade-rgb), 0.14);
   color: var(--jade);
-  font-size: 0.95rem;
+  font-size: var(--text-15);
 }
 
 .prefsFoot {

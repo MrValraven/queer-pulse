@@ -177,12 +177,14 @@ export interface ModReport {
   /** Live: that window has already closed and the report is still open. */
   isOverdue?: boolean;
   /** Live: what got reported. "Remove" only wires up for `"post"`. A reply
-   *  report is dismissible and links through to its thread (see
-   *  `ModReportedPosts`). */
-  subjectType?: "post" | "reply";
-  /** Live: the post or reply id, the "Remove" action's delete target. */
+   *  report is dismissible and links through to its thread, and an
+   *  `"event_photo"` report is one photograph in a gathering's album, which
+   *  has no thread to link to at all (see `ModReportedPosts`). */
+  subjectType?: "post" | "reply" | "event_photo";
+  /** Live: the post, reply or photo id, the "Remove" action's delete target. */
   subjectId?: string;
-  /** Live: the thread to open. The post itself, or a reply's parent post. */
+  /** Live: the thread to open. The post itself, or a reply's parent post.
+   *  Unset for a photo report, which lives in an album rather than a thread. */
   threadPostId?: string;
   /** Live: the content is already tombstoned by its author or a moderator. */
   isContentDeleted?: boolean;

@@ -18,9 +18,11 @@
   --card-pad: 24px;
   --card-pad-lg: 30px;
 
-  /* ── Section rhythm ── */
-  --section-y: 108px; /* vertical padding for most sections */
-  --section-y-lg: 120px; /* larger sections */
+  /* ── Section rhythm ──
+     --section-y and --section-y-lg are defined ONCE, at the bottom of this
+     file, where they alias the --section-y-* grid. They used to be declared
+     here too, as raw px, and that copy would be dead: same selector, later
+     declaration wins. Do not reintroduce it. */
 
   /* ── Grid gaps ── */
   --gap-lg: 32px;
@@ -116,4 +118,55 @@
   --radius-badge: var(--radius-14);
   --radius-panel: var(--radius-20);
   --radius-card: var(--radius-22);
+}
+
+/* ── Section rhythm scale (numeric primitives) ──────────────────────────────
+   Same story as the type and radius scales, and the last of the three. The two
+   role names above (--section-y 108px, --section-y-lg 120px) had 15 uses
+   between them, against 564 hand-written vertical section paddings spread over
+   33 distinct values: 48, 50, 52, 54, 56, 58, 60, 64, 68, 70, 72, 76, 78, 80,
+   84, 86, 88, 90, 92, 96, 100, 108, 110, 116, 120, 128, 130, 140, 148, 150,
+   160, 180 and 200px. Adjacent pages breathed differently for no reason anyone
+   could state, and there was no way to retune the app's vertical rhythm at all.
+
+   UNLIKE type and radius, this scale SNAPS. Those two took one token per value
+   already shipping, because moving 7,650 type sites by half a pixel could not
+   have been reviewed. Here the numbers are different: 564 sites, and the
+   quantity is section padding, where the eye cannot resolve a 4px change on an
+   80px gap. Snapping to an 8px grid is therefore the only version of this that
+   actually fixes the finding — tokenising all 33 values would have preserved
+   the guesswork under nicer names. Every value moved by at most 4px (150px, the
+   single worst case, moved 6px), and ties round UP.
+
+   The grid is 8px to 128px, then coarser: past that the values are one-offs on
+   long marketing pages, and an 8px step there is precision nobody asked for.
+
+   Vertical only. Horizontal gutters are --wrap-px and the --gap-* set; this
+   scale is specifically the space ABOVE and BELOW a section, which is what has
+   to agree across pages. px on purpose — see the unit note in typography.css
+   for why type scales with the reader's font size and layout does not. */
+:root {
+  --section-y-48: 48px;
+  --section-y-56: 56px;
+  --section-y-64: 64px;
+  --section-y-72: 72px;
+  --section-y-80: 80px;
+  --section-y-88: 88px;
+  --section-y-96: 96px;
+  --section-y-104: 104px;
+  --section-y-112: 112px;
+  --section-y-120: 120px;
+  --section-y-128: 128px;
+  --section-y-144: 144px;
+  --section-y-160: 160px;
+  --section-y-180: 180px;
+  --section-y-200: 200px;
+
+  /* The role names re-pointed at the grid. --section-y was 108px, which is not
+     on it; 108 sits exactly between two steps and ties round UP, so it lands on
+     112 like every other 108 in the tree. The 15 existing uses stay consistent
+     with the 564 swept ones rather than becoming the only off-grid sections
+     left in the app. */
+  --section-y: var(--section-y-112);
+  --section-y-lg: var(--section-y-120);
 }

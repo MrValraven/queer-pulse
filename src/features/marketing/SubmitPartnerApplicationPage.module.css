@@ -1,6 +1,6 @@
 .section {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 0 90px;
+  padding: 28px 0 var(--section-y-88);
   background: var(--cream);
 }
 
@@ -21,7 +21,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 5vw, 54px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.04;

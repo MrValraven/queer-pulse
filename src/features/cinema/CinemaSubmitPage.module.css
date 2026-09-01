@@ -8,7 +8,7 @@
 
 /* ── Header ── */
 .subHeader {
-  padding: 120px 0 48px;
+  padding: var(--section-y-120) 0 var(--section-y-48);
   border-bottom: 2px solid var(--line-strong);
 }
 .shInner {
@@ -28,7 +28,7 @@
 .shTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(46px, 6.5vw, 84px);
+  font-size: clamp(2.875rem, 6.5vw, 5.25rem);
   color: var(--text-strong);
   letter-spacing: -0.026em;
   line-height: 0.96;
@@ -94,7 +94,7 @@
 
 /* ── Layout ── */
 .subBody {
-  padding: 56px 0 100px;
+  padding: var(--section-y-56) 0 var(--section-y-104);
 }
 .sbInner {
   display: grid;
@@ -143,8 +143,8 @@
   outline-offset: 2px;
 }
 .stepNum {
-  width: 28px;
-  height: 28px;
+  width: 2.333em; /* 28 / 12 */
+  height: 2.333em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -201,8 +201,8 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .fbNum {
-  width: 38px;
-  height: 38px;
+  width: 2.375em; /* 38 / 16 */
+  height: 2.375em;
   border-radius: 50%;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
@@ -218,7 +218,7 @@
 .fbTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.012em;
 }

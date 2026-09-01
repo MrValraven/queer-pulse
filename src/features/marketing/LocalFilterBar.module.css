@@ -241,8 +241,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
+  min-width: 1.636em;
+  height: 1.636em;
   padding: 0 5px;
   border-radius: var(--radius-pill);
   background: var(--plum);
@@ -274,7 +274,7 @@
 .sheetTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   letter-spacing: -0.01em;
   color: var(--text-strong);
   margin: 0;

@@ -8,7 +8,7 @@
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
-  padding: 8px 0 60px;
+  padding: 8px 0 var(--section-y-64);
 }
 
 @keyframes bcEq {
@@ -350,7 +350,7 @@
 .nowTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 3.4vw, 38px);
+  font-size: clamp(1.625rem, 3.4vw, 2.375rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -533,8 +533,8 @@
   animation: none;
 }
 .tipAv {
-  width: 34px;
-  height: 34px;
+  width: 3.091em;
+  height: 3.091em;
   border-radius: 50%;
   flex: none;
   display: grid;
@@ -592,7 +592,7 @@
 .tipTotalV {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   margin-top: 4px;
 }
@@ -607,8 +607,8 @@
   flex-direction: row-reverse;
 }
 .tbAv {
-  width: 32px;
-  height: 32px;
+  width: 2.909em;
+  height: 2.909em;
   border-radius: 50%;
   flex: none;
   display: grid;

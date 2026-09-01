@@ -3,12 +3,12 @@
   grid-template-columns: 1fr 420px;
   gap: 56px;
   align-items: start;
-  padding: 56px 0 80px;
+  padding: var(--section-y-56) 0 var(--section-y-80);
 }
 .intro h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 5.5vw, 68px);
+  font-size: clamp(2.5rem, 5.5vw, 4.25rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -64,8 +64,8 @@
   }
 }
 .routeIcon {
-  width: 42px;
-  height: 42px;
+  width: 2.1em;
+  height: 2.1em;
   border-radius: var(--radius-11);
   display: flex;
   align-items: center;
@@ -101,7 +101,7 @@
 .form h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }

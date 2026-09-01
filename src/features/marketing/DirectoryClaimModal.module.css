@@ -15,7 +15,7 @@
   margin-bottom: 8px;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   letter-spacing: -0.015em;
   color: var(--text-strong);
 }
@@ -33,7 +33,7 @@
 }
 
 .counter {
-  font-size: 0.75rem;
+  font-size: var(--text-12);
   font-weight: 500;
   color: var(--ink-40);
 }

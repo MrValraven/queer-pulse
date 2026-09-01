@@ -50,7 +50,7 @@
 .guideTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(21px, 3vw, 27px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -68,7 +68,7 @@
 }
 
 .body {
-  padding: 40px 0 80px;
+  padding: 40px 0 var(--section-y-80);
 }
 .filters {
   display: flex;
@@ -123,8 +123,8 @@
   gap: 12px;
 }
 .orgAv {
-  width: 40px;
-  height: 40px;
+  width: 2.857em;
+  height: 2.857em;
   border-radius: var(--radius-10);
   display: flex;
   align-items: center;
@@ -254,12 +254,12 @@
 
 .contributionTitle {
   font-family: var(--serif);
-  font-size: 1.35rem;
+  font-size: var(--text-22);
   margin: 0 0 1rem;
 }
 
 .contributionNote {
   margin: 0.9rem 0 0;
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   color: rgba(var(--plum-rgb), 0.6);
 }

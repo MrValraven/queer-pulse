@@ -3,6 +3,7 @@ import { Button } from "../ui";
 import { linkToPath } from "../../../app/routeMap";
 import { useTranslation } from "../../i18n/useTranslation";
 import type { MegaMenu } from "./navMenus";
+import { NavBuildBadge } from "./NavBuildBadge";
 import styles from "./MegaNav.module.css";
 
 /**
@@ -34,6 +35,7 @@ export function MegaNavColumns({
               onClick={onClose}
             >
               {t(link.labelKey)}
+              {link.isBeingBuilt && <NavBuildBadge />}
             </Link>
           ))}
           {column.cta && (

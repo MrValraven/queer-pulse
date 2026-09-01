@@ -154,10 +154,11 @@
 .verdictMark {
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
+  /* 46 / 22, in em so the disc scales with the verdict glyph. */
+  width: 2.091em;
+  height: 2.091em;
   border-radius: 50%;
-  font-size: 1.4rem;
+  font-size: var(--text-22);
   color: var(--verdict-ink);
   background: rgba(var(--verdict-rgb), 0.16);
   box-shadow:
@@ -179,7 +180,7 @@
    word "suspended" alone. */
 .verdictLead {
   margin: 6px 0 0;
-  font-size: 0.83rem;
+  font-size: var(--text-13-5);
   line-height: 1.5;
   color: rgba(var(--cream-rgb), 0.76);
 }
@@ -213,7 +214,7 @@
    verifier ("call them this") rather than as part of the name. */
 .holderPronouns {
   margin: -6px 0 0;
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   letter-spacing: 0.04em;
   line-height: 1.4;
   color: rgba(var(--cream-rgb), 0.74);
@@ -224,7 +225,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.95rem;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.88);
 }
 
@@ -255,7 +256,7 @@
 }
 
 .meta dt {
-  font-size: 0.6rem;
+  font-size: var(--text-9-5);
   text-transform: uppercase;
   letter-spacing: 0.11em;
   color: rgba(var(--cream-rgb), 0.55);
@@ -263,7 +264,7 @@
 
 .meta dd {
   margin: 5px 0 0;
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
   color: rgb(var(--cream-rgb));
@@ -284,7 +285,7 @@
 }
 
 .faceLabel {
-  font-size: 0.6rem;
+  font-size: var(--text-9-5);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: rgba(var(--cream-rgb), 0.55);
@@ -314,7 +315,7 @@
 .faceCaption {
   margin: 0;
   max-width: 34ch;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.78);
 }
@@ -324,7 +325,7 @@
   margin: 8px 0 0;
   padding-top: var(--gap-sm);
   border-top: 1px solid rgba(var(--cream-rgb), 0.12);
-  font-size: 0.88rem;
+  font-size: var(--text-14);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.78);
 }
@@ -338,7 +339,7 @@
   margin: 4px 0 0;
   padding-top: 14px;
   border-top: 1px solid rgba(var(--cream-rgb), 0.1);
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   letter-spacing: 0.04em;
   color: rgba(var(--cream-rgb), 0.5);
 }
@@ -359,7 +360,7 @@
 
 .lead {
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--text-16);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.88);
 }
@@ -377,7 +378,7 @@
   /* A real `<h2>`, so its user-agent margin has to go: the box's own padding
      sets the spacing here. */
   margin: 0;
-  font-size: 0.6rem;
+  font-size: var(--text-9-5);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -389,7 +390,7 @@
   padding-left: 18px;
   display: grid;
   gap: 9px;
-  font-size: 0.87rem;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: rgba(var(--cream-rgb), 0.82);
 }
@@ -403,7 +404,7 @@
    rather than as the page being vague. */
 .privacy {
   margin: 12px 0 0;
-  font-size: 0.76rem;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: rgba(var(--cream-rgb), 0.55);
 }
@@ -416,7 +417,7 @@
   text-align: left;
   padding: 2px 0 2px 14px;
   border-left: 2px solid var(--verdict-rail);
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.88);
 }
@@ -427,7 +428,7 @@
   text-align: left;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 0.92rem;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: rgba(var(--cream-rgb), 0.72);
 }
@@ -448,6 +449,6 @@
   justify-content: center;
   gap: 10px;
   padding: calc(var(--card-pad-lg) + 12px) var(--card-pad);
-  font-size: 0.95rem;
+  font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 0.8);
 }

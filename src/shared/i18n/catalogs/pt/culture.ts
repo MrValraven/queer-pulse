@@ -227,4 +227,55 @@ export const culture: Catalog = {
     "As escolhas de noite, o quadro de encomendas, a montra de arte e a rádio comunitária ainda estão a ser construídos e não há nada publicado. Entretanto, a revista já está a sair e é nas comunidades que a cena se organiza.",
   "comingSoon.magazineCta": "Ler a revista",
   "comingSoon.communitiesCta": "Explorar comunidades",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-46 — PRD-46 - the live commission-interest page carved out of the Culture coming-soon gate, plus the panel on CultureComingSoon that offers it. Success copy promises the admin queue and nothing else: QueerPulse sends no email and the backend has no commission_interest notification, so no reply of any kind reaches the member.
+  "commissionInterestPage.metaTitle": "Registar interesse numa encomenda",
+  "commissionInterestPage.metaDescription":
+    "Diz à equipa de cultura o que gostarias de encomendar enquanto o Quadro de Encomendas está a ser construído.",
+  "commissionInterestPage.hubLabel": "Cultura",
+  "commissionInterestPage.eyebrow": "Quadro de Encomendas",
+  "commissionInterestPage.title": "Registar interesse numa <em>encomenda</em>",
+  "commissionInterestPage.intro":
+    "O Quadro de Encomendas ainda está a ser construído, por isso ainda não há nada para explorar. O que já funciona é este formulário: regista o que procuras e com quem gostarias de trabalhar.",
+  "commissionInterestPage.introReach":
+    "O que enviares vai para a fila da equipa de cultura, onde alguém da administração ou da equipa editorial o lê. Nada disto é publicado e ninguém fora dessa equipa o vê.",
+  "commissionInterestPage.titleLabel": "O que gostarias de encomendar",
+  "commissionInterestPage.titleHelper":
+    "Uma descrição curta da peça ou do projeto. Por exemplo: retratos para a capa de uma fanzine do Orgulho.",
+  "commissionInterestPage.categoryLabel": "Tipo de trabalho",
+  "commissionInterestPage.categoryHelper":
+    "A opção mais próxima. A equipa lê as tuas outras respostas em conjunto com esta.",
+  "commissionInterestPage.recipientLabel": "Com quem gostarias de trabalhar",
+  "commissionInterestPage.recipientHelper":
+    "Indica uma pessoa ou um coletivo. Se não te ocorrer ninguém em concreto, descreve o tipo de pessoa que procuras.",
+  "commissionInterestPage.messageLabel": "Algo mais que queiras acrescentar",
+  "commissionInterestPage.messageHelper":
+    "Opcional. Orçamento, prazos, referências ou a forma como queres trabalhar.",
+  "commissionInterestPage.submitCta": "Registar interesse",
+  "commissionInterestPage.sending": "A enviar",
+  "commissionInterestPage.error.title": "Não foi possível enviar.",
+  "commissionInterestPage.error.body":
+    "As tuas respostas continuam aqui. Verifica a ligação e envia outra vez.",
+  "commissionInterestPage.error.retryCta": "Tentar de novo",
+  "commissionInterestPage.success.title": "Interesse",
+  "commissionInterestPage.success.em": "registado",
+  "commissionInterestPage.success.body":
+    "O que enviaste ficou guardado e está agora na fila que a equipa de cultura lê.",
+  "commissionInterestPage.success.step1":
+    "A equipa vê o que escreveste, juntamente com o teu nome na QueerPulse.",
+  "commissionInterestPage.success.step2":
+    "O Quadro de Encomendas ainda está a ser construído, por isso nada do que enviaste é publicado.",
+  "commissionInterestPage.success.step3":
+    "Daqui não sai nenhuma resposta. A QueerPulse não envia e-mails nem cria notificações para isto, por isso não fica nada à tua espera numa caixa de entrada.",
+  "commissionInterestPage.success.backCta": "Voltar a Cultura",
+  "commissionInterestPage.success.anotherCta": "Registar outro interesse",
+  "comingSoon.commissions.title":
+    "O Quadro de Encomendas está a ser construído",
+  "comingSoon.commissions.body":
+    "Ainda não há nada publicado nele. Podes na mesma dizer à equipa de cultura o que gostarias de encomendar, e isso vai direto para a fila que eles leem.",
+  "comingSoon.commissions.cta": "Registar interesse",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-46 — PRD-46 - the live commission-interest page carved out of the Culture coming-soon gate, plus the panel on CultureComingSoon that offers it. Success copy promises the admin queue and nothing else: QueerPulse sends no email and the backend has no commission_interest notification, so no reply of any kind reaches the member.
 };

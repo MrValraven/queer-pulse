@@ -10,20 +10,21 @@
   --serif: "Fraunces Variable", "Fraunces", Georgia, serif;
   --sans: "DM Sans Variable", "DM Sans", system-ui, -apple-system, sans-serif;
 
-  /* ── Fluid display scale (clamp) ── */
-  --text-hero: clamp(50px, 8.2vw, 118px);
-  --text-display: clamp(34px, 4.4vw, 58px);
-  --text-title: clamp(28px, 3.5vw, 46px);
-  --text-heading: clamp(22px, 2.4vw, 32px);
-  --text-subhead: 20px;
+  /* ── Fluid display scale (clamp) ──
+     The clamp BOUNDS are rem so a member who raises their browser font size
+     moves the floor and the ceiling with it; the middle term stays vw because
+     that one is genuinely viewport-driven. See the unit note on the numeric
+     scale below. */
+  --text-hero: clamp(3.125rem, 8.2vw, 7.375rem); /* 50 → 118px at a 16px root */
+  --text-display: clamp(2.125rem, 4.4vw, 3.625rem); /* 34 → 58px */
+  --text-title: clamp(1.75rem, 3.5vw, 2.875rem); /* 28 → 46px */
+  --text-heading: clamp(1.375rem, 2.4vw, 2rem); /* 22 → 32px */
 
-  /* ── Body / UI scale ── */
-  --text-body-lg: 17px;
-  --text-body: 15px;
-  --text-body-sm: 14px;
-  --text-caption: 13px;
-  --text-label: 12.5px;
-  --text-eyebrow: 13px; /* always uppercase + tracked */
+  /* The role names (--text-body, --text-caption, --text-label, --text-eyebrow,
+     --text-subhead) are defined ONCE, at the bottom of this file, where they
+     alias the numeric scale. They used to be declared here too, as raw px, and
+     that copy was dead: same selector, later declaration wins. Do not
+     reintroduce it — a second declaration here would silently take over. */
 
   /* ── Line heights ── */
   --lh-display: 1.02;
@@ -59,39 +60,90 @@
    files, it is the whole UI range written by hand, which is why type could not
    be retuned globally.
 
-   These are PRIMITIVES: one token per step actually in use, at the exact pixel
-   value that was already shipping, so adopting them changed no rendered output.
-   The half-steps are real and deliberate-looking in context (13.5 and 14.5 both
-   appear hundreds of times), so they are preserved rather than snapped — snapping
-   would have moved thousands of sites by half a pixel with no way to review it.
+   These are PRIMITIVES: one token per step actually in use. The half-steps are
+   real and deliberate-looking in context (13.5 and 14.5 both appear hundreds of
+   times), so they are preserved rather than snapped — snapping would have moved
+   thousands of sites by half a pixel with no way to review it.
+
+   ── THE UNIT: rem, and why ────────────────────────────────────────────────
+   Every step is rem, at 1rem = 16px. Nothing in the app sets a root font-size,
+   so 1rem IS the member's browser font-size setting, and because 617 of the 736
+   module files already size type through these tokens, changing this one file
+   is what makes the whole app answer that setting. A member who sets 20px in
+   their browser now gets a proportionally larger app instead of an app that
+   ignores them. That is WCAG 1.4.4, and it is the reason this scale is not px.
+
+   The px comment beside each step is the size at the default 16px root. It is
+   documentation, not a promise: the whole point is that it moves.
+
+   Two consequences to hold in mind when writing CSS against these tokens:
+     · A fixed `height` on a box containing type no longer holds its contents at
+       every root size. Prefer `min-height` and let the box grow, or size the box
+       in rem too so it scales with the text inside it.
+     · `-webkit-line-clamp` still works, but the clamped block's own height must
+       be free to grow, for the same reason.
+
+   Spacing, radii and shadows stay px on purpose. Type scaling with the reader is
+   an accessibility requirement; the whole layout scaling with it is a different,
+   much larger decision that nobody has made.
 
    Reach for a SEMANTIC name first (--text-body, --text-caption, --text-label):
    those alias into this scale and say what the type is FOR. Use a numeric step
-   only when no role name fits. Never write a literal px font-size: scripts/check-css-scale.mjs
-   fails the build on new ones. */
+   only when no role name fits. Never write a literal font-size, px OR rem:
+   scripts/check-css-scale.mjs fails the build on new ones. */
 :root {
-  --text-8: 8px;
-  --text-9: 9px;
-  --text-9-5: 9.5px;
-  --text-10: 10px;
-  --text-10-5: 10.5px;
-  --text-11: 11px;
-  --text-11-5: 11.5px;
-  --text-12: 12px;
-  --text-12-5: 12.5px;
-  --text-13: 13px;
-  --text-13-5: 13.5px;
-  --text-14: 14px;
-  --text-14-5: 14.5px;
-  --text-15: 15px;
-  --text-15-5: 15.5px;
-  --text-16: 16px;
-  --text-16-5: 16.5px;
-  --text-17: 17px;
-  --text-17-5: 17.5px;
-  --text-18: 18px;
-  --text-19: 19px;
-  --text-20: 20px;
+  --text-8: 0.5rem; /* 8px */
+  --text-9: 0.5625rem; /* 9px */
+  --text-9-5: 0.59375rem; /* 9.5px */
+  --text-10: 0.625rem; /* 10px */
+  --text-10-5: 0.65625rem; /* 10.5px */
+  --text-11: 0.6875rem; /* 11px */
+  --text-11-5: 0.71875rem; /* 11.5px */
+  --text-12: 0.75rem; /* 12px */
+  --text-12-5: 0.78125rem; /* 12.5px */
+  --text-13: 0.8125rem; /* 13px */
+  --text-13-5: 0.84375rem; /* 13.5px */
+  --text-14: 0.875rem; /* 14px */
+  --text-14-5: 0.90625rem; /* 14.5px */
+  --text-15: 0.9375rem; /* 15px */
+  --text-15-5: 0.96875rem; /* 15.5px */
+  --text-16: 1rem; /* 16px */
+  --text-16-5: 1.03125rem; /* 16.5px */
+  --text-17: 1.0625rem; /* 17px */
+  --text-17-5: 1.09375rem; /* 17.5px */
+  --text-18: 1.125rem; /* 18px */
+  --text-19: 1.1875rem; /* 19px */
+  --text-20: 1.25rem; /* 20px */
+
+  /* Above 20px. These were 619 hand-written literals before the 2026-09-01
+     sweep, clustered hard at 21 to 30px — the card and panel heading range
+     the role names never covered. Integer steps only up here: a half pixel
+     stops being a deliberate choice at this size. */
+  --text-21: 1.3125rem; /* 21px */
+  --text-22: 1.375rem; /* 22px */
+  --text-23: 1.4375rem; /* 23px */
+  --text-24: 1.5rem; /* 24px */
+  --text-25: 1.5625rem; /* 25px */
+  --text-26: 1.625rem; /* 26px */
+  --text-27: 1.6875rem; /* 27px */
+  --text-28: 1.75rem; /* 28px */
+  --text-29: 1.8125rem; /* 29px */
+  --text-30: 1.875rem; /* 30px */
+  --text-32: 2rem; /* 32px */
+  --text-34: 2.125rem; /* 34px */
+  --text-36: 2.25rem; /* 36px */
+  --text-38: 2.375rem; /* 38px */
+  --text-40: 2.5rem; /* 40px */
+  --text-42: 2.625rem; /* 42px */
+  --text-44: 2.75rem; /* 44px */
+  --text-46: 2.875rem; /* 46px */
+  --text-48: 3rem; /* 48px */
+  --text-52: 3.25rem; /* 52px */
+  --text-54: 3.375rem; /* 54px */
+  --text-56: 3.5rem; /* 56px */
+  --text-58: 3.625rem; /* 58px */
+  --text-62: 3.875rem; /* 62px */
+  --text-64: 4rem; /* 64px */
 
   /* The semantic names re-pointed at the scale, so retuning a step moves both
      the role and every numeric consumer of that size together. Values are

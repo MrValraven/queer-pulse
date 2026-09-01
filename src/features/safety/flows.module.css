@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 110px 20px 80px;
+  padding: var(--section-y-112) 20px var(--section-y-80);
   background: var(--cream);
 }
 .stateBar {
@@ -90,7 +90,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 10px;
@@ -134,8 +134,9 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .memAv {
-  width: 48px;
-  height: 48px;
+  /* 48 / 17, in em so the box scales with its glyph. */
+  width: 2.824em;
+  height: 2.824em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.15);
   color: var(--accent-ink);
@@ -555,8 +556,9 @@
   gap: 6px;
 }
 .tlDot {
-  width: 26px;
-  height: 26px;
+  /* 26 / 11, in em so the box scales with its glyph. */
+  width: 2.364em;
+  height: 2.364em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -590,7 +592,11 @@
   height: 2px;
   width: 48px;
   background: rgba(var(--plum-rgb), 0.1);
-  margin-top: 12px;
+  /* The connector meets the centre of `.tlDot`, which is now sized in em, so
+     the offset shares the dot's basis (12 / 11). The rule holds no text, so
+     the font-size is only there to supply that basis. */
+  font-size: var(--text-11);
+  margin-top: 1.091em;
 }
 .tlLineDone {
   background: var(--jade);
@@ -659,15 +665,16 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .pausedIcon {
-  width: 56px;
-  height: 56px;
+  /* 56 / 26, in em so the box scales with its glyph. */
+  width: 2.154em;
+  height: 2.154em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: var(--text-26);
   margin: 0 auto 20px;
 }
 .pausedSub {

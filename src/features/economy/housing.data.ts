@@ -14,6 +14,17 @@ export const FILTERS = [
   { value: "studio", labelKey: "economy:housing.filter.studio" },
 ];
 
+/** The board's minimum-bedrooms choices, in the order they read in the picker.
+ * Shared with the active-filter chips so a chosen value is labelled the same
+ * in the drawer and on the chip that removes it. */
+export const BEDROOM_OPTIONS = [
+  { value: "", labelKey: "economy:housing.filterBar.bedsAny" },
+  { value: "0", labelKey: "economy:housing.filterBar.bedsStudio" },
+  { value: "1", labelKey: "economy:housing.filterBar.beds1" },
+  { value: "2", labelKey: "economy:housing.filterBar.beds2" },
+  { value: "3", labelKey: "economy:housing.filterBar.beds3" },
+];
+
 export const TIPS = [
   {
     number: "01",

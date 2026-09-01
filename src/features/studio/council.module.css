@@ -1,6 +1,6 @@
 /* Shared dark styles for Studio council/governance tools */
 .wrap {
-  padding: 8px 0 60px;
+  padding: 8px 0 var(--section-y-64);
   max-width: var(--maxw-page);
   margin: 0 auto;
 }
@@ -21,7 +21,7 @@
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 5vw, 56px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -72,7 +72,7 @@
 .fact .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
@@ -120,7 +120,7 @@
 .curHead h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
 }
@@ -293,7 +293,7 @@
 .kpiMini .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
 }
 .kpiMini .v em {
@@ -460,7 +460,7 @@
 .aside h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: rgba(var(--cream-rgb), 1);
 }
 .aside h2 em {
@@ -536,8 +536,8 @@
   margin-bottom: 16px;
 }
 .claimRow .av {
-  width: 32px;
-  height: 32px;
+  width: 2.667em;
+  height: 2.667em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.22);
   color: var(--jade-light, var(--jade-light));
@@ -751,8 +751,8 @@
   color: var(--jade-light, var(--jade-light));
 }
 .flagClaim .av {
-  width: 28px;
-  height: 28px;
+  width: 2.545em;
+  height: 2.545em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade-light, var(--jade-light));

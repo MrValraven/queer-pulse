@@ -4,7 +4,7 @@
 
 .title {
   font-family: var(--serif);
-  font-size: 2rem;
+  font-size: var(--text-32);
   margin: 0 0 0.4rem;
 }
 
@@ -56,14 +56,14 @@
 }
 
 .oppOrg {
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: rgba(var(--plum-rgb), 0.6);
 }
 
 .oppPendingTag {
   display: inline-block;
   margin-top: 0.35rem;
-  font-size: 0.75rem;
+  font-size: var(--text-12);
   font-weight: 600;
   color: var(--accent-ink);
 }
@@ -104,7 +104,7 @@
 .applicantMeta {
   display: block;
   margin-top: 0.35rem;
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   color: rgba(var(--plum-rgb), 0.55);
 }
 
@@ -124,7 +124,7 @@
 
 .completionTitle {
   margin: 0 0 0.6rem;
-  font-size: 0.78rem;
+  font-size: var(--text-label);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -148,13 +148,13 @@
 
 .completionWhy {
   margin: 0.7rem 0 0;
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   color: rgba(var(--plum-rgb), 0.55);
 }
 
 .completionError {
   margin: 0.6rem 0 0;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
 }
@@ -162,7 +162,7 @@
 .completionDone {
   display: block;
   margin-top: 0.7rem;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--jade);
 }
@@ -170,6 +170,6 @@
 .completionNoShow {
   display: block;
   margin-top: 0.7rem;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: rgba(var(--plum-rgb), 0.55);
 }

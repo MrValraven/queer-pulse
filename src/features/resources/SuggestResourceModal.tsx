@@ -77,7 +77,19 @@ export function SuggestResourceModal({
               components={{ em: <em /> }}
             />
           }
-          sub={t("resources:suggest.success.sub")}
+          sub={
+            // Two sentences in one paragraph, because `PlumSuccess` renders
+            // `sub` inside a `<p>` and a nested `<p>` is invalid markup.
+            //
+            // The second sentence is the honest half of PRD-45: the outcome
+            // now really does reach the member, on the submissions page and
+            // in the bell. It promises no reply and no email, because
+            // QueerPulse sends no email and nobody writes back personally.
+            <>
+              {t("resources:suggest.success.sub")}{" "}
+              {t("resources:suggest.success.tracked")}
+            </>
+          }
           onClose={onClose}
         />
       ) : (

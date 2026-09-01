@@ -6,7 +6,7 @@
   max-width: 1440px;
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 28px 80px;
+  padding: 28px 28px var(--section-y-80);
 }
 
 .head {
@@ -25,7 +25,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(36px, 5vw, 52px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -79,7 +79,7 @@
     /* Tighter gutters so the results grid keeps its full width on phones — at the
        old 28px the minmax(280px) columns overflowed narrow viewports.
        nav band reserved by shell (base.css); this is only breathing room */
-    padding: 12px 16px 64px;
+    padding: 12px 16px var(--section-y-64);
   }
 }
 /* Below the point where a 280px card + gutters no longer fits, drop the results
@@ -192,8 +192,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
+  min-width: 1.636em;
+  height: 1.636em;
   padding: 0 5px;
   border-radius: var(--radius-pill);
   background: var(--plum);
@@ -464,8 +464,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
+  min-width: 1.636em;
+  height: 1.636em;
   padding: 0 5px;
   border-radius: var(--radius-pill);
   background: var(--plum);
@@ -479,7 +479,7 @@
 .sheetTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 16px;
@@ -606,8 +606,8 @@
   align-items: center;
 }
 .mAv {
-  width: 48px;
-  height: 48px;
+  width: 3.429em;
+  height: 3.429em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.14);
   color: var(--accent-ink);
@@ -686,7 +686,7 @@
   /* Reserve two lines so one-line and two-line roles keep the tags + footer at
      the same height across cards in a row, and cap longer taglines at two lines
      with an ellipsis so no card runs tall. */
-  min-height: calc(13px * 1.5 * 2);
+  min-height: calc(var(--text-13) * 1.5 * 2);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;

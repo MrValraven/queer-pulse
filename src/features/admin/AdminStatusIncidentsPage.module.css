@@ -50,7 +50,7 @@
 
 .rowMeta {
   margin: 0;
-  font-size: 0.84rem;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   overflow-wrap: anywhere;
 }
@@ -70,7 +70,7 @@
   gap: 6px;
   padding: 4px 11px;
   border-radius: var(--radius-pill);
-  font-size: 0.78rem;
+  font-size: var(--text-12-5);
   font-weight: 600;
   white-space: nowrap;
   border: 1px solid rgba(var(--line-rgb), 0.12);
@@ -95,7 +95,7 @@
 
 .drawerEyebrow {
   margin: 0 0 4px;
-  font-size: 0.75rem;
+  font-size: var(--text-12);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -104,7 +104,7 @@
 .drawerTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: 1.3rem;
+  font-size: var(--text-21);
   color: var(--ink);
 }
 
@@ -114,7 +114,7 @@
 }
 
 .fieldLabel {
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
   margin-top: 10px;
@@ -122,7 +122,7 @@
 
 .fieldHint {
   margin: 0 0 6px;
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   color: var(--ink-40);
 }
 

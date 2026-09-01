@@ -13,6 +13,10 @@ import styles from "./CommunitiesPage.module.css";
  * the sort and the toggles (see `CommunitiesPage`'s `allForCounts`) so
  * switching one chip never makes the others' numbers jump, and a count is
  * omitted rather than shown as "0" until its pool has fully loaded.
+ *
+ * A chip that lands on 0 goes inert: picking it could only ever empty the
+ * grid, and a dead end the viewer has to back out of is worse than a chip that
+ * says up front there is nothing there.
  */
 export function CommunitiesCategoryFilter({
   filter,
@@ -37,6 +41,13 @@ export function CommunitiesCategoryFilter({
       <div className={styles.filters}>
         {FILTERS.map((option) => {
           const count = categoryCounts[option.value];
+          const isSelected = filter === option.value;
+          // A chip whose pool is empty would filter the grid down to nothing,
+          // so it goes inert. Three chips never do: one still loading (`null`,
+          // no number shown yet), the one currently applied (otherwise the
+          // active chip greys out under the viewer), and "All communities",
+          // which stays the way back out of any other chip.
+          const isEmpty = count === 0 && !isSelected && option.value !== "all";
           return (
             <Button
               variant="ghost"
@@ -44,14 +55,20 @@ export function CommunitiesCategoryFilter({
               key={option.value}
               // The chips are a single-select filter, so each one announces
               // whether it is the one currently applied.
-              aria-pressed={filter === option.value}
-              className={[
-                styles.chip,
-                filter === option.value && styles.chipActive,
-              ]
+              aria-pressed={isSelected}
+              // `aria-disabled` rather than the `disabled` attribute: an empty
+              // category is worth hearing ("Sports, 0, dimmed") while tabbing
+              // the row, and a real `disabled` would drop it out of the tab
+              // order and say nothing at all. Same pixels (Button.module.css
+              // dims both identically), the click is refused below.
+              aria-disabled={isEmpty || undefined}
+              className={[styles.chip, isSelected && styles.chipActive]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => setFilter(option.value)}
+              onClick={() => {
+                if (isEmpty) return;
+                setFilter(option.value);
+              }}
             >
               {t(option.labelKey)}
               {count !== null && (

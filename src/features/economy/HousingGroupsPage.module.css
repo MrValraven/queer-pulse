@@ -1,6 +1,6 @@
 /* ── Hero ───────────────────────────────────────────────────────────── */
 .hero {
-  padding: 60px 0 40px;
+  padding: var(--section-y-64) 0 40px;
   position: relative;
   overflow: hidden;
 }
@@ -30,7 +30,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 78px);
+  font-size: clamp(2.5rem, 6vw, 4.875rem);
   color: var(--text-strong);
   letter-spacing: -0.026em;
   line-height: 0.96;
@@ -51,12 +51,12 @@
 
 /* ── Directory grid ─────────────────────────────────────────────────── */
 .gridSection {
-  padding-block: 24px 72px;
+  padding-block: 24px var(--section-y-72);
 }
 .gridHead h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.4vw, 40px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -127,7 +127,7 @@
 .detailTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;
@@ -191,7 +191,7 @@
 .emptyTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3.4vw, 34px);
+  font-size: var(--text-heading);
   color: var(--cream);
 }
 .emptyTitle em {
@@ -207,11 +207,11 @@
 
 /* ── Detail view ────────────────────────────────────────────────────── */
 .detailHero {
-  padding: 56px 0 12px;
+  padding: var(--section-y-56) 0 12px;
 }
 .detailTitle {
   margin-block: 14px 0;
-  font-size: clamp(34px, 5vw, 60px);
+  font-size: var(--text-display);
 }
 .detailMeta {
   margin-block-start: 14px;
@@ -229,7 +229,7 @@
 }
 .detailLoading,
 .notFound {
-  padding-block: 56px;
+  padding-block: var(--section-y-56);
 }
 
 .normsSection {
@@ -238,7 +238,7 @@
 .normsTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 3.4vw, 38px);
+  font-size: clamp(1.625rem, 3.4vw, 2.375rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -274,12 +274,12 @@
 }
 
 .listingsSection {
-  padding-block: 24px 72px;
+  padding-block: 24px var(--section-y-72);
 }
 .listingsTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3vw, 34px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -318,7 +318,7 @@
 .listingTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   line-height: 1.15;
 }
@@ -369,7 +369,7 @@
    public board and reads as a quieter, member-private area, so a cream-tinted
    band separates it from the group's own listings without a boxed card. */
 .mineSection {
-  padding-block: 40px 80px;
+  padding-block: 40px var(--section-y-80);
   background: var(--cream);
   border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
 }

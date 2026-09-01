@@ -55,7 +55,7 @@
 }
 .modalTitle {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-strong);
@@ -211,7 +211,7 @@
 @media (min-width: 720px) {
   .sheet {
     border-radius: var(--radius-28);
-    padding: 44px 48px 48px;
+    padding: 44px 48px var(--section-y-48);
     box-shadow: var(--shadow-e4);
   }
 }
@@ -324,7 +324,7 @@
 .sideSheetTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 23px;
+  font-size: var(--text-23);
   /* --text-strong, not --plum: --plum is a fixed brand colour (also used as a
      background elsewhere) so it doesn't theme-switch; --text-strong equals
      plum in light mode and flips to light ink in dark mode so the heading

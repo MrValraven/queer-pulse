@@ -21,12 +21,12 @@
 .title {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 1.02rem;
+  font-size: var(--text-16-5);
   color: var(--ink);
 }
 
 .count {
-  font-size: 0.82rem;
+  font-size: var(--text-caption);
   color: var(--ink-40);
 }
 
@@ -53,7 +53,7 @@
 
 .rowName {
   font-weight: 600;
-  font-size: 0.94rem;
+  font-size: var(--text-15);
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
@@ -62,7 +62,7 @@
 
 .rowMeta {
   margin-top: 2px;
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   color: var(--ink-40);
 }
 
@@ -74,6 +74,6 @@
 }
 
 .error {
-  font-size: 0.86rem;
+  font-size: var(--text-body-sm);
   color: var(--ink-60);
 }

@@ -28,7 +28,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -41,7 +41,7 @@
   background: var(--fc-accent);
 }
 .time {
-  font-size: 0.78rem;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 
@@ -81,13 +81,13 @@
 .name {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 1.12rem;
+  font-size: var(--text-18);
   color: var(--ink);
   line-height: 1.2;
 }
 .meta {
   margin-top: 2px;
-  font-size: 0.86rem;
+  font-size: var(--text-14);
   color: var(--ink-60);
 }
 /* Pronouns sit inline just after the name — DM Sans, muted, kept together so
@@ -96,15 +96,19 @@
   margin-left: 6px;
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 0.86rem;
+  font-size: var(--text-14);
   color: var(--ink-60);
   white-space: nowrap;
 }
 
 /* Gathering date block (replaces the avatar in the lead slot). */
+/* Sized in em so the tile grows with .dateDay / .dateMonth when a reader raises
+   their browser font size. Both children set their own font-size, so the
+   font-size here only supplies the em basis (46 / 18). */
 .dateBlock {
-  width: 46px;
-  height: 46px;
+  font-size: var(--text-18);
+  width: 2.556em;
+  height: 2.556em;
   border-radius: var(--radius-12);
   background: rgba(var(--line-rgb), 0.06);
   display: flex;
@@ -115,12 +119,12 @@
 .dateDay {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 1.15rem;
+  font-size: var(--text-18);
   line-height: 1;
   color: var(--ink);
 }
 .dateMonth {
-  font-size: 0.6rem;
+  font-size: var(--text-9-5);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -132,7 +136,7 @@
   margin: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 1rem;
+  font-size: var(--text-16);
   line-height: 1.45;
   color: var(--ink);
 }
@@ -155,7 +159,7 @@
   gap: 9px;
 }
 .proofLabel {
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   color: var(--ink-60);
   min-width: 0;
 }
@@ -173,12 +177,12 @@
   gap: 8px;
 }
 .meterLabel {
-  font-size: 0.86rem;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--ink);
 }
 .meterTrailing {
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 .meterTrack {
@@ -198,7 +202,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 0.84rem;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
 }
 .statIcon {
@@ -228,7 +232,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 0.86rem;
+  font-size: var(--text-14);
   font-weight: 600;
   color: var(--fc-accent-ink);
   text-decoration: none;
@@ -256,7 +260,7 @@
   flex: 1;
 }
 .reactionHint {
-  font-size: 0.84rem;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
   align-self: center;
 }
@@ -284,7 +288,7 @@
   background: var(--paper);
   color: var(--ink);
   font: inherit;
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
 }
 .inlineComposerField:focus-visible {
   outline: var(--focus-ring);
@@ -304,6 +308,6 @@
   align-items: center;
   gap: 6px;
   margin-top: 10px;
-  font-size: 0.78rem;
+  font-size: var(--text-12-5);
   color: var(--ink-60);
 }

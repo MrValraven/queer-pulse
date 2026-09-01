@@ -1,5 +1,6 @@
-import { FiArrowRight, FiStar, FiTrash2 } from "react-icons/fi";
+import { FiArrowRight, FiStar, FiTrash2, FiUser } from "react-icons/fi";
 import { Badge, Button, ImageSlot, Stars } from "../../shared/components/ui";
+import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Landlord, Recommendation, Tint } from "./landlords";
 import { LandlordActions } from "./LandlordActions";
@@ -104,7 +105,18 @@ export function LandlordAreas({ landlord }: { landlord: Landlord }) {
 /** One published recommendation. The author's own entry carries a quiet
  *  "Yours" marker plus the withdraw control, since these are public ratings of
  *  named real people and the writer should be able to take theirs back down
- *  without asking a moderator. */
+ *  without asking a moderator.
+ *
+ *  Everyone else gets a report control addressed at THIS recommendation
+ *  (`landlord_recommendation`, keyed by its uuid). The entry-level control in
+ *  the hero stays for complaints genuinely about the directory entry: acting on
+ *  one of those withholds the whole entry, and with it every other tenant's
+ *  warning about the same landlord, which is the wrong answer to "this one
+ *  sentence outed me".
+ *
+ *  A recommendation whose author erased their account keeps its stars and its
+ *  text and loses its byline, so the name line becomes a placeholder rather
+ *  than an empty space. */
 function RecommendationCard({
   recommendation,
   onWithdraw,
@@ -113,6 +125,9 @@ function RecommendationCard({
   onWithdraw: () => void;
 }) {
   const { t } = useTranslation();
+  const authorName = recommendation.isAuthorRemoved
+    ? t("economy:landlordPage.recommendation.formerMember")
+    : recommendation.name;
   return (
     <div
       className={[s.rec, recommendation.isMine && s.recMine]
@@ -121,10 +136,23 @@ function RecommendationCard({
     >
       <div className={s.recHead}>
         <div className={[s.recAv, TINT[recommendation.tint]].join(" ")}>
-          {recommendation.initials}
+          {recommendation.isAuthorRemoved ? (
+            <FiUser aria-hidden />
+          ) : (
+            recommendation.initials
+          )}
         </div>
         <div>
-          <div className={s.recName}>{recommendation.name}</div>
+          <div
+            className={[
+              s.recName,
+              recommendation.isAuthorRemoved && s.recNameGone,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {authorName}
+          </div>
           <div className={s.recWhen}>{recommendation.when}</div>
         </div>
         <span className={s.recStars}>
@@ -132,7 +160,7 @@ function RecommendationCard({
         </span>
       </div>
       <div className={s.recText}>{recommendation.text}</div>
-      {recommendation.isMine && (
+      {recommendation.isMine ? (
         <div className={s.recMineFoot}>
           <Badge tone="jade">
             {t("economy:landlordPage.recommendation.yoursBadge")}
@@ -147,6 +175,22 @@ function RecommendationCard({
             {t("economy:landlordPage.recommendation.withdrawCta")}
           </Button>
         </div>
+      ) : (
+        // No id means a demo fixture, which has no row behind it to report.
+        recommendation.id && (
+          <div className={s.recReport}>
+            <ReportSubjectControl
+              subjectType="landlord_recommendation"
+              subjectId={recommendation.id}
+              subjectName={authorName}
+              label={t("economy:landlordPage.recommendation.report.cta")}
+              ariaLabel={t(
+                "economy:landlordPage.recommendation.report.ariaLabel",
+                { name: authorName },
+              )}
+            />
+          </div>
+        )
       )}
     </div>
   );
@@ -166,7 +210,10 @@ export function LandlordRecommendations({
       <div className={s.recs}>
         {landlord.recommendations.map((recommendation, index) => (
           <RecommendationCard
-            key={`${recommendation.name}-${index}`}
+            // The uuid where there is one. The name/index fallback is for the
+            // demo fixtures, whose entries have neither an id nor a stable
+            // order to key by.
+            key={recommendation.id ?? `${recommendation.name}-${index}`}
             recommendation={recommendation}
             onWithdraw={onWithdrawMine}
           />

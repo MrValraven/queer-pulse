@@ -2,7 +2,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 76px;
+  padding: var(--section-y-64) 0 var(--section-y-80);
   position: relative;
   overflow: hidden;
 }
@@ -24,7 +24,7 @@
 .heroTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 80px);
+  font-size: clamp(2.5rem, 6vw, 5rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -48,7 +48,7 @@
 /* ── Reading body (cream) ────────────────────────────────────────────────── */
 .body {
   background: var(--cream);
-  padding: 72px 24px 110px;
+  padding: var(--section-y-72) 24px var(--section-y-112);
 }
 .column {
   max-width: var(--maxw-text);
@@ -61,7 +61,7 @@
 .blockTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 3.4vw, 38px);
+  font-size: clamp(1.625rem, 3.4vw, 2.375rem);
   color: var(--ink);
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -125,7 +125,7 @@
 .ctaTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--ink);
   letter-spacing: -0.02em;
   margin-bottom: 10px;
@@ -176,19 +176,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade);
-  font-size: 22px;
+  font-size: var(--text-22);
   margin-bottom: 18px;
   position: relative;
 }
 .disclaimerTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 12px;

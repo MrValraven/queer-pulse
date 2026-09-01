@@ -9,8 +9,8 @@
   align-items: flex-start;
 }
 .icon {
-  width: 42px;
-  height: 42px;
+  width: 2.1em; /* 42 / 20 */
+  height: 2.1em;
   border-radius: var(--radius-12);
   flex: none;
   display: flex;
@@ -26,7 +26,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.1;

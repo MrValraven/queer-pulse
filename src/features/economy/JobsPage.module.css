@@ -12,8 +12,8 @@
 .sbIcon {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 2em;
+  height: 2em;
   border-radius: var(--radius-9);
   background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade);
@@ -60,7 +60,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 88px;
+  padding: var(--section-y-64) 0 var(--section-y-88);
   position: relative;
   overflow: hidden;
 }
@@ -90,7 +90,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.8vw, 80px);
+  font-size: clamp(2.375rem, 5.8vw, 5rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -125,7 +125,7 @@
 }
 
 .body {
-  padding: 72px 0 100px;
+  padding: var(--section-y-72) 0 var(--section-y-104);
 }
 .top {
   display: flex;
@@ -166,6 +166,30 @@
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
 }
+/* PRD-44: the way into "jobs you posted" sits beside the post button, quiet
+   next to it, because managing a listing is a return visit and posting one is
+   the board's headline action. */
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.myJobsLink {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.myJobsLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-6);
+}
+
 .postBtn {
   font-family: var(--sans);
   font-size: var(--text-14);
@@ -212,8 +236,8 @@
   }
 }
 .logo {
-  width: 52px;
-  height: 52px;
+  width: 3.25em;
+  height: 3.25em;
   border-radius: var(--radius-14);
   display: flex;
   align-items: center;
@@ -367,7 +391,7 @@
 }
 
 .employers {
-  padding: 72px 0;
+  padding: var(--section-y-72) 0;
   background: var(--cream);
 }
 .empGrid {
@@ -397,8 +421,8 @@
   box-shadow: var(--shadow-lift);
 }
 .empLogo {
-  width: 44px;
-  height: 44px;
+  width: 3.143em;
+  height: 3.143em;
   border-radius: var(--radius-11);
   display: flex;
   align-items: center;
@@ -434,10 +458,10 @@
 @media (max-width: 700px) {
   .hero {
     /* nav band reserved by shell (base.css); this is only breathing room */
-    padding: 36px 0 64px;
+    padding: 36px 0 var(--section-y-64);
   }
   .body {
-    padding: 48px 0 72px;
+    padding: var(--section-y-48) 0 var(--section-y-72);
   }
   .card {
     flex-direction: column;

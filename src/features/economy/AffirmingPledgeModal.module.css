@@ -16,12 +16,12 @@
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
-  font-size: 1.4rem;
+  font-size: var(--text-22);
 }
 
 .title {
   font-family: var(--serif);
-  font-size: 1.4rem;
+  font-size: var(--text-22);
   color: var(--ink);
   margin: 0;
 }
@@ -33,7 +33,7 @@
 
 .sub {
   color: var(--ink-60);
-  font-size: 0.92rem;
+  font-size: var(--text-14-5);
   max-width: 46ch;
   margin: 0;
 }
@@ -51,7 +51,7 @@
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;
-  font-size: 0.92rem;
+  font-size: var(--text-14-5);
   color: var(--ink);
   line-height: 1.5;
 }
@@ -60,7 +60,7 @@
   flex: none;
   margin-block-start: 0.15rem;
   color: var(--jade);
-  font-size: 1rem;
+  font-size: var(--text-16);
 }
 
 .foot {

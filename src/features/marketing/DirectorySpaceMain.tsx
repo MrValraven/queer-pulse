@@ -53,7 +53,11 @@ export function DirectorySpaceMain({
   return (
     <div>
       <DirectoryHoursSection place={place} />
-      <DirectoryVisitSection place={place} preview={preview} />
+      <DirectoryVisitSection
+        place={place}
+        preview={preview}
+        ownerRef={ownerRef}
+      />
       <DirectoryAboutSection place={place} />
       <DirectoryServicesSection place={place} />
       <DirectoryAccessSection place={place} />

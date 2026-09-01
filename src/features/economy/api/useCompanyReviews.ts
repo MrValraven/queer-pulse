@@ -3,11 +3,13 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getCompanyReviews } from "./companies.api";
 import { reviewDtoToReview } from "./companies.adapters";
 import { economyKeys } from "./economyKeys";
-import type { CompanyReview } from "../companies.data";
+import type { CompanyReviewView } from "./companyReviewView";
 
 export interface CompanyReviewsResult {
-  /** All reviews fetched so far, flattened across loaded pages. */
-  reviews: CompanyReview[];
+  /** All reviews fetched so far, flattened across loaded pages. Live rows
+   *  carry the review id and the employer's reply; demo fixtures carry
+   *  neither, which is what hides the reply block there. */
+  reviews: CompanyReviewView[];
   /** Server-reported total across all pages. */
   total: number;
   /** True while the first page is in flight. */
@@ -28,7 +30,7 @@ export interface CompanyReviewsResult {
 }
 
 interface ReviewsPageVM {
-  items: CompanyReview[];
+  items: CompanyReviewView[];
   total: number;
   page: number;
 }

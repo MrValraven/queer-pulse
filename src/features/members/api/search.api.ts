@@ -14,7 +14,10 @@ export type LiveResultType =
   | "subprofile"
   | "topic";
 
-const LIVE_RESULT_TYPES: readonly LiveResultType[] = [
+/** Every `type` token `GET /search` can put on a result row. Exported so
+ *  `searchTypes.api.ts` can validate `GET /search/types` against the same
+ *  taxonomy, rather than keeping a second copy of it. */
+export const LIVE_RESULT_TYPES: readonly LiveResultType[] = [
   "member",
   "community",
   "event",

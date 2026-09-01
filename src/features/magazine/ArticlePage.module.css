@@ -1,6 +1,6 @@
 .header {
   background: var(--cream);
-  padding: 120px 0 48px;
+  padding: var(--section-y-120) 0 var(--section-y-48);
   border-bottom: 2px solid var(--line-strong);
 }
 .back {
@@ -28,7 +28,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 5.5vw, 72px);
+  font-size: clamp(2rem, 5.5vw, 4.5rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -80,7 +80,7 @@
 .bodyWrap {
   display: grid;
   grid-template-columns: 1fr min(68ch, 100%) 1fr;
-  padding: 64px 28px 0;
+  padding: var(--section-y-64) 28px 0;
 }
 .bodyInner {
   grid-column: 2;
@@ -115,7 +115,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(22px, 3vw, 34px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   line-height: 1.3;
   letter-spacing: -0.01em;
@@ -128,7 +128,7 @@
 .lead {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(20px, 2.5vw, 26px);
+  font-size: clamp(1.25rem, 2.5vw, 1.625rem);
   color: var(--text-strong);
   line-height: 1.42;
   letter-spacing: -0.01em;
@@ -146,7 +146,7 @@
 .heading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(22px, 2.8vw, 32px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.18;
@@ -164,7 +164,7 @@
 .quote p {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(20px, 2.6vw, 28px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   line-height: 1.35;
   letter-spacing: -0.01em;
@@ -251,7 +251,7 @@
 }
 .statValue {
   font-family: var(--serif);
-  font-size: 42px;
+  font-size: var(--text-42);
   font-weight: 400;
   color: var(--text-strong);
   letter-spacing: -0.03em;
@@ -277,7 +277,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
   margin-top: 56px;
   padding-top: 32px;
-  padding-bottom: 56px;
+  padding-bottom: var(--section-y-56);
   display: flex;
   align-items: flex-start;
   gap: 18px;
@@ -297,7 +297,7 @@
 .related {
   background: var(--paper);
   border-top: 2px solid var(--line-strong);
-  padding: 56px 0 80px;
+  padding: var(--section-y-56) 0 var(--section-y-80);
 }
 .relatedHead {
   font-family: var(--serif);
@@ -370,13 +370,13 @@
 
 .notFound {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 100px;
+  padding: var(--section-y-64) 0 var(--section-y-104);
   text-align: center;
 }
 .notFound h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: var(--text-strong);
   margin-bottom: 16px;
 }

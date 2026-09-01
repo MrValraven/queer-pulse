@@ -12,7 +12,8 @@
  * literal was free.
  *
  * The scales those literals were converted to live in src/styles/tokens/:
- *   font-size      → --text-8 … --text-20 (0.5 steps) and the role names
+ *   font-size      → --text-8 … --text-64 (0.5 steps to 20, then integers) and
+ *                    the role names
  *                    (--text-body, --text-caption, --text-label, --text-eyebrow)
  *                    plus the fluid display set (--text-hero, --text-display,
  *                    --text-title, --text-heading)
@@ -24,11 +25,16 @@
  *                    and selection state
  *   z-index        → the named stacking order in tokens/layers.css
  *                    (--z-raised … --z-toast)
+ *   section padding → --section-y-48 … --section-y-200 in tokens/spacing.css,
+ *                    an 8px grid to 128 then coarser, plus --section-y and
+ *                    --section-y-lg
+ *   border colour  → --line-rgb (and the ready-made --line, --line-2,
+ *                    --line-strong) in tokens/colors.css
  *
  * WHAT COUNTS AS A VIOLATION
  *
- *   font-size      any `font-size` whose value still carries a px number once
- *                  var() references are removed. A hand-rolled
+ *   font-size      any `font-size` whose value still carries a px OR rem number
+ *                  once var() references are removed. A hand-rolled
  *                  `clamp(28px, 4vw, 44px)` counts too: the four fluid display
  *                  tokens exist precisely so headings on adjacent pages scale
  *                  by the same curve, and the app shipped ~450 distinct curves.
@@ -43,16 +49,37 @@
  *                  bare 1/2/3 by design. See the rules comment at the top of
  *                  tokens/layers.css. Negative values (a decorative layer
  *                  pushed behind its own content) are local too and pass.
+ *   section-padding a `padding` whose VERTICAL slot carries a px literal of 48
+ *                  or more. Shorthand order decides which slot is vertical, so
+ *                  see verticalPaddingParts() below. 48px is the floor because
+ *                  below it the number is component padding, not the space
+ *                  between sections, and this scale is only about the latter.
+ *   plum-border    a border or outline colour reading `var(--plum-rgb)`.
+ *                  Checked BEFORE the var() strip, because here the var()
+ *                  reference IS the bug: --plum-rgb never flips, so such a
+ *                  hairline is near-invisible in dark mode. --line-rgb resolves
+ *                  to --plum-rgb in light and flips in dark, which makes the
+ *                  swap provably a no-op in light mode.
  *
  * WHAT IS DELIBERATELY NOT COUNTED
  *
  *   src/styles/tokens/  is skipped whole. That is where the literals are
  *                       legitimately defined; a token file is the one place a
  *                       raw px value is the point.
- *   rem / em / %        font sizes are not flagged. The scale is px-based, so
- *                       there is nothing to point a relative unit at, and the
- *                       handful in the tree are deliberate (icon-relative
- *                       sizing inside a component that already scales).
+ *   em / % font sizes   not flagged; both are already relative to something
+ *                       real. rem USED to be exempt here on the reasoning that
+ *                       the scale was px-based so a relative unit pointed at
+ *                       nothing. That stopped being true on 2026-09-01 when the
+ *                       scale went rem: every rem the app needs is now a token,
+ *                       and a hand-written one (`0.85rem` = 13.6px) is the
+ *                       second unit system this gate exists to keep out.
+ *   plum backgrounds,   NOT flagged, and must not be. `background`, `color`,
+ *   fills, shadows      `box-shadow` and gradients read --plum-rgb on purpose:
+ *                       they are meant to stay plum in both themes. Only an
+ *                       EDGE has to flip.
+ *   padding under 48px, horizontal padding of any size, and the single-value
+ *                       `padding: Npx` shorthand (see verticalPaddingParts).
+ *                       Gutters are --wrap-px and the --gap-* set.
  *   text-shadow,        left alone. They are rare, they carry no elevation
  *   filter: drop-shadow meaning, and there is no token scale for them yet.
  *
@@ -102,6 +129,16 @@ const CATEGORIES = [
     label: "raw z-index above 3",
     fix: "use a layer token from tokens/layers.css (--z-sticky, --z-nav, --z-popover, --z-modal, --z-lightbox, --z-toast)",
   },
+  {
+    id: "section-padding",
+    label: "literal vertical section padding (>= 48px)",
+    fix: "use a --section-y-* step from tokens/spacing.css (48 to 128 on an 8px grid, then 144/160/180/200)",
+  },
+  {
+    id: "plum-border",
+    label: "border built on --plum-rgb, which does not flip in dark mode",
+    fix: "use rgba(var(--line-rgb), …) — identical in light, correct in dark — or the ready-made --line / --line-2 / --line-strong",
+  },
 ];
 
 function walk(directory, out = []) {
@@ -148,19 +185,110 @@ function stripVarCalls(value) {
 }
 
 const PX_LITERAL = /(?:^|[^\w-])\d+(?:\.\d+)?px\b/;
+// font-size only: rem counts as a literal too. The scale went rem on
+// 2026-09-01 (see the unit note in tokens/typography.css), so `0.85rem` is no
+// longer "a deliberate relative size" — it is 13.6px written by hand, and the
+// whole reason the app had two unit systems. Every rem the app needs is a token.
+const TYPE_LITERAL = /(?:^|[^\w-])\d+(?:\.\d+)?(?:px|rem)\b/;
 const RADIUS_PROPERTY =
   /^(?:border-radius|border-[a-z-]+-radius|--[\w-]*radius)$/;
 const SHADOW_PROPERTY = /^(?:box-shadow|--[\w-]*shadow)$/;
+const PADDING_PROPERTY =
+  /^(?:padding|padding-block|padding-block-start|padding-block-end|padding-top|padding-bottom)$/;
+// A border or outline whose COLOUR is the one that must flip in dark mode.
+// Deliberately not `background`, `color`, `box-shadow` or a gradient: those read
+// --plum-rgb on purpose, because they are supposed to stay plum.
+const FLIPPING_EDGE_PROPERTY =
+  /^(?:border|border-top|border-right|border-bottom|border-left|border-block|border-inline|border-(?:top|right|bottom|left|block|inline)(?:-start|-end)?|border-color|border-[a-z-]+-color|outline|outline-color)$/;
+const SECTION_PADDING_FLOOR = 48;
+
+/**
+ * The vertical slots of a padding declaration, which is the only part this gate
+ * cares about: horizontal gutters are --wrap-px's job, not the rhythm scale's.
+ * Shorthand order is the whole difficulty, so it is spelled out rather than
+ * inferred:
+ *   padding: A            NOT COUNTED — see below
+ *   padding: A B          A vertical
+ *   padding: A B C        A top, C bottom
+ *   padding: A B C D      A top, C bottom
+ *   padding-block: A [B]  both vertical
+ *
+ * Slots are split paren-aware and on the RAW value, so `var(--x)`,
+ * `max(48px, env(safe-area-inset-bottom))` and `calc(…)` each occupy exactly
+ * one slot rather than being torn apart or deleted.
+ *
+ * The single-value shorthand is deliberately exempt. `padding: 48px` sets all
+ * four sides to the same number, and a box padded equally on every side is
+ * component padding — a callout card, a CTA panel — not the space between
+ * sections. Vertical rhythm is by definition the asymmetry between the two
+ * axes, so a declaration with no asymmetry has nothing to say about it, and
+ * putting a --section-y-* token there would set the HORIZONTAL padding from the
+ * rhythm scale too. Three separate reviewers reached that conclusion
+ * independently on the four sites in the tree (a CTA card, a plum callout, a
+ * two-column feature panel and a talk box), which is what settled it.
+ */
+function splitTopLevel(value) {
+  const parts = [];
+  let depth = 0;
+  let current = "";
+  for (const character of value) {
+    if (character === "(") depth += 1;
+    else if (character === ")") depth -= 1;
+    if (depth === 0 && /\s/.test(character)) {
+      if (current) parts.push(current);
+      current = "";
+      continue;
+    }
+    current += character;
+  }
+  if (current) parts.push(current);
+  return parts;
+}
+
+function verticalPaddingParts(property, value) {
+  const parts = splitTopLevel(value);
+  if (parts.length === 0) return [];
+  if (property === "padding-top" || property === "padding-bottom") {
+    return parts.slice(0, 1);
+  }
+  if (property.startsWith("padding-block")) return parts.slice(0, 2);
+  if (parts.length === 1) return [];
+  if (parts.length === 2) return parts.slice(0, 1);
+  return [parts[0], parts[2]];
+}
 
 /**
  * Which category a declaration violates, or null when it is fine. Values arrive
  * already comment-stripped; `property` is lowercased.
  */
 function classify(property, rawValue) {
+  // Checked BEFORE the var() strip, because the whole violation here IS a
+  // var() reference: rgba(var(--plum-rgb), 0.1) on an edge.
+  if (
+    FLIPPING_EDGE_PROPERTY.test(property) &&
+    /var\(\s*--plum-rgb\s*[,)]/.test(rawValue)
+  ) {
+    return "plum-border";
+  }
+
   const value = stripVarCalls(rawValue).trim();
 
   if (property === "font-size") {
-    return PX_LITERAL.test(value) ? "font-size" : null;
+    return TYPE_LITERAL.test(value) ? "font-size" : null;
+  }
+  if (PADDING_PROPERTY.test(property)) {
+    // Deliberately the RAW value, not the var()-stripped one. Stripping first
+    // deletes a slot and SHIFTS every later value left, so
+    // `padding: var(--section-y-56) 52px 46px` reads as `52px 46px` and the
+    // horizontal 52px gets mistaken for the vertical position. Two such
+    // declarations in the tree were false positives before this was fixed.
+    const isOverFloor = verticalPaddingParts(property, rawValue).some(
+      (part) => {
+        const match = /^(\d+(?:\.\d+)?)px$/.exec(part);
+        return match !== null && Number(match[1]) >= SECTION_PADDING_FLOOR;
+      },
+    );
+    return isOverFloor ? "section-padding" : null;
   }
   if (RADIUS_PROPERTY.test(property)) {
     return PX_LITERAL.test(value) ? "border-radius" : null;

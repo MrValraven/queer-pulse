@@ -1,6 +1,6 @@
 /* ── Header ── */
 .header {
-  padding: 128px 0 56px;
+  padding: var(--section-y-128) 0 var(--section-y-56);
   position: relative;
   overflow: hidden;
   border-bottom: 2px solid rgba(var(--cream-rgb), 0.14);
@@ -39,7 +39,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(48px, 7vw, 96px);
+  font-size: clamp(3rem, 7vw, 6rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.026em;
   line-height: 0.94;
@@ -187,7 +187,7 @@
   padding: 20px 24px;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 64px;
+  font-size: var(--text-64);
   color: rgba(var(--cream-rgb), 0.24);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -218,7 +218,7 @@
 .featTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 46px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   line-height: 1.04;
@@ -241,8 +241,8 @@
   margin-top: 18px;
 }
 .av {
-  width: 30px;
-  height: 30px;
+  width: 2.727em; /* 30 / 11 */
+  height: 2.727em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.22);
   color: var(--accent);
@@ -326,7 +326,7 @@
   left: 16px;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: rgba(var(--cream-rgb), 0.22);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -373,8 +373,8 @@
   border-top: 1px dashed rgba(var(--cream-rgb), 0.14);
 }
 .avSm {
-  width: 24px;
-  height: 24px;
+  width: 2.4em; /* 24 / 10 */
+  height: 2.4em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.22);
   color: var(--accent);
@@ -414,7 +414,7 @@
 }
 
 .empty {
-  padding: 60px 0 40px;
+  padding: var(--section-y-64) 0 40px;
 }
 
 /* ── Propose a collection CTA ── */
@@ -422,7 +422,7 @@
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: var(--radius-24);
-  padding: 52px 56px;
+  padding: var(--section-y-56) 56px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
@@ -461,7 +461,7 @@
 .proposeTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 4vw, 48px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   line-height: 1.04;
@@ -504,8 +504,8 @@
   margin-bottom: 0;
 }
 .stepNum {
-  width: 26px;
-  height: 26px;
+  width: 2.261em; /* 26 / 11.5 */
+  height: 2.261em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.28);
   color: var(--accent-soft);
@@ -522,7 +522,7 @@
 }
 
 .body {
-  padding: 0 0 80px;
+  padding: 0 0 var(--section-y-80);
 }
 
 /* ── Responsive ── */

@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.92rem;
+  font-size: var(--text-14-5);
   font-weight: 600;
   /* Follow the skin's legible foreground (cream on the dark stage ground,
      ink on the light skins) instead of the fixed app ink, which paints

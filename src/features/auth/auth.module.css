@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 84px 16px 40px;
+  padding: var(--section-y-88) 16px 40px;
   background: var(--cream);
   position: relative;
   overflow-x: hidden;
@@ -46,7 +46,7 @@
   gap: 9px;
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 22px;
+  font-size: var(--text-22);
   letter-spacing: -0.01em;
   color: var(--text-strong);
 }
@@ -128,7 +128,7 @@
 .card h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 40px;
+  font-size: var(--text-40);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -540,8 +540,9 @@
   margin-bottom: 24px;
 }
 .vouchAv {
-  width: 40px;
-  height: 40px;
+  /* 40 / 14, in em so the box scales with its glyph. */
+  width: 2.857em;
+  height: 2.857em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.16);
   color: var(--accent-ink);
@@ -730,8 +731,9 @@
 }
 .nextNum {
   flex: none;
-  width: 26px;
-  height: 26px;
+  /* 26 / 14, in em so the disc scales with its number. */
+  width: 1.857em;
+  height: 1.857em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
@@ -811,7 +813,7 @@
     padding: 36px 24px 30px;
   }
   .card h1 {
-    font-size: 34px;
+    font-size: var(--text-34);
   }
 }
 

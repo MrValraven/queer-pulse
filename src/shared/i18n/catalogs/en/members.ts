@@ -1822,4 +1822,13 @@ export const members: Catalog = {
   "savedLists.toast.fileError": "Could not add it to that list",
   "savedLists.toast.unfiled": "Taken out of the list",
   "savedLists.toast.unfileError": "Could not take it out of the list",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-34c — PRD-34c - /search category tabs. The tab strip now asks the backend (GET /search/types) which result types are actually live, so a closed surface no longer gets a tab that can only show the empty state. These two keys cover the case where that lookup itself fails: the strip falls back to the categories that need no feature flag (All, Pages) and this compact panel says why, with a retry. Search itself still works, so the copy must not read as a search failure. Rendered through the shared LoadErrorState in SearchPage.tsx.
+  "search.tabsError.title": "We couldn't load <em>the categories</em>",
+  "search.tabsError.body":
+    "Search still works and the results below are complete. We just could not check which categories are open, so the filters above are short. Try again in a moment.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-34c — PRD-34c - /search category tabs. The tab strip now asks the backend (GET /search/types) which result types are actually live, so a closed surface no longer gets a tab that can only show the empty state. These two keys cover the case where that lookup itself fails: the strip falls back to the categories that need no feature flag (All, Pages) and this compact panel says why, with a retry. Search itself still works, so the copy must not read as a search failure. Rendered through the shared LoadErrorState in SearchPage.tsx.
 };

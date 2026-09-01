@@ -1,6 +1,6 @@
 /* nav band reserved by shell (base.css); this is only breathing room */
 .page {
-  padding: 16px 0 120px;
+  padding: 16px 0 var(--section-y-120);
 }
 
 /* Header */
@@ -31,7 +31,7 @@
 .phTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 5vw, 58px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -153,7 +153,7 @@
 }
 .pcTitle {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 8px;

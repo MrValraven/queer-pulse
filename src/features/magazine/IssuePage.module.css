@@ -1,5 +1,5 @@
 .cover {
-  padding-top: 92px;
+  padding-top: var(--section-y-96);
 }
 .liveEmpty {
   padding: var(--section-y-lg) 0;
@@ -29,7 +29,7 @@
   grid-template-columns: 1.05fr 1fr;
   gap: 48px;
   align-items: center;
-  padding: 20px 0 56px;
+  padding: 20px 0 var(--section-y-56);
   border-bottom: 2px solid var(--line-strong);
 }
 .metaRow {
@@ -46,7 +46,7 @@
 .num {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 36px;
+  font-size: var(--text-36);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -75,7 +75,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(56px, 9vw, 128px);
+  font-size: clamp(3.5rem, 9vw, 8rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.92;
@@ -112,7 +112,7 @@
 .letter {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
 }
 .letterInner {
   max-width: 760px;
@@ -130,7 +130,7 @@
 .letter h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.15;
@@ -174,7 +174,7 @@
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 80px 28px;
+  padding: var(--section-y-80) 28px;
 }
 .tocHead {
   display: flex;
@@ -189,7 +189,7 @@
 .tocHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 36px;
+  font-size: var(--text-36);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -263,7 +263,7 @@
 .entryTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.2;
@@ -309,7 +309,7 @@
 .contrib {
   background: var(--paper);
   border-top: 2px solid var(--line-strong);
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
 }
 .contribInner {
   max-width: var(--maxw-page);
@@ -319,7 +319,7 @@
 .contrib h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -376,7 +376,7 @@
 
 .print {
   background: var(--cream);
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .printInner {
@@ -399,7 +399,7 @@
 .poH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 36px;
+  font-size: var(--text-36);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;

@@ -1,18 +1,18 @@
 .page {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 108px 28px 80px;
+  padding: var(--section-y-112) 28px var(--section-y-80);
 }
 .notFound {
   max-width: 560px;
   margin: 0 auto;
-  padding: 140px 28px 120px;
+  padding: var(--section-y-144) 28px var(--section-y-120);
   text-align: center;
 }
 .notFound h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 38px);
+  font-size: clamp(1.75rem, 4vw, 2.375rem);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 12px;
@@ -28,7 +28,7 @@
   grid-template-columns: 1fr 320px;
   gap: 48px;
   align-items: center;
-  padding-bottom: 48px;
+  padding-bottom: var(--section-y-48);
   margin-bottom: 48px;
   border-bottom: 2px solid var(--line-strong);
 }
@@ -43,7 +43,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(48px, 7.2vw, 90px);
+  font-size: clamp(3rem, 7.2vw, 5.625rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -156,7 +156,7 @@
   display: block;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 38px;
+  font-size: var(--text-38);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -206,7 +206,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }
@@ -250,7 +250,7 @@
 .featTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -316,7 +316,7 @@
 .artTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.22;
@@ -349,7 +349,7 @@
 .readlist h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;

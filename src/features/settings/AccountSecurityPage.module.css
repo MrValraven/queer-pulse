@@ -5,7 +5,7 @@
   max-width: 880px;
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 28px 80px;
+  padding: 28px 28px var(--section-y-80);
 }
 .back {
   font-size: var(--text-13);
@@ -34,7 +34,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 5vw, 52px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;

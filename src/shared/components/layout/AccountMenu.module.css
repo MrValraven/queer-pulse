@@ -77,8 +77,9 @@
   gap: 5px;
 }
 .railMini {
-  width: 30px;
-  height: 30px;
+  /* 30 / 16, in em so the box scales with its glyph. */
+  width: 1.875em;
+  height: 1.875em;
   display: grid;
   place-items: center;
   border: 1px solid rgba(var(--cream-rgb), 0.12);
@@ -227,8 +228,9 @@
   gap: 4px;
 }
 .headerIcon {
-  width: 32px;
-  height: 32px;
+  /* 32 / 16, in em so the box scales with its glyph. */
+  width: 2em;
+  height: 2em;
   display: grid;
   place-items: center;
   border-radius: var(--radius-9);
@@ -374,7 +376,7 @@
 }
 .populateState {
   margin-left: auto;
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--ink);

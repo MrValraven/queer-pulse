@@ -15,7 +15,7 @@
 .titleInput {
   width: 100%;
   font-family: var(--serif);
-  font-size: clamp(19px, 2.2vw, 24px);
+  font-size: clamp(1.1875rem, 2.2vw, 1.5rem);
   font-weight: 600;
   color: var(--ink);
   background: transparent;

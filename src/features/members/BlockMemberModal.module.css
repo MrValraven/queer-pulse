@@ -5,7 +5,7 @@
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   color: var(--ink);
-  font-size: 0.94rem;
+  font-size: var(--text-15);
   line-height: 1.5;
 }
 .reportRow {
@@ -15,7 +15,7 @@
   margin-top: 16px;
   cursor: pointer;
   color: var(--ink);
-  font-size: 0.95rem;
+  font-size: var(--text-body);
   line-height: 1.4;
 }
 .reportRow input {

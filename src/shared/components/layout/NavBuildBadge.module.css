@@ -1,0 +1,21 @@
+/* Ground-agnostic by construction: every colour is derived from the inherited
+   link colour, so the badge follows the row it sits in (ink on the cream mega
+   panel, cream on the plum rail, plum again on that rail's cream active row)
+   and needs no per-surface variant and no dark-theme override. Picking a fixed
+   channel here would have gone invisible on at least one of those grounds. */
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px;
+  border: 1px solid color-mix(in srgb, currentColor 26%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  color: inherit;
+  font-size: var(--text-10);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+}

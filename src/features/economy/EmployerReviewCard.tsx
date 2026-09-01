@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
@@ -14,6 +16,7 @@ export function EmployerReviewCard({
   onWriteReview?: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -68,14 +71,42 @@ export function EmployerReviewCard({
 
       {expanded ? (
         <div className={styles.coReviews}>
-          {c.reviews.map((r) => (
-            <div className={styles.coReview} key={r.text}>
-              <div className={styles.coReviewText}>{r.text}</div>
+          {c.reviews.map((review) => (
+            <div className={styles.coReview} key={review.text}>
+              <div className={styles.coReviewText}>{review.text}</div>
               <div className={styles.coReviewMeta}>
-                {r.meta.map((m) => (
-                  <span key={m}>{m}</span>
+                {review.meta.map((metaItem) => (
+                  <span key={metaItem}>{metaItem}</span>
                 ))}
               </div>
+              {/* The employer answering (PRD-47). Headed with its own label and
+                  set on its own ground, so a reader can never take the
+                  subject's answer for another reviewer's. */}
+              {review.employerReply && (
+                <div className={styles.employerReply}>
+                  <div className={styles.employerReplyHead}>
+                    <span className={styles.employerReplyTitle}>
+                      {t("economy:employerReviewCard.reply.title")}
+                    </span>
+                    <span className={styles.employerReplyDate}>
+                      {fmt.date(new Date(review.employerReply.at), {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                  <div className={styles.employerReplyText}>
+                    {review.employerReply.text}
+                  </div>
+                  {review.isEditedAfterEmployerReply && (
+                    <p className={styles.employerReplyStale}>
+                      <FiAlertCircle aria-hidden />
+                      {t("economy:employerReviewCard.reply.editedAfterReply")}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

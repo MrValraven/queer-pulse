@@ -52,6 +52,25 @@ const SEVERITY_LOOK: Record<
 };
 
 /**
+ * Subject types whose reported content the platform will not show a community
+ * moderator, so the row offers them escalation and nothing else (TS-14). Today
+ * that is a gathering photograph: the moderation evidence route is platform
+ * staff only, the gathering's album is served to that gathering's participants
+ * only, and the stored file is served to its uploader only. A moderator asked
+ * to take a photo down would be deciding on the reason code and the caption
+ * alone, and the server refuses them for exactly that reason
+ * (`assertCommunityModMaySettle`), so showing the button would only produce a
+ * 403 on press.
+ *
+ * Written as a list of plain strings rather than of `ModReport["subjectType"]`
+ * members so this row keeps compiling while the shared subject union grows,
+ * which is where the next entry will come from.
+ */
+const SUBJECT_TYPES_A_COMMUNITY_MOD_CANNOT_SEE: readonly string[] = [
+  "event_photo",
+];
+
+/**
  * One row of the community reports queue: the content a moderator is being
  * asked to judge, then the two answers they can give.
  *
@@ -78,7 +97,8 @@ export function ModToolsReportRow({
   onRemove: (report: ModReport) => void;
   onDismiss: (report: ModReport) => void;
   /** Hands the report to platform staff. The only answer offered on an
-   *  emergency report (TS-07). */
+   *  emergency report (TS-07) and on a report about something the moderator
+   *  cannot be shown (TS-14). */
   onEscalate: (report: ModReport) => void;
 }) {
   const { t } = useTranslation();
@@ -96,12 +116,27 @@ export function ModToolsReportRow({
   const threadHref = report.threadPostId
     ? `/community/${slug}?tab=discussion#post-${report.threadPostId}`
     : null;
+  // Two separate reasons a report is not this moderator's to settle, and the
+  // row has to tell them apart because the sentence it shows differs.
+  //
   // TS-07: outing and doxxing are emergency severity, and the server refuses
-  // to let a community moderator settle one — a dismissal here would be
+  // to let a community moderator settle one. A dismissal here would be
   // platform-wide, terminal, and filed before anyone trained had seen it.
-  // Escalating is the whole answer offered on those rows, so the two buttons
-  // that would 403 are not shown at all.
-  const isStaffOnly = report.severity === "emergency";
+  //
+  // TS-14: the reported thing cannot be shown to them at all. Severity says
+  // nothing about this, so gating on severity alone left Take it down and
+  // Dismiss on every non-emergency photo report (harassment, hate speech,
+  // discrimination, impersonation, spam, other), where pressing either one
+  // returned a 403 from a server that had already decided.
+  //
+  // Either way the two buttons that would 403 are absent rather than
+  // refusing: an action offered and then denied is worse than an action never
+  // offered.
+  const isEmergency = report.severity === "emergency";
+  const isSubjectUnviewable =
+    report.subjectType !== undefined &&
+    SUBJECT_TYPES_A_COMMUNITY_MOD_CANNOT_SEE.includes(report.subjectType);
+  const isStaffOnly = isEmergency || isSubjectUnviewable;
 
   return (
     <div className={styles.reportRow}>
@@ -192,7 +227,12 @@ export function ModToolsReportRow({
 
       {isStaffOnly && (
         <p className={styles.reportNote}>
-          {t("communities:detail.modtools.reports.staffOnlyNote")}
+          {/* The emergency sentence names outing and doxxing, which is not
+              true of a photo report on `spam`. Say the reason that actually
+              applies, so a moderator reads a limit rather than a slight. */}
+          {isEmergency
+            ? t("communities:detail.modtools.reports.staffOnlyNote")
+            : t("communities:detail.modtools.reports.unviewableSubjectNote")}
         </p>
       )}
 

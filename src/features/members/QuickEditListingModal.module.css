@@ -2,14 +2,14 @@
  * this small "fix one thing" form reads consistently with the app's other
  * lightweight edit modals. */
 .field {
-  font-size: 0.8125rem;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--text-strong);
   margin-block: 12px 6px;
 }
 
 .helper {
-  font-size: 0.75rem;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-block-start: -2px;
   margin-block-end: 6px;
@@ -22,7 +22,7 @@
   border-radius: var(--radius-badge);
   padding: 10px 14px;
   font-family: var(--sans);
-  font-size: 0.875rem;
+  font-size: var(--text-body-sm);
   color: var(--text-strong);
   background: var(--cream);
 }
@@ -40,7 +40,7 @@
 }
 
 .counter {
-  font-size: 0.75rem;
+  font-size: var(--text-12);
   color: var(--ink-40);
   margin-block-start: 6px;
   text-align: right;
@@ -51,7 +51,7 @@
   margin-block-start: 18px;
   padding-block-start: 14px;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
-  font-size: 0.8125rem;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 

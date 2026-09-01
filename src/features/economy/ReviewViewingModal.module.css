@@ -1,0 +1,46 @@
+/* Panels the review modal grew when a review became correctable: the load
+   state, the words that already stand, and the inline save failure. The form
+   chrome itself still comes from housingModals.module.css, which the submit and
+   the edit path share. */
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 0 26px;
+}
+.loadingLabel {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  margin-bottom: 4px;
+}
+
+/* The review as it stands, shown read-only once it has gone public. Tinted off
+   --line-rgb rather than --plum-rgb so the panel stays visible in dark mode. */
+.standing {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(var(--line-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-12);
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+.standingText {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Inline save failure, beside the words the member just typed. Deliberately not
+   a toast: a toast talks over the copy and then takes it away. */
+.saveError {
+  font-size: var(--text-13);
+  color: var(--accent);
+  line-height: 1.55;
+  margin-bottom: 16px;
+}

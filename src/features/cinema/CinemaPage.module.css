@@ -1,5 +1,5 @@
 .mast {
-  padding: 128px 0 0;
+  padding: var(--section-y-128) 0 0;
   border-bottom: 2px solid rgba(var(--cream-rgb), 0.16);
   position: relative;
   overflow: hidden;
@@ -40,7 +40,7 @@
 .mastBrand {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(50px, 8.5vw, 118px);
+  font-size: var(--text-hero);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.03em;
   line-height: 0.88;
@@ -191,7 +191,7 @@
 .cvTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 5vw, 76px);
+  font-size: clamp(2.5rem, 5vw, 4.75rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.96;
@@ -255,7 +255,7 @@
 }
 
 .body {
-  padding: 80px 0 110px;
+  padding: var(--section-y-80) 0 var(--section-y-112);
 }
 .sec {
   margin-bottom: 82px;
@@ -273,7 +273,7 @@
 .secH h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.018em;
   line-height: 1.05;
@@ -311,7 +311,7 @@
 }
 .cinemaSectionHead h2 {
   font-weight: 300;
-  font-size: 32px;
+  font-size: var(--text-32);
 }
 .cinemaSectionHead a {
   font-size: var(--text-13);
@@ -434,7 +434,7 @@
 .nq {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.42;
   max-width: 56ch;
@@ -493,7 +493,7 @@
 .coll h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.12;
@@ -622,7 +622,7 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .liveDate .d {
-  font-size: 38px;
+  font-size: var(--text-38);
   line-height: 0.9;
   letter-spacing: -0.02em;
 }
@@ -637,7 +637,7 @@
 .liveMain h4 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.16;
 }
@@ -695,7 +695,7 @@
   background: rgba(var(--cream-rgb), 0.04);
   border: 1px solid rgba(var(--cream-rgb), 0.12);
   border-radius: var(--radius-24);
-  padding: 52px 48px;
+  padding: var(--section-y-56) 48px;
 }
 .ledgerEb {
   font-size: var(--text-12);
@@ -708,7 +708,7 @@
 .ledgerText h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4vw, 48px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -806,7 +806,7 @@
 .aboutStripText h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 42px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.06;
@@ -864,7 +864,7 @@
 .openCallsText h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 42px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.06;

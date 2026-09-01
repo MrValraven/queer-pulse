@@ -43,7 +43,7 @@
 .digestLbl {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgb(var(--cream-rgb));
   letter-spacing: -0.01em;
   min-inline-size: 180px;
@@ -66,7 +66,7 @@
 .tileNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 34px;
+  font-size: var(--text-34);
   line-height: 1;
   color: rgb(var(--cream-rgb));
   letter-spacing: -0.02em;
@@ -318,8 +318,9 @@
   text-decoration: none;
 }
 .sbIc {
-  width: 36px;
-  height: 36px;
+  /* 36 / 13, in em so the box scales with its glyph. */
+  width: 2.769em;
+  height: 2.769em;
   border-radius: var(--radius-10);
   display: flex;
   align-items: center;
@@ -394,7 +395,7 @@
 }
 .upDd {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   font-weight: 400;
   color: var(--text-strong);
   line-height: 1;

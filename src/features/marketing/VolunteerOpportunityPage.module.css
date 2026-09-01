@@ -2,7 +2,7 @@
   max-width: 980px;
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 28px 80px;
+  padding: 28px 28px var(--section-y-80);
 }
 .back {
   font-size: var(--text-13);
@@ -50,7 +50,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 5.5vw, 60px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -117,7 +117,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 14px;
@@ -244,8 +244,8 @@
   text-decoration: none;
 }
 .teamPill .av {
-  width: 22px;
-  height: 22px;
+  width: 2.316em;
+  height: 2.316em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.14);
   color: var(--accent-ink);
@@ -435,7 +435,7 @@
 .appliedTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 23px;
+  font-size: var(--text-23);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 10px;
@@ -511,8 +511,8 @@
 }
 .signupAv {
   flex: none;
-  width: 34px;
-  height: 34px;
+  width: 2.833em;
+  height: 2.833em;
   border-radius: var(--radius-9);
   display: flex;
   align-items: center;

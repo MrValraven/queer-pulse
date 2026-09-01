@@ -102,6 +102,11 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
           initial={myProfile}
           onSubmit={handleSubmit}
           onClose={onClose}
+          // A confirmed take-down closes the editor back to the board, which
+          // the delete hook has already invalidated. The success is announced
+          // by the toast the danger zone raises, so there is no second panel
+          // claiming something the request may not have done.
+          onDeleted={onClose}
           submitting={upsertFlatmateProfile.isPending}
         />
       )}

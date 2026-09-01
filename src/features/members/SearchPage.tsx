@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
+import { LoadErrorState, SkeletonLine } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { TABS, type ResultType } from "./search.data";
+import { TABS, visibleSearchTabs, type ResultType } from "./search.data";
 import { SearchResults } from "./SearchResults";
 import { useSearchData } from "./api/useSearchData";
+import { useSearchTypes } from "./api/useSearchTypes";
 import { pushRecent } from "./searchRecents";
 import styles from "./SearchPage.module.css";
 
@@ -19,7 +21,32 @@ export function SearchPage() {
   const simulatedLoad = useSimulatedLoad();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
-  const [tab, setTab] = useState<ResultType | "all">("all");
+  // What the member last clicked. The tab actually rendered is derived from
+  // it below, because a category can stop existing under them.
+  const [requestedTab, setTab] = useState<ResultType | "all">("all");
+  // Which categories exist at all is a backend answer, because a result type
+  // whose feature is closed is never queried and never returned: its tab
+  // could only ever show the empty state, which reads as "nothing matched"
+  // rather than "this surface is not open". Demo mode keeps the whole strip,
+  // its corpus fills every tab.
+  const {
+    launchedTypes,
+    isPending: isLoadingTabs,
+    isError: hasTabsFailed,
+    refetch: retryTabs,
+  } = useSearchTypes();
+  const tabs = useMemo(
+    () => (demoMode ? TABS : visibleSearchTabs(launchedTypes)),
+    [demoMode, launchedTypes],
+  );
+  // A tab can stop existing under the member: the strip is short until the
+  // types answer lands, and a deploy can close a feature while the page is
+  // open. Deriving the active tab rather than resetting the stored one keeps
+  // them on a tab that renders, and gives their choice back the moment the
+  // category reappears (a retry, say) instead of silently forgetting it.
+  const tab = tabs.some((tabOption) => tabOption.id === requestedTab)
+    ? requestedTab
+    : "all";
   const {
     data: searchData,
     recents,
@@ -83,23 +110,46 @@ export function SearchPage() {
       <div className={styles.body}>
         <div className="wrap">
           {!signInRequired && (
-            <div className={styles.tabs}>
-              {TABS.map((tabOption) => (
-                <button
-                  key={tabOption.id}
-                  type="button"
-                  className={[
-                    styles.tab,
-                    tab === tabOption.id && styles.tabActive,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => setTab(tabOption.id)}
-                >
-                  {t(tabOption.labelKey)}
-                </button>
-              ))}
-            </div>
+            <>
+              <div className={styles.tabs}>
+                {isLoadingTabs ? (
+                  <SkeletonLine width={320} height={34} />
+                ) : (
+                  tabs.map((tabOption) => (
+                    <button
+                      key={tabOption.id}
+                      type="button"
+                      className={[
+                        styles.tab,
+                        tab === tabOption.id && styles.tabActive,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={() => setTab(tabOption.id)}
+                    >
+                      {t(tabOption.labelKey)}
+                    </button>
+                  ))
+                )}
+              </div>
+              {/* The categories could not be looked up. Search itself still
+                  works and the merged view groups whatever comes back, so the
+                  honest answer is to say the strip is short and offer a retry,
+                  never to guess the list back or drop it silently. */}
+              {hasTabsFailed && (
+                <LoadErrorState
+                  compact
+                  onRetry={retryTabs}
+                  title={
+                    <Translation
+                      i18nKey="members:search.tabsError.title"
+                      components={{ em: <em /> }}
+                    />
+                  }
+                  description={t("members:search.tabsError.body")}
+                />
+              )}
+            </>
           )}
           <SearchResults
             query={query}

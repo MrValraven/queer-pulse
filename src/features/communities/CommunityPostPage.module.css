@@ -2,7 +2,7 @@
    replies are the whole page, so the column is capped rather than stretched
    across a desktop width the Pulse timeline never uses either. */
 .body {
-  padding: 52px 0 var(--section-y);
+  padding: var(--section-y-56) 0 var(--section-y);
   background: var(--cream);
 }
 
@@ -12,7 +12,7 @@
 
 .heading {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   line-height: 1.2;
   color: var(--text-strong);
   margin: 0 0 20px;
@@ -53,9 +53,9 @@
 
 @media (max-width: 700px) {
   .body {
-    padding: 32px 0 72px;
+    padding: 32px 0 var(--section-y-72);
   }
   .heading {
-    font-size: 22px;
+    font-size: var(--text-22);
   }
 }

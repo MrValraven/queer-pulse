@@ -30,7 +30,7 @@
 
 .statNumber {
   font-family: var(--serif);
-  font-size: clamp(20px, 5vw, 22px);
+  font-size: clamp(1.25rem, 5vw, 1.375rem);
   line-height: 1.1;
   color: var(--text-strong);
 }
@@ -122,13 +122,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: 2.909em;
+  height: 2.909em;
   border-radius: 50%;
   border: 2px dashed var(--accent);
   background: var(--paper);
   color: var(--accent);
-  font-size: 22px;
+  font-size: var(--text-22);
   flex-shrink: 0;
 }
 
@@ -409,7 +409,7 @@
 .identityName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 7vw, 32px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -527,8 +527,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 2.2em;
+  height: 2.2em;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);

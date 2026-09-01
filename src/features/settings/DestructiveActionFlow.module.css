@@ -27,14 +27,15 @@
 }
 
 .icon {
-  width: 56px;
-  height: 56px;
+  /* 56 / 24, in em so the tile scales with its glyph. */
+  width: 2.333em;
+  height: 2.333em;
   border-radius: var(--radius-16);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 18px;
-  font-size: 24px;
+  font-size: var(--text-24);
   animation: dafIconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.06s both;
 }
 .iconAccent {
@@ -57,7 +58,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.12;
@@ -126,14 +127,15 @@
   pointer-events: none;
 }
 .resultIcon {
-  width: 58px;
-  height: 58px;
+  /* 58 / 26, in em so the tile scales with its glyph. */
+  width: 2.231em;
+  height: 2.231em;
   border-radius: var(--radius-16);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 18px;
-  font-size: 26px;
+  font-size: var(--text-26);
   background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade);
   position: relative;
@@ -142,7 +144,7 @@
 .resultTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   letter-spacing: -0.015em;
   line-height: 1.1;
   position: relative;

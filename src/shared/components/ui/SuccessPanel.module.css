@@ -6,7 +6,7 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   text-align: center;
-  padding: 48px 40px 40px;
+  padding: var(--section-y-48) 40px 40px;
   border-radius: var(--radius-28);
   animation: panelIn 0.34s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));
 }
@@ -33,7 +33,7 @@
    title to near-invisibility on plum). */
 .panel .title {
   font-family: var(--serif);
-  font-size: clamp(24px, 3vw, 30px);
+  font-size: var(--text-heading);
   font-weight: 400;
   line-height: 1.12;
   letter-spacing: -0.01em;

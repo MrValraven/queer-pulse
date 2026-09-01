@@ -1276,4 +1276,29 @@ export const gatherings: Catalog = {
   "hub.browse.cost.any": "Any cost",
   "hub.browse.cost.free": "Free",
   "hub.browse.cost.paid": "Has a door price",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.
+  "photos.removeAriaLabel": "Remove this photo from the album",
+  "photos.removeConfirmTitle": "Remove this photo?",
+  "photos.removeConfirmBody":
+    "This takes the photo out of the album for everyone who can see it. It cannot be undone.",
+  "photos.removeConfirmCta": "Remove photo",
+  "photos.removedToast": "Photo removed from the album.",
+  "photos.removeError":
+    "We could not remove that photo. It is still in the album, so try again.",
+  "photos.openPhotoAriaLabel": "Open this photo in a new tab",
+  "photos.openCaptionedPhotoAriaLabel":
+    "Open this photo in a new tab: {caption}",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PHOTO-REPORT — PHOTO-REPORT - the per-photo report control on a gathering album tile (live mode only). Sits beside the existing photos.removeAriaLabel take-down control. The captioned variant gives each tile a distinct accessible name; the plain one covers a photo with no caption. reportSubjectName is what the report modal calls the subject when the photo carries no caption of its own.
+  // PRD-38 — PRD-38 - taking a photo down from a gathering album (live mode). The control, its confirmation, and the two outcomes. Also two accessible names for the album tile link, which had none when a photo carried no caption.
+  "photos.reportCta": "Report",
+  "photos.reportAriaLabel": "Report this photo",
+  "photos.reportCaptionedAriaLabel": "Report the photo captioned {caption}",
+  "photos.reportSubjectName": "Photo from {gathering}",
 };

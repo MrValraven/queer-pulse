@@ -1,6 +1,6 @@
 /* ── Hero ── */
 .hero {
-  padding: 128px 0 0;
+  padding: var(--section-y-128) 0 0;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -43,7 +43,7 @@
   grid-template-columns: 1fr 360px;
   gap: 56px;
   align-items: end;
-  padding-bottom: 64px;
+  padding-bottom: var(--section-y-64);
 }
 .heroEb {
   font-size: var(--text-11-5);
@@ -67,7 +67,7 @@
 .heroTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(52px, 7.5vw, 108px);
+  font-size: var(--text-hero);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.026em;
   line-height: 0.94;
@@ -122,7 +122,7 @@
 }
 .sidebarRow .v {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
@@ -141,7 +141,7 @@
 
 /* ── Body ── */
 .body {
-  padding: 72px 0 100px;
+  padding: var(--section-y-72) 0 var(--section-y-104);
   background: var(--cream);
 }
 .section {
@@ -163,7 +163,7 @@
 .secHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }
@@ -239,7 +239,7 @@
 .cardTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 46px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.022em;
   line-height: 1.02;
@@ -308,7 +308,7 @@
 .amount {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 52px;
+  font-size: var(--text-52);
   color: var(--text-strong);
   letter-spacing: -0.022em;
   line-height: 1;
@@ -399,7 +399,7 @@
 .sc h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;
@@ -503,7 +503,7 @@
 
 /* ── How it works ── */
 .how {
-  padding: 72px 0;
+  padding: var(--section-y-72) 0;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -531,7 +531,7 @@
 .how h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.2vw, 52px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   margin-bottom: 40px;
@@ -553,7 +553,7 @@
 .hwNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 56px;
+  font-size: var(--text-56);
   color: rgba(var(--cream-rgb), 0.2);
   letter-spacing: -0.02em;
   line-height: 1;

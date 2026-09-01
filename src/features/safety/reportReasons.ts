@@ -26,14 +26,36 @@ export type ReportSubjectType =
   | "company"
   | "job"
   | "subprofile"
-  // A review of a directory listing (`listing_reviews`).
+  // A review, addressed by its uuid, on ANY of the three surfaces that carry
+  // one: a directory listing (`listing_reviews`), an employer
+  // (`company_reviews`) or a home (`housing_reviews`). One code covers all
+  // three on purpose, so a moderator's takedown means the same thing wherever
+  // the review sits and the taxonomy does not grow a value per vertical.
+  //
+  // ONE SUBJECT COVERS THE REVIEW AND THE REPLY UNDER IT. The reviewed party's
+  // single public answer lives on the review row and is not separately
+  // reportable: a reply read without the review it answers is not the same
+  // statement. The backend's `review` resolver therefore shows a moderator
+  // both halves and refuses an account action when a reply exists, since
+  // nothing on the wire says which half was reported.
   | "review"
   | "magazine_comment"
   // A member's PUBLIC question on a business listing, OR the answer posted
   // under it (`listing_public_questions`). One subject covers the pair, so a
   // report of it can name two different authors, which is why account-level
   // enforcement refuses it (`admin/api/enforcementTargetError.ts`).
-  | "listing_public_question";
+  | "listing_public_question"
+  // ONE photograph in a gathering's album (`event_photos`). `event` already
+  // existed and is the wrong grain: acting on it takes down the whole gathering
+  // over one image. Until this existed, a photo of an identifiable person at a
+  // queer event could be removed only by its uploader or an organizer, who on
+  // the reports that matter most are the people being complained about.
+  | "event_photo"
+  // ONE tenant's recommendation of a landlord (`landlord_recommendations`).
+  // Same grain problem, sharper: `landlord` reports the whole entry, and these
+  // recommendations are how tenants warn each other, so acting on a complaint
+  // about one took down every other tenant's warning with it.
+  | "landlord_recommendation";
 
 export type ReasonCode =
   | "outing"
@@ -331,6 +353,44 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "discrimination",
     "spam",
     "off_topic",
+    "other",
+  ],
+  // One photograph in a gathering's album. Mirrors the backend's
+  // `ReportSubjectType.EventPhoto` set exactly. `outing` and `doxxing` lead
+  // deliberately, and not only for ordering: they are the only two codes
+  // `deriveSeverity` maps to the emergency band, and a photograph of a face at
+  // a queer event outs somebody in a way a paragraph of text cannot. A list
+  // without them would route exactly the report this control exists for into
+  // the ordinary queue, which is the failure the public-question list above
+  // records having already shipped once. `venue_safety` is absent because a
+  // photo is not an incident at a place, and `off_topic` because an album has
+  // no topic to be off.
+  event_photo: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
+    "discrimination",
+    "impersonation",
+    "spam",
+    "other",
+  ],
+  // One tenant's recommendation of a landlord. Mirrors the backend's
+  // `ReportSubjectType.LandlordRecommendation` set exactly, which is the
+  // `landlord` set unchanged: a complaint about a single recommendation raises
+  // exactly what a complaint about the whole entry raises, and the only thing
+  // that differs is how much a moderator takes down when they act. Identical
+  // sets also mean a moderator reading both never has to learn which codes
+  // exist at which grain.
+  landlord_recommendation: [
+    "outing",
+    "doxxing",
+    "not_affirming",
+    "discrimination",
+    "harassment",
+    "hate_speech",
+    "impersonation",
+    "spam",
     "other",
   ],
 };

@@ -14,7 +14,7 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
   font-family: var(--sans);
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink);
   cursor: pointer;
@@ -34,7 +34,7 @@
 .sectionTitle {
   margin: 16px 0 12px;
   font-family: var(--sans);
-  font-size: 0.82rem;
+  font-size: var(--text-eyebrow);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-60);
@@ -107,7 +107,7 @@
   padding: 2px 8px;
   border-radius: var(--radius-pill);
   font-family: var(--sans);
-  font-size: 0.7rem;
+  font-size: var(--text-11);
   font-weight: 600;
   color: var(--cream);
   background: rgba(var(--plum-rgb), 0.72);
@@ -126,13 +126,13 @@
 .error {
   color: var(--danger);
   margin: 0 0 12px;
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
 }
 
 .note {
   color: var(--ink-60);
   margin: 0 0 12px;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
 }
 
 @media (prefers-reduced-motion: reduce) {

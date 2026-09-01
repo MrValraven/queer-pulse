@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 48px 0 60px;
+  padding: var(--section-y-48) 0 var(--section-y-64);
   position: relative;
   overflow: hidden;
 }
@@ -31,7 +31,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(36px, 5.5vw, 68px);
+  font-size: clamp(2.25rem, 5.5vw, 4.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
@@ -118,7 +118,7 @@
 }
 
 .body {
-  padding: 52px 0 100px;
+  padding: var(--section-y-56) 0 var(--section-y-104);
 }
 .layout {
   display: grid;
@@ -154,14 +154,17 @@
 
 .hcs {
   display: grid;
-  grid-template-columns: 44px 1fr;
+  /* The numeral column holds `.hcsNum`, which is sized in em: `max-content`
+     lets the track follow it up, while 44px stays the floor it renders at. */
+  grid-template-columns: minmax(44px, max-content) 1fr;
   gap: 0 16px;
   margin-bottom: 4px;
   position: relative;
 }
 .hcsNum {
-  width: 44px;
-  height: 44px;
+  /* 44 / 16, in em so the box scales with its glyph. */
+  width: 2.75em;
+  height: 2.75em;
   border-radius: 50%;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
@@ -226,7 +229,7 @@
 .sectionHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 23px;
+  font-size: var(--text-23);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 36px 0 20px;

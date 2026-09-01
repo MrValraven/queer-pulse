@@ -7,12 +7,20 @@ import {
   FiBriefcase,
   FiInfo,
 } from "react-icons/fi";
-import { routes } from "../../../app/routeMap";
+import { linkToPath, routes } from "../../../app/routeMap";
 export interface MegaLink {
   /** Catalog key for the visible label — resolve with `t()`. */
   labelKey: string;
   href: string;
   featured?: boolean;
+  /**
+   * Stamped by `filterMenus`, never written by hand in `NAV_MENUS`: this link
+   * keeps its place in the nav on purpose while its destination still resolves
+   * to a not-launched page, so the row renders a quiet "being built" marker
+   * (`NavBuildBadge`) after the label. Without the marker a featured link into
+   * an unlaunched surface reads as a broken link rather than a preview.
+   */
+  isBeingBuilt?: boolean;
 }
 
 export interface MegaColumn {
@@ -61,10 +69,69 @@ export interface MegaMenu {
 }
 
 /**
+ * Surfaces that deliberately KEEP their nav entry while every one of their
+ * routes resolves to a not-launched page in live mode.
+ *
+ * Derived, not a second hand-kept list of names: these are exactly the two
+ * features whose `routes.tsx` swaps its whole subtree for a coming-soon page
+ * when `demoMode === false` (`cinemaRoutes` → `CinemaComingSoon`,
+ * `studioRoutes` → `StudioComingSoonPage`), and the prefixes below are the same
+ * `routes.*` constants those files branch on, so renaming a path moves both
+ * together instead of drifting them apart.
+ *
+ * Everything else that is unlaunched is DROPPED from the nav rather than
+ * badged, and that stays `authGate.ts`'s call: its `COMING_SOON_PATTERNS` (the
+ * whole Work & Economy surface, hidden in shipped builds) and
+ * `DEMO_ONLY_NAV_PATTERNS` (Culture) are both filtered out by
+ * `useIsLinkVisible` before `filterMenus` ever inspects a link, so no link can
+ * be dropped and badged at once. `authGate.ts` names Cinema and Studio as the
+ * two deliberate exceptions to those lists; this is the other half of that
+ * decision, the part that makes the signal visible.
+ */
+const BEING_BUILT_LIVE_PREFIXES: string[] = [routes.cinema, routes.studio];
+
+/**
+ * True when a nav link points into a surface that is still being built. Always
+ * false in demo mode, where both surfaces render their full mock experience.
+ */
+export function isBeingBuiltLink(href: string, demoMode: boolean): boolean {
+  if (demoMode) return false;
+  const path = linkToPath(href).split(/[?#]/)[0] || "/";
+  if (!path.startsWith("/")) return false; // external / mailto / tel
+  return BEING_BUILT_LIVE_PREFIXES.some(
+    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+  );
+}
+
+/**
+ * Stamp the "being built" marker on a link whose destination is not launched,
+ * and take its `featured` emphasis away.
+ *
+ * Featuring is a column's one piece of emphasis, spent on the destination that
+ * pays off today. Cinema and Studio were both `featured: true` while landing on
+ * a coming-soon page, which is the actual defect the badge alone would not fix:
+ * a bold, promoted row that goes nowhere reads as broken, and no amount of
+ * marker copy beside it undoes the promise the emphasis already made. So the
+ * link stays (that is the honest "this is being built" signal) and the emphasis
+ * goes. In demo mode both surfaces are fully built, so nothing is demoted there
+ * and the demo nav keeps its original hierarchy.
+ */
+function markBeingBuilt(link: MegaLink, demoMode: boolean): MegaLink {
+  if (!isBeingBuiltLink(link.href, demoMode)) return link;
+  return { ...link, featured: false, isBeingBuilt: true };
+}
+
+/**
  * Filter a menu list down to the links a visitor may see. `isVisible(href)`
  * comes from `useIsLinkVisible()`. Gated links are dropped, columns that end up
  * empty are removed, and a menu with no remaining columns is omitted entirely so
  * its top-level trigger disappears too.
+ *
+ * Surviving links are then run through `markBeingBuilt`, which is why
+ * `demoMode` is a parameter: a link that is kept on purpose but lands on a
+ * not-launched page comes back carrying `isBeingBuilt`, and the three link
+ * renderers (`MegaNavColumns`, `MegaNavDrawer`, `SidebarGroup`) draw the marker
+ * from that one flag.
  *
  * The feature promo is the menu's highlighted "main link". When its destination
  * is gated (Community → members, Lisbon → directory), a logged-out visitor gets
@@ -76,15 +143,20 @@ export interface MegaMenu {
 export function filterMenus(
   menus: MegaMenu[],
   isVisible: (href: string) => boolean,
+  demoMode: boolean,
 ): MegaMenu[] {
   return menus
     .map((menu) => {
       const columns = menu.columns
         .map((column) => ({
           ...column,
-          links: column.links.filter((link) => isVisible(link.href)),
+          links: column.links
+            .filter((link) => isVisible(link.href))
+            .map((link) => markBeingBuilt(link, demoMode)),
           cta:
-            column.cta && isVisible(column.cta.href) ? column.cta : undefined,
+            column.cta && isVisible(column.cta.href)
+              ? markBeingBuilt(column.cta, demoMode)
+              : undefined,
         }))
         .filter((column) => column.links.length > 0 || column.cta);
       const feature =
@@ -341,6 +413,12 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.culture,
             featured: true,
           },
+          // Cinema and Studio are `featured` for the DEMO build, where both are
+          // complete surfaces. In a live build every `/cinema/*` and `/studio/*`
+          // route resolves to a coming-soon page, so `filterMenus` strips the
+          // emphasis and stamps `isBeingBuilt` instead: the rows stay visible as
+          // an honest "being built" signal, quietly marked, without a bold link
+          // promising a destination that is not there yet. PRD-49.
           {
             labelKey: "shared:megaNav.culture.col.screenSound.cinema",
             href: routes.cinema,

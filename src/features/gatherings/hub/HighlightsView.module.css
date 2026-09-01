@@ -3,7 +3,7 @@
    plum band's background inside this module's constrained container. */
 
 .section {
-  padding-block: 48px 0;
+  padding-block: var(--section-y-48) 0;
 }
 
 /* Featured grid — `EventPosterCard` is parent-sized for the `featured`
@@ -23,13 +23,13 @@
    card boxes/borders) so it reads lighter than the full landing-page grid
    this data also feeds. ── */
 .waysSection {
-  padding-block: 24px 72px;
+  padding-block: 24px var(--section-y-72);
 }
 
 .waysHeading {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(20px, 2.2vw, 26px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: var(--ls-heading);
   margin: 0 0 28px;

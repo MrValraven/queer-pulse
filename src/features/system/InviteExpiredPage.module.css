@@ -54,7 +54,7 @@
 .heading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 40px;
+  font-size: var(--text-40);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -114,8 +114,8 @@
 }
 
 .inviteAvatar {
-  width: 24px;
-  height: 24px;
+  width: 2.286em; /* 24 / 10.5 */
+  height: 2.286em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
   color: var(--accent-ink);
@@ -169,6 +169,6 @@
   }
 
   .heading {
-    font-size: 32px;
+    font-size: var(--text-32);
   }
 }

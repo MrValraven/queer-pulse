@@ -56,7 +56,7 @@
 .doSection {
   background: var(--paper);
   border-top: 2px solid var(--line-strong);
-  padding: 80px 0 64px;
+  padding: var(--section-y-80) 0 var(--section-y-64);
 }
 .doInner {
   max-width: var(--maxw-page);
@@ -66,7 +66,7 @@
 .doH2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(36px, 5vw, 52px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -125,7 +125,7 @@
 .tierName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -140,7 +140,7 @@
 .tierPrice {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 48px;
+  font-size: var(--text-48);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -242,7 +242,7 @@
 .process {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 80px 28px;
+  padding: var(--section-y-80) 28px;
 }
 .processGrid {
   display: grid;
@@ -269,7 +269,7 @@
 .procN {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 40px;
+  font-size: var(--text-40);
   color: var(--accent);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -303,7 +303,7 @@
 
 .proof {
   background: rgba(var(--plum-rgb), 0.04);
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
 }
 .proofInner {
   max-width: var(--maxw-page);
@@ -313,7 +313,7 @@
 .proof h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -365,8 +365,8 @@
   }
 }
 .partnerLogo {
-  width: 48px;
-  height: 48px;
+  width: 2.667em;
+  height: 2.667em;
   border-radius: var(--radius-12);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
@@ -430,7 +430,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.4;
@@ -449,8 +449,8 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .quoteAv {
-  width: 42px;
-  height: 42px;
+  width: 3em;
+  height: 3em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.14);
   color: var(--accent-ink);
@@ -473,7 +473,7 @@
 }
 
 .ctaSection {
-  padding: 80px 0 96px;
+  padding: var(--section-y-80) 0 var(--section-y-96);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -513,7 +513,7 @@
 .ctaSection h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 5vw, 56px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;

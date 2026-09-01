@@ -72,7 +72,7 @@
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 0;
-  padding-top: 56px;
+  padding-top: var(--section-y-56);
   height: 100dvh;
   min-height: 560px;
 }
@@ -116,7 +116,7 @@
 .overlayHead {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
@@ -196,7 +196,7 @@
 .psTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
@@ -339,7 +339,7 @@
 .spTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: rgba(var(--cream-rgb), 1);
 }
 .spTitle em {
@@ -454,7 +454,7 @@
 }
 
 .below {
-  padding: 48px 0 80px;
+  padding: var(--section-y-48) 0 var(--section-y-80);
   border-top: 1px solid rgba(var(--cream-rgb), 0.08);
 }
 .belowGrid {
@@ -465,7 +465,7 @@
 .below h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 20px;

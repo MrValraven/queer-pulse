@@ -14,7 +14,7 @@
    bar is a compact single row and doesn't need it. */
 @media (--md) {
   .rowsWithBulkBar {
-    padding-bottom: 200px;
+    padding-bottom: var(--section-y-200);
   }
 }
 

@@ -25,6 +25,18 @@ export interface Bar {
 export interface Review {
   text: string;
   meta: string[];
+  /**
+   * The EMPLOYER's single public reply to this review (PRD-47). Demo fixture
+   * only on this surface: live employer replies are read from the API on the
+   * company page. Absent means the employer has not answered.
+   */
+  employerReply?: { text: string; at: string };
+  /**
+   * The reviewer changed their words AFTER the employer replied, so the reply
+   * may be answering text that is no longer above it. Demo fixture; live rows
+   * take this precomputed from the server and never derive it on the client.
+   */
+  isEditedAfterEmployerReply?: boolean;
 }
 export interface Company {
   avatar: string;
@@ -69,6 +81,10 @@ export const COMPANIES: Company[] = [
       {
         text: '"The ERG is real but under-resourced. It runs on volunteers. Trans healthcare in the plan is decent though."',
         meta: ["Design", "1 month ago"],
+        employerReply: {
+          text: "We have funded two paid days a month for ERG organisers from this quarter, and the healthcare plan keeps its trans coverage. Thank you for saying it plainly.",
+          at: "2026-02-14T00:00:00.000Z",
+        },
       },
       {
         text: '"Came out at the offsite and it was a non-event in the best way. Leadership still defaults to assumptions in all-hands."',
@@ -97,6 +113,13 @@ export const COMPANIES: Company[] = [
       {
         text: '"HR meant well but had no idea how to handle a name change. I had to walk them through it myself."',
         meta: ["Operations", "1 month ago"],
+        employerReply: {
+          text: "You should not have had to do that. There is now a written name-change process and one named person who owns it.",
+          at: "2026-02-02T00:00:00.000Z",
+        },
+        // The review was rewritten after this reply went up. Shown so a reader
+        // can weigh the exchange rather than read agreement into it.
+        isEditedAfterEmployerReply: true,
       },
       {
         text: '"The rainbow logo goes up in June and comes down in July. Read the room before you accept an offer here."',

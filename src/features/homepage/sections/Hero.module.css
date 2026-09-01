@@ -56,7 +56,7 @@
   font-weight: 500;
 }
 .sub {
-  font-size: clamp(17px, 1.6vw, 20px);
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
   color: var(--ink-60);
   max-width: 54ch;
   margin-top: 34px;

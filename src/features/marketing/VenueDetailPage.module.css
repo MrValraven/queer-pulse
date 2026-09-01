@@ -1,6 +1,6 @@
 .page {
   background: var(--cream);
-  padding: 40px 0 80px;
+  padding: 40px 0 var(--section-y-80);
 }
 .back {
   display: inline-flex;
@@ -29,7 +29,7 @@
 }
 .name {
   font-family: var(--serif);
-  font-size: clamp(30px, 5vw, 46px);
+  font-size: var(--text-title);
   color: var(--plum);
   margin: 0 0 12px;
 }

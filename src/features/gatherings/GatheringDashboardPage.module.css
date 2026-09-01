@@ -47,7 +47,7 @@
 
 .hero {
   background: var(--plum);
-  padding: 56px 0 40px;
+  padding: var(--section-y-56) 0 40px;
   position: relative;
   overflow: hidden;
 }
@@ -124,7 +124,7 @@
 .heroTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.8vw, 48px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -142,7 +142,7 @@
 }
 .hsN {
   font-family: var(--serif);
-  font-size: clamp(32px, 4vw, 52px);
+  font-size: var(--text-display);
   font-weight: 300;
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.03em;
@@ -257,7 +257,7 @@
   }
 }
 .qrIcon {
-  font-size: 32px;
+  font-size: var(--text-32);
   opacity: 0.3;
 }
 .qrLabel {
@@ -331,8 +331,8 @@
   margin-bottom: 4px;
 }
 .rrAv {
-  width: 28px;
-  height: 28px;
+  width: 2.8em; /* 28 / 10 */
+  height: 2.8em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -422,8 +422,8 @@
   }
 }
 .attAv {
-  width: 38px;
-  height: 38px;
+  width: 2.923em; /* 38 / 13 */
+  height: 2.923em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -521,7 +521,7 @@
 }
 .statBig {
   font-family: var(--serif);
-  font-size: 44px;
+  font-size: var(--text-44);
   font-weight: 300;
   color: var(--text-strong);
   letter-spacing: -0.03em;
@@ -634,8 +634,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 2.1em; /* 42 / 20 */
+  height: 2.1em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.22);
   color: var(--jade);
@@ -645,7 +645,7 @@
 .endedTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }

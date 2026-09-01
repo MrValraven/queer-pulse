@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 68px 0 0;
+  padding: var(--section-y-72) 0 0;
   position: relative;
   overflow: hidden;
 }
@@ -47,7 +47,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(42px, 6.2vw, 86px);
+  font-size: clamp(2.625rem, 6.2vw, 5.375rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -128,7 +128,7 @@
 }
 
 .body {
-  padding: 80px 0 100px;
+  padding: var(--section-y-80) 0 var(--section-y-104);
 }
 
 .incHeroBox {
@@ -150,7 +150,7 @@
 .incH {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -183,7 +183,7 @@
 }
 .incStat .n {
   font-family: var(--serif);
-  font-size: 36px;
+  font-size: var(--text-36);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -209,7 +209,7 @@
 .colH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(22px, 2.8vw, 34px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 24px;
@@ -230,8 +230,8 @@
   align-items: start;
 }
 .incStepNum {
-  width: 36px;
-  height: 36px;
+  width: 2.25em;
+  height: 2.25em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent-ink);
@@ -365,7 +365,7 @@
 .econH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -408,7 +408,7 @@
   }
 }
 .toolIcon {
-  font-size: 32px;
+  font-size: var(--text-32);
 }
 .toolTitle {
   font-family: var(--serif);
@@ -445,7 +445,7 @@
 .rateH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(24px, 3vw, 36px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 20px;
@@ -516,7 +516,7 @@
 }
 .rcResultVal {
   font-family: var(--serif);
-  font-size: 36px;
+  font-size: var(--text-36);
   font-weight: 400;
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
@@ -723,12 +723,12 @@
 .modalTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
 }
 .modalClose {
-  width: 34px;
-  height: 34px;
+  width: 1.889em;
+  height: 1.889em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
@@ -779,7 +779,7 @@
     padding: 36px 0 0;
   }
   .body {
-    padding: 56px 0 72px;
+    padding: var(--section-y-56) 0 var(--section-y-72);
   }
   .modalRow2 {
     grid-template-columns: 1fr;

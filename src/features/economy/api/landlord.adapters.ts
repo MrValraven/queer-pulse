@@ -42,6 +42,8 @@ function recDtoToRecommendation(
   mySlug: string | undefined,
 ): Recommendation {
   return {
+    // The handle the per-recommendation report control is addressed by.
+    id: rec.id,
     initials: rec.initials, // server-computed from the DTO's own member ref
     name: rec.name,
     tint: rec.tint,
@@ -54,6 +56,11 @@ function recDtoToRecommendation(
     // so the withdraw control only appears on the reader's own rating. A DTO
     // with no member ref (a deleted account) belongs to nobody.
     isMine: Boolean(mySlug && rec.member?.slug === mySlug),
+    // `landlord_recommendations.author_user_id` is `ON DELETE SET NULL`, so a
+    // warning outlives its author and comes back with no member ref. That is
+    // the same shape a missing profile row produces, and it reads the same way
+    // on the page, so one flag covers both.
+    isAuthorRemoved: rec.member === null,
   };
 }
 

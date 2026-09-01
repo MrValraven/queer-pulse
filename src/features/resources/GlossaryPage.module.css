@@ -83,7 +83,7 @@
 .body {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 36px 28px 80px;
+  padding: 36px 28px var(--section-y-80);
 }
 .alphabet {
   display: flex;
@@ -92,8 +92,8 @@
   flex-wrap: wrap;
 }
 .alphabet a {
-  width: 30px;
-  height: 30px;
+  width: 2.4em; /* 30 / 12.5 */
+  height: 2.4em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,7 +159,7 @@
 .termName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -214,13 +214,13 @@
 }
 
 .noResults {
-  padding: 60px 0;
+  padding: var(--section-y-64) 0;
   text-align: center;
 }
 .noResults h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   margin-bottom: 8px;
 }
@@ -234,7 +234,7 @@
 .foot {
   background: var(--paper);
   border-top: 2px solid var(--line-strong);
-  padding: 60px 0;
+  padding: var(--section-y-64) 0;
   margin-top: 48px;
 }
 .footInner {
@@ -246,7 +246,7 @@
 .foot h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 10px;

@@ -1,7 +1,7 @@
 /* ── Hero ───────────────────────────────────────────────────────────── */
 .hero {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 56px;
+  padding: var(--section-y-64) 0 var(--section-y-56);
   position: relative;
   overflow: hidden;
 }
@@ -59,7 +59,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(48px, 7vw, 98px);
+  font-size: clamp(3rem, 7vw, 6.125rem);
   color: var(--text-strong);
   letter-spacing: -0.026em;
   line-height: 0.94;
@@ -127,7 +127,7 @@
 .actHead h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 42px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.018em;
 }
@@ -146,7 +146,7 @@
 
 /* ── Phases ─────────────────────────────────────────────────────────── */
 .phases {
-  padding: 64px 0 32px;
+  padding: var(--section-y-64) 0 32px;
 }
 .phaseRail {
   display: grid;
@@ -170,7 +170,7 @@
 .phaseNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 38px;
+  font-size: var(--text-38);
   color: rgba(var(--plum-rgb), 0.16);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -203,7 +203,7 @@
 
 /* ── Active co-ops ──────────────────────────────────────────────────── */
 .active {
-  padding: 48px 0;
+  padding: var(--section-y-48) 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .actHead {
@@ -253,7 +253,7 @@
 .ccTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.012em;
 }
@@ -373,8 +373,8 @@
   display: flex;
 }
 .av {
-  width: 26px;
-  height: 26px;
+  width: 2.6em;
+  height: 2.6em;
   border-radius: 50%;
   font-family: var(--serif);
   font-weight: 500;
@@ -444,7 +444,7 @@
 .coopEmpty {
   background: var(--plum);
   border-radius: var(--radius-20);
-  padding: 56px 40px;
+  padding: var(--section-y-56) 40px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -454,7 +454,7 @@
 .coopEmptyTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3.2vw, 34px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.016em;
   line-height: 1.15;
@@ -474,7 +474,7 @@
 
 /* ── Templates ──────────────────────────────────────────────────────── */
 .templates {
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
   background: rgba(var(--plum-rgb), 0.02);
 }
@@ -551,7 +551,7 @@
 
 /* ── Start CTA ──────────────────────────────────────────────────────── */
 .startCta {
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -596,7 +596,7 @@
 .scText h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.4vw, 52px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   line-height: 1.04;

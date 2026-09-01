@@ -1,7 +1,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   letter-spacing: -0.01em;
   color: var(--text-strong);
   margin: 0 0 6px;
@@ -41,7 +41,7 @@
 }
 .meterLabel {
   flex: none;
-  font-size: var(--text-12-5);
+  font-size: var(--text-label);
   font-weight: 600;
   color: var(--ink-60);
 }

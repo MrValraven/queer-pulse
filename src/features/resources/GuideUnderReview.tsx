@@ -44,7 +44,7 @@ export function GuideUnderReview() {
         <Button to={routes.guideIndex} variant="primary" size="lg">
           {t("resources:guide.underReview.indexCta")}
         </Button>
-        <Button to={routes.resources} variant="ghost" size="lg">
+        <Button to={routes.resources} variant="ghost-dark" size="lg">
           {t("resources:guide.underReview.libraryCta")}
         </Button>
       </Outro>

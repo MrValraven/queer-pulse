@@ -18,7 +18,7 @@
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--cream);
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   cursor: pointer;
 }
 .toolbar button:hover {

@@ -1,4 +1,5 @@
 import {
+  apiDelete,
   apiGet,
   apiGetNullable,
   apiPost,
@@ -131,6 +132,21 @@ export const getMyFlatmateProfile = () =>
 
 export const upsertFlatmateProfile = (body: UpsertFlatmateProfileBody) =>
   apiPut<FlatmateProfileDTO>("/flatmate-profiles/mine", body);
+
+/**
+ * DELETE /flatmate-profiles/mine — the member takes their own profile down.
+ * 204 with no body, and idempotent: deleting when there is nothing to delete
+ * still succeeds, so a double-confirm can never surface a spurious failure.
+ *
+ * What the row takes with it (verified against `FlatmateProfilesService.
+ * deleteMine` and the FK added by `AddMissingUserForeignKeysForErasure`): the
+ * profile itself with every special-category field on it, and every like/pass
+ * pointing at it (`flatmate_likes.to_profile_id` is `ON DELETE CASCADE`), which
+ * ends any mutual match. Conversations already opened by a "say hello" are
+ * ordinary DMs and are NOT touched. The take-down copy has to say both.
+ */
+export const deleteMyFlatmateProfile = () =>
+  apiDelete<void>("/flatmate-profiles/mine");
 
 /** Outcome of a say-hello. `pronounsShared` reflects whether the opt-in pronoun
  * pre-share actually took effect (only when the sender has consent-stored

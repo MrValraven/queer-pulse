@@ -205,7 +205,7 @@ export function AdminInvitesPage() {
       </FadeIn>
 
       {inviterOptions.length > 1 && (
-        <FadeIn delay={70}>
+        <FadeIn delay={70} className={styles.filterFade}>
           <div className={styles.filterBar}>
             <span className={styles.filterLabel} id="invite-inviter-label">
               {t("admin:adminInvites.filterByInviter")}

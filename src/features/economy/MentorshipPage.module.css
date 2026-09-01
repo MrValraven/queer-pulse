@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 88px;
+  padding: var(--section-y-64) 0 var(--section-y-88);
   position: relative;
   overflow: hidden;
 }
@@ -47,7 +47,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.8vw, 78px);
+  font-size: clamp(2.375rem, 5.8vw, 4.875rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -78,7 +78,7 @@
 }
 .msN {
   font-family: var(--serif);
-  font-size: 42px;
+  font-size: var(--text-42);
   font-weight: 400;
   color: var(--jade);
   letter-spacing: -0.03em;
@@ -91,7 +91,7 @@
 }
 
 .choose {
-  padding: 72px 0 0;
+  padding: var(--section-y-72) 0 0;
 }
 .secHead {
   margin-bottom: 36px;
@@ -99,7 +99,7 @@
 .secHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -143,13 +143,13 @@
   }
 }
 .ccIcon {
-  font-size: 36px;
+  font-size: var(--text-36);
   margin-bottom: 16px;
 }
 .ccTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 10px;
@@ -167,7 +167,7 @@
 }
 
 .mentorsStrip {
-  padding: 72px 0;
+  padding: var(--section-y-72) 0;
   background: var(--cream);
 }
 .mentorGrid {
@@ -210,8 +210,8 @@
   gap: 13px;
 }
 .mcAv {
-  width: 46px;
-  height: 46px;
+  width: 2.706em;
+  height: 2.706em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -313,7 +313,7 @@
   border-radius: var(--radius-28) var(--radius-28) 0 0;
   width: 100%;
   max-width: 580px;
-  padding: 32px 36px 48px;
+  padding: 32px 36px var(--section-y-48);
   /* svh, not vh: vh is the large viewport, so 90vh overflows under mobile
      browser chrome and pushes actions off-screen. */
   max-height: 90svh;
@@ -362,7 +362,7 @@
 .mmTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(20px, 3vw, 28px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.12;
@@ -463,21 +463,21 @@
   padding: 12px 0 8px;
 }
 .mmSuccessIcon {
-  width: 56px;
-  height: 56px;
+  width: 2.154em;
+  height: 2.154em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: var(--text-26);
   margin: 0 auto 18px;
 }
 .modalClose {
   position: absolute;
   top: 18px;
   right: 18px;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--ink-40);
   background: none;
   border: none;

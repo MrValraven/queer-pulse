@@ -1,7 +1,7 @@
 .hero {
   /* The nav band (80px) is now reserved once by `main[data-page-main]` in
      base.css; this padding is only the hero's own breathing room below it. */
-  padding: 60px 0 56px;
+  padding: var(--section-y-64) 0 var(--section-y-56);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .plum {
@@ -44,7 +44,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 76px);
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -80,7 +80,7 @@
   padding: 40px 0 36px;
 }
 .compact .title {
-  font-size: clamp(34px, 4.6vw, 58px);
+  font-size: var(--text-display);
   max-width: 20ch;
 }
 .compact .eyebrow {

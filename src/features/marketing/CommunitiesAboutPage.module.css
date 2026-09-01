@@ -21,7 +21,7 @@
 .sectionTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 46px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -125,7 +125,7 @@
   color: var(--accent-ink);
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   line-height: 1;
 }
 
@@ -182,7 +182,7 @@
   max-width: 26ch;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3.4vw, 40px);
+  font-size: clamp(1.5rem, 3.4vw, 2.5rem);
   line-height: 1.25;
   letter-spacing: -0.01em;
   color: var(--text-strong);

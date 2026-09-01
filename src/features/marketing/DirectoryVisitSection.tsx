@@ -14,6 +14,7 @@ import {
   DirectoryPlaceOnline,
 } from "./DirectoryPlaceLocation";
 import { DirectoryContactRows } from "./DirectoryContactRows";
+import { DirectoryMessageBusiness } from "./DirectoryMessageBusiness";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -21,6 +22,11 @@ interface Props {
   /** Moderation preview: the "back to directory" link doesn't render, matching
    *  how the rest of the page's navigation is inert there. */
   preview?: boolean;
+  /** The viewer's own ref for this listing, present only when they own it.
+   * Threaded solely so `DirectoryMessageBusiness` can skip its member-gated
+   * contact read for an owner, who has "Edit this listing" rather than an
+   * inbox of their own to write to. */
+  ownerRef?: string;
 }
 
 /**
@@ -42,7 +48,11 @@ interface Props {
  * action to the foot of the details column, and demotes "back to directory" to
  * a quiet link below the card, which is what a navigation escape hatch is.
  */
-export function DirectoryVisitSection({ place, preview = false }: Props) {
+export function DirectoryVisitSection({
+  place,
+  preview = false,
+  ownerRef,
+}: Props) {
   const { t } = useTranslation();
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
 
@@ -75,6 +85,15 @@ export function DirectoryVisitSection({ place, preview = false }: Props) {
               <DirectoryPlaceAddress place={place} />
             )}
             <DirectoryContactRows place={place} />
+            {/* The one contact route that stays inside QueerPulse. Last in the
+                list because the rows above are the business's own published
+                details, and first in usefulness whenever every one of them is
+                empty. */}
+            <DirectoryMessageBusiness
+              place={place}
+              preview={preview}
+              ownerRef={ownerRef}
+            />
             {(hasSavedSignal || primaryAction) && (
               <div className={s.visitFoot}>
                 {hasSavedSignal && (

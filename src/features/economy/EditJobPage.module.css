@@ -1,0 +1,136 @@
+/* The poster's edit form (PRD-44). Cream page, paper cards, one measured
+   column: the composer is a five-step wizard because posting is a first-time
+   task, whereas correcting a live listing is a scan-and-fix task, so every
+   field is on one page and the poster goes straight to the one that is wrong. */
+
+.page {
+  max-width: 820px;
+  margin-inline: auto;
+  padding-block: clamp(20px, 5vw, 40px);
+  padding-inline: clamp(16px, 4vw, 24px);
+}
+
+.head {
+  margin-block-end: 20px;
+}
+.eyebrow {
+  font-size: var(--text-13);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-block-end: 8px;
+}
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  color: var(--ink);
+  margin-block-end: 8px;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.sub {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  max-width: 56ch;
+}
+
+/* Says plainly that a save is quiet: no moderator queue, no notification to
+   anyone who already applied, so nobody hesitates over fixing a typo. */
+.quietNote {
+  margin-block-end: 18px;
+  padding: 12px 14px;
+  border-radius: var(--radius-14);
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 62ch;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 20px;
+  margin-block-end: 16px;
+}
+
+.cardTitle {
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  color: var(--ink);
+  margin-block-end: 14px;
+}
+
+.cardSub {
+  margin-block: 14px 10px;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* Fields sit side by side where they read as one decision (currency + range +
+   period, format + city + timezone) and stack on a phone. */
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0 14px;
+}
+
+.switches {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-block-start: 6px;
+}
+
+.checkGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.screeningRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.screeningField {
+  flex: 1;
+  min-width: 0;
+}
+
+.saveError {
+  margin-block-end: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.09);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-block-start: 6px;
+}
+
+@media (--md) {
+  .screeningRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .foot {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}

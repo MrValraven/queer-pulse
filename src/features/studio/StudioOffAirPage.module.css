@@ -1,6 +1,6 @@
 /* Off-air hero */
 .offairHero {
-  padding: 60px 30px 40px;
+  padding: var(--section-y-64) 30px 40px;
   position: relative;
   overflow: hidden;
 }
@@ -56,7 +56,7 @@
 .offairHero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 86px);
+  font-size: clamp(2.5rem, 6vw, 5.375rem);
   color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.03em;
   line-height: 0.98;
@@ -73,7 +73,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 0.6);
   line-height: 1.5;
   margin-top: 26px;
@@ -116,7 +116,7 @@
 .clockTime {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 46px;
+  font-size: var(--text-46);
   color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.02em;
   line-height: 0.9;
@@ -159,7 +159,7 @@
 .nsInfo h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.01em;
   line-height: 1.2;

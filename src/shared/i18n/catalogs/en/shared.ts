@@ -597,4 +597,8 @@ export const shared: Catalog = {
   "adminNav.items.housingGroupListings": "Group listings",
   "adminNav.items.landlords": "Landlords",
   "adminNav.items.volunteerHours": "Volunteer hours",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-49 — PRD-49 - the quiet marker on a meganav / mobile drawer / sidebar link whose destination is not launched yet (Cinema, Studio in live mode). Rendered by NavBuildBadge INSIDE the link, so it also becomes the tail of the link's accessible name: 'Cinema Being built'. Keep it short, uppercase-safe and free of any timing promise: it says the thing is under construction, never that it arrives soon or on a date.
+  "megaNav.beingBuilt": "Being built",
 };

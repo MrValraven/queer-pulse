@@ -145,6 +145,34 @@
   width: 14px;
   height: 14px;
 }
+/* Height-animated disclosure without measuring, the same shape the member
+   directory's filter sections use (`FilterSection`): the tray stays mounted
+   inside a 1-row grid whose track eases between 0fr (closed) and 1fr (its
+   content's height). It used to be conditionally mounted, so it appeared in a
+   single frame — 53 chips arriving at once, with nothing to tell the eye the
+   grid below had been pushed down rather than replaced. */
+.tagsPanelWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 0.28s var(--ease);
+}
+.tagsPanelWrapOpen {
+  grid-template-rows: 1fr;
+}
+/* The collapsing grid item. It carries no padding, border or background of its
+   own — those all live on `.tagsPanel` inside it, because any of them on the
+   item itself keeps a non-zero minimum height the 0fr track can't collapse
+   past, and a sliver of the tray peeks under the chip. */
+.tagsPanelClip {
+  overflow: hidden;
+  min-height: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tagsPanelWrap {
+    transition: none;
+  }
+}
 .tagsPanel {
   display: flex;
   flex-direction: column;
@@ -349,7 +377,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.15;
@@ -527,7 +555,7 @@
    instead of a solid one, and no coloured shoulder — just the plain paper
    card with its lock badge doing the telling. */
 .privateCard {
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.24);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.24);
 }
 .privateCard .shoulder {
   background: transparent;
@@ -569,7 +597,7 @@
   margin: 0 0 14px;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: var(--text-title);
   line-height: 1.08;
   letter-spacing: -0.02em;
 }

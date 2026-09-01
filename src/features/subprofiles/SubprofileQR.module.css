@@ -19,7 +19,7 @@
    the theme-following `.card` surface, since it is only text. */
 .symbol {
   background: rgba(var(--cream-rgb), 1);
-  border-color: rgba(var(--plum-rgb), 0.12);
+  border-color: rgba(var(--line-rgb), 0.12);
 }
 
 .card svg {
@@ -29,14 +29,14 @@
 
 .loadingHint,
 .fallbackHint {
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
 }
 
 .fallbackLink {
   max-width: 100%;
   overflow-wrap: anywhere;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--accent-text);
 }
 

@@ -48,6 +48,7 @@ export function CommunitiesRefinePanel({
     tagIds,
     setTagIds,
     categoryCounts,
+    tagCounts,
   } = discover;
 
   return (
@@ -110,7 +111,11 @@ export function CommunitiesRefinePanel({
         </RefineGroup>
       </RefineSplit>
 
-      <CommunitiesTagsFilter selectedTagIds={tagIds} onChange={setTagIds} />
+      <CommunitiesTagsFilter
+        selectedTagIds={tagIds}
+        onChange={setTagIds}
+        tagCounts={tagCounts}
+      />
     </RefinePanel>
   );
 }

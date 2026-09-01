@@ -252,4 +252,54 @@ export const culture: Catalog = {
     "The club picks, the commission board, the art showcase and community radio are still being built, and there is nothing published there yet. In the meantime the magazine is running, and our communities are where the scene is being organised.",
   "comingSoon.magazineCta": "Read the magazine",
   "comingSoon.communitiesCta": "Browse communities",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-46 — PRD-46 - the live commission-interest page carved out of the Culture coming-soon gate, plus the panel on CultureComingSoon that offers it. Success copy promises the admin queue and nothing else: QueerPulse sends no email and the backend has no commission_interest notification, so no reply of any kind reaches the member.
+  "commissionInterestPage.metaTitle": "Register interest in a commission",
+  "commissionInterestPage.metaDescription":
+    "Tell the culture team what you would like commissioned while the commission board is being built.",
+  "commissionInterestPage.hubLabel": "Culture",
+  "commissionInterestPage.eyebrow": "Commission board",
+  "commissionInterestPage.title": "Register interest in a <em>commission</em>",
+  "commissionInterestPage.intro":
+    "The commission board is still being built, so there is nothing to browse yet. What already works is this form: it records what you are looking for and who you would like to work with.",
+  "commissionInterestPage.introReach":
+    "Your submission goes to the culture team's queue, where an admin or an editorial staff member reads it. Nothing here is published, and nobody outside that team sees it.",
+  "commissionInterestPage.titleLabel": "What you would like commissioned",
+  "commissionInterestPage.titleHelper":
+    "A short description of the piece or project. For example: portraits for a Pride zine cover.",
+  "commissionInterestPage.categoryLabel": "Kind of work",
+  "commissionInterestPage.categoryHelper":
+    "The closest fit. The team reads the rest of your answers alongside it.",
+  "commissionInterestPage.recipientLabel": "Who you would like to work with",
+  "commissionInterestPage.recipientHelper":
+    "Name a maker or a collective. If nobody specific comes to mind, describe the kind of maker you are hoping for.",
+  "commissionInterestPage.messageLabel": "Anything else you want to add",
+  "commissionInterestPage.messageHelper":
+    "Optional. Budget, timing, references, or how you want to work.",
+  "commissionInterestPage.submitCta": "Register interest",
+  "commissionInterestPage.sending": "Sending",
+  "commissionInterestPage.error.title": "That did not go through.",
+  "commissionInterestPage.error.body":
+    "Your answers are still here. Check your connection and send it again.",
+  "commissionInterestPage.error.retryCta": "Try again",
+  "commissionInterestPage.success.title": "Interest",
+  "commissionInterestPage.success.em": "registered",
+  "commissionInterestPage.success.body":
+    "Your submission is saved, and it now sits in the queue the culture team reads.",
+  "commissionInterestPage.success.step1":
+    "The team sees what you wrote, along with your name on QueerPulse.",
+  "commissionInterestPage.success.step2":
+    "The commission board itself is still being built, so nothing you sent is published anywhere.",
+  "commissionInterestPage.success.step3":
+    "No reply is sent from here. QueerPulse sends no email and raises no notification for this, so there is nothing waiting in an inbox.",
+  "commissionInterestPage.success.backCta": "Back to Culture",
+  "commissionInterestPage.success.anotherCta": "Register another interest",
+  "comingSoon.commissions.title": "The commission board is being built",
+  "comingSoon.commissions.body":
+    "Nothing is published on it yet. You can still tell the culture team what you would like commissioned, and it goes straight to the queue they read.",
+  "comingSoon.commissions.cta": "Register interest",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-46 — PRD-46 - the live commission-interest page carved out of the Culture coming-soon gate, plus the panel on CultureComingSoon that offers it. Success copy promises the admin queue and nothing else: QueerPulse sends no email and the backend has no commission_interest notification, so no reply of any kind reaches the member.
 };

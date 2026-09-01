@@ -20,7 +20,7 @@
 .title {
   margin: 0 0 6px;
   font-family: var(--serif);
-  font-size: clamp(21px, 2.6vw, 27px);
+  font-size: clamp(1.3125rem, 2.6vw, 1.6875rem);
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--ink);
@@ -62,7 +62,7 @@
 
 .valueField input.valueInput {
   font-family: var(--serif);
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: var(--text-heading);
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--ink);

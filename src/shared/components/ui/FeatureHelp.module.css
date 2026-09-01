@@ -10,7 +10,7 @@
   height: 1.5em;
   margin-left: 0.5rem;
   padding: 0;
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   /* Derive every colour from `currentColor` — the adjacent heading's text
      colour, which is always legible on whatever surface it sits on. A fixed
      token (the old --plum-rgb) can't know it's on a dark-ground skin (stage,

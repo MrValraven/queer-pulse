@@ -65,7 +65,7 @@
 .headTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.6vw, 38px);
+  font-size: clamp(1.625rem, 3.6vw, 2.375rem);
   letter-spacing: -0.02em;
   color: var(--text-strong);
   line-height: 1.1;
@@ -104,7 +104,7 @@
 .cardTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   margin: 0;
 }
@@ -439,7 +439,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 32px;
+  min-height: 2.667em; /* 32 / 12 */
   padding: 0 10px;
   border-radius: var(--radius-9);
   border: 1.5px solid rgba(var(--line-rgb), 0.16);

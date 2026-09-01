@@ -40,7 +40,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(36px, 5vw, 52px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -218,6 +218,95 @@
 .tintD {
   background: rgba(var(--accent-rgb), 0.3);
 }
+/* Live album: the tile is a frame, so the photo link and the take-down control
+   can sit side by side. A button inside an anchor is not valid HTML, so the
+   link fills the frame and the control layers over it. */
+.picLink {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: inherit;
+  overflow: hidden;
+}
+/* The control sits on a photograph, so it carries its own ground rather than
+   relying on ink tokens over an unknown image. Cream ground + plum ink are the
+   non-flipping channels, so the icon stays visible in both themes; the border
+   keeps the edge readable over a pale photo. Specificity is deliberate
+   (`.pic .removePhoto`): it has to beat the shared Button variant regardless
+   of stylesheet order.
+
+   THE BORDER IS DRAWN FROM `currentColor`, WHICH IS THE CHIP'S OWN INK, and
+   that is load bearing. The usual hairline channel `--line-rgb` flips to
+   `247, 243, 238` in dark mode, and `--cream-rgb` is the SAME `247, 243, 238`
+   and never flips (colors.css: "NOT theme-switched"). So a `--line-rgb` border
+   on this chip paints cream on cream in dark mode and disappears. That is the
+   mirror image of the bug the token rule exists to stop, and it catches a
+   plum-on-cream chip precisely because the chip supplies its own ground rather
+   than sitting on a theme surface. Deriving the border from `currentColor`
+   also means it can never drift from the icon it outlines. */
+.pic .removePhoto {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
+  color: var(--plum);
+  background: rgba(var(--cream-rgb), 0.85);
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  backdrop-filter: var(--blur-sm);
+}
+@media (hover: hover) {
+  .pic .removePhoto:hover:not(:disabled) {
+    background: rgba(var(--cream-rgb), 1);
+    color: var(--accent-ink);
+  }
+}
+
+/* Report control on a photo tile, opposite corner to the take-down control so
+   the two never read as one pair of buttons. Same two rules as `.removePhoto`:
+   it sits on a photograph, so it carries its own ground out of the channels
+   that do NOT flip between themes (cream ground, plum ink) rather than trusting
+   an ink token over an unknown image; and it is permanently visible rather than
+   hover-revealed, because a hover-only control does not exist on a touch screen
+   and this is the affordance someone reaches for the moment they find a
+   photograph of themselves in an album.
+
+   `ReportSubjectControl` takes no className, so the chip is this wrapper and
+   the rules below reset the control's own aside-sized spacing and ink: it is
+   written for a cream aside, where `--ink-40` is legible and 13px of vertical
+   padding IS the tap target. Here the chip owns the tap target and the ink is
+   pinned to plum. Specificity is deliberate (`.pic .reportPhoto ...`): it has
+   to beat that module regardless of stylesheet order. */
+.pic .reportPhoto {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  z-index: 1;
+  display: flex;
+  border-radius: var(--radius-pill);
+  /* Pinned on the WRAPPER, not only on the inner button, because the border
+     below is drawn from `currentColor`. Left to inherit, it would pick up the
+     surrounding theme ink, which flips, and the border would go back to being
+     cream on cream in dark mode. The inner button inherits this too. */
+  color: var(--plum);
+  background: rgba(var(--cream-rgb), 0.85);
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  backdrop-filter: var(--blur-sm);
+  overflow: hidden;
+}
+.pic .reportPhoto > * {
+  padding-top: 0;
+}
+.pic .reportPhoto button {
+  padding: 10px 12px;
+  font-size: var(--text-11);
+  color: var(--plum);
+}
+@media (hover: hover) {
+  .pic .reportPhoto button:hover {
+    color: var(--accent-ink);
+  }
+}
+
 .tag {
   position: absolute;
   top: 10px;
@@ -242,7 +331,7 @@
 .foot {
   background: var(--paper);
   border-top: 2px solid var(--line-strong);
-  padding: 48px 0;
+  padding: var(--section-y-48) 0;
 }
 .footInner {
   max-width: 780px;
@@ -252,7 +341,7 @@
 .foot h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 12px;
@@ -306,8 +395,8 @@
   text-decoration: none;
 }
 .pillAv {
-  width: 22px;
-  height: 22px;
+  width: 2.316em; /* 22 / 9.5 */
+  height: 2.316em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.14);
   color: var(--accent-ink);

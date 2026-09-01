@@ -1,5 +1,5 @@
 .hero {
-  padding: 148px 0 64px;
+  padding: var(--section-y-144) 0 var(--section-y-64);
   text-align: center;
 }
 .eb {
@@ -23,7 +23,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 5.5vw, 72px);
+  font-size: clamp(2.375rem, 5.5vw, 4.5rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -43,7 +43,7 @@
 }
 
 .tiers {
-  padding: 16px 0 88px;
+  padding: 16px 0 var(--section-y-88);
 }
 .tiersGrid {
   display: grid;
@@ -89,7 +89,7 @@
 .tierName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }
@@ -106,7 +106,7 @@
 .amount {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 40px;
+  font-size: var(--text-40);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -176,7 +176,7 @@
 }
 
 .pays {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
   background: var(--cream);
 }
 .paysH {
@@ -186,7 +186,7 @@
 .paysH h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.6vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -258,7 +258,7 @@
 .pcNum {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 34px;
+  font-size: var(--text-34);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -273,7 +273,7 @@
 }
 
 .ledger {
-  padding: 80px 0 100px;
+  padding: var(--section-y-80) 0 var(--section-y-104);
 }
 .ledgerLabel {
   text-align: center;
@@ -304,7 +304,7 @@
 .ls .v {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 38px;
+  font-size: var(--text-38);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;

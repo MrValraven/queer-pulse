@@ -120,6 +120,55 @@ export interface CreateJobDto {
   agreement: boolean;
 }
 
+/**
+ * PATCH /jobs/:slug body. Every field is optional and the backend only writes
+ * the ones that are present, so an edit form sends the whole set it owns and a
+ * field it never showed stays untouched.
+ *
+ * Two rules the backend enforces that this type encodes:
+ *  - `forbidNonWhitelisted` is on globally, so a key that is not part of
+ *    `CreateJobDto` rejects the WHOLE request with a 400. Never spread extra
+ *    view-model fields in here.
+ *  - `null` clears a nullable column (class-validator's `@IsOptional()` skips
+ *    validation for `null`, and the service maps `value ?? null` onto the
+ *    row). `undefined` is dropped by `JSON.stringify` and means "leave alone",
+ *    which is NOT the same thing: an emptied email has to be sent as `null`,
+ *    because `""` would fail `@IsEmail`.
+ *
+ * `companySlug` / `company` / `agreement` are deliberately absent: the backend
+ * accepts them for compatibility but `JobsService.update` never reads them, so
+ * a job's company affiliation is fixed at creation. `queerRun` / `qrLabel` are
+ * derived from the company at creation and are not the poster's to edit here.
+ */
+export interface UpdateJobDto {
+  title?: string;
+  category?: string;
+  commitment?: string;
+  seniority?: string;
+  format?: JobFormat;
+  location?: string;
+  city?: string | null;
+  timezone?: string | null;
+  description?: string;
+  deadline?: string | null;
+  startDate?: string | null;
+  salary?: string | null;
+  rateMin?: number | null;
+  rateMax?: number | null;
+  currency?: string | null;
+  ratePer?: string | null;
+  hidePay?: boolean;
+  barter?: boolean;
+  benefits?: string[];
+  inclusivity?: string[];
+  tags?: string[];
+  screening?: string[];
+  contacts?: string[];
+  email?: string | null;
+  link?: string | null;
+  detail?: JobDetailBody;
+}
+
 export interface CreateJobApplicationDto {
   answers: JobApplicationAnswer[];
   coverNote?: string;
@@ -153,6 +202,45 @@ export const createJob = (dto: CreateJobDto) =>
 
 export const closeJob = (slug: string) =>
   apiPost<JobDetailDTO>(`/jobs/${slug}/close`);
+
+/**
+ * GET /me/jobs returns the caller's OWN postings, newest first, in the same
+ * `JobCardDTO` shape and the same page-number envelope as the public board.
+ * Scoped to `posterId` server-side, and deliberately NOT moderation-filtered:
+ * a takedown withholds a job from the public grid, the poster still manages it
+ * here. Backs the poster's "jobs you posted" index (PRD-44), which until now
+ * had no caller at all, leaving a poster with no way back to a listing whose
+ * slug they no longer held.
+ */
+export async function getMyJobs(
+  params: { page?: number } = {},
+  signal?: AbortSignal,
+) {
+  const query = new URLSearchParams();
+  if (params.page) query.set("page", String(params.page));
+  const queryString = query.toString();
+  const res = await apiGet<JobCardDTO[] | Paginated<JobCardDTO>>(
+    `/me/jobs${queryString ? `?${queryString}` : ""}`,
+    undefined,
+    undefined,
+    signal,
+  );
+  return toItemsPage(res);
+}
+
+/**
+ * PATCH /jobs/:slug lets the poster correct their own listing (PRD-44). 403 for
+ * anyone who is not the poster, 404 for an unknown slug, 400 for a field the
+ * validators refuse.
+ *
+ * The slug is STABLE across an update: `JobsService.update` writes the changed
+ * columns and never re-runs `allocateUniqueSlug`, so renaming the role keeps
+ * the same URL and the form can navigate straight back to the detail page it
+ * came from. Editing also does not re-open moderation and sends no
+ * notification, so a fixed typo is a quiet save.
+ */
+export const updateJob = (slug: string, dto: UpdateJobDto) =>
+  apiPatch<JobDetailDTO>(`/jobs/${slug}`, dto);
 
 export const applyToJob = (slug: string, dto: CreateJobApplicationDto) =>
   apiPost<JobApplicationDTO>(`/jobs/${slug}/applications`, dto);

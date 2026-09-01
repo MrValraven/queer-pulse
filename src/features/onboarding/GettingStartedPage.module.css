@@ -41,7 +41,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 6vw, 38px);
+  font-size: clamp(1.75rem, 6vw, 2.375rem);
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--ink);
@@ -108,8 +108,12 @@
 }
 .levelDial {
   position: relative;
-  width: 108px;
-  height: 108px;
+  /* The dial, its ring mask and the numeral it frames are all expressed against
+     one font-size so they scale together. 3em = 108px at the default root, so
+     nothing moves until a reader raises their browser font size. */
+  font-size: var(--text-36);
+  width: 3em; /* 108 / 36 */
+  height: 3em;
   display: grid;
   place-items: center;
 }
@@ -124,15 +128,15 @@
   );
   -webkit-mask: radial-gradient(
     circle,
-    transparent 0 40px,
-    #000 40px 50px,
-    transparent 50px
+    transparent 0 1.111em,
+    #000 1.111em 1.389em,
+    transparent 1.389em
   );
   mask: radial-gradient(
     circle,
-    transparent 0 40px,
-    #000 40px 50px,
-    transparent 50px
+    transparent 0 1.111em,
+    #000 1.111em 1.389em,
+    transparent 1.389em
   );
   transition: background 1.1s var(--ease);
 }
@@ -144,7 +148,7 @@
   display: block;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 36px;
+  font-size: var(--text-36);
   line-height: 0.9;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
@@ -418,7 +422,7 @@
 .questsTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(22px, 5vw, 28px);
+  font-size: var(--text-heading);
   letter-spacing: -0.01em;
   color: var(--ink);
   margin: 8px 0 8px;

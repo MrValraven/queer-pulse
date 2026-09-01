@@ -9,7 +9,7 @@
 .head {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 23px;
+  font-size: var(--text-23);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: var(--gap-sm);
@@ -61,7 +61,7 @@
   width: 18px;
   height: 18px;
   border-radius: var(--radius-5);
-  border: 1.6px solid rgba(var(--plum-rgb), 0.24);
+  border: 1.6px solid rgba(var(--line-rgb), 0.24);
   flex: none;
   margin-top: 3px;
   display: grid;
@@ -145,7 +145,7 @@
 }
 
 .empty {
-  padding: 60px 20px;
+  padding: var(--section-y-64) 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -156,7 +156,7 @@
 
 .empty h3 {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   font-weight: 400;
   color: var(--plum);
 }

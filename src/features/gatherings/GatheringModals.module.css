@@ -84,8 +84,8 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 36px;
-  height: 36px;
+  width: 2em; /* 36 / 18 */
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
@@ -114,7 +114,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(21px, 3vw, 28px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.12;
@@ -181,21 +181,21 @@
   }
 }
 .successIcon {
-  width: 56px;
-  height: 56px;
+  width: 2.154em; /* 56 / 26 */
+  height: 2.154em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--jade);
-  font-size: 26px;
+  font-size: var(--text-26);
   margin-bottom: 20px;
 }
 .successTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(24px, 4vw, 32px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.1;
@@ -224,8 +224,8 @@
   position: absolute;
   top: 18px;
   right: 18px;
-  width: 36px;
-  height: 36px;
+  width: 2em; /* 36 / 18 */
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
@@ -254,7 +254,8 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   /* Clear the iOS home indicator on the flush-to-bottom sheet. */
-  padding: 48px 38px max(48px, env(safe-area-inset-bottom));
+  padding: var(--section-y-48) 38px
+    max(var(--section-y-48), env(safe-area-inset-bottom));
   text-align: center;
   /* Upward-cast sheet shadow (separates the bottom sheet from the page above
      it); shape stays directional rather than snapping to a downward
@@ -267,7 +268,7 @@
     max-width: 520px;
     max-height: none;
     border-radius: var(--radius-card, 22px);
-    padding: 48px 38px;
+    padding: var(--section-y-48) 38px;
     box-shadow: none;
   }
 }
@@ -298,7 +299,7 @@
 .loadingTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(20px, 3vw, 25px);
+  font-size: clamp(1.25rem, 3vw, 1.5625rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   margin-bottom: 8px;

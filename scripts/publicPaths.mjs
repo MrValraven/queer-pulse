@@ -91,6 +91,10 @@ export const GATED_PATTERNS = [
   "/spaces-map",
   "/cinema/watch",
   "/cinema/membership",
+  // Culture's commission-interest form. The Culture landing page is public and
+  // unlaunched; this one child route is a live member action behind
+  // ActiveMemberGuard, so it is gated. Mirrors authGate.ts.
+  "/magazine/culture/commission-interest",
 ];
 
 /** Public escape hatches that fall inside a gated prefix (the studio shopfront). */

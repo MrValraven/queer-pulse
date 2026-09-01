@@ -11,7 +11,7 @@
 }
 
 .hero {
-  padding: 180px 0 100px;
+  padding: var(--section-y-180) 0 var(--section-y-104);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -53,7 +53,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(44px, 7vw, 88px);
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
   line-height: 0.98;
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
@@ -65,7 +65,7 @@
   color: var(--accent);
 }
 .lead {
-  font-size: clamp(16px, 1.6vw, 19px);
+  font-size: clamp(1rem, 1.6vw, 1.1875rem);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 28px;
@@ -74,7 +74,7 @@
 }
 
 .howSection {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
   background: var(--cream);
 }
 .secHead {
@@ -88,7 +88,7 @@
 .secHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -123,7 +123,7 @@
 }
 .howN {
   font-family: var(--serif);
-  font-size: 48px;
+  font-size: var(--text-48);
   font-weight: 300;
   color: var(--accent);
   line-height: 1;
@@ -143,7 +143,7 @@
 }
 
 .reviewsSection {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
   background: var(--paper);
 }
 .companyGrid {
@@ -168,8 +168,8 @@
   gap: 12px;
 }
 .coAv {
-  width: 44px;
-  height: 44px;
+  width: 2.75em;
+  height: 2.75em;
   border-radius: var(--radius-12);
   display: flex;
   align-items: center;
@@ -182,7 +182,7 @@
 .coName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -197,7 +197,7 @@
 }
 .coNum {
   font-family: var(--serif);
-  font-size: 32px;
+  font-size: var(--text-32);
   font-weight: 400;
   color: var(--jade);
   letter-spacing: -0.02em;
@@ -290,8 +290,8 @@
 .verifyIcon {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 2.111em;
+  height: 2.111em;
   border-radius: var(--radius-11);
   background: rgba(var(--jade-rgb), 0.12);
   color: var(--jade);
@@ -301,7 +301,7 @@
 .verifyHead h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -350,7 +350,7 @@
 .writeBox h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -446,4 +446,59 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+/* ===== The employer's reply under a review (PRD-47) ===== */
+/* Same block the company page uses, so the subject answering a review reads
+   identically wherever it appears. Built on --line-rgb / --line-strong, which
+   flip between themes, rather than the plum channels, which do not. */
+.employerReply {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: rgba(var(--line-rgb), 0.06);
+  border-inline-start: 3px solid var(--line-strong);
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
+}
+.employerReplyHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+/* The label doing the work: this is the EMPLOYER speaking, not a reviewer. */
+.employerReplyTitle {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: var(--text-12-5);
+  color: var(--text-strong);
+}
+.employerReplyDate {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  flex: none;
+}
+.employerReplyText {
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  text-wrap: pretty;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+/* The reviewer changed their words after the employer replied. */
+.employerReplyStale {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 8px;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.employerReplyStale svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 2px;
 }

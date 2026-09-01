@@ -1,7 +1,7 @@
 /* ── Hero ─────────────────────────────────────────────────────────── */
 .hero {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 48px 0 64px;
+  padding: var(--section-y-48) 0 var(--section-y-64);
   position: relative;
   overflow: hidden;
 }
@@ -36,7 +36,7 @@
 .heroH {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(46px, 7vw, 92px);
+  font-size: var(--text-hero);
   color: var(--text-strong);
   letter-spacing: -0.026em;
   line-height: 0.94;
@@ -65,7 +65,7 @@
 .who {
   padding: 10px 16px;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-pill);
   font-size: var(--text-13-5);
   color: var(--text-strong);
@@ -78,7 +78,7 @@
 }
 @media (hover: hover) {
   .who:hover {
-    border-color: rgba(var(--plum-rgb), 0.28);
+    border-color: rgba(var(--line-rgb), 0.28);
   }
 }
 .whoOn {
@@ -94,7 +94,7 @@
 .sHead h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.8vw, 42px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.018em;
 }
@@ -116,8 +116,8 @@
 
 /* ── Start here ───────────────────────────────────────────────────── */
 .start {
-  padding: 64px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  padding: var(--section-y-64) 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .lessons {
   display: grid;
@@ -132,7 +132,7 @@
 .lesson {
   display: block;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-18);
   padding: 24px 26px;
   text-decoration: none;
@@ -157,7 +157,7 @@
 .lessonN {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: rgba(var(--plum-rgb), 0.16);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -191,7 +191,7 @@
 .lessonMeta {
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px dashed rgba(var(--plum-rgb), 0.12);
+  border-top: 1px dashed rgba(var(--line-rgb), 0.12);
   font-size: var(--text-11-5);
   color: var(--ink-40);
   display: flex;
@@ -200,9 +200,9 @@
 
 /* ── Common questions (FAQ) ───────────────────────────────────────── */
 .questions {
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
   background: rgba(var(--plum-rgb), 0.03);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .qList {
   display: flex;
@@ -211,7 +211,7 @@
 }
 .qItem {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-14);
   overflow: hidden;
 }
@@ -260,7 +260,7 @@
   font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.7;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .qA em {
   font-style: italic;
@@ -272,8 +272,8 @@
 
 /* ── Support rooms ────────────────────────────────────────────────── */
 .groups {
-  padding: 64px 0;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.1);
+  padding: var(--section-y-64) 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .grGrid {
   display: grid;
@@ -287,7 +287,7 @@
 }
 .gr2 {
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-18);
   padding: 24px 26px;
   display: flex;
@@ -301,7 +301,7 @@
 }
 @media (hover: hover) {
   .gr2:hover {
-    border-color: rgba(var(--plum-rgb), 0.24);
+    border-color: rgba(var(--line-rgb), 0.24);
     box-shadow: var(--shadow-lift);
   }
 }
@@ -338,13 +338,13 @@
 .grArrow {
   flex-shrink: 0;
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--accent);
 }
 
 /* ── Don't say / Do say ───────────────────────────────────────────── */
 .dont {
-  padding: 64px 0;
+  padding: var(--section-y-64) 0;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -380,7 +380,7 @@
 .dontInner h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 4vw, 46px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
 }

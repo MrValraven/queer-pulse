@@ -14,7 +14,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -149,7 +149,7 @@
 .success h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 34px;
+  font-size: var(--text-34);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.08;

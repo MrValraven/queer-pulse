@@ -2,7 +2,7 @@
   max-width: var(--maxw-page);
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 28px 80px;
+  padding: 28px 28px var(--section-y-80);
 }
 .head {
   padding-bottom: 32px;
@@ -25,7 +25,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 5vw, 60px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -45,7 +45,7 @@
 .counter {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -55,7 +55,7 @@
   color: var(--accent);
 }
 .counterSent {
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--ink-40);
 }
 .counterL {
@@ -298,8 +298,8 @@
   }
 }
 .appLogo {
-  width: 56px;
-  height: 56px;
+  width: 2.8em;
+  height: 2.8em;
   border-radius: var(--radius-14);
   background: rgba(var(--accent-rgb), 0.1);
   display: flex;

@@ -46,7 +46,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.4vw, 42px);
+  font-size: var(--text-title);
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--text-strong);
@@ -498,7 +498,7 @@
 .spotName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3vw, 38px);
+  font-size: var(--text-title);
   line-height: 1.03;
   letter-spacing: -0.02em;
   color: var(--text-strong);
@@ -739,8 +739,8 @@
   display: inline-flex;
 }
 .face {
-  width: 32px;
-  height: 32px;
+  width: 2.909em; /* 32 / 11 */
+  height: 2.909em;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
@@ -772,17 +772,22 @@
   background: rgba(var(--plum-rgb), 0.1);
   color: var(--ink-60);
   font-size: var(--text-10);
+  /* Restated because .face's em box is measured against --text-11 and this
+     chip drops to --text-10; 3.2em keeps it the same 32px circle as its
+     siblings at any root size. */
+  width: 3.2em; /* 32 / 10 */
+  height: 3.2em;
 }
 .quoteBy .face {
-  width: 24px;
-  height: 24px;
+  width: 2.4em; /* 24 / 10 */
+  height: 2.4em;
   font-size: var(--text-10);
   border-width: 0;
   margin-left: 0;
 }
 .host .face {
-  width: 30px;
-  height: 30px;
+  width: 2.727em; /* 30 / 11 */
+  height: 2.727em;
   border-width: 0;
   margin-left: 0;
 }
@@ -845,7 +850,7 @@
 .spotEmpty h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
 }
 .spotEmpty p {

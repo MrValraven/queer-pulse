@@ -61,12 +61,12 @@
 }
 
 .body {
-  padding: 24px 0 80px;
+  padding: 24px 0 var(--section-y-80);
 }
 .secTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.018em;
   margin: 36px 0 18px;
@@ -95,8 +95,8 @@
   }
 }
 .icon {
-  width: 46px;
-  height: 46px;
+  width: 3.286em;
+  height: 3.286em;
   border-radius: var(--radius-12);
   display: flex;
   align-items: center;

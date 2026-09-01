@@ -2,7 +2,7 @@
   max-width: var(--maxw-page);
   margin: 0 auto;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 28px 28px 80px;
+  padding: 28px 28px var(--section-y-80);
 }
 .head {
   padding-bottom: 24px;
@@ -25,7 +25,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 5vw, 52px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -117,7 +117,7 @@
 .ic {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 38px;
+  font-size: var(--text-38);
   color: var(--accent);
   line-height: 1;
   letter-spacing: -0.02em;
@@ -125,7 +125,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -229,14 +229,14 @@
   }
 }
 .plus {
-  width: 42px;
-  height: 42px;
+  width: 1.909em;
+  height: 1.909em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   font-weight: 300;
 }
@@ -303,8 +303,8 @@
   }
 }
 .recentKind {
-  width: 30px;
-  height: 30px;
+  width: 3em;
+  height: 3em;
   border-radius: var(--radius-7);
   display: flex;
   align-items: center;

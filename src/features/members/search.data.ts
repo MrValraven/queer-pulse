@@ -624,7 +624,15 @@ export const RECENTS = [
   "sublet arroios",
   "documentary composer",
 ];
-export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
+export interface SearchTab {
+  id: ResultType | "all";
+  labelKey: string;
+}
+
+/** The full category taxonomy: one tab per result type, plus the merged "all"
+ *  view. This is the DEMO tab strip verbatim, because the demo corpus fills
+ *  every one of these. Live mode narrows it through `visibleSearchTabs`. */
+export const TABS: SearchTab[] = [
   { id: "all", labelKey: "members:search.type.all" },
   { id: "member", labelKey: "members:search.type.member" },
   { id: "community", labelKey: "members:search.type.community" },
@@ -647,6 +655,38 @@ export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
  *  `api/useSearchData.ts`'s `isLiveSearchType` and `api/search.api.ts`'s
  *  `LiveResultType`. */
 export const NO_LIVE_SEARCH_TYPES = new Set<ResultType>(["page", "board"]);
+
+/**
+ * The tab strip live search should show, given the result types the backend
+ * says it can currently answer with (`GET /search/types`, via
+ * `api/useSearchTypes.ts`).
+ *
+ * A result type whose feature is closed is queried for nothing and returns
+ * nothing, so its tab could only ever show the empty state. To a member that
+ * reads as "your query found nothing" when the truth is "this surface is not
+ * open", which is the same silent failure as an outage dressed up as zero
+ * results. Rather than keep a hand-written list of what is closed beside the
+ * taxonomy it mirrors, and let the two drift, the answer comes from the
+ * backend and this filters against it.
+ *
+ * `launchedTypes` is `null` when that answer is not known yet: still in
+ * flight, or the request failed. The strip then keeps only the tabs that
+ * stand on no backend feature at all, so nothing it shows can be wrong:
+ * "all" is a view rather than a type, and `NO_LIVE_SEARCH_TYPES` are the
+ * client-side rows (static navigation shortcuts) that no flag governs.
+ *
+ * Demo mode does not call this: its corpus fills every tab, so it renders
+ * `TABS` whole.
+ */
+export function visibleSearchTabs(
+  launchedTypes: readonly ResultType[] | null,
+): SearchTab[] {
+  return TABS.filter((tabOption) => {
+    if (tabOption.id === "all") return true;
+    if (NO_LIVE_SEARCH_TYPES.has(tabOption.id)) return true;
+    return launchedTypes !== null && launchedTypes.includes(tabOption.id);
+  });
+}
 
 /** Mirrors the backend's `PER_TYPE_LIMIT` (`search.service.ts`) — the number
  *  of hits a type returns before it's "at cap" on the unfiltered, all-types

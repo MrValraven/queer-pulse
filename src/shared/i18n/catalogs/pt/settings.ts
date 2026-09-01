@@ -1147,4 +1147,72 @@ export const settings: Catalog = {
   "accountData.dsar.cta": "Abrir o formulário",
   "accountData.note":
     "Cada um destes abre numa página completa, para leres exatamente o que faz antes de avançares.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-48-FE — PRD-48 - the member's own submissions index at /account/submissions (MySubmissionsPage), plus the Settings > Account card that leads to it. Three intakes on one page: partner applications, swap proposals sent, resource suggestions. Each keeps its own status vocabulary on purpose. `resource.status.archived` is queue tidying rather than a verdict, so its copy must never read as a refusal. Nothing here may promise an email: QueerPulse sends none.
+  "account.submissions.title": "O que enviaste",
+  "account.submissions.desc":
+    "Candidaturas a parceria, propostas de troca e sugestões de recursos, cada uma com o ponto de situação e a decisão.",
+  "account.submissions.cta": "Abrir as tuas submissões",
+  "mySubmissions.backToAccount": "Conta",
+  "mySubmissions.eyebrow": "A tua conta · Submissões",
+  "mySubmissions.h1": "O que <em>enviaste</em>, e no que deu.",
+  "mySubmissions.lead":
+    "Tudo o que submeteste para alguém rever, e o ponto de situação de cada coisa. As respostas chegam aqui e às tuas notificações. A QueerPulse não envia email, por isso é nesta página que a decisão fica depois de limpares o sino.",
+  "mySubmissions.footNote":
+    "Só aparecem aqui as submissões que passam por uma fila de revisão. As publicações, encontros e anúncios que publicas ficam logo online, por isso não há nada a aguardar.",
+  "mySubmissions.emptyAll.title": "Ainda não enviaste nada",
+  "mySubmissions.emptyAll.description":
+    "Candidata uma organização a parceira, propõe uma troca na bolsa de competências ou sugere uma entrada para o diretório de recursos, e passa a aparecer aqui com a respetiva resposta.",
+  "mySubmissions.row.sentOn": "Enviado a {date}",
+  "mySubmissions.row.decidedOn": "Respondido a {date}",
+  "mySubmissions.partner.heading": "Candidaturas a parceria",
+  "mySubmissions.partner.kind": "Candidatura a parceria",
+  "mySubmissions.partner.status.pending": "Com a equipa de parcerias",
+  "mySubmissions.partner.status.approved": "Aprovada",
+  "mySubmissions.partner.status.rejected": "Não aprovada",
+  "mySubmissions.partner.noteLabel": "Da equipa de parcerias",
+  "mySubmissions.partner.noReason":
+    "Não ficou registada nenhuma razão para esta.",
+  "mySubmissions.partner.empty.title": "Sem candidaturas a parceria",
+  "mySubmissions.partner.empty.description":
+    "Ainda não candidataste nenhuma organização a parceira da QueerPulse.",
+  "mySubmissions.partner.error.title":
+    "Não conseguimos carregar as tuas candidaturas a parceria",
+  "mySubmissions.partner.error.description":
+    "O resto desta página continua a funcionar. Tenta esta secção outra vez.",
+  "mySubmissions.barter.heading": "Propostas de troca que enviaste",
+  "mySubmissions.barter.kind": "Proposta de troca",
+  "mySubmissions.barter.status.pending": "Com quem publicou",
+  "mySubmissions.barter.status.accepted": "Aceite por quem publicou",
+  "mySubmissions.barter.status.declined": "Recusada por quem publicou",
+  "mySubmissions.barter.listingGone": "Esta troca já não está no quadro",
+  "mySubmissions.barter.editedAfter":
+    "Quem publicou alterou esta troca depois de a tua oferta ter seguido, por isso pode já não dizer o mesmo que dizia quando propuseste.",
+  "mySubmissions.barter.link": "Abrir as tuas trocas",
+  "mySubmissions.barter.empty.title": "Sem propostas de troca",
+  "mySubmissions.barter.empty.description":
+    "Ainda não ofereceste uma troca no anúncio de outra pessoa.",
+  "mySubmissions.barter.error.title":
+    "Não conseguimos carregar as tuas propostas de troca",
+  "mySubmissions.barter.error.description":
+    "O resto desta página continua a funcionar. Tenta esta secção outra vez.",
+  "mySubmissions.resource.heading": "Recursos que sugeriste",
+  "mySubmissions.resource.kind": "Sugestão de recurso",
+  "mySubmissions.resource.status.pending": "A aguardar revisão",
+  "mySubmissions.resource.status.approved": "Adicionado ao diretório",
+  "mySubmissions.resource.status.declined": "Não adicionado",
+  "mySubmissions.resource.status.archived": "Fechado sem decisão",
+  "mySubmissions.resource.archivedNote":
+    "Ninguém recusou isto. A fila fechou a sugestão sem chegar a decidir, normalmente porque o recurso já está listado ou porque a sugestão ficou desatualizada.",
+  "mySubmissions.resource.noteLabel": "De quem reviu",
+  "mySubmissions.resource.noReason":
+    "Não ficou registada nenhuma razão para esta.",
+  "mySubmissions.resource.empty.title": "Sem sugestões de recursos",
+  "mySubmissions.resource.empty.description":
+    "Ainda não sugeriste nenhuma entrada para o diretório de recursos.",
+  "mySubmissions.resource.error.title":
+    "Não conseguimos carregar as tuas sugestões de recursos",
+  "mySubmissions.resource.error.description":
+    "O resto desta página continua a funcionar. Tenta esta secção outra vez.",
 };

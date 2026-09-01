@@ -89,7 +89,7 @@
   position: relative;
   background: var(--cream);
   min-height: 100%;
-  padding-bottom: 80px;
+  padding-bottom: var(--section-y-80);
   /* Establishes the containment context every `@container` query below (and
      `.pp-cover`'s `cqw` unit above) queries against — without it those
      queries are dead and this page never responds on mobile/tablet. Safe
@@ -239,10 +239,10 @@
    (border, box-shadow, and the stage skin's `--sk-tint` background) paints a
    SQUARE around the round avatar — the stray coral corners + square shadow. */
 .pp-av {
-  width: 112px;
-  height: 112px;
-  font-size: 34px;
-  margin-top: -58px;
+  width: 3.294em; /* 112 / 34 */
+  height: 3.294em;
+  font-size: var(--text-34);
+  margin-top: -1.706em; /* -58 / 34 */
   border: 5px solid var(--cream);
   box-shadow: var(--shadow-e2);
   border-radius: 50%;
@@ -282,7 +282,7 @@
 .pp-name {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 6.4cqw, 64px);
+  font-size: clamp(2.375rem, 6.4cqw, 4rem);
   line-height: 1.02;
   letter-spacing: -0.03em;
   color: var(--text-strong);
@@ -297,7 +297,7 @@
   align-items: center;
 }
 .pp-tagline {
-  font-size: clamp(16px, 1.7cqw, 19px);
+  font-size: clamp(1rem, 1.7cqw, 1.1875rem);
   color: var(--ink-60);
   line-height: 1.45;
   max-width: 48ch;
@@ -450,9 +450,9 @@
     gap: 16px;
   }
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-av {
-    width: 96px;
-    height: 96px;
-    margin-top: -48px;
+    width: 2.824em; /* 96 / 34, inherited from .pp-av */
+    height: 2.824em;
+    margin-top: -1.412em; /* -48 / 34 */
   }
   /* Centre the chip + tagline PAIR (they share a line now, `.pp-taglineRow`);
      the chip's own horizontal centring came from `.pp-text{align-items:center}`
@@ -596,7 +596,7 @@
 .pp-sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.4cqw, 38px);
+  font-size: clamp(1.625rem, 3.4cqw, 2.375rem);
   letter-spacing: -0.02em;
   color: var(--text-strong);
   line-height: 1.05;
@@ -832,7 +832,7 @@ button.pp-row {
 .pp-spot h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(24px, 3cqw, 34px);
+  font-size: clamp(1.5rem, 3cqw, 2.125rem);
   letter-spacing: -0.02em;
   line-height: 1.08;
   color: var(--text-strong);
@@ -845,8 +845,8 @@ button.pp-row {
   color: var(--ink-40);
 }
 .credits .avatar {
-  width: 22px;
-  height: 22px;
+  width: 2.444em; /* 22 / 9 */
+  height: 2.444em;
   font-size: var(--text-9);
 }
 
@@ -988,7 +988,7 @@ button.pp-row {
   text-transform: uppercase;
   letter-spacing: -0.005em;
   line-height: 0.9;
-  font-size: clamp(48px, 10cqw, 110px);
+  font-size: clamp(3rem, 10cqw, 6.875rem);
   color: rgb(var(--cream-rgb));
 }
 .pp[data-skin="stage"] .pp-tagline,
@@ -1011,7 +1011,7 @@ button.pp-row {
   text-transform: uppercase;
   color: rgb(var(--cream-rgb));
   letter-spacing: 0.01em;
-  font-size: clamp(24px, 3.2cqw, 40px);
+  font-size: clamp(1.5rem, 3.2cqw, 2.5rem);
 }
 .pp[data-skin="stage"] .pp-sec > header {
   border-bottom: 2px solid rgba(var(--cream-rgb), 0.16);
@@ -1069,7 +1069,7 @@ button.pp-row {
   text-transform: uppercase;
   color: var(--sk-on);
   letter-spacing: 0;
-  font-size: clamp(28px, 4.4cqw, 48px);
+  font-size: clamp(1.75rem, 4.4cqw, 3rem);
   line-height: 0.95;
 }
 .pp[data-skin="stage"] .pp-spot .art {
@@ -1150,7 +1150,7 @@ button.pp-row {
   font-family: "Instrument Serif", var(--serif);
   font-weight: 400;
   letter-spacing: -0.01em;
-  font-size: clamp(42px, 8cqw, 92px);
+  font-size: clamp(2.625rem, 8cqw, 5.75rem);
   line-height: 0.96;
 }
 .pp[data-skin="studio"] .pp-kind {
@@ -1165,7 +1165,7 @@ button.pp-row {
 .pp[data-skin="studio"] .pp-tagline {
   font-family: "Instrument Serif", var(--serif);
   font-style: italic;
-  font-size: clamp(18px, 2.1cqw, 24px);
+  font-size: clamp(1.125rem, 2.1cqw, 1.5rem);
   color: var(--ink-60);
   max-width: 34ch;
 }
@@ -1218,12 +1218,12 @@ button.pp-row {
 .pp[data-skin="studio"] .pp-tile .art {
   aspect-ratio: 4/5;
   border-radius: 0;
-  border: 1px solid rgba(var(--plum-rgb), 0.22);
+  border: 1px solid rgba(var(--line-rgb), 0.22);
   padding: 0;
 }
 .pp[data-skin="studio"] .pp-gallery-cell {
   border-radius: 0;
-  border: 1px solid rgba(var(--plum-rgb), 0.22);
+  border: 1px solid rgba(var(--line-rgb), 0.22);
 }
 .pp[data-skin="studio"] .pp-tile > div {
   display: grid;
@@ -1241,7 +1241,7 @@ button.pp-row {
 }
 .pp[data-skin="studio"] .pp-tile b {
   font-family: "Instrument Serif", var(--serif);
-  font-size: 23px;
+  font-size: var(--text-23);
   font-weight: 400;
 }
 .pp[data-skin="studio"] .pp-tile small {
@@ -1253,7 +1253,7 @@ button.pp-row {
 }
 .pp[data-skin="studio"] .pp-row b {
   font-family: "Instrument Serif", var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
 }
 .pp[data-skin="studio"] .pp-spot {
@@ -1277,7 +1277,7 @@ button.pp-row {
 }
 .pp[data-skin="studio"] .pp-spot h2 {
   font-family: "Instrument Serif", var(--serif);
-  font-size: clamp(30px, 4.4cqw, 50px);
+  font-size: clamp(1.875rem, 4.4cqw, 3.125rem);
 }
 .pp[data-skin="studio"] .endo,
 .pp[data-skin="studio"] .partof > * {
@@ -1287,7 +1287,7 @@ button.pp-row {
 }
 .pp[data-skin="studio"] .endo-q {
   font-family: "Instrument Serif", var(--serif);
-  font-size: 23px;
+  font-size: var(--text-23);
   font-weight: 400;
   font-style: italic;
 }
@@ -1296,7 +1296,7 @@ button.pp-row {
   color: var(--ink-40);
 }
 .pp[data-skin="studio"] .pp-foot {
-  padding-bottom: 70px;
+  padding-bottom: var(--section-y-72);
 }
 
 /* ═══════════ PAGE — a page of a book ═══════════
@@ -1314,7 +1314,7 @@ button.pp-row {
   max-width: 600px;
   margin: 0 auto;
   padding: 44px 0 8px;
-  border-bottom: 0.5px solid rgba(var(--plum-rgb), 0.4);
+  border-bottom: 0.5px solid rgba(var(--line-rgb), 0.4);
   font-size: var(--text-10-5);
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1331,7 +1331,7 @@ button.pp-row {
   text-align: center;
   max-width: 600px;
   margin: 0 auto;
-  padding-top: 52px;
+  padding-top: var(--section-y-56);
 }
 .pp[data-skin="page"] .pp-av {
   display: none;
@@ -1345,14 +1345,14 @@ button.pp-row {
 }
 .pp[data-skin="page"] .pp-name {
   font-weight: 300;
-  font-size: clamp(36px, 5.6cqw, 58px);
+  font-size: clamp(2.25rem, 5.6cqw, 3.625rem);
   letter-spacing: -0.03em;
 }
 .pp[data-skin="page"] .pp-tagline {
   font-style: italic;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(17px, 2cqw, 21px);
+  font-size: clamp(1.0625rem, 2cqw, 1.3125rem);
   color: var(--accent-ink);
   max-width: 32ch;
 }
@@ -1367,7 +1367,7 @@ button.pp-row {
 }
 .pp[data-skin="page"] .pp-bio::first-letter {
   font-family: var(--serif);
-  font-size: 58px;
+  font-size: var(--text-58);
   line-height: 0.84;
   float: left;
   padding: 7px 12px 0 0;
@@ -1411,7 +1411,7 @@ button.pp-row {
 .pp[data-skin="page"] .pp-sec h2 {
   font-weight: 400;
   font-style: italic;
-  font-size: 23px;
+  font-size: var(--text-23);
   letter-spacing: 0.01em;
 }
 .pp[data-skin="page"] .pp-list {
@@ -1486,13 +1486,13 @@ button.pp-row {
 .pp[data-skin="page"] .endo-q {
   font-weight: 300;
   font-style: italic;
-  font-size: 21px;
+  font-size: var(--text-21);
   text-align: center;
 }
 .pp[data-skin="page"] .pp-foot {
   grid-template-columns: 1fr;
   text-align: center;
-  border-top: 0.5px solid rgba(var(--plum-rgb), 0.35);
+  border-top: 0.5px solid rgba(var(--line-rgb), 0.35);
   padding-top: 34px;
 }
 .pp[data-skin="page"] .endo {
@@ -1520,7 +1520,7 @@ button.pp-row {
   padding-top: 34px;
 }
 .pp[data-skin="workshop"] .pp-id {
-  border: 1px solid rgba(var(--plum-rgb), 0.28);
+  border: 1px solid rgba(var(--line-rgb), 0.28);
   background: color-mix(in srgb, var(--paper) 72%, transparent);
   padding: 24px;
   gap: 22px;
@@ -1528,9 +1528,9 @@ button.pp-row {
 }
 .pp[data-skin="workshop"] .pp-av {
   border-radius: var(--radius-6);
-  width: 76px;
-  height: 76px;
-  font-size: 22px;
+  width: 3.455em; /* 76 / 22 */
+  height: 3.455em;
+  font-size: var(--text-22);
   margin-top: 2px;
   border: 1px solid rgba(var(--line-rgb), 0.28);
   box-shadow: none;
@@ -1577,7 +1577,7 @@ button.pp-row {
 .pp[data-skin="workshop"] .pp-name {
   font-weight: 500;
   letter-spacing: -0.02em;
-  font-size: clamp(30px, 4.4cqw, 46px);
+  font-size: clamp(1.875rem, 4.4cqw, 2.875rem);
 }
 /* Square the social glyphs to sit with the skin's boxed chips/tags, and hang
    them on the same plum hairline as the rest of the card (was a round grey
@@ -1618,7 +1618,7 @@ button.pp-row {
   max-width: 70ch;
 }
 .pp[data-skin="workshop"] .pp-sec > header {
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.28);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.28);
   padding-bottom: 8px;
 }
 .pp[data-skin="workshop"] .pp-sec h2 {
@@ -1641,7 +1641,7 @@ button.pp-row {
   counter-reset: idx;
 }
 .pp[data-skin="workshop"] .pp-row {
-  border-top: 1px dashed rgba(var(--plum-rgb), 0.24);
+  border-top: 1px dashed rgba(var(--line-rgb), 0.24);
   border-bottom: none;
   padding: 16px 4px 16px 52px;
   position: relative;
@@ -1649,7 +1649,7 @@ button.pp-row {
   border-radius: 0;
 }
 .pp[data-skin="workshop"] .pp-row:last-child {
-  border-bottom: 1px dashed rgba(var(--plum-rgb), 0.24);
+  border-bottom: 1px dashed rgba(var(--line-rgb), 0.24);
 }
 .pp[data-skin="workshop"] .pp-row::before {
   counter-increment: idx;
@@ -1669,7 +1669,7 @@ button.pp-row {
   grid-template-columns: 1fr;
 }
 .pp[data-skin="workshop"] .pp-tile {
-  border-top: 1px dashed rgba(var(--plum-rgb), 0.24);
+  border-top: 1px dashed rgba(var(--line-rgb), 0.24);
   padding: 16px 4px;
 }
 .pp[data-skin="workshop"] .pp-tile .art,.pp[data-skin="workshop"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
@@ -1712,22 +1712,22 @@ button.pp-row {
 .pp[data-skin="workshop"] .pp-spot {
   background: color-mix(in srgb, var(--paper) 72%, transparent);
   border-radius: 0;
-  border: 1px solid rgba(var(--plum-rgb), 0.28);
+  border: 1px solid rgba(var(--line-rgb), 0.28);
   gap: 22px;
 }
 .pp[data-skin="workshop"] .pp-spot .art {
   border-radius: 0;
-  border: 1px solid rgba(var(--plum-rgb), 0.2);
+  border: 1px solid rgba(var(--line-rgb), 0.2);
 }
 .pp[data-skin="workshop"] .pp-spot h2 {
   font-weight: 500;
-  font-size: clamp(24px, 3cqw, 32px);
+  font-size: clamp(1.5rem, 3cqw, 2rem);
 }
 .pp[data-skin="workshop"] .endo,
 .pp[data-skin="workshop"] .partof > * {
   border-radius: 0;
   background: color-mix(in srgb, var(--paper) 72%, transparent);
-  border-color: rgba(var(--plum-rgb), 0.24);
+  border-color: rgba(var(--line-rgb), 0.24);
 }
 .pp[data-skin="workshop"] .ph {
   background:
@@ -1767,9 +1767,9 @@ button.pp-row {
 }
 .pp[data-skin="practice"] .pp-av {
   margin-top: 0;
-  width: 82px;
-  height: 82px;
-  font-size: 24px;
+  width: 3.417em; /* 82 / 24 */
+  height: 3.417em;
+  font-size: var(--text-24);
   border: 1px solid color-mix(in srgb, var(--sk-tint) 45%, transparent);
   box-shadow: none;
   background: none;
@@ -1781,7 +1781,7 @@ button.pp-row {
   font-family: var(--sans);
   font-weight: 500;
   letter-spacing: -0.02em;
-  font-size: clamp(28px, 3.6cqw, 40px);
+  font-size: clamp(1.75rem, 3.6cqw, 2.5rem);
 }
 .pp[data-skin="practice"] .pp-kind {
   background: none;
@@ -1823,7 +1823,7 @@ button.pp-row {
 }
 .pp[data-skin="practice"] .pp-row {
   border: none;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   padding: 26px 0 26px 46px;
   position: relative;
   background: none;
@@ -1896,7 +1896,7 @@ button.pp-row {
 .pp[data-skin="practice"] .pp-spot h2 {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 24px;
+  font-size: var(--text-24);
 }
 .pp[data-skin="practice"] .pp-spot .art {
   display: none;
@@ -1934,9 +1934,9 @@ button.pp-row {
     align-items: flex-start;
   }
   .pp[data-skin="practice"] .pp-av {
-    width: 136px;
-    height: 136px;
-    font-size: 38px;
+    width: 3.579em; /* 136 / 38 */
+    height: 3.579em;
+    font-size: var(--text-38);
   }
 }
 .pp[data-skin="practice"] .pp-practice-grid {
@@ -2021,9 +2021,9 @@ button.pp-row {
 }
 .pp[data-skin="table"] .pp-av {
   margin-top: 0;
-  width: 72px;
-  height: 72px;
-  font-size: 22px;
+  width: 3.273em; /* 72 / 22 */
+  height: 3.273em;
+  font-size: var(--text-22);
   border: 1px solid color-mix(in srgb, var(--sk-tint) 55%, transparent);
   box-shadow: none;
   background: none;
@@ -2031,7 +2031,7 @@ button.pp-row {
 }
 .pp[data-skin="table"] .pp-name {
   font-weight: 400;
-  font-size: clamp(34px, 5.4cqw, 58px);
+  font-size: clamp(2.125rem, 5.4cqw, 3.625rem);
   letter-spacing: 0.005em;
 }
 .pp[data-skin="table"] .pp-kind {
@@ -2094,7 +2094,7 @@ button.pp-row {
 .pp[data-skin="table"] .pp-row b {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   flex: none;
 }
 .pp[data-skin="table"] .pp-row small {
@@ -2142,7 +2142,7 @@ button.pp-row {
 .pp[data-skin="table"] .pp-tile b {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
 }
 .pp[data-skin="table"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
    opens the lightbox, so it resets browser chrome and stays visually identical
@@ -2249,7 +2249,7 @@ button.pp-row {
   display: none;
 }
 .pp[data-skin="chart"] .pp-hero {
-  padding-top: 56px;
+  padding-top: var(--section-y-56);
   position: relative;
 }
 .pp[data-skin="chart"] .pp-id {
@@ -2262,9 +2262,9 @@ button.pp-row {
 }
 .pp[data-skin="chart"] .pp-av {
   margin-top: 0;
-  width: 80px;
-  height: 80px;
-  font-size: 23px;
+  width: 3.478em; /* 80 / 23 */
+  height: 3.478em;
+  font-size: var(--text-23);
   border: 1px solid rgba(var(--chart-gold-rgb), 0.5);
   box-shadow: none;
   background: var(--skin-chart-ground);
@@ -2289,7 +2289,7 @@ button.pp-row {
 .pp[data-skin="chart"] .pp-name {
   font-family: "Cormorant", var(--serif);
   font-weight: 300;
-  font-size: clamp(46px, 8.4cqw, 88px);
+  font-size: clamp(2.875rem, 8.4cqw, 5.5rem);
   line-height: 1;
   letter-spacing: 0.01em;
   color: var(--chart-lit);
@@ -2298,7 +2298,7 @@ button.pp-row {
   font-family: "Cormorant", var(--serif);
   font-style: italic;
   font-weight: 300;
-  font-size: clamp(19px, 2.4cqw, 27px);
+  font-size: clamp(1.1875rem, 2.4cqw, 1.6875rem);
   line-height: 1.4;
   color: rgba(var(--chart-ink-rgb), 0.6);
   max-width: 30ch;
@@ -2394,7 +2394,7 @@ button.pp-row {
   grid-row: 1;
   font-family: "Cormorant", var(--serif);
   font-weight: 400;
-  font-size: 27px;
+  font-size: var(--text-27);
   line-height: 1.15;
   color: var(--chart-lit);
 }
@@ -2507,7 +2507,7 @@ button.pp-row {
 .pp[data-skin="chart"] .pp-spot h2 {
   font-family: "Cormorant", var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4.4cqw, 48px);
+  font-size: clamp(1.875rem, 4.4cqw, 3rem);
   letter-spacing: 0.01em;
   color: var(--chart-lit);
 }
@@ -2521,7 +2521,7 @@ button.pp-row {
   font-family: "Cormorant", var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: 24px;
+  font-size: var(--text-24);
   line-height: 1.45;
   color: var(--chart-lit);
 }
@@ -2702,7 +2702,7 @@ button.pp-row {
 .pp[data-skin="stage"] .nextup b {
   font-family: "Anton", var(--sans);
   text-transform: uppercase;
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
   letter-spacing: 0.01em;
 }
@@ -2803,7 +2803,7 @@ button.pp-row {
   font-family: "Anton", var(--sans);
   text-transform: uppercase;
   color: var(--cream);
-  font-size: clamp(22px, 2.8cqw, 32px);
+  font-size: clamp(1.375rem, 2.8cqw, 2rem);
   margin-bottom: 16px;
 }
 .booker dl {
@@ -2898,7 +2898,7 @@ button.pp-row {
 }
 .lb-figure figcaption b {
   font-family: "Instrument Serif", var(--serif);
-  font-size: 34px;
+  font-size: var(--text-34);
   font-weight: 400;
   color: var(--cream);
 }
@@ -3059,7 +3059,7 @@ button.pp-row {
   gap: 9px;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(20px, 2.6cqw, 27px);
+  font-size: clamp(1.25rem, 2.6cqw, 1.6875rem);
   line-height: 1.5;
   letter-spacing: -0.01em;
   hanging-punctuation: first;
@@ -3556,7 +3556,7 @@ button.pp-row {
   text-wrap: balance;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.4cqw, 36px);
+  font-size: clamp(1.625rem, 3.4cqw, 2.25rem);
   letter-spacing: 0.01em;
 }
 .menucard-line {
@@ -3643,7 +3643,7 @@ button.pp-row {
 .pp[data-skin="chart"] .skynow b {
   font-family: "Cormorant", var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--chart-lit);
 }
 .pp[data-skin="chart"] .skynow span:not(.skynow-label) {
@@ -3719,7 +3719,7 @@ button.pp-row {
 .ethics li {
   font-family: "Cormorant", var(--serif);
   font-weight: 300;
-  font-size: 22px;
+  font-size: var(--text-22);
   line-height: 1.5;
   color: rgba(var(--chart-ink-rgb), 0.78);
   padding: 16px 0;
@@ -3910,9 +3910,9 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .pp-av {
   margin-top: 0;
-  width: 88px;
-  height: 88px;
-  font-size: 26px;
+  width: 3.385em; /* 88 / 26 */
+  height: 3.385em;
+  font-size: var(--text-26);
   border: 1px solid rgba(242, 217, 184, 0.45);
   box-shadow: 0 0 34px rgba(242, 217, 184, 0.18);
   background: var(--skin-chair-ground);
@@ -3932,7 +3932,7 @@ button.pp-row {
 .pp[data-skin="chair"] .pp-name {
   font-family: "Bodoni Moda", var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 7cqw, 76px);
+  font-size: clamp(2.5rem, 7cqw, 4.75rem);
   line-height: 1.02;
   letter-spacing: -0.01em;
   color: var(--ch-lit);
@@ -3940,7 +3940,7 @@ button.pp-row {
 .pp[data-skin="chair"] .pp-tagline {
   font-family: "Bodoni Moda", var(--serif);
   font-style: italic;
-  font-size: clamp(18px, 2.2cqw, 24px);
+  font-size: clamp(1.125rem, 2.2cqw, 1.5rem);
   color: rgba(251, 243, 234, 0.66);
   max-width: 34ch;
 }
@@ -4008,7 +4008,7 @@ button.pp-row {
 .pp[data-skin="chair"] .pp-row b {
   font-family: "Bodoni Moda", var(--serif);
   font-weight: 400;
-  font-size: 25px;
+  font-size: var(--text-25);
   color: var(--ch-lit);
 }
 .pp[data-skin="chair"] .pp-row small {
@@ -4018,7 +4018,7 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .pp-row .when {
   font-family: "Bodoni Moda", var(--serif);
-  font-size: 23px;
+  font-size: var(--text-23);
   color: var(--ch-bulb);
   margin-left: auto;
   font-variant-numeric: tabular-nums;
@@ -4094,7 +4094,7 @@ button.pp-row {
 .pp[data-skin="chair"] .endo-q {
   font-family: "Bodoni Moda", var(--serif);
   font-style: italic;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--ch-lit);
 }
 .pp[data-skin="chair"] .partof > * {
@@ -4161,7 +4161,7 @@ button.pp-row {
 }
 .pp[data-skin="chair"] .beforesit li {
   font-family: "Bodoni Moda", var(--serif);
-  font-size: 21px;
+  font-size: var(--text-21);
   line-height: 1.5;
   color: rgba(251, 243, 234, 0.8);
   padding: 16px 0;
@@ -4238,13 +4238,13 @@ button.pp-row {
   gap: 12px;
 }
 .pp[data-skin="chair"] .pp-av {
-  width: 74px;
-  height: 74px;
-  font-size: 21px;
+  width: 3.524em; /* 74 / 21 */
+  height: 3.524em;
+  font-size: var(--text-21);
   border: 1px solid rgba(242, 217, 184, 0.5);
 }
 .pp[data-skin="chair"] .pp-name {
-  font-size: clamp(46px, 9cqw, 112px);
+  font-size: clamp(2.875rem, 9cqw, 7rem);
   line-height: 0.94;
   letter-spacing: -0.02em;
   margin-bottom: -6px;
@@ -4292,7 +4292,7 @@ button.pp-row {
   font-size: var(--text-13);
 }
 .pp[data-skin="chair"] .pp-row .when {
-  font-size: 30px;
+  font-size: var(--text-30);
   color: var(--ch-bulb);
   margin-left: 0;
 }
@@ -4405,7 +4405,7 @@ button.pp-row {
   font-family: "Syne", var(--sans);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: clamp(46px, 11cqw, 138px);
+  font-size: clamp(2.875rem, 11cqw, 8.625rem);
   line-height: 0.86;
   letter-spacing: -0.035em;
   color: var(--rw-ink);
@@ -4415,7 +4415,7 @@ button.pp-row {
   text-wrap: balance;
 }
 .pp[data-skin="runway"] .pp-tagline {
-  font-size: clamp(15px, 1.6cqw, 18px);
+  font-size: clamp(0.9375rem, 1.6cqw, 1.125rem);
   color: var(--ink-60);
   max-width: 38ch;
   letter-spacing: 0.005em;
@@ -4440,7 +4440,7 @@ button.pp-row {
   font-family: "Syne", var(--sans);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: clamp(20px, 2.6cqw, 30px);
+  font-size: clamp(1.25rem, 2.6cqw, 1.875rem);
   letter-spacing: -0.02em;
   color: var(--rw-ink);
 }
@@ -4537,7 +4537,7 @@ button.pp-row {
   font-family: "Syne", var(--sans);
   font-weight: 800;
   text-transform: uppercase;
-  font-size: clamp(28px, 4.4cqw, 52px);
+  font-size: clamp(1.75rem, 4.4cqw, 3.25rem);
   line-height: 0.92;
   letter-spacing: -0.03em;
   color: var(--skin-runway-ground);
@@ -4635,7 +4635,7 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-name {
   font-family: "EB Garamond", var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 6.4cqw, 72px);
+  font-size: clamp(2.375rem, 6.4cqw, 4.5rem);
   line-height: 1.04;
   letter-spacing: -0.01em;
   color: var(--ink);
@@ -4643,7 +4643,7 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-tagline {
   font-family: "EB Garamond", var(--serif);
   font-style: italic;
-  font-size: clamp(18px, 2.1cqw, 23px);
+  font-size: clamp(1.125rem, 2.1cqw, 1.4375rem);
   color: var(--ink-60);
   max-width: 44ch;
 }
@@ -4686,7 +4686,7 @@ button.pp-row {
   grid-column: 1;
   font-family: "EB Garamond", var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   line-height: 1.2;
   color: var(--ink);
 }
@@ -4737,7 +4737,7 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-tile b {
   font-family: "EB Garamond", var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
 }
 .pp[data-skin="gallery"] .pp-tile small {
   font-variant: small-caps;
@@ -4756,13 +4756,13 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-spot h2 {
   font-family: "EB Garamond", var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4cqw, 44px);
+  font-size: clamp(1.75rem, 4cqw, 2.75rem);
   color: var(--ink);
 }
 .pp[data-skin="gallery"] .endo-q {
   font-family: "EB Garamond", var(--serif);
   font-style: italic;
-  font-size: 22px;
+  font-size: var(--text-22);
 }
 .pp[data-skin="gallery"] .ph {
   background: #efede7;
@@ -4888,7 +4888,7 @@ button.pp-row {
   display: block;
   font-family: "EB Garamond", var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4.6cqw, 46px);
+  font-size: clamp(1.75rem, 4.6cqw, 2.875rem);
   line-height: 1.05;
   letter-spacing: -0.01em;
 }
@@ -4933,7 +4933,7 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-name {
   grid-column: 2;
   grid-row: 1 / span 3;
-  font-size: clamp(44px, 10cqw, 112px);
+  font-size: clamp(2.75rem, 10cqw, 7rem);
   line-height: 0.94;
   letter-spacing: -0.015em;
   align-self: start;
@@ -4984,7 +4984,7 @@ button.pp-row {
 }
 .pp[data-skin="gallery"] .pp-bio::first-letter {
   font-family: "EB Garamond", var(--serif);
-  font-size: 62px;
+  font-size: var(--text-62);
   line-height: 0.82;
   float: left;
   padding: 6px 10px 0 0;
@@ -5115,7 +5115,7 @@ button.pp-row {
 .pp[data-skin="gallery"] .pp-row b {
   grid-column: 2;
   grid-row: 1;
-  font-size: 24px;
+  font-size: var(--text-24);
   line-height: 1.18;
   padding-top: 0;
 }
@@ -5158,7 +5158,7 @@ button.pp-row {
   gap: 30px;
 }
 .pp[data-skin="gallery"] .pp-spot h2 {
-  font-size: clamp(30px, 4.6cqw, 52px);
+  font-size: clamp(1.875rem, 4.6cqw, 3.25rem);
   line-height: 1.02;
 }
 .pp[data-skin="gallery"] .pp-spot .eyebrow {
@@ -5187,7 +5187,7 @@ button.pp-row {
   vertical-align: 4px;
 }
 .pp[data-skin="gallery"] .pp-foot {
-  padding-bottom: 70px;
+  padding-bottom: var(--section-y-72);
 }
 
 /* ═══════════ RECORD (history) — aged stock, a spine of dates ═══════════ */
@@ -5236,9 +5236,9 @@ button.pp-row {
 }
 .pp[data-skin="history"] .pp-av {
   margin-top: 0;
-  width: 74px;
-  height: 74px;
-  font-size: 21px;
+  width: 3.524em; /* 74 / 21 */
+  height: 3.524em;
+  font-size: var(--text-21);
   border-radius: var(--radius-4);
   border: 1px solid var(--hs-rule);
   box-shadow: none;
@@ -5259,7 +5259,7 @@ button.pp-row {
 .pp[data-skin="history"] .pp-name {
   font-family: "Libre Caslon Text", var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 5cqw, 58px);
+  font-size: clamp(2rem, 5cqw, 3.625rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
   color: var(--ink);
@@ -5267,7 +5267,7 @@ button.pp-row {
 .pp[data-skin="history"] .pp-tagline {
   font-family: "Libre Caslon Text", var(--serif);
   font-style: italic;
-  font-size: clamp(16px, 1.9cqw, 20px);
+  font-size: clamp(1rem, 1.9cqw, 1.25rem);
   color: var(--ink-60);
   max-width: 42ch;
 }
@@ -5342,7 +5342,7 @@ button.pp-row {
 .pp[data-skin="history"] .pp-row b {
   font-family: "Libre Caslon Text", var(--serif);
   font-weight: 400;
-  font-size: 25px;
+  font-size: var(--text-25);
   line-height: 1.25;
   color: var(--ink);
 }
@@ -5359,7 +5359,7 @@ button.pp-row {
   width: 110px;
   text-align: right;
   font-family: "Libre Caslon Text", var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   line-height: 1;
   color: #5f4526;
   font-variant-numeric: lining-nums;
@@ -5560,13 +5560,13 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(46px, 11.5cqw, 140px);
+  font-size: clamp(2.875rem, 11.5cqw, 8.75rem);
   line-height: 0.84;
   letter-spacing: -0.03em;
   color: var(--ink);
 }
 .pp[data-skin="collective"] .pp-tagline {
-  font-size: clamp(17px, 2.1cqw, 24px);
+  font-size: clamp(1.0625rem, 2.1cqw, 1.5rem);
   font-weight: 500;
   color: var(--ink);
   max-width: 30ch;
@@ -5589,7 +5589,7 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(22px, 3.2cqw, 38px);
+  font-size: clamp(1.375rem, 3.2cqw, 2.375rem);
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--ink);
@@ -5612,7 +5612,7 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(19px, 2.2cqw, 26px);
+  font-size: clamp(1.1875rem, 2.2cqw, 1.625rem);
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--ink);
@@ -5686,7 +5686,7 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(28px, 4.4cqw, 52px);
+  font-size: clamp(1.75rem, 4.4cqw, 3.25rem);
   line-height: 0.92;
   letter-spacing: -0.03em;
   color: var(--sk-on);
@@ -5741,7 +5741,7 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(18px, 2.2cqw, 24px);
+  font-size: clamp(1.125rem, 2.2cqw, 1.5rem);
   letter-spacing: -0.01em;
 }
 .pp[data-skin="collective"] .nextaction-when {
@@ -5762,7 +5762,7 @@ button.pp-row {
   font-family: "Archivo Black", var(--sans);
   font-weight: 400;
   text-transform: uppercase;
-  font-size: clamp(22px, 3.2cqw, 38px);
+  font-size: clamp(1.375rem, 3.2cqw, 2.375rem);
   letter-spacing: -0.02em;
   border-bottom: 4px solid var(--ink);
   padding-bottom: 8px;
@@ -5861,8 +5861,8 @@ button.pp-row {
 }
 .pp[data-skin="classroom"] .pp-av {
   margin-top: 0;
-  width: 70px;
-  height: 70px;
+  width: 3.5em; /* 70 / 20 */
+  height: 3.5em;
   font-size: var(--text-20);
   border: 1.5px solid rgba(246, 244, 238, 0.6);
   background: none;
@@ -5884,7 +5884,7 @@ button.pp-row {
 .pp[data-skin="classroom"] .pp-spot h2 {
   font-family: "Newsreader", var(--serif);
   font-weight: 400;
-  font-size: clamp(34px, 5.4cqw, 60px);
+  font-size: clamp(2.125rem, 5.4cqw, 3.75rem);
   line-height: 1.06;
   letter-spacing: -0.02em;
   color: #f6f4ee;
@@ -5892,7 +5892,7 @@ button.pp-row {
 .pp[data-skin="classroom"] .pp-tagline {
   font-family: "Newsreader", var(--serif);
   font-style: italic;
-  font-size: clamp(18px, 2.1cqw, 23px);
+  font-size: clamp(1.125rem, 2.1cqw, 1.4375rem);
   color: rgba(246, 244, 238, 0.78);
   max-width: 40ch;
 }
@@ -5939,7 +5939,7 @@ button.pp-row {
 .pp[data-skin="classroom"] .pp-sec h2 {
   font-family: "Newsreader", var(--serif);
   font-weight: 400;
-  font-size: clamp(23px, 2.9cqw, 31px);
+  font-size: clamp(1.4375rem, 2.9cqw, 1.9375rem);
   color: var(--cl-board);
   letter-spacing: -0.01em;
 }
@@ -5965,7 +5965,7 @@ button.pp-row {
   grid-row: span 3;
   align-self: start;
   font-family: "Newsreader", var(--serif);
-  font-size: 56px;
+  font-size: var(--text-56);
   color: rgba(32, 38, 31, 0.16);
   line-height: 0.9;
 }
@@ -6098,7 +6098,7 @@ button.pp-row {
 }
 .pp[data-skin="classroom"] .fees dl > div:first-child dd {
   font-family: "Newsreader", var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   line-height: 1.2;
   color: #f6f4ee;
 }
@@ -6140,7 +6140,7 @@ button.pp-row {
 .pp[data-skin="classroom"] .promises h2 {
   font-family: "Newsreader", var(--serif);
   font-weight: 400;
-  font-size: clamp(23px, 2.9cqw, 31px);
+  font-size: clamp(1.4375rem, 2.9cqw, 1.9375rem);
   color: var(--cl-board);
   border-bottom: 2px solid var(--cl-board);
   padding-bottom: 8px;

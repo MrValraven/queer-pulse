@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 16px 0 52px;
+  padding: 16px 0 var(--section-y-56);
   position: relative;
   overflow: hidden;
 }
@@ -87,7 +87,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 6vw, 72px);
+  font-size: clamp(2.375rem, 6vw, 4.5rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
@@ -187,8 +187,9 @@
   }
 }
 .sav {
-  width: 30px;
-  height: 30px;
+  /* 30 / 10, in em so the box scales with its glyph. */
+  width: 3em;
+  height: 3em;
   border-radius: 50%;
   border: 2px solid var(--line-strong);
   display: flex;
@@ -212,7 +213,7 @@
 }
 
 .body {
-  padding: 52px 0 var(--section-y);
+  padding: var(--section-y-56) 0 var(--section-y);
   background: var(--cream);
 }
 .layout {
@@ -319,7 +320,7 @@
 }
 .gDd {
   font-family: var(--serif);
-  font-size: 30px;
+  font-size: var(--text-30);
   font-weight: 400;
   color: var(--text-strong);
   line-height: 1;
@@ -390,8 +391,9 @@
   }
 }
 .mAv {
-  width: 48px;
-  height: 48px;
+  /* 48 / 16, in em so the box scales with its glyph. */
+  width: 3em;
+  height: 3em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -467,9 +469,10 @@
    compact square shape the thread rail wants. Focus ring, disabled treatment
    and the react-icons sizing come from the primitive. */
 .vbtn {
-  width: 34px;
-  min-width: 34px;
-  height: 34px;
+  /* 34 / 15, in em so the square scales with the react-icon it centres. */
+  width: 2.267em;
+  min-width: 2.267em;
+  height: 2.267em;
   border-radius: var(--radius-8);
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
@@ -548,8 +551,9 @@
   flex-wrap: wrap;
 }
 .thAv {
-  width: 20px;
-  height: 20px;
+  /* 20 / 8, in em so the box scales with its glyph. */
+  width: 2.5em;
+  height: 2.5em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -585,8 +589,9 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .rAv {
-  width: 28px;
-  height: 28px;
+  /* 28 / 9, in em so the box scales with its glyph. */
+  width: 3.111em;
+  height: 3.111em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -686,8 +691,9 @@
   margin-bottom: 14px;
 }
 .sbOrgAv {
-  width: 48px;
-  height: 48px;
+  /* 48 / 17, in em so the box scales with its glyph. */
+  width: 2.824em;
+  height: 2.824em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -758,7 +764,7 @@
 }
 .sbEDd {
   font-family: var(--serif);
-  font-size: 52px;
+  font-size: var(--text-52);
   font-weight: 300;
   color: rgba(var(--cream-rgb), 1);
   line-height: 1;
@@ -811,8 +817,9 @@
   border-bottom: none;
 }
 .sbRelIc {
-  width: 36px;
-  height: 36px;
+  /* 36 / 13, in em so the box scales with its glyph. */
+  width: 2.769em;
+  height: 2.769em;
   border-radius: var(--radius-10);
   display: flex;
   align-items: center;

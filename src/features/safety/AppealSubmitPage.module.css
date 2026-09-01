@@ -18,7 +18,7 @@
 
 .heading {
   font-family: var(--serif);
-  font-size: 27px;
+  font-size: var(--text-27);
   line-height: 1.15;
   color: var(--text-strong);
   margin: 0 0 12px;
@@ -92,20 +92,21 @@
   color: rgba(var(--cream-rgb), 1);
 }
 .successIcon {
-  width: 58px;
-  height: 58px;
+  /* 58 / 28, in em so the box scales with its glyph. */
+  width: 2.071em;
+  height: 2.071em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: var(--text-28);
   margin: 0 auto 22px;
 }
 .successTitle {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   line-height: 1.15;
   color: rgba(var(--cream-rgb), 1);
   margin: 0 0 12px;

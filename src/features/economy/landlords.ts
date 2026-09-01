@@ -3,12 +3,26 @@ import { MEMBERS, memberName } from "../members/data/members";
 export type Tint = "coral" | "jade" | "plum";
 
 export interface Recommendation {
+  /**
+   * The recommendation's own uuid, present in live mode only. It is the handle
+   * a report is addressed by, so the per-recommendation report control renders
+   * only when it is there. The demo fixtures below carry no id and therefore no
+   * report control, which is correct: there is nothing behind them to report.
+   */
+  id?: string;
   initials: string;
   name: string;
   tint: Tint;
   stars: number;
   text: string;
   when: string;
+  /**
+   * True when this warning outlived the member who wrote it. The FK is
+   * `ON DELETE SET NULL`, so erasing an account leaves the stars and the text
+   * standing and takes only the byline. The card renders a placeholder in place
+   * of the name rather than a blank space where a person used to be.
+   */
+  isAuthorRemoved?: boolean;
   /**
    * True when the signed-in member wrote this recommendation, which is what
    * unlocks the withdraw control (`DELETE /landlords/:slug/recommendations/

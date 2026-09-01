@@ -4,7 +4,7 @@
 
 .section {
   background: var(--cream);
-  padding-block: 40px 100px;
+  padding-block: 40px var(--section-y-104);
 }
 
 .wrap {
@@ -19,7 +19,7 @@
 .heading {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 14px;

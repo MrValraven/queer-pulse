@@ -254,11 +254,16 @@ export function GatheringPhotosPage() {
   // participants. The prototype hero/controls/footer are demo-only chrome, so
   // live renders a minimal header (real event title) + the live mosaic; the
   // upload control is shown to organizers (host or cohost) via the detail's
-  // server-decided `viewerIsOrganizer`.
+  // server-decided `viewerIsOrganizer`, which also lets them take any photo
+  // down (an uploader can always take their own down, decided per photo).
+  // Every photo also carries its own report control, filed under the
+  // `event_photo` subject so a moderator can act on ONE image instead of
+  // taking the whole gathering down over it. The demo branch below keeps its
+  // prototype tiles, which have no ids to report.
   if (!demoMode) {
     const gathering = eventData?.gathering;
     // Organizer = host or cohost, decided server-side (`EventDetail.isOrganizer`).
-    const canUpload = Boolean(gathering?.viewerIsOrganizer);
+    const isOrganizer = Boolean(gathering?.viewerIsOrganizer);
     return (
       <PageShell>
         <section className={styles.hero}>
@@ -273,7 +278,8 @@ export function GatheringPhotosPage() {
         </section>
         <GatheringPhotosLive
           slug={gathering?.slug ?? ""}
-          canUpload={canUpload}
+          isOrganizer={isOrganizer}
+          gatheringTitle={gathering?.title ?? ""}
         />
       </PageShell>
     );

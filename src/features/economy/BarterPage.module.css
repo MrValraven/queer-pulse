@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 56px;
+  padding: var(--section-y-64) 0 var(--section-y-56);
   position: relative;
   overflow: hidden;
 }
@@ -31,7 +31,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 80px);
+  font-size: clamp(2.5rem, 6vw, 5rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -167,7 +167,7 @@
 }
 
 .body {
-  padding: 44px 0 80px;
+  padding: 44px 0 var(--section-y-80);
 }
 .grid {
   display: grid;
@@ -334,7 +334,7 @@
 .postStrip h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
@@ -428,7 +428,7 @@
 .psSuccess h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
@@ -475,4 +475,25 @@
   display: flex;
   justify-content: center;
   margin-top: 28px;
+}
+
+/* The way into the member's own half of the board: the swaps they posted and
+   the proposals they sent. On the plum hero, so cream text with a coral hover. */
+.mineRow {
+  margin-top: 28px;
+}
+.mineLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.86);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.3);
+  padding-bottom: 2px;
+}
+.mineLink:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }

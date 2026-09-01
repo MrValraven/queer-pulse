@@ -87,8 +87,8 @@
   position: absolute;
   top: 14px;
   right: 14px;
-  width: 36px;
-  height: 36px;
+  width: 2em; /* 36 / 18 */
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
@@ -117,7 +117,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   margin-bottom: 18px;
 }
@@ -212,7 +212,7 @@
   padding: 0 24px;
 }
 .vfIcon {
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 0.85);
   margin-bottom: 8px;
 }
@@ -262,8 +262,8 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 36px;
-  height: 36px;
+  width: 2em; /* 36 / 18 */
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.12);
   border: none;
@@ -280,21 +280,21 @@
   }
 }
 .successIcon {
-  width: 54px;
-  height: 54px;
+  width: 2.16em; /* 54 / 25 */
+  height: 2.16em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--jade);
-  font-size: 25px;
+  font-size: var(--text-25);
   margin-bottom: 18px;
 }
 .successTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 27px;
+  font-size: var(--text-27);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.1;
   margin-bottom: 14px;
@@ -313,8 +313,8 @@
   margin-bottom: 20px;
 }
 .guestAv {
-  width: 40px;
-  height: 40px;
+  width: 2.857em; /* 40 / 14 */
+  height: 2.857em;
   border-radius: 50%;
   display: flex;
   align-items: center;

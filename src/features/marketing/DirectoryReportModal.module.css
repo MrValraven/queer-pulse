@@ -6,7 +6,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   letter-spacing: -0.02em;
   color: var(--ink);
 }
@@ -87,19 +87,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 2.167em;
+  height: 2.167em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
-  font-size: 24px;
+  font-size: var(--text-24);
   margin-bottom: 16px;
 }
 
 .confirmTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
 }
@@ -135,19 +135,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 2.167em;
+  height: 2.167em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.14);
   color: var(--accent-ink);
-  font-size: 24px;
+  font-size: var(--text-24);
   margin-bottom: 16px;
 }
 
 .errorTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   letter-spacing: -0.02em;
   color: var(--ink);
 }

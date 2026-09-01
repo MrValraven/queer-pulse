@@ -1,6 +1,6 @@
 .hero {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 56px;
+  padding: var(--section-y-64) 0 var(--section-y-56);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .cat {
@@ -14,7 +14,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.5vw, 72px);
+  font-size: clamp(2.375rem, 5.5vw, 4.5rem);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -33,7 +33,7 @@
 }
 
 .body {
-  padding: 56px 0 100px;
+  padding: var(--section-y-56) 0 var(--section-y-104);
 }
 .layout {
   display: grid;
@@ -94,7 +94,7 @@
 .secH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.4vw, 40px);
+  font-size: clamp(1.625rem, 3.4vw, 2.5rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -150,7 +150,7 @@
 .statN {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 38px;
+  font-size: var(--text-38);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -185,14 +185,17 @@
 }
 .step {
   display: grid;
-  grid-template-columns: 40px 1fr;
+  /* The numeral column holds `.stepNum`, which is sized in em: `max-content`
+     lets the track follow it up, while 40px stays the floor it renders at. */
+  grid-template-columns: minmax(40px, max-content) 1fr;
   gap: 16px;
   padding: 18px 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .stepNum {
-  width: 34px;
-  height: 34px;
+  /* 34 / 15, in em so the box scales with its glyph. */
+  width: 2.267em;
+  height: 2.267em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent-ink);
@@ -232,8 +235,9 @@
   padding: 16px 18px;
 }
 .acAv {
-  width: 44px;
-  height: 44px;
+  /* 44 / 15, in em so the box scales with its glyph. */
+  width: 2.933em;
+  height: 2.933em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -268,7 +272,7 @@
   padding: 20px 22px;
 }
 .prinIcon {
-  font-size: 22px;
+  font-size: var(--text-22);
   flex: none;
 }
 .prinTitle {
@@ -431,7 +435,7 @@
 }
 .finTotalAmount {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
 }
 

@@ -67,7 +67,7 @@
 .h {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--text-strong);
@@ -85,8 +85,8 @@
   gap: 6px;
 }
 .crumb {
-  width: 26px;
-  height: 26px;
+  width: 2.364em; /* 26 / 11 */
+  height: 2.364em;
   border: none;
   border-radius: var(--radius-8);
   background: rgba(var(--plum-rgb), 0.06);
@@ -614,8 +614,8 @@
   gap: 5px;
 }
 .zoom button {
-  width: 32px;
-  height: 32px;
+  width: 2.133em; /* 32 / 15 */
+  height: 2.133em;
   border-radius: var(--radius-9);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   background: var(--paper);
@@ -761,8 +761,8 @@
   margin-bottom: 16px;
 }
 .insAv {
-  width: 50px;
-  height: 50px;
+  width: 2.778em; /* 50 / 18 */
+  height: 2.778em;
   flex: none;
   border-radius: var(--radius-14);
   display: flex;
@@ -918,8 +918,8 @@
   }
 }
 .mini {
-  width: 30px;
-  height: 30px;
+  width: 2.727em; /* 30 / 11 */
+  height: 2.727em;
   flex: none;
   border-radius: var(--radius-9);
   display: flex;
@@ -985,13 +985,13 @@
 }
 
 .insEmpty {
-  padding: 50px 16px;
+  padding: var(--section-y-48) 16px;
   text-align: center;
   color: var(--ink-60);
 }
 .insEmptyIc {
-  width: 54px;
-  height: 54px;
+  width: 2.25em; /* 54 / 24 */
+  height: 2.25em;
   margin: 0 auto 14px;
   border-radius: var(--radius-16);
   background: rgba(var(--plum-rgb), 0.05);
@@ -999,7 +999,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: var(--text-24);
 }
 .insEmpty h4 {
   font-family: var(--serif);

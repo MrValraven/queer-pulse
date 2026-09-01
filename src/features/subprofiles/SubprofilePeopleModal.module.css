@@ -9,7 +9,7 @@
   margin: 0;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(20px, 3vw, 25px);
+  font-size: clamp(1.25rem, 3vw, 1.5625rem);
   letter-spacing: -0.015em;
   line-height: 1.15;
   color: var(--text-strong);

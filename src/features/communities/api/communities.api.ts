@@ -194,7 +194,24 @@ export interface CommunitiesQuery {
   tags?: string[];
 }
 
-export async function getCommunities(params: CommunitiesQuery = {}) {
+/** Per-option availability counts returned alongside a browse page. Mirrors
+ *  the backend's `CommunityBrowseFacetCounts`; optional so a server that
+ *  predates the field (or a bare-array response) reads as "not counted"
+ *  rather than as zeros. */
+export interface CommunityBrowseFacets {
+  /** Curated tag id → matching communities under the rest of this request's
+   *  filters, its own `tags` filter lifted. A tag MISSING from this map was
+   *  not counted, which must never render as a `0`. */
+  tags?: Record<string, number>;
+}
+
+export interface CommunitiesPage extends Paginated<CommunityCardDTO> {
+  facets?: CommunityBrowseFacets;
+}
+
+export async function getCommunities(
+  params: CommunitiesQuery = {},
+): Promise<CommunitiesPage> {
   const query = new URLSearchParams();
   if (params.filter) query.set("filter", params.filter);
   if (params.type) query.set("type", params.type);
@@ -204,10 +221,16 @@ export async function getCommunities(params: CommunitiesQuery = {}) {
   if (params.sort) query.set("sort", params.sort);
   if (params.tags?.length) query.set("tags", params.tags.join(","));
   const qs = query.toString();
-  const res = await apiGet<CommunityCardDTO[] | Paginated<CommunityCardDTO>>(
-    `/communities${qs ? `?${qs}` : ""}`,
-  );
-  return toItemsPage(res);
+  const res = await apiGet<
+    | CommunityCardDTO[]
+    | (Paginated<CommunityCardDTO> & { facets?: CommunityBrowseFacets })
+  >(`/communities${qs ? `?${qs}` : ""}`);
+  // `toItemsPage` normalises the envelope (and a bare-array response) but only
+  // knows the four page fields, so the facets are carried across by hand.
+  return {
+    ...toItemsPage(res),
+    facets: Array.isArray(res) ? undefined : res?.facets,
+  };
 }
 
 export const getCommunity = (slug: string) =>
@@ -265,11 +288,15 @@ export type CommunityReportSeverity = "emergency" | "high" | "medium" | "low";
  *  `queerpulse-backend/src/communities/community-report-response.ts`. `null`
  *  when the row the report points at no longer exists. */
 export interface CommunityReportContentDTO {
-  kind: "post" | "reply";
-  /** The reported row's own id (post id, or reply id). */
+  /** A top-level post, a reply under one, or one photograph in the album of a
+   *  gathering this community hosts. */
+  kind: "post" | "reply" | "event_photo";
+  /** The reported row's own id (post id, reply id, or photo id). */
   id: string;
-  /** The thread to open: the post itself, or a reply's parent post. */
-  postId: string;
+  /** The thread to open: the post itself, or a reply's parent post. Absent on
+   *  an `event_photo`, which lives in an album and has no thread at all, so
+   *  the "open the thread" affordance simply does not render. */
+  postId?: string;
   /** Plain text, whitespace-collapsed, cut server-side. Carries no ellipsis;
    *  `isExcerptTruncated` is what says there is more. */
   excerpt: string;
@@ -294,7 +321,7 @@ export interface CommunityReportContentDTO {
  *  `communityReportToModReport`. */
 export interface CommunityReportDTO {
   id: string;
-  subjectType: "post" | "reply";
+  subjectType: "post" | "reply" | "event_photo";
   subjectId: string;
   reasonCode: ReasonCode;
   severity: CommunityReportSeverity;
@@ -309,7 +336,8 @@ export interface CommunityReportDTO {
 }
 
 /** GET /communities/:slug/reports — open reports whose subject is a post or
- *  reply in this community (owner/mod only). */
+ *  reply in this community, or a photograph in one of its gatherings' albums
+ *  (owner/mod only). */
 export const getCommunityReports = (slug: string) =>
   apiGet<CommunityReportDTO[]>(`/communities/${slug}/reports`);
 

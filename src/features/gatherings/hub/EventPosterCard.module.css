@@ -174,11 +174,11 @@
 }
 
 .lead .title {
-  font-size: clamp(24px, 2.6vw, 34px);
+  font-size: var(--text-heading);
 }
 
 .featured .title {
-  font-size: clamp(19px, 1.8vw, 24px);
+  font-size: clamp(1.1875rem, 1.8vw, 1.5rem);
 }
 
 .titleList {

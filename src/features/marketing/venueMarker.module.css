@@ -127,13 +127,13 @@
 }
 .pinName {
   color: var(--cream);
-  font-size: 0.74rem;
+  font-size: var(--text-12);
   font-weight: 600;
   white-space: nowrap;
 }
 .pinAddress {
   color: rgba(var(--cream-rgb), 0.72);
-  font-size: 0.66rem;
+  font-size: var(--text-10-5);
   font-weight: 500;
 }
 
@@ -189,7 +189,7 @@
   background: var(--accent);
   color: var(--cream);
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: var(--text-13);
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--shadow-e2);
@@ -200,12 +200,12 @@
 .cluster[data-size="md"] {
   inline-size: 42px;
   block-size: 42px;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
 }
 .cluster[data-size="lg"] {
   inline-size: 50px;
   block-size: 50px;
-  font-size: 0.95rem;
+  font-size: var(--text-15);
 }
 @media (hover: hover) and (pointer: fine) {
   .cluster:hover {

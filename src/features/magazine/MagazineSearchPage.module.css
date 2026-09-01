@@ -1,5 +1,5 @@
 .body {
-  padding: 40px 0 120px;
+  padding: 40px 0 var(--section-y-120);
 }
 
 .head {
@@ -18,7 +18,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;

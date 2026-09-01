@@ -5961,13 +5961,13 @@ export const marketing: Catalog = {
   "forOrgs.form.sendingCta": "A enviar…",
   "forOrgs.form.sent.title": "Enviado à nossa <em>equipa de parcerias.</em>",
   "forOrgs.form.sent.body":
-    "Obrigade, recebemos a tua mensagem. A nossa equipa de parcerias lê cada uma e responde pessoalmente dentro de 5 dias úteis.",
+    "Obrigade, recebemos a tua mensagem. A nossa equipa de parcerias lê cada uma e responde pessoalmente dentro de 5 dias úteis, por email, de hello@queerpulse.com para o endereço que indicaste acima. Vale a pena juntá-lo aos teus contactos, para a resposta não cair no spam.",
   "forOrgs.form.error":
-    "Algo correu mal ao enviar. Tenta novamente ou escreve diretamente à equipa de parcerias.",
+    "Algo correu mal ao enviar. Tenta novamente, ou escreve diretamente à equipa de parcerias para hello@queerpulse.com.",
   "forOrgs.form.small":
-    "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
+    "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só a resposta de uma pessoa, por email, no prazo de 5 dias úteis.",
   "forOrgs.form.toast":
-    "Enviado à nossa equipa de parcerias. Vão responder no prazo de 5 dias úteis",
+    "Enviado à nossa equipa de parcerias. Vão responder-te por email no prazo de 5 dias úteis",
 
   // ── Diretório — chrome do diretório de negócios + página de detalhe. Os
   //    registos de locais (`directoryPlaces.ts`: nomes, taglines,
@@ -7915,4 +7915,181 @@ export const marketing: Catalog = {
     "<strong>O regulador setorial, se alguma vez cairmos no artigo 28.º.</strong> O Decreto-Lei 82/2022 entrega a fiscalização a um regulador diferente por cada categoria de serviço, em vez de a entregar a uma única entidade de acessibilidade. Os serviços de comércio eletrónico cabem à ANACOM. Como está dito acima, não cremos que o QueerPulse seja hoje um serviço abrangido pelo decreto-lei, por isso é bem possível que este caminho não esteja aberto para ti neste momento. Preferimos dizer-te isso com clareza a mandar-te a um regulador que te vai ter de dispensar.",
   "accessibilityStatement.enforcement.p2":
     "Nada disto substitui os tribunais nem qualquer outro direito que tenhas. Se quiseres apresentar queixa e não souberes por onde começar, o IDiPD é a primeira porta certa.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  "directory.detail.enquiry.cta": "Enviar mensagem a este negócio",
+  "directory.detail.enquiry.deliveryNote":
+    "Chega como mensagem direta da tua conta, e só quem gere esta ficha a pode ler.",
+  "directory.detail.enquiry.replyNote":
+    "A tua primeira mensagem passa. Uma resposta, de qualquer um dos lados, precisa de uma ligação aceite.",
+  "directory.detail.enquiry.existingThreadCta": "Abrir a conversa que já tens",
+  "directory.detail.enquiry.signInPrompt":
+    "Com sessão iniciada podes escrever a um negócio aqui, sem dar um número de telefone nem um email.",
+  "directory.detail.enquiry.signInCta": "Iniciar sessão",
+  "directory.detail.enquiry.loadErrorTitle":
+    "Não conseguimos verificar se este negócio recebe mensagens",
+  "directory.detail.enquiry.loadErrorBody":
+    "O resto da ficha está bem. Só esta verificação é que não respondeu.",
+  "directory.detail.enquiry.unavailable.unclaimed":
+    "Ainda ninguém reivindicou esta ficha, por isso não há uma caixa de entrada do negócio por trás dela. Se és tu que geres o {name}, reivindica a ficha e passas a poder ser contactado por aqui.",
+  "directory.detail.enquiry.unavailable.noAccount":
+    "Esta ficha não está ligada a uma conta que possa receber mensagens, por isso os contactos acima são a forma de lá chegar.",
+  "directory.detail.enquiry.unavailable.ownListing":
+    "Esta ficha é tua, por isso não há aqui ninguém a quem escrever.",
+  "directory.detail.enquiry.unavailable.blocked":
+    "Não é possível contactar este negócio a partir da tua conta.",
+  "directory.detail.enquiry.ariaLabel": "Escrever a {name}",
+  "directory.detail.enquiry.eyebrow": "Mensagem privada",
+  "directory.detail.enquiry.title": "Escrever a <em>{name}</em>",
+  "directory.detail.enquiry.sub":
+    "Isto vai para quem gere esta ficha, como mensagem direta da tua conta. Não fica publicado na ficha.",
+  "directory.detail.enquiry.replyNotice":
+    "Ainda não têm uma ligação, por isso esta primeira mensagem passa e a conversa fica depois fechada para ambos até que um de vocês aceite uma ligação.",
+  "directory.detail.enquiry.bodyLabel": "A tua mensagem",
+  "directory.detail.enquiry.bodyPlaceholder":
+    "O que gostarias de lhes perguntar?",
+  "directory.detail.enquiry.bodyHint": "Pelo menos {min} carateres.",
+  "directory.detail.enquiry.charactersLeft": "Carateres restantes: {remaining}",
+  "directory.detail.enquiry.cancel": "Cancelar",
+  "directory.detail.enquiry.submit": "Enviar mensagem",
+  "directory.detail.enquiry.submitting": "A enviar…",
+  "directory.detail.enquiry.error.rateLimited":
+    "Já escreveste a este negócio hoje. Dá-lhes tempo para responder primeiro.",
+  "directory.detail.enquiry.error.notAllowed":
+    "Não é possível contactar este negócio a partir da tua conta.",
+  "directory.detail.enquiry.error.unavailable":
+    "Esta ficha já não recebe mensagens pelo QueerPulse. Tenta os contactos da página.",
+  "directory.detail.enquiry.error.gone":
+    "Esta ficha já não está disponível, por isso a tua mensagem não foi enviada.",
+  "directory.detail.enquiry.error.generic":
+    "A tua mensagem não foi enviada. Tenta outra vez daqui a pouco.",
+  "directory.detail.enquiry.successAriaLabel":
+    "A tua mensagem para {name} foi enviada",
+  "directory.detail.enquiry.successTitle": "Mensagem",
+  "directory.detail.enquiry.successEm": "enviada",
+  "directory.detail.enquiry.successBody":
+    "Está na caixa de entrada de quem gere o {name}, como mensagem direta tua.",
+  "directory.detail.enquiry.successReplyStep":
+    "Ainda não têm uma ligação, por isso a conversa fica fechada para ambos até que um de vocês aceite uma ligação.",
+  "directory.detail.enquiry.openThreadCta": "Abrir a conversa",
+  "directory.detail.enquiry.doneCta": "Concluído",
+  "directory.detail.enquiry.limit.thisBusiness":
+    "Já escreveste a {name} hoje. Dá tempo para responderem antes de escreveres outra vez.",
+  "directory.detail.enquiry.limit.directory":
+    "Escreveste a muitos negócios hoje, por isso isto está em pausa por agora.",
+  "directory.detail.enquiry.limit.clearsIn": "Podes escrever de novo {when}.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // COORD-CHANGELOG — COORD - deep-scan section 13 (the vertical surfaces), the member-facing half.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  "changelog.entries.take-down-your-flatmate-profile.title":
+    "Podes retirar o teu perfil de colega de casa",
+  "changelog.entries.take-down-your-flatmate-profile.body":
+    "Um perfil de colega de casa é um anúncio pessoal com os teus pronomes, as tuas etiquetas de identidade, os detalhes da tua casa e o teu orçamento, e não havia forma de o remover. Se encontrasses quarto, ficava lá. O editor do perfil passa a ter um botão para o retirar, que diz com clareza o que desaparece e o que fica: o perfil, os gostos e qualquer correspondência desaparecem, e as conversas que já começaste ficam nas Mensagens, porque são tuas e da outra pessoa.",
+  "changelog.entries.message-a-business-without-leaving.title":
+    "Podes escrever a um negócio a partir da ficha dele",
+  "changelog.entries.message-a-business-without-leaving.body":
+    "A ficha de um negócio oferecia um site, um email e um telefone, por isso um sítio que não tivesse preenchido nada disso ficava sem forma de contacto, e todas as conversas aconteciam fora da plataforma. Agora podes escrever a um negócio a partir da ficha dele. Antes de escreveres, a página diz-te se a pessoa responsável está contactável, se a tua primeira mensagem vai precisar de ligação para te responderem, se já tens uma conversa com ela e se já escreveste hoje.",
+  "changelog.entries.remove-a-photo-from-a-gathering-album.title":
+    "Podes remover uma foto do álbum de um encontro",
+  "changelog.entries.remove-a-photo-from-a-gathering-album.body":
+    "Uma foto de pessoas num evento queer podia ser carregada e nunca mais retirada, nem por quem a publicou nem por quem organizou. Agora ambos a podem remover, a partir do próprio álbum, por teclado tal como por toque. Remover apaga também o ficheiro do armazenamento, o que antes não acontecia: o registo desaparecia e a imagem ficava, ainda acessível a quem tivesse a ligação.",
+  "changelog.entries.your-own-jobs-and-a-way-to-correct-them.title":
+    "As vagas que publicaste, e uma forma de as corrigir",
+  "changelog.entries.your-own-jobs-and-a-way-to-correct-them.body":
+    "Publicar uma vaga deixava-te sem lista do que tinhas publicado e sem forma de a editar. Se enganasses o intervalo salarial, fechar o anúncio era o único remédio. Passa a haver uma página com as vagas que publicaste, e em cada uma as candidaturas, o botão de fechar e um formulário de edição. A habitação e o voluntariado já funcionavam assim.",
+  "changelog.entries.your-own-swap-board.title":
+    "O teu próprio quadro de trocas, e resposta ao que propuseste",
+  "changelog.entries.your-own-swap-board.body":
+    "O quadro de trocas não tinha forma de retirar nem de editar, por isso uma troca concluída ficava lá para sempre e uma gralha nunca se corrigia, e se propunhas uma troca não tinhas onde a ver nem sabias se tinha sido aceite. Tudo isso passa a estar num só sítio: as trocas que publicaste, com editar e fechar, e as propostas que enviaste, cada uma com o que foi decidido. Se quem publicou mudar algo essencial depois da tua proposta, a tua proposta diz-to.",
+  "changelog.entries.one-place-for-everything-you-have-sent.title":
+    "Um só sítio para tudo o que nos enviaste",
+  "changelog.entries.one-place-for-everything-you-have-sent.body":
+    "Candidatar-te a parceria, propor uma troca e sugerir um recurso eram três entradas separadas, e saber se recebias resposta era decidido caso a caso. Duas delas nunca te diziam nada. Passa a haver uma única página na tua conta com tudo o que submeteste e o que lhe aconteceu, e uma decisão sobre qualquer uma chega-te às notificações. Onde quem reviu escreveu uma razão, podes lê-la.",
+  "changelog.entries.employers-and-listers-can-answer-a-review.title":
+    "Quem emprega e quem anuncia casa pode responder a uma avaliação",
+  "changelog.entries.employers-and-listers-can-answer-a-review.body":
+    "Um café do directório podia responder a uma avaliação sua, e quem emprega ou anuncia uma casa não podia. Ambos passam a poder responder uma vez, publicamente, com a resposta identificada como sendo de quem foi avaliado. Duas regras protegem quem escreveu: a resposta mantém-se se a avaliação for editada depois, para que ninguém apague uma resposta mudando um carácter, e a página diz quando uma avaliação foi editada depois da resposta, para que uma resposta nunca pareça concordar com palavras que não viu.",
+  "changelog.entries.register-interest-in-a-commission.title":
+    "Podes registar interesse numa encomenda",
+  "changelog.entries.register-interest-in-a-commission.body":
+    "O quadro de encomendas ainda está a ser construído, e a página dizia-o e não oferecia mais nada, apesar de o formulário por trás funcionar e de a fila do nosso lado ter quem a lesse. Agora podes registar o que gostavas de encomendar e com quem gostavas de trabalhar. A página é honesta sobre o que acontece a seguir: fica numa fila que uma pessoa lê, e não te é enviado email nenhum, porque esta plataforma não envia email.",
+  "changelog.entries.the-nav-says-what-is-still-being-built.title":
+    "O menu diz o que ainda está a ser construído",
+  "changelog.entries.the-nav-says-what-is-still-being-built.body":
+    "O Cinema e o Studio estavam no menu Cultura como ligações destacadas que davam numa página ainda por construir. Mantê-los ali foi uma decisão, para veres o que aí vem, mas nada o dizia e pareciam ligações partidas. Passam a ter uma marca discreta, e deixam de estar destacados, porque o destaque pertence ao que já funciona.",
+  "changelog.entries.search-stops-offering-what-it-cannot-find.title":
+    "A pesquisa deixa de oferecer o que não consegue encontrar",
+  "changelog.entries.search-stops-offering-what-it-cannot-find.body":
+    "A pesquisa tinha um separador de Vagas que nunca podia ter nada, porque a área de trabalho ainda não está aberta, e os resultados dela levavam a páginas que te devolviam ao roteiro. A pesquisa passa a perguntar que áreas estão mesmo abertas e mostra só esses separadores, para que uma categoria que podes abrir seja uma categoria com alguma coisa lá dentro.",
+  "changelog.entries.a-hidden-review-stays-hidden.title":
+    "Uma avaliação escondida fica escondida de quem é avaliado",
+  "changelog.entries.a-hidden-review-stays-hidden.body":
+    "Quando alguém da moderação escondia uma avaliação de uma casa, ela desaparecia do anúncio público e da classificação, e a pessoa avaliada continuava a poder lê-la por inteiro no seu próprio histórico de visitas. Era justamente ali que era mais preciso funcionar. Passa a ficar retida também aí, e quem anuncia deixa de poder responder a uma avaliação que foi escondida.",
+  "changelog.entries.erasing-your-account-keeps-what-others-rely-on.title":
+    "Apagar a tua conta mantém aquilo de que os outros dependem",
+  "changelog.entries.erasing-your-account-keeps-what-others-rely-on.body":
+    "Apagar uma conta eliminava todas as imagens que alguma vez tinhas carregado, pelo nome do ficheiro, sem verificar se alguma coisa ainda apontava para elas. Fotos que tiraste num encontro, a imagem de capa de uma comunidade que tinhas passado a outra pessoa, imagens na galeria de um anúncio: desaparecia tudo e deixava espaços partidos nas páginas de outras pessoas. O teu nome sai dessas contribuições, que é para isso que serve apagar a conta, e as imagens a que pertencem passam a ficar. Aquilo para que já nada aponta continua a ser eliminado.",
+  "changelog.entries.an-anonymous-owner-stays-anonymous.title":
+    "Quem tem um negócio e escolheu o anonimato continua anónimo",
+  "changelog.entries.an-anonymous-owner-stays-anonymous.body":
+    "A página de um negócio pode não identificar ninguém, e há muita gente que escolhe exactamente isso. Quando uma dessas pessoas respondia a uma pergunta pública, a notificação que chegava a quem perguntou identificava-a à mesma, com a fotografia e uma ligação para o perfil, entregando a identidade que a página retém de propósito. Essa notificação passa a identificar alguém apenas quando a página já o faz. Às notificações já enviadas foi retirado o nome.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // COORD-CHANGELOG-2 — COORD - the six decisions taken after the section 13 build, the member-facing half.
+  // COORD-CHANGELOG — COORD - deep-scan section 13 (the vertical surfaces), the member-facing half.
+  // COORD-FORORGS — COORD - the /about/for-organisations inquiry form. The promise of a personal reply in 5 working days is TRUE: a person answers from hello@queerpulse.com, out of band. What the copy did not say was by WHAT CHANNEL, on a platform that sends no automated email, so somebody could sit waiting on a notification that will never come. It now names the channel, the sending address and the address it goes to. The error state named no address to fall back to, which was a dead end; it names one now.
+  // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
+  // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
+  // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  "changelog.entries.tag-filters-show-how-many-communities-are-behind-them.title":
+    "Os filtros de etiquetas mostram quantas comunidades t\u00eam por tr\u00e1s",
+  "changelog.entries.tag-filters-show-how-many-communities-are-behind-them.body":
+    "A p\u00e1gina das comunidades deixa-te limitar por qualquer uma de 53 etiquetas, e nenhuma delas te dizia onde levava: escolher uma podia esvaziar a lista, e a \u00fanica forma de saber era tentar. Cada etiqueta passa a ter um n\u00famero, contado sobre tudo o resto que j\u00e1 tiveres aplicado, por isso o n\u00famero responde ao que terias se acrescentasses tamb\u00e9m esta etiqueta. Uma etiqueta sem nada por tr\u00e1s fica esbatida e ignora o clique, o mesmo tratamento que os filtros de categoria j\u00e1 tinham. O pr\u00f3prio painel passa a abrir suavemente, para veres a lista a dar-lhe espa\u00e7o.",
+  "changelog.entries.housing-filters-fold-away-until-you-need-them.title":
+    "Os filtros de casas ficam recolhidos at\u00e9 precisares deles",
+  "changelog.entries.housing-filters-fold-away-until-you-need-them.body":
+    "A p\u00e1gina de casas abria com um painel de filtros sempre aberto, que empurrava as primeiras casas para baixo do ecr\u00e3 por causa de escolhas que a maioria das pessoas faz uma vez ou nunca. Esses filtros passam a estar atr\u00e1s de um bot\u00e3o \u201CRefinar\u201D, o mesmo que a p\u00e1gina de encontros e a das comunidades j\u00e1 usam. O que tens aplicado continua vis\u00edvel logo abaixo, como uma linha de etiquetas, e cada etiqueta retira o seu pr\u00f3prio filtro, por isso um painel fechado nunca esconde o que est\u00e1 a limitar os resultados. O bot\u00e3o de Lista e Mapa subiu para a mesma linha, e guardar uma pesquisa fica agora ao lado das etiquetas que guardaria.",
+  "changelog.entries.empty-category-filters-can-no-longer-be-picked.title":
+    "Os filtros de categoria sem nada por tr\u00e1s ficam inativos",
+  "changelog.entries.empty-category-filters-can-no-longer-be-picked.body":
+    "Na p\u00e1gina das comunidades, um filtro de categoria que mostrava 0 continuava a poder ser escolhido, e escolh\u00ea-lo esvaziava a lista, deixando-te a perceber sozinho que o problema era o filtro e n\u00e3o a plataforma. Uma categoria sem nada dentro fica agora esbatida e ignora o clique. O n\u00famero continua l\u00e1 para leres, para veres num relance que categorias est\u00e3o paradas, e \u201CTodas as comunidades\u201D fica sempre dispon\u00edvel para voltar atr\u00e1s.",
+  "changelog.entries.the-app-follows-your-browsers-text-size.title":
+    "A aplicação segue o tamanho de letra do teu navegador",
+  "changelog.entries.the-app-follows-your-browsers-text-size.body":
+    "Se tinhas definido um tamanho de letra maior no teu navegador, a maior parte da aplicação ignorava-o em silêncio. O texto estava preso a tamanhos fixos que nunca se mexiam, por isso a definição não fazia nada em quase todas as páginas. Todos os tamanhos da aplicação passam a ser medidos em relação à definição do teu próprio navegador: aumenta-a e toda a interface cresce, diminui-a e encolhe. Nada muda se nunca mexeste nessa definição. As caixas que tinham uma altura congelada, como os círculos de avatar, os contadores e os títulos dos cartões, passam a crescer com as palavras lá dentro, para que o texto maior não fique cortado.",
+  "changelog.entries.faint-outlines-are-visible-again-in-dark-mode.title":
+    "Os contornos ténues voltam a ver-se no modo escuro",
+  "changelog.entries.faint-outlines-are-visible-again-in-dark-mode.body":
+    "Sessenta contornos na aplicação eram desenhados numa cor que fica escura nos dois temas, por isso numa página escura esses fios quase desapareciam: a margem de um cartão, o contorno de um painel, a caixa à volta da nota de quem revê algo que submeteste. Passam a usar a cor que fica creme no modo escuro, que é o que todos os outros contornos da aplicação já faziam. No modo claro ficam exatamente como estavam.",
+  "changelog.entries.deep-links-no-longer-flash-the-homepage.title":
+    "Abrir uma ligação já não mostra a página inicial primeiro",
+  "changelog.entries.deep-links-no-longer-flash-the-homepage.body":
+    "Todas as páginas além da inicial recebiam a cópia guardada da própria página inicial enquanto a aplicação carregava, por isso abrir uma ligação para uma política, um guia ou a página de alguém pintava a página inicial por um momento antes de aparecer a página verdadeira. Essa mesma cópia era o que uma pré-visualização de ligação ou um motor de busca lia sempre que não executava a aplicação, e por isso todas essas páginas se descreviam como a página inicial e levavam o título e a descrição dela. As páginas passam a receber uma moldura vazia, e cada uma preenche o seu próprio título e descrição enquanto carrega.",
+  "changelog.entries.report-one-photo-not-the-whole-gathering.title":
+    "Podes denunciar uma foto, e não o encontro inteiro",
+  "changelog.entries.report-one-photo-not-the-whole-gathering.body":
+    "Não havia forma de denunciar uma única foto no álbum de um encontro. O mais próximo era denunciar o encontro inteiro, e agir sobre isso retira o encontro por causa de uma imagem, por isso na prática uma fotografia de uma pessoa identificável só podia ser removida por quem a publicou ou por quem organizou, que às vezes são as pessoas de quem nos queixamos. Cada foto passa a ter o seu próprio botão de denúncia, com outing e exposição de dados no topo da lista, porque são as duas razões que chegam à fila de uma hora. Quem modera vê a própria foto, guardada apenas enquanto a denúncia estiver aberta e fora do alcance de mais ninguém.",
+  "changelog.entries.report-one-landlord-warning.title":
+    "Podes denunciar um aviso sobre um senhorio, e a remoção pode ser revertida",
+  "changelog.entries.report-one-landlord-warning.body":
+    "As recomendações numa ficha de senhorio são a forma de quem arrenda avisar as outras pessoas, e o único botão de denúncia dizia respeito à ficha inteira, por isso agir sobre uma queixa a respeito de uma delas retirava também todos os avisos de todas as outras pessoas. Cada recomendação passa a ter o seu próprio botão de denúncia. O lado de quem modera também mudou: retirar uma apagava-a definitivamente, e um erro não se podia desfazer. Passa a ficar retida em vez de destruída, e repô-la devolve as palavras exactas e a classificação do senhorio com elas.",
+  "changelog.entries.your-landlord-warning-outlives-your-account.title":
+    "Um aviso que escreveste sobre um senhorio sobrevive à tua conta",
+  "changelog.entries.your-landlord-warning-outlives-your-account.body":
+    "Apagar a tua conta apagava todas as recomendações de senhorios que tinhas escrito, e mudava discretamente a classificação desse senhorio com elas. Todo o resto do que escreves aqui já funcionava ao contrário: as palavras ficam e o teu nome sai. Os avisos sobre senhorios passam a fazer o mesmo, para que quem procura casa continue a ler o que descobriste, atribuído a alguém que entretanto saiu.",
+  "changelog.entries.correct-a-review-until-it-goes-public.title":
+    "Podes corrigir uma avaliação de visita até ela ficar pública",
+  "changelog.entries.correct-a-review-until-it-goes-public.body":
+    "As avaliações depois de uma visita a uma casa são escritas às cegas: nenhum dos lados vê a do outro até ambos terem escrito ou o prazo terminar. Não havia forma de corrigir uma gralha, nunca. Passas a poder editar a tua avaliação até ao momento em que fica pública, e não depois, para que uma correcção nunca possa tornar-se uma reacção ao que a outra pessoa escreveu. O formulário diz-te o prazo enquanto escreves.",
 };

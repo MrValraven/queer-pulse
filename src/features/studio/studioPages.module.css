@@ -11,7 +11,7 @@
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4vw, 50px);
+  font-size: var(--text-title);
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
@@ -53,7 +53,7 @@
 .collInfo h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.6vw, 58px);
+  font-size: var(--text-display);
   line-height: 1.02;
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
@@ -208,7 +208,7 @@
 }
 .sumH {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
   margin-bottom: 4px;
 }
@@ -234,7 +234,7 @@
 }
 .sumTotal span:last-child {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--accent);
 }
 .sumNote {
@@ -252,7 +252,7 @@
   background: rgba(var(--cream-rgb), 0.05);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: var(--radius-20);
-  padding: 56px 40px;
+  padding: var(--section-y-56) 40px;
 }
 /* Entrance for the confirmation screen swapped in after checkout. */
 .screenIn {
@@ -274,19 +274,19 @@
   }
 }
 .doneIcon {
-  width: 58px;
-  height: 58px;
+  width: 2.231em;
+  height: 2.231em;
   border-radius: 50%;
   background: var(--jade);
   display: grid;
   place-items: center;
   margin: 0 auto 20px;
-  font-size: 26px;
+  font-size: var(--text-26);
 }
 .done h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }

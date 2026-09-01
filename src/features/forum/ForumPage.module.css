@@ -33,7 +33,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(34px, 4.6vw, 54px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -82,7 +82,7 @@
   padding: 11px 40px 11px 40px;
   font-family: var(--sans);
   /* 1rem (16px) minimum: anything smaller triggers iOS Safari focus-zoom. */
-  font-size: 1rem;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--paper);
   outline: none;
@@ -98,7 +98,7 @@
 .searchHint {
   margin: 6px 0 0;
   padding-left: 2px;
-  font-size: 0.78rem;
+  font-size: var(--text-12-5);
   color: var(--ink-40);
 }
 .searchClear {
@@ -132,7 +132,7 @@
 }
 
 .body {
-  padding: 24px 0 80px;
+  padding: 24px 0 var(--section-y-80);
 }
 .layout {
   display: grid;
@@ -530,8 +530,8 @@
   }
 }
 .tmAv {
-  width: 26px;
-  height: 26px;
+  width: 2.364em; /* 26 / 11 */
+  height: 2.364em;
   border-radius: 50%;
   display: flex;
   align-items: center;

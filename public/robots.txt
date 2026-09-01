@@ -108,6 +108,14 @@ Disallow: /studio/calls
 Disallow: /studio/triage
 Disallow: /studio/council
 
+# --- Build artefact, not a page ---
+# `/spa.html` is the untouched SPA shell that scripts/prerender.mjs writes for
+# vercel.json's catch-all rewrite to serve on every route it does not bake. It
+# is reachable directly and returns 200, but it has no content of its own — an
+# empty <div id="root"> and the brand-level default metadata. Nothing links to
+# it; this keeps it out of an index if something ever does.
+Disallow: /spa.html
+
 # --- Deliberately de-indexed public surfaces (word-of-mouth only) ---
 Disallow: /magazine
 Disallow: /cinema
@@ -210,6 +218,8 @@ Disallow: /studio
 Disallow: /activism
 Disallow: /archive
 Disallow: /sustainer
+# The contentless SPA shell — see the note in the `*` group above.
+Disallow: /spa.html
 Allow: /
 
 # --- Model training: blocked outright ---

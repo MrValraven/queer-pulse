@@ -114,7 +114,7 @@
 /* ══ Reference page ═══════════════════════════════════════════════════════ */
 .hero {
   background: var(--plum);
-  padding: 60px 0 76px;
+  padding: var(--section-y-64) 0 var(--section-y-80);
   position: relative;
   overflow: hidden;
 }
@@ -136,7 +136,7 @@
 .heroTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 6vw, 74px);
+  font-size: clamp(2.375rem, 6vw, 4.625rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -159,7 +159,7 @@
 
 .body {
   background: var(--cream);
-  padding: 64px 24px 110px;
+  padding: var(--section-y-64) 24px var(--section-y-112);
 }
 .column {
   max-width: 760px;
@@ -169,7 +169,7 @@
 .sectionTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(24px, 3.2vw, 34px);
+  font-size: var(--text-heading);
   color: var(--ink);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -372,19 +372,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.16);
   color: var(--jade);
-  font-size: 22px;
+  font-size: var(--text-22);
   margin-bottom: 18px;
   position: relative;
 }
 .disclaimerTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 12px;

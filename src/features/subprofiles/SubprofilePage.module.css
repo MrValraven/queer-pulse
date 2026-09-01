@@ -43,7 +43,7 @@
   flex-direction: column;
   gap: 12px;
   /* Push the text block below the overlapping avatar's bottom edge. */
-  padding-top: 56px;
+  padding-top: var(--section-y-56);
 }
 
 @media (max-width: 600px) {

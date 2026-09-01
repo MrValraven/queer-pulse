@@ -22,7 +22,7 @@
   align-self: flex-start;
 }
 .label {
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--ink) 60%, transparent);
@@ -116,11 +116,11 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.35rem 0.7rem;
-  border: 1px solid rgba(var(--plum-rgb), 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-pill);
   background: transparent;
   color: var(--ink);
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   cursor: pointer;
 }
 .addBar button:hover {

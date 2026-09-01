@@ -217,6 +217,24 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // A swap proposal always carries the proposer as its actor, resolved
   // server-side into the standard `actor` field.
   "barter_proposal_received",
+  // PRD-47. The subject of a review answering it: a business owner, an
+  // employer, a housing lister. The actor is CONDITIONAL on this one, unlike
+  // every other kind in this set, and that is why it can sit here safely: the
+  // backend omits `payload.actorId` for a moderator-written reply, and the
+  // business directory omits it again for a co-manager or an owner whose public
+  // page does not name them, so nothing is outed by a bell row. Those rows
+  // resolve no `dto.actor` at all and therefore never reach the branch below
+  // that reads this set, keeping the generic `type.review_replied.text`
+  // ("Someone replied to your review of Lux Cafe.").
+  //
+  // The named variant drops the business name, because `NotificationItem`
+  // interpolates `{name}` and nothing else into a `textNamed` string (the same
+  // constraint `barter_proposal_received` above hit). Naming the person is
+  // worth that trade here: an actor-bearing row shows their face and links
+  // their profile, so "Someone replied" beside a named avatar reads as a bug.
+  // The reviewed thing is still one click away through `sourceHref`, which
+  // resolves to the business page the reply is published on.
+  "review_replied",
 ]);
 
 export function notificationDtoToView(
@@ -549,6 +567,24 @@ function sourceHrefFromPayload(
   // `account`, which already means "the delete-account page".
   if (payload.source === "account_dsar") {
     return routes.dsar;
+  }
+  // PRD-48. A decided submission goes to the page that is ABOUT that
+  // submission, which is the whole test a destination has to pass here.
+  //
+  // `submission` is the member's own submissions index: every intake they have
+  // sent in, with its state, its outcome and the reviewer's reason, still there
+  // long after the bell row is cleared. It carries the two staff-reviewed
+  // kinds (a partner application, a suggested resource).
+  //
+  // `barter` is the proposer's own half of the skill exchange, which the index
+  // links out to anyway: it holds the listing the offer was made against and
+  // the thread it opened, so it says more about a swap proposal than the index
+  // does. Neither takes a slug.
+  if (payload.source === "submission") {
+    return routes.mySubmissions;
+  }
+  if (payload.source === "barter") {
+    return routes.myBarter;
   }
   // A reviewed intake submission has NO destination, on purpose. There is no
   // member-facing page for a Culture submission, a micro-grant application or a

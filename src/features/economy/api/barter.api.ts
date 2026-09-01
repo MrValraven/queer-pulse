@@ -87,6 +87,40 @@ export interface CreateBarterListingBody {
   tags?: string[];
 }
 
+/** `PATCH /barter/:id`: the poster's correction. Every field is optional and
+ *  an omitted one is left alone; the server names exactly this set, so a field
+ *  outside it is rejected outright rather than quietly ignored. */
+export type UpdateBarterListingBody = Partial<CreateBarterListingBody>;
+
+/** The listing a sent proposal was made against, as the proposer's own list
+ *  shows it. `null` on a row whose listing is gone, or whose poster and the
+ *  reader have since blocked each other. */
+export interface ProposedBarterListingDTO {
+  id: string;
+  member: BarterMemberRefDTO | null;
+  category: BarterCategoryKey;
+  mode: Mode;
+  offer: string;
+  want: string;
+  status: BarterListingStatus;
+}
+
+/** One proposal the reader SENT (`GET /barter/mine/proposals`), with where it
+ *  stands and the swap it was made against. */
+export interface MySentBarterProposalDTO {
+  id: string;
+  listingId: string;
+  listing: ProposedBarterListingDTO | null;
+  message: string;
+  status: BarterProposalStatus;
+  decidedAt: string | null;
+  createdAt: string;
+  /** True when the poster changed the category, the mode or either headline
+   *  after this proposal was sent, so the offer was made against a swap that
+   *  no longer reads the same way. */
+  wasListingEditedAfterProposal: boolean;
+}
+
 /** GET /barter — one page of open listings, filtered by the board's controls. */
 export async function getBarterListings(
   params: ListBarterParams,
@@ -110,6 +144,30 @@ export const getBarterListing = (id: string) =>
 /** POST /barter */
 export const createBarterListing = (body: CreateBarterListingBody) =>
   apiPost<BarterListingDTO>("/barter", body);
+
+/** PATCH /barter/:id: correct a swap you posted. Answers the owner's shape,
+ *  so the pending-proposal count comes back with the edit. 403 when the reader
+ *  did not post it, 404 when there is no listing with that id. */
+export const updateBarterListing = (
+  id: string,
+  body: UpdateBarterListingBody,
+) => apiPatch<MyBarterListingDTO>(`/barter/${id}`, body);
+
+/** POST /barter/:id/close: take one of your swaps off the board. Idempotent
+ *  on the server, so re-closing a closed swap answers rather than failing. */
+export const closeBarterListing = (id: string) =>
+  apiPost<BarterListingDTO>(`/barter/${id}/close`);
+
+/** GET /barter/mine/proposals: the proposals you sent, newest first, each with
+ *  its outcome and the listing it was made against. */
+export async function getMySentBarterProposals(
+  signal?: AbortSignal,
+): Promise<MySentBarterProposalDTO[]> {
+  const response = await apiGet<
+    MySentBarterProposalDTO[] | ItemsPage<MySentBarterProposalDTO>
+  >("/barter/mine/proposals", undefined, undefined, signal);
+  return toItemsPage(response).items;
+}
 
 /** POST /barter/:id/proposals */
 export const proposeBarterSwap = (id: string, message: string) =>

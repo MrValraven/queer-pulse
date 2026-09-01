@@ -1,6 +1,6 @@
 /* ── Hero ── */
 .hero {
-  padding: 150px 0 88px;
+  padding: var(--section-y-144) 0 var(--section-y-88);
   position: relative;
   overflow: hidden;
   border-bottom: 2px solid rgba(var(--cream-rgb), 0.16);
@@ -51,7 +51,7 @@
 .heroTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(54px, 8.5vw, 116px);
+  font-size: var(--text-hero);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.026em;
   line-height: 0.94;
@@ -75,7 +75,7 @@
 
 /* ── Deed ── */
 .deed {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
 }
 .deedInner {
@@ -98,7 +98,7 @@
 }
 .deedText p {
   font-family: var(--serif);
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 0.9);
   line-height: 1.55;
   letter-spacing: -0.006em;
@@ -119,7 +119,7 @@
 
 /* ── Principles ── */
 .principles {
-  padding: 84px 0;
+  padding: var(--section-y-88) 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
 }
 .prHead {
@@ -129,7 +129,7 @@
 .prHead h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(36px, 5vw, 64px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
 }
@@ -162,7 +162,7 @@
 .prNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 54px;
+  font-size: var(--text-54);
   color: rgba(var(--cream-rgb), 0.16);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -171,7 +171,7 @@
 .prTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
   margin-bottom: 12px;
@@ -192,7 +192,7 @@
 
 /* ── Split visual ── */
 .split {
-  padding: 84px 0;
+  padding: var(--section-y-88) 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
 }
 .splitInner {
@@ -204,7 +204,7 @@
 .svText h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.4vw, 54px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   margin-bottom: 16px;
@@ -303,13 +303,13 @@
 
 /* ── Curators' council ── */
 .council {
-  padding: 84px 0;
+  padding: var(--section-y-88) 0;
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.12);
 }
 .council h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.4vw, 52px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.022em;
   margin-bottom: 8px;
@@ -359,8 +359,8 @@
   align-items: center;
 }
 .ccAv {
-  width: 52px;
-  height: 52px;
+  width: 2.889em; /* 52 / 18 */
+  height: 2.889em;
   border-radius: 50%;
   font-family: var(--serif);
   font-weight: 500;
@@ -424,7 +424,7 @@
 
 /* ── Governance ── */
 .gov {
-  padding: 84px 0;
+  padding: var(--section-y-88) 0;
 }
 .govInner {
   display: grid;
@@ -434,7 +434,7 @@
 .govBlock h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.012em;
   margin-bottom: 16px;

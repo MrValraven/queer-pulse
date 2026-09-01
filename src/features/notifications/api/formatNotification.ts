@@ -55,6 +55,40 @@ export type NotificationKind =
   | "appeal_resolved"
   | "invite_accepted"
   | "listing_review"
+  // Sent to the MEMBER WHO ASKED a public question on a business page when
+  // that question is answered (mirrors the backend `notifications_type_enum`
+  // value added in
+  // `AddListingPublicQuestionNotificationTypes1794300000000`). It has been
+  // written since that migration shipped and had no entry here, so it rendered
+  // the `unknown` fallback: a member got "Something happened on QueerPulse" as
+  // the answer to a question they personally typed.
+  //
+  // THE COPY IS WRITTEN FOR NO ACTOR, which is the common case rather than the
+  // edge one. The public Q&A names nobody: an answer is attributed by ROLE
+  // (`answeredByRole: 'owner' | 'moderator'`), a co-manager is invisible on the
+  // page by design, and an owner who is anonymous or who withheld
+  // `linkToProfile` has told the platform not to tie their name to the
+  // business. The backend spreads `payload.actorId` only where the page already
+  // links that owner's profile, so most rows resolve no actor at all. The asker
+  // is owed the ANSWER, and the sentence says exactly that without depending on
+  // a name that usually is not there.
+  //
+  // Payload carries `listingName` for the sentence, plus `source: 'listing'`
+  // and `listingSlug`, which `sourceHrefFromPayload` resolves to the business
+  // page the answer is published on. The answer text itself never rides along:
+  // it is on the page one click away, the same rule that keeps a review reply's
+  // text off `review_replied`.
+  // The other half of the public Q&A on a business listing, going to the
+  // listing's OWNER when a member asks something on their page. It was missing
+  // here for the same reason its sibling was: both were added to the backend
+  // enum and neither reached the frontend, so an owner's "somebody asked you a
+  // question" row rendered the unknown-kind fallback, "You have a new
+  // notification." Carries `payload.actorId` (the asker, who IS named on the
+  // page they asked from, so nothing is withheld) plus `listingName` for the
+  // sentence and a slug for the deep link. The question text stays off the
+  // bell, the same rule that keeps the ANSWER off the answered row.
+  | "listing_public_question"
+  | "listing_public_question_answered"
   | "roadmap_status"
   // Sent to the member a moderation action lands on (mirrors the backend
   // `notifications_type_enum` value added in
@@ -345,7 +379,53 @@ export type NotificationKind =
   // whitelist), and always delivered (no preference mutes them). Neither may
   // promise any other channel: QueerPulse sends no email.
   | "ban_evasion_escalation_raised"
-  | "ban_evasion_escalation_resolved";
+  | "ban_evasion_escalation_resolved"
+  // PRD-48, the two rows behind the shared intake primitive (mirrors the
+  // backend `notifications_type_enum` values added in
+  // `AddSubmissionAndReviewNotificationTypes1796400000000`).
+  //
+  // `submission_decided` goes to the MEMBER WHO SUBMITTED when the reviewing
+  // side reaches a terminal outcome, written by `SubmissionDecisionNotifier`.
+  // The gap it closes is a class of gap rather than one instance: every intake
+  // on the platform had its own entity, its own status words and its own
+  // decision endpoint, and whether the person who submitted ever heard back was
+  // decided one intake at a time, so a partner application, a barter proposal
+  // and a suggested resource each ended in permanent silence for the same
+  // reason.
+  //
+  // ONE KIND, TWO DISCRIMINATORS. Payload carries `{ kind, outcome,
+  // subjectLabel?, reviewNote? }`: `kind` is which intake this was (the
+  // backend's `SubmissionKind`) and `outcome` is `accepted | declined |
+  // archived`. The copy branches on BOTH, because "your swap was turned down"
+  // and "your resource suggestion is live" are not the same sentence and must
+  // not share a hedged one. An unknown kind, or a known kind with an unknown
+  // outcome, degrades one step at a time to honest generic copy rather than
+  // rendering nothing. System-driven, no actor: the bell never names who
+  // decided.
+  //
+  // `subjectLabel` is the submission's own headline read back to the member so
+  // the row says WHICH submission, and `reviewNote` is the reviewer's reason
+  // where one was given. The note is the meta line, exactly as
+  // `moderation_outcome`'s `{note}` is: these intakes have no member-facing
+  // tracker page and QueerPulse sends no email, so this row is the whole of
+  // what the member ever hears, and a declined outcome without its reason would
+  // be the reasonless refusal the finding exists to stop.
+  | "submission_decided"
+  // `review_replied` goes to the AUTHOR OF A REVIEW when the SUBJECT of that
+  // review answers it in public, written by `ReviewReplyNotifier`. A business
+  // owner's public reply to a member's review used to tell that member nothing,
+  // so the only way to find a reply was to go back and look.
+  //
+  // Member-driven, and the one difference from `submission_decided` above: it
+  // carries `payload.actorId` (the replying owner, employer or lister) so the
+  // same block/mute gate `listing_public_question_answered` sits behind applies
+  // here too. A moderator-written reply omits the actor and reads as the
+  // platform speaking. Payload also carries `subjectLabel` (the reviewed
+  // thing's own public name) plus `source` and a slug for the deep link. The
+  // REPLY TEXT never rides along: it is already published on the page this row
+  // opens, which is the same rule that keeps
+  // `listing_public_question_answered`'s answer body off the bell.
+  | "review_replied";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -380,6 +460,14 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   join_request_declined: "community",
   invite_accepted: "community",
   listing_review: "community",
+  // The answer to a question you asked on a business page is a public exchange
+  // about a place, same tab as listing_review and review_replied rather than
+  // the platform tab: this is not the platform's word on something you
+  // submitted, it is a business answering you where other members can read it.
+  // Both halves of a listing's public Q&A sit under "community": they are a
+  // public exchange about a place, not the platform's word on a submission.
+  listing_public_question: "community",
+  listing_public_question_answered: "community",
   job_application: "platform",
   listing_approved: "platform",
   report_resolved: "platform",
@@ -463,6 +551,16 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // into a community's own activity.
   ban_evasion_escalation_raised: "platform",
   ban_evasion_escalation_resolved: "platform",
+  // The outcome of something the member submitted is the platform's word on
+  // their own submission, same tab as intake_reviewed and
+  // volunteer_application_decided. True even for a barter proposal, whose
+  // reviewer is another member: what the row reports is the fate of the
+  // member's own submission, not activity in a community.
+  submission_decided: "platform",
+  // A member answering a review you wrote is activity between two members
+  // about a place, same tab as listing_review, which is the row on the other
+  // side of the same conversation.
+  review_replied: "community",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -670,6 +768,152 @@ function volunteerApplicationDecidedKeyFor(
   return status === "accepted" || status === "declined"
     ? `volunteer_application_decided.${status}`
     : "volunteer_application_decided";
+}
+
+/**
+ * The closed set of intake names the backend can put on a `submission_decided`
+ * row's `payload.kind`, mirroring `SubmissionKind` in
+ * `queerpulse-backend/src/submissions/submission-kinds.ts`.
+ *
+ * A closed set rather than a free interpolation, for the same reason
+ * `INTAKE_FORM_KINDS` above is one: the raw value is a snake_case identifier,
+ * and `resource_suggestion` is not a thing to show a member. A kind the backend
+ * adds before this list learns about it degrades to the generic copy rather
+ * than printing the identifier or rendering an empty row.
+ */
+const SUBMISSION_KINDS = new Set<string>([
+  "partner_application",
+  "barter_proposal",
+  "resource_suggestion",
+]);
+
+/**
+ * The closed set of terminal outcomes, mirroring `SubmissionOutcome` on the
+ * backend. `archived` is its own outcome rather than a shade of `declined`
+ * because telling somebody they were turned down when nobody weighed it is a
+ * worse row than telling them the queue item was closed.
+ */
+const SUBMISSION_OUTCOMES = new Set<string>([
+  "accepted",
+  "declined",
+  "archived",
+]);
+
+/**
+ * Resolve the i18n subkey a `submission_decided` notification's copy lives
+ * under. TWO discriminators, so the fallback happens in two steps rather than
+ * one:
+ *
+ *  - both known  -> `submission_decided.<kind>.<outcome>`, the real sentence.
+ *  - kind known, outcome not -> `submission_decided.<kind>`, which still names
+ *    the thing the member sent in and says a decision was reached.
+ *  - neither known -> the flat `submission_decided.*` copy, which says only
+ *    that there is news about something they sent in.
+ *
+ * Degrading a step at a time is the point: an intake added on the backend
+ * before this file learns about it still produces an honest, readable row
+ * rather than a blank one or a raw identifier. Non-matching types pass through
+ * unchanged.
+ */
+function submissionDecidedKeyFor(type: string, payload: unknown): string {
+  if (type !== "submission_decided") return type;
+  const decided = payload as { kind?: string; outcome?: string } | null;
+  const kind = decided?.kind;
+  if (typeof kind !== "string" || !SUBMISSION_KINDS.has(kind)) {
+    return "submission_decided";
+  }
+  const outcome = decided?.outcome;
+  return typeof outcome === "string" && SUBMISSION_OUTCOMES.has(outcome)
+    ? `submission_decided.${kind}.${outcome}`
+    : `submission_decided.${kind}`;
+}
+
+/**
+ * Resolves the `{subjectLabel}` token a `submission_decided` row interpolates:
+ * the submission's own headline, read back to the member so the row says which
+ * submission it is about.
+ *
+ * Read defensively like every other payload token here. The backend omits the
+ * key entirely rather than writing a blank one, so a submission whose headline
+ * was never recorded must still produce a whole sentence instead of leaving
+ * `{subjectLabel}` on screen. The fallback is per-kind, because "your swap
+ * proposal on a listing" and "your partner application for your organisation"
+ * are different sentences and one shared phrase fits neither.
+ */
+function submissionSubjectToken(payload: unknown, t: TFunction): string {
+  const decided = payload as { kind?: string; subjectLabel?: string } | null;
+  const subjectLabel = decided?.subjectLabel;
+  if (typeof subjectLabel === "string" && subjectLabel.trim() !== "") {
+    return subjectLabel;
+  }
+  const kind = decided?.kind;
+  return typeof kind === "string" && SUBMISSION_KINDS.has(kind)
+    ? t(`notifications:type.submission_decided.${kind}.subjectFallback`)
+    : t("notifications:type.submission_decided.subjectFallback");
+}
+
+/**
+ * Resolves the `{reviewNote}` token a `submission_decided` row interpolates
+ * into its META line: the reviewer's reason, where one was given.
+ *
+ * The meta line IS the note, the same shape `moderation_outcome.*.meta` uses
+ * (`"{note}"`). That is deliberate: these intakes have no member-facing tracker
+ * page, and QueerPulse sends no email, so the bell is the only place the reason
+ * can be read at all.
+ *
+ * A decision with no note falls back to the kind's own short label ("Partner
+ * application"), so the meta line still says what the row is about instead of
+ * going blank. It never apologises and never suggests the decision might yet
+ * change.
+ */
+function submissionNoteToken(payload: unknown, t: TFunction): string {
+  const decided = payload as { kind?: string; reviewNote?: string } | null;
+  const reviewNote = decided?.reviewNote;
+  if (typeof reviewNote === "string" && reviewNote.trim() !== "") {
+    return reviewNote;
+  }
+  const kind = decided?.kind;
+  return typeof kind === "string" && SUBMISSION_KINDS.has(kind)
+    ? t(`notifications:type.submission_decided.${kind}.label`)
+    : t("notifications:type.submission_decided.labelFallback");
+}
+
+/**
+ * Resolves the `{subjectLabel}` token a `review_replied` row interpolates: the
+ * public name of the thing the member reviewed (the business, the employer, the
+ * home).
+ *
+ * Same defensive read as `submissionSubjectToken`, with one shared fallback
+ * rather than a per-kind one: this row has no kind discriminator, and "your
+ * review of something you reviewed" is not a sentence, so the fallback phrasing
+ * is what the copy string is written around.
+ */
+function reviewSubjectToken(payload: unknown, t: TFunction): string {
+  const subjectLabel = (payload as { subjectLabel?: string } | null)
+    ?.subjectLabel;
+  return typeof subjectLabel === "string" && subjectLabel.trim() !== ""
+    ? subjectLabel
+    : t("notifications:type.review_replied.subjectFallback");
+}
+
+/**
+ * Resolves the `{listingName}` token both halves of a listing's public Q&A
+ * interpolate: the public name of the business, which the asker's row uses to
+ * say what they asked about and the owner's row uses to say which of their
+ * listings was asked about.
+ *
+ * Same defensive read as `reviewSubjectToken`. The backend has always written
+ * `listingName`, so the fallback is for a malformed or truncated payload rather
+ * than an older row shape, and it exists because leaving `{listingName}` on
+ * screen would be the worst possible version of a row whose whole job is to
+ * hand somebody an answer they asked for. The business is one click away
+ * through `sourceHref` in either case.
+ */
+function listingQuestionSubjectToken(payload: unknown, t: TFunction): string {
+  const listingName = (payload as { listingName?: string } | null)?.listingName;
+  return typeof listingName === "string" && listingName.trim() !== ""
+    ? listingName
+    : t("notifications:type.listing_public_question_answered.subjectFallback");
 }
 
 /**
@@ -1088,6 +1332,8 @@ export function formatNotification(
     key = volunteerApplicationDecidedKeyFor(type, payload);
   } else if (type === "story_submission_decided") {
     key = storySubmissionDecidedKeyFor(type, payload);
+  } else if (type === "submission_decided") {
+    key = submissionDecidedKeyFor(type, payload);
   } else if (type === "report_filed" || type === "community_report_filed") {
     key = reportFiledKeyFor(type, payload);
   } else if (type === "community_banned") {
@@ -1185,6 +1431,30 @@ export function formatNotification(
     // payload is missing or malformed still reads as a whole sentence instead
     // of showing `{communityName}` to somebody being asked to act.
     tokens.communityName = banEvasionCommunityToken(type, payload, t);
+  }
+  if (type === "submission_decided") {
+    // Overrides the raw `subjectLabel`/`reviewNote` `interpolationTokens`
+    // already copied through with the same values, defensively re-resolved so a
+    // row missing either still reads as a whole sentence and a whole meta line
+    // instead of showing a brace token to somebody being told their submission
+    // was turned down.
+    tokens.subjectLabel = submissionSubjectToken(payload, t);
+    tokens.reviewNote = submissionNoteToken(payload, t);
+  }
+  if (type === "review_replied") {
+    // Same reason: the reviewed thing's name is the copy's only interpolation
+    // slot, so a row missing it must still name something readable.
+    tokens.subjectLabel = reviewSubjectToken(payload, t);
+  }
+  if (
+    type === "listing_public_question" ||
+    type === "listing_public_question_answered"
+  ) {
+    // Same reason again: the business name is the sentence's only slot. On the
+    // answered row it usually names no PERSON at all, so the place is the whole
+    // of what tells the asker which question was answered; on the question row
+    // it is what tells an owner which of their listings was asked about.
+    tokens.listingName = listingQuestionSubjectToken(payload, t);
   }
   if (type === "barter_proposal_received") {
     // Overrides the raw `listingOffer` `interpolationTokens` already copied

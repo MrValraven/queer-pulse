@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 48px 0 60px;
+  padding: var(--section-y-48) 0 var(--section-y-64);
   position: relative;
   overflow: hidden;
 }
@@ -45,7 +45,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.8vw, 74px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
@@ -142,7 +142,7 @@
 }
 
 .body {
-  padding: 52px 0 var(--section-y);
+  padding: var(--section-y-56) 0 var(--section-y);
 }
 .grid {
   display: grid;
@@ -181,15 +181,17 @@
   align-items: flex-start;
 }
 .gcSpine {
-  width: 48px;
-  min-width: 48px;
-  height: 68px;
+  /* em against the spine letter's own font-size (--text-22): 48 / 22 and
+     68 / 22, so the spine keeps its proportions as type scales. */
+  width: 2.182em;
+  min-width: 2.182em;
+  height: 3.091em;
   border-radius: var(--radius-5) var(--radius-8) var(--radius-8) var(--radius-5);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 500;
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -319,7 +321,7 @@
 .ssText h3 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 9px;
@@ -397,17 +399,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
+  /* 46 / 22, in em so the disc scales with its glyph. */
+  width: 2.091em;
+  height: 2.091em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade);
-  font-size: 22px;
+  font-size: var(--text-22);
 }
 .ssSuccessTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }
@@ -429,7 +432,7 @@
 }
 
 .empty {
-  padding: 60px 0;
+  padding: var(--section-y-64) 0;
   text-align: center;
   grid-column: 1 / -1;
 }
@@ -462,7 +465,7 @@
 .wpHead h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   letter-spacing: -0.015em;
   color: rgba(var(--cream-rgb), 1);
 }

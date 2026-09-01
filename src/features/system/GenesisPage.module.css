@@ -24,7 +24,7 @@
 .heading {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 40px;
+  font-size: var(--text-40);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -53,6 +53,6 @@
   }
 
   .heading {
-    font-size: 32px;
+    font-size: var(--text-32);
   }
 }

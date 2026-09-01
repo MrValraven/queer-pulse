@@ -52,7 +52,7 @@
 .subject {
   margin: 0;
   font-family: var(--serif);
-  font-size: 1.12rem;
+  font-size: var(--text-18);
   color: var(--ink);
   overflow-wrap: anywhere;
 }
@@ -65,7 +65,7 @@
 
 .meta {
   margin: 4px 0 0;
-  font-size: 0.84rem;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   overflow-wrap: anywhere;
 }
@@ -83,7 +83,7 @@
 
 .sectionTerm {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: var(--text-label);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -106,7 +106,7 @@
   background: rgba(var(--jade-rgb), 0.1);
   border: 1px solid rgba(var(--jade-rgb), 0.24);
   color: var(--jade-ink);
-  font-size: 0.88rem;
+  font-size: var(--text-14);
 }
 
 .assessmentUnknown {
@@ -141,7 +141,7 @@
 
 .fieldLabel {
   display: block;
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
   margin-top: 10px;
@@ -149,6 +149,6 @@
 
 .fieldHint {
   margin: 0 0 6px;
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   color: var(--ink-40);
 }

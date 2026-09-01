@@ -11,7 +11,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { usePostedJobs } from "../../app/providers/usePostedJobs";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { COMPANY_PROFILES, type CompanyReview } from "./companies.data";
+import { COMPANY_PROFILES } from "./companies.data";
+import type { CompanyReviewView } from "./api/companyReviewView";
 import { JOBS } from "./jobs.data";
 import { useCompany } from "./api/useCompany";
 import { useCompanyReviews } from "./api/useCompanyReviews";
@@ -31,7 +32,7 @@ export function CompanyPage() {
   const companyQuery = useCompany(slug);
   const [tab, setTab] = useState<TabId>("about");
   const [writing, setWriting] = useState(false);
-  const [addedReviews, setAddedReviews] = useState<CompanyReview[]>([]);
+  const [addedReviews, setAddedReviews] = useState<CompanyReviewView[]>([]);
 
   const profile = demoMode
     ? (COMPANY_PROFILES[slug] ?? null)
@@ -121,6 +122,11 @@ export function CompanyPage() {
             isLoadingMoreReviews={reviewsQuery.isFetchingNextPage}
             hasReviewsError={reviewsQuery.isError}
             onRetryReviews={reviewsQuery.refetch}
+            // Server-decided (`CompanyDetailDTO.isOwner`), and false in demo:
+            // it is what puts the reply composer in front of the employer and
+            // nobody else. An UNCLAIMED company has no owner, so this is false
+            // for every viewer of one and the composer never appears.
+            isOwner={companyQuery.data?.isOwner ?? false}
             tab={tab}
             setTab={setTab}
           />

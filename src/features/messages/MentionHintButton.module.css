@@ -6,8 +6,9 @@
 /* Matches the 43px square of `.gifBtn`/`.sendBtn` (MessagesPage.module.css)
    so the composer controls read as a matched row. */
 .btn {
-  width: 43px;
-  height: 43px;
+  /* 43 / 20, in em so the square grows with the "@" it centres. */
+  width: 2.15em;
+  height: 2.15em;
   padding: 0;
   display: flex;
   align-items: center;
@@ -16,7 +17,7 @@
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   background: var(--cream);
   color: var(--text-strong);
-  font-size: 1.25rem;
+  font-size: var(--text-20);
   cursor: pointer;
   touch-action: manipulation;
   transition:
@@ -59,7 +60,7 @@
   padding: 0 6px;
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ink-60);
@@ -111,18 +112,18 @@
   color: rgba(var(--cream-rgb), 0.95);
   font-family: var(--sans);
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: var(--text-13);
 }
 
 .label {
   font-family: var(--sans);
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
 }
 
 .hint {
   margin: 8px 6px 2px;
   font-family: var(--sans);
-  font-size: 0.76rem;
+  font-size: var(--text-12);
   line-height: 1.35;
   color: var(--ink-60);
   opacity: 0.7;

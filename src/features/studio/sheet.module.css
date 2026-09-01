@@ -12,7 +12,7 @@
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 5vw, 56px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -60,7 +60,7 @@
 .sheetHi h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
@@ -121,7 +121,7 @@
 .pdfTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   text-align: center;
 }
@@ -199,8 +199,8 @@
   padding: 16px 18px;
 }
 .transcriber .av {
-  width: 40px;
-  height: 40px;
+  width: 2.857em;
+  height: 2.857em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
   color: var(--jade-light, var(--jade-light));
@@ -240,7 +240,7 @@
 .checkout h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
 }
 .checkout h2 em {

@@ -3,11 +3,13 @@ import type { Barter } from "../barter.data";
 import type {
   BarterProposalRow,
   MyBarterListingRow,
+  MySentBarterProposalRow,
 } from "../barterProposals.data";
 import type {
   BarterListingDTO,
   BarterProposalDTO,
   MyBarterListingDTO,
+  MySentBarterProposalDTO,
 } from "./barter.api";
 
 /**
@@ -99,6 +101,41 @@ export function myBarterListingToRow(
     want: view.want,
     days: view.days,
     pendingProposalCount: listing.pendingProposalCount,
+    status: listing.status,
+  };
+}
+
+/**
+ * One proposal the reader SENT to the row their own half of the board lists.
+ *
+ * `listing` stays `null` when the server sent none: the swap is gone, or its
+ * poster and the reader have since blocked each other. The row is still shown
+ * because it is the reader's own record of something they sent, and the page
+ * says plainly that the swap is no longer there rather than dropping it.
+ */
+export function mySentBarterProposalToRow(
+  dto: MySentBarterProposalDTO,
+): MySentBarterProposalRow {
+  const poster = memberRefToPerson(dto.listing?.member ?? null);
+  return {
+    id: dto.id,
+    listingId: dto.listingId,
+    listing: dto.listing
+      ? {
+          id: dto.listing.id,
+          mode: dto.listing.mode,
+          category: dto.listing.category,
+          offer: dto.listing.offer,
+          want: dto.listing.want,
+          status: dto.listing.status,
+          name: poster?.name ?? "",
+        }
+      : null,
+    message: dto.message,
+    createdAt: dto.createdAt,
+    decidedAt: dto.decidedAt,
+    status: dto.status,
+    wasListingEditedAfterProposal: dto.wasListingEditedAfterProposal,
   };
 }
 

@@ -4,7 +4,7 @@
 .dialogTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
@@ -115,12 +115,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 2.167em; /* 52 / 24 */
+  height: 2.167em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
-  font-size: 24px;
+  font-size: var(--text-24);
   margin-bottom: 16px;
   animation: iconPop 0.32s var(--ease) 0.18s both;
 }
@@ -141,7 +141,7 @@
 .confirmTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }

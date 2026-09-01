@@ -67,7 +67,7 @@
   border: 1px solid rgba(var(--cream-rgb), 0.28);
   background: rgba(var(--cream-rgb), 0.1);
   color: var(--cream);
-  font-size: 22px;
+  font-size: var(--text-22);
   cursor: pointer;
   transition: background 0.15s var(--ease);
 }
@@ -89,7 +89,7 @@
   border: 1px solid rgba(var(--cream-rgb), 0.22);
   background: rgba(var(--cream-rgb), 0.08);
   color: rgba(var(--cream-rgb), 0.85);
-  font-size: 22px;
+  font-size: var(--text-22);
   cursor: pointer;
   transition:
     background 0.15s var(--ease),

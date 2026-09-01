@@ -12,7 +12,7 @@
 
   max-width: 1160px;
   margin: 0 auto;
-  padding: 8px 0 120px;
+  padding: 8px 0 var(--section-y-120);
 }
 
 /* ── Header ── */
@@ -41,7 +41,7 @@
 .prH h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4.5vw, 52px);
+  font-size: clamp(1.875rem, 4.5vw, 3.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -131,7 +131,7 @@
 .groupHead h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
@@ -175,7 +175,7 @@
 .coverBody h3 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 27px;
+  font-size: var(--text-27);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -324,8 +324,8 @@
 }
 .remove {
   position: relative;
-  width: 28px;
-  height: 28px;
+  width: 1.556em;
+  height: 1.556em;
   border-radius: var(--radius-8);
   border: 1px solid var(--line);
   background: transparent;
@@ -459,8 +459,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  /* Anchored to the day numeral's own step so the 52px frame can be
+     expressed in em (52 / 22) and grows with the reader's font size.
+     Both children set their own size, so nothing inherits this. */
+  font-size: var(--text-22);
+  width: 2.364em;
+  height: 2.364em;
   border-radius: var(--radius-10);
   background: rgba(var(--cream-rgb), 0.06);
   border: 1px solid var(--line);
@@ -468,7 +472,7 @@
 .dateBox b {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1;
 }

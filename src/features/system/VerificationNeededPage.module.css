@@ -234,7 +234,7 @@
 .successTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.05;
@@ -303,7 +303,7 @@
 .expiredTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text-strong);
   line-height: 1.05;
   margin-bottom: 12px;

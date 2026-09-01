@@ -2,7 +2,7 @@
    scroll-lock, focus-trap, grabber and close chrome. Tokens only. */
 
 .eyebrow {
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -12,7 +12,7 @@
 .title {
   margin-top: 6px;
   font-family: var(--serif);
-  font-size: 1.5rem;
+  font-size: var(--text-24);
   color: var(--ink);
 }
 

@@ -89,6 +89,10 @@ const ACCEPTED_EXTRA_DISALLOWS = new Map([
     "Defensive prefix: no such route exists today, and a member card scanner could only ever be member-only.",
   ],
   [
+    "/spa.html",
+    "Not a route: the contentless SPA shell scripts/prerender.mjs writes for vercel.json's catch-all rewrite. It returns 200 with an empty #root, so it is worth keeping out of an index even though nothing links to it.",
+  ],
+  [
     "/about/volunteer/opportunity/*/edit",
     "Gated per authGate (routes.editVolunteer), but carries a :slug so publicPaths.mjs cannot express it. Hand-written on purpose.",
   ],

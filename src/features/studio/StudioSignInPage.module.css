@@ -88,7 +88,7 @@
 .wordmark {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text);
   letter-spacing: -0.01em;
 }
@@ -133,7 +133,7 @@
 .asideBody h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(34px, 3.6vw, 50px);
+  font-size: clamp(2.125rem, 3.6vw, 3.125rem);
   color: var(--text);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -260,7 +260,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 28px;
+  padding: var(--section-y-48) 28px;
 }
 .authCard {
   width: 100%;
@@ -325,7 +325,7 @@
 .authCard h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 40px;
+  font-size: var(--text-40);
   color: var(--text);
   letter-spacing: -0.025em;
   line-height: 1.02;

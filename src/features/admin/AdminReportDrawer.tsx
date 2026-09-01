@@ -21,6 +21,7 @@ import {
   ReportDrawerActionGrid,
   ReportDrawerReasonNote,
 } from "./AdminReportDrawerDecision";
+import { ReportedPhotoEvidence } from "./AdminReportPhotoEvidence";
 import {
   DEFAULT_RESTRICT_DURATION,
   modActionCodeFor,
@@ -163,7 +164,23 @@ export function AdminReportDrawer({
       {loading ? (
         <ReportContextLoading />
       ) : detail ? (
-        <ReportContext detail={detail} subjectType={report.subjectType} />
+        <>
+          {/* FIRST, above the written context, and only on an `event_photo`
+              report. Every other subject is text, so the excerpt block below is
+              the thing being judged; here the image IS the report, and `outing`
+              and `doxxing` carry a one-hour SLA. Making a moderator scroll past
+              an author byline and an empty thread block to reach the evidence
+              would be the wrong reading order for the reports that matter most.
+              Renders nothing at all when the report carries no photo snapshot,
+              so a queue of text reports pays neither the markup nor a request. */}
+          {detail.reportedPhoto && (
+            <ReportedPhotoEvidence
+              reportId={report.id}
+              photo={detail.reportedPhoto}
+            />
+          )}
+          <ReportContext detail={detail} subjectType={report.subjectType} />
+        </>
       ) : (
         <ReportContextFallback report={report} />
       )}

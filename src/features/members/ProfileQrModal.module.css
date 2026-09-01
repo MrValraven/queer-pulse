@@ -34,7 +34,7 @@
 }
 
 .who span {
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   overflow-wrap: anywhere;
 }

@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { ModalShell } from "./ModalKit";
 import { useViewingAction } from "./api/useHousingViewings";
+import { useViewingReviewPair } from "./api/useHousingReviews";
 import type {
   HousingViewingDTO,
   HousingViewingStatus,
@@ -48,6 +49,19 @@ export function ViewingCard({
   const fmt = useFormat();
   const action = useViewingAction();
   const [proposing, setProposing] = useState(false);
+  const isCompleted = viewing.status === "completed";
+  // CACHE-ONLY: `isEnabled: false` fires no request. The pair endpoint is one
+  // call per viewing and the "past" group is unbounded, so a row must not fetch
+  // it just to pick a button label. It reads whatever `ReviewViewingModal`
+  // already loaded for this viewing, which is what turns "Leave a review" into
+  // "Your review" once the member has written one. Before that it is absent and
+  // the button keeps its invitation, which is the right thing to say to
+  // somebody who has not reviewed yet.
+  const reviewPairQuery = useViewingReviewPair(
+    isCompleted ? viewing.id : undefined,
+    { isEnabled: false },
+  );
+  const hasReviewed = Boolean(reviewPairQuery.data?.youReviewed);
   const counterpartyName = viewing.counterparty
     ? `${viewing.counterparty.firstName} ${viewing.counterparty.lastName}`.trim()
     : t("economy:housingViewing.list.someone");
@@ -179,9 +193,13 @@ export function ViewingCard({
             {t("economy:housingViewing.list.markCompleted")}
           </Button>
         )}
-        {viewing.status === "completed" && (
+        {isCompleted && (
           <Button variant="primary" size="sm" onClick={() => onReview(viewing)}>
-            {t("economy:housingViewing.list.leaveReview")}
+            {t(
+              hasReviewed
+                ? "economy:housingViewing.list.yourReview"
+                : "economy:housingViewing.list.leaveReview",
+            )}
           </Button>
         )}
       </div>

@@ -6,7 +6,7 @@
 .stat b {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: var(--accent);
   display: block;
   letter-spacing: -0.02em;
@@ -93,7 +93,7 @@
 }
 
 .body {
-  padding: 36px 0 80px;
+  padding: 36px 0 var(--section-y-80);
 }
 .grid {
   display: grid;
@@ -187,7 +187,7 @@
 .empty {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 50px 0;
+  padding: var(--section-y-48) 0;
   color: var(--ink-40);
 }
 .loadMore {
@@ -197,13 +197,13 @@
 }
 
 .orgsSection {
-  padding: 12px 0 70px;
+  padding: 12px 0 var(--section-y-72);
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .orgsTitle {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 28px;
+  font-size: var(--text-28);
   letter-spacing: -0.01em;
   color: var(--text-strong);
   margin: 0 0 8px;

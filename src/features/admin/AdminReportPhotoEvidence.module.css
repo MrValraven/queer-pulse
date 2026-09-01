@@ -1,0 +1,143 @@
+/* The reported gathering photo inside the moderation drawer.
+
+   Its own module rather than another block in AdminModerationPage.module.css:
+   this is the only place in the console that renders member-uploaded photography
+   at size, and the edge treatment below exists for that reason alone. */
+
+.section {
+  margin-bottom: 26px;
+}
+
+/* Matches .dSecLabel in AdminModerationPage.module.css so the photo block sits
+   in the same rhythm as the excerpt, thread and people sections above it. */
+.sectionLabel {
+  margin: 0 0 12px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* A photograph is an unknown ground: its edge can be near-white or near-black,
+   and a single-value edge disappears against one of the two. So the frame is
+   drawn twice, light inside and dark outside, and one of the two always reads:
+   a cream hairline border against a dark photo, a plum ring against a light
+   one. Both channels are chosen because they do NOT flip between themes.
+   `--line-rgb` does flip, and a border drawn with it would go cream-on-cream in
+   dark mode against exactly the photos that need an edge most. */
+.frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--cream-rgb), 0.5);
+  border-radius: var(--radius-14);
+  background: rgba(var(--plum-rgb), 0.06);
+  box-shadow: var(--ring-plum-soft);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Bounded so a portrait photo cannot push the decision controls off the
+     bottom of the drawer. `contain` rather than `cover`: a crop can remove the
+     very person the report is about. */
+  max-height: 420px;
+  object-fit: contain;
+}
+
+/* Holds the frame's height while the image decodes, so the sections beneath it
+   do not jump once it arrives. */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0;
+  color: var(--ink-40);
+}
+.placeholder svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* The photo is gone. An honest sentence, calm rather than alarming: the report
+   is still actionable, and the moderator has done nothing wrong by arriving
+   after the uploader deleted it. */
+.unavailable {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 16px;
+  border-radius: var(--radius-14);
+  background: rgba(var(--plum-rgb), 0.05);
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+.unavailable svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 2px;
+  color: var(--ink-40);
+}
+
+.captionLabel {
+  margin: 14px 0 6px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+/* Mirrors .dClaim: the uploader's words are context around the image, so they
+   read as neutral quotation rather than as the danger-toned excerpt block. */
+.caption {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--plum);
+  border-radius: 0 var(--radius-14) var(--radius-14) 0;
+  background: rgba(var(--plum-rgb), 0.05);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .caption {
+  background: rgba(var(--ink-rgb), 0.06);
+  color: var(--ink);
+}
+
+.meta {
+  margin: 10px 0 0;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+
+.fullSizeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+.fullSizeLink:hover {
+  text-decoration: underline;
+}
+.fullSizeLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-4);
+}
+.fullSizeLink svg {
+  width: 13px;
+  height: 13px;
+}

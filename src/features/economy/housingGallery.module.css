@@ -110,14 +110,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 2em;
+  height: 2em;
   border-radius: var(--radius-pill);
   border: none;
   background: transparent;
   color: var(--cream);
   cursor: pointer;
-  font-size: 22px;
+  font-size: var(--text-22);
 }
 @media (hover: hover) and (pointer: fine) {
   .iconBtn:hover {

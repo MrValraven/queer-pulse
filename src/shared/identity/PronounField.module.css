@@ -22,7 +22,7 @@
 .chip {
   padding: 7px 14px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--plum-rgb), 0.18);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
   background: var(--paper);
   color: var(--ink);
   font: inherit;
@@ -76,7 +76,7 @@
   flex: 1;
   padding: 10px 12px;
   border-radius: var(--radius-10);
-  border: 1px solid rgba(var(--plum-rgb), 0.18);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
   background: var(--paper);
   font: inherit;
   font-size: var(--text-14);

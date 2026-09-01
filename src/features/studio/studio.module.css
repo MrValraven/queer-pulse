@@ -74,7 +74,7 @@
 .brandRow .brand {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text);
 }
 .brandRow .brand em {
@@ -281,8 +281,8 @@
   }
 }
 .avatar {
-  width: 34px;
-  height: 34px;
+  width: 2.615em;
+  height: 2.615em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.1);
   color: var(--text);
@@ -334,7 +334,7 @@
 .heroInfo h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5vw, 64px);
+  font-size: clamp(2.375rem, 5vw, 4rem);
   color: var(--text);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -458,7 +458,7 @@
 .rowH h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text);
   letter-spacing: -0.015em;
 }
@@ -611,7 +611,7 @@
 .setCard h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text);
   letter-spacing: -0.015em;
 }
@@ -695,7 +695,7 @@
 }
 .sideCard .ct {
   font-family: var(--serif);
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text);
   margin-top: 8px;
 }
@@ -713,8 +713,8 @@
   margin-top: 14px;
 }
 .avStack .av {
-  width: 30px;
-  height: 30px;
+  width: 2.727em;
+  height: 2.727em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
   color: var(--accent-soft);
@@ -838,7 +838,7 @@
 .detailHero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 76px);
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
   color: var(--text);
   letter-spacing: -0.025em;
   line-height: 0.96;
@@ -878,8 +878,8 @@
   font-style: italic;
 }
 .author .av {
-  width: 32px;
-  height: 32px;
+  width: 2.667em;
+  height: 2.667em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
   color: var(--accent-soft);
@@ -898,7 +898,7 @@
 .buyCard .price {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 48px;
+  font-size: var(--text-48);
   color: var(--text);
   letter-spacing: -0.02em;
   line-height: 1;

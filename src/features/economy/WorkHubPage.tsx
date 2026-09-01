@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { FiBriefcase } from "react-icons/fi";
+import { FiBriefcase, FiEdit3 } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -12,7 +12,9 @@ import {
   STATUS_CARDS,
   workStatusLine,
   applicationsHubCard,
+  type StatusCard,
 } from "./work.data";
+import { useMyJobs } from "./api/jobOwner.hooks";
 import { WorkNextActions } from "./WorkNextActions";
 import { WorkHubCards } from "./WorkHubCards";
 import { WorkProfileCard } from "./WorkProfileCard";
@@ -25,6 +27,22 @@ export function WorkHubPage() {
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfileData();
   const statusLine = useMemo(() => workStatusLine(t), [t]);
+  // PRD-44: the hub is the spine of Work, so a member who has published a role
+  // gets the way into managing it here. The card is absent for everyone else
+  // rather than showing a zero, which would read as a dead end.
+  const { rows: myPostedJobs } = useMyJobs();
+  const myJobsCard = useMemo<StatusCard>(
+    () => ({
+      key: "my-jobs",
+      icon: <FiEdit3 />,
+      labelKey: "economy:myJobs.hub.label",
+      primaryKey: "economy:myJobs.hub.primary",
+      primaryValues: { count: myPostedJobs.length },
+      nextKey: "economy:myJobs.hub.next",
+      to: routes.myJobs,
+    }),
+    [myPostedJobs.length],
+  );
   // The activity summaries are demo-only fiction — live mode has no backend to
   // aggregate them yet, so it shows a neutral getting-started state.
   return (
@@ -52,6 +70,15 @@ export function WorkHubPage() {
           </h2>
           <WorkHubCards cards={[applicationsHubCard(demoMode)]} />
         </section>
+
+        {myPostedJobs.length > 0 && (
+          <section className={styles.band}>
+            <h2 className={styles.sectionTitle}>
+              {t("economy:myJobs.hub.label")}
+            </h2>
+            <WorkHubCards cards={[myJobsCard]} />
+          </section>
+        )}
 
         {demoMode ? (
           <>

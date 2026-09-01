@@ -2,7 +2,7 @@
    list on purpose — this page exists so nothing is unreachable, so legibility
    and completeness beat presentation. */
 .body {
-  padding: 56px 0 88px;
+  padding: var(--section-y-56) 0 var(--section-y-88);
   background: var(--paper);
 }
 
@@ -12,7 +12,7 @@
 
 .groupTitle {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   margin-bottom: 18px;
   color: var(--text-strong);
 }

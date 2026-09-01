@@ -30,6 +30,7 @@ import { useWorkProfile } from "../../app/providers/useWorkProfile";
 import { usePostedJobs } from "../../app/providers/usePostedJobs";
 import { JOBS, JOB_FILTERS, type Job } from "./jobs.data";
 import { useJobs } from "./api/useJobs";
+import { useMyJobs } from "./api/jobOwner.hooks";
 import { JobsEmployers } from "./JobsEmployers";
 import { safetyFor } from "./employerSafety.data";
 import { SafetyBadges } from "./SafetyBadges";
@@ -176,6 +177,10 @@ export function JobsPage() {
     fetchNextPage,
     isFetchingNextPage,
   } = useJobs();
+  // PRD-44: a poster had no index of what they published. The board is where
+  // they come looking, so the way in sits next to the post button, and only
+  // for someone who actually has a posting to manage.
+  const { rows: myPostedJobs } = useMyJobs();
   const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [showAll, setShowAll] = useState(false);
@@ -258,13 +263,20 @@ export function JobsPage() {
                 </button>
               ))}
             </div>
-            <button
-              type="button"
-              className={styles.postBtn}
-              onClick={() => void navigate(routes.postJob)}
-            >
-              {t("economy:jobs.postCta")}
-            </button>
+            <div className={styles.topActions}>
+              {myPostedJobs.length > 0 && (
+                <Link to={routes.myJobs} className={styles.myJobsLink}>
+                  {t("economy:myJobs.entryLink")}
+                </Link>
+              )}
+              <button
+                type="button"
+                className={styles.postBtn}
+                onClick={() => void navigate(routes.postJob)}
+              >
+                {t("economy:jobs.postCta")}
+              </button>
+            </div>
           </div>
           {safeOnly && (
             <div className={styles.safetyBanner}>

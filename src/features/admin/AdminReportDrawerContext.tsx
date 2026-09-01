@@ -34,20 +34,44 @@ import styles from "./AdminModerationPage.module.css";
  */
 
 /**
- * The one subject type whose report can name two different authors: it covers
- * a public question AND the answer posted under it, and records neither which
- * half was reported nor who wrote the answer (it is nullable, it survives a
- * listing changing hands, and it can be a moderator).
+ * The subject types whose report can name two different authors.
+ *
+ * Each covers a statement AND the answer posted under it, under one subject and
+ * one "Report this" control, and records neither which half was reported nor
+ * who wrote the second one:
+ *
+ *  - `listing_public_question`: a member's public question on a business
+ *    listing and the owner's answer beneath it. The answerer is nullable, it
+ *    survives the listing changing hands, and it can be a moderator.
+ *  - `review`: a review and the reviewed party's single public reply under it,
+ *    on all three surfaces that carry one (a directory listing, an employer,
+ *    a home). Added by PRD-47 when housing and employer reviews gained the
+ *    reply the business directory already had.
+ *
+ * A SET, so the day a third one arrives there is an obvious place to declare
+ * it. This list mirrors the backend resolver: exactly the two statements in
+ * `queerpulse-backend/src/moderation/report-subject-resolver.service.ts` that
+ * select `is_author_ambiguous` belong here, and nothing else does. It is a
+ * hardcoded mirror only because the flag never reaches the wire:
+ * `ReportSubjectResolution.isAuthorAmbiguous` is consumed inside
+ * `AccountEnforcementService` and no field on `ModReportDTO` or `ReportDetail`
+ * carries it. If one is ever added, delete this set and read the flag instead.
+ *
+ * The mirror is deliberately WIDER than the backend flag: the backend only sets
+ * it when a second half actually exists, and nothing on the wire says whether
+ * it does, so the note warns that restrict and ban CAN be refused rather than
+ * promising they will be.
  */
-const AMBIGUOUS_AUTHOR_SUBJECT: ModReport["subjectType"] =
-  "listing_public_question";
+const AMBIGUOUS_AUTHOR_SUBJECTS: ReadonlySet<ModReport["subjectType"]> =
+  new Set(["listing_public_question", "review"]);
 
 /**
  * Says out loud that the author named just above may not be the person who
  * wrote the reported half.
  *
- * The drawer has to name somebody, and it names whoever asked, because they
- * opened the exchange. Without this line a moderator reads one handle, decides
+ * The drawer has to name somebody, and it names whoever posted first, because
+ * they opened the exchange: the member who asked the question, or the member
+ * who wrote the review. Without this line a moderator reads one handle, decides
  * about that person, and only learns two people are involved from the refusal
  * toast after they have already tried to ban one of them. Rendered at the
  * moment the naming happens, so the refusal confirms what they already knew
@@ -59,7 +83,7 @@ function AmbiguousAuthorsNote({
   subjectType: ModReport["subjectType"];
 }) {
   const { t } = useTranslation();
-  if (subjectType !== AMBIGUOUS_AUTHOR_SUBJECT) return null;
+  if (!AMBIGUOUS_AUTHOR_SUBJECTS.has(subjectType)) return null;
   return (
     <p className={styles.dAmbiguous}>
       <FiInfo aria-hidden />{" "}

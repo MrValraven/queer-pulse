@@ -79,10 +79,10 @@
 .body {
   max-width: 760px;
   margin: 0 auto;
-  padding: 64px 28px 0;
+  padding: var(--section-y-64) 28px 0;
 }
 .art {
-  padding: 48px 0;
+  padding: var(--section-y-48) 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   scroll-margin-top: 64px;
 }
@@ -103,7 +103,7 @@
 .art h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(30px, 4.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -163,7 +163,7 @@
   color: var(--accent-ink);
 }
 .version {
-  padding: 40px 28px 80px;
+  padding: 40px 28px var(--section-y-80);
   max-width: 760px;
   margin: 0 auto;
   text-align: center;

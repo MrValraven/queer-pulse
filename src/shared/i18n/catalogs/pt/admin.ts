@@ -1636,7 +1636,7 @@ export const admin: Catalog = {
   "moderation.reportDrawer.transparency":
     "Vamos dizer a {name} exatamente o que foi feito e porquê, com uma ligação para recorrer. Nada acontece em silêncio.",
   "moderation.reportDrawer.ambiguousAuthorsNote":
-    "Isto é uma pergunta e a resposta por baixo, e podem ter sido escritas por pessoas diferentes. A denúncia não regista qual delas foi denunciada, por isso restringir e banir não vão avançar aqui.",
+    "Isto abrange o que foi publicado e a resposta por baixo, e podem ter sido duas pessoas diferentes a escrever cada metade. A denúncia não regista qual das metades a pessoa queria denunciar, por isso restringir e banir podem não avançar aqui.",
   "moderation.reportDrawer.accountActionsTarget":
     "Restringir e banir atuam sobre quem publicou isto. Ocultar e remover atuam sobre o próprio conteúdo. Sem uma conta por trás, um anúncio sem dono ou uma conta apagada, restringir e banir não vão avançar.",
   "moderation.reportDrawer.restrictDurationLabel": "Duração da restrição",
@@ -1770,7 +1770,7 @@ export const admin: Catalog = {
   "moderation.refusal.noAccount":
     "Isto não avançou: não há nenhuma conta por trás do que foi denunciado, por isso não há ninguém para restringir ou banir. Remove o conteúdo, arquiva a denúncia ou encaminha-a.",
   "moderation.refusal.ambiguousAuthors":
-    "Isto não avançou: esta denúncia cobre uma pergunta e a resposta por baixo, e foram duas pessoas diferentes a escrevê-las. O painel mostra quem perguntou, por isso abre o anúncio para veres quem escreveu a parte que queres e age a partir do perfil dessa pessoa, ou age sobre o conteúdo.",
+    "Isto não avançou: esta denúncia abrange o que foi publicado e a resposta por baixo, e foram duas pessoas diferentes a escrevê-las. O painel mostra quem publicou primeiro, por isso abre a página onde isto foi publicado, vê quem escreveu a metade que queres e age a partir do perfil dessa pessoa, ou age sobre o conteúdo.",
   "moderation.refusal.houseAccount":
     "Isto não avançou: o que foi denunciado remete para a conta da casa, que nunca é alvo de moderação. Age sobre o conteúdo ou arquiva a denúncia.",
   "moderation.refusal.staffAccount":
@@ -5361,4 +5361,18 @@ export const admin: Catalog = {
     "Não conseguimos resolver esse escalamento.",
   "banEvasionEscalations.error.alreadyResolved":
     "Alguém já resolveu este escalamento.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PHOTO-EVIDENCE — PHOTO-EVIDENCE. The reported gathering photo inside the moderation report drawer (AdminReportPhotoEvidence.tsx). Rendered only for an event_photo report. imageAlt is the image's accessible name and deliberately says what the image IS rather than what is in it: a moderator's screen reader is often audible to whoever is nearby, and describing the person in a photo that may be outing them is the exact harm being judged. unavailable is the honest state for a photo the uploader deleted after filing; the report stays actionable, so the wording never implies the case is over.
+  // PRD-47d — PRD-47d - OVERWRITES two existing keys; adds none. `ambiguous_authors` now answers two subject types: `listing_public_question` (a question and the answer under it) and `review` (a review and the reviewed party's public reply under it, on a directory listing, an employer or a home). Today's copy names a question and a listing, so a moderator refused on an employer-review or housing-review report reads a sentence about a surface they are not looking at. Two further corrections on top of the generalisation. (1) The drawer note said restrict and ban "won't go through here"; the backend only sets `is_author_ambiguous` when a second half actually EXISTS, and nothing on the wire tells the drawer whether it does, so the old sentence was already false on an unanswered question and would be false on most reviews. It now says they CAN be refused. The refusal string keeps its absolute phrasing, because it only ever renders when the flag really fired. (2) It names "whoever posted first" rather than "whoever asked", which is true of a reviewer as well as an asker, and points at "the page it was posted on" rather than "the listing", which is true of a home and an employer as well. This block supersedes the identical pair in PRD-47c.json (see the note in PRD-47D-LANDLORD-TAKEDOWN.md): that manifest is missing `overwrite`, so the merge would have skipped it, and its Portuguese is unaccented where the live catalogue is accented.
+  "moderation.reportDrawer.photoEvidence.title": "Fotografia denunciada",
+  "moderation.reportDrawer.photoEvidence.imageAlt":
+    "A fotografia a que esta denuncia diz respeito, tal como estava no momento em que foi apresentada.",
+  "moderation.reportDrawer.photoEvidence.unavailable":
+    "Esta fotografia ja nao esta disponivel. Foi retirada depois de a denuncia ter sido apresentada, por isso estas a decidir com base nos detalhes abaixo e nao na imagem. O facto de a fotografia ter desaparecido nao encerra a denuncia.",
+  "moderation.reportDrawer.photoEvidence.captionLabel":
+    "Legenda escrita por quem publicou",
+  "moderation.reportDrawer.photoEvidence.uploadedAt":
+    "Publicada no album a {date}",
+  "moderation.reportDrawer.photoEvidence.fullSizeCta": "Abrir em tamanho real",
 };

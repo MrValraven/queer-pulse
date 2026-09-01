@@ -127,7 +127,7 @@
 .emptyTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   font-weight: 400;
   line-height: 1.15;
   color: rgba(var(--cream-rgb), 1);
@@ -173,8 +173,8 @@
 .pagerBtn {
   display: grid;
   place-items: center;
-  min-width: 32px;
-  height: 32px;
+  min-width: 2.462em; /* 32 / 13 */
+  height: 2.462em;
   padding: 0 6px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.14);

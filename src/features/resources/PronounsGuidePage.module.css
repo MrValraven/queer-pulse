@@ -3,7 +3,7 @@
 .body {
   max-width: var(--maxw, 1200px);
   margin: 0 auto;
-  padding: 72px 28px 110px;
+  padding: var(--section-y-72) 28px var(--section-y-112);
 }
 .layout {
   display: grid;
@@ -28,7 +28,7 @@
 .proseH {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(24px, 3vw, 34px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.018em;
   line-height: 1.1;

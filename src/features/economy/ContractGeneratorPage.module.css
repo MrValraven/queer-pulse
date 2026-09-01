@@ -178,7 +178,7 @@
 .docTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 30px;
+  font-size: var(--text-30);
   line-height: 1.1;
   margin: 0 0 18px;
   color: var(--ink);

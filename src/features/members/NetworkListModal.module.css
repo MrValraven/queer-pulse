@@ -18,7 +18,7 @@
   margin: 8px 0 12px;
   padding: 0 2px;
   color: rgba(var(--ink-rgb), 0.66);
-  font-size: 0.95rem;
+  font-size: var(--text-body);
 }
 
 .modalRows {

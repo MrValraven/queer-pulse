@@ -1,5 +1,5 @@
 .page {
-  padding: 88px 0 100px;
+  padding: var(--section-y-88) 0 var(--section-y-104);
 }
 
 .layout {
@@ -23,7 +23,7 @@
 
 .sbHead {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   margin-bottom: 18px;
   letter-spacing: -0.01em;
@@ -72,7 +72,7 @@
 .secHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(24px, 3.5vw, 32px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 4px;

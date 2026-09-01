@@ -66,6 +66,7 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     isLoading: isFetchingFirstPage,
     isError: hasListFailed,
     refetch: retryList,
+    facets,
   } = useCommunities({
     filter: isMineScope ? "mine" : undefined,
     q: q || undefined,
@@ -129,6 +130,15 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     ? visible.filter((community) => community.slug !== featured!.slug)
     : visible;
 
+  // Tag-chip counts, unlike the category chips just above them, are a live
+  // facet: the server counts them over this same request's filters with the
+  // `tags` filter itself lifted, so a number answers "how many would I get if
+  // I picked this tag as well", and a 0 is a dead end worth greying out. The
+  // two client-side narrowings (`isBusyOnly`, and `sort=active`'s drain) are
+  // computed after pagination and are not part of the query, so they don't
+  // move these numbers in either mode. `undefined` until the first page lands.
+  const tagCounts = facets?.tags;
+
   // Category-chip counts are deliberately stable across search/sort/toggles —
   // they read against the whole pool for this scope, not whatever's currently
   // filtered, so switching a chip doesn't make the other chips' numbers jump.
@@ -182,6 +192,7 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     hasListFailed,
     retryList,
     categoryCounts,
+    tagCounts,
     hasActiveRefinement,
     resetRefinements,
   };

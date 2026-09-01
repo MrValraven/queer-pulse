@@ -11,7 +11,7 @@
   margin: 0 0 0.4rem;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 2rem;
+  font-size: var(--text-32);
   letter-spacing: -0.015em;
   color: var(--text-strong);
 }
@@ -24,7 +24,7 @@
 
 .policyLine {
   margin: 0 0 2rem;
-  font-size: 0.875rem;
+  font-size: var(--text-body-sm);
   line-height: 1.6;
   color: var(--ink-40);
 }
@@ -36,7 +36,7 @@
 }
 
 .loadingLabel {
-  font-size: 0.875rem;
+  font-size: var(--text-body-sm);
   color: var(--ink-40);
 }
 
@@ -68,14 +68,14 @@
   margin: 0;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 1.25rem;
+  font-size: var(--text-subhead);
   letter-spacing: -0.01em;
   color: var(--text-strong);
 }
 
 .meta {
   margin: 0.35rem 0 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   color: var(--ink-40);
   overflow-wrap: anywhere;
 }
@@ -89,7 +89,7 @@
 
 .statusLine {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--ink-60);
 }
@@ -103,7 +103,7 @@
 
 .noteLabel {
   margin: 0 0 0.3rem;
-  font-size: 0.6875rem;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -112,7 +112,7 @@
 
 .noteBody {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: var(--text-body);
   line-height: 1.55;
   color: var(--ink-60);
   overflow-wrap: anywhere;
@@ -129,7 +129,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.875rem;
+  font-size: var(--text-body-sm);
   font-weight: 600;
   color: var(--accent-text);
   text-decoration: none;

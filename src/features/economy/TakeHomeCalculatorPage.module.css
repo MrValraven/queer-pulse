@@ -74,12 +74,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.18);
   color: var(--jade);
-  font-size: 22px;
+  font-size: var(--text-22);
   margin-bottom: 16px;
 }
 
@@ -93,7 +93,7 @@
 .netValue {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(42px, 7vw, 60px);
+  font-size: clamp(2.625rem, 7vw, 3.75rem);
   line-height: 1;
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
@@ -195,7 +195,7 @@
 }
 .total dd {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   font-weight: 400;
   color: var(--text-strong);
   letter-spacing: -0.01em;

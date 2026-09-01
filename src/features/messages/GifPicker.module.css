@@ -35,7 +35,7 @@
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-badge);
   font-family: var(--sans);
-  font-size: 1rem;
+  font-size: var(--text-16);
   color: var(--ink);
   background: var(--cream);
 }
@@ -79,21 +79,21 @@
   text-align: center;
   color: var(--ink-40);
   font-family: var(--sans);
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
 }
 .comingSoon {
   padding: 18px 16px 4px;
   text-align: center;
   color: var(--ink);
   font-family: var(--serif);
-  font-size: 1.05rem;
+  font-size: var(--text-17);
 }
 .comingSoonHint {
   padding: 0 16px 18px;
   text-align: center;
   color: var(--ink-40);
   font-family: var(--sans);
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   line-height: 1.45;
 }
 .loadMore {
@@ -111,7 +111,7 @@
   padding: 7px 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   font-family: var(--sans);
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   color: var(--ink-40);
   text-align: right;
 }

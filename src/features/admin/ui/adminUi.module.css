@@ -30,7 +30,7 @@
 }
 .h1 {
   font-family: var(--serif);
-  font-size: clamp(28px, 3.6vw, 40px);
+  font-size: var(--text-title);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.015em;
@@ -250,20 +250,20 @@
   line-height: 1;
 }
 .av_sm {
-  width: 30px;
-  height: 30px;
+  width: 2.727em; /* 30 / 11 */
+  height: 2.727em;
   font-size: var(--text-11);
   border-radius: var(--radius-9);
 }
 .av_md {
-  width: 40px;
-  height: 40px;
+  width: 2.857em; /* 40 / 14 */
+  height: 2.857em;
   font-size: var(--text-14);
   border-radius: var(--radius-12);
 }
 .av_lg {
-  width: 56px;
-  height: 56px;
+  width: 2.947em; /* 56 / 19 */
+  height: 2.947em;
   font-size: var(--text-19);
   border-radius: var(--radius-16);
 }
@@ -528,7 +528,7 @@
 }
 .modalTitle {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--text-strong);

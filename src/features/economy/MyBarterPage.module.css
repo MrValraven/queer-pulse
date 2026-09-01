@@ -1,0 +1,163 @@
+.page {
+  max-width: 860px;
+  margin-inline: auto;
+  padding-block: clamp(20px, 5vw, 40px);
+  padding-inline: clamp(16px, 4vw, 24px);
+}
+
+.head {
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  font-size: var(--text-13);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  line-height: 1.08;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+
+.sub {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  max-width: 56ch;
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.section {
+  margin-top: 32px;
+}
+
+.sectionTitle {
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 18px 20px;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.kind {
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.cardTitle {
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  color: var(--ink);
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+.cardMeta {
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+  margin-bottom: 10px;
+}
+
+/* What the proposer wrote when they offered. Their own words, shown back to
+   them verbatim. */
+.message {
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+
+/* The listing moved after this offer went out. Amber, because it is something
+   to act on rather than something that failed. */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--amber-rgb), 0.22);
+  border-radius: var(--radius-14);
+  background: rgba(var(--amber-rgb), 0.09);
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+
+.cardError {
+  margin-bottom: 10px;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--accent-ink);
+}
+
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewLink {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--accent-ink);
+  padding: 0 6px;
+}
+
+.closeBtn {
+  margin-left: auto;
+}

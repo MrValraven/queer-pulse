@@ -20,10 +20,27 @@
  * assume a developer's local e2e install is present; CI and Vercel start with
  * an empty browser cache. The binary also needs system libs that Vercel's
  * Amazon Linux 2023 build image does not ship (nss/nspr) — vercel.json's
- * installCommand dnf-installs them. Vercel serves directory indexes
- * natively, and vercel.json's rewrites only fire when no file matches — so
- * these files win, and the /(.*)->/ rule degrades into an SPA fallback for
- * gated routes.
+ * installCommand dnf-installs them.
+ *
+ * TWO-FILE CONTRACT (ENG-15): Vercel resolves the filesystem BEFORE its
+ * rewrites, so a baked dist/<path>/index.html wins on its own URL — that is how
+ * "/" serves the prerendered homepage. Everything unbaked falls through to
+ * vercel.json's catch-all, which must point at FALLBACK_HTML_FILE and never at
+ * "/". It used to rewrite to "/", so every unbaked route — the other 17 sitemap
+ * URLs, every /p/:handle, every gated route — was served the homepage's baked
+ * HTML: its title, description, canonical and Organization JSON-LD (which
+ * <JsonLd> never removes, because it only cleans up elements it created
+ * itself), plus a painted homepage body that real members saw flash before
+ * React cleared #root. So this script writes the UNTOUCHED shell to that file,
+ * and assertFallbackRewrite() holds vercel.json to it on every build.
+ *
+ * ONE PATH THIS DOES NOT COVER: the service worker's OFFLINE navigation
+ * fallback still hands back the precached "index.html" (src/sw.ts:121), which by
+ * then is the baked homepage. It cannot point here instead — vite-plugin-pwa
+ * builds its precache manifest during `vite build`, before this file exists, so
+ * matchPrecache("spa.html") would miss and the offline page would break. React
+ * clears #root either way, so the cost is a homepage flash on an offline
+ * navigation to a never-visited route. Narrow, and deliberate.
  *
  * SAFETY: assertNoGatedPaths() runs before anything is written. A gated path
  * would bake in the sign-in redirect and leak member surface structure.
@@ -45,6 +62,13 @@ import {
 } from "./publicPaths.mjs";
 
 const DIST_DIRECTORY = "dist";
+/**
+ * The untouched SPA shell, served for every path this script does NOT bake.
+ * Kept OUT of dist/index.html, which the "/" pass overwrites with the rendered
+ * homepage. vercel.json's catch-all rewrite must name this file — see the
+ * two-file contract above and assertFallbackRewrite() below.
+ */
+const FALLBACK_HTML_FILE = "spa.html";
 const NAVIGATION_TIMEOUT_MS = 20_000;
 const READY_TIMEOUT_MS = 10_000;
 /** Frames to let React commit fetched content after the ready flag flips. */
@@ -105,10 +129,63 @@ function outputPathFor(publicPath) {
   return join(DIST_DIRECTORY, publicPath, "index.html");
 }
 
+/**
+ * Fail the build if vercel.json's catch-all rewrite points at a page this
+ * script bakes, instead of at the untouched shell.
+ *
+ * This is the ENG-15 regression guard. It lives here rather than in a test
+ * because no CI runs on this repo and `scripts/build-gates.mjs` runs neither
+ * lint nor tests (ENG-02) — a spec file asserting the same thing would never
+ * execute. `pnpm prerender` is a real build step, so this does.
+ *
+ * It catches the two ways the contract breaks: someone restoring the old
+ * `destination: "/"`, and PRERENDER_PATHS growing to include whatever the
+ * catch-all names.
+ */
+async function assertFallbackRewrite() {
+  const config = JSON.parse(await readFile("vercel.json", "utf8"));
+  const catchAll = (config.rewrites ?? []).find(
+    (rule) => rule.source === "/(.*)",
+  );
+  if (!catchAll) {
+    throw new Error(
+      "vercel.json has no `/(.*)` rewrite. Every unbaked route would 404 instead of\n" +
+        `  reaching the SPA. Restore: { "source": "/(.*)", "destination": "/${FALLBACK_HTML_FILE}" }`,
+    );
+  }
+
+  // Every URL a baked page is reachable at, in the shapes a rewrite could name.
+  const bakedDestinations = new Set(
+    PRERENDER_PATHS.flatMap((publicPath) =>
+      publicPath === "/"
+        ? ["/", "/index.html"]
+        : [publicPath, `${publicPath}/`, `${publicPath}/index.html`],
+    ),
+  );
+  if (bakedDestinations.has(catchAll.destination)) {
+    throw new Error(
+      `vercel.json's catch-all rewrites to "${catchAll.destination}", which this script\n` +
+        "  OVERWRITES with a prerendered page. Every unbaked route — the rest of the\n" +
+        "  sitemap, every /p/:handle, every gated route — would be served that page's\n" +
+        "  title, description, canonical and JSON-LD, and members would see its body\n" +
+        `  flash on every deep link. Point it at "/${FALLBACK_HTML_FILE}" instead.`,
+    );
+  }
+  if (catchAll.destination !== `/${FALLBACK_HTML_FILE}`) {
+    throw new Error(
+      `vercel.json's catch-all rewrites to "${catchAll.destination}", but the only file\n` +
+        `  this script guarantees holds the untouched SPA shell is "/${FALLBACK_HTML_FILE}".\n` +
+        "  Change one to match the other.",
+    );
+  }
+}
+
 // --- Guard before any I/O ---------------------------------------------------
 // PRERENDER_PATHS must be a subset of the vetted public surface AND ungated.
 assertPrerenderSubset();
 assertNoGatedPaths(PRERENDER_PATHS);
+// ...and the production fallback must not be one of the pages we overwrite.
+await assertFallbackRewrite();
 
 // --- Environment contract ---------------------------------------------------
 // src/shared/api/config.ts THROWS at module load in a production build that has
@@ -156,6 +233,30 @@ console.log(
 // Capture the untouched SPA shell before anything is overwritten (see the
 // fallback comment in createDistServer).
 const shellHtml = await readFile(join(DIST_DIRECTORY, "index.html"));
+
+// The shell is only a shell if #root is still EMPTY. `pnpm build` always runs
+// `vite build` first, which regenerates a clean dist/index.html, so this holds
+// there. Running `pnpm prerender` twice without a rebuild does NOT: the second
+// run would read the FIRST run's baked homepage and persist it as the fallback,
+// re-creating the exact ENG-15 bug through a different door. Refuse instead.
+if (!/<div id="root">\s*<\/div>/.test(shellHtml.toString("utf8"))) {
+  console.error(
+    `[prerender] Refusing to run: ${join(DIST_DIRECTORY, "index.html")} is not a clean SPA shell —\n` +
+      "  its #root already has content, so a previous prerender pass wrote it. Persisting\n" +
+      `  that as ${FALLBACK_HTML_FILE} would serve the homepage for every unbaked route, which is\n` +
+      "  the bug this two-file contract exists to prevent.\n" +
+      "  Run `vite build` (or the full `pnpm build`) to regenerate the shell first.",
+  );
+  process.exit(1);
+}
+
+// Persist that snapshot as the PRODUCTION fallback. Written before the render
+// loop so it exists even if a path fails and the build aborts below: a dist/
+// with no fallback file would rewrite every unbaked route to a 404.
+await writeFile(join(DIST_DIRECTORY, FALLBACK_HTML_FILE), shellHtml);
+console.log(
+  `[prerender] Wrote the untouched shell to ${join(DIST_DIRECTORY, FALLBACK_HTML_FILE)} (the catch-all rewrite's target).`,
+);
 
 const server = createDistServer(shellHtml);
 const port = await listen(server);

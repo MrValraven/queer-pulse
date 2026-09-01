@@ -3,12 +3,12 @@
 .content {
   max-width: 760px;
   margin: 0 auto;
-  padding: 24px 28px 100px;
+  padding: 24px 28px var(--section-y-104);
 }
 .section h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.4vw, 38px);
+  font-size: clamp(1.625rem, 3.4vw, 2.375rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
@@ -126,7 +126,7 @@
 .reportBox h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 10px;

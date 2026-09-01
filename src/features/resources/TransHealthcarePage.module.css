@@ -63,7 +63,7 @@
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 40px;
-  padding: 52px 0 100px;
+  padding: var(--section-y-56) 0 var(--section-y-104);
   align-items: start;
 }
 @media (--mobile) {
@@ -83,7 +83,7 @@
 .jSectionTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 24px;
@@ -92,7 +92,7 @@
 }
 .step {
   display: grid;
-  grid-template-columns: 48px 1fr;
+  grid-template-columns: auto 1fr;
   gap: 0 16px;
   margin-bottom: 6px;
   position: relative;
@@ -100,8 +100,12 @@
 .step::before {
   content: "";
   position: absolute;
-  left: 23px;
-  top: 50px;
+  /* Anchored to .stepNum's own type scale so the connector keeps meeting the
+     circle when a reader raises their font size. 1.5em - 1px = 23px and
+     3.125em = 50px at a 16px root, i.e. identical to the old literals. */
+  font-size: var(--text-16);
+  left: calc(1.5em - 1px);
+  top: 3.125em;
   bottom: -6px;
   width: 1.5px;
   background: rgba(var(--plum-rgb), 0.08);
@@ -110,8 +114,8 @@
   display: none;
 }
 .stepNum {
-  width: 48px;
-  height: 48px;
+  width: 3em; /* 48 / 16 */
+  height: 3em;
   border-radius: 50%;
   border: 2px solid rgba(var(--line-rgb), 0.12);
   display: flex;

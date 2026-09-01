@@ -9,7 +9,7 @@
   align-items: center;
   text-align: center;
   gap: 14px;
-  padding-block: 56px;
+  padding-block: var(--section-y-56);
   padding-inline: 32px;
   background: linear-gradient(
     180deg,
@@ -39,7 +39,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 1.35rem;
+  font-size: var(--text-22);
   color: var(--text-strong);
   margin: 0;
 }

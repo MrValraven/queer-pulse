@@ -1628,6 +1628,8 @@ export const communities: Catalog = {
   "discover.filter.tagsAriaLabel": "Filtrar comunidades por etiqueta",
   "discover.filter.tagsSearchPlaceholder": "Pesquisar etiquetas",
   "discover.filter.tagsNoMatch": "Nenhuma etiqueta corresponde a “{query}”.",
+  "discover.filter.tagWithCount_one": "{label}, {count} comunidade",
+  "discover.filter.tagWithCount_other": "{label}, {count} comunidades",
 
   // ── Vocabulário de etiquetas curadas (COMMUNITY_TAGS, communityTags.data.ts) ──
   // Mostradas como pastilhas em cada cartão de comunidade e como as opções do
@@ -1687,4 +1689,9 @@ export const communities: Catalog = {
   "tag.trans-health-medical": "Saúde Trans & Cuidados Médicos",
   "tag.sex-worker-allies": "Aliados de Profissionais do Sexo",
   "tag.accessibility-first": "Acessibilidade em Primeiro Lugar",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PHOTO-ESCALATE — PHOTO-ESCALATE (TS-14) — the mod tools report row. Sits beside the existing detail.modtools.reports.staffOnlyNote, which stays as-is for the emergency band. This one is shown when the report is about something the platform will not show a community moderator (a gathering photo today), so Take it down and Dismiss are absent and escalation is the offered action.
+  "detail.modtools.reports.unviewableSubjectNote":
+    "Esta denúncia é sobre uma fotografia que não te podemos mostrar aqui. A equipa da plataforma consegue vê-la, por isso a decisão é dela. Envia para cima e acrescenta o que souberes sobre o encontro ou sobre quem lá esteve.",
 };

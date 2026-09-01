@@ -61,7 +61,7 @@
 .body {
   max-width: 760px;
   margin: 0 auto;
-  padding: 56px 28px 0;
+  padding: var(--section-y-56) 28px 0;
 }
 .section {
   padding: 40px 0;
@@ -74,7 +74,7 @@
 .sectionTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.6vw, 36px);
+  font-size: clamp(1.625rem, 3.6vw, 2.25rem);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -88,7 +88,7 @@
 .subTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(21px, 2.6vw, 26px);
+  font-size: clamp(1.3125rem, 2.6vw, 1.625rem);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.15;
@@ -162,7 +162,7 @@
 .headlineValue {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 40px;
+  font-size: var(--text-40);
   line-height: 1.05;
   color: var(--text-strong);
   letter-spacing: -0.02em;
@@ -294,7 +294,7 @@
 .footerLinks {
   max-width: 760px;
   margin: 0 auto;
-  padding: 36px 28px 80px;
+  padding: 36px 28px var(--section-y-80);
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -303,7 +303,7 @@
 .state {
   max-width: 760px;
   margin: 0 auto;
-  padding: 64px 28px 80px;
+  padding: var(--section-y-64) 28px var(--section-y-80);
 }
 .stateBody {
   font-size: var(--text-15);

@@ -7,7 +7,7 @@
 }
 .formTitle {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   font-weight: 400;
   color: var(--text-strong);
   letter-spacing: -0.01em;
@@ -119,7 +119,7 @@
 }
 .overallVal {
   font-family: var(--serif);
-  font-size: 44px;
+  font-size: var(--text-44);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -147,7 +147,7 @@
 }
 .pctVal {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   font-weight: 400;
   color: var(--jade);
   letter-spacing: -0.01em;
@@ -230,7 +230,7 @@
 }
 .emptyTitle {
   font-family: var(--serif);
-  font-size: 28px;
+  font-size: var(--text-28);
   font-weight: 400;
   color: rgba(var(--cream-rgb), 1);
   margin: 0 0 10px;

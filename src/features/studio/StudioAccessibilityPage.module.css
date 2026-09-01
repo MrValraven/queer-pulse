@@ -9,7 +9,7 @@
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
 
-  padding: 8px 0 60px;
+  padding: 8px 0 var(--section-y-64);
   max-width: 780px;
   margin: 0 auto;
 }
@@ -29,7 +29,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(2rem, 5vw, 3.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -79,7 +79,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.15;
@@ -216,8 +216,8 @@
   border: 1px solid rgba(var(--cream-rgb), 0.16);
   border-bottom-width: 2px;
   border-radius: var(--radius-7);
-  min-width: 30px;
-  height: 28px;
+  min-width: 2.5em;
+  height: 2.333em;
   padding: 0 9px;
   display: inline-flex;
   align-items: center;
@@ -256,7 +256,7 @@
 .contact h3 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 30px;
+  font-size: var(--text-30);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
 }

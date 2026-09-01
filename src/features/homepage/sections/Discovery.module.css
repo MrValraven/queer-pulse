@@ -25,7 +25,7 @@
 .display {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(36px, 5.4vw, 62px);
+  font-size: var(--text-display);
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--text-strong);
@@ -38,7 +38,7 @@
 }
 .sub {
   margin-top: 24px;
-  font-size: clamp(16px, 1.5vw, 19px);
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
   color: var(--ink-60);
   max-width: 52ch;
   line-height: 1.6;
@@ -202,7 +202,7 @@
   display: grid;
   place-items: center;
   font-family: var(--serif);
-  font-size: clamp(72px, 12vw, 104px);
+  font-size: clamp(4.5rem, 12vw, 6.5rem);
   color: var(--tfg);
 }
 .photoVerified {
@@ -262,7 +262,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(24px, 3vw, 28px);
+  font-size: var(--text-heading);
   letter-spacing: -0.01em;
   line-height: 1.1;
   color: var(--text-strong);
@@ -283,7 +283,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(17px, 1.7vw, 19px);
+  font-size: clamp(1.0625rem, 1.7vw, 1.1875rem);
   line-height: 1.5;
   color: var(--ink-60);
   margin: 16px 0 0;

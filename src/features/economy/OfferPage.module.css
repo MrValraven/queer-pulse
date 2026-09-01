@@ -1,7 +1,7 @@
 .page {
   min-height: 100svh;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 68px 0 100px;
+  padding: var(--section-y-72) 0 var(--section-y-104);
 }
 .backLink {
   margin-bottom: 32px;
@@ -51,7 +51,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 4.4vw, 58px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.022em;
   line-height: 1.06;
@@ -105,8 +105,8 @@
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .posterAv {
-  width: 52px;
-  height: 52px;
+  width: 2.737em;
+  height: 2.737em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -141,13 +141,13 @@
 
 .other {
   margin-top: 80px;
-  padding-top: 60px;
+  padding-top: var(--section-y-64);
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 .other h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 34px;
+  font-size: var(--text-34);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 28px;

@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 72px;
+  padding: var(--section-y-64) 0 var(--section-y-72);
   position: relative;
   overflow: hidden;
 }
@@ -42,7 +42,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 6vw, 72px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -75,7 +75,7 @@
 }
 
 .body {
-  padding: 72px 0 100px;
+  padding: var(--section-y-72) 0 var(--section-y-104);
 }
 .layout {
   display: grid;
@@ -94,7 +94,7 @@
 .sectionHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 4vw, 48px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;

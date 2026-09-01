@@ -37,24 +37,24 @@
   padding: var(--card-pad-lg);
   text-align: center;
   border-radius: var(--radius-card);
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
 }
 
 .emptyIcon {
-  font-size: 1.75rem;
+  font-size: var(--text-28);
   color: var(--plum);
   opacity: 0.5;
 }
 
 .emptyTitle {
   font-family: var(--serif);
-  font-size: 1.1rem;
+  font-size: var(--text-17-5);
   margin: 0;
 }
 
 .emptyBody {
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   opacity: 0.75;
   max-width: 44ch;
   margin: 0;
@@ -74,7 +74,7 @@
 }
 
 .emptyIssuersTitle {
-  font-size: 0.78rem;
+  font-size: var(--text-12-5);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   opacity: 0.6;
@@ -98,7 +98,7 @@
   padding: 6px 12px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--line);
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   color: var(--plum);
   text-decoration: none;
   transition:
@@ -116,7 +116,7 @@
   display: flex;
   align-items: center;
   gap: var(--gap-xs);
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   color: var(--plum);
   opacity: 0.85;
   margin: 0;
@@ -132,7 +132,7 @@
 }
 
 .photoConsentText {
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   color: var(--plum);
   opacity: 0.85;
 }
@@ -145,7 +145,7 @@
   display: flex;
   align-items: center;
   gap: var(--gap-xs);
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   color: var(--plum);
   opacity: 0.6;
   margin: 0;

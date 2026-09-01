@@ -42,7 +42,7 @@
 
 .summary {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--ink);
   overflow-wrap: anywhere;
@@ -53,14 +53,14 @@
    nobody on a phone can open. */
 .platformNote {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-caption);
   line-height: 1.5;
   color: var(--ink-60);
 }
 
 .byline {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--text-caption);
   color: var(--ink-40);
   overflow-wrap: anywhere;
 }
@@ -79,7 +79,7 @@
 
 .detailLabel {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
@@ -89,7 +89,7 @@
 
 .detailValue {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-body-sm);
   line-height: 1.5;
   color: var(--ink-60);
   overflow-wrap: anywhere;
@@ -106,7 +106,7 @@
 }
 
 .pagerMeta {
-  font-size: 13px;
+  font-size: var(--text-caption);
   color: var(--ink-40);
 }
 
@@ -117,7 +117,7 @@
 }
 
 .pagerPage {
-  font-size: 13px;
+  font-size: var(--text-caption);
   font-weight: 600;
   color: var(--ink-60);
 }

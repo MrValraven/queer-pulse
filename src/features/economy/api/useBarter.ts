@@ -10,25 +10,31 @@ import { BARTERS, type Barter, type Mode } from "../barter.data";
 import type {
   BarterProposalRow,
   MyBarterListingRow,
+  MySentBarterProposalRow,
 } from "../barterProposals.data";
 import {
   barterListingToView,
   barterProposalToRow,
   myBarterListingToRow,
+  mySentBarterProposalToRow,
   type BarterView,
 } from "./barter.adapters";
 import {
+  closeBarterListing,
   createBarterListing,
   decideBarterProposal,
   getBarterListing,
   getBarterListings,
   getBarterProposals,
   getMyBarterListings,
+  getMySentBarterProposals,
   proposeBarterSwap,
+  updateBarterListing,
   type BarterCategoryKey,
   type BarterProposalAckDTO,
   type BarterProposalDecision,
   type CreateBarterListingBody,
+  type UpdateBarterListingBody,
 } from "./barter.api";
 import { economyKeys } from "./economyKeys";
 
@@ -304,6 +310,124 @@ export function useDecideBarterProposal(listingId: string | undefined) {
       if (demoMode) return;
       void queryClient.invalidateQueries({
         queryKey: economyKeys.myBarterRoot,
+      });
+    },
+  });
+}
+
+/**
+ * Cache key for the proposals the reader SENT. It lives here rather than in
+ * `economyKeys` because nothing outside this module reads or invalidates it:
+ * every write that can change a sent proposal's outcome is the OWNER's, and
+ * the owner is a different member in a different session.
+ */
+const mySentBarterProposalsKey = (demoMode: boolean) =>
+  ["barter-sent-proposals", demoMode] as const;
+
+/**
+ * The proposals you SENT, with each one's outcome (`GET /barter/mine/proposals`).
+ * The mirror of `useBarterProposals`, which is the owner's inbox. Demo imports
+ * the colocated fixture on demand so it never ships in the live bundle.
+ */
+export function useMySentBarterProposals() {
+  const { demoMode } = useDemoMode();
+  return useQuery<MySentBarterProposalRow[]>({
+    queryKey: mySentBarterProposalsKey(demoMode),
+    queryFn: async ({ signal }) => {
+      if (demoMode) {
+        const { DEMO_MY_SENT_BARTER_PROPOSALS } =
+          await import("../barterProposals.data");
+        return DEMO_MY_SENT_BARTER_PROPOSALS;
+      }
+      const dtos = await getMySentBarterProposals(signal);
+      return dtos.map(mySentBarterProposalToRow);
+    },
+  });
+}
+
+/**
+ * Take one of your swaps off the board (`POST /barter/:id/close`). The endpoint
+ * shipped with no caller at all, so a completed swap stayed on the board for
+ * good.
+ *
+ * Nothing moves on screen before the server answers, and the owner's set is
+ * invalidated afterwards so the row's status comes back stored rather than
+ * guessed. Demo patches its own cached fixture instead, so the prototype stays
+ * coherent without inventing a request.
+ *
+ * `silentError` because the page writes the refusal onto the row it belongs to.
+ */
+export function useCloseBarterListing() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, string>({
+    meta: { silentError: true },
+    mutationFn: async (listingId) => {
+      if (demoMode) {
+        await new Promise((resolve) => setTimeout(resolve, 450));
+        return;
+      }
+      await closeBarterListing(listingId);
+    },
+    onSuccess: (_result, listingId) => {
+      if (demoMode) {
+        queryClient.setQueryData<MyBarterListingRow[]>(
+          economyKeys.myBarter(true),
+          (previous) =>
+            (previous ?? []).map((row) =>
+              row.id === listingId ? { ...row, status: "closed" } : row,
+            ),
+        );
+        return;
+      }
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.myBarterRoot,
+      });
+      void queryClient.invalidateQueries({ queryKey: economyKeys.barterRoot });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.barterListingById(listingId),
+      });
+    },
+  });
+}
+
+/**
+ * Correct a swap you posted (`PATCH /barter/:id`). Barter was the only vertical
+ * with no edit path, so a typo in a headline could never be fixed.
+ *
+ * The board, the listing itself and the owner's set are all invalidated on
+ * success: an edit changes what every one of them shows. Demo fakes the round
+ * trip, since the fixture board is read-only.
+ *
+ * `silentError` because the edit form names the API's refusals itself (403 not
+ * yours, 404 gone, 400 a mode with nothing on that side).
+ */
+export function useUpdateBarterListing(listingId: string | undefined) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, UpdateBarterListingBody>({
+    meta: { silentError: true },
+    mutationFn: async (body) => {
+      if (demoMode) {
+        await new Promise((resolve) => setTimeout(resolve, 450));
+        return;
+      }
+      // Live with no listing id has nothing to write against. Failing is the
+      // honest answer; pretending the edit saved would leave the form claiming
+      // a change the server never heard about.
+      if (!listingId) throw new Error("No swap listing selected");
+      await updateBarterListing(listingId, body);
+    },
+    onSuccess: () => {
+      if (demoMode || !listingId) return;
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.myBarterRoot,
+      });
+      void queryClient.invalidateQueries({ queryKey: economyKeys.barterRoot });
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.barterListingById(listingId),
       });
     },
   });

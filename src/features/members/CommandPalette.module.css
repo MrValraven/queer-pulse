@@ -46,7 +46,7 @@
   border: none;
   background: transparent;
   font-family: var(--sans);
-  font-size: 1.05rem;
+  font-size: var(--text-body-lg);
   color: var(--ink);
   outline: none;
 }
@@ -57,7 +57,7 @@
 
 .kbd {
   font-family: var(--sans);
-  font-size: 0.7rem;
+  font-size: var(--text-11);
   color: var(--ink-60);
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.12);
@@ -75,15 +75,15 @@
 .close {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 2.444em;
+  height: 2.444em;
   flex-shrink: 0;
   margin: -6px -6px -6px 0;
   border: none;
   background: transparent;
   border-radius: var(--radius-10);
   color: var(--ink-40);
-  font-size: 1.15rem;
+  font-size: var(--text-18);
   cursor: pointer;
   transition: color 0.18s var(--ease);
 }
@@ -111,7 +111,7 @@
   color: var(--ink-60);
   border-radius: var(--radius-pill);
   padding: 5px 12px;
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   cursor: pointer;
   transition:
     border-color 0.18s var(--ease),
@@ -158,7 +158,7 @@
 
 .comingSoonBadge {
   font-family: var(--sans);
-  font-size: 0.7rem;
+  font-size: var(--text-11);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -172,7 +172,7 @@
 .comingSoonText {
   margin: 0;
   max-width: 34ch;
-  font-size: 0.92rem;
+  font-size: var(--text-14-5);
   line-height: 1.5;
   color: var(--ink-60);
 }
@@ -236,14 +236,14 @@
 
 .rowSub {
   color: var(--ink-60);
-  font-size: 0.82rem;
+  font-size: var(--text-caption);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .rowType {
-  font-size: 0.72rem;
+  font-size: var(--text-11-5);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--ink-40);
@@ -260,7 +260,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
   color: var(--ink-60);
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   cursor: pointer;
 }
 

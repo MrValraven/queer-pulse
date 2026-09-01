@@ -1,7 +1,7 @@
 /* StudioSettingsPage — dark studio shell */
 .wrap {
   max-width: 840px;
-  padding: 8px 30px 60px;
+  padding: 8px 30px var(--section-y-64);
 }
 
 /* Page header */
@@ -19,7 +19,7 @@
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4vw, 48px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -64,7 +64,7 @@
 .sec h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: rgba(var(--cream-rgb), 0.92);
   letter-spacing: -0.015em;
   margin-bottom: 6px;

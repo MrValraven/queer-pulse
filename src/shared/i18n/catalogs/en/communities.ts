@@ -1632,6 +1632,8 @@ export const communities: Catalog = {
   "discover.filter.tagsAriaLabel": "Filter communities by tag",
   "discover.filter.tagsSearchPlaceholder": "Search tags",
   "discover.filter.tagsNoMatch": "No tags match “{query}”.",
+  "discover.filter.tagWithCount_one": "{label}, {count} community",
+  "discover.filter.tagWithCount_other": "{label}, {count} communities",
 
   // ── Curated tag vocabulary (COMMUNITY_TAGS, communityTags.data.ts) ───────
   // Shown as pills on every community card and as the edit modal's / Discover
@@ -1690,4 +1692,9 @@ export const communities: Catalog = {
   "tag.trans-health-medical": "Trans Health & Medical",
   "tag.sex-worker-allies": "Sex Worker Allies",
   "tag.accessibility-first": "Accessibility-First",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PHOTO-ESCALATE — PHOTO-ESCALATE (TS-14) — the mod tools report row. Sits beside the existing detail.modtools.reports.staffOnlyNote, which stays as-is for the emergency band. This one is shown when the report is about something the platform will not show a community moderator (a gathering photo today), so Take it down and Dismiss are absent and escalation is the offered action.
+  "detail.modtools.reports.unviewableSubjectNote":
+    "This report is about a photo we cannot show you here. Platform staff can see it, so the decision is theirs. Send it up, and add anything you know about the gathering or the people in it.",
 };

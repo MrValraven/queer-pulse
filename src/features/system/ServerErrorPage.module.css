@@ -120,7 +120,7 @@
 .codeBg {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(80px, 18vw, 130px);
+  font-size: clamp(5rem, 18vw, 8.125rem);
   color: rgba(var(--cream-rgb), 0.08);
   line-height: 1;
   letter-spacing: -0.04em;
@@ -134,7 +134,7 @@
 .heading {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 5vw, 44px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.06;
@@ -244,7 +244,7 @@
 .cdNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 48px;
+  font-size: var(--text-48);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;

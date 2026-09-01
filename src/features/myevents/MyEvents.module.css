@@ -7,7 +7,7 @@
 /* The page is named once, in EventsHeader, which carries its own breathing
    room — this is just the gap from it down to the bucket pills. */
 .ev-page {
-  padding: var(--gap-sm) 0 110px;
+  padding: var(--gap-sm) 0 var(--section-y-112);
 }
 
 /* shared keyframes (were global in the prototype) */
@@ -85,7 +85,7 @@
 .cal-month {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 23px;
+  font-size: var(--text-23);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -326,7 +326,7 @@ button.cal-cell.has {
 }
 .cw-num {
   font-family: var(--serif);
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   line-height: 1;
   margin-top: 2px;
@@ -531,7 +531,7 @@ button.cal-cell.has {
 .ins-stat {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 34px;
+  font-size: var(--text-34);
   line-height: 1.05;
   letter-spacing: -0.01em;
   position: relative;
@@ -888,7 +888,7 @@ button.cal-cell.has {
   padding: 7px 0 8px;
 }
 .ev-layout.compact .ev-tile .et-day {
-  font-size: 22px;
+  font-size: var(--text-22);
 }
 .ev-layout.compact .ev-name {
   font-size: var(--text-17);
@@ -922,7 +922,7 @@ button.cal-cell.has {
 }
 .ev-tile .et-day {
   font-family: var(--serif);
-  font-size: 27px;
+  font-size: var(--text-27);
   font-weight: 400;
   color: var(--text-strong);
   line-height: 1;
@@ -1149,8 +1149,9 @@ button.cal-cell.has {
   display: flex;
 }
 .av-stack .av {
-  width: 28px;
-  height: 28px;
+  /* 28 / 11, in em so the stacked discs scale with their initials. */
+  width: 2.545em;
+  height: 2.545em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1592,7 +1593,7 @@ button.cal-cell.has {
 /* ---------- Empty states ---------- */
 .empty {
   text-align: center;
-  padding: 58px 24px;
+  padding: var(--section-y-56) 24px;
   border: 1.5px dashed rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-20);
   background: rgba(var(--plum-rgb), 0.015);
@@ -1632,7 +1633,7 @@ button.cal-cell.has {
 .empty-h {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 25px;
+  font-size: var(--text-25);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 9px;
@@ -1945,7 +1946,7 @@ button.cal-cell.has {
 .modal-title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 27px;
+  font-size: var(--text-27);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -2238,7 +2239,7 @@ button.cal-cell.has {
 .confirm-h {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 38px;
+  font-size: var(--text-38);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 12px;

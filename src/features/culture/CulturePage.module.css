@@ -2,7 +2,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 68px 0 0;
+  padding: var(--section-y-72) 0 0;
   position: relative;
   overflow: hidden;
 }
@@ -47,7 +47,7 @@
 .heroH {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 84px);
+  font-size: clamp(2.5rem, 6vw, 5.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -100,7 +100,7 @@
 
 /* Body */
 .body {
-  padding: 80px 0 100px;
+  padding: var(--section-y-80) 0 var(--section-y-104);
 }
 
 /* Section headers now use the shared <SectionHead> primitive. */
@@ -133,7 +133,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 44px;
+  font-size: var(--text-44);
   position: relative;
 }
 .book {
@@ -220,7 +220,7 @@
 .subHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(22px, 2.5vw, 32px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }
@@ -406,7 +406,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
+  font-size: var(--text-40);
   transition: transform 0.4s var(--ease);
 }
 @media (hover: hover) {
@@ -450,7 +450,7 @@
 /* Radio — full bleed */
 .radioFull {
   background: var(--plum);
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
 }
 .radioWrap {
   display: grid;
@@ -474,7 +474,7 @@
 .curatorTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(26px, 3.6vw, 48px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1.1;
   margin-bottom: 8px;
@@ -551,7 +551,7 @@
 .radioTrack {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(20px, 2.8vw, 30px);
+  font-size: var(--text-heading);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
@@ -603,8 +603,9 @@
   opacity: 0.45;
 }
 .rBtn {
-  width: 34px;
-  height: 34px;
+  /* 34 / 13, in em so the round control scales with its glyph. */
+  width: 2.615em;
+  height: 2.615em;
   border-radius: 50%;
   background: rgba(var(--cream-rgb), 0.1);
   border: none;

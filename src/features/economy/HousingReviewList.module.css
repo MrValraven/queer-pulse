@@ -1,0 +1,204 @@
+/* The public reviews block on a housing listing (PRD-47).
+   Every colour is a theme token: `--line-rgb` flips between light and dark,
+   `--plum-rgb` does not, so borders and washes here use `--line-rgb`. */
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.emptyLine {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.reviewsHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.average {
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+.averageOutOf {
+  font-size: var(--text-14);
+  color: var(--ink-40);
+}
+.averageCount {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.reviewCard {
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+  padding: 16px 18px;
+}
+.reviewTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.reviewName {
+  font-weight: 600;
+  font-size: var(--text-14);
+  color: var(--text-strong);
+}
+.reviewStars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--accent);
+  margin-inline-start: auto;
+}
+.reviewStars svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+.reviewText {
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  text-wrap: pretty;
+  /* The reviewer's typed line breaks are stored, so they are shown. */
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* The author changed their review after posting it. Quiet, factual, and always
+   shown, so an edit is never silent. */
+.editedNote {
+  margin-top: 6px;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+/* ── The lister's reply ──────────────────────────────────────────────────── */
+/* Its own block with its own heading, because the whole point is that a reader
+   can tell the subject's answer from another reviewer's words. Same shape the
+   business directory and the employer pages use for the same statement, so the
+   pattern reads identically across the verticals. */
+.listerReply {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: rgba(var(--line-rgb), 0.06);
+  border-inline-start: 3px solid var(--line-strong);
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
+}
+.listerReplyHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+/* The label carrying the whole point: this block is the LISTER speaking.
+   Weighted and coloured so it cannot be skimmed past. */
+.listerReplyTitle {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: var(--text-12-5);
+  color: var(--text-strong);
+}
+.listerReplyDate {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  flex: none;
+}
+.listerReplyText {
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  text-wrap: pretty;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* The review changed after the lister answered it. Sits under the reply, in
+   plain language, so a reader can weigh the exchange without the page taking a
+   side. */
+.staleReplyNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 8px;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.staleReplyNote svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 2px;
+}
+
+/* ── Compose / edit, lister only ─────────────────────────────────────────── */
+/* A ghost <Button>: only the type and gutters are tightened, so it keeps its
+   own minimum tap target and the pill radius does not collapse onto the label. */
+.replyToggle {
+  margin-top: 12px;
+  padding: 8px 18px;
+  font-size: var(--text-13);
+}
+.replyComposer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.replyInput {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  resize: vertical;
+}
+.replyInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--accent);
+}
+.replyNote {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+.replyComposerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ── Report ──────────────────────────────────────────────────────────────── */
+/* Quiet by design: always available, never competing with the reply action. */
+.reviewFoot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.reportButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+.reportButton svg {
+  width: 13px;
+  height: 13px;
+}

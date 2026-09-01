@@ -2,7 +2,7 @@
 .hero {
   position: relative;
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 52px 0 12px;
+  padding: var(--section-y-56) 0 12px;
   overflow: hidden;
 }
 @media (max-width: 720px) {
@@ -71,7 +71,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(36px, 5vw, 58px);
+  font-size: var(--text-display);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
@@ -123,7 +123,7 @@
 
 /* ===== Layout ===== */
 .page {
-  padding: 18px 0 64px;
+  padding: 18px 0 var(--section-y-64);
 }
 .grid {
   display: grid;
@@ -155,8 +155,8 @@
   gap: 9px;
 }
 .wpN {
-  width: 27px;
-  height: 27px;
+  width: 2.16em;
+  height: 2.16em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.09);
   color: var(--ink-40);
@@ -293,7 +293,7 @@
 .paneH2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 27px;
+  font-size: var(--text-27);
   color: var(--text-strong);
   letter-spacing: -0.012em;
 }
@@ -474,8 +474,8 @@
   box-shadow: var(--ring-plum);
 }
 .pcIc {
-  width: 42px;
-  height: 42px;
+  width: 2.1em;
+  height: 2.1em;
   border-radius: var(--radius-12);
   display: flex;
   align-items: center;
@@ -554,8 +554,8 @@
   border-top: none;
 }
 .dmAv {
-  width: 34px;
-  height: 34px;
+  width: 2.615em;
+  height: 2.615em;
   border-radius: 50%;
   flex: none;
   display: flex;
@@ -1002,7 +1002,7 @@
 .usePlaceNameChip {
   align-self: flex-start;
   padding: 4px 12px;
-  border: 1px solid rgba(var(--plum-rgb), 0.2);
+  border: 1px solid rgba(var(--line-rgb), 0.2);
   border-radius: var(--radius-pill);
   background: transparent;
   font-family: var(--sans);
@@ -1030,7 +1030,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 14px;
-  border: 1px solid rgba(var(--plum-rgb), 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-12);
   background: rgba(var(--plum-rgb), 0.04);
   font-size: var(--text-13);
@@ -1380,8 +1380,8 @@
   border-radius: var(--radius-12);
 }
 .vlAv {
-  width: 30px;
-  height: 30px;
+  width: 2.727em;
+  height: 2.727em;
   border-radius: 50%;
   background: var(--jade);
   color: var(--paper);
@@ -1450,14 +1450,14 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  padding: 90px 40px;
+  padding: var(--section-y-88) 40px;
   text-align: center;
 }
 .sending p {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: rgba(var(--cream-rgb), 1);
 }
 .sending .ring {
@@ -1556,8 +1556,8 @@
   margin-bottom: 14px;
 }
 .dirAv {
-  width: 48px;
-  height: 48px;
+  width: 2.667em;
+  height: 2.667em;
   border-radius: 50%;
   flex: none;
   display: flex;
@@ -1576,7 +1576,7 @@
 .dirName {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   line-height: 1.1;
@@ -1708,8 +1708,8 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .pdOwnerAv {
-  width: 36px;
-  height: 36px;
+  width: 3em;
+  height: 3em;
   border-radius: 50%;
   flex: none;
   display: flex;
@@ -1766,7 +1766,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(20px, 2.4vw, 26px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   line-height: 1.35;
   padding-left: 16px;
@@ -1871,7 +1871,7 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-26);
-  padding: 52px 52px 46px;
+  padding: var(--section-y-56) 52px 46px;
   overflow: hidden;
 }
 @media (--sm) {
@@ -1945,7 +1945,7 @@
 .statusTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4.6vw, 44px);
+  font-size: var(--text-title);
   line-height: 1.07;
   letter-spacing: -0.02em;
   margin-bottom: 14px;

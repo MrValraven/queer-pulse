@@ -9,7 +9,7 @@
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
-  padding: 8px 0 60px;
+  padding: 8px 0 var(--section-y-64);
   max-width: 780px;
   margin: 0 auto;
 }
@@ -29,7 +29,7 @@
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(2rem, 5vw, 3.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -159,8 +159,8 @@
 
 /* Icon / avatar circle */
 .ntIc {
-  width: 44px;
-  height: 44px;
+  width: 2.933em;
+  height: 2.933em;
   border-radius: 50%;
   flex: none;
   display: flex;
@@ -285,7 +285,7 @@
   color: var(--text-60);
   line-height: 1.6;
   text-align: center;
-  padding: 48px 24px;
+  padding: var(--section-y-48) 24px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-16);

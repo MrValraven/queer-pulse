@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 68px 0 88px;
+  padding: var(--section-y-72) 0 var(--section-y-88);
   position: relative;
   overflow: hidden;
 }
@@ -47,7 +47,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.8vw, 78px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -88,7 +88,7 @@
 }
 
 .sitSection {
-  padding: 72px 0 0;
+  padding: var(--section-y-72) 0 0;
 }
 .sitLabelRow {
   margin-bottom: 24px;
@@ -96,7 +96,7 @@
 .sitLabelRow h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(26px, 3.5vw, 38px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }
@@ -237,7 +237,7 @@
 }
 
 .tabContent {
-  padding: 72px 0 var(--section-y);
+  padding: var(--section-y-72) 0 var(--section-y);
 }
 .tabHead {
   margin-bottom: 48px;
@@ -245,7 +245,7 @@
 .tabHead h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 4vw, 50px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -355,7 +355,7 @@
 .reviewHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: var(--text-heading);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 28px;
@@ -383,8 +383,9 @@
   margin-bottom: 12px;
 }
 .rvAv {
-  width: 40px;
-  height: 40px;
+  /* 40 / 15, in em so the disc scales with its initials. */
+  width: 2.667em;
+  height: 2.667em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -435,8 +436,9 @@
   padding-top: 28px;
 }
 .psNum {
-  width: 32px;
-  height: 32px;
+  /* 32 / 14, in em so the step disc scales with its number. */
+  width: 2.286em;
+  height: 2.286em;
   border-radius: 50%;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
@@ -495,7 +497,7 @@
 .talkLeft h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(32px, 4.4vw, 54px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -538,8 +540,9 @@
   }
 }
 .tcAv {
-  width: 44px;
-  height: 44px;
+  /* 44 / 16, in em so the disc scales with its initials. */
+  width: 2.75em;
+  height: 2.75em;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -568,7 +571,7 @@
 }
 
 .forumCta {
-  padding: 80px 0;
+  padding: var(--section-y-80) 0;
   background: rgba(var(--plum-rgb), 0.03);
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
@@ -582,7 +585,7 @@
 .forumCtaText h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }

@@ -168,13 +168,13 @@ span.navIcon svg {
 
 /* Main */
 .main {
-  padding: 40px 52px 100px;
+  padding: 40px 52px var(--section-y-104);
   max-width: 740px;
 }
 
 @media (--wide) {
   .main {
-    padding: 28px 22px 80px;
+    padding: 28px 22px var(--section-y-80);
   }
 }
 
@@ -185,7 +185,7 @@ span.navIcon svg {
 .sectionTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 4px;
@@ -236,8 +236,9 @@ span.navIcon svg {
 }
 
 .photoAv {
-  width: 88px;
-  height: 88px;
+  /* 88 / 28, in em so the disc scales with its initial. */
+  width: 3.143em;
+  height: 3.143em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.15);
   display: flex;
@@ -245,7 +246,7 @@ span.navIcon svg {
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--accent-ink);
   flex: none;
   border: 3px solid rgba(var(--line-rgb), 0.08);

@@ -3,10 +3,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { getCommunities, type CommunitiesQuery } from "./communities.api";
+import {
+  getCommunities,
+  type CommunitiesQuery,
+  type CommunityBrowseFacets,
+} from "./communities.api";
 import { cardDtoToCommunity } from "./communities.adapters";
 import { useAllCommunities } from "../useAllCommunities";
 import { communities } from "../../homepage/data/communities";
+import { COMMUNITY_TAGS } from "../communityTags.data";
 import type { Community } from "../../homepage/data/types";
 
 export interface CommunitiesResult {
@@ -30,12 +35,22 @@ export interface CommunitiesResult {
   isError: boolean;
   /** Re-runs the failed request. Wire it to `LoadErrorState`'s `onRetry`. */
   refetch: () => void;
+  /**
+   * Availability counts for the filters that carry them, read off the FIRST
+   * page: every page of one filter run shares the same facets (mirrors
+   * `useMembers`). `undefined` until the first page lands, and per-option
+   * `undefined` for anything the server didn't count — a chip shows no badge
+   * rather than a zero, because "not counted" and "nobody is here" are
+   * different answers and only one of them greys the chip out.
+   */
+  facets?: CommunityBrowseFacets;
 }
 
 interface CommunitiesPageVM {
   items: Community[];
   total: number;
   page: number;
+  facets?: CommunityBrowseFacets;
 }
 
 /**
@@ -147,7 +162,29 @@ export function useCommunities(
           params.sort === "name"
             ? [...matches].sort((a, b) => a.name.localeCompare(b.name))
             : matches;
-        return { items: sorted, total: sorted.length, page: 1 };
+        // Mirror the live endpoint's `facets.tags`: counted over the same set
+        // MINUS this filter's own predicate (`accessMatched`, not `matches`),
+        // because a tag's badge answers "how many if I picked this one" and
+        // its own filter would have already excluded every other tag's rows.
+        // Every curated id is present, zeros included, exactly as the server
+        // returns them — a tag nobody carries is a real answer, not a gap.
+        const tagCounts: Record<string, number> = Object.fromEntries(
+          COMMUNITY_TAGS.map((tag) => [tag.id, 0]),
+        );
+        for (const community of accessMatched) {
+          for (const tagId of community.tags ?? []) {
+            // `undefined` means the community carries a tag outside the
+            // curated vocabulary, which the live facet wouldn't count either.
+            const soFar = tagCounts[tagId];
+            if (soFar !== undefined) tagCounts[tagId] = soFar + 1;
+          }
+        }
+        return {
+          items: sorted,
+          total: sorted.length,
+          page: 1,
+          facets: { tags: tagCounts },
+        };
       }
       const res = await getCommunities({
         ...params,
@@ -157,6 +194,7 @@ export function useCommunities(
         items: res.items.map((card) => cardDtoToCommunity(card, t)),
         total: res.total,
         page: res.page,
+        facets: res.facets,
       };
     },
     getNextPageParam: (last, all) => {
@@ -175,5 +213,6 @@ export function useCommunities(
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),
+    facets: pages[0]?.facets,
   };
 }

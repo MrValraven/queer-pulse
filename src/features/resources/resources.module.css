@@ -1,7 +1,7 @@
 /* Shared layout for the plum-hero resource pages (Wellbeing, Trans Hub, Legal). */
 
 .hero {
-  padding: 180px 0 100px;
+  padding: var(--section-y-180) 0 var(--section-y-104);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -43,7 +43,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(44px, 7vw, 88px);
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
   line-height: 0.98;
   letter-spacing: -0.02em;
   color: rgba(var(--cream-rgb), 1);
@@ -55,7 +55,7 @@
   color: var(--hero-em, var(--accent));
 }
 .lead {
-  font-size: clamp(16px, 1.6vw, 19px);
+  font-size: clamp(1rem, 1.6vw, 1.1875rem);
   color: rgba(var(--cream-rgb), 0.68);
   max-width: 52ch;
   margin-top: 28px;
@@ -144,7 +144,7 @@
   font-weight: 300;
 }
 .titleDisplay {
-  font-size: clamp(54px, 8.5vw, 118px);
+  font-size: var(--text-hero);
   line-height: 0.92;
   max-width: 12ch;
 }
@@ -156,7 +156,7 @@
 }
 
 .section {
-  padding: 88px 0;
+  padding: var(--section-y-88) 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .sectionPaper {
@@ -168,7 +168,7 @@
 .section h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -219,7 +219,7 @@
 .cardName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 21px;
+  font-size: var(--text-21);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -294,7 +294,7 @@
 }
 .stepN {
   font-family: var(--serif);
-  font-size: 28px;
+  font-size: var(--text-28);
   font-weight: 400;
   color: var(--accent);
   line-height: 1;
@@ -372,7 +372,7 @@
 .crisisNum {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--jade);
   letter-spacing: -0.01em;
   margin-top: auto;
@@ -396,7 +396,7 @@
 .plumStrip h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(24px, 3vw, 38px);
+  font-size: clamp(1.5rem, 3vw, 2.375rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -434,7 +434,7 @@
 }
 .statN {
   font-family: var(--serif);
-  font-size: 34px;
+  font-size: var(--text-34);
   font-weight: 400;
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
@@ -486,7 +486,7 @@
 .emergencyStrip h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.015em;
 }
@@ -545,8 +545,8 @@
   border-bottom: none;
 }
 .featureIcon {
-  width: 44px;
-  height: 44px;
+  width: 2.2em; /* 44 / 20 */
+  height: 2.2em;
   border-radius: var(--radius-12);
   display: grid;
   place-items: center;
@@ -563,7 +563,7 @@
   margin: 8px 0 4px;
 }
 .spoon {
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--jade);
 }
 .spoonSpent {
@@ -581,7 +581,7 @@
 .mapGroupLabel {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 16px;

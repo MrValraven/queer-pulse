@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 48px 0 64px;
+  padding: var(--section-y-48) 0 var(--section-y-64);
   position: relative;
   overflow: hidden;
 }
@@ -45,7 +45,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.8vw, 74px);
+  font-size: clamp(2.375rem, 5.8vw, 4.625rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.97;
@@ -74,7 +74,7 @@
 }
 .fundItem b {
   font-family: var(--serif);
-  font-size: 32px;
+  font-size: var(--text-32);
   font-weight: 400;
   color: var(--accent);
   display: block;
@@ -136,7 +136,7 @@
 }
 .howN {
   font-family: var(--serif);
-  font-size: 40px;
+  font-size: var(--text-40);
   font-weight: 300;
   color: rgba(var(--ink-rgb), 0.1);
   line-height: 1;
@@ -154,7 +154,7 @@
 }
 
 .body {
-  padding: 52px 0 100px;
+  padding: var(--section-y-56) 0 var(--section-y-104);
 }
 .layout {
   display: grid;
@@ -210,7 +210,7 @@
 .rcTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 8px;
@@ -281,7 +281,7 @@
 .gsHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 20px;
@@ -319,7 +319,7 @@
 }
 .gcAmount {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   font-weight: 400;
   color: var(--jade);
   white-space: nowrap;
@@ -435,7 +435,7 @@
 .csText h3 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 9px;
@@ -545,8 +545,8 @@
 }
 .close {
   position: relative;
-  width: 34px;
-  height: 34px;
+  width: 2.125em; /* 34 / 16 */
+  height: 2.125em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.08);
   border: none;
@@ -612,7 +612,7 @@
 .stepTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 6px;
@@ -708,7 +708,7 @@
   background: rgba(var(--plum-rgb), 0.04);
 }
 .catIcon {
-  font-size: 22px;
+  font-size: var(--text-22);
   margin-bottom: 7px;
 }
 .catName {
@@ -739,8 +739,8 @@
 }
 .remove {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 2.143em; /* 30 / 14 */
+  height: 2.143em;
   border-radius: var(--radius-8);
   background: rgba(var(--plum-rgb), 0.06);
   border: none;
@@ -822,8 +822,8 @@
   cursor: pointer;
 }
 .check {
-  width: 18px;
-  height: 18px;
+  width: 1.636em; /* 18 / 11 */
+  height: 1.636em;
   border-radius: var(--radius-5);
   border: 1.5px solid rgba(var(--line-rgb), 0.2);
   flex: none;
@@ -922,13 +922,13 @@
   padding: 40px 32px;
 }
 .successIcon {
-  font-size: 52px;
+  font-size: var(--text-52);
   margin-bottom: 16px;
 }
 .successTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 12px;

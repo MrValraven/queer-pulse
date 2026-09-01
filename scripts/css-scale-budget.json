@@ -1,7 +1,12 @@
 {
   "//": "Committed floor for scripts/check-css-scale.mjs. Every number here is debt to pay down. Lower it with `node scripts/check-css-scale.mjs --update-budget` after a cleanup; raising one is a hand edit that needs a written reason in the commit, the same rule as BUDGET in report-a11y.mjs.",
-  "font-size": 1118,
+  "//font-size": "1118 -> 210 on 2026-09-01, when the --text-* scale went rem and 14 agents swept every bare literal onto it. What is left is NOT bare literals: it is ~200 hand-rolled clamp() type curves whose range no fluid role token covers, plus six decorative sizes above the scale's 64px ceiling (74, 88, 90, 128, 220, 340). Closing the rest means a scale of fluid steps, which does not exist yet. Note the metric widened at the same time: rem font-sizes now count too, because rem stopped being a neutral unit the moment the scale became rem.",
+  "//section-padding": "New category, born at ZERO. 564 vertical section paddings across 33 arbitrary values were snapped onto the --section-y-* 8px grid on 2026-09-01. Keep it at zero.",
+  "//plum-border": "New category, floored at ONE rather than zero, deliberately. The single survivor is AdminMembersPage.module.css .legendInbound, a trust-network legend KEY whose border-top IS the coloured line, drawn to match .previewEdge / .graphEdge (both `stroke: rgba(var(--plum-rgb), ...)`). Flipping the key to cream in dark mode while the edge it labels stays plum would break the legend, and its siblings .legendMutual / .legendOutbound use --jade-rgb / --accent-rgb, neither of which flips either. The real defect there is that the graph strokes do not flip; that is an SVG stroke, not a border, and out of this gate's scope. If those strokes are ever fixed, drop this floor to 0.",
+  "font-size": 210,
   "border-radius": 11,
   "box-shadow": 208,
-  "z-index": 9
+  "z-index": 9,
+  "section-padding": 0,
+  "plum-border": 1
 }

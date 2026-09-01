@@ -1,0 +1,63 @@
+/* "Message this business" — the one contact route on a listing that stays
+   inside QueerPulse. It sits with the phone, website and email rows in the
+   visit card and keeps their hairline rhythm, so it reads as one more way to
+   reach the place rather than as a banner bolted underneath them. */
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+}
+
+.messageBtn {
+  width: auto;
+}
+
+/* What happens when they press it: the message becomes a direct message from
+   their own account, and a reply may need a connection. Both are said here,
+   before the composer opens, and again inside it. */
+.note {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-40);
+}
+
+/* The reason an owner cannot be written to. Rendered rather than swallowed: a
+   missing button with no explanation reads as a bug. */
+.unavailable {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* A cap the member has already hit. Coral, because it is the answer to a press
+   they just made, and it stays next to the disabled trigger. */
+.capped {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--accent-text);
+}
+
+.threadLink {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+}
+
+.signIn {
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.signIn a {
+  font-weight: 600;
+  color: var(--accent-ink);
+}

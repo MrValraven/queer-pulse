@@ -77,7 +77,7 @@
 .paneTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(28px, 3.2vw, 40px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   margin-bottom: 6px;
@@ -260,7 +260,7 @@
   margin-bottom: 36px;
 }
 .gIcon {
-  font-size: 24px;
+  font-size: var(--text-24);
   flex: none;
   color: var(--jade);
   margin-top: 2px;
@@ -404,7 +404,7 @@
 .modal h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--text-26);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }

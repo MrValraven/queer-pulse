@@ -5,6 +5,7 @@ import { NAV_MENUS, filterMenus } from "./navMenus";
 import { SidebarGroup } from "./SidebarGroup";
 import { SidebarFooter } from "./SidebarFooter";
 import { useIsLinkVisible } from "../../../app/authGate";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useNavMode } from "../../../app/providers/navModeContext";
 import { useAuth } from "../../../app/providers/authContext";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
@@ -21,7 +22,8 @@ import styles from "./Sidebar.module.css";
 export function Sidebar({ unreadCount }: { unreadCount?: number }) {
   const { t } = useTranslation();
   const isVisible = useIsLinkVisible();
-  const menus = filterMenus(NAV_MENUS, isVisible);
+  const { demoMode } = useDemoMode();
+  const menus = filterMenus(NAV_MENUS, isVisible, demoMode);
   const { railCollapsed, toggleRail } = useNavMode();
   const { loggedIn } = useAuth();
   // Same self-sourcing badge as the top-bar bell: an explicit prop wins, else

@@ -194,7 +194,7 @@
    `.rowsWithBulkBar`. */
 @media (--md) {
   .rowsWithBulkBar {
-    padding-bottom: 200px;
+    padding-bottom: var(--section-y-200);
   }
 }
 

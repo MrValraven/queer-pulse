@@ -2474,4 +2474,12 @@ export const resources: Catalog = {
     "Só te mostramos um guia depois de alguém o ler de ponta a ponta e confirmar cada número de telefone, prazo e informação de clínica que ele tem. Este ainda está à espera disso, por isso preferimos não te mostrar nada a mostrar-te uma coisa que não verificámos. Volta assim que for aprovado.",
   "guide.underReview.indexCta": "Ver o que já foi verificado",
   "guide.underReview.libraryCta": "Ver a biblioteca",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-45 — PRD-45 - one new key, appended to the existing 'suggest a resource' success panel (SuggestResourceModal.tsx renders it right after the existing suggest.success.sub, inside the same paragraph). It is the only copy change: a suggestion now really does report back, on /account/submissions and in the bell. It must never promise a personal reply or an email, because QueerPulse sends no email.
+  "suggest.success.tracked":
+    "A tua página de submissões mostra em que ponto está, e a decisão chega às tuas notificações.",
+
+  // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
+  // PRD-45 — PRD-45 - one new key, appended to the existing 'suggest a resource' success panel (SuggestResourceModal.tsx renders it right after the existing suggest.success.sub, inside the same paragraph). It is the only copy change: a suggestion now really does report back, on /account/submissions and in the bell. It must never promise a personal reply or an email, because QueerPulse sends no email.
 };

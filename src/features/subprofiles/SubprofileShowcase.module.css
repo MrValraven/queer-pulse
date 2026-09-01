@@ -223,7 +223,7 @@
 
 .handle {
   font-family: var(--sans);
-  font-size: 0.78rem;
+  font-size: var(--text-12-5);
   font-weight: 600;
   color: var(--ink-40);
   overflow: hidden;
@@ -247,7 +247,7 @@
   margin: 0;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: var(--text-heading);
   line-height: 1.12;
   color: var(--ink);
 }
@@ -274,7 +274,7 @@
   margin: 0;
   max-width: 46ch;
   color: var(--ink-60);
-  font-size: 0.95rem;
+  font-size: var(--text-body);
   line-height: 1.45;
 }
 
@@ -334,14 +334,14 @@ a.featuredStripLink:focus-visible {
 }
 
 .featuredStripEyebrow {
-  font-size: 0.64rem;
+  font-size: var(--text-10);
 }
 
 .featuredStripTitle {
   margin: 0;
   font-family: var(--sans);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--text-14-5);
   color: var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -415,7 +415,7 @@ a.featuredStripLink:focus-visible {
 .switchHead {
   margin: 0;
   font-family: var(--sans);
-  font-size: 0.68rem;
+  font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -438,7 +438,7 @@ a.featuredStripLink:focus-visible {
   justify-content: center;
   min-height: 44px;
   font-family: var(--sans);
-  font-size: 0.8rem;
+  font-size: var(--text-13);
   font-weight: 600;
   color: var(--ink-60);
   background: var(--paper);
@@ -639,7 +639,7 @@ a.featuredStripLink:focus-visible {
 .rowChevron {
   flex: none;
   color: var(--ink-40);
-  font-size: 1rem;
+  font-size: var(--text-16);
   transition: color var(--dur-base) var(--ease);
 }
 .row[aria-selected="true"] .rowChevron {
@@ -658,7 +658,7 @@ a.featuredStripLink:focus-visible {
   align-self: flex-start;
   margin-top: 2px;
   font-family: var(--sans);
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--accent-ink);
   background: none;

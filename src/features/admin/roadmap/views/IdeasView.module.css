@@ -103,7 +103,7 @@
 
 .voteCount strong {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   font-weight: 600;
   color: var(--ink);
   line-height: 1;

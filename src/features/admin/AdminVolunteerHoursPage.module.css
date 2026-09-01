@@ -13,7 +13,7 @@
 }
 
 .periodLabel {
-  font-size: 0.82rem;
+  font-size: var(--text-caption);
   font-weight: 600;
   color: var(--ink-60);
 }
@@ -35,7 +35,7 @@
 .headlineValue {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 40px;
+  font-size: var(--text-40);
   line-height: 1.05;
   color: var(--text-strong);
   letter-spacing: -0.02em;

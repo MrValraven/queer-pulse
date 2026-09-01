@@ -38,7 +38,7 @@
 }
 
 .filterLabel {
-  font-size: 0.78rem;
+  font-size: var(--text-label);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -116,7 +116,7 @@
 
 .rowMeta {
   margin: 0;
-  font-size: 0.84rem;
+  font-size: var(--text-13-5);
   color: var(--ink-40);
   overflow-wrap: anywhere;
 }
@@ -138,7 +138,7 @@
 
 .drawerEyebrow {
   margin: 0 0 4px;
-  font-size: 0.75rem;
+  font-size: var(--text-12);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -147,7 +147,7 @@
 .drawerTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: 1.3rem;
+  font-size: var(--text-21);
   color: var(--ink);
   overflow-wrap: anywhere;
 }
@@ -160,7 +160,7 @@
 
 .detailTerm {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: var(--text-label);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -208,7 +208,7 @@
 }
 
 .fieldLabel {
-  font-size: 0.85rem;
+  font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--ink);
   margin-top: 10px;
@@ -216,7 +216,7 @@
 
 .fieldHint {
   margin: 0 0 6px;
-  font-size: 0.8rem;
+  font-size: var(--text-caption);
   color: var(--ink-40);
 }
 
@@ -235,7 +235,7 @@
   background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid rgba(var(--accent-rgb), 0.28);
   color: var(--accent-text);
-  font-size: 0.86rem;
+  font-size: var(--text-body-sm);
 }
 
 .problems li + li {

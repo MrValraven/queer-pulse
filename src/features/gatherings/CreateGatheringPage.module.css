@@ -1,6 +1,6 @@
 .section {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 40px 0 100px;
+  padding: 40px 0 var(--section-y-104);
   background: var(--paper);
   border-top: 2px solid var(--line-strong);
   min-height: 100svh;
@@ -19,7 +19,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4.5vw, 52px);
+  font-size: var(--text-title);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -111,7 +111,7 @@
 .stepTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin-bottom: 6px;
@@ -213,7 +213,7 @@
   background: rgba(var(--plum-rgb), 0.04);
 }
 .typeIcon {
-  font-size: 24px;
+  font-size: var(--text-24);
   margin-bottom: 8px;
 }
 .typeName {
@@ -606,7 +606,7 @@
 .success {
   background: var(--plum);
   border-radius: var(--radius-card);
-  padding: 48px 44px;
+  padding: var(--section-y-48) 44px;
   text-align: center;
   animation: qpToastIn var(--dur-slow) var(--ease-out) both;
 }
@@ -614,11 +614,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 76px;
-  height: 76px;
+  width: 2.235em; /* 76 / 34 */
+  height: 2.235em;
   margin-bottom: 18px;
   border-radius: 50%;
-  font-size: 34px;
+  font-size: var(--text-34);
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.16);
   animation: qpCheckPop var(--dur-slow) var(--ease) 160ms both;
@@ -626,7 +626,7 @@
 .successTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 4vw, 44px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 14px;

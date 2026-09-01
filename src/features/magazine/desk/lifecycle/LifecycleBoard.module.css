@@ -24,7 +24,7 @@
 
 .countTile b {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   line-height: 1;
   color: var(--ink);
 }

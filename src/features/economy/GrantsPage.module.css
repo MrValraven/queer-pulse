@@ -1,7 +1,7 @@
 .hero {
   background: var(--plum);
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 80px;
+  padding: var(--section-y-64) 0 var(--section-y-80);
   position: relative;
   overflow: hidden;
 }
@@ -31,7 +31,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(40px, 6vw, 84px);
+  font-size: clamp(2.5rem, 6vw, 5.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -58,7 +58,7 @@
   display: block;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -100,7 +100,7 @@
 }
 
 .body {
-  padding: 64px 0 90px;
+  padding: var(--section-y-64) 0 var(--section-y-88);
 }
 .layout {
   display: grid;
@@ -114,7 +114,7 @@
 .secHead {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin-bottom: 20px;
@@ -265,12 +265,12 @@
 
 .guide {
   background: var(--plum);
-  padding: 96px 0;
+  padding: var(--section-y-96) 0;
 }
 .guide h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.8vw, 48px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.04;
@@ -303,7 +303,7 @@
 }
 .stepN {
   font-family: var(--serif);
-  font-size: 38px;
+  font-size: var(--text-38);
   font-weight: 300;
   color: rgba(var(--cream-rgb), 0.15);
   line-height: 1;

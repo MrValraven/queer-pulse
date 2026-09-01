@@ -1,0 +1,86 @@
+/* The live commission-interest form. A single narrow column: the page has one
+   job, and nothing on it competes with the form. */
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(48px, 9vh, 104px) 24px var(--section-y-96);
+}
+
+.head {
+  margin-bottom: 32px;
+}
+.eyebrow {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-heading);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 14px;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.intro {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin: 0 0 10px;
+}
+.intro:last-child {
+  margin-bottom: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-panel);
+  padding: 28px 24px;
+}
+
+/* Submit failure. Deliberately a panel rather than a toast: the retry lives in
+   the footer right below it, and a toast that has already faded leaves someone
+   staring at a form that looks like it worked. */
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.24);
+  border-radius: var(--radius-14);
+  padding: 14px 16px;
+  color: var(--accent-ink);
+}
+.error svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+.errorTitle {
+  font-size: var(--text-14);
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+.errorBody {
+  font-size: var(--text-13);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+}

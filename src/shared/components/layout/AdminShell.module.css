@@ -130,8 +130,9 @@
   }
 }
 .switchAv {
-  width: 30px;
-  height: 30px;
+  /* 30 / 12, in em so the box scales with its glyph. */
+  width: 2.5em;
+  height: 2.5em;
   border-radius: var(--radius-9);
   display: grid;
   place-items: center;
@@ -231,8 +232,9 @@
   background: rgba(var(--cream-rgb), 0.1);
 }
 .switchOptAv {
-  width: 30px;
-  height: 30px;
+  /* 30 / 12, in em so the box scales with its glyph. */
+  width: 2.5em;
+  height: 2.5em;
   border-radius: var(--radius-9);
   display: grid;
   place-items: center;
@@ -780,7 +782,7 @@
 }
 
 .content {
-  padding: 26px 30px 64px;
+  padding: 26px 30px var(--section-y-64);
   max-width: var(--maxw);
   width: 100%;
 }
@@ -845,7 +847,7 @@
     margin: 4px 0 0;
   }
   .content {
-    padding: 20px 18px 48px;
+    padding: 20px 18px var(--section-y-48);
   }
 }
 

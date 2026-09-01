@@ -9,7 +9,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  font-size: 0.82rem;
+  font-size: var(--text-13);
   color: var(--ink-60);
 }
 
@@ -57,7 +57,7 @@
 }
 
 .filterLabel {
-  font-size: 0.82rem;
+  font-size: var(--text-caption);
   font-weight: 600;
   color: var(--ink-60);
 }

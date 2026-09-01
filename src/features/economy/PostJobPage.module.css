@@ -4,7 +4,7 @@
 .page {
   background: var(--cream);
   min-height: 100svh;
-  padding: 28px 0 96px;
+  padding: 28px 0 var(--section-y-96);
 }
 .wrap {
   width: min(1120px, 92vw);
@@ -108,7 +108,7 @@
 }
 .stepTitle {
   font-family: var(--serif, "Fraunces", serif);
-  font-size: 30px;
+  font-size: var(--text-30);
   line-height: 1.1;
   color: var(--text-strong);
   margin: 0 0 8px;
@@ -447,8 +447,8 @@
   font-weight: 500;
 }
 .formTag button {
-  width: 18px;
-  height: 18px;
+  width: 1.385em;
+  height: 1.385em;
   border-radius: 50%;
   border: none;
   background: rgba(var(--plum-rgb), 0.12);
@@ -503,8 +503,8 @@
 }
 .sqNum {
   flex: none;
-  width: 24px;
-  height: 24px;
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   color: var(--text-strong);
@@ -575,8 +575,8 @@
 }
 .identityLogo {
   flex: none;
-  width: 46px;
-  height: 46px;
+  width: 3.067em;
+  height: 3.067em;
   border-radius: var(--radius-12);
   display: grid;
   place-items: center;
@@ -823,8 +823,8 @@
   margin-bottom: 10px;
 }
 .pvAv {
-  width: 26px;
-  height: 26px;
+  width: 2.364em;
+  height: 2.364em;
   border-radius: var(--radius-7);
   background: rgba(var(--accent-rgb), 0.14);
   color: var(--accent-ink);
@@ -914,7 +914,7 @@
 }
 .mlTitle {
   font-family: var(--serif, "Fraunces", serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   line-height: 1.15;
   color: var(--text-strong);
   margin: 0 0 12px;
@@ -1007,7 +1007,7 @@
 }
 .gateTitle {
   font-family: var(--serif, "Fraunces", serif);
-  font-size: 30px;
+  font-size: var(--text-30);
   line-height: 1.15;
   margin: 0 0 12px;
 }
@@ -1078,8 +1078,8 @@
 }
 .affLogo {
   flex: none;
-  width: 40px;
-  height: 40px;
+  width: 2.857em;
+  height: 2.857em;
   border-radius: var(--radius-10);
   display: grid;
   place-items: center;
@@ -1152,7 +1152,7 @@
 }
 .confirmTitle {
   font-family: var(--serif, "Fraunces", serif);
-  font-size: 32px;
+  font-size: var(--text-32);
   line-height: 1.12;
   color: var(--text-strong);
   margin: 0 0 10px;
@@ -1220,7 +1220,7 @@
 }
 .cstatN {
   font-family: var(--serif, "Fraunces", serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
 }
 .cstatL {

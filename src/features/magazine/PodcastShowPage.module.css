@@ -4,7 +4,7 @@
 .hero {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  padding: 120px 0 64px;
+  padding: var(--section-y-120) 0 var(--section-y-64);
   position: relative;
   overflow: hidden;
 }
@@ -53,7 +53,7 @@
   padding: 24px;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--accent);
 }
 .eyebrow {
@@ -67,7 +67,7 @@
 .h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(48px, 7vw, 84px);
+  font-size: clamp(3rem, 7vw, 5.25rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.95;
@@ -165,7 +165,7 @@
 .body {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 64px 28px 80px;
+  padding: var(--section-y-64) 28px var(--section-y-80);
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 48px;
@@ -189,7 +189,7 @@
 .epH h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 28px;
+  font-size: var(--text-28);
   color: var(--text-strong);
   letter-spacing: -0.015em;
 }
@@ -235,7 +235,7 @@
 .epFeat h3 {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -285,7 +285,7 @@
 .epNum {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 36px;
+  font-size: var(--text-36);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -411,8 +411,8 @@
   padding: 8px 0;
 }
 .hostAv {
-  width: 36px;
-  height: 36px;
+  width: 3em; /* 36 / 12 */
+  height: 3em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.14);
   color: var(--accent-ink);

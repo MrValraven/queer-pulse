@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { FiRepeat } from "react-icons/fi";
+import { FiArrowRight, FiRepeat } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { PageShell } from "../../shared/components/layout";
 import {
@@ -12,6 +13,7 @@ import {
   SkeletonLine,
 } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -113,6 +115,14 @@ export function BarterPage() {
               </Reveal>
             ))}
           </div>
+          {/* The member's own half of the board: what they posted, and what
+              they proposed on other people's swaps. Both had no entry point
+              anywhere before PRD-42/43. */}
+          <Reveal as="div" className={styles.mineRow} delay={400}>
+            <Link to={routes.myBarter} className={styles.mineLink}>
+              {t("economy:barter.hero.mineCta")} <FiArrowRight aria-hidden />
+            </Link>
+          </Reveal>
         </div>
       </header>
 

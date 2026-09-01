@@ -25,7 +25,7 @@
   border-radius: var(--radius-28) var(--radius-28) 0 0;
   width: 100%;
   max-width: 560px;
-  padding: 44px 48px 48px;
+  padding: 44px 48px var(--section-y-48);
   position: relative;
   /* svh, not vh: vh is the large viewport, so 92vh overflows under mobile
      browser chrome and pushes actions off-screen. */
@@ -87,8 +87,8 @@
   position: absolute;
   top: 18px;
   right: 18px;
-  width: 36px;
-  height: 36px;
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   background: rgba(var(--plum-rgb), 0.07);
   border: none;
@@ -146,7 +146,7 @@
 }
 .toName {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   font-weight: 500;
@@ -167,7 +167,7 @@
 .title {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 34px;
+  font-size: var(--text-34);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.08;
@@ -509,7 +509,7 @@
 }
 .statN {
   font-family: var(--serif);
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   line-height: 1;
 }
@@ -620,7 +620,7 @@
 .success h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 36px;
+  font-size: var(--text-36);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.08;

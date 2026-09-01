@@ -283,8 +283,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 26px;
-  height: 26px;
+  min-width: 2.364em; /* 26 / 11 */
+  height: 2.364em;
   margin-left: -8px;
   padding: 0 6px;
   border-radius: var(--radius-pill, 999px);
@@ -580,7 +580,7 @@
 .dName {
   margin: 0;
   font-family: var(--serif);
-  font-size: 21px;
+  font-size: var(--text-21);
   font-weight: 600;
   color: var(--ink);
 }
@@ -721,7 +721,7 @@
 
 .glanceValue {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: var(--text-26);
   font-weight: 600;
   color: var(--text-strong);
   line-height: 1;
@@ -1246,8 +1246,8 @@
 
 .sealedIcon {
   flex-shrink: 0;
-  width: 38px;
-  height: 38px;
+  width: 2.235em; /* 38 / 17 */
+  height: 2.235em;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,7 +1,7 @@
 /* ===== Cover band ===== */
 .cover {
   /* nav band reserved by shell (base.css); this is only breathing room */
-  padding-top: 48px;
+  padding-top: var(--section-y-48);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   position: relative;
@@ -25,7 +25,7 @@
 .coverInner {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 0 28px 52px;
+  padding: 0 28px var(--section-y-56);
   position: relative;
   z-index: 1;
 }
@@ -51,8 +51,8 @@
   flex-wrap: wrap;
 }
 .logo {
-  width: 104px;
-  height: 104px;
+  width: 2.476em;
+  height: 2.476em;
   border-radius: var(--radius-22);
   background: rgba(var(--cream-rgb), 0.1);
   border: 1px solid rgba(var(--cream-rgb), 0.16);
@@ -61,7 +61,7 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 42px;
+  font-size: var(--text-42);
   color: rgba(var(--cream-rgb), 1);
   flex: none;
 }
@@ -72,7 +72,7 @@
 .name {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 5.6vw, 64px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -155,7 +155,7 @@
   display: block;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: rgba(var(--cream-rgb), 1);
   line-height: 1;
   margin-bottom: 5px;
@@ -170,7 +170,7 @@
 .body {
   max-width: var(--maxw-page);
   margin: 0 auto;
-  padding: 56px 28px 96px;
+  padding: var(--section-y-56) 28px var(--section-y-96);
 }
 .grid {
   display: grid;
@@ -240,7 +240,7 @@
 .prose h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   color: var(--text-strong);
   letter-spacing: -0.01em;
   margin: 36px 0 14px;
@@ -371,7 +371,7 @@
 .revScore {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: 56px;
+  font-size: var(--text-56);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -482,7 +482,7 @@
 }
 .workTile {
   width: 100%;
-  height: 240px;
+  min-height: 240px;
   border-radius: var(--radius-16);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background: linear-gradient(
@@ -545,8 +545,8 @@
   gap: 10px;
 }
 .teamAv {
-  width: 36px;
-  height: 36px;
+  width: 3em;
+  height: 3em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.15);
   color: var(--accent-ink);
@@ -623,4 +623,116 @@
   display: flex;
   justify-content: center;
   margin-top: 12px;
+}
+
+/* ===== The employer's reply to a review (PRD-47) ===== */
+/* The house plum block the business directory already uses for the same
+   statement, so a subject answering a review reads the same across verticals.
+   Built on --line-rgb / --line-strong rather than --plum-rgb / --plum: those
+   two flip between themes while the plum channels do not, so in light mode
+   this is pixel-identical to the directory's block and in dark mode the rule
+   is actually visible instead of dark-on-dark. */
+.employerReply {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: rgba(var(--line-rgb), 0.06);
+  border-inline-start: 3px solid var(--line-strong);
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
+}
+.employerReplyHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+/* The label carrying the whole point: this block is the EMPLOYER speaking, not
+   another reviewer. Weighted and coloured so it cannot be skimmed past. */
+.employerReplyTitle {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: var(--text-12-5);
+  color: var(--text-strong);
+}
+.employerReplyDate {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  flex: none;
+}
+.employerReplyText {
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  text-wrap: pretty;
+  /* The employer's typed line breaks are stored, so they are shown. */
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+/* The reviewer changed their words after the employer had replied. Sits inside
+   the reply block, in plain language, so a reader can weigh the exchange
+   without the page taking a side. */
+.employerReplyStale {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 8px;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.employerReplyStale svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 2px;
+}
+
+/* The owner's Reply / Edit-reply action is a ghost <Button>. Only the type and
+   gutters are tightened; the button keeps its own 44px min-height tap target,
+   and the horizontal padding stays so the pill's radius does not collapse onto
+   the label. */
+.replyToggle {
+  margin-top: 12px;
+  padding: 8px 18px;
+  font-size: var(--text-13);
+}
+.replyComposer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.replyInput {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  resize: vertical;
+}
+.replyInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--accent);
+}
+.replyComposerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* "Report this review" under each review. Quiet by design: reporting is always
+   available but never competes with the employer's reply CTA beside it. */
+.reviewReport {
+  margin-top: 10px;
+}
+/* Marks a review the author has changed since posting it. */
+.revEdited {
+  margin-top: 8px;
+  font-size: var(--text-12);
+  color: var(--ink-40);
 }

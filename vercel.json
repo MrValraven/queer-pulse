@@ -1,6 +1,6 @@
 {
   "installCommand": "dnf install -y nss nspr mesa-libgbm libdrm libxkbcommon && pnpm install",
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "/spa.html" }],
   "headers": [
     {
       "source": "/(.*)",

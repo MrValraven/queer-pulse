@@ -21,7 +21,7 @@
 }
 
 .section {
-  padding: 88px 0;
+  padding: var(--section-y-88) 0;
 }
 .alt {
   background: var(--cream);
@@ -46,7 +46,7 @@
 .h {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4.2vw, 54px);
+  font-size: var(--text-display);
   letter-spacing: -0.025em;
   line-height: 1.04;
   margin-bottom: 16px;
@@ -101,7 +101,7 @@
   margin: 0;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -143,8 +143,8 @@
   gap: 11px;
 }
 .icIcon {
-  width: 40px;
-  height: 40px;
+  width: 2.222em;
+  height: 2.222em;
   border-radius: var(--radius-11);
   display: flex;
   align-items: center;
@@ -207,8 +207,8 @@
   }
 }
 .orgAv {
-  width: 46px;
-  height: 46px;
+  width: 3.286em;
+  height: 3.286em;
   border-radius: var(--radius-12);
   display: flex;
   align-items: center;
@@ -279,7 +279,7 @@
 }
 .fgDate .d {
   display: block;
-  font-size: 44px;
+  font-size: var(--text-44);
   font-weight: 500;
   line-height: 1;
   color: rgba(var(--cream-rgb), 1);
@@ -300,7 +300,7 @@
   display: block;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(20px, 2.4vw, 24px);
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
@@ -384,7 +384,7 @@
    stacking the date/body split of the first-gathering panel. */
 @media (max-width: 720px) {
   .section {
-    padding: 60px 0;
+    padding: var(--section-y-64) 0;
   }
   .firstGather {
     flex-direction: column;

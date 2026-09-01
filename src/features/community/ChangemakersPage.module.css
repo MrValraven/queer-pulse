@@ -38,7 +38,7 @@
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(36px, 4.8vw, 64px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -73,7 +73,7 @@
 .stat .n {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 3.4vw, 44px);
+  font-size: var(--text-title);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1;
@@ -88,7 +88,7 @@
 /* Less air above the featured card so it sits just under the hero rather
    than a scroll below it; the section keeps its full closing space. */
 .featured {
-  padding: 48px 0 72px;
+  padding: var(--section-y-48) 0 var(--section-y-72);
 }
 .featLabel {
   font-size: var(--text-12);
@@ -120,7 +120,7 @@
 .featName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 32px;
+  font-size: var(--text-32);
   color: var(--text-strong);
   letter-spacing: -0.015em;
   margin: 8px 0 14px;
@@ -161,13 +161,13 @@
 }
 
 .profiles {
-  padding: 0 0 80px;
+  padding: 0 0 var(--section-y-80);
 }
 /* With no featured changemaker above it (an empty list, or a list with nothing
    promoted) this section sits straight under the plum hero, so it takes the
    top padding `.featured` would otherwise have carried. */
 .hero + .profiles {
-  padding-top: 48px;
+  padding-top: var(--section-y-48);
 }
 .grid {
   display: grid;
@@ -209,7 +209,7 @@
 .cardName {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 22px;
+  font-size: var(--text-22);
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
@@ -249,7 +249,7 @@
 .nominate {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  padding: 88px 0;
+  padding: var(--section-y-88) 0;
   text-align: left;
   position: relative;
   overflow: hidden;
@@ -281,7 +281,7 @@
 .nominate h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 4.4vw, 54px);
+  font-size: var(--text-display);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.04;
@@ -329,7 +329,9 @@
 .nomSteps li {
   counter-increment: nomStep;
   display: grid;
-  grid-template-columns: 26px minmax(0, 1fr);
+  /* 26 / 14.5 in em: the counter column tracks the list's own type scale, and
+     the ::before disc below uses the same 26px expressed against its own. */
+  grid-template-columns: 1.793em minmax(0, 1fr);
   gap: 13px;
   align-items: start;
   font-size: var(--text-14-5);
@@ -340,8 +342,9 @@
   content: counter(nomStep);
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  /* 26 / 12, in em so the counter disc scales with its digit. */
+  width: 2.167em;
+  height: 2.167em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.16);
   border: 1px solid rgba(var(--accent-rgb), 0.4);
@@ -363,7 +366,7 @@
 .nomCardTitle {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--text-24);
   letter-spacing: -0.015em;
   color: var(--text-strong);
   margin: 0 0 22px;
@@ -432,8 +435,9 @@
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  /* 28 / 15, in em so the button scales with its glyph. */
+  width: 1.867em;
+  height: 1.867em;
   border: none;
   border-radius: 50%;
   background: none;

@@ -5,6 +5,8 @@ import { NAV_MENUS, filterMenus } from "./navMenus";
 import { Button } from "../ui";
 import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { NavBuildBadge } from "./NavBuildBadge";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./MegaNavDrawer.module.css";
 
@@ -15,7 +17,8 @@ interface MegaNavDrawerProps {
 export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
   const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
-  const menus = filterMenus(NAV_MENUS, isLinkVisible);
+  const { demoMode } = useDemoMode();
+  const menus = filterMenus(NAV_MENUS, isLinkVisible, demoMode);
   const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
@@ -71,6 +74,7 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
                         tabIndex={isOpen ? undefined : -1}
                       >
                         {t(link.labelKey)}
+                        {link.isBeingBuilt && <NavBuildBadge />}
                       </Link>
                     ))}
                     {column.cta && (

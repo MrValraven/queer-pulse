@@ -91,9 +91,13 @@
 }
 
 /* ── Listing stage ── */
+/* Reserved in rem, not px: the listing cards are absolutely positioned so the
+   stage cannot measure them, and their type is rem-based. Growing the floor at
+   the same rate keeps a taller card from running into the section below.
+   42rem = 672px at a 16px root. */
 .lstStage {
   position: relative;
-  height: 672px;
+  min-height: 42rem; /* 672 / 16 */
 }
 .lst {
   position: absolute;
@@ -101,7 +105,7 @@
   left: 0;
   width: 100%;
   background: var(--paper);
-  border: 1px solid rgba(var(--plum-rgb), 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-e4), var(--shadow-e1);
   overflow: hidden;
@@ -155,7 +159,7 @@
   font-weight: 600;
   color: var(--text-strong);
   background: var(--paper);
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
   z-index: 3;
 }
 .lst[data-position="back"] .lstPeek {
@@ -169,7 +173,7 @@
   align-items: center;
   gap: 8px;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   background: rgba(var(--plum-rgb), 0.02);
 }
 .lt {
@@ -292,7 +296,7 @@ span.lt {
   gap: 14px;
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .hhName {
   font-family: var(--sans);
@@ -347,7 +351,7 @@ span.lt {
   justify-content: space-between;
   gap: 8px 14px;
   padding: 14px var(--card-pad);
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   background: rgba(var(--plum-rgb), 0.02);
   font-family: var(--sans);
   font-size: var(--text-caption);
@@ -420,7 +424,7 @@ span.lt {
   gap: 11px;
   margin-top: 18px;
   padding-top: 16px;
-  border-top: 1px solid rgba(var(--plum-rgb), 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   font-family: var(--sans);
   font-size: var(--text-body-sm);
   color: var(--ink-60);
@@ -435,7 +439,7 @@ span.lt {
   margin-top: 20px;
   padding: 22px;
   border-radius: var(--radius-16);
-  border: 1.5px dashed rgba(var(--plum-rgb), 0.18);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.18);
   background: rgba(var(--plum-rgb), 0.02);
 }
 .emptyTitle {
@@ -462,6 +466,8 @@ span.lt {
   }
   .lstStage {
     height: auto;
+    /* Cards are back in flow here, so drop the desktop stage floor. */
+    min-height: 0;
     display: flex;
     gap: 18px;
     overflow-x: auto;

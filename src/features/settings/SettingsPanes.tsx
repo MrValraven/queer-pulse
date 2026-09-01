@@ -469,6 +469,20 @@ export function AccountPane() {
             </div>
           </div>
         </div>
+        <div className={styles.dataCards}>
+          {/* PRD-48. The way a member reaches their own submissions index.
+              Every intake on the platform had its own status vocabulary and
+              its own decision endpoint, and no shared place to read the
+              outcome, so the answer to "what did I send in?" existed nowhere.
+              Surfaced here, next to the other account-level pages, exactly the
+              way `routes.sessions` and `routes.dataExport` are. */}
+          <DataCard
+            title={t("settings:account.submissions.title")}
+            description={t("settings:account.submissions.desc")}
+            button={t("settings:account.submissions.cta")}
+            to={routes.mySubmissions}
+          />
+        </div>
       </Section>
       <Section label={t("settings:account.section.security")}>
         <ToggleList>
