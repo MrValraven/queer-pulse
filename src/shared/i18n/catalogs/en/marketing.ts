@@ -1336,7 +1336,7 @@ export const marketing: Catalog = {
     "We reply in English or Portuguese, usually within two working days.",
   "imprint.representation.title": "Responsible for content",
   "imprint.representation.p1":
-    "The volunteers who run QueerPulse are collectively responsible for what's published here. For anything about the site's content, email us and a real person will answer.",
+    "The volunteers who run QueerPulse are responsible for the pages QueerPulse publishes itself: this site's own writing, the magazine and the guides. Members are responsible for what they post. If something a member posted needs attention, report it in the app or email us, and a real person will look at it.",
   "imprint.hosting.title": "Hosting",
   "imprint.hosting.p1":
     "The platform runs on cloud hosting and storage. Your session and data are handled as described in our Privacy Policy.",

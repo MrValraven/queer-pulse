@@ -1372,7 +1372,7 @@ export const marketing: Catalog = {
     "Respondemos em inglês ou português, normalmente dentro de dois dias úteis.",
   "imprint.representation.title": "Responsável pelo conteúdo",
   "imprint.representation.p1":
-    "Os voluntários que gerem a QueerPulse são coletivamente responsáveis pelo que aqui é publicado. Para qualquer coisa sobre o conteúdo do site, envia-nos um email e uma pessoa a sério responde.",
+    "Os voluntários que gerem a QueerPulse são responsáveis pelas páginas que a própria QueerPulse publica: os textos deste site, a revista e os guias. Cada membro é responsável pelo que publica. Se algo publicado por um membro precisar de atenção, denuncia na aplicação ou envia-nos um email, e uma pessoa a sério vai ver.",
   "imprint.hosting.title": "Alojamento",
   "imprint.hosting.p1":
     "A plataforma corre em alojamento e armazenamento na cloud. A tua sessão e os teus dados são tratados como descrito na nossa Política de Privacidade.",
