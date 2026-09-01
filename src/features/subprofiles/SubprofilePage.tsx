@@ -25,7 +25,7 @@ import { useImageLightbox } from "./useImageLightbox";
 import { usePoemDeepLink } from "./usePoemDeepLink";
 import { PoemReaderModal } from "./poem/PoemReaderModal";
 import { slugify } from "./poem/poemModel";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { personaPublicPath, personaShareUrl } from "./personaLinks.data";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
@@ -160,13 +160,22 @@ export function SubprofilePage() {
 
   const craftLabel = t(KIND_LABEL_KEYS[data.kind]);
   const canonicalPath = personaPublicPath(data);
+  // A persona still named after its profession ("Poet") is titled "Owner Name |
+  // Poet". The three sinks below each already carry the craft as its own field,
+  // so they take the owner's name alone rather than the composed title, which
+  // would otherwise say "Poet" twice ("Poet · Poet · QueerPulse").
+  const seoName = personaNameBesideCraft({
+    displayName: data.displayName,
+    kind: data.kind,
+    ownerName: data.ownerName,
+  });
   const cardImage = data.coverUrl ?? data.avatarUrl ?? undefined;
   // A real wide cover reads well as a large-image card; falling back to the
   // small avatar/default, `summary` (square thumb) is the better fit.
   const twitterCard = data.coverUrl ? "summary_large_image" : "summary";
   const cardImageAlt = cardImage
     ? t("subprofiles:page.ogImageAlt", {
-        name: data.displayName,
+        name: seoName,
         craft: craftLabel,
       })
     : undefined;
@@ -178,7 +187,7 @@ export function SubprofilePage() {
   return (
     <PageShell>
       <PageMeta
-        title={`${data.displayName} · ${craftLabel} · QueerPulse`}
+        title={`${seoName} · ${craftLabel} · QueerPulse`}
         description={
           (data.tagline || data.bio || "").slice(0, 160) || undefined
         }
@@ -197,7 +206,9 @@ export function SubprofilePage() {
       {!isOwnerDraftPreview && (
         <JsonLd
           schema={buildPersonProfileSchema({
-            name: data.displayName,
+            // schema.org Person: the human's name in `name`, the craft in
+            // `jobTitle` — the same split the "Owner Name | Poet" heading makes.
+            name: seoName,
             url: canonicalPath,
             jobTitle: craftLabel,
             image: cardImage ?? null,

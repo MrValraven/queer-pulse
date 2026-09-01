@@ -77,7 +77,18 @@ export function PlacesSection({
   // Visitors see nothing rather than an empty shell; the owner gets a prompt.
   // An owner with no places of their own may still have an invitation waiting,
   // so the section stays for them either way.
-  if (places.length === 0 && !isSelf && !hasVisitorFetchFailed) return null;
+  //
+  // While the visitor fetch is still out, that "nothing" is a placeholder
+  // rather than an absence: the mobile profile's Community tab reads its
+  // children to decide whether to show a "nothing here yet" fallback (see the
+  // `[data-tab-empty]` rule in `MobileProfile.module.css`), and returning a
+  // bare `null` here would flash that fallback and then replace it with the
+  // grid. `data-section-pending` marks the node as "still deciding" for that
+  // rule. It stays childless, so `[data-section-wrap]:empty` semantics and
+  // the visitor's own view are unchanged — nothing is drawn either way.
+  if (places.length === 0 && !isSelf && !hasVisitorFetchFailed) {
+    return visitorListings.isPending ? <div data-section-pending /> : null;
+  }
 
   // A live listing addresses its own ref for edit and delete; both need the
   // same owner + live-mode + real-ref gate.

@@ -12,23 +12,31 @@ export const subprofiles: Catalog = {
     "Pseudonymous professional personas from across the community. No ranking, no algorithm. Just the work.",
   "directory.searchPlaceholder": "Search personas",
   "directory.searchAria": "Search personas",
-  "directory.filterLabel": "Filter by craft",
-  "directory.filterAll": "All",
   "directory.loading": "Loading personas…",
   "directory.empty.title": "No personas here yet",
   "directory.empty.description":
-    "Nothing matches this just now. Try another craft, or clear your search and see everyone.",
+    "Nothing matches this just now. Try another profession, or clear your search and see everyone.",
   "directory.empty.clear": "Clear filters",
   "directory.error.title": "We couldn't load the directory",
   "directory.error.description":
     "Something went wrong reaching the server. This isn't an empty directory. Try again in a moment.",
   "directory.error.retry": "Try again",
   "directory.openToCollabsChip": "Open to collabs",
-  "directory.tagFilterHeading": "Tags",
-  "directory.tagFilterLabel": "Filter by tag",
 
-  "directory.filtersNote_one": "{count} craft to browse.",
-  "directory.filtersNote_other": "{count} crafts to browse.",
+  // Refine drawer (SubprofileDirectoryToolbar / SubprofileDirectoryRefinePanel).
+  // The Profession band is headed by page family, and those headings reuse the
+  // create flow's own `family.*.label` keys.
+  "directory.refine.professionLabel": "Profession",
+  "directory.refine.availabilityLabel": "Availability",
+  "directory.refine.tagsLabel": "Tags",
+  // Whole accessible name for a counted chip: the badge itself is aria-hidden,
+  // so "Poet 4" would be heard as a quantity of Poets.
+  "directory.refine.optionWithCount_one": "{label}, {count} persona",
+  "directory.refine.optionWithCount_other": "{label}, {count} personas",
+  // Rides the active-filter chip row, so it only appears once something is
+  // narrowing the grid.
+  "directory.resultCount_one": "{count} persona",
+  "directory.resultCount_other": "{count} personas",
   "directory.showMore": "Show more",
   "directory.shownOfTotal": "{shown} of {total}",
 

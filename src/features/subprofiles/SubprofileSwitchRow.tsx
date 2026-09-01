@@ -1,7 +1,7 @@
 import { FiChevronRight } from "react-icons/fi";
 import { MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { SubprofileOwnerBadges } from "./SubprofileOwnerBadges";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
@@ -68,7 +68,11 @@ export function SubprofileSwitchRow({
           row-local siblings around it. */}
       <MemberIdentity
         person={{
-          name: persona.displayName,
+          name: personaNameBesideCraft({
+            displayName: persona.displayName,
+            kind: persona.kind,
+            ownerName: persona.ownerName,
+          }),
           avatarUrl: persona.avatarUrl ?? undefined,
         }}
         tint="plum"

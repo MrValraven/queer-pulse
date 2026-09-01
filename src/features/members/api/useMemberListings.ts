@@ -14,6 +14,14 @@ export interface MemberListingsResult {
    * error panel instead of the "no places" silence.
    */
   isError: boolean;
+  /**
+   * True while the live fetch is still out, i.e. `places` being empty says
+   * nothing yet. The visitor branch of `PlacesSection` renders `null` for an
+   * empty list, so without this the mobile profile's Community tab would
+   * flash its "nothing here yet" fallback and then replace it with the grid.
+   * Always false in demo mode, which resolves synchronously.
+   */
+  isPending: boolean;
   /** Re-runs the failed fetch. Wire it to the error panel's retry button. */
   refetch: () => void;
 }
@@ -32,9 +40,13 @@ export interface MemberListingsResult {
  */
 export function useMemberListings(memberSlug: string): MemberListingsResult {
   const { demoMode } = useDemoMode();
+  // Hoisted because `isPending` has to read it too: react-query reports a
+  // disabled query as pending forever, so a live-mode call with no slug would
+  // otherwise claim to be loading for good.
+  const isQueryEnabled = !demoMode && memberSlug.length > 0;
   const listingsQuery = useQuery<MemberPlace[]>({
     queryKey: ["memberListings", demoMode, memberSlug],
-    enabled: !demoMode && memberSlug.length > 0,
+    enabled: isQueryEnabled,
     initialData: demoMode ? registryPlacesForMember(memberSlug) : undefined,
     queryFn: async () => {
       if (demoMode) return registryPlacesForMember(memberSlug);
@@ -57,8 +69,10 @@ export function useMemberListings(memberSlug: string): MemberListingsResult {
 
   return {
     places: listingsQuery.data ?? [],
-    // Demo resolves synchronously off the static registry: nothing to fail.
+    // Demo resolves synchronously off the static registry: nothing to fail
+    // and nothing to wait for.
     isError: !demoMode && listingsQuery.isError,
+    isPending: isQueryEnabled && listingsQuery.isPending,
     refetch,
   };
 }

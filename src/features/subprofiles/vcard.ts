@@ -2,6 +2,7 @@ import { toAbsoluteUrl } from "../../shared/seo";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { socialHref } from "../../shared/social/socialPlatforms";
 import { personaShareUrl } from "./personaLinks.data";
+import { personaTitleName } from "./subprofile-kinds";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
 /** Escape the characters vCard (RFC 6350) reserves in a text value:
@@ -25,8 +26,15 @@ export function escapeVCard(value: string): string {
 export function buildVCard(view: PublicSubprofileView): string {
   const lines: string[] = ["BEGIN:VCARD", "VERSION:3.0"];
 
-  lines.push(`FN:${escapeVCard(view.displayName)}`);
-  lines.push(`N:${escapeVCard(view.displayName)};;;;`);
+  // A contact saved as just "Poet" is useless in a phone book, so a persona
+  // still named after its profession files under "Owner Name | Poet".
+  const contactName = personaTitleName({
+    displayName: view.displayName,
+    kind: view.kind,
+    ownerName: view.ownerName,
+  });
+  lines.push(`FN:${escapeVCard(contactName)}`);
+  lines.push(`N:${escapeVCard(contactName)};;;;`);
 
   if (view.tagline) lines.push(`TITLE:${escapeVCard(view.tagline)}`);
 

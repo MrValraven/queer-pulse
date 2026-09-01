@@ -1,5 +1,6 @@
 import { nestedPersonaPath, personaPath } from "../../app/routeMap";
 import { personaCardPath } from "../subprofiles/personaLinks.data";
+import { personaTitleName } from "../subprofiles/subprofile-kinds";
 import type {
   SubprofileCardDTO,
   SubprofilePublicDTO,
@@ -45,7 +46,11 @@ export function vmFromPublic(dto: SubprofilePublicDTO): TherapistCardVM {
   return {
     handle,
     href,
-    name: dto.displayName,
+    name: personaTitleName({
+      displayName: dto.displayName,
+      kind: dto.kind,
+      ownerName: dto.ownerName,
+    }),
     initials: initialsOf(dto.displayName),
     avatarUrl: dto.avatarUrl,
     creds: dto.tagline,
@@ -61,7 +66,11 @@ export function vmFromCard(dto: SubprofileCardDTO): TherapistCardVM {
   return {
     handle: dto.handle,
     href: personaCardPath(dto),
-    name: dto.displayName,
+    name: personaTitleName({
+      displayName: dto.displayName,
+      kind: dto.kind,
+      ownerName: dto.ownerName,
+    }),
     initials: initialsOf(dto.displayName),
     avatarUrl: dto.avatarUrl,
     creds: dto.tagline,

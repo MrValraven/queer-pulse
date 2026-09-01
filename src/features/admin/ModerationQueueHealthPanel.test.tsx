@@ -46,7 +46,7 @@ describe("ModerationQueueHealthPanel", () => {
     expect(screen.getByText("Appeals")).toBeInTheDocument();
     expect(screen.getByText("Verification requests")).toBeInTheDocument();
     expect(
-      screen.getByText("Bans waiting on a second look"),
+      screen.getByText("Bans needing a second signature"),
     ).toBeInTheDocument();
 
     // One chip per queue plus the overall summary chip.

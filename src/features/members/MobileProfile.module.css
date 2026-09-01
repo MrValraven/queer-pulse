@@ -263,6 +263,27 @@
   display: none;
 }
 
+/* `MobileProfileTabEmptyState` renders unconditionally as the last child of
+   every `.tabPanel`; this rule takes it away again the moment the panel
+   actually has content. The test is "any sibling that isn't the empty state
+   and isn't itself empty": a section that returned `null` leaves either no
+   node at all (the self-wrapping `ProfileCommunitiesSection`/`PlacesSection`)
+   or the childless `[data-section-wrap]` div collapsed just above, so both
+   fail it. `[data-section-pending]` is `PlacesSection`'s in-flight marker —
+   a deliberately childless node, so it needs naming separately or a visitor
+   would see the empty state flash while `GET /directory/by-member/:slug` is
+   still out.
+
+   Doing this in CSS rather than a JS gate is what keeps the eight sections'
+   emptiness rules in one place: the panel never re-derives them, and it
+   reaches the two async-sourced sections that a synchronous check on
+   `profile` has no way to see (the same reason `tabHasContent` in
+   `MobileProfileTabs` can't gate the `community` tab). */
+.tabPanel:has(> [data-section-pending]) > [data-tab-empty],
+.tabPanel:has(> :not([data-tab-empty]):not(:empty)) > [data-tab-empty] {
+  display: none;
+}
+
 /* ── Header cluster (MobileProfileHeader) ────────────────────────────────── */
 .mheader {
   display: flex;

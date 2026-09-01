@@ -49,6 +49,8 @@ export function CommunitiesRefinePanel({
     setTagIds,
     categoryCounts,
     tagCounts,
+    openToAllCount,
+    busyCount,
   } = discover;
 
   return (
@@ -83,30 +85,18 @@ export function CommunitiesRefinePanel({
           aria-labelledby={togglesLabelId}
         >
           <div className={styles.toggles}>
-            <Button
-              variant="ghost"
-              size="sm"
-              aria-pressed={isOpenOnly}
-              className={[styles.toggle, isOpenOnly && styles.toggleOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setIsOpenOnly((value) => !value)}
-            >
-              <span className={styles.toggleDot} aria-hidden />
-              {t("communities:discover.toggle.openOnly")}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              aria-pressed={isBusyOnly}
-              className={[styles.toggle, isBusyOnly && styles.toggleOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setIsBusyOnly((value) => !value)}
-            >
-              <span className={styles.toggleDot} aria-hidden />
-              {t("communities:discover.toggle.busyOnly")}
-            </Button>
+            <QuickFilterToggle
+              label={t("communities:discover.toggle.openOnly")}
+              count={openToAllCount}
+              isOn={isOpenOnly}
+              onToggle={() => setIsOpenOnly((value) => !value)}
+            />
+            <QuickFilterToggle
+              label={t("communities:discover.toggle.busyOnly")}
+              count={busyCount}
+              isOn={isBusyOnly}
+              onToggle={() => setIsBusyOnly((value) => !value)}
+            />
           </div>
         </RefineGroup>
       </RefineSplit>
@@ -117,5 +107,58 @@ export function CommunitiesRefinePanel({
         tagCounts={tagCounts}
       />
     </RefinePanel>
+  );
+}
+
+/**
+ * One of the drawer's two pill toggles, with the live availability count the
+ * chip rows beside it already carry (`ChipSelect`'s badge, same treatment).
+ *
+ * `count` is `undefined` while the first page is still in flight, and on a
+ * server that predates the facet. That renders as NO badge and never as a
+ * disabled pill: "not counted" and "nobody is here" are different answers, and
+ * only the second one may take a filter away from a member.
+ */
+function QuickFilterToggle({
+  label,
+  count,
+  isOn,
+  onToggle,
+}: {
+  label: string;
+  count: number | undefined;
+  isOn: boolean;
+  onToggle: () => void;
+}) {
+  const { t } = useTranslation();
+  // Nothing left to find under this toggle, so picking it could only empty the
+  // grid. Never while it is already on, or it could not be switched back off.
+  const isUnavailable = count === 0 && !isOn;
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      aria-pressed={isOn}
+      // The badge is aria-hidden, so the pill carries the whole phrase as its
+      // name: "Busy this week, 4 communities", never "Busy this week 4".
+      aria-label={
+        count === undefined
+          ? undefined
+          : t("communities:discover.toggle.withCount", { label, count })
+      }
+      disabled={isUnavailable}
+      className={[styles.toggle, isOn && styles.toggleOn]
+        .filter(Boolean)
+        .join(" ")}
+      onClick={onToggle}
+    >
+      <span className={styles.toggleDot} aria-hidden />
+      {label}
+      {count !== undefined && (
+        <span className={styles.toggleCount} aria-hidden>
+          {count}
+        </span>
+      )}
+    </Button>
   );
 }

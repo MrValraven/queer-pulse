@@ -4917,8 +4917,33 @@ export const admin: Catalog = {
   "moderationHealth.queue.reports": "Reports",
   "moderationHealth.queue.appeals": "Appeals",
   "moderationHealth.queue.verification": "Verification requests",
-  "moderationHealth.queue.ban_ratifications": "Bans waiting on a second look",
+  "moderationHealth.queue.ban_ratifications": "Bans needing a second signature",
   "moderationHealth.queue.unknown": "Another queue",
+  // The other twenty-two queues the admin-queue-notifications registry can
+  // name (see ADMIN_QUEUE_KEYS in features/notifications/api/adminQueueRoutes).
+  "moderationHealth.queue.dsar": "Data requests",
+  "moderationHealth.queue.housing_listings": "Housing listings",
+  "moderationHealth.queue.housing_group_listings": "Group housing listings",
+  "moderationHealth.queue.landlord_intro_requests": "Landlord introductions",
+  "moderationHealth.queue.landlord_suggestions": "Landlord suggestions",
+  "moderationHealth.queue.concerns": "Governance concerns",
+  "moderationHealth.queue.intakes": "Intake forms",
+  "moderationHealth.queue.legal_requests": "Legal and government demands",
+  "moderationHealth.queue.housing_coop_join_requests": "Co-op join requests",
+  "moderationHealth.queue.community_tag_requests": "Community tag requests",
+  "moderationHealth.queue.reading_group_proposals": "Reading group proposals",
+  "moderationHealth.queue.safe_space_nominations": "Safe space nominations",
+  "moderationHealth.queue.safe_space_flags": "Safe space flags",
+  "moderationHealth.queue.listing_submissions": "Directory listings",
+  "moderationHealth.queue.listing_claims": "Listing claims",
+  "moderationHealth.queue.listing_edit_suggestions": "Listing edit suggestions",
+  "moderationHealth.queue.resource_suggestions": "Resource suggestions",
+  "moderationHealth.queue.magazine_submissions": "Story submissions",
+  "moderationHealth.queue.writer_applications": "Writer applications",
+  "moderationHealth.queue.commission_interests": "Commission interest",
+  "moderationHealth.queue.partner_applications": "Partner applications",
+  "moderationHealth.queue.changemaker_nominations": "Changemaker nominations",
+  "moderationHealth.queue.roadmap_ideas": "Member ideas",
 
   // Which of the three axes tripped, said as what it means rather than as the
   // field name.
@@ -4989,6 +5014,14 @@ export const admin: Catalog = {
   "moderationHealth.notification.oldestToken_one": "{value} hour",
   "moderationHealth.notification.oldestToken_other": "{value} hours",
   "moderationHealth.notification.oldestNone": "nothing waiting",
+
+  // The staff arrival notice. One string for all twenty-seven queues: the queue
+  // interpolates as {queue} and the count is CLDR-pluralised. It bundles on
+  // the queue, so {count} can be greater than one. No copy here asks anyone
+  // to hurry, and none of it says anything was sent.
+  "queueArrival.text_one": "{queue}: {count} item is waiting for a look.",
+  "queueArrival.text_other": "{queue}: {count} items are waiting for a look.",
+  "queueArrival.meta": "Something landed in a queue you work.",
 
   // ââ Volunteer hours report (SUS-05) âââââââââââââââââââââââââââââââââââââââ
   // Admin oversight of volunteering: confirmed sessions and hours over a

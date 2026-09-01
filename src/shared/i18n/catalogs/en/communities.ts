@@ -68,6 +68,10 @@ export const communities: Catalog = {
   "discover.toggle.groupLabel": "Quick filters",
   "discover.toggle.openOnly": "Open to all",
   "discover.toggle.busyOnly": "Busy this week",
+  // The pills carry a live availability count. The badge is
+  // aria-hidden, so this is the whole accessible name.
+  "discover.toggle.withCount_one": "{label}, {count} community",
+  "discover.toggle.withCount_other": "{label}, {count} communities",
   "discover.sort.active": "Most active",
   // Sort as a removable chip on the active-filters row: the toolbar keeps the
   // sort control inside the Refine drawer, so this is where a shut drawer

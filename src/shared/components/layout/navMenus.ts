@@ -198,6 +198,14 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.community.col.people.membersDirectory",
             href: routes.members,
           },
+          {
+            // The persona directory (`/subprofiles`): members' work-facing
+            // personas, next to the members directory it complements — that
+            // one browses people, this one browses what they do.
+            labelKey:
+              "shared:megaNav.community.col.people.professionalDirectory",
+            href: routes.subprofiles,
+          },
           { labelKey: "nav:forum", href: routes.forum },
           {
             // DISC-4 — the topics directory, sitting next to Forum (its main

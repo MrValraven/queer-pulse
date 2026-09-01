@@ -188,6 +188,11 @@ export interface CommunitiesQuery {
    *  pagination doesn't reshuffle) — mirrors the backend's
    *  `ListCommunitiesQuery.sort`. Omit for the default. */
   sort?: "newest" | "name";
+  /** `true` narrows to communities at or above the backend's busy threshold
+   *  (`communities.active_this_week`). One-way: there is no "quiet only"
+   *  filter, so `false` and omitted are the same request. Mirrors the
+   *  backend's `ListCommunitiesQuery.busy`. */
+  busy?: boolean;
   /** Curated tag ids to narrow to (⊆ `COMMUNITY_TAGS`) — ANDed with the other
    *  filters, OR'd against each other (a community matches if it carries any
    *  of the given tags). Mirrors the backend's `ListCommunitiesQuery.tags`. */
@@ -203,6 +208,15 @@ export interface CommunityBrowseFacets {
    *  filters, its own `tags` filter lifted. A tag MISSING from this map was
    *  not counted, which must never render as a `0`. */
   tags?: Record<string, number>;
+  /** Communities open to all, under the rest of this request's filters with
+   *  the `access` filter itself lifted — the "Open to all" pill's count.
+   *  `undefined` on a server that predates the facet, which must render as no
+   *  badge rather than as a `0`. */
+  openToAll?: number;
+  /** Communities at or above the busy threshold, under the rest of this
+   *  request's filters with `busy` itself lifted — the "Busy this week" pill's
+   *  count. `undefined` means "not counted", never "nobody is here". */
+  busy?: number;
 }
 
 export interface CommunitiesPage extends Paginated<CommunityCardDTO> {
@@ -219,6 +233,9 @@ export async function getCommunities(
   if (params.page) query.set("page", String(params.page));
   if (params.q) query.set("q", params.q);
   if (params.sort) query.set("sort", params.sort);
+  // One-way, so only the narrowing value is ever sent — `busy=false` would be
+  // a request the API deliberately has no answer for.
+  if (params.busy) query.set("busy", "true");
   if (params.tags?.length) query.set("tags", params.tags.join(","));
   const qs = query.toString();
   const res = await apiGet<

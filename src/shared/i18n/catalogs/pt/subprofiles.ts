@@ -8,23 +8,31 @@ export const subprofiles: Catalog = {
     "Personas profissionais pseudónimas de toda a comunidade. Sem rankings, sem algoritmo. Só o trabalho.",
   "directory.searchPlaceholder": "Pesquisar personas",
   "directory.searchAria": "Pesquisar personas",
-  "directory.filterLabel": "Filtrar por ofício",
-  "directory.filterAll": "Tudo",
   "directory.loading": "A carregar personas…",
   "directory.empty.title": "Ainda não há personas aqui",
   "directory.empty.description":
-    "Nada corresponde a isto por agora. Experimenta outro ofício ou limpa a pesquisa para veres toda a gente.",
+    "Nada corresponde a isto por agora. Experimenta outra profissão ou limpa a pesquisa para veres toda a gente.",
   "directory.empty.clear": "Limpar filtros",
   "directory.error.title": "Não conseguimos carregar o diretório",
   "directory.error.description":
     "Algo correu mal ao contactar o servidor. Isto não é um diretório vazio. Tenta novamente daqui a pouco.",
   "directory.error.retry": "Tentar novamente",
   "directory.openToCollabsChip": "Aberto a colaborações",
-  "directory.tagFilterHeading": "Tags",
-  "directory.tagFilterLabel": "Filtrar por tag",
 
-  "directory.filtersNote_one": "{count} ofício para explorar.",
-  "directory.filtersNote_other": "{count} ofícios para explorar.",
+  // Painel "Refinar" (SubprofileDirectoryToolbar / SubprofileDirectoryRefinePanel).
+  // A faixa Profissão é encabeçada pela família da página, e esses títulos
+  // reutilizam as chaves `family.*.label` do fluxo de criação.
+  "directory.refine.professionLabel": "Profissão",
+  "directory.refine.availabilityLabel": "Disponibilidade",
+  "directory.refine.tagsLabel": "Tags",
+  // Nome acessível completo de um chip com contagem: o número está
+  // aria-hidden, logo "Poeta 4" seria lido como uma quantidade de Poetas.
+  "directory.refine.optionWithCount_one": "{label}, {count} persona",
+  "directory.refine.optionWithCount_other": "{label}, {count} personas",
+  // Acompanha a linha de filtros ativos, por isso só aparece quando algo está
+  // a filtrar a grelha.
+  "directory.resultCount_one": "{count} persona",
+  "directory.resultCount_other": "{count} personas",
   "directory.showMore": "Ver mais",
   "directory.shownOfTotal": "{shown} de {total}",
 

@@ -3,6 +3,7 @@ import { FiChevronRight } from "react-icons/fi";
 import { MemberIdentity } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { personaNameBesideCraft } from "./subprofile-kinds";
 import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { SubprofileAvailability } from "./SubprofileAvailability";
 import { SubprofileOwnerBadges } from "./SubprofileOwnerBadges";
@@ -65,7 +66,11 @@ export function SubprofileMobileRow({
             siblings around it. */}
         <MemberIdentity
           person={{
-            name: persona.displayName,
+            name: personaNameBesideCraft({
+              displayName: persona.displayName,
+              kind: persona.kind,
+              ownerName: persona.ownerName,
+            }),
             avatarUrl: persona.avatarUrl ?? undefined,
           }}
           tint="plum"

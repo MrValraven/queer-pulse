@@ -90,6 +90,62 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "what-you-submit-now-reaches-a-person",
+        category: "feature",
+        date: "1 Sep 2026",
+        ...entryKeys("what-you-submit-now-reaches-a-person"),
+      },
+      {
+        id: "every-filter-now-tells-you-how-many-it-would-leave",
+        category: "improvement",
+        date: "1 Sep 2026",
+        ...entryKeys("every-filter-now-tells-you-how-many-it-would-leave"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "browse-the-professional-directory-by-profession",
+        category: "improvement",
+        date: "1 Sep 2026",
+        ...entryKeys("browse-the-professional-directory-by-profession"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "personas-named-after-a-craft-now-show-whose-they-are",
+        category: "improvement",
+        date: "1 Sep 2026",
+        ...entryKeys("personas-named-after-a-craft-now-show-whose-they-are"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "empty-profile-tabs-say-so",
+        category: "fix",
+        date: "1 Sep 2026",
+        ...entryKeys("empty-profile-tabs-say-so"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "the-professional-directory-is-in-the-main-menu",
+        category: "improvement",
+        date: "1 Sep 2026",
+        ...entryKeys("the-professional-directory-is-in-the-main-menu"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
         id: "tag-filters-show-how-many-communities-are-behind-them",
         category: "improvement",
         date: "1 Sep 2026",

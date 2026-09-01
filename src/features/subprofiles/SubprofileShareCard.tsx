@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { personaShareUrl } from "./personaLinks.data";
 import { downloadVCard } from "./vcard";
+import { personaAddressName } from "./subprofile-kinds";
 import { SubprofileQR } from "./SubprofileQR";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SubprofileShareCard.module.css";
@@ -25,6 +26,14 @@ export function SubprofileShareCard({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const shareUrl = personaShareUrl(view);
+  // Both strings below read "{name}'s page", so they take the ADDRESS name
+  // (the owner's first name for a persona still called "Poet") rather than the
+  // composed "Owner Name | Poet" title, which would not survive a possessive.
+  const addressName = personaAddressName({
+    displayName: view.displayName,
+    kind: view.kind,
+    ownerName: view.ownerName,
+  });
 
   async function handleCopyLink() {
     try {
@@ -41,7 +50,7 @@ export function SubprofileShareCard({
   return (
     <Modal
       title={t("subprofiles:shareCard.title")}
-      sub={t("subprofiles:shareCard.subtitle", { name: view.displayName })}
+      sub={t("subprofiles:shareCard.subtitle", { name: addressName })}
       onClose={onClose}
       className={styles.modal}
     >
@@ -49,7 +58,7 @@ export function SubprofileShareCard({
         <SubprofileQR
           url={shareUrl}
           ariaLabel={t("subprofiles:shareCard.qrAria", {
-            name: view.displayName,
+            name: addressName,
           })}
         />
 

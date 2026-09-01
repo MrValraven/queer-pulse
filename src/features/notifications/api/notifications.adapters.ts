@@ -22,6 +22,7 @@ import {
 import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
+import { adminQueueRoute } from "./adminQueueRoutes";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
@@ -249,6 +250,9 @@ export function notificationDtoToView(
     // `security_new_sign_in` prints the wall-clock time of the sign-in in the
     // member's own language; every other kind ignores this argument.
     fmt,
+    // `admin_queue_item` renders its own count, because it bundles on the
+    // queue and one row can stand for several arrivals.
+    dto.otherActorCount,
   );
   const view: Notification = {
     // Backend ids are uuids — pass through as-is. Coercing with Number() would
@@ -264,6 +268,11 @@ export function notificationDtoToView(
     },
     text,
     meta,
+    // `admin_queue_item`'s own copy already carries the count ("4 items are
+    // waiting for a look"), so `NotificationItem` must not also append the
+    // generic "and 3 others" bundle suffix on top of it: that would both
+    // double-count and speak about people where none are named.
+    hasOwnBundleCount: kind === "admin_queue_item",
     time: formatTime(dto.createdAt, fmt),
     createdAtIso: dto.createdAt,
   };
@@ -451,6 +460,14 @@ function sourceHrefFromPayload(
   // so it opens the reading rather than one of the queues it summarises.
   if (type === "moderation_queue_alert") {
     return `${routes.adminModeration}?tab=health`;
+  }
+  // An admin queue arrival goes to the queue that received it. Keyed on `type`
+  // like the branches above, because `payload.source` is `"admin"`, a value
+  // the generic branches further down would not resolve. An unknown queue key
+  // yields no href rather than a broken link: the row still reads.
+  if (type === "admin_queue_item") {
+    const queue = payload?.queue;
+    return adminQueueRoute(typeof queue === "string" ? queue : "");
   }
   // PRD-31, both halves of a ban-evasion escalation. Keyed on `type` for the
   // same reason the two report kinds above are: each payload carries a

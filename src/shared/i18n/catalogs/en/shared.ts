@@ -359,6 +359,8 @@ export const shared: Catalog = {
   "megaNav.community.featurePublic.cta": "Get involved",
   "megaNav.community.col.people.head": "People",
   "megaNav.community.col.people.membersDirectory": "Members directory",
+  "megaNav.community.col.people.professionalDirectory":
+    "Professional directory",
   "megaNav.community.col.people.topics": "Topics",
   "megaNav.community.col.people.dating": "Dating",
   "megaNav.community.col.gather.head": "Gather",

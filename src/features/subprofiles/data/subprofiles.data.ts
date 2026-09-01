@@ -2780,6 +2780,8 @@ export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
     handle: sp.handle ?? sp.slug,
     linkVisibility: sp.linkVisibility,
     ownerSlug: sp.linkVisibility === "linked" ? sp.ownerSlug : null,
+    // Same linked-only rule as `ownerSlug` — mirrors the backend's `toCardDTO`.
+    ownerName: sp.linkVisibility === "linked" ? sp.ownerName : null,
     slug: sp.slug,
     kind: sp.kind,
     displayName: sp.displayName,

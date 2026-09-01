@@ -65,9 +65,15 @@ export function NotificationItem({
   // How many members beyond the one named did the same thing to the same
   // subject. A bundled row is one row for one conversation: forty replies to a
   // thread used to be forty rows, forty unread, and forty taps to clear.
+  //
+  // `hasOwnBundleCount` rows are excluded because they bundle on a QUEUE
+  // rather than on an actor, and their own copy already carries the count.
+  // Appending "and 3 others" to "4 items are waiting for a look" would both
+  // double-count and speak about people where there are none named.
   const otherActorCount = notification.otherActorCount ?? 0;
+  const hasOwnBundleCount = notification.hasOwnBundleCount ?? false;
   const othersLabel =
-    otherActorCount > 0
+    otherActorCount > 0 && !hasOwnBundleCount
       ? t("notifications:bundle.others", { count: otherActorCount })
       : "";
 

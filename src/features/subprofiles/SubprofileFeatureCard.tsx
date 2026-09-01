@@ -4,7 +4,7 @@ import { Avatar, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
 import { initialsFromName } from "../../shared/lib/initials";
 import { safeHref } from "../../shared/lib/safeHref";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { SubprofileFeaturedStrip } from "./SubprofileFeaturedStrip";
 import { SubprofileAvailability } from "./SubprofileAvailability";
@@ -171,7 +171,11 @@ export function SubprofileFeatureCard({
             <div className={styles.featureIdentity}>
               <h3 className={styles.featureName}>
                 <Link className={styles.featureLink} to={href}>
-                  {persona.displayName}
+                  {personaNameBesideCraft({
+                    displayName: persona.displayName,
+                    kind: persona.kind,
+                    ownerName: persona.ownerName,
+                  })}
                 </Link>
               </h3>
 

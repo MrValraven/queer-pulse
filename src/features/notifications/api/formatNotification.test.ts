@@ -50,6 +50,36 @@ function makeT(language: Language): TFunction {
 
 const t = makeT("en");
 
+/**
+ * `admin_queue_item`'s copy lives in the `admin` namespace rather than
+ * `notifications`, the same reason `moderation_queue_alert`'s does (see
+ * `moderationQueueAlert.format.test.ts`), so it needs its own `t` bound to
+ * that catalog rather than the `t` above.
+ */
+const resolvedAdminCatalogs: Record<Language, Catalog | undefined> = {
+  en: undefined,
+  pt: undefined,
+};
+
+beforeAll(async () => {
+  resolvedAdminCatalogs.en = await loadNamespace("en", "admin");
+  resolvedAdminCatalogs.pt = await loadPtNamespace("admin");
+});
+
+function makeAdminT(language: Language): TFunction {
+  return (key: string, options?: TranslateOptions) => {
+    const { path } = parseKey(key);
+    const hit = resolveEntry(
+      resolvedAdminCatalogs[language],
+      path,
+      language,
+      options,
+    );
+    if (hit === undefined) throw new Error(`missing key: ${key}`);
+    return hit;
+  };
+}
+
 /** Every kind the notifications centre knows how to render. `new_message` is
  * deliberately absent — DM alerts were retired from the centre (see the
  * "deprecated new_message" test below). */
@@ -346,5 +376,52 @@ describe("formatNotification — verification_update", () => {
       expect(result.text).toBe("O teu pedido de verificação foi recusado.");
       expect(result.meta).toBe("A foto do documento estava desfocada.");
     });
+  });
+});
+
+/** Same rationale as the two describes above: a sibling top-level describe to
+ *  stay under the per-function line budget. */
+describe("formatNotification: admin_queue_item", () => {
+  const adminT = makeAdminT("en");
+
+  it("names the queue an admin arrival landed in", () => {
+    const result = formatNotification(
+      "admin_queue_item",
+      { source: "admin", queue: "invite_requests" },
+      adminT,
+    );
+    expect(result.category).toBe("platform");
+    expect(result.kind).toBe("admin_queue_item");
+    expect(result.text).toContain("1");
+  });
+
+  it("counts a bundled admin arrival as one more than otherActorCount", () => {
+    const result = formatNotification(
+      "admin_queue_item",
+      { source: "admin", queue: "invite_requests" },
+      adminT,
+      undefined,
+      3,
+    );
+    expect(result.text).toContain("4");
+  });
+
+  it("still reads for a queue this build does not know", () => {
+    const result = formatNotification(
+      "admin_queue_item",
+      { source: "admin", queue: "some_future_queue" },
+      adminT,
+    );
+    expect(result.text).not.toBe("");
+    expect(result.kind).toBe("admin_queue_item");
+  });
+
+  it("renders the arrival copy in Portuguese", () => {
+    const result = formatNotification(
+      "admin_queue_item",
+      { source: "admin", queue: "dsar" },
+      makeAdminT("pt"),
+    );
+    expect(result.text).not.toBe("");
   });
 });

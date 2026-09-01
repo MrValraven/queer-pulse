@@ -1,6 +1,7 @@
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
 import type { NotifType } from "../notifications.types";
+import { ADMIN_QUEUE_ROUTES } from "./adminQueueRoutes";
 
 /**
  * The notification kinds the backend's `notifications_type_enum` can serve
@@ -425,7 +426,23 @@ export type NotificationKind =
   // REPLY TEXT never rides along: it is already published on the page this row
   // opens, which is the same rule that keeps
   // `listing_public_question_answered`'s answer body off the bell.
-  | "review_replied";
+  | "review_replied"
+  // Sent to the staff who can work an admin review queue when an item lands in
+  // it (mirrors the backend `notifications_type_enum` value added in
+  // `AddAdminQueueItemNotificationType`, written by
+  // `AdminQueueNotificationsService.announce`). One kind for all twenty-seven
+  // queues; which one is in `payload.queue`.
+  //
+  // Staff-only, unmutable, no actor, never pushed to a phone. Like
+  // `moderation_queue_alert`, its copy lives in the `admin:` namespace rather
+  // than `notifications:`: the queue names are admin vocabulary shared with
+  // the queue-health panel, and there is no member-facing counterpart to any
+  // of it.
+  //
+  // It BUNDLES on the queue, so one row can stand for several arrivals. Its
+  // copy therefore carries the count itself and `NotificationItem` suppresses
+  // the generic "and N others" suffix for it.
+  | "admin_queue_item";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -561,6 +578,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // about a place, same tab as listing_review, which is the row on the other
   // side of the same conversation.
   review_replied: "community",
+  // An arrival in a review queue is platform duty mail that deep-links into a
+  // console, same tab as moderation_queue_alert.
+  admin_queue_item: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -1276,6 +1296,34 @@ function moderationQueueAlertTokens(
   };
 }
 
+/** The queue key from an admin-queue payload, or null when it is missing. */
+function adminQueueKeyOf(payload: unknown): string | null {
+  const record = payload as { queue?: unknown } | null;
+  const queue = record?.queue;
+  return typeof queue === "string" && queue.length > 0 ? queue : null;
+}
+
+/**
+ * The catalog key for a queue's name. Reuses `moderationHealth.queue.*`, which
+ * already names five of these queues for the queue-health panel, so the bell
+ * and the panel cannot end up calling the same queue two different things. An
+ * unknown or missing key falls back to the neutral entry that namespace
+ * already carries, so a queue this build has never heard of still reads.
+ *
+ * "Recognised" means present in `ADMIN_QUEUE_ROUTES`, not merely non-empty: a
+ * newer backend can send a queue key this build has never seen, and that key
+ * has no `moderationHealth.queue.<key>` catalog entry, so building the string
+ * anyway would hand `t()` a miss. `I18nProvider`'s `t` returns a missing key
+ * verbatim, which is exactly the raw-translation-code-on-screen failure this
+ * fallback exists to prevent.
+ */
+function adminQueueLabelKey(queue: string | null): string {
+  if (!queue || !(queue in ADMIN_QUEUE_ROUTES)) {
+    return "admin:moderationHealth.queue.unknown";
+  }
+  return `admin:moderationHealth.queue.${queue}`;
+}
+
 /**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
@@ -1296,6 +1344,14 @@ export function formatNotification(
    * omits it gets the generic "recently" phrasing rather than a broken string.
    */
   fmt?: Formatters,
+  /**
+   * How many further arrivals a bundled row stands for. Only
+   * `admin_queue_item` reads it: its copy carries the count itself, because
+   * "4 invite requests waiting" is the useful sentence and "A new invite
+   * request landed. and 3 others" is not. Optional, so every call site that
+   * predates it keeps compiling.
+   */
+  otherActorCount?: number,
 ): FormattedNotification {
   const known = isKnownKind(type);
   // TS-04 is the ONE type whose copy lives outside the `notifications:`
@@ -1311,6 +1367,21 @@ export function formatNotification(
       meta: t(`${key}.meta`, tokens),
       category: "platform",
       kind: "moderation_queue_alert",
+    };
+  }
+  // The second kind whose copy lives outside the `notifications:` namespace,
+  // for the same reason the first does. Returns early rather than falling
+  // through to the `notifications:type.*` lookup.
+  if (type === "admin_queue_item") {
+    const queue = adminQueueKeyOf(payload);
+    return {
+      text: t("admin:queueArrival.text", {
+        count: (otherActorCount ?? 0) + 1,
+        queue: t(adminQueueLabelKey(queue)),
+      }),
+      meta: t("admin:queueArrival.meta"),
+      category: "platform",
+      kind: "admin_queue_item",
     };
   }
   let key: string;

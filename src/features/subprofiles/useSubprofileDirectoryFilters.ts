@@ -1,90 +1,110 @@
 import { useMemo, useState } from "react";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { skinFor, type SkinFamily } from "./subprofile-skins";
-import type { SubprofileCardDTO } from "./api/subprofiles.api";
+import type { SubprofileCardDTO, SubprofileKind } from "./api/subprofiles.api";
+import { groupProfessionsByFamily } from "./subprofileDirectory.data";
+import {
+  countByKind,
+  countByTag,
+  matchesKind,
+  matchesOpenToCollabs,
+  matchesQuery,
+  matchesTags,
+  topTags,
+} from "./subprofileDirectoryFacets";
 
 const AVAILABLE_TAGS_CAP = 20;
 /** How many cards the "Show more" reveal shows per step (Personas redesign
  *  Phase 4, Decision §4 — client-side pagination, no backend page param). */
 const PER_PAGE = 6;
 
-/** Union of `card.tags` across `cards`, deduped and capped at
- *  `AVAILABLE_TAGS_CAP`, most-frequent tag first. Purely client-side. */
-function computeAvailableTags(cards: SubprofileCardDTO[]): string[] {
-  const occurrenceCountByTag = new Map<string, number>();
-  for (const card of cards) {
-    for (const tag of card.tags) {
-      occurrenceCountByTag.set(tag, (occurrenceCountByTag.get(tag) ?? 0) + 1);
-    }
-  }
-  return [...occurrenceCountByTag.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, AVAILABLE_TAGS_CAP)
-    .map(([tag]) => tag);
-}
-
 /**
- * The directory page's whole client-side filter/pagination state machine —
- * skin family, tags, free-text search, open-to-collabs, and the "show more"
- * reveal — extracted out of `SubprofileDirectoryPage` so that component stays
- * under the 200-line cap. Personas redesign Phase 4 (Decision §2/§4): every
- * facet here filters the ALREADY-fetched `cards` set; nothing re-queries the
- * network.
+ * The directory page's whole client-side refine state — professions, tags,
+ * free-text search, open-to-collabs, and the "show more" reveal — extracted
+ * out of `SubprofileDirectoryPage` so that component stays under the 200-line
+ * cap. Personas redesign Phase 4 (Decision §2/§4): every facet here filters the
+ * ALREADY-fetched `cards` set; nothing re-queries the network.
+ *
+ * Professions replaced the old page-family facet (see
+ * `groupProfessionsByFamily`). They are multi-select and OR within the facet,
+ * matching the tag row beside them: "poets or illustrators" is a question
+ * somebody browsing a directory actually has, and single-select could not
+ * answer it.
  */
 export function useSubprofileDirectoryFilters(cards: SubprofileCardDTO[]) {
-  const { t } = useTranslation();
-  const [family, setFamily] = useState<SkinFamily | undefined>(undefined);
+  const [kinds, setKinds] = useState<SubprofileKind[]>([]);
   const [query, setQuery] = useState("");
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [openToCollabs, setOpenToCollabs] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PER_PAGE);
 
-  // Family narrows first (mirrors the old server-side kind narrowing), then
-  // the tag vocabulary and "N crafts" count are derived from THAT set, so
-  // picking a family shrinks the tag row the same way it used to.
-  const familyFilteredCards = useMemo(
-    () =>
-      family === undefined
-        ? cards
-        : cards.filter((card) => skinFor(card.kind) === family),
-    [cards, family],
+  const term = query.trim().toLowerCase();
+
+  // The two chip vocabularies come from the whole fetched set, so neither row
+  // reshuffles under the member as they narrow. What moves is the counts.
+  const professionGroups = useMemo(
+    () => groupProfessionsByFamily(new Set(cards.map((card) => card.kind))),
+    [cards],
   );
   const availableTags = useMemo(
-    () => computeAvailableTags(familyFilteredCards),
-    [familyFilteredCards],
+    () => topTags(cards, AVAILABLE_TAGS_CAP),
+    [cards],
   );
-  const craftCount = useMemo(
-    () => new Set(familyFilteredCards.map((card) => card.kind)).size,
-    [familyFilteredCards],
-  );
-  const filtersNote = t("subprofiles:directory.filtersNote", {
-    count: craftCount,
-  });
 
-  // Tags (OR within the set), "open to collabs", and free-text search (AND
-  // across the three) — all client-side over the family-filtered set.
-  const visibleCards = useMemo(() => {
-    const term = query.trim().toLowerCase();
-    return familyFilteredCards.filter((card) => {
-      if (openToCollabs && card.availability !== "open_to_collabs") {
-        return false;
-      }
-      if (
-        activeTags.length > 0 &&
-        !card.tags.some((tag) => activeTags.includes(tag))
-      ) {
-        return false;
-      }
-      if (
-        term &&
-        !card.displayName.toLowerCase().includes(term) &&
-        !(card.tagline ?? "").toLowerCase().includes(term)
-      ) {
-        return false;
-      }
-      return true;
-    });
-  }, [familyFilteredCards, activeTags, openToCollabs, query]);
+  // Each facet is counted under the OTHER three, never under itself: counting
+  // professions under the profession selection would read every unpicked chip
+  // as 0 the moment one was picked, which is exactly backwards for an OR facet.
+  const professionCounts = useMemo(
+    () =>
+      countByKind(
+        cards.filter(
+          (card) =>
+            matchesTags(card, activeTags) &&
+            matchesOpenToCollabs(card, openToCollabs) &&
+            matchesQuery(card, term),
+        ),
+      ),
+    [cards, activeTags, openToCollabs, term],
+  );
+  const tagCounts = useMemo(
+    () =>
+      countByTag(
+        cards.filter(
+          (card) =>
+            matchesKind(card, kinds) &&
+            matchesOpenToCollabs(card, openToCollabs) &&
+            matchesQuery(card, term),
+        ),
+      ),
+    [cards, kinds, openToCollabs, term],
+  );
+
+  // The availability pill is a facet too, so it carries the same live count as
+  // the chip rows and dims at 0. Counted under the professions, tags and search
+  // but NOT under itself: with the toggle already on, counting under it would
+  // just restate the grid's own size rather than answer "how many are open to
+  // collabs".
+  const openToCollabsCount = useMemo(
+    () =>
+      cards.filter(
+        (card) =>
+          matchesKind(card, kinds) &&
+          matchesTags(card, activeTags) &&
+          matchesQuery(card, term) &&
+          matchesOpenToCollabs(card, true),
+      ).length,
+    [cards, kinds, activeTags, term],
+  );
+
+  const visibleCards = useMemo(
+    () =>
+      cards.filter(
+        (card) =>
+          matchesKind(card, kinds) &&
+          matchesTags(card, activeTags) &&
+          matchesOpenToCollabs(card, openToCollabs) &&
+          matchesQuery(card, term),
+      ),
+    [cards, kinds, activeTags, openToCollabs, term],
+  );
 
   // Any filter change re-starts the reveal at PER_PAGE, so "Show more" never
   // leaves a stale offset pointing past a now-smaller filtered set. Adjusted
@@ -92,10 +112,10 @@ export function useSubprofileDirectoryFilters(cards: SubprofileCardDTO[]) {
   // input changes) rather than in an effect, which would cost an extra
   // committed render before the reset took effect.
   const filterSignature = JSON.stringify([
-    family,
+    kinds,
     activeTags,
     openToCollabs,
-    query,
+    term,
   ]);
   const [priorFilterSignature, setPriorFilterSignature] =
     useState(filterSignature);
@@ -106,6 +126,15 @@ export function useSubprofileDirectoryFilters(cards: SubprofileCardDTO[]) {
 
   const shownCards = visibleCards.slice(0, visibleCount);
   const hasMore = visibleCount < visibleCards.length;
+
+  const onToggleKind = (kind: string) => {
+    const next = kind as SubprofileKind;
+    setKinds((current) =>
+      current.includes(next)
+        ? current.filter((activeKind) => activeKind !== next)
+        : [...current, next],
+    );
+  };
 
   const onToggleTag = (tag: string) => {
     setActiveTags((current) =>
@@ -120,23 +149,32 @@ export function useSubprofileDirectoryFilters(cards: SubprofileCardDTO[]) {
   const onShowMore = () => setVisibleCount((count) => count + PER_PAGE);
 
   const onClearFilters = () => {
-    setFamily(undefined);
+    setKinds([]);
     setQuery("");
     setActiveTags([]);
     setOpenToCollabs(false);
   };
 
   return {
-    family,
-    setFamily,
+    kinds,
+    onToggleKind,
+    setKinds,
     query,
     setQuery,
     activeTags,
     onToggleTag,
+    setActiveTags,
     openToCollabs,
     onToggleOpenToCollabs,
+    setOpenToCollabs,
+    openToCollabsCount,
+    professionGroups,
+    professionCounts,
     availableTags,
-    filtersNote,
+    tagCounts,
+    /** True while anything is narrowing the grid, the search term included. */
+    hasActiveRefinement:
+      kinds.length > 0 || activeTags.length > 0 || openToCollabs || term !== "",
     visibleCards,
     shownCards,
     hasMore,
@@ -144,3 +182,9 @@ export function useSubprofileDirectoryFilters(cards: SubprofileCardDTO[]) {
     onClearFilters,
   };
 }
+
+/** The whole refine state, passed to the toolbar as one prop the way
+ *  `/communities` passes `discover`. */
+export type SubprofileDirectoryFilters = ReturnType<
+  typeof useSubprofileDirectoryFilters
+>;

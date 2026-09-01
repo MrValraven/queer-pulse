@@ -72,6 +72,10 @@ export const communities: Catalog = {
   "discover.toggle.groupLabel": "Filtros rápidos",
   "discover.toggle.openOnly": "Abertas a todas as pessoas",
   "discover.toggle.busyOnly": "Com atividade esta semana",
+  // The pills carry a live availability count. The badge is
+  // aria-hidden, so this is the whole accessible name.
+  "discover.toggle.withCount_one": "{label}, {count} comunidade",
+  "discover.toggle.withCount_other": "{label}, {count} comunidades",
   "discover.sort.active": "Mais ativas",
   "discover.sort.chip": "Ordenado por {label}",
   "discover.resline.count_one": "{count} comunidade",

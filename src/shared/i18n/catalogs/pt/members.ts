@@ -240,6 +240,16 @@ export const members: Catalog = {
   "profile.tabs.community": "Comunidade",
   "profile.tabs.activity": "Atividade",
   "profile.tabs.ariaLabel": "Secções do perfil",
+  // Fallback shown inside a mobile profile tab whose sections all rendered
+  // nothing (MobileProfileTabEmptyState). Deliberately tab-agnostic: it backs
+  // all four tabs from one set of keys, and only the owner is offered a way
+  // to act on it.
+  "profile.tabs.empty.title": "Ainda não há nada aqui",
+  "profile.tabs.empty.descriptionSelf":
+    "Tudo o que adicionares aqui aparece no teu perfil.",
+  "profile.tabs.empty.descriptionPublic":
+    "{first} ainda não adicionou nada a esta secção.",
+  "profile.tabs.empty.cta": "Editar perfil",
 
   // ── Secção de comunidades (ProfileCommunities) ──────────────────────────────
   "profile.communities.title": "Comunidades",

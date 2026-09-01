@@ -80,6 +80,16 @@ export interface Notification {
    * do.
    */
   otherActorCount?: number;
+  /**
+   * Whether this row's own copy already carries a count, so `NotificationItem`
+   * must suppress the generic `otherActorCount` bundle suffix rather than
+   * append it on top. Set for `admin_queue_item`, which bundles on a QUEUE
+   * rather than on an actor: its copy already reads "4 items are waiting for
+   * a look", and appending "and 3 others" to that would both double-count and
+   * speak about people where none are named. `false` (or absent) for every
+   * other kind, which keeps the generic suffix.
+   */
+  hasOwnBundleCount?: boolean;
   meta: string;
   time: string;
   /**

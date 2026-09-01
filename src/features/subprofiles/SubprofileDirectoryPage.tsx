@@ -14,42 +14,29 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
 import { SubprofileCard } from "./SubprofileCard";
-import { SubprofileDirectoryFilters } from "./SubprofileDirectoryFilters";
+import { SubprofileDirectoryToolbar } from "./SubprofileDirectoryToolbar";
 import { SubprofileDirectoryFooterPrompt } from "./SubprofileDirectoryFooterPrompt";
 import { useSubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
 import styles from "./SubprofileDirectoryPage.module.css";
 
 /**
  * Browse standalone (unlinked + published) personas across the community,
- * filterable by skin family, tag, free-text search, and open-to-collabs.
+ * filterable by profession, tag, free-text search, and open-to-collabs.
  * Wrapped in `AppShell` (logged-in). Personas redesign Phase 4 (Decision §2):
- * the directory fetches the FULL standalone set once and applies every
- * filter — family, tags, search, collabs — client-side, via
- * `useSubprofileDirectoryFilters` (kept in its own file so this component
- * stays under the 200-line cap).
+ * the directory fetches the FULL standalone set once and applies every filter
+ * (profession, tags, search, collabs) client-side, via
+ * `useSubprofileDirectoryFilters`. The controls themselves live in
+ * `SubprofileDirectoryToolbar`, so this component stays under the 200-line
+ * cap.
  */
 export function SubprofileDirectoryPage() {
   const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useSubprofileDirectory();
   const cards = useMemo(() => data ?? [], [data]);
 
-  const {
-    family,
-    setFamily,
-    query,
-    setQuery,
-    activeTags,
-    onToggleTag,
-    openToCollabs,
-    onToggleOpenToCollabs,
-    availableTags,
-    filtersNote,
-    visibleCards,
-    shownCards,
-    hasMore,
-    onShowMore,
-    onClearFilters,
-  } = useSubprofileDirectoryFilters(cards);
+  const directory = useSubprofileDirectoryFilters(cards);
+  const { visibleCards, shownCards, hasMore, onShowMore, onClearFilters } =
+    directory;
 
   return (
     <AppShell>
@@ -69,17 +56,9 @@ export function SubprofileDirectoryPage() {
             <p className={styles.sub}>{t("subprofiles:directory.subtitle")}</p>
           </header>
 
-          <SubprofileDirectoryFilters
-            activeFamily={family}
-            onFamily={setFamily}
-            query={query}
-            onQuery={setQuery}
-            availableTags={availableTags}
-            activeTags={activeTags}
-            onToggleTag={onToggleTag}
-            openToCollabs={openToCollabs}
-            onToggleOpenToCollabs={onToggleOpenToCollabs}
-            filtersNote={filtersNote}
+          <SubprofileDirectoryToolbar
+            directory={directory}
+            isCountKnown={!isLoading && !isError}
           />
 
           {isLoading ? (

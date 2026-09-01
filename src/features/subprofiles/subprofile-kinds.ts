@@ -1034,11 +1034,94 @@ export function personaAddressName({
   ownerName?: string;
 }): string {
   const trimmedName = displayName.trim();
-  const isBareProfession =
-    trimmedName.toLowerCase() === KIND_LABELS[kind].toLowerCase();
-  if (!isBareProfession) return trimmedName;
+  if (!isBareProfessionName({ displayName, kind })) return trimmedName;
   const ownerFirstName = ownerName?.trim().split(/\s+/)[0];
   return ownerFirstName || trimmedName;
+}
+
+/**
+ * Is this persona still carrying the profession as its name? A persona created
+ * without a display name persists `KIND_LABELS[kind]` as its `displayName`
+ * (see that constant's doc), so "Poet" / "Developer" are the auto-filled
+ * default rather than a name anyone chose. Compared case-insensitively because
+ * the stored value is user-editable and an owner may have retyped it in a
+ * different case. Shared by `personaAddressName` and `personaTitleName`, which
+ * do different things with the same signal.
+ */
+export function isBareProfessionName({
+  displayName,
+  kind,
+}: {
+  displayName: string;
+  kind: SubprofileKind;
+}): boolean {
+  return displayName.trim().toLowerCase() === KIND_LABELS[kind].toLowerCase();
+}
+
+/**
+ * The name to TITLE a persona with wherever it is presented to other people —
+ * the directory card, its page heading, the share card, its vCard. A persona
+ * still named after its profession ("Poet") reads as a category rather than
+ * somebody's work, so it is titled "Owner Name | Poet" instead, which restores
+ * the human without discarding the craft.
+ *
+ * Distinct from `personaAddressName`, which answers a different question: how
+ * to ADDRESS the persona inside a sentence ("backing Tiago's work"), where a
+ * full name and a bar separator would not read. Both hang off
+ * `isBareProfessionName`, so the two stay in step.
+ *
+ * The craft comes from `KIND_LABELS[kind]` rather than the stored name, so a
+ * persona retyped as "poet" still titles as "Tiago Costa | Poet". It stays the
+ * English persisted label (never the translated `KIND_LABEL_KEYS` badge), so
+ * the title agrees with the persona's own persisted name and address.
+ *
+ * Falls back to the display name untouched when the persona has a real name,
+ * or when no owner name is known — an UNLINKED persona deliberately carries no
+ * owner identity (`toCardDTO` refuses to leak the tie), and anonymity outranks
+ * a nicer title.
+ */
+export function personaTitleName({
+  displayName,
+  kind,
+  ownerName,
+}: {
+  displayName: string;
+  kind: SubprofileKind;
+  ownerName?: string | null;
+}): string {
+  const trimmedName = displayName.trim();
+  if (!isBareProfessionName({ displayName, kind })) return trimmedName;
+  const trimmedOwnerName = ownerName?.trim();
+  if (!trimmedOwnerName) return trimmedName;
+  return `${trimmedOwnerName} | ${KIND_LABELS[kind]}`;
+}
+
+/**
+ * The name for a slot that ALREADY shows the craft in a field of its own — the
+ * page runhead, a feature card's name-above-craft column, the switch row's
+ * "kind · tagline" line, the SEO title's `· {craft} ·` segment, a schema.org
+ * Person's `name` beside its `jobTitle`.
+ *
+ * Those slots can't take `personaTitleName`'s composed "Owner Name | Poet",
+ * which would say the craft twice ("Poet · Poet · QueerPulse"). They take the
+ * owner's name alone and let the existing craft field do the rest, which is the
+ * same information split across the two slots the layout already has.
+ *
+ * Falls back to the display name untouched on exactly `personaTitleName`'s
+ * terms: a persona with a real name, or one with no owner name to borrow.
+ */
+export function personaNameBesideCraft({
+  displayName,
+  kind,
+  ownerName,
+}: {
+  displayName: string;
+  kind: SubprofileKind;
+  ownerName?: string | null;
+}): string {
+  const trimmedName = displayName.trim();
+  if (!isBareProfessionName({ displayName, kind })) return trimmedName;
+  return ownerName?.trim() || trimmedName;
 }
 
 /** Turn any label into a URL-safe slug: lowercase, non-alphanumerics → hyphens. */

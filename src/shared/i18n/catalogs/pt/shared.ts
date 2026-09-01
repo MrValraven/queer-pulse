@@ -333,6 +333,8 @@ export const shared: Catalog = {
   "megaNav.community.featurePublic.cta": "Participar",
   "megaNav.community.col.people.head": "Pessoas",
   "megaNav.community.col.people.membersDirectory": "Diretório de pessoas",
+  "megaNav.community.col.people.professionalDirectory":
+    "Diretório profissional",
   "megaNav.community.col.people.topics": "Tópicos",
   // Kept as "Dating" (not "Convívios") to avoid colliding with nav:gatherings
   // ("Convívios"), already the platform's term for the events feature.

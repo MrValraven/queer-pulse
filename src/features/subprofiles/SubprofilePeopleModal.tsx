@@ -13,6 +13,8 @@ import { ModalSheet } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { personaTitleName } from "./subprofile-kinds";
+import type { SubprofileKind } from "./api/subprofiles.api";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import { getFollowers, type FollowerDTO } from "./api/subprofiles.api";
@@ -30,6 +32,12 @@ type PeopleModalMode = "followers" | "endorsements";
 export interface PersonaPeopleSummary {
   id: string;
   displayName: string;
+  /** Kind + owner name let the modal title a persona still named after its
+   *  profession as "Owner Name | Poet" (`personaTitleName`) instead of the bare
+   *  "Poet". `ownerName` is absent for an unlinked persona, which then keeps its
+   *  bare name — same anonymity rule as everywhere else. */
+  kind: SubprofileKind;
+  ownerName?: string;
   endorsementCount: number;
   followerCount: number;
   /** Is the current viewer a co-owner (creator or invited member) of this
@@ -183,6 +191,11 @@ export function SubprofilePeopleModal({
     }
   }
 
+  const personaName = personaTitleName({
+    displayName: persona.displayName,
+    kind: persona.kind,
+    ownerName: persona.ownerName,
+  });
   const title =
     mode === "followers"
       ? t("subprofiles:peopleModal.followersTitle", {
@@ -196,7 +209,7 @@ export function SubprofilePeopleModal({
     <ModalSheet onClose={onClose} ariaLabel={title}>
       <header className={styles.head}>
         <h3 className={styles.title}>{title}</h3>
-        <p className={styles.sub}>{persona.displayName}</p>
+        <p className={styles.sub}>{personaName}</p>
       </header>
       {mode === "endorsements" &&
         (endorsersLoading ? (
@@ -250,7 +263,7 @@ export function SubprofilePeopleModal({
               icon={<FiLock aria-hidden />}
               title={t("subprofiles:peopleModal.followersPrivateTitle")}
               description={t("subprofiles:peopleModal.followersPrivateBody", {
-                name: persona.displayName,
+                name: personaName,
               })}
             />
           </div>
@@ -279,7 +292,7 @@ export function SubprofilePeopleModal({
                   "subprofiles:peopleModal.followersCountOnlyBody",
                   {
                     count: persona.followerCount,
-                    name: persona.displayName,
+                    name: personaName,
                   },
                 )}
               />

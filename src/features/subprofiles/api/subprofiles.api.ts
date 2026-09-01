@@ -606,6 +606,11 @@ export interface SubprofileCardDTO {
   linkVisibility: LinkVisibility;
   /** The owner member's profile slug — LINKED personas only, else null (anonymity). */
   ownerSlug: string | null;
+  /** The owner member's display name — LINKED personas only, else null, on the
+   *  same anonymity rule as `ownerSlug`. Titles a persona still named after its
+   *  profession as "Owner Name | Poet" (`personaTitleName`); an unlinked
+   *  persona gets null and keeps its bare name. */
+  ownerName: string | null;
   /** The persona's per-owner slug (for the /members/:ownerSlug/:slug route). */
   slug: string;
   kind: SubprofileKind;

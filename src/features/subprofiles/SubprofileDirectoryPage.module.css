@@ -55,94 +55,148 @@
   margin: 10px 0 0;
 }
 
-/* ── Filters ─────────────────────────────────────────────────────────────── */
-.filters {
+/* ── Refine bar ──────────────────────────────────────────────────────────── */
+/* One row: the search field takes the width, Refine sits at its end. Mirrors
+   `/communities`' `.find`, minus the tab switch and primary action that page
+   has to share the line with. */
+.bar {
   display: flex;
-  flex-direction: column;
-  gap: var(--gap-sm);
-}
-.chips {
-  display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: var(--gap-xs);
-}
-.chip {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-pill);
-  padding: 8px 15px;
-  /* A full 44px touch target (WCAG 2.5.8) even for the shorter `.chipTag`
-     variant, and no double-tap-zoom delay on the toggle. */
-  min-height: 44px;
-  touch-action: manipulation;
-  cursor: pointer;
-  transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .chip:hover {
-    border-color: var(--line-strong);
-  }
-}
-.chip:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-/* A tactile press cue on tap — motion-gated so reduced-motion users get none. */
-@media (prefers-reduced-motion: no-preference) {
-  .chip:active {
-    transform: scale(0.98);
-  }
-}
-.chipOn {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  color: var(--accent-ink);
-}
-@media (prefers-reduced-motion: reduce) {
-  .chip {
-    transition: none;
-  }
+  gap: 12px;
 }
 .search {
-  max-width: 420px;
+  flex: 1 1 320px;
+  min-width: 0;
+  max-width: 480px;
+}
+.refineToggle {
+  flex: none;
+}
+@media (--mobile) {
+  .search {
+    flex: 1 1 100%;
+    max-width: none;
+  }
 }
 
-/* The note computed from the current family/craft counts ("Six kinds of page
-   across N crafts") — sits directly under the family chip row, ahead of the
-   search field. */
-.filtersNote {
-  font-size: var(--text-13-5);
-  color: var(--ink-40);
-  margin: 0;
-}
-
-.tagFilter {
+/* ── Refine drawer bands ─────────────────────────────────────────────────── */
+/* The Profession band: one chip row per page family, each under its own
+   heading, so ninety-four professions stay navigable. The heading is a label
+   rather than a filter — the family itself is no longer pickable. */
+.professionGroups {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-xs);
+  gap: 14px;
 }
-.tagFilterHeading {
-  font-size: var(--text-11-5);
+.professionGroupLabel {
+  font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--ink-60);
-}
-/* Visually distinct from a family chip: lighter weight, quieter colour, so
-   the two facets (craft family vs. tag) read as separate filters. */
-.chipTag {
-  font-size: var(--text-12);
-  font-weight: 500;
-  padding: 6px 12px;
   color: var(--ink-40);
+  margin: 0 0 6px;
+}
+
+/* Few enough professions that a column each is mostly empty drawer: the
+   families stand side by side instead, each divided from the last by a
+   hairline. `--line-rgb` because it has to stay visible in dark mode.
+   `INLINE_PROFESSION_LIMIT` in SubprofileDirectoryRefinePanel.tsx decides when
+   this class is applied; past it the stack is the readable layout. */
+.professionGroupsInline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px 0;
+}
+.professionGroupsInline .professionGroup {
+  min-width: 0;
+  padding-inline: 20px;
+  border-inline-start: 1px solid rgba(var(--line-rgb), 0.14);
+}
+.professionGroupsInline .professionGroup:first-child {
+  padding-inline-start: 0;
+  border-inline-start: none;
+}
+
+/* A narrow drawer has no width to divide, so the inline variant folds back
+   into the same stack the long list uses. */
+@media (--mobile) {
+  .professionGroupsInline {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .professionGroupsInline .professionGroup {
+    padding-inline: 0;
+    border-inline-start: none;
+  }
+}
+
+/* The availability pill. Same treatment as `/communities`' open/busy toggles:
+   a jade ground once on, since jade is this app's "an active, positive filter
+   is applied". */
+.toggles {
+  display: inline-flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 500;
+  color: var(--ink-60);
+  cursor: pointer;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: transparent;
+  border-radius: var(--radius-pill);
+  padding: 9px 16px 9px 13px;
+  white-space: nowrap;
+  transition:
+    color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+/* Without the `:not()` tail the ghost Button's own hover overrides `.toggleOn`
+   with a plum wash, so hovering an active toggle reads as "off". */
+@media (hover: hover) {
+  .toggle:not(.toggleOn):hover:not(:disabled) {
+    color: var(--ink);
+    border-color: rgba(var(--line-rgb), 0.4);
+  }
+}
+.toggleDot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.32);
+  transition: background var(--dur-base) var(--ease);
+}
+.toggleOn {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+  border-color: rgba(var(--jade-rgb), 0.35);
+}
+.toggleOn .toggleDot {
+  background: var(--jade);
+}
+/* The live facet count, same treatment as `ChipSelect`'s `.chipCount`: the pill
+   is a filter like the chips above it, so it answers "how many would be left?"
+   the same way. `aria-hidden` — the button's `aria-label` says it in words. */
+.toggleCount {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.55;
+}
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .toggleDot {
+    transition: none;
+  }
 }
 
 /* ── Results grid ────────────────────────────────────────────────────────── */

@@ -4951,8 +4951,40 @@ export const admin: Catalog = {
   "moderationHealth.queue.appeals": "Recursos",
   "moderationHealth.queue.verification": "Pedidos de verificação",
   "moderationHealth.queue.ban_ratifications":
-    "Banimentos à espera de segunda opinião",
+    "Banimentos pendentes de segunda assinatura",
   "moderationHealth.queue.unknown": "Outra fila",
+  // As outras vinte e duas filas que o registo de notificações de admin pode
+  // nomear (ver ADMIN_QUEUE_KEYS em features/notifications/api/adminQueueRoutes).
+  "moderationHealth.queue.dsar": "Pedidos de dados",
+  "moderationHealth.queue.housing_listings": "Anúncios de habitação",
+  "moderationHealth.queue.housing_group_listings":
+    "Anúncios de habitação em grupo",
+  "moderationHealth.queue.landlord_intro_requests":
+    "Apresentações de senhorios",
+  "moderationHealth.queue.landlord_suggestions": "Sugestões de senhorios",
+  "moderationHealth.queue.concerns": "Preocupações de governação",
+  "moderationHealth.queue.intakes": "Formulários",
+  "moderationHealth.queue.legal_requests": "Exigências legais e do Estado",
+  "moderationHealth.queue.housing_coop_join_requests":
+    "Pedidos de adesão a cooperativas",
+  "moderationHealth.queue.community_tag_requests": "Pedidos de etiquetas",
+  "moderationHealth.queue.reading_group_proposals":
+    "Propostas de grupos de leitura",
+  "moderationHealth.queue.safe_space_nominations":
+    "Nomeações de espaços seguros",
+  "moderationHealth.queue.safe_space_flags": "Sinalizações de espaços seguros",
+  "moderationHealth.queue.listing_submissions": "Espaços do diretório",
+  "moderationHealth.queue.listing_claims": "Reivindicações de espaços",
+  "moderationHealth.queue.listing_edit_suggestions":
+    "Sugestões de edição de espaços",
+  "moderationHealth.queue.resource_suggestions": "Sugestões de recursos",
+  "moderationHealth.queue.magazine_submissions": "Propostas de histórias",
+  "moderationHealth.queue.writer_applications": "Candidaturas a escritor",
+  "moderationHealth.queue.commission_interests": "Interesse em encomendas",
+  "moderationHealth.queue.partner_applications": "Candidaturas a parceiro",
+  "moderationHealth.queue.changemaker_nominations":
+    "Nomeações de agentes de mudança",
+  "moderationHealth.queue.roadmap_ideas": "Ideias de membros",
 
   // Qual dos três eixos disparou, dito pelo que significa e não pelo nome do
   // campo.
@@ -5022,6 +5054,16 @@ export const admin: Catalog = {
   "moderationHealth.notification.oldestToken_one": "{value} hora",
   "moderationHealth.notification.oldestToken_other": "{value} horas",
   "moderationHealth.notification.oldestNone": "nada à espera",
+
+  // O aviso de chegada para a equipa. Uma string para as vinte e seis filas:
+  // a fila interpola como {queue} e a contagem segue o plural do CLDR. Junta-se
+  // por fila, por isso {count} pode ser maior do que um. Nada aqui pede pressa
+  // a ninguém, nem diz que algo foi enviado.
+  "queueArrival.text_one":
+    "{queue}: {count} item à espera de uma vista de olhos.",
+  "queueArrival.text_other":
+    "{queue}: {count} itens à espera de uma vista de olhos.",
+  "queueArrival.meta": "Chegou algo a uma fila que trabalhas.",
 
   // ── Relatório de horas de voluntariado (SUS-05) ────────────────────────
   // Supervisão do voluntariado: sessões e horas confirmadas num período.

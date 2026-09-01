@@ -7,7 +7,7 @@ import { SubprofileSpotlight } from "./SubprofileSpotlight";
 import { SubprofileSkinExtras } from "./SubprofileSkinExtras";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
 import { PersonaRightsFooter } from "./rights/PersonaRightsFooter";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
 import { PracticeBody } from "./skins/PracticeBody";
 // The global `.pp*` skin styles for the whole persona tree. Imported here (the
@@ -62,6 +62,11 @@ export function SubprofilePageBody({
 }) {
   const { t } = useTranslation();
   const rootRef = usePersonaMotion();
+  const runheadName = personaNameBesideCraft({
+    displayName: data.displayName,
+    kind: data.kind,
+    ownerName: data.ownerName,
+  });
 
   return (
     <article
@@ -96,8 +101,12 @@ export function SubprofilePageBody({
               onOpenWork={onOpenWorkAt}
             />
 
+            {/* The runhead already gives the craft its own slot, so a persona
+                still named after its profession shows the OWNER's name here
+                rather than the composed "Owner Name | Poet" title — otherwise
+                the two slots would both read "Poet". */}
             <div className="pp-runhead">
-              <span>{data.displayName}</span>
+              <span>{runheadName}</span>
               <span>{t(KIND_LABEL_KEYS[data.kind])}</span>
             </div>
 

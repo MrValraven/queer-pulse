@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import { personaCardPath } from "./personaLinks.data";
+import { personaTitleName } from "./subprofile-kinds";
 import type { AccentKey, SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
 
@@ -45,6 +46,14 @@ export function SubprofileCard({
   const hasSocials = card.socialCount > 0;
   const hasFollowers = card.followerCount > 0;
   const visibleTags = card.tags.slice(0, CARD_TAG_CAP);
+  // A persona still carrying its profession as a name ("Poet") is titled
+  // "Owner Name | Poet" instead, so the card names a person rather than a
+  // category. Unlinked personas carry no owner name and stay bare.
+  const titleName = personaTitleName({
+    displayName: card.displayName,
+    kind: card.kind,
+    ownerName: card.ownerName,
+  });
 
   return (
     <Link
@@ -64,7 +73,7 @@ export function SubprofileCard({
         <span className={styles.familyPill}>
           {t(`subprofiles:family.${family}.label`)}
         </span>
-        <span className={styles.name}>{card.displayName}</span>
+        <span className={styles.name}>{titleName}</span>
         {card.tagline && <span className={styles.tagline}>{card.tagline}</span>}
         {visibleTags.length > 0 && (
           <TagRow className={styles.tags}>

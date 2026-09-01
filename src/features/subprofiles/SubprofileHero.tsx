@@ -6,7 +6,7 @@ import { ProfilePhotoViewer } from "../members/ProfilePhotoViewer";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import { KIND_LABEL_KEYS, personaTitleName } from "./subprofile-kinds";
 import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { personaPublicPathOrNull } from "./personaLinks.data";
@@ -57,6 +57,15 @@ export function SubprofileHero({
   // Only a real uploaded photo is worth enlarging — an initials fallback has
   // nothing more to show. Preview mode stays non-interactive like the meta row.
   const canViewPhoto = interactive && avatarRendered && Boolean(view.avatarUrl);
+  // A persona still carrying its profession as a name is titled "Owner Name |
+  // Poet" here, so the heading names a person. The `.pp-kind` chip below keeps
+  // showing the TRANSLATED craft label — it is chrome and follows the reader's
+  // language, while this title is the persona's own persisted name.
+  const titleName = personaTitleName({
+    displayName: view.displayName,
+    kind: view.kind,
+    ownerName: view.ownerName,
+  });
 
   const avatar = (
     <Avatar
@@ -91,7 +100,7 @@ export function SubprofileHero({
               the heading's accessible name is exactly the display name.
               `.pp-nameRow` keeps them on one line (persona-skins.css). */}
           <div className="pp-nameRow">
-            <h1 className="pp-name">{view.displayName}</h1>
+            <h1 className="pp-name">{titleName}</h1>
             <FeatureHelp id="subprofiles.detail" />
           </div>
           {/* The craft chip reads as a qualifier on the tagline, so the two

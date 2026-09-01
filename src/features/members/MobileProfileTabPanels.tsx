@@ -14,6 +14,7 @@ import {
 } from "./ProfileContentSections";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { PlacesSection } from "./PlacesSection";
+import { MobileProfileTabEmptyState } from "./MobileProfileTabEmptyState";
 import styles from "./MobileProfile.module.css";
 
 /**
@@ -40,6 +41,12 @@ function SectionWrap({ children }: { children: ReactNode }) {
  * the tablist chrome, active-tab state, and which tabs are present at all.
  * Every section keeps its own internal empty-state logic (some render
  * `null`, some render a prompt); this just groups them by tab.
+ *
+ * `MobileProfileTabEmptyState` closes every panel as a fallback for the tab
+ * whose sections all rendered nothing (reachable on `about` and `community`,
+ * the two tabs `MobileProfileTabs` never hides). It hides itself in CSS
+ * whenever a sibling actually rendered, so this file still doesn't duplicate
+ * any section's emptiness rule.
  *
  * `isSelf` here is the RAW "is this the owner's page" flag, mirroring
  * `ProfilePage`'s own variable — required as-is by `ProfileCommunitiesSection`
@@ -129,6 +136,7 @@ export function MobileProfileTabPanels({
           <ActivitySection profile={profile} />
         </SectionWrap>
       )}
+      <MobileProfileTabEmptyState isSelf={selfView} firstName={firstName} />
     </div>
   );
 }

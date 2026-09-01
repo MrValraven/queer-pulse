@@ -12,6 +12,7 @@ import { cardDtoToCommunity } from "./communities.adapters";
 import { useAllCommunities } from "../useAllCommunities";
 import { communities } from "../../homepage/data/communities";
 import { COMMUNITY_TAGS } from "../communityTags.data";
+import { BUSY_THRESHOLD } from "../communitiesDiscover.data";
 import type { Community } from "../../homepage/data/types";
 
 export interface CommunitiesResult {
@@ -146,15 +147,23 @@ export function useCommunities(
                 (community.accessTier ?? "public") === params.access,
             )
           : typeMatched;
+        // Mirror the live endpoint's `busy=true` filter (the Discover page's
+        // "Busy this week" toggle) over the same static registry. Demo's
+        // `activeThisWeek` is the registry's own number, so the cut is the
+        // same shape as the server's `active_this_week >= BUSY_THRESHOLD`.
+        const busyMatched = params.busy
+          ? accessMatched.filter(
+              (community) => (community.activeThisWeek ?? 0) >= BUSY_THRESHOLD,
+            )
+          : accessMatched;
         // Mirror the live endpoint's `tags=` filter (used by the Discover
         // page's tags filter) — a community matches if it carries ANY of the
         // selected tag ids, same OR-within/AND-across-filters semantics as
         // every other facet on this page.
-        const matches = params.tags?.length
-          ? accessMatched.filter((community) =>
-              params.tags!.some((tagId) => community.tags?.includes(tagId)),
-            )
-          : accessMatched;
+        const matchesTags = (community: Community) =>
+          !params.tags?.length ||
+          params.tags.some((tagId) => community.tags?.includes(tagId));
+        const matches = busyMatched.filter(matchesTags);
         // Mirror the live endpoint's `sort=name` (A→Z); `newest`/omitted keeps
         // the registry's own order, same as the backend's `created_at DESC`
         // default reads today.
@@ -163,7 +172,7 @@ export function useCommunities(
             ? [...matches].sort((a, b) => a.name.localeCompare(b.name))
             : matches;
         // Mirror the live endpoint's `facets.tags`: counted over the same set
-        // MINUS this filter's own predicate (`accessMatched`, not `matches`),
+        // MINUS this filter's own predicate (`busyMatched`, not `matches`),
         // because a tag's badge answers "how many if I picked this one" and
         // its own filter would have already excluded every other tag's rows.
         // Every curated id is present, zeros included, exactly as the server
@@ -171,7 +180,7 @@ export function useCommunities(
         const tagCounts: Record<string, number> = Object.fromEntries(
           COMMUNITY_TAGS.map((tag) => [tag.id, 0]),
         );
-        for (const community of accessMatched) {
+        for (const community of busyMatched) {
           for (const tagId of community.tags ?? []) {
             // `undefined` means the community carries a tag outside the
             // curated vocabulary, which the live facet wouldn't count either.
@@ -179,11 +188,37 @@ export function useCommunities(
             if (soFar !== undefined) tagCounts[tagId] = soFar + 1;
           }
         }
+        // Mirror the live endpoint's two toggle facets. Same rule as the tag
+        // counts, applied to a pair rather than a vocabulary: each is counted
+        // with its OWN predicate lifted and the other one still applied, so a
+        // toggle that is already on reports how many are there rather than
+        // reading back its own result set. The base is every other filter —
+        // search, category and tags — with NEITHER toggle applied, which is
+        // what the server's `browseBaseQuery(query, 'toggles')` builds.
+        const toggleFacetBase = typeMatched.filter(matchesTags);
+        const isOpenToAll = (community: Community) =>
+          (community.accessTier ?? "public") === "public";
+        const isBusy = (community: Community) =>
+          (community.activeThisWeek ?? 0) >= BUSY_THRESHOLD;
+        const openToAllCount = toggleFacetBase.filter(
+          (community) =>
+            isOpenToAll(community) && (!params.busy || isBusy(community)),
+        ).length;
+        const busyCount = toggleFacetBase.filter(
+          (community) =>
+            isBusy(community) &&
+            (!params.access ||
+              (community.accessTier ?? "public") === params.access),
+        ).length;
         return {
           items: sorted,
           total: sorted.length,
           page: 1,
-          facets: { tags: tagCounts },
+          facets: {
+            tags: tagCounts,
+            openToAll: openToAllCount,
+            busy: busyCount,
+          },
         };
       }
       const res = await getCommunities({

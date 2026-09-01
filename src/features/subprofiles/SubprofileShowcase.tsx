@@ -8,6 +8,7 @@ import type {
   PublicSubprofileView,
   SubprofileOwnerMeta,
 } from "./api/subprofiles.adapters";
+import { personaTitleName } from "./subprofile-kinds";
 import { SubprofileEditButton } from "./SubprofileEditButton";
 import { SubprofileFeatureCard } from "./SubprofileFeatureCard";
 import { SubprofileShowcaseMobile } from "./SubprofileShowcaseMobile";
@@ -128,7 +129,15 @@ export function SubprofileShowcase({
           always reflects the current selection — no separate announce
           state to keep in sync. */}
       <p aria-live="polite" className={styles.visuallyHidden}>
-        {t("subprofiles:alsoAs.announce", { name: active.displayName })}
+        {/* The announce has no craft field of its own, so it takes the full
+            "Owner Name | Poet" title rather than the beside-craft name. */}
+        {t("subprofiles:alsoAs.announce", {
+          name: personaTitleName({
+            displayName: active.displayName,
+            kind: active.kind,
+            ownerName: active.ownerName,
+          }),
+        })}
       </p>
       <SubprofileFeatureCard
         persona={active}

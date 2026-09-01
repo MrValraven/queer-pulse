@@ -6,10 +6,9 @@ import { useCommunities } from "./api/useCommunities";
 import { useFeaturedCommunity } from "./api/useFeaturedCommunity";
 import { useCommunitiesTagsFilter } from "./useCommunitiesTagsFilter";
 import { useDiscoverCategoryCounts } from "./useDiscoverCategoryCounts";
-import {
-  BUSY_THRESHOLD,
-  type CommunitiesScope,
-  type DiscoverSort,
+import type {
+  CommunitiesScope,
+  DiscoverSort,
 } from "./communitiesDiscover.data";
 
 /**
@@ -70,11 +69,16 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
   } = useCommunities({
     filter: isMineScope ? "mine" : undefined,
     q: q || undefined,
-    // "active" isn't a server-side sort (see the drain note below) — leave the
-    // server on its default order and re-sort client-side once fully drained.
+    // "active" is not sent (the backend does support it) — leave the server on
+    // its default order and re-sort client-side once fully drained. See the
+    // drain note below for the follow-up that would retire that.
     sort: sort === "name" ? "name" : undefined,
     type: filter === "all" ? undefined : filter,
     access: isOpenOnly ? "public" : undefined,
+    // Server-side since the backend gained `?busy=true` over the indexed
+    // `communities.active_this_week` counter. It used to be a client-side cut
+    // that first had to drain every remaining page into the browser.
+    busy: isBusyOnly || undefined,
     tags: tagIds.length ? tagIds : undefined,
   });
   // The 600ms placeholder skeleton is a demo-prototype device; live mode waits
@@ -99,28 +103,24 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     !isBusyOnly &&
     tagIds.length === 0;
 
-  // The backend can't sort/filter by `activeThisWeek` (it's computed
-  // post-pagination, not an indexed column), so "Most active" and "Busy this
-  // week" fully drain every remaining page client-side before filtering/
-  // sorting in memory — correct results over a handful of extra requests,
-  // rather than a "most active" that's silently wrong past page 1.
-  const needsDrain = isBusyOnly || sort === "active";
+  // "Most active" still drains every remaining page and re-sorts in memory:
+  // the FE sends no `sort=active`, so a server-ordered page 1 wouldn't be the
+  // most active overall. ("Busy this week" no longer drains — it is a real
+  // query param now. Adopting `sort=active` the same way is the obvious
+  // follow-up; it is a separate change from this one.)
+  const needsDrain = sort === "active";
   useEffect(() => {
     if (needsDrain && hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [needsDrain, hasNextPage, isFetchingNextPage, fetchNextPage]);
   const isDraining = needsDrain && hasNextPage;
   const isShowingSkeletons = isLoading || isDraining;
 
-  // The server does the real `type`/`q`/`access` filtering (`useCommunities`'s
-  // params), so `communities` already IS the filtered set — no client-side
-  // re-filter over just the loaded page, which used to false-negative "no
-  // communities match" once a filtered category had more than one page (COM-3).
+  // The server does the real `type`/`q`/`access`/`busy` filtering
+  // (`useCommunities`'s params), so `communities` already IS the filtered set
+  // — no client-side re-filter over just the loaded page, which used to
+  // false-negative "no communities match" once a filtered category had more
+  // than one page (COM-3).
   let visible = communities;
-  if (isBusyOnly) {
-    visible = visible.filter(
-      (community) => (community.activeThisWeek ?? 0) >= BUSY_THRESHOLD,
-    );
-  }
   if (sort === "active") {
     visible = [...visible].sort(
       (a, b) => (b.activeThisWeek ?? 0) - (a.activeThisWeek ?? 0),
@@ -134,10 +134,17 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
   // facet: the server counts them over this same request's filters with the
   // `tags` filter itself lifted, so a number answers "how many would I get if
   // I picked this tag as well", and a 0 is a dead end worth greying out. The
-  // two client-side narrowings (`isBusyOnly`, and `sort=active`'s drain) are
-  // computed after pagination and are not part of the query, so they don't
-  // move these numbers in either mode. `undefined` until the first page lands.
+  // one remaining client-side narrowing (`sort=active`'s drain) is applied
+  // after pagination and is not part of the query, so it doesn't move these
+  // numbers in either mode. `undefined` until the first page lands.
   const tagCounts = facets?.tags;
+  // The same live facet for the two pill toggles, each counted with its own
+  // predicate lifted and the other still applied. `undefined` until the first
+  // page lands (and on a server that predates the facet), which the panel
+  // renders as no badge — "not counted" and "nobody is here" are different
+  // answers and only the second one may grey a toggle out.
+  const openToAllCount = facets?.openToAll;
+  const busyCount = facets?.busy;
 
   // Category-chip counts are deliberately stable across search/sort/toggles —
   // they read against the whole pool for this scope, not whatever's currently
@@ -193,6 +200,8 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     retryList,
     categoryCounts,
     tagCounts,
+    openToAllCount,
+    busyCount,
     hasActiveRefinement,
     resetRefinements,
   };

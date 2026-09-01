@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { routes } from "../../../app/routeMap";
 import type { TFunction } from "../../../shared/i18n/types";
 import { createFormatters } from "../../../shared/i18n/format";
 import { notificationDtoToView } from "./notifications.adapters";
@@ -192,6 +193,36 @@ describe("notificationDtoToView", () => {
         fmt,
       );
       expect(view.actions).toBeUndefined();
+    });
+  });
+
+  // The final review of the admin-queue arrival notifications feature asked
+  // for these two directly: `adminQueueLabelKey` (formatNotification.test.ts)
+  // was the label half of "a queue this build has never heard of still
+  // reads," and this is the link half of the same path.
+  describe("admin_queue_item source href", () => {
+    it("links a known queue to its admin route", () => {
+      const view = notificationDtoToView(
+        dto({
+          type: "admin_queue_item",
+          payload: { source: "admin", queue: "invite_requests" },
+        }),
+        t,
+        fmt,
+      );
+      expect(view.sourceHref).toBe(routes.adminJoinRequests);
+    });
+
+    it("leaves an unknown queue without a link rather than a broken one", () => {
+      const view = notificationDtoToView(
+        dto({
+          type: "admin_queue_item",
+          payload: { source: "admin", queue: "some_future_queue" },
+        }),
+        t,
+        fmt,
+      );
+      expect(view.sourceHref).toBeUndefined();
     });
   });
 });
