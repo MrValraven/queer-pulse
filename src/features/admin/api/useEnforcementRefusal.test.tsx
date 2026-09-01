@@ -48,13 +48,15 @@ describe("useEnforcementRefusal", () => {
     ).toBeInTheDocument();
   });
 
-  // The reconciliation the drawer cannot offer: it names whoever asked,
-  // because it has to name somebody, so the refusal has to account for that
-  // rather than leaving a moderator to square two contradictory facts.
-  it("reconciles the drawer naming the asker when two people wrote it", async () => {
+  // The reconciliation the drawer cannot offer: it names whoever posted
+  // first, because it has to name somebody, so the refusal has to account for
+  // that rather than leaving a moderator to square two contradictory facts.
+  // "Posted first" rather than "asked" (PRD-47d): the same refusal answers a
+  // review and its reply, where the first poster is a reviewer, not an asker.
+  it("reconciles the drawer naming the first poster when two people wrote it", async () => {
     renderRefusal(refusalError(400, UNRESOLVED, "ambiguous_authors"));
     const line = await screen.findByText(/two different people wrote them/i);
-    expect(line).toHaveTextContent(/drawer names whoever asked/i);
+    expect(line).toHaveTextContent(/drawer names whoever posted first/i);
   });
 
   it("explains the house account is never a moderation target", async () => {

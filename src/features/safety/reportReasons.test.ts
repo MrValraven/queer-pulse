@@ -172,6 +172,8 @@ describe("SUBJECT_REASONS", () => {
       "review",
       "magazine_comment",
       "listing_public_question",
+      "event_photo",
+      "landlord_recommendation",
     ];
     expect(Object.keys(SUBJECT_REASONS).sort()).toEqual(
       [...backendSubjectTypes].sort(),
