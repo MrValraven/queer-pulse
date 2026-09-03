@@ -7,11 +7,33 @@
  * the real app. So this stylesheet is the `splash` layer and its exit, and the
  * seam with the OS is held by colour instead of animation: the manifest's
  * background_color is the same --plum as .overlay, so the OS's own launch
- * screen already IS this screen's first frame.
+ * screen already IS this screen's first frame. The document's own pre-React
+ * paint in between (the baked homepage at the start_url) is covered by the
+ * inline style in index.html, not by anything here.
  *
  * Every cream value is written as rgba(var(--cream-rgb), N) rather than
  * var(--cream). --cream flips to near-black in dark mode; --cream-rgb does not,
  * and this sheet is locked plum in both themes.
+ */
+
+/* ── the entrance ────────────────────────────────────────────────────────
+ *
+ * The first frame is the OS frame: the icon's mark (.ghost, the rest-state
+ * BrandMark) at the size the OS drew it, centred on the screen, on flat plum,
+ * with nothing else visible. Everything below keys off `.shown`, which lands
+ * one frame after mount, so that frame is really painted and the transitions
+ * have a state to run FROM. Then, on one clock:
+ *
+ *   120ms  the ghost starts shrinking (520ms) until its core is the 13px dot
+ *   200ms  the orbs and grain fade in over 700ms
+ *   300ms  the wordmark rises in
+ *   520ms  the ghost fades out over the dot it now matches; greeting fades in
+ *   560ms  the hairline appears
+ *   600ms  the first pulse ring leaves the dot
+ *
+ * All done by ~920ms, inside the sequence's minimum dwell. Under reduced
+ * motion base.css collapses every transition, which turns this into the still
+ * cut it always was.
  */
 
 .overlay {
@@ -20,10 +42,6 @@
   z-index: var(--z-app-launch);
   background: var(--plum);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   /* Nothing under here is meant to be reachable, and there is nothing to
      scroll during a boot; cheaper and less invasive than a scroll lock, which
      would fight ScrollManager's restore on the way out. */
@@ -48,6 +66,11 @@
   position: absolute;
   border-radius: var(--radius-avatar);
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease) 0.2s;
+}
+.overlay.shown .orb {
+  opacity: 1;
 }
 .orbAccent {
   width: 520px;
@@ -99,13 +122,31 @@
 .grain {
   position: absolute;
   inset: 0;
-  opacity: 0.045;
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.7s var(--ease) 0.2s;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
   background-size: 140px;
 }
+.overlay.shown .grain {
+  opacity: 0.045;
+}
 
 /* ── the pulse ───────────────────────────────────────────────────────────── */
+
+/* The mark's centre sits exactly on the viewport's centre, which is where the
+   OS puts the icon on its launch screen; the wordmark hangs below it. A flex
+   centring of the whole group would put the dot ~75px higher and the handoff
+   would jump. */
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 /* Two rings per 1.15s cycle — one strong beat and a softer one 330ms behind
    it, which is a heart rhythm rather than three even pings. This dot is the
@@ -115,8 +156,34 @@
   position: relative;
   width: 13px;
   height: 13px;
+  /* Half the box, so the dot's centre is the stage's top edge. */
+  margin-top: -6.5px;
   flex: none;
   transition: transform 0.44s var(--ease);
+}
+/* The icon as the OS painted it. Sized so its core IS the dot (13px), then
+   scaled up to the icon's on-screen size by --launch-open-scale, which
+   AppLaunch.tsx computes from the viewport width. Rings are cream through
+   currentColor; the core is coral like the icon's, even on Remembrance day,
+   because it is matching the OS frame and not the splash, and it fades out
+   over the dot before the dot's own colour matters. */
+.ghost {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 41.6px;
+  height: 41.6px;
+  display: flex;
+  color: rgba(var(--cream-rgb), 1);
+  transform: translate(-50%, -50%) scale(var(--launch-open-scale, 1));
+  transform-origin: center;
+  transition:
+    transform 0.52s var(--ease) 0.12s,
+    opacity 0.16s linear 0.52s;
+}
+.overlay.shown .ghost {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
 }
 .markCore {
   position: absolute;
@@ -133,8 +200,12 @@
   opacity: 0;
   animation: appLaunchBeat 1.15s var(--ease) infinite;
 }
+/* The beat waits for the ghost to have become the dot. */
+.markRing {
+  animation-delay: 0.6s;
+}
 .markRingLate {
-  animation-delay: 0.33s;
+  animation-delay: 0.93s;
 }
 @keyframes appLaunchBeat {
   0% {
@@ -174,8 +245,8 @@
   opacity: 0;
   transform: translateY(15px);
   transition:
-    opacity 0.34s var(--ease),
-    transform 0.44s var(--ease);
+    opacity 0.34s var(--ease) 0.3s,
+    transform 0.52s var(--ease) 0.3s;
 }
 .overlay.shown .wordmark {
   opacity: 1;
@@ -198,7 +269,7 @@
   text-align: center;
   text-wrap: balance;
   opacity: 0;
-  transition: opacity 0.4s var(--ease) 0.12s;
+  transition: opacity 0.4s var(--ease) 0.52s;
 }
 .greeting {
   font-family: var(--serif);
@@ -234,7 +305,7 @@
   border-radius: var(--radius-2);
   overflow: hidden;
   opacity: 0;
-  transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear 0.56s;
 }
 .overlay.shown .hairline {
   opacity: 1;

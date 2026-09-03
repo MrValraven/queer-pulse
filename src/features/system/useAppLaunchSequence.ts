@@ -13,9 +13,12 @@ export type LaunchProgress = "determinate" | "shimmer" | "complete";
 /**
  * Minimum time the splash owns the screen. On a warm cache the app can be
  * ready in well under 200ms, and a full-screen take-over that appears and
- * leaves inside a few frames reads as a glitch rather than a launch.
+ * leaves inside a few frames reads as a glitch rather than a launch. It also
+ * has to outlast the entrance (AppLaunch.module.css): the ghost icon finishes
+ * shrinking at ~680ms and the greeting is fully in at ~920ms, and the exit
+ * cannot start before COMPLETE_MS + HANDOFF_DELAY_MS after this.
  */
-const MIN_DWELL_MS = 600;
+const MIN_DWELL_MS = 800;
 
 /**
  * How long the determinate fill is allowed to run before we stop pretending to

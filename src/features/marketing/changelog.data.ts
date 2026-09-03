@@ -90,6 +90,22 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "the-installed-app-opens-in-one-motion",
+        category: "improvement",
+        date: "3 Sep 2026",
+        ...entryKeys("the-installed-app-opens-in-one-motion"),
+        tag: { labelKey: "marketing:changelog.tag.feed", to: routes.feed },
+      },
+      {
+        id: "opening-the-installed-app-no-longer-flashes-the-homepage",
+        category: "fix",
+        date: "3 Sep 2026",
+        ...entryKeys(
+          "opening-the-installed-app-no-longer-flashes-the-homepage",
+        ),
+        tag: { labelKey: "marketing:changelog.tag.feed", to: routes.feed },
+      },
+      {
         id: "the-app-icon-is-now-the-pulse-dot",
         category: "improvement",
         date: "3 Sep 2026",

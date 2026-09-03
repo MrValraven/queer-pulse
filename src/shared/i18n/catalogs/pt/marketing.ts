@@ -8056,6 +8056,14 @@ export const marketing: Catalog = {
     "O ícone da aplicação é agora o ponto de pulso",
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.body":
     "A QueerPulse tinha dois logótipos. O nome na barra superior, o kit de imprensa e o ecrã de arranque usavam o ponto coral do pulso; o ícone no teu ecrã principal, o separador do navegador e dezoito imagens de arranque usavam um relâmpago roxo em cores que a plataforma nunca veste. Agora coincidem: o ícone, o favicon, os ecrãs de arranque e o kit de imprensa trazem todos o ponto, desenhado uma vez e partilhado em todo o lado, para que a aplicação em que tocas seja a aplicação que abres. Se o ícone antigo persistir no teu ecrã principal, remove a aplicação instalada e volta a adicioná-la.",
+  "changelog.entries.the-installed-app-opens-in-one-motion.title":
+    "A aplicação instalada abre num só movimento",
+  "changelog.entries.the-installed-app-opens-in-one-motion.body":
+    "Quando abres a QueerPulse a partir do ecrã principal, o telemóvel mostra o ícone da aplicação em roxo por um instante, e depois o nosso ecrã de arranque aparecia como uma imagem separada: um pequeno pulso, a marca e a tua saudação a surgirem do nada. Agora o ecrã de arranque abre exatamente na imagem que o telemóvel acabou de mostrar e o ícone encolhe até se tornar o pulso enquanto a marca e a saudação chegam à volta dele, e toda a abertura se lê como um único movimento contínuo em vez de dois ecrãs.",
+  "changelog.entries.opening-the-installed-app-no-longer-flashes-the-homepage.title":
+    "Abrir a aplicação instalada já não mostra a página inicial por instantes",
+  "changelog.entries.opening-the-installed-app-no-longer-flashes-the-homepage.body":
+    "Tocar no ícone da QueerPulse no ecrã principal mostrava o ecrã de arranque, depois um relance da página de entrada pública, depois a saudação e por fim o teu feed. Esse instante a meio era a página a carregar por baixo antes de a aplicação assumir o controlo. O fundo mantém-se agora em roxo desde que o ícone abre até chegares à aplicação, e o arranque lê-se como um único ecrã. Nada mudou quanto ao sítio onde acabas.",
   "changelog.entries.the-installed-app-now-opens-on-your-feed.title":
     "A aplicação instalada abre agora no teu feed",
   "changelog.entries.the-installed-app-now-opens-on-your-feed.body":

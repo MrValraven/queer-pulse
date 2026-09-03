@@ -1,5 +1,12 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { createPortal } from "react-dom";
+import { BrandMark } from "../../shared/components/ui/BrandMark";
 import { useAuth } from "../../app/providers/authContext";
 import { useDisplayMode } from "../../app/providers/displayModeContext";
 import { Translation } from "../../shared/i18n/Translation";
@@ -8,6 +15,7 @@ import {
   applyHandoffTargets,
   clearLaunchMemory,
   readLaunchMemory,
+  resolveLaunchOpenScale,
   resolveLaunchSeason,
   writeLaunchMemory,
 } from "./appLaunch.utils";
@@ -30,6 +38,21 @@ function greetingKeyFor(hour: number): string {
  * and the app icon, before any JavaScript exists, and no web API hooks it. That
  * frame is the same --plum as this overlay, so the two read as one screen and
  * this component picks up where the OS leaves off.
+ *
+ * Between the two sits one more frame nobody owns from React: the document's
+ * own paint, before main.tsx has run. At the start_url that document is the
+ * prerendered homepage, and it flashed. index.html carries an inline style that
+ * keeps the ground plum and #root hidden in installed display mode until
+ * DisplayModeProvider stamps `data-display-mode` on <html>, which happens in
+ * the same commit that mounts this overlay. Keep the two in step.
+ *
+ * Colour alone is not a seamless handoff, though. The OS frame is the icon's
+ * mark, large and centred on the screen; the splash is a 13px pulse with a
+ * wordmark under it. So the overlay's first frame reproduces the OS frame (a
+ * ghost of the rest-state mark at the icon's size, flat plum, nothing else)
+ * and the entrance shrinks that ghost into the pulse while the rest of the
+ * composition arrives around it. The sizes and timings live in the stylesheet
+ * and appLaunch.utils.ts.
  *
  * Renders nothing at all outside the installed app: in a browser tab the launch
  * moment is a page load, not an app opening, and a full-screen take-over there
@@ -60,6 +83,13 @@ function AppLaunchOverlay({ preview }: { preview: LaunchPreview | null }) {
     preview?.name ? { firstName: preview.name } : readLaunchMemory(),
   );
   const [season] = useState(() => preview?.season ?? resolveLaunchSeason());
+  // Settled once at mount, like the rest: the ghost's opening size is the size
+  // of the icon the OS painted a moment ago, which does not change mid-splash.
+  const [openScale] = useState(() =>
+    resolveLaunchOpenScale(
+      typeof window === "undefined" ? 0 : window.innerWidth,
+    ),
+  );
   // Settled once, in a lazy initializer: reading the clock in the JSX below
   // would be impure, and the greeting must not change under a re-render.
   const [greetingKey] = useState(() => greetingKeyFor(new Date().getHours()));
@@ -121,10 +151,13 @@ function AppLaunchOverlay({ preview }: { preview: LaunchPreview | null }) {
     .filter(Boolean)
     .join(" ");
 
+  const overlayStyle = { "--launch-open-scale": openScale } as CSSProperties;
+
   return createPortal(
     <div
       ref={overlayRef}
       className={overlayClass}
+      style={overlayStyle}
       data-season={season}
       role="status"
       aria-live="polite"
@@ -134,35 +167,45 @@ function AppLaunchOverlay({ preview }: { preview: LaunchPreview | null }) {
       <span className={`${styles.orb} ${styles.orbSkin}`} aria-hidden />
       <span className={styles.grain} aria-hidden />
 
-      {/* The continuity anchor: the icon's mark, beating, on its way to
-          becoming the nav bar's live dot. */}
-      <span ref={markRef} className={styles.mark} aria-hidden>
-        <span className={styles.markCore} />
-        <span className={styles.markRing} />
-        <span className={styles.markRingLate} />
-      </span>
+      {/* Pinned to the viewport's centre, where the OS centres the icon. */}
+      <div className={styles.stage}>
+        {/* The continuity anchor: the icon's mark, beating, on its way to
+            becoming the nav bar's live dot. The ghost inside it is the icon
+            as the OS just drew it, opening at that size and shrinking until
+            its core sits exactly over the dot, then fading out. */}
+        <span ref={markRef} className={styles.mark} aria-hidden>
+          <span className={styles.markCore} />
+          <span className={styles.markRing} />
+          <span className={styles.markRingLate} />
+          <span className={styles.ghost}>
+            <BrandMark state="rest" size="100%" />
+          </span>
+        </span>
 
-      <div className={styles.wordmarkGroup}>
-        <div ref={wordmarkRef} className={styles.wordmark}>
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <span className={styles.wordmarkItalic} /> }}
-          />
-        </div>
-        {memory ? (
-          <div className={`${styles.tagline} ${styles.greeting}`}>
+        <div className={styles.wordmarkGroup}>
+          <div ref={wordmarkRef} className={styles.wordmark}>
             <Translation
-              i18nKey="shared:appLaunch.greeting"
-              values={{
-                greeting: t(greetingKey),
-                name: memory.firstName,
-              }}
-              components={{ em: <em className={styles.greetingName} /> }}
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <span className={styles.wordmarkItalic} /> }}
             />
           </div>
-        ) : (
-          <div className={styles.tagline}>{t("shared:appLaunch.tagline")}</div>
-        )}
+          {memory ? (
+            <div className={`${styles.tagline} ${styles.greeting}`}>
+              <Translation
+                i18nKey="shared:appLaunch.greeting"
+                values={{
+                  greeting: t(greetingKey),
+                  name: memory.firstName,
+                }}
+                components={{ em: <em className={styles.greetingName} /> }}
+              />
+            </div>
+          ) : (
+            <div className={styles.tagline}>
+              {t("shared:appLaunch.tagline")}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className={`${styles.hairline} ${styles[progress]}`} aria-hidden>

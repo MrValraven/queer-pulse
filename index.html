@@ -35,6 +35,38 @@
     />
     <meta name="theme-color" content="#2D1B3D" />
 
+    <!--
+      Installed-app boot cover, the frame BETWEEN the OS launch screen and the
+      AppLaunch overlay (src/features/system/AppLaunch.tsx).
+
+      The document at the manifest's start_url ("/?mode=standalone") is the
+      prerendered marketing homepage (scripts/prerender.mjs bakes "/" into
+      dist/index.html), and the browser paints that markup the moment the
+      stylesheet lands, well before main.tsx has run and React has mounted the
+      plum overlay. Members saw it: OS splash, a flash of the landing page,
+      then the boot sequence. The shortcuts and spa.html would show a cream
+      body in that same gap instead.
+
+      So while the app is installed (the same display-mode query
+      DisplayModeProvider reads) and React has not yet stamped
+      `data-display-mode` on <html> (it does so in its first commit, the same
+      one that mounts the overlay), the ground is the manifest's plum and #root
+      is hidden. The value is --plum by hand: no token exists before the bundle.
+      Inline <style> is allowed by vercel.json's CSP (style-src 'unsafe-inline');
+      an inline <script> would not be.
+    -->
+    <style>
+      @media (display-mode: standalone), (display-mode: fullscreen) {
+        html:not([data-display-mode]),
+        html:not([data-display-mode]) body {
+          background: #2d1b3d;
+        }
+        html:not([data-display-mode]) #root {
+          visibility: hidden;
+        }
+      }
+    </style>
+
     <!-- Installed-app presentation. `black-translucent` lets the page extend
          under the status bar; the slim app bar (Navbar.module.css .appBar) pads
          itself by env(safe-area-inset-top) so the clock reads against the bar

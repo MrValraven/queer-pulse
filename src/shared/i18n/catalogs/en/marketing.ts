@@ -7922,6 +7922,14 @@ export const marketing: Catalog = {
     "The app icon is now the pulse dot",
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.body":
     "QueerPulse had two logos. The name in the top bar, the press kit and the launch screen used the coral pulse dot; the icon on your home screen, the browser tab and eighteen launch images used a purple lightning bolt in colours the platform never wears. They now match: the icon, the favicon, the launch screens and the press kit all carry the dot, drawn once and shared everywhere, so the app you tap is the app you open. If the old icon lingers on your home screen, remove the installed app and add it again.",
+  "changelog.entries.the-installed-app-opens-in-one-motion.title":
+    "The installed app opens in one motion",
+  "changelog.entries.the-installed-app-opens-in-one-motion.body":
+    "When you open QueerPulse from your home screen, the phone shows the app icon on plum for a moment, and then our own launch screen used to appear as a separate picture: a small pulse, the wordmark and your greeting fading in from nothing. Now the launch screen opens on exactly the picture the phone just showed and the icon shrinks into the pulse while the wordmark and greeting arrive around it, so the whole opening reads as one continuous motion instead of two screens.",
+  "changelog.entries.opening-the-installed-app-no-longer-flashes-the-homepage.title":
+    "Opening the installed app no longer flashes the homepage",
+  "changelog.entries.opening-the-installed-app-no-longer-flashes-the-homepage.body":
+    "Tapping the QueerPulse icon on your home screen showed the launch screen, then a split-second flash of the public landing page, then the greeting, then your feed. That middle frame was the page loading underneath before the app had taken over. The ground now stays plum from the moment the icon opens until you land in the app, so the launch reads as one screen. Nothing changed about where you end up.",
   "changelog.entries.the-installed-app-now-opens-on-your-feed.title":
     "The installed app now opens on your feed",
   "changelog.entries.the-installed-app-now-opens-on-your-feed.body":

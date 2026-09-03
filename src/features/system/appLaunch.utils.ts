@@ -81,6 +81,33 @@ export function clearLaunchMemory(): void {
 }
 
 /**
+ * How wide the OS draws the app icon on its own launch screen, as a fraction
+ * of the viewport width. Measured from an iPhone that matched none of
+ * index.html's apple-touch-startup-image queries, so iOS generated its launch
+ * screen from the icon: the tile (plum on plum, so only the mark shows) spanned
+ * 55% of the screen, centred. Android's icon splash is smaller; this is the
+ * closest single figure to both and the one with evidence behind it.
+ */
+const OS_ICON_WIDTH_FRACTION = 0.55;
+
+/**
+ * Side of the ghost's box at rest, in px: the size at which the mark's core
+ * (radius 10 of a 64 grid) is exactly the overlay's 13px pulse dot, so the
+ * ghost can fade out over the dot with nothing moving.
+ */
+export const LAUNCH_GHOST_SIZE_PX = 13 * (64 / 20);
+
+/**
+ * The scale the ghost mark opens at, so its first frame is the same size as
+ * the icon the OS just painted. Drives `--launch-open-scale` on the overlay;
+ * the stylesheet then eases it down to 1.
+ */
+export function resolveLaunchOpenScale(viewportWidth: number): number {
+  if (!(viewportWidth > 0)) return 1;
+  return (viewportWidth * OS_ICON_WIDTH_FRACTION) / LAUNCH_GHOST_SIZE_PX;
+}
+
+/**
  * Point the exit animation at the nav bar's real brand dot and wordmark.
  *
  * The design's exit is specified against a fixed 402x874 stage, where the
