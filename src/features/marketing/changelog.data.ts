@@ -90,6 +90,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "a-community-page-now-fits-a-phone-screen",
+        category: "fix",
+        date: "3 Sep 2026",
+        ...entryKeys("a-community-page-now-fits-a-phone-screen"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
         id: "the-installed-app-opens-in-one-motion",
         category: "improvement",
         date: "3 Sep 2026",

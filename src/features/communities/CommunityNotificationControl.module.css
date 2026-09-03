@@ -135,3 +135,32 @@
   flex: none;
   padding-top: 2px;
 }
+
+/* Phone: the hub's six underline tabs used to wrap onto three stacked rows,
+   pushing the feed far down the page and leaving the bell floating beside the
+   first row with the underline rule stopping short of it. One horizontal
+   scroll strip instead, the same chip-scroller pattern the forum sidebar
+   uses. The tablist is addressed through this wrapper (and by role, not by
+   class) because the tab styling lives in the shared Tabs module. */
+@media (--mobile) {
+  .tabRowTabs > [role="tablist"] {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .tabRowTabs > [role="tablist"]::-webkit-scrollbar {
+    display: none;
+  }
+  .tabRowTabs > [role="tablist"] > [role="tab"] {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    scroll-snap-align: start;
+    /* Tighter than the 24px desktop gutter so four tabs are legible at once
+       and the fifth is visibly clipped, which is what says "this scrolls". */
+    padding-inline: 14px;
+  }
+}

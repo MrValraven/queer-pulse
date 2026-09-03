@@ -61,6 +61,40 @@
   min-width: 0;
 }
 
+/* The composer's own row class, merged onto the calling tab's (`.composer` in
+   PulseTab, `.newPost` in the detail page). The tabs keep owning the row's
+   look: ground, padding, gap. This only carries the narrow-viewport
+   behaviour, which both callers need identically. */
+.root {
+  flex-wrap: wrap;
+}
+
+.actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  /* Matches the row gap both callers set, so grouping the pair leaves the
+     desktop row pixel-identical to the four flat children it replaced. */
+  gap: 12px;
+}
+
+/* Phone: the field, the attach button and Share cannot share one line. Four
+   flat children left the field ~120px wide, which broke the announcement
+   switch's label to one syllable per line. A 100% basis is what forces the
+   wrap. It can never fit beside the field. */
+@media (--sm) {
+  .actions {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+  /* Two classes so this beats the caller's `align-items: center` regardless of
+     which CSS Module the bundler emits first. Centring a 38px avatar against a
+     field that is now three lines tall floats it in mid-air. */
+  .root.root {
+    align-items: flex-start;
+  }
+}
+
 /* ── Announcement switch (owner / co-owner / moderator only) ──────────────── */
 .announcementRow {
   display: flex;

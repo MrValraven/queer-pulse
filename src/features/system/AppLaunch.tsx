@@ -14,6 +14,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   applyHandoffTargets,
   clearLaunchMemory,
+  readLaunchCentreTop,
   readLaunchMemory,
   resolveLaunchOpenScale,
   resolveLaunchSeason,
@@ -90,6 +91,16 @@ function AppLaunchOverlay({ preview }: { preview: LaunchPreview | null }) {
       typeof window === "undefined" ? 0 : window.innerWidth,
     ),
   );
+  // Where the SCREEN's centre is inside this viewport (see appLaunch.utils):
+  // null means the stylesheet's plain 50%. Followed through resize because an
+  // iOS home-screen launch can grow its viewport a frame or two after the
+  // first paint, and the mark has to stay on the icon's spot through that.
+  const [centreTop, setCentreTop] = useState(readLaunchCentreTop);
+  useEffect(() => {
+    const onResize = () => setCentreTop(readLaunchCentreTop());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   // Settled once, in a lazy initializer: reading the clock in the JSX below
   // would be impure, and the greeting must not change under a re-render.
   const [greetingKey] = useState(() => greetingKeyFor(new Date().getHours()));
@@ -151,7 +162,10 @@ function AppLaunchOverlay({ preview }: { preview: LaunchPreview | null }) {
     .filter(Boolean)
     .join(" ");
 
-  const overlayStyle = { "--launch-open-scale": openScale } as CSSProperties;
+  const overlayStyle = {
+    "--launch-open-scale": openScale,
+    ...(centreTop === null ? {} : { "--launch-centre-top": `${centreTop}px` }),
+  } as CSSProperties;
 
   return createPortal(
     <div

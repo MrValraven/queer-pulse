@@ -7922,6 +7922,10 @@ export const marketing: Catalog = {
     "The app icon is now the pulse dot",
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.body":
     "QueerPulse had two logos. The name in the top bar, the press kit and the launch screen used the coral pulse dot; the icon on your home screen, the browser tab and eighteen launch images used a purple lightning bolt in colours the platform never wears. They now match: the icon, the favicon, the launch screens and the press kit all carry the dot, drawn once and shared everywhere, so the app you tap is the app you open. If the old icon lingers on your home screen, remove the installed app and add it again.",
+  "changelog.entries.a-community-page-now-fits-a-phone-screen.title":
+    "A community page now fits a phone screen",
+  "changelog.entries.a-community-page-now-fits-a-phone-screen.body":
+    "On a phone, a community's own page had two rough edges. The Share box squeezed the avatar, the text field, the attach button and Share onto a single line, which left the 'Post as an announcement' switch and its explanation crushed into a column a few characters wide, reading one syllable per line. The page's six tabs wrapped onto three stacked rows, pushing the feed far down the screen while the notification bell floated off beside the first row. The Share box now gives the text field the full width and drops the attach and Share buttons onto their own line beneath it, and the tabs sit on one strip you swipe sideways. Nothing changed on a laptop.",
   "changelog.entries.the-installed-app-opens-in-one-motion.title":
     "The installed app opens in one motion",
   "changelog.entries.the-installed-app-opens-in-one-motion.body":

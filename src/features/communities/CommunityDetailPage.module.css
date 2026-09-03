@@ -218,7 +218,10 @@
 }
 .layout {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  /* minmax(0, …) like `.layoutWide` below: a bare `1fr` floors the column at
+     its content's min-content width, so any horizontally scrolling child (the
+     mobile tab strip) widens the whole page instead of scrolling. */
+  grid-template-columns: minmax(0, 1fr) 300px;
   gap: 44px;
   align-items: flex-start;
 }
@@ -230,7 +233,7 @@
 }
 @media (--mobile) {
   .layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .sidebar {
     display: none;

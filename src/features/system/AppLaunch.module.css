@@ -134,13 +134,16 @@
 
 /* ── the pulse ───────────────────────────────────────────────────────────── */
 
-/* The mark's centre sits exactly on the viewport's centre, which is where the
-   OS puts the icon on its launch screen; the wordmark hangs below it. A flex
+/* The mark's centre sits exactly on the SCREEN's centre, which is where iOS
+   puts the icon on its launch screen; the wordmark hangs below it. A flex
    centring of the whole group would put the dot ~75px higher and the handoff
-   would jump. */
+   would jump. `50%` is the viewport's centre, which is the screen's only once
+   the viewport spans the screen; on an iOS launch it may not yet, so
+   AppLaunch.tsx supplies the corrected value (appLaunch.utils.ts,
+   resolveLaunchCentreTop) and this is its fallback. */
 .stage {
   position: absolute;
-  top: 50%;
+  top: var(--launch-centre-top, 50%);
   left: 0;
   right: 0;
   display: flex;

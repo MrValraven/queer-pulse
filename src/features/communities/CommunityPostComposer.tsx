@@ -81,7 +81,10 @@ export function CommunityPostComposer({
   } = attach;
 
   return (
-    <div className={className} style={style}>
+    <div
+      className={[className, styles.root].filter(Boolean).join(" ")}
+      style={style}
+    >
       <Avatar
         initials={viewer?.initials ?? "?"}
         tint={viewer?.tint ?? "plum"}
@@ -139,31 +142,36 @@ export function CommunityPostComposer({
           </div>
         )}
       </div>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className={styles.hiddenFileInput}
-        onChange={(event) => {
-          void handleFile(event.target.files?.[0]);
-        }}
-      />
-      <IconButton
-        className={styles.attachImageBtn}
-        aria-label={t("communities:common.attachImageAria")}
-        disabled={isUploading}
-        onClick={openPicker}
-      >
-        <FiImage aria-hidden />
-      </IconButton>
-      <Button
-        variant={submitVariant}
-        onClick={onSubmit}
-        style={{ whiteSpace: "nowrap", ...submitStyle }}
-      >
-        {submitIcon}
-        {submitLabel}
-      </Button>
+      {/* Attach + send travel together so a phone can drop the pair onto its
+          own line rather than squeezing the field (and with it the
+          announcement switch) into a ~120px column. */}
+      <div className={styles.actions}>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          className={styles.hiddenFileInput}
+          onChange={(event) => {
+            void handleFile(event.target.files?.[0]);
+          }}
+        />
+        <IconButton
+          className={styles.attachImageBtn}
+          aria-label={t("communities:common.attachImageAria")}
+          disabled={isUploading}
+          onClick={openPicker}
+        >
+          <FiImage aria-hidden />
+        </IconButton>
+        <Button
+          variant={submitVariant}
+          onClick={onSubmit}
+          style={{ whiteSpace: "nowrap", ...submitStyle }}
+        >
+          {submitIcon}
+          {submitLabel}
+        </Button>
+      </div>
     </div>
   );
 }

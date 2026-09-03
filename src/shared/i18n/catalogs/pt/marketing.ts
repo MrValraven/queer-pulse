@@ -8056,6 +8056,10 @@ export const marketing: Catalog = {
     "O ícone da aplicação é agora o ponto de pulso",
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.body":
     "A QueerPulse tinha dois logótipos. O nome na barra superior, o kit de imprensa e o ecrã de arranque usavam o ponto coral do pulso; o ícone no teu ecrã principal, o separador do navegador e dezoito imagens de arranque usavam um relâmpago roxo em cores que a plataforma nunca veste. Agora coincidem: o ícone, o favicon, os ecrãs de arranque e o kit de imprensa trazem todos o ponto, desenhado uma vez e partilhado em todo o lado, para que a aplicação em que tocas seja a aplicação que abres. Se o ícone antigo persistir no teu ecrã principal, remove a aplicação instalada e volta a adicioná-la.",
+  "changelog.entries.a-community-page-now-fits-a-phone-screen.title":
+    "A página de uma comunidade cabe agora num ecrã de telemóvel",
+  "changelog.entries.a-community-page-now-fits-a-phone-screen.body":
+    "Num telemóvel, a página de uma comunidade tinha duas arestas por limar. A caixa Partilhar comprimia o avatar, o campo de texto, o botão de anexar e o Partilhar numa única linha, o que deixava o interruptor 'Publicar como anúncio' e a sua explicação espremidos numa coluna com poucos caracteres de largura, a ler-se uma sílaba por linha. Os seis separadores da página passavam para três filas empilhadas, empurrando o conteúdo para muito baixo no ecrã enquanto o sino das notificações ficava de lado, junto à primeira fila. A caixa Partilhar dá agora toda a largura ao campo de texto e passa os botões de anexar e Partilhar para uma linha própria por baixo, e os separadores ficam numa só faixa que deslizas para o lado. Nada mudou num portátil.",
   "changelog.entries.the-installed-app-opens-in-one-motion.title":
     "A aplicação instalada abre num só movimento",
   "changelog.entries.the-installed-app-opens-in-one-motion.body":

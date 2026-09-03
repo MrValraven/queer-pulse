@@ -82,13 +82,91 @@ export function clearLaunchMemory(): void {
 
 /**
  * How wide the OS draws the app icon on its own launch screen, as a fraction
- * of the viewport width. Measured from an iPhone that matched none of
- * index.html's apple-touch-startup-image queries, so iOS generated its launch
- * screen from the icon: the tile (plum on plum, so only the mark shows) spanned
- * 55% of the screen, centred. Android's icon splash is smaller; this is the
- * closest single figure to both and the one with evidence behind it.
+ * of the screen width. Measured pixel by pixel from a launch-screen screenshot
+ * of an iPhone that matched none of index.html's apple-touch-startup-image
+ * queries, so iOS generated its launch screen from the icon: the core (radius
+ * 10 of the 64 grid) spanned 16.7% of the width, which puts the tile (plum on
+ * plum, so only the mark shows) at 53%, and its centre sat at exactly 50% of
+ * the screen height. Android's icon splash is smaller; this is the figure
+ * with evidence behind it.
  */
-const OS_ICON_WIDTH_FRACTION = 0.55;
+const OS_ICON_WIDTH_FRACTION = 0.53;
+
+/**
+ * The home indicator band at the bottom of a Face ID iPhone, in CSS px. The
+ * status bar band varies by model (44, 47, 54, 59...); this one does not, which
+ * is what lets resolveLaunchCentreTop() split a missing height into the two.
+ */
+const IOS_HOME_INDICATOR_BAND_PX = 34;
+
+/**
+ * A viewport short of the screen by more than this is not a chrome band at
+ * all (landscape, split view, a keyboard), and the correction stands down.
+ */
+const IOS_MAX_CHROME_BANDS_PX = 120;
+
+/** Missing height at or below this is the home indicator band alone. */
+const IOS_BOTTOM_BAND_ONLY_MAX_PX = 36;
+
+/** Missing height at or above this is both bands, not one tall status bar. */
+const IOS_BOTH_BANDS_MIN_PX = 70;
+
+export interface LaunchCentreInput {
+  /** window.innerHeight at the moment of measuring. */
+  viewportHeight: number;
+  /** window.screen.height: the full screen in CSS px, portrait on iOS. */
+  screenHeight: number;
+  /** navigator.standalone, the iOS-only home-screen launch flag. */
+  isIosStandalone: boolean;
+}
+
+/**
+ * Where the screen's vertical centre falls inside the viewport, in px from the
+ * viewport's top, or null to leave the stylesheet's `50%` alone.
+ *
+ * iOS puts its generated launch icon at the exact centre of the SCREEN. The
+ * overlay is `position: fixed; inset: 0`, so `50%` is the centre of the
+ * VIEWPORT, and on an iOS home-screen launch the first layout can run in a
+ * viewport that is still short of the screen by the status bar band, the home
+ * indicator band, or both, before it grows to full size. In that frame `50%`
+ * sits below the icon and the handoff visibly steps down.
+ *
+ * The screen height is known (`screen.height`), so the correction is just
+ * which band is missing: the home indicator is a fixed 34px, the status bar is
+ * whatever is left. Re-run on resize: once the viewport reaches the screen,
+ * the answer is `50%` again and nothing has moved. iOS only, on the flag that
+ * only iOS sets, because Android's splash centres differently and has not
+ * been measured.
+ */
+export function resolveLaunchCentreTop({
+  viewportHeight,
+  screenHeight,
+  isIosStandalone,
+}: LaunchCentreInput): number | null {
+  if (!isIosStandalone) return null;
+  if (!(viewportHeight > 0) || !(screenHeight > 0)) return null;
+  const missingHeight = screenHeight - viewportHeight;
+  if (missingHeight < 0 || missingHeight > IOS_MAX_CHROME_BANDS_PX) return null;
+  let statusBarBand = 0;
+  if (missingHeight > IOS_BOTTOM_BAND_ONLY_MAX_PX) {
+    statusBarBand =
+      missingHeight >= IOS_BOTH_BANDS_MIN_PX
+        ? missingHeight - IOS_HOME_INDICATOR_BAND_PX
+        : missingHeight;
+  }
+  return screenHeight / 2 - statusBarBand;
+}
+
+/** The inputs resolveLaunchCentreTop() needs, read from the live window. */
+export function readLaunchCentreTop(): number | null {
+  if (typeof window === "undefined") return null;
+  const iosNavigator = navigator as Navigator & { standalone?: boolean };
+  return resolveLaunchCentreTop({
+    viewportHeight: window.innerHeight,
+    screenHeight: window.screen?.height ?? 0,
+    isIosStandalone: iosNavigator.standalone === true,
+  });
+}
 
 /**
  * Side of the ghost's box at rest, in px: the size at which the mark's core
