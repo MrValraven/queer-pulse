@@ -52,6 +52,11 @@
       `data-display-mode` on <html> (it does so in its first commit, the same
       one that mounts the overlay), the ground is the manifest's plum and #root
       is hidden. The value is --plum by hand: no token exists before the bundle.
+
+      This only works because the prerender strips React's runtime stamps from
+      <html> before baking a page (scripts/prerender.mjs, assertCleanRootElement).
+      A baked `data-display-mode="browser"` on the homepage made this selector
+      never match, and the flash came back.
       Inline <style> is allowed by vercel.json's CSP (style-src 'unsafe-inline');
       an inline <script> would not be.
     -->

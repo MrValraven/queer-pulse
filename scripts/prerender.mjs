@@ -142,6 +142,26 @@ function outputPathFor(publicPath) {
  * `destination: "/"`, and PRERENDER_PATHS growing to include whatever the
  * catch-all names.
  */
+/**
+ * The baked <html> tag must carry nothing but `lang`. See the strip above; this
+ * holds it, so a new provider that stamps the root element cannot quietly bake
+ * its state into every prerendered page again.
+ */
+function assertCleanRootElement(publicPath, html) {
+  const rootTag = html.match(/<html\b[^>]*>/)?.[0] ?? "";
+  const attributes = rootTag
+    .slice("<html".length, -1)
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((attribute) => !attribute.startsWith("lang="));
+  if (attributes.length > 0) {
+    throw new Error(
+      `[prerender] ${publicPath}: <html> carries runtime attributes after the strip: ${attributes.join(" ")}`,
+    );
+  }
+}
+
 async function assertFallbackRewrite() {
   const config = JSON.parse(await readFile("vercel.json", "utf8"));
   const catchAll = (config.rewrites ?? []).find(
@@ -297,12 +317,26 @@ try {
       // has committed the content those pages fetched. Give the render loop a
       // couple of frames to flush before serialising.
       await page.waitForTimeout(SETTLE_AFTER_READY_MS);
-      // Strip the readiness marker before serialising — it is a signal between
-      // the app and this script, not something that belongs in shipped HTML.
+      // Strip the app's RUNTIME state from <html> before serialising. React
+      // stamps this browser's theme, nav mode, display mode and motion setting
+      // onto the root element (ThemeProvider, NavModeProvider,
+      // DisplayModeProvider, AccessibilityProvider) plus inline custom
+      // properties for the keyboard and consent insets, and page.content()
+      // serialises the root element WITH its attributes. Baked, they are the
+      // headless browser's state shipped to every visitor: `data-display-mode=
+      // "browser"` on the homepage defeated index.html's installed-app boot
+      // cover, whose selector waits for React to stamp that attribute, so the
+      // homepage flashed under the launch screen. The readiness marker goes
+      // for the same reason: a signal between the app and this script, not
+      // shipped HTML. Only `lang` belongs to the document itself.
       await page.evaluate(() => {
-        delete document.documentElement.dataset.prerenderReady;
+        const root = document.documentElement;
+        for (const { name } of Array.from(root.attributes)) {
+          if (name !== "lang") root.removeAttribute(name);
+        }
       });
       const html = await page.content();
+      assertCleanRootElement(publicPath, html);
       const outputPath = outputPathFor(publicPath);
       await mkdir(join(outputPath, ".."), { recursive: true });
       await writeFile(outputPath, html, "utf8");
