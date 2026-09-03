@@ -90,6 +90,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "the-install-tip-now-opens-the-steps-in-place",
+        category: "improvement",
+        date: "3 Sep 2026",
+        ...entryKeys("the-install-tip-now-opens-the-steps-in-place"),
+      },
+      {
         id: "a-community-page-now-fits-a-phone-screen",
         category: "fix",
         date: "3 Sep 2026",

@@ -7922,6 +7922,10 @@ export const marketing: Catalog = {
     "The app icon is now the pulse dot",
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.body":
     "QueerPulse had two logos. The name in the top bar, the press kit and the launch screen used the coral pulse dot; the icon on your home screen, the browser tab and eighteen launch images used a purple lightning bolt in colours the platform never wears. They now match: the icon, the favicon, the launch screens and the press kit all carry the dot, drawn once and shared everywhere, so the app you tap is the app you open. If the old icon lingers on your home screen, remove the installed app and add it again.",
+  "changelog.entries.the-install-tip-now-opens-the-steps-in-place.title":
+    "The install tip now opens the steps in place",
+  "changelog.entries.the-install-tip-now-opens-the-steps-in-place.body":
+    "The small card that offers to add QueerPulse to your home screen only had one small link to tap, and it carried you off to a separate page of instructions, away from whatever you were reading. On a phone the whole card is now one tap target, and tapping it opens the steps for your own device in a panel over the page. On Android, where the browser allows it, that panel also holds a real Install button that runs the phone's own install prompt. Close it and you are exactly where you were.",
   "changelog.entries.a-community-page-now-fits-a-phone-screen.title":
     "A community page now fits a phone screen",
   "changelog.entries.a-community-page-now-fits-a-phone-screen.body":

@@ -24,6 +24,29 @@
   display: none;
 }
 
+.trigger {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-11);
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
 .icon {
   flex: none;
   display: flex;
@@ -43,6 +66,7 @@
 }
 
 .title {
+  display: block;
   font-family: var(--sans);
   font-weight: 600;
   font-size: var(--text-14);
@@ -51,6 +75,7 @@
 }
 
 .text {
+  display: block;
   margin-top: 3px;
   font-family: var(--sans);
   font-size: var(--text-12-5);
@@ -71,7 +96,7 @@
   text-decoration: none;
 }
 
-.cta:hover {
+.trigger:hover .cta {
   text-decoration: underline;
 }
 

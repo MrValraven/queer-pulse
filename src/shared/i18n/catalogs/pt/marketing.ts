@@ -8056,6 +8056,10 @@ export const marketing: Catalog = {
     "O ícone da aplicação é agora o ponto de pulso",
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.body":
     "A QueerPulse tinha dois logótipos. O nome na barra superior, o kit de imprensa e o ecrã de arranque usavam o ponto coral do pulso; o ícone no teu ecrã principal, o separador do navegador e dezoito imagens de arranque usavam um relâmpago roxo em cores que a plataforma nunca veste. Agora coincidem: o ícone, o favicon, os ecrãs de arranque e o kit de imprensa trazem todos o ponto, desenhado uma vez e partilhado em todo o lado, para que a aplicação em que tocas seja a aplicação que abres. Se o ícone antigo persistir no teu ecrã principal, remove a aplicação instalada e volta a adicioná-la.",
+  "changelog.entries.the-install-tip-now-opens-the-steps-in-place.title":
+    "A dica de instalação abre agora os passos ali mesmo",
+  "changelog.entries.the-install-tip-now-opens-the-steps-in-place.body":
+    "O cartão pequeno que se oferece para adicionar a QueerPulse ao teu ecrã principal tinha apenas uma ligação minúscula para tocar, e levava-te para uma página de instruções separada, longe do que estavas a ler. Num telemóvel, o cartão inteiro passa a ser uma única zona de toque, e tocar nele abre os passos do teu próprio aparelho num painel por cima da página. No Android, quando o navegador o permite, esse painel traz também um botão Instalar que dispara a janela de instalação do próprio telemóvel. Fecha-o e ficas exatamente onde estavas.",
   "changelog.entries.a-community-page-now-fits-a-phone-screen.title":
     "A página de uma comunidade cabe agora num ecrã de telemóvel",
   "changelog.entries.a-community-page-now-fits-a-phone-screen.body":
