@@ -128,7 +128,7 @@
 .banner[data-state="permanently_closed"] .title,
 .banner[data-state="permanently_closed"] .lead,
 .banner[data-state="permanently_closed"] .note {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .banner[data-state="permanently_closed"] .note {
   border-left-color: rgba(var(--cream-rgb), 0.3);
@@ -138,5 +138,5 @@
 }
 .banner[data-state="permanently_closed"] .icon {
   background: rgba(var(--cream-rgb), 0.14);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }

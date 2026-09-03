@@ -13,7 +13,7 @@
   text-align: center;
 }
 .loadMoreEnd {
-  color: rgba(var(--plum-rgb), 0.55);
+  color: rgba(var(--ink-rgb), 0.55);
 }
 .loadMoreError {
   color: var(--accent);

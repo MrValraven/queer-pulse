@@ -43,7 +43,7 @@
 
 .emptyIcon {
   font-size: var(--text-28);
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.5;
 }
 
@@ -99,7 +99,7 @@
   border-radius: var(--radius-pill);
   border: 1px solid var(--line);
   font-size: var(--text-13-5);
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
   transition:
     border-color 0.2s var(--ease),
@@ -117,7 +117,7 @@
   align-items: center;
   gap: var(--gap-xs);
   font-size: var(--text-13);
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.85;
   margin: 0;
 }
@@ -133,7 +133,7 @@
 
 .photoConsentText {
   font-size: var(--text-13);
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.85;
 }
 
@@ -146,7 +146,7 @@
   align-items: center;
   gap: var(--gap-xs);
   font-size: var(--text-13);
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   margin: 0;
 }

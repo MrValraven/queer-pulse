@@ -126,7 +126,7 @@
     visibility var(--dur-fast) var(--ease);
 }
 .pinName {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-12);
   font-weight: 600;
   white-space: nowrap;
@@ -187,7 +187,7 @@
   border: 2px solid var(--cream);
   border-radius: var(--radius-avatar);
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 700;

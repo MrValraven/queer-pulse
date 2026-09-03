@@ -164,7 +164,7 @@ export const earnedBadges: Badge[] = [
         <circle cx="20" cy="6" r="3.5" fill={s("accent")} />
         <path
           d="M19 6l.8.8L21.5 5"
-          stroke="var(--cream)"
+          stroke="rgb(var(--cream-rgb))"
           strokeWidth="1.3"
           strokeLinecap="round"
           strokeLinejoin="round"

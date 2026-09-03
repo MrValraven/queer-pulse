@@ -1242,7 +1242,7 @@
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  color: rgba(var(--plum-rgb), 0.5);
+  color: rgba(var(--ink-rgb), 0.5);
   cursor: grab;
   touch-action: none;
 }
@@ -1291,11 +1291,13 @@
   height: 28px;
   flex-shrink: 0;
   border-radius: 50%;
-  color: rgba(var(--plum-rgb), 0.5);
+  /* --ink-rgb, not --plum-rgb: plum channels do not flip, so the resting
+     state was invisible on the dark page while the hover state was not. */
+  color: rgba(var(--ink-rgb), 0.5);
   transition: color var(--dur-base) var(--ease);
 }
 .ovMoveBtn:hover:not(:disabled) {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
 }
 .ovMoveBtn:disabled {
@@ -1310,7 +1312,7 @@
   height: 28px;
   flex-shrink: 0;
   border-radius: 50%;
-  color: rgba(var(--plum-rgb), 0.5);
+  color: rgba(var(--ink-rgb), 0.5);
 }
 .ovRemoveBtn:hover {
   color: var(--accent);

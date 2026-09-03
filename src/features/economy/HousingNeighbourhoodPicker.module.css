@@ -31,7 +31,7 @@
 }
 
 .placeholder {
-  color: rgba(var(--plum-rgb), 0.55);
+  color: rgba(var(--ink-rgb), 0.55);
 }
 
 .count {
@@ -41,7 +41,7 @@
   padding: 0 6px;
   border-radius: var(--radius-pill);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-12);
   line-height: 20px;
   text-align: center;
@@ -87,7 +87,7 @@
 }
 
 .clear:disabled {
-  color: rgba(var(--plum-rgb), 0.35);
+  color: rgba(var(--ink-rgb), 0.35);
   cursor: default;
 }
 

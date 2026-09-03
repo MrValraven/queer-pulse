@@ -291,6 +291,8 @@
   background: rgba(var(--cream-rgb), 0.92);
   /* Circle is always light (non-flipping cream channels), so pin the icon dark
      — var(--text-strong) would flip to light and vanish in dark mode. */
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
   display: flex;
   align-items: center;

@@ -190,7 +190,7 @@ const SOLID: Partial<
 > = {
   coral: { background: "var(--accent)", color: "var(--paper)" },
   jade: { background: "var(--jade)", color: "var(--paper)" },
-  plum: { background: "var(--plum)", color: "var(--cream)" },
+  plum: { background: "var(--plum)", color: "rgb(var(--cream-rgb))" },
 };
 // Soft avatar (reply authors) by member tint.
 const SOFT: Partial<Record<AvatarTint, { background: string; color: string }>> =
@@ -310,7 +310,7 @@ export const NEUTRAL_AUTHOR: Thread["author"] = {
   name: "",
   isMine: true,
   background: "var(--plum)",
-  color: "var(--cream)",
+  color: "rgb(var(--cream-rgb))",
 };
 
 /**

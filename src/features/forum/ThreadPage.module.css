@@ -112,12 +112,12 @@
   margin-left: auto;
 }
 .editedMark {
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   font-size: 0.85em;
 }
 .tombstone {
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   font-style: italic;
 }
@@ -511,7 +511,7 @@
 .lockedTitle {
   font-family: var(--serif);
   font-size: var(--text-17);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   margin-bottom: 2px;
 }
 .lockedBody {

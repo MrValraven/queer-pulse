@@ -14,6 +14,11 @@ export const shared: Catalog = {
   // AdminSidebar/Sidebar/SystemStateShell/AuthLoader/RoomLoader all render this
   // exact mark). Never translated — the tag placeholder just carries the
   // italic styling.
+  "appLaunch.ariaLabel": "Opening QueerPulse",
+  "appLaunch.tagline": "A queer network, rooted in Lisbon",
+  "appLaunch.greeting": "{greeting}, <em>{name}</em>",
+  "appLaunch.stillConnecting": "Still connecting…",
+  "appLaunch.offline": "You're offline. Showing your saved feed.",
   "brand.wordmark": "Queer<em>Pulse</em>",
 
   // Generic loading label shared by Suspense/auth fallbacks.

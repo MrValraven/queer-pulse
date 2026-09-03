@@ -19,6 +19,7 @@ export const simulations: Catalog = {
   "player.deviceGroupAriaLabel": "Dispositivo de pré-visualização",
   "player.mobile": "Telemóvel",
   "player.desktop": "Computador",
+  "player.replay": "Repetir",
   "player.openFullScreen": "Abrir em novo separador",
   "player.loading": "A carregar simulação…",
   "player.loadError": "Não foi possível carregar esta simulação.",

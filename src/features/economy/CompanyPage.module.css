@@ -110,18 +110,18 @@
 }
 .badgeVerified {
   background: rgba(var(--jade-rgb), 0.18);
-  color: color-mix(in srgb, var(--jade) 45%, var(--cream));
+  color: color-mix(in srgb, var(--jade) 45%, rgb(var(--cream-rgb)));
 }
 .badgeVerified::before {
   content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--jade) 45%, var(--cream));
+  background: color-mix(in srgb, var(--jade) 45%, rgb(var(--cream-rgb)));
 }
 .badgeCoral {
   background: rgba(var(--accent-rgb), 0.18);
-  color: color-mix(in srgb, var(--accent) 55%, var(--cream));
+  color: color-mix(in srgb, var(--accent) 55%, rgb(var(--cream-rgb)));
 }
 
 .actions {

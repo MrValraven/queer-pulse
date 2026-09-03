@@ -10,7 +10,7 @@ const svgBaseProps = {
   height: "100%",
   preserveAspectRatio: "xMidYMid meet",
   fill: "none",
-  stroke: "var(--cream)",
+  stroke: "rgb(var(--cream-rgb))",
   strokeWidth: 2,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
@@ -106,7 +106,11 @@ export function AboutArt(): ReactNode {
       <circle cx="120" cy="75" r="46" />
       <path d="M120 33v14M120 103v14M78 75h14M148 75h14" />
       <path d="M120 47l16 44-16-12-16 12z" />
-      <path d="M120 47l16 44-16-12z" fill="var(--cream)" stroke="none" />
+      <path
+        d="M120 47l16 44-16-12z"
+        fill="rgb(var(--cream-rgb))"
+        stroke="none"
+      />
       <circle cx="120" cy="75" r="5" fill="var(--accent)" stroke="none" />
     </svg>
   );

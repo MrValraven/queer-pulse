@@ -80,7 +80,7 @@ const PROFILES: CompanyProfile[] = [
     slug: "atelier-pulso",
     logo: "AP",
     logoBg: "rgba(247,243,238,.10)",
-    logoText: "var(--cream)",
+    logoText: "rgb(var(--cream-rgb))",
     name: (
       <>
         Atelier <em>Pulso</em>
@@ -230,7 +230,7 @@ const PROFILES: CompanyProfile[] = [
     slug: "national-lgbtq-rights-org",
     logo: "LR",
     logoBg: "rgba(247,243,238,.10)",
-    logoText: "var(--cream)",
+    logoText: "rgb(var(--cream-rgb))",
     name: <>A national LGBTQ+ rights organisation</>,
     nameText: "A national LGBTQ+ rights organisation",
     tagline:
@@ -348,7 +348,7 @@ const PROFILES: CompanyProfile[] = [
     slug: "opus-diversus",
     logo: "OD",
     logoBg: "rgba(247,243,238,.10)",
-    logoText: "var(--cream)",
+    logoText: "rgb(var(--cream-rgb))",
     name: <>Opus Diversus</>,
     nameText: "Opus Diversus",
     tagline:
@@ -462,7 +462,7 @@ const PROFILES: CompanyProfile[] = [
     slug: "livraria-devagar",
     logo: "LD",
     logoBg: "rgba(247,243,238,.10)",
-    logoText: "var(--cream)",
+    logoText: "rgb(var(--cream-rgb))",
     name: <>Livraria Devagar</>,
     nameText: "Livraria Devagar",
     tagline:
@@ -565,7 +565,7 @@ const PROFILES: CompanyProfile[] = [
     slug: "queerpulse",
     logo: "QP",
     logoBg: "rgba(247,243,238,.10)",
-    logoText: "var(--cream)",
+    logoText: "rgb(var(--cream-rgb))",
     name: (
       <>
         Queer<em>Pulse</em>

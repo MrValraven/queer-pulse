@@ -109,7 +109,7 @@
   font-weight: 700;
   font-size: var(--text-16-5);
   line-height: 1.5;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
 }
 .a {
@@ -152,7 +152,7 @@
   font-family: var(--serif);
   font-size: var(--text-32);
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1;
   letter-spacing: -0.02em;
 }

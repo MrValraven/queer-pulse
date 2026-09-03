@@ -95,7 +95,15 @@ export default defineConfig({
         scope: "/",
         display: "standalone",
         theme_color: "#2d1b3d",
-        background_color: "#f7f3ee",
+        // The ground the OS draws the launch screen on before any JS runs:
+        // Android/Chrome generates its splash from this plus the 512 icon, and
+        // iOS falls back to the same treatment on a device whose CSS size
+        // matches none of index.html's apple-touch-startup-image queries.
+        // This was --cream (#f7f3ee), which is what produced the abrupt
+        // cream-disc launch screen on an installed app — the OS frame opened on
+        // cream and the app then painted on plum. Kept equal to --plum so the
+        // OS frame IS the first frame of the AppLaunch boot sequence.
+        background_color: "#2d1b3d",
         // Discoverable in app stores / install dialogs that surface categories.
         categories: ["social", "lifestyle"],
         // Long-press / jump-list quick actions from the installed icon. Paths

@@ -17,7 +17,7 @@
   border: 0;
   border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-13);
   cursor: pointer;
 }

@@ -8,6 +8,11 @@ import type { Catalog } from "../../types";
  * that file's comments for which component each section belongs to.
  */
 export const shared: Catalog = {
+  "appLaunch.ariaLabel": "A abrir a QueerPulse",
+  "appLaunch.tagline": "Uma rede queer, com raízes em Lisboa",
+  "appLaunch.greeting": "{greeting}, <em>{name}</em>",
+  "appLaunch.stillConnecting": "A ligar…",
+  "appLaunch.offline": "Estás offline. A mostrar o teu feed guardado.",
   "brand.wordmark": "Queer<em>Pulse</em>",
 
   "loading.label": "A carregar…",

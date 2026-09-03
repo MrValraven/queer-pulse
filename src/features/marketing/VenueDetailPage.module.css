@@ -30,7 +30,7 @@
 .name {
   font-family: var(--serif);
   font-size: var(--text-title);
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 12px;
 }
 .sub {

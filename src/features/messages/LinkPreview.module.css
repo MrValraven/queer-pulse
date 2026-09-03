@@ -67,7 +67,7 @@
   white-space: nowrap;
 }
 .cardReceived .site {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .cardSent .site {
   color: var(--accent);

@@ -72,7 +72,7 @@
   border: 0;
   border-radius: var(--radius-avatar);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-20);
   line-height: 1;
   cursor: pointer;
@@ -261,7 +261,7 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -277,7 +277,7 @@
   border: 0;
   border-radius: var(--radius-avatar);
   background: rgba(var(--cream-rgb), 0.12);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-15);
   line-height: 1;
   cursor: pointer;
@@ -319,7 +319,7 @@
 }
 @media (hover: hover) {
   .endHint a:hover {
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 

@@ -25,7 +25,7 @@
 }
 .badge {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-12);
   font-weight: 700;
   border-radius: var(--radius-pill);

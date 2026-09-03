@@ -159,6 +159,24 @@
   transform-origin: bottom left;
 }
 
+/* Leaving. Opacity only, and shorter than the entrance: the entrance tells the
+   eye where the panel came from, while on the way out the member has already
+   decided and the panel is covering what they want to look at. Reversing the
+   entrance's translate/scale would read as the panel retracting into the
+   avatar, pulling the eye back to the thing they just dismissed.
+
+   Must come after `.menu`: same specificity, so source order decides which
+   `animation` shorthand wins. The duration mirrors MENU_EXIT_MS in
+   AccountMenu.tsx, which owns the unmount. `pointer-events` so a second click
+   during the fade lands on the page underneath rather than on a panel that is
+   already on its way out. Reduced motion is covered by the global
+   animation-duration override in tokens/effects.css, and MENU_EXIT_MS drops to
+   zero there too, so nothing waits on it. */
+.menuClosing {
+  animation: qpMenuOut 90ms var(--ease-in) forwards;
+  pointer-events: none;
+}
+
 /* Pinned identity header — stays visible while the list scrolls. */
 .header {
   flex-shrink: 0;
@@ -398,5 +416,13 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* No `from`: the panel leaves from wherever it currently is, so a dismissal
+   mid-entrance fades from that partial opacity instead of snapping to 1. */
+@keyframes qpMenuOut {
+  to {
+    opacity: 0;
   }
 }

@@ -157,7 +157,7 @@
   flex: 1;
 }
 .venueLink {
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
 }

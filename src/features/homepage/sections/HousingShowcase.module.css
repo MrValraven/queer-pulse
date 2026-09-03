@@ -196,7 +196,7 @@ span.lt {
 }
 .lt.on {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .lstNote {
   margin-left: auto;
@@ -239,7 +239,7 @@ span.lt {
   padding: 7px 12px;
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.82);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   backdrop-filter: var(--blur-md);
 }
 .chipAccent {
@@ -257,7 +257,7 @@ span.lt {
   font-weight: 400;
   line-height: 1.14;
   letter-spacing: var(--ls-heading);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .roomMeta {
   font-family: var(--sans);
@@ -445,7 +445,7 @@ span.lt {
 .emptyTitle {
   font-family: var(--serif);
   font-size: var(--text-19);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .emptyBody {
   font-family: var(--sans);

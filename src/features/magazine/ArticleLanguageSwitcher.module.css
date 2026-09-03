@@ -64,7 +64,7 @@
 /* The language on screen. Filled rather than outlined so the reader can see
    at a glance which one they are in. */
 .current {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: var(--plum);
   border: 1px solid var(--plum);
 }

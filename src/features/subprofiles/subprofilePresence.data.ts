@@ -3,13 +3,20 @@ import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 
 /** accent key → CSS custom-property values applied inline on the persona hero.
  *  `tint` is the accent color; `on` is a readable foreground for text on `tint`.
- *  All pairs are chosen to pass WCAG AA in light + dark. */
+ *
+ *  Every `tint` here is a fixed brand colour that does NOT flip between themes,
+ *  so its foreground must not flip either. `--cream` and `--ink` both DO flip,
+ *  which is why the family pill on the personas directory went unreadable in
+ *  dark mode: cream on the plum pill resolved to near-black on near-black.
+ *  `--cream-rgb` and `--ink-surface` are the non-flipping counterparts the
+ *  token file publishes for exactly this, and carry the identical light-mode
+ *  values, so this is a no-op in light and a fix in dark. */
 export const ACCENT_TOKENS: Record<AccentKey, { tint: string; on: string }> = {
-  plum: { tint: "var(--plum)", on: "var(--cream)" },
-  coral: { tint: "var(--accent)", on: "var(--cream)" },
-  jade: { tint: "var(--jade)", on: "var(--ink)" },
-  amber: { tint: "var(--amber)", on: "var(--ink)" },
-  violet: { tint: "var(--violet)", on: "var(--cream)" },
+  plum: { tint: "var(--plum)", on: "rgb(var(--cream-rgb))" },
+  coral: { tint: "var(--accent)", on: "rgb(var(--cream-rgb))" },
+  jade: { tint: "var(--jade)", on: "var(--ink-surface)" },
+  amber: { tint: "var(--amber)", on: "var(--ink-surface)" },
+  violet: { tint: "var(--violet)", on: "rgb(var(--cream-rgb))" },
 };
 
 /** Inline style setting BOTH accent custom properties (`--accent-tint` +

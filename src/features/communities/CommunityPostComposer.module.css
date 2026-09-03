@@ -40,13 +40,13 @@
   top: 4px;
   right: 4px;
   background: rgba(var(--plum-rgb), 0.72);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: 50%;
 }
 @media (hover: hover) {
   .stagedImageRemove:hover:not(:disabled) {
     background: rgba(var(--plum-rgb), 0.88);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 

@@ -1024,7 +1024,7 @@
   padding: 2px 9px;
   font-size: var(--text-11);
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.08);
   border-radius: var(--radius-pill);
 }

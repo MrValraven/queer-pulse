@@ -46,8 +46,17 @@ function BackChevronIcon() {
 function Brand({ to }: { to: string }) {
   return (
     <Link to={to} className={styles.brand}>
-      <span className={styles.pulseDot} aria-hidden />
-      <span>
+      {/* The two `data-launch-target` hooks are the destination of the
+          installed-app boot sequence's exit: its pulse flies into this dot and
+          its wordmark shrinks into this text (features/system/AppLaunch).
+          Stable attributes rather than these hashed CSS-module class names, so
+          that component can find them without importing this stylesheet. */}
+      <span
+        className={styles.pulseDot}
+        data-launch-target="brand-dot"
+        aria-hidden
+      />
+      <span data-launch-target="brand-wordmark">
         <Translation
           i18nKey="shared:brand.wordmark"
           components={{ em: <span className={styles.brandItalic} /> }}

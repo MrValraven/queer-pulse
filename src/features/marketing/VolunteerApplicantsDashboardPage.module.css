@@ -9,12 +9,12 @@
 }
 
 .sub {
-  color: rgba(var(--plum-rgb), 0.68);
+  color: rgba(var(--ink-rgb), 0.68);
   margin: 0 0 2rem;
 }
 
 .altText {
-  color: rgba(var(--plum-rgb), 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
 }
 
 .grid {
@@ -57,7 +57,7 @@
 
 .oppOrg {
   font-size: var(--text-13-5);
-  color: rgba(var(--plum-rgb), 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
 }
 
 .oppPendingTag {
@@ -98,14 +98,14 @@
 
 .applicantNote {
   margin: 0.35rem 0 0;
-  color: rgba(var(--plum-rgb), 0.75);
+  color: rgba(var(--ink-rgb), 0.75);
 }
 
 .applicantMeta {
   display: block;
   margin-top: 0.35rem;
   font-size: var(--text-caption);
-  color: rgba(var(--plum-rgb), 0.55);
+  color: rgba(var(--ink-rgb), 0.55);
 }
 
 .applicantActions {
@@ -128,7 +128,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(var(--plum-rgb), 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
 }
 
 .completionControls {
@@ -149,7 +149,7 @@
 .completionWhy {
   margin: 0.7rem 0 0;
   font-size: var(--text-caption);
-  color: rgba(var(--plum-rgb), 0.55);
+  color: rgba(var(--ink-rgb), 0.55);
 }
 
 .completionError {
@@ -171,5 +171,5 @@
   display: block;
   margin-top: 0.7rem;
   font-size: var(--text-13-5);
-  color: rgba(var(--plum-rgb), 0.55);
+  color: rgba(var(--ink-rgb), 0.55);
 }

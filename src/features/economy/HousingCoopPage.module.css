@@ -171,7 +171,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-38);
-  color: rgba(var(--plum-rgb), 0.16);
+  color: rgba(var(--ink-rgb), 0.16);
   letter-spacing: -0.02em;
   line-height: 1;
   font-style: italic;

@@ -246,7 +246,7 @@ export function useThreadPageState() {
         parentPostId,
         avatar: profile.initials,
         background: "var(--plum)",
-        color: "var(--cream)",
+        color: "rgb(var(--cream-rgb))",
         // Translated, and flagged `isMine` so ownership never depends on the
         // rendered string (a "You" comparison broke in every other language).
         name: t("forum:author.you"),

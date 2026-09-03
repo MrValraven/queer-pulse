@@ -30,6 +30,9 @@
  *                    --section-y-lg
  *   border colour  → --line-rgb (and the ready-made --line, --line-2,
  *                    --line-strong) in tokens/colors.css
+ *   text colour    → --text-strong for plum-coloured type, rgba(var(--ink-rgb),
+ *                    …) for faint type, and rgba(var(--cream-rgb), …) for type
+ *                    sitting on a locked-dark fill
  *
  * WHAT COUNTS AS A VIOLATION
  *
@@ -54,6 +57,20 @@
  *                  see verticalPaddingParts() below. 48px is the floor because
  *                  below it the number is component padding, not the space
  *                  between sections, and this scale is only about the latter.
+ *   non-flipping-  a `color` reading --plum, --plum-deep, --plum-rgb or --cream.
+ *   text           The first three never flip, so such type stays near-black on
+ *                  the dark page; --cream flips the WRONG way, to near-black, so
+ *                  cream type on a locked-dark fill vanishes there too. This is
+ *                  the bug that made 187 labels unreadable in dark mode before
+ *                  the 2026-09-03 sweep, and nothing was watching for it: the
+ *                  gate below guarded EDGES built on --plum-rgb and no more.
+ *                  A var() FALLBACK position is not counted. `var(--ink-60,
+ *                  rgba(var(--plum-rgb), 0.6))` only reaches the fallback if the
+ *                  primary is undefined, which is a different bug from this one.
+ *                  Genuine exceptions exist: type on a ground that is light in
+ *                  BOTH themes (a cream card skin, a coral or amber fill) must
+ *                  stay dark. Mark those in a comment on, or within the six
+ *                  lines above, the declaration. See NON_FLIPPING_TEXT_ALLOW.
  *   plum-border    a border or outline colour reading `var(--plum-rgb)`.
  *                  Checked BEFORE the var() strip, because here the var()
  *                  reference IS the bug: --plum-rgb never flips, so such a
@@ -73,10 +90,17 @@
  *                       scale went rem: every rem the app needs is now a token,
  *                       and a hand-written one (`0.85rem` = 13.6px) is the
  *                       second unit system this gate exists to keep out.
- *   plum backgrounds,   NOT flagged, and must not be. `background`, `color`,
- *   fills, shadows      `box-shadow` and gradients read --plum-rgb on purpose:
- *                       they are meant to stay plum in both themes. Only an
- *                       EDGE has to flip.
+ *   plum backgrounds,   NOT flagged, and must not be. `background`, `box-shadow`
+ *   fills, shadows      and gradients read --plum-rgb on purpose: they are meant
+ *                       to stay plum in both themes. Only an EDGE, and the TYPE
+ *                       sitting on it, has to flip.
+ *   fill / stroke,      left alone. A plum `stroke` on a spot illustration or a
+ *   text-decoration-    graph axis is usually decorative, often inside an SVG
+ *   color, scrollbar-   carrying its own ground, and there are ~29 in the tree
+ *   color               that would need judging one at a time. Underline and
+ *                       scrollbar colours built on --plum-rgb are the same
+ *                       defect as plum-border, but they are chrome rather than
+ *                       letters. Both are real debt; neither is gated yet.
  *   padding under 48px, horizontal padding of any size, and the single-value
  *                       `padding: Npx` shorthand (see verticalPaddingParts).
  *                       Gutters are --wrap-px and the --gap-* set.
@@ -133,6 +157,11 @@ const CATEGORIES = [
     id: "section-padding",
     label: "literal vertical section padding (>= 48px)",
     fix: "use a --section-y-* step from tokens/spacing.css (48 to 128 on an 8px grid, then 144/160/180/200)",
+  },
+  {
+    id: "non-flipping-text",
+    label: "text colour that does not flip in dark mode",
+    fix: "use --text-strong for plum type (identical in light), rgba(var(--ink-rgb), …) for faint type, or rgba(var(--cream-rgb), …) for type on a locked-dark fill",
   },
   {
     id: "plum-border",
@@ -198,6 +227,26 @@ const PADDING_PROPERTY =
 // A border or outline whose COLOUR is the one that must flip in dark mode.
 // Deliberately not `background`, `color`, `box-shadow` or a gradient: those read
 // --plum-rgb on purpose, because they are supposed to stay plum.
+// The type whose colour has to follow the theme. Only `color` and its
+// -webkit alias: `fill`/`stroke` are usually decorative SVG (see the header),
+// and `text-decoration-color` is an edge, not a letter.
+const FLIPPING_TEXT_PROPERTY = /^(?:color|-webkit-text-fill-color)$/;
+// --plum / --plum-deep / --plum-rgb never flip, so type built on them stays
+// near-black on the dark page. --cream flips the WRONG way for type, to
+// near-black, so cream type on a locked-dark fill vanishes there.
+const NON_FLIPPING_TEXT_VALUE =
+  /var\(\s*--(?:plum-deep|plum-rgb|plum|cream)\s*[,)]/;
+// A var() FALLBACK is not this bug: `var(--ink-60, rgba(var(--plum-rgb), 0.6))`
+// only reaches the plum if --ink-60 is undefined, which never happens for a
+// global token. Detected as "a var() whose first argument is followed by a
+// comma", which is the only shape a fallback can take.
+const HAS_VAR_FALLBACK = /var\(\s*--[\w-]+\s*,/;
+// Opt-out for the genuine exception: type on a ground that is light in BOTH
+// themes (a cream card skin, a coral or amber fill) must stay dark, and
+// --text-strong would flip it to light ink and make it vanish there instead.
+const NON_FLIPPING_TEXT_ALLOW = "css-scale-allow: non-flipping-text";
+const NON_FLIPPING_TEXT_ALLOW_REACH = 6;
+
 const FLIPPING_EDGE_PROPERTY =
   /^(?:border|border-top|border-right|border-bottom|border-left|border-block|border-inline|border-(?:top|right|bottom|left|block|inline)(?:-start|-end)?|border-color|border-[a-z-]+-color|outline|outline-color)$/;
 const SECTION_PADDING_FLOOR = 48;
@@ -271,6 +320,16 @@ function classify(property, rawValue) {
     return "plum-border";
   }
 
+  // Same reasoning, and the same reason it runs before the strip: the var()
+  // reference IS the violation.
+  if (
+    FLIPPING_TEXT_PROPERTY.test(property) &&
+    NON_FLIPPING_TEXT_VALUE.test(rawValue) &&
+    !HAS_VAR_FALLBACK.test(rawValue)
+  ) {
+    return "non-flipping-text";
+  }
+
   const value = stripVarCalls(rawValue).trim();
 
   if (property === "font-size") {
@@ -323,7 +382,26 @@ for (const file of walk(sourceDirectory)) {
 
   // Strip comments first: this repo writes long explanatory comments in its
   // stylesheets, and several of them quote the very literals being retired.
-  const text = readFileSync(file, "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  // Blanked to spaces rather than deleted, so every offset and line number
+  // still lines up with the file on disk. The old outright deletion pulled
+  // later lines upward and mis-reported every sample below a block comment.
+  const raw = readFileSync(file, "utf8");
+  const text = raw.replace(/\/\*[\s\S]*?\*\//g, (comment) =>
+    comment.replace(/[^\n]/g, " "),
+  );
+
+  // Lines carrying the non-flipping-text opt-out. Read from `raw`, since the
+  // marker lives in the very comments blanked out above.
+  const allowLines = new Set();
+  raw.split("\n").forEach((line, index) => {
+    if (line.includes(NON_FLIPPING_TEXT_ALLOW)) allowLines.add(index + 1);
+  });
+  const isAllowed = (line) => {
+    for (let above = 0; above <= NON_FLIPPING_TEXT_ALLOW_REACH; above += 1) {
+      if (allowLines.has(line - above)) return true;
+    }
+    return false;
+  };
 
   for (const match of text.matchAll(DECLARATION)) {
     const property = match[1].toLowerCase();
@@ -331,13 +409,20 @@ for (const file of walk(sourceDirectory)) {
     const category = classify(property, value);
     if (!category) continue;
 
+    // Anchored on the VALUE, not on match.index: DECLARATION starts at the
+    // preceding `;`/`{`/`}`, which for the first declaration in a rule sits on
+    // the selector line, ABOVE any comment between the two. That put the line
+    // number before the opt-out marker rather than after it.
+    const valueOffset = match.index + match[0].length - match[2].length;
+    const line = text.slice(0, valueOffset).split("\n").length;
+    if (category === "non-flipping-text" && isAllowed(line)) continue;
+
     countByCategory.set(category, countByCategory.get(category) + 1);
     const perFile = filesByCategory.get(category);
     perFile.set(relativePath, (perFile.get(relativePath) ?? 0) + 1);
 
     const samples = samplesByCategory.get(category);
     if (samples.length < 6) {
-      const line = text.slice(0, match.index).split("\n").length;
       samples.push(
         `${relativePath}:${line}  ${property}: ${value.replace(/\s+/g, " ").slice(0, 80)}`,
       );

@@ -127,7 +127,7 @@
   place-items: center;
   border-radius: var(--radius-12);
   background: var(--danger);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .emergIco svg {
   width: 20px;
@@ -1223,7 +1223,7 @@ button.reportMain:focus-visible {
 }
 .decOverturnOn .decIco {
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .decOverturnOn .decTitle {
   color: var(--jade);

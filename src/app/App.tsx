@@ -52,6 +52,7 @@ import { ConsentPreferencesGate } from "../shared/components/consent/ConsentPref
 import { PolicyReacceptanceGate } from "../features/auth/PolicyReacceptanceGate";
 import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { OfflineGate } from "../features/system/OfflineGate";
+import { AppLaunch } from "../features/system/AppLaunch";
 import { ScrollManager } from "./ScrollManager";
 import { RouteAnnouncer } from "./RouteAnnouncer";
 import { AppRoutes } from "./routes";
@@ -198,6 +199,12 @@ export function App() {
             the session to decide which tab destinations to warm at idle, and
             outside BrowserRouter because it needs no router context. */}
         <RoutePrefetcher />
+        {/* The installed-app boot sequence. A sibling of the router, not a
+            child: it has to cover the first route chunk's Suspense rather than
+            be unmounted by it, and it needs no router context. Inert in a
+            browser tab (it reads DisplayModeProvider and renders null), so the
+            web and the prerender pass never see it. */}
+        <AppLaunch />
         <BrowserRouter>
           <ScrollManager />
           {/* Speaks each route change into a polite live region and lands

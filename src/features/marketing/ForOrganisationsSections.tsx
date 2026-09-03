@@ -97,7 +97,7 @@ function OrgTierCtaButton({ cta }: { cta: OrgTier["cta"] }) {
         href="#start"
         variant="primary"
         className={styles.tierBtn}
-        style={{ background: "var(--accent)", color: "var(--cream)" }}
+        style={{ background: "var(--accent)", color: "rgb(var(--cream-rgb))" }}
       >
         {cta.label}
       </Button>

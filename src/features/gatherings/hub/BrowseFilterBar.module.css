@@ -61,7 +61,7 @@
 .chip[aria-pressed="true"] {
   background: var(--plum);
   border-color: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* The split's second column is a 1fr track, so a lone select in it would

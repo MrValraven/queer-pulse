@@ -139,7 +139,10 @@
   margin-top: 14px;
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--plum);
+  /* --text-strong, not --plum: bare plum is a fixed brand colour that does not
+     flip, so this link was near-invisible on the dark page. --text-strong IS
+     --plum in light mode (nothing changes there) and flips to light ink. */
+  color: var(--text-strong);
   text-decoration: none;
 }
 

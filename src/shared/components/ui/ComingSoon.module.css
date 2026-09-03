@@ -8,7 +8,7 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--line-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   white-space: nowrap;

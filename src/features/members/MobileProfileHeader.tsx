@@ -25,7 +25,7 @@ function VerifiedCheck() {
     <svg width={11} height={11} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M5 12.5l4 4L19 7"
-        stroke="var(--cream)"
+        stroke="rgb(var(--cream-rgb))"
         strokeWidth={3.5}
         strokeLinecap="round"
         strokeLinejoin="round"

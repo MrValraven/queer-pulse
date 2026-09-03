@@ -83,7 +83,7 @@
   color: var(--text-strong);
 }
 .pickerOptionOn {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: var(--plum);
   border-color: var(--plum);
 }
@@ -101,6 +101,8 @@
   border-radius: var(--radius-pill);
 }
 .pickerOptionOn .pickerCount {
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
   background: var(--accent);
 }

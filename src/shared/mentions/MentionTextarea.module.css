@@ -56,7 +56,7 @@
   border-radius: 50%;
   object-fit: cover;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-11);
   font-weight: 600;
   flex: 0 0 auto;

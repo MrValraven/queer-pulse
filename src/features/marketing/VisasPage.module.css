@@ -104,7 +104,7 @@
 }
 .routeSel .rcChip {
   background: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .rcName {

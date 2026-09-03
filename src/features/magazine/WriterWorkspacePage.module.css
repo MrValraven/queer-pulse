@@ -102,7 +102,7 @@
 }
 
 .tabButtonActive {
-  color: var(--plum);
+  color: var(--text-strong);
   border-bottom-color: var(--accent);
 }
 

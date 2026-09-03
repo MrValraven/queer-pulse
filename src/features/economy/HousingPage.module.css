@@ -636,7 +636,7 @@
 
 .mapListMeta {
   font-size: var(--text-13);
-  color: rgba(var(--plum-rgb), 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
 }
 
 .loadMoreRow {
@@ -669,5 +669,5 @@
 
 .viewToggleBtnOn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }

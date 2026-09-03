@@ -66,7 +66,7 @@
   border-radius: 50%;
   border: 1px solid rgba(var(--cream-rgb), 0.28);
   background: rgba(var(--cream-rgb), 0.1);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-22);
   cursor: pointer;
   transition: background 0.15s var(--ease);
@@ -98,7 +98,7 @@
 
 .arrow:hover {
   background: rgba(var(--cream-rgb), 0.2);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .left {

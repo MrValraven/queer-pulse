@@ -43,6 +43,11 @@
   /* A blocking full-screen loader, above the skip link because there is
      nothing to skip to while it is up. */
   --z-room-loader: 2000;
+  /* The installed-app boot sequence (features/system/AppLaunch). Above the
+     room loader: on a cold launch in standalone it owns the screen before
+     anything else has painted, and a post-sign-in RoomLoader raised underneath
+     it would be a loader on top of a loader. */
+  --z-app-launch: 2100;
   /* Toasts sit at the very top. See the note above. */
   --z-toast: 9999;
 }

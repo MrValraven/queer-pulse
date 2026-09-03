@@ -394,7 +394,7 @@ a.sbAll:hover {
 .festYear {
   font-family: var(--serif);
   font-size: var(--text-24);
-  color: rgba(var(--plum-rgb), 0.22);
+  color: rgba(var(--ink-rgb), 0.22);
   letter-spacing: -0.02em;
   font-weight: 300;
 }

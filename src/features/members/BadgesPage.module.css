@@ -94,7 +94,7 @@
     var(--plum) 44%,
     var(--plum-deep) 100%
   );
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-30);
   position: relative;
   overflow: hidden;
@@ -134,7 +134,7 @@
     color 0.2s;
 }
 .backLink:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   gap: 13px;
 }
 .heroTitle {
@@ -412,7 +412,7 @@
   font-family: var(--serif);
   font-size: var(--text-19);
   letter-spacing: -0.015em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .rungXp {
   display: block;
@@ -452,7 +452,7 @@
     color 0.2s;
 }
 .rungAll:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   gap: 12px;
 }
 
@@ -826,7 +826,7 @@
 }
 .fchipOn {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .fchipMuted {
   opacity: 0.5;
@@ -1184,7 +1184,7 @@
   padding: 44px 46px;
   position: relative;
   overflow: hidden;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .seasonBand .hdEyebrow {
   color: rgba(var(--cream-rgb), 0.42);
@@ -1193,7 +1193,7 @@
   color: rgba(var(--cream-rgb), 0.56);
 }
 .seasonBand .hdTitle {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .seasons {
   display: grid;
@@ -1226,7 +1226,7 @@
   font-weight: 400;
   font-size: var(--text-20);
   letter-spacing: -0.015em;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .ticket p {
   font-size: var(--text-12-5);
@@ -1372,7 +1372,7 @@
   font-style: italic;
   font-weight: 400;
   font-size: var(--text-19);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   white-space: nowrap;
 }
 
@@ -1757,7 +1757,7 @@
 }
 .earnCard {
   background: linear-gradient(160deg, #3a2553, var(--plum-deep));
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-30);
   padding: var(--section-y-48) 40px 40px;
   text-align: center;
@@ -1811,7 +1811,7 @@
 
 .caseCard {
   background: linear-gradient(165deg, #3a2553, var(--plum-deep));
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-26);
   padding: 34px 30px 26px;
   position: relative;

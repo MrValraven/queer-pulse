@@ -117,7 +117,7 @@
   font-weight: 700;
   letter-spacing: var(--ls-eyebrow, 0.08em);
   text-transform: uppercase;
-  color: rgba(var(--plum-rgb), 0.66);
+  color: rgba(var(--ink-rgb), 0.66);
 }
 
 .useList {

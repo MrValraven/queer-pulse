@@ -249,6 +249,8 @@
   top: 6px;
   right: 6px;
   z-index: 1;
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
   background: rgba(var(--cream-rgb), 0.85);
   border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
@@ -287,6 +289,8 @@
      below is drawn from `currentColor`. Left to inherit, it would pick up the
      surrounding theme ink, which flips, and the border would go back to being
      cream on cream in dark mode. The inner button inherits this too. */
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
   background: rgba(var(--cream-rgb), 0.85);
   border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
@@ -299,6 +303,8 @@
 .pic .reportPhoto button {
   padding: 10px 12px;
   font-size: var(--text-11);
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
 }
 @media (hover: hover) {
@@ -317,6 +323,8 @@
   text-transform: uppercase;
   /* Chip is always light (non-flipping cream channels) over a photo — pin the
      label dark so it doesn't flip to light and vanish in dark mode. */
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
   background: rgba(var(--cream-rgb), 0.85);
   padding: 3px 9px;

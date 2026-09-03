@@ -96,15 +96,24 @@ const markDataUri = `data:image/svg+xml;base64,${markSvg.toString("base64")}`;
  * wildcard: each device needs its own PNG at its exact pixel dimensions.
  */
 const SPLASH_SIZES = [
-  { outputName: "iphone-2796x1290.png", width: 2796, height: 1290 }, // 15/14 Pro Max, landscape
-  { outputName: "iphone-1290x2796.png", width: 1290, height: 2796 }, // 15/14 Pro Max
-  { outputName: "iphone-1179x2556.png", width: 1179, height: 2556 }, // 15/15 Pro/14 Pro
-  { outputName: "iphone-1170x2532.png", width: 1170, height: 2532 }, // 14/13/12
+  { outputName: "iphone-1320x2868.png", width: 1320, height: 2868 }, // 17 Pro Max/16 Pro Max
+  { outputName: "iphone-1206x2622.png", width: 1206, height: 2622 }, // 17/17 Pro/16 Pro
+  { outputName: "iphone-2796x1290.png", width: 2796, height: 1290 }, // 16 Plus/15 Plus/15 Pro Max/14 Pro Max, landscape
+  { outputName: "iphone-1290x2796.png", width: 1290, height: 2796 }, // 16 Plus/15 Plus/15 Pro Max/14 Pro Max
+  { outputName: "iphone-1284x2778.png", width: 1284, height: 2778 }, // 14 Plus/13 Pro Max/12 Pro Max
+  { outputName: "iphone-1179x2556.png", width: 1179, height: 2556 }, // 16/16e/15/15 Pro/14 Pro
+  { outputName: "iphone-1170x2532.png", width: 1170, height: 2532 }, // 14/13/13 Pro/12/12 Pro
   { outputName: "iphone-1125x2436.png", width: 1125, height: 2436 }, // 13 mini/12 mini/11 Pro/X/XS
   { outputName: "iphone-1242x2688.png", width: 1242, height: 2688 }, // 11 Pro Max/XS Max
   { outputName: "iphone-828x1792.png", width: 828, height: 1792 }, // 11/XR
   { outputName: "iphone-750x1334.png", width: 750, height: 1334 }, // SE/8/7/6s
-  { outputName: "ipad-1536x2048.png", width: 1536, height: 2048 }, // common iPad
+  { outputName: "ipad-2048x2732.png", width: 2048, height: 2732 }, // iPad Pro 13"/12.9"
+  { outputName: "ipad-1668x2388.png", width: 1668, height: 2388 }, // iPad Pro 11"
+  { outputName: "ipad-1640x2360.png", width: 1640, height: 2360 }, // iPad Air 11"/10.9"
+  { outputName: "ipad-1668x2224.png", width: 1668, height: 2224 }, // iPad Air 10.5"/Pro 10.5"
+  { outputName: "ipad-1620x2160.png", width: 1620, height: 2160 }, // iPad 10.2"
+  { outputName: "ipad-1536x2048.png", width: 1536, height: 2048 }, // iPad 9.7"
+  { outputName: "ipad-1488x2266.png", width: 1488, height: 2266 }, // iPad mini 8.3"
 ];
 
 /**

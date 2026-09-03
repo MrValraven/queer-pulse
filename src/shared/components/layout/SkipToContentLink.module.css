@@ -10,7 +10,7 @@
   padding: 12px 20px;
   border-radius: var(--radius-pill);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--sans);
   font-size: var(--text-body);
   font-weight: 600;

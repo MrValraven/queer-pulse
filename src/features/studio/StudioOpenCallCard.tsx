@@ -60,7 +60,7 @@ export function StudioOpenCallCard({ call: c }: Props) {
               fontFamily: "var(--serif)",
               fontWeight: 300,
               fontSize: 28,
-              color: "var(--cream)",
+              color: "rgb(var(--cream-rgb))",
             }}
           >
             <em style={{ fontStyle: "normal", color: "var(--accent)" }}>

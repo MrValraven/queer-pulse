@@ -2802,7 +2802,7 @@ button.pp-row {
 .booker h2 {
   font-family: "Anton", var(--sans);
   text-transform: uppercase;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: clamp(1.375rem, 2.8cqw, 2rem);
   margin-bottom: 16px;
 }
@@ -2900,7 +2900,7 @@ button.pp-row {
   font-family: "Instrument Serif", var(--serif);
   font-size: var(--text-34);
   font-weight: 400;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .lb-figure figcaption span {
   font-size: var(--text-13-5);
@@ -2928,7 +2928,7 @@ button.pp-row {
   cursor: pointer;
 }
 .lb-x:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .lb-x:focus-visible {
   outline: var(--focus-ring);
@@ -2946,7 +2946,7 @@ button.pp-row {
   cursor: pointer;
 }
 .lb-arrow:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .lb-arrow:focus-visible {
   outline: var(--focus-ring);

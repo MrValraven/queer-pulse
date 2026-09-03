@@ -261,5 +261,5 @@
 .contributionNote {
   margin: 0.9rem 0 0;
   font-size: var(--text-14-5);
-  color: rgba(var(--plum-rgb), 0.6);
+  color: rgba(var(--ink-rgb), 0.6);
 }

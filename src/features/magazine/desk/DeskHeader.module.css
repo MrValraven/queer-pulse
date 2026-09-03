@@ -83,7 +83,7 @@
   padding: 0;
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .picker .viewingAsSelect > button[aria-expanded="true"] {
   border: none;

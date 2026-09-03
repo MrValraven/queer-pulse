@@ -100,12 +100,12 @@
   line-height: 1.5;
 }
 .editedMark {
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   font-size: 0.85em;
 }
 .tombstone {
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   font-style: italic;
   margin-top: 2px;

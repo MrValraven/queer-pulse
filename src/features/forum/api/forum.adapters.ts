@@ -27,7 +27,7 @@ function numericId(slug: string): number {
 const SOLID: Record<SlugTint, { background: string; color: string }> = {
   coral: { background: "var(--accent)", color: "var(--paper)" },
   jade: { background: "var(--jade)", color: "var(--paper)" },
-  plum: { background: "var(--plum)", color: "var(--cream)" },
+  plum: { background: "var(--plum)", color: "rgb(var(--cream-rgb))" },
 };
 const SOFT: Record<SlugTint, { background: string; color: string }> = {
   coral: { background: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },

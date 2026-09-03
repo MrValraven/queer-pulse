@@ -1,7 +1,7 @@
 .counter {
   font-size: var(--text-12-5);
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
   margin-bottom: 4px;
 }
 
@@ -55,7 +55,7 @@
   border-radius: var(--radius-8);
   font-size: var(--text-14);
   line-height: 1;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   flex: none;
   transition:

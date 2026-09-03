@@ -11,7 +11,7 @@
   border-radius: var(--radius-pill);
   border: none;
   background: transparent;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   touch-action: manipulation;
   transition: background-color 0.15s var(--ease);

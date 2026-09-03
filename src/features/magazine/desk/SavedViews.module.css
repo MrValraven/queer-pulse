@@ -25,7 +25,7 @@
 .chipOn {
   border-style: solid;
   border-color: var(--plum);
-  color: var(--plum);
+  color: var(--text-strong);
   background: var(--wash);
 }
 

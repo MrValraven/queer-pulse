@@ -204,7 +204,7 @@
 @media (hover: hover) and (pointer: fine) {
   .suggestTagTrigger:hover {
     background: none;
-    color: var(--plum);
+    color: var(--text-strong);
   }
 }
 

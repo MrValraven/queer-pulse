@@ -800,7 +800,7 @@
 }
 .openChip {
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .closedChip {
   background: rgba(var(--line-rgb), 0.12);
@@ -1205,7 +1205,7 @@
   font-family: var(--sans);
   font-weight: 700;
   font-size: var(--text-12-5);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .ownerReplyDate {
   font-size: var(--text-12);

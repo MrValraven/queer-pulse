@@ -80,7 +80,7 @@
   position: absolute;
   pointer-events: none;
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-family: var(--sans);
   font-size: var(--text-12);
   line-height: 1.35;

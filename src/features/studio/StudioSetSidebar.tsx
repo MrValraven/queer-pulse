@@ -79,7 +79,10 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           <span>{t("studio:setSubmission.sidebar.tracksInSet")}</span>
           <span
             className="v"
-            style={{ fontFamily: "var(--serif)", color: "var(--cream)" }}
+            style={{
+              fontFamily: "var(--serif)",
+              color: "rgb(var(--cream-rgb))",
+            }}
           >
             {TRACKS.length}
           </span>
@@ -109,7 +112,10 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           <span>{t("studio:setSubmission.sidebar.payoutPool")}</span>
           <span
             className="v"
-            style={{ fontFamily: "var(--serif)", color: "var(--cream)" }}
+            style={{
+              fontFamily: "var(--serif)",
+              color: "rgb(var(--cream-rgb))",
+            }}
           >
             <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
               {fmt.currency(SET_PAYOUT_POOL)}

@@ -61,7 +61,7 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   background: color-mix(in srgb, var(--plum) 82%, transparent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   backdrop-filter: var(--blur-sm);
 }
 

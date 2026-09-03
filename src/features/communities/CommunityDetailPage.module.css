@@ -856,12 +856,12 @@
   display: inline-flex;
 }
 .editedMark {
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   font-size: 0.85em;
 }
 .tombstone {
-  color: var(--plum);
+  color: var(--text-strong);
   opacity: 0.6;
   font-style: italic;
 }

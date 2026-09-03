@@ -318,6 +318,41 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
           "See the prompt inviting members to install QueerPulse as an app.",
         to: routes.pwaPrompt,
       },
+      {
+        id: "app-launch",
+        title: "Opening the installed app",
+        description:
+          "The boot sequence a member sees when they open QueerPulse from their home screen: the mark beating on plum, the wordmark rising, and the handoff into the feed. Normally only reachable on an installed phone.",
+        to: appLaunchPreviewPath({ holdMs: 900 }),
+      },
+      {
+        id: "app-launch-returning",
+        title: "Opening the app as a returning member",
+        description:
+          "The warm start: instead of the slogan, the splash greets you by name for the time of day.",
+        to: appLaunchPreviewPath({ holdMs: 900, name: "Tiago" }),
+      },
+      {
+        id: "app-launch-slow",
+        title: "Opening the app on a slow connection",
+        description:
+          "What the wait looks like when it runs long: the hairline stops pretending to measure, turns into a shimmer, and says it is still connecting.",
+        to: appLaunchPreviewPath({ holdMs: 3400 }),
+      },
+      {
+        id: "app-launch-offline",
+        title: "Opening the app offline",
+        description:
+          "The offline path: the splash says you are offline and about to land on your saved feed, then takes a longer beat before handing over.",
+        to: appLaunchPreviewPath({ holdMs: 2500, isOffline: true }),
+      },
+      {
+        id: "app-launch-pride",
+        title: "Opening the app during Pride",
+        description:
+          "The seasonal variant of the launch screen, which the app picks up from the date on its own. Trans Day of Remembrance and Lisbon summer work the same way.",
+        to: appLaunchPreviewPath({ holdMs: 1400, season: "pride" }),
+      },
     ],
   },
 ];
@@ -334,4 +369,30 @@ export function findSimFlow(id: string): SimFlow | undefined {
  *  query string stays valid. */
 export function withSandboxFlag(path: string): string {
   return `${path}${path.includes("?") ? "&" : "?"}sandbox=1`;
+}
+
+/**
+ * Build a launch-screen preview URL. The boot sequence only runs on a cold
+ * start of the installed app, so these flags are the only way to look at it on
+ * a desktop; they are ignored outside a sandbox or a dev server
+ * (features/system/appLaunchPreview.ts).
+ *
+ * It rides on the feed because that is the screen the sequence hands off TO:
+ * the exit flies its beating mark into the nav bar's live dot, which has to be
+ * really there for the handoff to be worth previewing.
+ */
+export function appLaunchPreviewPath(options: {
+  holdMs: number;
+  name?: string;
+  season?: string;
+  isOffline?: boolean;
+}): string {
+  const params = new URLSearchParams({
+    launch: "preview",
+    launchHold: String(options.holdMs),
+  });
+  if (options.name) params.set("launchName", options.name);
+  if (options.season) params.set("launchSeason", options.season);
+  if (options.isOffline) params.set("launchOffline", "1");
+  return `${routes.feed}?${params.toString()}`;
 }

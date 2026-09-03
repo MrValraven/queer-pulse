@@ -204,7 +204,7 @@
   padding: 3px 9px;
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.08);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .committedBadge svg {
   width: 11px;

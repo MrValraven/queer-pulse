@@ -46,7 +46,7 @@
 .name {
   font-family: var(--serif);
   font-size: var(--text-18);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .message {

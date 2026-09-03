@@ -64,7 +64,7 @@
 .bubbleAuthor {
   font-size: var(--text-12);
   font-weight: 700;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .bubbleTime {

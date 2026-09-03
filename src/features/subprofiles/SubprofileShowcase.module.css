@@ -466,7 +466,7 @@ a.featuredStripLink:focus-visible {
 }
 .chip[aria-pressed="true"] {
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--plum);
 }
 .chip:focus-visible {

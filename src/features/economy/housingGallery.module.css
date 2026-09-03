@@ -57,7 +57,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(var(--plum-rgb), 0.55);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 700;
   font-size: var(--text-18);
 }
@@ -97,7 +97,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   padding-inline: 8px;
   min-height: 44px;
 }
@@ -115,7 +115,7 @@
   border-radius: var(--radius-pill);
   border: none;
   background: transparent;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   cursor: pointer;
   font-size: var(--text-22);
 }
@@ -150,7 +150,7 @@
   aspect-ratio: 3 / 2;
   border-radius: var(--radius-card);
   background: rgba(var(--cream-rgb), 0.08);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
   padding: 24px;
   text-align: center;

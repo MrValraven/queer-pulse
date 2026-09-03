@@ -192,7 +192,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-heading);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .emptyTitle em {
   font-style: italic;

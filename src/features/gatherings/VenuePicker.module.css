@@ -59,7 +59,7 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
 }
 @media (hover: hover) {
@@ -151,7 +151,7 @@
 }
 .linkedIcon {
   flex-shrink: 0;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .linkedBody {
   flex: 1;
@@ -178,7 +178,7 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
 }
 @media (hover: hover) {

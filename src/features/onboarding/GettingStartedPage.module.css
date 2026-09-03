@@ -73,7 +73,7 @@
   padding: 28px 24px 24px;
   margin-block-end: 20px;
   text-align: center;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   /* Lifted plum -> plum -> deep plum. The top stop is derived from the token
      rather than a hand-copied literal, so it follows a brand change. */
   background: linear-gradient(

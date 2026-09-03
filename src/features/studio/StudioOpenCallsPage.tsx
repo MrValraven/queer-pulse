@@ -130,7 +130,7 @@ export function StudioOpenCallsPage() {
                           fontFamily: "var(--serif)",
                           fontWeight: 300,
                           fontSize: 28,
-                          color: "var(--cream)",
+                          color: "rgb(var(--cream-rgb))",
                         }}
                       >
                         <em

@@ -13,6 +13,10 @@ interface DeviceFrameProps {
    *  simulation iframe. The sandbox iframe is same-origin, so the parent can
    *  attach a keydown listener directly to its contentWindow. */
   onEscape?: () => void;
+  /** Bumped to replay: it joins the iframe's key, so a change tears the old
+   *  instance down and boots a fresh one. The only way to watch a one-shot
+   *  flow (the launch sequence) more than once without reloading the page. */
+  replayKey?: number;
 }
 
 type Status = "loading" | "ready" | "error";
@@ -34,10 +38,11 @@ export function DeviceFrame({
   title,
   device,
   onEscape,
+  replayKey = 0,
 }: DeviceFrameProps) {
   const { t } = useTranslation();
   const [loadState, setLoadState] = useState<LoadState | null>(null);
-  const frameKey = `${device}:${src}`;
+  const frameKey = `${device}:${src}:${replayKey}`;
   const status: Status =
     loadState && loadState.key === frameKey ? loadState.status : "loading";
 

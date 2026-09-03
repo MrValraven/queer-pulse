@@ -94,6 +94,6 @@
 .threadLink {
   font-size: var(--text-14);
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   text-decoration: underline;
 }

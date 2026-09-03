@@ -26,6 +26,8 @@
 }
 .badge:hover {
   background: var(--amber);
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
   border-color: var(--amber);
   transform: translateY(calc(var(--drop) - 1px));
@@ -48,6 +50,6 @@
 }
 .unlocked:hover {
   background: var(--jade);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   border-color: var(--jade);
 }

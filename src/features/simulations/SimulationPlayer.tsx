@@ -5,6 +5,7 @@ import {
   FiSmartphone,
   FiMonitor,
   FiExternalLink,
+  FiRotateCcw,
 } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -25,6 +26,10 @@ export function SimulationPlayer() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const [device, setDevice] = useState<Device>("desktop");
+  // Boots a fresh instance in the frame. Anything that plays once and is then
+  // over — the launch sequence above all — is otherwise unwatchable a second
+  // time without reloading the whole page.
+  const [replayKey, setReplayKey] = useState(0);
   const navigate = useNavigate();
 
   // Esc returns to the gallery. This covers focus on the player chrome
@@ -104,6 +109,13 @@ export function SimulationPlayer() {
             <FiMonitor aria-hidden /> {t("simulations:player.desktop")}
           </button>
         </div>
+        <button
+          type="button"
+          className={styles.deviceBtn}
+          onClick={() => setReplayKey((previous) => previous + 1)}
+        >
+          <FiRotateCcw aria-hidden /> {t("simulations:player.replay")}
+        </button>
         <a
           href={withSandboxFlag(flow.to)}
           target="_blank"
@@ -118,6 +130,7 @@ export function SimulationPlayer() {
         src={withSandboxFlag(flow.to)}
         title={flow.title}
         device={device}
+        replayKey={replayKey}
         onEscape={() => void navigate(routes.simulations)}
       />
     </div>

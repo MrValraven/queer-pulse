@@ -126,7 +126,7 @@ function FeaturedEmpty({ onReset }: { onReset: () => void }) {
         style={{
           fontFamily: "var(--serif)",
           fontSize: 22,
-          color: "var(--cream)",
+          color: "rgb(var(--cream-rgb))",
           marginBottom: 8,
         }}
       >

@@ -45,7 +45,7 @@
 }
 
 .grab:hover {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .pt {
@@ -56,7 +56,7 @@
   font-family: var(--serif);
   font-size: var(--text-16);
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -99,7 +99,7 @@
 }
 
 .iconButton:hover:not(:disabled) {
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .iconButton:disabled {
@@ -163,7 +163,7 @@
   flex-direction: column;
   gap: 6px;
   background: linear-gradient(transparent, rgba(var(--plum-rgb), 0.86) 42%);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .coverlines .ct {
@@ -224,7 +224,7 @@
   font-family: var(--serif);
   font-size: var(--text-15);
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 /* digest & social, archive (Task 7: DigestSocialTab / ArchiveTab) — added
@@ -253,7 +253,7 @@
   font-family: var(--serif);
   font-size: var(--text-16);
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   margin: 0 0 2px;
 }
 
@@ -294,7 +294,7 @@
 .ck[aria-checked="true"] {
   background: var(--plum);
   border-color: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .ck svg {
@@ -332,7 +332,7 @@
 .socialcard b {
   font-size: var(--text-15);
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
   line-height: 1.2;
   font-family: var(--serif);
 }
@@ -360,7 +360,7 @@
   font-family: var(--serif);
   font-size: var(--text-16);
   font-weight: 400;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .simBody {

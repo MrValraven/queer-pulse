@@ -194,7 +194,7 @@
   font-family: var(--sans);
   font-weight: 700;
   font-size: var(--text-12-5);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .answerModerator .answerBy {
   color: var(--jade-ink);

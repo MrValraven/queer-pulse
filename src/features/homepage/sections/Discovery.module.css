@@ -184,7 +184,7 @@
 /* ── Featured portrait (left) ── */
 .featPhoto {
   position: relative;
-  min-height: 300px;
+  min-height: 260px;
   overflow: hidden;
   background: var(--tbg);
 }
@@ -286,14 +286,15 @@
   font-size: clamp(1.0625rem, 1.7vw, 1.1875rem);
   line-height: 1.5;
   color: var(--ink-60);
-  margin: 16px 0 0;
+  margin: 14px 0 0;
   max-width: 42ch;
   /* The card's height is fixed by the grid (`.featCol` stretches `.feat` to the
-     member stack beside it), so quote length can't make the card jump — every
+     member stack beside it), so quote length can't make the card jump: every
      carousel slide already shares that one height. Let the quote grow up to 8
-     lines to fill the space the stretched card gives us instead of cutting off
-     mid-thought, with a 6-line floor so short quotes still hold a tidy box. */
-  min-height: calc(1.5em * 6);
+     lines instead of cutting off mid-thought, over a 2-line floor. A taller
+     floor reserved lines a short quote never uses, which read as a hole
+     between the quote and the tags. */
+  min-height: calc(1.5em * 2);
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 8;
@@ -301,8 +302,8 @@
   overflow: hidden;
 }
 .featTags {
-  margin-top: 16px;
-  margin-bottom: 12px;
+  margin-top: 14px;
+  margin-bottom: 10px;
 }
 .featFoot {
   display: flex;
@@ -311,7 +312,7 @@
   gap: 14px;
   flex-wrap: wrap;
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .vouch {

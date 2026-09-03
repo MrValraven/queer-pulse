@@ -101,7 +101,7 @@
   height: 28px;
   border-radius: var(--radius-8);
   background: var(--wash);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 
 .rowLabel {

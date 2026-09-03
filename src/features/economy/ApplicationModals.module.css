@@ -652,7 +652,7 @@
   animation: riseIn 0.5s var(--ease) 0.4s both;
 }
 .successLink:hover {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 .undoBar {
   display: inline-flex;

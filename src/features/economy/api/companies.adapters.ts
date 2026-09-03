@@ -19,7 +19,7 @@ import type { TFunction } from "../../../shared/i18n/types";
 
 // Prototype-only dark-cover logo colours used for live/API-sourced companies.
 const LOGO_BG = "rgba(247,243,238,.10)";
-const LOGO_TEXT = "var(--cream)";
+const LOGO_TEXT = "rgb(var(--cream-rgb))";
 
 /** A row for the JobsPage employers grid — unifies the mock EMPLOYERS shape
  *  (plus a resolved `slug`) with what a live company card can supply. */

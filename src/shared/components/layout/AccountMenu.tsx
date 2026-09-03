@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiLogOut, FiChevronDown } from "react-icons/fi";
 import { Avatar, Tooltip } from "../ui";
@@ -11,8 +11,9 @@ import { routes } from "../../../app/routeMap";
 import { isComingSoonLink } from "../../../app/authGate";
 import { useTeamRole, type TeamRole } from "../../../features/admin/adminRole";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { useTranslation } from "../../i18n/useTranslation";
-import { useOutsideDismiss } from "../../hooks";
+import { useExitTransition, useOutsideDismiss } from "../../hooks";
 import {
   ACCOUNT_GROUPS,
   HEADER_ACTIONS,
@@ -24,6 +25,10 @@ import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
 import styles from "./AccountMenu.module.css";
+
+/** How long the panel lingers to fade out after a dismissal, ms. Mirrors the
+ * `.menuClosing` animation in AccountMenu.module.css. */
+const MENU_EXIT_MS = 90;
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
 export function AccountMenu({
@@ -52,15 +57,38 @@ export function AccountMenu({
   const { role, setRole, canSwitch } = useTeamRole();
   const { navMode, setNavMode } = useNavMode();
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const [open, setOpen] = useState(false);
+  // Which close is running decides whether the panel gets its fade. Dismissal
+  // (outside press, Escape, the chevron) fades; a click that NAVIGATES unmounts
+  // at once, so a fading panel is never sitting over a page that is already
+  // changing underneath it. Reduced motion skips the fade on every path.
+  const [exitMs, setExitMs] = useState(0);
+  const { isMounted, isExiting } = useExitTransition(open, exitMs);
   const ref = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
+  const dismissMenu = useCallback(() => {
+    setExitMs(reducedMotion ? 0 : MENU_EXIT_MS);
+    setOpen(false);
+  }, [reducedMotion]);
+
+  const closeMenuForNavigation = useCallback(() => {
+    setExitMs(0);
+    setOpen(false);
+  }, []);
+
+  const toggleMenu = useCallback(() => {
+    if (open) dismissMenu();
+    else setOpen(true);
+  }, [open, dismissMenu]);
+
   // The shared hook this menu is named after in its own doc comment. Escape
-  // closes and restores focus to the trigger.
-  useOutsideDismiss(open, ref, () => setOpen(false), {
+  // closes and restores focus to the trigger. Keyed on `open`, so a panel
+  // already fading out no longer listens.
+  useOutsideDismiss(open, ref, dismissMenu, {
     onEscape: () => {
-      setOpen(false);
+      dismissMenu();
       triggerRef.current?.focus();
     },
   });
@@ -75,7 +103,7 @@ export function AccountMenu({
             ref={triggerRef}
             type="button"
             className={styles.railMain}
-            onClick={() => setOpen((o) => !o)}
+            onClick={toggleMenu}
             aria-expanded={open}
           >
             <Avatar
@@ -91,7 +119,7 @@ export function AccountMenu({
             <button
               type="button"
               className={styles.railMini}
-              onClick={() => setOpen((o) => !o)}
+              onClick={toggleMenu}
               aria-expanded={open}
               aria-label={t("shared:accountMenu.ariaLabel")}
             >
@@ -109,7 +137,7 @@ export function AccountMenu({
           ref={triggerRef}
           type="button"
           className={styles.trigger}
-          onClick={() => setOpen((o) => !o)}
+          onClick={toggleMenu}
           aria-expanded={open}
         >
           <Avatar
@@ -129,8 +157,9 @@ export function AccountMenu({
         </button>
       )}
 
-      {open && (
+      {isMounted && (
         <AccountMenuPanel
+          isExiting={isExiting}
           name={name}
           photo={photo ?? undefined}
           initials={initials}
@@ -143,7 +172,7 @@ export function AccountMenu({
           demoMode={demoMode}
           available={available}
           toggle={toggle}
-          onClose={() => setOpen(false)}
+          onClose={closeMenuForNavigation}
           onSignOut={signOut}
         />
       )}
@@ -155,6 +184,7 @@ export function AccountMenu({
  * groups, and the sign-out footer. Split out to keep AccountMenu itself under
  * the repo's 200-line-per-component limit. */
 function AccountMenuPanel({
+  isExiting,
   name,
   photo,
   initials,
@@ -170,6 +200,7 @@ function AccountMenuPanel({
   onClose,
   onSignOut,
 }: {
+  isExiting: boolean;
   name: string;
   photo?: string;
   initials: string;
@@ -199,7 +230,11 @@ function AccountMenuPanel({
   };
   return (
     <div
-      className={[styles.menu, placement === "rail" && styles.menuRail]
+      className={[
+        styles.menu,
+        placement === "rail" && styles.menuRail,
+        isExiting && styles.menuClosing,
+      ]
         .filter(Boolean)
         .join(" ")}
     >

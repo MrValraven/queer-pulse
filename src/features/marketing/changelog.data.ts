@@ -90,6 +90,24 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "text-that-vanished-in-dark-mode-is-back",
+        category: "fix",
+        date: "3 Sep 2026",
+        ...entryKeys("text-that-vanished-in-dark-mode-is-back"),
+      },
+      {
+        id: "the-installed-app-now-opens-on-a-heartbeat",
+        category: "feature",
+        date: "3 Sep 2026",
+        ...entryKeys("the-installed-app-now-opens-on-a-heartbeat"),
+      },
+      {
+        id: "opening-the-installed-app-no-longer-flashes-a-bare-icon",
+        category: "fix",
+        date: "3 Sep 2026",
+        ...entryKeys("opening-the-installed-app-no-longer-flashes-a-bare-icon"),
+      },
+      {
         id: "what-you-submit-now-reaches-a-person",
         category: "feature",
         date: "1 Sep 2026",

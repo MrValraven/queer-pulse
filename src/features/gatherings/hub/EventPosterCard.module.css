@@ -103,6 +103,8 @@
   padding: 5px 12px;
   border-radius: var(--radius-pill);
   background: rgb(var(--cream-rgb));
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
   font-family: var(--sans);
   font-size: var(--text-label);
@@ -124,7 +126,7 @@
   padding: 4px 11px;
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.1);
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--sans);
   font-size: var(--text-label);
   font-weight: 700;
@@ -269,6 +271,8 @@
 
 .kindEventScrim {
   background: rgb(var(--cream-rgb));
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
 }
 

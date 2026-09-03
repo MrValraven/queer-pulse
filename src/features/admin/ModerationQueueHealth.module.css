@@ -67,7 +67,7 @@
 .queueName {
   font-family: var(--serif);
   font-size: var(--text-18);
-  color: var(--plum);
+  color: var(--text-strong);
   text-decoration: none;
 }
 
@@ -167,6 +167,6 @@
 
 .indicatorLink {
   margin-left: auto;
-  color: var(--plum);
+  color: var(--text-strong);
   font-weight: 600;
 }

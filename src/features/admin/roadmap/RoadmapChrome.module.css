@@ -84,7 +84,7 @@
 .bulkSelect {
   background: rgba(var(--cream-rgb), 0.12);
   border-color: rgba(var(--cream-rgb), 0.28);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background-image:
     linear-gradient(45deg, transparent 50%, rgba(var(--cream-rgb), 0.6) 50%),
     linear-gradient(135deg, rgba(var(--cream-rgb), 0.6) 50%, transparent 50%);
@@ -148,7 +148,7 @@
 .chipOn {
   background: var(--plum);
   border-color: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .chipCount {

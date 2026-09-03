@@ -90,7 +90,7 @@
 }
 
 .pagesRow b {
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: var(--text-15);
 }
 
@@ -125,7 +125,7 @@
 }
 
 .tabButtonActive {
-  color: var(--plum);
+  color: var(--text-strong);
   border-bottom-color: var(--accent);
 }
 

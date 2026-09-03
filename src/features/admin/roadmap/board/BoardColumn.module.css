@@ -77,7 +77,7 @@
 @media (hover: hover) and (pointer: fine) {
   .addButton:hover {
     background: var(--plum);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 

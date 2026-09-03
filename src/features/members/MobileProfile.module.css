@@ -553,7 +553,7 @@
   border-radius: var(--radius-pill);
   border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
-  color: var(--plum);
+  color: var(--text-strong);
   font-size: var(--text-20);
   cursor: pointer;
   touch-action: manipulation;

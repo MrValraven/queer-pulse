@@ -31,7 +31,7 @@
   background: var(--plum);
   border-color: transparent;
   border-inline-start-color: var(--accent);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .seal {
@@ -103,7 +103,7 @@
 .panel[data-tone="suspended"] .reason,
 .panel[data-tone="removed"] .reason {
   background: rgba(var(--cream-rgb), 0.1);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .facts {
@@ -137,7 +137,7 @@
 
 .panel[data-tone="suspended"] .fact dd,
 .panel[data-tone="removed"] .fact dd {
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
 }
 
 @media (max-width: 560px) {

@@ -46,7 +46,7 @@
   margin: 0;
   font-family: var(--serif);
   font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .meta {
   margin: 0.5rem 0 0;

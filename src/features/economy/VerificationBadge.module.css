@@ -31,6 +31,6 @@
 
 /* Phone-verified — a lighter, plum-toned signal so it reads as a lesser tier. */
 .phone {
-  color: var(--plum);
+  color: var(--text-strong);
   background: rgba(var(--plum-rgb), 0.09);
 }

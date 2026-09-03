@@ -14,6 +14,7 @@ export { useVisualViewportKeyboard } from "./useVisualViewportKeyboard";
 export { useScrollLock } from "./useScrollLock";
 export { useFocusOnMount } from "./useFocusOnMount";
 export { useOutsideDismiss } from "./useOutsideDismiss";
+export { useExitTransition } from "./useExitTransition";
 export { useLocalStorage } from "./useLocalStorage";
 export { useRefineDrawer } from "./useRefineDrawer";
 export { useSubmitFlow, type FlowStatus } from "./useSubmitFlow";

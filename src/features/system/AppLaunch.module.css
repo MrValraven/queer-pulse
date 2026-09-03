@@ -1,0 +1,447 @@
+/* QueerPulse installed-app boot sequence ("Heartbeat", direction A).
+ *
+ * The design's stage has five phases — home, opening, splash, handoff, app —
+ * but only ONE of them is ours. `home` and `opening` are the OS: the icon on
+ * the home screen and the zoom out of it are drawn by iOS/Android before a line
+ * of our JavaScript exists, and there is no web API that hooks them. `app` is
+ * the real app. So this stylesheet is the `splash` layer and its exit, and the
+ * seam with the OS is held by colour instead of animation: the manifest's
+ * background_color is the same --plum as .overlay, so the OS's own launch
+ * screen already IS this screen's first frame.
+ *
+ * Every cream value is written as rgba(var(--cream-rgb), N) rather than
+ * var(--cream). --cream flips to near-black in dark mode; --cream-rgb does not,
+ * and this sheet is locked plum in both themes.
+ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-app-launch);
+  background: var(--plum);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* Nothing under here is meant to be reachable, and there is nothing to
+     scroll during a boot; cheaper and less invasive than a scroll lock, which
+     would fight ScrollManager's restore on the way out. */
+  touch-action: none;
+  /* Opaque on the FIRST frame. The OS launch screen hands off on this exact
+     plum, so a fade-in would flash the half-painted app underneath. Only the
+     exit animates. */
+  opacity: 1;
+  transition:
+    opacity 0.42s var(--ease) 0.06s,
+    transform 0.44s var(--ease);
+  --launch-skin: var(--jade);
+}
+.overlay.leaving {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+/* ── ground ──────────────────────────────────────────────────────────────── */
+
+.orb {
+  position: absolute;
+  border-radius: var(--radius-avatar);
+  pointer-events: none;
+}
+.orbAccent {
+  width: 520px;
+  height: 520px;
+  top: -160px;
+  right: -190px;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.3),
+    transparent 62%
+  );
+  animation: appLaunchDriftA 22s ease-in-out infinite;
+}
+/* The second orb is where a member's persona skin shows up. It falls back to
+   jade; coral and the mark never change, whatever the skin is. */
+.orbSkin {
+  width: 460px;
+  height: 460px;
+  bottom: -150px;
+  left: -170px;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--launch-skin) 30%, transparent),
+    transparent 62%
+  );
+  animation: appLaunchDriftB 26s ease-in-out infinite;
+}
+@keyframes appLaunchDriftA {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-34px, 26px);
+  }
+}
+@keyframes appLaunchDriftB {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(28px, -22px);
+  }
+}
+
+/* 4.5% fractal noise, the same paper grain as the printed cards. Inline SVG so
+   it costs no request on the boot path. */
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>");
+  background-size: 140px;
+}
+
+/* ── the pulse ───────────────────────────────────────────────────────────── */
+
+/* Two rings per 1.15s cycle — one strong beat and a softer one 330ms behind
+   it, which is a heart rhythm rather than three even pings. This dot is the
+   continuity anchor: it is the mark inside the app icon, and on the way out it
+   flies into the nav bar's live dot and stays there. */
+.mark {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  flex: none;
+  transition: transform 0.44s var(--ease);
+}
+.markCore {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-avatar);
+  background: var(--accent);
+}
+.markRing,
+.markRingLate {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-avatar);
+  border: 1px solid rgba(var(--accent-rgb), 0.85);
+  opacity: 0;
+  animation: appLaunchBeat 1.15s var(--ease) infinite;
+}
+.markRingLate {
+  animation-delay: 0.33s;
+}
+@keyframes appLaunchBeat {
+  0% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  72%,
+  100% {
+    transform: scale(8.5);
+    opacity: 0;
+  }
+}
+
+/* ── wordmark ────────────────────────────────────────────────────────────── */
+
+/* 49px below the dot's centre, which is the design's 336px→392px geometry on a
+   874px-tall stage, expressed as a gap so it holds at any height. */
+.wordmarkGroup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 49px;
+  padding: 0 24px;
+  transform-origin: 50% 0;
+  transition:
+    transform 0.44s var(--ease),
+    opacity 0.3s var(--ease) 0.1s;
+}
+.wordmark {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-52);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: rgba(var(--cream-rgb), 1);
+  opacity: 0;
+  transform: translateY(15px);
+  transition:
+    opacity 0.34s var(--ease),
+    transform 0.44s var(--ease);
+}
+.overlay.shown .wordmark {
+  opacity: 1;
+  transform: none;
+}
+.wordmarkItalic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+/* First launch gets the slogan; a returning member gets greeted by name. */
+.tagline {
+  margin-top: 20px;
+  font-size: var(--text-11-5);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.42);
+  text-align: center;
+  text-wrap: balance;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease) 0.12s;
+}
+.greeting {
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  font-weight: 400;
+  color: rgba(var(--cream-rgb), 0.62);
+}
+.greetingName {
+  font-style: italic;
+  color: var(--accent);
+}
+.overlay.shown .tagline {
+  opacity: 1;
+}
+
+/* ── honest progress ────────────────────────────────────────────────────── */
+
+/* The hairline never fake-completes. It runs out to 92% over the determinate
+   window — short of 100%, because we do not know when ready will fire and a bar
+   sitting full while the app is still loading is a lie — then either finishes
+   in 180ms when ready actually lands, or turns into a shimmer that says so.
+   env(safe-area-inset-bottom) keeps it clear of the home indicator. */
+.hairline {
+  position: absolute;
+  bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 132px;
+  height: 1.5px;
+  background: rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-2);
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
+.overlay.shown .hairline {
+  opacity: 1;
+}
+.hairlineFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--accent);
+  border-radius: var(--radius-2);
+  transition: width 1.7s var(--ease);
+}
+/* Gated on `.shown`, which lands one frame after mount, so the fill has a
+   frame at width 0 to transition FROM. Declared straight on `.determinate` it
+   would be painted at its target width and never animate at all. */
+.shown .determinate .hairlineFill {
+  width: 92%;
+}
+.complete .hairlineFill {
+  width: 100%;
+  transition-duration: 0.18s;
+}
+.shimmer {
+  background: rgba(var(--cream-rgb), 0.1);
+}
+.shimmer .hairlineFill {
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background-size: 60% 100%;
+  background-repeat: no-repeat;
+  animation: appLaunchShimmer 1.25s var(--ease) infinite;
+  transition: none;
+}
+@keyframes appLaunchShimmer {
+  0% {
+    background-position: -70% 0;
+  }
+  100% {
+    background-position: 170% 0;
+  }
+}
+
+.statusline {
+  position: absolute;
+  bottom: calc(52px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  padding: 0 24px;
+  text-align: center;
+  font-size: var(--text-12);
+  color: rgba(var(--cream-rgb), 0.5);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+}
+.statusline.on {
+  opacity: 1;
+}
+
+/* ── exit ────────────────────────────────────────────────────────────────── */
+
+/* The travel distances are measured at runtime from the nav bar's own brand
+   dot and wordmark (AppLaunch.tsx), because a phone is not a fixed 402×874
+   stage. When those targets cannot be found the custom properties stay unset
+   and the fallbacks turn the exit into a plain lift, which is the correct
+   degradation: no travel is better than travel to the wrong place. */
+.leaving .mark {
+  transform: translate(var(--launch-dot-dx, 0px), var(--launch-dot-dy, 0px))
+    scale(var(--launch-dot-scale, 1));
+}
+.leaving .markRing,
+.leaving .markRingLate {
+  animation: none;
+  opacity: 0;
+}
+.leaving .wordmarkGroup {
+  transform: translate(var(--launch-wm-dx, 0px), var(--launch-wm-dy, 0px))
+    scale(var(--launch-wm-scale, 1));
+  opacity: 0;
+}
+
+/* ── seasonal variants ──────────────────────────────────────────────────── */
+
+.overlay[data-season="pride"] .orbAccent {
+  background: conic-gradient(
+    from 210deg,
+    rgba(var(--accent-rgb), 0.34),
+    rgba(var(--jade-rgb), 0.3),
+    rgba(var(--amber-rgb), 0.2),
+    rgba(var(--accent-rgb), 0.34)
+  );
+  filter: blur(60px);
+}
+.overlay[data-season="pride"] .orbSkin {
+  background: conic-gradient(
+    from 40deg,
+    rgba(var(--jade-rgb), 0.3),
+    rgba(var(--accent-rgb), 0.26),
+    rgba(var(--jade-rgb), 0.3)
+  );
+  filter: blur(60px);
+}
+
+/* Trans Day of Remembrance: the colour comes out. One ring, not two, and it
+   does not repeat as a heartbeat — the beat is the wrong register for the day. */
+.overlay[data-season="remembrance"] .orbAccent {
+  background: radial-gradient(
+    circle,
+    rgba(var(--cream-rgb), 0.14),
+    transparent 62%
+  );
+}
+.overlay[data-season="remembrance"] .orbSkin {
+  display: none;
+}
+.overlay[data-season="remembrance"] .markCore {
+  background: rgba(var(--cream-rgb), 1);
+}
+.overlay[data-season="remembrance"] .markRing {
+  border-color: rgba(var(--cream-rgb), 0.7);
+}
+.overlay[data-season="remembrance"] .markRingLate {
+  display: none;
+}
+.overlay[data-season="remembrance"] .wordmarkItalic {
+  color: rgba(var(--cream-rgb), 1);
+}
+.overlay[data-season="remembrance"] .hairlineFill {
+  background: rgba(var(--cream-rgb), 0.6);
+}
+
+.overlay[data-season="summer"] .orbAccent {
+  background: radial-gradient(
+    circle,
+    rgba(var(--amber-rgb), 0.3),
+    transparent 62%
+  );
+}
+.overlay[data-season="summer"] .orbSkin {
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.24),
+    transparent 62%
+  );
+}
+
+/* ── reduced motion ─────────────────────────────────────────────────────── */
+
+/* base.css already neutralises every animation and transition app-wide under
+   both the OS setting and the in-app toggle — but it does it with
+   `animation-duration: 0.01ms`, which lands the rings on their FINAL keyframe
+   (scale 8.5, opacity 0) and makes the pulse disappear entirely. So the still
+   has to be composed by hand: the dot at rest inside two static rings, and no
+   travel on the way out. Both selectors are needed because the in-app toggle
+   is an attribute, not a media query. */
+@media (prefers-reduced-motion: reduce) {
+  .markRing,
+  .markRingLate {
+    animation: none;
+    opacity: 0.35;
+    transform: scale(2.6);
+  }
+  .markRingLate {
+    opacity: 0.16;
+    transform: scale(4.4);
+  }
+  .orb {
+    animation: none;
+  }
+  .wordmark {
+    transform: none;
+  }
+  .leaving .mark,
+  .leaving .wordmarkGroup {
+    transform: none;
+  }
+  .overlay.leaving {
+    transform: none;
+  }
+  .shimmer .hairlineFill {
+    animation: none;
+    background: var(--accent);
+  }
+}
+:global(html[data-reduce-motion="true"]) .markRing,
+:global(html[data-reduce-motion="true"]) .markRingLate {
+  animation: none;
+  opacity: 0.35;
+  transform: scale(2.6);
+}
+:global(html[data-reduce-motion="true"]) .markRingLate {
+  opacity: 0.16;
+  transform: scale(4.4);
+}
+:global(html[data-reduce-motion="true"]) .orb {
+  animation: none;
+}
+:global(html[data-reduce-motion="true"]) .wordmark {
+  transform: none;
+}
+:global(html[data-reduce-motion="true"]) .leaving .mark,
+:global(html[data-reduce-motion="true"]) .leaving .wordmarkGroup {
+  transform: none;
+}
+:global(html[data-reduce-motion="true"]) .overlay.leaving {
+  transform: none;
+}
+:global(html[data-reduce-motion="true"]) .shimmer .hairlineFill {
+  animation: none;
+  background: var(--accent);
+}

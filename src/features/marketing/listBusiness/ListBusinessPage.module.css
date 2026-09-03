@@ -1008,7 +1008,7 @@
   font-family: var(--sans);
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--plum);
+  color: var(--text-strong);
   cursor: pointer;
   transition: background 0.2s var(--ease);
 }
@@ -1035,7 +1035,7 @@
   background: rgba(var(--plum-rgb), 0.04);
   font-size: var(--text-13);
   line-height: 1.5;
-  color: var(--plum);
+  color: var(--text-strong);
 }
 .onlineNote svg {
   flex-shrink: 0;

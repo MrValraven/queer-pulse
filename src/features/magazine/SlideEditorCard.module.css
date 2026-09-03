@@ -54,7 +54,7 @@
   place-items: center;
   border-radius: var(--radius-7);
   background: var(--plum);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   font-size: var(--text-11-5);
   font-weight: 700;
 }

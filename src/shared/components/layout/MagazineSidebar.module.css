@@ -121,7 +121,7 @@
 @media (hover: hover) {
   .backToPlatform:hover {
     background: rgba(var(--cream-rgb), 0.08);
-    color: var(--cream);
+    color: rgba(var(--cream-rgb), 1);
   }
 }
 .kbdHint {

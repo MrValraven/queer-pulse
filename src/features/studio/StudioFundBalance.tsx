@@ -31,7 +31,7 @@ export function StudioFundBalance() {
             fontFamily: "var(--serif)",
             fontWeight: 300,
             fontSize: 56,
-            color: "var(--cream)",
+            color: "rgb(var(--cream-rgb))",
             letterSpacing: "-0.025em",
             lineHeight: 1,
             margin: "8px 0",
@@ -69,7 +69,7 @@ export function StudioFundBalance() {
               fontFamily: "var(--serif)",
               fontWeight: 300,
               fontSize: 28,
-              color: "var(--cream)",
+              color: "rgb(var(--cream-rgb))",
             }}
           >
             <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
@@ -90,7 +90,7 @@ export function StudioFundBalance() {
               fontFamily: "var(--serif)",
               fontWeight: 300,
               fontSize: 28,
-              color: "var(--cream)",
+              color: "rgb(var(--cream-rgb))",
             }}
           >
             <em style={{ fontStyle: "normal", color: "var(--accent)" }}>

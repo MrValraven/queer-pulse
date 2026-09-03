@@ -283,7 +283,7 @@
   inline-size: 24px;
   block-size: 24px;
   border-radius: var(--radius-pill);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--plum-rgb), 0.7);
 }
 .noPhotos {

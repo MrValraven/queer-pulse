@@ -222,6 +222,8 @@
 }
 .skinCream {
   background: rgb(var(--cream-rgb));
+  /* css-scale-allow: non-flipping-text. The ground under this label is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
   color: var(--plum);
 }
 .skinJade {

@@ -96,7 +96,7 @@
   width: 26px;
   height: 26px;
   border-radius: var(--radius-pill);
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: var(--accent);
 }
 
@@ -109,7 +109,7 @@
   font-family: var(--sans);
   font-size: var(--text-11);
   font-weight: 600;
-  color: var(--cream);
+  color: rgba(var(--cream-rgb), 1);
   background: rgba(var(--plum-rgb), 0.72);
   pointer-events: none;
 }
