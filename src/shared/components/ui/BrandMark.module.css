@@ -1,0 +1,123 @@
+/* The QueerPulse mark. Geometry lives in brandMark.geometry.json (shared with
+   scripts/generate-icons.mjs and generate-press-assets.mjs); this file only
+   holds the three behaviours from the brand guide: heartbeat, ripple, gather.
+   Keyframes are declared here because a CSS module cannot reach a global one. */
+
+.mark {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  overflow: visible;
+  vertical-align: middle;
+  flex: none;
+}
+
+.core,
+.rippleRing,
+.satellite {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Heartbeat: a two-beat lub-dub at a resting heart rate, then a rest. */
+.heartbeat {
+  animation: brandHeartbeat 1000ms cubic-bezier(0.33, 1, 0.68, 1) infinite;
+}
+@keyframes brandHeartbeat {
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.15);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.11);
+  }
+  56%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Ripple: rings born from the core travel outward and fade. Never inward. */
+.rippleRing {
+  animation: brandRipple 1600ms var(--ease) infinite;
+}
+.rippleRingLate {
+  animation-delay: 400ms;
+}
+@keyframes brandRipple {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.6;
+  }
+  80%,
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+/* Gather: satellites arrive along their own radial path and settle, bowl
+   first and tail last; the core beats once as the tail lands. Never rotates. */
+.arrive {
+  animation: brandArrive 3200ms linear infinite;
+}
+@keyframes brandArrive {
+  0% {
+    transform: translate(var(--from-x), var(--from-y)) scale(0.7);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
+  }
+  24% {
+    transform: translate(0, 0) scale(1);
+    opacity: var(--settled-opacity);
+  }
+  84% {
+    transform: translate(0, 0) scale(1);
+    opacity: var(--settled-opacity);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.8, 0.15);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+}
+.beatOnce {
+  animation: brandBeatOnce 3200ms cubic-bezier(0.33, 1, 0.68, 1) infinite;
+}
+@keyframes brandBeatOnce {
+  0%,
+  42% {
+    transform: scale(1);
+  }
+  49% {
+    transform: scale(1.15);
+  }
+  56%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion: every frame is the static mark. Rings stay, at unequal
+   fade, so the still frame still implies outward travel. */
+@media (prefers-reduced-motion: reduce) {
+  .heartbeat,
+  .arrive,
+  .beatOnce,
+  .rippleRing {
+    animation: none;
+  }
+  .rippleRing {
+    opacity: 0.35;
+    transform: scale(1.2);
+  }
+  .rippleRingLate {
+    opacity: 0.16;
+    transform: scale(1.5);
+  }
+}

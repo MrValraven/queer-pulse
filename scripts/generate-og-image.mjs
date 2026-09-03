@@ -110,14 +110,29 @@ const html = `<!doctype html>
     height: 10px;
     background: linear-gradient(90deg, ${COLORS.accent}, ${COLORS.amber}, ${COLORS.jadeSoft});
   }
+  /* The horizontal lockup from the brand guide: the coral dot at 0.4em with
+     a one-dot gap, Fraunces semibold, "Pulse" in the italic. */
   .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
     font-family: "Fraunces", serif;
-    font-weight: 700;
+    font-weight: 600;
     font-optical-sizing: auto;
     font-size: 100px;
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
     color: ${COLORS.cream};
+  }
+  .wordmark .dot {
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 50%;
+    background: ${COLORS.accent};
+    flex: none;
+  }
+  .wordmark i {
+    font-style: italic;
   }
   .title {
     font-family: "Fraunces", serif;
@@ -143,7 +158,7 @@ const html = `<!doctype html>
 </head>
 <body>
   <div class="stripe"></div>
-  <div class="wordmark">QueerPulse</div>
+  <div class="wordmark"><span class="dot"></span><span>Queer<i>Pulse</i></span></div>
   <div class="title">${TITLE}</div>
   <div class="subtitle">${SUBTITLE}</div>
   <div class="footer">${FOOTER}</div>

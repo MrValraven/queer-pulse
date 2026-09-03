@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { DisplayModeContext } from "./displayModeContext";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { safeStorage } from "../../shared/storage/safeStorage";
+import { isStandaloneLaunch } from "./standaloneLaunch";
 
 const INSTALLED_KEY = "qp-installed";
 
@@ -25,13 +26,13 @@ function readIosStandalone(): boolean {
 
 /**
  * Sticky fallback for engines where neither signal above is reliable. The
- * manifest's `start_url` is `/?mode=standalone`, so a launch from the home
- * screen latches the flag; ordinary tab visits never carry the param.
+ * manifest's `start_url` is `/?mode=standalone` (see standaloneLaunch.ts), so
+ * a launch from the home screen latches the flag; ordinary tab visits never
+ * carry the param.
  */
 function readStickyInstalled(): boolean {
   if (typeof window === "undefined") return false;
-  const launchedFromManifest =
-    new URLSearchParams(window.location.search).get("mode") === "standalone";
+  const launchedFromManifest = isStandaloneLaunch(window.location.search);
   if (launchedFromManifest) {
     safeStorage.set(INSTALLED_KEY, "true");
     return true;

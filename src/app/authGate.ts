@@ -1,6 +1,7 @@
 import { matchPath, useLocation } from "react-router-dom";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
+import { isStandaloneLaunch } from "./providers/standaloneLaunch";
 import { linkToPath, routes } from "./routeMap";
 import { safeInternalPath } from "../shared/lib/safeInternalPath";
 import type { StaffRoleId } from "../features/admin/staffRoles.registry";
@@ -688,6 +689,18 @@ export function useAuthGateRedirect(): string | null {
       return reachableWhileDeactivated.includes(pathname)
         ? null
         : routes.deleteAccount;
+    }
+    // Opening the INSTALLED app. The manifest's start_url is "/?mode=standalone"
+    // (see providers/standaloneLaunch.ts), and "/" is the marketing homepage
+    // for everyone, so without this a signed-in member tapping the home-screen
+    // icon landed on the landing page every time. The launch marker is the
+    // only thing that distinguishes this from a member choosing to open "/"
+    // from inside the app, which stays reachable. Signed-out launches fall
+    // through and keep the homepage. Placed BEFORE the suspended check so a
+    // suspended member's launch still reaches /feed, whose own gate then
+    // shows them the page that explains the suspension.
+    if (pathname === routes.homepage && isStandaloneLaunch(search)) {
+      return routes.feed;
     }
     // A suspended member: their sessions are revoked and every ActiveMemberGuard
     // route 403s, so a gated page would render a blank screen with no

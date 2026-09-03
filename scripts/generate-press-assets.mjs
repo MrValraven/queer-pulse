@@ -8,8 +8,9 @@
  * committed to public/press/ and served as static assets.
  *
  * Everything here is DERIVED, never invented:
- *   - the mark comes from public/favicon.svg, the same source the PWA icons
- *     are generated from (scripts/generate-icons.mjs);
+ *   - the mark is drawn from src/shared/components/ui/brandMark.geometry.json
+ *     through scripts/brand-mark-svg.mjs, the same source the BrandMark
+ *     component and the PWA icons (scripts/generate-icons.mjs) use;
  *   - the wordmark is rendered by Chromium from the app's own self-hosted
  *     Fraunces, at the weight, tracking and coral pulse dot that
  *     PressKitPage.module.css and Footer.module.css already use;
@@ -29,9 +30,9 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { deflateRawSync } from "node:zlib";
 import { chromium } from "@playwright/test";
 import sharp from "sharp";
+import { markSvg } from "./brand-mark-svg.mjs";
 
-const MARK_SOURCE = "public/favicon.svg";
-const APP_ICON_SOURCE = "public/icons/icon-512.png";
+const APP_ICON_SOURCE = "public/icons/icon-512-v3.png";
 const COLOR_TOKENS = "src/styles/tokens/colors.css";
 const TYPE_TOKENS = "src/styles/tokens/typography.css";
 const OUTPUT_DIRECTORY = "public/press";
@@ -59,16 +60,38 @@ async function readRootBlock(path) {
   return firstBlock;
 }
 
-const colorBlock = await readRootBlock(COLOR_TOKENS);
-const typeBlock = await readRootBlock(TYPE_TOKENS);
+/**
+ * Every `:root { … }` block of a stylesheet, joined. The typography tokens
+ * have no dark counterpart, and their semantic aliases (`--text-subhead:
+ * var(--text-20)`) sit in a second `:root` block at the bottom of the file,
+ * so the first-block scoping that protects the colours would miss them.
+ */
+async function readAllRootBlocks(path) {
+  const source = await readFile(path, "utf8");
+  return [...source.matchAll(/^:root\s*\{([\s\S]*?)^\}/gm)]
+    .map((match) => match[1])
+    .join("\n");
+}
 
-/** Resolve one custom property out of an already-scoped token block. */
-function tokenValue(block, tokenName, path) {
+const colorBlock = await readRootBlock(COLOR_TOKENS);
+const typeBlock = await readAllRootBlocks(TYPE_TOKENS);
+
+/**
+ * Resolve one custom property out of an already-scoped token block. A value
+ * that is itself a `var(--other)` reference is followed within the same block,
+ * so an alias publishes the size it points at rather than the pointer.
+ */
+function tokenValue(block, tokenName, path, depth = 0) {
   const match = block.match(new RegExp(`^\\s*${tokenName}:\\s*([^;]+);`, "m"));
   if (!match) {
     throw new Error(`Token ${tokenName} not found in ${path}`);
   }
-  return match[1].replace(/\s+/g, " ").trim();
+  const value = match[1].replace(/\s+/g, " ").trim();
+  const reference = value.match(/^var\((--[a-z0-9-]+)\)$/i);
+  if (reference && depth < 4) {
+    return tokenValue(block, reference[1], path, depth + 1);
+  }
+  return value;
 }
 
 const color = (tokenName) => tokenValue(colorBlock, tokenName, COLOR_TOKENS);
@@ -162,34 +185,25 @@ const TYPE_SCALE = [
 /* The mark                                                                   */
 /* -------------------------------------------------------------------------- */
 
-const markSource = await readFile(MARK_SOURCE, "utf8");
-
 /**
- * The mark's silhouette. favicon.svg draws the glyph as one filled outline and
- * then paints its interior shading through a mask of that same outline, so the
- * first path IS the silhouette. Extracting it gives a genuine single-colour
- * variant of the real mark rather than a redrawn approximation.
+ * The mark at rest for light grounds (coral core, plum rings), and the
+ * single-colour version, both from the shared geometry so the press files are
+ * the real mark rather than a redrawn approximation.
  */
-function extractSilhouettePath(svg) {
-  const match = svg.match(/<path[^>]*\sd="([^"]+)"/);
-  if (!match) throw new Error(`No outline path found in ${MARK_SOURCE}`);
-  return match[1];
-}
-
-function extractViewBox(svg) {
-  const match = svg.match(/viewBox="([^"]+)"/);
-  if (!match) throw new Error(`No viewBox found in ${MARK_SOURCE}`);
-  return match[1];
-}
-
-const silhouettePath = extractSilhouettePath(markSource);
-const markViewBox = extractViewBox(markSource);
+const markSource = markSvg({
+  state: "rest",
+  core: ACCENT,
+  ring: PLUM,
+  label: "QueerPulse",
+});
 
 function monochromeMarkSvg(fill) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${markViewBox}" role="img" aria-label="QueerPulse">
-  <path fill="${fill}" d="${silhouettePath}"/>
-</svg>
-`;
+  return markSvg({
+    state: "rest",
+    core: fill,
+    ring: fill,
+    label: "QueerPulse",
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -422,8 +436,9 @@ function brandReferenceHtml() {
   <section>
     <h2>Using the marks</h2>
     <ul>
-      <li>Leave one full <em>P</em>-height of clear space around the mark on every side.</li>
-      <li>Minimum size: 88&nbsp;px wide on screen, 18&nbsp;mm in print.</li>
+      <li>Clear space: the height of the capital <em>Q</em> around the wordmark on every side; one core-dot diameter around the mark on its own.</li>
+      <li>Minimum size: the wordmark 96&nbsp;px wide on screen, 24&nbsp;mm in print; the mark 40&nbsp;px or 10&nbsp;mm.</li>
+      <li>Beside the wordmark the mark is the dot alone. The ringed symbol stands on its own, or above the wordmark in the stacked lockup.</li>
       <li>The wordmark always carries the coral pulse dot, except in the coral colourway, where the dot becomes plum. Do not recolour the dot to anything else.</li>
       <li>On a light ground use the primary wordmark; on plum or any dark ground use the inverse.</li>
       <li>The wordmark is Fraunces semibold with &ldquo;Pulse&rdquo; in the italic. Do not re-set it in another face.</li>

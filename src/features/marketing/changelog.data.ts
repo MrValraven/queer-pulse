@@ -90,6 +90,23 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "the-app-icon-is-now-the-pulse-dot",
+        category: "improvement",
+        date: "3 Sep 2026",
+        ...entryKeys("the-app-icon-is-now-the-pulse-dot"),
+        tag: {
+          labelKey: "marketing:changelog.tag.pressKit",
+          to: routes.pressKit,
+        },
+      },
+      {
+        id: "the-installed-app-now-opens-on-your-feed",
+        category: "fix",
+        date: "3 Sep 2026",
+        ...entryKeys("the-installed-app-now-opens-on-your-feed"),
+        tag: { labelKey: "marketing:changelog.tag.feed", to: routes.feed },
+      },
+      {
         id: "text-that-vanished-in-dark-mode-is-back",
         category: "fix",
         date: "3 Sep 2026",

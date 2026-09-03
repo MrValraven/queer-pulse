@@ -251,8 +251,8 @@ self.addEventListener("push", (event) => {
         // icon to a member who hides previews; this is the same rule applied
         // locally, for a payload composed before that landed.
         icon: shouldHidePreviews
-          ? "/icons/icon-192-v2.png"
-          : (payload.icon ?? "/icons/icon-192-v2.png"),
+          ? "/icons/icon-192-v3.png"
+          : (payload.icon ?? "/icons/icon-192-v3.png"),
         // Android/Chrome renders `badge` as a small monochrome status-bar glyph
         // and hard-masks it to a single colour: a full-colour app icon here comes
         // out as a grey blob. Point at a dedicated transparent, single-colour

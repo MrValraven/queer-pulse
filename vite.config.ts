@@ -1,6 +1,80 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+
+/** The one file this plugin exists to keep OUT of the precache. */
+const WEBMANIFEST = "manifest.webmanifest";
+
+/** Shape of the entries workbox precaches, and of the plugin API we reach for. */
+interface PrecacheEntry {
+  url: string;
+  revision?: string | null;
+}
+interface PwaPluginApi {
+  extendManifestEntries?: (
+    extend: (entries: PrecacheEntry[]) => PrecacheEntry[] | undefined,
+  ) => void;
+}
+
+/**
+ * Drop `manifest.webmanifest` from the service worker's precache.
+ *
+ * WHY. The webmanifest is the app's INSTALL IDENTITY: its name, icons,
+ * start_url, and the `background_color` the OS paints its launch screen with.
+ * It is read by the browser and the OS at install and update-check time, never
+ * by the running app. Precached, it sits behind this worker's update gate, and
+ * `registerType: "prompt"` leaves a new worker waiting until the member accepts
+ * the update pill — so a phone whose owner never accepted it keeps being handed
+ * the OLD manifest. That is not hypothetical: it is how an installed app went
+ * on painting a cream launch screen after `background_color` had already
+ * shipped as plum, and it would have re-baked cream on a reinstall too.
+ *
+ * WHY IT TAKES A PLUGIN. Leaving it out of `globPatterns` does nothing, and
+ * neither does a `manifestTransforms` filter. vite-plugin-pwa appends the
+ * manifest it generates to `additionalManifestEntries` itself (see
+ * `configureStaticAssets` in its dist), and workbox concatenates those AFTER
+ * transforms run. `extendManifestEntries` is the plugin's own hook for editing
+ * that final list, and this is the only place it can be reached.
+ *
+ * Nothing is lost: the file is ~1 KB, Vercel serves it `max-age=0,
+ * must-revalidate`, no route in src/sw.ts matches `destination: "manifest"`, so
+ * it simply goes to the network — and installing an app does not work offline
+ * anyway.
+ */
+function keepWebmanifestOffPrecache(): Plugin {
+  let resolvedPlugins: readonly Plugin[] = [];
+  return {
+    name: "qp:webmanifest-off-precache",
+    apply: "build",
+    configResolved(config) {
+      resolvedPlugins = config.plugins as readonly Plugin[];
+    },
+    // buildStart, not configResolved: the entry list is built inside
+    // vite-plugin-pwa's own async configResolved, and Vite does not guarantee
+    // one plugin's configResolved has settled before the next one's runs.
+    // buildStart is the first hook that is definitively after all of them, and
+    // it is still well before generateBundle/closeBundle write the worker.
+    buildStart() {
+      const api = resolvedPlugins.find(
+        (plugin) => plugin.name === "vite-plugin-pwa",
+      )?.api as PwaPluginApi | undefined;
+      if (!api?.extendManifestEntries) {
+        // Loud on purpose. A silent no-op here would put the stale-launch-screen
+        // bug back invisibly, and it would only surface on someone's phone days
+        // after a deploy. If a vite-plugin-pwa upgrade moved this API, port this
+        // plugin to the new one rather than deleting the check.
+        throw new Error(
+          "qp:webmanifest-off-precache: vite-plugin-pwa no longer exposes " +
+            "extendManifestEntries, so the webmanifest would be precached again " +
+            "and installed apps could keep an out-of-date launch screen.",
+        );
+      }
+      api.extendManifestEntries((entries) =>
+        entries.filter((entry) => entry.url !== WEBMANIFEST),
+      );
+    },
+  };
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -72,6 +146,9 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    // Position in this array is not load-bearing: it looks vite-plugin-pwa up
+    // by name at buildStart, by which point every plugin's config has resolved.
+    keepWebmanifestOffPrecache(),
     VitePWA({
       strategies: "injectManifest",
       srcDir: "src",
@@ -80,7 +157,11 @@ export default defineConfig({
       // auto-claiming worker can swap mid-session. PwaUpdatePrompt reloads
       // on the user's say-so.
       registerType: "prompt",
-      includeAssets: ["favicon.svg", "icons/apple-touch-icon-180-v2.png"],
+      includeAssets: [
+        "favicon.svg",
+        "favicon.ico",
+        "icons/apple-touch-icon-180-v3.png",
+      ],
       // The manifest lives here rather than in public/manifest.json so it stays
       // in one place alongside the icon list. public/manifest.json is deleted.
       manifest: {
@@ -88,9 +169,11 @@ export default defineConfig({
         short_name: "QueerPulse",
         description:
           "A quiet, vouched-for network for LGBTQ+ professionals, creatives and community in Lisbon.",
-        // The ?mode=standalone marker is DisplayModeProvider's sticky fallback
-        // for engines where the display-mode query and navigator.standalone
-        // both misfire. Do not remove it without updating that provider.
+        // The ?mode=standalone marker is read by src/app/providers/
+        // standaloneLaunch.ts: DisplayModeProvider latches its sticky
+        // "installed" fallback from it, and authGate uses it to send a
+        // signed-in launch to /feed instead of the homepage. Do not change it
+        // without updating that module.
         start_url: "/?mode=standalone",
         scope: "/",
         display: "standalone",
@@ -138,22 +221,29 @@ export default defineConfig({
         ],
         icons: [
           {
-            src: "/icons/icon-192-v2.png",
+            src: "/icons/icon-192-v3.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/icon-512-v2.png",
+            src: "/icons/icon-512-v3.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/icon-512-maskable-v2.png",
+            src: "/icons/icon-512-maskable-v3.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
+          },
+          // Android 13+ themed icons keep only the alpha channel of this one.
+          {
+            src: "/icons/icon-monochrome-512-v3.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "monochrome",
           },
         ],
       },
@@ -182,13 +272,17 @@ export default defineConfig({
         // chunk names in manualChunks.
         globPatterns: [
           "index.html",
-          "manifest.webmanifest",
+          // NOT "manifest.webmanifest": see keepWebmanifestOffPrecache above.
+          // The file reaches the precache by TWO independent routes — this glob
+          // over the emitted dist/, and the entry vite-plugin-pwa appends to
+          // additionalManifestEntries — and closing only one leaves it cached.
           "**/*.css",
           "assets/index-*.js",
           "assets/vendor-react-*.js",
           "assets/vendor-query-*.js",
           "**/*.woff2",
           "favicon.svg",
+          "favicon.ico",
           "icons/*.png",
         ],
       },

@@ -16,6 +16,12 @@ export { Outro } from "./Outro";
 export { Tooltip } from "./Tooltip";
 export { QrCode, type QrCodeProps } from "./QrCode";
 export { FeatureHelp } from "./FeatureHelp";
+export {
+  BrandMark,
+  type BrandMarkProps,
+  type BrandMarkState,
+  type BrandMarkMotion,
+} from "./BrandMark";
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";

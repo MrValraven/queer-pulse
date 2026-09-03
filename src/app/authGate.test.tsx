@@ -74,6 +74,39 @@ describe("useAuthGateRedirect: public support pages", () => {
   });
 });
 
+describe("useAuthGateRedirect: installed-app launch", () => {
+  beforeEach(() => {
+    role = "member";
+    staffRoles = [];
+    demoMode = false;
+  });
+
+  it("sends a signed-in member from the manifest start_url to their feed", () => {
+    loggedIn = true;
+    const { result } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt("/?mode=standalone"),
+    });
+    expect(result.current).toBe("/feed");
+  });
+
+  it("leaves a signed-in member alone on a plain visit to the homepage", () => {
+    loggedIn = true;
+    const { result } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt("/"),
+    });
+    expect(result.current).toBeNull();
+  });
+
+  it("keeps a signed-out launch on the homepage", () => {
+    loggedIn = false;
+    role = null;
+    const { result } = renderHook(() => useAuthGateRedirect(), {
+      wrapper: wrapperAt("/?mode=standalone"),
+    });
+    expect(result.current).toBeNull();
+  });
+});
+
 describe("useAuthGateRedirect: /magazine/editor capability gate", () => {
   beforeEach(() => {
     loggedIn = true;

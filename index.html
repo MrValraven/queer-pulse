@@ -2,9 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- The ICO carries hand-fitted 16 and 32 px rasters (Google Search ignores
+         SVG favicons); `sizes` keeps Chrome from preferring it over the SVG. -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- iOS ignores SVG here, so this must stay a PNG. -->
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180-v2.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180-v3.png" />
     <!-- viewport-fit=cover is what makes env(safe-area-inset-*) resolve to real
          values on iOS; without it every safe-area calculation in the app is 0. -->
     <meta

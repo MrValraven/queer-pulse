@@ -1,0 +1,30 @@
+{
+  "viewBox": 64,
+  "centre": 32,
+  "tileRadius": 14,
+  "core": { "r": 10 },
+  "dotAlone": { "r": 12 },
+  "innerRing": { "r": 15, "strokeWidth": 1.75, "opacity": 0.55 },
+  "outerArc": {
+    "r": 21,
+    "strokeWidth": 1.5,
+    "opacity": 0.28,
+    "path": "M48.55 19.07 A21 21 0 1 1 34.92 11.21"
+  },
+  "compactRing": { "r": 16, "strokeWidth": 2.25, "opacity": 0.55 },
+  "ripple": { "r": 14, "strokeWidth": 1.6 },
+  "gathering": {
+    "coreR": 9,
+    "satelliteOpacity": 0.85,
+    "satellites": [
+      { "cx": 28.94, "cy": 53.79, "r": 4, "role": "bowl", "from": [-2, 14] },
+      { "cx": 14, "cy": 42.82, "r": 4.8, "role": "bowl", "from": [-12, 7] },
+      { "cx": 9.78, "cy": 26.05, "r": 3.2, "role": "bowl", "from": [-14, -4] },
+      { "cx": 23.46, "cy": 12.82, "r": 4.8, "role": "bowl", "from": [-6, -13] },
+      { "cx": 39.52, "cy": 11.33, "r": 4, "role": "bowl", "from": [5, -13] },
+      { "cx": 54.72, "cy": 28.4, "r": 3.2, "role": "bowl", "from": [14, -2] },
+      { "cx": 48.97, "cy": 48.97, "r": 3.2, "role": "tail", "from": [7, 7] },
+      { "cx": 55.33, "cy": 55.33, "r": 4, "role": "tail", "from": [10, 10] }
+    ]
+  }
+}
