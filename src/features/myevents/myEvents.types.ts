@@ -54,6 +54,11 @@ export interface MyEvent {
   review?: boolean;
   blocked?: boolean;
   online?: boolean;
+  /* No `onlineUrl` here on purpose (PRD-182): a join link is disclosed on the
+     same gate as a street address, so it rides on the DETAIL response and
+     never on a list card. `JoinLinkButton` resolves it on click through the
+     shared detail query rather than this shape carrying a field the list
+     response was never going to fill. */
   timezone?: string;
   ticket?: boolean;
   sliding?: boolean;

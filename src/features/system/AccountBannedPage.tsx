@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiSlash } from "react-icons/fi";
 import {
   Button,
   StatusCard,
@@ -11,6 +12,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import {
+  ACCOUNT_ERASURE_GRACE_DAYS,
+  APPEAL_DECISION_WINDOW_DAYS,
+  APPEAL_FILING_WINDOW_DAYS,
+} from "./accountWindows";
 import styles from "./AccountBannedPage.module.css";
 
 export function AccountBannedPage() {
@@ -19,9 +25,7 @@ export function AccountBannedPage() {
   const { demoMode } = useDemoMode();
 
   // A permanent ban is status "suspended" with no `suspendedUntil`. When a real
-  // banned member views this, show their actual reason from `/auth/me` instead
-  // of the demo case-file copy; fall back to the generic copy if none is on
-  // record.
+  // banned member views this, show their actual reason from `/auth/me`.
   const banned = !demoMode && user?.status === "suspended";
   const reasonNote = banned ? user?.suspension?.note?.trim() || null : null;
 
@@ -29,7 +33,10 @@ export function AccountBannedPage() {
     {
       key: "row1",
       label: t("system:accountBanned.whatNow.row1.title"),
-      description: t("system:accountBanned.whatNow.row1.body"),
+      description: t("system:accountBanned.whatNow.row1.body", {
+        filingDays: APPEAL_FILING_WINDOW_DAYS,
+        decisionDays: APPEAL_DECISION_WINDOW_DAYS,
+      }),
     },
     {
       key: "row2",
@@ -37,6 +44,7 @@ export function AccountBannedPage() {
       description: (
         <Translation
           i18nKey="system:accountBanned.whatNow.row2.body"
+          values={{ erasureDays: ACCOUNT_ERASURE_GRACE_DAYS }}
           components={{ a: <Link to={routes.privacy} /> }}
         />
       ),
@@ -62,12 +70,7 @@ export function AccountBannedPage() {
     <SystemStateShell orbTone="plum" mutedBrand>
       <StatusCard
         tone="plum"
-        icon={
-          <svg viewBox="0 0 24 24" aria-hidden>
-            <circle cx="12" cy="12" r="10" />
-            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-          </svg>
-        }
+        icon={<FiSlash aria-hidden />}
         kicker={t("system:accountBanned.kicker")}
         heading={
           <Translation
@@ -98,23 +101,23 @@ export function AccountBannedPage() {
           />
         }
       >
-        <p className={styles.lead}>
-          <Translation
-            i18nKey="system:accountBanned.lead2"
-            components={{ b: <b /> }}
-          />
-        </p>
-
         <div className={styles.violation}>
           <h4>{t("system:accountBanned.violation.title")}</h4>
+          {/* The §02·06 case file is a demo fixture. Rendering it as the live
+              fallback meant a member whose record carries no moderator note
+              read an invented case against themselves, complete with an
+              incident count and a second reviewer. Live mode with no note on
+              record says exactly that instead. */}
           <p>
             {reasonNote ? (
               reasonNote
-            ) : (
+            ) : demoMode ? (
               <Translation
                 i18nKey="system:accountBanned.violation.body"
                 components={{ b: <b /> }}
               />
+            ) : (
+              t("system:accountBanned.violation.bodyLive")
             )}
           </p>
         </div>

@@ -55,10 +55,10 @@ function ShortcutsModal({ onClose }: { onClose: () => void }) {
       }
     >
       <div className={styles.kbdList}>
-        {SHORTCUTS.map(([key, label]) => (
-          <div key={key} style={{ display: "contents" }}>
-            <span className={styles.kbd}>{key}</span>
-            <span className={styles.kbdDesc}>{label}</span>
+        {SHORTCUTS.map((shortcut) => (
+          <div key={shortcut.keys} style={{ display: "contents" }}>
+            <span className={styles.kbd}>{shortcut.keys}</span>
+            <span className={styles.kbdDesc}>{t(shortcut.labelKey)}</span>
           </div>
         ))}
       </div>

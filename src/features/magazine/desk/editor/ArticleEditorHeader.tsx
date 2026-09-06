@@ -6,6 +6,8 @@ import {
 } from "../../../../shared/components/ui";
 import { routes } from "../../../../app/routeMap";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { ArticleDraftConflictBanner } from "./ArticleDraftConflictBanner";
+import { savedLabelKey } from "./articleSavedLabel";
 import type { EditorMode } from "./editorMode";
 import type { PublishStatus } from "./PublishRail";
 import styles from "../../ArticleEditorPage.module.css";
@@ -17,12 +19,21 @@ export interface ArticleEditorHeaderProps {
   title: string;
   section: string;
   issueLabel: string;
-  savedLabel: string;
-  /** True while the last autosave is still unsent because it failed. The
-   * retry matters because a failed save leaves that content only in the
-   * browser until something else changes. */
-  canRetrySave: boolean;
+  /** The save indicator's four inputs. The header renders the label itself
+   *  (`savedLabelKey`) because it also owns what the writer does about each
+   *  state: the retry button for a failed save, and the blocking banner for a
+   *  draft that has moved on. */
+  isSavePending: boolean;
+  isSaveError: boolean;
+  isDirty: boolean;
+  hasSaveConflict: boolean;
+  /** Retries the last failed autosave. A failed save leaves that content only
+   *  in the browser until something else changes. */
   onRetrySave: () => void;
+  /** ENG-111. Re-reads the draft out of a save conflict, discarding whatever
+   *  this tab had unsaved. Only ever reachable through the banner. */
+  isReloadingDraft: boolean;
+  onReloadDraft: () => void;
   mode: EditorMode;
   onModeChange: (mode: EditorMode) => void;
   /** Derived from `article.publishedAt` against the clock — `"scheduled"`
@@ -51,15 +62,25 @@ export interface ArticleEditorHeaderProps {
  * `articlePublishChecklist` the `PublishRail` renders, never gated on
  * unpublishing an already-live or already-scheduled article. Extracted from
  * `ArticleEditorPage` purely to keep that file under the 200-line cap.
+ *
+ * It renders a fragment, because it owns the whole save-state story: the bar
+ * itself, and directly under it the blocking banner for a draft that has
+ * moved on underneath this tab (ENG-111). The saved indicator, the retry
+ * button and that banner are three faces of one state, so they are derived
+ * together here from the four save booleans rather than assembled by the page.
  */
 export function ArticleEditorHeader({
   pieceId,
   title,
   section,
   issueLabel,
-  savedLabel,
-  canRetrySave,
+  isSavePending,
+  isSaveError,
+  isDirty,
+  hasSaveConflict,
   onRetrySave,
+  isReloadingDraft,
+  onReloadDraft,
   mode,
   onModeChange,
   liveStatus,
@@ -72,6 +93,9 @@ export function ArticleEditorHeader({
   onSendOn,
 }: ArticleEditorHeaderProps) {
   const { t } = useTranslation();
+  const savedLabel = t(
+    savedLabelKey({ isSavePending, isSaveError, isDirty, hasSaveConflict }),
+  );
   const publishLabel =
     liveStatus !== "draft"
       ? t("magazine:write.header.unpublish")
@@ -79,67 +103,78 @@ export function ArticleEditorHeader({
         ? t("magazine:write.publish.scheduleCta")
         : t("magazine:write.header.publish");
   return (
-    <div className={styles.ebar}>
-      <Button
-        variant="ghost"
-        size="sm"
-        to={routes.magazinePiece.replace(":id", pieceId)}
-        aria-label={t("magazine:write.header.backAria")}
-      >
-        <FiArrowLeft aria-hidden />
-      </Button>
-      <div className={styles.title}>
-        <b>{title.trim() || t("magazine:write.header.untitled")}</b>
-        <span className={styles.titleSub}>
-          {t("magazine:write.header.subtitle", {
-            section: section || t("magazine:write.header.unsectioned"),
-            issue: issueLabel,
-            saved: savedLabel,
-          })}
-        </span>
-      </div>
-      {canRetrySave && (
-        <Button variant="ghost" size="sm" onClick={onRetrySave}>
-          <FiRefreshCw aria-hidden />
-          {t("magazine:write.header.retrySave")}
-        </Button>
-      )}
-      <Tag>
-        {liveStatus === "published"
-          ? t("magazine:write.header.statusPublished")
-          : liveStatus === "scheduled"
-            ? t("magazine:write.header.statusScheduled")
-            : t("magazine:write.header.statusDraft")}
-      </Tag>
-      <SegmentedControl
-        label={t("magazine:write.header.viewLabel")}
-        options={[
-          { value: "draft", label: t("magazine:write.mode.draft") },
-          { value: "shape", label: t("magazine:write.mode.shape") },
-          { value: "read", label: t("magazine:write.mode.read") },
-        ]}
-        value={mode}
-        onChange={(value) => onModeChange(value as EditorMode)}
-      />
-      <div className={styles.right}>
+    <>
+      <div className={styles.ebar}>
         <Button
           variant="ghost"
           size="sm"
-          disabled={sendOnDisabled}
-          onClick={onSendOn}
+          to={routes.magazinePiece.replace(":id", pieceId)}
+          aria-label={t("magazine:write.header.backAria")}
         >
-          {sendOnLabel}
+          <FiArrowLeft aria-hidden />
         </Button>
-        <Button
-          variant="plum"
-          size="sm"
-          disabled={publishDisabled || publishPending}
-          aria-busy={publishPending}
-          onClick={onPublish}
-        >
-          {publishLabel}
-        </Button>
+        <div className={styles.title}>
+          <b>{title.trim() || t("magazine:write.header.untitled")}</b>
+          <span className={styles.titleSub}>
+            {t("magazine:write.header.subtitle", {
+              section: section || t("magazine:write.header.unsectioned"),
+              issue: issueLabel,
+              saved: savedLabel,
+            })}
+          </span>
+        </div>
+        {isSaveError && (
+          <Button variant="ghost" size="sm" onClick={onRetrySave}>
+            <FiRefreshCw aria-hidden />
+            {t("magazine:write.header.retrySave")}
+          </Button>
+        )}
+        <Tag>
+          {liveStatus === "published"
+            ? t("magazine:write.header.statusPublished")
+            : liveStatus === "scheduled"
+              ? t("magazine:write.header.statusScheduled")
+              : t("magazine:write.header.statusDraft")}
+        </Tag>
+        <SegmentedControl
+          label={t("magazine:write.header.viewLabel")}
+          options={[
+            { value: "draft", label: t("magazine:write.mode.draft") },
+            { value: "shape", label: t("magazine:write.mode.shape") },
+            { value: "read", label: t("magazine:write.mode.read") },
+          ]}
+          value={mode}
+          onChange={(value) => onModeChange(value as EditorMode)}
+        />
+        <div className={styles.right}>
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={sendOnDisabled}
+            onClick={onSendOn}
+          >
+            {sendOnLabel}
+          </Button>
+          <Button
+            variant="plum"
+            size="sm"
+            disabled={publishDisabled || publishPending}
+            aria-busy={publishPending}
+            onClick={onPublish}
+          >
+            {publishLabel}
+          </Button>
+        </div>
       </div>
-    </div>
+      {/* ENG-111. Directly under the sticky bar rather than over the document:
+          the writer's text stays visible and copyable, which a full-page
+          takeover would hide right before a reload throws it away. */}
+      {hasSaveConflict && (
+        <ArticleDraftConflictBanner
+          onReload={onReloadDraft}
+          isReloading={isReloadingDraft}
+        />
+      )}
+    </>
   );
 }

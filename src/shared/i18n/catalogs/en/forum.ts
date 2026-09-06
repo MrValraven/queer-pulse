@@ -33,6 +33,8 @@ export const forum: Catalog = {
   "replySort.oldest": "Oldest",
   "replySort.newest": "Newest",
   "replySort.mostHelpful": "Most helpful",
+  // Names the three buttons as ONE control for a screen reader (DES-121).
+  "replySort.groupAria": "Order the replies",
 
   // ── ForumPage hero ──────────────────────────────────────────────────────
   "hero.title": "The town <em>square</em>",
@@ -98,11 +100,17 @@ export const forum: Catalog = {
   "search.placeholder": "Search the forum…",
   "search.ariaLabel": "Search the forum",
   "search.clearAria": "Clear search",
+  // PRD-164: the box now matches thread titles AND the text of any reply
+  // inside them. The old hint sent members elsewhere for something it does
+  // itself. It stays honest about the edges: this is the forum, not the
+  // whole platform.
   "search.hint":
-    "Searches thread titles only. Post and reply text stays out of the match.",
+    "Searches thread titles and the replies inside them, so an answer buried in a comment still turns up. Forum only.",
 
   // ── ForumThreadList ─────────────────────────────────────────────────────
-  "threadList.top": "Top",
+  // `top` ranks votes from the last 30 days now, so the label says so rather
+  // than implying an all-time leaderboard.
+  "threadList.top": "Top this month",
   "threadList.new": "New",
   "threadList.active": "Active",
   "threadList.unanswered": "Unanswered",
@@ -122,10 +130,19 @@ export const forum: Catalog = {
     "The town square is open to every member. Be the one to start the conversation.",
   "threadList.emptyAll.action": "Write a post",
   "threadList.pinnedBadge": "Pinned",
+  "threadList.withdrawnBadge": "Withdrawn",
   "threadList.upvoteAria": "Upvote",
   "threadList.removeUpvoteAria": "Remove upvote",
   "threadList.loadingMore": "Loading…",
   "threadList.loadMoreCta": "Load more posts",
+  // Unread replies since the member last opened the thread (PRD-170). The chip
+  // is terse; the aria version says what the number means.
+  "threadList.unreadBadge_one": "{formatted} new",
+  "threadList.unreadBadge_other": "{formatted} new",
+  "threadList.unreadAria_one": "{formatted} reply you haven't read yet",
+  "threadList.unreadAria_other": "{formatted} replies you haven't read yet",
+  // The server caps the count at 99, so 99 means "99 or more".
+  "threadList.unreadCap": "99+",
 
   // ── Shared reply-count phrasing (thread card meta + reply sort bar) ─────
   repliesCount_one: "{formatted} reply",
@@ -163,6 +180,9 @@ export const forum: Catalog = {
   "threadOp.report": "Report",
   "threadOp.voteAria": "Upvote this post",
   "threadOp.unvoteAria": "Remove your upvote",
+  // ENG-130. The reason is not ours to guess at, so we don't invent one.
+  "threadOp.unavailable":
+    "The opening post isn't available to you. The replies below are still here to read.",
 
   // ── Locked thread (moderator has closed replies) ────────────────────────
   "locked.title": "This thread is closed to new replies",
@@ -244,6 +264,7 @@ export const forum: Catalog = {
 
   // ── PostActionsMenu (⋯ overflow menu) ────────────────────────────────────
   "postMenu.edit": "Edit",
+  "postMenu.moveCategory": "Move to another category",
   "postMenu.delete": "Delete",
   "postMenu.restore": "Restore",
   "postMenu.history": "View edit history",
@@ -279,6 +300,24 @@ export const forum: Catalog = {
   "deleteConfirm.cancel": "Keep it",
   "deleteConfirm.deleting": "Deleting…",
 
+  // ── Withdrawing a whole thread (PRD-160) ─────────────────────────────────
+  "deleteThread.title": "Take this post down?",
+  "deleteThread.body":
+    "The whole thread goes: the title, your opening post and the link people follow to get here. Replies stay written where they are, and nobody reaches them from the forum any more. You can’t undo this yourself.",
+  "deleteThread.confirm": "Take it down",
+  "deleteThread.cancel": "Keep it up",
+  "deleteThread.deleting": "Taking it down…",
+
+  // ── Moving a thread to another category (PRD-163) ────────────────────────
+  "moveCategory.title": "Move this post",
+  "moveCategory.body":
+    "People find the forum by category, so a post filed in the right place is a post that gets answered. Pick where it belongs.",
+  "moveCategory.fieldLabel": "Category",
+  "moveCategory.save": "Move it",
+  "moveCategory.saving": "Moving…",
+  "moveCategory.cancel": "Leave it here",
+  "moveCategory.badgeAria": "Move this post out of {category}",
+
   // ── Edit history modal ────────────────────────────────────────────────────
   "history.title": "Edit history",
   "history.empty": "No earlier versions to show.",
@@ -288,6 +327,8 @@ export const forum: Catalog = {
   // ── Toasts (edit / delete / restore / lock / pin) ─────────────────────────
   "toast.editSaved": "Your edit is live.",
   "toast.deleted": "Post deleted.",
+  "toast.threadDeleted": "That post is off the forum now.",
+  "toast.categoryMoved": "Moved to {category}.",
   "toast.restored": "Post restored.",
   "toast.threadLocked": "Thread closed to new replies.",
   "toast.threadUnlocked": "Thread reopened.",
@@ -336,4 +377,18 @@ export const forum: Catalog = {
   "draft.restored": "Draft restored",
   "draft.threadKind": "POST",
   "draft.replyKind": "REPLY",
+  // Row title for an autosaved inline nested reply, so the drafts list says
+  // who the half-written answer was for (PRD-166).
+  "draft.inlineReplyTitle": "Reply to {name}",
+  // Row title for a saved post the member has not titled yet: they picked a
+  // community or some tags before writing anything.
+  "draft.untitledThreadTitle": "Unfinished post",
+
+  // ── The forum's own sight of an unsent draft (PRD-165) ────────────────────
+  "draftNotice.title": "Your unfinished post is still here",
+  "draftNotice.resumeCta": "Resume",
+
+  // ── Link unfurl card under a post (PRD-171) ───────────────────────────────
+  "linkPreview.aria": "Link preview: {title}",
+  "linkPreview.ariaGeneric": "Link preview from {site}",
 };

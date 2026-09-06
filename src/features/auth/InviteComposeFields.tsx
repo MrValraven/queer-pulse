@@ -15,13 +15,6 @@ interface InviteComposeFieldsProps {
   setNote: (v: string) => void;
 }
 
-const optionalStyle = {
-  fontWeight: 400,
-  textTransform: "none" as const,
-  letterSpacing: 0,
-  fontSize: 11,
-};
-
 export function InviteComposeFields({
   recipientEmail,
   setRecipientEmail,
@@ -42,7 +35,9 @@ export function InviteComposeFields({
       <div className={styles.field}>
         <label htmlFor={`${fieldId}-recipient`}>
           {t("auth:invite.compose.recipientEmail.label")}{" "}
-          <span style={optionalStyle}>{t("auth:common.optionalSuffix")}</span>
+          <span className={styles.optionalSuffix}>
+            {t("auth:common.optionalSuffix")}
+          </span>
         </label>
         <input
           id={`${fieldId}-recipient`}
@@ -77,7 +72,9 @@ export function InviteComposeFields({
       <div className={styles.field}>
         <label htmlFor={`${fieldId}-vouch`}>
           {t("auth:invite.compose.vouch.label")}{" "}
-          <span style={optionalStyle}>{t("auth:common.optionalSuffix")}</span>
+          <span className={styles.optionalSuffix}>
+            {t("auth:common.optionalSuffix")}
+          </span>
         </label>
         <textarea
           id={`${fieldId}-vouch`}
@@ -92,7 +89,9 @@ export function InviteComposeFields({
       <div className={styles.field}>
         <label htmlFor={`${fieldId}-note`}>
           {t("auth:invite.compose.note.label")}{" "}
-          <span style={optionalStyle}>{t("auth:common.optionalSuffix")}</span>
+          <span className={styles.optionalSuffix}>
+            {t("auth:common.optionalSuffix")}
+          </span>
         </label>
         <textarea
           id={`${fieldId}-note`}

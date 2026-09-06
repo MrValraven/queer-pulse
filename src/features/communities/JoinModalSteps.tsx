@@ -10,11 +10,15 @@ export function JoinStepIntro({
   community,
   isRequest,
   isInvite,
+  isInvited = false,
   onNext,
 }: {
   community: JoinModalCommunity;
   isRequest: boolean;
   isInvite: boolean;
+  /** PRD-140: this member holds a standing invitation, so the door is already
+   *  open to them and no moderator has anything left to review. */
+  isInvited?: boolean;
   onNext: () => void;
 }) {
   const { t } = useTranslation();
@@ -41,8 +45,14 @@ export function JoinStepIntro({
           ))}
         </div>
       )}
-      {isInvite && (
-        <p className={styles.hint}>{t("communities:join.intro.inviteHint")}</p>
+      {isInvited ? (
+        <p className={styles.hint}>{t("communities:join.intro.invitedHint")}</p>
+      ) : (
+        isInvite && (
+          <p className={styles.hint}>
+            {t("communities:join.intro.inviteHint")}
+          </p>
+        )
       )}
       <Button variant="primary" onClick={onNext}>
         {t("communities:join.intro.continueCta")}

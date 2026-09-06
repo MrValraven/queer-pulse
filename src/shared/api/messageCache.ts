@@ -164,6 +164,36 @@ export function patchMessageDelete(
   );
 }
 
+/**
+ * Remove ONE message from the thread cache entirely — "delete for me"
+ * (PRD-227), a SECOND thing beside `patchMessageDelete`'s tombstone above.
+ * Unlike a tombstone (which deliberately KEEPS its slot so the timeline stays
+ * continuous for every OTHER participant), hiding a message for just the
+ * viewer removes it outright: it no longer exists in THEIR view, and no other
+ * participant's cache is ever touched by this (they never even receive a
+ * socket frame for it — the hide is server-private). A no-op if the thread
+ * isn't cached / in demo mode.
+ */
+export function removeMessageFromThread(
+  queryClient: QueryClient,
+  conversationId: string,
+  messageId: string,
+): void {
+  queryClient.setQueriesData<ThreadData>(
+    threadFilter(conversationId),
+    (data) => {
+      if (!data) return data;
+      return {
+        ...data,
+        pages: data.pages.map((page) => ({
+          ...page,
+          items: page.items.filter((item) => item.id !== messageId),
+        })),
+      };
+    },
+  );
+}
+
 /** Patch a message's SHARED pin state in place (`pinnedAt` ISO, or null when
  *  unpinned) — for the acting user's optimistic update and the counterpart's
  *  `message:pinned` socket frame, so the in-bubble pin indicator flips without a
@@ -303,7 +333,11 @@ export function patchConversationMuted(
 /** Patch a conversation-list row's unread state to zero — used by
  *  `useMarkRead.onSuccess` instead of `invalidateQueries(["conversations"])`,
  *  so opening an unread thread (which fires on every thread-open-with-unread)
- *  doesn't cost a network round-trip. A no-op if the row isn't cached. */
+ *  doesn't cost a network round-trip. A no-op if the row isn't cached.
+ *  Also clears `markedUnreadAt` (PRD-225): re-opening/reading a thread is the
+ *  ONLY thing that clears a manual "mark unread", mirroring exactly what the
+ *  server's `markRead` does in the same request this patches the response of —
+ *  so the two can never disagree. */
 export function patchConversationRead(
   queryClient: QueryClient,
   conversationId: string,
@@ -313,7 +347,38 @@ export function patchConversationRead(
     (previous) =>
       previous?.map((conversation) =>
         conversation.id === conversationId
-          ? { ...conversation, unread: false, unreadCount: 0 }
+          ? {
+              ...conversation,
+              unread: false,
+              unreadCount: 0,
+              markedUnreadAt: undefined,
+            }
+          : conversation,
+      ),
+  );
+}
+
+/** Patch a conversation-list row's manual "mark unread" state in place
+ *  (PRD-225) — used by `useToggleMarkUnread`'s optimistic update. Setting it
+ *  true also flips `unread` immediately (the row menu's whole point is an
+ *  instant unread dot); clearing it does NOT touch `unread`/`unreadCount` on
+ *  its own — only a genuine read (`patchConversationRead` above) may do that.
+ *  A no-op if the row isn't cached. */
+export function patchConversationMarkedUnread(
+  queryClient: QueryClient,
+  conversationId: string,
+  markedUnreadAt: string | undefined,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? {
+              ...conversation,
+              markedUnreadAt,
+              unread: markedUnreadAt ? true : conversation.unread,
+            }
           : conversation,
       ),
   );
@@ -371,6 +436,42 @@ export function upsertMessage(
       };
     },
   );
+}
+
+/**
+ * The newest message id currently cached for a conversation's thread — used
+ * to send an honest `upToMessageId` read-watermark (see `useMarkRead`)
+ * instead of the sender's wall clock. `MessageArea` renders straight from
+ * this SAME cache (see the file header), so "newest cached" and "newest this
+ * tab has actually rendered" are the same data source; walks every cached
+ * demoMode variant of the thread query and keeps the max by `(createdAt,
+ * id)`, mirroring `reconcileConversationHistory`'s own resume-point walk.
+ * Returns null when nothing is cached yet (a thread whose history hasn't
+ * been fetched into this tab), so the caller can fall back to its own
+ * default watermark.
+ */
+export function newestCachedMessageId(
+  queryClient: QueryClient,
+  conversationId: string,
+): string | null {
+  const entries = queryClient.getQueriesData<ThreadData>(
+    threadFilter(conversationId),
+  );
+  let newest: MessageResponse | null = null;
+  for (const [, data] of entries) {
+    for (const page of data?.pages ?? []) {
+      for (const message of page.items) {
+        if (
+          !newest ||
+          message.createdAt > newest.createdAt ||
+          (message.createdAt === newest.createdAt && message.id > newest.id)
+        ) {
+          newest = message;
+        }
+      }
+    }
+  }
+  return newest?.id ?? null;
 }
 
 /**

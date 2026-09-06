@@ -254,8 +254,26 @@
   margin-bottom: 2px;
   overflow-wrap: anywhere;
 }
-.recentInfo span {
+/* The supporting line only. This used to be a `.recentInfo span` descendant
+   rule, which also reached inside `SavedUnavailableNote` and flattened its own
+   type and colour. A class on the one span that wants it keeps the note's
+   styling intact. */
+.recentMeta {
   font-size: var(--text-12);
+  color: var(--ink-60);
+}
+/* A recent save whose subject can no longer be opened (PRD-169). The row stays
+   tappable, because filing it into a list still works and removing it is done
+   from the list itself; the treatment and the note inside it are what say the
+   save has gone dead. Matches the filed-item row in SavedListDetailModal. The
+   wash rides --line-rgb, which flips to cream in dark mode, so it holds in
+   both themes. */
+.recentRowUnavailable {
+  align-items: start;
+  background: rgba(var(--line-rgb), 0.035);
+  border-style: dashed;
+}
+.recentRowUnavailable .recentInfo b {
   color: var(--ink-60);
 }
 .recentAdd {

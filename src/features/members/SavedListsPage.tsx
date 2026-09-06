@@ -8,9 +8,13 @@ import {
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { SavedItem } from "../../app/providers/useSaved";
+import {
+  isSavedItemUnavailable,
+  type SavedItem,
+} from "../../app/providers/useSaved";
 import type { SavedListDTO } from "./api/SavedLists.api";
 import { SavedListDetailModal } from "./SavedListDetailModal";
+import { SavedUnavailableNote } from "./SavedUnavailableNote";
 import { SavedListFileModal, SavedListNewModal } from "./SavedListModals";
 import { useSavedListsController } from "./SavedListsPage.controller";
 import styles from "./SavedListsPage.module.css";
@@ -62,7 +66,17 @@ function SavedListCardSkeleton() {
   );
 }
 
-/** A recent save, offered for filing into one of the member's named lists. */
+/**
+ * A recent save, offered for filing into one of the member's named lists.
+ *
+ * The row stays tappable when the subject can no longer be opened (PRD-169):
+ * it opens the file modal rather than navigating, so it cannot land anybody on
+ * a not-found page, and filing a lost save into a list is still a reasonable
+ * thing to want. What it must not do is stay silent, or the member finds out
+ * only once the list is built. `SavedUnavailableNote` carries the state as
+ * text, on the same terms as the saved card, the filed-item row and the
+ * shared-list row: never a reason, since the API deliberately does not say one.
+ */
 function SavedListRecentRow({
   item,
   onFile,
@@ -71,14 +85,22 @@ function SavedListRecentRow({
   onFile: () => void;
 }) {
   const { t } = useTranslation();
+  const isUnavailable = isSavedItemUnavailable(item);
   return (
-    <button type="button" className={styles.recentRow} onClick={onFile}>
+    <button
+      type="button"
+      className={`${styles.recentRow}${
+        isUnavailable ? ` ${styles.recentRowUnavailable}` : ""
+      }`}
+      onClick={onFile}
+    >
       <span className={styles.recentKind}>
         {item.kind.slice(0, 3).toUpperCase()}
       </span>
       <span className={styles.recentInfo}>
         <b>{item.title}</b>
-        {item.meta && <span>{item.meta}</span>}
+        {item.meta && <span className={styles.recentMeta}>{item.meta}</span>}
+        {isUnavailable && <SavedUnavailableNote />}
       </span>
       <span className={styles.recentAdd}>
         {t("members:savedLists.recent.fileCta")}

@@ -1,6 +1,7 @@
-import { Navigate, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
+import { MagazineStoryRedirect } from "./MagazineStoryRedirect";
 
 const MagazinePage = lazyNamed(
   () => import("./MagazinePage"),
@@ -25,6 +26,11 @@ const MagazineSectionArticlesPage = lazyNamed(
 const MagazineSearchPage = lazyNamed(
   () => import("./MagazineSearchPage"),
   "MagazineSearchPage",
+);
+const DecksPage = lazyNamed(
+  () => import("./DecksPage"),
+  "DecksPage",
+  routes.magazineDecks,
 );
 const IssuePage = lazyNamed(() => import("./IssuePage"), "IssuePage");
 const IssuesPage = lazyNamed(() => import("./IssuesPage"), "IssuesPage");
@@ -69,8 +75,10 @@ const ApplyToWritePage = lazyNamed(
   "ApplyToWritePage",
 );
 
-// The three first-person stories are now regular data-driven articles in the
-// article registry; their legacy paths resolve to the generic ArticlePage.
+// The three first-person stories are regular data-driven articles in the DEMO
+// article registry; their legacy paths resolve to the generic ArticlePage
+// there. Live mode has no piece at these slugs, so `MagazineStoryRedirect`
+// sends a live reader to the magazine front instead (PRD-101).
 const STORY_ARTICLE_IDS: Record<string, string> = {
   [routes.story]: "studio-principe-real",
   [routes.storyTomas]: "supper-club-mouraria",
@@ -103,6 +111,10 @@ export function magazineRoutes() {
           `?tag=` from the URL, so a search is shareable and every tag pill in
           the magazine links here. */}
       <Route path={routes.magazineSearch} element={<MagazineSearchPage />} />
+      {/* PRD-105 — the decks index. A literal path, declared beside the
+          single-deck reader at `routes.deck` (`/magazine/deck`); neither is a
+          wildcard, so the two never collide. */}
+      <Route path={routes.magazineDecks} element={<DecksPage />} />
       <Route path={routes.issue} element={<IssuePage />} />
       {/* CNT-8 fix: a real per-issue route — every archive/masthead link used
           to point at this same bare path (always issue 09), so no past issue
@@ -110,30 +122,29 @@ export function magazineRoutes() {
           `:number` is given (see `IssuePage`/`useIssue`). */}
       <Route path={`${routes.issue}/:number`} element={<IssuePage />} />
       <Route path={routes.issues} element={<IssuesPage />} />
+      {/* PRD-101 — demo lands on the curated piece, live on the magazine
+          front: these three slugs only exist in the demo registry. */}
       <Route
         path={routes.story}
         element={
-          <Navigate
-            to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.story]}`}
-            replace
+          <MagazineStoryRedirect
+            articleId={STORY_ARTICLE_IDS[routes.story] ?? ""}
           />
         }
       />
       <Route
         path={routes.storyTomas}
         element={
-          <Navigate
-            to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storyTomas]}`}
-            replace
+          <MagazineStoryRedirect
+            articleId={STORY_ARTICLE_IDS[routes.storyTomas] ?? ""}
           />
         }
       />
       <Route
         path={routes.storySafety}
         element={
-          <Navigate
-            to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storySafety]}`}
-            replace
+          <MagazineStoryRedirect
+            articleId={STORY_ARTICLE_IDS[routes.storySafety] ?? ""}
           />
         }
       />

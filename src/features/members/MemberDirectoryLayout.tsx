@@ -7,11 +7,14 @@ import type {
   SortKey,
 } from "./memberDirectoryFilter.data";
 import { type SectionKey } from "./filterSectionKeys";
+import type { MemberDirectorySearch } from "./useMemberDirectoryQuery";
 import { FiltersSidebar } from "./MemberFilterCards";
 import { MemberResultsColumn } from "./MemberDirectorySections";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 export interface MemberDirectoryLayoutProps {
+  /** The name-search box's value and setter, rendered in the results column. */
+  search: MemberDirectorySearch;
   filters: FilterState;
   /** Every member loaded so far. DEMO mode counts the sidebar's facets off
    *  this (there it is the whole directory); live mode uses `facets` — see
@@ -50,6 +53,7 @@ export interface MemberDirectoryLayoutProps {
  *  `MemberDirectoryFilterPage` purely to keep that component under the
  *  200-line single-component limit — this owns no state of its own. */
 export function MemberDirectoryLayout({
+  search,
   filters,
   sourceMembers,
   facets,
@@ -112,6 +116,7 @@ export function MemberDirectoryLayout({
           directory as currently filtered. */}
       <PullToRefresh onRefresh={onRefresh}>
         <MemberResultsColumn
+          search={search}
           filters={filters}
           sort={sort}
           onSort={onSort}

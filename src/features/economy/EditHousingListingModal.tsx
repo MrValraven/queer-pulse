@@ -37,7 +37,15 @@ export function EditHousingListingModal({
   const form = useListSpaceForm({
     title: listing.title,
     area: listing.area,
+    // The owner read carries their own stored address (absent when they never
+    // added one). Seeding it matters twice over: the field would otherwise
+    // render blank on a listing that HAS an address, and the form always sends
+    // this field, so a blank would silently erase it.
+    addressLine: listing.addressLine ?? "",
     rent: String(listing.rentEuros),
+    // Null is "not stated", which seeds as a blank field. Do NOT seed a 0: it
+    // would turn a deposit nobody stated into a stated zero on the next save.
+    deposit: listing.depositEuros !== null ? String(listing.depositEuros) : "",
     type: listing.type,
     bedrooms: listing.bedrooms !== undefined ? String(listing.bedrooms) : "",
     accessibility: listing.accessibilityInfo,

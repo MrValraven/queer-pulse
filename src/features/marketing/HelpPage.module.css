@@ -125,3 +125,96 @@
 :global([data-theme="dark"]) .helpContact {
   border-color: rgba(var(--cream-rgb), 0.12);
 }
+
+/* ── Search ────────────────────────────────────────────────────────────────
+   The field sits in the hero above the tab row. While a search is running the
+   tabs unmount and this status line takes their place, so the two never
+   contradict each other about what the list below is showing. */
+
+.search {
+  margin-top: 28px;
+  max-width: 460px;
+}
+
+.searchState {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.searchStateOn {
+  padding-top: 18px;
+}
+.searchStatus {
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.clearSearch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-8);
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: color 0.16s var(--ease);
+}
+.clearSearch svg {
+  width: 14px;
+  height: 14px;
+}
+@media (hover: hover) {
+  .clearSearch:hover {
+    color: var(--accent);
+  }
+}
+
+/* ── Search results ──────────────────────────────────────────────────────── */
+
+.resultCategory {
+  margin: 0;
+  padding: 16px 4px 0;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.resultCategory + .accQ {
+  padding-top: 6px;
+}
+
+.resultExcerpt {
+  margin: 0;
+  padding: 0 4px 20px;
+  max-width: 70ch;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.65;
+}
+
+/* Overrides the browser's yellow-on-black <mark> default. */
+.hit {
+  background: rgba(var(--accent-rgb), 0.22);
+  color: inherit;
+  border-radius: var(--radius-4);
+  padding: 0 2px;
+}
+
+:global([data-theme="dark"]) .hit {
+  background: rgba(var(--accent-rgb), 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clearSearch {
+    transition: none;
+  }
+}

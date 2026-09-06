@@ -9,6 +9,7 @@ import { useRealtime } from "../../shared/api/realtime";
 import type { ChatMessage } from "./data";
 import { saveOutbox } from "./outbox";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import {
   mediaKindOf,
   revokeBlobPreview,
@@ -21,9 +22,72 @@ type DeliverFunction = (
   localId: string,
   replyToId?: string,
   forwarded?: boolean,
-  attachment?: GifAttachment,
+  attachment?: GifAttachment | DocumentAttachment,
   mediaKind?: MediaKind,
 ) => void;
+
+/** How many times the outbox may automatically re-send a still-failing entry
+ *  (mount / `online` / reconnect) before giving up on ever auto-replaying it
+ *  again. It stays visible as `"failed"` and a MANUAL `retrySend` still works
+ *  past this cap — only the unattended replay loop stops. Bounds a transient
+ *  failure (network blip, 5xx, 429, timeout) that never recovers from
+ *  silently reburning the 60/min send throttle on every connectivity flap for
+ *  the rest of the entry's localStorage lifetime. */
+const MAX_AUTO_REPLAY_ATTEMPTS = 5;
+
+/** Exponential backoff between automatic replay attempts for one entry (2s,
+ *  4s, 8s, 16s, capped at 30s) — the same order of magnitude as the socket
+ *  layer's own reconnect backoff, so a burst of `online`/reconnect events
+ *  close together can't hammer a still-cooling-down send. */
+function backoffDelayMs(retryCount: number): number {
+  return Math.min(2000 * 2 ** retryCount, 30_000);
+}
+
+/** True when the outbox may automatically replay `message` right now: it has
+ *  a client id, is still `sending`/`failed`, was never classified a
+ *  PERMANENT failure (`isRetryable === false`, set by
+ *  `useMessageDeliverCore`'s `onError` — see `PERMANENT_FAILURE_STATUS_CODES`
+ *  there), hasn't exhausted `MAX_AUTO_REPLAY_ATTEMPTS`, and has cleared its
+ *  backoff window since the last attempt. A manual `retrySend` bypasses this
+ *  entirely (it calls `deliver` directly) — this gate only governs the
+ *  unattended mount / `online` / reconnect replay loops below. */
+function isDueForAutoReplay(message: ChatMessage): message is ChatMessage & {
+  localId: string;
+} {
+  if (!message.localId) return false;
+  if (message.status !== "sending" && message.status !== "failed") {
+    return false;
+  }
+  if (message.isRetryable === false) return false;
+  const retryCount = message.retryCount ?? 0;
+  if (retryCount >= MAX_AUTO_REPLAY_ATTEMPTS) return false;
+  const lastAttemptAt = message.lastAttemptAt ?? 0;
+  return Date.now() - lastAttemptAt >= backoffDelayMs(retryCount);
+}
+
+/** Record that the outbox itself (not a manual retry) just spent one
+ *  automatic-replay attempt on `localId`, BEFORE firing `deliver` — so two
+ *  replay triggers landing in the same tick (e.g. `online` and a socket
+ *  reconnect firing together) can't both see the same stale `retryCount` and
+ *  double-spend the budget on one connectivity flap. */
+function markAutoReplayAttempt(
+  setSent: Dispatch<SetStateAction<Record<string, ChatMessage[]>>>,
+  conversationId: string,
+  localId: string,
+): void {
+  setSent((previous) => ({
+    ...previous,
+    [conversationId]: (previous[conversationId] ?? []).map((item) =>
+      item.localId === localId
+        ? {
+            ...item,
+            retryCount: (item.retryCount ?? 0) + 1,
+            lastAttemptAt: Date.now(),
+          }
+        : item,
+    ),
+  }));
+}
 
 interface OutboxDeps {
   sent: Record<string, ChatMessage[]>;
@@ -112,12 +176,12 @@ export function useMessageOutbox({
       // placeholder, so a `sending` entry here was never attempted, and a
       // `failed` one (a genuine send error before the id even resolved,
       // effectively unreachable today but kept for safety) deserves the same
-      // automatic retry `replayOutbox` gives every other failed send.
+      // automatic retry `replayOutbox` gives every other failed send —
+      // `isDueForAutoReplay` skips one already classified a PERMANENT failure
+      // (`isRetryable === false`) or that exhausted its retry budget.
       for (const message of pending) {
-        if (
-          message.localId &&
-          (message.status === "sending" || message.status === "failed")
-        ) {
+        if (isDueForAutoReplay(message)) {
+          markAutoReplayAttempt(setSent, newConvId, message.localId);
           deliver(
             newConvId,
             message.text,
@@ -138,14 +202,17 @@ export function useMessageOutbox({
   // so a message the server already stored is deduped rather than duplicated —
   // safe to fire on every connectivity flap. A send that succeeds is cleared
   // from `sent` by `deliver`'s onSuccess, so a later replay simply skips it.
+  // `isDueForAutoReplay` is what keeps this actually safe to call on every
+  // flap: it skips a PERMANENT failure (never resent again — see
+  // `useMessageDeliverCore`'s `PERMANENT_FAILURE_STATUS_CODES`) and bounds a
+  // still-transient one to `MAX_AUTO_REPLAY_ATTEMPTS` with backoff between
+  // tries, so a dead entry can't burn the 60/min send throttle forever.
   const replayOutbox = useCallback(() => {
     if (demoMode) return;
     for (const [conversationId, messages] of Object.entries(sentRef.current)) {
       for (const message of messages) {
-        if (
-          message.localId &&
-          (message.status === "sending" || message.status === "failed")
-        ) {
+        if (isDueForAutoReplay(message)) {
+          markAutoReplayAttempt(setSent, conversationId, message.localId);
           deliverRef.current(
             conversationId,
             message.text,
@@ -159,7 +226,7 @@ export function useMessageOutbox({
         }
       }
     }
-  }, [demoMode]);
+  }, [demoMode, setSent]);
 
   // Replay once on mount: the persisted outbox may hold a send that was in
   // flight or failed when the tab last closed.

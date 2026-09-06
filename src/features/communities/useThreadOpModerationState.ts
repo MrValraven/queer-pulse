@@ -10,6 +10,7 @@ import {
 import { deriveOpFlags, type OpOverride } from "./communityThread.helpers";
 import type { Thread as ThreadData } from "./communityDetails";
 import type { DeleteTarget, ReportTarget } from "./communityThread.types";
+import type { CommunityTakedownInput } from "./api/communities.api";
 
 /** OP-post moderation: local demo overrides + derived flags, and the
  *  edit / delete / restore / pin / report actions on the thread's own post.
@@ -41,6 +42,7 @@ export function useThreadOpModerationState(
   const onError = () => showToast(t("communities:common.error"), "error");
 
   const {
+    opIsMine,
     opDeleted,
     opPinned,
     opBody,
@@ -89,11 +91,27 @@ export function useThreadOpModerationState(
     );
   }
 
-  function runDeleteOp() {
+  /**
+   * Take the thread's own post down.
+   *
+   * `takedown` is present only when a MODERATOR acted on somebody else's post
+   * (PRD-147): the reason and the cited house rule reach the author with their
+   * notification, and the whole decision is written to the community's
+   * governance log. An author deleting their own post passes nothing and keeps
+   * the plain toast, because nothing was logged and nobody was told.
+   */
+  function runDeleteOp(takedown?: CommunityTakedownInput) {
+    const successToast = () =>
+      showToast(
+        takedown
+          ? t("communities:detail.modtools.takedown.post.successToast")
+          : t("communities:detail.thread.deletedToast"),
+        "success",
+      );
     if (demoMode) {
       setConfirmDelete(null);
       setOpOverride((prev) => ({ ...prev, deleted: true }));
-      showToast(t("communities:detail.thread.deletedToast"), "success");
+      successToast();
       return;
     }
     if (!data.id) {
@@ -103,14 +121,21 @@ export function useThreadOpModerationState(
     // The confirm modal stays mounted (and busy) until the delete resolves,
     // so the "Deleted" toast only ever follows a delete that happened.
     deletePost.mutate(
-      { id: data.id },
+      { id: data.id, takedown },
       {
         onSuccess: () => {
           setConfirmDelete(null);
-          showToast(t("communities:detail.thread.deletedToast"), "success");
+          successToast();
         },
         onError: () => {
           setConfirmDelete(null);
+          if (takedown) {
+            showToast(
+              t("communities:detail.modtools.takedown.errorToast"),
+              "error",
+            );
+            return;
+          }
           onError();
         },
       },
@@ -169,6 +194,9 @@ export function useThreadOpModerationState(
   return {
     editingOp,
     setEditingOp,
+    // The delete confirmation branches on this: the author gets the plain
+    // confirm, anybody else gets the takedown dialog (PRD-147).
+    opIsMine,
     opDeleted,
     opPinned,
     opBody,

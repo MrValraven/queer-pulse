@@ -72,34 +72,71 @@ export interface BadgesDTO {
 }
 
 export type PerkState = "available" | "locked" | "claimed";
+
+/**
+ * Every English string in the perks block is a FALLBACK. The words the page
+ * renders are owned here on the frontend and resolved from the stable ids
+ * beside them (see `perkCatalog.data.ts`), so a perk this build has not
+ * caught up with still reads as readable English rather than an identifier.
+ */
 export type PerkFooterDTO =
   | { type: "active-auto"; autoLabel: string }
   | { type: "button"; label: string; toast: string }
   | { type: "link-auto"; label: string; to: string; autoLabel: string }
-  | { type: "lock"; label: string }
+  /** `unlockLevel` builds "Unlocks at Level 4 · Familiar" from the frontend's
+   *  own level names; `label` is the English fallback. */
+  | { type: "lock"; label: string; unlockLevel: number }
+  /** ISO timestamp, formatted and phrased locally. */
   | { type: "claimed"; date: string };
+
+/** Monthly invite allowance before and after claiming an invite-quota perk.
+ *  Absent on every other perk. */
+export interface PerkInviteQuotaDTO {
+  base: number;
+  total: number;
+}
+
 export interface PerkDTO {
-  /** Stable catalogue key. The path segment the claim endpoint takes. */
+  /** Stable catalogue key. The path segment the claim endpoint takes, and the
+   *  id the frontend resolves the perk's words from. */
   key: string;
   cat: string;
   title: string;
   desc: string;
   state: PerkState;
   footer: PerkFooterDTO;
+  inviteQuota?: PerkInviteQuotaDTO;
 }
+
+export type PerkGroupKind = "available" | "coming" | "claimed";
 export interface PerkGroupDTO {
+  kind: PerkGroupKind;
+  /** Set only on a `coming` group: the level its perks unlock at. */
+  unlockLevel?: number;
+  /** English fallback for the heading. */
   label: string;
   perks: PerkDTO[];
 }
 
+/** One capability named on a level's ladder row: a baseline capability id or
+ *  a claimable perk's catalogue key, plus the English fallback. */
+export interface PerkLadderEntryDTO {
+  id: string;
+  label: string;
+}
+
 export type PerkLadderState = "achieved" | "current" | "locked";
+export type PerkLadderStatusKind = "done" | "current" | "xp-away";
 export interface PerkLadderRowDTO {
   num: number;
   name: string;
   state: PerkLadderState;
-  /** Short status label, e.g. "Done", "Current", "320 XP away", "Locked". */
+  statusKind: PerkLadderStatusKind;
+  /** XP still to go, set only when `statusKind` is `xp-away`. */
+  xpAway?: number;
+  /** English fallback for the status label. */
   status: string;
-  perks: string[];
+  perks: PerkLadderEntryDTO[];
 }
 export interface PerksDTO {
   /** Perks currently claimable (drives the profile card chip). */

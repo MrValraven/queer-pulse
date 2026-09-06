@@ -4,14 +4,19 @@ import type { SubprofileCardDTO, SubprofileKind } from "./api/subprofiles.api";
 const OPEN_TO_COLLABS = "open_to_collabs";
 
 /**
- * The directory's four narrowing predicates, kept apart from the hook that
- * combines them so each facet's counts can be taken under the OTHER three.
+ * The directory's three narrowing predicates, kept apart from the hook that
+ * combines them so each facet's counts can be taken under the OTHER two.
  *
  * That is the whole reason these are separate one-liners rather than a single
  * `matchesAll`: a profession chip's badge has to say how many personas it would
- * yield under the current tags, availability and search, but NOT under the
- * profession selection itself. Counting a facet under its own selection is what
- * makes a multi-select row where every unpicked chip reads 0.
+ * yield under the current tags and availability, but NOT under the profession
+ * selection itself. Counting a facet under its own selection is what makes a
+ * multi-select row where every unpicked chip reads 0.
+ *
+ * There is no free-text predicate here any more. Search is a server param now
+ * (`GET /subprofiles/directory?query=`), so the set these run over has already
+ * been searched, and a second browser-side spelling of the same ILIKE would be
+ * a filter nobody could see running.
  */
 export const matchesKind = (
   card: SubprofileCardDTO,
@@ -25,12 +30,6 @@ export const matchesOpenToCollabs = (
   card: SubprofileCardDTO,
   isOpenToCollabsOnly: boolean,
 ) => !isOpenToCollabsOnly || card.availability === OPEN_TO_COLLABS;
-
-/** `term` must already be trimmed and lower-cased. An empty term matches all. */
-export const matchesQuery = (card: SubprofileCardDTO, term: string) =>
-  term === "" ||
-  card.displayName.toLowerCase().includes(term) ||
-  (card.tagline ?? "").toLowerCase().includes(term);
 
 /** How many of `cards` carry each profession (`kind`). */
 export function countByKind(

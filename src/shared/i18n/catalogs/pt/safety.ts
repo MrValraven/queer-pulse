@@ -33,7 +33,7 @@ export const safety: Catalog = {
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.meta.title": "Denunciar uma preocupação à equipa de segurança",
   "report.meta.description":
-    "Faz uma denúncia sobre assédio, abuso ou uma situação insegura na QueerPulse. Denuncia de forma anónima, ou deixa um email para a equipa de segurança te contactar.",
+    "Faz uma denúncia sobre assédio, abuso ou uma situação insegura no QueerPulse. Podes denunciar de forma anónima e podes denunciar sem conta.",
   "report.eyebrow": "Segurança e Denúncias",
   "report.hero.title": "A segurança é <em>estrutural.</em>",
   "report.hero.lead":
@@ -49,19 +49,19 @@ export const safety: Catalog = {
 
   "report.how.title": "Como <em>funciona a denúncia</em>",
   "report.how.lead":
-    "Fazes uma denúncia. Respondemos no prazo de 24 horas. Isto é exatamente o que acontece entretanto: sem caixa negra, sem garantias vagas.",
+    "Fazes uma denúncia. Um moderador analisa-a no prazo de 24 horas. Isto é exatamente o que acontece entretanto: sem caixa negra, sem garantias vagas.",
   "report.flow.step1.title": "Fazes uma denúncia",
   "report.flow.step1.desc":
     "Através do botão em qualquer perfil, mensagem ou publicação do fórum, ou diretamente por esta página. Podes denunciar de forma anónima, se precisares.",
   "report.flow.step2.title": "Confirmação imediata",
   "report.flow.step2.desc":
-    "Recebes uma confirmação no prazo de 1 hora. Uma pessoa real fica responsável pela tua denúncia.",
+    "Uma confirmação chega às tuas notificações do QueerPulse no prazo de 1 hora e uma pessoa real fica responsável pela tua denúncia. Uma denúncia feita sem conta salta este passo: não há aqui uma caixa de entrada para alcançar.",
   "report.flow.step3.title": "Revisão no prazo de 24 horas",
   "report.flow.step3.desc":
     "Analisamos as provas, o contexto e o histórico. Em casos graves, o acesso da pessoa denunciada é suspenso temporariamente durante a análise.",
   "report.flow.step4.title": "Decisão e ação",
   "report.flow.step4.desc":
-    "Resultados possíveis: aviso, suspensão temporária, remoção permanente. Comunicamos-te o resultado, com a justificação.",
+    "Resultados possíveis: aviso, suspensão temporária, remoção permanente. O resultado e a justificação por trás dele chegam às tuas notificações do QueerPulse.",
 
   "report.form.title": "Fazer uma <em>denúncia.</em>",
   "report.form.lead":
@@ -91,7 +91,9 @@ export const safety: Catalog = {
   "report.form.detailPlaceholder":
     "Conta-nos o que aconteceu, com o detalhe com que te sintas confortável a partilhar. Não há respostas erradas.",
   "report.form.emailLabel":
-    "O teu email de contacto (opcional, para acompanhamento)",
+    "Um endereço onde alguém te possa contactar (opcional)",
+  "report.form.emailHelper":
+    "O QueerPulse não envia emails. Isto só dá a alguém da equipa de segurança uma forma de te contactar se precisar de te perguntar alguma coisa. Se deixares em branco, a denúncia fica anónima.",
   "report.form.emailPlaceholder": "teu@email.com",
   // Ver o comentário na versão EN: é uma escolha EXPLÍCITA, porque este
   // formulário costumava deduzi-la a partir do campo de email em branco.
@@ -103,7 +105,7 @@ export const safety: Catalog = {
   "report.form.identity.anonymousHelper":
     "Quem modera vê a denúncia sem o teu nome e sem esse registo de denúncias anteriores. A QueerPulse continua a guardar internamente a ligação entre ti e esta denúncia, para que possa ser rastreada se for preciso.",
   "report.form.identity.signedOutNote":
-    "Não tens sessão iniciada, por isso quem modera vê esta denúncia sem nome e sem qualquer registo de denúncias anteriores para a pesar. Inicia sessão primeiro se quiseres que fique submetida em teu nome.",
+    "Não tens sessão iniciada, por isso quem modera vê esta denúncia sem nome e sem qualquer histórico de denúncias para a pesar. Os membros leem o que aconteceu a uma denúncia nas notificações do QueerPulse; sem conta, não há aqui um sítio onde uma resposta possa chegar. Inicia sessão primeiro se quiseres que fique registada como tua.",
   "report.form.submitting": "A submeter…",
   "report.form.submitCta": "Submeter denúncia",
   "report.form.fineprint":
@@ -145,7 +147,11 @@ export const safety: Catalog = {
 
   "report.toast.chooseCategory": "Escolhe primeiro o que estás a denunciar.",
   "report.toast.received":
-    "Denúncia recebida. Entraremos em contacto no prazo de 24 horas.",
+    "Denúncia recebida. O que resultar dela chega às tuas notificações do QueerPulse.",
+  "report.authRefused":
+    "O servidor não aceitou esta denúncia tal como foi enviada. Inicia sessão e envia outra vez. Se já tens sessão iniciada, uma restrição de moderação na tua conta pode ser o que está a bloquear.",
+  "report.toast.receivedSignedOut":
+    "Denúncia recebida. Um moderador lê todas. Sem conta não há aqui um sítio onde uma resposta possa chegar, por isso não vais receber nada de volta.",
   "report.toast.submitError":
     "Não foi possível enviar a tua denúncia. Não chegou até nós. Verifica a ligação e tenta novamente.",
   // Ver o comentário na versão EN: só cobre o limite de rajada de 60 segundos.
@@ -305,6 +311,7 @@ export const safety: Catalog = {
   "profileMenu.unmute": "Dessilenciar {name}",
   "profileMenu.block": "Bloquear {name}",
   "profileMenu.unblock": "Desbloquear {name}",
+  "profileMenu.report": "Denunciar {name}",
   "profileMenu.mutedToast":
     "Silenciaste {name}. As publicações desta pessoa ficam escondidas de ti.",
   "profileMenu.unmutedToast": "Dessilenciaste {name}.",
@@ -323,6 +330,9 @@ export const safety: Catalog = {
   "blockModal.body":
     "Bloquear corta qualquer ligação entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhum de vocês consegue estabelecer ligação com o outro. Podes desbloquear mais tarde.",
   "blockModal.reportCheckbox": "Denunciar também {name} à equipa de moderação",
+  "blockModal.reasonCodeLabel": "O que aconteceu?",
+  "blockModal.reasonCodeHelper":
+    "É isto que a equipa de moderação vê primeiro, e é o que define a rapidez com que a denúncia é vista.",
   "blockModal.reasonLabel": "Motivo (opcional)",
   "blockModal.reasonPlaceholder":
     "Acrescenta qualquer contexto para a equipa de moderação…",
@@ -339,7 +349,7 @@ export const safety: Catalog = {
 
   "appeal.pending.title": "Estamos a <em>analisar</em> o teu recurso",
   "appeal.pending.sub":
-    "A nossa equipa de moderação vai analisar o teu caso com cuidado e responder no prazo de 5 dias úteis.",
+    "Um moderador que não esteve envolvido na decisão original lê o teu caso. A data abaixo é o prazo a que nos obrigamos.",
   "appeal.ref.label": "Referência do recurso",
   "appeal.pending.submittedLabel": "Submetido",
   "appeal.pending.expectedLabel": "Resposta esperada",
@@ -394,7 +404,16 @@ export const safety: Catalog = {
   "appealSubmit.form.submitting": "A enviar…",
   "appealSubmit.form.ladderCta": "Ler a escala da comunidade",
   "appealSubmit.notice":
-    "<b>Enquanto o teu recurso é analisado,</b> a decisão original mantém-se. O resultado aparece nesta página, normalmente dentro de alguns dias. Volta cá, ou reabre o teu recurso a qualquer momento para veres em que ponto está.",
+    "<b>Enquanto o teu recurso é analisado,</b> a decisão original mantém-se. Um moderador diferente decide-o no prazo de {days} dias, e o resultado aparece nesta página com a data limite. Volta cá, ou reabre o teu recurso a qualquer momento para veres em que ponto está.",
+  "appealSubmit.windowClosed.contactCta": "Escrever à equipa de moderação",
+  "appealSubmit.windowClosed.bodyNoDate":
+    "Os recursos estão abertos durante {days} dias depois de uma decisão, e a janela para este fechou. Se algo mudou entretanto, ou se não conseguiste chegar a este formulário a tempo, escreve à equipa de moderação e pede que voltem a olhar.",
+  "appealSubmit.windowClosed.body":
+    "Os recursos estão abertos durante {days} dias depois de uma decisão. Este fechou a {date}. Se algo mudou entretanto, ou se não conseguiste chegar a este formulário a tempo, escreve à equipa de moderação e pede que voltem a olhar.",
+  "appealSubmit.windowClosed.title":
+    "A janela de recurso para esta decisão fechou",
+  "appealSubmit.filingWindow":
+    "Os recursos estão abertos durante {days} dias depois de uma decisão. O prazo começa quando a decisão foi tomada, e não quando a leste. Quando não há registo de quando isso foi, não se aplica nenhum prazo a ti.",
   "appealSubmit.foot":
     "Todos os recursos, e como foram decididos, ficam registados no nosso <a>registo de transparência</a>.",
   "appealSubmit.errorFrame": "Não foi possível registar o teu recurso",
@@ -599,8 +618,10 @@ export const safety: Catalog = {
   "spaces.how.step2.desc":
     "Três pessoas sem qualquer interesse no espaço vão lá e escrevem o que encontraram. Quem nomeou o espaço não conta para as três, e o mesmo vale para quem é proprietárie ou ajuda a geri-lo.",
   "spaces.how.step3.title": "A equipa de revisão decide",
+  // O passo 3 é onde a barreira das três visitas é de facto aplicada, por isso
+  // é o único passo que tem de nomear a exceção.
   "spaces.how.step3.desc":
-    "A equipa de revisão lê as visitas e decide se os critérios são cumpridos. Em qualquer dos casos é obrigatório escrever uma justificação, que fica registada com quem decidiu e quando. O espaço é informado depois da decisão.",
+    "A equipa de revisão lê as visitas e decide se os critérios são cumpridos. Com menos de três visitas independentes o emblema é recusado, a não ser que a equipa registe a razão da exceção. Em qualquer dos casos é obrigatório escrever uma justificação, que fica registada com quem decidiu e quando, e o espaço é informado depois.",
   "spaces.how.step4.title": "Emblema atribuído",
   "spaces.how.step4.desc":
     "Se for aprovado, o espaço recebe um nível de confiança e o emblema na sua ficha do diretório, com a data em que foi atribuído. É conquistado ao cumprir o padrão.",
@@ -617,14 +638,34 @@ export const safety: Catalog = {
     "Um diretório de espaços em Lisboa avaliado pela comunidade e verificado como genuinamente seguro para pessoas LGBTQ+, com avaliações, um emblema de verificação, e uma forma de sinalizar ou nomear um espaço.",
   "spaces.hero.category": "Verificado pela comunidade",
   "spaces.hero.title": "Espaços que são realmente <em>seguros.</em>",
+  // "Todos os espaços nesta lista foram visitados e avaliados" era uma
+  // garantia que nada garantia: o serviço calculava a contagem de visitas
+  // independentes, registava-a em `safe_space_audits`, e atribuía o emblema
+  // na mesma. A contagem passou a BLOQUEAR uma atribuição abaixo de
+  // `SAFE_SPACE_REQUIRED_INDEPENDENT_VISITS`, e a única forma de a ultrapassar
+  // é uma justificação escrita que fica no registo de auditoria e obriga a
+  // linha pública de proveniência a indicar a contagem real.
+  //
+  // A garantia é real e tem uma porta. Este texto descreve as duas coisas, e
+  // continua a nunca dizer "todos": a exceção é rara, mas existe, e uma
+  // afirmação absoluta voltaria a ser falsa na primeira vez que fosse usada.
   "spaces.hero.lead":
-    "Não é autodeclarado. Não é um autocolante arco-íris na montra. Todos os espaços nesta lista foram visitados e avaliados por várias pessoas da comunidade, e podem perder o estatuto se as coisas mudarem.",
+    "Um emblema aqui é conquistado. Três pessoas sem qualquer interesse no espaço vão lá, e cada uma escreve o que encontrou, antes de uma equipa de revisão decidir segundo critérios fixos. Quando a equipa atribui um emblema com menos visitas, regista a razão e o emblema mostra a contagem real. Essa regra vale para os emblemas atribuídos a partir de hoje. Todos os emblemas têm data, voltam a revisão passado um ano, e podem ser retirados.",
   "spaces.hero.stat.verified": "espaços verificados em Lisboa",
   "spaces.hero.stat.reviews": "avaliações submetidas por pessoas",
-  "spaces.hero.stat.removed": "espaços sinalizados e removidos este ano",
+  // Rotula `stats.removed`, que o backend calcula como os espaços que estão
+  // agora no estado removido. Não há filtro de data nenhum nessa consulta,
+  // por isso "este ano" era simplesmente falso.
+  "spaces.hero.stat.removed": "espaços que perderam o emblema",
   "spaces.dir.title": "Espaços <em>verificados.</em>",
-  "spaces.dir.updated":
-    "Última atualização em junho de 2025 · Mantido pela comunidade",
+  // Só aparece quando nenhum emblema da página traz data, e enquanto o pedido
+  // ainda está a decorrer. A versão com data é `spaces.dir.lastCheck`.
+  "spaces.dir.updated": "Mantido pela comunidade",
+  // `{date}` é a data de emblema mais recente da página
+  // (`stats.lastReVerifiedAt`), localizada por `fmt.date`. Substituiu um
+  // "Última atualização em junho de 2025" fixo que nada produzia.
+  "spaces.dir.lastCheck":
+    "Última verificação de emblemas a {date} · Mantido pela comunidade",
   "spaces.dir.nominateCta": "+ Nomear um espaço",
   "spaces.dir.browseLead":
     "Todos os espaços verificados estão agora no diretório local, filtrados apenas para os que conquistaram o emblema.",
@@ -645,8 +686,13 @@ export const safety: Catalog = {
     "Qualquer espaço pode pôr uma bandeira arco-íris na montra durante o Orgulho. A verificação significa outra coisa: significa que pessoas da comunidade estiveram lá, avaliaram-no segundo um conjunto claro de critérios, e concordaram que cumpre o padrão. E pode ser revogada.",
   "spaces.how.title": "Como <em>funciona a verificação.</em>",
   "spaces.removed.title": "Quando um espaço <em>perde</em> o emblema.",
-  "spaces.removed.lead":
-    "A verificação pode ser revogada, e é. Uma ficha não é uma recompensa que o espaço guarda para sempre; é um padrão que tem de continuar a cumprir. Quando deixa de o cumprir, dizemo-lo, e dizemos porquê. Removemos {count} espaços este ano.",
+  // O mesmo número de `spaces.hero.stat.removed`, e a mesma correção: conta os
+  // espaços que estão agora no estado removido, e não remoções dentro de um
+  // ano. Com plural porque é composto com uma contagem em direto.
+  "spaces.removed.lead_one":
+    "A verificação pode ser revogada, e é. Uma ficha não é uma recompensa que o espaço guarda para sempre; é um padrão que tem de continuar a cumprir. Quando deixa de o cumprir, dizemo-lo, e dizemos porquê. Neste momento, {count} espaço desta lista perdeu o emblema.",
+  "spaces.removed.lead_other":
+    "A verificação pode ser revogada, e é. Uma ficha não é uma recompensa que o espaço guarda para sempre; é um padrão que tem de continuar a cumprir. Quando deixa de o cumprir, dizemo-lo, e dizemos porquê. Neste momento, {count} espaços desta lista perderam o emblema.",
   "spaces.removed.step1":
     "<span>3 sinalizações</span> suspendem o emblema de imediato, até revisão.",
   "spaces.removed.step2":
@@ -684,8 +730,12 @@ export const safety: Catalog = {
     "A tua nomeação para <strong>{name}</strong> foi recebida. A comunidade é a razão por que esta lista tem algum significado. Contribuir para ela é genuinamente um presente.",
   "spaces.nominate.thanks.textPlain":
     "A tua nomeação foi recebida. A comunidade é a razão por que esta lista tem algum significado. Contribuir para ela é genuinamente um presente.",
+  // O prazo de 48 horas TEM suporte real: uma constante de política, um
+  // endpoint de confirmação e uma varredura diária que avisa a moderação
+  // quando o prazo passa. O que era vago era o canal, e a QueerPulse não envia
+  // email nenhum. O final passa a nomear o único canal que existe.
   "spaces.nominate.thanks.subInfo":
-    "Aqui está o que acontece a seguir: confirmamos a receção de todas as nomeações no prazo de <strong>48 horas</strong>. Depois, três pessoas verificadas visitam de forma independente e avaliam-no segundo os critérios, antes de um painel de voluntáries decidir. Vamos manter-te informade.",
+    "Aqui está o que acontece a seguir: confirmamos a receção de todas as nomeações no prazo de <strong>48 horas</strong>. Depois, três pessoas verificadas visitam de forma independente e avaliam-no segundo os critérios, antes de um painel de voluntáries decidir. É nas tuas notificações aqui na aplicação que vais saber de cada passo.",
   "spaces.nominate.anotherCta": "Nomear outro espaço",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
@@ -695,8 +745,11 @@ export const safety: Catalog = {
   "spaces.detail.trust.body":
     "<strong>Este espaço cumpre os critérios de Espaços Seguros</strong> e foi visitado por pessoas moderadoras da QueerPulse nos últimos 12 meses. Última reverificação em <strong>{date}</strong> · {verifier}.",
   "spaces.detail.relyTitle": "Com o que podes contar, <em>aqui</em>",
+  // "Verificamos duas vezes por ano" nomeava uma cadência que nada implementa
+  // e que contradizia a que existe mesmo: o intervalo de reavaliação é de 365
+  // dias, com uma varredura diária a levantar cada emblema que o ultrapassa.
   "spaces.detail.relySub":
-    "Todos os espaços verificados comprometem-se com isto. Verificamos duas vezes por ano.",
+    "Todos os espaços verificados comprometem-se com isto. Um emblema volta à revisão um ano depois de ser atribuído.",
   "spaces.detail.vouchedTitle_one":
     "Com voto de confiança de <em>{count} pessoa</em>",
   "spaces.detail.vouchedTitle_other":
@@ -728,8 +781,16 @@ export const safety: Catalog = {
     "O registo mantém-se aberto. Se algo te aconteceu aqui, contar-nos continua a ajudar. Informa qualquer futura reavaliação.",
   "spaces.detail.fileReportCta": "Fazer uma denúncia",
   "spaces.detail.lookingForTitle": "À procura de um lugar seguro?",
-  "spaces.detail.lookingForBody":
-    "Este espaço foi retirado da lista, mas há mais de {count} espaços verificados por toda a Lisboa que não foram. Encontra um perto de ti.",
+  // `{count}` é o `stats.verified` em direto, que substituiu um
+  // `VERIFIED_COUNT = 47` fixo. O "mais de" saiu com ele: o número agora é
+  // exato. `lookingForBodyPlain` cobre o pedido ainda a decorrer, em que a
+  // contagem é 0 e não há número honesto para mostrar.
+  "spaces.detail.lookingForBody_one":
+    "Este espaço foi retirado da lista. Há mais {count} espaço em Lisboa com o emblema. Vai antes lá.",
+  "spaces.detail.lookingForBody_other":
+    "Este espaço foi retirado da lista. Há mais {count} espaços em Lisboa com o emblema. Encontra um perto de ti.",
+  "spaces.detail.lookingForBodyPlain":
+    "Este espaço foi retirado da lista. Há outros espaços em Lisboa com o emblema. Encontra um perto de ti.",
   "spaces.detail.seeVerifiedCta": "Ver espaços verificados",
 
   // ── VouchModal.tsx ─────────────────────────────────────────────────────
@@ -936,6 +997,12 @@ export const safety: Catalog = {
   "governance.action.tierOption": "Nível {tier}",
   "governance.action.awardCta": "Atribuir o emblema",
   "governance.action.declineCta": "Recusar",
+  // Só aparece quando a contagem está abaixo da barreira. `{min}` é o
+  // `@MinLength(20)` do backend em `belowVisitBarReason`.
+  "governance.action.belowBarLabel":
+    "Motivo para atribuir abaixo da barreira de visitas",
+  "governance.action.belowBarHelper":
+    "Este espaço tem {count} de {required} visitas independentes, por isso o emblema é recusado sem uma exceção escrita. No mínimo {min} caracteres. Fica no registo de auditoria, e o emblema público vai indicar a contagem real.",
   "governance.action.reopenLabel": "Motivo da reabertura",
   "governance.action.reopenHelper":
     "Devolve a nomeação à fila. O motivo fica registado.",

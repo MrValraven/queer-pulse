@@ -77,35 +77,69 @@ const ASSIGNMENTS: WriterAssignmentDto[] = [
   },
 ];
 
+/**
+ * `state` on every row below is written exactly as the backend's
+ * `pitchStatusToWriterState` would compose it from `status` (plus `passNote`
+ * on a pass), so the fixture mirrors the wire rather than prose the server
+ * never sends. Nothing renders `state` any more: `WriterPitchesTab` composes a
+ * translated label from `status` and interpolates `passNote` verbatim, since a
+ * pass note is the editor's own words.
+ */
 const PITCHES: WriterPitchDto[] = [
   {
     id: "wp1",
     title: "The last kiosk in Anjos",
     sent: "12 Jul",
-    state: "Maybe: held for issue 15",
+    state: "Held for consideration",
+    status: "maybe",
+    passNote: null,
     tone: "hold",
   },
   {
     id: "wp2",
     title: "Why we stopped going out",
     sent: "2 Jun",
-    state: 'Passed: "not now", Marta replied personally',
+    state: "Passed: Not now, but please pitch it again for issue 16.",
+    status: "passed",
+    passNote: "Not now, but please pitch it again for issue 16.",
     tone: "no",
   },
 ];
 
+/**
+ * The issue ids and titles match `DEMO_ISSUES` in `desk.data.ts` (issue 12
+ * "Small rooms, loud rooms", issue 14 "Aftercare"), spelled out here rather
+ * than imported so this fixture keeps its no-dependency shape.
+ *
+ * `status`/`dueOn`/`paidOn` are the machine values live mode sends, and they
+ * are what the payments tab reads: the badge used to decide its tone by
+ * sniffing `state` for the word "paid", a test that only works in English.
+ * `state` itself is written as the backend's `paymentStatusToWriterState`
+ * would compose it from those three, so the fixture mirrors the wire.
+ */
 const PAYMENTS: WriterPaymentDto[] = [
   {
     title: "On grief and group chats",
     issue: "12",
+    issueId: "demo-issue-12",
+    issueTitle: "Small rooms, loud rooms",
     fee: "€380",
-    state: "Paid 14 Jun",
+    state: "Paid 14 Jun 2026",
+    status: "paid",
+    dueOn: "2026-06-20",
+    paidOn: "2026-06-14",
   },
   {
     title: "What we owe old friends",
     issue: "14",
+    issueId: "demo-issue-14",
+    issueTitle: "Aftercare",
     fee: "€420",
-    state: "Due 19 Aug",
+    // The same piece's assignment card above reads "approved, unpaid".
+    state: "Approved, unpaid: due 19 Aug 2026",
+    status: "approved_unpaid",
+    dueOn: "2026-08-19",
+    paidOn: null,
   },
 ];
 

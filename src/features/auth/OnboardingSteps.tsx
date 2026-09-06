@@ -246,7 +246,9 @@ function NotificationsOptIn() {
           {t("auth:onboarding.stepDone.notifications.desc")}
         </div>
       </div>
-      <div inert={busy} style={busy ? { opacity: 0.6 } : undefined}>
+      {/* DES-170: the dimmed in-flight treatment is `.toggleBusy` in the
+          module now, rather than an inline opacity literal. */}
+      <div inert={busy} className={busy ? styles.toggleBusy : undefined}>
         <Toggle
           tone="coral"
           checked={isSubscribed}

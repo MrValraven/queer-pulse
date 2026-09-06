@@ -222,10 +222,10 @@ function StepIntentsLoading({ stepLabel }: { stepLabel: string }) {
       <div className={styles.chipHint}>
         {t("auth:onboarding.stepIntents.hint")}
       </div>
-      <div className={styles.chips} aria-hidden>
-        <SkeletonLine height={38} width="46%" style={{ borderRadius: 999 }} />
-        <SkeletonLine height={38} width="60%" style={{ borderRadius: 999 }} />
-        <SkeletonLine height={38} width="52%" style={{ borderRadius: 999 }} />
+      <div className={`${styles.chips} ${styles.chipSkeletons}`} aria-hidden>
+        <SkeletonLine height={38} width="46%" />
+        <SkeletonLine height={38} width="60%" />
+        <SkeletonLine height={38} width="52%" />
       </div>
     </>
   );

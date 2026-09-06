@@ -8,6 +8,7 @@ import { ForumEditHistoryModal } from "./ForumEditHistoryModal";
 import { ForumSidebar } from "./ForumSidebar";
 import { ForumThreadList } from "./ForumThreadList";
 import { ForumHero } from "./ForumHero";
+import { MoveCategoryModal } from "./MoveCategoryModal";
 import { ForumLoadMore } from "./ForumLoadMore";
 import { useForumPageState } from "./useForumPageState";
 import styles from "./ForumPage.module.css";
@@ -61,9 +62,12 @@ export function ForumPage() {
                   onShowAll={page.resetFilters}
                   onCompose={() => page.openCompose()}
                   canEditThread={page.canEditThread}
+                  canMoveCategory={page.canMoveCategory}
+                  canDeleteThread={page.canDeleteThread}
                   onEditTitle={(thread) =>
                     page.setEditingTitleThreadId(thread.id)
                   }
+                  onMoveCategory={moderation.requestMoveCategory}
                   onDelete={moderation.requestDelete}
                   onRestore={moderation.requestRestore}
                   onHistory={moderation.requestHistory}
@@ -100,9 +104,22 @@ export function ForumPage() {
         />
       )}
 
+      {moderation.movingThread && (
+        <MoveCategoryModal
+          initialCategory={moderation.movingThread.category}
+          busy={moderation.moveBusy}
+          onSave={moderation.confirmMoveNow}
+          onClose={() => moderation.setMovingThread(null)}
+        />
+      )}
+
+      {/* PRD-160: the row's delete withdraws the WHOLE thread now, so this
+          mounts the thread copy, which is honest about what stays and what
+          goes. The post copy is still what every other call site gets. */}
       {moderation.confirmDelete && (
         <ConfirmDeleteModal
           busy={moderation.deleteBusy}
+          subject="thread"
           onConfirm={moderation.confirmDeleteNow}
           onClose={() => moderation.setConfirmDelete(null)}
         />

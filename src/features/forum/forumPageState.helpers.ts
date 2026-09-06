@@ -11,6 +11,13 @@ export const FORUM_SORTS: readonly ForumSort[] = [
   "unanswered",
 ];
 
+/** The forum's landing order, and the value `setSort` strips from the URL so
+ *  the default round-trips (never `?sort=active`). It matches the SERVER's own
+ *  default: both ends now agree on what an un-parameterised list means.
+ *  PRD-161: this was `top`, which on a forum where almost every thread has
+ *  zero votes produced a fixed order that no amount of new posting disturbed. */
+export const DEFAULT_FORUM_SORT: ForumSort = "active";
+
 /** Narrows a raw `?sort=` URL param to a known `ForumSort`, so a malformed or
  *  stale link (or hand-edited URL) falls back to the default rather than
  *  passing garbage through to `useThreads`/the server. */
@@ -36,6 +43,61 @@ export function canEditThread(thread: Thread, demoMode: boolean): boolean {
         !!thread.canRestore ||
         !!thread.canViewHistory ||
         !!thread.canPin;
+}
+
+/**
+ * Twenty-four hours, in milliseconds: the window an AUTHOR has to refile their
+ * own thread. Mirrors `CATEGORY_MOVE_WINDOW_MS` in the backend's
+ * `forum-threads.service.ts`, which is the only authority. This copy exists so
+ * the row never offers a member an action the server is about to 403.
+ */
+const CATEGORY_MOVE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * May the viewer move this thread to another category (PRD-163)?
+ *
+ * There is no server flag for it, so this reproduces the backend's rule from
+ * what the thread DTO does carry:
+ *  - a moderator may move any thread at any time. `canPin` is the DTO's plain
+ *    `viewer.isModerator` mirror (so is `canLock`), which is exactly the
+ *    permission the move endpoint checks.
+ *  - the author may move their own thread inside its first 24 hours. `canEdit`
+ *    is the author-only title permission, so it is the author signal; the
+ *    window is measured against the thread's own `createdAt`.
+ *
+ * Demo threads carry neither `createdAt` nor the permission flags, so this
+ * returns false there and the affordance simply does not render. No demo
+ * constant is read on the live path or the demo one.
+ */
+export function canMoveThreadCategory(thread: Thread): boolean {
+  if (thread.isDeleted) return false;
+  if (thread.canPin || thread.canLock) return true;
+  // `canEditTitle` is the THREAD's author flag. On a list card it is the same
+  // value as `canEdit`; on a thread DETAIL view-model `canEdit` has been
+  // replaced by the opening POST's permission, which is a different right (see
+  // `Thread.canEditTitle`), so reading `canEdit` alone hid the affordance from
+  // the author of a thread whose opening post was tombstoned.
+  const isAuthor = thread.canEditTitle ?? thread.canEdit;
+  if (!isAuthor || !thread.createdAt) return false;
+  const createdAtMs = new Date(thread.createdAt).getTime();
+  if (Number.isNaN(createdAtMs)) return false;
+  return Date.now() - createdAtMs <= CATEGORY_MOVE_WINDOW_MS;
+}
+
+/**
+ * May the viewer withdraw this whole thread (PRD-160)?
+ *
+ * `DELETE /forum/threads/:slug` accepts the thread's AUTHOR or a platform
+ * moderator. `canDelete` on the DTO is the narrower opening-POST permission
+ * (and goes false once that post is tombstoned), so it is not the right gate:
+ * author (`canEdit`) or moderator (`canPin`/`canLock`) is.
+ */
+export function canDeleteThread(thread: Thread): boolean {
+  if (!thread.slug || thread.isDeleted) return false;
+  // See `canMoveThreadCategory` on why the author signal is `canEditTitle`
+  // with `canEdit` only as the fallback.
+  const isAuthor = thread.canEditTitle ?? thread.canEdit;
+  return !!isAuthor || !!thread.canPin || !!thread.canLock;
 }
 
 /** Dedupe the local optimistic copy against the refetched server list by

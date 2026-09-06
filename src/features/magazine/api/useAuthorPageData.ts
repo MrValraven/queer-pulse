@@ -6,6 +6,7 @@ import type { Author } from "../authorContent.data";
 import { authorFromDto, mergeAuthor } from "./magazine.adapters";
 import { ignoreEnrichmentError, nullOnNotFound } from "./loadErrors";
 import { getArticles, getAuthor } from "./magazine.api";
+import { useReaderLanguage } from "./useReaderLanguage";
 
 /**
  * `AuthorPage.tsx`. Demo mode is the existing `AUTHORS[slug]` lookup,
@@ -21,13 +22,26 @@ import { getArticles, getAuthor } from "./magazine.api";
  *
  * i18n: `language` joins the query key because the adapters locale-format
  * the featured article's meta via `fmt` — switching language must re-derive it.
+ *
+ * PRD-110: the article list now carries the reader's content language, so a
+ * Portuguese reader sees a writer's Portuguese headlines rather than English
+ * ones that only turn Portuguese after the click.
+ *
+ * PRD-103/PRD-112: this list stays ONE page on purpose. It feeds the page's
+ * featured piece and its "Selected work" grid, and the backend caps a page at
+ * 20 rows, so a writer with more than 20 pieces has a back catalogue this
+ * request cannot hold. `AuthorWork`'s "All {count} articles" therefore counts
+ * `AuthorDTO.pieceCount` (the real total) and opens the paginated
+ * author-filtered list at `/magazine/search?author=<slug>`, which pages
+ * through the whole catalogue.
  */
 export function useAuthorPageData(slug: string) {
   const { demoMode } = useDemoMode();
   const fmt = useFormat();
   const { t, language } = useTranslation();
+  const readerLanguage = useReaderLanguage();
   return useQuery<Author | null>({
-    queryKey: ["magazine-author", demoMode, language, slug],
+    queryKey: ["magazine-author", demoMode, language, readerLanguage, slug],
     queryFn: async () => {
       if (demoMode) return null;
 
@@ -35,7 +49,9 @@ export function useAuthorPageData(slug: string) {
         // The author is the page (404 becomes the not-found wall, anything
         // else is rethrown and retried); their article list only enriches it.
         getAuthor(slug).catch(nullOnNotFound),
-        getArticles({ author: slug }).catch(ignoreEnrichmentError),
+        getArticles({ author: slug, lang: readerLanguage }).catch(
+          ignoreEnrichmentError,
+        ),
       ]);
       if (!dto) return null;
 

@@ -35,7 +35,7 @@ function stubDiscover(
     featured: null,
     isShowingFeatured: false,
     isShowingSkeletons: false,
-    needsDrain: false,
+    isShowingStaleResults: false,
     hasNextPage: false,
     fetchNextPage: vi.fn(),
     isFetchingNextPage: false,

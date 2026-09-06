@@ -24,6 +24,9 @@ export interface FeaturedCommunityRef {
   /** Resolved cover-image URL, standing in for the flat category colour as the
    *  card's letterhead ground. Absent/null when the community has none. */
   coverImageUrl?: string | null;
+  /** The community's own square identity mark. Optional on the card shell:
+   *  an absent mark draws nothing, no placeholder and no reserved gap. */
+  avatarImageUrl?: string | null;
   /** How many members were active in the community this week, when the source
    *  knows it. Absent in sources that don't carry it (the demo registry, whose
    *  flagship communities carry their own number on the `living` mock). */

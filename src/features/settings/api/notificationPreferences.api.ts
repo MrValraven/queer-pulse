@@ -20,6 +20,7 @@ export const NOTIFICATION_PREFERENCE_CATEGORY = {
   vouches: "vouches",
   recognition: "recognition",
   personas: "personas",
+  personaFollows: "persona_follows",
   invitations: "invitations",
   listings: "listings",
   opportunities: "opportunities",

@@ -3,11 +3,12 @@ import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { CommunitiesGrid } from "./CommunitiesGrid";
 import { CommunitiesHomeDigest } from "./CommunitiesHomeDigest";
 import { CommunitiesHomeSidebar } from "./CommunitiesHomeSidebar";
 import {
+  CommunitiesHomeLivePulse,
+  CommunitiesHomeLiveTodos,
   CommunitiesHomePulse,
   CommunitiesHomeTodos,
 } from "./CommunitiesHomeFeed";
@@ -27,6 +28,12 @@ import styles from "./CommunitiesHomePage.module.css";
  * — scoped to your own memberships. Everything the hub carried before sits
  * underneath: the mod to-do list, the cross-community pulse, and the events /
  * suggestions rail.
+ *
+ * `useCommunitiesHomeData().live` is the mode switch for the whole body: an
+ * object in live mode (fed by `GET /me/communities/digest`) and `null` in demo
+ * mode, where every section keeps reading the mock registry exactly as before.
+ * Reading it rather than `demoMode` directly means a live branch cannot
+ * accidentally reach a mock list: the demo lists are empty in that mode.
  */
 export function CommunitiesHome({
   discover,
@@ -34,22 +41,26 @@ export function CommunitiesHome({
   discover: DiscoverCommunities;
 }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  // The placeholder skeleton is a demo-prototype device: the pulse feed it
-  // covers is mock-derived and always empty in live mode, so live members were
-  // waiting half a second for nothing.
+  // A demo-prototype device: the mock pulse has nothing to wait for, so the
+  // half-second placeholder stands in for a fetch. Live mode has a real one.
   const isSimulatedLoading = useSimulatedLoad(500);
-  const isPulseLoading = demoMode && isSimulatedLoading;
   const {
     isLoading: isMembershipsLoading,
-    pulse,
-    todos,
     myCommunities,
-    upcoming,
     suggestions,
-    digest,
+    demo,
+    live,
   } = useCommunitiesHomeData();
-  const hasSidebar = upcoming.length > 0 || suggestions.length > 0;
+
+  // The band is a summary of the week, so it waits for the week: in live mode
+  // it appears once the digest lands and stays away while it is in flight or
+  // after it failed (the pulse below carries that failure, with the retry).
+  const digest = live ? live.digest : demo.digest;
+  const upcomingCounts = live?.upcoming ?? [];
+  const hasSidebar =
+    demo.upcoming.length > 0 ||
+    upcomingCounts.length > 0 ||
+    suggestions.length > 0;
 
   return (
     <div className={styles.page}>
@@ -74,16 +85,13 @@ export function CommunitiesHome({
               discover={discover}
               isPending={isMembershipsLoading}
               beforeGrid={
-                /* The weekly digest is derived entirely from the `getLiving`
-                   mock — there's no live feed backend — so it only renders in
-                   demo mode rather than showing a misleading all-zero week. */
-                demoMode ? <CommunitiesHomeDigest digest={digest} /> : null
+                digest ? <CommunitiesHomeDigest digest={digest} /> : null
               }
             />
 
-            {/* The rail only exists when it has something in it — both of its
-                cards are demo-derived — so the column drops rather than
-                leaving a 300px gutter of nothing beside the feed. */}
+            {/* The rail only exists when it has something in it, so the column
+                drops rather than leaving a 300px gutter of nothing beside the
+                feed. */}
             <div
               className={[
                 styles.layout,
@@ -94,13 +102,42 @@ export function CommunitiesHome({
                 .join(" ")}
             >
               <div>
-                <CommunitiesHomeTodos todos={todos} />
-                <CommunitiesHomePulse loading={isPulseLoading} pulse={pulse} />
+                {/* Moderation to-dos, in both modes now (PRD-144): the digest
+                    carries a pending-join-request and open-report count for
+                    each community the viewer staffs, so the live block reads
+                    the same one request the rest of this page does. Each count
+                    links into the mod-console pane that clears it, and a
+                    viewer who staffs nothing gets no block in any state. */}
+                {live ? (
+                  <CommunitiesHomeLiveTodos
+                    isModeratorSomewhere={live.isModeratorSomewhere}
+                    isLoading={live.isLoading}
+                    isError={live.isError}
+                    onRetry={live.refetch}
+                    todos={live.todos}
+                  />
+                ) : (
+                  <CommunitiesHomeTodos todos={demo.todos} />
+                )}
+                {live ? (
+                  <CommunitiesHomeLivePulse
+                    isLoading={live.isLoading}
+                    isError={live.isError}
+                    onRetry={live.refetch}
+                    excerpts={live.pulse}
+                  />
+                ) : (
+                  <CommunitiesHomePulse
+                    loading={isSimulatedLoading}
+                    pulse={demo.pulse}
+                  />
+                )}
               </div>
 
               {hasSidebar && (
                 <CommunitiesHomeSidebar
-                  upcoming={upcoming}
+                  upcoming={demo.upcoming}
+                  upcomingCounts={upcomingCounts}
                   suggestions={suggestions}
                 />
               )}

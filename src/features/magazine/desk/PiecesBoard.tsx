@@ -1,6 +1,7 @@
 import type { KeyboardEvent, MouseEvent } from "react";
 import { Avatar, Select } from "../../../shared/components/ui";
 import { FormatBadge } from "./FormatBadge";
+import { viewStageLabelKey } from "./stageLabels";
 import { initialsFromName } from "../../../shared/lib/initials";
 import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -38,7 +39,10 @@ export function PiecesBoard({
         return (
           <div key={stage} className={styles.bcol}>
             <h3 className={styles.colHead}>
-              {stage}
+              {/* A `Stage` IS its own English label, so the column heading and
+                  the per-card picker below both resolve it through the shared
+                  stage-key lookup. */}
+              {t(viewStageLabelKey(stage))}
               <b className={styles.colCount}>{columnPieces.length}</b>
             </h3>
             {columnPieces.map((piece) => {
@@ -80,10 +84,32 @@ export function PiecesBoard({
                       value={piece.stage}
                       label={t("magazine:desk.board.moveStageAria")}
                       onChange={(value) => onMove(piece, value as Stage)}
-                      options={stages.map((option) => ({
-                        value: option,
-                        label: option,
-                      }))}
+                      // "Published" is never a CHOOSABLE option here. A piece
+                      // becomes published as a side effect of a real publish
+                      // (the piece record's Publish action, the article
+                      // editor's rail, or a ship), each of which first clears
+                      // the consent and sensitivity gate. `PATCH
+                      // /magazine/admin/pieces/:id` therefore refuses
+                      // `stage: 'published'` outright (see the comment on
+                      // `PIECE_STAGES` in the backend's `update-piece.dto.ts`),
+                      // so offering it would only hand the editor a 400 and
+                      // imply the gate can be stepped around with a dropdown.
+                      //
+                      // It IS kept, disabled, for a piece already at that
+                      // stage: dropping it outright left such a card's picker
+                      // showing the "Select…" placeholder, which reads as
+                      // "no stage" for the one piece whose stage matters most.
+                      options={stages
+                        .filter(
+                          (option) =>
+                            option !== "Published" ||
+                            piece.stage === "Published",
+                        )
+                        .map((option) => ({
+                          value: option,
+                          label: t(viewStageLabelKey(option)),
+                          disabled: option === "Published",
+                        }))}
                     />
                   </div>
                 </div>

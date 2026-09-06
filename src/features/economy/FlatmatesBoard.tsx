@@ -63,8 +63,16 @@ export function FlatmatesBoard() {
   // Skeleton while the simulated demo beat runs OR (live) the query is in
   // flight — otherwise a slow live fetch flashes the empty-board CTA. A
   // "Load more" fetch keeps the loaded cards on screen instead.
-  const loading =
-    useSimulatedLoad() || (!demoMode && isFetching && !isFetchingNextPage);
+  //
+  // `useSimulatedLoad` is a DEMO device (ENG-172). Demo profiles resolve from a
+  // local registry in the same tick, so the short fake beat is the only thing
+  // keeping the board from popping in. Live mode has a real loading state, and
+  // the fake 600ms sat on top of it, painting a skeleton over profiles that had
+  // already arrived, so it is gated to demo mode.
+  const isSimulatedLoading = useSimulatedLoad();
+  const loading = demoMode
+    ? isSimulatedLoading
+    : isFetching && !isFetchingNextPage;
   const isAnyFilterActive =
     type !== "all" ||
     neighbourhood !== "all" ||

@@ -14,6 +14,20 @@ import { useEffect, useState } from "react";
  * Keyed on the slug, the state clears only when the user opens a genuinely
  * different thread, so a newly-loaded thread never inherits a stale
  * collapse/reply-target from the previous one.
+ *
+ * `inlineDraft` is the composer's LIVE text only. Its durable copy is the
+ * autosaved draft `ThreadComposer` keeps per (thread, parent post) — clearing
+ * the state here never discards that (PRD-166).
+ *
+ * PRD-165 asked whether that durable copy should follow the member across
+ * devices the way the new-thread draft now does. It already does, and needs
+ * nothing added: `ThreadComposer` autosaves through the same `/me/drafts` row
+ * as every other composer, so the reply text is on the server either way. What
+ * the new-thread composer had to promote was its EXTRA state (category,
+ * community, tags, photo), and a reply box has none of that: it is a body and
+ * nothing else. Inventing a bag for it would persist state that does not exist.
+ * The one genuinely local thing here is `inlineDraft`, which is the controlled
+ * value of an open textarea while it is on screen.
  */
 export function useNestedReplyComposer(resetKey: unknown) {
   const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set());
@@ -41,9 +55,14 @@ export function useNestedReplyComposer(resetKey: unknown) {
     setInlineDraft("");
   }
 
-  /** Closes the inline composer and clears its draft — used both on an
-   *  explicit Cancel and after a successful post (nothing to keep either
-   *  way). */
+  /** Closes the inline composer and clears the ON-SCREEN text — used both on
+   *  an explicit Cancel and after a successful post.
+   *
+   *  It does NOT touch the PERSISTED draft, which is deliberate: the composer
+   *  itself deletes that once the reply really posts (`ThreadComposer.post`),
+   *  and a Cancel (or the mis-tap that closes one composer by opening another)
+   *  must leave the member's words recoverable. Reopening the same reply box
+   *  restores them. */
   function cancelReply() {
     setReplyTargetId(null);
     setInlineDraft("");

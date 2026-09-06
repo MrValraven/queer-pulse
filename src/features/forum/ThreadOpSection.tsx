@@ -1,4 +1,8 @@
 import { type Thread } from "./forum.data";
+import {
+  canDeleteThread,
+  canMoveThreadCategory,
+} from "./forumPageState.helpers";
 import { ThreadOpCard } from "./ThreadOpCard";
 import {
   type deriveOpView,
@@ -33,6 +37,20 @@ export function ThreadOpSection({
   onEditTags?: () => void;
   moderation: ReturnType<typeof useThreadModeration>;
 }) {
+  // PRD-163: the same gate the list row uses — a moderator at any time, the
+  // author inside the thread's first 24 hours. Undefined when it does not
+  // apply, which is what keeps the item out of the ⋯ menu entirely rather than
+  // offering an action the server is about to refuse.
+  const onMoveCategory = canMoveThreadCategory(thread)
+    ? moderation.openMoveCategory
+    : undefined;
+  // PRD-160: "Delete" here takes the WHOLE thread down, so the gate is the
+  // thread endpoint's (author or moderator) as well as the opening post's.
+  // `opCanDelete` alone went false the moment that post was tombstoned, hiding
+  // the action from the very author who wanted the thread gone;
+  // `canDeleteThread` is false on a demo thread (no slug), which is what leaves
+  // the prototype's local tombstone behaviour exactly as it was.
+  const canDelete = opView.opCanDelete || canDeleteThread(thread);
   return (
     <ThreadOpCard
       thread={thread}
@@ -54,7 +72,7 @@ export function ThreadOpSection({
         })
       }
       canEdit={opView.opCanEdit}
-      canDelete={opView.opCanDelete}
+      canDelete={canDelete}
       canRestore={opView.opCanRestore}
       canViewHistory={opView.opCanViewHistory}
       onEdit={() => {
@@ -66,6 +84,7 @@ export function ThreadOpSection({
       onHistory={() =>
         thread.opPostId && moderation.setHistoryPostId(thread.opPostId)
       }
+      onMoveCategory={onMoveCategory}
       onEditTags={onEditTags}
     />
   );

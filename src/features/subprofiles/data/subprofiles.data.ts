@@ -2946,12 +2946,16 @@ export type DemoPublicAccessResult =
   | { kind: "not-found" };
 
 /** Unfiltered lookup by global handle for an UNLINKED persona. Falls back to
- *  matching the internal `slug` when `handle` is null — an unpublished
- *  unlinked draft has no handle yet (it's only assigned on publish, see
- *  `validatePublishDemo`/the MSW publish handler), so its owner's own
- *  "preview" link (`personaPublicPathForOwner`) already addresses it by slug
- *  instead. Mirroring that fallback here is what makes an owner's draft
- *  preview reachable at all. */
+ *  matching the internal `slug` when `handle` is null: an unpublished unlinked
+ *  draft has no handle yet (it's only assigned on publish, see
+ *  `validatePublishDemo`/the MSW publish handler), so a hand-typed `/p/<slug>`
+ *  still opens it in the prototype.
+ *
+ *  Nothing LINKS here any more. The owner surfaces used to build a `/p/<slug>`
+ *  preview link from this fallback, which the real `/p/:handle` route resolves
+ *  for nobody, so View / Share / QR / vCard now go through
+ *  `personaOwnerAddress` and say "no address yet" instead (PRD-206). The
+ *  fallback stays because the demo registry is also read by direct URL. */
 export const findDemoSubprofileByHandle = (
   handle: string,
 ): DemoSubprofile | undefined =>

@@ -8,6 +8,10 @@ import type {
 } from "./api/recognition.adapters";
 import type { Badge, BadgeDrawerEntry } from "./badges.data";
 import { xpSourceMetaFor } from "./xpBreakdown.data";
+import {
+  badgeCategoryLabelKeyFor,
+  badgeDisplayMetaFor,
+} from "./badgeCatalog.data";
 import { closestToEarning, progressPercent } from "./badgeSelectors";
 import { BadgeMedallion } from "./BadgeMedallion";
 import { BadgeEarnMoment } from "./BadgeEarnMoment";
@@ -88,6 +92,12 @@ export function BadgesMomentum({
                 : badge.tint === "accent"
                   ? styles.tCoral
                   : styles.tPlum;
+            // Display words resolve from the stable id (see
+            // `badgeCatalog.data.ts`) rather than off the wire. Every card
+            // here is a locked badge, so "what it takes" is the right tense;
+            // an unmapped id or category keeps the server's own English.
+            const displayMeta = badgeDisplayMetaFor(badge.key);
+            const categoryLabelKey = badgeCategoryLabelKeyFor(badge.category);
             return (
               <article key={badge.key} className={`${styles.nx} ${tint}`}>
                 <span className={styles.nxXp}>
@@ -108,12 +118,20 @@ export function BadgesMomentum({
                       size="sm"
                     />
                     <span>
-                      <span className={styles.nxCat}>{badge.category}</span>
-                      <h3>{badge.name}</h3>
+                      <span className={styles.nxCat}>
+                        {categoryLabelKey
+                          ? t(categoryLabelKey)
+                          : badge.category}
+                      </span>
+                      <h3>
+                        {displayMeta ? t(displayMeta.nameKey) : badge.name}
+                      </h3>
                     </span>
                   </span>
                   <span className={styles.nxCrit}>
-                    {badge.criteria ?? badge.when}
+                    {displayMeta
+                      ? t(displayMeta.lockedContextKey)
+                      : (badge.criteria ?? badge.when)}
                   </span>
                   {badge.progress && (
                     <span className={styles.nxProg}>

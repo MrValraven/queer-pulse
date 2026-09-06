@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { LoadErrorState } from "../../shared/components/ui";
+import { LoadErrorState, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -31,8 +31,43 @@ export function ApplyToWritePage() {
   if (!demoMode && isWriter) {
     return <Navigate to={routes.submitStory} replace />;
   }
+  // DES-101 — never a blank document while the application loads: the shell,
+  // the masthead and a skeleton of the hero, so the page keeps its frame for
+  // the length of the request (the same shape `AuthorPage` uses).
   if (isLoading) {
-    return null;
+    return (
+      <PageShell>
+        <MagazineMasthead active="write" />
+        <section className={styles.page}>
+          <div className="wrap">
+            <div className={styles.hero} aria-hidden>
+              <SkeletonLine
+                width={160}
+                height={13}
+                style={{ marginBottom: 18 }}
+              />
+              <SkeletonLine
+                width="85%"
+                height={52}
+                style={{ marginBottom: 24 }}
+              />
+              <SkeletonLine
+                width="95%"
+                height={16}
+                style={{ marginBottom: 10 }}
+              />
+              <SkeletonLine width="70%" height={16} />
+            </div>
+            <div className={styles.editorGrid} aria-hidden>
+              <SkeletonLine
+                height="auto"
+                style={{ aspectRatio: "3 / 2", width: "100%" }}
+              />
+            </div>
+          </div>
+        </section>
+      </PageShell>
+    );
   }
 
   const showForm =

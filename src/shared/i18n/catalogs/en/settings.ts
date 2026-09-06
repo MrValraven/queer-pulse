@@ -81,7 +81,7 @@ export const settings: Catalog = {
   // ── SettingsPersonalisation.tsx — AccessibilityPane ──────────────────────
   "personalisation.accessibility.title": "Accessibility <em>preferences.</em>",
   "personalisation.accessibility.sub":
-    "Tune motion and navigation to suit you. What you change here saves the moment you flip it and applies across the whole platform. Preferences marked coming soon are still being built.",
+    "Tune text size, motion, reading and navigation to suit you. Every preference here is live: what you change saves the moment you change it and applies across the whole platform.",
   "personalisation.accessibility.resetAll": "Reset all preferences",
   "personalisation.accessibility.resetNote":
     "This returns the preferences you can change back to their defaults. Your profile data is unaffected.",
@@ -245,6 +245,12 @@ export const settings: Catalog = {
   "notifications.volume.topicFollows.title": "Topics you follow",
   "notifications.volume.topicFollows.desc":
     "New posts under a topic you chose to follow",
+  // PRD-208. Deliberately parallel to topicFollows above, which is the switch
+  // beside it in the same group: same shape of promise, same phrasing, no
+  // trailing period, matching every other row in this list.
+  "notifications.volume.personaFollows.title": "Personas you follow",
+  "notifications.volume.personaFollows.desc":
+    "New work from a persona you chose to follow",
   "notifications.volume.recognition.title": "Recognition",
   "notifications.volume.recognition.desc":
     "Levels, badges, endorsements, credits, and new followers",
@@ -933,25 +939,20 @@ export const settings: Catalog = {
   // ── SaveButton.tsx — reusable save control, shared across several panes ──
 
   // ── AccessibilityPrefSections.tsx — the accessibility pane's rows.
-  // Only "Reduce motion" and "Skip to content link" are backed by a store and
-  // applied; every other row is badged coming soon and rendered inert, so it
-  // stays visible as a roadmap without pretending to save. ─────────────────
-  // Shown under the two preferences that are really backed by a store, so the
-  // absence of a save bar on this pane reads as intent rather than a bug.
-  "a11y.instantSaveHint": "Saved to this device the moment you flip it.",
+  // Every row here is applied. PRD-307 removed the seven that were badged
+  // coming soon and rendered inert (high contrast, larger-text boolean,
+  // dyslexia font, pause decorative, larger tap targets, sticky nav, colour
+  // theme), along with their keys, and built the text-size slider. ─────────
+  // Shown under each preference, so the absence of a save bar on this pane
+  // reads as intent rather than a bug.
+  "a11y.instantSaveHint": "Saved to this device the moment you change it.",
   "a11y.section.display.eyebrow": "Display",
   "a11y.section.display.desc":
-    "These settings apply across the whole platform.",
-  "a11y.toggle.highContrast.title": "High contrast mode",
-  "a11y.toggle.highContrast.desc":
-    "Increases colour contrast for better readability. Affects text, borders, and focus rings.",
-  "a11y.toggle.largerText.title": "Increase text size",
-  "a11y.toggle.largerText.desc":
-    "Makes body text slightly larger across all pages.",
-  "a11y.toggle.dyslexia.title": "Dyslexia-friendly font",
-  "a11y.toggle.dyslexia.desc":
-    "Wider letter-spacing and increased line height for improved readability.",
+    "Text size applies across the whole platform, scaling every heading, label and paragraph together.",
   "a11y.textSize.label": "Text size",
+  // Single braces for interpolation. The percentage is also the slider's
+  // aria-valuetext, so a screen reader announces "110%" rather than "110".
+  "a11y.textSize.value": "{percent}%",
   "a11y.textSize.preview":
     "The quick brown fox crossed Príncipe Real and found a community waiting on the other side.",
   "a11y.section.motion.eyebrow": "Motion",
@@ -960,34 +961,20 @@ export const settings: Catalog = {
   "a11y.toggle.reduceMotion.title": "Reduce motion",
   "a11y.toggle.reduceMotion.desc":
     "Disables animations, transitions, and pulse effects across the platform.",
-  "a11y.toggle.pauseDecorative.title": "Pause decorative animations",
-  "a11y.toggle.pauseDecorative.desc":
-    "Stops background orbs, pulse dots, and loading spinners from animating.",
   "a11y.preview.liveLabel": "Live preview",
   "a11y.preview.cardText":
     "This card animates on load. Toggle motion settings to see the effect.",
   "a11y.section.reading.eyebrow": "Reading",
   "a11y.section.reading.desc":
     "Adjust how content is displayed for comfortable reading.",
-  "a11y.toggle.wideSpacing.title": "Wider line spacing",
+  "a11y.toggle.wideSpacing.title": "Open out text spacing",
   "a11y.toggle.wideSpacing.desc":
-    "Increases space between lines of text (line-height: 2.0).",
-  "a11y.toggle.focusRings.title": "Show focus indicators",
+    "Adds space between lines, letters, words and paragraphs, in body text, lists and quotes.",
+  "a11y.toggle.focusRings.title": "Always show the focus ring",
   "a11y.toggle.focusRings.desc":
-    "Adds visible keyboard focus rings on all interactive elements.",
-  "a11y.colorTheme.label": "Colour theme",
-  "a11y.colorTheme.headingLabel": "Heading colour style",
-  "a11y.colorTheme.default": "Default",
-  "a11y.colorTheme.softer": "Softer",
-  "a11y.colorTheme.highContrast": "High contrast",
+    "Marks the element you are on after every click, tap and key press. Normally the ring appears only when the platform reads your input as keyboard navigation.",
   "a11y.section.interaction.eyebrow": "Interaction",
   "a11y.section.interaction.desc": "Adjust how you interact with the platform.",
-  "a11y.toggle.largeTargets.title": "Larger tap targets",
-  "a11y.toggle.largeTargets.desc":
-    "Increases minimum button and link size for easier touch interaction.",
-  "a11y.toggle.stickyNav.title": "Sticky navigation",
-  "a11y.toggle.stickyNav.desc":
-    "Keeps the navigation bar always visible while scrolling.",
   "a11y.toggle.skipLink.title": "Skip to content link",
   "a11y.toggle.skipLink.desc":
     'On by default. Press Tab and a "Skip to main content" link appears at the top, so you can jump straight past the navigation. Turning it off removes that shortcut. The link stays hidden until it\'s focused, so leaving it on costs you nothing.',
@@ -1024,8 +1011,11 @@ export const settings: Catalog = {
     "We couldn't cancel that just now. Try again.",
 
   // ── Step-up re-authentication (useReauthToken.ts) ────────────────────────
-  "reauth.completion.success":
-    "You're re-authenticated. Press confirm again to finish.",
+  // Deliberately says only what just happened, and leaves what comes next to
+  // each surface. The data export resumes itself on landing (PRD-305), while
+  // deactivation, deletion and the DSAR still want a second press, so a single
+  // "press confirm again" was wrong on one of the four.
+  "reauth.completion.success": "You're re-authenticated.",
   "reauth.completion.failed": "We couldn't confirm that was you. Try again.",
   "deleteAccount.options.deactivate.title": "Deactivate",
   "deleteAccount.options.deactivate.desc":
@@ -1117,17 +1107,15 @@ export const settings: Catalog = {
   "themeStudio.directoryHint":
     "This is how your profile appears in search results and the member directory.",
   "themeStudio.memberSince": "Lisbon · Member since {year}",
-  "themeStudio.levelPreview": "Lv.4 · Familiar",
+  // Both halves come from code: the number from `PREVIEW_LEVEL`, the name
+  // from `levelNameKeyFor(4)`. It used to be a fourth hand-written copy of a
+  // ladder word, which meant a PT reader saw an English one.
+  "themeStudio.levelPreview": "Lv.{level} · {name}",
   "themeStudio.cover.stripe": "Bold stripe",
   "themeStudio.pattern.none": "Solid",
   "themeStudio.pattern.stripe": "Diagonal stripes",
   "themeStudio.pattern.dots": "Dot grid",
   "themeStudio.pattern.grid": "Grid",
-  "themeStudio.badge.foundingMember": "Founding Member (Legendary)",
-  "themeStudio.badge.eventHost": "Event Host (Legendary)",
-  "themeStudio.badge.sustainer": "Sustainer (Rare)",
-  "themeStudio.badge.regular": "Regular (Rare)",
-  "themeStudio.badge.vouch": "Vouch (Rare)",
 
   // ── AccountDataSheet.tsx — the profile's "Your data" sheet, which now
   // signposts the one page that owns each account-lifecycle action instead of
@@ -1165,6 +1153,8 @@ export const settings: Catalog = {
     "Apply to list an organisation as a partner, propose a swap on the skill exchange, or suggest an entry for the resources directory, and it will appear here with its answer.",
   "mySubmissions.row.sentOn": "Sent {date}",
   "mySubmissions.row.decidedOn": "Answered {date}",
+  // PRD-263: route an approved partner to its own profile editor.
+  "mySubmissions.partner.manageProfileCta": "Manage your partner profile",
   "mySubmissions.partner.heading": "Partner applications",
   "mySubmissions.partner.kind": "Partner application",
   "mySubmissions.partner.status.pending": "With the partnerships team",
@@ -1211,4 +1201,34 @@ export const settings: Catalog = {
     "We could not load your resource suggestions",
   "mySubmissions.resource.error.description":
     "The rest of this page still works. Try this section again.",
+
+  // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
+  // PRD-186 — how long before a gathering its reminder fires. The backend has
+  // stored this per member since reminders were built and no frontend ever
+  // read it, so everyone sat on the default day-before lead while the choice
+  // the server already held was unreachable. Sits under the "Event reminders"
+  // switch it qualifies.
+  "notifications.reminderLead.title": "Remind me",
+  "notifications.reminderLead.desc":
+    "How long before a gathering starts. Only applies while event reminders are on.",
+  "notifications.reminderLead.option.60": "An hour before",
+  "notifications.reminderLead.option.1440": "A day before",
+  "notifications.reminderLead.option.10080": "A week before",
+
+  // ── Deep-scan section 12 (PRD-308), built 2026-09-06 ──────────────────────
+  // SessionsPage.tsx — "sign out everywhere" as one act. The page already had
+  // a control that ends the OTHER devices; a member who believes someone else
+  // is in their account also had to find the sign-out item in the account
+  // menu, and knowing to do both was left to them. The two controls now sit
+  // side by side and the copy names the difference outright, since "all" and
+  // "other" are one word apart and read the same when you are frightened.
+  "sessions.bulk.signOutOthers": "Sign out the other devices",
+  "sessions.bulk.signOutEverywhere": "Sign out everywhere",
+  "sessions.everywhere.confirmTitle": "Sign out on every device?",
+  "sessions.everywhere.confirmBody":
+    "This ends every session on your account, this device included, so you will be signed out here as soon as you confirm. Sign back in with Google whenever you are ready. Nothing on your account is deleted.",
+  "sessions.everywhere.confirmCta": "Sign out everywhere",
+  "sessions.toast.signedOutEverywhere": "Signed out on every device",
+  "sessions.toast.signedOutEverywhereError":
+    "We could not sign you out everywhere just now. You are still signed in, so try again.",
 };

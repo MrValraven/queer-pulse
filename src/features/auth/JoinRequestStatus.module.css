@@ -135,6 +135,24 @@
   font-weight: 600;
 }
 
+/* PRD-304: the same clock line, on the state where the applicant is still
+   waiting. Composed on top of `.deadline` so the icon sizing and type stay
+   identical; only the centring changes, because this one sits in the middle of
+   the state frame rather than inside the left-aligned invite panel. */
+.reviewDeadline {
+  justify-content: center;
+  max-width: 42ch;
+  margin: 0 auto 18px;
+}
+
+/* Past the date we gave ourselves. Coral rather than a warning red: the
+   request is still alive and still being read, and the only thing that changed
+   is that we now owe both an apology and a reply. */
+.reviewDeadlineLate {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
 /* Why a refresh was turned down, in a live region under the actions. Empty
    until something is refused, and it keeps its box so the actions above it do
    not jump when a sentence arrives. */

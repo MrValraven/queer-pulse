@@ -202,6 +202,7 @@ export const shared: Catalog = {
   "adminNav.items.overview": "Overview",
   "adminNav.items.landing": "Landing page",
   "adminNav.items.pressKit": "Press kit",
+  "adminNav.items.queues": "All queues",
   "adminNav.items.moderation": "Moderation",
   "adminNav.items.staff": "Staff & roles",
   "adminNav.items.concerns": "Concerns",
@@ -222,6 +223,7 @@ export const shared: Catalog = {
   "adminNav.items.verifications": "Verifications",
   "adminNav.items.orgTiers": "Partnership tiers",
   "adminNav.items.resourceGuides": "Resource guides",
+  "adminNav.items.glossary": "Glossary",
   "adminNav.items.resourceListings": "Resource listings",
   "adminNav.items.resourceSuggestions": "Resource suggestions",
   "adminNav.items.communityTagRequests": "Community tag requests",
@@ -438,7 +440,10 @@ export const shared: Catalog = {
   "megaNav.culture.col.magazine.head": "The Magazine",
   "megaNav.culture.col.magazine.currentIssue": "Current issue",
   "megaNav.culture.col.magazine.allIssues": "All issues",
-  "megaNav.culture.col.magazine.stories": "Stories",
+  // PRD-101 — replaces the retired "Stories" entry, which pointed at
+  // `/magazine/story`: a legacy path that redirected to one hardcoded mock
+  // slug and hit the "Article not found" wall in live mode.
+  "megaNav.culture.col.magazine.sections": "Browse by section",
   "megaNav.culture.col.magazine.writeForUs": "Write for us",
   "megaNav.culture.col.screenSound.cinema": "Cinema · queer film",
   "megaNav.culture.col.makers.head": "Makers & Scene",
@@ -608,4 +613,21 @@ export const shared: Catalog = {
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-49 — PRD-49 - the quiet marker on a meganav / mobile drawer / sidebar link whose destination is not launched yet (Cinema, Studio in live mode). Rendered by NavBuildBadge INSIDE the link, so it also becomes the tail of the link's accessible name: 'Cinema Being built'. Keep it short, uppercase-safe and free of any timing promise: it says the thing is under construction, never that it arrives soon or on a date.
   "megaNav.beingBuilt": "Being built",
+
+  // ── Add to calendar (shared/components/calendar/AddToCalendarSheet) ──────
+  // Moved out of the `myevents` namespace when the picker became shared: the
+  // gathering detail page offers the same sheet at the moment a member
+  // confirms a seat, which is when they actually want the date (PRD-189).
+  // Google/Outlook/Yahoo are product names and stay untranslated.
+  "addToCalendar.title": "Add to calendar",
+  "addToCalendar.google": "Google Calendar",
+  "addToCalendar.outlook": "Outlook",
+  "addToCalendar.yahoo": "Yahoo Calendar",
+  "addToCalendar.apple": "Apple Calendar",
+  "addToCalendar.ics": "Using another calendar app? Download the file (.ics)",
+  "addToCalendar.toastGoogle": "Opened in Google Calendar",
+  "addToCalendar.toastOutlook": "Opened in Outlook",
+  "addToCalendar.toastYahoo": "Opened in Yahoo Calendar",
+  "addToCalendar.toastApple": "Downloaded. Open it to add to Apple Calendar",
+  "addToCalendar.toastIcs": "Downloaded. Open it in your calendar app",
 };

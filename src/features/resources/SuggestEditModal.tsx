@@ -28,6 +28,20 @@ interface SuggestEditModalProps {
    * surface (e.g. "legal", "library"). Defaults to "glossary".
    */
   context?: string;
+  /**
+   * Which subject question the modal asks:
+   *  - `"term"` — pick one of `subjectOptions`, in the glossary's "which term"
+   *    wording.
+   *  - `"generic"` — pick one of `subjectOptions`, in the neutral "what's this
+   *    about?" wording.
+   *  - `"newTerm"` — name something the glossary does not have yet, as free
+   *    text with no picker (PRD-264: "suggest a term" and "suggest an edit"
+   *    are different asks and must not arrive as the same submission).
+   *
+   * Defaults to the historical behaviour: `"generic"` when `subjectOptions`
+   * are given, `"term"` otherwise.
+   */
+  subjectKind?: "term" | "generic" | "newTerm";
 }
 
 export function SuggestEditModal({
@@ -35,6 +49,7 @@ export function SuggestEditModal({
   subject,
   subjectOptions,
   context = "glossary",
+  subjectKind,
 }: SuggestEditModalProps) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -44,6 +59,10 @@ export function SuggestEditModal({
   const [change, setChange] = useState("");
   const [phase, setPhase] = useState<"form" | "loading" | "done">("form");
 
+  const resolvedSubjectKind =
+    subjectKind ?? (subjectOptions ? "generic" : "term");
+  const isNewSubject = !subject && resolvedSubjectKind === "newTerm";
+  const isGenericSubject = resolvedSubjectKind === "generic";
   const options =
     subjectOptions ?? GLOSSARY.map((glossaryTerm) => t(glossaryTerm.termKey));
   const valid =
@@ -74,7 +93,15 @@ export function SuggestEditModal({
 
   return (
     <ResourceModal
-      title={phase === "done" ? "" : t("resources:suggestEdit.modalTitle")}
+      title={
+        phase === "done"
+          ? ""
+          : t(
+              isNewSubject
+                ? "resources:suggestEdit.newTerm.modalTitle"
+                : "resources:suggestEdit.modalTitle",
+            )
+      }
       onClose={onClose}
     >
       {phase === "done" ? (
@@ -95,13 +122,31 @@ export function SuggestEditModal({
               {t(
                 subject
                   ? "resources:suggestEdit.body.introSubject"
-                  : subjectOptions
-                    ? "resources:suggestEdit.body.introPicker"
-                    : "resources:suggestEdit.body.intro",
+                  : isNewSubject
+                    ? "resources:suggestEdit.body.introNewTerm"
+                    : isGenericSubject
+                      ? "resources:suggestEdit.body.introPicker"
+                      : "resources:suggestEdit.body.intro",
               )}
             </p>
 
-            {subject ? (
+            {isNewSubject ? (
+              <>
+                <label className={styles.label} htmlFor={`${fieldId}-term`}>
+                  {t("resources:suggestEdit.form.newTermNameLabel")}
+                </label>
+                <input
+                  id={`${fieldId}-term`}
+                  className={styles.input}
+                  type="text"
+                  value={term}
+                  onChange={(event) => setTerm(event.target.value)}
+                  placeholder={t(
+                    "resources:suggestEdit.form.newTermNamePlaceholder",
+                  )}
+                />
+              </>
+            ) : subject ? (
               <>
                 <span className={styles.label}>
                   {t("resources:suggestEdit.form.subjectFixedLabel")}
@@ -114,7 +159,7 @@ export function SuggestEditModal({
               <>
                 <label className={styles.label} htmlFor={`${fieldId}-term`}>
                   {t(
-                    subjectOptions
+                    isGenericSubject
                       ? "resources:suggestEdit.form.subjectLabel"
                       : "resources:suggestEdit.form.termLabel",
                   )}
@@ -122,7 +167,7 @@ export function SuggestEditModal({
                 <Select
                   id={`${fieldId}-term`}
                   placeholder={t(
-                    subjectOptions
+                    isGenericSubject
                       ? "resources:suggestEdit.form.selectPlaceholderGeneric"
                       : "resources:suggestEdit.form.selectPlaceholder",
                   )}
@@ -136,7 +181,7 @@ export function SuggestEditModal({
                     {
                       value: "__new",
                       label: t(
-                        subjectOptions
+                        isGenericSubject
                           ? "resources:suggestEdit.form.otherOption"
                           : "resources:suggestEdit.form.newTermOption",
                       ),
@@ -147,14 +192,22 @@ export function SuggestEditModal({
             )}
 
             <label className={styles.label} htmlFor={`${fieldId}-change`}>
-              {t("resources:suggestEdit.form.changeLabel")}
+              {t(
+                isNewSubject
+                  ? "resources:suggestEdit.form.newTermDefinitionLabel"
+                  : "resources:suggestEdit.form.changeLabel",
+              )}
             </label>
             <textarea
               id={`${fieldId}-change`}
               className={styles.textarea}
               value={change}
               onChange={(e) => setChange(e.target.value)}
-              placeholder={t("resources:suggestEdit.form.changePlaceholder")}
+              placeholder={t(
+                isNewSubject
+                  ? "resources:suggestEdit.form.newTermDefinitionPlaceholder"
+                  : "resources:suggestEdit.form.changePlaceholder",
+              )}
             />
           </div>
 

@@ -423,6 +423,10 @@
   height: 52px;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
+  /* The success tick (react-icons `FiCheck`, which paints with currentColor).
+     The card sits on --plum, which does not flip, so this stays the pale
+     on-dark jade in both themes. */
+  color: var(--jade-soft);
   display: flex;
   align-items: center;
   justify-content: center;

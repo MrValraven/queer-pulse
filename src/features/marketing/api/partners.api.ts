@@ -131,13 +131,60 @@ export interface TriagePartnerApplicationDto {
   note?: string;
 }
 
-/** PATCH /admin/partners/:id — an admin sets a partner's featured flag and/or
- *  testimonial. The backend 409s a quote written without an author. */
-export interface UpdatePartnerAdminDto {
+/**
+ * PATCH /my-partners/:id — the fields a partner may change about ITSELF
+ * (PRD-263), and the ONLY fields that route accepts: the backend DTO has no
+ * others, and the global validation pipe rejects unknown keys outright.
+ *
+ * `tier`, `since`, `eyebrow` and `name` are absent on purpose. Tier and since
+ * describe the RELATIONSHIP, eyebrow prints as "Partner · …" so its first word
+ * is a relationship claim too, and the name is the identity the approval was
+ * granted to. All four stay with staff.
+ *
+ * `contact` REPLACES the whole block when sent — it is one document on the
+ * backend, always fully populated — so the editor always sends every subfield.
+ */
+export interface UpdatePartnerProfileDto {
+  region?: Region;
+  regionLabel?: string;
+  city?: string;
+  desc?: string;
+  tagline?: string;
+  logo?: string;
+  tags?: string[];
+  about?: string[];
+  stats?: PartnerStat[];
+  aboutMore?: PartnerSection[];
+  jointWork?: PartnerJointWork[];
+  timeline?: PartnerTimelineItem[];
+  how?: PartnerSection[];
+  funding?: string;
+  atGlance?: PartnerAtGlance[];
+  contact?: PartnerContact;
+}
+
+/**
+ * PATCH /admin/partners/:id — staff edit of an approved partner. Everything a
+ * partner may change about itself, PLUS the relationship claims and the
+ * marketing surface. The backend 409s a quote written without an author.
+ */
+export interface UpdatePartnerAdminDto extends UpdatePartnerProfileDto {
+  name?: string;
+  tier?: string;
+  since?: string;
+  eyebrow?: string;
   featured?: boolean;
   testimonialQuote?: string | null;
   testimonialAuthor?: string | null;
   testimonialRole?: string | null;
+}
+
+/** GET /my-partners — a partner profile this member maintains. The public
+ *  detail (that is what is being edited) plus the id the PATCH addresses and
+ *  the status the editor states plainly. */
+export interface OwnedPartnerDTO extends PartnerDetailDTO {
+  id: string;
+  status: PartnerStatus;
 }
 
 // ── Raw calls (one per endpoint) ─────────────────────────────────────────────
@@ -198,3 +245,19 @@ export const getAdminPartners = () =>
 /** PATCH /admin/partners/:id — admin sets a partner's featured flag + testimonial. */
 export const updatePartnerAdmin = (id: string, dto: UpdatePartnerAdminDto) =>
   apiPatch<PartnerApplicationDTO>(`/admin/partners/${id}`, dto);
+
+/**
+ * GET /my-partners — every approved partner this member OWNS, newest first.
+ *
+ * Scoped server-side by the session's user id against `partners.owner_user_id`
+ * (stamped at approval from the application's submitter). A member who
+ * maintains none gets `[]`, never a 404 — "you run no partner profile" is a
+ * state the editor renders, not an error.
+ */
+export const getMyPartners = () => apiGet<OwnedPartnerDTO[]>("/my-partners");
+
+/** PATCH /my-partners/:id — a partner updating its own public profile. 404s
+ *  for a partner this member does not own (deliberately not a 403, which
+ *  would confirm the id exists). */
+export const updateMyPartner = (id: string, dto: UpdatePartnerProfileDto) =>
+  apiPatch<OwnedPartnerDTO>(`/my-partners/${id}`, dto);

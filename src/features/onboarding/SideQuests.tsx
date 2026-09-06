@@ -5,6 +5,10 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { badgeIconFor } from "../members/badgeIcons";
 import type { Badge } from "../members/badges.data";
+import {
+  badgeCategoryLabelKeyFor,
+  badgeDisplayMetaFor,
+} from "../members/badgeCatalog.data";
 import { useRecognition } from "../members/api/useRecognition";
 import { ClaimButton } from "../members/PerksSections";
 import type { Perk } from "../members/perks.data";
@@ -17,13 +21,26 @@ const VISIBLE_COUNT = 6;
  *  CTA button only when `sideQuestCta.ts` maps this badge to somewhere to go. */
 function BadgeQuestCard({ badge, to }: { badge: Badge; to?: string }) {
   const { t } = useTranslation();
+  // `useRecognition()` hands over the server catalogue, which carries stable
+  // ids beside English display words. The words resolve here rather than off
+  // the wire (see `badgeCatalog.data.ts`). Every quest is a locked badge, so
+  // `when` is the "what it takes" line; an unmapped id or category falls back
+  // to the server's own English.
+  const displayMeta = badgeDisplayMetaFor(badge.key);
+  const categoryLabelKey = badgeCategoryLabelKeyFor(badge.category);
   return (
     <div className={styles.questCard}>
       <div className={styles.questIconWrap}>{badgeIconFor(badge.key)}</div>
       <div className={styles.questBody}>
-        <span className={styles.questCat}>{badge.category}</span>
-        <span className={styles.questName}>{badge.name}</span>
-        <span className={styles.questDesc}>{badge.when}</span>
+        <span className={styles.questCat}>
+          {categoryLabelKey ? t(categoryLabelKey) : badge.category}
+        </span>
+        <span className={styles.questName}>
+          {displayMeta ? t(displayMeta.nameKey) : badge.name}
+        </span>
+        <span className={styles.questDesc}>
+          {displayMeta ? t(displayMeta.lockedContextKey) : badge.when}
+        </span>
       </div>
       {to && (
         <Button to={to} variant="ghost" size="sm">

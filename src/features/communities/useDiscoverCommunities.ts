@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDebouncedValue, useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community, CommunityType } from "../homepage/data/types";
@@ -66,21 +66,36 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     isError: hasListFailed,
     refetch: retryList,
     facets,
-  } = useCommunities({
-    filter: isMineScope ? "mine" : undefined,
-    q: q || undefined,
-    // "active" is not sent (the backend does support it) — leave the server on
-    // its default order and re-sort client-side once fully drained. See the
-    // drain note below for the follow-up that would retire that.
-    sort: sort === "name" ? "name" : undefined,
-    type: filter === "all" ? undefined : filter,
-    access: isOpenOnly ? "public" : undefined,
-    // Server-side since the backend gained `?busy=true` over the indexed
-    // `communities.active_this_week` counter. It used to be a client-side cut
-    // that first had to drain every remaining page into the browser.
-    busy: isBusyOnly || undefined,
-    tags: tagIds.length ? tagIds : undefined,
-  });
+    isShowingPreviousResults: isShowingStaleResults,
+  } = useCommunities(
+    {
+      filter: isMineScope ? "mine" : undefined,
+      q: q || undefined,
+      // Every sort the toolbar offers is a server sort: "name" orders by
+      // `name ASC, id ASC` and "active" by the indexed
+      // `communities.active_this_week DESC` (then `created_at DESC, id ASC`), so
+      // page 1 of "Most active" really is the most active overall. "Newest" is
+      // the endpoint's own default order, so it travels as an omitted param
+      // rather than an explicit one: that keeps the default grid's query key
+      // identical to the unfiltered key `useCommunitiesTabCounts` and the
+      // category-count hook already mount, so the three share one cache entry
+      // and one request instead of splitting into two.
+      sort: sort === "newest" ? undefined : sort,
+      type: filter === "all" ? undefined : filter,
+      access: isOpenOnly ? "public" : undefined,
+      // Server-side since the backend gained `?busy=true` over the indexed
+      // `communities.active_this_week` counter. It used to be a client-side cut
+      // that first had to drain every remaining page into the browser.
+      busy: isBusyOnly || undefined,
+      tags: tagIds.length ? tagIds : undefined,
+    },
+    {
+      // Sort and every facet ride in the query key, so each pick is a fresh
+      // key. Holding the previous run's cards on screen until the new first
+      // page lands keeps a re-sort a swap rather than a blank grid.
+      shouldKeepPreviousResults: true,
+    },
+  );
   // The 600ms placeholder skeleton is a demo-prototype device; live mode waits
   // on the real first page instead of adding half a second to every visit.
   const isSimulatedLoading = useSimulatedLoad();
@@ -103,29 +118,20 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     !isBusyOnly &&
     tagIds.length === 0;
 
-  // "Most active" still drains every remaining page and re-sorts in memory:
-  // the FE sends no `sort=active`, so a server-ordered page 1 wouldn't be the
-  // most active overall. ("Busy this week" no longer drains — it is a real
-  // query param now. Adopting `sort=active` the same way is the obvious
-  // follow-up; it is a separate change from this one.)
-  const needsDrain = sort === "active";
-  useEffect(() => {
-    if (needsDrain && hasNextPage && !isFetchingNextPage) fetchNextPage();
-  }, [needsDrain, hasNextPage, isFetchingNextPage, fetchNextPage]);
-  const isDraining = needsDrain && hasNextPage;
-  const isShowingSkeletons = isLoading || isDraining;
+  const isShowingSkeletons = isLoading;
 
-  // The server does the real `type`/`q`/`access`/`busy` filtering
-  // (`useCommunities`'s params), so `communities` already IS the filtered set
-  // — no client-side re-filter over just the loaded page, which used to
-  // false-negative "no communities match" once a filtered category had more
-  // than one page (COM-3).
-  let visible = communities;
-  if (sort === "active") {
-    visible = [...visible].sort(
-      (a, b) => (b.activeThisWeek ?? 0) - (a.activeThisWeek ?? 0),
-    );
-  }
+  // The server does the real `type`/`q`/`access`/`busy` filtering AND the real
+  // ordering (`useCommunities`'s params), so `communities` already IS the
+  // filtered, sorted set: no client-side re-filter or re-sort over the pages
+  // that happen to be loaded. "Most active" used to be the exception. It left
+  // the server on its default order and then pulled every remaining page into
+  // the browser, one request after another, purely to re-sort in memory: 20
+  // sequential round trips for a 400-community directory, with six skeletons
+  // on screen for all of them. It is `sort=active` now, one request, ordered
+  // by the server off the indexed `active_this_week` counter, which is also
+  // what makes it paginate: page 2 continues the same ranking instead of
+  // appending a differently-ordered slice under a locally re-sorted page 1.
+  const visible = communities;
   const gridItems = isShowingFeatured
     ? visible.filter((community) => community.slug !== featured!.slug)
     : visible;
@@ -133,10 +139,10 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
   // Tag-chip counts, unlike the category chips just above them, are a live
   // facet: the server counts them over this same request's filters with the
   // `tags` filter itself lifted, so a number answers "how many would I get if
-  // I picked this tag as well", and a 0 is a dead end worth greying out. The
-  // one remaining client-side narrowing (`sort=active`'s drain) is applied
-  // after pagination and is not part of the query, so it doesn't move these
-  // numbers in either mode. `undefined` until the first page lands.
+  // I picked this tag as well", and a 0 is a dead end worth greying out.
+  // Nothing narrows or reorders the list client-side any more, so what the
+  // server counted is what the grid shows. `undefined` until the first page
+  // lands.
   const tagCounts = facets?.tags;
   // The same live facet for the two pill toggles, each counted with its own
   // predicate lifted and the other still applied. `undefined` until the first
@@ -188,7 +194,10 @@ export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
     featured,
     isShowingFeatured,
     isShowingSkeletons,
-    needsDrain,
+    // True while the grid is still showing the PREVIOUS sort/filter's rows.
+    // "Load more" is held during it: `hasNextPage` describes the run on
+    // screen, and paging it would append the incoming run's page 2 under it.
+    isShowingStaleResults,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,

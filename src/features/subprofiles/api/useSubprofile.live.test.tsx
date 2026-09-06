@@ -132,16 +132,15 @@ describe("useSubprofiles (live mode via MSW)", () => {
 });
 
 describe("useSubprofileDirectory (live mode via MSW)", () => {
-  it("fetches GET /subprofiles/directory with no kind/query network params — Personas Phase 4 filters family/tags/search client-side over the full set", async () => {
+  it("fetches GET /subprofiles/directory unfiltered when no search term is given (the profession/tag/availability facets still narrow client-side)", async () => {
     const { useSubprofileDirectory: useDirectoryLive, wrapper } =
       await loadLive();
     const { result } = renderHook(() => useDirectoryLive(), { wrapper });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
-    // Previously "nightform" (musician) and "grain-studio" only turned up under
-    // a narrowing kind/query param — now the fetch is unfiltered, so both are
-    // present in the same response.
-    const handles = result.current.data!.map((card) => card.handle);
+    // With no term the request carries no `query` param, so both "nightform"
+    // (musician) and "grain-studio" are present in the same response.
+    const handles = result.current.cards.map((card) => card.handle);
     expect(handles).toContain("nightform");
     expect(handles).toContain("grain-studio");
   });
@@ -153,7 +152,7 @@ describe("useSubprofileDirectory (demo mode)", () => {
       wrapper: TestProviders,
     });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
-    const handles = result.current.data!.map((card) => card.handle);
+    const handles = result.current.cards.map((card) => card.handle);
     expect(handles).toContain("nightform");
     expect(handles).toContain("grain-studio");
   });

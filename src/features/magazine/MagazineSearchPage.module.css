@@ -45,3 +45,15 @@
   font-size: var(--text-12-5);
   color: var(--ink-60);
 }
+
+/* PRD-112: the writer whose back catalogue is being browsed, linking back to
+   their author page. */
+.authorLink {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+.authorLink:hover {
+  text-decoration: underline;
+}

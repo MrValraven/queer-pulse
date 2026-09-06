@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getEvents } from "../../gatherings/api/events.api";
 import { cardToCalendarEvent } from "../../gatherings/api/events.adapters";
 import type { CalendarEvent } from "../../gatherings/data";
@@ -38,6 +39,7 @@ export interface HomepageGatheringsResult {
 export function useHomepageGatherings(): HomepageGatheringsResult {
   const { demoMode } = useDemoMode();
   const { loggedIn, checking } = useAuth();
+  const { t } = useTranslation();
   const isEnabled = !demoMode && loggedIn && !checking;
 
   const query = useQuery<CalendarEvent[]>({
@@ -45,7 +47,7 @@ export function useHomepageGatherings(): HomepageGatheringsResult {
     enabled: isEnabled,
     queryFn: async () => {
       const page = await getEvents({ filter: "upcoming", page: 1 });
-      return page.items.map(cardToCalendarEvent);
+      return page.items.map((card) => cardToCalendarEvent(card, t));
     },
   });
 

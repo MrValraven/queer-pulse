@@ -30,6 +30,15 @@ export interface SubmittedAppealDTO {
   id: string;
   status: AppealStatus;
   createdAt: string;
+  /**
+   * When the platform has undertaken to decide this appeal by (TS-11,
+   * PRD-286). Computed and stored at this exact moment as `filedAt` plus the
+   * published decision window, and now returned as well: the deadline was
+   * already a fact the instant the member pressed submit, and withholding it
+   * until they came back to the outcome page hid the promise at the one moment
+   * it was worth the most.
+   */
+  slaDueAt: string;
 }
 
 /** File an appeal against a moderation decision taken on the current member. */

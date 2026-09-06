@@ -121,23 +121,31 @@ export function recognitionToModel(dto: RecognitionDTO): Recognition {
     },
     perks: {
       availableCount: dto.perks.availableCount,
-      groups: dto.perks.groups.map((g) => ({
-        label: g.label,
-        perks: g.perks.map((perk) => ({
+      groups: dto.perks.groups.map((group) => ({
+        kind: group.kind,
+        unlockLevel: group.unlockLevel,
+        label: group.label,
+        perks: group.perks.map((perk) => ({
           key: perk.key,
           category: perk.cat,
           title: perk.title,
           description: perk.desc,
           state: perk.state,
           footer: perk.footer,
+          inviteQuota: perk.inviteQuota,
         })),
       })),
-      ladder: dto.perks.ladder.map((r) => ({
-        number: r.num,
-        name: r.name,
-        state: r.state,
-        status: r.status,
-        perks: r.perks,
+      ladder: dto.perks.ladder.map((row) => ({
+        number: row.num,
+        name: row.name,
+        state: row.state,
+        statusKind: row.statusKind,
+        xpAway: row.xpAway,
+        status: row.status,
+        perks: row.perks.map((entry) => ({
+          id: entry.id,
+          label: entry.label,
+        })),
       })),
     },
     xpBreakdown: dto.xpBreakdown.map((item) => ({

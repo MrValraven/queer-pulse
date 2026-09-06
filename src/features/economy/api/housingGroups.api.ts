@@ -1,4 +1,5 @@
 import {
+  ApiError,
   apiDelete,
   apiGet,
   apiPatch,
@@ -112,8 +113,49 @@ export const getHousingGroups = () =>
 export const getHousingGroup = (slug: string) =>
   apiGet<HousingGroupDTO>(`/housing-groups/${slug}`);
 
+/**
+ * The rooms shared inside a group. An OPEN group answers anyone. An
+ * ACCESS-GATED group answers only a member and refuses everyone else with a
+ * `GROUP_MEMBERSHIP_REQUIRED` 403, so read the error through
+ * `groupMembershipStandingFrom` rather than letting it surface as a failure.
+ */
 export const getGroupListings = (slug: string) =>
   apiGet<GroupListingDTO[]>(`/housing-groups/${slug}/listings`);
+
+/** Where the caller stands with a group they are not a member of. Mirrors the
+ *  backend `GroupMembershipStanding`, and only ever describes the caller's own
+ *  join requests. */
+export type GroupMembershipStanding = "pending" | "declined" | "none";
+
+const MEMBERSHIP_STANDINGS: GroupMembershipStanding[] = [
+  "pending",
+  "declined",
+  "none",
+];
+
+/**
+ * Reads a `GROUP_MEMBERSHIP_REQUIRED` 403 body and returns the caller's own
+ * standing with the group, so a gated surface can say what to do next: wait,
+ * ask, or accept the answer. Returns `null` for any other error, which the
+ * caller then handles normally. Mirrors `affirmingPledgeRequiredFrom`, which
+ * reads the sibling gate on the same housing surfaces.
+ *
+ * Falls back to `"none"` when the body carries the code without a recognised
+ * standing: the gate is real either way, and inviting someone to ask is the
+ * safe thing to say when we cannot tell whether they already did.
+ */
+export function groupMembershipStandingFrom(
+  error: unknown,
+): GroupMembershipStanding | null {
+  if (!(error instanceof ApiError) || error.status !== 403) return null;
+  const data = error.data as
+    { code?: string; membershipStanding?: string } | undefined;
+  if (data?.code !== "GROUP_MEMBERSHIP_REQUIRED") return null;
+  const standing = MEMBERSHIP_STANDINGS.find(
+    (candidate) => candidate === data.membershipStanding,
+  );
+  return standing ?? "none";
+}
 
 /** The caller's own rooms in this group, in whatever state each is in. Active
  *  members only; 404 when the group slug is unknown. */
@@ -150,3 +192,27 @@ export const submitGroupJoinRequest = (
   slug: string,
   body: GroupJoinRequestBody,
 ) => apiPost<{ id: string }>(`/housing-groups/${slug}/join-requests`, body);
+
+/** The three states a group join request moves through. Mirrors the backend
+ *  `GroupJoinRequestStatus` enum exactly, including its `approved` spelling of
+ *  the outcome the co-op surface calls `accepted`. */
+export type GroupJoinRequestStatus = "pending" | "approved" | "declined";
+
+/**
+ * The APPLICANT's own view of a group join request (PRD-242). Deliberately
+ * leaner than the admin row: it carries which group was asked and where the
+ * request stands, and none of the triage material (the `relationship` answer,
+ * the screening `answers`, the `note`) or the `mutualConnections` trust signal
+ * that belong to the review console.
+ */
+export interface MyGroupJoinRequestDTO {
+  id: string;
+  status: GroupJoinRequestStatus;
+  createdAt: string;
+  group: { slug: string; name: string } | null;
+}
+
+/** The caller's own group applications across every group, newest first.
+ *  Signed-in callers only. */
+export const getMyGroupJoinRequests = () =>
+  apiGet<MyGroupJoinRequestDTO[]>("/housing-groups/join-requests/mine");

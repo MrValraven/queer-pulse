@@ -1,7 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getPiece } from "./pieces.api";
+import type { PieceRecordPublishFields } from "./piecePublish.api";
 import { DEMO_RECORD, type PieceRecordView } from "../data/pieceRecord.data";
+
+/**
+ * What `PieceRecordPage` actually renders: the record plus the publish state
+ * from CONTRACT §3 (`isPublished` / `publishedAt` / `publicHref`). The publish
+ * fields are optional here on purpose: the demo fixture predates them and a
+ * backend that has not shipped them yet must not blank the whole page, so
+ * every reader treats an absent field as "not published".
+ */
+export type PieceRecordWithPublish = PieceRecordView & PieceRecordPublishFields;
 
 /**
  * The full piece record — brief/care/payment/audit/letters/corrections/
@@ -20,7 +30,7 @@ import { DEMO_RECORD, type PieceRecordView } from "../data/pieceRecord.data";
  */
 export function usePieceRecord(id: string) {
   const { demoMode } = useDemoMode();
-  const query = useQuery<PieceRecordView>({
+  const query = useQuery<PieceRecordWithPublish>({
     queryKey: ["magazine-piece", id, demoMode],
     queryFn: async () => {
       if (demoMode) return DEMO_RECORD;

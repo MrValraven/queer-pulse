@@ -1,3 +1,6 @@
+import { useMemo, useState } from "react";
+import { useDebouncedValue } from "../../shared/hooks";
+import { memberName } from "./data/members";
 import { useMembers, type MembersResult } from "./api/useMembers";
 import {
   ALL_OF_LISBON,
@@ -6,6 +9,27 @@ import {
   type FilterState,
   type SortKey,
 } from "./memberDirectoryFilter.data";
+
+/** How long the name search waits after the last keystroke before its term
+ *  becomes a query key and reaches the network. Same interval as every other
+ *  list-with-search control in the app (`useDiscoverCommunities`,
+ *  `useSubprofileDirectoryFilters`, `AdminListingsHeader`). */
+const SEARCH_DEBOUNCE_MS = 300;
+
+/** The directory's name-search box, as one bundle the page threads down to the
+ *  results column. */
+export interface MemberDirectorySearch {
+  /** Raw text in the field, updated on every keystroke. */
+  input: string;
+  /** The trimmed, debounced term actually driving the query and the empty
+   *  state. Lags `input` by `SEARCH_DEBOUNCE_MS`. */
+  term: string;
+  onChange: (value: string) => void;
+}
+
+export interface MemberDirectoryResult extends MembersResult {
+  search: MemberDirectorySearch;
+}
 
 /**
  * Turns the directory's sidebar `FilterState` + sort into the `GET /members`
@@ -32,14 +56,36 @@ import {
  * refetches. Demo mode sorts the whole mock list in the browser and must NOT
  * put sort in the key, or every sort change would refetch and flash the
  * skeleton.
+ *
+ * The NAME SEARCH lives here too, state and all, so the page component stays
+ * inside the 200-line rule. It is forwarded as `GET /members?query=`, a
+ * weighted full-text match the endpoint has accepted all along
+ * (`ListMembersQuery.query` over first name, last name, slug, tagline and
+ * bio). The directory was the one browse surface with no caller for it, so
+ * "find the person I met last night" meant leaving for global search. Live
+ * mode sends the debounced term, so the match runs across the WHOLE directory
+ * rather than the pages the browser happened to load, and it rides in the
+ * query key: without that a new search would render the previous term's cached
+ * page. Demo mode keeps it out of the key for the same reason it keeps `sort`
+ * out (there is no request to make) and narrows the mock list here instead,
+ * over the same fields the server matches: name, slug and the card's role
+ * line, the fixture's stand-in for a tagline.
+ *
+ * Narrowing the demo list HERE rather than in the page also keeps the sidebar
+ * honest: it counts demo facets off the list it is handed, and live facets
+ * already come back counted under the search term, so both modes report
+ * availability within the current search.
  */
 export function useMemberDirectoryQuery(
   filters: FilterState,
   sort: SortKey,
   demoMode: boolean,
-): MembersResult {
+): MemberDirectoryResult {
+  const [searchInput, setSearchInput] = useState("");
+  const searchTerm = useDebouncedValue(searchInput.trim(), SEARCH_DEBOUNCE_MS);
   const hoods = filters.hoods.filter((hood) => hood !== ALL_OF_LISBON);
-  return useMembers({
+  const result = useMembers({
+    query: demoMode ? undefined : searchTerm || undefined,
     identities: filters.identities,
     openTo: filters.openTo,
     hoods,
@@ -54,4 +100,27 @@ export function useMemberDirectoryQuery(
       filters.yearsTo !== EMPTY_FILTERS.yearsTo ? filters.yearsTo : undefined,
     sort: demoMode ? undefined : SORT_PARAM[sort],
   });
+
+  const items = useMemo(() => {
+    if (!demoMode || searchTerm === "") return result.items;
+    const needle = searchTerm.toLowerCase();
+    return result.items.filter((member) => {
+      const name = member.firstName
+        ? `${member.firstName} ${member.lastName ?? ""}`
+        : memberName(member.slug);
+      return `${name} ${member.slug} ${member.role}`
+        .toLowerCase()
+        .includes(needle);
+    });
+  }, [demoMode, searchTerm, result.items]);
+
+  return {
+    ...result,
+    items,
+    search: {
+      input: searchInput,
+      term: searchTerm,
+      onChange: setSearchInput,
+    },
+  };
 }

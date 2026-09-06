@@ -1,0 +1,37 @@
+/* Global rules behind the accessibility preferences that are pure CSS.
+   Imported by AccessibilityProvider, which mounts at the app root, so these
+   ship in the entry chunk and apply on every route rather than only on the
+   settings page the member set them from.
+
+   The preferences themselves live in `AccessibilityProvider`, which stamps
+   them onto <html> as data attributes. Reduce motion has its own kill-switch
+   in base.css and is not repeated here. */
+
+/* "Open out the spacing" (WCAG 1.4.12). Scoped to running text rather than
+   every element: the chrome measures its rows and pills in fixed pixels, and a
+   platform-wide line-height would push type out of boxes that cannot grow.
+   The values are the WCAG 1.4.12 minima, which content has to survive anyway. */
+html[data-a11y-wide-spacing="true"] :is(p, li, dd, blockquote, figcaption) {
+  line-height: 2;
+  letter-spacing: 0.12em;
+  word-spacing: 0.16em;
+}
+
+html[data-a11y-wide-spacing="true"] p + p {
+  margin-top: 2em;
+}
+
+/* "Always show focus". The platform's ring is `:focus-visible` only, so it
+   appears for keyboard focus and stays away from the mouse click that would
+   otherwise leave a ring behind on every button. A member who cannot track
+   where focus went needs it on EVERY focus, mouse included.
+
+   The three values are the token triple from tokens/effects.css, restated the
+   way base.css restates them. A bare coral outline here would measure 2.63:1
+   on cream and fail the very people this row is for. */
+html[data-a11y-focus-rings="true"] :focus {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}

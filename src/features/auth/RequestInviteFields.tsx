@@ -3,13 +3,6 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./auth.module.css";
 
-const optionalStyle = {
-  fontWeight: 400,
-  textTransform: "none" as const,
-  letterSpacing: 0,
-  fontSize: 11,
-};
-
 export interface RequestInviteFieldsProps {
   first: string;
   setFirst: (v: string) => void;
@@ -125,7 +118,9 @@ export function RequestInviteFields({
         label={
           <Translation
             i18nKey="auth:requestInvite.field.mutual.label"
-            components={{ optional: <span style={optionalStyle} /> }}
+            components={{
+              optional: <span className={styles.optionalSuffix} />,
+            }}
           />
         }
         helper={t("auth:requestInvite.field.mutual.helper")}

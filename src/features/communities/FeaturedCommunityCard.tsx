@@ -22,6 +22,13 @@ const CATEGORY_CLASS: Record<CommunityType, string> = {
   professional: styles.professional!,
 };
 
+/** The identity mark's rendered edge, in CSS pixels. Mirrors `.markImg`'s own
+ *  width/height in this component's stylesheet; spelled onto the `<img>` too so
+ *  the browser reserves the box before the file decodes. Larger than the grid
+ *  card's 44px because this card's cover is, at its narrowest, five times the
+ *  size of a grid card's letterhead. */
+const FEATURED_MARK_PX = 56;
+
 interface FeaturedCommunityCardProps {
   community: Community;
   /** Whether the viewer already belongs to this community. The caller
@@ -65,6 +72,23 @@ export function FeaturedCommunityCard({
           <span className={styles.flag}>
             <span className={styles.liveDot} aria-hidden />
             {t("communities:discover.featured.gatheringFlag")}
+          </span>
+        )}
+        {community.avatarImageUrl && (
+          // The community's own square mark (PRD-146), the same object the grid
+          // cards and the detail hero carry. Decorative: the name is a heading
+          // in the body beside it, so labelling this would repeat it to a
+          // screen reader. Absent draws nothing at all.
+          <span className={styles.mark} aria-hidden>
+            <img
+              className={styles.markImg}
+              src={community.avatarImageUrl}
+              alt=""
+              width={FEATURED_MARK_PX}
+              height={FEATURED_MARK_PX}
+              loading="lazy"
+              referrerPolicy="no-referrer"
+            />
           </span>
         )}
       </div>

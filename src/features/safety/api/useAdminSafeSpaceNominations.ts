@@ -145,6 +145,7 @@ export function useAdminSafeSpaceNominationAction() {
         reason: action.reason,
         tier: action.tier,
         verifierLabel: action.verifierLabel,
+        belowVisitBarReason: action.belowVisitBarReason,
       });
     },
     onSuccess: () => {

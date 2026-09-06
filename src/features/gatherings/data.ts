@@ -189,6 +189,38 @@ export interface GatheringDetail {
   /** Live mode only (LOC-07): seats the going RSVPs occupy, guests included.
    *  This, never the row count, is what capacity is measured against. */
   seatsTaken?: number;
+  /**
+   * Live mode only: the gathering has been called off (PRD-181).
+   *
+   * The cancel path flips the event row and nothing else, so an attendee kept
+   * seeing a live-looking page with a working RSVP button that the server
+   * answered 400. This carries the fact through to every surface that renders
+   * a gathering the member still has a stake in.
+   *
+   * Absent in the demo registry: no demo gathering is cancelled, and the
+   * cancelled prototype page is its own route.
+   */
+  cancelled?: boolean;
+  /** Live mode only: the gathering happens online rather than at a door.
+   *  Derived from the DTO rather than from the `hood` string, which is a
+   *  display label and gets translated (DES-130). */
+  isOnline?: boolean;
+  /**
+   * Live mode only: the video link for an online gathering (PRD-182).
+   *
+   * Gated by the server on exactly the same rule as `address`: organisers and
+   * confirmed attendees only. A `null`/absent value on an online gathering is
+   * therefore the same kind of fact the address panel already states out loud
+   * ("shared with the people who are going"), never a missing field.
+   */
+  onlineUrl?: string | null;
+  /** Live mode only: how many members hold a "going" RSVP. Carried on the
+   *  detail so the RSVP control can state the head count without a second
+   *  request for the roster (which the host may have hidden anyway). */
+  goingCount?: number;
+  /** Live mode only: when the host last edited this gathering. Read by the
+   *  manage dashboard's "last edited N days ago" line (PRD-191). */
+  updatedAt?: Date;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {
@@ -740,6 +772,27 @@ export function createGatheringPath(communitySlug?: string): string {
   return `${routes.createGathering}?${query.toString()}`;
 }
 
+/** Query param naming the gathering a new one is being copied from (PRD-190).
+ *  Kept beside the path helper below so no caller hardcodes the name. */
+export const DUPLICATE_GATHERING_PARAM = "duplicate";
+
+/**
+ * "Run this again": the create wizard, pre-filled from an existing gathering.
+ *
+ * A host running a monthly one-off used to retype the whole wizard each time.
+ * The slug travels in the URL rather than in router state so the prefill
+ * survives a refresh and a shared link, and the wizard fetches the source
+ * itself — which also means the copy is subject to the same organiser checks
+ * as any other read of that gathering.
+ *
+ * The date, the time and the two publish confirmations are deliberately NOT
+ * copied — see `GatheringFormSeed`.
+ */
+export function duplicateGatheringPath(slug: string): string {
+  const query = new URLSearchParams({ [DUPLICATE_GATHERING_PARAM]: slug });
+  return `${routes.createGathering}?${query.toString()}`;
+}
+
 /** Lifecycle sub-pages of one gathering (all under `/gatherings/:slug/...`). */
 export const gatheringRecapPath = (slug: string): string =>
   `${gatheringPath(slug)}/recap`;
@@ -876,6 +929,11 @@ export interface CalendarEvent {
   coverImageUrl?: string;
   /** Going/RSVP count, used only to weight highlight curation. */
   attendeeCount?: number;
+  /** The gathering has been called off (PRD-181). Discovery lists never carry
+   *  a cancelled row (the server filters them), but "going", "saved",
+   *  "hosting" and "past" deliberately do, so the member is told rather than
+   *  left with a row that quietly vanished. */
+  cancelled?: boolean;
 }
 
 const ACCENT = "var(--accent)";

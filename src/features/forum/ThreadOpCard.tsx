@@ -10,6 +10,8 @@ import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { FeatureHelp } from "../../shared/components/ui";
 import { PostActionsMenu } from "./PostActionsMenu";
 import { ForumPostImage } from "./ForumImageAttach";
+import { ForumLinkPreview } from "./ForumLinkPreview";
+import { firstLinkIn, useInViewOnce } from "./api/useForumLinkPreview";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadOpCard({
@@ -30,6 +32,7 @@ export function ThreadOpCard({
   onDelete,
   onRestore,
   onHistory,
+  onMoveCategory,
   onEditTags,
 }: {
   thread: Thread;
@@ -54,6 +57,10 @@ export function ThreadOpCard({
   onDelete: () => void;
   onRestore: () => void;
   onHistory: () => void;
+  /** Re-file this thread into another category (PRD-163). Omitted for a viewer
+   *  outside the author's 24-hour window who is not a moderator, which is what
+   *  keeps the action off a menu the server would refuse. */
+  onMoveCategory?: () => void;
   /** Open the tag editor (SOC-13). Omitted for a viewer who may not re-file
    *  this thread, which is what hides the control. */
   onEditTags?: () => void;
@@ -61,8 +68,19 @@ export function ThreadOpCard({
   const { t } = useTranslation();
   const fmt = useFormat();
   const catMeta = CATS.find((c) => c.id === thread.category);
-  const catColor = CAT_STYLE[thread.category]?.color ?? "var(--plum)";
+  // DES-120's fix, applied to the last place that still had the old fallback:
+  // `--plum` does NOT flip in dark mode, so an unknown category printed its
+  // name in near-black on the dark card. `--text-strong` IS the plum-for-text
+  // token and flips, and it is what `CAT_STYLE.general` already resolves to.
+  const catColor = CAT_STYLE[thread.category]?.color ?? "var(--text-strong)";
   const voted = !!thread.myVote;
+  // ENG-130. Explicit `false` only: undefined is "the posts page has not landed
+  // yet", which must read as loading rather than as a missing opening post.
+  const isOpUnavailable = thread.isOpAvailable === false;
+  // PRD-171: unfurl the first link in the opening post, and only once the card
+  // is near the viewport (see `useForumLinkPreview` on the shared rate budget).
+  const { ref: bodyRef, isInView } = useInViewOnce<HTMLDivElement>();
+  const firstLink = firstLinkIn(body);
 
   return (
     <div className={styles.opCard}>
@@ -144,6 +162,8 @@ export function ThreadOpCard({
               name: thread.author.name,
               official: thread.author.official,
             }}
+            canMoveCategory={!!onMoveCategory}
+            onMoveCategory={onMoveCategory}
             onEdit={onEdit}
             onDelete={onDelete}
             onRestore={onRestore}
@@ -154,8 +174,16 @@ export function ThreadOpCard({
       <h1 className={styles.opTitle}>
         {title} <FeatureHelp id="forum.thread" />
       </h1>
-      <div className={styles.opBody}>
-        {deleted ? (
+      <div className={styles.opBody} ref={bodyRef}>
+        {isOpUnavailable ? (
+          // The server told us there is no opening post THIS viewer can see.
+          // State that and nothing else: the reason (a mute, a block, a
+          // moderator's hand, a thread with no OP row) is not ours to guess at,
+          // and every reply that did come back is rendered below.
+          <p className={styles.opUnavailable}>
+            {t("forum:threadOp.unavailable")}
+          </p>
+        ) : deleted ? (
           <p className={styles.tombstone}>
             {t(
               thread.removedByModerator
@@ -171,11 +199,12 @@ export function ThreadOpCard({
               </p>
             ))}
             <ForumPostImage src={thread.opImage} />
+            <ForumLinkPreview url={firstLink} isEnabled={isInView} />
           </>
         )}
       </div>
       <OpTagsRow tags={thread.tags} onEditTags={onEditTags} />
-      {!deleted && (
+      {!deleted && !isOpUnavailable && (
         <OpFooterActions
           upvotes={thread.upvotes}
           voted={voted}

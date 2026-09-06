@@ -122,9 +122,9 @@ export const cards: Catalog = {
   "verify.serial": "N.º do cartão",
   "verify.memberSince": "Sócie desde",
   "verify.checkPhoto":
-    "Confirme a fotografia do cartão com a pessoa que o mostra.",
+    "Confirma a fotografia do cartão com a pessoa que o mostra.",
   "verify.checkNoPhoto":
-    "Este cartão não tem fotografia, por isso não confirma quem o tem na mão. Peça o nome ou outra coisa em que confie.",
+    "Este cartão não tem fotografia, por isso não confirma quem o tem na mão. Pede o nome ou outra coisa em que confies.",
 
   "verify.lead.active":
     "A comunidade abaixo emitiu este cartão e ele é válido hoje.",
@@ -137,7 +137,7 @@ export const cards: Catalog = {
 
   "verify.face.label": "O rosto que consta deste cartão",
   "verify.face.caption":
-    "Esta cópia veio dos registos da própria comunidade. Compare-a com a pessoa que lhe mostra o cartão.",
+    "Esta cópia veio dos registos da própria comunidade. Compara-a com a pessoa que te mostra o cartão.",
 
   "verify.stamp": "Verificado às {time}",
   "verify.stampNote":
@@ -157,15 +157,15 @@ export const cards: Catalog = {
   "verify.unverified.privacy":
     "O QueerPulse responde a tudo isto da mesma maneira de propósito, para que quem ande a ler códigos ao acaso não fique a saber nada sobre quem tem cartão aqui.",
   "verify.unverified.next":
-    "Peça à pessoa para abrir o cartão no QueerPulse e leia o código a partir do ecrã dela.",
+    "Pede à pessoa para abrir o cartão no QueerPulse e lê o código a partir do ecrã dela.",
   "verify.unverified.fair":
-    "Isto não diz nada sobre a pessoa à sua frente. Um cartão pode falhar a verificação por motivos completamente fora do controlo dela.",
+    "Isto não diz nada sobre a pessoa à tua frente. Um cartão pode falhar a verificação por motivos completamente fora do controlo dela.",
 
   "verify.unreachable.title": "Não conseguimos contactar o QueerPulse",
   "verify.unreachable.lead":
-    "Nada foi verificado e nada foi decidido sobre este cartão. O seu dispositivo não conseguiu obter resposta.",
+    "Nada foi verificado e nada foi decidido sobre este cartão. O teu dispositivo não conseguiu obter resposta.",
   "verify.unreachable.next":
-    "Verifique a rede ou o wi-fi e tente de novo. Se a pessoa estiver à espera, peça-lhe para abrir o cartão no QueerPulse na ligação dela.",
+    "Verifica a rede ou o wi-fi e tenta de novo. Se a pessoa estiver à espera, pede-lhe para abrir o cartão no QueerPulse na ligação dela.",
   "verify.retry": "Tentar de novo",
   "verify.retrying": "A verificar…",
   "verify.checking": "A verificar este cartão…",
@@ -219,7 +219,7 @@ export const cards: Catalog = {
     "A fotografia vem do perfil da própria pessoa e fica ao lado do nome da comunidade. Qualquer pessoa pode desligar a sua no seu cartão.",
   "designer.photoStyleLabel": "Como as fotografias são impressas",
   "designer.photoStyleHelper":
-    "Isto aplica-se à fotografia de todas as pessoas neste cartão, por isso é uma escolha sua sobre as imagens delas.",
+    "Isto aplica-se à fotografia de todas as pessoas neste cartão, por isso é uma escolha tua sobre as imagens delas.",
   "photoStyle.color": "A cores",
   "photoStyle.mono": "A preto e branco",
   "designer.pronounsLabel": "Pronomes",
@@ -236,7 +236,7 @@ export const cards: Catalog = {
   "designer.printCheck":
     "Permitir que dones e moderadores imprimam estes cartões",
   "designer.printHelper":
-    "Imprima uma folha de cartões físicos para os membros levarem consigo. Um cartão impresso mostra o mesmo código que está no telemóvel, por isso continua a funcionar até o substituir.",
+    "Imprime uma folha de cartões físicos para os membros levarem consigo. Um cartão impresso mostra o mesmo código que está no telemóvel, por isso continua a funcionar até o substituíres.",
   "designer.crestLabel": "Emblema",
   "designer.crestHelper":
     "Um logótipo quadrado pequeno, mostrado no canto superior do cartão. Opcional.",
@@ -298,7 +298,7 @@ export const cards: Catalog = {
   "holders.replaceAria": "Substituir o cartão de {name}",
   "holders.replaceModal.title": "Substituir o cartão de {name}?",
   "holders.replaceModal.body":
-    "Use isto quando um cartão impresso se perde ou é roubado. Todas as cópias impressas deixam de funcionar de imediato. O cartão no telemóvel continua a funcionar e passa a mostrar um código novo, por isso a pessoa continua a ser membro.",
+    "Usa isto quando um cartão impresso se perde ou é roubado. Todas as cópias impressas deixam de funcionar de imediato. O cartão no telemóvel continua a funcionar e passa a mostrar um código novo, por isso a pessoa continua a ser membro.",
   "holders.replaceModal.confirm": "Substituir cartão",
   "holders.replaceModal.cancel": "Manter este cartão",
   "holders.replaceToast": "O cartão de {name} tem um código novo.",
@@ -336,7 +336,7 @@ export const cards: Catalog = {
   "print.inkNotice":
     "Estes cartões imprimem a cores de ponta a ponta, por isso um lote grande gasta bastante tinta.",
   "print.foldHint":
-    "Cada cartão imprime numa tira. Corte pelas marcas dos cantos e dobre para trás na linha tracejada, para a frente e o verso se juntarem.",
+    "Cada cartão imprime numa tira. Corta pelas marcas dos cantos e dobra para trás na linha tracejada, para a frente e o verso se juntarem.",
   "print.unavailableTitle": "Nada para imprimir",
   "print.emptyBody":
     "Nenhum dos membros selecionados tem um cartão ativo. Emita os cartões primeiro e volte aqui.",

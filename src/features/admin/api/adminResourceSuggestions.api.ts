@@ -1,4 +1,7 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
+import type { ResourceListingWriteBody } from "./adminResourceListings.api";
+
+export type { ResourceListingWriteBody };
 
 export type ResourceListingCategory = "legal_aid" | "sexual_health_testing";
 export type ResourceSuggestionStatus =
@@ -23,6 +26,13 @@ export interface AdminResourceSuggestionDTO {
   status: ResourceSuggestionStatus;
   decidedAt: string | null;
   decisionNote: string | null;
+  /**
+   * The directory listing this suggestion's approval published (PRD-269), or
+   * null for everything else. The console reads it to show that a row is
+   * already live and to keep the approve action off it, which is the same
+   * fact the backend's 409 on a second approve states.
+   */
+  createdListingId: string | null;
 }
 
 export interface AdminResourceSuggestionListDTO {
@@ -52,10 +62,24 @@ export type ResourceSuggestionDecision = "approve" | "decline" | "archive";
 const decisionBody = (note?: string) =>
   note && note.trim() ? { note: note.trim() } : {};
 
-export const approveResourceSuggestion = (id: string, note?: string) =>
+/**
+ * Approve, and publish (PRD-269).
+ *
+ * `listing` is REQUIRED by the endpoint, and that is the point: approving now
+ * creates the public directory row in the same transaction as the decision, so
+ * the reviewer confirms or corrects every field of it first. The suggestion
+ * cannot supply a `region` at all, and its contact fields are all optional
+ * where a listing needs at least one, so the missing pieces come from the
+ * person who checked the organisation rather than from a default.
+ */
+export const approveResourceSuggestion = (
+  id: string,
+  listing: ResourceListingWriteBody,
+  note?: string,
+) =>
   apiPost<AdminResourceSuggestionDTO>(
     `/admin/resource-suggestions/${id}/approve`,
-    decisionBody(note),
+    { ...decisionBody(note), listing },
   );
 
 export const declineResourceSuggestion = (id: string, note?: string) =>

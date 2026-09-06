@@ -21,7 +21,16 @@ import type { useNestedReplyComposer } from "./useNestedReplyComposer";
  *  - A moderator-locked thread replaces the reply composer with a banner, so no
  *    new replies can be posted.
  */
-const POSTS_KEY = ["forum-thread-posts", true, "welcome", "en"] as const;
+// The reply sort is part of the posts key (PRD-162): each ordering is its own
+// infinite query with its own cursor. `oldest` is the default the page mounts
+// with.
+const POSTS_KEY = [
+  "forum-thread-posts",
+  true,
+  "welcome",
+  "en",
+  "oldest",
+] as const;
 
 function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
   return {
@@ -41,6 +50,7 @@ function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
     canViewHistory: false,
     image: null,
     isAccepted: false,
+    isOp: false,
     ...overrides,
   };
 }
@@ -51,7 +61,13 @@ describe("useVotePost optimistic patch", () => {
       defaultOptions: { queries: { retry: false } },
     });
     const seeded: InfiniteData<ThreadPostsPage> = {
-      pages: [{ items: [post({ voteCount: 3, myVote: 0 })], nextCursor: null }],
+      pages: [
+        {
+          items: [post({ voteCount: 3, myVote: 0 })],
+          nextCursor: null,
+          isOpAvailable: true,
+        },
+      ],
       pageParams: [null],
     };
     client.setQueryData(POSTS_KEY, seeded);

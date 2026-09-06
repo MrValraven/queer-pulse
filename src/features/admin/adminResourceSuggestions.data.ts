@@ -22,6 +22,7 @@ export const ADMIN_RESOURCE_SUGGESTIONS: AdminResourceSuggestionDTO[] = [
     status: "pending",
     decidedAt: null,
     decisionNote: null,
+    createdListingId: null,
   },
   {
     id: "rs_5002",
@@ -36,5 +37,10 @@ export const ADMIN_RESOURCE_SUGGESTIONS: AdminResourceSuggestionDTO[] = [
     status: "approved",
     decidedAt: "2026-08-11T10:00:00.000Z",
     decisionNote: "Verified with the clinic directly.",
+    // Approved BEFORE approval published anything (PRD-269), which is exactly
+    // the state the defect left rows in: told "accepted", nothing in the
+    // directory. Kept as the fixture's second row so the console's handling of
+    // a pre-transition approval is visible in demo mode.
+    createdListingId: null,
   },
 ];

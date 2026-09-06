@@ -14,9 +14,14 @@ export type CommunityRole = "owner" | "co_owner" | "mod" | "member";
  * How a community gates joining (and whether it shows in Discover).
  * - `public`  — instant join, listed in Discover.
  * - `request` — submit a request that lands in the mods' queue; listed.
- * - `invite`  — reviewed the same as `request` (no real invite-code check on
- *   the backend); listed but gated.
- * - `private` — hidden from Discover unless you're invited (e.g. coming-out).
+ * - `invite`  — listed, and only a member holding a per-person invitation gets
+ *   in (PRD-141). There is no shareable code and no invite link: an uninvited
+ *   join answers `outcome: "invite_required"`, and an invitation holder is
+ *   admitted at once. This used to behave exactly like `request`, so the
+ *   setting gated nothing.
+ * - `private` — hidden from Discover, and its very existence is withheld: the
+ *   detail 404s everybody except its roster and the people holding an
+ *   invitation to it (e.g. coming-out and survivors' groups).
  */
 export type AccessTier = "public" | "request" | "invite" | "private";
 

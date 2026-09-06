@@ -227,3 +227,35 @@
   color: var(--text-strong);
   margin: 16px 0 8px;
 }
+
+/* PRD-224. The control that clears one row. Deliberately quiet: it sits above
+   the overlay row link (z-index, like every other interactive part of a row)
+   and only takes colour on hover or focus, so the affordance is there without
+   competing with the notification itself. */
+.dismiss {
+  flex: none;
+  margin-top: 1px;
+  min-width: 32px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: var(--radius-9);
+  color: var(--ink-40);
+  font-size: var(--text-14);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition:
+    color 0.18s,
+    background 0.18s;
+}
+@media (hover: hover) {
+  .dismiss:hover {
+    color: var(--text-strong);
+    background: rgba(var(--plum-rgb), 0.07);
+  }
+}

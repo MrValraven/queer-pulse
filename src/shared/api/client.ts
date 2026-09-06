@@ -641,3 +641,46 @@ export const apiDelete = <T>(
   validate?: ResponseValidator<T>,
   signal?: AbortSignal,
 ) => request<T>("DELETE", path, body, true, timeoutMs, validate, signal);
+
+/**
+ * A GET whose body is NOT JSON — a file the member is downloading.
+ *
+ * `request()` above parses every 2xx body as JSON and raises `ApiError(422,
+ * "Malformed JSON …")` on anything else, which is the right default for an API
+ * that speaks JSON everywhere; a `text/csv` export is the exception. Kept as a
+ * separate, deliberately small function rather than a `raw` flag threaded
+ * through `request()`'s recursion, so nothing about the JSON path changes.
+ *
+ * It keeps the two behaviours that matter for an authenticated download:
+ * cookies (`credentials: "include"`) and the one-shot access-token refresh on
+ * 401, so a member whose 15-minute token lapsed while they read the page still
+ * gets their file instead of an unexplained failure. It does NOT need CSRF —
+ * that guards state-changing methods, and this is a GET.
+ *
+ * First used by the gathering host's attendee export (PRD-190).
+ */
+export async function apiGetText(
+  path: string,
+  timeoutMs?: number,
+): Promise<string> {
+  const fetchOnce = () =>
+    timedFetch(
+      `${API_BASE_URL}${API_VERSION_PREFIX}${path}`,
+      { method: "GET", credentials: "include" },
+      timeoutMs,
+    );
+
+  let res = await fetchOnce();
+  if (res.status === 401 && shouldAttemptRecovery()) {
+    if (await refreshOnce()) {
+      res = await fetchOnce();
+    } else {
+      onAuthLost?.();
+      throw new ApiError(401, "Not authenticated");
+    }
+  }
+  if (!res.ok) {
+    throw new ApiError(res.status, res.statusText);
+  }
+  return res.text();
+}

@@ -12,6 +12,8 @@ import {
   WaitlistAttendeeActions,
 } from "./ManageAttendeeActions";
 import { useAttendees } from "./api/useAttendees";
+import { getAttendeesCsv } from "./api/events.api";
+import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { AttendeeSection } from "./ManageGatheringAttendees";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -30,6 +32,7 @@ export function AttendeesTab({ slug }: { slug: string }) {
   const [barTarget, setBarTarget] = useState<BarTarget | null>(null);
   const [loadingMoreGoing, setLoadingMoreGoing] = useState(false);
   const [loadingMoreWaitlist, setLoadingMoreWaitlist] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const { data, loadMoreGoing, loadMoreWaitlist } = useAttendees(slug);
   const going = data?.going ?? [];
   const waitlist = data?.waitlist ?? [];
@@ -45,6 +48,23 @@ export function AttendeesTab({ slug }: { slug: string }) {
     : 0;
   const hasMoreGoing = data?.hasMoreGoing ?? false;
   const hasMoreWaitlist = data?.hasMoreWaitlist ?? false;
+  const exportAttendees = async () => {
+    if (demoMode) {
+      showToast(t("gatherings:manage.attendees.exportDemoToast"), "info");
+      return;
+    }
+    setIsExporting(true);
+    try {
+      const csv = await getAttendeesCsv(slug);
+      downloadBlob(`${slug}-attendees.csv`, csv, "text/csv;charset=utf-8;");
+      showToast(t("gatherings:manage.attendees.exportedToast"), "success");
+    } catch {
+      showToast(t("gatherings:manage.attendees.exportFailedToast"), "error");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   const onLoadMoreGoing = async () => {
     setLoadingMoreGoing(true);
     await loadMoreGoing();
@@ -65,14 +85,22 @@ export function AttendeesTab({ slug }: { slug: string }) {
           aria-label={t("gatherings:manage.attendees.searchPlaceholder")}
           placeholder={t("gatherings:manage.attendees.searchPlaceholder")}
         />
+        {/* A real download (PRD-190). This button used to raise a "Exported"
+            toast and produce no file, so a host who needed the door list
+            offline had to read it off their phone. Demo has no roster behind
+            it, so it keeps the toast rather than downloading a mock guest
+            list as if it were real people. */}
         <Button
           variant="ghost"
           className={styles.actionBtn}
-          onClick={() =>
-            showToast(t("gatherings:manage.attendees.exportedToast"), "success")
-          }
+          disabled={isExporting}
+          onClick={() => void exportAttendees()}
         >
-          {t("gatherings:manage.attendees.exportCta")}
+          {t(
+            isExporting
+              ? "gatherings:manage.attendees.exportingCta"
+              : "gatherings:manage.attendees.exportCta",
+          )}
         </Button>
         <Button
           variant="primary"

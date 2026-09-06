@@ -1,7 +1,10 @@
 /* ---- Page shell ---- */
+/* Centred: this is a member surface rendered inside `AppShell`, whose content
+   column is full-width. It used to sit inside `MagazineDeskShell`, where the
+   editor rail supplied the left offset and `margin: 0` was right. PRD-125. */
 .page {
   max-width: 980px;
-  margin: 0;
+  margin: 0 auto;
   padding: 40px 28px var(--section-y-80);
 }
 
@@ -313,10 +316,19 @@
 .actionPrimary {
   color: var(--accent-ink);
 }
+/* Withdrawing removes the pitch from the desk for good, so the affordance is
+   coloured as the destructive thing it is. It still opens a confirm dialog. */
+.actionDanger {
+  color: var(--danger);
+}
 @media (hover: hover) {
   .action:hover {
     background: rgba(var(--plum-rgb), 0.05);
     color: var(--text-strong);
+  }
+  .actionDanger:hover {
+    background: rgba(var(--danger-rgb), 0.08);
+    color: var(--danger-ink);
   }
 }
 .action:focus-visible {

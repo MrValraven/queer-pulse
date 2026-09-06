@@ -264,9 +264,37 @@
   z-index: 1;
 }
 
+/* Section rhythm. These were inline `style={{ paddingBottom: 60 }}` and
+   `style={{ padding: "60px 0" }}` on the sections themselves. 60 is not on the
+   --section-y grid; it ties to 64 the same way the sweep tied 108 up to 112. */
+.servicesSection {
+  padding-bottom: var(--section-y-64);
+}
+
+.uptimeSection {
+  padding: var(--section-y-64) 0;
+}
+
+.incidentsSection {
+  padding-bottom: var(--section-y-80);
+}
+
+.incDot svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: rgba(var(--plum-rgb), 0.4);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
 .incItemResolved .incDot {
   border-color: var(--jade);
   background: rgba(var(--jade-rgb), 0.1);
+}
+
+.incItemResolved .incDot svg {
+  stroke: var(--jade);
 }
 
 .incDate {

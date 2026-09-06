@@ -55,6 +55,15 @@ export const MASTHEAD_NAV: MastheadNavItem[] = [
     labelKey: "magazine:masthead.nav.sections",
     href: routes.magazineSections,
   },
+  // PRD-105 — the decks index. Sits with sections/authors/issues: it is part
+  // of the magazine's contents, above the search tool that ends the row. This
+  // is also the only way into the index from the DEMO front, whose sections
+  // component is separate from the live one.
+  {
+    key: "decks",
+    labelKey: "magazine:masthead.nav.decks",
+    href: routes.magazineDecks,
+  },
   // CON-12 — search the whole published archive, and browse by tag. Last in
   // the row on purpose: it is a tool, and the sections/authors/issues entries
   // before it are the magazine's actual contents.

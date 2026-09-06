@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { publishDeck, type PublishDeckDto } from "./deckAdmin.api";
 import {
   convertDeckToArticle,
   createDeck,
@@ -52,6 +53,36 @@ export function useUpdateDeck() {
       if (demoMode) return { id, slug: dto.slug ?? "" };
       const deck = await updateDeck(id, dto);
       return { id: deck.id, slug: deck.slug };
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-admin-decks"],
+      });
+      void queryClient.invalidateQueries({ queryKey: ["magazine-deck"] });
+    },
+  });
+}
+
+/**
+ * PATCH /magazine/admin/decks/:id carrying the richer publish control
+ * (PRD-131): an ISO instant publishes or schedules, `null` unpublishes. Kept
+ * apart from `useUpdateDeck` because that hook is the plain save the autosave
+ * loop fires many times a session, while this one is the explicit,
+ * server-gated act that changes what readers can see.
+ */
+export function usePublishDeck() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<
+    { id: string; publishedAt: string | null },
+    Error,
+    { id: string; dto: PublishDeckDto }
+  >({
+    meta: { silentError: true },
+    mutationFn: async ({ id, dto }) => {
+      if (demoMode) return { id, publishedAt: dto.publishedAt ?? null };
+      const deck = await publishDeck(id, dto);
+      return { id: deck.id, publishedAt: deck.publishedAt };
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({

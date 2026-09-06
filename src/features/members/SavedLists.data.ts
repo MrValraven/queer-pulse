@@ -79,31 +79,43 @@ const LISBON_ITEMS: SavedItemDTO[] = [
   {
     id: "listing:clinica-arco-iris",
     kind: "listing",
+    href: null,
     title: "Clínica Arco-Íris",
     meta: "Trans-affirming GP and hormone care · Anjos",
     savedAt: "2026-08-25T08:15:00.000Z",
+    availability: "available",
   },
+  // One fixture is deliberately unavailable so the demo shows the state a
+  // resolved save reaches when its subject can no longer be opened (PRD-169).
+  // It sits in the SHARED demo list on purpose: a friend holding the link is
+  // exactly who used to be handed a dead row with no way to tell.
   {
     id: "listing:cafe-da-esquina",
     kind: "listing",
+    href: null,
     title: "Café da Esquina",
     meta: "Pastelaria with a community room · Arroios",
     savedAt: "2026-08-21T10:02:00.000Z",
+    availability: "unavailable",
   },
   {
     id: "listing:livraria-margem",
     kind: "listing",
+    href: null,
     title: "Livraria Margem",
     meta: "Queer bookshop, open until 22h · Príncipe Real",
     savedAt: "2026-08-14T17:41:00.000Z",
+    availability: "available",
   },
   {
     id: "article:navigating-lisbon-trans-health",
     kind: "article",
+    href: null,
     title: "Five things I learned navigating Lisbon's trans health system",
     meta: "By Rita Salgueiro",
     readTime: "9 min",
     savedAt: "2026-07-30T09:20:00.000Z",
+    availability: "available",
   },
 ];
 
@@ -111,17 +123,21 @@ const THERAPY_ITEMS: SavedItemDTO[] = [
   {
     id: "article:talking-to-a-therapist-about-transition",
     kind: "article",
+    href: null,
     title: "How to bring transition up with a therapist who is new to it",
     meta: "By Nuno Aguiar",
     readTime: "7 min",
     savedAt: "2026-08-23T19:22:00.000Z",
+    availability: "available",
   },
   {
     id: "post:the-week-i-stopped-explaining",
     kind: "post",
+    href: null,
     title: "The week I stopped explaining myself at work",
     meta: "Forum · Working life",
     savedAt: "2026-08-12T21:10:00.000Z",
+    availability: "available",
   },
 ];
 
@@ -129,17 +145,21 @@ const READING_ITEMS: SavedItemDTO[] = [
   {
     id: "article:a-history-of-the-lisbon-scene",
     kind: "article",
+    href: null,
     title: "A short history of the Lisbon scene, told by the people in it",
     meta: "Issue 8",
     readTime: "18 min",
     savedAt: "2026-08-11T12:00:00.000Z",
+    availability: "available",
   },
   {
     id: "film:pele-de-verao",
     kind: "film",
+    href: null,
     title: "Pele de Verão",
     meta: "Cinema · 94 min",
     savedAt: "2026-06-28T20:30:00.000Z",
+    availability: "available",
   },
 ];
 

@@ -1,4 +1,4 @@
-import { FiList, FiInbox, FiCalendar, FiArchive } from "react-icons/fi";
+import { FiList, FiCalendar, FiArchive } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
 
@@ -17,9 +17,23 @@ export interface MagazineNavItem {
 
 /**
  * The magazine editor rail's real destinations. The design source ("QueerPulse
- * Magazine Desk" left rail) also lists "Pieces" and "Contributors" — dropped
- * here because neither page exists in this build; only Desk, Pitches and
- * Issue are real, navigable surfaces.
+ * Magazine Desk" left rail) also lists "Pieces" and "Contributors", dropped
+ * here because neither page exists in this build; only Desk, Issue and the
+ * archive are real, navigable surfaces.
+ *
+ * "Pitches" was dropped for the same reason, and PRD-125 is why it had to go.
+ * It pointed at `routes.pitchTracker`, which is the MEMBER's own submission
+ * tracker: a different surface, in `AppShell` rather than the desk shell, for
+ * a different audience. While that route was staff-gated the mistake was
+ * invisible; opening it to every member (which is correct, since the endpoint
+ * behind it only ever required an active member) made it a rail item that
+ * silently threw an editor out of the desk. It also collided by name with the
+ * account menu's own "Pitches" entry, so the same word meant two surfaces.
+ *
+ * The editor's real pitch inbox is `PitchInbox`, rendered INLINE on the desk
+ * itself (`desk/DeskView.tsx`), so it has no route to point at and nothing is
+ * lost: "Desk" already lands on the page the inbox lives on. Do not re-add a
+ * "Pitches" entry here unless the inbox first becomes an addressable surface.
  */
 export const MAGAZINE_NAV: MagazineNavItem[] = [
   {
@@ -29,12 +43,6 @@ export const MAGAZINE_NAV: MagazineNavItem[] = [
     // `/magazine/editor` is a path prefix of every other editor route
     // (piece record, issue production, write, deck editor) — `end` keeps
     // "Desk" from lighting up while on those sub-surfaces.
-    end: true,
-  },
-  {
-    labelKey: "magazine:deskShell.nav.pitches",
-    to: routes.pitchTracker,
-    icon: FiInbox,
     end: true,
   },
   {

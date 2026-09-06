@@ -1,17 +1,16 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FiUserPlus, FiX } from "react-icons/fi";
-import { Avatar, Button, Modal } from "../../shared/components/ui";
+import { Avatar, Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
-import { routes } from "../../app/routeMap";
 import { reasonFor } from "../../shared/api/errorMessage";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
 import { useSubprofileInvites } from "./api/useSubprofileInvites";
 import { InviteCoOwnerModal } from "./InviteCoOwnerModal";
+import { LeavePersonaModal } from "./LeavePersonaModal";
 import { SubprofileOwnersList } from "./SubprofileOwnersList";
 import styles from "./SubprofileOwnersPanel.module.css";
 
@@ -40,10 +39,9 @@ export function SubprofileOwnersPanel({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const subprofileId = subprofile.id;
-  const { data: members, leave } = useSubprofileMembers(subprofileId);
+  const { data: members } = useSubprofileMembers(subprofileId);
   const { data: invites, revoke } = useSubprofileInvites(subprofileId);
   const [inviting, setInviting] = useState(false);
   const [revokingId, setRevokingId] = useState<string | null>(null);
@@ -78,20 +76,6 @@ export function SubprofileOwnersPanel({
       );
     } finally {
       setRevokingId(null);
-    }
-  }
-
-  async function handleLeave() {
-    try {
-      await leave.mutateAsync();
-      setLeaveOpen(false);
-      showToast(t("subprofiles:owners.toastLeft"), "info");
-      void navigate(routes.subprofilesDashboard);
-    } catch (error) {
-      showToast(
-        reasonFor(error) ?? t("subprofiles:owners.toastLeaveError"),
-        "error",
-      );
     }
   }
 
@@ -156,28 +140,10 @@ export function SubprofileOwnersPanel({
       )}
 
       {leaveOpen && (
-        <Modal
-          title={t("subprofiles:owners.leaveModalTitle")}
+        <LeavePersonaModal
+          subprofileId={subprofileId}
           onClose={() => setLeaveOpen(false)}
-          footer={
-            <>
-              <Button variant="ghost" onClick={() => setLeaveOpen(false)}>
-                {t("subprofiles:owners.leaveModalKeep")}
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => void handleLeave()}
-                disabled={leave.isPending}
-              >
-                {leave.isPending
-                  ? t("subprofiles:owners.leaveModalLeaving")
-                  : t("subprofiles:owners.leaveModalConfirm")}
-              </Button>
-            </>
-          }
-        >
-          <p>{t("subprofiles:owners.leaveModalBody")}</p>
-        </Modal>
+        />
       )}
     </div>
   );

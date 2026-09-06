@@ -66,6 +66,10 @@ export function deriveOpFlags({
   const opCanReport = isMember && !opIsMine && !opDeleted;
 
   return {
+    // Exposed as well as used above: the delete confirmation branches on it
+    // (PRD-147), since an author clearing their own post and a moderator
+    // taking somebody else's down are two different acts.
+    opIsMine,
     opDeleted,
     opPinned,
     opBody,

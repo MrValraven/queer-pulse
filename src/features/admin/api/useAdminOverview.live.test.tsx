@@ -220,6 +220,12 @@ describe("useAdminOverview (demo mode)", () => {
     expect(result.current.data).toEqual({
       metrics: METRICS,
       triage: TRIAGE_QUEUE,
+      triageCounts: {
+        emergencies: TRIAGE_QUEUE[0]!.count,
+        openReports: TRIAGE_QUEUE[1]!.count,
+        pendingVerifications: TRIAGE_QUEUE[2]!.count,
+        openAppeals: TRIAGE_QUEUE[3]!.count,
+      },
       reportWeeks: REPORT_WEEKS,
       reportSeries: REPORT_SERIES,
       memberGrowth: MEMBER_GROWTH,

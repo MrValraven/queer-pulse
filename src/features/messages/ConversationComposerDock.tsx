@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Composer } from "./Composer";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import styles from "./MessagesPage.module.css";
 
 interface ConversationComposerDockProps {
@@ -13,6 +14,11 @@ interface ConversationComposerDockProps {
   onSendImage?: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
+  ) => void;
+  /** Sends an uploaded document as its own message (PRD-226). */
+  onSendDocument?: (
+    attachment: DocumentAttachment,
+    localAttachment?: DocumentAttachment,
   ) => void;
   blocked: boolean;
   replyDraft?: ChatMessage | null;
@@ -36,6 +42,7 @@ export function ConversationComposerDock({
   onSend,
   onSendGif,
   onSendImage,
+  onSendDocument,
   blocked,
   replyDraft,
   onCancelReply,
@@ -70,6 +77,7 @@ export function ConversationComposerDock({
         onSend={onSend}
         onSendGif={onSendGif}
         onSendImage={onSendImage}
+        onSendDocument={onSendDocument}
         blocked={blocked}
         replyDraft={replyDraft}
         onCancelReply={onCancelReply}

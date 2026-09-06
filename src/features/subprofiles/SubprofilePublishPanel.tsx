@@ -12,7 +12,7 @@ import { estimateEditorReadiness } from "./subprofileDraftReadiness";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SideReadinessRing } from "./SideReadinessRing";
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
-import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
+import { PersonaDangerZone } from "./PersonaDangerZone";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofilePublishPanel.module.css";
@@ -29,11 +29,11 @@ interface ChecklistState {
  * `PublishChecklist`; on success, the plum success panel. Published personas
  * get an Unpublish action to return to draft. Live mode may not surface the
  * 422 `{unmet}` body, so a non-`PublishUnmetError` rejection renders the
- * checklist in its "still to check" state. Below all of that, a type-to-
- * confirm delete (`SubprofileDeleteModal`) — this pane's Publish/Unpublish
- * mutations and the delete mutation are siblings on the same persona, so
- * pairing "make it live" with "get rid of it entirely" here (rather than only
- * on the dashboard) keeps every persona-lifecycle action in one place.
+ * checklist in its "still to check" state. Below all of that, the
+ * `PersonaDangerZone` band: this pane's Publish/Unpublish mutations and the
+ * delete/leave actions are siblings on the same persona, so pairing "make it
+ * live" with "get rid of it entirely" here (rather than only on the dashboard)
+ * keeps every persona-lifecycle action in one place.
  */
 export function SubprofilePublishPanel({
   subprofile,
@@ -46,7 +46,6 @@ export function SubprofilePublishPanel({
   const editor = useSubprofileEditorContext();
   const [checklist, setChecklist] = useState<ChecklistState | null>(null);
   const [justPublished, setJustPublished] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   const isPublished = subprofile.status === "published";
   const isLinked = subprofile.linkVisibility === "linked";
@@ -190,21 +189,7 @@ export function SubprofilePublishPanel({
 
       <SubprofilePolishList subprofile={subprofile} />
 
-      <div className={styles.dangerZone}>
-        <p className={styles.dangerCopy}>
-          {t("subprofiles:publishPanel.deleteCopy")}
-        </p>
-        <Button variant="danger" onClick={() => setDeleting(true)}>
-          {t("subprofiles:publishPanel.deleteCta")}
-        </Button>
-      </div>
-
-      {deleting && (
-        <SubprofileDeleteModal
-          subprofile={subprofile}
-          onClose={() => setDeleting(false)}
-        />
-      )}
+      <PersonaDangerZone subprofile={subprofile} />
     </div>
   );
 }

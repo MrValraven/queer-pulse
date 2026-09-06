@@ -142,16 +142,54 @@
   justify-content: space-between;
   gap: 14px;
   padding: 11px 0;
-  border-top: 1px solid rgba(var(--cream-rgb), 0.12);
-  text-decoration: none;
 }
-.todoRow:first-of-type {
-  border-top: none;
+/* The rule between rows, written as an adjacent-sibling selector rather than
+   `:first-of-type`. Rows are `div`s now (each count inside one is its own
+   link, so the row itself cannot be), and the label above them is a `div`
+   too — `:first-of-type` would match the label and leave the first row with a
+   rule above it. */
+.todoRow + .todoRow {
+  border-top: 1px solid rgba(var(--cream-rgb), 0.12);
 }
 .todoName {
   font-size: var(--text-14-5);
   font-weight: 700;
   color: rgba(var(--cream-rgb), 1);
+}
+/* Placeholder bar for the live block while the digest is in flight. The
+   shared `SkeletonLine` shimmers in `--line-rgb`, which is dark on this plum
+   ground and invisible; this is the same pulse in cream. The keyframes are
+   declared here on purpose: a CSS-module `animation` naming a keyframe
+   defined in another file silently never runs. Reduced motion is handled
+   globally in base.css. */
+.todoSkeleton {
+  display: block;
+  height: 13px;
+  border-radius: var(--radius-10);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--cream-rgb), 0.09) 25%,
+    rgba(var(--cream-rgb), 0.2) 50%,
+    rgba(var(--cream-rgb), 0.09) 75%
+  );
+  background-size: 200% 100%;
+  animation: todoShimmer 1.5s ease infinite;
+}
+@keyframes todoShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+/* `LoadErrorState` renders an `EmptyState`, whose title and body are `--ink`:
+   readable on paper, not on plum. It gets a paper surface of its own inside
+   the block rather than the shared component growing a variant. */
+.todoError {
+  background: var(--paper);
+  border-radius: var(--radius-14);
+  overflow: hidden;
 }
 .todoCounts {
   display: flex;
@@ -337,6 +375,16 @@
   color: var(--jade);
 }
 .sbIcSuggest svg {
+  width: 16px;
+  height: 16px;
+}
+/* The live "upcoming" row: a gathering count rather than a date block, so it
+   takes the icon tile the suggestion rows use, in coral. */
+.sbIcUpcoming {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+}
+.sbIcUpcoming svg {
   width: 16px;
   height: 16px;
 }

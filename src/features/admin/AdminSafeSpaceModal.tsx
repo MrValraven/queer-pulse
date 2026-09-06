@@ -11,9 +11,16 @@ import type {
 } from "./api/adminSafeSpaces.api";
 import { AdminSafeSpaceModalFields } from "./AdminSafeSpaceModalFields";
 import {
+  classifyVisitBarRefusal,
+  isBelowVisitBarReasonLongEnough,
+  type VisitBarRefusal,
+} from "./api/safeSpaceVisitBarError";
+import { useHasOpenNomination } from "./api/useHasOpenNomination";
+import {
   draftFromSpace,
   draftToInput,
   emptyDraft,
+  isBecomingVerified,
   type SafeSpaceFormDraft,
 } from "./adminSafeSpaceModal.utils";
 import styles from "./AdminSafeSpaceModal.module.css";
@@ -30,6 +37,14 @@ import styles from "./AdminSafeSpaceModal.module.css";
  * it. Editing blind from a blank form would silently wipe out promises/
  * vouches the moderator never saw. A brand-new mark (status `none`) has no
  * existing profile to lose, so it skips the fetch and starts blank.
+ *
+ * This is also the SECOND door to a safe-space badge, beside the reviewed
+ * nomination queue, so it carries the same independent-visit gate the reviewed
+ * path carries: a move INTO `verified` for a listing under the bar needs a
+ * written exception of at least 20 characters, which lands on the audit trail
+ * and forces the public provenance line to state the real visit count. Every
+ * other save (unmarking, removing, editing a badge that already stands) is
+ * untouched.
  */
 export function AdminSafeSpaceModal({
   candidate,
@@ -64,12 +79,26 @@ export function AdminSafeSpaceModal({
     setDraft(draftFromSpace(candidate, space));
   }, [hasExistingProfile, isProfileLoading, space, candidate]);
 
+  const [refusal, setRefusal] = useState<VisitBarRefusal | null>(null);
+  const hasOpenNomination = useHasOpenNomination(candidate.ref);
+
+  const isMarkingVerified = isBecomingVerified(
+    candidate.safeSpaceStatus,
+    draft.status,
+  );
+  // Mirrors the server rule exactly. Looser hands the moderator an avoidable
+  // 400; tighter blocks a legitimate award.
+  const isBelowVisitBar = isMarkingVerified && !candidate.visits.hasMetVisitBar;
+  const isSaveBlocked =
+    isBelowVisitBar &&
+    !isBelowVisitBarReasonLongEnough(draft.belowVisitBarReason);
+
   function updateDraft(patch: Partial<SafeSpaceFormDraft>) {
     setDraft((current) => ({ ...current, ...patch }));
   }
 
   function handleSave() {
-    const body = draftToInput(draft);
+    const body = draftToInput(draft, isMarkingVerified);
     setSafeSpace.mutate(
       { ref: candidate.ref, body },
       {
@@ -82,6 +111,18 @@ export function AdminSafeSpaceModal({
           );
           onSaved(updatedCandidate.safeSpaceStatus);
           onClose();
+        },
+        // Branch on the typed `code`, never on the message prose: the two
+        // badge-granting endpoints word their refusals differently and neither
+        // message is localised. A refusal keeps the modal open with the counts
+        // the server returned, so the moderator can write the reason where they
+        // already are.
+        onError: (error) => {
+          const visitBarRefusal = classifyVisitBarRefusal(error);
+          setRefusal(visitBarRefusal);
+          if (!visitBarRefusal) {
+            showToast(t("admin:adminSafeSpaces.modal.saveFailed"), "error");
+          }
         },
       },
     );
@@ -114,7 +155,10 @@ export function AdminSafeSpaceModal({
             size="md"
             onClick={handleSave}
             disabled={
-              setSafeSpace.isPending || isWaitingForProfile || hasLoadFailed
+              setSafeSpace.isPending ||
+              isWaitingForProfile ||
+              hasLoadFailed ||
+              isSaveBlocked
             }
           >
             {setSafeSpace.isPending
@@ -133,7 +177,14 @@ export function AdminSafeSpaceModal({
           {t("admin:adminSafeSpaces.modal.loadFailed")}
         </p>
       ) : (
-        <AdminSafeSpaceModalFields draft={draft} onChange={updateDraft} />
+        <AdminSafeSpaceModalFields
+          draft={draft}
+          onChange={updateDraft}
+          visits={candidate.visits}
+          isBelowVisitBar={isBelowVisitBar}
+          refusal={refusal}
+          hasOpenNomination={hasOpenNomination}
+        />
       )}
     </AdminModal>
   );

@@ -9,6 +9,7 @@ import {
   soonLabel,
   COMMITTED,
 } from "./myEvents.helpers";
+import { JoinLinkButton } from "./JoinLinkButton";
 import type { AvatarSpec, MyEvent } from "./myEvents.types";
 
 export function AvStack({ who }: { who?: AvatarSpec[] }) {
@@ -42,13 +43,7 @@ export function EventMeta({ ev, links }: { ev: MyEvent; links: boolean }) {
         <>
           <span className={sx("dotsep")} />
           {isOnline(ev) ? (
-            <button
-              type="button"
-              className={sx("meta-link")}
-              onClick={() => toast(t("myevents:card.joinLinkToast"))}
-            >
-              {t("myevents:card.joinLinkCta")}
-            </button>
+            <JoinLinkButton ev={ev} className="meta-link" />
           ) : (
             <button
               type="button"
@@ -126,13 +121,7 @@ export function SoonBar({ ev }: { ev: MyEvent }) {
       </button>
       <span className={sx("soon-sep")}>·</span>
       {isOnline(ev) ? (
-        <button
-          type="button"
-          className={sx("soon-link")}
-          onClick={() => toast(t("myevents:card.joinLinkToast"))}
-        >
-          {t("myevents:card.joinLinkCta")}
-        </button>
+        <JoinLinkButton ev={ev} className="soon-link" />
       ) : (
         <button
           type="button"

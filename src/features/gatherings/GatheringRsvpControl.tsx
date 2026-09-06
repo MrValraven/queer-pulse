@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { FiCheckCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useToast } from "../../shared/components/feedback/useToast";
 import type { GatheringDetail } from "./data";
-import { useRsvp, useUnrsvp } from "./api/useEventMutations";
 import { useAttendees } from "./api/useAttendees";
-import { rsvpErrorMessage } from "./rsvpErrors";
+import type { GatheringRsvpState } from "./useGatheringRsvp";
+import { GatheringRsvpDetailsModal } from "./GatheringRsvpDetailsModal";
+import { RsvpClosedPanel, RsvpConfirmedPanel } from "./GatheringRsvpPanels";
 import styles from "./GatheringPage.module.css";
 
 /** The contact affordance returned by `useMemberContact` (connect vs. message). */
@@ -16,56 +14,54 @@ type ContactAction = (
   reason?: string,
 ) => void;
 
-type RsvpStatus = GatheringDetail["myRsvpStatus"];
-
 /**
- * The in-event RSVP control — RSVP is now an action *inside* the gathering,
- * not a standalone page. It reflects the viewer's own `myRsvpStatus` from the
- * event DTO so a reload still shows "you're going".
+ * The in-event RSVP control — RSVP is an action *inside* the gathering, not a
+ * standalone page. It reflects the viewer's own `myRsvpStatus` from the event
+ * DTO so a reload still shows "you're going".
  *
  * States:
- * - No active RSVP → a primary flavored RSVP CTA (`gathering.ctaKey`, e.g.
- *   "Reserve a seat") or "Join the waitlist" when the event is full, wired to
- *   `useRsvp("going")`.
- * - Going / waitlisted → a plum-panel confirmed state (jade tick, the live
- *   going count or the viewer's waitlist place) with "Cancel RSVP".
- * - "Message/Connect with the host" stays available as a secondary action in
- *   every state.
+ * - Cancelled or already over → a plain closed panel, no RSVP action at all.
+ *   Both are server-enforced (each answers an RSVP with a 400), so a live
+ *   button here would be a button that lies (PRD-181, PRD-183).
+ * - No active RSVP → the flavored RSVP CTA (`gathering.ctaKey`, e.g. "Reserve
+ *   a seat"), or "Join the waitlist" when full, plus "Maybe" — the API and My
+ *   Events both supported "maybe" while this surface offered only a seat, so a
+ *   member browsing could not mark interest without committing one (PRD-188).
+ * - Going / waitlisted / maybe → a plum-panel confirmed state with the live
+ *   going count or the viewer's waitlist place, "Your details" (plus-one and
+ *   access needs, PRD-187) and "Cancel RSVP".
+ * - "Message/Connect with the host" stays available in every state.
  *
- * Demo/live: `useRsvp`/`useUnrsvp` no-op the network call in demo, so the
- * confirmed state is held in local optimistic state here (seeded from
- * `myRsvpStatus`, re-synced when a live refetch resolves new server truth) —
- * the same pattern `GatheringBookmarkButton` uses for its "Save" toggle.
+ * The RSVP state machine itself lives in `useGatheringRsvp`, shared with the
+ * page hero so the two affordances can never disagree.
  */
 export function GatheringRsvpControl({
   gathering,
   connected,
   contact,
+  rsvp,
 }: {
   gathering: GatheringDetail;
   connected: boolean;
   contact: ContactAction;
+  /** Shared with the hero's RSVP button — see `GatheringDetailBody`. */
+  rsvp: GatheringRsvpState;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const rsvp = useRsvp(gathering.slug);
-  const unrsvp = useUnrsvp(gathering.slug);
-  const { data: attendees } = useAttendees(gathering.slug);
+  const [isDetailsOpen, setDetailsOpen] = useState(false);
 
-  const myRsvpStatus = gathering.myRsvpStatus ?? null;
-  const [prevMyRsvpStatus, setPrevMyRsvpStatus] =
-    useState<RsvpStatus>(myRsvpStatus);
-  const [status, setStatus] = useState<RsvpStatus>(myRsvpStatus);
-  // Adjusted during render (not an effect) so the re-sync lands in the same
-  // commit instead of a follow-up render.
-  if (prevMyRsvpStatus !== myRsvpStatus) {
-    setPrevMyRsvpStatus(myRsvpStatus);
-    setStatus(myRsvpStatus);
-  }
-
-  const isWaitlisted = status === "waitlisted";
-  const confirmed = status === "going" || isWaitlisted;
-  const goingCount = attendees?.goingCount ?? 0;
+  // The host's "Show attendee count" toggle (ENG-140). With it off, the server
+  // answers this route with an empty roster and zeroed counts for anyone but
+  // an organiser, so asking at all is a wasted request AND its zero would read
+  // as "nobody is going". Passing `undefined` disables the query outright and
+  // the confirmed panel states the generic line instead.
+  const isCountVisible =
+    gathering.viewerIsOrganizer === true ||
+    gathering.showAttendeeCount !== false;
+  const { data: attendees } = useAttendees(
+    isCountVisible ? gathering.slug : undefined,
+  );
+  const goingCount = attendees?.goingCount ?? gathering.goingCount ?? 0;
 
   const messageHost = () =>
     contact({ slug: gathering.hostSlug, name: gathering.host });
@@ -73,88 +69,39 @@ export function GatheringRsvpControl({
     ? t("connect:contact.message")
     : t("gatherings:common.connectCta");
 
-  const handleGoing = () => {
-    // A full gathering puts the member on the waitlist, so the mutation is
-    // told that up front: the request body is still "going", but the
-    // optimistic going head-count must not bump (see `RsvpIntent`).
-    const next: "going" | "waitlisted" = gathering.isFull
-      ? "waitlisted"
-      : "going";
-    setStatus(next);
-    rsvp.mutate(next, {
-      onSuccess: () =>
-        showToast(
-          t(
-            next === "waitlisted"
-              ? "gatherings:rsvpControl.waitlistToast"
-              : "gatherings:rsvpControl.goingToast",
-          ),
-          "success",
-        ),
-      // A refusal (barred, or a block in either direction) is surfaced as a
-      // plain sentence rather than a silent no-op that leaves the button
-      // looking broken. It never names who decided it — see `rsvpErrors.ts`.
-      onError: (error) => {
-        setStatus(gathering.myRsvpStatus ?? null);
-        showToast(rsvpErrorMessage(error, t), "error");
-      },
-    });
-  };
-
-  const handleCancel = () => {
-    setStatus(null);
-    unrsvp.mutate(undefined, {
-      onSuccess: () =>
-        showToast(t("gatherings:rsvpControl.cancelledToast"), "success"),
-      onError: () => setStatus(gathering.myRsvpStatus ?? null),
-    });
-  };
-
-  if (confirmed) {
+  if (!rsvp.canRsvp) {
     return (
-      <div className={styles.rsvpPanel}>
-        <div className={styles.rsvpConfirm}>
-          <div className={styles.rsvpConfirmHead}>
-            <span className={styles.rsvpConfirmIcon} aria-hidden>
-              <FiCheckCircle />
-            </span>
-            <Translation
-              i18nKey={
-                isWaitlisted
-                  ? "gatherings:rsvpControl.waitlistTitle"
-                  : "gatherings:rsvpControl.goingTitle"
-              }
-              components={{ em: <em /> }}
-            />
-          </div>
-          <p className={styles.rsvpConfirmNote}>
-            {isWaitlisted
-              ? gathering.waitlistPosition != null
-                ? t("gatherings:rsvpControl.waitlistPosition", {
-                    position: gathering.waitlistPosition,
-                  })
-                : t("gatherings:rsvpControl.waitlistNote")
-              : t("gatherings:rsvpControl.goingCount", { count: goingCount })}
-          </p>
-          <div className={styles.rsvpActions}>
-            <Button
-              variant="ghost-dark"
-              className={styles.fullBtn}
-              disabled={unrsvp.isPending}
-              onClick={handleCancel}
-            >
-              {t("gatherings:rsvpControl.cancelCta")}
-            </Button>
-            <Button
-              variant="ghost-dark"
-              className={styles.fullBtn}
-              onClick={messageHost}
-            >
-              {messageLabel}
-            </Button>
-          </div>
-        </div>
-      </div>
+      <RsvpClosedPanel
+        isCancelled={rsvp.isCancelled}
+        wasAttending={rsvp.isConfirmed || rsvp.isMaybe}
+        messageLabel={messageLabel}
+        onMessageHost={messageHost}
+      />
+    );
+  }
+
+  if (rsvp.isConfirmed || rsvp.isMaybe) {
+    return (
+      <>
+        <RsvpConfirmedPanel
+          status={rsvp.status}
+          waitlistPosition={gathering.waitlistPosition ?? null}
+          goingCount={goingCount}
+          isCountVisible={isCountVisible}
+          isPending={rsvp.isPending}
+          messageLabel={messageLabel}
+          onGoing={rsvp.goOrWaitlist}
+          onCancel={rsvp.cancelRsvp}
+          onOpenDetails={() => setDetailsOpen(true)}
+          onMessageHost={messageHost}
+        />
+        {isDetailsOpen && (
+          <GatheringRsvpDetailsModal
+            slug={gathering.slug}
+            onClose={() => setDetailsOpen(false)}
+          />
+        )}
+      </>
     );
   }
 
@@ -163,7 +110,7 @@ export function GatheringRsvpControl({
       <Button
         className={styles.fullBtn}
         disabled={rsvp.isPending}
-        onClick={handleGoing}
+        onClick={rsvp.goOrWaitlist}
       >
         {rsvp.isPending
           ? t("gatherings:rsvpControl.pendingCta")
@@ -171,6 +118,18 @@ export function GatheringRsvpControl({
             ? t("gatherings:rsvpControl.waitlistCta")
             : t(gathering.ctaKey)}
       </Button>
+      {/* "Maybe" is not offered on a full gathering: there is no seat to be
+          undecided about, and the honest next step there is the waitlist. */}
+      {!gathering.isFull && (
+        <Button
+          variant="ghost"
+          className={styles.fullBtn}
+          disabled={rsvp.isPending}
+          onClick={rsvp.markMaybe}
+        >
+          {t("gatherings:rsvpControl.maybeCta")}
+        </Button>
+      )}
       <Button variant="ghost" className={styles.fullBtn} onClick={messageHost}>
         {messageLabel}
       </Button>

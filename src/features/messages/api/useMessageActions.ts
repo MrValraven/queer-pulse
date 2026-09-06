@@ -5,6 +5,7 @@ import {
   patchMessageDelete,
   patchMessageEdit,
   patchMessageReaction,
+  removeMessageFromThread,
 } from "../../../shared/api/messageCache";
 import type { MessageReactionKey } from "../../../shared/contracts/contracts";
 import type { Conversation } from "../data";
@@ -12,6 +13,7 @@ import {
   addMessageReaction,
   deleteConversation,
   deleteMessage,
+  deleteMessageForMe,
   editMessage,
   removeMessageReaction,
   type MessageResponse,
@@ -73,6 +75,35 @@ export function useDeleteMessage(conversationId: string | null) {
         messageId,
         new Date().toISOString(),
       );
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+}
+
+/**
+ * DELETE /conversations/:id/messages/:messageId/for-me — hide ONE message
+ * from the caller's own view ("delete for me", PRD-227). SITS BESIDE
+ * `useDeleteMessage` above (the "for everyone" tombstone) without touching
+ * it: any participant may call this, not just the author. The message is
+ * removed from the thread cache OUTRIGHT (`removeMessageFromThread`) rather
+ * than tombstoned in place — unlike a shared delete, there is no "This
+ * message was deleted" slot to keep, because no other participant is ever
+ * meant to see this happened. Still invalidates the inbox: if the hidden
+ * message was this caller's own newest one, their preview falls back to
+ * their own next-newest visible message (the server already computes that
+ * per-viewer — see `MessagingCoreService.lastMessagesByConversation`).
+ */
+export function useDeleteMessageForMe(conversationId: string | null) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: async (messageId) => {
+      if (demoMode || !conversationId) return;
+      await deleteMessageForMe(conversationId, messageId);
+    },
+    onSuccess: (_result, messageId) => {
+      if (demoMode || !conversationId) return;
+      removeMessageFromThread(queryClient, conversationId, messageId);
       void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });

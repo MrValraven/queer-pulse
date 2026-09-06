@@ -89,6 +89,26 @@
   margin-top: 6px;
 }
 
+/* An item on the list whose subject can no longer be opened (PRD-169). Keeps
+   the sender's snapshot and reads as set aside. The wash rides --line-rgb,
+   which flips to cream in dark mode, so it holds in both themes. */
+.rowUnavailable {
+  background: rgba(var(--line-rgb), 0.035);
+  border-style: dashed;
+}
+.rowUnavailable .rowTitle {
+  color: var(--ink-60);
+}
+
+/* Shown only when NOTHING on the list can be opened, so the page reads as a
+   list that has aged rather than a page that has broken. */
+.allUnavailable {
+  margin: 14px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+
 .note {
   margin: 26px 0 0;
   padding-top: 18px;

@@ -31,6 +31,38 @@ export interface Recommendation {
    * the prototype exercises the same flow.
    */
   isMine?: boolean;
+  /**
+   * PRD-249. The author's own claim that they rented from this landlord, with a
+   * rough window, or `undefined` on a recommendation written before the
+   * platform asked for one.
+   *
+   * The card labels EVERY recommendation self-attested and unverified whether
+   * this is present or not, because that is a property of the surface. What
+   * this changes is the second line: an attested row can say when the tenancy
+   * ran, and a row without one says plainly that no window was given.
+   */
+  attestation?: RecommendationAttestation;
+  /**
+   * The named landlord's answer, published by the team on their behalf. A
+   * landlord in this directory has no account and cannot even read the page
+   * that rates them, so a reply reaches it through a public "Is this you?" form
+   * and a staff member. `undefined` when there is none.
+   */
+  landlordReply?: LandlordReply;
+}
+
+/** Pre-formatted for the card: the raw `YYYY-MM` months are turned into the
+ *  reader's language in the adapter, where a `Formatters` is in hand. */
+export interface RecommendationAttestation {
+  /** e.g. "Rented Mar 2024 to Sep 2025", or "Rented from Mar 2024, still
+   *  there". Built in the adapter (or authored, for the demo fixtures). */
+  tenancyLabel: string;
+}
+
+export interface LandlordReply {
+  text: string;
+  /** "Published by the team, Apr 2026" — already formatted. */
+  publishedLabel: string;
 }
 
 export interface Landlord {
@@ -42,6 +74,18 @@ export interface Landlord {
   photo: string;
   hood: string;
   stars: number;
+  /**
+   * PRD-249. How many recommendations the star rating was computed over, and
+   * how many of those carry a tenancy attestation. Both come from the DTO's
+   * `rating` in live mode and are absent on the demo fixtures, where the
+   * hero falls back to counting `recommendations`.
+   *
+   * They exist so the hero can never print a bare star row. The rating is a
+   * mean of self-reported ratings of a real third party, so the number is
+   * always shown with what it is made of.
+   */
+  ratingCount?: number;
+  ratingAttestedCount?: number;
   /** Short quote shown on the board card. */
   note: string;
   /* detail */
@@ -89,6 +133,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "Two winters in one of his Arroios rooms. He fixed the boiler the same week I mentioned it and never once asked who was staying over.",
         when: "Recommended Feb 2026",
+
+        attestation: { tenancyLabel: "Rented Jan 2024 to Dec 2025" },
         isMine: true,
       },
       {
@@ -98,6 +144,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "Rented from him for two years. A radiator died in January and was replaced in two days. Never once made us feel like our relationship was his business.",
         when: "Recommended Mar 2026",
+
+        attestation: { tenancyLabel: "Rented Feb 2023 to Feb 2026" },
       },
       {
         initials: "JF",
@@ -106,6 +154,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "Clear contract, fair deposit, returned in full. He is exactly as advertised, unremarkable in the best possible way.",
         when: "Recommended Jan 2026",
+
+        attestation: { tenancyLabel: "Rented Sep 2022 to Nov 2025" },
       },
       {
         initials: "RV",
@@ -113,6 +163,10 @@ export const LANDLORDS: Landlord[] = [
         tint: "plum",
         stars: 5,
         text: "Three years, zero problems. The bar for landlords is in hell and he clears it with room to spare.",
+        // Deliberately carries NO attestation, so the prototype shows what a
+        // recommendation written before PRD-249 looks like: the badge still
+        // says self-attested and unverified, and the line under it says no
+        // tenancy window was ever given.
         when: "Recommended Nov 2025",
       },
     ],
@@ -154,6 +208,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "Ana rented me my first place in Lisbon when no one else would look at a freelancer. Fair, warm, completely unbothered by anything about me except whether I was happy there.",
         when: "Recommended Apr 2026",
+
+        attestation: { tenancyLabel: "Rented from May 2024, still there" },
       },
       {
         initials: "SC",
@@ -162,6 +218,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "Two studios over four years. Deposit returned both times, to the cent. She is the reason I tell people Lisbon can be kind.",
         when: "Recommended Feb 2026",
+
+        attestation: { tenancyLabel: "Rented Jan 2024 to Dec 2025" },
       },
     ],
     rentingNote:
@@ -202,6 +260,15 @@ export const LANDLORDS: Landlord[] = [
         stars: 4,
         text: "Formal, traditional, and not once a problem. They fixed a leak properly, kept to the contract, and treated my partner and me with complete courtesy.",
         when: "Recommended Mar 2026",
+        attestation: { tenancyLabel: "Rented Feb 2023 to Feb 2026" },
+        // The one demo reply, so the prototype shows the shape. A landlord
+        // holds no account here, so these words reached the page through the
+        // public "Is this you?" form and a staff member, which is what the
+        // published line has to say.
+        landlordReply: {
+          text: "Thank you. We do keep to the contract and we always will. We are slow to warm up, that is fair, but every tenant is welcome in our building.",
+          publishedLabel: "Published by the team, Apr 2026",
+        },
       },
       {
         initials: MEMBERS.beatriz!.initials,
@@ -210,6 +277,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "Quiet street, solid building, fair people. Don't expect warmth on day one, but do expect to be treated properly. I stayed three years.",
         when: "Recommended Dec 2025",
+
+        attestation: { tenancyLabel: "Rented Jun 2022 to Sep 2025" },
       },
     ],
     rentingNote:
@@ -250,6 +319,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "Paulo actually screens for who you'll be living with. My house was full of people I'd never have found alone and now can't imagine not knowing.",
         when: "Recommended Apr 2026",
+
+        attestation: { tenancyLabel: "Rented from May 2024, still there" },
       },
       {
         initials: "AK",
@@ -258,6 +329,8 @@ export const LANDLORDS: Landlord[] = [
         stars: 5,
         text: "A queer landlord who gets it. Fast on repairs, fair on everything, and the flat felt safe from day one. Rare and precious.",
         when: "Recommended Feb 2026",
+
+        attestation: { tenancyLabel: "Rented Jan 2024 to Dec 2025" },
       },
     ],
     rentingNote:

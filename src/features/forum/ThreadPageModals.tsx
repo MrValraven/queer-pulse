@@ -1,14 +1,18 @@
 import { ReportReplyModal } from "./ReportReplyModal";
-import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
+import {
+  ConfirmDeleteModal,
+  type ConfirmDeleteSubject,
+} from "./ConfirmDeleteModal";
 import { EditOpModal } from "./EditOpModal";
 import { ForumEditHistoryModal } from "./ForumEditHistoryModal";
+import { MoveCategoryModal } from "./MoveCategoryModal";
 import { ThreadTagsModal } from "./ThreadTagsModal";
 import { type ForumReportTarget } from "./useThreadModeration";
 
-/** The five thread-scoped modals (report / edit-OP / confirm-delete / edit
- * history / edit-tags). Each renders only when its state is set, so their local
- * scroll-lock lifecycles stay tied to being mounted — exactly as when they
- * lived inline. */
+/** The six thread-scoped modals (report / edit-OP / confirm-delete / edit
+ * history / move-category / edit-tags). Each renders only when its state is
+ * set, so their local scroll-lock lifecycles stay tied to being mounted —
+ * exactly as when they lived inline. */
 export function ThreadPageModals({
   reportTarget,
   onCloseReport,
@@ -19,11 +23,17 @@ export function ThreadPageModals({
   onSaveOp,
   onCloseOp,
   confirmDelete,
+  confirmDeleteSubject,
   deleteBusy,
   onConfirmDelete,
   onCloseDelete,
   historyPostId,
   onCloseHistory,
+  isMovingCategory,
+  threadCategory,
+  isCategoryMoveSaving,
+  onSaveCategory,
+  onCloseMoveCategory,
   isEditingTags,
   threadTags,
   isTagsSaving,
@@ -39,11 +49,20 @@ export function ThreadPageModals({
   onSaveOp: (next: { title: string; body: string }) => void;
   onCloseOp: () => void;
   confirmDelete: { postId: string; isOp: boolean } | null;
+  /** Whether this confirmation is about ONE post or the WHOLE thread (PRD-160).
+   *  The two promises are different, so the copy is too. */
+  confirmDeleteSubject: ConfirmDeleteSubject;
   deleteBusy: boolean;
   onConfirmDelete: () => void;
   onCloseDelete: () => void;
   historyPostId: string | null;
   onCloseHistory: () => void;
+  /** Re-filing this thread into another category (PRD-163). */
+  isMovingCategory: boolean;
+  threadCategory: string;
+  isCategoryMoveSaving: boolean;
+  onSaveCategory: (category: string) => void;
+  onCloseMoveCategory: () => void;
   /** Tag re-filing (SOC-13), open to the thread's author and to moderators. */
   isEditingTags: boolean;
   threadTags: string[];
@@ -73,8 +92,17 @@ export function ThreadPageModals({
       {confirmDelete && (
         <ConfirmDeleteModal
           busy={deleteBusy}
+          subject={confirmDeleteSubject}
           onConfirm={onConfirmDelete}
           onClose={onCloseDelete}
+        />
+      )}
+      {isMovingCategory && (
+        <MoveCategoryModal
+          initialCategory={threadCategory}
+          busy={isCategoryMoveSaving}
+          onSave={onSaveCategory}
+          onClose={onCloseMoveCategory}
         />
       )}
       {historyPostId && (

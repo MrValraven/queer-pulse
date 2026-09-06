@@ -291,11 +291,14 @@ export const governance: Catalog = {
   // ── Levantar uma preocupação ────────────────────────────────────────────
   "sections.raise.eyebrow": "Levantar uma preocupação",
   "sections.raise.title": "Algo não está <em>bem?</em> Diz-nos.",
+  // PRD-261: ver a nota no catálogo EN. A cópia antiga prometia uma
+  // confirmação em 48 horas e uma atualização por email que nunca podia
+  // chegar.
   "sections.raise.intro":
-    "Usa este formulário para denunciar uma pessoa, um conteúdo, uma decisão da plataforma, ou uma preocupação sobre como o QueerPulse é gerido. Todas as submissões são confidenciais e revistas no prazo de 48 horas.",
+    "Usa este formulário para denunciar uma pessoa, um conteúdo, uma decisão da plataforma, ou uma preocupação sobre como o QueerPulse é gerido. Todas as submissões são confidenciais, e comprometemo-nos a dar resposta no prazo de três dias.",
   "sections.raise.cardTitle": "Submeter uma preocupação",
   "sections.raise.cardText":
-    "A tua identidade é mantida confidencial. Vais receber uma confirmação no prazo de 48 horas e uma atualização quando o assunto for resolvido.",
+    "A tua identidade permanece confidencial. O QueerPulse não envia emails, por isso ao submeteres recebes um código de referência: guarda-o, e podes ver a qualquer momento o que aconteceu à tua preocupação.",
   "sections.raise.selectPlaceholder": "Que tipo de preocupação?",
   "sections.raise.option.member": "Denunciar uma pessoa ou comportamento",
   "sections.raise.option.gathering": "Denunciar um convívio ou evento",
@@ -500,4 +503,59 @@ export const governance: Catalog = {
   "transparency.links.constitution": "Ler a Constituição",
   "transparency.links.codeOfConduct": "Ler o Código de Conduta",
   "transparency.links.governance": "Voltar a Governação",
+  // PRD-260: ver a nota no catálogo EN.
+  "sections.proposals.signedOut":
+    "Inicia sessão para veres as propostas que os membros estão a votar.",
+
+  // PRD-261: ver a nota no catálogo EN. Nada aqui pode sugerir um email.
+  "concernStatus.submitted.title": "A tua preocupação está connosco",
+  "concernStatus.submitted.intro":
+    "Ficou registada e está na fila que a equipa de governação vai trabalhando.",
+  "concernStatus.submitted.fieldLabel": "O teu código de referência",
+  "concernStatus.submitted.copy": "Copiar",
+  "concernStatus.submitted.copied": "Copiado",
+  "concernStatus.submitted.copiedToast": "Código de referência copiado.",
+  "concernStatus.submitted.copyErrorToast":
+    "O teu navegador não deixou copiar. Seleciona o código e copia à mão.",
+  "concernStatus.submitted.keepIt":
+    "Guarda este código num sítio a que consigas voltar. Não guardamos nenhuma cópia que te possa ser devolvida, e o QueerPulse não envia emails, por isso esta é a única forma de consultares a tua preocupação mais tarde.",
+  "concernStatus.submitted.checkCta": "Ver esta preocupação",
+  "concernStatus.submitted.whatHappensNext":
+    "Alguém da equipa de governação lê todas as preocupações. Comprometemo-nos a dar-lhe uma primeira leitura em três dias. Volta com o teu código para veres quando alguém a pegou e como terminou.",
+  "concernStatus.submitted.anotherCta": "Levantar outra preocupação",
+
+  "concernStatus.meta.title": "Consultar uma preocupação | QueerPulse",
+  "concernStatus.meta.description":
+    "Consulta uma preocupação que levantaste no QueerPulse com o código de referência que recebeste.",
+  "concernStatus.title": "Consultar uma preocupação",
+  "concernStatus.intro":
+    "Cola o código de referência que recebeste ao submeter. Mostra em que ponto está essa preocupação, e mais nada sobre ela.",
+  "concernStatus.loading": "A consultar\u2026",
+  "concernStatus.form.label": "Código de referência",
+  "concernStatus.form.cta": "Consultar",
+
+  "concernStatus.meta.submitted": "Submetida a {date}",
+  "concernStatus.meta.updated": "Última alteração a {date}",
+
+  "concernStatus.received.title": "Já a temos",
+  "concernStatus.received.body":
+    "A tua preocupação está registada e à espera. Ainda ninguém a abriu. Comprometemo-nos a dar-lhe uma primeira leitura em três dias, por isso volta cá com este código.",
+  "concernStatus.reviewing.title": "Alguém está a analisá-la",
+  "concernStatus.reviewing.body":
+    "Alguém da equipa de governação pegou na tua preocupação e está a trabalhar nela. Volta cá com este código para veres como termina.",
+  "concernStatus.resolved.title": "Esta preocupação foi resolvida",
+  "concernStatus.resolved.body":
+    "A equipa de governação analisou-a e agiu. Se ainda houver algo errado, levanta uma nova preocupação e diz que esta foi fechada.",
+  "concernStatus.dismissed.title": "Esta preocupação foi fechada sem ação",
+  "concernStatus.dismissed.body":
+    "A equipa de governação leu-a e decidiu não agir. Essa decisão é deles para explicar: se quiseres que seja revista, levanta uma nova preocupação e di-lo.",
+
+  "concernStatus.notFound.title": "Não encontramos esse código",
+  "concernStatus.notFound.body":
+    "Verifica se tem alguma gralha. Os códigos são longos e cada carácter conta. Sobre um código que não reconhecemos não te podemos dizer mais do que isto.",
+  "concernStatus.notFound.cta": "Tentar outro código",
+  "concernStatus.unavailable.title": "Não foi possível consultar neste momento",
+  "concernStatus.unavailable.body":
+    "Algo correu mal do nosso lado. O teu código continua válido.",
+  "concernStatus.unavailable.cta": "Tentar novamente",
 };

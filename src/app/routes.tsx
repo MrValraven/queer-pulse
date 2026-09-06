@@ -6,6 +6,7 @@ import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 import { lazyNamed } from "./routeHelpers";
 import { routes } from "./routeMap";
 import { LEGACY_REDIRECTS } from "./routes.redirects.data";
+import { LegacyRedirect } from "./routes.redirects";
 import {
   useAuthGateRedirect,
   isGatedPath,
@@ -125,23 +126,27 @@ export function AppRoutes() {
           {adminRoutes()}
           {simulationRoutes()}
 
-          {/* Legacy paths → new homes (keeps old links & design hrefs working) */}
+          {/* Legacy paths → new homes (keeps old links & design hrefs working).
+              `LegacyRedirect`, never a bare `<Navigate>`: the query string and
+              hash have to survive the hop, or `/article?id=some-slug` arrives
+              at `/magazine/article` with no id and shows the not-found wall
+              (PRD-100). */}
           {LEGACY_REDIRECTS.map(([from, to]) => (
             <Route
               key={from}
               path={from}
-              element={<Navigate to={to} replace />}
+              element={<LegacyRedirect to={to} />}
             />
           ))}
 
           {/* Legacy aliases → canonical pages */}
           <Route
             path={routes.businessDirectory}
-            element={<Navigate to={routes.directory} replace />}
+            element={<LegacyRedirect to={routes.directory} />}
           />
           <Route
             path={routes.spacesMap}
-            element={<Navigate to={routes.map} replace />}
+            element={<LegacyRedirect to={routes.map} />}
           />
 
           {/* Genuinely unknown paths → 404 */}

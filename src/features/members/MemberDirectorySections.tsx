@@ -8,6 +8,7 @@ import {
   FadeIn,
   FeatureHelp,
   ModalSheet,
+  SearchInput,
   Select,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -24,6 +25,7 @@ import {
   type MemberCard,
 } from "./memberDirectoryFilter.data";
 import { type SectionKey } from "./filterSectionKeys";
+import type { MemberDirectorySearch } from "./useMemberDirectoryQuery";
 import { FiltersSidebar, MemberResultSkeleton } from "./MemberFilterCards";
 import { MemberResultsGrid } from "./MemberResultsGrid";
 import styles from "./MemberDirectoryFilterPage.module.css";
@@ -98,6 +100,10 @@ export function MemberDirectoryHeader({
 }
 
 export interface MemberResultsColumnProps {
+  /** The name-search box's value and setter. The term itself is already
+   *  folded into `hasActiveFilters`, so a search that matches nobody lands on
+   *  the "nothing matched, clear it" state rather than "no members yet". */
+  search: MemberDirectorySearch;
   filters: FilterState;
   sort: SortKey;
   onSort: (sort: SortKey) => void;
@@ -121,6 +127,7 @@ export interface MemberResultsColumnProps {
 /** The right-hand results column: count row + sort, applied chips, the card
  *  grid (with skeleton / empty states), and the "load more" pager. */
 export function MemberResultsColumn({
+  search,
   filters,
   sort,
   onSort,
@@ -147,8 +154,21 @@ export function MemberResultsColumn({
 
   return (
     <div>
+      <div className={styles.searchRow}>
+        <SearchInput
+          className={styles.directorySearch}
+          value={search.input}
+          onChange={search.onChange}
+          placeholder={t("members:directory.searchPlaceholder")}
+          ariaLabel={t("members:directory.searchLabel")}
+        />
+      </div>
+
       <div className={styles.topRow}>
-        <div className={styles.count}>
+        {/* The count answers the search as it is typed, so it is announced
+            rather than only redrawn. Atomic, because the sentence only means
+            anything whole. */}
+        <div className={styles.count} aria-live="polite" aria-atomic="true">
           {t("members:directory.showingPrefix")}{" "}
           <b>
             <em>{fmt.number(filteredCount)}</em>

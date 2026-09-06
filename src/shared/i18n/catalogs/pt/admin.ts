@@ -92,7 +92,7 @@ export const admin: Catalog = {
   "verifications.drawer.reasonRequiredHint":
     "É necessário um motivo para reduzir o nível.",
   "verifications.drawer.liveOnlyTitle":
-    "Aplicar uma substituição precisa da API em direto. Experimente fora do modo demonstração.",
+    "Aplicar uma substituição precisa da API em direto. Experimenta fora do modo demonstração.",
   "verifications.drawer.applying": "A aplicar…",
 
   // ── Segmento de fila de revisão + gaveta de pedido (Tarefa 9) ──────────
@@ -134,7 +134,7 @@ export const admin: Catalog = {
   "verifications.requests.drawer.decisionHeading": "Decisão anterior",
   "verifications.requests.drawer.reviewedBy": "revisto por {actor}",
   "verifications.requests.drawer.appealBanner":
-    "Esta pessoa apresentou recurso de um pedido rejeitado. Reveja com olhos novos antes de decidir de novo.",
+    "Esta pessoa apresentou recurso de um pedido rejeitado. Revê com olhos novos antes de decidires de novo.",
   "verifications.requests.drawer.duplicateBanner":
     "Esta pessoa partilha uma impressão digital de verificação com {count} outra(s) conta(s).",
   "verifications.requests.drawer.signalsHeading": "Sinais",
@@ -150,7 +150,7 @@ export const admin: Catalog = {
     "A referência de sessão do fornecedor de identidade desta pessoa é partilhada com pelo menos outra conta.",
   "verifications.requests.drawer.reasonLabel": "Motivo",
   "verifications.requests.drawer.reasonPlaceholder":
-    "Partilhe o porquê, sobretudo se estiver a rejeitar.",
+    "Partilha o porquê, sobretudo se estiveres a rejeitar.",
   "verifications.requests.drawer.reasonRequiredHint":
     "É necessário um motivo para rejeitar. Aprovar ou marcar em revisão não precisa de um.",
   "verifications.requests.drawer.notDecidableHint":
@@ -202,7 +202,7 @@ export const admin: Catalog = {
     "Isto rejeita os {count} pedidos selecionados e notifica cada pessoa. Não pode ser desfeito a partir daqui.",
   "verifications.requests.bulk.confirmReject.reasonLabel": "Motivo",
   "verifications.requests.bulk.confirmReject.reasonPlaceholder":
-    "Partilhe o porquê, sobretudo porque todas as pessoas selecionadas vão ver isto.",
+    "Partilha o porquê, sobretudo porque todas as pessoas selecionadas vão ver isto.",
   "verifications.requests.bulk.confirmReject.confirmCta": "Rejeitar pedidos",
 
   "verifications.requests.keyboard.hint":
@@ -899,6 +899,44 @@ export const admin: Catalog = {
   "adminSafeSpaces.modal.savedToast":
     "O perfil de espaço seguro de {name} foi guardado",
 
+  // PRD-247 follow-up. The independent-visit bar on the DIRECT badge path
+  // (`PATCH /admin/listings/:ref/safe-space`). The reviewed nomination queue
+  // states the same rule in the `safety:governance.action.belowBar*` strings,
+  // and the direct editor renders those rather than a second wording, so one
+  // rule reads the same whichever door the moderator came through.
+  //
+  // `underBar.summaryNote` must keep both halves. A badge under the bar predates
+  // enforcement AND a low count can mean the visits were never written up, so
+  // the panel must never read as an accusation about the venue.
+  "adminSafeSpaces.underBar.title": "Abaixo da barreira de visitas",
+  "adminSafeSpaces.underBar.verifierIgnored":
+    "A linha “Verificado por” acima é ignorada enquanto a contagem estiver curta. O emblema vai indicar publicamente a contagem real de visitas.",
+  "adminSafeSpaces.underBar.queueHint":
+    "Este espaço tem uma nomeação aberta na fila de revisão. Decidir por lá avisa quem o nomeou.",
+  "adminSafeSpaces.underBar.reasonCount": "{count} de {min} caracteres",
+  "adminSafeSpaces.underBar.reasonShort":
+    "Escreve pelo menos {min} caracteres para atribuir o emblema abaixo da barreira.",
+  "adminSafeSpaces.underBar.refusedTitle": "O emblema foi recusado",
+  "adminSafeSpaces.underBar.refusedBody":
+    "Há {count} de {required} visitas independentes registadas. Escreve o motivo acima e guarda outra vez.",
+  "adminSafeSpaces.underBar.chip": "{count}/{required} visitas",
+  "adminSafeSpaces.underBar.chipTitle":
+    "Visitas independentes registadas, face a uma barreira de {required}.",
+  "adminSafeSpaces.underBar.summary_one":
+    "1 ficha verificada está abaixo da barreira de visitas.",
+  "adminSafeSpaces.underBar.summary_other":
+    "{count} fichas verificadas estão abaixo da barreira de visitas.",
+  "adminSafeSpaces.underBar.summaryNote":
+    "Estes emblemas foram atribuídos antes de a barreira passar a ser exigida, e uma contagem baixa também pode significar que as visitas nunca foram registadas. Lê isto como papelada a confirmar.",
+  "adminSafeSpaces.underBar.forbiddenTitle": "Esta não é tua para dispensar",
+  "adminSafeSpaces.underBar.forbiddenBody":
+    "Atribuir um emblema abaixo da barreira de visitas está limitado a moderadores e administradores da plataforma. Podes na mesma atribuí-lo assim que houver {required} visitas independentes registadas, ou pedir a um moderador da plataforma que trate desta.",
+  "adminSafeSpaces.markWithReasonCta": "Marcar com um motivo",
+  "adminSafeSpaces.toast.visitBarRefused":
+    "{name} está abaixo da barreira de visitas. Escreve o motivo no editor.",
+  "adminSafeSpaces.modal.saveFailed":
+    "Não foi possível guardar. Verifica a ligação e tenta outra vez.",
+
   // ── Fila de espaços do diretório ──────────────────────────────────────────
   // ── Supervisão de convites (/admin/invites) ──────────────────────────
   "adminInvites.title": "Supervisão de <em>convites</em>",
@@ -1149,6 +1187,8 @@ export const admin: Catalog = {
   "adminIntakes.kind.panel_signup": "Inscrição no painel de bolsas",
   "adminIntakes.kind.incubator_cohort": "Candidatura à incubadora",
   "adminIntakes.kind.incubator_mentor": "Oferta para mentoria",
+  // PRD-249. Quem é nomeado numa recomendação a pedir para responder.
+  "adminIntakes.kind.landlord_reply_request": "Direito de resposta do senhorio",
   "adminIntakes.kind.incubator_session": "Pedido de sessão de mentoria",
   "adminIntakes.kind.culture_suggest_pick": "Sugestão para o clube de leitura",
   "adminIntakes.kind.culture_post_project": "Projeto no mural de encomendas",
@@ -1196,6 +1236,11 @@ export const admin: Catalog = {
   "adminIntakes.payload.empty":
     "Esta submissão chegou sem nenhum campo preenchido.",
   "adminIntakes.field.about": "Sobre o trabalho",
+  // PRD-249, o conteúdo do pedido de direito de resposta.
+  "adminIntakes.field.contact": "Como contactar",
+  "adminIntakes.field.landlordSlug": "Entrada do senhorio",
+  "adminIntakes.field.recommendationId": "Recomendação",
+  "adminIntakes.field.reply": "O que quer publicado",
   "adminIntakes.field.applicantName": "Quem se candidata",
   "adminIntakes.field.author": "Autoria",
   "adminIntakes.field.budgetItems": "Linhas do orçamento",
@@ -1258,6 +1303,17 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.row.replyLabel": "Resposta a quem escreveu",
   "adminMagazineSubmissions.row.replyPlaceholder":
     "Resposta opcional a quem escreveu",
+  // PRD-124: aceitar uma história de quem lê cria agora a peça na redação e
+  // arquiva o texto da pessoa como rascunho do artigo, por isso uma linha
+  // aceite liga diretamente ao registo onde a edição acontece. O par abaixo só
+  // aparece numa linha já decidida como aceite cujo `acceptedPieceId` continua
+  // nulo (decidida antes desta build): reenviar a mesma decisão termina o
+  // trabalho sem mexer na nota de resposta, em quem decidiu, na data da
+  // decisão, nem voltar a notificar a pessoa.
+  "adminMagazineSubmissions.row.openDeskPiece": "Abrir a peça na redação",
+  "adminMagazineSubmissions.row.acceptNotOnDesk":
+    "Esta história foi aceite antes de uma aceitação criar uma peça na redação, por isso ainda não há nada que um editor possa abrir.",
+  "adminMagazineSubmissions.row.createDeskPieceCta": "Criar a peça na redação",
   "adminMagazineSubmissions.row.declineCta": "Recusar",
   "adminMagazineSubmissions.row.acceptCta": "Aceitar",
   "adminMagazineSubmissions.row.commissionCta": "Encomendar",
@@ -1279,6 +1335,9 @@ export const admin: Catalog = {
   "adminWriterApplications.row.sampleLink": "Amostra ligada",
   "adminWriterApplications.row.approveCta": "Aprovar",
   "adminWriterApplications.row.declineCta": "Recusar",
+  // Dá um nome acessível real ao campo da nota de avaliação, tal como o
+  // `adminMagazineSubmissions.row.replyLabel` acompanha o seu placeholder.
+  "adminWriterApplications.row.reviewNoteLabel": "Nota para o candidato",
   "adminWriterApplications.row.reviewNotePlaceholder":
     "Nota opcional para o candidato",
   "adminWriterApplications.unknownMember": "Um membro",
@@ -2138,7 +2197,7 @@ export const admin: Catalog = {
     "Relatório de transparência em fila. As pessoas serão notificadas quando for publicado.",
   "governance.header.publishedToast": "Relatório de transparência publicado.",
   "governance.header.publishError":
-    "Não foi possível publicar o relatório. Tente novamente.",
+    "Não foi possível publicar o relatório. Tenta novamente.",
   "governance.tabs.finances": "Finanças",
   "governance.tabs.policy": "Política e versões",
   "governance.tabs.proposals": "Propostas",
@@ -2301,7 +2360,7 @@ export const admin: Catalog = {
   "governance.finances.edit.cancel": "Cancelar",
   "governance.finances.edit.saved": "Valores atualizados.",
   "governance.finances.edit.error":
-    "Não foi possível guardar. Tente novamente.",
+    "Não foi possível guardar. Tenta novamente.",
   "governance.finances.edit.noChanges": "Nada foi alterado.",
 
   "governance.ledger.moderatorHonoraria": "Honorários de moderação",
@@ -2347,7 +2406,7 @@ export const admin: Catalog = {
   "governance.audit.metaMatch": "{count} entradas",
   "governance.audit.exportToast": "Exportadas {total} entradas em CSV",
   "governance.audit.exportError":
-    "Não foi possível exportar o registo de auditoria. Tente novamente.",
+    "Não foi possível exportar o registo de auditoria. Tenta novamente.",
   "governance.audit.exportCta": "Exportar CSV",
   "governance.audit.columns.moderator": "Pessoa moderadora",
   "governance.audit.columns.action": "Ação",
@@ -2395,6 +2454,22 @@ export const admin: Catalog = {
     "A pessoa afetada viu este motivo e teve direito a recorrer. Esta entrada nunca pode ser editada ou eliminada.",
 
   // ── Candidaturas a parceiro ────────────────────────────────────────────────
+  // PRD-266 / PRD-263: ver as notas no catálogo EN.
+  "partners.legacyInquiries":
+    "As mensagens de parceria enviadas pelo antigo formulário Para Organizações estão na <a>consola de entradas</a>, em Inquéritos, filtradas pelo tipo parceiro.",
+  "partnerProfile.name": "Nome da organização",
+  "partnerProfile.tier": "Nível de parceria",
+  "partnerProfile.since": "Parceiros desde",
+  "partnerProfile.eyebrow": "Etiqueta do cartão",
+  "partnerProfile.tagline": "Frase de apresentação",
+  "partnerProfile.desc": "Descrição curta",
+  "partnerProfile.city": "Cidade",
+  "partnerProfile.regionLabel": "Etiqueta de região",
+  "partnerProfile.phone": "Telefone",
+  "partnerProfile.phoneNote": "Quando ligar",
+  "partnerProfile.email": "Email de contacto",
+  "partnerProfile.website": "Site",
+  "partnerProfile.address": "Morada",
   "partners.title": "Candidaturas a parceiro · <em>revisão</em>",
   "partners.header.eyebrow": "Parcerias",
   "partners.header.title": "Quem quer ser <em>parceiro</em>.",
@@ -3872,7 +3947,7 @@ export const admin: Catalog = {
   "adminResourceSuggestions.header.eyebrow": "Fila de revisão",
   "adminResourceSuggestions.header.title": "Sugestões de <em>recursos</em>",
   "adminResourceSuggestions.header.sub":
-    "Todos os recursos de Apoio Jurídico / Testagem de Saúde Sexual sugeridos por membros. Aprovar aqui apenas regista a decisão: publique o recurso real e verificado manualmente em Diretório de recursos.",
+    "Todos os recursos de Apoio Jurídico / Testagem de Saúde Sexual sugeridos por membros. Aprovar aqui apenas regista a decisão: publica o recurso real e verificado manualmente em Diretório de recursos.",
   "adminResourceSuggestions.filter.all": "Todas as categorias",
   "adminResourceSuggestions.category.legal_aid": "Apoio Jurídico",
   "adminResourceSuggestions.category.sexual_health_testing":
@@ -3887,6 +3962,19 @@ export const admin: Catalog = {
   "adminResourceSuggestions.row.by": "Sugerido por {name}",
   "adminResourceSuggestions.row.sent": "Enviado a {date}",
   "adminResourceSuggestions.unknownMember": "Um membro",
+  // PRD-269: ver a nota no catálogo EN.
+  "adminResourceSuggestions.approve.eyebrow": "Aprovar e publicar",
+  "adminResourceSuggestions.approve.title":
+    "Revê a ficha antes de ficar visível",
+  "adminResourceSuggestions.approve.body":
+    "Aprovar publica {name} no diretório público de imediato. Confirma cada campo primeiro: estes dados foram escritos de memória por um membro e ninguém os verificou.",
+  "adminResourceSuggestions.approve.confirmCta": "Aprovar e publicar",
+  "adminResourceSuggestions.approve.noteLabel": "Nota para o membro",
+  "adminResourceSuggestions.approve.notePlaceholder":
+    "Opcional. Quem sugeriu isto vai ler.",
+  "adminResourceSuggestions.approve.contactRequired":
+    "Adiciona um telefone, um email ou um site. Uma ficha que ninguém consegue contactar não vale a pena publicar.",
+  "adminResourceSuggestions.publishedChip": "No diretório",
   "adminResourceSuggestions.empty": "Ainda não há sugestões.",
   "adminResourceSuggestions.error": "Não foi possível carregar as sugestões.",
   "adminResourceSuggestions.loadMore": "Carregar mais",
@@ -3974,6 +4062,21 @@ export const admin: Catalog = {
   "governance.overview.edit.noChanges": "Nada foi alterado.",
   "governance.overview.edit.error":
     "Não foi possível guardar. Tenta novamente.",
+  // PRD-265: ver a nota no catálogo EN.
+  "governance.overview.edit.textEn": "{label}, inglês",
+  "governance.overview.edit.textPt": "{label}, português",
+  "governance.overview.edit.restoreSeeded": "Repor uma entrada do pacote",
+  "governance.overview.edit.needsBothLanguages":
+    "Preenche o inglês e o português em todas as entradas que escreveste. Nada aqui é traduzido depois.",
+  "governance.overview.decisions.addDecision": "Adicionar uma decisão",
+  "governance.overview.decisions.newEntry": "Nova decisão",
+  "governance.overview.decisions.field.lead": "Decisão",
+  "governance.overview.decisions.field.body": "O que aconteceu",
+  "governance.overview.principles.addPrinciple": "Adicionar um princípio",
+  "governance.overview.principles.newEntry": "Novo princípio",
+  "governance.overview.principles.field.titleText": "Princípio",
+  "governance.overview.principles.field.bodyText": "O que significa",
+  "governance.overview.council.newSeat": "Novo lugar",
   "governance.overview.health.title": "Saúde da <em>comunidade</em>",
   "governance.overview.health.sub":
     "Os números da página pública de Governação, na ordem em que as pessoas os veem. As pessoas ativas são contadas em direto e não se escrevem aqui.",
@@ -4274,6 +4377,57 @@ export const admin: Catalog = {
   "topics.delete.confirmCta": "Eliminar tópico",
 
   // ── Consola de guias de recursos (CON-08 / CON-09) ──────────────────────
+  // ── PRD-264: consola do glossário ───────────────────────────────────────
+  // Ver a nota no catálogo EN.
+  "adminGlossary.title": "O <em>glossário</em>",
+  "adminGlossary.guidesBreadcrumb": "Guias de recursos",
+  "adminGlossary.header.eyebrow": "Editorial",
+  "adminGlossary.header.sub":
+    "Todos os termos que as pessoas leem, dos mais antigos primeiro. Acrescenta uma palavra, corrige uma definição e termina o português: um termo sem português mostra na mesma o inglês, por isso a falha não se vê de fora.",
+  "adminGlossary.searchLabel": "Pesquisar termos",
+  "adminGlossary.searchPlaceholder": "Termo, slug ou categoria",
+  "adminGlossary.newTermCta": "Adicionar um termo",
+  "adminGlossary.untranslatedBanner":
+    "{count} termos ainda não têm definição em português.",
+  "adminGlossary.empty":
+    "Ainda não há termos. Adiciona o primeiro, ou corre a migração de preenchimento.",
+  "adminGlossary.noMatches": "Nenhum termo corresponde a essa pesquisa.",
+  "adminGlossary.viewPublicGlossaryCta": "Abrir o glossário público",
+  "adminGlossary.loadError.title":
+    "Não conseguimos carregar o <em>glossário.</em>",
+  "adminGlossary.loadError.body":
+    "A lista de termos não chegou. Tenta outra vez daqui a um momento.",
+  "adminGlossary.row.noPortuguese": "Sem português",
+  "adminGlossary.editor.createTitle": "Adicionar um termo ao glossário",
+  "adminGlossary.editor.editTitle": "Editar este termo",
+  "adminGlossary.editor.createCta": "Adicionar termo",
+  "adminGlossary.editor.saveCta": "Guardar alterações",
+  "adminGlossary.field.term": "Termo",
+  "adminGlossary.field.slug": "Slug",
+  "adminGlossary.field.slugHint":
+    "Palavras em minúsculas ligadas por hífenes simples. É preenchido a partir do termo e não pode ser mudado depois, para que as ligações para este termo continuem a funcionar.",
+  "adminGlossary.field.category": "Categoria",
+  "adminGlossary.field.categoryHint":
+    "A etiqueta na página pública. Reutiliza uma categoria existente sempre que possível: uma nova aparece em inglês nas duas línguas até ser adicionada ao catálogo.",
+  "adminGlossary.field.definition": "Definição (inglês)",
+  "adminGlossary.field.definitionPt": "Definição (português)",
+  "adminGlossary.field.definitionPtHint":
+    "Se ficar vazia, a página mostra a definição em inglês a quem lê em português sem o dizer.",
+  "adminGlossary.review.title": "Marcar este termo como revisto",
+  "adminGlossary.review.body":
+    "Confirma que leste esta definição e que ela ainda se aplica: as palavras que as pessoas usam mesmo, o que abrange e o que não abrange, e se a comunidade já deixou o termo para trás.",
+  "adminGlossary.delete.title": "Apagar este termo?",
+  "adminGlossary.delete.body":
+    '"{term}" desaparece do glossário e de todas as páginas que lhe apontam. Não há como voltar atrás.',
+  "adminGlossary.delete.confirmCta": "Apagar termo",
+  "adminGlossary.toast.created": "{term} adicionado.",
+  "adminGlossary.toast.saved": "{term} guardado.",
+  "adminGlossary.toast.reviewed": "{term} marcado como revisto.",
+  "adminGlossary.toast.deleted": "{term} apagado.",
+  "adminGlossary.error.save": "Não foi possível guardar o termo.",
+  "adminGlossary.error.review": "Não foi possível registar a revisão.",
+  "adminGlossary.error.delete": "Não foi possível apagar o termo.",
+
   "adminResourceGuides.title": "Guias de <em>recursos</em>",
   "adminResourceGuides.header.eyebrow": "Editorial",
   "adminResourceGuides.header.sub":
@@ -4284,6 +4438,9 @@ export const admin: Catalog = {
   "adminResourceGuides.sort.updated": "Atualizados recentemente",
   "adminResourceGuides.staleBanner":
     "{count} guias nunca foram revistos por ninguém.",
+  // PRD-270: ver a nota no catálogo EN.
+  "adminResourceGuides.overdueBanner":
+    "{count} guias passaram a data de revisão.",
   "adminResourceGuides.empty":
     "Ainda não há guias. Assim que a migração de conteúdo correr, todos aparecem aqui.",
   "adminResourceGuides.viewPublicIndexCta": "Abrir o índice público de guias",
@@ -4332,7 +4489,7 @@ export const admin: Catalog = {
 
   "adminResourceGuides.review.title": "Marcar este guia como revisto",
   "adminResourceGuides.review.body":
-    "Confirme que leu este guia de ponta a ponta e que tudo continua correto: números de telefone, critérios de elegibilidade, horários de clínicas, referências legais.",
+    "Confirma que leste este guia de ponta a ponta e que tudo continua correto: números de telefone, critérios de elegibilidade, horários de clínicas, referências legais.",
   "adminResourceGuides.review.reviewedByLabel": "Revisto por",
   "adminResourceGuides.review.reviewedByHint": "Uma pessoa ou uma equipa",
   "adminResourceGuides.review.reviewedOnLabel": "Revisto a",
@@ -4515,12 +4672,12 @@ export const admin: Catalog = {
   "moderation.templates.delete.confirmCta": "Eliminar resposta",
   "moderation.templates.delete.title": 'Eliminar "{label}"?',
   "moderation.templates.empty":
-    "Ainda não há respostas guardadas. Adicione uma e aparece já no painel do relatório.",
+    "Ainda não há respostas guardadas. Adiciona uma e aparece já no painel do relatório.",
   "moderation.templates.eyebrow": "Moderação",
   "moderation.templates.form.actionField": "Ação a que se adequa",
   "moderation.templates.form.bodyField": "O que o membro lê",
   "moderation.templates.form.bodyHint":
-    "Pode usar {tokens}. São preenchidos antes de o moderador enviar a nota, e o moderador pode na mesma editar o resultado.",
+    "Podes usar {tokens}. São preenchidos antes de o moderador enviar a nota, e o moderador pode na mesma editar o resultado.",
   "moderation.templates.form.createCta": "Adicionar resposta",
   "moderation.templates.form.createTitle": "Nova resposta guardada",
   "moderation.templates.form.editTitle": "Editar resposta guardada",
@@ -4985,6 +5142,11 @@ export const admin: Catalog = {
   "moderationHealth.queue.changemaker_nominations":
     "Nomeações de agentes de mudança",
   "moderationHealth.queue.roadmap_ideas": "Ideias de membros",
+  "moderationHealth.queue.guide_reviews": "Revisões de guias",
+  "moderationHealth.queue.ban_evasion_escalations":
+    "Escalonamentos de evasão a bloqueio",
+  "moderationHealth.queue.community_owner_review_requests":
+    "Pedidos de revisão de dono",
 
   // Qual dos três eixos disparou, dito pelo que significa e não pelo nome do
   // campo.
@@ -5048,7 +5210,7 @@ export const admin: Catalog = {
   "moderationHealth.notification.ok.text_other":
     "{queue} voltou ao normal, com {count} itens à espera.",
   "moderationHealth.notification.ok.meta":
-    "Nada a fazer. Obrigada por a teres despachado.",
+    "Nada a fazer. Obrigade por a teres despachado.",
   "moderationHealth.notification.overdueToken_one": "{value} fora do prazo",
   "moderationHealth.notification.overdueToken_other": "{value} fora do prazo",
   "moderationHealth.notification.oldestToken_one": "{value} hora",
@@ -5417,4 +5579,63 @@ export const admin: Catalog = {
   "moderation.reportDrawer.photoEvidence.uploadedAt":
     "Publicada no album a {date}",
   "moderation.reportDrawer.photoEvidence.fullSizeCta": "Abrir em tamanho real",
+
+  // ── PRD-282, the staff triage console (`AdminQueuesPage`) ──────────────
+  // The three "null" cells below are three different sentences on purpose and
+  // must stay that way. `cell.noDeadline` is a queue that never promised
+  // anything, so calling it "on time" would invent a promise; `cell.onTime` is
+  // a queue with a real clock and nothing late; `cell.notTracked` is a queue
+  // that keeps no record of what has been worked, and must never drift towards
+  // "nothing waiting". The queue NAMES are not here: they reuse the existing
+  // `moderationHealth.queue.*` block, because two hand-curated lists mirroring
+  // one taxonomy drift apart silently.
+  "adminQueues.title": "O que está à <em>espera</em>",
+  "adminQueues.header.eyebrow": "Triagem",
+  "adminQueues.header.title": "O que está à <em>espera</em>",
+  "adminQueues.header.sub":
+    "Todas as filas em que podes trabalhar, num só ecrã, com a coisa mais antiga à espera em cada uma.",
+  "adminQueues.asOf": "Contado às {time}",
+  "adminQueues.refresh": "Atualizar",
+  "adminQueues.refreshing": "A atualizar",
+  "adminQueues.verdict.overdueTitle": "Há coisas fora do prazo",
+  "adminQueues.verdict.overdueBody":
+    "Começa pelas linhas marcadas como fora do prazo em baixo. Cada uma é uma promessa que a plataforma já fez.",
+  "adminQueues.verdict.clearTitle": "Nada está fora do prazo",
+  "adminQueues.verdict.clearBody":
+    "Todas as filas com prazo estão dentro dele. O que está em baixo continua à tua espera.",
+  "adminQueues.verdict.heroLabel_one": "coisa fora do prazo",
+  "adminQueues.verdict.heroLabel_other": "coisas fora do prazo",
+  "adminQueues.stat.waiting": "À espera de nós",
+  "adminQueues.stat.queuesWithWork": "Filas com trabalho",
+  "adminQueues.stat.queuesWithWorkNote": "de {total} em que podes trabalhar",
+  "adminQueues.stat.untracked": "Impossíveis de contar",
+  "adminQueues.stat.untrackedNote":
+    "Estas filas não guardam registo do que já foi tratado.",
+  "adminQueues.table.caption": "Filas com algo à espera",
+  "adminQueues.table.queue": "Fila",
+  "adminQueues.table.waiting": "À espera",
+  "adminQueues.table.oldest": "Espera mais antiga",
+  "adminQueues.table.deadline": "Prazo",
+  "adminQueues.cell.notTracked": "Sem registo",
+  "adminQueues.cell.noDeadline": "Sem prazo",
+  "adminQueues.cell.onTime": "Dentro do prazo",
+  "adminQueues.cell.overdue_one": "{count} fora do prazo",
+  "adminQueues.cell.overdue_other": "{count} fora do prazo",
+  "adminQueues.age.hours_one": "{count} hora",
+  "adminQueues.age.hours_other": "{count} horas",
+  "adminQueues.age.days_one": "{count} dia",
+  "adminQueues.age.days_other": "{count} dias",
+  "adminQueues.clear.summary_one": "{count} fila está vazia",
+  "adminQueues.clear.summary_other": "{count} filas estão vazias",
+  "adminQueues.deskClear.title": "A tua secretária está limpa",
+  "adminQueues.deskClear.body_one":
+    "Nada está à espera na fila em que trabalhas.",
+  "adminQueues.deskClear.body_other":
+    "Nada está à espera em nenhuma das {count} filas em que trabalhas.",
+  "adminQueues.noQueues.title": "Ainda não tens filas",
+  "adminQueues.noQueues.body":
+    "A tua conta não chega a nenhuma fila de equipa neste momento. Pede a um admin a permissão que cobre o trabalho que fazes.",
+  "adminQueues.error.title": "Não conseguimos ler as contagens",
+  "adminQueues.error.body":
+    "Tenta outra vez. Se continuar a falhar, abre as filas diretamente: o que falta aqui são só as contagens.",
 };

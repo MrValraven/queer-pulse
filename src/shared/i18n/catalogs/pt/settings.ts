@@ -243,6 +243,10 @@ export const settings: Catalog = {
   "notifications.volume.topicFollows.title": "Temas que segues",
   "notifications.volume.topicFollows.desc":
     "Novas publicações num tema que escolheste seguir",
+  // PRD-208. Paralelo a topicFollows acima, ver a nota no catálogo EN.
+  "notifications.volume.personaFollows.title": "Personas que segues",
+  "notifications.volume.personaFollows.desc":
+    "Trabalho novo de uma persona que escolheste seguir",
   "notifications.volume.recognition.title": "Reconhecimento",
   "notifications.volume.recognition.desc":
     "Níveis, distintivos, apoios, créditos e novos seguidores",
@@ -938,23 +942,15 @@ export const settings: Catalog = {
 
   // ── SaveButton.tsx — controlo de guardar reutilizável ────────────────────
 
-  // ── AccessibilityPreferencesPage.tsx + Sections — a página completa de
-  // acessibilidade. Só a Redução de movimento é funcional; o resto são
-  // etiquetas em interruptores não funcionais — só as etiquetas são traduzidas.
+  // ── AccessibilityPrefSections.tsx — as linhas do painel de acessibilidade.
+  // Todas funcionam. O PRD-307 removeu as sete que estavam marcadas como em
+  // breve e inertes, e construiu o cursor do tamanho do texto.
   "a11y.instantSaveHint": "Guardado neste dispositivo assim que o alteras.",
   "a11y.section.display.eyebrow": "Visualização",
   "a11y.section.display.desc":
-    "Estas definições aplicam-se a toda a plataforma.",
-  "a11y.toggle.highContrast.title": "Modo de alto contraste",
-  "a11y.toggle.highContrast.desc":
-    "Aumenta o contraste de cor para melhor legibilidade. Afeta texto, contornos e anéis de foco.",
-  "a11y.toggle.largerText.title": "Aumentar o tamanho do texto",
-  "a11y.toggle.largerText.desc":
-    "Torna o texto do corpo ligeiramente maior em todas as páginas.",
-  "a11y.toggle.dyslexia.title": "Tipo de letra para dislexia",
-  "a11y.toggle.dyslexia.desc":
-    "Maior espaçamento entre letras e altura de linha aumentada para melhor legibilidade.",
+    "O tamanho do texto aplica-se a toda a plataforma e cresce ao mesmo tempo em títulos, etiquetas e parágrafos.",
   "a11y.textSize.label": "Tamanho do texto",
+  "a11y.textSize.value": "{percent}%",
   "a11y.textSize.preview":
     "A raposa castanha atravessou o Príncipe Real e encontrou uma comunidade à espera do outro lado.",
   "a11y.section.motion.eyebrow": "Movimento",
@@ -963,35 +959,21 @@ export const settings: Catalog = {
   "a11y.toggle.reduceMotion.title": "Reduzir movimento",
   "a11y.toggle.reduceMotion.desc":
     "Desativa animações, transições e efeitos de pulsação em toda a plataforma.",
-  "a11y.toggle.pauseDecorative.title": "Pausar animações decorativas",
-  "a11y.toggle.pauseDecorative.desc":
-    "Impede que orbes de fundo, pontos pulsantes e indicadores de carregamento animem.",
   "a11y.preview.liveLabel": "Pré-visualização em direto",
   "a11y.preview.cardText":
     "Este cartão anima ao carregar. Muda as definições de movimento para veres o efeito.",
   "a11y.section.reading.eyebrow": "Leitura",
   "a11y.section.reading.desc":
     "Ajusta a forma como o conteúdo é apresentado para uma leitura confortável.",
-  "a11y.toggle.wideSpacing.title": "Espaçamento entre linhas mais amplo",
+  "a11y.toggle.wideSpacing.title": "Abrir o espaçamento do texto",
   "a11y.toggle.wideSpacing.desc":
-    "Aumenta o espaço entre linhas de texto (altura de linha: 2.0).",
-  "a11y.toggle.focusRings.title": "Mostrar indicadores de foco",
+    "Acrescenta espaço entre linhas, letras, palavras e parágrafos, no corpo do texto, nas listas e nas citações.",
+  "a11y.toggle.focusRings.title": "Mostrar sempre o anel de foco",
   "a11y.toggle.focusRings.desc":
-    "Adiciona anéis de foco do teclado visíveis em todos os elementos interativos.",
-  "a11y.colorTheme.label": "Tema de cor",
-  "a11y.colorTheme.headingLabel": "Estilo de cor dos títulos",
-  "a11y.colorTheme.default": "Predefinido",
-  "a11y.colorTheme.softer": "Suave",
-  "a11y.colorTheme.highContrast": "Alto contraste",
+    "Marca o elemento onde estás depois de cada clique, toque e tecla. Normalmente o anel aparece só quando a plataforma lê a tua interação como navegação por teclado.",
   "a11y.section.interaction.eyebrow": "Interação",
   "a11y.section.interaction.desc":
     "Ajusta a forma como interages com a plataforma.",
-  "a11y.toggle.largeTargets.title": "Alvos de toque maiores",
-  "a11y.toggle.largeTargets.desc":
-    "Aumenta o tamanho mínimo de botões e ligações para facilitar a interação por toque.",
-  "a11y.toggle.stickyNav.title": "Navegação fixa",
-  "a11y.toggle.stickyNav.desc":
-    "Mantém a barra de navegação sempre visível ao percorreres a página.",
   "a11y.toggle.skipLink.title": "Ligação para saltar para o conteúdo",
   "a11y.toggle.skipLink.desc":
     "Ligado por predefinição. Pressiona Tab e aparece no topo uma ligação «Saltar para o conteúdo principal», para passares a navegação de uma vez. Desligar remove esse atalho. A ligação fica escondida até receber foco, por isso deixá-la ligada não te custa nada.",
@@ -1118,17 +1100,13 @@ export const settings: Catalog = {
   "themeStudio.directoryHint":
     "É assim que o teu perfil aparece nos resultados de pesquisa e no diretório de pessoas.",
   "themeStudio.memberSince": "Lisboa · Aqui desde {year}",
-  "themeStudio.levelPreview": "Nív.4 · Familiar",
+  // Ver a nota no catálogo EN.
+  "themeStudio.levelPreview": "Nív.{level} · {name}",
   "themeStudio.cover.stripe": "Risca arrojada",
   "themeStudio.pattern.none": "Liso",
   "themeStudio.pattern.stripe": "Riscas diagonais",
   "themeStudio.pattern.dots": "Grelha de pontos",
   "themeStudio.pattern.grid": "Grelha",
-  "themeStudio.badge.foundingMember": "Pessoa Fundadora (Lendário)",
-  "themeStudio.badge.eventHost": "Organiza Encontros (Lendário)",
-  "themeStudio.badge.sustainer": "Apoiante (Raro)",
-  "themeStudio.badge.regular": "Regular (Raro)",
-  "themeStudio.badge.vouch": "Voto de confiança (Raro)",
 
   // ── AccountDataSheet.tsx — o painel "Os teus dados" do perfil, que agora
   // encaminha para a página que trata de cada ação em vez de construir uma
@@ -1166,6 +1144,8 @@ export const settings: Catalog = {
     "Candidata uma organização a parceira, propõe uma troca na bolsa de competências ou sugere uma entrada para o diretório de recursos, e passa a aparecer aqui com a respetiva resposta.",
   "mySubmissions.row.sentOn": "Enviado a {date}",
   "mySubmissions.row.decidedOn": "Respondido a {date}",
+  // PRD-263: ver a nota no catálogo EN.
+  "mySubmissions.partner.manageProfileCta": "Gerir o perfil da tua organização",
   "mySubmissions.partner.heading": "Candidaturas a parceria",
   "mySubmissions.partner.kind": "Candidatura a parceria",
   "mySubmissions.partner.status.pending": "Com a equipa de parcerias",
@@ -1215,4 +1195,29 @@ export const settings: Catalog = {
     "Não conseguimos carregar as tuas sugestões de recursos",
   "mySubmissions.resource.error.description":
     "O resto desta página continua a funcionar. Tenta esta secção outra vez.",
+
+  // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
+  // PRD-186 — ver a nota no catálogo EN.
+  "notifications.reminderLead.title": "Lembra-me",
+  "notifications.reminderLead.desc":
+    "Quanto tempo antes de um encontro começar. Só se aplica com os lembretes ligados.",
+  "notifications.reminderLead.option.60": "Uma hora antes",
+  "notifications.reminderLead.option.1440": "Um dia antes",
+  "notifications.reminderLead.option.10080": "Uma semana antes",
+
+  // ── Deep-scan section 12 (PRD-308), built 2026-09-06 ──────────────────────
+  // SessionsPage.tsx — ver a nota no catálogo EN. "Nos outros dispositivos" e
+  // "em todo o lado" têm de se ler como dois atos diferentes, porque quem
+  // procura este controlo costuma estar assustade.
+  "sessions.bulk.signOutOthers": "Terminar sessão nos outros dispositivos",
+  "sessions.bulk.signOutEverywhere": "Terminar sessão em todo o lado",
+  "sessions.everywhere.confirmTitle":
+    "Terminar sessão em todos os dispositivos?",
+  "sessions.everywhere.confirmBody":
+    "Isto termina todas as sessões da tua conta, incluindo a deste dispositivo, por isso a tua sessão aqui termina assim que confirmares. Volta a iniciar sessão com a tua conta Google quando quiseres. Não se apaga nada da tua conta.",
+  "sessions.everywhere.confirmCta": "Terminar sessão em todo o lado",
+  "sessions.toast.signedOutEverywhere":
+    "Sessão terminada em todos os dispositivos",
+  "sessions.toast.signedOutEverywhereError":
+    "Não conseguimos terminar a sessão em todo o lado neste momento. Continuas com sessão iniciada, por isso tenta novamente.",
 };

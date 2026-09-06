@@ -126,7 +126,7 @@ export function StepCommunities({ onNext, onBack, stepLabel }: StepProps) {
           components={{ em: <em /> }}
         />
       </div>
-      <div className={styles.p} style={{ marginBottom: 20 }}>
+      <div className={`${styles.p} ${styles.pTight}`}>
         {t("auth:onboarding.stepCommunities.body")}
       </div>
       {isLoading ? (

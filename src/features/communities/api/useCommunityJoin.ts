@@ -10,6 +10,7 @@ import {
   getCommunityRules,
   joinCommunityWithRules,
   triageJoinRequest,
+  withdrawMyJoinRequest,
   type JoinCommunityPayload,
   type JoinResultDTO,
   type TriageJoinRequestPayload,
@@ -110,6 +111,39 @@ export function useJoinCommunityWithRules(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+    },
+  });
+}
+
+/**
+ * `DELETE /communities/:slug/join-requests/mine` (PRD-148) — withdraw the
+ * caller's own pending request.
+ *
+ * The hero's "Requested" button used to be a disabled label with no way out:
+ * an applicant who changed their mind, or who asked the wrong community, could
+ * only wait for a decision. Withdrawing before a decision also keeps a
+ * `not_now`/`not_a_fit` decline (and its 30 or 180 day reapply lock) from ever
+ * being written, which is the part that actually costs the member something.
+ *
+ * Demo mode is a no-op: the mock membership provider has no primitive for
+ * taking a pending request back, and the affordance is gated to live mode so
+ * the prototype's behaviour is unchanged.
+ */
+export function useWithdrawJoinRequest(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, void>({
+    // The confirm dialog reports its own failure next to the action.
+    meta: { silentError: true },
+    mutationFn: async () => {
+      if (demoMode) return;
+      await withdrawMyJoinRequest(slug);
+    },
+    onSuccess: () => {
+      // The detail DTO carries `myJoinRequestStatus`, which is what flips the
+      // hero back to "Ask to join"; the community's own queue drops the row.
+      void queryClient.invalidateQueries({ queryKey: ["community", slug] });
+      void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
     },
   });
 }

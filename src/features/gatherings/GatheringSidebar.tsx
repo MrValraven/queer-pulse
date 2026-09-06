@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiLock } from "react-icons/fi";
+import { FiLock, FiVideo } from "react-icons/fi";
 import { Avatar, type AvatarTint } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -8,6 +8,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
 import { GatheringRsvpControl } from "./GatheringRsvpControl";
+import type { GatheringRsvpState } from "./useGatheringRsvp";
 import { eventZoneFormat } from "./eventTimezone";
 import { spotsText, type GatheringDetail } from "./data";
 import styles from "./GatheringPage.module.css";
@@ -75,10 +76,14 @@ export function GatheringSidebar({
   gathering,
   connected,
   contact,
+  rsvp,
 }: {
   gathering: GatheringDetail;
   connected: boolean;
   contact: ContactAction;
+  /** The page's single RSVP state machine, shared with the hero's button so
+   *  the two can never disagree — see `GatheringDetailBody`. */
+  rsvp: GatheringRsvpState;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -160,17 +165,26 @@ export function GatheringSidebar({
         gathering={gathering}
         connected={connected}
         contact={contact}
+        rsvp={rsvp}
       />
 
+      {/* An online gathering has no door to reveal, so it says what it
+          actually withholds: the join link, on the same gate (PRD-182). This
+          row used to promise every reader "the exact location is shared once
+          you RSVP" even when there was no location to share. */}
       <div className={styles.locReveal}>
         <div className={styles.locHead}>
           <span className={styles.locIcon} aria-hidden>
-            <FiLock />
+            {gathering.isOnline ? <FiVideo /> : <FiLock />}
           </span>
           <div>
             <div className={styles.locHood}>{gathering.hood}</div>
             <div className={styles.locNote}>
-              {t("gatherings:gathering.locationNote")}
+              {t(
+                gathering.isOnline
+                  ? "gatherings:gathering.joinLinkNote"
+                  : "gatherings:gathering.locationNote",
+              )}
             </div>
           </div>
         </div>

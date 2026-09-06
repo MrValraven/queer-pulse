@@ -4,6 +4,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import {
   patchConversationFavorite,
+  patchConversationMarkedUnread,
   patchConversationMuted,
   patchConversationPinned,
 } from "../../../shared/api/messageCache";
@@ -197,6 +198,54 @@ export function useToggleArchive() {
         queryClient,
         conversationId,
         archived ? undefined : new Date().toISOString(),
+      );
+      if (!demoMode) {
+        void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      }
+    },
+  });
+}
+
+export interface ToggleMarkUnreadInput {
+  conversationId: string;
+  /** Whether this chat is currently manually marked unread — decides
+   *  mark-unread vs. clear. Always `false` when called from the row menu
+   *  (there's no "mark read" entry — reopening the thread is what clears it,
+   *  via `useMarkRead`/`patchConversationRead`), but kept symmetric with the
+   *  other toggles here for the same optimistic-patch shape. */
+  markedUnread: boolean;
+}
+
+/**
+ * Mark/unmark a chat unread from the row menu (PRD-225) — a WhatsApp/
+ * Telegram/Signal-style "come back to this" flag. Mirrors `useToggleArchive`
+ * exactly: live mode PATCHes `/conversations/:id`, demo mode writes through
+ * to `conversationPrefs.ts`. Deliberately does NOT touch `unreadCount` or the
+ * read watermark — only `ConversationsService.markRead` (a genuine re-open)
+ * ever clears this, so the row can't silently flip back to "read" on its own
+ * re-render.
+ */
+export function useToggleMarkUnread() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, ToggleMarkUnreadInput>({
+    mutationFn: async ({ conversationId, markedUnread }) => {
+      if (demoMode) {
+        writeConversationPrefOverride(conversationId, {
+          markedUnreadAt: markedUnread ? undefined : new Date().toISOString(),
+        });
+        return;
+      }
+      await updateConversationPrefs(conversationId, {
+        markUnread: !markedUnread,
+      });
+    },
+    onSuccess: (_result, { conversationId, markedUnread }) => {
+      patchConversationMarkedUnread(
+        queryClient,
+        conversationId,
+        markedUnread ? undefined : new Date().toISOString(),
       );
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });

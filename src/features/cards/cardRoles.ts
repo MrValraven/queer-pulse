@@ -20,7 +20,18 @@ const ROLE_LABEL_KEY = {
 /**
  * The label key for the role string that arrived on a card DTO. The wire type
  * is `string`, so an unrecognised value falls back to `member`: a card is read
- * at a door, and the smallest claim is the safe one to print.
+ * at a door, and the smallest claim is the safe one to print. The fallback is
+ * the guarantee that no card surface can ever render a raw `cards:role.…` key
+ * to a stranger, which is why every card face must route through here instead
+ * of interpolating the wire value into a key by hand.
+ *
+ * The full set the backend can emit is `RosterRole` in
+ * `queerpulse-backend/src/communities/entities/community-member.entity.ts`:
+ * `owner`, `co_owner`, `mod`, `member`. All three places that put a role on a
+ * card DTO read that enum and default to `'member'` when the holder has no
+ * roster row (`card-verification.service.ts`, `card-holders.service.ts`,
+ * `my-cards.service.ts`), so the map below is complete rather than merely
+ * broad, and `satisfies` keeps it that way.
  */
 export function cardRoleLabelKey(role: string): string {
   return (

@@ -71,6 +71,13 @@ export function CommunityCardPreview({
       countLabel={countLabel}
       activeThisWeek={activeThisWeek}
       coverImageUrl={draft.coverImageUrl || undefined}
+      /* The mark the owner is choosing right now. Renderable here for the same
+         reason the cover beside it is: the edit modal seeds its draft from the
+         detail DTO's already-resolved URLs and `ImageUploadField` hands back a
+         resolved one. (The founding wizard's own preview cannot do this — there
+         `draft.avatarImageUrl` is still a private storage key, which is why
+         `StartCommunityPreview` takes a separate `avatarPreviewUrl`.) */
+      avatarImageUrl={draft.avatarImageUrl || undefined}
       tags={draft.tags}
       roster={roster}
       className={isPrivate ? styles.privateCard : undefined}

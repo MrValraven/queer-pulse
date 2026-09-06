@@ -2,6 +2,10 @@ interface SavedLabelState {
   isSavePending: boolean;
   isSaveError: boolean;
   isDirty: boolean;
+  /** ENG-111. The draft moved on underneath this tab and autosave has
+   *  stopped. Outranks every other state: while it holds, nothing this editor
+   *  types is being written anywhere. */
+  hasSaveConflict: boolean;
 }
 
 /**
@@ -16,7 +20,9 @@ export function savedLabelKey({
   isSavePending,
   isSaveError,
   isDirty,
+  hasSaveConflict,
 }: SavedLabelState): string {
+  if (hasSaveConflict) return "magazine:write.header.savedConflict";
   if (isSavePending) return "magazine:write.header.savedSaving";
   if (isSaveError) return "magazine:write.header.savedError";
   if (isDirty) return "magazine:write.header.savedUnsaved";

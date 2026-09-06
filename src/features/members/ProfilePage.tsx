@@ -9,14 +9,15 @@ import { useMediaQuery } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { currentUserSlug } from "./data/memberProfiles";
 import { isMemberMissingError, useMemberProfile } from "./api/useMemberProfile";
-import { ProfileBelowHeroSections } from "./ProfileBelowHeroSections";
+import { profileBelowHeroNodes } from "./ProfileBelowHeroGroup";
 import { ProfileLayoutSwitch } from "./ProfileLayoutSwitch";
 import { ProfileBackBar, ProfilePreviewBanner } from "./ProfilePageChrome";
-import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
 import { ProfileEditBar } from "./ProfileEditBar";
 import { ProfileInviteCard } from "./ProfileInviteCard";
-import { WhoSeesWhatSheet } from "./WhoSeesWhatSheet";
-import { AccountDataSheet } from "./AccountDataSheet";
+import { ProfileLimitedNote } from "./ProfileLimitedNote";
+import { ProfileMovedNote } from "./ProfileMovedNote";
+import { ProfileOwnerSheets } from "./ProfileOwnerSheets";
+import { useMovedHandleRedirect } from "./useMovedHandleRedirect";
 import { useProfileEditGuard } from "./useProfileEditGuard";
 import { useProfilePageSheets } from "./useProfilePageSheets";
 import {
@@ -77,6 +78,13 @@ export function ProfilePage() {
     error: otherMemberError,
     refetch: refetchOtherMember,
   } = useMemberProfile(isSelf ? undefined : slug);
+  // PRD-204 — a username its owner renamed away from still forwards to them for
+  // the reclaim cooldown. Called on every render so the guard below can hold the
+  // page back while the forwarding navigation runs from its effect.
+  const isRedirectingToMovedSlug = useMovedHandleRedirect(
+    slug,
+    otherMemberError,
+  );
   const otherMember = data?.member ?? null;
   const limited = data?.limited ?? false;
 
@@ -96,6 +104,10 @@ export function ProfilePage() {
   }
   if (!isSelf && isLoading) return <ProfileLoadingState />;
   if (blocked) return <ProfileBlockedState />;
+  // The order here is the contract. A forwarded username must never flash the
+  // "no such member" wall on its way through, so this sits ABOVE both branches
+  // below, which would otherwise both claim a PROFILE_MOVED 404 as an absence.
+  if (isRedirectingToMovedSlug) return <ProfileLoadingState />;
   // A 5xx, a timeout or an offline browser is an outage, not an absence. It
   // used to fall through to the "no such member" wall, which reads as "this
   // person left" and offers no retry, so a transient failure sent people away
@@ -110,9 +122,9 @@ export function ProfilePage() {
   if (!isSelf && !otherMember) return <ProfileNotFoundState />;
 
   // Non-null by the guards above: isSelf → liveProfile (ProfileProvider always
-  // has one), !isSelf → otherMember. `limited` needs no prop: the adapter has
-  // already zeroed out bio/work/openTo for a limited card.
-  void limited;
+  // has one), !isSelf → otherMember. The adapter has already zeroed out
+  // bio/work/openTo for a limited card, so the sections below render empty and
+  // `ProfileLimitedNote` says whose choice that was (PRD-203).
   const resolvedProfile = profile!;
 
   // Mobile Instagram-style layout applies to both the view and edit states —
@@ -130,50 +142,22 @@ export function ProfilePage() {
   // cycle can never trip it.
   const toggleHidden = () => sheets.toggleHidden(resolvedProfile.hiddenUntil);
 
-  // The work/board/skills/groups + communities + places sections, excluding
-  // "Also working as" — desktop read-mode renders that section separately,
-  // full-width, between the two rail grids (see below).
-  const restBelowHero = (
-    <ProfileBelowHeroSections
-      profile={resolvedProfile}
-      isSelf={isSelf}
-      selfView={selfView}
-      previewing={previewing}
-      otherMember={isSelf ? null : otherMember}
-      ownerSlug={ownerSlug}
-      edit={
-        selfView && isEditing
-          ? {
-              work: draft.work,
-              skills: draft.skills,
-              groups: draft.groups,
-              board: draft.board,
-              shapings: draft.shapings,
-              update: (patch) => updateDraft(patch),
-            }
-          : undefined
-      }
-    />
-  );
-
-  // Shared below-hero sections — rendered after the hero on both the phone-
-  // width edit layout and the desktop edit layout. Neither has the rail
-  // grid, so "Also working as" stays inline with the rest here (desktop
-  // read-mode below breaks it out separately).
-  const belowHero = (
-    <>
-      <ProfileSubprofilesSection
-        ownerSlug={ownerSlug}
-        isSelf={selfView}
-        previewing={isSelf && previewing}
-      />
-      {restBelowHero}
-    </>
-  );
+  const { restBelowHero, belowHero } = profileBelowHeroNodes({
+    profile: resolvedProfile,
+    isSelf,
+    selfView,
+    previewing,
+    isEditing,
+    otherMember: isSelf ? null : otherMember,
+    ownerSlug,
+    draft,
+    updateDraft,
+  });
 
   return (
     <PageShell>
       <ProfileBackBar />
+      <ProfileMovedNote />
 
       <ProfileLayoutSwitch
         profile={resolvedProfile}
@@ -198,6 +182,18 @@ export function ProfilePage() {
         onToggleHidden={toggleHidden}
       />
 
+      {/* PRD-203 — a limited card is a hero and then nothing, which reads as
+          an abandoned account until something says whose choice it was. Sits
+          right under the hero because everything after it is empty here, and
+          never appears in demo, where `limited` is always false. */}
+      {!isSelf && limited && otherMember && (
+        <ProfileLimitedNote
+          slug={otherMember.slug}
+          firstName={otherMember.first}
+          visibility={otherMember.visibility}
+        />
+      )}
+
       {/* ACQ-08 — owner-only, and last on the page so it pushes nothing down.
           Hidden while editing (the sticky save bar owns the foot of the screen
           then) and silent unless there are invites actually left to give. */}
@@ -209,21 +205,7 @@ export function ProfilePage() {
         <ProfilePreviewBanner onExit={() => setPreviewing(false)} />
       )}
 
-      {/* Owner sheets — `SideSheet` already portals to `document.body`, so
-          placement here doesn't matter for layout. Both are opened from
-          `ProfileSettingsMenu`, which the desktop hero and the mobile header
-          each render for the owner; the `!useMobileLayout` guard that used to
-          sit here was what made every setting inside them unreachable on a
-          phone. */}
-      {sheets.isWhoSeesWhatOpen && (
-        <WhoSeesWhatSheet onClose={sheets.closeWhoSeesWhat} />
-      )}
-      {sheets.isAccountDataOpen && (
-        <AccountDataSheet
-          onClose={sheets.closeAccountData}
-          ownerSlug={ownerSlug}
-        />
-      )}
+      <ProfileOwnerSheets sheets={sheets} ownerSlug={ownerSlug} />
     </PageShell>
   );
 }

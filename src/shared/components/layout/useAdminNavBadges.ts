@@ -1,3 +1,6 @@
+import { useAuth } from "../../../app/providers/authContext";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useAdminOverview } from "../../../features/admin/api/useAdminOverview";
 import { useModReports } from "../../../features/admin/api/useModReports";
 import { useJoinRequests } from "../../../features/admin/api/useJoinRequests";
 import { usePartnerApplications } from "../../../features/marketing/api/usePartnerApplications";
@@ -11,7 +14,40 @@ import type { AdminNavBadgeCounts } from "./AdminNavGroup";
  * network just to render the sidebar.
  */
 export function useAdminNavBadges(): AdminNavBadgeCounts {
-  const modReports = useModReports();
+  // ENG-180: for an admin the moderation badge reads the count
+  // `GET /admin/overview` already returns, through the same hook and the same
+  // query key the admin dashboard uses. It used to mount `useModReports()` for
+  // everyone, which on EVERY admin page fetched a hydrated first page of the
+  // open queue plus the whole resolved tab (reporter, reported, credibility
+  // and community lookups, and the moderation translate chunk) to render one
+  // number. On the dashboard this now costs nothing at all: the page mounts
+  // the identical query, so react-query serves both from one fetch. Elsewhere
+  // in the console it is one small aggregate response that then stays warm
+  // across admin routes.
+  //
+  // The two numbers are the same number: `ModerationService.computeCounts()`
+  // counts reports in status `open` or `escalated`, and `AdminOverviewService`
+  // builds `triage.openReports` from exactly that filter.
+  //
+  // THE ROLE SPLIT IS LOAD-BEARING. `/admin/overview` is `@Roles(Admin)`
+  // alone, while this rail also renders for a moderator (`AdminSidebar`'s
+  // `isFullConsole`) and for a grant holder. Pointing every viewer at the
+  // overview would 403 for a moderator on every admin page and quietly show
+  // them a zero on the queue they work daily. So a moderator keeps the
+  // `/mod/reports` source, which their role can read, and exactly one of the
+  // two queries is ever enabled.
+  const { role } = useAuth();
+  const { demoMode } = useDemoMode();
+  // Demo mode reads fixtures from both hooks and touches no network, so it
+  // takes the overview arm, matching `AdminSidebar`'s own `isAdmin`.
+  const hasAdminOverviewAccess = demoMode || role === "admin";
+  const overview = useAdminOverview({ isEnabled: hasAdminOverviewAccess });
+  const modReports = useModReports(
+    undefined,
+    "all",
+    undefined,
+    !hasAdminOverviewAccess,
+  );
   const joinRequests = useJoinRequests("pending");
   const partnerApplications = usePartnerApplications();
   // OPS-06: the cross-co-op join-request queue on /admin/housing. Same query
@@ -41,7 +77,9 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
     (verificationRequestsQuery.counts.appealing ?? 0);
 
   return {
-    moderation: modReports.data?.counts.open ?? 0,
+    moderation: hasAdminOverviewAccess
+      ? (overview.data?.triageCounts.openReports ?? 0)
+      : (modReports.data?.counts.open ?? 0),
     members: joinRequests.data?.length ?? 0,
     partnerships:
       partnerApplications.data?.filter((a) => a.status === "pending").length ??

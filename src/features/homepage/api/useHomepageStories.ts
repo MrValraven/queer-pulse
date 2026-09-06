@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import { useReaderLanguage } from "../../magazine/api/useReaderLanguage";
 import {
   getArticles,
   type ArticleListItemDTO,
@@ -38,11 +39,17 @@ export function useHomepageStories(): HomepageStoriesResult {
   const { loggedIn, checking } = useAuth();
   const isEnabled = !demoMode && loggedIn && !checking;
 
+  // PRD-110 — the same language the magazine's own lists send. Without it a
+  // Portuguese reader gets English headlines on the one screen everybody
+  // lands on, then Portuguese text after the click. It joins the query key
+  // because it changes WHICH rows come back, not just how they are formatted.
+  const readerLanguage = useReaderLanguage();
+
   const query = useQuery<ArticleListItemDTO[]>({
-    queryKey: ["homepage-stories"],
+    queryKey: ["homepage-stories", readerLanguage],
     enabled: isEnabled,
     queryFn: async () => {
-      const page = await getArticles({ page: 1 });
+      const page = await getArticles({ page: 1, lang: readerLanguage });
       return page.items;
     },
   });

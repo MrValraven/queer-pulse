@@ -14,12 +14,29 @@ export const LEGAL = routes.legal;
 export const FORUM = routes.forum;
 export const ARRIVING = routes.arriving;
 
+/**
+ * AIMA (Agência para a Integração, Migrações e Asilo) is the Portuguese body
+ * that took over from SEF in October 2023 and publishes the current residency
+ * requirements, including the income thresholds this page used to hardcode as
+ * euro amounts. Every money figure on the page is now a pointer here instead:
+ * the threshold is set against a minimum wage that is reset every year, so a
+ * number printed in this repo is wrong the moment the decree lands, and it is
+ * exactly the kind of number somebody sizes a real visa application on.
+ */
+export const AIMA = "https://aima.gov.pt";
+
 export interface InfoCard {
   eyebrowKey: string;
   titleKey: string;
   bodyKey: string;
   tag?: { labelKey: string; kind: "jade" | "accent" };
-  link?: { labelKey: string; href: string };
+  link?: {
+    labelKey: string;
+    href: string;
+    /** Leaves QueerPulse for an official source, so it renders as an anchor
+     *  rather than a router link. */
+    isExternal?: boolean;
+  };
 }
 export interface Step {
   titleKey: string;
@@ -123,6 +140,11 @@ export const TABS: Tab[] = [
         titleKey: "marketing:visas.tabs.d7.card1.title",
         bodyKey: "marketing:visas.tabs.d7.card1.body",
         tag: { labelKey: "marketing:visas.tabs.d7.card1.tag", kind: "accent" },
+        link: {
+          labelKey: "marketing:visas.tabs.d7.card1.link",
+          href: AIMA,
+          isExternal: true,
+        },
       },
       {
         eyebrowKey: "marketing:visas.tabs.d7.card2.eyebrow",
@@ -168,6 +190,11 @@ export const TABS: Tab[] = [
         titleKey: "marketing:visas.tabs.d8.card1.title",
         bodyKey: "marketing:visas.tabs.d8.card1.body",
         tag: { labelKey: "marketing:visas.tabs.d8.card1.tag", kind: "accent" },
+        link: {
+          labelKey: "marketing:visas.tabs.d8.card1.link",
+          href: AIMA,
+          isExternal: true,
+        },
       },
       {
         eyebrowKey: "marketing:visas.tabs.d8.card2.eyebrow",

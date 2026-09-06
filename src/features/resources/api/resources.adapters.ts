@@ -83,9 +83,13 @@ function deriveTypeKind(category: string | null): TypeKind {
  *
  *  The backend now persists a Portuguese definition (CON-08), so `defPt` is
  *  real whenever an editor has written one. Cross-reference `meta` links stay
- *  presentation-only and unpersisted, and the category chip's label is still
- *  the raw English category in live mode — both documented gaps rather than
- *  fabricated content. */
+ *  presentation-only and unpersisted, a documented gap rather than fabricated
+ *  content.
+ *
+ *  `typePt` is deliberately left unset: the chip's Portuguese label comes from
+ *  the catalog (`GLOSSARY_CATEGORY_KEYS`), because the backend stores one
+ *  free-form English `category` and echoing it as the Portuguese label is what
+ *  made PT mode render English chips (PRD-267). */
 export function glossaryTermToTerm(dto: GlossaryTermResponseDTO): Term {
   const def: ReactNode = dto.definition;
   // CON-08 gave the glossary a real Portuguese column and an admin editor to
@@ -97,11 +101,15 @@ export function glossaryTermToTerm(dto: GlossaryTermResponseDTO): Term {
   return {
     name: dto.term,
     type,
-    typePt: type,
     typeKind: deriveTypeKind(dto.category),
     def,
     defPt,
-    search: `${dto.term} ${dto.definition}`.toLowerCase(),
+    // The search index carries both languages, so a reader searching in
+    // Portuguese matches a term whose Portuguese definition is written. Before
+    // PRD-267 it held the English text alone and PT mode found nothing.
+    search: [dto.term, dto.definition, dto.definitionPt ?? "", type]
+      .join(" ")
+      .toLowerCase(),
   };
 }
 

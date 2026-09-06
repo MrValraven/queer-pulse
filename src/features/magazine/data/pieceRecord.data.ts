@@ -283,6 +283,11 @@ export const DEMO_RECORD: PieceRecordView = {
   editorId: "marta",
   writerId: null,
   stage: "edit",
+  // Still at `edit`, so nothing of it is live: the demo record exercises the
+  // gated, not-yet-published side of the piece record's Publish action.
+  isPublished: false,
+  publishedAt: null,
+  publicHref: null,
   due: "4 Aug",
   late: true,
   waitingOn: "writer",

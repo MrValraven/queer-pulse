@@ -34,6 +34,7 @@ import { useMessageThreadList } from "./useMessageThreadList";
 import { useMessageSending } from "./useMessageSending";
 import { useMessageCreation } from "./useMessageCreation";
 import { useMessageGroupActions } from "./useMessageGroupActions";
+import { useMarkThreadUnread } from "./useMarkThreadUnread";
 
 export { nextLocalId } from "./useMessagesController.helpers";
 
@@ -250,6 +251,7 @@ export function useMessagesController() {
     send,
     sendGif,
     sendImage,
+    sendDocument,
     retrySend,
     appendOptimistic,
     deliver,
@@ -294,6 +296,11 @@ export function useMessagesController() {
     updateGroupMutation,
   });
 
+  // Row menu "Mark as unread" (PRD-225) — own hook purely to keep this
+  // controller under the 200-line cap; see its own doc for the `readIds`
+  // interaction it has to handle.
+  const markThreadUnread = useMarkThreadUnread(setReadIds);
+
   return {
     isMobile,
     view,
@@ -323,7 +330,9 @@ export function useMessagesController() {
     send,
     sendGif,
     sendImage,
+    sendDocument,
     retrySend,
     markThreadRead: markRead.mutate,
+    markThreadUnread,
   };
 }

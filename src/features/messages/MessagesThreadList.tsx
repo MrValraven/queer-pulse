@@ -41,6 +41,8 @@ export function MessagesThreadList({
   onDelete,
   onSelectResult,
   deletePending,
+  onMarkThreadRead,
+  onMarkThreadUnread,
 }: {
   loading: boolean;
   threads: Conversation[];
@@ -57,6 +59,12 @@ export function MessagesThreadList({
    *  id) jumps to that bubble. */
   onSelectResult: (conversationId: string, messageId?: string) => void;
   deletePending: boolean;
+  /** Row menu "Mark as read" (PRD-225) — the same mutation opening a thread
+   *  fires (`useMarkRead`), reused so a thread can be caught up without
+   *  opening it. */
+  onMarkThreadRead: (conversationId: string) => void;
+  /** Row menu "Mark as unread" (PRD-225). */
+  onMarkThreadUnread: (conversationId: string) => void;
 }) {
   const queryClient = useQueryClient();
   const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(null);
@@ -142,6 +150,8 @@ export function MessagesThreadList({
             onQueryChange={onQueryChange}
             onSelectResult={onSelectResult}
             onRequestDelete={setConfirmDelete}
+            onMarkThreadRead={onMarkThreadRead}
+            onMarkThreadUnread={onMarkThreadUnread}
           />
         </PullToRefresh>
       </div>

@@ -51,21 +51,30 @@ export const system: Catalog = {
   "accountBanned.heading": "A tua conta foi <em>encerrada.</em>",
   "accountBanned.lead1":
     "Depois de uma revisão de moderação completa e uma ronda de recurso, a tua conta foi removida permanentemente da QueerPulse. <em>Isto não foi feito de ânimo leve.</em>",
-  "accountBanned.lead2":
-    "A tua subscrição Sustainer ativa foi <b>reembolsada proporcionalmente</b> para o cartão registado.",
   "accountBanned.violation.title": "Motivo · referente ao teu processo",
+  // SÓ EM DEMO. Um processo inventado, que ninguém real chega a ler: em modo
+  // real a página mostra a nota de quem moderou, e `violation.bodyLive` quando
+  // não há nenhuma. Ver a nota em en/system.ts.
   "accountBanned.violation.body":
     "<b>§02·06</b>: Uso da plataforma como arma contra outras pessoas da comunidade. O padrão de comportamento foi documentado em <b>8 incidentes distintos</b> ao longo de quatro meses e revisto por duas pessoas moderadoras independentes.",
+  "accountBanned.violation.bodyLive":
+    "Não ficou registado nenhum motivo no teu processo. O formulário de recurso é o sítio para o pedires.",
   "accountBanned.whatNow.row1.title": "Podes recorrer desta decisão uma vez",
+  // Os dois números vêm de `features/system/accountWindows.ts`. Esta linha
+  // dizia 21 dias.
   "accountBanned.whatNow.row1.body":
-    "Abre o recurso no prazo de 14 dias após a remoção. É revisto pelo painel permanente de recursos da Assembleia, pessoas diferentes das que trataram o teu processo. Resposta em 21 dias.",
+    "Abre o recurso no prazo de {filingDays} dias após a remoção. É revisto pelo painel permanente de recursos da Assembleia, pessoas diferentes das que trataram o teu processo. A decisão chega em {decisionDays} dias.",
   "accountBanned.whatNow.row2.title":
-    "Os teus dados são removidos da plataforma no prazo de 30 dias",
+    "Os teus dados ficam até pedires que sejam apagados",
+  // O encerramento da conta não agenda eliminação nenhuma: só acontece a teu
+  // pedido, com um período de {erasureDays} dias. Ver a nota em en/system.ts.
   "accountBanned.whatNow.row2.body":
-    "Consulta a nossa <a>política de privacidade</a>. As publicações que escreveste ficam no lugar sem o teu nome, a menos que peças especificamente a eliminação abaixo.",
+    "Consulta a nossa <a>política de privacidade</a>. Pede a eliminação abaixo e a tua conta fica logo escondida, e os dados são apagados definitivamente {erasureDays} dias depois. As publicações que escreveste ficam no lugar sem o teu nome.",
   "accountBanned.whatNow.row3.title": "Não ficam registos públicos desta ação",
+  // Dizia: "O processo existe internamente durante 36 meses. As tuas ligações
+  // foram notificadas de que saíste." Nada disso existe no código.
   "accountBanned.whatNow.row3.body":
-    "O processo existe internamente durante 36 meses. As tuas ligações foram notificadas de que saíste, sem motivo dado. Ninguém saberá que a tua conta foi encerrada, a menos que sejas tu a contar.",
+    "O processo fica guardado internamente e nunca é publicado. Ninguém é avisado de que a tua conta foi encerrada, a menos que sejas tu a contar.",
   "accountBanned.whatNow.row4.title": "O apoio em crise continua disponível",
   "accountBanned.whatNow.row4.body":
     "A <wellbeingLink>biblioteca de recursos</wellbeingLink> está aberta a todas as pessoas, sejam ou não da comunidade.",
@@ -79,6 +88,11 @@ export const system: Catalog = {
   "accountLocked.heading": "A tua conta está <em>em pausa.</em>",
   "accountLocked.lead":
     "Detetámos atividade de início de sessão fora do habitual na tua conta e bloqueámo-la por precaução. Não estás em sarilhos. Preferimos reagir a mais do que arriscar.",
+  // Texto em modo real. Nada no produto bloqueia uma conta, por isso a página
+  // em modo real só diz que o bloqueio existe e para onde ir: as três linhas
+  // `reason*` abaixo são uma demonstração com dados inventados.
+  "accountLocked.leadLive":
+    "A tua conta está bloqueada, por isso não consegues iniciar sessão agora. Escreve-nos e alguém da equipa vai ver isto à mão.",
   "accountLocked.reason1":
     "<b>5 tentativas de início de sessão falhadas</b> nos últimos 12 minutos, a partir de dois dispositivos.",
   "accountLocked.reason2":
@@ -94,6 +108,9 @@ export const system: Catalog = {
   "accountSuspended.kicker": "Conta em pausa · ação de moderação",
   "accountSuspended.heading":
     "A tua conta está <em>suspensa</em> durante {days} dias.",
+  // Usado quando nada no registo diz quanto tempo dura a suspensão, e por isso
+  // a página não tem nenhum número que possa mostrar.
+  "accountSuspended.headingLive": "A tua conta está <em>suspensa.</em>",
   "accountSuspended.lead":
     "Uma pessoa moderadora reviu uma denúncia e decidiu que a tua mensagem recente em <b>{channel}</b> violou o §02·02 do Código de Conduta (<em>identificação de género incorreta repetida</em>). Esta é uma <b>suspensão temporária no nível 3</b> da escala de moderação.",
   // Texto de introdução em modo real (membro mesmo suspenso) — os detalhes ficam
@@ -103,6 +120,7 @@ export const system: Catalog = {
   "accountSuspended.reason.title": "Porque é que a tua conta foi pausada",
   "accountSuspended.details.action": "Ação",
   "accountSuspended.details.actionValue": "Suspensão de {days} dias",
+  "accountSuspended.details.actionValueLive": "Suspensão",
   "accountSuspended.details.started": "Início",
   "accountSuspended.details.liftsAutomatically": "Levanta-se automaticamente",
   "accountSuspended.details.reviewedBy": "Revisto por",
@@ -116,14 +134,20 @@ export const system: Catalog = {
     "Participar em convívios a que já tinhas confirmado presença",
   "accountSuspended.whatStays.item3":
     "Chat de crise · sempre disponível, sem exceções",
+  // `{decisionDays}` vem de `features/system/accountWindows.ts`. Esta linha
+  // dizia "5 dias úteis".
   "accountSuspended.whatStays.item4":
-    "Apresentar um recurso · resposta em 5 dias úteis",
+    "Apresentar um recurso · decisão em {decisionDays} dias",
   "accountSuspended.actions.appealCta": "Apresentar um recurso",
   "accountSuspended.actions.ladderCta": "Ver a escala de moderação",
   "accountSuspended.actions.messageModCta":
     "Enviar mensagem à equipa de moderação",
+  // SÓ EM DEMO: uma percentagem inventada e uma ligação para estatísticas de
+  // 2025 que não existem. Em modo real usamos o Relatório de Transparência.
   "accountSuspended.foot":
     "{percent}% dos recursos são revertidos. Publicamos este número todos os anos. <a>Ver as estatísticas de moderação de 2025</a>",
+  "accountSuspended.footLive":
+    "O teu recurso é decidido por outra pessoa, diferente de quem tomou a decisão original. Quantas decisões são revertidas está contado no <a>relatório de transparência</a>.",
 
   // ── InviteExpiredPage.tsx (estado do convite: expirado / usado / cancelado / inválido) ─
   "inviteState.expired.eyebrow": "Convite expirado",
@@ -199,8 +223,13 @@ export const system: Catalog = {
   // ── MaintenancePage.tsx ───────────────────────────────────────────────────
   "maintenance.eyebrow": "Manutenção agendada",
   "maintenance.heading": "Já <em>voltamos.</em>",
+  // SÓ EM DEMO, tal como `info.*`, `affected.*` e `meta.line1` abaixo: uma
+  // versão fixa, uma janela 14:00–14:20 escrita à mão e uma fila de email numa
+  // plataforma que não envia email nenhum. Em modo real não aparece nada disto.
   "maintenance.lead":
     "Estamos a lançar a <b>versão 2.5</b>: melhores ferramentas de moderação, um chat de crise renovado e envios de imagens mais rápidos. Deve voltar dentro de cerca de <em>20 minutos</em>.",
+  "maintenance.leadLive":
+    "A QueerPulse está em manutenção. Ainda não temos uma hora para te dar. A página de estado tem o que soubermos, e fica de pé enquanto o resto da plataforma está em baixo.",
   "maintenance.info.startedLabel": "Início",
   "maintenance.info.startedValue": "14:00 <em>WET</em>",
   "maintenance.info.backByLabel": "De volta às",
@@ -219,15 +248,14 @@ export const system: Catalog = {
   // ── OfflinePage.tsx ───────────────────────────────────────────────────────
   "offline.eyebrow": "Sem ligação",
   "offline.h1": "Estás <em>offline.</em>",
+  // Esta página oferecia ligações para o feed, convívios e mensagens, como se
+  // fossem "páginas que já abriste". Nunca podiam funcionar. Ver a nota em
+  // en/system.ts.
   "offline.lead":
-    "Sem sinal, ou não conseguimos contactar os nossos servidores neste momento. <b>As páginas que já abriste</b> neste dispositivo podem ainda carregar. Experimenta uma abaixo.",
-  "offline.tryTitle": "Experimenta uma página que já abriste",
-  "offline.links.feed.label": "Feed da comunidade",
-  "offline.links.feed.sub": "As novidades da tua comunidade",
-  "offline.links.events.label": "Eventos",
-  "offline.links.events.sub": "O que se passa e as tuas confirmações",
-  "offline.links.messages.label": "Mensagens",
-  "offline.links.messages.sub": "As tuas conversas recentes",
+    "Sem sinal, ou não conseguimos contactar os nossos servidores neste momento. A QueerPulse guarda uma cópia da própria aplicação neste dispositivo, e é por isso que <b>este ecrã ainda carrega</b>.",
+  "offline.noCache.title": "O que podes fazer",
+  "offline.noCache.body":
+    "Ainda não há nada na QueerPulse que se leia offline: cada página vai buscar o que mostra. Este ecrã desaparece sozinho assim que a ligação voltar, e ficas onde ias.",
   "offline.status": "À escuta de sinal",
   "offline.retryCta": "Tentar outra vez",
   "offline.retryingCta": "Ainda offline",
@@ -442,11 +470,23 @@ export const system: Catalog = {
 
   // ── VerificationNeededPage.tsx / VerificationNeededSections.tsx ──────────
   "verificationNeeded.heading": "Verificação rápida · <em>ainda és tu?</em>",
+  // SÓ EM DEMO, com `actionCard` e `foot` abaixo: uma contagem decrescente de
+  // uma verificação simulada e o cancelamento de uma subscrição que não tem
+  // pagamentos por trás. Ver a nota em en/system.ts.
   "verificationNeeded.lead":
     "Para o próximo passo, precisamos de confirmar que ainda és tu neste dispositivo. <b>Esta é uma de duas ações</b> para as quais pedimos nova autenticação: cancelar a subscrição ou remover a conta.",
+  "verificationNeeded.leadLive":
+    "Antes de seguirmos, precisamos de saber que ainda és tu neste dispositivo. A QueerPulse pede isto nos passos que não têm volta: <b>apagar a conta, exportar os teus dados e pedidos sobre os teus direitos</b>.",
   "verificationNeeded.actionCard":
     "Estás prestes a <b>cancelar a tua subscrição Sustainer</b>",
   "verificationNeeded.foot": "Esta verificação expira em <b>{time}</b>.",
+  "verificationNeeded.footLive":
+    "Voltas a esta página assim que a Google terminar.",
+  "verificationNeeded.confirm.introLive":
+    "Confirmar significa iniciar sessão na Google outra vez, para que uma sessão que outra pessoa tenha deixado aberta não leve isto por diante. Não é enviado nenhum email.",
+  "verificationNeeded.successLive.sub":
+    "Verificação confirmada, e fica válida durante alguns minutos. Volta à ação que começaste e carrega outra vez no botão para a terminares.",
+  "verificationNeeded.successLive.continueCta": "Voltar às definições",
   // Ver a nota em en/system.ts: a nova autenticação passa por iniciar sessão
   // no Google outra vez, e não por uma ligação enviada por email, que a
   // QueerPulse nunca entrega.

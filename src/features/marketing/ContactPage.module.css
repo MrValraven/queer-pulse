@@ -124,6 +124,10 @@
   height: 56px;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.12);
+  /* The success tick (react-icons `FiCheck`, painted with currentColor).
+     --jade-ink rather than --jade: it lightens in dark mode, where plain jade
+     on the dark card is too close to the surface to read. */
+  color: var(--jade-ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -155,4 +159,17 @@
 :global([data-theme="dark"]) .route,
 :global([data-theme="dark"]) .form {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* PRD-272: the four route cards are buttons now (they preselect a form topic
+   instead of opening a mail client), so they need the element reset a card
+   that used to be an `<a>` never did. Everything visual still comes from
+   `.route`; this only undoes the user-agent button styling. */
+.routeButton {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
 }

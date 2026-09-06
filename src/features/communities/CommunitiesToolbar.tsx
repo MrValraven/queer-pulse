@@ -70,7 +70,11 @@ export function CommunitiesToolbar({
 
   const resultCount =
     discover.gridItems.length + (discover.isShowingFeatured ? 1 : 0);
-  const isCountKnown = !discover.isShowingSkeletons;
+  // Not known while the grid is still showing the previous sort or filter's
+  // rows either: that count belongs to the run being replaced, and announcing
+  // it would say a number the member is about to see change.
+  const isCountKnown =
+    !discover.isShowingSkeletons && !discover.isShowingStaleResults;
 
   // A member who belongs to no communities gets the empty state below, and
   // searching an empty pool is an affordance for nothing — so the search and

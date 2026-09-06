@@ -1,6 +1,5 @@
-import { useEffect, useState, type CSSProperties } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { useEffect, useRef, useState } from "react";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
@@ -14,6 +13,7 @@ import { defaultArticleId, firstPlainText } from "./data/articles";
 import { ArticleReaderBody } from "./ArticleReaderBody";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
+import { ArticleHeader } from "./ArticleHeader";
 import { useArticle } from "./api/useArticle";
 import { ApiError } from "../../shared/api/client";
 import {
@@ -23,23 +23,29 @@ import {
 } from "./ArticleStates";
 import { ArticleContentNotes, ArticleCorrections } from "./ArticleNotes";
 import { ArticleLifecycleBanner } from "./ArticleLifecycleBanner";
-import { ArticleLanguageSwitcher } from "./ArticleLanguageSwitcher";
-import { ArticleTagList } from "./ArticleTagList";
 import { ArticleRelatedRail } from "./ArticleRelatedRail";
 import { clampDescription, nodeToText } from "./nodeText";
 import { ArticleComments } from "./comments/ArticleComments";
+import { ArticleReadingAids } from "./ArticleReadingAids";
 
 import styles from "./ArticlePage.module.css";
-
-const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 };
 
 export function ArticlePage() {
   const { t, language } = useTranslation();
   const { demoMode } = useDemoMode();
   const [params, setParams] = useSearchParams();
   const [textSize, setTextSize] = useState<TextSize>("md");
+  // PRD-113: the element the reading aids measure: progress, the resume
+  // point and the contents list all address the body, never the whole page.
+  const bodyRef = useRef<HTMLDivElement>(null);
   const simLoading = useSimulatedLoad();
-  const id = params.get("id") ?? defaultArticleId;
+  // PRD-101 — a bare `/magazine/article` with no `?id=`. Demo mode keeps the
+  // curated default piece, which is the prototype's own front door. Live mode
+  // has no such piece: falling back to the mock slug asked the API for
+  // "city-changed" and painted an "Article not found" wall at a URL a reader
+  // can plausibly reach. It redirects to the magazine front instead.
+  const requestedId = params.get("id");
+  const id = requestedId ?? (demoMode ? defaultArticleId : "");
   // CON-16 — the reader's chosen content language. It lives in the URL so a
   // Portuguese link stays Portuguese when it is shared, and it falls back to
   // the chrome language so a member who has set the interface to Portuguese
@@ -65,6 +71,11 @@ export function ArticlePage() {
   // the query too — otherwise the simulated beat can clear before it resolves.
   const loading = demoMode ? simLoading || isLoading : isLoading;
 
+  // PRD-101 — nothing was addressed and there is no curated default to fall
+  // back on (live mode). Send the reader to the magazine front, which is a
+  // real page, instead of a not-found wall for a slug they never asked for.
+  if (!id) return <Navigate to={routes.magazine} replace />;
+
   // A failed request is NOT a missing article (FE-CNT-08): offer a retry
   // rather than telling the reader the piece does not exist. And a 401 is not
   // a failure at all (CON-07) — every magazine read sits behind
@@ -81,8 +92,13 @@ export function ArticlePage() {
 
   const related = data?.related ?? [];
 
-  // First plain-text paragraph doubles as the saved-card blurb.
-  const blurb = firstPlainText(article.body);
+  // First plain-text paragraph doubles as the saved-card blurb; the desk's own
+  // dek is a better one when the piece carries it (PRD-102).
+  const blurb = article.dek ?? firstPlainText(article.body);
+
+  // PRD-102 — the line under the headline: the standfirst the desk wrote for
+  // exactly this slot, or the dek when there is no standfirst.
+  const standfirst = article.standfirst?.trim() || article.dek?.trim() || "";
 
   const plainTitle = nodeToText(article.title).replace(/\s+/g, " ").trim();
 
@@ -104,40 +120,7 @@ export function ArticlePage() {
         type="article"
       />
       <MagazineMasthead />
-      <div className={styles.header}>
-        <div className="wrap">
-          <Link to={routes.magazine} className={styles.back}>
-            <FiArrowLeft aria-hidden /> {t("magazine:article.backToMagazine")}{" "}
-            <span style={{ opacity: 0.5 }}>·</span> {article.section}
-          </Link>
-          <div className={styles.kicker}>{article.kicker}</div>
-          <h1 className={styles.title}>{article.title}</h1>
-          <div className={styles.bylineRow}>
-            <Avatar initials={article.initials} tint={article.tint} size={36} />
-            <div>
-              <div className={styles.author}>
-                <AuthorLink name={article.byline} />
-              </div>
-              {article.role && (
-                <div className={styles.role}>{article.role}</div>
-              )}
-            </div>
-            <div className={styles.pills}>
-              <span className={styles.pill}>{article.date}</span>
-              <span className={styles.pill}>{article.readTime}</span>
-            </div>
-          </div>
-          <ArticleTagList tags={article.tags} />
-          {/* CON-16 — every language this piece is readable in. When there is
-              only one and it is not the reader's, it says so plainly instead
-              of leaving them looking for a control that is not there. */}
-          <ArticleLanguageSwitcher
-            translations={article.translations}
-            currentLocale={article.locale}
-            translatorName={article.translatorName}
-          />
-        </div>
-      </div>
+      <ArticleHeader article={article} standfirst={standfirst} />
 
       <div className={styles.hero}>
         <ImageSlot
@@ -180,14 +163,15 @@ export function ArticlePage() {
             publishedLabel={article.date}
           />
           <ArticleContentNotes notes={article.contentNotes ?? []} />
-          <div
-            className={styles.body}
-            style={
-              {
-                "--article-body-size": `${SIZE_PX[textSize]}px`,
-              } as CSSProperties
-            }
-          >
+          {/* PRD-113: the long-read aids: a progress bar, a contents list
+              built from the piece's own headings, and the point this reader
+              left off at. Above the body so a returning reader meets the
+              resume prompt before the first paragraph. */}
+          <ArticleReadingAids article={article} bodyRef={bodyRef} />
+          {/* DES-102: the chosen size rides a data attribute and the CSS maps
+              it onto rem tokens. Writing px here ignored the reader's own
+              browser font size and capped "A+" at 22px. */}
+          <div className={styles.body} data-text-size={textSize} ref={bodyRef}>
             <ArticleReaderBody article={article} />
           </div>
 

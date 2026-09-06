@@ -15,8 +15,11 @@ export function DeskStats({
   pitchCount: number;
 }) {
   const { t } = useTranslation();
+  // "In flight" is work still moving: everything before Ready. A published
+  // piece has left the pipeline entirely, so counting it here would quietly
+  // inflate the desk's workload for the rest of the issue's life.
   const inFlightCount = pieces.filter(
-    (piece) => piece.stage !== "Ready",
+    (piece) => piece.stage !== "Ready" && piece.stage !== "Published",
   ).length;
   const readyCount = pieces.filter((piece) => piece.stage === "Ready").length;
   const lateCount = pieces.filter((piece) => piece.late).length;

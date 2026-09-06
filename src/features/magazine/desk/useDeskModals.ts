@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece, Pitch } from "../data/desk.data";
 import type { usePieceMutations } from "../api/usePieceMutations";
 import type { usePitchMutations } from "../api/usePitchMutations";
@@ -31,6 +32,7 @@ export function useDeskModals({
   pitchMutations,
 }: UseDeskModalsParams) {
   const { showToast } = useToast();
+  const { t } = useTranslation();
   const [modal, setModal] = useState<DeskModal>(null);
   const [contextId, setContextId] = useState<string | null>(null);
   // The commissioning pitch's `suggest` hint (e.g. "deck"), so submitCommission
@@ -89,10 +91,9 @@ export function useDeskModals({
     // (and thus `activeMe`) hasn't resolved yet rather than firing a request the
     // backend rejects with "editorId must be a UUID".
     if (!activeMe) {
-      showToast(
-        "Still loading your editor profile. Try again in a moment.",
-        "error",
-      );
+      // Same wording the Write action uses for the same window, so the two
+      // desk actions do not describe one unresolved session two ways.
+      showToast(t("magazine:desk.write.editorNotReady"), "error");
       return;
     }
     if (modal?.kind === "commission" && modal.pitch && contextId) {
@@ -115,7 +116,9 @@ export function useDeskModals({
     pieceMutations.commission.mutate({
       format: sourcePitchFormat ?? "article",
       title:
-        pitchTitle ?? (payload.angle.trim().slice(0, 120) || "Untitled piece"),
+        pitchTitle ??
+        (payload.angle.trim().slice(0, 120) ||
+          t("magazine:desk.write.untitledTitle")),
       section: payload.section,
       editorId: activeMe,
       dueOn: payload.dueDate || undefined,

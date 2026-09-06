@@ -49,22 +49,34 @@ export const system: Catalog = {
   "accountBanned.heading": "Your account has been <em>closed.</em>",
   "accountBanned.lead1":
     "After a full moderation review and one round of appeal, your account has been permanently removed from QueerPulse. <em>This was not done lightly.</em>",
-  "accountBanned.lead2":
-    "Your active Sustainer membership has been <b>refunded pro-rated</b> to the card on file.",
   "accountBanned.violation.title": "Reason · referenced from your case file",
+  // DEMO ONLY. An invented case file, shown to nobody real: the live page
+  // prints the moderator's own note, and `violation.bodyLive` when there is
+  // none. A banned member must never read a fabricated case against themselves.
   "accountBanned.violation.body":
     "<b>§02·06</b>: Weaponising platform access against members. The pattern of behaviour was documented across <b>8 separate incidents</b> over four months and reviewed by two independent moderators.",
+  "accountBanned.violation.bodyLive":
+    "No reason was recorded on your case file. The appeal form is the place to ask for one.",
   "accountBanned.whatNow.row1.title": "You can appeal this decision once",
+  // Both numbers come from `features/system/accountWindows.ts`, mirroring the
+  // backend constants that enforce them. This line used to promise 21 days.
   "accountBanned.whatNow.row1.body":
-    "Open within 14 days of removal. Reviewed by the Assembly's standing appeals panel, different humans than your case moderators. Response within 21 days.",
+    "Open within {filingDays} days of removal. Reviewed by the Assembly's standing appeals panel, different humans than your case moderators. A decision comes back within {decisionDays} days.",
   "accountBanned.whatNow.row2.title":
-    "Your data is removed from the platform within 30 days",
+    "Your data stays until you ask us to erase it",
+  // Being removed schedules no deletion: erasure only ever runs on the
+  // member's own request, on a {erasureDays}-day grace period. The line here
+  // used to read "removed from the platform within 30 days", as though a ban
+  // triggered it.
   "accountBanned.whatNow.row2.body":
-    "Per our <a>privacy policy</a>. Posts you authored stay up with your name removed, unless you specifically request deletion below.",
+    "Per our <a>privacy policy</a>. Ask for erasure below and your account is hidden straight away, then permanently deleted {erasureDays} days later. Posts you authored stay up with your name removed.",
   "accountBanned.whatNow.row3.title":
     "Public records of this action are not kept",
+  // Was: "The case file exists internally for 36 months. Your connections were
+  // notified you left, without reason." No retention job enforces 36 months and
+  // nothing notifies a sanctioned member's connections.
   "accountBanned.whatNow.row3.body":
-    "The case file exists internally for 36 months. Your connections were notified you left, without reason. No member will know you were removed unless you tell them.",
+    "The case file is kept internally and is never published. No member is told your account was removed unless you tell them.",
   "accountBanned.whatNow.row4.title": "Crisis support remains available",
   "accountBanned.whatNow.row4.body":
     "The <wellbeingLink>resource library</wellbeingLink> is open to everyone, member or not.",
@@ -78,6 +90,11 @@ export const system: Catalog = {
   "accountLocked.heading": "Your account is <em>on pause.</em>",
   "accountLocked.lead":
     "We spotted unusual sign-in activity on your account and locked it as a precaution. You're not in trouble. We'd rather over-react than risk it.",
+  // Live lead. Nothing in the product locks an account, so the live page can
+  // say only that the lock exists and where to go: the three `reason*` lines
+  // below are a demo showcase of invented sign-in telemetry.
+  "accountLocked.leadLive":
+    "Your account is locked, so you can't sign in right now. Write to the team and someone will look at it by hand.",
   "accountLocked.reason1":
     "<b>5 failed sign-in attempts</b> in the last 12 minutes, from two devices.",
   "accountLocked.reason2":
@@ -93,6 +110,9 @@ export const system: Catalog = {
   "accountSuspended.kicker": "Account paused · moderation action",
   "accountSuspended.heading":
     "Your account is <em>suspended</em> for {days} days.",
+  // Used when nothing on record says how long the suspension runs, so the page
+  // has no number it is entitled to print.
+  "accountSuspended.headingLive": "Your account is <em>suspended.</em>",
   "accountSuspended.lead":
     "A moderator reviewed a report and decided your recent message in <b>{channel}</b> crossed §02·02 of the Code of Conduct (<em>repeated misgendering</em>). This is a <b>temporary suspension at rung 3</b> of the moderation ladder.",
   // Live-mode lead (real suspended member) — the specifics live in the reason
@@ -102,6 +122,7 @@ export const system: Catalog = {
   "accountSuspended.reason.title": "Why your account was paused",
   "accountSuspended.details.action": "Action",
   "accountSuspended.details.actionValue": "{days}-day suspension",
+  "accountSuspended.details.actionValueLive": "Suspension",
   "accountSuspended.details.started": "Started",
   "accountSuspended.details.liftsAutomatically": "Lifts automatically",
   "accountSuspended.details.reviewedBy": "Reviewed by",
@@ -113,13 +134,20 @@ export const system: Catalog = {
     "Attending gatherings you'd already RSVP'd to",
   "accountSuspended.whatStays.item3":
     "Crisis chat · always available, no exceptions",
+  // `{decisionDays}` comes from `features/system/accountWindows.ts`, mirroring
+  // `APPEAL_DECISION_WINDOW_DAYS`. This line used to say "5 working days".
   "accountSuspended.whatStays.item4":
-    "Filing an appeal · response within 5 working days",
+    "Filing an appeal · a decision within {decisionDays} days",
   "accountSuspended.actions.appealCta": "File an appeal",
   "accountSuspended.actions.ladderCta": "Read the ladder",
   "accountSuspended.actions.messageModCta": "Message the mod team",
+  // DEMO ONLY: an invented overturn rate, and a link to a "2025 moderation
+  // stats" page that does not exist. The live foot below points at the real
+  // Transparency Report, which counts the overturn rate at request time.
   "accountSuspended.foot":
     "{percent}% of appeals are overturned. We publish the number annually. <a>See 2025 moderation stats</a>",
+  "accountSuspended.footLive":
+    "Your appeal is decided by someone other than the moderator who made the original call. How many decisions get overturned is counted in the <a>transparency report</a>.",
 
   // ── InviteExpiredPage.tsx (invite state: expired / used / revoked / not found) ─
   "inviteState.expired.eyebrow": "Invite expired",
@@ -194,8 +222,13 @@ export const system: Catalog = {
   // ── MaintenancePage.tsx ───────────────────────────────────────────────────
   "maintenance.eyebrow": "Scheduled maintenance",
   "maintenance.heading": "Be right <em>back.</em>",
+  // DEMO ONLY, along with `info.*`, `affected.*` and `meta.line1` below: a
+  // fixed release name, a hard-coded 14:00–14:20 outage window, and an email
+  // queue for a platform that delivers no email. Live mode prints none of it.
   "maintenance.lead":
     "We're shipping the <b>2.5 release</b>: better moderation tools, an upgraded crisis chat, and faster image uploads. Should be back in about <em>20 minutes</em>.",
+  "maintenance.leadLive":
+    "QueerPulse is down for maintenance. We don't have a time to give you yet. The status page carries whatever we know, and it stays up while the rest of the platform is down.",
   "maintenance.info.startedLabel": "Started",
   "maintenance.info.startedValue": "14:00 <em>WET</em>",
   "maintenance.info.backByLabel": "Back by",
@@ -213,15 +246,16 @@ export const system: Catalog = {
   // ── OfflinePage.tsx ───────────────────────────────────────────────────────
   "offline.eyebrow": "No connection",
   "offline.h1": "You're <em>offline.</em>",
+  // This page used to offer feed/gatherings/messages links framed as "pages
+  // you've already opened". They could never work: the service worker caches
+  // the app's own code, never any API response, and OfflineGate replaces the
+  // whole routed tree with this screen, so following one of those links only
+  // changed the URL and re-rendered this same page.
   "offline.lead":
-    "No signal, or we can't reach our servers right now. <b>Pages you've already opened</b> on this device may still load. Try one below.",
-  "offline.tryTitle": "Try a page you've opened before",
-  "offline.links.feed.label": "Community feed",
-  "offline.links.feed.sub": "The latest from your community",
-  "offline.links.events.label": "Events",
-  "offline.links.events.sub": "What's happening and your RSVPs",
-  "offline.links.messages.label": "Messages",
-  "offline.links.messages.sub": "Your recent conversations",
+    "No signal, or we can't reach our servers right now. QueerPulse keeps a copy of the app itself on this device, which is why <b>this screen still loads</b>.",
+  "offline.noCache.title": "What you can do",
+  "offline.noCache.body":
+    "Nothing on QueerPulse is readable offline yet: every page fetches what it shows. This screen clears itself the moment your connection comes back, and you'll land where you were going.",
   "offline.status": "Listening for signal",
   "offline.retryCta": "Try again",
   "offline.retryingCta": "Still offline",
@@ -435,11 +469,24 @@ export const system: Catalog = {
 
   // ── VerificationNeededPage.tsx / VerificationNeededSections.tsx ──────────
   "verificationNeeded.heading": "Quick check · <em>is this still you?</em>",
+  // DEMO ONLY, with `actionCard` and `foot` below: a countdown against a
+  // simulated check, and a membership cancellation there is no billing for.
+  // Live mode runs the real step-up (`beginReauth`), which leaves for Google
+  // and so has no in-page timer to count down.
   "verificationNeeded.lead":
     "For your next step we need to confirm it's still you on this device. <b>This is one of two actions</b> we re-auth for: cancelling membership, or removing your account.",
+  "verificationNeeded.leadLive":
+    "Before we go on, we need to know it's still you on this device. QueerPulse asks for this on the steps you can't take back: <b>erasing your account, exporting your data, and data-rights requests</b>.",
   "verificationNeeded.actionCard":
     "You're about to <b>cancel your Sustainer membership</b>",
   "verificationNeeded.foot": "This re-auth expires in <b>{time}</b>.",
+  "verificationNeeded.footLive":
+    "You'll land back on this page once Google is done.",
+  "verificationNeeded.confirm.introLive":
+    "Confirming means signing in with Google again, so a session someone else left open can't carry this through. Nothing is emailed.",
+  "verificationNeeded.successLive.sub":
+    "Re-authentication confirmed, and it stays good for a few minutes. Go back to the action you started and press its button again to finish it.",
+  "verificationNeeded.successLive.continueCta": "Back to settings",
   // Step-up re-auth on QueerPulse is a Google sign-in round trip (see
   // features/settings/api/useReauthToken.ts). The pane that used to sit here
   // offered to email a one-time link; QueerPulse delivers no email, so it was

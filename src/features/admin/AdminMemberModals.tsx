@@ -8,7 +8,7 @@ import {
   AdminCheckLine,
   type AdminSegOption,
 } from "./ui";
-import { ADMIN_PROFILE } from "../../shared/components/layout/adminNav.data";
+import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import type {
   RestrictDurationId,
   RestrictReasonId,
@@ -33,12 +33,21 @@ export function MessageModal({
 }) {
   const { t } = useTranslation();
   const first = firstName(name);
+  // DES-160, the same leak as the dashboard greeting one modal over: this
+  // label read `ADMIN_PROFILE.firstName` off the mock member registry, so a
+  // real admin was offered "send as Tiago" as the account they would be
+  // speaking from. `useAccountIdentity` resolves the signed-in member and
+  // returns the fixture persona only in demo mode, where that persona IS the
+  // signed-in member. While the profile is still resolving it hands back an
+  // empty string, so the option reads plainly as "You" rather than naming the
+  // wrong person or leaving a hole where a name belongs.
+  const { firstName: signedInFirstName } = useAccountIdentity();
   const SEND_AS: AdminSegOption[] = [
     {
       value: "self",
-      label: t("admin:members.message.sendAsSelf", {
-        name: ADMIN_PROFILE.firstName,
-      }),
+      label: signedInFirstName
+        ? t("admin:members.message.sendAsSelf", { name: signedInFirstName })
+        : t("admin:members.message.sendAsSelfNameless"),
     },
     { value: "team", label: t("admin:members.message.sendAsTeam") },
   ];

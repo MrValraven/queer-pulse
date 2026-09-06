@@ -493,12 +493,24 @@ export const economy: Catalog = {
   "housing.filterBar.beds3": "3+",
   "housing.filterBar.availableBy": "Available by",
   "housing.filterBar.bills": "Bills included",
+  // PRD-250. Listers have ticked "Furnished" and "Pets welcome" as stored
+  // feature chips since launch and no filter ever read them, so a renter with a
+  // dog read every description by hand while the answer sat in structured data.
+  "housing.filterBar.furnished": "Furnished",
+  "housing.filterBar.pets": "Pets welcome",
   "housing.filterBar.accessibility": "Has access info",
   "housing.filterBar.verified": "Verified only",
   "housing.filterBar.flagsLabel": "Must have",
   "housing.filterBar.chip.priceRange": "€{min}–€{max}",
   "housing.filterBar.chip.priceFrom": "From €{min}",
   "housing.filterBar.chip.priceUpTo": "Up to €{max}",
+  // PRD-250. Deposit had no field at all before this. `deposit` is the band
+  // heading a sighted reader sees; `depositMax` is the input's own aria-label,
+  // because the band heading alone does not name the control and a11y is a
+  // BUDGET=0 build gate.
+  "housing.filterBar.deposit": "Deposit",
+  "housing.filterBar.depositMax": "Maximum deposit",
+  "housing.filterBar.chip.depositUpTo": "Deposit up to €{max}",
   "housing.filterBar.chip.beds": "{beds} bedrooms",
   "housing.filterBar.chip.availableBy": "By {date}",
   "housing.map.ariaLabel": "Map of listings by neighbourhood",
@@ -587,6 +599,14 @@ export const economy: Catalog = {
   "housingModal.charsCount_other": "{count} characters",
   "housingModal.cancel": "Cancel",
   "housingModal.done": "Done",
+  // PRD-245. The enquiry hook already returned the `conversationId` of the
+  // thread the message landed in, and the success panel threw it away, leaving
+  // "Done" as the only way out: the member had to hunt through Messages for the
+  // note they had just written. The directory's enquiry modal has deep-linked
+  // the thread all along, so this is one flow catching up with its twin. Live
+  // only, because a demo send never leaves the browser and resolves no id.
+  // Same wording as `marketing:directory.detail.enquiry.openThreadCta`.
+  "housingModal.message.openThreadCta": "Open the conversation",
 
   "housingModal.message.ariaLabel": "Message the lister",
   "housingModal.message.successTitle": "Message <em>sent.</em>",
@@ -624,6 +644,21 @@ export const economy: Catalog = {
   "housingModal.recommend.whatShouldKnow": "What should members know?",
   "housingModal.recommend.placeholder":
     "How were repairs, contracts, deposits? Did they respect your privacy and your relationships? Specifics help.",
+  // PRD-249. The attestation. Required for every new recommendation, and the
+  // reason the tick is worded as a plain statement of fact rather than a
+  // consent-style "I confirm that": it has to be answerable honestly or not at
+  // all.
+  "housingModal.recommend.attestLabel": "I rented from {landlordName} myself.",
+  "housingModal.recommend.tenancyLabel": "Roughly when did you rent from them?",
+  "housingModal.recommend.tenancyFrom": "From",
+  "housingModal.recommend.tenancyTo": "Until",
+  "housingModal.recommend.stillRenting": "I still rent from them",
+  "housingModal.recommend.tenancyHint":
+    "The month is enough. Nobody is asking you for the day.",
+  // Says plainly what the author is about to do to a real person who cannot
+  // read the page, and that they will be able to answer it.
+  "housingModal.recommend.unverifiedNote":
+    "This goes on a public page about {landlordName}, a real person with no account here. It will be labelled self-attested and unverified, because nothing on QueerPulse can check it, and {landlordName} can ask to answer it.",
   "housingModal.recommend.note":
     "Recommendations are checked before they appear. Only recommend landlords you've actually rented from.",
   "housingModal.recommend.submit": "Submit recommendation",
@@ -649,6 +684,14 @@ export const economy: Catalog = {
   "listSpace.areaPlaceholder": "e.g. Arroios, Lisbon",
   "listSpace.rentLabel": "Monthly rent (€) *",
   "listSpace.rentPlaceholder": "e.g. 650",
+  // PRD-250. Optional, and the hint has to earn its place: a blank is stored as
+  // "not stated", and a listing with no stated deposit is excluded from a
+  // renter's deposit-capped search. So skipping this field has a cost the
+  // lister should be told about rather than discover.
+  "listSpace.depositLabel": "Deposit (€)",
+  "listSpace.depositPlaceholder": "e.g. 900",
+  "listSpace.depositHint":
+    "Leave this blank if you have not set a deposit yet. Renters filtering by deposit will not see homes that have not stated one.",
   "listSpace.bedroomsLabel": "Bedrooms",
   "listSpace.bedroomsPlaceholder": "e.g. 1, use 0 for a studio",
   "listSpace.typeLabel": "Type of space *",
@@ -666,6 +709,15 @@ export const economy: Catalog = {
   // ── ListSpaceDetailFields + ListSpacePhotoField (LOC-09) ───────────────
   "listSpace.areaHint":
     "Just the neighbourhood. Every home on this board is in {city}.",
+  // PRD-241. The street address, which no form collected until now. The listing
+  // page has promised since launch that "the exact address appears once you and
+  // the person are connected", and nothing could keep that promise: no DTO
+  // accepted the field, so the unlock always resolved to a null address and
+  // every viewer, connected or not, saw a neighbourhood centroid.
+  "listSpace.addressLabel": "Street address",
+  "listSpace.addressPlaceholder": "e.g. Rua da Escola Politécnica 42",
+  "listSpace.addressHint":
+    "Optional, and private. It is only shared with people you connect with or accept a viewing from. Everyone else sees the neighbourhood.",
   "listSpace.blurbLabel": "One-line summary",
   "listSpace.blurbPlaceholder":
     "e.g. A double room in a four-person queer flatshare",
@@ -768,6 +820,14 @@ export const economy: Catalog = {
   "myHousingListings.postedOn": "Posted {date}",
   "myHousingListings.expiresOn": "Expires {date}",
   "myHousingListings.expiredHint": "Expired, extend it to relist",
+  // PRD-244. The only signal that arrives BEFORE a listing lapses. Every other
+  // one is post-mortem: the "Expired" pill and the hint above both wait until
+  // the home has already dropped off the board. Replaces the flat
+  // `expiresOn` date inside the last week of the term.
+  "myHousingListings.expiringInDays_one":
+    "Expires in {count} day, extend it to keep it on the board",
+  "myHousingListings.expiringInDays_other":
+    "Expires in {count} days, extend it to keep it on the board",
   "myHousingListings.filledHint": "Marked as filled, hidden from the board",
   "myHousingListings.actions.edit": "Edit",
   "myHousingListings.actions.view": "View listing",
@@ -946,6 +1006,42 @@ export const economy: Catalog = {
     "Something went wrong on our end. Give it another try in a moment.",
   "housingListing.error.retry": "Try again",
 
+  // PRD-248. The landlord page used to fold every fetch failure into the
+  // not-found branch and bounce the reader to the housing board with no
+  // explanation, so a flaky connection read as "this landlord was removed".
+  // A genuine 404 still redirects; everything else now lands here. Mirrors the
+  // listing block above, with its own noun: a landlord is a person.
+  // PRD-249. The public right-of-reply form, the one surface on this platform
+  // written FOR somebody who is not a member and never will be. QueerPulse is
+  // invite-only, so a named landlord cannot read the page that names them; this
+  // is the whole of their access to it.
+  //
+  // Nothing here promises a message back. The platform sends no email, and a
+  // person waiting on an answer must not be told one is coming.
+  "landlordReply.eyebrow": "Right of reply",
+  "landlordReply.title": "Answer what was written about you",
+  "landlordReply.intro":
+    "Someone sent you this because a member of QueerPulse wrote about renting from you. QueerPulse is invite-only, so you cannot read that page, and this form is how you answer it.",
+  "landlordReply.checkNotice":
+    "Nothing you write here is published straight away. Somebody on the team reads it first and works out that you are the person named. That step is why this form exists at all.",
+  "landlordReply.nameLabel": "Your name",
+  "landlordReply.contactLabel": "A way to reach you",
+  "landlordReply.contactHint":
+    "A phone number, or wherever you are easiest to find. The team may need to ask you something before publishing.",
+  "landlordReply.replyLabel": "What you want to say",
+  "landlordReply.replyPlaceholder": "Your answer, in your own words.",
+  "landlordReply.replyHint":
+    "This is published as your words, next to what was written about you.",
+  "landlordReply.send": "Send this to the team",
+  "landlordReply.error": "That did not send. Try again.",
+  "landlordReply.doneTitle": "The team has it",
+  "landlordReply.doneBody":
+    "Somebody will read this and work out who you are before anything is published. Keep this page if you want to write down what you sent.",
+  "landlordPage.error.title": "We couldn't load this profile",
+  "landlordPage.error.body":
+    "Something went wrong on our end. Give it another try in a moment.",
+  "landlordPage.error.retry": "Try again",
+
   // ── Verified listing chip (P2.3) ───────────────────────────────────────
   "verifiedListing.label": "Verified listing",
   "verifiedListing.tooltip":
@@ -1111,6 +1207,37 @@ export const economy: Catalog = {
   "landlordPage.section.about": "About {name}",
   "landlordPage.section.whereTheyRent": "Where they rent",
   "landlordPage.section.recommendations": "Member recommendations",
+  // PRD-249. A recommendation is a public, named rating of a real person who is
+  // not a member here, written by anyone, with no proof the author ever rented
+  // from them. Housing reviews of listers are gated on a completed viewing; this
+  // surface had no equivalent gate and no right of reply. The maintainer chose
+  // attestation plus honest labelling over an interaction gate, because most
+  // people found their home through a landlord they met off-platform and a gate
+  // would silence exactly the tenants with the most to say.
+  //
+  // The aggregate score stays visible (dropping it would make readers open every
+  // recommendation to learn four people agree), but it is impossible to fetch
+  // without its qualifier: `isRatingSelfReported` is a constant on the wire.
+  "landlordPage.rating.selfReported_one": "Self-reported by {count} member",
+  "landlordPage.rating.selfReported_other": "Self-reported by {count} members",
+  "landlordPage.rating.attestedOf_one":
+    "{count} of {total} says they rented here.",
+  "landlordPage.rating.attestedOf_other":
+    "{count} of {total} say they rented here.",
+  "landlordPage.section.recommendationsNote":
+    "These are members writing about their own tenancies with {name}. QueerPulse has not checked any of them, and {name} is not a member here.",
+  // Shown on every card unconditionally, never only on unattested ones: the
+  // label is about what the platform can verify, which is nothing, rather than
+  // about how forthcoming an individual author was.
+  "landlordPage.recommendation.selfAttestedBadge": "Self-attested, unverified",
+  "landlordPage.recommendation.noTenancyGiven": "No tenancy dates were given.",
+  // The right of reply. A landlord has no account and is never given one: a
+  // claimed entry is an entry its subject can shape, which inverts the
+  // directory's purpose. They fill a public form, a human establishes they are
+  // the person named, and staff publish their words under the words they answer.
+  "landlordPage.recommendation.reply.heading": "{name} answered this",
+  "landlordPage.recommendation.reply.askCta":
+    "Are you {name}? Ask to reply to this",
   "landlordPage.sidebar.atAGlance": "At a glance",
   "landlordPage.sidebar.rentedFrom": "Rented from {name}?",
   "landlordPage.sidebar.rentedFromBody":
@@ -3702,6 +3829,25 @@ export const economy: Catalog = {
     "You're seeing the rough area for now. The exact address appears once you and the person are connected.",
   "housingListing.location.exactNote":
     "You're connected, so this is the exact location.",
+  // PRD-241, the third state. Before this there were only two: unlocked with an
+  // address, and everything else. So a viewer who WAS connected, or whose
+  // viewing had been accepted, fell into `approxNote` above and was told the
+  // address "appears once you and the person are connected", which they already
+  // were. The promise was re-made to the one person who had satisfied it. This
+  // string is for a viewer with real access to a lister who simply has not
+  // filled the field in.
+  "housingListing.location.noAddressOnFileNote":
+    "You have access to the exact address, and this lister has not added one. Ask them for it when you arrange a visit.",
+  // The owner's own two states. `precise` is granted to the owner, a connected
+  // member and an accepted viewer alike, so both notes above pointed an owner at
+  // themselves: one told them they were "connected" to their own home, the other
+  // told them to ask the lister for an address they are the lister of. The two
+  // keys above are unchanged and still correct for the reader they were written
+  // for.
+  "housingListing.location.ownExactNote":
+    "This is your own listing, so you're seeing the exact address you saved.",
+  "housingListing.location.ownNoAddressNote":
+    "You haven't added a street address to this listing yet. Add one and people you let in will see the exact spot.",
   "housingListing.location.addressLabel": "Address",
   "housingListing.location.mapAreaAria":
     "Map showing the approximate area of {title}",
@@ -3771,6 +3917,23 @@ export const economy: Catalog = {
   "housingGroups.norms.sub":
     "House rules everyone here agrees to. Break them and you're out, that's the point.",
   "housingGroups.listings.title": "Rooms and flats inside",
+  // ENG-171, the read side. A vetted group's whole pitch is that rooms come
+  // from screened members, and until now anyone at all, signed out included,
+  // could read them. The group itself stays public and discoverable, because
+  // the join flow depends on a stranger finding it: what is withheld is the
+  // rooms, and how many there are.
+  //
+  // Three sentences rather than one, because the next step differs: wait, ask,
+  // or accept the answer. Someone already declined is given the answer instead
+  // of a button that asks the same stewards again. Nothing here names a count,
+  // a title or a rent.
+  "housingGroups.listings.locked.title": "Rooms stay inside the group",
+  "housingGroups.listings.locked.none":
+    "This group keeps the rooms shared in it for the people it has let in. Ask to join, and a steward will say hello.",
+  "housingGroups.listings.locked.pending":
+    "Your request to join is still with the stewards. The rooms shared here open up once one of them says yes.",
+  "housingGroups.listings.locked.declined":
+    "Your request to join wasn't approved, so the rooms shared here stay inside the group.",
   "housingGroups.listings.perMonth": "€{price} / mo",
   "housingGroups.listings.accessLabel": "Access:",
   "housingGroups.listings.empty":
@@ -3806,6 +3969,9 @@ export const economy: Catalog = {
   "placeholder.notSet": "Not set",
   "member.fallbackName": "A member",
   "housing.fact.rent": "Rent",
+  // PRD-250. Rendered only when the lister actually stated a deposit: a blank
+  // means "not stated" and must never render as zero.
+  "housing.fact.deposit": "Deposit",
   "housing.fact.rentPerMonth": "{amount} / month",
   "housing.fact.area": "Area",
   "housing.fact.available": "Available",
@@ -3842,6 +4008,13 @@ export const economy: Catalog = {
   "company.hiringContact.fallbackRole":
     "Applications are read by the team here.",
   "landlord.recommendation.when": "Recommended {date}",
+  // PRD-249. Month precision on purpose. A date would demand a day nobody
+  // remembers and then print it back as if it were known. "Says they" throughout:
+  // the platform is reporting a claim, never endorsing it.
+  "landlord.recommendation.tenancy.range": "Says they rented {from} to {to}",
+  "landlord.recommendation.tenancy.ongoing":
+    "Says they have rented since {from}",
+  "landlord.recommendation.reply.published": "Published by the team, {date}",
   "housingCoop.card.phaseLabel": "Phase {number} · {phase}",
   "housingCoop.card.phaseWord.forming": "forming",
   "housingCoop.card.phaseWord.legal": "legal",
@@ -3956,6 +4129,40 @@ export const economy: Catalog = {
   "groupListing.mine.empty":
     "You have not shared a room here yet. When you do, it will show up in this spot with its review state.",
   "groupListing.mine.postedOn": "Posted {date}",
+
+  // PRD-242. Where a member sees what happened to a co-op or housing-group
+  // application. Until this there was no bell AND no page: both triage methods
+  // wrote the status, returned the admin DTO and stopped, and neither
+  // controller exposed a read. A member applied, saw a success panel, and then
+  // nothing ever. The bell now fires and these surfaces are what it opens.
+  //
+  // "Notification" here always means the in-app bell. QueerPulse sends no email
+  // and never will, so no string in this block may imply one.
+  "housingJoinRequests.coop.title": "Your applications",
+  "housingJoinRequests.coop.titleEm": "to co-ops",
+  "housingJoinRequests.coop.sub":
+    "Every co-op you have asked to join, and where each request stands. You get a notification the moment one is decided.",
+  "housingJoinRequests.group.title": "Your application",
+  "housingJoinRequests.group.titleEm": "to this group",
+  "housingJoinRequests.group.sub":
+    "Where your request to join stands. You get a notification the moment the stewards decide.",
+  "housingJoinRequests.askedOn": "Asked {date}",
+  // The three status pills (amber / jade / danger).
+  "housingJoinRequests.status.pending": "Waiting on a decision",
+  "housingJoinRequests.status.accepted": "You are in",
+  "housingJoinRequests.status.declined": "Not this time",
+  // The sentence under each pill.
+  "housingJoinRequests.outcome.pending":
+    "Nobody has decided yet. This updates here as soon as they do.",
+  "housingJoinRequests.outcome.accepted":
+    "You were let in. Anything that happens next comes from the people who run it.",
+  "housingJoinRequests.outcome.declined":
+    "This one was not approved. You can ask again later, or look at the others.",
+  // Named at submit time, so the member knows where to come back to.
+  "joinCoop.success.whereToCheck":
+    "You will find this application, and what is decided about it, further down this page.",
+  "joinGroup.success.whereToCheck":
+    "You will find this application, and what the stewards decide, at the top of the group page.",
 
   "groupListing.mine.status.review": "Waiting for review",
   "groupListing.mine.status.question": "A question for you",

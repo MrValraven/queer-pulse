@@ -92,10 +92,19 @@ export function WhereGrid() {
   );
 }
 
-/** FAQ #2 (deadname) and #6 (legal name data) carry an `<a>` run needing a real link. */
+/**
+ * FAQ #2 (deadname) and #6 (legal name data) carry an `<a>` run needing a real
+ * link.
+ *
+ * PRD-272: #2 was a `mailto:hello@queerpulse.com`. Somebody asking for a
+ * deadname to be removed is asking for an ACCOUNT change, which is exactly
+ * what the Contact form's `account` topic is for — a tracked row with an
+ * owner and a status, rather than a mail client and a shared inbox. The ask
+ * is also often urgent and personal, and "we replied, honest" with nothing to
+ * point at is the worst possible answer to it.
+ */
 const FAQ_LINK: Record<number, ReactElement> = {
-  // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- <a> is an element template; <Translation> clones it with link text at render time.
-  1: <a href="mailto:hello@queerpulse.com" />,
+  1: <Link to={`${routes.contact}?topic=account`} />,
   5: <Link to={routes.dataExport} />,
 };
 

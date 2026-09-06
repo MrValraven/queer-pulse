@@ -399,6 +399,17 @@
   color: var(--ink-40);
   cursor: not-allowed;
 }
+/* DES-170: the "(optional)" suffix inside a field label. The label is
+   uppercase, bold and letter-spaced; this steps out of all three so the aside
+   reads as an aside. Was a shared inline-style object carrying a `fontSize: 11`
+   literal. */
+.optionalSuffix {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--text-11);
+}
+
 .helper {
   font-size: var(--text-12);
   color: var(--ink-40);
@@ -515,6 +526,13 @@
   transition:
     border-color 0.2s,
     background 0.2s;
+}
+/* DES-170: the Google mark used to carry width/height attributes of its own.
+   Sized here now that it comes from react-icons, which renders at 1em. */
+.google svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
 }
 /* Matches the shared Button's disabled treatment (opacity .4 + not-allowed), so
    the busy/disabled state of this CTA reads the same as every other one. */
@@ -772,6 +790,39 @@
   margin: 0 auto 26px;
 }
 
+/* PRD-306: the invite-code entry page. A quiet coral tile rather than the jade
+   `.sentIc` with its ripple, because nothing has happened yet: this is a door
+   being opened, not a confirmation. */
+.codeIcon {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 20px;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+}
+.codeIcon svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* An invite code is read character by character, so it gets the mono face and
+   is shown upper-case: that is the only case codes are ever minted in, and it
+   is what `normalizeInviteCode` sends, so the field shows what will be looked
+   up rather than what happened to be typed. */
+.codeInput {
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.codeInput::placeholder {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 /* Magic-link sent state */
 .sentIc {
   width: 80px;
@@ -785,6 +836,32 @@
   color: var(--jade);
   position: relative;
 }
+/* DES-170: the check inside the tile is a react-icons glyph now, which renders
+   at 1em, so the tile sizes it here instead of the icon carrying its own
+   width/height attributes. */
+.sentIc svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* DES-170: the request-sent confirmation's own layout, lifted out of inline
+   styles (`textAlign`, a `34ch` measure, and a `13.5px` font size that is now
+   the `--text-13-5` token `.footer a` already applies). */
+.sentScreen {
+  text-align: center;
+}
+.sentSub {
+  max-width: 34ch;
+  margin: 0 auto 28px;
+}
+/* `.footer a` owns this link's type, colour and weight. This only lines the
+   back arrow up with the words beside it. */
+.backHomeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .sentIc::after {
   content: "";
   position: absolute;

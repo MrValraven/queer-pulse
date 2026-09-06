@@ -15,7 +15,7 @@ import styles from "./SubprofileDeleteModal.module.css";
  * Type-to-confirm delete for the editor's Publish pane. Mirrors the
  * dashboard's (`MySubprofilesPage`) co-owner-aware delete copy/logic — the
  * same `useSubprofileMembers` shared-delete detection feeding
- * `deleteModalBodyShared` vs. `deleteModalBody`, and the same
+ * `deleteModalBodyCoOwned` vs. `deleteModalBody`, and the same
  * `useSubprofileMutations().remove` call — but additionally requires typing
  * the persona's display name before Delete enables, and spells out exactly
  * what's lost (`.losing`, the global "what breaks" list) rather than a plain
@@ -24,6 +24,12 @@ import styles from "./SubprofileDeleteModal.module.css";
  * from the editor that leaves the now-deleted persona's editor; from the
  * dashboard itself the navigate is a no-op and the closed modal + invalidated
  * list is all that's needed (this same modal backs both delete entry points).
+ *
+ * CREATOR ONLY. `SubprofilesService.remove` rejects every other co-owner with a
+ * 403, so both entry points gate the Delete affordance on `usePersonaIsCreator`
+ * and offer `LeavePersonaModal` instead. A co-owner must never reach this
+ * confirmation: typing the persona's name only to collect a generic failure
+ * toast teaches nothing and points nowhere.
  */
 export function SubprofileDeleteModal({
   subprofile,
@@ -39,8 +45,12 @@ export function SubprofileDeleteModal({
   const { data: members } = useSubprofileMembers(subprofile.id);
   const [typedName, setTypedName] = useState("");
 
-  const coOwnerCount = members?.length ?? 0;
-  const isSharedDelete = coOwnerCount > 1;
+  // The roster includes the creator, who is the only member who can be reading
+  // this modal, so the count that belongs in the copy is everyone ELSE. The old
+  // wording said "all {n} co-owners" with the full roster length, which counted
+  // the reader among the people they were about to take the persona from.
+  const otherOwnerCount = Math.max((members?.length ?? 0) - 1, 0);
+  const isSharedDelete = otherOwnerCount > 0;
   const requiredName =
     subprofile.displayName.trim() ||
     t("subprofiles:mine.deleteModalDefaultName");
@@ -85,9 +95,9 @@ export function SubprofileDeleteModal({
       <div className={styles.body}>
         <p>
           {isSharedDelete
-            ? t("subprofiles:mine.deleteModalBodyShared", {
+            ? t("subprofiles:mine.deleteModalBodyCoOwned", {
                 name: requiredName,
-                n: coOwnerCount,
+                count: otherOwnerCount,
               })
             : t("subprofiles:mine.deleteModalBody")}
         </p>

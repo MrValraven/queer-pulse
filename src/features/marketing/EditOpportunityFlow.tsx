@@ -25,7 +25,10 @@ export function EditOpportunityFlow({ slug }: { slug: string }) {
 
   if (isLoading) return <SkeletonCard />;
 
-  if (!data?.opportunity || !data.isPoster) {
+  // Poster-only: `canEditOpportunity` is the API's own edit capability, which
+  // (unlike `canReviewApplicants`) never widens to the attributed community's
+  // owners and mods.
+  if (!data?.opportunity || !data.canEditOpportunity) {
     return (
       <EmptyState
         title={t("marketing:postOpportunity.edit.notAllowed")}

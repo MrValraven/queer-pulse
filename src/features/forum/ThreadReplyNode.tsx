@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes, thread as threadPath } from "../../app/routeMap";
+import { nestedReplyDraftId } from "./api/forumDrafts.api";
 import { type Reply } from "./forum.data";
 import { countDescendants, type ReplyNode } from "./buildReplyTree";
 import { ThreadReplyItem } from "./ThreadReplyItem";
@@ -85,6 +88,10 @@ export function ThreadReplyNode({
   setInlineDraft,
 }: ThreadReplyNodeProps) {
   const { t } = useTranslation();
+  // Which thread this reply belongs to, read from the route rather than
+  // threaded down through every recursion level. It scopes the inline
+  // composer's draft, so two threads' answers can never share a key.
+  const { id: threadRouteId } = useParams<{ id: string }>();
   // Once a branch-off past the indent cap is opened, it stays open for the
   // rest of this node's lifetime (no reason to re-collapse it automatically).
   const [continued, setContinued] = useState(false);
@@ -165,6 +172,20 @@ export function ThreadReplyNode({
             setReply={setInlineDraft}
             onPost={onPostReply}
             textareaRef={inlineTextareaRef}
+            // PRD-166 — the inline composer autosaves like the bottom one, but
+            // keyed to (thread, parent post): a mis-tap on another reply's
+            // "Reply" no longer throws away half a paragraph, and two answers
+            // under two different replies cannot overwrite each other.
+            draft={{
+              draftId: nestedReplyDraftId(
+                threadRouteId ?? "unsaved",
+                node.reply.postId ?? node.reply.id,
+              ),
+              title: t("forum:draft.inlineReplyTitle", {
+                name: node.reply.name,
+              }),
+              href: threadRouteId ? threadPath(threadRouteId) : routes.forum,
+            }}
           />
           <Button
             variant="ghost"

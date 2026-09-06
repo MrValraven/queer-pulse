@@ -1,6 +1,25 @@
 import type { HousingListingFilters } from "./api/housingListing.api";
 import { FILTERS } from "./housing.data";
 import type { HousingListing } from "./housingListings";
+import {
+  HOUSING_FURNISHED_FEATURE,
+  HOUSING_PETS_WELCOME_FEATURE,
+} from "./listSpaceOptions.data";
+
+/**
+ * Whether a listing's `features` carry a canonical chip. Whole entry, case
+ * insensitive, exactly what the backend's `hasHousingFeature` and the browse
+ * SQL's `lower(btrim(...))` comparison do, so the demo board and the live board
+ * agree on what "furnished" means.
+ *
+ * Substring matching is deliberately avoided in both places: `Unfurnished`
+ * contains `furnished`, so it would show unfurnished rooms to someone asking
+ * for a furnished one.
+ */
+function hasHousingFeature(features: string[], canonical: string): boolean {
+  const wanted = canonical.trim().toLowerCase();
+  return features.some((feature) => feature.trim().toLowerCase() === wanted);
+}
 
 /**
  * The directory filter set the board builds and the saved searches store —
@@ -22,7 +41,10 @@ export function activeFilterCount(filters: HousingFilters): number {
   if (filters.bedroomsMin !== undefined) count += 1;
   if (filters.billsIncluded) count += 1;
   if (filters.hasAccessibilityInfo) count += 1;
+  if (filters.furnished) count += 1;
+  if (filters.petsWelcome) count += 1;
   if (filters.verifiedOnly) count += 1;
+  if (filters.depositMax !== undefined) count += 1;
   if (filters.availableBy) count += 1;
   return count;
 }
@@ -70,7 +92,12 @@ export function housingFiltersToSearchParams(
   }
   if (filters.billsIncluded) params.set("billsIncluded", "true");
   if (filters.hasAccessibilityInfo) params.set("hasAccessibilityInfo", "true");
+  if (filters.furnished) params.set("furnished", "true");
+  if (filters.petsWelcome) params.set("petsWelcome", "true");
   if (filters.verifiedOnly) params.set("verifiedOnly", "true");
+  if (filters.depositMax !== undefined) {
+    params.set("depositMax", String(filters.depositMax));
+  }
   if (filters.availableBy) params.set("availableBy", filters.availableBy);
   return params;
 }
@@ -116,7 +143,10 @@ export function housingFiltersFromSearchParams(
     bedroomsMin: readNumberParam(params, "bedroomsMin"),
     billsIncluded: readFlagParam(params, "billsIncluded"),
     hasAccessibilityInfo: readFlagParam(params, "hasAccessibilityInfo"),
+    furnished: readFlagParam(params, "furnished"),
+    petsWelcome: readFlagParam(params, "petsWelcome"),
     verifiedOnly: readFlagParam(params, "verifiedOnly"),
+    depositMax: readNumberParam(params, "depositMax"),
     availableBy:
       availableBy && ISO_DATE_PATTERN.test(availableBy)
         ? availableBy
@@ -167,6 +197,28 @@ export function matchesHousingFilters(
   }
   if (filters.billsIncluded && !listing.billsIncluded) return false;
   if (filters.hasAccessibilityInfo && !listing.accessibilityInfo) return false;
+  if (
+    filters.furnished &&
+    !hasHousingFeature(listing.features, HOUSING_FURNISHED_FEATURE)
+  ) {
+    return false;
+  }
+  if (
+    filters.petsWelcome &&
+    !hasHousingFeature(listing.features, HOUSING_PETS_WELCOME_FEATURE)
+  ) {
+    return false;
+  }
+  if (filters.depositMax !== undefined) {
+    // Same rule the backend applies: a listing that states no deposit is
+    // unknown, never zero, so it cannot satisfy a cap.
+    if (
+      listing.depositEuros === undefined ||
+      listing.depositEuros > filters.depositMax
+    ) {
+      return false;
+    }
+  }
   if (filters.verifiedOnly && !listing.verified) return false;
   // `availableBy` is applied server-side in live mode; demo fixtures carry a
   // human `avail` label ("1 Jul", "Now"), not a real date, so it isn't

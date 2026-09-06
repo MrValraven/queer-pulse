@@ -32,6 +32,8 @@ Disallow: /feed
 Disallow: /search
 Disallow: /members
 Disallow: /member-directory-filter
+# The persona directory. `/p/:handle` (a standalone persona page) stays public.
+Disallow: /subprofiles
 Disallow: /dating
 Disallow: /reading-groups
 Disallow: /family
@@ -161,6 +163,8 @@ Disallow: /feed
 Disallow: /search
 Disallow: /members
 Disallow: /member-directory-filter
+# The persona directory. `/p/:handle` (a standalone persona page) stays public.
+Disallow: /subprofiles
 Disallow: /dating
 Disallow: /reading-groups
 Disallow: /family

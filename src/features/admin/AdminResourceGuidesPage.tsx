@@ -9,6 +9,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ApiError } from "../../shared/api/client";
+import { todayIso } from "../../shared/lib/date";
 import { routes } from "../../app/routeMap";
 import { AdminPageHeader } from "./ui";
 import { useAdminResourceGuides } from "./api/useAdminResourceGuides";
@@ -49,8 +50,23 @@ export function AdminResourceGuidesPage() {
   const isForbidden =
     isError && error instanceof ApiError && error.status === 403;
   const guides = data ?? [];
+  // Never reviewed, and therefore NOT PUBLIC: `ResourcesService` requires
+  // `last_reviewed_on IS NOT NULL` on every public read, so these guides are
+  // invisible to members until somebody reads one end to end.
   const staleCount = guides.filter(
     (guide) => guide.lastReviewedOn === null,
+  ).length;
+  // PRD-270. Reviewed once and now past their date: still published, still
+  // being read, carrying an "overdue" footer. A different problem from the one
+  // above and a different sentence, so the two are counted apart rather than
+  // summed into a number that means neither. `review_due_on` is a plain
+  // `yyyy-mm-dd`, which compares correctly as a string against today's.
+  const today = todayIso();
+  const overdueCount = guides.filter(
+    (guide) =>
+      guide.lastReviewedOn !== null &&
+      guide.reviewDueOn !== null &&
+      guide.reviewDueOn <= today,
   ).length;
 
   return (
@@ -94,6 +110,14 @@ export function AdminResourceGuidesPage() {
       {!isLoading && !isError && staleCount > 0 && (
         <p className={styles.staleBanner}>
           {t("admin:adminResourceGuides.staleBanner", { count: staleCount })}
+        </p>
+      )}
+
+      {!isLoading && !isError && overdueCount > 0 && (
+        <p className={styles.staleBanner}>
+          {t("admin:adminResourceGuides.overdueBanner", {
+            count: overdueCount,
+          })}
         </p>
       )}
 

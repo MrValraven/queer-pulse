@@ -28,7 +28,9 @@ import {
  * feed's type switch.
  *
  * Backend mapping: `title` = thread title, `summary` =
- * "{category} · N replies", `link` = `/forum/threads/{slug}`.
+ * "{category} · N replies" (a LIVE count that excludes deleted replies since
+ * ENG-132), `link` = `/forum/threads/{slug}`, and `excerpt` = the opening
+ * post as plain text (PRD-167), which may be null.
  *
  * SOC-04/SOC-18: it also carries the "why am I seeing this" line and a
  * per-thread "show me less of this". Muting a thread quiets that one
@@ -95,6 +97,12 @@ export function ForumThreadCard({ item }: { item: FeedItem }) {
         }
       />
       <FeedQuote>{item.title}</FeedQuote>
+      {/* PRD-167: the opening post's own words, so a thread is decided on the
+          same terms as every other card in the feed. The backend already
+          strips the markup and cuts it to 180 characters on a word boundary,
+          and sends null when there is nothing readable to show, which renders
+          nothing at all rather than an empty slot. */}
+      {item.excerpt && <p className={styles.threadExcerpt}>{item.excerpt}</p>}
       <FeedReasonLine reason={item.reason} subject={item.reasonSubject} />
       <FeedActions
         primary={

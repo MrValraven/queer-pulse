@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import type { GroupMemberPick } from "./NewGroupModal";
 import type {
   useCreateGroup,
@@ -12,6 +13,7 @@ import { useGroupCreation } from "./useGroupCreation";
 import { useMessageForwarding } from "./useMessageForwarding";
 import { useMessageDeepLinks } from "./useMessageDeepLinks";
 import type { CreationOutcome } from "./messageCreation.types";
+import type { MediaKind } from "./messageSending.helpers";
 
 export type { CreationOutcome } from "./messageCreation.types";
 
@@ -46,8 +48,8 @@ interface CreationDeps {
     localId: string,
     replyToId?: string,
     forwarded?: boolean,
-    attachment?: GifAttachment,
-    mediaKind?: "gif" | "image",
+    attachment?: GifAttachment | DocumentAttachment,
+    mediaKind?: MediaKind,
   ) => void;
   /** From the sending sub-hook — re-keys and re-drives any outbox entries
    *  queued under a placeholder id once its real conversation exists. */
@@ -65,8 +67,8 @@ export interface MessageCreation {
   forwardMessage: (
     recipient: Conversation,
     text: string,
-    attachment?: GifAttachment,
-    mediaKind?: "gif" | "image",
+    attachment?: GifAttachment | DocumentAttachment,
+    mediaKind?: MediaKind,
     outcome?: CreationOutcome,
   ) => void;
 }

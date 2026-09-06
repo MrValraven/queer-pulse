@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -12,6 +12,11 @@ import { STAGE_DTO_TO_VIEW } from "./api/pieces.adapters";
 import { StagePill } from "./desk/StagePill";
 import { StageStepper } from "./desk/StageStepper";
 import { PublishGateCard } from "./desk/PublishGateCard";
+import { PiecePublishModal } from "./desk/PiecePublishModal";
+import {
+  usePiecePublishAction,
+  type PiecePublishAction,
+} from "./desk/usePiecePublishAction";
 import { PieceTabsNav, type PieceRecordTabId } from "./desk/PieceTabsNav";
 import { MoneyMiniCard } from "./desk/MoneyMiniCard";
 import { BriefTab } from "./desk/BriefTab";
@@ -21,25 +26,109 @@ import { HistoryTab } from "./desk/HistoryTab";
 import { AfterTab } from "./desk/AfterTab";
 import styles from "./PieceRecordPage.module.css";
 
+interface PieceRecordActionsProps {
+  action: PiecePublishAction;
+  title: string;
+  openGateCount: number;
+  onOpenDraft: () => void;
+}
+
+/**
+ * The sticky header's right-hand action group: open the draft, view the live
+ * page, and publish or unpublish. A sibling component of the page rather than
+ * inline JSX so `PieceRecordPage` stays inside the 200-line budget.
+ */
+function PieceRecordActions({
+  action,
+  title,
+  openGateCount,
+  onOpenDraft,
+}: PieceRecordActionsProps) {
+  const { t } = useTranslation();
+  const publishReasonId = useId();
+  const hasOpenGateItems = openGateCount > 0;
+
+  return (
+    <div className={styles.right}>
+      <Button variant="ghost" size="sm" onClick={onOpenDraft}>
+        {t("magazine:piece.header.openDraft")}
+      </Button>
+      {action.isPublished && action.publicHref && (
+        <Button
+          variant="ghost"
+          size="sm"
+          to={action.publicHref}
+          aria-label={t("magazine:piece.publish.viewLiveAria", { title })}
+        >
+          <FiExternalLink aria-hidden />
+          {t("magazine:piece.publish.viewLive")}
+        </Button>
+      )}
+      {action.isPublished || action.isScheduled ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={action.askToUnpublish}
+          disabled={action.isPending}
+        >
+          {t("magazine:piece.publish.unpublish")}
+        </Button>
+      ) : (
+        <Button
+          variant="plum"
+          size="sm"
+          // `aria-disabled`, never `disabled`: the button keeps its place in
+          // the tab order so a screen reader can reach the reason below, and
+          // the server is the gate that actually counts.
+          aria-disabled={hasOpenGateItems || action.isPending}
+          aria-describedby={hasOpenGateItems ? publishReasonId : undefined}
+          onClick={action.askToPublish}
+        >
+          {t("magazine:piece.header.publish")}
+        </Button>
+      )}
+      {hasOpenGateItems && (
+        <span id={publishReasonId} className="visuallyHidden">
+          {t("magazine:piece.publish.blockedByGate", { count: openGateCount })}
+        </span>
+      )}
+    </div>
+  );
+}
+
 /**
  * The full piece record — brief, care & consent, money, history and reader
  * letters — behind `/magazine/editor/piece/:id`. "Open the draft" navigates
  * to the block-based article editor (`routes.magazineWrite`) for
  * article-format pieces (Phase 3), and to the deck editor
  * (`routes.deckEditor`) for deck-format pieces (Phase 4) — opening the
- * linked deck directly when `deckId` is set, otherwise a fresh deck. Publish
- * stays disabled while the publish gate has any open item — the gate is not
- * advisory (see `PublishGateCard`).
+ * linked deck directly when `deckId` is set, otherwise a fresh deck.
+ *
+ * Publish and Unpublish are real (PRD-119/PRD-120) and both confirm first;
+ * `usePiecePublishAction` owns the whole action so the header button and the
+ * rail's `PublishGateCard` can never disagree. Publish reads as blocked while
+ * the care gate has an open item, though the gate that counts is the server's:
+ * it re-checks every attempt and its refusal is rendered item by item.
+ * Unpublish is never gated.
  */
 export function PieceRecordPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { record, isLoading, isError } = usePieceRecord(id!);
-  const { markPaid, toggleLetterRunInLetters, addCorrection, savePayment } =
-    useRecordMutations(id!);
+  const {
+    markPaid,
+    toggleLetterRunInLetters,
+    addCorrection,
+    savePayment,
+    publish,
+    unpublish,
+  } = useRecordMutations(id!);
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [tab, setTab] = useState<PieceRecordTabId>("brief");
+  // Above the early returns: hooks cannot run conditionally, so the action
+  // hook tolerates an undefined record while the page is still loading.
+  const publishAction = usePiecePublishAction({ record, publish, unpublish });
 
   if (isLoading) {
     return (
@@ -86,7 +175,6 @@ export function PieceRecordPage() {
   const openGateCount = pieceRecord.publishGate.filter(
     (item) => !item.done,
   ).length;
-  const hasOpenGateItems = openGateCount > 0;
   const formatLabel =
     pieceRecord.format === "article"
       ? t("magazine:piece.header.formatArticle")
@@ -97,7 +185,6 @@ export function PieceRecordPage() {
   const issueLabel = pieceRecord.issueId
     ? t("magazine:piece.header.inAnIssue")
     : t("magazine:piece.header.notScheduled");
-  const publishStub = () => showToast(t("magazine:piece.header.publishToast"));
   // Live mode routes by the real piece id; demo mode's article editor ignores
   // the id and always shows DEMO_ARTICLE (fine — there's only one demo draft
   // fixture today). Deck-format pieces open the deck editor: the linked
@@ -166,19 +253,12 @@ export function PieceRecordPage() {
             </span>
           </div>
           <StagePill stage={displayStage} />
-          <div className={styles.right}>
-            <Button variant="ghost" size="sm" onClick={handleOpenDraft}>
-              {t("magazine:piece.header.openDraft")}
-            </Button>
-            <Button
-              variant="plum"
-              size="sm"
-              disabled={hasOpenGateItems}
-              onClick={publishStub}
-            >
-              {t("magazine:piece.header.publish")}
-            </Button>
-          </div>
+          <PieceRecordActions
+            action={publishAction}
+            title={pieceRecord.title}
+            openGateCount={openGateCount}
+            onOpenDraft={handleOpenDraft}
+          />
         </div>
 
         <div className={styles.ework}>
@@ -194,7 +274,8 @@ export function PieceRecordPage() {
           <aside className={styles.erail}>
             <PublishGateCard
               publishGate={pieceRecord.publishGate}
-              onPublish={publishStub}
+              action={publishAction}
+              onOpenCare={() => setTab("care")}
             />
             <StageStepper stage={pieceRecord.stage} />
             <MoneyMiniCard
@@ -204,6 +285,18 @@ export function PieceRecordPage() {
           </aside>
         </div>
       </div>
+
+      <PiecePublishModal
+        intent={publishAction.confirmIntent}
+        title={pieceRecord.title}
+        isPending={publishAction.isPending}
+        onClose={publishAction.closeConfirm}
+        onConfirm={
+          publishAction.confirmIntent === "unpublish"
+            ? publishAction.confirmUnpublish
+            : publishAction.confirmPublish
+        }
+      />
     </MagazineDeskShell>
   );
 }

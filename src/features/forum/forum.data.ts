@@ -13,6 +13,7 @@ import { FaHandFist } from "react-icons/fa6";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { tintForSlug, initialsOf } from "../../shared/api/refs";
 import { MEMBERS, fullName, currentUser } from "../members/data/members";
+import type { ReplySort } from "./api/forum.api";
 
 /**
  * i18n Pattern A + label-key indirection: `id` is the canonical value the rest
@@ -31,20 +32,49 @@ export const CATS: { id: string; nameKey: string; icon: IconType }[] = [
   { id: "trans", nameKey: "forum:cat.trans", icon: FiZap },
 ];
 
-export const CAT_STYLE: Record<string, { background: string; color: string }> =
-  {
-    general: { background: "rgba(45,27,61,.08)", color: "var(--plum)" },
-    housing: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
-    health: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
-    arts: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
-    activism: {
-      background: "rgba(var(--danger-rgb),.07)",
-      color: "var(--danger)",
-    },
-    guides: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
-    jobs: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
-    trans: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
-  };
+/**
+ * The colour family a category reads in (DES-120). SEMANTIC only: the real
+ * values live in the consuming stylesheet, so a category badge is styled by a
+ * CSS Module class rather than an inline `style` object built from literals.
+ *
+ * The washes used to be hardcoded `rgba()` triples here. `rgba(45,27,61,.08)`
+ * is plum, and neither `--plum` nor `--plum-rgb` flips in dark mode, so the
+ * "general" badge sat as a light smudge carrying near-black text on a dark
+ * card. `neutral` now resolves to the line/ink channels, which do flip.
+ */
+export type CategoryTone = "neutral" | "jade" | "violet" | "coral" | "danger";
+
+export const CAT_TONE: Record<string, CategoryTone> = {
+  general: "neutral",
+  housing: "jade",
+  health: "violet",
+  arts: "coral",
+  activism: "danger",
+  guides: "jade",
+  jobs: "coral",
+  trans: "violet",
+};
+
+/**
+ * The category label's TEXT colour, for the surfaces that tint a category name
+ * without the badge chrome around it (the thread page's OP card). Tokens only,
+ * and every one of them flips in dark mode: `--text-strong` is the plum-for-text
+ * token, `--jade-ink` is the jade tuned to carry small text on a jade tint, and
+ * `--violet` / `--accent-ink` / `--danger` each get a dark-mode override.
+ *
+ * The badge itself no longer reads this: it takes its whole appearance from the
+ * `CAT_TONE` class in the stylesheet.
+ */
+export const CAT_STYLE: Record<string, { color: string }> = {
+  general: { color: "var(--text-strong)" },
+  housing: { color: "var(--jade-ink)" },
+  health: { color: "var(--violet)" },
+  arts: { color: "var(--accent-ink)" },
+  activism: { color: "var(--danger)" },
+  guides: { color: "var(--jade-ink)" },
+  jobs: { color: "var(--accent-ink)" },
+  trans: { color: "var(--violet)" },
+};
 
 export interface Reply {
   /** Stable identity for tree assembly. Live = backend post id; demo = seeded/generated id. */
@@ -152,6 +182,13 @@ export interface Thread {
   deleted?: boolean;
   removedByModerator?: boolean;
   canEdit?: boolean;
+  /** The THREAD's own author permission (`ForumThreadResponse.canEdit`), kept
+   *  under its own name because `canEdit` on a thread DETAIL view-model is the
+   *  OPENING POST's permission instead (see `threadDetail`). The post one goes
+   *  false as soon as that post is tombstoned; the author's right to withdraw
+   *  or refile the thread does not, so `canDeleteThread` and
+   *  `canMoveThreadCategory` read this. Live-provided; absent in demo. */
+  canEditTitle?: boolean;
   canDelete?: boolean;
   canRestore?: boolean;
   canViewHistory?: boolean;
@@ -176,6 +213,30 @@ export interface Thread {
   canEditTags?: boolean;
   /** Resolved URL of a photo attached to the opening post, when there is one. */
   opImage?: string;
+  /** When the thread was opened (ISO). Live-provided; absent on demo threads.
+   *  Drives the author's 24-hour category-move window (PRD-163). There is no
+   *  server flag for it, so it is computed from this. */
+  createdAt?: string;
+  /** The WHOLE thread has been withdrawn (PRD-160). Only ever true in a
+   *  platform moderator's view; every other read path filters these out. */
+  isDeleted?: boolean;
+  /** How many replies have landed since the member last opened this thread
+   *  (PRD-170), capped at 99 by the server.
+   *
+   *  `null` means there is no watermark to compare against: an anonymous
+   *  visitor, a thread they have never opened, or a write echo from
+   *  follow/lock/pin/delete/create/update. `0` means they are caught up. Only
+   *  `1..99` earns a badge; `null` and `0` render nothing. Undefined on demo
+   *  threads, which have no server. */
+  unreadReplyCount?: number | null;
+  /** Whether the OPENING POST is readable by this viewer (ENG-130).
+   *
+   *  Undefined while the posts page is still in flight and on demo threads.
+   *  `false` is the server saying this thread carries no OP anyone here can
+   *  see (its author is muted/blocked for this viewer, a moderator hid it, or
+   *  the thread genuinely has no `is_op` post): the OP card says so plainly
+   *  and every post that DID come back is rendered as a reply. */
+  isOpAvailable?: boolean;
 }
 
 // ── Author / reply identity, driven by the member registry ──────────────────
@@ -948,11 +1009,19 @@ export const MOD_ROLE_KEY: Record<string, string> = {
  * thing that changes with language.
  */
 export const REPLY_SORTS: {
-  id: "oldest" | "newest" | "mostHelpful";
+  id: ReplySort;
   labelKey: string;
 }[] = [
   { id: "oldest", labelKey: "forum:replySort.oldest" },
   { id: "newest", labelKey: "forum:replySort.newest" },
-  { id: "mostHelpful", labelKey: "forum:replySort.mostHelpful" },
+  // "Most helpful" is the LABEL; `top` is the server's ordering
+  // (`vote_count DESC`, oldest reply as the tie-break). The id is the value
+  // that goes on the wire, so it has to be the server's word for it
+  // (PRD-162) — it used to be a client-only `mostHelpful` that reordered
+  // whichever twenty replies happened to be loaded.
+  { id: "top", labelKey: "forum:replySort.mostHelpful" },
 ];
-export type ReplySortId = (typeof REPLY_SORTS)[number]["id"];
+/** Alias kept for the components that already speak in `ReplySortId`; the
+ *  canonical type is `ReplySort` in `api/forum.api.ts`, which is the exact set
+ *  of values `GET /forum/threads/:slug/posts?sort=` accepts. */
+export type ReplySortId = ReplySort;

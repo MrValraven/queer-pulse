@@ -10,10 +10,24 @@ export type StageState = "done" | "active" | "upcoming" | "rejected";
  * and the live `submissionToPitch` adapter emit the same stable keys. */
 export type PitchStage = { labelKey: string; state: StageState };
 
+/**
+ * One affordance under a tracker card. Exactly one of `label` / `labelKey`
+ * carries the text.
+ *
+ * `label` is plain English and belongs to the demo `PITCHES` registry only: its
+ * copy is name-fused ("Message Marta", "View Marta's edits"), so it was left
+ * unswept when the rest of the surface moved to label-key indirection. Anything
+ * the LIVE adapter emits must use `labelKey`, because live cards are rendered
+ * for real members in their own language.
+ */
 export type PitchAction = {
-  label: string;
+  label?: string;
+  /** Catalog key for the label, resolved via `t()` in `PitchCard.tsx`. */
+  labelKey?: string;
   primary?: boolean;
   to?: string;
+  /** Marks the destructive "pull this pitch back" action. `PitchCard` routes it
+   *  to `onWithdraw` (a confirm step) instead of the generic click handler. */
   withdraw?: boolean;
 };
 

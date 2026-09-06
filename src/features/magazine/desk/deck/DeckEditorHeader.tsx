@@ -5,6 +5,7 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { SlideDeck } from "../../data/decks";
 import { DeckPresentButton } from "../../DeckPresentButton";
 import { DeckViewer } from "../../DeckViewer";
+import { isFutureInstant } from "../editor/scheduleValidity";
 import styles from "../../DeckEditorPage.module.css";
 
 export interface DeckEditorHeaderProps {
@@ -21,6 +22,13 @@ export interface DeckEditorHeaderProps {
   onConvert: () => void;
   publishPending: boolean;
   publishDisabled: boolean;
+  /** The stored publish instant. A FUTURE one means the deck is SCHEDULED,
+   *  which the status tag says rather than claiming it is already out. */
+  publishedAt: string | null;
+  /** Whether the rail's timing segment currently reads "Schedule", so this
+   *  button and the rail's own button never carry different words for the
+   *  same click (PRD-131). */
+  isScheduling: boolean;
   onPublish: () => void;
 }
 
@@ -28,15 +36,15 @@ export interface DeckEditorHeaderProps {
  * The deck editor's sticky `.ebar` header: back to the desk, the deck title +
  * "Deck · {n} slides" sub-line + a status tag + saved indicator, Save draft,
  * "Make it prose" (opens the convert modal), Present (the real `DeckViewer`
- * in a full-screen takeover), and Publish/Unpublish (gated by the same
- * `deckPublishChecklist` the rail renders). Extracted from `DeckEditorPage`
+ * in a full-screen takeover), and Publish/Schedule/Unpublish (gated by the
+ * same `isDeckPublishBlocked` the rail uses). Extracted from `DeckEditorPage`
  * purely to keep that file under the 200-line cap — mirrors the article
  * editor's `ArticleEditorHeader`.
  *
- * Decks have no manual-save-only mode in the design brief's chrome list, but
- * unlike the article editor there's no autosave debounce here — dropping
- * Save would silently break persistence, so it stays, styled into the same
- * `.right` action group as Present/Publish.
+ * Save stays alongside autosave (`useDeckAutosave`, PRD-131) rather than
+ * being dropped: the FIRST write of a brand-new deck is a create that needs
+ * the slug the writer picks, and autosave deliberately does not fire that.
+ * It is styled into the same `.right` action group as Present/Publish.
  */
 export function DeckEditorHeader({
   title,
@@ -50,10 +58,16 @@ export function DeckEditorHeader({
   onConvert,
   publishPending,
   publishDisabled,
+  publishedAt,
+  isScheduling,
   onPublish,
 }: DeckEditorHeaderProps) {
   const { t } = useTranslation();
   const clampedIndex = Math.min(index, Math.max(deck.slides.length - 1, 0));
+  // `isFutureInstant` is documented against the `DatePicker` wall-clock
+  // shape, but it is a plain `new Date(...)` comparison, so a stored ISO
+  // instant answers the same question.
+  const isScheduled = isFutureInstant(publishedAt);
 
   return (
     <div className={styles.ebar}>
@@ -74,9 +88,11 @@ export function DeckEditorHeader({
         </span>
       </div>
       <Tag>
-        {published
-          ? t("magazine:editor.decks.statusPublished")
-          : t("magazine:editor.decks.statusDraft")}
+        {isScheduled
+          ? t("magazine:write.header.statusScheduled")
+          : published
+            ? t("magazine:editor.decks.statusPublished")
+            : t("magazine:editor.decks.statusDraft")}
       </Tag>
       <span className={styles.titleSub}>{savedLabel}</span>
       <div className={styles.right}>
@@ -106,7 +122,9 @@ export function DeckEditorHeader({
         >
           {published
             ? t("magazine:deck.editor.unpublish")
-            : t("magazine:deck.editor.publish")}
+            : isScheduling
+              ? t("magazine:write.publish.scheduleCta")
+              : t("magazine:deck.editor.publish")}
         </Button>
       </div>
     </div>

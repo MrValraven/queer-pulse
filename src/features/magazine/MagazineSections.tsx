@@ -40,7 +40,7 @@ function ArticleCard({ card }: { card: Card }) {
   return (
     <Reveal
       as={Link}
-      {...{ to: `/article?id=${card.id}` }}
+      {...{ to: `${routes.article}?id=${card.id}` }}
       className={styles.ac}
     >
       <div className={styles.acImg}>
@@ -287,7 +287,7 @@ export function MagazineSections() {
               <Reveal
                 as={Link}
                 key={card.id}
-                {...{ to: `/article?id=${card.id}` }}
+                {...{ to: `${routes.article}?id=${card.id}` }}
                 className={styles.ec}
               >
                 <div className={styles.ecKicker}>{card.kicker}</div>

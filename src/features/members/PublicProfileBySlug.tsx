@@ -4,7 +4,9 @@ import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { usePublicProfileBySlug } from "./api/usePublicProfile";
+import { ProfileMovedNote } from "./ProfileMovedNote";
 import { PublicProfilePublicView } from "./PublicProfilePublicView";
+import { useMovedHandleRedirect } from "./useMovedHandleRedirect";
 import styles from "./PublicProfilePage.module.css";
 
 /**
@@ -18,9 +20,21 @@ import styles from "./PublicProfilePage.module.css";
  */
 export function PublicProfileBySlug({ slug }: { slug: string }) {
   const { t } = useTranslation();
-  const { profile, isLoading, notFound } = usePublicProfileBySlug(slug);
+  const { profile, isLoading, notFound, error } = usePublicProfileBySlug(slug);
+  // PRD-204. This route is the one a member prints on a card, puts in a bio or
+  // hands to somebody off the platform, so it is the address least likely to be
+  // re-shared once it breaks, and the person who followed it has no account to
+  // search from. The hook is the same one the member-facing profile uses: it
+  // swaps the slug segment in place, so the shape of this path needs nothing
+  // special from it, and it stays inert in demo mode, which has no handle
+  // ledger to forward through.
+  const isRedirectingToMovedSlug = useMovedHandleRedirect(slug, error);
 
-  if (isLoading) {
+  // Held ABOVE the not-found wall below, which would otherwise claim the moved
+  // 404 as an absence and paint for a frame on the way through. The navigation
+  // can only run from an effect, so this ordering is the fix, and reversing it
+  // would silently undo the whole thing.
+  if (isLoading || isRedirectingToMovedSlug) {
     return (
       <PageShell>
         <div className={styles.page}>
@@ -71,6 +85,16 @@ export function PublicProfileBySlug({ slug }: { slug: string }) {
         image={profile.avatarUrl ?? undefined}
         type="profile"
       />
+
+      {/* Says which username was followed and where it now leads. Shown here
+          for the same reason it is shown to a member, and with more force: the
+          visitor may have no account at all, they arrived from a card or a bio
+          rather than from a link they could go back and check, and the
+          forwarding expires with the 30-day reclaim cooldown, so the address
+          they hold stops working later. Someone told what happened can ask for
+          a current one. It renders only when this very navigation carried the
+          forwarding state, so a first-hand visit and a reload show nothing. */}
+      <ProfileMovedNote />
 
       <div className={styles.page}>
         <PublicProfilePublicView profile={profile} />

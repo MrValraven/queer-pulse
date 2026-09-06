@@ -62,7 +62,8 @@ function ProposalListSkeleton() {
 export function ProposalsSection() {
   const { t } = useTranslation();
   const { loggedIn } = useAuth();
-  const { proposals, loading, error, retry } = useGovernanceProposals();
+  const { proposals, loading, error, retry, isSignedOut } =
+    useGovernanceProposals();
   const [isComposing, setIsComposing] = useState(false);
 
   const shelfOf = (shelf: keyof typeof SHELF_STATUSES) =>
@@ -100,7 +101,15 @@ export function ProposalsSection() {
           </p>
         </div>
       )}
-      {error ? (
+      {/* Order matters. A signed-out visitor never made the request, so they
+          get an honest note about who the ballot is open to — not the retry
+          panel (nothing failed) and not "no proposal has been opened yet"
+          (which would be an invention). The rest of this page is public. */}
+      {isSignedOut ? (
+        <p className={styles.proposalEmpty}>
+          {t("governance:sections.proposals.signedOut")}
+        </p>
+      ) : error ? (
         <SectionError onRetry={retry} />
       ) : loading ? (
         <ProposalListSkeleton />

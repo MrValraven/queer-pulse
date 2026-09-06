@@ -45,6 +45,8 @@ export function MessagesThreadListBody({
   onQueryChange,
   onSelectResult,
   onRequestDelete,
+  onMarkThreadRead,
+  onMarkThreadUnread,
 }: {
   loading: boolean;
   searching: boolean;
@@ -63,6 +65,9 @@ export function MessagesThreadListBody({
   onQueryChange: (value: string) => void;
   onSelectResult: (conversationId: string, messageId?: string) => void;
   onRequestDelete: (thread: Conversation) => void;
+  /** Row menu "Mark as read"/"Mark as unread" (PRD-225). */
+  onMarkThreadRead: (conversationId: string) => void;
+  onMarkThreadUnread: (conversationId: string) => void;
 }) {
   const { t } = useTranslation();
   // "Requests" isn't a conversation filter at all (see `threadFilters.ts`) —
@@ -88,6 +93,8 @@ export function MessagesThreadListBody({
           onRequestDelete={onRequestDelete}
           onSelectResult={onSelectResult}
           onClearSearch={() => onQueryChange("")}
+          onMarkThreadRead={onMarkThreadRead}
+          onMarkThreadUnread={onMarkThreadUnread}
         />
       )}
       {!loading && !searching && threads.length === 0 && (
@@ -128,6 +135,8 @@ export function MessagesThreadListBody({
               pinnedCount={pinnedCount}
               onOpen={onOpen}
               onRequestDelete={onRequestDelete}
+              onMarkThreadRead={onMarkThreadRead}
+              onMarkThreadUnread={onMarkThreadUnread}
             />
           </FadeIn>
         ))}

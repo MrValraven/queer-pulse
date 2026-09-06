@@ -1486,6 +1486,15 @@
   position: relative;
   z-index: 1;
   box-shadow: var(--shadow-e2);
+  overflow: hidden;
+}
+/* The chosen avatar fills the same tile the initials sit in, so the mark keeps
+   its size, its paper ring and its pull-up onto the cover either way. */
+.cpvAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .cpvName {
   font-family: var(--serif);

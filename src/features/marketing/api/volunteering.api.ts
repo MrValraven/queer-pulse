@@ -57,15 +57,27 @@ export interface OpportunityDetailDTO extends OpportunityCardDTO {
   team: MemberRefDTO[];
   applyRole: string;
   poster: MemberRefDTO | null;
-  /** True when the viewer posted this opportunity (reveals the signups list). */
-  isPoster: boolean;
+  /**
+   * The applicant-review tier: the poster, OR an owner/mod of the community
+   * this opportunity is attributed to. Reveals the signups roster and the
+   * manage-applicants entry point, and withdraws the "apply" offer — an
+   * organiser reviewing their own community's posting is not an applicant to
+   * it. Resolved server-side by the same predicate the roster and
+   * accept/decline routes guard on, so the sidebar can never offer a control
+   * the API would refuse.
+   */
+  canReviewApplicants: boolean;
+  /** Poster-only: edit and close speak for the posting itself, so a community
+   *  organiser reviews applicants without inheriting either. */
+  canEditOpportunity: boolean;
   /** True when the viewer has already signed up (drives the "on the list" state). */
   mySignup: boolean;
 }
 
 export type SignupStatus = "pending" | "accepted" | "declined";
 
-/** A single signup, as GET /volunteering/:slug/signups returns (poster-only). */
+/** A single signup, as GET /volunteering/:slug/signups returns (review tier:
+ *  the poster, or an owner/mod of the attributed community). */
 export interface VolunteerSignupDTO {
   id: string;
   member: MemberRefDTO | null;
@@ -183,11 +195,12 @@ export const signUpForOpportunity = (slug: string, note?: string) =>
 export const withdrawSignup = (slug: string) =>
   apiDelete<void>(`/volunteering/${slug}/signups`);
 
-/** Poster-only roster of everyone who signed up. */
+/** The applicant roster, readable by the review tier (poster or community
+ *  owner/mod) — see `OpportunityDetailDTO.canReviewApplicants`. */
 export const getSignups = (slug: string) =>
   apiGet<VolunteerSignupDTO[]>(`/volunteering/${slug}/signups`);
 
-/** Poster-only: accept or decline an applicant. */
+/** Review tier only: accept or decline an applicant. */
 export const decideSignup = (
   slug: string,
   signupId: string,

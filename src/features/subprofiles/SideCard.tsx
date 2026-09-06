@@ -1,10 +1,10 @@
+import type { ReactNode } from "react";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import { SideReadinessRing } from "./SideReadinessRing";
 import { SideStatusPill } from "./SideStatusPill";
-import { SideCardFooter } from "./SideCardFooter";
 import { LINK_BADGE } from "./mySubprofiles.data";
 import {
   accentTintStyle,
@@ -16,14 +16,11 @@ import type { SubprofileView } from "./api/subprofiles.adapters";
 
 interface SideCardProps {
   view: SubprofileView;
-  /** Opens the persona's own page. */
-  onOpen: () => void;
-  /** Opens the persona in the editor. */
-  onEdit: () => void;
-  /** Requests the share affordance (caller owns the actual copy-link/QR flow). */
-  onShare: () => void;
-  /** Requests the delete-confirm flow (caller owns the confirm modal). */
-  onDelete: () => void;
+  /** The `.side-acts` action row, supplied by `OwnerSideCard`. The actions a
+   *  member may take depend on this persona's public address and on whether
+   *  they created it, and both answers come from hooks; keeping them out of
+   *  this pure presenter keeps the card free of data fetching. */
+  footer: ReactNode;
 }
 
 /**
@@ -33,18 +30,12 @@ interface SideCardProps {
  * (published) > `.side-body` (cut-out avatar, name, tagline, tie/avail pills,
  * a state-dependent meta line) > `SideCardFooter`'s `.side-acts`.
  *
- * A pure consumer of the owner `SubprofileView` — no data fetching, no
- * demo/live branching of its own; every action is a caller-supplied callback
- * (dual-mode + the actual share/delete flows live in the dashboard page,
- * Task 6, mirroring how `MySubprofilesPage` wires it today).
+ * A pure consumer of the owner `SubprofileView`: no data fetching and no
+ * demo/live branching of its own. The whole action row arrives as `footer`
+ * (`SideCardFooter`, assembled by `OwnerSideCard`), which is where the address
+ * and creator lookups those actions depend on actually live.
  */
-export function SideCard({
-  view,
-  onOpen,
-  onEdit,
-  onShare,
-  onDelete,
-}: SideCardProps) {
+export function SideCard({ view, footer }: SideCardProps) {
   const { t } = useTranslation();
   const accent = view.accent ?? DEFAULT_ACCENT;
   const isDraft = view.status === "draft";
@@ -123,12 +114,7 @@ export function SideCard({
         </div>
       </div>
 
-      <SideCardFooter
-        onOpen={onOpen}
-        onEdit={onEdit}
-        onShare={onShare}
-        onDelete={onDelete}
-      />
+      {footer}
     </article>
   );
 }

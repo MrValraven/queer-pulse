@@ -1,0 +1,133 @@
+/* The partner's own profile editor (PRD-263). Deliberately the same visual
+   language as the "Apply to partner" form it succeeds: one column, section
+   heads, a two-up row where two short fields belong side by side. */
+
+.page {
+  max-width: var(--maxw-text);
+  margin: 0 auto;
+  padding: var(--section-y-48) var(--wrap-px) var(--section-y-80);
+}
+
+.head {
+  margin-bottom: var(--section-y-48);
+}
+
+.eyebrow {
+  font-size: var(--text-12);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-38);
+  line-height: 1.1;
+  margin: 10px 0 0;
+  color: var(--text-strong);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.sub {
+  margin: 12px 0 0;
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  max-width: 56ch;
+}
+
+.loading {
+  display: grid;
+  gap: 16px;
+}
+
+.picker {
+  margin-bottom: 24px;
+}
+
+.form {
+  display: grid;
+  gap: 20px;
+}
+
+.sectionHead {
+  margin-top: 12px;
+  font-size: var(--text-12);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-60);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The read-only block naming what only staff can change. Tinted rather than
+   greyed: these are real, live values on the public page, not disabled
+   controls. */
+.staffBlock {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 20px 22px;
+}
+
+.staffTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.staffRows {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.staffRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: var(--text-14);
+}
+
+.staffRow dt {
+  color: var(--ink-60);
+}
+
+.staffRow dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-strong);
+  text-align: right;
+}
+
+.staffNote {
+  margin: 14px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}

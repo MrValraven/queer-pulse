@@ -10,10 +10,11 @@ import type { FeedItem } from "./api/feed.api";
  * single merged `liveItems: FeedItem[]` (Task 7), and this component maps
  * each item to its card by switching on `item.type` — `community_post` via
  * `feedItemToPost` + `CommunityPostCard`, `gathering` → `GatheringCard`,
- * `forum_thread` → `ForumThreadCard`, `new_member` → `MemberCard`. Deliberately
- * NOT grouped by type (that was the old, now-removed `livePosts`/`liveMembers`
- * partitioning), so the fixture below interleaves all four types and the test
- * asserts they render in that exact order.
+ * `forum_thread` → `ForumThreadCard`, `new_member` → `MemberCard`, and
+ * (PRD-107) `article` → `ArticleCard`. Deliberately NOT grouped by type (that
+ * was the old, now-removed `livePosts`/`liveMembers` partitioning), so the
+ * fixture below interleaves all five types and the test asserts they render in
+ * that exact order.
  */
 const COMMUNITY_POST_ITEM: FeedItem = {
   id: "post-1",
@@ -80,12 +81,37 @@ const NEW_MEMBER_ITEM: FeedItem = {
   },
 };
 
+/**
+ * PRD-107: a published magazine piece. `title` is the headline and `summary`
+ * the dek; the magazine's own furniture rides alongside. `byline` is a
+ * `magazine_author`, which is why `actor` is null here: this contributor is
+ * credited by name only and holds no member account.
+ */
+const ARTICLE_ITEM: FeedItem = {
+  id: "article-1",
+  type: "article",
+  createdAt: "2026-08-04T08:00:00.000Z",
+  title: "ARTICLE_UNIQUE_HEADLINE",
+  summary: "ARTICLE_UNIQUE_DEK",
+  link: "/magazine/article?id=a-room-of-our-own",
+  actor: null,
+  kicker: "Housing",
+  section: "Features",
+  readMinutes: 9,
+  imageUrl: null,
+  locale: "en",
+  byline: { name: "Rita Mendes", slug: "rita-mendes", avatarUrl: null },
+  reason: "recent",
+  reasonSubject: null,
+};
+
 // Deliberately interleaved, not grouped by type.
 const MIXED_TYPE_FEED_ITEMS: FeedItem[] = [
   COMMUNITY_POST_ITEM,
   FORUM_THREAD_ITEM,
   GATHERING_ITEM,
   NEW_MEMBER_ITEM,
+  ARTICLE_ITEM,
 ];
 
 function renderLiveBody(items: FeedItem[]) {
@@ -111,26 +137,60 @@ describe("FeedListBody (live mode)", () => {
   it("renders one card per FeedItem type, in the server's item order", async () => {
     renderLiveBody(MIXED_TYPE_FEED_ITEMS);
 
-    // Each card renders its own item's distinguishing text — proves all four
+    // Each card renders its own item's distinguishing text, proving all five
     // types render (gathering/forum_thread previously rendered nothing at
-    // all, since the pre-Task-7 hook silently dropped them).
+    // all, since the pre-Task-7 hook silently dropped them; `article` reached
+    // the switch's `default: null` before PRD-107).
     await screen.findByText(COMMUNITY_POST_ITEM.summary);
     await screen.findByText(FORUM_THREAD_ITEM.title);
     await screen.findByText(GATHERING_ITEM.title);
     await screen.findByText(NEW_MEMBER_ITEM.title);
+    await screen.findByText(ARTICLE_ITEM.title);
 
     // Order preservation: the DOM should read community_post, forum_thread,
-    // gathering, new_member — the fixture's order — not regrouped by type.
+    // gathering, new_member, article, which is the fixture's order, not regrouped by
+    // type.
     const bodyText = document.body.textContent ?? "";
     const communityPostIndex = bodyText.indexOf(COMMUNITY_POST_ITEM.summary);
     const forumThreadIndex = bodyText.indexOf(FORUM_THREAD_ITEM.title);
     const gatheringIndex = bodyText.indexOf(GATHERING_ITEM.title);
     const newMemberIndex = bodyText.indexOf(NEW_MEMBER_ITEM.title);
+    const articleIndex = bodyText.indexOf(ARTICLE_ITEM.title);
 
     expect(communityPostIndex).toBeGreaterThanOrEqual(0);
     expect(forumThreadIndex).toBeGreaterThan(communityPostIndex);
     expect(gatheringIndex).toBeGreaterThan(forumThreadIndex);
     expect(newMemberIndex).toBeGreaterThan(gatheringIndex);
+    expect(articleIndex).toBeGreaterThan(newMemberIndex);
+  });
+
+  it("renders a magazine article's headline, dek and byline, linked to the piece (PRD-107)", async () => {
+    renderLiveBody([ARTICLE_ITEM]);
+
+    await screen.findByText(ARTICLE_ITEM.title);
+    await screen.findByText(ARTICLE_ITEM.summary);
+
+    // The card opens the piece at the slug the backend addressed it by.
+    const articleLinks = await screen.findAllByRole("link");
+    const hrefs = articleLinks.map((link) => link.getAttribute("href"));
+    expect(hrefs).toContain(ARTICLE_ITEM.link);
+    // The byline is a magazine author page, never a member profile: a
+    // contributor credited by name only has no account to link to.
+    expect(hrefs).toContain("/magazine/author/rita-mendes");
+    expect(hrefs).not.toContain("/members/rita-mendes");
+  });
+
+  it("credits the desk when a piece carries no byline row", async () => {
+    renderLiveBody([{ ...ARTICLE_ITEM, byline: null }]);
+
+    await screen.findByText(ARTICLE_ITEM.title);
+    const hrefs = (await screen.findAllByRole("link")).map((link) =>
+      link.getAttribute("href"),
+    );
+    // No byline, so no author link at all. Never a link to nowhere.
+    expect(hrefs.some((href) => href?.startsWith("/magazine/author/"))).toBe(
+      false,
+    );
   });
 
   it("links the community_post card's thread action to the item's own link, not a generic fallback", async () => {

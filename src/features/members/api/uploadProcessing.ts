@@ -99,10 +99,29 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // A community's square identity mark, shown beside its name next to the wide
+  // `community-cover` banner. Same constraints as a member/group avatar (min
+  // 200 × 200px, under 5 MB), which is also the backend's own cap for the
+  // `community-avatar` upload kind.
+  "community-avatar": {
+    maxBytes: 5 * MB,
+    maxLabel: "5 MB",
+    minWidth: 200,
+    minHeight: 200,
+  },
   // A message-composer image attachment (MSG-8) — no minimum, a member should
   // be able to share a small screenshot or a square photo just as easily as a
   // landscape one. Mirrors the backend's 8 MB cap (`upload-kinds.ts`).
   "message-image": { maxBytes: 8 * MB, maxLabel: "8 MB" },
+  // A message-composer DOCUMENT attachment (PRD-226). Never actually read by
+  // this file's image pipeline (`validateTypeAndSize`/`processImage` are
+  // never called for a document — see `DocumentComposerButton`'s own
+  // `validateDocumentTypeAndSize`), but `UPLOAD_LIMITS` is a `Record<UploadKind,
+  // …>` so every kind needs an entry. 20 MB mirrors the backend's cap
+  // (`message-document` in `upload-kinds.ts`) — deliberately above the image
+  // cap, since a multi-page scanned lease is never downscaled the way a photo
+  // is.
+  "message-document": { maxBytes: 20 * MB, maxLabel: "20 MB" },
 };
 
 /** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */
@@ -150,6 +169,9 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   "story-cover": 2560,
   "listing-photo": 2560,
   "community-cover": 2560,
+  // A square identity mark, never a hero: the same 1600px cap the other
+  // avatars get rather than the wide-banner one above it.
+  "community-avatar": 1600,
   // Higher than the other wide heroes, and deliberately so: a persona banner
   // is the ONE image on the page that spans the full viewport at full
   // browser width with nothing inset around it, so on a 2× display at a
@@ -163,6 +185,10 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   // slot, not a full-bleed hero, so it gets the same 1600px cap as an avatar/
   // work image rather than the wide-hero kinds above.
   "message-image": 1600,
+  // Unused: a document is never decoded/resampled through this canvas
+  // pipeline (see the `"message-image"` entry above's sibling note on
+  // `UPLOAD_LIMITS`). Present only so the `Record<UploadKind, …>` stays total.
+  "message-document": 0,
 };
 
 /** Re-encode quality used once an image is actually being downscaled — a
@@ -607,6 +633,9 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // the centre of the crop rather than the centre of the file.
   "persona-cover": { aspect: 3, aspectLabel: "3:1", allowFreeform: false },
   "community-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  // The community's square mark renders in a circle/rounded square slot, so it
+  // locks to 1:1 exactly like a member or group avatar.
+  "community-avatar": { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
   "listing-photo": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
   "work-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
   "gathering-photo": {
@@ -617,6 +646,13 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // Unused in practice — the message composer never opens the reframe editor
   // (a chat photo sends as-is), but every `UploadKind` needs an entry here.
   "message-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  // Unused: a document has no crop/reframe UI at all (there is nothing to
+  // frame). Present only so the `Record<UploadKind, …>` stays total.
+  "message-document": {
+    aspect: "free",
+    aspectLabel: "free",
+    allowFreeform: true,
+  },
 };
 
 /** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */

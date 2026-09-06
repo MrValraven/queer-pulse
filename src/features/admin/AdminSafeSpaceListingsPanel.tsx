@@ -24,6 +24,13 @@ import styles from "./AdminSafeSpacesPage.module.css";
  * sometimes needs to correct a listing without a nomination to hang it on;
  * the reviewed path with its written reason and audit row is the nomination
  * queue next door.
+ *
+ * It also REPORTS the badges that already stand below the independent-visit
+ * bar, and changes none of them. Enforcement binds new awards; a badge granted
+ * before the bar was enforced is a record to look at, and a low count can mean
+ * the visits were never written up rather than never made. Nothing here
+ * revokes, suspends, or bulk-edits a badge on that basis, and the wording keeps
+ * it as paperwork to check rather than a verdict on a venue.
  */
 export function AdminSafeSpaceListingsPanel() {
   const { t } = useTranslation();
@@ -49,8 +56,27 @@ export function AdminSafeSpaceListingsPanel() {
     setStatusOverrides((current) => ({ ...current, [ref]: status }));
   }
 
+  const underBarVerifiedCount = visibleCandidates.filter(
+    (candidate) =>
+      candidate.safeSpaceStatus === "verified" &&
+      !candidate.visits.hasMetVisitBar,
+  ).length;
+
   return (
     <>
+      {!isLoading && !isError && underBarVerifiedCount > 0 && (
+        <FadeIn delay={40}>
+          <div className={styles.underBarSummary}>
+            {t("admin:adminSafeSpaces.underBar.summary", {
+              count: underBarVerifiedCount,
+            })}
+            <p className={styles.underBarSummaryNote}>
+              {t("admin:adminSafeSpaces.underBar.summaryNote")}
+            </p>
+          </div>
+        </FadeIn>
+      )}
+
       <FadeIn delay={80}>
         {/* Without this branch the rows component's "no listings" line stood
             in for a failed fetch (DES-22). */}

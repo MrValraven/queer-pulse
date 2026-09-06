@@ -7,8 +7,7 @@ import styles from "./SavedViews.module.css";
 
 /**
  * Saved-views strip: one chip per `SAVED_VIEWS` entry showing the live count
- * of pieces matching its predicate, plus a "+ Save this view" chip. The
- * `hint` field on `SAVED_VIEWS` is decorative copy and is ignored here.
+ * of pieces matching its predicate, plus a "+ Save this view" chip.
  */
 export function SavedViews({
   pieces,
@@ -34,7 +33,7 @@ export function SavedViews({
             aria-pressed={active === view.id}
             onClick={() => onToggle(view.id)}
           >
-            {view.label} <span>{count}</span>
+            {t(view.labelKey)} <span>{count}</span>
           </button>
         );
       })}

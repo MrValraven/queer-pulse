@@ -13,6 +13,10 @@ export interface DeckModalsProps {
    *  wiring); this only fires the confirmation. */
   onConfirmDelete: () => void;
   deletePending: boolean;
+  /** Named in the confirm so the editor can see WHICH deck is about to go. */
+  deckTitle: string;
+  /** Also named there: the count is the clearest measure of what is lost. */
+  slideCount: number;
   /** Confirmed convert (CNT-6) — the caller owns the actual
    *  `convertDeckToArticle` mutation, its success/error toast, and the
    *  post-convert navigate to the article editor; this only fires the
@@ -31,6 +35,8 @@ export function DeckModals({
   onClose,
   onConfirmDelete,
   deletePending,
+  deckTitle,
+  slideCount,
   onConfirmConvert,
   convertPending,
 }: DeckModalsProps) {
@@ -59,8 +65,18 @@ export function DeckModals({
           </div>
         }
       >
+        {/* ENG-112 — only an unpublished deck no piece points at can reach
+            this confirm, so the copy says exactly that rather than the old
+            vague warning about readers hitting a 404 (which a live deck's
+            one-click delete really did cause, and which is now impossible). */}
         <p className={styles.body}>
-          {t("magazine:deck.editor.deleteModal.body")}
+          {t("magazine:deck.editor.deleteModal.detail", {
+            title: deckTitle,
+            count: slideCount,
+          })}
+        </p>
+        <p className={styles.body}>
+          {t("magazine:deck.editor.deleteModal.draftOnly")}
         </p>
       </Modal>
     );

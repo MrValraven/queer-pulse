@@ -8,11 +8,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useSubprofiles } from "./api/useSubprofiles";
 import type { SubprofileKind } from "./api/subprofiles.api";
-import type {
-  PublicSubprofileView,
-  SubprofileView,
-} from "./api/subprofiles.adapters";
-import { KIND_LABEL_KEYS } from "./subprofile-kinds";
+import type { SubprofileView } from "./api/subprofiles.adapters";
+import {
+  isValidSubprofileKind,
+  MAX_SUBPROFILES,
+  toPublicView,
+} from "./mySubprofiles.data";
 import { OwnerSideCard, type PersonaShareTarget } from "./OwnerSideCard";
 import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
 import { NewSideModal } from "./NewSideModal";
@@ -32,40 +33,6 @@ import styles from "./MySubprofilesPage.module.css";
 // that weight lands in its own chunk fetched only when a member opens Share,
 // never in the dashboard's initial payload.
 const SubprofileShareCard = lazy(() => import("./SubprofileShareCard"));
-
-const MAX_SUBPROFILES = 12;
-
-const VALID_KINDS = new Set<string>(Object.keys(KIND_LABEL_KEYS));
-
-/** Narrow a raw `?kind=` query value to a real `SubprofileKind`, or `null` if
- *  it's missing/unrecognized — never trust a URL param as-is. */
-function isValidSubprofileKind(value: string | null): value is SubprofileKind {
-  return value !== null && VALID_KINDS.has(value);
-}
-
-/** Adapt an owner-dashboard row (`SubprofileView`, no owner-tie/social-proof
- *  fields) into the `PublicSubprofileView` shape `SubprofileShareCard` reads,
- *  so the share card is a single implementation shared by the public hero and
- *  this page. Mirrors `personaPublicPathForOwner`'s linked-vs-standalone
- *  rule, with `creatorSlug` (resolved by `OwnerSideCard`) as the owner tie:
- *  the QR and the vCard `URL:` line must encode the CREATOR's address, since
- *  that is the only one the nested public route resolves. The
- *  owner-viewing-their-own-card social-proof fields don't apply here, so they
- *  default to `false`. */
-function toPublicView(
-  subprofile: SubprofileView,
-  creatorSlug: string,
-): PublicSubprofileView {
-  return {
-    ...subprofile,
-    ownerSlug: subprofile.linkVisibility === "linked" ? creatorSlug : undefined,
-    ownerName: undefined,
-    viewerEndorsed: false,
-    viewerFollowing: false,
-    // The signed-in owner is trivially a member of their own persona.
-    viewerIsMember: true,
-  };
-}
 
 /**
  * Owner dashboard: every persona this member runs, as a `.sides` card grid
@@ -189,7 +156,8 @@ export function MySubprofilesPage() {
         // click, so a brief nothing beats flashing a spinner over the page.
         <Suspense fallback={null}>
           <SubprofileShareCard
-            view={toPublicView(shareTarget.view, shareTarget.creatorSlug)}
+            view={toPublicView(shareTarget.view)}
+            shareUrl={shareTarget.shareUrl}
             onClose={() => setShareTarget(null)}
           />
         </Suspense>

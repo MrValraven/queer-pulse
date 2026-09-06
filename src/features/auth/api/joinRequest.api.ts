@@ -196,6 +196,21 @@ export interface JoinRequestStatusDTO {
    * applicant has been shown before it matters, and the page must show it.
    */
   inviteExpiresAt: string | null;
+  /**
+   * PRD-304. ISO 8601 date the platform said it would answer by, three days
+   * from submission. The mod queue has always had this and coloured a late
+   * request with it; the applicant had nothing, so day four felt exactly like
+   * day one and there was nothing to quote when they wrote in.
+   *
+   * Present ONLY while the request is undecided. Once `status` is approved or
+   * declined the backend sends null, because `decidedAt` is then the real
+   * answer and a date the queue overshot says nothing beside it.
+   *
+   * Null also means NO CLOCK, never overdue: a request submitted before the
+   * queue stamped due dates carries none, so the page stays silent rather than
+   * inventing a promise it cannot point at.
+   */
+  dueAt: string | null;
 }
 
 /**

@@ -53,3 +53,25 @@
   gap: 10px;
   flex-shrink: 0;
 }
+
+/* ── Badges granted before the visit bar was enforced ──────────
+   A report, never an action. These badges predate enforcement and a low count
+   can also mean the visits were never written up, so this is amber (read this)
+   rather than danger (something is wrong here). */
+.underBarSummary {
+  margin: 20px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--amber-rgb), 0.35);
+  border-radius: var(--radius-14);
+  background: rgba(var(--amber-rgb), 0.1);
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.underBarSummaryNote {
+  margin: 6px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+}

@@ -6,12 +6,68 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { applicantDeclineReasonKey } from "./api/joinRequestDeclineReason";
 import { ContactLink, StatusState } from "./JoinRequestStatusFrame";
-import { useDayLabel, wholeDaysSince } from "./joinRequestStatusFormat";
+import {
+  useDayLabel,
+  wholeDaysSince,
+  wholeDaysUntil,
+} from "./joinRequestStatusFormat";
 import { Under18Notice } from "./Under18Notice";
 import styles from "./JoinRequestStatus.module.css";
 
-/** Still with a reviewer. No promised date, because we do not have one. */
-export function UnderReviewState({ submittedAt }: { submittedAt: string }) {
+/**
+ * PRD-304. The date the queue holds itself to, said to the one person actually
+ * waiting on it.
+ *
+ * The platform has always stamped this: every request gets a three-day answer
+ * deadline at submission, and the mod queue colours a request that runs past
+ * it. The applicant was told none of it, so day four felt exactly like day one
+ * and someone writing in had nothing to point at. Nothing else will ever say
+ * this either: QueerPulse sends no email, and an applicant has no account to
+ * be notified in, so this line is the whole of it.
+ *
+ * Renders nothing without a usable date. A request stamped before the queue
+ * kept deadlines carries none, and silence is honest where an invented promise
+ * would not be.
+ */
+function ReviewDeadline({ dueAt }: { dueAt: string | null }) {
+  const { t } = useTranslation();
+  const dateLabel = useDayLabel()(dueAt);
+  if (!dueAt || !dateLabel) return null;
+  const daysLeft = wholeDaysUntil(dueAt);
+  // `wholeDaysUntil` rounds up, so anything still ahead is at least 1 and only
+  // a date that has genuinely passed lands at or below zero.
+  const isLate = daysLeft !== null && daysLeft <= 0;
+  return (
+    <p
+      className={[
+        styles.deadline,
+        styles.reviewDeadline,
+        isLate ? styles.reviewDeadlineLate : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <FiClock aria-hidden />
+      <span>
+        {isLate
+          ? t("auth:joinRequestStatus.underReview.overdue", {
+              date: dateLabel,
+            })
+          : t("auth:joinRequestStatus.underReview.dueBy", { date: dateLabel })}
+      </span>
+    </p>
+  );
+}
+
+/** Still with a reviewer, and now carrying the date we said we would answer by. */
+export function UnderReviewState({
+  submittedAt,
+  dueAt,
+}: {
+  submittedAt: string;
+  /** ISO deadline for an answer, or null when this request carries no clock. */
+  dueAt: string | null;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const dayLabel = useDayLabel();
@@ -28,6 +84,11 @@ export function UnderReviewState({ submittedAt }: { submittedAt: string }) {
             ago: fmt.relativeTime(-days, "day"),
             date: submittedLabel,
           });
+  // PRD-304. Derived here as well as inside `ReviewDeadline` because the foot
+  // line changes with it: once we are past our own date, the way out of this
+  // screen is chasing the answer rather than adding to the request.
+  const daysUntilDue = dueAt === null ? null : wholeDaysUntil(dueAt);
+  const isPastDue = daysUntilDue !== null && daysUntilDue <= 0;
   return (
     <StatusState
       icon={<FiClock aria-hidden />}
@@ -46,11 +107,18 @@ export function UnderReviewState({ submittedAt }: { submittedAt: string }) {
       }
       foot={
         <Translation
-          i18nKey="auth:joinRequestStatus.underReview.foot"
+          // Past our own date the foot stops being a general "anything to add?"
+          // and becomes the way to chase an answer we owe.
+          i18nKey={
+            isPastDue
+              ? "auth:joinRequestStatus.underReview.overdueFoot"
+              : "auth:joinRequestStatus.underReview.foot"
+          }
           components={{ a: <ContactLink /> }}
         />
       }
     >
+      <ReviewDeadline dueAt={dueAt} />
       <p className={styles.note}>
         {t("auth:joinRequestStatus.underReview.note")}
       </p>

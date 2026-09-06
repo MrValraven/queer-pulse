@@ -16,6 +16,14 @@ export async function shareSubprofile(
 ): Promise<void> {
   const url = personaShareUrl(view);
 
+  // An unlinked persona with no handle yet resolves nowhere. Every entry point
+  // hides or disables Share in that state, so this branch is the last line of
+  // defence: say what is missing rather than hand over a dead link.
+  if (!url) {
+    showToast(t("subprofiles:share.noAddressYet"), "error");
+    return;
+  }
+
   if (navigator.share) {
     try {
       await navigator.share({ title: view.displayName, url });

@@ -41,6 +41,12 @@ export const messages: Catalog = {
   "thread.archiveChat": "Archive chat",
   "thread.unarchiveChat": "Unarchive chat",
   "thread.archivedIndicator": "Archived chat",
+  // PRD-225. One row-menu entry that flips on the thread's current state, the
+  // way every pair above it does. "Mark as read" reuses the ordinary read
+  // mutation, so it advances the real watermark and clears the manual flag in
+  // one request.
+  "thread.markUnread": "Mark as unread",
+  "thread.markRead": "Mark as read",
   "thread.deleteChat": "Delete chat",
   // Inbox filter tabs
   "thread.tabAll": "All",
@@ -146,6 +152,19 @@ export const messages: Catalog = {
   "conversation.composerGroupPlaceholder": "Message the group…",
   "conversation.leftGroupNotice":
     "You left this group. Its history stays here, but you can't send new messages.",
+  // PRD-220: a cold enquiry (housing, flatmates) opens a 1:1 thread between two
+  // members who aren't connected, and every reply from either side is refused
+  // until they are. Shown instead of the composer, with the action that fixes
+  // it. Which of the three states shows depends on the connection so far.
+  "conversation.connectionRequiredNotice":
+    "Replying here needs a connection with {name} first.",
+  "conversation.connectionRequiredSendCta": "Send a connection request",
+  "conversation.connectionRequiredPendingNotice":
+    "Your connection request to {name} is still waiting for a reply.",
+  "conversation.connectionRequiredIncomingNotice":
+    "{name} would like to connect. Accept to keep this conversation going.",
+  "conversation.connectionRequiredAcceptCta": "Accept and reply",
+  "conversation.connectionRequiredDeclineCta": "Not now",
   "conversation.send": "Send",
   "conversation.composeAria": "Write a message",
   "conversation.backToList": "Back to conversations",
@@ -169,6 +188,10 @@ export const messages: Catalog = {
   "actions.more": "More",
   "actions.report": "Report",
   "actions.delete": "Delete",
+  // PRD-227. Offered to every participant on every message, unlike
+  // `actions.delete` above, which only the author or staff can reach: hiding a
+  // message on your own side is always yours to do.
+  "actions.deleteForMe": "Delete for me",
 
   // Long-press/right-click overlay (MessageActionOverlay) — reuses
   // actions.report/actions.delete above for its own menu items.
@@ -194,6 +217,14 @@ export const messages: Catalog = {
   "delete.confirmTitle": "Delete this message?",
   "delete.confirmBody": "It will be removed for everyone in this chat.",
   "delete.confirmCta": "Delete",
+  // PRD-227 "delete for me": a SECOND, per-viewer thing beside the tombstone
+  // above, never a replacement for it. The body has to be unambiguous about
+  // who still sees the message, because the two options sit side by side and
+  // choosing the wrong one is not undoable.
+  "delete.confirmForMeTitle": "Delete this message for you?",
+  "delete.confirmForMeBody":
+    "This message will be removed from your side of the chat only. The other person will still see it.",
+  "delete.confirmForMeCta": "Delete for me",
   "delete.cancelCta": "Cancel",
   "report.title": "Report this message",
 

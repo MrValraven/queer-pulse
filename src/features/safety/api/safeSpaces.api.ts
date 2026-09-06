@@ -69,7 +69,18 @@ export interface RemovedSpaceCardDTO {
 export interface SafeSpaceListDTO {
   verified: SafeSpaceCardDTO[];
   removed: RemovedSpaceCardDTO[];
-  stats: { verified: number; reviews: number; removed: number };
+  stats: {
+    verified: number;
+    reviews: number;
+    /** Safe spaces standing in the REMOVED state right now. The backend
+     *  applies no date filter, so this is never "removals this year" and the
+     *  hub's copy no longer says it is. */
+    removed: number;
+    /** Newest `YYYY-MM-DD` badge date across the verified spaces on the page,
+     *  or null when no badge carries one. Optional so an older payload (and
+     *  the fixtures in this repo's tests) still typecheck. */
+    lastReVerifiedAt?: string | null;
+  };
 }
 
 /**

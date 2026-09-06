@@ -53,6 +53,15 @@ const GATED_PATTERNS: string[] = [
   "/members",
   "/members/*",
   "/member-directory-filter",
+  // The persona directory. `GET /subprofiles/directory` sits under the
+  // controller's class-level `ActiveMemberGuard` with no `@Public()`, so
+  // without this a signed-out visitor rendered the page and parked on
+  // "We couldn't load the directory" behind a Retry that can never succeed.
+  // Only the directory itself: the standalone persona page `/p/:handle` reads
+  // the `@Public()` `by-handle/:handle` route and stays public, and a linked
+  // persona at `/members/:slug/:subslug` is already covered by `/members/*`.
+  // ENG-156.
+  "/subprofiles",
   "/dating",
   "/reading-groups",
   "/family",
@@ -95,8 +104,12 @@ const GATED_PATTERNS: string[] = [
   routes.postVolunteer,
   routes.editVolunteer,
   routes.manageVolunteerApplicants,
-  // The writer pitch tracker — a staff surface that happens to sit outside the
-  // `/magazine/writer` prefix. Gated here and capability-gated below.
+  // The member's own pitch tracker ("where every pitch actually is"). Gated as
+  // a member surface and nothing more: the page reads
+  // `GET /magazine/submissions/mine`, which `MagazineController` guards with
+  // `ActiveMemberGuard` alone, so every active member is admitted. It carries
+  // NO entry in CAPABILITY_PATTERNS below — see the note there for why the
+  // `magazine_writer` gate it used to sit behind was wrong. PRD-125.
   routes.pitchTracker,
   // Block & mute is an account-settings surface that lives under /safety, where
   // the crisis pages around it are deliberately public.
@@ -291,6 +304,16 @@ const MOD_PATTERNS: string[] = ["/mod/*"];
 const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   routes.adminModeration,
   `${routes.adminModeration}/*`,
+  // PRD-282. The triage console over every staff queue.
+  // `AdminQueuesController` is `@Roles(Moderator, Admin)` plus a spread of
+  // `@StaffRoles(...)` under `RolesOrStaffGuard`, and it filters the response
+  // body per queue, so a moderator who opens it sees their own eleven queues
+  // and learns nothing about the other twenty. Bouncing them here would leave
+  // the deadline-bearing queues they work daily with no standing signal at all,
+  // which is the defect this screen exists to close.
+  //
+  // No `/*` sibling: the console has no child routes.
+  routes.adminQueues,
   // `admin-verification.controller.ts` is `@Roles(Moderator, Admin)` on the
   // whole controller (the level console, the review queue, bulk decisions and
   // per-member history alike), so moderators are meant to work this queue.
@@ -361,9 +384,17 @@ const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
     capability: "magazine_editor",
   },
   {
-    // The pitch tracker is the writer workspace's third tab; it just happens to
-    // be registered outside the `/magazine/writer` prefix.
-    patterns: ["/magazine/writer", "/magazine/writer/*", routes.pitchTracker],
+    // The writer workspace, and only the writer workspace. `routes.pitchTracker`
+    // (`/magazine/pitches`) used to be listed here as "the workspace's third
+    // tab", but the two are different surfaces reading different backends:
+    // the workspace's pitches tab reads `GET /magazine/writer/pitches` behind
+    // `@StaffRoles('magazine_writer')`, while the tracker reads
+    // `GET /magazine/submissions/mine` behind `ActiveMemberGuard` alone. Gating
+    // the tracker on this grant bounced every plain member — and every
+    // non-admin editor — off a page their own account menu links them to, onto
+    // the visitor homepage with no explanation, even though the endpoint the
+    // page calls would have answered them. PRD-125.
+    patterns: ["/magazine/writer", "/magazine/writer/*"],
     capability: "magazine_writer",
   },
 ];
@@ -385,7 +416,16 @@ const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
  */
 const CAPABILITY_ELEVATED_PATTERNS: {
   patterns: string[];
-  capability: StaffRoleId;
+  /**
+   * ANY ONE of these grants opens the path on its own. A list rather than a
+   * single grant because `elevatingCapabilities` returns the FIRST matching
+   * entry and stops, so a path reachable by several grants cannot be expressed
+   * as sibling entries: only the earliest would ever be consulted, and every
+   * other holder would be bounced from a screen their own backend guard admits
+   * them to. Every entry that predates PRD-282 carries exactly one id, which is
+   * byte-for-byte the behaviour it had as a scalar field.
+   */
+  capabilities: StaffRoleId[];
 }[] = [
   {
     // `HousingModerationGuard`: Moderator or Admin, OR `housing_moderator`.
@@ -396,7 +436,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       routes.adminHousingGroupListings,
       `${routes.adminHousingGroupListings}/*`,
     ],
-    capability: "housing_moderator",
+    capabilities: ["housing_moderator"],
   },
   // OPS-03. Each entry below matches one `@StaffRoles(...)` on the backend,
   // where `RolesOrStaffGuard` passes the account tier OR the grant. Keep this
@@ -413,7 +453,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       routes.adminSafeSpaces,
       `${routes.adminSafeSpaces}/*`,
     ],
-    capability: "directory_moderator",
+    capabilities: ["directory_moderator"],
   },
   {
     // The resource library: guides, service listings, member suggestions and
@@ -429,7 +469,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       routes.adminGuideFeedback,
       `${routes.adminGuideFeedback}/*`,
     ],
-    capability: "resource_curator",
+    capabilities: ["resource_curator"],
   },
   {
     // Story submissions, writer applications, commission interest, and the two
@@ -446,7 +486,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       routes.adminLanding,
       `${routes.adminLanding}/*`,
     ],
-    capability: "editorial",
+    capabilities: ["editorial"],
   },
   {
     // Community care work. The last-resort overrides (freeze, archive,
@@ -461,7 +501,7 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       routes.adminReadingGroupProposals,
       `${routes.adminReadingGroupProposals}/*`,
     ],
-    capability: "communities",
+    capabilities: ["communities"],
   },
   {
     patterns: [
@@ -474,19 +514,40 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       routes.adminChangemakerNominations,
       `${routes.adminChangemakerNominations}/*`,
     ],
-    capability: "partnerships",
+    capabilities: ["partnerships"],
+  },
+  {
+    // PRD-282, the triage console over every staff queue. `AdminQueuesController`
+    // spreads `@StaffRoles(...)` from every grant that owns at least one queue
+    // and then filters the RESPONSE BODY per queue, so any one of these six
+    // reaches the screen and sees only the queues it can work. This is the entry
+    // that needed a list rather than a single grant: as six sibling entries only
+    // the first would ever be consulted, and the other five holders would be
+    // bounced from the one screen that tells them their queue is late.
+    //
+    // `magazine_editor` and `magazine_writer` are deliberately absent. Neither
+    // owns a queue in `ADMIN_QUEUE_REGISTRY`, so neither reaches the endpoint.
+    patterns: [routes.adminQueues],
+    capabilities: [
+      "housing_moderator",
+      "directory_moderator",
+      "resource_curator",
+      "editorial",
+      "communities",
+      "partnerships",
+    ],
   },
 ];
 
 /**
- * The staff role that, on its own, satisfies `pathname`'s role requirement, or
- * null when no grant elevates into it.
+ * The staff roles that each, on their own, satisfy `pathname`'s role
+ * requirement. Empty when no grant elevates into it.
  */
-export function elevatingCapability(pathname: string): StaffRoleId | null {
+export function elevatingCapabilities(pathname: string): StaffRoleId[] {
   for (const entry of CAPABILITY_ELEVATED_PATTERNS) {
-    if (matchesAny(pathname, entry.patterns)) return entry.capability;
+    if (matchesAny(pathname, entry.patterns)) return entry.capabilities;
   }
-  return null;
+  return [];
 }
 
 /**
@@ -671,7 +732,7 @@ export function useAuthGateRedirect(): string | null {
     // Note the backend auto-reactivates a *deactivated* member on Google
     // sign-in, so in practice this catches the erasure-grace case.
     if (!demoMode && status === "deactivated") {
-      // Two carve-outs, both for the same reason — a blanket redirect would
+      // Three carve-outs, all for the same reason — a blanket redirect would
       // hide the one page that explains what is happening.
       //   - `routes.deleteAccount` is the destination itself, and hosts the
       //     cancel button that is the only way back out of erasure grace.
@@ -682,8 +743,14 @@ export function useAuthGateRedirect(): string | null {
       //     delete-account screen with no way to learn that nothing is wrong
       //     with them. It is public, so this grants nothing they could not
       //     already read signed out.
+      //   - `routes.dataExport` is the LAST window in which the export is worth
+      //     anything: this branch mostly catches the erasure grace, so the data
+      //     is about to be deleted permanently. See the note on the suspended
+      //     branch below for why the export and deletion pages are exempt from
+      //     every account-state bounce, and please do not tidy this away.
       const reachableWhileDeactivated: string[] = [
         routes.deleteAccount,
+        routes.dataExport,
         routes.status,
       ];
       return reachableWhileDeactivated.includes(pathname)
@@ -715,11 +782,33 @@ export function useAuthGateRedirect(): string | null {
       const target = user?.suspendedUntil
         ? routes.accountSuspended
         : routes.accountBanned;
+      // `routes.dataExport` and `routes.deleteAccount` are exempt DELIBERATELY,
+      // and the exemption must survive the next tidy-up of this list.
+      //
+      // Leaving and taking your data with you are the two things moderation
+      // state may never take away. They are also the two things the banned page
+      // itself sends people to do: its "Request full data erasure" button
+      // targets `routes.dataExport`, and its copy tells a removed member to
+      // request deletion. Without these two entries that button was a loop
+      // (bounce to /system/account-banned, press, bounce again) with no way
+      // through for the one class of member who most needs it, since a
+      // permanent ban is `status === "suspended"` with no `suspendedUntil` and
+      // therefore lands on exactly that page.
+      //
+      // The server already agrees and always has: `AccountController` carries
+      // no `ActiveMemberGuard` precisely so that "account lifecycle actions
+      // (deactivate, deletion, export, DSAR, sessions) must remain reachable"
+      // (queerpulse-backend/src/account/account.controller.ts). So this closes a
+      // gap where the CLIENT gate forbade what the API allowed. Both paths stay
+      // gated for everyone signed out; this exempts them from the account-state
+      // bounce only.
       const alwaysAllowed: string[] = [
         routes.accountSuspended,
         routes.accountBanned,
         routes.appealSubmit,
         routes.appealOutcome,
+        routes.dataExport,
+        routes.deleteAccount,
       ];
       if (alwaysAllowed.includes(pathname)) return null;
       return isGatedPath(pathname) ? target : null;
@@ -735,9 +824,10 @@ export function useAuthGateRedirect(): string | null {
       const need = requiredRole(pathname);
       // An additive grant can satisfy a role requirement on its own, wherever
       // the backend guard accepts the same union (CAPABILITY_ELEVATED_PATTERNS).
-      const elevating = elevatingCapability(pathname);
-      const hasElevatingGrant =
-        elevating !== null && (staffRoles ?? []).includes(elevating);
+      const elevatingGrants = elevatingCapabilities(pathname);
+      const hasElevatingGrant = elevatingGrants.some((capability) =>
+        (staffRoles ?? []).includes(capability),
+      );
       if (need === "admin" && role !== "admin" && !hasElevatingGrant) {
         return routes.homepage;
       }

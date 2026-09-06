@@ -157,6 +157,7 @@ export function ThreadPage() {
           onSaveOp={moderation.saveOpEdit}
           onCloseOp={() => moderation.setEditingOp(false)}
           confirmDelete={moderation.confirmDelete}
+          confirmDeleteSubject={moderation.confirmDeleteSubject}
           deleteBusy={moderation.deleteBusy}
           onConfirmDelete={() =>
             moderation.confirmDelete &&
@@ -168,6 +169,11 @@ export function ThreadPage() {
           onCloseDelete={() => moderation.setConfirmDelete(null)}
           historyPostId={moderation.historyPostId}
           onCloseHistory={() => moderation.setHistoryPostId(null)}
+          isMovingCategory={moderation.isMovingCategory}
+          threadCategory={thread.category}
+          isCategoryMoveSaving={moderation.isCategoryMoveSaving}
+          onSaveCategory={moderation.saveCategory}
+          onCloseMoveCategory={moderation.closeMoveCategory}
           isEditingTags={answerAndTags.isEditingTags}
           threadTags={thread.tags}
           isTagsSaving={answerAndTags.isTagsSaving}

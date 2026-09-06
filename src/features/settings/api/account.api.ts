@@ -1,4 +1,10 @@
-import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPost,
+  postUnversioned,
+  refreshSession,
+} from "../../../shared/api/client";
 
 /**
  * Account lifecycle contract — GDPR erasure (Art. 17), data portability
@@ -227,6 +233,33 @@ export const revokeSession = (id: string) =>
 
 /** DELETE /account/sessions — revoke every session except the current one. */
 export const revokeOtherSessions = () => apiDelete<void>("/account/sessions");
+
+/**
+ * POST /auth/logout-all — end EVERY session, this device included, and clear
+ * this browser's auth and CSRF cookies.
+ *
+ * The other half of "sign out everywhere". `revokeOtherSessions` above keeps
+ * the caller signed in here, which is right when a member is tidying up old
+ * devices and wrong when they think their account is compromised: that member
+ * had to run this page's bulk control AND then find the sign-out item in the
+ * account menu, and knowing to do both was left to them (PRD-308).
+ *
+ * UNVERSIONED, like `postLogout`: the controller is `@Version(VERSION_NEUTRAL)`
+ * so the path stays inside the `path=/auth` scope of the refresh cookie.
+ *
+ * Unlike `logout` the backend route is authenticated, because it acts on every
+ * session an account holds and the id has to come from a verified access token
+ * rather than a presented cookie. `postUnversioned` does no 401 refresh of its
+ * own, so a member whose access token has just expired gets one retry behind
+ * `refreshSession()`. Resolves false if it still did not land, and the caller
+ * must keep the member signed in rather than claim a sign-out that never
+ * happened.
+ */
+export async function postLogoutAll(): Promise<boolean> {
+  if (await postUnversioned("/auth/logout-all")) return true;
+  if (!(await refreshSession())) return false;
+  return postUnversioned("/auth/logout-all");
+}
 
 /* ── Demo/live helper ──────────────────────────────────────────────────── */
 

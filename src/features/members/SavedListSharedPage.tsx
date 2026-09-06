@@ -4,15 +4,26 @@ import { PageShell } from "../../shared/components/layout";
 import { Spinner } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { isSavedItemUnavailable } from "../../app/providers/useSaved";
 import type { SavedItemDTO } from "./api/saved.api";
 import { useSharedSavedList } from "./api/SavedLists.queries";
+import { SavedUnavailableNote } from "./SavedUnavailableNote";
 import styles from "./SavedListSharedPage.module.css";
 
 /** One item on the shared list. Read-only and inert: a recipient may not have
- *  an account, so nothing here links into the member surface. */
+ *  an account, so nothing here links into the member surface.
+ *
+ *  An item the API reports unavailable says so (PRD-169). This page is the case
+ *  that hurt most: somebody sent a list to a friend, and a subject that has
+ *  since gone left a row the reader cannot tell apart from a live one. No
+ *  remove hint here, because the reader owns nothing on this page. */
 function SharedSavedListRow({ item }: { item: SavedItemDTO }) {
+  const isUnavailable = isSavedItemUnavailable(item);
+
   return (
-    <li className={styles.row}>
+    <li
+      className={`${styles.row}${isUnavailable ? ` ${styles.rowUnavailable}` : ""}`}
+    >
       <span className={styles.rowBadge}>
         {item.kind.slice(0, 3).toUpperCase()}
       </span>
@@ -22,6 +33,7 @@ function SharedSavedListRow({ item }: { item: SavedItemDTO }) {
         {item.description && (
           <span className={styles.rowBlurb}>{item.description}</span>
         )}
+        {isUnavailable && <SavedUnavailableNote />}
       </span>
     </li>
   );
@@ -70,6 +82,16 @@ export function SavedListSharedPage() {
   const { token } = useParams<{ token: string }>();
   const { data: sharedList, isLoading, isError } = useSharedSavedList(token);
 
+  // A list where nothing at all can be opened any more is still a real list the
+  // sender meant to hand over, so it keeps its name, its count and its rows. It
+  // gets one extra line so the reader knows the page is telling them something
+  // rather than failing at them.
+  const hasOnlyUnavailableItems = Boolean(
+    sharedList &&
+    sharedList.items.length > 0 &&
+    sharedList.items.every(isSavedItemUnavailable),
+  );
+
   return (
     <PageShell>
       <PageMeta title={t("members:savedLists.shared.metaTitle")} noIndex />
@@ -97,6 +119,11 @@ export function SavedListSharedPage() {
                   <SharedSavedListRow key={item.id} item={item} />
                 ))}
               </ul>
+              {hasOnlyUnavailableItems && (
+                <p className={styles.allUnavailable}>
+                  {t("members:savedLists.shared.allUnavailable")}
+                </p>
+              )}
               <p className={styles.note}>
                 {t("members:savedLists.shared.note")}
               </p>

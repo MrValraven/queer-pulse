@@ -1,0 +1,42 @@
+/* The note under the hero of a limited profile (PRD-203). A calm, centred
+   card rather than a warning strip: the member set a boundary and the page
+   is acknowledging it, so nothing here is coloured like an error. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  max-width: 34rem;
+  margin: 32px auto 40px;
+}
+
+.icon {
+  display: flex;
+  font-size: var(--text-20);
+  color: var(--accent);
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  line-height: 1.25;
+  margin: 0;
+  color: var(--text-strong);
+}
+
+.body {
+  font-size: var(--text-15);
+  line-height: 1.6;
+  margin: 0;
+  color: var(--ink-60, var(--ink));
+  overflow-wrap: anywhere;
+}
+
+.status {
+  font-size: var(--text-14);
+  line-height: 1.5;
+  margin: 0;
+  color: var(--ink-60, var(--ink));
+}

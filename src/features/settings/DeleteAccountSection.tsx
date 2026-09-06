@@ -32,6 +32,16 @@ import {
 import styles from "./DeleteAccountPage.module.css";
 
 /**
+ * Dot colour per outcome tone. A `Record` mapping to `styles.*` stays in the
+ * component file by convention, because it depends on the CSS-module import.
+ */
+const WH_DOT_TONE: Record<"muted" | "keeps" | "loses", string> = {
+  muted: styles.whDotMuted!,
+  keeps: styles.whDotKeeps!,
+  loses: styles.whDotLoses!,
+};
+
+/**
  * THE surface for stepping away from an account, in both its forms: pausing
  * (`POST /account/deactivate`) and erasing (`POST /account/deletion-request`).
  *
@@ -190,10 +200,7 @@ export function DeleteAccountSection({
         <div className={styles.whList}>
           {content.whatHappens.map((item, i) => (
             <div key={i} className={styles.whRow}>
-              <div
-                className={styles.whDot}
-                style={{ background: item.color }}
-              />
+              <div className={`${styles.whDot} ${WH_DOT_TONE[item.tone]}`} />
               <div className={styles.whText}>
                 <Translation
                   i18nKey={item.textKey}

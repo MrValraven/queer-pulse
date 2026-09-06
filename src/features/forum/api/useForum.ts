@@ -16,6 +16,7 @@ import {
   type ForumThreadCountsResponse,
   type ForumThreadResponse,
   type GetThreadsOptions,
+  type ReplySort,
 } from "./forum.api";
 import { threadDetail, threadToCard } from "./forum.adapters";
 
@@ -31,6 +32,11 @@ export interface ThreadListPage {
 export interface ThreadPostsPage {
   items: ForumPostResponse[];
   nextCursor: string | null;
+  /** The server's `opAvailable` for this thread (ENG-130): can THIS viewer see
+   *  the opening post at all? Carried on every page because it describes the
+   *  thread, so a member who landed on page three still gets an honest OP card
+   *  without refetching page one. */
+  isOpAvailable: boolean;
 }
 
 /**
@@ -193,8 +199,9 @@ export function useForumCounts(q?: string, tag?: string) {
  * /forum/threads/:slug/posts?cursor=), so ThreadPage can pull in further pages
  * of replies from its "Load more" button. Every page loaded so far is flattened
  * and merged with the meta into the same `Thread` detail view-model
- * (`threadDetail`), whose first post is the OP body and whose remainder are the
- * replies — so the merge stays correct as pages append.
+ * (`threadDetail`), which picks the OP out by the server's `isOp` flag and
+ * treats every other post as a reply — so the merge stays correct as pages
+ * append, and on a page that carries no OP at all.
  *
  * Demo mode short-circuits both queries (`enabled: false`) and resolves the
  * scripted `THREADS` mock by numeric id with `hasNextPage === false`, so the
@@ -207,7 +214,7 @@ export function useForumCounts(q?: string, tag?: string) {
  * slug genuinely resolves to nothing (404); it NEVER falls back to mock data in
  * live mode — that leak was the bug this replaces.
  */
-export function useThread(routeParam: string) {
+export function useThread(routeParam: string, sort: ReplySort = "oldest") {
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
   const fmt = useFormat();
@@ -222,23 +229,39 @@ export function useThread(routeParam: string) {
   });
 
   const postsQuery = useInfiniteQuery<ThreadPostsPage>({
-    queryKey: ["forum-thread-posts", demoMode, routeParam, language],
+    // `sort` is part of the key on purpose (PRD-162). Each sort mints its own
+    // cursor format, and a cursor minted under one decodes as "no cursor" under
+    // another — so feeding the held cursor across a sort change would silently
+    // restart the paging rather than error. A distinct key is a distinct
+    // infinite query, which starts at `initialPageParam` with no cursor at all,
+    // and keeps each ordering's loaded pages cached in its own right.
+    queryKey: ["forum-thread-posts", demoMode, routeParam, language, sort],
     enabled: live,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
       const res = await getThreadPosts(
         slug as string,
         pageParam as string | undefined,
+        sort,
       );
-      return { items: res.data, nextCursor: res.pageInfo.nextCursor };
+      return {
+        items: res.data,
+        nextCursor: res.pageInfo.nextCursor,
+        isOpAvailable: res.opAvailable,
+      };
     },
     getNextPageParam: (last) => last.nextCursor ?? undefined,
   });
 
   const posts = useMemo<ForumPostResponse[]>(
-    () => (postsQuery.data?.pages ?? []).flatMap((p) => p.items),
+    () => (postsQuery.data?.pages ?? []).flatMap((page) => page.items),
     [postsQuery.data],
   );
+
+  // `opAvailable` describes the thread, so every page agrees; read it off the
+  // first page that has landed. Undefined until one has, which is what keeps
+  // "still loading" from rendering as "there is no opening post".
+  const isOpAvailable = postsQuery.data?.pages[0]?.isOpAvailable;
 
   const thread = useMemo<Thread | undefined>(() => {
     if (demoMode)
@@ -247,8 +270,8 @@ export function useThread(routeParam: string) {
         THREADS[0]
       );
     if (!metaQuery.data) return undefined;
-    return threadDetail(metaQuery.data, posts, t, fmt);
-  }, [demoMode, routeParam, metaQuery.data, posts, t, fmt]);
+    return threadDetail(metaQuery.data, posts, t, fmt, isOpAvailable);
+  }, [demoMode, routeParam, metaQuery.data, posts, isOpAvailable, t, fmt]);
 
   // Split a failed meta fetch into a genuine 404 (the slug resolves to nothing →
   // an honest "not found") vs any other failure (500 / network / timeout →

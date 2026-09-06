@@ -1,4 +1,5 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { ApiError, apiGet, apiPost } from "../../../shared/api/client";
+import { routes } from "../../../app/routeMap";
 import type { FinLine } from "../governance.data";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
@@ -76,20 +77,43 @@ export interface ModerationStepDTO {
   key: string;
 }
 
+/**
+ * PRD-265. The EN/PT an editor typed for an entry that has no i18n key,
+ * because it was authored after the bundle shipped. Mirrors the backend's
+ * `OverviewAuthoredText`.
+ */
+export interface AuthoredTextDTO {
+  en: string;
+  pt: string;
+}
+
+/**
+ * A council seat. The role descriptor arrives as EXACTLY ONE of `roleKey` (a
+ * seeded i18n key) or `role` (the editor's own words) — see PRD-265; the
+ * backend enforces the exclusive-or, and `useGovernanceOverview` collapses the
+ * two into one `GovernanceText` so no component has to know which it got.
+ */
 export interface CouncilSeatDTO {
   name: string;
   initials: string;
-  roleKey: string;
+  roleKey?: string;
+  role?: AuthoredTextDTO;
   tint: "jade" | "violet" | "plum";
 }
 
+/** A principle: `key` (seeded) or `title` + `text` (authored). */
 export interface PrincipleDTO {
-  key: string;
+  key?: string;
+  title?: AuthoredTextDTO;
+  text?: AuthoredTextDTO;
   icon: string;
 }
 
+/** A decision-log entry: `key` (seeded) or `lead` + `body` (authored). */
 export interface DecisionDTO {
-  key: string;
+  key?: string;
+  lead?: AuthoredTextDTO;
+  body?: AuthoredTextDTO;
 }
 
 export interface GovernanceOverviewResponseDTO {
@@ -135,17 +159,84 @@ export type ConcernCategory =
 export interface ConcernSubmission {
   category: ConcernCategory;
   description: string;
-  /** Only sent by logged-out submitters, so staff can follow up. */
-  email?: string;
 }
 
-/** Minimal ack the intake endpoint echoes — never the submitted payload. */
+/**
+ * Minimal ack the intake endpoint echoes — never the submitted payload.
+ *
+ * `statusToken` is the whole of PRD-261: the reference code, handed over at
+ * the one moment it exists. The backend stores only its sha256 hash and
+ * QueerPulse sends no email, so this response is the entire delivery
+ * mechanism. Optional on the type because the same endpoint backs twelve
+ * intake kinds and only a concern mints one.
+ */
 export interface ConcernAckDTO {
   id: string;
   status: string;
+  statusToken?: string;
+  /** ISO 8601 — when the concern was recorded. */
+  submittedAt: string;
 }
 
 export const submitConcern = (submission: ConcernSubmission) =>
   apiPost<ConcernAckDTO>("/intakes/governance_concern", {
     payload: submission,
   });
+
+// ── Checking back on a concern (PRD-261) ─────────────────────────────────────
+// `GET /intakes/concerns/status?token=…`, public and unauthenticated: the
+// person this answers usually has no account, which is the point of an
+// anonymous reporting form. The code is the entire credential, throttled at 20
+// requests/hour per IP, and every failure is one indistinguishable 404 so the
+// route can never confirm whether a given code — or a given report — exists.
+
+/** Where one concern stands. Deliberately three fields: this is the blast
+ *  radius of a leaked code, so it carries no id, no category, no description
+ *  and nothing staff wrote. */
+export interface ConcernStatusDTO {
+  /** `new` (nobody has picked it up yet), `reviewing`, `resolved`, or
+   *  `dismissed` (closed without action). */
+  status: string;
+  /** ISO 8601 — when it was submitted. */
+  submittedAt: string;
+  /** ISO 8601 — when staff last moved it; null while still untouched. */
+  updatedAt: string | null;
+}
+
+/**
+ * The shape the backend's query DTO accepts: base64url, 32–128 characters.
+ * Guarding on it client-side turns an obvious typo into an instant answer
+ * instead of spending one of the endpoint's 20 requests/hour on a certain 400.
+ */
+export const CONCERN_STATUS_TOKEN_PATTERN = /^[A-Za-z0-9_-]{32,128}$/;
+
+/** True when `token` could plausibly be a reference code at all. */
+export function isWellFormedConcernToken(token: string): boolean {
+  return CONCERN_STATUS_TOKEN_PATTERN.test(token);
+}
+
+export const getConcernStatus = (token: string) =>
+  apiGet<ConcernStatusDTO>(
+    `/intakes/concerns/status?token=${encodeURIComponent(token)}`,
+  );
+
+/**
+ * True when the lookup can never succeed for this code, however the backend
+ * phrased it: a 404 (the single indistinguishable miss) or a 400 (a code the
+ * query DTO refused outright). Both get ONE message on screen, so someone
+ * probing codes learns nothing from the difference — and retrying is pointless,
+ * which is the rule the query hook's `retry` needs.
+ *
+ * Mirrors `isUnresolvableStatusToken` in `features/auth/api/joinRequest.api`,
+ * the platform's other public token lookup.
+ */
+export function isUnresolvableConcernToken(error: unknown): boolean {
+  return (
+    error instanceof ApiError && (error.status === 404 || error.status === 400)
+  );
+}
+
+/** The status page with the code already in the query string, so the common
+ *  path from the confirmation panel is a click rather than a copy-and-paste. */
+export const concernStatusLink = (token: string): string =>
+  `${routes.concernStatus}?token=${encodeURIComponent(token)}`;

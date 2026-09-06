@@ -258,6 +258,23 @@
   width: 100%;
   justify-content: center;
 }
+/* DES-170: the link icon inside the "generate a link" CTA. */
+.generateCtaIcon {
+  flex: none;
+  margin-right: 8px;
+}
+
+/* DES-170: the "(optional)" suffix inside a field label. The label itself is
+   uppercase, bold and letter-spaced; this steps out of all three so the aside
+   reads as an aside. Was a shared inline-style object carrying a `fontSize: 11`
+   literal. */
+.optionalSuffix {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--text-11);
+}
+
 .formNote {
   font-size: var(--text-12-5);
   color: var(--ink-40);

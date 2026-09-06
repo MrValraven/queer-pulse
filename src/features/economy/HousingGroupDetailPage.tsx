@@ -15,9 +15,12 @@ import {
   GroupDetailHeader,
   GroupNorms,
   GroupListings,
+  GroupListingsLocked,
 } from "./HousingGroupDetailSections";
 import { GroupEmptyState } from "./GroupEmptyState";
 import { MyGroupListings } from "./MyGroupListings";
+import { MyHousingJoinRequests } from "./MyHousingJoinRequests";
+import { useMyGroupJoinRequests } from "./api/useMyHousingJoinRequests";
 import { EditGroupListingModal } from "./EditGroupListingModal";
 import { PostGroupRoomModal } from "./PostGroupRoomModal";
 import { JoinGroupModal } from "./JoinGroupModal";
@@ -35,6 +38,14 @@ export function HousingGroupDetailPage() {
   const canPost = useCanPostGroupListing();
   const { data: myListings, isLoading: isLoadingMine } =
     useMyGroupListings(slug);
+  // PRD-242. Where the `housing_join_decided` bell row lands. The read is flat
+  // across every group, so this page picks out its own row; a member who never
+  // applied here has none and the section renders nothing.
+  const { data: myJoinRequests, isLoading: isLoadingMyJoinRequests } =
+    useMyGroupJoinRequests();
+  const myJoinRequestsHere = (myJoinRequests ?? []).filter(
+    (request) => request.slug === slug,
+  );
   const [isJoining, setIsJoining] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [editingListing, setEditingListing] = useState<MyGroupListing | null>(
@@ -90,8 +101,31 @@ export function HousingGroupDetailPage() {
   return (
     <PageShell>
       <GroupDetailHeader group={group} onJoin={() => setIsJoining(true)} />
+      {/* Held back until the read settles. Having applied here is the exception
+          rather than the rule, so a skeleton on every group page would announce
+          a section most readers will never have. */}
+      {!isLoadingMyJoinRequests && (
+        <MyHousingJoinRequests
+          requests={myJoinRequestsHere}
+          titleKey="economy:housingJoinRequests.group.title"
+          titleEmKey="economy:housingJoinRequests.group.titleEm"
+          subKey="economy:housingJoinRequests.group.sub"
+        />
+      )}
       <GroupNorms norms={group.norms} />
-      <GroupListings listings={group.listings ?? []} />
+      {/* An access-gated group answers its rooms only to the people it has let
+          in (ENG-172). `listingsGate` carries the reader's own standing, and
+          `listings` is empty and meaningless whenever it is set, so the two
+          are branched rather than merged: an empty grid here would read as a
+          group with nothing in it. */}
+      {group.listingsGate ? (
+        <GroupListingsLocked
+          membershipStanding={group.listingsGate.membershipStanding}
+          onJoin={() => setIsJoining(true)}
+        />
+      ) : (
+        <GroupListings listings={group.listings ?? []} />
+      )}
 
       {canPost && (
         <MyGroupListings

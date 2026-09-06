@@ -157,7 +157,9 @@ export function InviteLinkPanel({
               <Sending label={t("auth:invite.link.generating")} />
             ) : (
               <>
-                <FiLink aria-hidden style={{ marginRight: 8 }} />
+                {/* DES-170: the gap to the label is `.generateCtaIcon` in the
+                    module now, rather than an inline margin literal. */}
+                <FiLink aria-hidden className={styles.generateCtaIcon} />
                 {t("auth:invite.link.generateCta")}
               </>
             )}

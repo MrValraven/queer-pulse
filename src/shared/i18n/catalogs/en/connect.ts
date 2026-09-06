@@ -42,6 +42,17 @@ export const connect: Catalog = {
   "moreMenu.message": "Message",
   "moreMenu.mute": "Mute {name}",
   "moreMenu.unmute": "Unmute {name}",
+  // The quiet neighbour of Block (PRD-200). Shown only on an accepted,
+  // unblocked connection. Every claim in the confirm body is verified
+  // against ConnectionsService.remove (hard DELETE, no event emitted, the
+  // conversation row untouched) and MessagesService.send (403 "You can only
+  // message accepted connections").
+  "moreMenu.removeConnection": "Remove connection with {name}",
+  "moreMenu.removeConfirm.title": "Remove your connection with {name}?",
+  "moreMenu.removeConfirm.body":
+    "{name} is not told, and nothing either of you has already said is deleted. Your conversation stays in your inbox, though neither of you can send a new message until you are connected again. Either of you can ask to connect again whenever you want.",
+  "moreMenu.removeConfirm.action": "Remove connection",
+  "moreMenu.toastRemoved": "You and {name} are no longer connected.",
   "moreMenu.block": "Block {name}",
   "moreMenu.unblock": "Unblock {name}",
   "moreMenu.report": "Report",

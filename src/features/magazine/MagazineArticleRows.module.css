@@ -71,3 +71,11 @@
     transform: none;
   }
 }
+
+/* PRD-103: the shared "load more" footer, so every magazine browse list
+   continues past the backend's 20-row page in the same place. */
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}

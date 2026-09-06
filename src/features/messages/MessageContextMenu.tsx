@@ -31,6 +31,8 @@ export interface MessageContextMenuProps {
   onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
+  /** "Delete for me" (PRD-227) — see `MessageActionMenu`'s own doc. */
+  onDeleteForMe: () => void;
   onReport: () => void;
   onClose: () => void;
 }
@@ -61,6 +63,7 @@ export function MessageContextMenu({
   onEdit,
   onCopy,
   onDelete,
+  onDeleteForMe,
   onReport,
   onClose,
 }: MessageContextMenuProps) {
@@ -177,6 +180,7 @@ export function MessageContextMenu({
         onEdit={onEdit}
         onCopy={onCopy}
         onDelete={onDelete}
+        onDeleteForMe={onDeleteForMe}
         onReport={onReport}
         onClose={onClose}
       />

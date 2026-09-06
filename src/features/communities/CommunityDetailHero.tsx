@@ -1,26 +1,27 @@
 import { Link, useParams } from "react-router-dom";
-import {
-  FiArrowLeft,
-  FiBookmark,
-  FiCheck,
-  FiClock,
-  FiShare2,
-} from "react-icons/fi";
+import { FiArrowLeft, FiBookmark, FiMail, FiShare2 } from "react-icons/fi";
 import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Person } from "./communityDetails";
 import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
+import { CommunityHeroActions } from "./CommunityHeroActions";
 import { CommunityReportControl } from "../safety/CommunityReportControl";
+import { leadingInitials } from "../../shared/lib/initials";
 import styles from "./CommunityDetailPage.module.css";
 
 /** Community detail hero: breadcrumb, title, meta row and the join/edit CTAs. */
 export function CommunityDetailHero({
   community,
   detail,
+  avatarImageUrl,
   joined,
   requested,
+  isInvited,
+  isInviteOnlyLocked,
+  canDeclineInvite,
+  canWithdrawRequest,
   joinLabel,
   canEdit,
   heroAvatars,
@@ -31,12 +32,23 @@ export function CommunityDetailHero({
   onShare,
   onJoin,
   onLeave,
+  onAcceptInvite,
+  onDeclineInvite,
+  onWithdrawRequest,
   onEdit,
 }: {
   community: Community;
   detail: CommunityDetail;
+  /** The community's own square identity mark, or "" when it has none (PRD-146).
+   *  Empty falls back to the generated initial, exactly as the founding
+   *  wizard's live card preview does. */
+  avatarImageUrl: string;
   joined: boolean;
   requested: boolean;
+  isInvited: boolean;
+  isInviteOnlyLocked: boolean;
+  canDeclineInvite: boolean;
+  canWithdrawRequest: boolean;
   joinLabel: string;
   canEdit: boolean;
   heroAvatars: Person[];
@@ -47,6 +59,9 @@ export function CommunityDetailHero({
   onShare: () => void;
   onJoin: () => void;
   onLeave: () => void;
+  onAcceptInvite: () => void;
+  onDeclineInvite: () => void;
+  onWithdrawRequest: () => void;
   onEdit: () => void;
 }) {
   const { t } = useTranslation();
@@ -75,10 +90,31 @@ export function CommunityDetailHero({
         {/* FeatureHelp sits beside the heading, not inside it, so the info
             button doesn't pollute the h1's accessible name. */}
         <div className={styles.h1Row}>
+          {/* The community's own mark. Decorative: its name is the heading
+              right beside it, so naming the image would only repeat it to a
+              screen reader. A community with no mark keeps the generated
+              initial the founding wizard's card preview already shows. */}
+          <span className={styles.heroMark} aria-hidden>
+            {avatarImageUrl ? (
+              <img
+                className={styles.heroMarkImg}
+                src={avatarImageUrl}
+                alt=""
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              leadingInitials(community.name, { fallback: "•" })
+            )}
+          </span>
           <h1 className={styles.h1}>{community.name}</h1>
           <FeatureHelp id="community.detail" />
         </div>
         <p className={styles.heroSub}>{community.description}</p>
+        {isInvited && (
+          <p className={styles.inviteBanner}>
+            <FiMail aria-hidden /> {t("communities:detail.invite.banner")}
+          </p>
+        )}
         <div className={styles.heroMeta}>
           <span>{community.count}</span>
           <span className={styles.metaSep} />
@@ -87,19 +123,20 @@ export function CommunityDetailHero({
           <span>{detail.cadence}</span>
         </div>
         <div className={styles.actRow}>
-          {joined ? (
-            <Button variant="jade" onClick={onLeave}>
-              <FiCheck aria-hidden /> {t("communities:detail.joined")}
-            </Button>
-          ) : requested ? (
-            <Button variant="ghost-dark" disabled>
-              <FiClock aria-hidden /> {t("communities:detail.requested")}
-            </Button>
-          ) : (
-            <Button variant="primary" onClick={onJoin}>
-              {joinLabel}
-            </Button>
-          )}
+          <CommunityHeroActions
+            joined={joined}
+            requested={requested}
+            isInvited={isInvited}
+            isInviteOnlyLocked={isInviteOnlyLocked}
+            canDeclineInvite={canDeclineInvite}
+            canWithdrawRequest={canWithdrawRequest}
+            joinLabel={joinLabel}
+            onJoin={onJoin}
+            onLeave={onLeave}
+            onAcceptInvite={onAcceptInvite}
+            onDeclineInvite={onDeclineInvite}
+            onWithdrawRequest={onWithdrawRequest}
+          />
           {canEdit && (
             <Button variant="ghost-dark" onClick={onEdit}>
               {t("communities:edit.cta")}

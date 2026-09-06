@@ -25,6 +25,8 @@ export function MessagesSearchResults({
   onRequestDelete,
   onSelectResult,
   onClearSearch,
+  onMarkThreadRead,
+  onMarkThreadUnread,
 }: {
   query: string;
   threads: Conversation[];
@@ -37,6 +39,9 @@ export function MessagesSearchResults({
   onRequestDelete: (thread: Conversation) => void;
   onSelectResult: (conversationId: string, messageId?: string) => void;
   onClearSearch: () => void;
+  /** Row menu "Mark as read"/"Mark as unread" (PRD-225). */
+  onMarkThreadRead: (conversationId: string) => void;
+  onMarkThreadUnread: (conversationId: string) => void;
 }) {
   const { t } = useTranslation();
   // Debounce only the body-search fan-out; the name filter (from the controller)
@@ -81,6 +86,8 @@ export function MessagesSearchResults({
               pinnedCount={pinnedCount}
               onOpen={onOpen}
               onRequestDelete={onRequestDelete}
+              onMarkThreadRead={onMarkThreadRead}
+              onMarkThreadUnread={onMarkThreadUnread}
             />
           ))}
         </section>

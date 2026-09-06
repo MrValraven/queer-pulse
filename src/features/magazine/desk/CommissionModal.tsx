@@ -26,6 +26,17 @@ export interface CommissionPayload {
 interface CommissionModalProps {
   pitch?: { title: string; byline: string; note: string };
   sectionName?: string;
+  /**
+   * The section taxonomy from `useMagazineSections` (seeded rows in live
+   * mode, the canonical fixture in demo). PRD-130: this used to be the demo
+   * `DEMO_SECTIONS` constant even in live mode, so an editor commissioned
+   * into a hand-curated list the backend had never heard of.
+   *
+   * It arrives EMPTY while the fetch is in flight and after it fails, and
+   * that empty case is what disables the picker below. Commissioning into no
+   * section at all is worse than being told to wait: the piece would carry a
+   * section the Issue plan can never count.
+   */
   sections: { name: string }[];
   /** Track pre-selected to match the desk's active tab. */
   defaultTrack: DeskTrack;
@@ -54,12 +65,20 @@ export function CommissionModal({
 }: CommissionModalProps) {
   const { t } = useTranslation();
   const [angle, setAngle] = useState(pitch?.note ?? "");
-  const [section, setSection] = useState(
-    sectionName ?? sections[0]?.name ?? "",
+  // The taxonomy is fetched now, so it can land after this modal is already
+  // open (the desk opens it on a keystroke). The editor's choice is therefore
+  // held as an OVERRIDE and the effective section derived below, so a list
+  // that arrives late fills the picker on the next render without an effect,
+  // and without ever swapping out a section the editor has already picked.
+  const [sectionOverride, setSectionOverride] = useState<string | null>(
+    sectionName ?? null,
   );
+  const section = sectionOverride ?? sections[0]?.name ?? "";
   const [words, setWords] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [fee, setFee] = useState("");
+  const hasNoSections = sections.length === 0;
+
   // Without a selected issue there's nowhere to bind an issue piece, so a
   // commission can only land unfiled.
   const [track, setTrack] = useState<DeskTrack>(
@@ -67,6 +86,9 @@ export function CommissionModal({
   );
 
   const send = () => {
+    // Belt and braces behind the disabled button: a brief with no section is
+    // rejected by the backend and orphaned in the Issue plan either way.
+    if (!section) return;
     onCommission({
       angle: angle.trim(),
       section,
@@ -91,7 +113,7 @@ export function CommissionModal({
           <Button variant="ghost" onClick={onClose}>
             {t("magazine:desk.modals.cancel")}
           </Button>
-          <Button variant="primary" onClick={send}>
+          <Button variant="primary" onClick={send} disabled={!section}>
             {t("magazine:desk.modals.commission.sendBrief")}
           </Button>
         </div>
@@ -134,10 +156,23 @@ export function CommissionModal({
         />
       </FormField>
       <div className={styles.row}>
-        <FormField label={t("magazine:desk.modals.commission.sectionLabel")}>
+        <FormField
+          label={t("magazine:desk.modals.commission.sectionLabel")}
+          error={
+            hasNoSections
+              ? t("magazine:desk.modals.commission.sectionsUnavailable")
+              : undefined
+          }
+        >
           <Select
             value={section}
-            onChange={(value) => setSection(value ?? "")}
+            onChange={setSectionOverride}
+            disabled={hasNoSections}
+            placeholder={
+              hasNoSections
+                ? t("magazine:desk.modals.commission.sectionsEmptyOption")
+                : undefined
+            }
             options={sections.map((option) => ({
               value: option.name,
               label: option.name,

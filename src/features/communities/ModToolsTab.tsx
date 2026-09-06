@@ -275,7 +275,7 @@ function ModToolsPane({
     return <ModToolsBanRatifications slug={living.slug} />;
   }
   if (section === "invites") {
-    return <ModToolsInvites slug={living.slug} />;
+    return <ModToolsInvites slug={living.slug} role={role} />;
   }
   if (section === "support") {
     return <ModToolsSupport slug={living.slug} />;

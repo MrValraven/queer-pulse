@@ -26,6 +26,31 @@ export interface IssueDigestItemDto {
   on: boolean;
 }
 
+/** One piece a ship refused to publish, with every reason it was held. */
+export interface IssueHeldPieceDto {
+  pieceId: string;
+  title: string;
+  /** Human-readable reasons, already resolved by the backend (a stage that is
+   *  not `ready`, open care-gate items, a format readiness failure). */
+  reasons: string[];
+}
+
+/**
+ * What the most recent ship of this issue actually did (ENG-110). Absent or
+ * `null` on an issue that has never shipped, so every reader has to treat it
+ * as optional.
+ */
+export interface IssueLastShipDto {
+  /** ISO instant the ship ran. */
+  shippedAt: string;
+  /** ISO instant the published pieces go live. Equals `shippedAt` for an
+   *  immediate ship; a future issue date makes this 09:00 Europe/Lisbon on
+   *  that date, which is how a ship schedules rather than publishes. */
+  publishAt: string;
+  publishedPieceIds: string[];
+  held: IssueHeldPieceDto[];
+}
+
 /**
  * Full issue-production detail from GET /magazine/admin/issues/:number —
  * mirrors backend `IssueProductionResponse`.
@@ -45,6 +70,9 @@ export interface IssueProductionDto {
   digestSentAt: string | null;
   shipChecklist: PublishGateItemDto[];
   pages: { editorial: number; total: number; max: number };
+  /** Optional rather than `| null` on purpose: the demo fixture and any build
+   *  older than ENG-110 answer without the key at all. */
+  lastShip?: IssueLastShipDto | null;
 }
 
 /**

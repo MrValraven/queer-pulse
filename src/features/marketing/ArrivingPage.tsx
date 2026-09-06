@@ -15,6 +15,12 @@ import {
 import { ArrivingChecklistSection } from "./ArrivingChecklist";
 import { ArrivingGatheringsSection } from "./ArrivingGatherings";
 import { ArrivingCommunitiesSection } from "./ArrivingCommunities";
+import { PageReviewStamp } from "./PageReviewStamp";
+
+/** The day a person last read this page through. Built from local date parts
+ *  so the stamp never renders a day early west of Greenwich. Bump it when the
+ *  page is read through again. */
+const LAST_REVIEWED_ON = new Date(2026, 8, 6);
 
 export function ArrivingPage() {
   const { t } = useTranslation();
@@ -44,7 +50,12 @@ export function ArrivingPage() {
           />
         }
         sub={t("marketing:arriving.hero.body")}
-      />
+      >
+        <PageReviewStamp
+          reviewedOn={LAST_REVIEWED_ON}
+          verifyKey="marketing:arriving.review.verify"
+        />
+      </PageHero>
 
       <ArrivingChecklistSection />
       <NeighbourhoodsSection />

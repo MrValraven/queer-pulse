@@ -1116,7 +1116,7 @@ export const cinema: Catalog = {
     "Este filme tem {count} nota de conteúdo. Faz uma pausa, depois decide quando estiveres pronto.",
   "watch.overlay.sub_other":
     "Este filme tem {count} notas de conteúdo. Faz uma pausa, depois decide quando estiveres pronto.",
-  "watch.overlay.readyCta": "Estou pronto · reproduzir o filme",
+  "watch.overlay.readyCta": "Estou pronte · reproduzir o filme",
   "watch.overlay.backCta": "Voltar à página do filme",
   "watch.tab.filmInfo": "Informação do filme",
   "watch.tab.lobby": "Lobby",

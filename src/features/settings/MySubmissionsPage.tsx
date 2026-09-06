@@ -9,6 +9,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyPartnerApplications } from "../marketing/api/partnerApplicationMine.hooks";
+import { useMyPartners } from "../marketing/api/useMyPartners";
 import { useMySentBarterProposals } from "../economy/api/useBarter";
 import {
   useMyResourceSuggestions,
@@ -89,6 +90,11 @@ export function MySubmissionsPage() {
   const resourceSuggestionsResult = useSubmittedResourceSuggestions();
 
   const partnerApplications = partnerApplicationsQuery.data ?? [];
+  // PRD-263. Gates the "manage your partner profile" link below. Same
+  // `enabled` guard as the applications query: `GET /my-partners` sits behind
+  // `ActiveMemberGuard` and 401s before the session settles.
+  const ownedPartnersQuery = useMyPartners({ enabled: !checking });
+  const ownedPartners = ownedPartnersQuery.data ?? [];
   const barterProposals = barterProposalsQuery.data ?? [];
   const resourceSuggestions = resourceSuggestionsResult.suggestions;
 
@@ -169,6 +175,20 @@ export function MySubmissionsPage() {
                   application={application}
                 />
               ))}
+              {/* PRD-263. The way in to the partner's own profile editor. It
+                  belongs here because this is where an approved application
+                  already ends up, and "approved" is exactly the moment the
+                  organisation stops waiting on staff and starts owning a
+                  public page. Rendered only when the member actually
+                  maintains one, so it never advertises a door that would
+                  open on an empty room. */}
+              {ownedPartners.length > 0 && (
+                <p className={styles.sectionAside}>
+                  <Link to={routes.partnerProfileEdit}>
+                    {t("settings:mySubmissions.partner.manageProfileCta")}
+                  </Link>
+                </p>
+              )}
             </SubmissionSection>
 
             <SubmissionSection

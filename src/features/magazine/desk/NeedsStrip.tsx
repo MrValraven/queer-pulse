@@ -23,9 +23,13 @@ export function NeedsStrip({
   onChase: (piece: Piece) => void;
 }) {
   const { t } = useTranslation();
+  // A published piece is out of the pipeline: a stale due date on it would
+  // otherwise keep it at the top of this strip as "late" forever.
   const needsAttention = pieces
     .filter(
-      (piece) => piece.late || (piece.wait === "you" && piece.editorId === me),
+      (piece) =>
+        piece.stage !== "Published" &&
+        (piece.late || (piece.wait === "you" && piece.editorId === me)),
     )
     .slice(0, 3);
 

@@ -282,11 +282,16 @@ export const governance: Catalog = {
   // ── Raise a concern ─────────────────────────────────────────────────────
   "sections.raise.eyebrow": "Raise a concern",
   "sections.raise.title": "Something isn't <em>right?</em> Tell us.",
+  // PRD-261: the old copy promised a confirmation within 48 hours and an
+  // emailed update. QueerPulse sends no email, and `intake-sla.ts` enforces
+  // three days rather than 48 hours, which is the number the staff queue
+  // reddens on. Both strings now describe what actually happens: a reference
+  // code, and a three-day first look.
   "sections.raise.intro":
-    "Use this form to report a member, a piece of content, a platform decision, or a concern about how QueerPulse is run. All submissions are confidential and reviewed within 48 hours.",
+    "Use this form to report a member, a piece of content, a platform decision, or a concern about how QueerPulse is run. Every submission is confidential, and we hold ourselves to answering within three days.",
   "sections.raise.cardTitle": "Submit a concern",
   "sections.raise.cardText":
-    "Your identity is kept confidential. You'll receive a confirmation within 48 hours and an update when the matter is resolved.",
+    "Your identity stays confidential. QueerPulse sends no email, so when you submit this you get a reference code instead: keep it, and you can check what happened to your concern at any time.",
   "sections.raise.selectPlaceholder": "What kind of concern?",
   "sections.raise.option.member": "Report a member or behaviour",
   "sections.raise.option.gathering": "Report a gathering or event",
@@ -492,4 +497,65 @@ export const governance: Catalog = {
   "transparency.links.constitution": "Read the Constitution",
   "transparency.links.codeOfConduct": "Read the Code of Conduct",
   "transparency.links.governance": "Back to Governance",
+  // PRD-260: the governance overview and finances are public reads, but the
+  // proposals list stays member-only: a `council_removal` proposal carries a
+  // `targetMember`, so publishing it would publish "there is an open motion to
+  // remove [Name]" to anonymous visitors.
+  "sections.proposals.signedOut":
+    "Sign in to see the proposals members are voting on.",
+
+  // PRD-261: an anonymous concern submitter used to get nothing at all. They
+  // now get a reference code (256-bit, stored only as a sha256 hash) and a
+  // public status lookup. Nothing here may imply an email: QueerPulse sends
+  // none.
+  "concernStatus.submitted.title": "Your concern is with us",
+  "concernStatus.submitted.intro":
+    "It has been recorded and it is in the queue that governance staff work through.",
+  "concernStatus.submitted.fieldLabel": "Your reference code",
+  "concernStatus.submitted.copy": "Copy",
+  "concernStatus.submitted.copied": "Copied",
+  "concernStatus.submitted.copiedToast": "Reference code copied.",
+  "concernStatus.submitted.copyErrorToast":
+    "Your browser wouldn't let us copy that. Select the code and copy it by hand.",
+  "concernStatus.submitted.keepIt":
+    "Save this code somewhere you can get to it. We keep no copy you can be given back, and QueerPulse sends no email, so this is the only way to look your concern up later.",
+  "concernStatus.submitted.checkCta": "Check on this concern",
+  "concernStatus.submitted.whatHappensNext":
+    "A member of the governance team reads every concern. We hold ourselves to three days for a first look. Come back with your code to see when someone picked it up and how it ended.",
+  "concernStatus.submitted.anotherCta": "Raise another concern",
+
+  "concernStatus.meta.title": "Check a concern | QueerPulse",
+  "concernStatus.meta.description":
+    "Look up a concern you raised with QueerPulse using the reference code you were given.",
+  "concernStatus.title": "Check on a concern",
+  "concernStatus.intro":
+    "Paste the reference code you were given when you submitted. It shows where that one concern stands, and nothing else about it.",
+  "concernStatus.loading": "Looking that up\u2026",
+  "concernStatus.form.label": "Reference code",
+  "concernStatus.form.cta": "Check",
+
+  "concernStatus.meta.submitted": "Submitted {date}",
+  "concernStatus.meta.updated": "Last moved {date}",
+
+  "concernStatus.received.title": "We have it",
+  "concernStatus.received.body":
+    "Your concern is recorded and waiting. Nobody has opened it yet. We hold ourselves to three days for a first look, so check back with this code.",
+  "concernStatus.reviewing.title": "Someone is looking at it",
+  "concernStatus.reviewing.body":
+    "A member of the governance team has picked your concern up and is working on it. Come back with this code to see how it ends.",
+  "concernStatus.resolved.title": "This concern was resolved",
+  "concernStatus.resolved.body":
+    "The governance team looked into it and acted. If something about it is still wrong, raise a new concern and say that this one was closed.",
+  "concernStatus.dismissed.title": "This concern was closed without action",
+  "concernStatus.dismissed.body":
+    "The governance team read it and decided not to act on it. That decision is theirs to explain: if you want it looked at again, raise a new concern and say so.",
+
+  "concernStatus.notFound.title": "We can't find that code",
+  "concernStatus.notFound.body":
+    "Check it for a typo. Codes are long and every character counts. We can't tell you anything more than this about a code we don't recognise.",
+  "concernStatus.notFound.cta": "Try another code",
+  "concernStatus.unavailable.title": "We couldn't check just now",
+  "concernStatus.unavailable.body":
+    "Something went wrong on our side. Your code is still good.",
+  "concernStatus.unavailable.cta": "Try again",
 };

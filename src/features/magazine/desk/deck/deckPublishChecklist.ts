@@ -11,10 +11,13 @@ export interface DeckPublishChecklistItem {
 }
 
 /**
- * The deck editor's "before it ships" checklist — shared by `DeckPublishRail`
- * (which renders it) and `DeckEditorPage`'s header Publish button (which only
- * needs the pass/fail, via `isDeckPublishReady`), so the two Publish
- * affordances can never disagree about whether the draft is ready. Mirrors
+ * The deck editor's "before it ships" checklist — rendered by
+ * `DeckPublishRail` and scored, via `isDeckPublishReady`, by
+ * `deckPublishGate.ts`, which both Publish buttons read, so the two
+ * affordances can never disagree about whether the draft is ready. The
+ * REQUIRED rows here are also re-implemented server-side (backend
+ * `deck-slides.validation.ts#isDeckPublishReady`), so a direct request cannot
+ * skip what this gates. Mirrors
  * `articlePublishChecklist.ts`'s shape and reuses its generic `write.publish.*`
  * copy (title/segmented-control/alt-text wording) where the text is
  * identical — only the deck-specific items get their own keys.

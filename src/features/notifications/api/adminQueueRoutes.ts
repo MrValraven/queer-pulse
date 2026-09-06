@@ -13,7 +13,7 @@ import { routes } from "../../../app/routeMap";
  * row reaches this file it has already been addressed to somebody. What this
  * file owns is only the destination.
  *
- * 27 keys map onto 22 distinct routes: /admin/moderation carries two
+ * 28 keys map onto 23 distinct routes: /admin/moderation carries two
  * (`appeals`, `ban_ratifications`), /admin/safe-spaces two
  * (`safe_space_nominations`, `safe_space_flags`), /admin/landlords two
  * (`landlord_intro_requests`, `landlord_suggestions`), and /admin/listings
@@ -52,6 +52,11 @@ export const ADMIN_QUEUE_ROUTES: Record<string, string> = {
   // arrival until this queue was added (final review of the admin-queue
   // arrival notifications feature).
   roadmap_ideas: routes.adminRoadmap,
+  // PRD-270. The one queue whose arrivals are made by TIME rather than by a
+  // member: a guide whose review date has passed, or that has never been
+  // reviewed and is therefore withheld from the public entirely. The daily
+  // sweeper announces them into the console that already sorts stalest-first.
+  guide_reviews: routes.adminResourceGuides,
 };
 
 /** Every queue key, for catalog-coverage tests. */

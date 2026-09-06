@@ -1,13 +1,17 @@
 /* Page-specific bits only. The card shell, icon, eyebrow (kicker), heading and
-   lead come from the shared <StatusCard>. The cached-links list and the custom
-   status/retry foot below are page-specific and stay here. */
-.cached {
+   lead come from the shared <StatusCard>. The "what you can do" block and the
+   custom status/retry foot below are page-specific and stay here.
+
+   The `.cached*` link-row styles that used to live here are gone with the three
+   feed/gatherings/messages links they dressed: those links could not work (see
+   the note at the top of OfflinePage.tsx). */
+.noCache {
   margin-top: 28px;
   padding-top: 24px;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 
-.cachedTitle {
+.noCacheTitle {
   font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -16,70 +20,10 @@
   margin-bottom: 14px;
 }
 
-.cachedList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cachedRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  background: var(--cream);
-  border: 1px solid rgba(var(--line-rgb), 0.08);
-  border-radius: var(--radius-11);
-  text-decoration: none;
-  color: inherit;
-  transition:
-    border-color 0.2s,
-    transform 0.2s var(--ease);
-}
-
-@media (hover: hover) {
-  .cachedRow:hover {
-    border-color: var(--line-strong);
-    transform: translateX(2px);
-  }
-}
-
-.cachedIc {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-8);
-  background: rgba(var(--jade-rgb), 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-}
-
-.cachedIc svg {
-  width: 14px;
-  height: 14px;
-  stroke: var(--jade);
-  stroke-width: 2;
-}
-
-.cachedText {
-  flex: 1;
-}
-
-.cachedText b {
-  display: block;
+.noCacheBody {
   font-size: var(--text-14);
-  color: var(--text-strong);
-  font-weight: 600;
-}
-
-.cachedText span {
-  font-size: var(--text-12);
   color: var(--ink-60);
-}
-
-.cachedArrow {
-  color: var(--ink-40);
+  line-height: 1.65;
 }
 
 .foot {

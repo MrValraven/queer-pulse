@@ -119,6 +119,19 @@ export function SubprofileShowcase({
   const loneHasCover = !hasList && Boolean(safeHref(active.coverUrl));
   const loneLayoutClass = loneHasCover ? styles.soloWide : styles.solo;
 
+  // The nested route is addressed by the persona's OWN `ownerSlug`, which the
+  // server resolves per persona to its CREATOR's profile slug. A co-owned
+  // persona shows on every co-owner's profile, and the route resolves
+  // `slug` + creator only, so building the link from the slug of whichever
+  // profile is being viewed produced a 404, and, where that co-owner had a
+  // persona of their own under the same slug, opened the OTHER persona. The
+  // `ownerSlug` prop stays as the fallback for the self view, where the owner
+  // list carries no per-persona owner of its own.
+  const activeHref = nestedPersonaPath(
+    active.ownerSlug ?? ownerSlug,
+    active.slug,
+  );
+
   return (
     <div
       className={`${styles.showcase} ${hasList ? styles.split : loneLayoutClass}`}
@@ -141,7 +154,7 @@ export function SubprofileShowcase({
       </p>
       <SubprofileFeatureCard
         persona={active}
-        href={nestedPersonaPath(ownerSlug, active.slug)}
+        href={activeHref}
         direction={direction}
         variant={loneHasCover ? "wide" : "compact"}
         id={hasList ? heroId : undefined}

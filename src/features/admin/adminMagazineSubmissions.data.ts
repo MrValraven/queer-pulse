@@ -9,7 +9,13 @@ import type { AdminMagazineSubmissionDTO } from "./api/adminMagazineSubmissions.
  * The first two rows are still open, so the accept / decline / commission
  * actions render on them; the rest carry a recorded decision and its reply.
  * `sub_5005` keeps the pre-split shape (everything in `pitch`, no deck or
- * body) so the page is exercised against a legacy row too.
+ * body) so the page is exercised against a legacy row too, and `sub_5006` is
+ * an accept that produced a desk piece, so the link through to it renders.
+ *
+ * The two halves of the reopen path are covered as well: `sub_5004` is a live
+ * decline, so the Reopen action renders on it, and `sub_5005` was declined once
+ * and put back, so the reopen stamp renders on a row that is otherwise
+ * indistinguishable from one nobody has decided.
  */
 export const ADMIN_MAGAZINE_SUBMISSIONS: AdminMagazineSubmissionDTO[] = [
   {
@@ -25,7 +31,11 @@ export const ADMIN_MAGAZINE_SUBMISSIONS: AdminMagazineSubmissionDTO[] = [
     decision: null,
     decisionNote: null,
     decidedAt: null,
+    reopenedBy: null,
+    reopenedAt: null,
+    reopenCount: 0,
     commissionedPitchId: null,
+    acceptedPieceId: null,
     createdAt: "2026-07-25T09:40:00.000Z",
   },
   {
@@ -41,7 +51,11 @@ export const ADMIN_MAGAZINE_SUBMISSIONS: AdminMagazineSubmissionDTO[] = [
     decision: null,
     decisionNote: null,
     decidedAt: null,
+    reopenedBy: null,
+    reopenedAt: null,
+    reopenCount: 0,
     commissionedPitchId: null,
+    acceptedPieceId: null,
     createdAt: "2026-07-22T15:10:00.000Z",
   },
   {
@@ -58,7 +72,11 @@ export const ADMIN_MAGAZINE_SUBMISSIONS: AdminMagazineSubmissionDTO[] = [
     decisionNote:
       "Beautiful. We'd like this for the winter issue — the desk will be in touch about frame selection.",
     decidedAt: "2026-07-20T10:00:00.000Z",
+    reopenedBy: null,
+    reopenedAt: null,
+    reopenCount: 0,
     commissionedPitchId: "pitch_9003",
+    acceptedPieceId: null,
     createdAt: "2026-07-18T07:30:00.000Z",
   },
   {
@@ -75,7 +93,11 @@ export const ADMIN_MAGAZINE_SUBMISSIONS: AdminMagazineSubmissionDTO[] = [
     decisionNote:
       "We ran a close piece on archives last issue. Please send us the next one.",
     decidedAt: "2026-07-14T11:20:00.000Z",
+    reopenedBy: null,
+    reopenedAt: null,
+    reopenCount: 0,
     commissionedPitchId: null,
+    acceptedPieceId: null,
     createdAt: "2026-07-11T12:00:00.000Z",
   },
   {
@@ -92,7 +114,37 @@ export const ADMIN_MAGAZINE_SUBMISSIONS: AdminMagazineSubmissionDTO[] = [
     decision: null,
     decisionNote: null,
     decidedAt: null,
+    // Declined once and put back: the decision, its note and its date are gone,
+    // which is what returns a story to the queue, so the reopen stamp is the
+    // only thing saying an answer was ever sent and taken back.
+    reopenedBy: { slug: "tomas", name: "Tomás Ferreira" },
+    reopenedAt: "2026-07-16T09:30:00.000Z",
+    reopenCount: 1,
     commissionedPitchId: null,
+    acceptedPieceId: null,
     createdAt: "2026-07-09T08:15:00.000Z",
+  },
+  {
+    id: "sub_5006",
+    submitter: { slug: "teresa", name: "Teresa Lopes" },
+    format: "Reportage",
+    workingTitle: "The night bus that runs to the shelter",
+    pitch: "A ride-along on the 208, the only route that reaches the door.",
+    deck: "Two drivers, one route, and the twenty minutes that decide a night.",
+    body: "The 208 leaves the square at ten past midnight and it is never empty. The driver knows most of the faces, and the ones she does not know, she waits for.",
+    coverUrl: null,
+    status: "accepted",
+    decision: "accepted",
+    decisionNote:
+      "Yes, gladly. It's on the desk now and an editor will write to you this week.",
+    decidedAt: "2026-07-06T16:45:00.000Z",
+    reopenedBy: null,
+    reopenedAt: null,
+    reopenCount: 0,
+    commissionedPitchId: null,
+    // A plain accept builds the desk piece straight away and carries the
+    // member's text into it as the article draft, so the row links through.
+    acceptedPieceId: "piece_7006",
+    createdAt: "2026-07-03T19:05:00.000Z",
   },
 ];

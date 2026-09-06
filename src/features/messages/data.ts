@@ -48,24 +48,31 @@ export interface ChatMessage {
   /** `"system"` renders a centred event pill (see `systemEvent`); `"gif"` and
    *  `"image"` both render an inline image (see `attachment`, distinguished
    *  only for copy/analytics — the bubble markup is identical either way);
-   *  absent/`"user"` is an ordinary bubble. */
-  kind?: "user" | "system" | "gif" | "image";
+   *  `"document"` renders a file-card (name, format, size, a download link —
+   *  PRD-226); absent/`"user"` is an ordinary bubble. */
+  kind?: "user" | "system" | "gif" | "image" | "document";
   /** Resolved system event for a `kind: "system"` message. */
   systemEvent?: ChatSystemEvent;
-  /** The media attachment a `kind:"gif"` or `kind:"image"` bubble RENDERS
-   *  (rendered as an inline image either way). Absent for text/system
-   *  messages. `text` holds a "GIF"/"Photo" fallback. For an image message
-   *  this is the upload's local blob preview while the send is optimistic
-   *  (immediately paintable) — see `sendAttachment` for what's actually sent. */
-  attachment?: import("../../shared/api/gifs").GifAttachment;
-  /** Client-only: the SEND payload for a `kind:"image"` optimistic message —
-   *  the private storage key the upload minted, distinct from `attachment`
-   *  (the local blob preview) because the key alone isn't a fetchable URL to
-   *  render with. `retrySend`/the offline-outbox replay resend this, never
-   *  `attachment`. Absent for a gif (its `attachment` already IS the real,
-   *  resendable value) and for every server-derived message (the server
-   *  response's `attachment` is already the real, resolved URL). */
-  sendAttachment?: import("../../shared/api/gifs").GifAttachment;
+  /** The media/document attachment a `kind:"gif"`/`kind:"image"`/
+   *  `kind:"document"` bubble RENDERS. Absent for text/system messages.
+   *  `text` holds a "GIF"/"Photo"/"Document" fallback. For an image or
+   *  document message this is the upload's local blob preview while the send
+   *  is optimistic (immediately paintable) — see `sendAttachment` for what's
+   *  actually sent. */
+  attachment?:
+    | import("../../shared/api/gifs").GifAttachment
+    | import("../../shared/api/documentAttachment").DocumentAttachment;
+  /** Client-only: the SEND payload for a `kind:"image"`/`kind:"document"`
+   *  optimistic message — the private storage key the upload minted, distinct
+   *  from `attachment` (the local blob preview) because the key alone isn't a
+   *  fetchable URL to render with. `retrySend`/the offline-outbox replay
+   *  resend this, never `attachment`. Absent for a gif (its `attachment`
+   *  already IS the real, resendable value) and for every server-derived
+   *  message (the server response's `attachment` is already the real,
+   *  resolved URL). */
+  sendAttachment?:
+    | import("../../shared/api/gifs").GifAttachment
+    | import("../../shared/api/documentAttachment").DocumentAttachment;
   /** GROUP threads only — the sender's identity for per-run attribution (name
    *  label + avatar above a received run). Absent in DMs, where the header
    *  already identifies the single counterpart. */
@@ -91,6 +98,28 @@ export interface ChatMessage {
   deliveredAt?: string;
   /** Client id for an optimistic message, so a failed one can be found + retried. */
   localId?: string;
+  /** Whether the offline outbox (`useMessageOutbox`) may automatically replay
+   *  this `"failed"` send again on mount / `online` / socket reconnect.
+   *  Undefined/`true` = still eligible. `false` = either a PERMANENT
+   *  rejection (400/403/404/409/413/422 — e.g. a blocked pair, or a housing
+   *  enquiry thread's 403) that can never succeed by resending the same
+   *  payload, or a transient failure that already exhausted its automatic
+   *  retry budget (`MAX_AUTO_REPLAY_ATTEMPTS` in `useMessageOutbox.ts`). The
+   *  bubble still renders `"failed"` either way, and a MANUAL `retrySend`
+   *  still attempts it again regardless of this flag — only the unattended
+   *  replay loop honours it. Set by `useMessageDeliverCore`'s `onError`. */
+  isRetryable?: boolean;
+  /** Count of AUTOMATIC outbox-replay attempts made for this send (mount /
+   *  `online` / reconnect only — a manual `retrySend` never advances this).
+   *  Bounds a still-transient failure's automatic retries and picks its
+   *  backoff delay; absent/0 = never auto-replayed. */
+  retryCount?: number;
+  /** Epoch ms of the last send attempt (automatic replay OR manual retry) —
+   *  the automatic replay loop won't re-attempt before `retryCount`'s backoff
+   *  window has elapsed since this, so a burst of reconnects/online events
+   *  close together can't hammer the same still-cooling-down entry. Absent =
+   *  never attempted. */
+  lastAttemptAt?: number;
   /** Per-key reaction counts + whether the signed-in member reacted (live mode).
    *  Absent for demo/optimistic messages, which carry no reactions. */
   reactions?: ReactionSummary[];
@@ -184,6 +213,13 @@ export interface Conversation {
    *  archived thread can never be the reason a reply goes unseen. Drives the
    *  Archived inbox filter/tab. */
   archivedAt?: string | null;
+  /** ISO timestamp this member explicitly marked the chat unread from the row
+   *  menu (WhatsApp/Telegram/Signal-style "come back to this"). Absent/null =
+   *  not manually marked. Server state (survives navigating away and shows on
+   *  other devices) — independent of `unreadCount`: a genuinely-read thread
+   *  can still carry this until the member re-opens it, which is the only
+   *  thing that clears it. `unread` above already ORs this in. */
+  markedUnreadAt?: string | null;
   /** This member's own unsent composer text, synced from whichever device last
    *  wrote it (server cross-device layer). Absent/null = no stored draft. Only
    *  read once, to SEED the composer on mount alongside the instant local
@@ -197,6 +233,13 @@ export interface Conversation {
   /** Counterpart's user id (live) — correlates presence events. */
   otherParticipantId?: string;
   official?: boolean;
+  /** SERVER-AUTHORITATIVE (PRD-220): true for a DM the two aren't accepted
+   *  connections in — e.g. a housing/flatmate enquiry that opened a thread
+   *  cold. The ordinary send path 403s every message past the enquiry itself,
+   *  from either side, so the composer renders `ComposerConnectionNotice`
+   *  instead of a normal input. Always false/absent for official and group
+   *  threads (the connection gate doesn't apply to them). */
+  replyRequiresConnection?: boolean;
   /** True for a GROUP thread — swaps the header/inbox to group framing (title +
    *  member-count subtitle, per-sender attribution, "Group info"). Absent = DM. */
   isGroup?: boolean;

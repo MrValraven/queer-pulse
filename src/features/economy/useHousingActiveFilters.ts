@@ -5,9 +5,13 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { BEDROOM_OPTIONS, FILTERS } from "./housing.data";
 import type { HousingFilters } from "./housingFilters";
 
-/** The three yes/no narrowings, paired with the label their chip carries. */
+/** The yes/no narrowings, paired with the label their chip carries. Same order
+ * as the toggle row in `HousingFilterBar`, so a chip sits where its control
+ * does. */
 const FLAG_FILTERS = [
   ["billsIncluded", "economy:housing.filterBar.bills"],
+  ["furnished", "economy:housing.filterBar.furnished"],
+  ["petsWelcome", "economy:housing.filterBar.pets"],
   ["hasAccessibilityInfo", "economy:housing.filterBar.accessibility"],
   ["verifiedOnly", "economy:housing.filterBar.verified"],
 ] as const;
@@ -118,6 +122,16 @@ export function useHousingActiveFilters({
                 beds: beds ? t(beds.labelKey) : String(filters.bedroomsMin),
               }),
         onRemove: () => onChange({ ...filters, bedroomsMin: undefined }),
+      });
+    }
+
+    if (filters.depositMax !== undefined) {
+      list.push({
+        key: "depositMax",
+        label: t("economy:housing.filterBar.chip.depositUpTo", {
+          max: filters.depositMax,
+        }),
+        onRemove: () => onChange({ ...filters, depositMax: undefined }),
       });
     }
 

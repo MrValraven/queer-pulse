@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
@@ -12,7 +12,12 @@ import { PILL_LABEL_KEYS, TIP_KEYS, TOTAL_STEPS } from "./createGathering.data";
 import { useGatheringForm } from "./useGatheringForm";
 import { useCreateEvent } from "./api/useEventMutations";
 import { formToCreateEventDto } from "./api/events.adapters";
-import { CREATE_GATHERING_COMMUNITY_PARAM } from "./data";
+import {
+  CREATE_GATHERING_COMMUNITY_PARAM,
+  DUPLICATE_GATHERING_PARAM,
+} from "./data";
+import { gatheringToFormSeed } from "./gatheringSeed";
+import { useEvent } from "./api/useEvent";
 import { CreateGatheringSuccess } from "./CreateGatheringSuccess";
 import {
   CapacityStep,
@@ -40,8 +45,22 @@ export function CreateGatheringPage() {
   // once, on mount, by the form hook: changing the URL afterwards does not
   // overwrite a pick the host has since made.
   const [searchParams] = useSearchParams();
+  // "Run this again" (PRD-190): `?duplicate=<slug>` fetches that gathering and
+  // seeds the wizard from it. The fetch is asynchronous, so the seed is applied
+  // by `useGatheringForm` whenever it lands rather than only on mount —
+  // `useMemo` keeps its identity stable so it is applied exactly once.
+  const duplicateSlug = searchParams.get(DUPLICATE_GATHERING_PARAM);
+  const { data: duplicateSource } = useEvent(duplicateSlug ?? undefined);
+  const seed = useMemo(
+    () =>
+      duplicateSlug && duplicateSource
+        ? gatheringToFormSeed(duplicateSource.gathering)
+        : undefined,
+    [duplicateSlug, duplicateSource],
+  );
   const form = useGatheringForm({
     communitySlug: searchParams.get(CREATE_GATHERING_COMMUNITY_PARAM) ?? "",
+    ...(seed ? { seed } : {}),
   });
   const createEvent = useCreateEvent();
 
@@ -53,7 +72,11 @@ export function CreateGatheringPage() {
     (stepIndex: number) => {
       if (stepIndex === 0)
         return Boolean(form.type) && form.title.trim().length > 0;
-      if (stepIndex === 1) return form.dateValid;
+      // Step 1 also holds the online gathering's join link (PRD-182). A
+      // malformed one would 400 on publish four steps later with an error the
+      // host cannot map back to a field, so it is caught here instead. Empty
+      // is fine: the link is optional and can be added after publishing.
+      if (stepIndex === 1) return form.dateValid && form.onlineUrlValid;
       if (stepIndex === 2) return form.recurrenceValid;
       if (stepIndex === TOTAL_STEPS - 1) return form.allChecked;
       return true;
@@ -62,6 +85,7 @@ export function CreateGatheringPage() {
       form.type,
       form.title,
       form.dateValid,
+      form.onlineUrlValid,
       form.recurrenceValid,
       form.allChecked,
     ],
@@ -89,11 +113,13 @@ export function CreateGatheringPage() {
       ? t("gatherings:create.nav.detailsHint")
       : currentStepIndex === 1 && !form.dateValid
         ? t("gatherings:create.nav.dateHint")
-        : currentStepIndex === 2 && !form.recurrenceValid
-          ? t("gatherings:create.nav.repeatsHint")
-          : isLastStep && !form.allChecked
-            ? t("gatherings:create.nav.publishHint")
-            : undefined;
+        : currentStepIndex === 1 && !form.onlineUrlValid
+          ? t("gatherings:create.step2.joinLinkInvalid")
+          : currentStepIndex === 2 && !form.recurrenceValid
+            ? t("gatherings:create.nav.repeatsHint")
+            : isLastStep && !form.allChecked
+              ? t("gatherings:create.nav.publishHint")
+              : undefined;
 
   const next = () => {
     if (!canAdvanceFromStep(currentStepIndex)) return;

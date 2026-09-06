@@ -79,12 +79,24 @@ export function removedCardDtoToSpace(dto: RemovedSpaceCardDTO): RemovedSpace {
 export function safeSpaceListToView(dto: SafeSpaceListDTO): {
   verified: VerifiedSpace[];
   removed: RemovedSpace[];
-  stats: { verified: number; reviews: number; removed: number };
+  stats: {
+    verified: number;
+    reviews: number;
+    removed: number;
+    lastReVerifiedAt: string | null;
+  };
 } {
   return {
     verified: dto.verified.map(verifiedCardDtoToSpace),
     removed: dto.removed.map(removedCardDtoToSpace),
-    stats: dto.stats,
+    stats: {
+      verified: dto.stats.verified,
+      reviews: dto.stats.reviews,
+      removed: dto.stats.removed,
+      // Normalized to null rather than left undefined, so the hub has one
+      // "there is no date to show" case instead of two.
+      lastReVerifiedAt: dto.stats.lastReVerifiedAt ?? null,
+    },
   };
 }
 

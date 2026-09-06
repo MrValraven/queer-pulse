@@ -3,7 +3,9 @@
    onto repo tokens — see ArticleBlockView.tsx for the per-kind dispatch. */
 
 .p {
-  font-size: var(--article-body-size, 17.5px);
+  /* DES-102: the fallback is a rem token too, for the surfaces that render a
+     block outside the reader's sized body (the desk's own preview). */
+  font-size: var(--article-body-size, var(--text-17-5));
   line-height: 1.68;
   color: var(--ink);
   margin-bottom: 1.5em;
@@ -30,6 +32,8 @@
 }
 
 .h {
+  /* PRD-113: the contents list jumps here, clear of the sticky toolbar. */
+  scroll-margin-top: calc(var(--sticky-top) + var(--gap-lg));
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-heading);

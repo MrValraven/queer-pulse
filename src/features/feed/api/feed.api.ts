@@ -7,8 +7,10 @@ import type {
 import type { FeedTab } from "../feed.data";
 
 // ── Feed DTOs + raw calls ────────────────────────────────────────────────────
-// The feed is a READ-TIME AGGREGATION — `FeedItem` (contracts.ts) is the union
-// of community_post | forum_thread | gathering. PAGINATION: cursor-based
+// The feed is a READ-TIME AGGREGATION. `FeedItem` (contracts.ts) is the union
+// of community_post | forum_thread | gathering | new_member | article, and the
+// interface below adds only the ranking and interaction signals the feed alone
+// consumes. PAGINATION: cursor-based
 // (infinite scroll). Post interactions target the underlying community-posts
 // domain, which the backend owns; we call those endpoints directly here.
 
@@ -41,6 +43,24 @@ export interface FeedItemSource {
   name: string;
 }
 
+/** PRD-107: the magazine credit on an `article` item.
+ *
+ *  Kept apart from `actor` because it is not a member account: `slug`
+ *  addresses `/magazine/author/:slug`, and plenty of contributors are credited
+ *  by name only and hold no account at all. `actor` is still filled in when the
+ *  byline is linked to a member, which is what the block/mute filter below
+ *  reads. */
+export interface FeedArticleByline {
+  name: string;
+  slug: string;
+  avatarUrl: string | null;
+}
+
+/** The feed's own item type, re-exported from the shared contract so the cards
+ *  can keep importing it from here. `"article"` (PRD-107, a published magazine
+ *  piece) now lives in the contract itself. */
+export type { FeedItemType } from "../../../shared/contracts/contracts";
+
 export interface FeedItem extends ContractFeedItem {
   /** Present on every tab, since muting is a reader's preference rather than
    *  a ranking concept. Null for a flat item with no room behind it. */
@@ -54,6 +74,20 @@ export interface FeedItem extends ContractFeedItem {
   replyCount?: number;
   /** The viewer's own reaction key, or null when they haven't reacted. */
   myReaction?: string | null;
+  /** PRD-107, `article` only: the magazine's own furniture. `title` is the
+   *  headline and `summary` the dek; these carry what the shared shape has no
+   *  room for. */
+  kicker?: string;
+  section?: string;
+  readMinutes?: number;
+  /** The piece's lead art, or null when the desk set none. */
+  imageUrl?: string | null;
+  /** The language of the row the card is showing, so a reader served the
+   *  original where no translation exists can be told which one they got. */
+  locale?: string;
+  byline?: FeedArticleByline | null;
+  // PRD-167's `excerpt` (a `forum_thread`'s opening post) is inherited from the
+  // shared contract, which is where it is documented.
 }
 
 /** Map the page's tab chips onto the backend `tab` query param. */
@@ -74,12 +108,34 @@ function tabParam(tab: FeedTab): string | undefined {
   }
 }
 
-/** GET /feed?tab=&cursor= — a cursor page of aggregated feed items. */
-export async function getFeed(tab: FeedTab, cursor?: string) {
+/**
+ * GET /feed?tab=&cursor=&lang=&joinedWithinDays=: a cursor page of aggregated
+ * feed items.
+ *
+ * PRD-107: `lang` is the reader's chosen language and reaches the magazine
+ * source alone. A piece with a published translation in it comes back
+ * translated, at the translation's own slug; a piece without one stays as
+ * written. A language the magazine does not publish in is simply ignored.
+ *
+ * PRD-168: `joinedWithinDays` bounds the `new_member` and
+ * `community_new_member` sources to people who joined that recently, and
+ * touches nothing else. Only the sidebar's "New this week" widget sends it
+ * (as 7); the People TAB omits it and keeps its unbounded behaviour. The
+ * spelling matters: the backend validates the query with
+ * `forbidNonWhitelisted`, so any other parameter name is a 400.
+ */
+export async function getFeed(
+  tab: FeedTab,
+  cursor?: string,
+  lang?: string,
+  joinedWithinDays?: number,
+) {
   const q = new URLSearchParams();
   const tabQueryValue = tabParam(tab);
   if (tabQueryValue) q.set("tab", tabQueryValue);
   if (cursor) q.set("cursor", cursor);
+  if (lang) q.set("lang", lang);
+  if (joinedWithinDays) q.set("joinedWithinDays", String(joinedWithinDays));
   const qs = q.toString();
   const res = await apiGet<FeedItem[] | Paginated<FeedItem>>(
     `/feed${qs ? `?${qs}` : ""}`,

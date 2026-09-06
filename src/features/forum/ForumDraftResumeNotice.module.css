@@ -1,0 +1,47 @@
+/* The quiet "your unfinished post is still here" line under the forum hero.
+   Deliberately small: a paper strip on the cream page, the same hairline every
+   other forum surface uses, no illustration and no colour block. It sits
+   between the hero and the board because that is where a member's eye already
+   is on the way to writing. */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+}
+
+.icon {
+  flex: none;
+  color: var(--accent);
+  width: 18px;
+  height: 18px;
+}
+
+.text {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.title {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* One line only: the point is to recognise the draft, never to read it here. */
+.preview {
+  margin-top: 2px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.action {
+  flex: none;
+}

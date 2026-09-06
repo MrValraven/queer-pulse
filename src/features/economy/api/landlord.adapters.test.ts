@@ -42,6 +42,17 @@ function makeRecommendationDTO(
     stars: 5,
     text: "Never once asked who my partner was.",
     createdAt: "2026-03-01T00:00:00.000Z",
+    // PRD-249. The default fixture is what every recommendation written from
+    // now on looks like: attested by its author, and still unverified, because
+    // nothing on the platform can check a tenancy. Tests about the historic
+    // rows pass `attestation: null`.
+    isSelfAttested: true,
+    attestation: {
+      tenancyStartedOn: "2024-03",
+      tenancyEndedOn: "2025-09",
+      attestedAt: "2026-03-01T00:00:00.000Z",
+    },
+    landlordReply: null,
     ...overrides,
   };
 }
@@ -58,7 +69,12 @@ function makeDetailDTO(
     hood: "Arroios",
     note: "",
     tagline: "",
-    rating: { score: "5.0", count: recommendations.length },
+    rating: {
+      score: "5.0",
+      count: recommendations.length,
+      attestedCount: recommendations.filter((rec) => rec.attestation).length,
+    },
+    isRatingSelfReported: true,
     about: [],
     areas: [],
     rentingNote: "",

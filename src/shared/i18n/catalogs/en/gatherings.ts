@@ -1301,4 +1301,114 @@ export const gatherings: Catalog = {
   "photos.reportAriaLabel": "Report this photo",
   "photos.reportCaptionedAriaLabel": "Report the photo captioned {caption}",
   "photos.reportSubjectName": "Photo from {gathering}",
+
+  // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
+
+  // DES-130 — the "Online" neighbourhood label. The card and detail adapters
+  // used to emit the English literal while the My Events adapter translated
+  // the identical fact, so one gathering read in two languages on two screens.
+  "common.online": "Online",
+
+  // PRD-182 — the join link for an online gathering. It rides the same server
+  // gate as a street address (organisers and confirmed attendees), so its
+  // absence is a fact to state, never a blank line. Two different absences,
+  // said differently: the host never added one, or the reader has not earned
+  // it yet.
+  "gathering.where.joinLinkLabel": "Join link",
+  "gathering.where.joinLinkMissing":
+    "You haven't added a join link yet. Attendees will look for it here.",
+  "gathering.where.joinLinkWithheld":
+    "The join link is shared with the people who are going.",
+  "gathering.joinLinkNote":
+    "Join link shared with confirmed guests after you RSVP.",
+
+  // PRD-181 / PRD-183 — a gathering nobody can still join. The page used to
+  // render an ordinary RSVP button in both states and the server answered it
+  // with a 400 the member had no way to read.
+  "gathering.cancelledBanner":
+    "This gathering was cancelled. Nothing is happening on this date.",
+  "gathering.endedBanner":
+    "This gathering has already happened. RSVPs are closed.",
+  "gathering.reportCta": "Report this gathering",
+  "gathering.reportAriaLabel": "Report the gathering {title}",
+
+  // PRD-188 — "Maybe" on the detail page. The API and My Events both supported
+  // it while this surface offered only a seat, so a member could not mark
+  // interest without committing one.
+  "rsvpControl.maybeCta": "Maybe",
+  "rsvpControl.maybeTitle": "You're a <em>maybe</em>",
+  "rsvpControl.maybeNote":
+    "You haven't taken a seat. Switch to going when you know.",
+  "rsvpControl.maybeToast": "Marked as maybe",
+  "rsvpControl.switchToGoingCta": "I'm going",
+
+  // ENG-140 — the host turned "Show attendee count" off, so the server sends
+  // no roster and no numbers to anyone but an organiser. Said plainly rather
+  // than rendered as a zero, which would read as "nobody is coming".
+  "rsvpControl.goingCountHidden": "The host keeps the guest list private.",
+
+  // PRD-187 — the plus-one and access needs, reachable from the gathering
+  // itself instead of only from a My Events card on another page.
+  "rsvpControl.yourDetailsCta": "Your details",
+
+  // PRD-181 / PRD-183 — the sidebar panel for a closed gathering. Someone who
+  // was coming is told their plan has changed; someone who was not is simply
+  // told the state.
+  "rsvpControl.cancelledTitle": "This gathering was <em>cancelled</em>",
+  "rsvpControl.cancelledNote": "The host called it off.",
+  "rsvpControl.cancelledAttendingNote":
+    "The host called it off, so your place is gone. Nothing else to do.",
+  "rsvpControl.endedTitle": "This gathering has <em>ended</em>",
+  "rsvpControl.endedNote": "It already happened.",
+  "rsvpControl.endedAttendingNote": "Hope it was good.",
+
+  // PRD-187 — "Anything we should know?" on the gathering detail
+  // (GatheringRsvpDetailsModal). Capacity counts declared guests, so an
+  // undeclared plus-one is a place the host never laid.
+  "rsvpDetails.eyebrow": "Your RSVP",
+  "rsvpDetails.title": "Anything we should <em>know</em>?",
+  "rsvpDetails.sub": "The host reads this. Nobody else has to.",
+  "rsvpDetails.guestsLabel": "Who's coming",
+  "rsvpDetails.guestOption_one": "Me and {count} other",
+  "rsvpDetails.guestOption_other": "Me and {count} others",
+  "rsvpDetails.guestsHint":
+    "Seats are counted per person, so this is how many places the host lays.",
+  "rsvpDetails.accessLabel": "Access needs",
+  "rsvpDetails.accessPlaceholder":
+    "Step-free entry, a seat near the door, a quiet corner…",
+  "rsvpDetails.dietaryLabel": "Food and drink",
+  "rsvpDetails.dietaryPlaceholder": "Vegan, no alcohol, an allergy…",
+  "rsvpDetails.whoSeesLabel": "Who can see this",
+  "rsvpDetails.visibility.everyone": "Everyone going",
+  "rsvpDetails.visibility.connections": "My connections",
+  "rsvpDetails.visibility.justMe": "Just the host",
+  "rsvpDetails.privacyNote":
+    "The host always sees what you write here, whatever you choose above.",
+  "rsvpDetails.cancelCta": "Cancel",
+  "rsvpDetails.saveCta": "Save",
+  "rsvpDetails.savedToast": "Saved",
+  "rsvpDetails.saveErrorToast": "That didn't save. Try again in a moment.",
+
+  // PRD-182 — the join link in the create wizard, asked only for an online
+  // gathering (which has no door to describe instead).
+  "create.step2.joinLinkLabel": "Join link",
+  "create.step2.joinLinkPlaceholder": "https://…",
+  "create.step2.joinLinkHint":
+    "Shared with the people who are going, never on the public page. You can add it later.",
+  "create.step2.joinLinkInvalid":
+    "That doesn't look like a link. It needs to start with https://",
+
+  // PRD-184 — the upcoming list used to stop at the soonest 20 with no way to
+  // ask for the rest, so a busy season simply ended.
+  "calendar.loadMore": "Show more",
+  "calendar.loadingMore": "Loading…",
+
+  // PRD-190 — host tooling: run a gathering again, and take the door list
+  // offline. The export button used to raise a toast and produce no file.
+  "manage.overview.duplicateCta": "Run this again",
+  "manage.attendees.exportingCta": "Exporting…",
+  "manage.attendees.exportDemoToast":
+    "There's no real guest list to export in the demo.",
+  "manage.attendees.exportFailedToast":
+    "The export didn't come through. Try again in a moment.",
 };

@@ -23,6 +23,9 @@ export interface ConversationPrefOverride {
   /** ISO timestamp this chat was archived (demo-mode override, like
    *  `pinnedAt`). Undefined = not archived. */
   archivedAt?: string;
+  /** ISO timestamp this chat was manually marked unread (demo-mode override,
+   *  like `pinnedAt`/`archivedAt` — PRD-225). Undefined = not marked. */
+  markedUnreadAt?: string;
 }
 
 export type ConversationPrefsMap = Record<string, ConversationPrefOverride>;
@@ -37,7 +40,9 @@ function isOverride(value: unknown): value is ConversationPrefOverride {
       typeof candidate.favorite === "boolean") &&
     (candidate.muted === undefined || typeof candidate.muted === "boolean") &&
     (candidate.archivedAt === undefined ||
-      typeof candidate.archivedAt === "string")
+      typeof candidate.archivedAt === "string") &&
+    (candidate.markedUnreadAt === undefined ||
+      typeof candidate.markedUnreadAt === "string")
   );
 }
 
@@ -68,7 +73,8 @@ function saveConversationPrefs(map: ConversationPrefsMap): void {
         override.pinnedAt ||
         override.favorite ||
         override.muted ||
-        override.archivedAt
+        override.archivedAt ||
+        override.markedUnreadAt
       ) {
         trimmed[conversationId] = override;
       }
@@ -117,6 +123,10 @@ export function applyConversationPrefs(
       favorite: override.favorite ?? conversation.favorite,
       muted: override.muted ?? conversation.muted,
       archivedAt: override.archivedAt ?? conversation.archivedAt,
+      markedUnreadAt: override.markedUnreadAt ?? conversation.markedUnreadAt,
+      // PRD-225: a manual mark-unread override makes the demo row unread too,
+      // exactly mirroring the live adapter's `unreadCount > 0 || markedUnreadAt`.
+      unread: conversation.unread || !!override.markedUnreadAt,
     };
   });
 }

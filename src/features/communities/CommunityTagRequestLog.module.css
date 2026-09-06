@@ -1,0 +1,80 @@
+.log {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.title {
+  margin: 0 0 4px;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sub {
+  margin: 0 0 14px;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 12px 14px;
+  background: var(--paper);
+}
+
+.rowHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.label {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* The dates and the byline read as one line of small print on desktop and wrap
+   to their own lines on a phone, so no separator glyph is needed between
+   them. */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+.hint {
+  margin: 12px 0 0;
+  font-size: var(--text-12);
+  line-height: 1.55;
+  color: var(--ink-40);
+}

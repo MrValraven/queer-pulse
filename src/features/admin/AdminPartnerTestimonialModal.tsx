@@ -6,17 +6,31 @@ import { describeError } from "../../shared/api/errorMessage";
 import { AdminModal } from "./ui";
 import { ApiError } from "../../shared/api/client";
 import { useUpdatePartnerAdmin } from "./api/useUpdatePartnerAdmin";
+import {
+  AdminPartnerProfileFields,
+  type AdminPartnerProfileDraft,
+} from "./AdminPartnerProfileFields";
 import type { PartnerApplicationDTO } from "../marketing/api/partners.api";
 import styles from "./AdminPartnerApplicationsPage.module.css";
 
 const FORM_ID = "admin-partner-testimonial-form";
 
 /**
- * Quote/author/role editor for one approved partner's homepage testimonial.
- * Seeds its draft from the partner once and owns all field state locally,
- * same shape as AdminOrgTierForm. A quote requires an author (the backend
- * 409s a quote written without one), so Save is disabled until that pairing
- * holds; empty fields are sent as `null` rather than empty strings.
+ * Staff editor for one approved partner (PRD-263).
+ *
+ * Was the testimonial trio alone, which is why `tier`, `since` and `eyebrow`
+ * sat frozen at the application form's defaults and every partner in the
+ * directory advertised the same tier. It now carries the whole profile:
+ * `AdminPartnerProfileFields` above, the homepage testimonial below.
+ *
+ * Seeds its draft from the partner once and owns all field state locally, same
+ * shape as AdminOrgTierForm. A quote requires an author (the backend 409s a
+ * quote written without one), so Save is disabled until that pairing holds;
+ * empty testimonial fields are sent as `null` rather than empty strings.
+ *
+ * `contact` is sent whole on every save, because the backend stores it as one
+ * fully populated document — a partial write would have to mean "clear the
+ * rest".
  */
 export function AdminPartnerTestimonialModal({
   partner,
@@ -31,6 +45,30 @@ export function AdminPartnerTestimonialModal({
   const [quote, setQuote] = useState(partner.testimonialQuote ?? "");
   const [author, setAuthor] = useState(partner.testimonialAuthor ?? "");
   const [role, setRole] = useState(partner.testimonialRole ?? "");
+  const [profileDraft, setProfileDraft] = useState<AdminPartnerProfileDraft>(
+    () => ({
+      name: partner.name,
+      tier: partner.tier,
+      since: partner.since,
+      eyebrow: partner.eyebrow,
+      tagline: partner.tagline,
+      desc: partner.desc,
+      city: partner.city,
+      regionLabel: partner.regionLabel,
+      phone: partner.contact.phone ?? "",
+      phoneNote: partner.contact.phoneNote ?? "",
+      email: partner.contact.email ?? "",
+      website: partner.contact.website ?? "",
+      address: partner.contact.address ?? "",
+    }),
+  );
+
+  function setProfileField<Field extends keyof AdminPartnerProfileDraft>(
+    field: Field,
+    value: AdminPartnerProfileDraft[Field],
+  ) {
+    setProfileDraft((current) => ({ ...current, [field]: value }));
+  }
 
   const quoteWithoutAuthor =
     quote.trim().length > 0 && author.trim().length === 0;
@@ -42,6 +80,21 @@ export function AdminPartnerTestimonialModal({
       {
         id: partner.id,
         dto: {
+          name: profileDraft.name.trim(),
+          tier: profileDraft.tier.trim(),
+          since: profileDraft.since.trim(),
+          eyebrow: profileDraft.eyebrow.trim(),
+          tagline: profileDraft.tagline.trim(),
+          desc: profileDraft.desc.trim(),
+          city: profileDraft.city.trim(),
+          regionLabel: profileDraft.regionLabel.trim(),
+          contact: {
+            phone: profileDraft.phone.trim() || null,
+            phoneNote: profileDraft.phoneNote.trim() || null,
+            email: profileDraft.email.trim() || null,
+            website: profileDraft.website.trim() || null,
+            address: profileDraft.address.trim() || null,
+          },
           testimonialQuote: quote.trim() || null,
           testimonialAuthor: author.trim() || null,
           testimonialRole: role.trim() || null,
@@ -92,6 +145,11 @@ export function AdminPartnerTestimonialModal({
       }
     >
       <form id={FORM_ID} className={styles.fieldGroup} onSubmit={handleSubmit}>
+        <AdminPartnerProfileFields
+          draft={profileDraft}
+          onChange={setProfileField}
+        />
+
         <label className={styles.fieldLabel} htmlFor="testimonial-quote">
           {t("admin:partnerTestimonial.quote")}
         </label>

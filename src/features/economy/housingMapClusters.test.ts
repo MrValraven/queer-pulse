@@ -24,6 +24,7 @@ describe("buildHousingClusters", () => {
           preciseLongitude: null,
           addressLine: null,
           precision: "area" as const,
+          isUnlocked: false,
         },
       },
     ];

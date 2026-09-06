@@ -4,6 +4,9 @@
  * reads the API and falls back to these when demo is on. Copy is warm and
  * community-first (see the `queer-community-copywriting` skill).
  */
+import type { GroupMembershipStanding } from "./api/housingGroups.api";
+
+export type { GroupMembershipStanding };
 
 /** A screening question shown in the join-with-screening flow. */
 export interface GroupScreeningQuestion {
@@ -22,6 +25,16 @@ export interface GroupListing {
   accessibilityInfo: string;
 }
 
+/**
+ * Why the rooms in a group are not on the page: the group screens who gets in
+ * and the reader is not in yet. `membershipStanding` is the reader's OWN
+ * standing with the group, so it says whether to wait, to ask, or to accept the
+ * answer, and it describes nobody else.
+ */
+export interface GroupListingsGate {
+  membershipStanding: GroupMembershipStanding;
+}
+
 export interface VettedGroup {
   /** Slug — the id the UI routes and submits on. */
   id: string;
@@ -35,6 +48,10 @@ export interface VettedGroup {
   screeningQuestions: GroupScreeningQuestion[];
   /** Present on the detail view; the list view leaves it undefined. */
   listings?: GroupListing[];
+  /** Set on the detail view when the group let the reader see itself and not
+   *  what is inside it. `listings` is empty in that case and means nothing:
+   *  render the gate, never an empty grid. */
+  listingsGate?: GroupListingsGate;
 }
 
 const SHARED_NORMS = [

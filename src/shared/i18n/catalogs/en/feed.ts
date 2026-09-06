@@ -242,4 +242,14 @@ export const feed: Catalog = {
   "mute.kind.forum_thread": "Thread",
   "mute.mutedOn": "Turned down {date}",
   "mute.unmute": "Show again",
+
+  // ── The magazine as a feed source (PRD-107) ─────────────────────────────
+  // A published piece never reached the home screen, so the one place every
+  // member lands could not show the magazine at all. The byline falls back to
+  // the publication name for a piece credited to no named writer.
+  "card.eyebrow.article": "From the magazine",
+  "card.article.anonymousByline": "QueerPulse",
+  "article.byline": "By {name}",
+  "article.inLanguage": "This piece is in {language}.",
+  "action.readPiece": "Read the piece",
 };

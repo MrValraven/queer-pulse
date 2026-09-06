@@ -22,8 +22,11 @@ type ActionTarget = {
 export interface ConversationOverlaysProps {
   /** Message the long-press/right-click action overlay is open for. */
   actionTarget: ActionTarget;
-  /** Message the delete-confirm dialog is open for. */
+  /** Message the "delete for everyone" confirm dialog is open for. */
   deleteTarget: ChatMessage | null;
+  /** Message the "delete for me" (PRD-227) confirm dialog is open for —
+   *  distinct state, its own dialog instance. */
+  deleteForMeTarget: ChatMessage | null;
   /** Message the report modal is open for (its server id is the report subject). */
   reportTarget: ChatMessage | null;
   onReactionToggle: (
@@ -45,12 +48,18 @@ export interface ConversationOverlaysProps {
   setActionTarget: Dispatch<SetStateAction<ActionTarget>>;
   /** Opens/closes the delete-confirm dialog — passed straight through from `useState`. */
   setDeleteTarget: Dispatch<SetStateAction<ChatMessage | null>>;
+  /** Opens/closes the "delete for me" confirm dialog (PRD-227). */
+  setDeleteForMeTarget: Dispatch<SetStateAction<ChatMessage | null>>;
   /** Opens/closes the report modal — passed straight through from `useState`. */
   setReportTarget: Dispatch<SetStateAction<ChatMessage | null>>;
-  /** Confirms the pending delete. */
+  /** Confirms the pending "delete for everyone". */
   onConfirmDelete: () => void;
+  /** Confirms the pending "delete for me" (PRD-227). */
+  onConfirmDeleteForMe: () => void;
   /** True while the delete request is in flight. */
   deletePending: boolean;
+  /** True while the "delete for me" request is in flight. */
+  deleteForMePending: boolean;
 }
 
 /** Presentational: the three modal/overlay surfaces a conversation can have
@@ -60,6 +69,7 @@ export interface ConversationOverlaysProps {
 export function ConversationOverlays({
   actionTarget,
   deleteTarget,
+  deleteForMeTarget,
   reportTarget,
   onReactionToggle,
   onSetReply,
@@ -70,9 +80,12 @@ export function ConversationOverlays({
   onToggleStar,
   setActionTarget,
   setDeleteTarget,
+  setDeleteForMeTarget,
   setReportTarget,
   onConfirmDelete,
+  onConfirmDeleteForMe,
   deletePending,
+  deleteForMePending,
 }: ConversationOverlaysProps) {
   return (
     <>
@@ -81,6 +94,14 @@ export function ConversationOverlays({
           onConfirm={onConfirmDelete}
           onClose={() => setDeleteTarget(null)}
           pending={deletePending}
+        />
+      )}
+      {deleteForMeTarget && (
+        <DeleteMessageDialog
+          scope="me"
+          onConfirm={onConfirmDeleteForMe}
+          onClose={() => setDeleteForMeTarget(null)}
+          pending={deleteForMePending}
         />
       )}
       {reportTarget?.id && (
@@ -124,6 +145,11 @@ export function ConversationOverlays({
             onEdit: () => onBeginEdit(message),
             onCopy: () => onCopyMessage(message),
             onDelete: () => setDeleteTarget(message),
+            // "Delete for me" (PRD-227) is unconditional — every participant
+            // may hide a message from their own view, so this never checks
+            // `canDelete` (that flag governs the "for everyone" tombstone
+            // above only).
+            onDeleteForMe: () => setDeleteForMeTarget(message),
             onReport: () => setReportTarget(message),
             onClose: () => setActionTarget(null),
           };

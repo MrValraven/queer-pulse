@@ -1,3 +1,4 @@
+import { FiLock } from "react-icons/fi";
 import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { HOUSING_CITY } from "./api/housingListing.api";
@@ -51,6 +52,26 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
           {t("economy:listSpace.areaHint", { city: HOUSING_CITY })}
         </p>
       </div>
+      <div className={styles.field}>
+        <label htmlFor="ls-address">
+          {t("economy:listSpace.addressLabel")}
+        </label>
+        <input
+          id="ls-address"
+          type="text"
+          value={values.addressLine}
+          onChange={(event) => setField("addressLine", event.target.value)}
+          placeholder={t("economy:listSpace.addressPlaceholder")}
+          autoComplete="off"
+          aria-describedby="ls-address-hint"
+        />
+        {/* The privacy rule is stated at the field, before anyone types their
+            home address, rather than in a policy page they will not open. */}
+        <p id="ls-address-hint" className={check.fieldHint}>
+          <FiLock className={check.fieldHintIcon} aria-hidden />
+          {t("economy:listSpace.addressHint")}
+        </p>
+      </div>
       <div className={styles.fieldRow}>
         <div className={styles.field}>
           <label htmlFor="ls-rent">{t("economy:listSpace.rentLabel")}</label>
@@ -77,6 +98,26 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
             placeholder={t("economy:listSpace.bedroomsPlaceholder")}
           />
         </div>
+      </div>
+      <div className={styles.field}>
+        <label htmlFor="ls-deposit">
+          {t("economy:listSpace.depositLabel")}
+        </label>
+        <input
+          id="ls-deposit"
+          type="number"
+          min={0}
+          value={values.deposit}
+          onChange={(event) => setField("deposit", event.target.value)}
+          placeholder={t("economy:listSpace.depositPlaceholder")}
+          aria-describedby="ls-deposit-hint"
+        />
+        {/* Left blank on purpose reads as "not stated", so a renter filtering
+            on a deposit cap will not be shown this home. Say so, rather than
+            letting a blank quietly narrow who sees it. */}
+        <p id="ls-deposit-hint" className={check.fieldHint}>
+          {t("economy:listSpace.depositHint")}
+        </p>
       </div>
       <div className={styles.field}>
         <label htmlFor="ls-type">{t("economy:listSpace.typeLabel")}</label>

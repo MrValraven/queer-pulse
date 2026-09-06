@@ -1,0 +1,161 @@
+/* "The personas you follow" (PRD-208), the persona hub's second tab.
+   A list of rows rather than the browse tab's card grid: this is a personal
+   register the member scans and prunes, so the useful shape is one line per
+   persona with the unfollow control always in the same place. */
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  /* A medium card on cream: --paper with the standard hairline. */
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.avatar {
+  flex: none;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  line-height: 1.2;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.family {
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jade-ink);
+}
+
+.tagline {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* A persona with no resolvable public address. Says so plainly instead of
+   handing out a link that goes nowhere. */
+.noAddress {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex: none;
+  text-align: end;
+}
+
+.followers {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.since {
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+
+.unfollow {
+  flex: none;
+}
+
+/* The row's parts stack once there is no width to sit them side by side, and
+   the meta column stops hugging the end so it reads as a caption. */
+@media (--mobile) {
+  .row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .identity {
+    flex: 1 1 100%;
+  }
+  .meta {
+    align-items: flex-start;
+    text-align: start;
+    flex: 1 1 auto;
+  }
+}
+
+/* ── Pager ───────────────────────────────────────────────────────────────── */
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-block-start: 6px;
+}
+
+.pagerCount {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagerButtons {
+  display: inline-flex;
+  gap: 8px;
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────────── */
+
+.skRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}
+
+.skText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}

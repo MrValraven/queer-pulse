@@ -271,3 +271,66 @@
   font-size: var(--text-13);
   color: var(--ink-60);
 }
+/* Says that the profession/tag/availability chips cut the personas loaded so
+   far rather than the whole directory. Only rendered while one of them is on
+   and there are further pages to pull. */
+.pagerNote {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  margin-block-start: 10px;
+  max-width: 62ch;
+}
+
+/* ── Hub tabs ────────────────────────────────────────────────────────────── */
+/* "Everyone" and "You follow". Underline tabs rather than pills: the refine
+   bar below already carries pill affordances, and two competing pill rows
+   read as two filters rather than a switch between two surfaces. */
+.viewTabs {
+  display: flex;
+  gap: 4px;
+  border-block-end: 1px solid rgba(var(--line-rgb), 0.14);
+}
+.viewTab {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: none;
+  border-block-end: 2px solid transparent;
+  padding: 10px 14px;
+  margin-block-end: -1px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .viewTab:not(.viewTabOn):hover {
+    color: var(--ink);
+  }
+}
+.viewTabOn {
+  color: var(--text-strong);
+  border-block-end-color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewTab {
+    transition: none;
+  }
+}
+
+/* The tab panel. `.container` used to lay out the browse body's children
+   directly; now that they sit inside a panel wrapper, the panel carries the
+   same column rhythm so nothing collapses together. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+@media (--sm) {
+  .panel {
+    gap: var(--gap-sm);
+  }
+}

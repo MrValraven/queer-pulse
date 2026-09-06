@@ -286,6 +286,7 @@ describe("useGrantStaffRole (demo)", () => {
         slug: "m1",
         role: "magazine_editor",
         isSystem: false,
+        reason: "Joining the magazine desk this cycle.",
       });
     });
 
@@ -328,6 +329,7 @@ describe("useRevokeStaffRole (demo)", () => {
         slug: "m1",
         role: "magazine_editor",
         isSystem: false,
+        reason: "Joining the magazine desk this cycle.",
       });
     });
 

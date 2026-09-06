@@ -185,20 +185,31 @@ export interface MessageResponse {
     deleted: boolean;
   } | null;
   /** `user` (an ordinary bubble), `system` (a rendered event pill), `gif` (a
-   *  picked provider GIF), or `image` (a member-uploaded photo) — the last two
-   *  both render as an inline-image bubble. Every DM message is `user`, so the
-   *  existing bubble path is unchanged. */
-  kind: "user" | "system" | "gif" | "image";
-  /** The media attachment for a `kind:"gif"` or `kind:"image"` message, else
-   *  null. The client renders it as an inline image; `body` carries a
-   *  "GIF"/"Photo" text fallback so previews/notifications keep working. */
-  attachment: {
-    url: string;
-    previewUrl: string;
-    width: number;
-    height: number;
-    provider: string;
-  } | null;
+   *  picked provider GIF), `image` (a member-uploaded photo) — both render as
+   *  an inline-image bubble — or `document` (a member-uploaded PDF/spreadsheet/
+   *  text file, PRD-226), which renders as a file-card bubble. Every DM
+   *  message is `user`, so the existing bubble path is unchanged. */
+  kind: "user" | "system" | "gif" | "image" | "document";
+  /** The media attachment for a `kind:"gif"`/`kind:"image"` (inline image) or
+   *  `kind:"document"` (file-card) message, else null. `body` carries a
+   *  "GIF"/"Photo"/"Document" text fallback so previews/notifications keep
+   *  working. */
+  attachment:
+    | {
+        url: string;
+        previewUrl: string;
+        width: number;
+        height: number;
+        provider: string;
+      }
+    | {
+        url: string;
+        fileName: string;
+        byteSize: number;
+        contentType: string;
+        provider: string;
+      }
+    | null;
   /** Resolved system event for a `system` message (else null). Actor/target come
    *  back as DISPLAY NAMES (never user ids); the client renders bilingual
    *  templates. `value` carries a scalar the event needs (e.g. a new title). */
@@ -262,6 +273,13 @@ export interface ConversationResponse {
   /** The other participant's user id — used only client-side to correlate
    *  presence (`presence` events key by userId). Null for official/group. */
   otherParticipantId: string | null;
+  /** True for a DM where the two are NOT accepted connections (PRD-220) — e.g.
+   *  a housing/flatmate enquiry that opened the thread cold. The ordinary send
+   *  path refuses every message past the enquiry itself, from either side, so
+   *  the composer must render a connection-request affordance instead of a
+   *  normal input. Always false for official/group threads. Absent on an
+   *  older cached response is treated as false (no gate) client-side. */
+  replyRequiresConnection?: boolean;
   /** `direct` (1:1 DM / official) or `group` (member-created, titled,
    *  multi-participant). DMs stay `direct` and render exactly as before. */
   kind: "direct" | "group";
@@ -759,9 +777,14 @@ export interface GlossaryTermResponse {
 
 /** `new_member` backs the "People" tab: a recently-joined active member,
  *  surfaced by `NewMemberCard`. It carries no fields beyond the shared
- *  `FeedItem` shape — see the field mapping below. */
+ *  `FeedItem` shape — see the field mapping below.
+ *
+ *  `article` (PRD-107) is a published magazine piece: `title` is the headline,
+ *  `summary` the dek, and `link` the piece's own path. The magazine furniture
+ *  the feed card also renders (kicker, section, read minutes, lead art, byline)
+ *  is the feed's alone and stays declared in `features/feed/api/feed.api.ts`. */
 export type FeedItemType =
-  "community_post" | "forum_thread" | "gathering" | "new_member";
+  "community_post" | "forum_thread" | "gathering" | "new_member" | "article";
 
 /**
  * For `type: "new_member"`: `actor` is the member who joined (handle/
@@ -788,6 +811,13 @@ export interface FeedItem {
    *  public tags. Both absent for every other item type. */
   neighbourhood?: string | null;
   interests?: string[];
+  /** `forum_thread` only (PRD-167) — the opening post's own words, HTML
+   *  stripped, whitespace collapsed and cut to 180 characters on a word
+   *  boundary with a trailing ellipsis. Null when the opening post is
+   *  tombstoned, missing, hidden, or strips down to nothing at all (an
+   *  image-only post), in which case the card renders no preview rather than an
+   *  empty one. Absent for every other item type. */
+  excerpt?: string | null;
 }
 
 // --- Media ---

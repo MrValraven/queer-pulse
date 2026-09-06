@@ -238,6 +238,8 @@ export function IssueProductionPage() {
             ? formatDate(production.publishedOn)
             : undefined
         }
+        publishesOn={production.publishedOn}
+        lastShip={production.lastShip}
         onClose={() => setShipModalOpen(false)}
         onShip={() => ship.mutate()}
       />

@@ -35,15 +35,41 @@ export const STEP_KEYS = [
 ];
 
 /**
- * The issue currently open for submissions — a specific issue's own record
- * (number + open date + deadline), so a real `Date` backs the deadline
- * instead of a hardcoded English string.
+ * DEMO ONLY (PRD-106). The issue open for submissions is real data now: live
+ * mode reads it from `GET /magazine/issues/open` through `useOpenIssue`, and
+ * the deadline comes from `magazine_issue.submission_deadline`, which an
+ * editor sets on the issue-production page.
+ *
+ * The constant this replaces was a hardcoded `{ number: 26, openDate: July
+ * 2026, deadlineDate: 15 August 2026 }` that the LIVE form printed as fact.
+ * It could only ever go stale, and by September 2026 it was quoting a
+ * three-week-old deadline on an issue number the desk had never created.
+ * Nothing outside demo mode may read this.
+ *
+ * Derived from today rather than frozen, so the demo tour never shows a
+ * lapsed deadline either: the demo issue runs at the start of the month after
+ * next, and closes to submissions at the start of next month.
  */
-export const ISSUE = {
-  number: 26,
-  openDate: new Date(2026, 6, 1),
-  deadlineDate: new Date(2026, 7, 15),
-};
+export function demoOpenIssue(): {
+  number: string;
+  title: string;
+  publishedOn: string;
+  submissionDeadline: string;
+} {
+  const today = new Date();
+  const isoDay = (date: Date): string =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+      date.getDate(),
+    ).padStart(2, "0")}`;
+  return {
+    number: "26",
+    title: "On belonging.",
+    publishedOn: isoDay(new Date(today.getFullYear(), today.getMonth() + 2, 1)),
+    submissionDeadline: isoDay(
+      new Date(today.getFullYear(), today.getMonth() + 1, 1),
+    ),
+  };
+}
 
 /**
  * Magazine sections the piece can be filed under (dropdown chrome). `id` is

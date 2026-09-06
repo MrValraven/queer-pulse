@@ -41,6 +41,12 @@ export interface CommunityCardDTO {
    *  mod picked for this community. Every card variant renders these as
    *  pills; absent/empty when none picked yet. */
   tags?: string[];
+  /** Resolved avatar URL — the community's small square identity mark, beside
+   *  the wide `coverImageUrl` banner. Null when the community has none and a
+   *  surface should fall back to its generated initial mark. Optional here so
+   *  a cached card from a build that predates the field reads as "no avatar"
+   *  rather than as a type error. */
+  avatarImageUrl?: string | null;
 }
 export interface CommunityDetailDTO extends CommunityCardDTO {
   purpose: string;
@@ -57,6 +63,25 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
    *  `archived`, a frozen community stays visible, so this reaches all viewers. */
   frozen?: boolean;
   myJoinRequestStatus: JoinRequestStatus | null;
+  /**
+   * PRD-140/PRD-141. Non-null when the VIEWER is not on the roster and holds a
+   * pending invitation to this community: the ISO timestamp it was sent. Null
+   * for a member (they are already in) and for anybody uninvited. It is what
+   * lets the hero offer "Accept invitation" instead of a join request, and it
+   * is the only reason a `private` community's detail is served to a
+   * non-member at all.
+   *
+   * Optional here (like `archived`/`frozen` above) so a response cached by a
+   * build that predates the field reads as "no invitation" rather than as a
+   * type error.
+   */
+  invitedAt?: string | null;
+  /** The owner's once-only greeting for a new joiner, STAFF ONLY: the backend
+   *  sends it to owner/co-owner/mod and null to everybody else, because this
+   *  is the settings-form value. The member-facing read (which also carries
+   *  "has this member seen it yet") is `GET /communities/:slug/preferences`,
+   *  behind `useCommunityPreferences`. Null for a community with no greeting. */
+  welcomeMessage?: string | null;
 }
 export interface CommunityReactionSummary {
   key: ReactionKey;
@@ -154,6 +179,15 @@ export interface CreateCommunityDto {
   /** Cover image — a storage key from the `community-cover` upload, an https
    *  URL, or "" / null to clear. Optional; omit to leave unchanged on PATCH. */
   coverImageUrl?: string | null;
+  /** Avatar image — a storage key from the `community-avatar` upload, an https
+   *  URL on a trusted host, or "" / null to clear. Optional; omit to leave
+   *  unchanged on PATCH. The backend validates it with `@IsImageReference`,
+   *  so a bare typed-in URL is refused: this always comes from an upload. */
+  avatarImageUrl?: string | null;
+  /** The once-only greeting a new member reads after joining. Plain text, max
+   *  2000 chars, stripped of markup at the write boundary; "" / null clears
+   *  it. Optional; omit to leave unchanged on PATCH. */
+  welcomeMessage?: string | null;
   handle: string; // desired slug
   stewards?: string[]; // member slugs → seeded as "mod"
   invites?: string[]; // ⚠ accepted but NOT persisted yet
@@ -458,9 +492,44 @@ export async function getPostReplies(
   return toItemsPage(res);
 }
 
-/** DELETE /communities/:slug/posts/:id — soft tombstone (author or owner/mod). */
-export const deleteCommunityPost = (slug: string, id: string) =>
-  apiDelete<CommunityPostDTO>(`/communities/${slug}/posts/${id}`);
+/**
+ * Optional body of the two community content deletes (PRD-147), mirroring the
+ * backend's `RemoveCommunityPostDto`.
+ *
+ * It travels only when a MODERATOR takes down somebody else's post or reply.
+ * An author clearing their own words sends nothing at all: nothing is written
+ * to the governance log and nobody is notified, because the only person who
+ * could be told is the one who did it.
+ *
+ * Every field is optional and the whole body may be absent. A takedown blocked
+ * on a form is a takedown that does not happen when it needs to; what changed
+ * is that the reason now has somewhere to go.
+ */
+export interface CommunityTakedownInput {
+  /** The moderator's explanation, WRITTEN FOR THE AUTHOR TO READ. It reaches
+   *  them verbatim in their notification, which is the only channel that
+   *  carries it: QueerPulse sends no email and there is no way to message a
+   *  community's moderators. Max 500 characters, the server's own ceiling. */
+  reason?: string;
+  /** Which of the community's house rules the takedown rests on, 0-based into
+   *  its current `rules`. The server snapshots the version and the wording
+   *  alongside the index, so the citation survives a later rewrite. */
+  ruleIndex?: number;
+  /** MODERATOR-ONLY working note. It stops at the community's governance log,
+   *  which is owner/co-owner/mod only, and appears in no member-facing
+   *  payload. Max 1000 characters, the server's own ceiling. */
+  internalNote?: string;
+}
+
+/** DELETE /communities/:slug/posts/:id — soft tombstone (author or owner/mod).
+ *  `takedown` is sent only by a moderator acting on somebody else's post; an
+ *  author's own delete passes nothing, which is what keeps it unlogged and
+ *  silent. See `CommunityTakedownInput`. */
+export const deleteCommunityPost = (
+  slug: string,
+  id: string,
+  takedown?: CommunityTakedownInput,
+) => apiDelete<CommunityPostDTO>(`/communities/${slug}/posts/${id}`, takedown);
 
 /** POST /communities/:slug/posts/:id/restore — clear the tombstone. */
 export const restoreCommunityPost = (slug: string, id: string) =>
@@ -484,14 +553,18 @@ export const editCommunityReply = (
     { text },
   );
 
-/** DELETE /communities/:slug/posts/:id/replies/:replyId — soft tombstone. */
+/** DELETE /communities/:slug/posts/:id/replies/:replyId — soft tombstone.
+ *  Takes the same optional moderator body as the post delete above: being
+ *  silenced mid-conversation with no word about why is the same injury. */
 export const deleteCommunityReply = (
   slug: string,
   postId: string,
   replyId: string,
+  takedown?: CommunityTakedownInput,
 ) =>
   apiDelete<CommunityReplyDTO>(
     `/communities/${slug}/posts/${postId}/replies/${replyId}`,
+    takedown,
   );
 
 /** POST /communities/:slug/posts/:id/replies/:replyId/restore — clear tombstone. */

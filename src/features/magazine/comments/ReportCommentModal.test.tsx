@@ -55,6 +55,17 @@ async function pickReasonAndSubmit() {
 }
 
 describe("ReportCommentModal", () => {
+  it("never names anyone when the reported comment carries no author", async () => {
+    renderModal({ authorName: null });
+
+    // The heading is catalog copy, so wait for it before asserting an absence.
+    expect(await screen.findByText("Report this comment")).toBeInTheDocument();
+    // ENG-102: the caller used to pass the VIEWER's own initials here, so the
+    // sheet asked them what was wrong with their own comment.
+    expect(screen.queryByText(/Rita/)).toBeNull();
+    expect(screen.queryByText(/undefined|null/)).toBeNull();
+  });
+
   it("submits the report with subjectType magazine_comment and the given subjectId", async () => {
     mutate.mockImplementation((_input, opts) => opts?.onSuccess?.());
     renderModal();

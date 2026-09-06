@@ -239,9 +239,17 @@
   }
 }
 @media (hover: hover) {
-  .tile:hover .tileCover {
+  .tile:hover .tileCover,
+  .tile:hover .tileCoverArt {
     box-shadow: var(--shadow-lift);
   }
+}
+/* PRD-104 — the same framed slot as `.tileCover`, for a tile that has real
+   cover art. `ImageSlot` owns the aspect ratio, radius, overflow and hairline,
+   so this only carries the grid spacing and the hover lift. */
+.tileCoverArt {
+  margin-bottom: 16px;
+  transition: box-shadow 0.3s var(--ease);
 }
 .tileCover {
   aspect-ratio: 3 / 4;

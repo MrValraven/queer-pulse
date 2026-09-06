@@ -11,6 +11,8 @@ import {
   CoopStartCta,
 } from "./HousingCoopSections";
 import { JoinCoopModal } from "./JoinCoopModal";
+import { MyHousingJoinRequests } from "./MyHousingJoinRequests";
+import { useMyCoopJoinRequests } from "./api/useMyHousingJoinRequests";
 import type { FormingCoop } from "./housingCoop.data";
 
 export function HousingCoopPage() {
@@ -18,6 +20,10 @@ export function HousingCoopPage() {
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const [joining, setJoining] = useState<FormingCoop | null>(null);
+  // PRD-242. Where the `housing_join_decided` bell row lands: this page is the
+  // co-op deep link, so the application it decided has to be visible on it.
+  const { data: myJoinRequests, isLoading: isLoadingMyJoinRequests } =
+    useMyCoopJoinRequests();
 
   // "Ask to join" is real in both modes (JoinCoopModal posts through
   // useSubmitCoopJoinRequest). The secondary CTAs (updates / mentoring /
@@ -58,6 +64,17 @@ export function HousingCoopPage() {
         }
         onStart={demoMode ? postHelp : undefined}
       />
+      {/* Held back until the read settles. Having applied is the exception
+          rather than the rule, so a skeleton would announce a section most
+          readers will never have. */}
+      {!isLoadingMyJoinRequests && (
+        <MyHousingJoinRequests
+          requests={myJoinRequests ?? []}
+          titleKey="economy:housingJoinRequests.coop.title"
+          titleEmKey="economy:housingJoinRequests.coop.titleEm"
+          subKey="economy:housingJoinRequests.coop.sub"
+        />
+      )}
       <CoopTemplates />
       <CoopStartCta
         onPost={demoMode ? postHelp : undefined}

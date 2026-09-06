@@ -167,14 +167,53 @@ export function useConnectionActions() {
     [toggleBlock],
   );
 
-  /** Remove an accepted connection. */
+  /**
+   * Ending an accepted connection touches more caches than the other actions.
+   * `DELETE /connections/:id` deletes the edge outright, so a member whose
+   * profile visibility is `network` drops back to the limited card for the
+   * viewer, the mutual-voucher count moves with it, and the direct-message
+   * thread stays in both inboxes while `MessagesService.send` starts refusing
+   * new messages ("You can only message accepted connections"). Each of those
+   * reads from its own query, so each is invalidated here.
+   */
+  const invalidateAfterRemoval = useCallback(() => {
+    invalidate(); // ["connections"] (list, counts, relationships) + ["members"]
+    void queryClient.invalidateQueries({ queryKey: ["profile"] });
+    void queryClient.invalidateQueries({ queryKey: ["profile-mutuals"] });
+    void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+  }, [invalidate, queryClient]);
+
+  /**
+   * Remove an accepted connection: the quiet way to step back, as against
+   * blocking, which writes a `blocks` row and hides both profiles.
+   *
+   * The optimistic move is written through `restore` with the slug filtered
+   * out of `connected`, because the store has no dedicated disconnect action
+   * and this keeps demo mode honest: in demo the local lists ARE the truth, so
+   * the card has to leave the page with no network round trip.
+   *
+   * Resolves `true` only once the server has confirmed (immediately in demo),
+   * `false` after a rollback, so the caller can withhold its success toast
+   * rather than contradict the error one `rollback` already fired.
+   */
   const remove = useCallback(
-    async (ref: ConnectionRef) => {
-      if (demoMode || !ref.id) return;
-      await removeConnection(ref.id);
-      invalidate();
+    async (ref: ConnectionRef): Promise<boolean> => {
+      const previous = snapshot();
+      restore({
+        ...previous,
+        connected: previous.connected.filter((slug) => slug !== ref.slug),
+      });
+      if (demoMode || !ref.id) return true;
+      try {
+        await removeConnection(ref.id);
+        invalidateAfterRemoval();
+        return true;
+      } catch (error) {
+        rollback(previous, error);
+        return false;
+      }
     },
-    [demoMode, invalidate],
+    [demoMode, invalidateAfterRemoval, snapshot, restore, rollback],
   );
 
   /**

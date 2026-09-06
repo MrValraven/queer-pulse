@@ -248,6 +248,43 @@ function buildUnreadNotifications(
         },
       ],
     },
+    {
+      // The demo counterpart of the live `persona_update` row (PRD-208), the
+      // notification that makes following a persona mean something: before it,
+      // a follow produced one notification to the persona's OWNER and the
+      // FOLLOWER never heard from that persona again.
+      //
+      // It reuses the live `notifications:type.persona_update.*` keys rather
+      // than minting demo-only strings, so the demo exercises the real CLDR
+      // plural. `newItemCount` is what the live payload carries and
+      // `formatNotification.ts` mirrors it onto `count`, so the count is
+      // passed under BOTH names here for the same reason.
+      //
+      // NAMES THE PERSONA, NEVER ITS OWNER. A persona is pseudonymous: the
+      // live payload deliberately carries no actor id, `persona_update` is
+      // absent from `ACTOR_PAYLOAD_KEY`, and the push handler skips the actor
+      // lookup. A demo row that showed a member name here would teach the
+      // wrong shape to anyone reading this file for the payload.
+      id: 17,
+      type: "community",
+      unread: true,
+      icon: { Glyph: FiStar, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.persona_update.text", {
+        subprofileName: "Nightform",
+        newItemCount: 3,
+        count: 3,
+      }),
+      meta: t("notifications:type.persona_update.meta"),
+      time: fmt.relativeTime(-40, "minute"),
+      createdAtIso: agoIso(40, "minute"),
+      actions: [
+        {
+          label: t("notifications:actions.seeTheWork"),
+          variant: "ghost",
+          href: "/p/nightform",
+        },
+      ],
+    },
     ...buildUnreadActivityNotifications(t, fmt),
   ];
 }

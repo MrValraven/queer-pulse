@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { Button, FeatureHelp, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
@@ -15,10 +16,26 @@ import {
 } from "./SafeSpacesSections";
 import styles from "./SafeSpacesPage.module.css";
 
+/**
+ * `stats.lastReVerifiedAt` is a `date` column, so it arrives as `YYYY-MM-DD`
+ * with no time or zone. Split into local parts rather than handed to
+ * `new Date(string)`, which reads a bare ISO date as UTC midnight and would
+ * print the day before anywhere west of Greenwich.
+ */
+function parseBadgeCheckDate(value: string | null): Date | null {
+  if (!value) return null;
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const parsed = new Date(year, month - 1, day);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
 export function SafeSpacesPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { removed, stats } = useSafeSpaces();
   const nomRef = useRef<HTMLDivElement>(null);
+  const lastBadgeCheck = parseBadgeCheckDate(stats.lastReVerifiedAt);
 
   const scrollToNominate = () =>
     nomRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
@@ -83,8 +100,17 @@ export function SafeSpacesPage() {
                   components={{ em: <em /> }}
                 />
               </h2>
+              {/* The hardcoded "Last updated June 2025" is gone: the date
+                  now comes from the newest badge on the page
+                  (`stats.lastReVerifiedAt`). Before the fetch settles, and on
+                  a list where no badge carries a date, the line says who
+                  maintains the directory and claims no freshness at all. */}
               <div className={styles.dirUpdated}>
-                {t("safety:spaces.dir.updated")}
+                {lastBadgeCheck
+                  ? t("safety:spaces.dir.lastCheck", {
+                      date: fmt.date(lastBadgeCheck),
+                    })
+                  : t("safety:spaces.dir.updated")}
               </div>
             </div>
           </div>

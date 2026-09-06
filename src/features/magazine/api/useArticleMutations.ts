@@ -20,6 +20,12 @@ import {
  * spammy. Live calls `PATCH /magazine/admin/pieces/:id/article` then
  * invalidates this piece's `useArticleDraft` cache.
  *
+ * The optimistic-concurrency precondition rides on the body the caller hands
+ * in (`UpdateArticleDraftDto.expectedVersion`, ENG-111), so this hook stays a
+ * plain pipe: `useArticleEditorDraftState` owns the version baseline, since it
+ * is the thing that knows which read the editor's on-screen text came from.
+ * A 409 surfaces here as an ordinary mutation error and is classified there.
+ *
  * `publish` is the explicit, user-triggered counterpart (CNT-1 fix) — mirrors
  * the deck editor's `useUpdateDeck`/`handleTogglePublish` pair, but hits the
  * dedicated `PATCH .../article/publish` route (`publishArticle`) rather than

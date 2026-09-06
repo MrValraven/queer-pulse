@@ -2,10 +2,11 @@ import {
   FLAG_SWATCHES,
   COVER_STYLES,
   PATTERNS,
-  BADGE_OPTIONS,
+  PROFILE_BADGE_KEYS,
   type CoverStyle,
   type PatternKey,
 } from "./profileTheme.data";
+import { badgeDisplayMetaFor } from "../members/badgeCatalog.data";
 import { useProfileTheme } from "../../app/providers/useProfileTheme";
 import { Select, Toggle } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -155,10 +156,17 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
           label={t("settings:themeStudio.badgeDisplayLabel")}
           value={badge}
           onChange={(value) => edit({ badge: value ?? badge })}
-          options={BADGE_OPTIONS.map((o) => ({
-            value: o.id,
-            label: t(o.labelKey),
-          }))}
+          // The label is resolved from the badge display map, the same lookup
+          // /badges uses, so this picker cannot drift from the badge case. An
+          // id the map has no entry for shows as the id, which is a visible
+          // local bug rather than a silently missing option.
+          options={PROFILE_BADGE_KEYS.map((badgeKey) => {
+            const displayMeta = badgeDisplayMetaFor(badgeKey);
+            return {
+              value: badgeKey,
+              label: displayMeta ? t(displayMeta.nameKey) : badgeKey,
+            };
+          })}
         />
       </div>
 

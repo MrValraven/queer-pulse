@@ -821,19 +821,31 @@ export interface SubprofileDirectoryPage {
   limit: number;
 }
 
-/** One page of the standalone-persona directory. Personas redesign Phase 4
- *  filters family/tags/search CLIENT-SIDE, so this sends no `query` param —
- *  only paging (`page`/`limit`), which `useSubprofileDirectory` uses to pull
- *  the whole set at `limit=100`. Optionally forwards `kind` for kind-scoped
- *  directories (e.g. the therapist directory), so the server can filter. */
+/** One page of the standalone-persona directory.
+ *
+ *  `query` is the endpoint's own free-text filter: an ILIKE over
+ *  `displayName` and `tagline` (`subprofile-public-read.service.ts`), applied
+ *  across the WHOLE table before paging. `useSubprofileDirectory` sends the
+ *  directory's search box through it, so a term reaches every persona rather
+ *  than only the pages the browser happened to pull.
+ *
+ *  `kind` scopes to a single profession, for kind-scoped directories (e.g. the
+ *  therapist directory). Paging is `page`/`limit`, `limit` capped at 100
+ *  server-side. */
 export const getSubprofileDirectory = (
-  params: { page?: number; limit?: number; kind?: string } = {},
+  params: {
+    page?: number;
+    limit?: number;
+    kind?: string;
+    query?: string;
+  } = {},
   signal?: AbortSignal,
 ) => {
   const q = new URLSearchParams();
   if (params.page !== undefined) q.set("page", String(params.page));
   if (params.limit !== undefined) q.set("limit", String(params.limit));
   if (params.kind) q.set("kind", params.kind);
+  if (params.query) q.set("query", params.query);
   const qs = q.toString();
   return apiGet<SubprofileDirectoryPage>(
     `/subprofiles/directory${qs ? `?${qs}` : ""}`,
@@ -904,6 +916,59 @@ export const unfollowSubprofile = (id: string) =>
 export const getFollowers = (id: string, signal?: AbortSignal) =>
   apiGet<{ count: number; followers: FollowerDTO[] }>(
     `/subprofiles/${id}/followers`,
+    undefined,
+    undefined,
+    signal,
+  );
+
+/**
+ * One row of "the personas I follow" (PRD-208), hand-mapped server-side from
+ * `Subprofile` + `subprofile_followers`.
+ *
+ * The three address fields are the ONLY way a row builds its link, and they
+ * carry the anonymity rule with them: `ownerSlug` is the CREATOR's profile
+ * slug on a LINKED persona and `null` on every unlinked one, exactly as
+ * `SubprofileCardDTO` does it, so a pseudonymous persona never discloses who
+ * is behind it. `personaOwnerAddress` in `personaLinks.data.ts` is the only
+ * sanctioned builder; a row whose address cannot be resolved renders without a
+ * link rather than fabricating a dead `/p/<slug>`.
+ */
+export interface FollowedPersonaDTO {
+  id: string;
+  displayName: string;
+  kind: SubprofileKind;
+  tagline: string | null;
+  avatarUrl: string | null;
+  accent: string | null;
+  slug: string;
+  handle: string | null;
+  linkVisibility: LinkVisibility;
+  ownerSlug: string | null;
+  followerCount: number;
+  /** ISO instant this member started following. Newest first in the list. */
+  followedAt: string;
+}
+
+/** One page of `GET /subprofiles/following`. */
+export interface FollowedPersonasPage {
+  items: FollowedPersonaDTO[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/**
+ * The personas the signed-in member follows, newest follow first.
+ *
+ * Reads only the caller's own follows: the endpoint takes no member parameter,
+ * because who a member follows is theirs alone. Personas that have since been
+ * unpublished, made private, owner-removed, taken down, or blocked either way
+ * are filtered SERVER-SIDE, so this list can never resurrect something
+ * moderation removed.
+ */
+export const getFollowedPersonas = (page: number, signal?: AbortSignal) =>
+  apiGet<FollowedPersonasPage>(
+    `/subprofiles/following?page=${page}`,
     undefined,
     undefined,
     signal,

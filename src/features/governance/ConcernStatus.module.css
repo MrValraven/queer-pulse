@@ -1,0 +1,155 @@
+/* PRD-261. The concern reference code panel (shown after a submission) and the
+   status page that code opens.
+
+   The panel follows the repo's success/confirmation pattern: a plum surface,
+   cream text, a serif title, `ghost-dark` buttons. Plum is used for the ground
+   and never for type here, because `--plum` does not flip in dark mode. */
+
+.panel {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-radius: var(--radius-18);
+  padding: 28px 30px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  color: rgba(var(--cream-rgb), 1);
+  margin: 0;
+}
+.panelBody {
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.78);
+  margin: 0;
+  max-width: 56ch;
+}
+.panelLink {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.codeRow {
+  width: 100%;
+}
+
+/* ── The status page ─────────────────────────────────────────────────────── */
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--section-y-64) 24px var(--section-y-96);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.pageTitle {
+  font-family: var(--serif);
+  font-size: var(--text-32);
+  color: var(--text-strong);
+  margin: 0;
+}
+.pageIntro {
+  font-size: var(--text-15);
+  line-height: 1.65;
+  color: var(--ink-60);
+  margin: 0;
+  max-width: 60ch;
+}
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 240px;
+}
+.formLabel {
+  font-size: var(--text-13);
+  font-weight: 500;
+  color: var(--ink);
+}
+.formInput {
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-12);
+  padding: 12px 14px;
+  font-family: var(--sans);
+  font-size: var(--text-14-5);
+  color: var(--ink);
+  background: var(--cream);
+  outline: none;
+}
+.formInput:focus {
+  border-color: var(--line-strong);
+}
+
+/* One state card: the answer, whichever of the five it is. */
+.state {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-18);
+  padding: 28px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.stateIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
+  font-size: var(--text-20);
+}
+.stateIconDone {
+  background: rgba(var(--jade-rgb), 0.15);
+  color: var(--jade-ink);
+}
+.stateTitle {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  color: var(--text-strong);
+  margin: 0;
+}
+.stateBody {
+  font-size: var(--text-14);
+  line-height: 1.65;
+  color: var(--ink-60);
+  margin: 0;
+  max-width: 58ch;
+}
+.stateMeta {
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  margin: 0;
+}
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+:global([data-theme="dark"]) .state {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}

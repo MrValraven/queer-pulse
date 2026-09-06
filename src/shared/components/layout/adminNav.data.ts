@@ -29,6 +29,7 @@ import {
   FiShield,
   FiTag,
   FiThumbsUp,
+  FiType,
   FiUserCheck,
   FiUserPlus,
   FiUserX,
@@ -103,6 +104,33 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
     labelKey: "shared:adminNav.sections.trust",
     defaultOpen: true,
     items: [
+      {
+        // PRD-282. Every staff queue on one screen, with how many are waiting
+        // and how long the oldest has waited. Filed first in Trust & safety
+        // because it answers "does anything have to happen today", which the
+        // rest of this rail needed about fifteen page loads to answer.
+        //
+        // No `badge`. `AdminNavBadge` is a closed union of the five counts
+        // `useAdminNavBadges` resolves, and none of them is this endpoint's
+        // overdue total. Wiring a sixth would mean mounting `useAdminQueues()`
+        // on every admin page, which is up to 30 aggregates per load for a
+        // number the rail cannot usefully summarise.
+        //
+        // `isAdminOnly` stays UNSET on purpose: a moderator and a grant holder
+        // are exactly who this screen is for, and the endpoint filters the
+        // response body per queue so each sees only their own.
+        labelKey: "shared:adminNav.items.queues",
+        to: routes.adminQueues,
+        icon: FiClock,
+        capabilities: [
+          "housing_moderator",
+          "directory_moderator",
+          "resource_curator",
+          "editorial",
+          "communities",
+          "partnerships",
+        ],
+      },
       {
         labelKey: "shared:adminNav.items.moderation",
         to: routes.adminModeration,
@@ -290,6 +318,18 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminResourceGuides,
         capabilities: ["resource_curator"],
         icon: FiBookOpen,
+      },
+      // PRD-264: the glossary console. Its route is nested under
+      // `adminResourceGuides` on purpose, so it inherits that path's
+      // `resource_curator` entry in `authGate.ts`'s
+      // `CAPABILITY_ELEVATED_PATTERNS`. A top-level `/admin/glossary` would
+      // fall through to the blanket admin-only rule and lock out exactly the
+      // curators the backend guard admits.
+      {
+        labelKey: "shared:adminNav.items.glossary",
+        to: routes.adminGlossary,
+        capabilities: ["resource_curator"],
+        icon: FiType,
       },
       {
         labelKey: "shared:adminNav.items.resourceListings",
@@ -551,10 +591,16 @@ export const STEWARDED: StewardedCommunity[] = [
  * way, through a "no profile loaded" fallback on its live branch; it now reads
  * `useAccountIdentity` and draws a neutral mark when there is no identity yet.
  *
- * Known remaining readers that are NOT demo-guarded, and should move to
- * `useAccountIdentity` with name-less copy: `AdminDashboardPage` (the greeting
- * in `admin:dashboard.title`) and `AdminMemberModals` (the "send as" option in
- * `admin:members.message.sendAsSelf`). Do not add more.
+ * `AdminDashboardPage` was the third leak and the loudest one: the console's
+ * very first line greeted every real admin as the fixture persona (DES-160).
+ * It reads `useAccountIdentity` now, and falls back to
+ * `admin:dashboard.titleNameless` while the profile is still loading, so the
+ * greeting is either the right name or no name at all.
+ *
+ * One reader that is NOT demo-guarded remains, and should move to
+ * `useAccountIdentity` with name-less copy the same way: `AdminMemberModals`
+ * (the "send as" option in `admin:members.message.sendAsSelf`). Do not add
+ * more.
  */
 export const ADMIN_PROFILE = {
   initials: currentUser.initials,

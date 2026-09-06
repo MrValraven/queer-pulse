@@ -403,6 +403,48 @@
   color: var(--accent-ink);
 }
 
+/* The published/scheduled block that replaces the Publish button once a piece
+   is live: the state line, the reader link, and Unpublish, stacked. */
+.publishState {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.publishStatus {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--text-strong);
+}
+
+.publishStatus svg {
+  margin-top: 2px;
+  flex: none;
+  color: var(--ink-40);
+}
+
+.publishStatus svg.doneIcon {
+  color: var(--jade);
+}
+
+/* `.note` is a horizontal icon-and-text row; a refusal carries a heading plus
+   a list of reasons, so this variant stacks them instead. */
+.noteStack {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.noteStack b {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
 .steps {
   display: flex;
   flex-direction: column;

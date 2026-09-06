@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { Button, SkeletonLine } from "../../shared/components/ui";
@@ -55,10 +55,23 @@ function AuthorLoadingState() {
   );
 }
 
+/**
+ * `/magazine/author` with no `:slug`. Demo mode opens the curated default
+ * writer; live mode has no member at that mock slug, so it used to fetch it
+ * and land on the not-found wall. It goes to the authors directory instead,
+ * which is the real "which writers are there" surface (PRD-101).
+ */
 export function AuthorPage() {
+  const { demoMode } = useDemoMode();
+  const { slug } = useParams();
+  const resolved = slug ?? (demoMode ? DEFAULT_AUTHOR_SLUG : null);
+  if (!resolved) return <Navigate to={routes.magazineAuthors} replace />;
+  return <AuthorProfile slug={resolved} />;
+}
+
+function AuthorProfile({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { slug = DEFAULT_AUTHOR_SLUG } = useParams();
   const {
     data: liveAuthor,
     isLoading,

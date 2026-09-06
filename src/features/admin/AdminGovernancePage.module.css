@@ -1321,6 +1321,16 @@
 .ovAddBtn {
   align-self: flex-start;
 }
+/* PRD-265. Holds the two ways of growing a section side by side: "Add a
+   decision" (a new entry the editor writes) and, only while one is missing,
+   "Restore a bundle entry". Wraps rather than shrinking, so on a narrow admin
+   window the second button drops below instead of truncating. */
+.ovAddRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
 .ovFooter {
   display: flex;
   flex-wrap: wrap;

@@ -103,7 +103,7 @@ export const shared: Catalog = {
     "Adiciona a QueerPulse ao teu ecrã principal em poucos toques. A mesma app, sem loja de aplicações.",
   "accountMenu.ariaLabel": "Menu da conta",
   "accountMenu.header.subtitle": "Perfil e conta",
-  "accountSheet.title": "A sua conta",
+  "accountSheet.title": "A tua conta",
   // ProfileInviteCard — a faixa discreta de convites no fim do perfil de quem
   // é dono dele (ACQ-08). Fica em `shared:` ao lado de `accountMenu.*` porque
   // as duas entradas são um par. Nunca aparece sem convites por dar, por isso
@@ -181,6 +181,7 @@ export const shared: Catalog = {
   "adminNav.items.overview": "Visão geral",
   "adminNav.items.landing": "Página inicial",
   "adminNav.items.pressKit": "Kit de imprensa",
+  "adminNav.items.queues": "Todas as filas",
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.staff": "Equipa e papéis",
   "adminNav.items.concerns": "Preocupações",
@@ -201,6 +202,7 @@ export const shared: Catalog = {
   "adminNav.items.verifications": "Verificações",
   "adminNav.items.orgTiers": "Níveis de parceria",
   "adminNav.items.resourceGuides": "Guias de recursos",
+  "adminNav.items.glossary": "Glossário",
   "adminNav.items.resourceListings": "Diretório de recursos",
   "adminNav.items.resourceSuggestions": "Sugestões de recursos",
   "adminNav.items.communityTagRequests": "Pedidos de etiquetas de comunidades",
@@ -267,7 +269,7 @@ export const shared: Catalog = {
   "filters.clearAll": "Limpar tudo",
   "filters.remove": "Remover filtro",
   "select.placeholder": "Selecionar…",
-  "select.searchPlaceholder": "Escreva para filtrar…",
+  "select.searchPlaceholder": "Escreve para filtrar…",
   "select.noResults": "Sem correspondências",
   "select.clear": "Limpar seleção",
   "select.loading": "A carregar…",
@@ -404,7 +406,7 @@ export const shared: Catalog = {
   "megaNav.culture.col.magazine.head": "A Revista",
   "megaNav.culture.col.magazine.currentIssue": "Edição atual",
   "megaNav.culture.col.magazine.allIssues": "Todas as edições",
-  "megaNav.culture.col.magazine.stories": "Histórias",
+  "megaNav.culture.col.magazine.sections": "Explorar por secção",
   "megaNav.culture.col.magazine.writeForUs": "Escreve para nós",
   "megaNav.culture.col.screenSound.cinema": "Cinema · filme queer",
   "megaNav.culture.col.makers.head": "Criação e cena",
@@ -567,4 +569,22 @@ export const shared: Catalog = {
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-49 — PRD-49 - the quiet marker on a meganav / mobile drawer / sidebar link whose destination is not launched yet (Cinema, Studio in live mode). Rendered by NavBuildBadge INSIDE the link, so it also becomes the tail of the link's accessible name: 'Cinema Being built'. Keep it short, uppercase-safe and free of any timing promise: it says the thing is under construction, never that it arrives soon or on a date.
   "megaNav.beingBuilt": "Em construção",
+
+  // ── Add to calendar (shared/components/calendar/AddToCalendarSheet) ──────
+  // Moved out of the `myevents` namespace when the picker became shared — see
+  // the EN catalog's note (PRD-189).
+  "addToCalendar.title": "Adicionar ao calendário",
+  "addToCalendar.google": "Google Calendar",
+  "addToCalendar.outlook": "Outlook",
+  "addToCalendar.yahoo": "Yahoo Calendar",
+  "addToCalendar.apple": "Calendário da Apple",
+  "addToCalendar.ics":
+    "A usar outra aplicação de calendário? Descarrega o ficheiro (.ics)",
+  "addToCalendar.toastGoogle": "Aberto no Google Calendar",
+  "addToCalendar.toastOutlook": "Aberto no Outlook",
+  "addToCalendar.toastYahoo": "Aberto no Yahoo Calendar",
+  "addToCalendar.toastApple":
+    "Descarregado. Abre-o para adicionar ao Calendário da Apple",
+  "addToCalendar.toastIcs":
+    "Descarregado. Abre-o na tua aplicação de calendário",
 };

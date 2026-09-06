@@ -277,3 +277,16 @@
   outline: 2px solid var(--line-strong);
   outline-offset: 1px;
 }
+
+/* PRD-266: the pointer to where the retired marketing-form partner inquiries
+   still live (the intake console). A quiet footnote under the page, not a
+   panel: it is history, and it stops mattering once the backlog is worked. */
+.legacyInquiries {
+  margin-top: 40px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.legacyInquiries a {
+  color: var(--accent);
+  font-weight: 600;
+}

@@ -36,6 +36,10 @@ import type { GifAttachment } from "../../../shared/api/gifs";
 export interface ConversationResponse extends BaseConversationResponse {
   archivedAt?: string | null;
   draft?: string | null;
+  /** PRD-225: when THIS caller manually marked the thread unread from the row
+   *  menu. Widened here for the same file-ownership reason as `archivedAt`/
+   *  `draft` above — the backend already sends it (`message-response.ts`). */
+  markedUnreadAt?: string | null;
 }
 
 export type { MessageResponse };
@@ -160,6 +164,7 @@ export const updateConversationPrefs = (
     favorite?: boolean;
     muted?: boolean;
     archived?: boolean;
+    markUnread?: boolean;
     draft?: string;
   },
 ) =>
@@ -262,13 +267,22 @@ export async function searchMessages(
   );
 }
 
-/** POST /conversations/:id/read — clear unread up to `lastReadAt`. */
+/** POST /conversations/:id/read — advance the read watermark. Prefer
+ *  `upToMessageId` (the newest message this client actually rendered): the
+ *  server reads THAT message's own `created_at` server-side, so the receipt
+ *  can never claim more than was genuinely shown (see `MarkReadDto` /
+ *  `ConversationsService.markRead` in the backend). `lastReadAt` is the
+ *  legacy client-clock form, honoured but clamped to `now()` server-side —
+ *  only used as a fallback when no message id is known yet (see
+ *  `useMarkRead`). Omitting both keeps the original "read up to now"
+ *  behaviour. */
 export const markConversationRead = (
   conversationId: string,
-  lastReadAt: string,
+  options: { upToMessageId?: string; lastReadAt?: string },
 ) =>
   apiPost<{ ok: true }>(`/conversations/${conversationId}/read`, {
-    lastReadAt,
+    ...(options.upToMessageId ? { upToMessageId: options.upToMessageId } : {}),
+    ...(options.lastReadAt ? { lastReadAt: options.lastReadAt } : {}),
   });
 
 /** POST /conversations/:id/messages/:messageId/reactions — add (or replace) my reaction. */
@@ -298,7 +312,42 @@ export const deleteMessage = (conversationId: string, messageId: string) =>
     `/conversations/${conversationId}/messages/${messageId}`,
   );
 
+/** DELETE /conversations/:id/messages/:messageId/for-me — hide ONE message
+ *  from my own view only ("delete for me", PRD-227). Any participant may
+ *  call this (not just the author) — sits beside `deleteMessage` above
+ *  ("delete for everyone") without touching it; the other participant's copy
+ *  is unaffected. */
+export const deleteMessageForMe = (conversationId: string, messageId: string) =>
+  apiDelete<{ ok: true }>(
+    `/conversations/${conversationId}/messages/${messageId}/for-me`,
+  );
+
 /** DELETE /conversations/:id — delete the conversation for my account only
  *  (WhatsApp-style). The other member keeps their copy. */
 export const deleteConversation = (conversationId: string) =>
   apiDelete<{ ok: true }>(`/conversations/${conversationId}`);
+
+/**
+ * POST /conversations/:id/messages — send a `kind:"document"` message
+ * (PRD-226: a lease PDF, a flyer, a spreadsheet, plain text). A narrow sibling
+ * of `sendMessage` above rather than a widened version of it: this file's
+ * ownership is shared with another build pass touching `sendMessage` directly,
+ * so this is appended standalone instead of editing that function's shape.
+ * Hits the SAME endpoint and is equally idempotent on `clientMessageId`.
+ */
+export const sendDocumentMessage = (
+  conversationId: string,
+  body: string,
+  attachment: import("../../../shared/api/documentAttachment").DocumentAttachment,
+  replyToId?: string,
+  clientMessageId?: string,
+  forwarded?: boolean,
+) =>
+  apiPost<MessageResponse>(`/conversations/${conversationId}/messages`, {
+    body,
+    kind: "document",
+    attachment,
+    ...(replyToId ? { replyToId } : {}),
+    ...(clientMessageId ? { clientMessageId } : {}),
+    ...(forwarded ? { forwarded: true } : {}),
+  });

@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { MagazineDeskShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { DEMO_SECTIONS, DEMO_STAGES } from "./data/desk.data";
+import { DEMO_STAGES } from "./data/desk.data";
 import type { useCreateIssue } from "./api/useDeskIssues";
 import { DeskView, type DeskViewProps } from "./desk/DeskView";
 import { DeskModals } from "./desk/DeskModals";
@@ -33,6 +33,13 @@ export interface EditorDashboardViewProps {
   pieceActions: ReturnType<typeof useDeskPieceActions>;
   writeAction: ReturnType<typeof useDeskWriteAction>;
   editors: DeskViewProps["editors"];
+  /** PRD-130 — the section taxonomy from `useMagazineSections` (seeded rows
+   *  in live mode, the canonical fixture in demo), feeding both the Issue
+   *  plan's gap counts and the commission picker. It arrives EMPTY while the
+   *  fetch is in flight and after it fails, which is exactly what
+   *  `CommissionModal` reads to disable its picker rather than filing a
+   *  piece into no section. */
+  sections: DeskViewProps["sections"];
   activeMe: DeskViewProps["me"];
   onMe: DeskViewProps["onMe"];
   layout: DeskViewProps["layout"];
@@ -68,6 +75,7 @@ export function EditorDashboardView({
   pieceActions,
   writeAction,
   editors,
+  sections,
   activeMe,
   onMe,
   layout,
@@ -118,7 +126,7 @@ export function EditorDashboardView({
         pitches={pitches}
         pitchCount={pitches.length}
         stages={DEMO_STAGES}
-        sections={DEMO_SECTIONS}
+        sections={sections}
         q={deskState.q}
         onQ={deskState.setQ}
         fmt={deskState.fmt}
@@ -165,7 +173,7 @@ export function EditorDashboardView({
       <DeskModals
         modal={modals.modal}
         editors={editors}
-        sections={DEMO_SECTIONS}
+        sections={sections}
         commissionTrack={tracks.track}
         hasCurrentIssue={tracks.hasCurrentIssue}
         issueNumber={issue.number}

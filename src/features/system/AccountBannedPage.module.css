@@ -1,25 +1,11 @@
-/* Page-specific bits only. The card shell, icon, kicker, heading, first lead,
+/* Page-specific bits only. The card shell, icon, kicker, heading, lead,
    actions and foot come from the shared <StatusCard>; the numbered "what
-   happens now" list is the shared vertical <Stepper>. `.lead` is retained for
-   the page's second lead paragraph, which StatusCard's single lead slot can't
-   host. */
-.lead {
-  font-size: var(--text-15-5);
-  color: var(--ink);
-  line-height: 1.7;
-  margin-bottom: 6px;
-}
+   happens now" list is the shared vertical <Stepper>.
 
-.lead b {
-  color: var(--text-strong);
-  font-weight: 600;
-}
-
-.lead em {
-  font-style: italic;
-  color: var(--accent-ink);
-}
-
+   `.lead` used to live here for a second lead paragraph telling the member
+   their Sustainer membership had been "refunded pro-rated to the card on
+   file". QueerPulse has no billing integration of any kind, so no refund was
+   ever issued and none could be; the paragraph and its styles are gone. */
 .violation {
   margin-top: 22px;
   padding: 18px 22px;

@@ -1,6 +1,21 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { AdminSafeSpaceNominationDTO } from "../safety/api/safeSpaceGovernance.api";
 import styles from "./AdminSafeSpaceGovernance.module.css";
+
+/**
+ * The tally this bar draws, wide enough for both readings of the same number.
+ *
+ * The reviewed queue (`AdminSafeSpaceNominationDTO["visits"]`) knows who
+ * nominated the place, so it can also report the vouches it discounted. The
+ * candidates endpoint has no nomination in hand and reports only the count, so
+ * `notIndependentVouchCount` is optional here. One component either way: the
+ * bar exists so the same number never grows a second visual language.
+ */
+export interface AdminSafeSpaceVisitTally {
+  independentVisitCount: number;
+  requiredVisitCount: number;
+  hasMetVisitBar: boolean;
+  notIndependentVouchCount?: number;
+}
 
 /**
  * The three-independent-visit bar, as the reviewer reads it.
@@ -16,7 +31,7 @@ import styles from "./AdminSafeSpaceGovernance.module.css";
 export function AdminSafeSpaceVisitBar({
   visits,
 }: {
-  visits: AdminSafeSpaceNominationDTO["visits"];
+  visits: AdminSafeSpaceVisitTally | null;
 }) {
   const { t } = useTranslation();
 
@@ -75,7 +90,7 @@ export function AdminSafeSpaceVisitBar({
               required: visits.requiredVisitCount,
             })}
       </p>
-      {visits.notIndependentVouchCount > 0 && (
+      {(visits.notIndependentVouchCount ?? 0) > 0 && (
         <p className={styles.visitNote}>
           {t("safety:governance.visits.notIndependent", {
             count: visits.notIndependentVouchCount,

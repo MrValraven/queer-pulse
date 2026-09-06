@@ -28,7 +28,7 @@ export const safety: Catalog = {
   // ── ReportPage.tsx ─────────────────────────────────────────────────────
   "report.meta.title": "Report a concern to the QueerPulse safety team",
   "report.meta.description":
-    "File a report about harassment, abuse, or an unsafe situation on QueerPulse. Report anonymously, or leave an email so the safety team can follow up.",
+    "File a report about harassment, abuse, or an unsafe situation on QueerPulse. You can file anonymously, and you can file without an account.",
   "report.eyebrow": "Safety & Reporting",
   "report.hero.title": "Safety is <em>structural.</em>",
   "report.hero.lead":
@@ -44,19 +44,19 @@ export const safety: Catalog = {
 
   "report.how.title": "How <em>reporting works</em>",
   "report.how.lead":
-    "You submit a report. We respond within 24 hours. Here's exactly what happens in between: no black box, no vague reassurances.",
+    "You submit a report. A moderator reviews it within 24 hours. Here's exactly what happens in between: no black box, no vague reassurances.",
   "report.flow.step1.title": "You submit a report",
   "report.flow.step1.desc":
     "Via the button on any profile, message, or forum post, or directly through this page. You can report anonymously if needed.",
   "report.flow.step2.title": "Immediate acknowledgement",
   "report.flow.step2.desc":
-    "You receive a confirmation within 1 hour. A real person is assigned to your report.",
+    "A confirmation reaches your QueerPulse notifications within 1 hour, and a real person is assigned to your report. A report filed without an account skips this step: there is no inbox here to reach.",
   "report.flow.step3.title": "Review within 24 hours",
   "report.flow.step3.desc":
     "We review the evidence, context, and history. For serious cases, the reported member's access is temporarily suspended during review.",
   "report.flow.step4.title": "Decision & action",
   "report.flow.step4.desc":
-    "Possible outcomes: warning, temporary suspension, permanent removal. We communicate the outcome to you, with reasoning.",
+    "Possible outcomes: warning, temporary suspension, permanent removal. The outcome and the reasoning behind it reach your QueerPulse notifications.",
 
   "report.form.title": "Make a <em>report.</em>",
   "report.form.lead":
@@ -87,7 +87,10 @@ export const safety: Catalog = {
   "report.form.detailLabel": "What happened?",
   "report.form.detailPlaceholder":
     "Tell us what happened, with as much detail as you're comfortable sharing. There are no wrong answers.",
-  "report.form.emailLabel": "Your contact email (optional, for follow-up)",
+  "report.form.emailLabel":
+    "An address where someone could reach you (optional)",
+  "report.form.emailHelper":
+    "QueerPulse sends no email. This only gives a person on the safety team a way to reach you if they need to ask you something. Leave it blank and the report is filed anonymously.",
   "report.form.emailPlaceholder": "you@email.com",
   // An EXPLICIT choice, because this form used to infer it: leaving the
   // optional email blank filed the report anonymously, and a signed-in member
@@ -102,7 +105,7 @@ export const safety: Catalog = {
   "report.form.identity.anonymousHelper":
     "The moderator sees the report without your name, and without that prior-report record. QueerPulse still stores the link between you and this report internally, so it can be traced if it has to be.",
   "report.form.identity.signedOutNote":
-    "You are not signed in, so the moderator sees this report without a name and without any prior-report record to weigh it against. Sign in first if you want it filed as you.",
+    "You are not signed in, so the moderator sees this report without a name and without any prior-report record to weigh it against. Members read what came of a report in their QueerPulse notifications; without an account there is no place here for an answer to land. Sign in first if you want it filed as you.",
   "report.form.submitting": "Submitting…",
   "report.form.submitCta": "Submit report",
   "report.form.fineprint":
@@ -140,7 +143,12 @@ export const safety: Catalog = {
   "report.modLog.viewReportCta": "View full report",
 
   "report.toast.chooseCategory": "Choose what you're reporting first.",
-  "report.toast.received": "Report received. We'll follow up within 24 hours.",
+  "report.toast.received":
+    "Report received. What comes of it lands in your QueerPulse notifications.",
+  "report.authRefused":
+    "The server would not accept this report as it was sent. Sign in and file it again. If you are already signed in, a moderation restriction on your account can be what is blocking it.",
+  "report.toast.receivedSignedOut":
+    "Report received. A moderator reads every one. Without an account there is no place here for an answer to land, so nothing will arrive back.",
   "report.toast.submitError":
     "Couldn't send your report. It didn't reach us. Check your connection and try again.",
   // Shown when POST /reports is refused by the 60-second burst throttle, whose
@@ -322,6 +330,7 @@ export const safety: Catalog = {
   "profileMenu.unmute": "Unmute {name}",
   "profileMenu.block": "Block {name}",
   "profileMenu.unblock": "Unblock {name}",
+  "profileMenu.report": "Report {name}",
   "profileMenu.mutedToast":
     "You muted {name}. Their posts are hidden from you.",
   "profileMenu.unmutedToast": "You unmuted {name}.",
@@ -338,6 +347,9 @@ export const safety: Catalog = {
   "blockModal.body":
     "Blocking severs any connection between you. {name} won't be able to view your profile, message you, or find you in search, and neither of you can connect with the other. You can unblock later.",
   "blockModal.reportCheckbox": "Also report {name} to the moderation team",
+  "blockModal.reasonCodeLabel": "What happened?",
+  "blockModal.reasonCodeHelper":
+    "This is what the moderation team sees first, and it sets how fast the report is picked up.",
   "blockModal.reasonLabel": "Reason (optional)",
   "blockModal.reasonPlaceholder": "Add any context for the moderation team…",
   "blockModal.cancelCta": "Cancel",
@@ -353,7 +365,7 @@ export const safety: Catalog = {
 
   "appeal.pending.title": "We're <em>reviewing</em> your appeal",
   "appeal.pending.sub":
-    "Our moderation team will look at your case carefully and respond within 5 business days.",
+    "A moderator who was not involved in the original decision reads your case. The date below is the deadline we hold ourselves to.",
   "appeal.ref.label": "Appeal reference",
   "appeal.pending.submittedLabel": "Submitted",
   "appeal.pending.expectedLabel": "Expected response",
@@ -408,7 +420,16 @@ export const safety: Catalog = {
   "appealSubmit.form.submitting": "Sending…",
   "appealSubmit.form.ladderCta": "Read the community ladder",
   "appealSubmit.notice":
-    "<b>While your appeal is reviewed,</b> the original decision stays in place. The outcome lands on this page, usually within a few days. Check back, or reopen your appeal any time to see where it stands.",
+    "<b>While your appeal is reviewed,</b> the original decision stays in place. A different moderator decides it within {days} days, and the outcome lands on this page with the date it is due. Check back, or reopen your appeal any time to see where it stands.",
+  "appealSubmit.windowClosed.contactCta": "Write to the moderation team",
+  "appealSubmit.windowClosed.bodyNoDate":
+    "Appeals are open for {days} days after a decision, and the window for this one has closed. If something has changed since, or you could not reach this form in time, write to the moderation team and ask them to look again.",
+  "appealSubmit.windowClosed.body":
+    "Appeals are open for {days} days after a decision. This one closed on {date}. If something has changed since, or you could not reach this form in time, write to the moderation team and ask them to look again.",
+  "appealSubmit.windowClosed.title":
+    "The appeal window for this decision has closed",
+  "appealSubmit.filingWindow":
+    "Appeals are open for {days} days after a decision. The clock starts when the decision was taken, rather than when you read about it. Where there is no record of when that was, no deadline applies to you.",
   "appealSubmit.foot":
     "Every appeal, and how it was decided, is logged in our <a>transparency record</a>.",
   "appealSubmit.errorFrame": "Couldn't file your appeal",
@@ -609,8 +630,11 @@ export const safety: Catalog = {
   "spaces.how.step2.desc":
     "Three members with no stake in the place go there and write up what they found. The person who nominated it does not count towards the three, and neither do the owner or anyone who helps run it.",
   "spaces.how.step3.title": "The review team decides",
+  // Step 3 is where the three-visit bar is actually enforced, so it is the one
+  // step that has to name the exception. Fewer than three independent visits
+  // refuses the award outright unless a reviewer writes down why.
   "spaces.how.step3.desc":
-    "The review team reads the visits and decides whether the criteria are met. A written reason is required either way, and it goes on the record along with who decided and when. The space is told after the decision.",
+    "The review team reads the visits and decides whether the criteria are met. Under three independent visits the badge is refused, unless the team writes down why it is making an exception. Either way a written reason goes on the record with who decided and when, and the space is told after.",
   "spaces.how.step4.title": "Badge awarded",
   "spaces.how.step4.desc":
     "If it is approved, the space gets a trust tier and the badge on its directory listing, dated from the day it was granted. It is earned by meeting the standard.",
@@ -627,13 +651,34 @@ export const safety: Catalog = {
     "A community-reviewed directory of venues in Lisbon verified as genuinely LGBTQ+ safe, with member reviews, a verification badge, and a way to flag or nominate a space.",
   "spaces.hero.category": "Community verified",
   "spaces.hero.title": "Spaces that are actually <em>safe.</em>",
+  // This used to read "Every venue on this list has been visited and reviewed
+  // by multiple community members", which nothing enforced: the service
+  // computed the independent-visit tally, wrote it into `safe_space_audits`,
+  // and then awarded regardless of it. The tally now BLOCKS an award below
+  // `SAFE_SPACE_REQUIRED_INDEPENDENT_VISITS`, and the one way past it is a
+  // written reason that lands on the audit row and forces the public
+  // provenance line to state the real visit count.
+  //
+  // So the guarantee is real and it has a door. This copy describes both, and
+  // deliberately still never says "every": an override is rare, but it exists,
+  // and an absolute claim would be false again the first time one is used.
   "spaces.hero.lead":
-    "Not self-declared. Not a rainbow sticker in the window. Every venue on this list has been visited and reviewed by multiple community members, and can lose its status if things change.",
+    "A badge here is earned. Three members with no stake in the place go, and each writes up what they found, before a review team decides against fixed criteria. Where the team grants a badge on fewer visits, it records why and the badge shows the real count. That rule binds awards made from today onward. Every badge is dated, comes back for review a year on, and can be taken back.",
   "spaces.hero.stat.verified": "verified spaces in Lisbon",
   "spaces.hero.stat.reviews": "member reviews submitted",
-  "spaces.hero.stat.removed": "spaces flagged & removed this year",
+  // Labels `stats.removed`, which `DirectoryService.listSafeSpaces` computes
+  // as the spaces standing in the REMOVED state right now. There is no date
+  // filter anywhere in that query, so "this year" was simply wrong.
+  "spaces.hero.stat.removed": "spaces that lost the badge",
   "spaces.dir.title": "Verified <em>spaces.</em>",
-  "spaces.dir.updated": "Last updated June 2025 · Member-maintained",
+  // Shown only when no badge on the page carries a date, and while the fetch
+  // is still in flight. It claims no freshness, because in that state the page
+  // has none to claim. The dated version is `spaces.dir.lastCheck`.
+  "spaces.dir.updated": "Member-maintained",
+  // `{date}` is the newest badge date on the page (`stats.lastReVerifiedAt`),
+  // localized by `fmt.date`. It replaced a hardcoded "Last updated June 2025"
+  // that nothing produced and nothing could keep true.
+  "spaces.dir.lastCheck": "Last badge check {date} · Member-maintained",
   "spaces.dir.nominateCta": "+ Nominate a space",
   "spaces.dir.browseLead":
     "Every verified space now lives in the local directory, filtered to just the ones that earned the badge.",
@@ -654,8 +699,13 @@ export const safety: Catalog = {
     "Any venue can put a rainbow flag in the window during Pride. Verification means something different: it means community members have been there, assessed it against a clear set of criteria, and agreed it meets the standard. And it can be revoked.",
   "spaces.how.title": "How <em>verification</em> works.",
   "spaces.removed.title": "When a space <em>loses</em> its badge.",
-  "spaces.removed.lead":
-    "Verification can be revoked, and it is. A listing isn't a reward a venue keeps forever; it's a standard they keep meeting. When they stop, we say so, and we say why. We removed {count} spaces this year.",
+  // Same number as `spaces.hero.stat.removed`, same correction: it counts the
+  // spaces standing in the removed state right now, not removals within a
+  // year. Pluralized because it is rendered with a live count.
+  "spaces.removed.lead_one":
+    "Verification can be revoked, and it is. A listing isn't a reward a venue keeps forever; it's a standard they keep meeting. When they stop, we say so, and we say why. Right now, {count} space on this list has lost its badge.",
+  "spaces.removed.lead_other":
+    "Verification can be revoked, and it is. A listing isn't a reward a venue keeps forever; it's a standard they keep meeting. When they stop, we say so, and we say why. Right now, {count} spaces on this list have lost theirs.",
   "spaces.removed.step1":
     "<span>3 flags</span> suspend the badge instantly, pending review.",
   "spaces.removed.step2":
@@ -692,8 +742,13 @@ export const safety: Catalog = {
     "Your nomination for <strong>{name}</strong> is in. The community is the reason this list means anything. Adding to it is genuinely a gift.",
   "spaces.nominate.thanks.textPlain":
     "Your nomination is in. The community is the reason this list means anything. Adding to it is genuinely a gift.",
+  // The 48-hour window IS backed: `SAFE_SPACE_ACKNOWLEDGEMENT_HOURS`, a
+  // moderator acknowledge endpoint, and a daily sweep that tells moderators
+  // when a nomination has gone past it. What was vague is the delivery, so the
+  // tail now names the one channel that exists. QueerPulse sends no email, and
+  // "we'll keep you posted" was the kind of line a reader reads as one.
   "spaces.nominate.thanks.subInfo":
-    "Here's what happens next: we acknowledge every nomination within <strong>48 hours</strong>. Then three verified members visit independently and review it against the criteria before a volunteer panel decides. We'll keep you posted.",
+    "Here's what happens next: we acknowledge every nomination within <strong>48 hours</strong>. Then three verified members visit independently and review it against the criteria before a volunteer panel decides. Your notifications here in the app are where you'll hear each step.",
   "spaces.nominate.anotherCta": "Nominate another space",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
@@ -703,8 +758,12 @@ export const safety: Catalog = {
   "spaces.detail.trust.body":
     "<strong>This space meets the Safe Spaces criteria</strong> and was visited by QueerPulse moderators in the last 12 months. Last re-verified <strong>{date}</strong> · {verifier}.",
   "spaces.detail.relyTitle": "What you can rely on, <em>here</em>",
+  // "We check in twice a year" named a cadence nothing implements and that
+  // contradicted the one that IS implemented: the re-review interval is 365
+  // days (`SAFE_SPACE_RE_REVIEW_INTERVAL_DAYS`), with a daily sweep raising
+  // every badge that passes it.
   "spaces.detail.relySub":
-    "Every verified space commits to these. We check in twice a year.",
+    "Every verified space commits to these. A badge comes back for review a year after it is granted.",
   "spaces.detail.vouchedTitle_one": "Vouched by <em>{count} member</em>",
   "spaces.detail.vouchedTitle_other": "Vouched by <em>{count} members</em>",
   "spaces.detail.vouchedSub":
@@ -733,8 +792,17 @@ export const safety: Catalog = {
     "The record stays open. If something happened to you here, telling us still helps. It informs any future re-review.",
   "spaces.detail.fileReportCta": "File a report",
   "spaces.detail.lookingForTitle": "Looking for somewhere safe?",
-  "spaces.detail.lookingForBody":
-    "This space is delisted, but {count}+ verified spaces across Lisbon are not. Find one near you.",
+  // `{count}` is the live `stats.verified` from `GET /directory/safe-spaces`,
+  // replacing a hardcoded `VERIFIED_COUNT = 47` in `SafeSpaceDetailPage`. The
+  // trailing "+" went with it: the number is now exact, so padding it would
+  // undo the fix. `lookingForBodyPlain` covers the in-flight fetch, where the
+  // count is 0 and there is no honest number to print.
+  "spaces.detail.lookingForBody_one":
+    "This space is delisted. {count} other space across Lisbon still holds the badge. Go there instead.",
+  "spaces.detail.lookingForBody_other":
+    "This space is delisted. {count} others across Lisbon still hold the badge. Find one near you.",
+  "spaces.detail.lookingForBodyPlain":
+    "This space is delisted. Other spaces across Lisbon still hold the badge. Find one near you.",
   "spaces.detail.seeVerifiedCta": "See verified spaces",
 
   // ── VouchModal.tsx ─────────────────────────────────────────────────────
@@ -939,6 +1007,12 @@ export const safety: Catalog = {
   "governance.action.tierOption": "Tier {tier}",
   "governance.action.awardCta": "Grant the badge",
   "governance.action.declineCta": "Decline",
+  // Shown only when the tally is under the bar. `{min}` is the backend's
+  // `@MinLength(20)` on `belowVisitBarReason`, quoted here so the reviewer
+  // reads the requirement before the button explains it by staying disabled.
+  "governance.action.belowBarLabel": "Reason for granting below the visit bar",
+  "governance.action.belowBarHelper":
+    "This space has {count} of {required} independent visits, so the badge is refused without a written exception. At least {min} characters. It goes on the audit record, and the public badge will state the real count.",
   "governance.action.reopenLabel": "Reason for re-opening",
   "governance.action.reopenHelper":
     "Puts the nomination back in the queue. The reason goes on the record.",

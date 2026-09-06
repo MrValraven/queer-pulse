@@ -70,6 +70,14 @@
   color: var(--danger);
   margin-block-start: 4px;
 }
+/* A hint that carries a lock icon (the private street address). The icon sits
+ * on the first line of a hint that may wrap, so the row is baseline-ish rather
+ * than centred, and the icon never shrinks. */
+.fieldHintIcon {
+  vertical-align: -0.12em;
+  margin-inline-end: 5px;
+  flex: none;
+}
 
 /* Group label for a chip row (features / ideal for). Matches `.field label`
  * from ApplicationModals so the chip groups read as ordinary fields. */

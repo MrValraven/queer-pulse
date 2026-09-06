@@ -132,12 +132,18 @@ export function CommunitiesGrid({
         </div>
       )}
 
-      {!isShowingSkeletons && !discover.needsDrain && discover.hasNextPage && (
+      {!isShowingSkeletons && discover.hasNextPage && (
         <div className={styles.loadMore}>
           <Button
             type="button"
             variant="ghost"
-            disabled={discover.isFetchingNextPage}
+            // Held while the cards on screen still belong to the previous sort
+            // or filter: `hasNextPage` describes that run, so paging now would
+            // append the incoming run's second page under rows it does not
+            // continue. It frees itself as soon as the new first page lands.
+            disabled={
+              discover.isFetchingNextPage || discover.isShowingStaleResults
+            }
             onClick={discover.fetchNextPage}
           >
             {discover.isFetchingNextPage

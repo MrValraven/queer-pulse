@@ -294,6 +294,36 @@
   margin-block-start: 12px;
   color: var(--ink-60);
 }
+/* Stands where the grid would, for a reader an access-gated group has not let
+   in. Built like a listing card on purpose: a closed door on the same shelf,
+   rather than an error banner. */
+.listingsLocked {
+  margin-block-start: 24px;
+  max-width: 44rem;
+  padding: 28px 24px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 1);
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.listingsLockedIcon {
+  font-size: var(--text-24);
+  color: var(--accent);
+}
+.listingsLockedTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-24);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+}
+.listingsLockedBody {
+  color: var(--ink-60);
+  max-width: 60ch;
+}
 .listingsGrid {
   margin-block-start: 24px;
   display: grid;

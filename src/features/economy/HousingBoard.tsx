@@ -71,8 +71,16 @@ export function HousingBoard() {
   const { data: landlords = [] } = useLandlords();
   // A "Load more" fetch must not swap the whole grid for skeletons — only a
   // first load (or a filter change) does.
-  const loading =
-    useSimulatedLoad() || (!demoMode && isFetching && !isFetchingNextPage);
+  //
+  // `useSimulatedLoad` is a DEMO device (ENG-172). Demo listings resolve from a
+  // local registry in the same tick, so the short fake beat is the only thing
+  // keeping the board from popping in. Live mode already has a real loading
+  // state, and the fake 600ms sat on top of it: it painted a skeleton over
+  // listings that had already arrived, so it is gated to demo mode.
+  const isSimulatedLoading = useSimulatedLoad();
+  const loading = demoMode
+    ? isSimulatedLoading
+    : isFetching && !isFetchingNextPage;
   const filtered = anyFilterActive(filters);
 
   const setType = (type: string) => setFilters((prev) => ({ ...prev, type }));

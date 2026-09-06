@@ -12,8 +12,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import { MentionsPanel } from "./MentionsPanel";
 import { NotificationItem } from "./NotificationItem";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useNotifications } from "./api/useNotifications";
 import { useMentions } from "./api/useMentions";
+import { useUnreadCount } from "./api/useUnreadCount";
 import { useNotificationsReadState } from "./useNotificationsReadState";
 import { bucketNotificationsByDay } from "./notificationDayBuckets";
 import { notificationTabs, type NotifType, type Notification } from "./data";
@@ -32,8 +34,15 @@ export function NotificationsPage() {
     refetch,
   } = useNotifications();
   const { data: mentionDays = [] } = useMentions();
-  const { readIds, resolvedIds, markRead, markAllRead, resolve } =
+  const { readIds, resolvedIds, markRead, markAllRead, resolve, dismiss } =
     useNotificationsReadState(notifications);
+  const { demoMode } = useDemoMode();
+  // PRD-223. The same server-wide count the nav bell reads, from the same query
+  // key, so the two can never disagree: the header used to count the unread
+  // rows among the PAGES LOADED SO FAR, which said "12" beside a bell saying
+  // "37" the moment a member had more than one page of unread. Both refresh
+  // together, because every read/dismiss mutation invalidates `["notifications"]`.
+  const serverUnreadCount = useUnreadCount();
   const [filter, setFilter] = useState<"all" | NotifType | "mentions">("all");
   const onMentions = filter === "mentions";
 
@@ -48,9 +57,13 @@ export function NotificationsPage() {
         !resolvedIds.has(n.id),
     );
   }, [notifications, filter, resolvedIds]);
-  const unreadCount = visible.filter(
+  // Demo mode has no server to count for it, so the prototype keeps counting
+  // its own mock rows (and keeps responding to "Mark all as read"); live mode
+  // takes the server's number.
+  const demoUnreadCount = visible.filter(
     (n) => n.unread && !readIds.has(n.id),
   ).length;
+  const unreadCount = demoMode ? demoUnreadCount : serverUnreadCount;
 
   // Unread @-mentions for the "Mentions" tab badge — from the same demo/live
   // source the Mentions thread renders, so it's 0 (hidden) in live mode until a
@@ -77,6 +90,7 @@ export function NotificationsPage() {
       isUnread={notification.unread && !readIds.has(notification.id)}
       onMarkRead={markRead}
       onResolve={resolve}
+      onDismiss={dismiss}
     />
   );
 

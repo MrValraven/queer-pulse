@@ -1,19 +1,12 @@
 import { FiCheck } from "react-icons/fi";
 import { useId, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
-import {
-  Button,
-  LoadErrorState,
-  Reveal,
-  Select,
-} from "../../shared/components/ui";
+import { Button, LoadErrorState, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { useOrgTiers } from "./api/useOrgTiers";
-import { useSubmitInquiry } from "./api/useSubmitInquiry";
 import type { OrgTier } from "./orgTiers.data";
 import styles from "./ForOrganisationsPage.module.css";
 
@@ -115,45 +108,49 @@ function OrgTierCtaButton({ cta }: { cta: OrgTier["cta"] }) {
   );
 }
 
-const INTEREST_KEYS = ["operational", "employer", "funding", "other"] as const;
-type InterestKey = (typeof INTEREST_KEYS)[number];
-
-export function PartnerContactForm() {
+/**
+ * The For Organisations page's partner ask (PRD-266).
+ *
+ * This section used to POST an `inquiries` row with `kind: "partner"`: a
+ * second, parallel intake for the same request the real pipeline already
+ * handles at `/about/partners/apply`. An organisation that used it got no
+ * profile, no queue with a due clock, no triage assignment and no decision
+ * notification, and staff worked two lists for one pipeline. The row was also
+ * the last thing on the platform promising an email reply, which QueerPulse
+ * does not send.
+ *
+ * IT HANDS OFF RATHER THAN SUBMITTING INLINE. The application endpoint
+ * (`POST /partner-applications`) sits behind `ActiveMemberGuard` and writes a
+ * NOT NULL `submitted_by_id`; the whole "you will hear back" half of the flow
+ * — `GET /partner-applications/mine` and the decision notification — is
+ * addressed to that member id, and the in-app bell is the only reply path
+ * there is. Submitting the full application inline from a public marketing
+ * page would therefore mean either an anonymous application nobody could ever
+ * be told the answer to, or an authentication wall in the middle of a
+ * marketing form. Sending the organisation to the real form keeps ONE intake.
+ *
+ * WHAT CARRIES ACROSS is the organisation's name, as `?org=`, and nothing
+ * else. The application form asks for city, tagline, description, tags and
+ * contact details in its own words; the old marketing form's "interested in"
+ * enum maps onto none of them, and bending it into one would put a
+ * mistranslated value in a field a reviewer reads as fact.
+ *
+ * An organisation that wants to ASK something rather than apply still has the
+ * contact intake, linked in the list above — the same tracked `inquiries`
+ * queue, under the `contact` kind, with its own admin console.
+ */
+export function PartnerApplyStart() {
   const { t } = useTranslation();
   const fieldId = useId();
-  const { showToast } = useToast();
-  const { demoMode } = useDemoMode();
-  const submitInquiry = useSubmitInquiry();
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState<{
-    name: string;
-    org: string;
-    email: string;
-    interest: InterestKey;
-    message: string;
-  }>({ name: "", org: "", email: "", interest: "operational", message: "" });
+  const navigate = useNavigate();
+  const [organisationName, setOrganisationName] = useState("");
 
-  const handleSubmit = () => {
-    if (submitInquiry.isPending) return;
-    // Demo keeps the prototype's toast-only acknowledgement; live persists the
-    // inquiry and then shows an honest success panel.
-    if (demoMode) {
-      showToast(t("marketing:forOrgs.form.toast"), "success", 4500);
-      return;
-    }
-    submitInquiry.mutate(
-      {
-        kind: "partner",
-        name: form.name.trim(),
-        email: form.email.trim(),
-        orgName: form.org.trim() || undefined,
-        subject: t(`marketing:forOrgs.form.interest.${form.interest}`),
-        body: form.message.trim(),
-      },
-      {
-        onSuccess: () => setSent(true),
-        onError: () => showToast(t("marketing:forOrgs.form.error"), "error"),
-      },
+  const startApplication = () => {
+    const trimmedName = organisationName.trim();
+    void navigate(
+      trimmedName
+        ? `${routes.partnerApply}?org=${encodeURIComponent(trimmedName)}`
+        : routes.partnerApply,
     );
   };
 
@@ -167,7 +164,7 @@ export function PartnerContactForm() {
               components={{ em: <em /> }}
             />
           </h2>
-          <p>{t("marketing:forOrgs.cta.body")}</p>
+          <p>{t("marketing:forOrgs.apply.lead")}</p>
           <ul className={styles.ctaList}>
             <li>{t("marketing:forOrgs.cta.list1")}</li>
             <li>{t("marketing:forOrgs.cta.list2")}</li>
@@ -185,107 +182,33 @@ export function PartnerContactForm() {
             </li>
           </ul>
         </Reveal>
-        {sent ? (
-          <div className={styles.partnerForm}>
-            <h3>
-              <Translation
-                i18nKey="marketing:forOrgs.form.sent.title"
-                components={{ em: <em /> }}
-              />
-            </h3>
-            <p>{t("marketing:forOrgs.form.sent.body")}</p>
+        <form
+          className={styles.partnerForm}
+          onSubmit={(event) => {
+            event.preventDefault();
+            startApplication();
+          }}
+        >
+          <div className={styles.field}>
+            <label htmlFor={`${fieldId}-org`}>
+              {t("marketing:forOrgs.form.orgLabel")}
+            </label>
+            <input
+              id={`${fieldId}-org`}
+              type="text"
+              autoComplete="organization"
+              placeholder={t("marketing:forOrgs.form.orgPlaceholder")}
+              value={organisationName}
+              onChange={(event) => setOrganisationName(event.target.value)}
+            />
           </div>
-        ) : (
-          <form
-            className={styles.partnerForm}
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-          >
-            <div className={styles.field}>
-              <label htmlFor={`${fieldId}-name`}>
-                {t("marketing:forOrgs.form.nameLabel")}
-              </label>
-              <input
-                id={`${fieldId}-name`}
-                type="text"
-                placeholder={t("marketing:forOrgs.form.namePlaceholder")}
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor={`${fieldId}-org`}>
-                {t("marketing:forOrgs.form.orgLabel")}
-              </label>
-              <input
-                id={`${fieldId}-org`}
-                type="text"
-                placeholder={t("marketing:forOrgs.form.orgPlaceholder")}
-                value={form.org}
-                onChange={(e) => setForm({ ...form, org: e.target.value })}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor={`${fieldId}-email`}>
-                {t("marketing:forOrgs.form.emailLabel")}
-              </label>
-              <input
-                id={`${fieldId}-email`}
-                type="email"
-                placeholder={t("marketing:forOrgs.form.emailPlaceholder")}
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-              />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor={`${fieldId}-interest`}>
-                {t("marketing:forOrgs.form.interestLabel")}
-              </label>
-              <Select
-                id={`${fieldId}-interest`}
-                options={INTEREST_KEYS.map((interestKey) => ({
-                  value: interestKey,
-                  label: t(`marketing:forOrgs.form.interest.${interestKey}`),
-                }))}
-                value={form.interest}
-                onChange={(value) =>
-                  setForm({ ...form, interest: value as InterestKey })
-                }
-              />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor={`${fieldId}-message`}>
-                {t("marketing:forOrgs.form.messageLabel")}
-              </label>
-              <textarea
-                id={`${fieldId}-message`}
-                placeholder={t("marketing:forOrgs.form.messagePlaceholder")}
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                rows={4}
-                required
-              />
-            </div>
-            <Button
-              variant="primary"
-              className={styles.formBtn}
-              type="submit"
-              disabled={submitInquiry.isPending}
-            >
-              {submitInquiry.isPending
-                ? t("marketing:forOrgs.form.sendingCta")
-                : t("marketing:forOrgs.form.submitCta")}
-            </Button>
-            <p className={styles.formSmall}>
-              {t("marketing:forOrgs.form.small")}
-            </p>
-          </form>
-        )}
+          <Button variant="primary" className={styles.formBtn} type="submit">
+            {t("marketing:partners.become.applyCta")}
+          </Button>
+          <p className={styles.formSmall}>
+            {t("marketing:forOrgs.apply.note")}
+          </p>
+        </form>
       </div>
     </section>
   );

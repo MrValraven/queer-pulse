@@ -1,4 +1,4 @@
-import { FiCheck, FiInfo, FiX } from "react-icons/fi";
+import { FiAlertCircle, FiCheck, FiInfo, FiX } from "react-icons/fi";
 import {
   Button,
   DatePicker,
@@ -12,6 +12,7 @@ import {
   buildPublishChecklist,
   isPublishReady,
 } from "./articlePublishChecklist";
+import type { PublishGateFailure } from "./articlePublishAction";
 import { isFutureInstant } from "./scheduleValidity";
 import styles from "../pieceTabs.module.css";
 
@@ -30,6 +31,16 @@ export interface PublishRailProps {
   published: boolean;
   publishPending: boolean;
   onPublish: () => void;
+  /** ENG-111. The draft moved on underneath this tab, so it cannot be flushed
+   *  before publishing and this button would ship whatever the server holds
+   *  rather than what is on screen. Blocks unpublishing too: the same reload
+   *  clears it, and a conflicted editor should make no writes at all. */
+  hasSaveConflict: boolean;
+  /** The server's structured refusal from the last publish attempt, or null
+   *  when the last attempt succeeded or has not happened. The rail is the one
+   *  place in this editor that can name the care-gate items holding a piece
+   *  back, so it renders them verbatim. */
+  gateFailure: PublishGateFailure | null;
 }
 
 /**
@@ -43,6 +54,12 @@ export interface PublishRailProps {
  * when `shipIssue` runs, never from this button). Unpublishing an
  * already-live article is never gated by any of this (mirrors
  * `DeckPublishRail`).
+ *
+ * The checklist is only what this CLIENT can see. The server gates a publish
+ * on two more things the editor holds nothing about: the piece's care gate,
+ * and a readiness re-check against the SAVED draft, which can differ from
+ * this tab's if another editor has been in the piece. Either refusal comes
+ * back with the items still open, and `gateFailure` renders them here.
  */
 export function PublishRail({
   standfirst,
@@ -54,6 +71,8 @@ export function PublishRail({
   published,
   publishPending,
   onPublish,
+  hasSaveConflict,
+  gateFailure,
 }: PublishRailProps) {
   const { t } = useTranslation();
   const checklist = buildPublishChecklist(standfirst, blocks, t);
@@ -61,6 +80,7 @@ export function PublishRail({
   const scheduleValid = isFutureInstant(scheduledAt);
   const disabled =
     publishPending ||
+    hasSaveConflict ||
     (!published &&
       (publishStatus === "issue" ||
         !isPublishReady(checklist) ||
@@ -128,6 +148,31 @@ export function PublishRail({
           ))}
         </ul>
       </div>
+
+      {/* The server refused the last publish and said why. Rendered as a
+          block in the rail rather than a toast: a toast is gone before the
+          desk can act on a list, and these items are the work itself. */}
+      {gateFailure && (
+        <div role="alert" className={cx(styles.note, styles.warn)}>
+          <b>
+            {t(
+              gateFailure.code === "magazine_care_gate_open"
+                ? "magazine:write.publish.gate.careHeading"
+                : "magazine:write.publish.gate.notReadyHeading",
+            )}
+          </b>
+          {gateFailure.openGateItems.length > 0 && (
+            <ul className={styles.ticks}>
+              {gateFailure.openGateItems.map((item) => (
+                <li key={item} className={styles.open}>
+                  <FiAlertCircle aria-hidden />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       <Button
         variant="plum"

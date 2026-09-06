@@ -124,6 +124,15 @@ export function useModReports(
   subjectId?: string,
   filter: ModQueueFilter = "all",
   community?: string,
+  /**
+   * `false` mounts the hook without fetching. The admin rail's badge hook
+   * passes it: since ENG-180 an admin reads the open-report count off
+   * `GET /admin/overview`, which the dashboard has already fetched, and only a
+   * viewer without the admin role (`/admin/overview` is `@Roles(Admin)` alone)
+   * still needs this queue to count. The query key is unchanged either way, so
+   * a disabled observer still shares the moderation page's cache entry.
+   */
+  isEnabled = true,
 ) {
   const { demoMode } = useDemoMode();
   // The adapters resolve catalog keys (reason label, triage category, "X
@@ -249,6 +258,7 @@ export function useModReports(
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    enabled: isEnabled,
   });
 
   // Flatten every loaded page back into the single `ModQueueData` shape

@@ -67,7 +67,7 @@ describe("escapeVCard", () => {
 
 describe("buildVCard", () => {
   it("frames a VERSION:3.0 card with CRLF line breaks", () => {
-    const card = buildVCard(makeView());
+    const card = buildVCard(makeView(), personaShareUrl(makeView()));
     expect(card.startsWith("BEGIN:VCARD\r\nVERSION:3.0\r\n")).toBe(true);
     expect(card.endsWith("\r\nEND:VCARD")).toBe(true);
   });
@@ -83,7 +83,7 @@ describe("buildVCard", () => {
         { platform: "email", urlOrHandle: "hi@nightform.test" },
       ],
     });
-    const card = buildVCard(view);
+    const card = buildVCard(view, personaShareUrl(view));
     const lines = card.split("\r\n");
 
     expect(lines).toContain("FN:NIGHTFORM");
@@ -103,12 +103,23 @@ describe("buildVCard", () => {
   });
 
   it("omits optional lines that have no value", () => {
-    const card = buildVCard(
-      makeView({ tagline: "", avatarUrl: null, bio: "" }),
-    );
+    const noOptionalsView = makeView({ tagline: "", avatarUrl: null, bio: "" });
+    const card = buildVCard(noOptionalsView, personaShareUrl(noOptionalsView));
     const lines = card.split("\r\n");
     expect(lines.some((line) => line.startsWith("TITLE:"))).toBe(false);
     expect(lines.some((line) => line.startsWith("PHOTO"))).toBe(false);
     expect(lines.some((line) => line.startsWith("NOTE:"))).toBe(false);
+  });
+
+  it("omits the URL line for a persona with no public address yet", () => {
+    // An unlinked persona with no handle resolves nowhere, so `personaShareUrl`
+    // hands back null and the saved contact carries no dead link.
+    const addresslessView = makeView({
+      handle: null,
+      linkVisibility: "unlinked",
+    });
+    const card = buildVCard(addresslessView, personaShareUrl(addresslessView));
+    const lines = card.split("\r\n");
+    expect(lines.some((line) => line.startsWith("URL:"))).toBe(false);
   });
 });

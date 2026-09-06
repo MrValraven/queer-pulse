@@ -4,6 +4,10 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { XpLedgerEntry } from "./badges.data";
+import {
+  isMachineReasonCode,
+  xpLedgerReasonMetaFor,
+} from "./xpLedgerReasons.data";
 import { XpSparkline } from "./XpSparkline";
 import styles from "./BadgesPage.module.css";
 
@@ -16,6 +20,37 @@ interface BadgesLedgerProps {
 const VISIBLE_ROWS = 6;
 
 const INTEGRITY_ITEMS = [1, 2, 3, 4, 5] as const;
+
+/** What happened, in the member's language. A row carrying a machine reason
+ *  code resolves both its sentence and its "why" line from
+ *  `xpLedgerReasons.data.ts`, so the code itself never reaches the screen and
+ *  the backend's English description is replaced rather than printed. A row
+ *  with no reason keeps the server's description, which is the only text
+ *  there is for it. */
+function LedgerRowWhat({ entry }: { entry: XpLedgerEntry }) {
+  const { t } = useTranslation();
+  const reason = entry.reason;
+  const reasonMeta =
+    reason && isMachineReasonCode(reason)
+      ? xpLedgerReasonMetaFor(reason)
+      : null;
+
+  if (reasonMeta) {
+    return (
+      <span className={styles.lgWhat}>
+        {t(reasonMeta.descriptionKey)}
+        <span className={styles.lgWhy}>{t(reasonMeta.explanationKey)}</span>
+      </span>
+    );
+  }
+
+  return (
+    <span className={styles.lgWhat}>
+      {entry.description}
+      {reason && <span className={styles.lgWhy}>{reason}</span>}
+    </span>
+  );
+}
 
 /** "Receipts": every dated XP event with a running total, plus the trust
  *  bullets explaining why the list can be relied on. Reads `xpLedger`, which
@@ -86,12 +121,7 @@ export function BadgesLedger({
                       year: "numeric",
                     })}
                   </span>
-                  <span className={styles.lgWhat}>
-                    {entry.description}
-                    {entry.reason && (
-                      <span className={styles.lgWhy}>{entry.reason}</span>
-                    )}
-                  </span>
+                  <LedgerRowWhat entry={entry} />
                   <span className={styles.lgXp}>
                     {entry.xp < 0 ? "−" : "+"}
                     {Math.abs(entry.xp)}

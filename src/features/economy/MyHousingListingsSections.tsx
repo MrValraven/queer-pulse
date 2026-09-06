@@ -1,4 +1,9 @@
-import { FiAlertCircle, FiHome, FiMessageSquare } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiClock,
+  FiHome,
+  FiMessageSquare,
+} from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import {
@@ -14,6 +19,29 @@ import { formatDate } from "../../shared/lib/date";
 import { FILTERS } from "./housing.data";
 import type { MyHousingListingRow } from "./myHousingListings.data";
 import styles from "./MyHousingListingsPage.module.css";
+
+const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+
+/**
+ * PRD-244: how close to `expiresAt` a live listing starts reading as expiring.
+ *
+ * Mirrors the backend's `LISTING_EXPIRY_WARNING_LEAD_DAYS` (7) so the card and
+ * the bell agree: an owner should never open this page to a flat date on the
+ * same day a notification told them the listing is about to lapse, and never
+ * see an urgent line for a listing nothing has warned them about.
+ */
+const EXPIRING_SOON_DAYS = 7;
+
+/**
+ * Whole days until `iso`, rounded UP so a listing eleven hours from lapsing
+ * reads as "1 day" rather than "0 days". Null for an unparseable timestamp, so
+ * a bad value falls back to the flat date instead of printing "NaN".
+ */
+function wholeDaysUntil(iso: string): number | null {
+  const target = new Date(iso).getTime();
+  if (Number.isNaN(target)) return null;
+  return Math.ceil((target - Date.now()) / DAY_IN_MILLISECONDS);
+}
 
 /** Every non-live moderation state, with the pill it renders as. A listing
  * that is refused, pulled, or waiting on the lister is the fact that matters
@@ -115,6 +143,21 @@ export function MyHousingListingCard({
   const { t, language } = useTranslation();
   const fmt = useFormat();
   const hidden = listing.filledAt !== null || listing.expired;
+  // PRD-244. Every other expiry signal on this card is a post-mortem: the
+  // danger pill and the expired hint both only appear once the home has
+  // already dropped out of public browse. This is the one signal that arrives
+  // while the owner can still press Extend, and it mirrors exactly what the
+  // backend warning sweep notifies on: a listing that is live, not filled, and
+  // inside the lead window. A listing waiting on a moderator gets the flat
+  // date, because the decision note above it is the fact that matters and
+  // approval refreshes the window anyway.
+  const daysToExpiry = wholeDaysUntil(listing.expiresAt);
+  const isExpiringSoon =
+    !hidden &&
+    listing.status === "live" &&
+    daysToExpiry !== null &&
+    daysToExpiry > 0 &&
+    daysToExpiry <= EXPIRING_SOON_DAYS;
   const typeLabel = t(
     FILTERS.find((filterOption) => filterOption.value === listing.type)
       ?.labelKey ?? "economy:housing.filter.all",
@@ -153,6 +196,13 @@ export function MyHousingListingCard({
               ? "economy:myHousingListings.expiredHint"
               : "economy:myHousingListings.filledHint",
           )}
+        </p>
+      ) : isExpiringSoon ? (
+        <p className={styles.cardHintExpiring}>
+          <FiClock aria-hidden />
+          {t("economy:myHousingListings.expiringInDays", {
+            count: daysToExpiry ?? 0,
+          })}
         </p>
       ) : (
         <p className={styles.cardHint}>

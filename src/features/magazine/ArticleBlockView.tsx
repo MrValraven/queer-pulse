@@ -4,6 +4,7 @@ import { Avatar, ImageSlot } from "../../shared/components/ui";
 import type { ImageSlotTint } from "../../shared/components/ui/ImageSlot";
 import { initialsFromName } from "../../shared/lib/initials";
 import { sanitizeArticleHtml } from "./desk/editor/sanitizeArticleHtml";
+import { articleHeadingAnchorId } from "./articleOutline";
 import styles from "./ArticleBlockView.module.css";
 
 /** `ImageSlotTint` has no "violet" (it mirrors `AvatarTint`) — same fallback
@@ -58,7 +59,10 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
 
     case "heading":
       return (
+        // PRD-113: the anchor the reader's contents list jumps to, keyed on
+        // the block's own stable id.
         <h2
+          id={articleHeadingAnchorId(block.id)}
           className={styles.h}
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
@@ -76,9 +80,10 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
       return (
         <blockquote className={styles.quote}>
           <p dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
-          {block.cite && (
-            <cite className={styles.cite}>{`— ${block.cite}`}</cite>
-          )}
+          {/* DES-100: the cite is the speaker's name on its own. The
+              house copy rule bans the em dash, and a hardcoded one here put a
+              glyph in front of every attributed quote in the magazine. */}
+          {block.cite && <cite className={styles.cite}>{block.cite}</cite>}
         </blockquote>
       );
 

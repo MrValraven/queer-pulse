@@ -1,5 +1,6 @@
 import { FiMapPin } from "react-icons/fi";
 import { Button, EmptyState, LoadErrorState } from "../../shared/components/ui";
+import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useResourceListings } from "./api/useResourceListings";
@@ -17,9 +18,16 @@ import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
  * and offers a retry. Only a request that came back with zero rows gets the
  * "coming soon" copy. Before this split, a failed fetch told someone looking
  * for HIV or STI testing that the clinic directory did not exist yet.
+ *
+ * The read itself is public (PRD-260) so nobody has to sign up before finding
+ * a testing clinic. Suggesting one is a member-only write, so that affordance
+ * is hidden for a signed-out visitor rather than shown and then answered with
+ * a 401.
  */
 export function TestingListings({ onSuggest }: { onSuggest: () => void }) {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
+  const canSuggestResource = loggedIn;
   const {
     listings,
     isLoading: isLoadingListings,
@@ -58,10 +66,14 @@ export function TestingListings({ onSuggest }: { onSuggest: () => void }) {
         icon={<FiMapPin />}
         title={t("resources:sexualHealth.testing.live.title")}
         description={t("resources:sexualHealth.testing.live.body")}
-        action={{
-          label: t("resources:suggest.cta"),
-          onClick: onSuggest,
-        }}
+        action={
+          canSuggestResource
+            ? {
+                label: t("resources:suggest.cta"),
+                onClick: onSuggest,
+              }
+            : undefined
+        }
       />
     );
   }
@@ -89,11 +101,13 @@ export function TestingListings({ onSuggest }: { onSuggest: () => void }) {
           />
         ))}
       </CardGrid>
-      <div style={{ marginTop: 20, textAlign: "center" }}>
-        <Button variant="ghost" onClick={onSuggest}>
-          {t("resources:suggest.cta")}
-        </Button>
-      </div>
+      {canSuggestResource && (
+        <div style={{ marginTop: 20, textAlign: "center" }}>
+          <Button variant="ghost" onClick={onSuggest}>
+            {t("resources:suggest.cta")}
+          </Button>
+        </div>
+      )}
     </>
   );
 }

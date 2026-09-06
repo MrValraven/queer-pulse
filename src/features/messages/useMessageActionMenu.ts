@@ -3,6 +3,7 @@ import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import {
   useToggleReaction,
   useDeleteMessage,
+  useDeleteMessageForMe,
   useEditMessage,
 } from "./api/useMessageActions";
 import { type LongPressOrigin } from "./useLongPress";
@@ -29,10 +30,18 @@ export interface MessageActionMenu {
   setActionTarget: React.Dispatch<React.SetStateAction<ActionOverlayTarget>>;
   deleteTarget: ChatMessage | null;
   setDeleteTarget: React.Dispatch<React.SetStateAction<ChatMessage | null>>;
+  /** Message the "delete for me" (PRD-227) confirm dialog is open for —
+   *  distinct from `deleteTarget` above ("delete for everyone"); the two
+   *  never share state. */
+  deleteForMeTarget: ChatMessage | null;
+  setDeleteForMeTarget: React.Dispatch<
+    React.SetStateAction<ChatMessage | null>
+  >;
   reportTarget: ChatMessage | null;
   setReportTarget: React.Dispatch<React.SetStateAction<ChatMessage | null>>;
   editingMessageId: string | null;
   confirmDelete: () => void;
+  confirmDeleteForMe: () => void;
   beginEdit: (message: ChatMessage) => void;
   submitEdit: (message: ChatMessage, nextBody: string) => void;
   cancelEdit: () => void;
@@ -48,6 +57,7 @@ export interface MessageActionMenu {
     mine: boolean,
   ) => void;
   deletePending: boolean;
+  deleteForMePending: boolean;
 }
 
 /**
@@ -63,6 +73,7 @@ export function useMessageActionMenu(
 ): MessageActionMenu {
   const toggleReaction = useToggleReaction(conversationId);
   const deleteMessage = useDeleteMessage(conversationId);
+  const deleteMessageForMe = useDeleteMessageForMe(conversationId);
   const editMessage = useEditMessage(conversationId);
 
   /** Message the report modal is open for (its server id is the report subject). */
@@ -73,6 +84,13 @@ export function useMessageActionMenu(
     if (deleteTarget?.id) deleteMessage.mutate(deleteTarget.id);
     setDeleteTarget(null);
   }, [deleteTarget, deleteMessage]);
+  /** Message the "delete for me" (PRD-227) confirm dialog is open for. */
+  const [deleteForMeTarget, setDeleteForMeTarget] =
+    useState<ChatMessage | null>(null);
+  const confirmDeleteForMe = useCallback(() => {
+    if (deleteForMeTarget?.id) deleteMessageForMe.mutate(deleteForMeTarget.id);
+    setDeleteForMeTarget(null);
+  }, [deleteForMeTarget, deleteMessageForMe]);
   const [actionTarget, setActionTarget] = useState<ActionOverlayTarget>(null);
   /** Server id of the message the inline editor is currently open for. */
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
@@ -130,10 +148,13 @@ export function useMessageActionMenu(
     setActionTarget,
     deleteTarget,
     setDeleteTarget,
+    deleteForMeTarget,
+    setDeleteForMeTarget,
     reportTarget,
     setReportTarget,
     editingMessageId,
     confirmDelete,
+    confirmDeleteForMe,
     beginEdit,
     submitEdit,
     cancelEdit,
@@ -141,5 +162,6 @@ export function useMessageActionMenu(
     copyMessage,
     handleReactionToggle,
     deletePending: deleteMessage.isPending,
+    deleteForMePending: deleteMessageForMe.isPending,
   };
 }

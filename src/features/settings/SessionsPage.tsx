@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import {
   FiArrowLeft,
   FiChevronRight,
+  FiLogOut,
   FiMonitor,
   FiSmartphone,
 } from "react-icons/fi";
 import {
   Button,
+  ConfirmDialog,
   EmptyState,
   FadeIn,
   LoadErrorState,
@@ -16,11 +18,13 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  postLogoutAll,
   revokeOtherSessions,
   revokeSession,
   simulateOr,
@@ -173,13 +177,26 @@ function SessionSkeleton() {
   );
 }
 
-/** The count + "sign out everything else" strip above the list. */
+/**
+ * The count + the two bulk controls above the list.
+ *
+ * Two, and they have to read as two different acts. "Sign out the other
+ * devices" leaves this one signed in, which is what a member tidying up an old
+ * laptop wants. "Sign out everywhere" ends this session too, which is what a
+ * member who thinks someone else is in their account wants, and until PRD-308
+ * that second one did not exist: they had to run the first control here and
+ * then go and find the sign-out item in the account menu, and knowing to do
+ * both was left to them. The copy names the difference outright rather than
+ * relying on "all" versus "other".
+ */
 function BulkRow({
   others,
-  onSignOutAll,
+  onSignOutOthers,
+  onSignOutEverywhere,
 }: {
   others: number;
-  onSignOutAll: () => void;
+  onSignOutOthers: () => void;
+  onSignOutEverywhere: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -195,11 +212,17 @@ function BulkRow({
           />
         )}
       </p>
-      {others > 0 && (
-        <Button variant="primary" onClick={onSignOutAll}>
-          {t("settings:sessions.bulk.signOutAll")}
+      <div className={styles.bulkActions}>
+        {others > 0 && (
+          <Button variant="ghost" onClick={onSignOutOthers}>
+            {t("settings:sessions.bulk.signOutOthers")}
+          </Button>
+        )}
+        <Button variant="primary" onClick={onSignOutEverywhere}>
+          <FiLogOut aria-hidden className={styles.bulkActionIcon} />
+          {t("settings:sessions.bulk.signOutEverywhere")}
         </Button>
-      )}
+      </div>
     </div>
   );
 }
@@ -210,9 +233,13 @@ export function SessionsPage() {
   const { demoMode } = useDemoMode();
   const { sessions, loading: fetching, failed, refetch } = useSessions();
   const simulated = useSimulatedLoad();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   // Demo keeps its simulated shimmer; live shows the real fetch state.
   const loading = demoMode ? simulated : fetching;
   const [signedOut, setSignedOut] = useState<Set<string>>(new Set());
+  const [isConfirmingEverywhere, setIsConfirmingEverywhere] = useState(false);
+  const [isSigningOutEverywhere, setIsSigningOutEverywhere] = useState(false);
 
   async function handleSignOut(id: string) {
     // Optimistic; revert on failure so we never imply a sign-out that didn't happen.
@@ -245,6 +272,41 @@ export function SessionsPage() {
       logError(err, { where: "SessionsPage.signOutAll" });
       setSignedOut(new Set());
       showToast(t("settings:sessions.toast.signedOutAllError"), "error");
+    }
+  }
+
+  /**
+   * "Sign out everywhere", one act: `POST /auth/logout-all` ends every session
+   * the account holds and clears this browser's auth and CSRF cookies, then
+   * the client drops its own session state and lands the member on the
+   * homepage, exactly where the account menu's sign-out leaves them.
+   *
+   * Order matters. The server call goes FIRST and its result is checked,
+   * because clearing local state on a request that never landed would show a
+   * signed-out UI over sessions that are all still live: the opposite of what
+   * this control promises, to the member least able to afford it. Demo mode
+   * has no backend, so it just signs out locally.
+   */
+  async function handleSignOutEverywhere() {
+    setIsSigningOutEverywhere(true);
+    try {
+      const isDone = demoMode ? true : await postLogoutAll();
+      if (!isDone) {
+        showToast(
+          t("settings:sessions.toast.signedOutEverywhereError"),
+          "error",
+        );
+        return;
+      }
+      setIsConfirmingEverywhere(false);
+      signOut();
+      void navigate(routes.homepage, { replace: true });
+      showToast(t("settings:sessions.toast.signedOutEverywhere"), "success");
+    } catch (err) {
+      logError(err, { where: "SessionsPage.signOutEverywhere" });
+      showToast(t("settings:sessions.toast.signedOutEverywhereError"), "error");
+    } finally {
+      setIsSigningOutEverywhere(false);
     }
   }
 
@@ -282,9 +344,24 @@ export function SessionsPage() {
         {!loading && !failed && (
           <BulkRow
             others={others}
-            onSignOutAll={() => void handleSignOutAll()}
+            onSignOutOthers={() => void handleSignOutAll()}
+            onSignOutEverywhere={() => setIsConfirmingEverywhere(true)}
           />
         )}
+
+        {/* The same confirm dialog the rest of Settings uses for a destructive
+            action, in its `destructive` tone. This one ends the member's own
+            session, so it cannot be an undo-able toast. */}
+        <ConfirmDialog
+          open={isConfirmingEverywhere}
+          onClose={() => setIsConfirmingEverywhere(false)}
+          onConfirm={() => void handleSignOutEverywhere()}
+          tone="destructive"
+          loading={isSigningOutEverywhere}
+          title={t("settings:sessions.everywhere.confirmTitle")}
+          description={t("settings:sessions.everywhere.confirmBody")}
+          confirmLabel={t("settings:sessions.everywhere.confirmCta")}
+        />
 
         <div className={styles.sectionH}>
           {t("settings:sessions.sectionActiveNow")}

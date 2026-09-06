@@ -58,6 +58,44 @@
   animation: qpPulse 1.8s var(--ease-out) infinite;
 }
 
+/* ── The community's own square identity mark (PRD-146) ───────────────────
+   Anchored to the cover's bottom-left, mirroring the gathering flag's top-left
+   inset, because on desktop this card's media column reaches the card's own
+   bottom edge and there is no shoulder to hang past. Stacked (under
+   --compact) that same corner is where the photo meets the body, which is the
+   avatar-on-a-banner reading the grid card gets literally.
+
+   Same two-value edge as the grid card's mark (`.cardMark` in
+   CommunitiesPage.module.css) and for the same reason: a member's cover
+   photograph is a ground this code does not control, so a dark 1px ground (this
+   wrapper's background through its padding) carries the edge on a pale photo
+   and a light hairline inside it (the image's border) carries it on a dark one.
+   Neither channel flips with the theme, because the photograph does not. The
+   photo is never filtered. */
+.mark {
+  position: absolute;
+  inset-block-end: 14px;
+  inset-inline-start: 14px;
+  padding: 1px;
+  background: rgba(var(--plum-rgb), 0.5);
+  border-radius: var(--radius-16);
+  /* The soft well plus the lift, both token rings: a hand-written box-shadow
+     here is a build failure (scripts/check-css-scale.mjs). */
+  box-shadow: var(--ring-plum-soft), var(--shadow-e2);
+  line-height: 0;
+}
+.markImg {
+  display: block;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border: 1px solid rgba(var(--cream-rgb), 0.6);
+  border-radius: var(--radius-15);
+  /* A mark with transparency lands on something solid rather than on the cover
+     showing through its own frame. */
+  background: var(--paper);
+}
+
 .body {
   display: flex;
   flex-direction: column;

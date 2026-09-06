@@ -41,6 +41,43 @@ export const notifications: Catalog = {
     "Uma nova casa em {area} corresponde à tua procura guardada: {title}.",
   "type.housing_listing_match.meta": "Alerta de casa",
 
+  // PRD-240. O ciclo das visitas, que antes disto não gerava notificação
+  // nenhuma. Ver as notas no ficheiro EN: estas linhas mostram o avatar de quem
+  // agiu, por isso o texto nomeia a casa e não a pessoa.
+  "type.housing_viewing_requested.text": "Novo pedido de visita a {title}.",
+  "type.housing_viewing_requested.meta": "Pedido de visita",
+
+  // Neutras quanto à direção de propósito: qualquer um dos lados pode aceitar,
+  // recusar ou propor outra hora, por isso "o teu pedido" estaria errado
+  // metade das vezes.
+  "type.housing_viewing_decided.accepted.text":
+    "A visita a {title} foi aceite.",
+  "type.housing_viewing_decided.declined.text":
+    "A visita a {title} foi recusada.",
+  "type.housing_viewing_decided.proposed.text":
+    "Foi proposta outra hora para a visita a {title}.",
+  "type.housing_viewing_decided.text":
+    "Há uma atualização sobre a visita a {title}.",
+  "type.housing_viewing_decided.meta": "Visita",
+
+  "type.housing_viewing_cancelled.text": "A visita a {title} foi cancelada.",
+  "type.housing_viewing_cancelled.meta": "Visita",
+
+  // PRD-242. O resultado de um pedido de entrada numa cooperativa ou num grupo
+  // de habitação. `{name}` já nomeia um ou outro.
+  "type.housing_join_decided.accepted.text":
+    "O teu pedido para entrar em {name} foi aceite.",
+  "type.housing_join_decided.declined.text":
+    "O teu pedido para entrar em {name} foi recusado.",
+  "type.housing_join_decided.text":
+    "Há uma decisão sobre o teu pedido para entrar em {name}.",
+  "type.housing_join_decided.meta": "Habitação",
+
+  // PRD-244. Sem token de data: `expiresAt` viaja como texto ISO em bruto.
+  "type.housing_listing_expiring.text":
+    "O teu anúncio {title} está prestes a expirar. Prolonga-o para o manteres no quadro.",
+  "type.housing_listing_expiring.meta": "Habitação",
+
   "type.promoted_to_member.text": "Já fazes parte da comunidade. Bem-vinde.",
   "type.promoted_to_member.meta": "Adesão",
 
@@ -187,6 +224,9 @@ export const notifications: Catalog = {
 
   "type.report_resolved.text": "Demos seguimento a uma denúncia que fizeste.",
   "type.report_resolved.meta": "Atualização de denúncia",
+  // PRD-289. Ver a nota em en/notifications.ts.
+  "type.report_received.text": "A tua denúncia está com a equipa de segurança.",
+  "type.report_received.meta": "Denúncia enviada",
 
   // Aviso de serviço para quem pode agir sobre uma nova denúncia. O sino nunca
   // identifica quem a apresentou, por isso esta copy também não o faz. As
@@ -243,6 +283,31 @@ export const notifications: Catalog = {
   // ler: a QueerPulse não envia email e não há forma de contactar a moderação
   // de uma comunidade. Uma pausa com prazo e uma remoção definitiva têm frases
   // separadas. Reformulação neutra: nenhuma concorda em género.
+  // Ver o comentario na versao EN.
+  "type.community_post_removed.post.meta": "Publicação removida",
+  "type.community_post_removed.post.reason.meta": "Publicação removida",
+  "type.community_post_removed.post.reason.text":
+    "A moderação de {communityName} removeu a tua publicação. O motivo indicado: {reason}",
+  "type.community_post_removed.post.reasonRule.meta": "Publicação removida",
+  "type.community_post_removed.post.reasonRule.text":
+    "A moderação de {communityName} removeu a tua publicação, ao abrigo da regra “{ruleText}”. O motivo indicado: {reason}",
+  "type.community_post_removed.post.rule.meta": "Publicação removida",
+  "type.community_post_removed.post.rule.text":
+    "A moderação de {communityName} removeu a tua publicação, ao abrigo da regra “{ruleText}”.",
+  "type.community_post_removed.post.text":
+    "A moderação de {communityName} removeu a tua publicação. Não ficou registado nenhum motivo.",
+  "type.community_post_removed.reply.meta": "Resposta removida",
+  "type.community_post_removed.reply.reason.meta": "Resposta removida",
+  "type.community_post_removed.reply.reason.text":
+    "A moderação de {communityName} removeu a tua resposta. O motivo indicado: {reason}",
+  "type.community_post_removed.reply.reasonRule.meta": "Resposta removida",
+  "type.community_post_removed.reply.reasonRule.text":
+    "A moderação de {communityName} removeu a tua resposta, ao abrigo da regra “{ruleText}”. O motivo indicado: {reason}",
+  "type.community_post_removed.reply.rule.meta": "Resposta removida",
+  "type.community_post_removed.reply.rule.text":
+    "A moderação de {communityName} removeu a tua resposta, ao abrigo da regra “{ruleText}”.",
+  "type.community_post_removed.reply.text":
+    "A moderação de {communityName} removeu a tua resposta. Não ficou registado nenhum motivo.",
   "type.community_banned.permanent.text":
     "Já não fazes parte de {communityName}. O motivo indicado: {reason}",
   "type.community_banned.permanent.meta": "Remoção de uma comunidade",
@@ -326,6 +391,12 @@ export const notifications: Catalog = {
   "type.appeal_resolved.text": "Há uma decisão sobre o teu recurso.",
   "type.appeal_resolved.meta": "Atualização de recurso",
 
+  // PRD-140. Ver o comentário na versão EN.
+  "type.community_invite_received.text":
+    "Foste convidade para {communityName}.",
+  "type.community_invite_received.textNamed":
+    "<profile>{name}</profile> convidou-te para {communityName}.",
+  "type.community_invite_received.meta": "Convite de comunidade",
   "type.invite_accepted.text": "Alguém que convidaste acabou de entrar.",
   "type.invite_accepted.textNamed":
     "<profile>{name}</profile> entrou com o teu convite.",
@@ -346,6 +417,58 @@ export const notifications: Catalog = {
     "A edição {issueNumber} saiu: {issueTitle}. Vê o que traz.",
   "type.magazine_issue_published.meta": "Nova edição",
 
+  // A redação da revista a falar com QUEM ESCREVE uma peça (PRD-121), mais o
+  // tipo `magazine_piece_message` que já existia e não tinha texto nenhum, por
+  // isso mostrava o recurso alternativo de tipo desconhecido durante meses.
+  //
+  // O `titleFallback` é partilhado pelas três linhas da PRD-121 através do
+  // `pieceTitleToken`, tal como o Q&A dos anúncios partilha um único recurso
+  // alternativo para o assunto: é lido dentro de aspas em todas as frases, por
+  // isso tem de se ler como um título.
+  "type.magazine_piece_commissioned.text":
+    "Tens uma nova peça para escrever: \u201C{title}\u201D.",
+  "type.magazine_piece_commissioned.meta": "Nova peça atribuída",
+  "type.magazine_piece_commissioned.titleFallback": "Sem título",
+
+  // As oito fases espelham os valores de máquina do `PieceStage` do backend,
+  // que é o que vem no payload. Traduzidas aqui em vez de emprestadas do
+  // espaço `magazine`: esse catálogo é um pacote carregado à parte que quem lê
+  // as notificações não tem razão para ter carregado, e as etiquetas de fase da
+  // própria redação são vocabulário editorial deixado de propósito em inglês,
+  // enquanto uma linha de notificação é texto para quem é membro. A mesma
+  // decisão que `type.verification_update.level.*` já tinha tomado. O recurso
+  // alternativo cobre uma fase acrescentada no backend antes de este catálogo a
+  // conhecer, para que ninguém leia `sensitivity_read` no ecrã.
+  "type.magazine_piece_stage_changed.text":
+    "A tua peça \u201C{title}\u201D mudou de fase: {stage}.",
+  "type.magazine_piece_stage_changed.meta": "Atualização da peça",
+  "type.magazine_piece_stage_changed.stage.commissioned": "Encomendada",
+  "type.magazine_piece_stage_changed.stage.drafting": "Em escrita",
+  "type.magazine_piece_stage_changed.stage.in_review": "Em revisão",
+  "type.magazine_piece_stage_changed.stage.edit": "Em edição",
+  "type.magazine_piece_stage_changed.stage.sensitivity_read":
+    "Leitura de sensibilidade",
+  "type.magazine_piece_stage_changed.stage.layout": "Paginação",
+  "type.magazine_piece_stage_changed.stage.ready": "Pronta a publicar",
+  "type.magazine_piece_stage_changed.stage.published": "Publicada",
+  "type.magazine_piece_stage_changed.stageFallback": "Uma nova fase",
+
+  "type.magazine_piece_published.text":
+    "A tua peça \u201C{title}\u201D já está publicada na revista.",
+  "type.magazine_piece_published.meta": "Publicada",
+
+  // O `textNamed` traz a marca `<profile>`, como todas as outras entradas em
+  // `PERSONALIZED_KINDS`. Esta linha não nomeia nenhuma peça porque a
+  // `PAYLOAD_ALLOWLIST` do backend não tem entrada para
+  // `magazine_piece_message`, por isso `pieceId`/`messageId` são retirados antes
+  // de chegarem ao cliente. O corpo da mensagem nunca chega às notificações e
+  // nenhum texto aqui o pode citar.
+  "type.magazine_piece_message.text":
+    "Tens uma nova mensagem sobre uma peça na redação da revista.",
+  "type.magazine_piece_message.textNamed":
+    "<profile>{name}</profile> enviou-te uma mensagem sobre uma peça na redação.",
+  "type.magazine_piece_message.meta": "Mensagem da redação",
+
   // Desfecho de uma preocupação — título por estado terminal
   // (resolvida/descartada); as chaves simples são o recurso alternativo.
   "type.concern_update.text":
@@ -357,6 +480,11 @@ export const notifications: Catalog = {
   "type.concern_update.dismissed.text":
     "A preocupação que levantaste foi analisada e encerrada.",
   "type.concern_update.dismissed.meta": "Atualização de preocupação",
+  // PRD-261: ver a nota no catálogo EN. Chaves construídas em tempo de
+  // execução por `concernUpdateKeyFor`, por isso não aparecem como literais.
+  "type.concern_update.reviewing.text":
+    "Alguém está a analisar a preocupação que levantaste.",
+  "type.concern_update.reviewing.meta": "Atualização de preocupação",
 
   // ── Desfecho de formulários enviados ─────────────────────────────────────
   // Todos os formulários da tabela `intake_submissions` EXCETO uma preocupação
@@ -470,6 +598,19 @@ export const notifications: Catalog = {
   "type.subprofile_credit.text": "{subprofileName} creditou-te em {itemTitle}.",
   "type.subprofile_credit.meta": "Crédito de persona",
 
+  // PRD-208. Trabalho novo de uma persona que este membro segue. Nomeia a
+  // PERSONA e nunca a pessoa por trás dela: o payload não traz qualquer chave
+  // de autor, por isso uma persona não associada mantém-se pseudónima.
+  // `{subprofileName}` é o nome do campo no payload, o mesmo que o
+  // `subprofile_credit` acima interpola. Com plural CLDR: o
+  // `formatNotification` espelha o `newItemCount` do payload em `count`, e o
+  // `.text` simples cobre uma linha que chegou sem esse número.
+  "type.persona_update.text": "{subprofileName} publicou algo novo.",
+  "type.persona_update.text_one": "{subprofileName} publicou um trabalho novo.",
+  "type.persona_update.text_other":
+    "{subprofileName} publicou {count} trabalhos novos.",
+  "type.persona_update.meta": "Persona que segues",
+
   // Enviada quando o motor de XP/crachás credita um membro ao ultrapassar um
   // nível. Do sistema (sem autor); {level}/{name} vêm do payload.
   "type.xp_level_up.text": "Chegaste ao Nível {level}, {name}.",
@@ -545,6 +686,11 @@ export const notifications: Catalog = {
     "Não conseguimos marcar como lido. Continua à tua espera. Tenta novamente daqui a pouco.",
   "page.markAllReadError":
     "Não conseguimos marcar como lido. Continuam à tua espera. Tenta novamente daqui a pouco.",
+  // PRD-224: limpar uma linha apaga-a no servidor, por isso desaparece em todos
+  // os teus dispositivos. Em caso de erro, a linha volta à lista e dizemos isso.
+  "page.dismissedToast": "Notificação limpa",
+  "page.dismissError":
+    "Não conseguimos limpar essa notificação. Continua na tua lista. Tenta novamente daqui a pouco.",
   "page.dayRecent": "Hoje e recentes",
   "page.dayEarlier": "Anteriores",
   "page.empty.title": "Tudo em dia",
@@ -571,6 +717,9 @@ export const notifications: Catalog = {
   "tabs.mentions": "Menções",
 
   // Rótulos de ação partilhados pela lista de notificações de demonstração
+  // PRD-224: nome acessível do botão de limpar, que só tem ícone. Nunca aparece
+  // como texto visível, por isso diz o que está a ser limpo.
+  "actions.dismiss": "Limpar esta notificação",
   "actions.viewThread": "Ver conversa",
   "actions.viewEvent": "Ver encontro",
   "actions.viewProfile": "Ver perfil",

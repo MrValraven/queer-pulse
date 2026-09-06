@@ -16,6 +16,7 @@ import {
   type GettingStartedStepState,
 } from "./useGettingStarted";
 import { GETTING_STARTED_STEP_XP } from "./gettingStarted.data";
+import { badgeDisplayMetaFor } from "../members/badgeCatalog.data";
 import { LevelXpStrip } from "./LevelXpStrip";
 import { XpSourcesTeaser } from "./XpSourcesTeaser";
 import { SideQuests } from "./SideQuests";
@@ -145,6 +146,10 @@ export function GettingStartedPage() {
   const navigate = useNavigate();
   const { steps, completedCount, totalCount, allDone, loading } =
     useGettingStarted();
+  // The badge this checklist grants, by its catalogue id. Null only if the
+  // display map has not caught up with the backend catalogue, in which case
+  // the line is dropped rather than shown with an English name in it.
+  const firstStepsNameKey = badgeDisplayMetaFor("first-steps")?.nameKey ?? null;
 
   if (demoMode) return <Navigate to={routes.homepage} replace />;
 
@@ -183,9 +188,18 @@ export function GettingStartedPage() {
                   onClose={() => {
                     void navigate(routes.feed);
                   }}
+                  // The badge's NAME is interpolated from the badge display
+                  // map rather than written into the sentence, which is how a
+                  // PT member came to read "Ganhaste o crachá First Steps."
                   steps={[
                     ...steps.map((step) => t(step.titleKey)),
-                    t("auth:gettingStarted.success.badge"),
+                    ...(firstStepsNameKey
+                      ? [
+                          t("auth:gettingStarted.success.badge", {
+                            badge: t(firstStepsNameKey),
+                          }),
+                        ]
+                      : []),
                   ]}
                 >
                   {t("auth:gettingStarted.allDone.body")}

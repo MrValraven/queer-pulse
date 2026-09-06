@@ -9,6 +9,7 @@ import { CommunityThreadHead } from "./CommunityThreadHead";
 import { CommunityInlineTextEditor } from "./CommunityInlineTextEditor";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import { CommunityHistoryModal } from "./CommunityHistoryModal";
+import { CommunityTakedownDialog } from "./CommunityTakedownDialog";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
@@ -18,6 +19,7 @@ import type {
   HistoryTarget,
   ReportTarget,
 } from "./communityThread.types";
+import type { CommunityTakedownInput } from "./api/communities.api";
 import styles from "./CommunityDetailPage.module.css";
 
 export function CommunityThread({
@@ -58,6 +60,7 @@ export function CommunityThread({
     setEditingReplyId,
     confirmDelete,
     setConfirmDelete,
+    isDeleteTargetOwnContent,
     historyTarget,
     setHistoryTarget,
     reportTarget,
@@ -206,6 +209,7 @@ export function CommunityThread({
       <ThreadModals
         slug={slug}
         confirmDelete={confirmDelete}
+        isDeleteTargetOwnContent={isDeleteTargetOwnContent}
         isDeletePending={deletePost.isPending || deleteReply.isPending}
         onConfirmDelete={runDelete}
         onCloseDelete={() => setConfirmDelete(null)}
@@ -224,6 +228,7 @@ export function CommunityThread({
 function ThreadModals({
   slug,
   confirmDelete,
+  isDeleteTargetOwnContent,
   isDeletePending,
   onConfirmDelete,
   onCloseDelete,
@@ -234,8 +239,14 @@ function ThreadModals({
 }: {
   slug: string;
   confirmDelete: DeleteTarget | null;
+  /** True when the thing coming down belongs to the viewer, which picks the
+   *  plain confirmation over the takedown dialog (PRD-147). */
+  isDeleteTargetOwnContent: boolean;
   isDeletePending: boolean;
-  onConfirmDelete: (target: DeleteTarget) => void;
+  onConfirmDelete: (
+    target: DeleteTarget,
+    takedown?: CommunityTakedownInput,
+  ) => void;
   onCloseDelete: () => void;
   historyTarget: HistoryTarget | null;
   onCloseHistory: () => void;
@@ -244,13 +255,28 @@ function ThreadModals({
 }) {
   return (
     <>
-      {confirmDelete && (
-        <ConfirmDeleteModal
-          busy={isDeletePending}
-          onConfirm={() => onConfirmDelete(confirmDelete)}
-          onClose={onCloseDelete}
-        />
-      )}
+      {/* Two different acts behind one menu item (PRD-147). The AUTHOR clearing
+          their own words gets the plain confirmation: nothing is logged and
+          nobody is told, because the only person who could be told is the one
+          who did it. A MODERATOR taking somebody else's down gets the takedown
+          dialog, where the reason and the cited house rule the author will read
+          are collected. */}
+      {confirmDelete &&
+        (isDeleteTargetOwnContent ? (
+          <ConfirmDeleteModal
+            busy={isDeletePending}
+            onConfirm={() => onConfirmDelete(confirmDelete)}
+            onClose={onCloseDelete}
+          />
+        ) : (
+          <CommunityTakedownDialog
+            subject={confirmDelete.kind}
+            slug={slug}
+            isBusy={isDeletePending}
+            onClose={onCloseDelete}
+            onConfirm={(takedown) => onConfirmDelete(confirmDelete, takedown)}
+          />
+        ))}
       {historyTarget && (
         <CommunityHistoryModal
           slug={slug}

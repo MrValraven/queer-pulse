@@ -12,7 +12,7 @@ export function ServiceCardSkeleton() {
       <SkeletonLine
         width={84}
         height={22}
-        style={{ borderRadius: 999, flex: "none" }}
+        style={{ borderRadius: "var(--radius-pill)", flex: "none" }}
       />
     </div>
   );
@@ -25,14 +25,18 @@ export function IncidentSkeleton() {
       <SkeletonLine
         width={37}
         height={37}
-        style={{ borderRadius: "50%", flex: "none" }}
+        style={{ borderRadius: "var(--radius-avatar)", flex: "none" }}
       />
       <div style={{ flex: 1 }}>
         <SkeletonLine width="22%" height={11} style={{ marginBottom: 8 }} />
         <SkeletonLine width="45%" height={18} style={{ marginBottom: 10 }} />
         <SkeletonLine width="90%" height={13} style={{ marginBottom: 5 }} />
         <SkeletonLine width="80%" height={13} style={{ marginBottom: 12 }} />
-        <SkeletonLine width={92} height={22} style={{ borderRadius: 999 }} />
+        <SkeletonLine
+          width={92}
+          height={22}
+          style={{ borderRadius: "var(--radius-pill)" }}
+        />
       </div>
     </div>
   );

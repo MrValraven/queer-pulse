@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RecognitionLevel } from "./api/recognition.adapters";
 import type { Badge } from "./badges.data";
 import { rarestBadge } from "./badgeSelectors";
+import { levelNameKeyFor } from "./levelLadder.data";
 import { BadgeMedallion } from "./BadgeMedallion";
 import styles from "./BadgesPage.module.css";
 
@@ -35,6 +36,10 @@ export function BadgeCaseCard({
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
   const titleId = useId();
+  // The ladder's words are owned by the frontend and keyed on the level
+  // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
+  // own English name.
+  const levelNameKey = levelNameKeyFor(level.level);
   const totalXp = earnedBadges.reduce(
     (sum, badge) => sum + (badge.xpReward ?? 0),
     0,
@@ -67,7 +72,8 @@ export function BadgeCaseCard({
         <div className={styles.ccTop}>
           <div>
             <div className={styles.ccLv}>
-              {t("members:badges.hero.levelWord")} {level.level} · {level.name}
+              {t("members:badges.hero.levelWord")} {level.level} ·{" "}
+              {levelNameKey ? t(levelNameKey) : level.name}
             </div>
             <div id={titleId} className={styles.ccName}>
               {memberName}

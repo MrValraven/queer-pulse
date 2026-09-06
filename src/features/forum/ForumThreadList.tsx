@@ -24,7 +24,10 @@ export function ForumThreadList({
   onShowAll,
   onCompose,
   canEditThread,
+  canMoveCategory,
+  canDeleteThread,
   onEditTitle,
+  onMoveCategory,
   onDelete,
   onRestore,
   onHistory,
@@ -48,7 +51,14 @@ export function ForumThreadList({
   onShowAll: () => void;
   onCompose: () => void;
   canEditThread: (thread: Thread) => boolean;
+  /** May the viewer refile this thread (PRD-163)? Passed straight through to
+   *  each row, which turns its category badge into the move control. */
+  canMoveCategory?: (thread: Thread) => boolean;
+  /** May the viewer withdraw the whole thread (PRD-160)? Passed through to the
+   *  row, which gates its "Delete" menu item on it. */
+  canDeleteThread?: (thread: Thread) => boolean;
   onEditTitle: (thread: Thread) => void;
+  onMoveCategory?: (thread: Thread) => void;
   onDelete: (thread: Thread) => void;
   onRestore: (thread: Thread) => void;
   onHistory: (thread: Thread) => void;
@@ -113,7 +123,10 @@ export function ForumThreadList({
               onVote={onVote}
               onTagClick={onTagClick}
               canEditThread={canEditThread}
+              canMoveCategory={canMoveCategory}
+              canDeleteThread={canDeleteThread}
               onEditTitle={onEditTitle}
+              onMoveCategory={onMoveCategory}
               onDelete={onDelete}
               onRestore={onRestore}
               onHistory={onHistory}
@@ -156,7 +169,10 @@ export function ForumThreadList({
               onVote={onVote}
               onTagClick={onTagClick}
               canEditThread={canEditThread}
+              canMoveCategory={canMoveCategory}
+              canDeleteThread={canDeleteThread}
               onEditTitle={onEditTitle}
+              onMoveCategory={onMoveCategory}
               onDelete={onDelete}
               onRestore={onRestore}
               onHistory={onHistory}

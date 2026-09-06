@@ -82,6 +82,24 @@
   margin-bottom: 14px;
 }
 
+/* PRD-244: the pre-expiry line, in place of the flat date, once a live listing
+ * is inside the warning window. Amber is the "something to act on" tone this
+ * page already uses for the moderator decision note; the danger tone stays
+ * reserved for a listing that has ALREADY lapsed, so the two states never read
+ * as the same severity. */
+.cardHintExpiring {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--amber-ink);
+  margin-bottom: 14px;
+}
+.cardHintExpiring svg {
+  flex-shrink: 0;
+}
+
 .cardActions {
   display: flex;
   flex-wrap: wrap;

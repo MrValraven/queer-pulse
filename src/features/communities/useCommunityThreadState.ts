@@ -16,6 +16,7 @@ import type {
   HistoryTarget,
   ReportTarget,
 } from "./communityThread.types";
+import type { CommunityTakedownInput } from "./api/communities.api";
 
 /**
  * All state, derived values, and mutation handlers for a thread. Composed
@@ -87,11 +88,31 @@ export function useCommunityThreadState(
   });
 
   // The confirm-delete dialog targets either the OP post or a reply; dispatch
-  // to whichever moderation slice owns that kind of content.
-  function runDelete(target: DeleteTarget) {
-    if (target.kind === "post") opModeration.runDeleteOp();
-    else replyModeration.runDeleteReply(target.replyId);
+  // to whichever moderation slice owns that kind of content. `takedown` is
+  // present only on a MODERATOR'S delete of somebody else's content (PRD-147)
+  // and carries the reason and cited house rule its author is sent.
+  function runDelete(target: DeleteTarget, takedown?: CommunityTakedownInput) {
+    if (target.kind === "post") opModeration.runDeleteOp(takedown);
+    else replyModeration.runDeleteReply(target.replyId, takedown);
   }
+
+  // Whether what is about to come down belongs to the viewer. The author gets
+  // the plain delete confirmation (nothing logged, nobody told); anybody else
+  // is a moderator and gets the takedown dialog (PRD-147).
+  function resolveIsDeleteTargetOwnContent(): boolean {
+    // No target means no dialog is open; the quieter answer keeps the takedown
+    // form from being the thing that renders on a stale click.
+    if (confirmDelete === null) return true;
+    if (confirmDelete.kind === "post") return opModeration.opIsMine;
+    const targetReply = replies.find(
+      (reply) => reply.id === confirmDelete.replyId,
+    );
+    // A reply the merged list no longer holds falls back to "own content" for
+    // the same reason: an unreachable row must never open a form that writes
+    // to somebody's notification.
+    return targetReply ? replyModeration.isOwnReply(targetReply) : true;
+  }
+  const isDeleteTargetOwnContent = resolveIsDeleteTargetOwnContent();
 
   return {
     t,
@@ -115,6 +136,7 @@ export function useCommunityThreadState(
     setEditingReplyId: replyModeration.setEditingReplyId,
     confirmDelete,
     setConfirmDelete,
+    isDeleteTargetOwnContent,
     historyTarget,
     setHistoryTarget,
     reportTarget,

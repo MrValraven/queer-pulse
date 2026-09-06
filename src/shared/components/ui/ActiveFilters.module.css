@@ -103,3 +103,41 @@
   content: "\00b7";
   margin-inline-start: 8px;
 }
+
+/* Arrival. A chip you just added should read as something that landed in this
+   row, and the row itself as something that opened under the drawer, so every
+   direct child animates on mount. Per child rather than on `.row`: a chip added
+   to a row that is already standing plays on its own instead of restaging the
+   label, the count and "Clear all" alongside it. No stagger, for the same
+   reason: an nth-child delay would hold back the one chip a member just asked
+   for. Chips scale, the type around them only fades. */
+.row > :not(.chip) {
+  animation: activeFiltersTextIn 0.22s var(--ease-out) both;
+}
+.chip {
+  animation: activeFiltersChipIn 0.24s var(--ease-out) both;
+}
+@keyframes activeFiltersTextIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes activeFiltersChipIn {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .row > :not(.chip),
+  .chip {
+    animation: none;
+  }
+}

@@ -55,7 +55,7 @@ function toTrackerPitch(
   fmt: Formatters,
   t: TFunction,
 ): Pitch {
-  return withDecision(submissionToPitch(dto, fmt), dto, t);
+  return withDecision(submissionToPitch(dto, fmt, t), dto, t);
 }
 
 /**

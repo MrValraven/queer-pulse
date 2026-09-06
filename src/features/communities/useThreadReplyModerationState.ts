@@ -7,9 +7,10 @@ import {
   useDeleteCommunityReply,
   useRestoreCommunityReply,
 } from "./api/useCommunityMutations";
-import { canReportReplyContent } from "./communityThread.helpers";
+import { canReportReplyContent, isReplyMine } from "./communityThread.helpers";
 import type { Reply, Thread as ThreadData } from "./communityDetails";
 import type { DeleteTarget, ReportTarget } from "./communityThread.types";
+import type { CommunityTakedownInput } from "./api/communities.api";
 
 /** Per-reply moderation: local demo overrides keyed by reply id, and the
  *  edit / delete / restore / report actions on a thread's replies. Parallel
@@ -70,14 +71,30 @@ export function useThreadReplyModerationState(
     );
   }
 
-  function runDeleteReply(replyId: string) {
+  /**
+   * Take one reply down.
+   *
+   * `takedown` is present only when a MODERATOR acted on somebody else's reply
+   * (PRD-147). A reply takedown was exactly as silent as a post takedown, and
+   * being silenced mid-conversation with no word about why is the same injury,
+   * so it carries the same reason and the same cited house rule. An author
+   * clearing their own reply passes nothing and keeps the plain toast.
+   */
+  function runDeleteReply(replyId: string, takedown?: CommunityTakedownInput) {
+    const successToast = () =>
+      showToast(
+        takedown
+          ? t("communities:detail.modtools.takedown.reply.successToast")
+          : t("communities:detail.thread.deletedToast"),
+        "success",
+      );
     if (demoMode) {
       setConfirmDelete(null);
       setReplyOverrides((prev) => ({
         ...prev,
         [replyId]: { ...prev[replyId], deleted: true },
       }));
-      showToast(t("communities:detail.thread.deletedToast"), "success");
+      successToast();
       return;
     }
     if (!data.id) {
@@ -87,14 +104,21 @@ export function useThreadReplyModerationState(
     // The confirm modal stays mounted (and busy) until the delete resolves,
     // so the "Deleted" toast only ever follows a delete that happened.
     deleteReply.mutate(
-      { postId: data.id, replyId },
+      { postId: data.id, replyId, takedown },
       {
         onSuccess: () => {
           setConfirmDelete(null);
-          showToast(t("communities:detail.thread.deletedToast"), "success");
+          successToast();
         },
         onError: () => {
           setConfirmDelete(null);
+          if (takedown) {
+            showToast(
+              t("communities:detail.modtools.takedown.errorToast"),
+              "error",
+            );
+            return;
+          }
           onError();
         },
       },
@@ -134,6 +158,13 @@ export function useThreadReplyModerationState(
     return canReportReplyContent(reply, { isMember, demoMode, user });
   }
 
+  /** Whether one reply belongs to the viewer. The delete confirmation branches
+   *  on it: the author gets the plain confirm, anybody else (which can only be
+   *  a moderator, since nobody else may delete it) gets the takedown dialog. */
+  function isOwnReply(reply: Reply): boolean {
+    return isReplyMine(reply, demoMode, user);
+  }
+
   return {
     editingReplyId,
     setEditingReplyId,
@@ -144,6 +175,7 @@ export function useThreadReplyModerationState(
     runRestoreReply,
     onReportReply,
     canReportReply,
+    isOwnReply,
     deleteReply,
   };
 }

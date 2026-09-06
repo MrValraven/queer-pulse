@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 import type { NotificationKind } from "./formatNotification";
 
 /**
@@ -111,3 +111,15 @@ export const markNotificationRead = (id: number | string) =>
 /** POST /notifications/read-all — mark every notification read. */
 export const markAllNotificationsRead = () =>
   apiPost<{ ok: true }>("/notifications/read-all");
+
+/**
+ * DELETE /notifications/:id: clear one row from the member's own bell, on
+ * every device (PRD-224).
+ *
+ * A real delete rather than a local hide: the row was coming back on the next
+ * load and on every other device, still unread, still offering to answer a
+ * connection request that had already been answered. Scoped server-side to the
+ * caller's own notifications, so a row that is not theirs is a 404.
+ */
+export const dismissNotification = (id: number | string) =>
+  apiDelete<{ ok: true }>(`/notifications/${id}`);

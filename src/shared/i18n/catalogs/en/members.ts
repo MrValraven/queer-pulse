@@ -152,6 +152,42 @@ export const members: Catalog = {
   "profile.hero.vouchedShort": "Vouched",
   "profile.hero.withdrawVouchCta": "Withdraw vouch",
   "profile.hero.vouchForCta": "Vouch for {first}",
+  // The limited-profile note (PRD-203). ProfilesService.canViewFull limits
+  // for exactly two reasons, carried to the client as ProfileCard.visibility,
+  // so they get two different sets of words. A boundary being respected, and
+  // never a rebuke to the viewer. The private branch must NOT promise more
+  // content, because a private profile stays private to connections too: the
+  // honest payoff there is messaging.
+  // The forwarded-from-an-old-username note (PRD-204). Says BOTH usernames,
+  // because the point is that the visitor can tell the address changed under
+  // them: someone scanning a months-old membership card would otherwise read
+  // the landing address as the one that was always printed. It never promises
+  // the old link keeps working, since the forwarding expires with the 30-day
+  // reclaim cooldown. `{oldSlug}` is the dead username, `{slug}` the live one;
+  // neither carries an @ of its own, so the sigil is in the copy and a
+  // translator can move it.
+  "profile.moved.body":
+    "You followed a link to @{oldSlug}. That username has changed, and this is where it now leads: @{slug}.",
+  "profile.moved.announcement": "Forwarded from @{oldSlug} to @{slug}.",
+  "profile.moved.ariaLabel": "Forwarded from an old username",
+  "profile.moved.dismiss": "Dismiss this note",
+  "profile.limited.ariaLabel": "About this profile",
+  "profile.limited.network.title": "{name} shares more with their connections",
+  "profile.limited.network.body":
+    "The rest of this profile opens up once the two of you are connected.",
+  "profile.limited.private.title": "{name} keeps their profile private",
+  "profile.limited.private.body":
+    "This is what everyone sees. Connecting will not open the rest, though it does let the two of you message each other.",
+  // Defensive fallback for an unexpected visibility value. Deliberately
+  // vague, because in this branch the client does not know which boundary
+  // applies.
+  "profile.limited.generic.title": "There is more to this profile",
+  "profile.limited.generic.body":
+    "{name} shares the rest with a smaller circle.",
+  "profile.limited.askToConnect": "Ask to connect",
+  "profile.limited.answerRequest": "Answer {name}'s request",
+  "profile.limited.requestSent":
+    "You have asked to connect. {name} will see it next time they are here.",
   "profile.hero.levelLabel": "Level {number}",
   "profile.hero.badgesChip": "{earned} / {total} badges",
   "profile.hero.perksChip": "{count} perks",
@@ -482,6 +518,20 @@ export const members: Catalog = {
   "hero.vouch.by": "Vouched for by <b>{names}</b>.",
   "hero.vouch.onlyNumberMatters": "A familiar face vouched for them.",
   "hero.vouch.onlyNumberMattersSelf": "A familiar face vouched for you.",
+  // The count-only branch (PRD-201). A member who hides their voucher roster is
+  // still served the true count, so the hero states the number rather than
+  // falling into the empty branch and telling the viewer there are none while
+  // ProfileTrustSignals prints the real figure a few lines below.
+  "hero.vouch.countOnly_one": "Vouched for by <b>{count} member</b>.",
+  "hero.vouch.countOnly_other": "Vouched for by <b>{count} members</b>.",
+  // Shown to a VISITOR. This member has vouches; the viewer simply cannot see
+  // who. It must not read as an apology or as a prompt to vouch.
+  "hero.vouch.namesHidden": "The names are private. Only the number is public.",
+  // Shown to the OWNER, whom the backend exempts from their own roster gate, so
+  // they see faces a visitor never will. This is what tells them the row is not
+  // what a stranger reads.
+  "hero.vouch.namesHiddenSelf":
+    "Only you can see who vouched for you. Visitors see the number.",
   "hero.vouch.emptySelf":
     "No vouches yet. They'll appear here as people who know you add their name. The only number that matters.",
   "hero.vouch.emptyOther":
@@ -715,9 +765,19 @@ export const members: Catalog = {
   "directory.sort.aToZ": "A to Z",
   "directory.sort.mostVouched": "Most vouched",
   "directory.removeChipLabel": "Remove {label}",
-  "directory.emptyFiltered.title": "Nothing matches your filters",
+  // The field's ACCESSIBLE NAME (PRD-205). SearchInput renders no visible
+  // <label>, so this is the only name a screen reader and the BUDGET=0 a11y
+  // gate ever see. It must read as a label, never as a hint, and must not be
+  // shortened to "Search". The placeholder deliberately says something else.
+  "directory.searchLabel": "Search members by name",
+  "directory.searchPlaceholder": "Name, or part of one",
+  // Reworded because the name search now feeds hasActiveFilters, so this is
+  // also where a search matching nobody lands. The old copy said "your
+  // filters" to a member who may have typed a name and touched no filter.
+  // The backend matches a substring, so "fewer letters" is real advice.
+  "directory.emptyFiltered.title": "Nothing matches yet",
   "directory.emptyFiltered.description":
-    "No members fit all of these just now. Loosen a filter or two and more people will show up.",
+    "Nobody matches that name and those filters right now. Try fewer letters, or loosen a filter, and more people will show up.",
   "directory.clearFiltersCta": "Clear filters",
   "directory.emptyAll.title": "No members here yet",
   "directory.emptyAll.description":
@@ -1067,124 +1127,8 @@ export const members: Catalog = {
   "drafts.bulkBar.selectedCount_other": "<b>{count}</b> selected",
   "drafts.bulkBar.deleteCta": "Delete selected",
   "drafts.bulkBar.cancel": "Cancel",
-
-  // ── Collections privacy vocabulary (collections.data.tsx) ───────────────────
-  "collections.privacy.private": "Private",
-  "collections.privacy.shared": "Shared",
-  "collections.privacy.public": "Public",
-  "collections.privacy.sharedWithCount_one": "Shared with {count}",
-  "collections.privacy.sharedWithCount_other": "Shared with {count}",
-
-  // ── Collections page chrome (CollectionsPage) ───────────────────────────────
-  "collections.header.eyebrow": "Collections · folders for saves",
-  "collections.header.title": "Things you keep <em>coming back to.</em>",
-  "collections.header.lead":
-    "Saved items, grouped however makes sense to you. Folders can be private (default), shared with specific members, or public.",
-  "collections.header.newCta": "+ New collection",
-  "collections.newCard.title": "New collection",
-  "collections.newCard.subtitle": "Group saves by why they matter",
-  "collections.recentSaves.heading": "Recently saved · not yet in a collection",
-  "collections.recentSaves.unfiledCount": "+ {count} unfiled",
-  "collections.recentSaves.addCta": "+ Add to collection",
-  "collections.toast.created": "Collection created",
-  "collections.toast.createError":
-    "Couldn't create that collection. Try again.",
-  "collections.toast.addError":
-    "Couldn't add that to your collection. Try again.",
-  "collections.toast.removed": "Removed from collection",
-  "collections.toast.removeError": "Couldn't remove that item. Try again.",
-  "collections.toast.renamed": "Collection renamed",
-  "collections.toast.renameError":
-    "Couldn't rename that collection. Try again.",
-  "collections.toast.deleted": "Collection deleted",
-  "collections.toast.deleteError":
-    "Couldn't delete that collection. Try again.",
-  "collections.newCollection.defaultMeta": "Just created. Start adding saves",
-  "collections.updatedJustNow": "Updated just now",
-  // Live-mode collection card chrome (values come from the server).
-  "collections.live.updated": "Updated {time}",
-  "collections.live.itemCount_one": "{count} saved item",
-  "collections.live.itemCount_other": "{count} saved items",
-  "collections.emptyLive.title": "No collections yet",
-  "collections.emptyLive.description":
-    "Group the articles, events and places you save into folders. Create your first collection to get started.",
-
-  // ── Collections modals (CollectionsModals) ──────────────────────────────────
-  "collections.modal.defaultDialogLabel": "Dialog",
-  "collections.modal.close": "Close",
-  "collections.modal.newCollection.dialogLabel": "New collection",
-  "collections.modal.newCollection.eyebrow": "New collection",
-  "collections.modal.newCollection.title": "What are you <em>gathering?</em>",
-  "collections.modal.newCollection.nameLabel": "Collection name",
-  "collections.modal.newCollection.namePlaceholder":
-    "e.g. Lisbon recs, Bring to therapy…",
-  "collections.modal.newCollection.visibilityLabel": "Who can see it",
-  "collections.modal.newCollection.privateOnlyNote":
-    "Collections are private to you. Nobody else can see what you file here.",
-  "collections.modal.newCollection.cancel": "Cancel",
-  "collections.modal.newCollection.submit": "Create collection",
-  "collections.modal.privacyOption.private": "Private",
-  "collections.modal.privacyOption.shared": "Shared with members",
-  "collections.modal.privacyOption.public": "Public",
-  "collections.modal.view.dialogLabel": "View collection",
-  "collections.modal.view.emptyText":
-    "Nothing in here yet. Add saves from the list below the grid.",
-  "collections.modal.view.close": "Close",
-  "collections.modal.view.removeItem": "Remove from collection",
-  "collections.modal.view.rename": "Rename",
-  "collections.modal.view.renameLabel": "Collection name",
-  "collections.modal.view.renameSave": "Save",
-  "collections.modal.view.renameCancel": "Cancel",
-  "collections.modal.view.delete": "Delete collection",
-  "collections.modal.view.deleteConfirm.title": "Delete {name}?",
-  "collections.modal.view.deleteConfirm.body":
-    "The collection goes, the saves stay. Everything filed here remains in your saved items.",
-  "collections.modal.view.deleteConfirm.cta": "Delete collection",
-  "collections.modal.add.dialogLabel": "Add to collection",
-  "collections.modal.add.eyebrow": "Add to collection",
-  "collections.modal.add.title": "Where should this live?",
-  "collections.modal.add.filing": "Filing…",
-  "collections.modal.add.cancel": "Cancel",
-  "collections.modal.add.success.dialogLabel": "Added to collection",
-  "collections.modal.add.success.title": "Added to <em>your collection.</em>",
-  "collections.modal.add.success.body":
-    "Saved into <b>{name}</b>. You'll find it there whenever you come back.",
-  "collections.modal.add.success.done": "Done",
-
-  // ── Saved-by-you card kinds (savedByYou.data.ts) ────────────────────────────
-  "savedByYou.kind.magazine.label": "Magazine",
-  "savedByYou.kind.magazine.cta": "Read",
-  "savedByYou.kind.film.label": "Cinema",
-  "savedByYou.kind.film.cta": "Watch",
-  "savedByYou.kind.job.label": "Work",
-  "savedByYou.kind.job.cta": "View role",
-  "savedByYou.kind.event.label": "Gathering",
-  "savedByYou.kind.event.cta": "View",
-  "savedByYou.kind.post.label": "Thread",
-  "savedByYou.kind.post.cta": "Open thread",
-  "savedByYou.kind.group.label": "Community",
-  "savedByYou.kind.group.cta": "Open",
-  "savedByYou.kind.housing.label": "Housing",
-  "savedByYou.kind.housing.cta": "View listing",
-  "savedByYou.kind.flatmate.label": "Flatmate",
-  "savedByYou.kind.flatmate.cta": "View profile",
-  "savedByYou.kind.landlord.label": "Landlord",
-  "savedByYou.kind.landlord.cta": "View landlord",
-  "savedByYou.kind.listing.label": "Business",
-  "savedByYou.kind.listing.cta": "View listing",
-
-  // ── Saved-by-you chrome (SavedByYou) ─────────────────────────────────────────
-  "savedByYou.removeAriaLabel": "Remove {title} from saved",
-  "savedByYou.removeTitle": "Remove from saved",
-  "savedByYou.heading": "Saved by you · live across QueerPulse",
-  "savedByYou.empty.title": "Nothing saved yet",
-  "savedByYou.empty.description":
-    "Save articles, films, jobs and posts as you explore. They'll gather here so you can come back to them and sort them into collections.",
-  "savedByYou.empty.browseMagazineCta": "Browse the magazine",
-  "savedByYou.empty.exploreCinemaCta": "Explore cinema",
-  "savedByYou.count_one": "{count} saved",
-  "savedByYou.count_other": "{count} saved",
-  "savedByYou.toast.removed": "Removed from saved",
+  "savedItem.unavailable.label": "No longer available",
+  "savedItem.unavailable.hint": "You can take it out whenever you like.",
 
   // ── Places (PlacesSection) ───────────────────────────────────────────────────
   // Same registry-status vocabulary as My Places above, reused on the
@@ -1457,6 +1401,171 @@ export const members: Catalog = {
   "badges.ledger.emptyTitle": "No history yet.",
   "badges.ledger.emptyBody":
     "Every point lands here with a date and a description, so you can always see where your level came from.",
+
+  // Badge and XP-ledger display strings (DES-141, DES-143). The backend
+  // catalog keeps STABLE MACHINE IDS, which are persisted on
+  // recognition_awards.badge_key under a unique constraint, so renaming one
+  // would orphan real members' awards. The words live here instead, the same
+  // shape XP_SOURCE_META and RARITY_LABEL_KEY already use in this feature.
+  // Mapped by src/features/members/badgeCatalog.data.ts and
+  // xpLedgerReasons.data.ts, both of which fall back rather than ever letting
+  // a raw id or reason code reach a member.
+  "badges.ledger.reason.moderationRemoval":
+    "Recount after a moderation takedown",
+  "badges.ledger.reason.moderationRemovalWhy":
+    "A moderator takedown stands against your account, so the content it removed has stopped counting. It counts again from the next recount after the takedown is lifted.",
+  "badges.ledger.reason.rebase": "Points rebalanced",
+  "badges.ledger.reason.rebaseWhy":
+    "Points now come only from activity another person was part of. This row is the one-off correction that brought your total into line.",
+  "badges.ledger.reason.adjustment": "Correction to your total",
+  "badges.ledger.reason.adjustmentWhy":
+    "This row was written by the platform. Ask the community team if you want the detail behind it.",
+  "perks.sidebar.explainBody":
+    "Perks are not a loyalty scheme. They are how the members who keep showing up get a little more back. Each level stands for something real: time here, gatherings attended, people connected. What you unlock is a bigger share of what the platform can already do.",
+  "perks.sidebar.suggestLabel":
+    "What would make being a long-term member worth more to you?",
+  "badges.case.categoryToggleLabel": "Show {category} badges",
+  "badges.category.attendance": "Attendance",
+  "badges.category.community": "Community",
+  "badges.category.culture": "Culture",
+  "badges.category.exploration": "Exploration",
+  "badges.category.hosting": "Hosting",
+  "badges.category.milestones": "Milestones",
+  "badges.category.platform": "Platform",
+  "badges.catalog.localScout.name": "Local Scout",
+  "badges.catalog.localScout.locked": "Save 3 places in the Local directory",
+  "badges.catalog.localScout.earned": "Saved 3 places in the Local directory",
+  "badges.catalog.wellRead.name": "Well-Read",
+  "badges.catalog.wellRead.locked": "Save 5 articles or resources",
+  "badges.catalog.wellRead.earned": "Saved 5 articles or resources",
+  "badges.catalog.firstGathering.name": "First Gathering",
+  "badges.catalog.firstGathering.locked": "Attend your first gathering",
+  "badges.catalog.firstGathering.earned": "Attended a QueerPulse gathering",
+  "badges.catalog.threeCompany.name": "Three's Company",
+  "badges.catalog.threeCompany.locked": "Attend 3 gatherings",
+  "badges.catalog.threeCompany.earned": "3 gatherings attended",
+  "badges.catalog.regularAttendee.name": "Regular",
+  "badges.catalog.regularAttendee.locked": "Attend 5 gatherings in one year",
+  "badges.catalog.regularAttendee.earned": "5 gatherings in one year",
+  "badges.catalog.decade.name": "Anniversary",
+  "badges.catalog.decade.locked": "Be a member for 1 year",
+  "badges.catalog.decade.earned": "Member for 1 year",
+  "badges.catalog.connector.name": "Connector",
+  "badges.catalog.connector.locked": "Make 10 connections",
+  "badges.catalog.connector.earned": "10 connections made",
+  "badges.catalog.vouch.name": "Vouch",
+  "badges.catalog.vouch.locked": "Vouch for a new member",
+  "badges.catalog.vouch.earned": "Vouched for a new member",
+  "badges.catalog.threadStarter.name": "Thread Starter",
+  "badges.catalog.threadStarter.locked": "Start a community thread",
+  "badges.catalog.threadStarter.earned": "Started a community thread",
+  "badges.catalog.networker.name": "Networker",
+  "badges.catalog.networker.locked": "Connect with 50 members",
+  "badges.catalog.networker.earned": "Connected with 50 members",
+  "badges.catalog.contributor.name": "Contributor",
+  "badges.catalog.contributor.locked": "Submit a member story",
+  "badges.catalog.contributor.earned": "Submitted a member story",
+  "badges.catalog.twoHomes.name": "Two Homes",
+  "badges.catalog.twoHomes.locked": "Join a second community",
+  "badges.catalog.twoHomes.earned": "Joined a second community",
+  "badges.catalog.foundingMember.name": "Founding Member",
+  "badges.catalog.foundingMember.locked": "Join in the first 500 members",
+  "badges.catalog.foundingMember.earned": "Joined in the first 500",
+  "badges.catalog.sustainer.name": "Rooted",
+  "badges.catalog.sustainer.locked": "Be a member for 6 months",
+  "badges.catalog.sustainer.earned": "Member for 6 months",
+  "badges.catalog.workReady.name": "Work Ready",
+  "badges.catalog.workReady.locked":
+    "Fill out your Work Profile (skills and focus areas)",
+  "badges.catalog.workReady.earned": "Completed the Work Profile",
+  "badges.catalog.eventHost.name": "Event Host",
+  "badges.catalog.eventHost.locked": "Host a QueerPulse gathering",
+  "badges.catalog.eventHost.earned": "Hosted a QueerPulse gathering",
+  "badges.catalog.serialHost.name": "Serial Host",
+  "badges.catalog.serialHost.locked": "Host 3 approved gatherings",
+  "badges.catalog.serialHost.earned": "Hosted 3 approved gatherings",
+  "badges.catalog.firstSteps.name": "First Steps",
+  "badges.catalog.firstSteps.locked": "Finish your getting started checklist",
+  "badges.catalog.firstSteps.earned": "Completed the getting started checklist",
+  "badges.catalog.pride2026.name": "Pride 2026",
+  "badges.catalog.pride2026.locked": "March with the QueerPulse block",
+  "badges.catalog.pride2026.earned": "Marched with the QueerPulse block",
+  "badges.catalog.firstTable2026.name": "New Year, First Table",
+  "badges.catalog.firstTable2026.locked":
+    "Attend the first gathering of the year",
+  "badges.catalog.firstTable2026.earned":
+    "Attended the first gathering of the year",
+  "badges.catalog.winterWarmth2026.name": "Winter Warmth",
+  "badges.catalog.winterWarmth2026.locked":
+    "Bring someone new to a December gathering",
+  "badges.catalog.winterWarmth2026.earned":
+    "Brought someone new to a December gathering",
+
+  "badges.catalog.pride2026.window": "Open until {date}",
+  "badges.catalog.firstTable2026.window": "January only",
+  "badges.catalog.winterWarmth2026.window": "Opens {date}",
+
+  // The seven rungs of the XP ladder. The backend served these as English
+  // words on `LevelDTO.name` and they rendered on eleven surfaces, the
+  // profile hero among them. NOTHING persists a level name (recognition_stats
+  // is user_id, xp, updated_at and every rung derives from xp), so the NUMBER
+  // is the stable id and the words live here. Resolved through
+  // `levelNameKeyFor()` in features/members/levelLadder.data.ts.
+  //
+  // Level 3 is "Regular" and so is the `regular-attendee` BADGE. They are
+  // different things, one a rung and one a thing earned once, and a member can
+  // hold the badge while standing on another rung, so the PT keeps them apart
+  // deliberately: this is "Sempre Por Cá", the badge is "Presença Habitual".
+  "levels.newcomer": "Newcomer",
+  "levels.explorer": "Explorer",
+  "levels.regular": "Regular",
+  "levels.familiar": "Familiar",
+  "levels.trusted": "Trusted",
+  "levels.anchor": "Anchor",
+  "levels.pillar": "Pillar",
+
+  // The perks ladder. BASE_PERKS_BY_LEVEL and PERK_CATALOG used to reach the
+  // client as one untyped list of ENGLISH SENTENCES, so a Portuguese member
+  // read the whole ladder in English. The wire now carries stable ids with
+  // the English kept as a fallback.
+  //
+  // PERK_CATALOG keys are PERSISTED on recognition_perk_claims.perk_key under
+  // a unique constraint, and are also the claim endpoint's path segment, so
+  // they must never be renamed. The base.* ids reach no table: a baseline
+  // capability is descriptive and can never be claimed. Both kinds land in
+  // ONE ladder list, so their ids must not collide.
+  "perks.group.available": "Available to claim",
+  "perks.group.coming": "Coming at Level {level} · {name}",
+  "perks.group.claimed": "Already claimed",
+  "perks.ladder.statusDone": "Done",
+  "perks.ladder.statusCurrent": "Current",
+  "perks.ladder.statusXpAway_one": "{count} XP away",
+  "perks.ladder.statusXpAway_other": "{count} XP away",
+  "perks.ladder.statusLocked": "Locked",
+  "perks.claim.unlocksAt": "Unlocks at Level {level} · {name}",
+  "perks.claim.claimedOn": "Claimed {date}",
+  "perks.claim.higherAllowanceCta": "Claim the higher allowance",
+  "perks.claim.higherAllowanceToast":
+    "Claimed. Your monthly invite allowance is higher from now on",
+  "perks.category.community": "Community",
+  "perks.category.membership": "Membership",
+  "perks.catalog.vouchAccess.title": "Vouch access",
+  "perks.catalog.vouchAccess.desc":
+    "The ability to vouch for other members, a trust signal that helps them stand out. Every active member has it from day one.",
+  "perks.catalog.vouchAccess.autoLabel": "Available to every active member",
+  "perks.catalog.inviteQuotaLevel4.title": "More invites each month",
+  "perks.catalog.inviteQuotaLevel4.desc":
+    "Claim it and your monthly invite allowance goes from {base} to {total}. Invites reset on the first of each month.",
+  "perks.catalog.inviteQuotaLevel5.title": "The highest invite allowance",
+  "perks.catalog.inviteQuotaLevel5.desc":
+    "Claim it and your monthly invite allowance goes from {base} to {total}. The community grows because of people like you.",
+  "perks.base.browseDirectory": "Browse the member directory",
+  "perks.base.joinGatherings": "Join gatherings and RSVP",
+  "perks.base.directMessages": "Message other members directly",
+  "perks.base.saveArticles": "Save articles and resources",
+  "perks.base.joinCommunities": "Join communities",
+  "perks.base.hostGathering": "Host a gathering",
+
   "badges.ledger.integrityHeading": "Why this can be trusted",
   "badges.ledger.integrity1Title": "Counted from what you already did.",
   "badges.ledger.integrity1Body":
@@ -1464,9 +1573,16 @@ export const members: Catalog = {
   "badges.ledger.integrity2Title": "Every point has a row.",
   "badges.ledger.integrity2Body":
     "Each increase lands in this list with a date and a description, so the total can be checked against it.",
-  "badges.ledger.integrity3Title": "Points are never taken back.",
+  // Was "Points are never taken back.", an absolute promise sitting directly
+  // above a real negative row that printed the raw code `moderation_removal`.
+  // The mechanism is at recognition-awarding.service.ts:226-234 and :321-328:
+  // the no-regression floor is lifted only while a moderation takedown stands
+  // against the account, and it is reversible. XP buys real invite quota, so
+  // a deduction has a material consequence and the member is owed the
+  // specifics rather than either an absolute or a vague reassurance. DES-141.
+  "badges.ledger.integrity3Title": "Points are only taken back in one case.",
   "badges.ledger.integrity3Body":
-    "Your total only moves up. A withdrawn vouch or a deleted post leaves it where it was.",
+    "Your own edits and deletions never lower it: a withdrawn vouch or a post you tidied away leaves your total where it was. While a moderation takedown stands against your account, the content it removed stops counting, and the extra monthly invitations your level buys go with it. Lift the takedown and the next recount restores whatever your activity still supports.",
   "badges.ledger.integrity4Title": "You choose what shows.",
   "badges.ledger.integrity4Body":
     "Any badge you earn can be hidden from your profile, one at a time. A hidden badge stays on this page for you.",
@@ -1815,6 +1931,11 @@ export const members: Catalog = {
   "savedLists.shared.count_other": "{count} things",
   "savedLists.shared.note":
     "Someone made this list on QueerPulse and sent you the link. They can turn it off whenever they want to, and this page will stop working when they do.",
+  // Shown when every single thing on a shared list has become unopenable. The
+  // list still renders in full: the sender meant to hand it over, and a reader
+  // deserves to know the page worked rather than guess that it broke.
+  "savedLists.shared.allUnavailable":
+    "None of these can be opened any more. Whoever sent you the list may have a newer one.",
   "savedLists.shared.gone.title": "This list is not available",
   "savedLists.shared.gone.body":
     "The link may have been turned off, or it may never have been a real one. Ask whoever sent it to you for a new link.",

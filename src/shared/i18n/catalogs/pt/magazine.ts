@@ -181,8 +181,8 @@ export const magazine: Catalog = {
   "deck.prev": "Slide anterior",
   "deck.slideCounter": "{current} / {total}",
   "deck.goToSlide": "Ir para o slide {n}",
-  "deck.tapToReveal": "Toque para revelar",
-  "deck.beforeAfterHint": "Arraste para comparar",
+  "deck.tapToReveal": "Toca para revelar",
+  "deck.beforeAfterHint": "Arrasta para comparar",
   "deck.end": "Chegou ao fim",
   "deck.backToMagazine": "Voltar à revista",
   "deck.badge": "Interativo",
@@ -257,9 +257,19 @@ export const magazine: Catalog = {
   "deck.editor.budget.count": "{count} / {max} caracteres",
   "deck.editor.saved": "Rascunho guardado",
   "deck.editor.publishedToast": "Deck publicado",
+  "deck.editor.scheduledToast": "Deck agendado",
+  "deck.editor.unpublishedToast": "Deck despublicado",
   "deck.editor.deletedToast": "Deck eliminado",
   "deck.editor.saveError":
     "Não foi possível guardar o teu deck. Tenta de novo.",
+  "deck.editor.publishNotReadyError":
+    "Adiciona pelo menos um slide, e texto alternativo em cada imagem, antes de publicar.",
+  // ENG-112: um deck publicado ou ligado a uma peça já não pode ser eliminado,
+  // por isso a recusa tem de dizer qual dos dois casos é e o que o desbloqueia.
+  "deck.editor.deleteBlockedPublished":
+    "Despublica este deck antes de o eliminares.",
+  "deck.editor.deleteBlockedLinked":
+    "Este deck pertence a uma peça da redação. Elimina a peça para remover os dois.",
   "deck.editor.backToDashboard": "Voltar ao painel",
   "deck.editor.metaTitle": "Detalhes do deck",
   "deck.editor.untitled": "Deck sem título",
@@ -269,8 +279,14 @@ export const magazine: Catalog = {
   "deck.editor.slidesHeading": "Slides",
   "deck.editor.slidesCount": "{count} de {max} · clica num slide para editar",
   "deck.editor.slidesCapped": "Limite de 40 slides atingido",
-  "deck.editor.publish.notNowNote":
-    "Isto publica-se assim que carregares em Publicar. O agendamento de decks ainda não está disponível.",
+  // A PRD-131 ligou o agendamento de decks, por isso o painel passa a dizer o
+  // que vai mesmo acontecer: sair com a edição, esperar por uma data, ou já.
+  "deck.editor.publish.issueLinked":
+    "Publica-se automaticamente quando a edição {number} sair.",
+  "deck.editor.publish.issueUnlinked":
+    "Este deck ainda não está numa edição. Adiciona-o a uma no registo da peça, ou publica-o agora ou numa data.",
+  "deck.editor.publish.scheduledFor":
+    "Agendado para {date} às {time}. Ninguém o vê até lá.",
   "deck.editor.publish.checklist.cover": "Slide de capa definido",
   "deck.editor.publish.checklist.source":
     "Fonte em todos os slides de estatística (opcional)",
@@ -279,10 +295,20 @@ export const magazine: Catalog = {
   "deck.editor.danger.title": "Zona de perigo",
   "deck.editor.danger.body":
     "Eliminar um deck remove-o de todos os sítios onde está ligado. Não é possível desfazer.",
+  "deck.editor.danger.blockedPublished":
+    "Este deck está publicado. Despublica-o primeiro e depois poderá ser eliminado.",
+  "deck.editor.danger.blockedLinked":
+    "Este deck pertence a uma peça da redação. Elimina a peça, que remove o deck com ela.",
   "deck.editor.danger.cta": "Eliminar este deck",
   "deck.editor.deleteModal.title": "Eliminar este deck?",
-  "deck.editor.deleteModal.body":
-    "Isto remove o deck e todos os seus slides. Quem já tiver o link vai ver um erro 404.",
+  // Substitui o texto antigo, que prometia um 404 a quem lê. A ENG-112 impede
+  // eliminar um deck publicado, por isso ninguém chega a esse estado.
+  "deck.editor.deleteModal.detail_one":
+    "Eliminar remove {title} e o seu {count} slide. Não há como voltar atrás, e não fica nenhuma cópia.",
+  "deck.editor.deleteModal.detail_other":
+    "Eliminar remove {title} e os seus {count} slides. Não há como voltar atrás, e não fica nenhuma cópia.",
+  "deck.editor.deleteModal.draftOnly":
+    "Só um deck em rascunho pode ser eliminado, por isso ninguém fora da redação perde nada.",
   "deck.editor.convertModal.title": "Transformar isto em texto corrido?",
   "deck.editor.convertModal.successToast": "Convertido num rascunho de artigo.",
   "deck.editor.convertModal.partialToast":
@@ -578,6 +604,13 @@ export const magazine: Catalog = {
     "Ainda estamos a carregar o teu perfil de edição. Tenta outra vez daqui a pouco.",
   "desk.write.noSection":
     "Ainda não há secções configuradas, por isso esta peça não teria onde sair.",
+  // PRD-130: distintas do `noSection` acima, que é o caso honesto de "esta
+  // revista não tem nenhuma configurada". Estas duas são a lista de secções
+  // ainda a caminho, e a lista de secções que falhou.
+  "desk.write.sectionsLoading":
+    "Ainda estamos a carregar a lista de secções. Tenta outra vez daqui a pouco.",
+  "desk.write.sectionsUnavailable":
+    "Não foi possível carregar a lista de secções, por isso esta peça não tem onde sair. Recarrega a secretária e tenta outra vez.",
   "desk.header.produce": "Produção da edição",
   "desk.header.slotsFilledAria": "Vagas da edição preenchidas",
   "desk.header.layoutAria": "Esquema da redação",
@@ -666,6 +699,10 @@ export const magazine: Catalog = {
 
   // ── SavedViews ───────────────────────────────────────────────────────────
   "desk.savedViews.saveThisView": "Guardar esta vista",
+  "desk.savedViews.lateOrAtRisk": "Atrasadas ou em risco",
+  "desk.savedViews.waitingOnArt": "À espera de imagens",
+  "desk.savedViews.needsSensitivityRead": "Precisa de leitura de sensibilidade",
+  "desk.savedViews.unpaidAfterFiling": "Por pagar depois da entrega",
 
   // ── PiecesPipeline ───────────────────────────────────────────────────────
   "desk.pipeline.emptyTitle": "A secretária está livre",
@@ -773,7 +810,6 @@ export const magazine: Catalog = {
   "deskShell.issueEyebrow": "Edição {number} · {theme}",
   "deskShell.menuAria": "Secções da redação",
   "deskShell.nav.desk": "Redação",
-  "deskShell.nav.pitches": "Propostas",
   "deskShell.nav.issue": "Edição",
   "deskShell.nav.lifecycle": "Arquivo",
   "deskShell.openNow": "Abertos agora",
@@ -786,6 +822,17 @@ export const magazine: Catalog = {
   "desk.modals.noteLabel": "A tua nota",
   "desk.modals.shortcuts.title": "Teclado",
   "desk.modals.shortcuts.gotIt": "Percebido",
+  // O atalho em si ("j / k", "⌘K") é mostrado tal e qual e fica fora do
+  // catálogo: o nome de uma tecla é igual em todas as línguas. Só o que ele
+  // faz é texto.
+  "desk.modals.shortcuts.moveBetween": "Mover entre peças",
+  "desk.modals.shortcuts.openFocused": "Abrir a peça em foco",
+  "desk.modals.shortcuts.chaseWriter": "Dar um toque a quem escreve",
+  "desk.modals.shortcuts.writeYourself": "Escrever tu uma peça",
+  "desk.modals.shortcuts.triageTopPitch": "Triar a proposta do topo",
+  "desk.modals.shortcuts.jumpAnywhere":
+    "Saltar para qualquer lado, ou começar uma peça",
+  "desk.modals.shortcuts.thisList": "Esta lista",
 
   // ── CommissionModal ──────────────────────────────────────────────────────
   "desk.modals.commission.titleFromPitch": "Encomendar esta proposta",
@@ -804,6 +851,12 @@ export const magazine: Catalog = {
   "desk.modals.commission.trackLabel": "Onde sai",
   "desk.modals.commission.trackUnassigned": "Nenhuma edição",
   "desk.modals.commission.trackIssue": "Edição {number}",
+  // PRD-130: o seletor de secção e o botão de enviar o briefing ficam
+  // desativados em conjunto sempre que a lista de secções está vazia, e isto
+  // diz porquê em vez de abrir um menu sem nada.
+  "desk.modals.commission.sectionsUnavailable":
+    "A lista de secções ainda não carregou, por isso este briefing ainda não tem onde sair.",
+  "desk.modals.commission.sectionsEmptyOption": "Sem secções disponíveis",
 
   // ── PassModal ────────────────────────────────────────────────────────────
   "desk.modals.pass.title": "Recusar “{title}”",
@@ -811,6 +864,21 @@ export const magazine: Catalog = {
   "desk.modals.pass.body":
     "Uma recusa cai melhor com um motivo genuíno. Escolhe um ponto de partida abaixo, ou escreve o teu próprio. De qualquer forma, quem escreveu ouve de uma pessoa real.",
   "desk.modals.pass.startingPoints": "Pontos de partida",
+  // Cada `label` dá nome a um chip; cada `body` é semeado na nota editável que
+  // quem escreveu acaba por ler, por isso tem de funcionar como prosa real de
+  // quem edita. O chip do template de deck reutiliza
+  // `desk.pitchRow.betterAsDeck`, por isso só o corpo está aqui.
+  "desk.modals.pass.templates.notForUs.label": "Não é para nós",
+  "desk.modals.pass.templates.notForUs.body":
+    "Agradeço-te teres confiado isto a nós. Não encaixa na QueerPulse. Não somos a casa que esta peça merece, e prefiro dizer-to já do que deixá-la à espera. Manda-nos a próxima, por favor.",
+  "desk.modals.pass.templates.notNow.label": "Agora não",
+  "desk.modals.pass.templates.notNow.body":
+    "Gosto muito disto, mas a edição 14 está cheia e o calendário joga contra. Posso voltar a falar contigo para a edição 16, quando o tema estiver mais perto? Sem compromisso de nenhum dos lados.",
+  "desk.modals.pass.templates.anotherSection.label": "Experimenta outra secção",
+  "desk.modals.pass.templates.anotherSection.body":
+    "Isto não resulta como reportagem de fundo, mas assentaria lindamente na secção Serviço: mais curto, mais prático, com a mesma investigação. Queres que a encomende assim?",
+  "desk.modals.pass.templates.betterAsDeck.body":
+    "A investigação é forte, mas o formato não é o certo: isto pede um deck. Se te apetecer, encomendava-o em oito ou nove slides.",
 
   // ── ChaseModal (Phase 7 Wave F: incorpora o PieceThread, sem passo de composição à parte) ─
   "desk.modals.chase.title": "Insistir com {name}",
@@ -823,6 +891,41 @@ export const magazine: Catalog = {
   "desk.modals.handoff.body":
     "Passa “{title}” a outra pessoa editora. Ela continua exatamente onde ficaste.",
   "desk.modals.handoff.toLabel": "Para",
+
+  // ── Editorial pipeline stage names (desk/stageLabels.ts) ─────────────────
+  // Substitui a nota "left unswept here" no cabeçalho desta secção: os ids de
+  // `Stage` em bruto que o StagePill, o StageStepper, os cabeçalhos de coluna e
+  // o seletor de fase do PiecesBoard, os cartões do IssuePlan e o toast "Movida
+  // para {stage}" do `usePieceMutations` mostravam tal e qual passam a resolver
+  // por uma só tabela.
+  //
+  // Ficam de propósito separadas de `pitchTracker.stage.*`. Esse conjunto é o
+  // percurso da proposta visto por QUEM PROPÕE (Proposta / Aceite / Primeiro
+  // rascunho); este é o circuito editorial da redação. Três delas coincidem em
+  // inglês por acaso, e em português divergem. Juntá-las prenderia o vocabulário
+  // de quem propõe a um fluxo interno. O género concorda com "peça" (feminino).
+  "desk.stage.commissioned": "Encomendada",
+  "desk.stage.drafting": "Em rascunho",
+  "desk.stage.inReview": "Em análise",
+  "desk.stage.edit": "Edição",
+  "desk.stage.sensitivityRead": "Leitura de sensibilidade",
+  "desk.stage.layout": "Paginação",
+  "desk.stage.ready": "Pronta",
+  "desk.stage.published": "Publicada",
+
+  // ── Desk mutation toasts (usePieceMutations / usePitchMutations) ─────────
+  // O `TRIAGE_TOAST_KEY.commission` aponta de propósito para
+  // `desk.pieceToast.commissioned`: o veredito É uma encomenda, mesmo texto.
+  // Continuam distintas de `piece.brief.commissioned`, que é uma ETIQUETA de
+  // campo no separador Briefing e pede outra forma em português.
+  "desk.pieceToast.commissioned": "Encomendada",
+  "desk.pieceToast.draftStarted": "Rascunho começado",
+  "desk.pieceToast.movedToStage": "Movida para {stage}",
+  "desk.pieceToast.handedOff": "Passada a outra pessoa",
+  "desk.pieceToast.deleted": "Apagada",
+  "desk.pitchToast.maybe": "Marcada como talvez",
+  "desk.pitchToast.passed": "Proposta recusada",
+  "desk.pitchToast.added": "Proposta adicionada",
 
   // ── DeskView ─────────────────────────────────────────────────────────────
 
@@ -843,7 +946,6 @@ export const magazine: Catalog = {
   "piece.header.backToDesk": "Voltar à redação",
   "piece.header.openDraft": "Abrir o rascunho",
   "piece.header.publish": "Publicar",
-  "piece.header.publishToast": "A publicação chega com a produção da edição",
   "piece.header.formatArticle": "Artigo",
   "piece.header.formatDeck": "Deck",
   "piece.header.inAnIssue": "Numa edição",
@@ -868,6 +970,62 @@ export const magazine: Catalog = {
   "piece.gate.notAdvisory":
     "O portão não é uma sugestão. Nada aqui pode ser ultrapassado por uma só pessoa.",
   "piece.gate.publish": "Publicar",
+
+  // ── Publish / unpublish from the piece record (PRD-119, PRD-120) ─────────
+  // O controlo de cuidado é imposto no servidor, por isso este texto tem duas
+  // tarefas: dizer o que está a reter a peça antes de se carregar em alguma
+  // coisa, e mostrar com honestidade a recusa da redação quando ela vem à
+  // mesma (outra pessoa abriu um item de cuidado entre o render e o clique).
+  "piece.publish.openCareTab": "Abrir o separador Cuidado",
+  "piece.publish.unpublish": "Despublicar",
+  "piece.publish.viewLive": "Ver publicado",
+  "piece.publish.viewLiveAria": "Ver “{title}” como quem lê o vê",
+  "piece.publish.liveSince": "Publicado desde {date}",
+  "piece.publish.scheduledFor": "Agendado para {date}",
+  "piece.publish.blockedByGate_one":
+    "A publicação está bloqueada: {count} item de cuidado ainda está por resolver.",
+  "piece.publish.blockedByGate_other":
+    "A publicação está bloqueada: {count} itens de cuidado ainda estão por resolver.",
+  "piece.publish.blockedToast_one":
+    "Resolve o {count} item de cuidado por resolver antes de publicar.",
+  "piece.publish.blockedToast_other":
+    "Resolve os {count} itens de cuidado por resolver antes de publicar.",
+  "piece.publish.publishedToast": "Publicado. Já está disponível para quem lê.",
+  "piece.publish.unpublishedToast":
+    "Retirado. Já não está acessível a quem lê.",
+  "piece.publish.failedToast":
+    "Não foi possível publicar esta peça. Tenta novamente.",
+  "piece.publish.unpublishFailedToast":
+    "Não foi possível retirar esta peça. Tenta novamente.",
+  "piece.publish.refusedCareGateHeading": "Retida pelo controlo de cuidado",
+  "piece.publish.refusedCareGateToast":
+    "Esta peça continua retida pelo controlo de cuidado.",
+  "piece.publish.refusedNotReadyHeading": "Ainda não está pronta para publicar",
+  "piece.publish.refusedNotReadyToast":
+    "Esta peça ainda não está pronta para publicar.",
+  "piece.publish.refusedNoDetail":
+    "A redação não indicou o motivo. Recarrega o registo e tenta novamente.",
+  "piece.publish.confirmPublishTitle": "Publicar “{title}”?",
+  "piece.publish.confirmPublishSub": "Fica disponível a quem lê de imediato.",
+  "piece.publish.confirmPublishBody":
+    "Quem escreveu é avisado de que saiu. Podes retirá-la a qualquer momento, e nada é apagado quando o fizeres.",
+  "piece.publish.confirmPublishCta": "Publicar",
+  "piece.publish.confirmUnpublishTitle": "Retirar “{title}”?",
+  "piece.publish.confirmUnpublishSub": "Quem lê perde o acesso de imediato.",
+  "piece.publish.confirmUnpublishBody":
+    "Nada é apagado. A peça volta a Pronta e podes voltar a publicá-la quando quiseres.",
+  "piece.publish.confirmUnpublishCta": "Retirar",
+  "piece.publish.confirmCancel": "Ainda não",
+
+  // ── Piece record demo toasts (api/useRecordMutations.ts) ─────────────────
+  // Só em modo demonstração, onde o registo é estático e a mutação resolve sem
+  // rede. A demonstração é uma superfície real, por isso são traduzidas.
+  "piece.recordToast.saved": "Guardado",
+  "piece.recordToast.markedPaid": "Marcado como pago",
+  "piece.recordToast.letterAdded": "Carta adicionada",
+  "piece.recordToast.markedRunInLetters": "Marcada para sair nas cartas",
+  "piece.recordToast.removedFromLetters": "Removida das cartas",
+  "piece.recordToast.correctionPublished": "Correção publicada",
 
   // ── MoneyMiniCard ────────────────────────────────────────────────────────
   "piece.moneyMini.heading": "Dinheiro",
@@ -1042,7 +1200,7 @@ export const magazine: Catalog = {
   // ── SubmitStorySuccess ─────────────────────────────────────────────────
   "submitStory.success.title": "Estamos a <em>ler.</em>",
   "submitStory.success.sub":
-    "Obrigada por confiares em nós com “{title}”. Aconteça o que acontecer, os direitos de autor são teus.",
+    "Obrigade por confiares em nós com “{title}”. Aconteça o que acontecer, os direitos de autor são teus.",
   "submitStory.success.defaultTitle": "o teu texto",
   "submitStory.success.timeline.readsEvery":
     "Uma pessoa editora lê pessoalmente todas as propostas.",
@@ -1141,9 +1299,18 @@ export const magazine: Catalog = {
   // ── PitchTrackerHeader ─────────────────────────────────────────────────
   "pitchTracker.header.eyebrow": "Revista · as tuas propostas",
   "pitchTracker.header.title": "Onde cada proposta <em>realmente está.</em>",
-  "pitchTracker.header.lead":
-    "{active} propostas ativas · {published} publicadas ao todo. A redação responde em <b>~ {days} dias</b>.",
   "pitchTracker.header.newPitchCta": "+ Nova proposta",
+  // A PRD-129 substituiu `pitchTracker.header.lead`, que interpolava três
+  // números fixos do protótipo e prometia um prazo de resposta que nada mede.
+  // Dois fragmentos com plural sobre contagens reais, mostrados por `Translation`.
+  "pitchTracker.header.leadActive_one":
+    "{count} proposta com a redação neste momento",
+  "pitchTracker.header.leadActive_other":
+    "{count} propostas com a redação neste momento",
+  "pitchTracker.header.leadPublished_one":
+    "<b>{count} publicada</b> desde sempre",
+  "pitchTracker.header.leadPublished_other":
+    "<b>{count} publicadas</b> desde sempre",
 
   // ── PitchTabs ──────────────────────────────────────────────────────────
   "pitchTracker.tabs.ariaLabel": "Estado da proposta",
@@ -1160,6 +1327,26 @@ export const magazine: Catalog = {
   "pitchTracker.page.withdrawnToast": "Proposta retirada",
   "pitchTracker.page.undoCta": "Desfazer",
   "pitchTracker.page.stubToast": "{label}: brevemente neste protótipo",
+  "pitchTracker.page.loadErrorTitle":
+    "Não conseguimos carregar as tuas propostas",
+  "pitchTracker.page.loadErrorBody":
+    "Tudo o que enviaste continua com a redação. Tenta novamente daqui a pouco.",
+
+  // ── Withdrawing a pitch (PRD-125) ────────────────────────────────────────
+  // Modo real. O `pitchTracker.page.withdrawnToast` acima continua a ser o
+  // toast da DEMONSTRAÇÃO, com Desfazer; retirar a sério é definitivo, por isso
+  // diz isso e não oferece Desfazer. O caso "já decidida" é o 409 que a redação
+  // devolve quando chegou lá primeiro, que é um desfecho real e não uma falha.
+  "pitchTracker.card.withdrawCta": "Retirar",
+  "pitchTracker.withdraw.confirmTitle": "Retirar esta proposta?",
+  "pitchTracker.withdraw.confirmBody":
+    "A redação deixa de a ver e a proposta sai do teu acompanhamento. Não é possível anular, mas podes sempre voltar a propor a história.",
+  "pitchTracker.withdraw.confirmCta": "Retirar proposta",
+  "pitchTracker.withdraw.doneToast": "Proposta retirada.",
+  "pitchTracker.withdraw.decidedToast":
+    "A redação já respondeu a esta proposta, por isso já não pode ser retirada.",
+  "pitchTracker.withdraw.failedToast":
+    "Não conseguimos retirar essa proposta. Tenta novamente daqui a pouco.",
 
   // ── PitchCard ─────────────────────────────────────────────────────────
   // Autoria e texto da nota são palavras próprias de quem edita (conteúdo);
@@ -1205,9 +1392,9 @@ export const magazine: Catalog = {
   "printOrder.closeAria": "Fechar",
   "printOrder.success.title": "Está a <em>caminho de ti.</em>",
   "printOrder.success.body_one":
-    "{count} exemplar de <b>{issue}</b> reservado desta tiragem. Enviamos um email para <b>{email}</b> quando sair de Marvila, normalmente dentro de uma semana. Obrigada por financiares as pessoas colaboradoras da próxima edição.",
+    "{count} exemplar de <b>{issue}</b> reservado desta tiragem. Enviamos um email para <b>{email}</b> quando sair de Marvila, normalmente dentro de uma semana. Obrigade por financiares as pessoas colaboradoras da próxima edição.",
   "printOrder.success.body_other":
-    "{count} exemplares de <b>{issue}</b> reservados desta tiragem. Enviamos um email para <b>{email}</b> quando saírem de Marvila, normalmente dentro de uma semana. Obrigada por financiares as pessoas colaboradoras da próxima edição.",
+    "{count} exemplares de <b>{issue}</b> reservados desta tiragem. Enviamos um email para <b>{email}</b> quando saírem de Marvila, normalmente dentro de uma semana. Obrigade por financiares as pessoas colaboradoras da próxima edição.",
   "printOrder.success.doneCta": "Concluído",
   "printOrder.eyebrow": "Edição impressa · {issue}",
   "printOrder.title": "Encomendar a <em>tiragem impressa.</em>",
@@ -1280,6 +1467,16 @@ export const magazine: Catalog = {
   "write.header.leaveConfirm":
     "Há edições que ainda não chegaram ao servidor. Queres sair do editor?",
   "write.header.issueScheduled": "Agendado numa edição",
+  "write.header.savedConflict": "Gravação em pausa",
+
+  // ── Save conflict (ENG-111) ──────────────────────────────────────────────
+  // Outra pessoa gravou este artigo depois de este separador o ter carregado.
+  // A gravação automática pára em vez de escrever por cima, por isso o texto
+  // tem de ser claro: recarregar custa as edições deste separador.
+  "write.conflict.heading": "Este rascunho avançou",
+  "write.conflict.body":
+    "Outra pessoa gravou este artigo depois de o teres aberto, por isso parámos de gravar em vez de escrever por cima do trabalho dela. Ao recarregar, ficas com a versão atual e perdes as edições deste separador, por isso copia primeiro o que quiseres guardar.",
+  "write.conflict.reloadCta": "Recarregar o rascunho atual",
 
   // ── Alternador Rascunho/Composição/Leitura (editorMode.ts) ───────────────
   "write.mode.draft": "Rascunho",
@@ -1394,6 +1591,15 @@ export const magazine: Catalog = {
   "write.publish.checklist.sensitivity":
     "Leitura de sensibilidade: tratada na ficha da peça",
   "write.publish.checklist.source": "Fonte na linha de estatísticas (opcional)",
+  // ENG-111: a recusa do próprio servidor, mostrada no painel. O toast de
+  // "ainda não está pronto" reutiliza o `write.header.publishNotReadyError`
+  // acima, que já diz exatamente o que falta acrescentar.
+  "write.publish.gate.careHeading":
+    "O controlo de cuidado desta peça ainda está aberto.",
+  "write.publish.gate.notReadyHeading":
+    "O rascunho gravado ainda não está pronto para publicar.",
+  "write.publish.gate.careToast":
+    "A publicação está bloqueada enquanto o controlo de cuidado estiver aberto.",
 
   // ── ArticleMetaRail ────────────────────────────────────────────────────────
   "write.meta.title": "Metadados da peça",
@@ -1502,6 +1708,34 @@ export const magazine: Catalog = {
   "issue.ship.shipIt": "Lançar",
   "issue.ship.warnNote":
     "As peças que ainda estão atrás do portão de publicação ficam em espera e publicam-se mais tarde. A edição não espera por elas.",
+  // ENG-110 / PRD-126: lançar agenda em vez de publicar quando a edição tem uma
+  // data futura, e o desfecho é relatado depois em vez de ser assumido. Nada
+  // aqui pode descrever uma entrega: a CON-05 retirou o digest por email e a
+  // QueerPulse não envia nenhum.
+  "issue.ship.schedulesForNote":
+    "Lançar a edição não publica nada hoje. Cada peça elegível fica agendada para ficar disponível às 09:00 de {date}.",
+  "issue.ship.publishesNowNote":
+    "Cada peça elegível fica disponível a quem lê assim que lançares a edição.",
+  "issue.ship.lastShipHeading": "Último lançamento a {date}",
+  "issue.ship.lastShipPublished_one": "{count} peça é publicada a {date}.",
+  "issue.ship.lastShipPublished_other":
+    "{count} peças são publicadas a {date}.",
+  "issue.ship.heldHeading_one": "{count} peça ficou retida",
+  "issue.ship.heldHeading_other": "{count} peças ficaram retidas",
+  "issue.ship.heldLastTimeHeading_one":
+    "O último lançamento reteve {count} peça",
+  "issue.ship.heldLastTimeHeading_other":
+    "O último lançamento reteve {count} peças",
+
+  // ── Issue production toasts ──────────────────────────────────────────────
+  // O `issuePanelSaved` renomeia de propósito o antigo "Digest guardado": a
+  // CON-05 retirou o digest por email e esse separador é agora o painel da
+  // edição. Um toast a nomear uma superfície que já não existe é uma mentira.
+  "issue.toast.runOrderSaved": "Alinhamento guardado",
+  "issue.toast.issuePanelSaved": "Painel da edição guardado",
+  "issue.toast.coverSaved": "Capa guardada",
+  "issue.toast.shipped": "Edição lançada",
+  "issue.toast.contentsBlurbSaved": "Descrição do índice guardada",
 
   // ── IssueTabsNav ─────────────────────────────────────────────────────────
   "issue.tabs.ariaLabel": "Secções da produção da edição",
@@ -1580,8 +1814,12 @@ export const magazine: Catalog = {
   // ── CoverContentsTab ─────────────────────────────────────────────────────
   "issue.cover.heading": "Capa",
   "issue.cover.artPlaceholder": "Imagem de capa",
-  "issue.cover.imageUrlLabel": "URL da imagem de capa",
-  "issue.cover.imageUrlPlaceholder": "https://…",
+  // A PRD-128 substituiu o campo de URL em bruto por um carregamento a sério,
+  // por isso a etiqueta nomeia a imagem em vez do endereço de onde era colada.
+  "issue.cover.imageLabel": "Imagem de capa",
+  "issue.cover.imageHelper":
+    "A imagem que apresenta a edição em todos os sítios onde aparece. Pelo menos 1200 por 600.",
+  "issue.cover.imagePlaceholder": "Ainda sem imagem de capa",
   "issue.cover.coverlineLabel": "Frase de capa {n}",
   "issue.cover.hint":
     "As frases de capa não são títulos. Mais curtas, mais diretas, sem trocadilhos.",
@@ -1669,6 +1907,12 @@ export const magazine: Catalog = {
   "writer.work.messageEditor": "Mensagem à pessoa editora",
   "writer.work.activeBadge": "Ativa",
   "writer.work.setActive": "Usar para assinatura e termos",
+  // Substitui o enum `magazine_payment.status` em bruto que quem escreve lia no
+  // seu próprio cartão ("approved_unpaid"). Fica separado de
+  // `piece.moneyMini.status*`, que é o mesmo facto do lado de quem edita.
+  "writer.work.paymentStatus.agreed": "Acordado",
+  "writer.work.paymentStatus.approvedUnpaid": "Aprovado, por pagar",
+  "writer.work.paymentStatus.paid": "Pago",
 
   // ── BriefDetailModal ─────────────────────────────────────────────────────
   "writer.brief.title": "Briefing: {title}",
@@ -1694,12 +1938,12 @@ export const magazine: Catalog = {
   "writer.pitches.noteLabel": "Do que se trata",
   "writer.pitches.notePlaceholder": "A ideia, porquê agora, e para quem é.",
   "writer.pitches.send": "Enviar",
+  "writer.pitches.sentToast": "Proposta enviada.",
 
   // ── WriterPaymentsTab ────────────────────────────────────────────────────
   "writer.payments.emptyTitle": "Ainda não tens pagamentos",
   "writer.payments.emptyDescription":
     "Assim que uma peça for entregue e aprovada, o pagamento aparece aqui.",
-  "writer.payments.issueLabel": "Edição {issue}",
   "writer.payments.unscheduled": "Sem edição agendada",
   "writer.payments.terms":
     "Prazo de pagamento de 21 dias. Se estivermos atrasados, isso fica registado aqui antes de teres de perguntar.",
@@ -1722,6 +1966,7 @@ export const magazine: Catalog = {
   "writer.byline.anonymous": "Anónime",
   "writer.byline.emptyState":
     "Ainda não tens nenhuma atribuição ativa para definir uma assinatura.",
+  "writer.byline.updatedToast": "Assinatura atualizada.",
 
   // ── FileDraftModal ───────────────────────────────────────────────────────
   "writer.fileDraft.title": "Entregar “{title}”",
@@ -1737,6 +1982,27 @@ export const magazine: Catalog = {
     "A contagem de palavras é comparada com o teu briefing ({target} palavras). Passar do valor não é problema.",
   "writer.fileDraft.wordCountNoTarget":
     "A contagem de palavras é comparada com o teu briefing. Passar do valor não é problema.",
+  "writer.fileDraft.filedToast": "Rascunho entregue.",
+  "writer.fileDraft.filing": "A entregar…",
+  "writer.fileDraft.failed":
+    "A entrega não foi concluída. O teu texto continua aqui, tenta entregar outra vez.",
+  // Entregar deixou de ser uma substituição às cegas: quem escreve escolhe o
+  // que acontece ao rascunho que está na redação, e uma versão gravada depois
+  // de abrir a janela trava a entrega até essa versão ter sido vista.
+  "writer.fileDraft.conflictHeading": "Este rascunho mudou desde que o abriste",
+  "writer.fileDraft.conflictBody":
+    "A pessoa que te edita guardou este artigo depois de o abrires. Recarrega o rascunho para veres essa versão antes de entregares, para não se perder nada. O teu texto fica na caixa.",
+  "writer.fileDraft.conflictReload": "Recarregar o rascunho",
+  "writer.fileDraft.currentDraftWords":
+    "O rascunho que está na redação agora: {words} palavras, edições incluídas.",
+  "writer.fileDraft.loadCurrentDraft": "Começar a partir do rascunho atual",
+  "writer.fileDraft.modeLabel": "O que acontece ao rascunho",
+  "writer.fileDraft.modeAppend": "Acrescentar o meu texto ao fim",
+  "writer.fileDraft.modeReplace": "Substituir todo o rascunho pelo meu texto",
+  "writer.fileDraft.modeAppendHelper":
+    "Entregar o mesmo texto duas vezes acrescenta-o uma vez. Nada do que já está na redação é alterado.",
+  "writer.fileDraft.modeReplaceHelper":
+    "A versão de quem te edita é guardada primeiro, para que possa ser reposta a partir do histórico de versões.",
 
   // ── MessageEditorModal (Fase 7 Vaga F) ──────────────────────────────────
   "writer.messages.title": "Mensagens · {title}",
@@ -1780,7 +2046,7 @@ export const magazine: Catalog = {
     "Um editor vai ler a tua amostra e responder-te. Isto demora normalmente umas duas semanas.",
   "applyToWrite.declined.title": "Desta vez não",
   "applyToWrite.declined.body":
-    "Obrigado por te candidatares. Desta vez não resultou.",
+    "Obrigade por te candidatares. Desta vez não resultou.",
   "applyToWrite.declined.reviewNoteLabel": "Da parte dos editores:",
   "applyToWrite.declined.reapplyCta": "Candidatar de novo",
   "applyToWrite.approved.title": "Já és uma pessoa escritora da QueerPulse",
@@ -1789,8 +2055,6 @@ export const magazine: Catalog = {
   "applyToWrite.approved.cta": "Começar a escrever",
 
   // ── ArticleComments (comments/) — comentários de leitores (CNT-10) ──────
-  "comments.heading_one": "{count} comentário",
-  "comments.heading_other": "{count} comentários",
   "comments.empty":
     "Ainda não há comentários: sê a primeira pessoa a dizer algo.",
   "comments.reply": "Responder",
@@ -1815,7 +2079,7 @@ export const magazine: Catalog = {
   "comments.report.sending": "A enviar…",
   "comments.report.confirmTitle": "Denúncia <em>enviada</em>",
   "comments.report.confirmBody":
-    "Obrigado. Um moderador vai rever o comentário de {name}.",
+    "Obrigade. Um moderador vai rever o comentário de {name}.",
   "comments.report.done": "Concluído",
   "comments.report.errorTitle": "Algo correu mal",
   "comments.report.errorBody":
@@ -1946,4 +2210,70 @@ export const magazine: Catalog = {
   "lifecycle.languages.openFailed": "Não foi possível abrir. Tenta outra vez.",
   "lifecycle.languages.allDone":
     "Este texto já existe em todos os idiomas em que publicamos.",
+
+  // ── Reader: the decks index (PRD-105) ───────────────────────────────────
+  "decks.metaTitle": "Decks interativos",
+  "decks.metaDescription":
+    "Todos os decks interativos que a revista publicou, do mais recente ao mais antigo.",
+  "decks.eyebrow": "Revista · decks",
+  "decks.title": "Decks interativos.",
+  "decks.sub":
+    "Histórias que a revista conta slide a slide: reportagens, ensaios fotográficos e peças de dados que percorres ao teu ritmo.",
+  "decks.count_one": "{count} deck",
+  "decks.count_other": "{count} decks",
+  "decks.emptyTitle": "Ainda não há decks.",
+  "decks.emptyBody":
+    "A revista ainda não publicou nenhum deck interativo. Quando publicar, fica aqui.",
+  "decks.errorTitle": "Não conseguimos carregar os decks.",
+  "decks.errorBody": "Algo nos interrompeu a caminho daqui. Tenta novamente.",
+  "decks.retryCta": "Tentar novamente",
+  "decks.loadMoreCta": "Carregar mais decks",
+  "decks.loadingMore": "A carregar…",
+  "decks.frontRailTitle": "Decks <em>interativos</em>",
+  "decks.allCta": "Ver todos os decks",
+  "masthead.nav.decks": "Decks",
+
+  // ── Reader: the deck page's own share and meta (DES-103) ────────────────
+  "deck.share": "Partilhar",
+  "deck.shareCopied": "Link copiado",
+  "deck.metaDescription":
+    "Uma apresentação interativa de {byline}, na revista QueerPulse.",
+
+  // ── Reader: paged article lists (PRD-103) ───────────────────────────────
+  "articleRows.loadMoreCta": "Carregar mais",
+  "articleRows.loadingMore": "A carregar…",
+  "search.byAuthorLabel": "Escrito por",
+
+  // ── Reader: long-read aids (PRD-113) ────────────────────────────────────
+  "toolbar.shareArticleAriaLabel": "Partilhar este artigo",
+  "reader.progressAriaLabel": "Progresso de leitura",
+  "reader.contentsAriaLabel": "Índice do artigo",
+  "reader.contentsCta": "Índice",
+  "reader.resumeText": "Ficaste a {percent}% deste texto.",
+  "reader.resumeCta": "Continuar onde ficaste",
+  "reader.resumeDismissAriaLabel": "Dispensar",
+
+  // ── Reader comments: paging and the blanked-row label ───────────────────
+  "comments.headingThreads_one": "{count} conversa",
+  "comments.headingThreads_other": "{count} conversas",
+  "comments.loadMore": "Carregar mais",
+  "comments.loadingMore": "A carregar…",
+  "comments.unknownAuthor": "[eliminado]",
+  "comments.report.subUnknown":
+    "Diz-nos o que está errado com este comentário.",
+  "comments.report.confirmBodyUnknown":
+    "Obrigade. Um moderador vai rever este comentário.",
+
+  // ── Submit a story: the real open issue (PRD-106) ───────────────────────
+  "submitStory.issue.nameUndated": "Aberta a propostas",
+  "submitStory.issue.noneOpen":
+    "Neste momento não há nenhuma edição aberta a propostas. Envia a tua proposta na mesma e a redação vai lê-la para a próxima.",
+  "issue.submissionDeadline.heading": "Propostas",
+  "issue.submissionDeadline.label": "Prazo de submissão",
+  "issue.submissionDeadline.hint":
+    "A data que quem escreve vê no formulário de envio de histórias. Deixa vazio e o formulário não mostra prazo nenhum.",
+  "issue.submissionDeadline.savedToast": "Prazo de submissão guardado",
+
+  // ── Pitch tracker (DES-100) ─────────────────────────────────────────────
+  "pitchTracker.card.submittedOn": "Enviada a {date}",
 };

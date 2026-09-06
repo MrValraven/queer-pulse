@@ -1,6 +1,6 @@
-/* Loading-state icon inside StatusCard's icon tile: a stroke ring that spins,
-   styled through the shared `.icon svg { stroke; fill: none }` rule so it
-   inherits the tile's tone colour like every other state icon does. */
+/* Loading-state icon inside StatusCard's icon tile: react-icons' <FiLoader>,
+   spun from here. Styled through the shared `.icon svg { stroke; fill: none }`
+   rule so it inherits the tile's tone colour like every other state icon. */
 .spinIcon {
   animation: spin 0.9s linear infinite;
   transform-origin: center;

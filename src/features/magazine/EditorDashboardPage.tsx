@@ -5,7 +5,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { DEMO_SECTIONS } from "./data/desk.data";
+import { useMagazineSections } from "./api/useMagazineSections";
 import { usePieces } from "./api/usePieces";
 import { usePitches } from "./api/usePitches";
 import { useDeskSummary } from "./api/useDeskSummary";
@@ -62,6 +62,20 @@ export function EditorDashboardPage() {
   // The editor directory backs both the "Viewing as" picker and the
   // sidebar's editor-load names — real names in live mode, not editorIds.
   const { editors } = useMagazineEditors();
+
+  // PRD-130 — the section taxonomy behind the Issue plan, the commission
+  // picker and the Write action. Dual-mode inside the hook: demo serves the
+  // canonical `DEMO_SECTIONS` fixture, live reads the seeded rows from
+  // `GET /magazine/sections`. The desk used to hand every one of those three
+  // the demo constant outright, which meant a live editor commissioned into
+  // a taxonomy the backend had never heard of. The two loading/error flags
+  // travel with the list because an empty picker that silently files a piece
+  // into no section at all is worse than a disabled one.
+  const {
+    sections,
+    isLoading: areSectionsLoading,
+    isError: hasSectionsError,
+  } = useMagazineSections();
 
   // Every issue, for the header switcher and the new-issue modal's suggested
   // number. `useCurrentIssue` is now only the DEFAULT selection: which issue
@@ -134,7 +148,9 @@ export function EditorDashboardPage() {
   const writeAction = useDeskWriteAction({
     activeMe,
     editors,
-    sections: DEMO_SECTIONS,
+    sections,
+    areSectionsLoading,
+    hasSectionsError,
     issue,
     track: tracks.track,
     pieceMutations,
@@ -146,7 +162,11 @@ export function EditorDashboardPage() {
     searchParams,
     setSearchParams,
     onWrite: writeAction.startWriting,
-    isWriteReady: Boolean(activeMe),
+    // The rail's "Write" deep link now waits for the section taxonomy too,
+    // since the draft cannot be stamped without one (PRD-130). Settled is
+    // enough: on a failed fetch the flag is spent on an error toast that
+    // names the real problem, which beats a flag stranded in the URL.
+    isWriteReady: Boolean(activeMe) && !areSectionsLoading,
     onCommission: modals.openCommission,
   });
 
@@ -196,6 +216,7 @@ export function EditorDashboardPage() {
       pieceActions={pieceActions}
       writeAction={writeAction}
       editors={editors}
+      sections={sections}
       activeMe={activeMe}
       onMe={setMeState}
       layout={layout}

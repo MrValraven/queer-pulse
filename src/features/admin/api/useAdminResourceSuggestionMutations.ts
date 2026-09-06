@@ -11,6 +11,7 @@ import {
   archiveResourceSuggestion,
   declineResourceSuggestion,
   type AdminResourceSuggestionListDTO,
+  type ResourceListingWriteBody,
   type ResourceSuggestionDecision,
   type ResourceSuggestionStatus,
 } from "./adminResourceSuggestions.api";
@@ -39,17 +40,34 @@ const STATUS_BY_DECISION: Record<
 // as calling the export directly inline.
 const LIVE_CALL: Record<
   ResourceSuggestionDecision,
-  (id: string, note?: string) => Promise<unknown>
+  (vars: DecideResourceSuggestionVars) => Promise<unknown>
 > = {
-  approve: (id, note) => approveResourceSuggestion(id, note),
-  decline: (id, note) => declineResourceSuggestion(id, note),
-  archive: (id, note) => archiveResourceSuggestion(id, note),
+  approve: ({ id, listing, note }) => {
+    // Guarded rather than assumed: `listing` is optional on the vars because
+    // decline and archive never carry one, and an approve that reached here
+    // without it would otherwise POST a body the endpoint rejects with a
+    // validation error the reviewer cannot act on. The page never opens the
+    // approve path without a draft, so this is a contract statement.
+    if (!listing) {
+      throw new Error(
+        "Approving a resource suggestion needs the reviewed listing body.",
+      );
+    }
+    return approveResourceSuggestion(id, listing, note);
+  },
+  decline: ({ id, note }) => declineResourceSuggestion(id, note),
+  archive: ({ id, note }) => archiveResourceSuggestion(id, note),
 };
 
 export interface DecideResourceSuggestionVars {
   id: string;
   decision: ResourceSuggestionDecision;
   note?: string;
+  /**
+   * The reviewed directory listing an APPROVAL publishes (PRD-269). Absent on
+   * decline and archive, which produce nothing public.
+   */
+  listing?: ResourceListingWriteBody;
 }
 
 type SuggestionsData = InfiniteData<AdminResourceSuggestionListDTO>;
@@ -65,8 +83,14 @@ interface DecideContext {
  * mode it calls `POST /admin/resource-suggestions/:id/{approve|decline|archive}`
  * and reconciles by invalidating on settle. Both modes patch the row's
  * `status` across every cached filter tab optimistically and roll back on
- * error. Deliberately never touches a `ResourceListing` — approving a
- * suggestion only records the decision, it never auto-creates a listing.
+ * error.
+ *
+ * Approving carries the reviewed listing body (PRD-269): the endpoint
+ * publishes the organisation to the public directory in the same transaction
+ * as the decision, so the row comes back with a `createdListingId` and can
+ * never be approved a second time. The optimistic patch stamps that field too,
+ * which is what keeps the console's approve action off a row that is already
+ * live in demo mode, where nothing is ever re-fetched to correct it.
  */
 export function useAdminResourceSuggestionMutations() {
   const { demoMode } = useDemoMode();
@@ -87,6 +111,15 @@ export function useAdminResourceSuggestionMutations() {
                         ...item,
                         status,
                         decidedAt: item.decidedAt ?? new Date().toISOString(),
+                        // An approval publishes a listing, so the row is now
+                        // live. The id is a placeholder until the invalidation
+                        // brings the real one back; in demo mode there is no
+                        // invalidation and the placeholder IS the record, which
+                        // is the same contract the rest of this patch keeps.
+                        createdListingId:
+                          status === "approved"
+                            ? (item.createdListingId ?? "pending")
+                            : item.createdListingId,
                       }
                     : item,
                 ),
@@ -102,17 +135,18 @@ export function useAdminResourceSuggestionMutations() {
     DecideResourceSuggestionVars,
     DecideContext
   >({
-    mutationFn: async ({ id, decision, note }) => {
+    mutationFn: async (variables) => {
+      const { id, decision } = variables;
       const status = STATUS_BY_DECISION[decision];
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.resourceSuggestion.decide (demo — no network)", {
+        logInfo("admin.resourceSuggestion.decide (demo, no network)", {
           id,
           decision,
         });
         return status;
       }
-      await LIVE_CALL[decision](id, note);
+      await LIVE_CALL[decision](variables);
       return status;
     },
     onMutate: async ({ id, decision }) => {

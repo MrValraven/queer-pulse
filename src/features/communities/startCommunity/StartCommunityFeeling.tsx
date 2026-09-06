@@ -13,7 +13,7 @@ const ORB: Record<TintKey, string> = {
 /** Chapter 6 — Feeling: a colour and a line that capture the heart. */
 export function StepFeeling({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
-  const { draft, set, setTint } = form;
+  const { draft, set, setTint, setAvatarPreviewUrl } = form;
   return (
     <div>
       <div className={styles.field}>
@@ -37,6 +37,24 @@ export function StepFeeling({ form }: { form: CommunityForm }) {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className={styles.field}>
+        <label>{t("communities:start.feeling.avatarLabel")}</label>
+        <ImageUploadField
+          kind="community-avatar"
+          circle
+          size={112}
+          value={draft.avatarImageUrl}
+          onChange={(avatarImageUrl) => set({ avatarImageUrl })}
+          // The picked image is fetchable right now; the stored key is not, so
+          // the sticky card preview beside the wizard reads it from here.
+          onPreviewChange={(previewUrl) => setAvatarPreviewUrl(previewUrl)}
+          placeholder={draft.name || t("communities:start.feeling.avatarLabel")}
+        />
+        <span className={styles.hint}>
+          {t("communities:start.feeling.avatarHint")}
+        </span>
       </div>
 
       <div className={styles.field}>

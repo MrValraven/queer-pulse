@@ -77,6 +77,11 @@ export const NOTIFICATION_CATEGORY_GROUPS: NotificationCategoryGroup[] = [
         "announcements",
       ),
       row(NOTIFICATION_PREFERENCE_CATEGORY.topicFollows, "topicFollows"),
+      // PRD-208. Sits beside "topics I follow" because it is the same kind of
+      // switch: something you asked to hear about, from somebody else's work.
+      // It is also the ONLY thing following a persona ever sends, so this is
+      // the row that makes following safe to try.
+      row(NOTIFICATION_PREFERENCE_CATEGORY.personaFollows, "personaFollows"),
     ],
   },
   {

@@ -2,10 +2,11 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { Avatar, ImageSlot, SkeletonLine } from "../../shared/components/ui";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { DEMO_ISSUE_COVER, ISSUE_COVER_IMG } from "./issue.data";
+import { DEMO_ISSUE_COVER } from "./issue.data";
 import styles from "./IssuePage.module.css";
 
 export interface IssueCoverProps {
@@ -17,6 +18,17 @@ export interface IssueCoverProps {
   title?: ReactNode;
   dek?: ReactNode;
   publishedLabel?: string;
+  /** PRD-104 — the desk's uploaded cover art. Absent/null keeps the tinted
+   *  `ImageSlot` placeholder; the stock photograph is now a demo-only value
+   *  passed in like any other, never a default baked in here. */
+  coverUrl?: string | null;
+  /** PRD-104 — the saved reframe for `coverUrl`, applied as a FOCAL POINT.
+   *  `crop` would distort it: this slot is a fixed 3/4 box and an editor's
+   *  rect has whatever aspect they dragged. */
+  coverCrop?: CropRect;
+  /** PRD-104 — whether this is the issue currently on the newsstand. The
+   *  "Current" pill used to render on every issue in the archive. */
+  isCurrent?: boolean;
   /** Demo mode alone renders the fabricated season line, stat counts and the
    *  editor's letter — none of which has a backend analogue. */
   demoMode: boolean;
@@ -29,6 +41,9 @@ export function IssueCover({
   title,
   dek,
   publishedLabel,
+  coverUrl,
+  coverCrop,
+  isCurrent = false,
   demoMode,
   loading = false,
 }: IssueCoverProps) {
@@ -37,7 +52,9 @@ export function IssueCover({
     <>
       <div className={styles.cover}>
         <div className={styles.coverInner}>
-          <Link to={routes.magazine} className={styles.back}>
+          {/* PRD-104 — "All issues" goes to the archive. It used to land on
+              the magazine front, which is not where the link says it goes. */}
+          <Link to={routes.issues} className={styles.back}>
             <FiArrowLeft aria-hidden /> {t("magazine:issue.backToAllIssues")}
           </Link>
           <div className={styles.spread}>
@@ -55,9 +72,12 @@ export function IssueCover({
                 {demoMode && (
                   <span className={styles.numL}>{DEMO_ISSUE_COVER.season}</span>
                 )}
-                <span className={styles.pill}>
-                  {t("magazine:issue.currentPill")}
-                </span>
+                {/* PRD-104 — only the issue actually on the newsstand. */}
+                {isCurrent && (
+                  <span className={styles.pill}>
+                    {t("magazine:issue.currentPill")}
+                  </span>
+                )}
               </div>
               <h1 className={styles.h1}>
                 {loading ? <SkeletonLine width="70%" height={48} /> : title}
@@ -115,7 +135,8 @@ export function IssueCover({
             <ImageSlot
               tint="coral"
               radius={18}
-              src={ISSUE_COVER_IMG}
+              src={coverUrl ?? undefined}
+              focus={coverCrop}
               alt={t("magazine:issue.coverAlt", { number: number ?? "" })}
               placeholder={t("magazine:issue.coverAlt", {
                 number: number ?? "",

@@ -9,11 +9,14 @@ import {
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   deletePost,
+  deleteThread,
   editPost,
   editThreadTags,
   editThreadTitle,
   followThread,
   lockThread,
+  markThreadRead,
+  moveThreadCategory,
   pinThread,
   replyToThread,
   restorePost,
@@ -625,6 +628,128 @@ export function useEditThreadTags(slug: string | undefined) {
       if (demoMode) return;
       invalidateThread(queryClient);
       void queryClient.invalidateQueries(THREADS_KEY);
+    },
+  });
+}
+
+/**
+ * PATCH /forum/threads/:slug, moving a thread to another category (PRD-163).
+ *
+ * A thread's category was fixed at creation: neither the author nor a
+ * moderator could refile a mis-filed one, and members browse the forum BY
+ * category from the sidebar, so a trans-health question left under "General"
+ * was invisible to exactly the people looking for it.
+ *
+ * The server owns the permission (author inside 24 hours, moderator any time);
+ * `canMoveThreadCategory` keeps the affordance off rows where it would 403.
+ * A missing slug THROWS rather than reporting a silent success, matching
+ * `useEditThreadTitle`/`useEditThreadTags`.
+ *
+ * On success it invalidates the thread list, the pinned bucket and the
+ * per-category COUNTS: the sidebar tallies are computed from this column, so
+ * leaving them stale showed the thread under its new heading while both
+ * numbers still described the old filing.
+ */
+export function useMoveThreadCategory() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { slug: string; category: string }>({
+    mutationFn: async ({ slug, category }) => {
+      if (demoMode) return;
+      if (!slug) throw new Error("Cannot move a thread without its slug");
+      await moveThreadCategory(slug, category);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      invalidateThread(queryClient);
+      void queryClient.invalidateQueries(THREADS_KEY);
+      void queryClient.invalidateQueries({
+        queryKey: ["forum-pinned-threads"],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["forum-thread-counts"],
+      });
+    },
+  });
+}
+
+/**
+ * POST /forum/threads/:slug/read — record that the member has seen this thread
+ * as it stands, which is what clears its unread badge (PRD-170).
+ *
+ * READING IS NOT FOLLOWING. This is a different route from
+ * `POST /forum/threads/:slug/follow` and writes a different field, so opening a
+ * thread signs nobody up for a notification per reply; `isSubscribed` never
+ * moves. Fire it AFTER the page has rendered: `GET /forum/threads/:slug`
+ * deliberately answers with the count from BEFORE the stamp, which is what lets
+ * the very visit that clears the badge still show where the member left off.
+ *
+ * Only the thread LIST (and the sticky bucket) is invalidated on success. This
+ * thread's own meta is deliberately left alone: refetching it here would
+ * replace the "you left off 7 replies ago" the page is currently showing with a
+ * fresh zero, mid-read. Both list queries are inactive while the member is on
+ * the thread page, so they simply refetch when they next mount — which is the
+ * moment the cleared badge matters.
+ *
+ * `markRead` is `mutation.mutate`, which react-query keeps referentially
+ * stable, so it can sit in an effect's dependency list without re-firing.
+ */
+export function useMarkThreadRead() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const mutation = useMutation<void, Error, { slug: string }>({
+    mutationFn: async ({ slug }) => {
+      // Demo has no watermark to stamp; the mock threads carry no unread count
+      // in the first place, so there is nothing to clear.
+      if (demoMode || !slug) return;
+      await markThreadRead(slug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries(THREADS_KEY);
+      void queryClient.invalidateQueries({
+        queryKey: ["forum-pinned-threads"],
+      });
+    },
+    // A watermark that fails to stamp is not worth a toast or a retry: the
+    // badge simply stands until the next visit.
+  });
+  return { markRead: mutation.mutate };
+}
+
+/**
+ * DELETE /forum/threads/:slug, withdrawing a WHOLE thread (PRD-160).
+ *
+ * `useDeletePost` tombstones ONE post. Used on an opening post that blanked the
+ * body and left the thread standing: its title, its row on /forum and its card
+ * in the home feed all kept their live link, and there was no thread-level
+ * delete at all. This is that missing action.
+ *
+ * Everything the withdrawn thread was counted or listed in has to be refetched,
+ * or the row it just left stays on screen until a stale time lapses: the list,
+ * the pinned bucket, the sidebar counts, this thread's own page queries, and
+ * the home feed, which carries forum threads as cards of its own.
+ */
+export function useDeleteThread() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { slug: string }>({
+    mutationFn: async ({ slug }) => {
+      if (demoMode) return;
+      if (!slug) throw new Error("Cannot delete a thread without its slug");
+      await deleteThread(slug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      invalidateThread(queryClient);
+      void queryClient.invalidateQueries(THREADS_KEY);
+      void queryClient.invalidateQueries({
+        queryKey: ["forum-pinned-threads"],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["forum-thread-counts"],
+      });
+      void queryClient.invalidateQueries({ queryKey: ["feed"] });
     },
   });
 }

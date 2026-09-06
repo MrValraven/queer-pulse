@@ -48,6 +48,7 @@ export function DirectoryListView({
   places,
   distanceById,
   total,
+  loadedCount = 0,
   loading,
   isError = false,
   onRetry,
@@ -64,6 +65,11 @@ export function DirectoryListView({
    *  the single most misleading thing this grid could do. */
   distanceById?: ReadonlyMap<string, number> | null;
   total: number;
+  /** How many places have been fetched so far, BEFORE the client-side category
+   *  / vibe / "open now" filters that produced `places`. Only read by the
+   *  filtered-empty state, which must not claim the whole registry was
+   *  checked when pages remain unfetched. */
+  loadedCount?: number;
   loading: boolean;
   /** True when the directory read failed (DES-25). Rendered as its own state,
    *  so an outage never reads as "no places listed yet". */
@@ -119,23 +125,39 @@ export function DirectoryListView({
     setBeen((current) => ({ ...current, [placeId]: currentBeen + 1 }));
   }
 
-  // Three distinct states below: the read failed, nothing is listed yet, and
-  // the filters matched nothing. The second offers "list a business" and the
-  // third offers Clear filters as the primary escape hatch.
+  // Four distinct states below: the read failed, nothing is listed yet, the
+  // filters matched nothing in a registry that is fully loaded, and the filters
+  // matched nothing YET while pages remain unfetched. The last two differ only
+  // in what they are entitled to claim: category, vibe and "open now" are
+  // applied client-side over the loaded pages alone, so with `hasMoreFromServer`
+  // still true a flat "no places match those filters" would be a platform-wide
+  // verdict this view has not earned. Both offer Clear filters as the primary
+  // escape hatch; "nothing listed yet" offers "list a business" instead.
   const listBusinessAction = {
     label: t("marketing:directory.submitStrip.cta"),
     to: routes.listBusiness,
   };
+  const clearFiltersAction = {
+    label: t("marketing:directory.clearFilters"),
+    onClick: onClearFilters,
+  };
   const emptyState =
-    hasActiveFilters && total > 0 ? (
+    hasActiveFilters && total > 0 && hasMoreFromServer ? (
+      <EmptyState
+        icon={<FiSearch />}
+        title={t("marketing:directory.emptyPartial.title")}
+        description={t("marketing:directory.emptyPartial.body", {
+          loaded: loadedCount,
+        })}
+        action={clearFiltersAction}
+        secondaryAction={listBusinessAction}
+      />
+    ) : hasActiveFilters && total > 0 ? (
       <EmptyState
         icon={<FiSearch />}
         title={t("marketing:directory.empty.title")}
         description={t("marketing:directory.empty.body")}
-        action={{
-          label: t("marketing:directory.clearFilters"),
-          onClick: onClearFilters,
-        }}
+        action={clearFiltersAction}
         secondaryAction={listBusinessAction}
       />
     ) : (

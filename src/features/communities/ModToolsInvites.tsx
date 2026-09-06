@@ -17,7 +17,10 @@ import {
 } from "./api/communityInvites.api";
 import { useInviteCommunityMembers } from "./api/useCommunityInvites";
 import { useRoster } from "./api/useRoster";
+import { isCommunityStaff } from "./communityStaff";
+import type { CommunityRole } from "./membership.types";
 import { ModToolsInviteResult } from "./ModToolsInviteResult";
+import { ModToolsPendingInvites } from "./ModToolsPendingInvites";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./ModToolsPanels.module.css";
 
@@ -32,8 +35,22 @@ import styles from "./ModToolsPanels.module.css";
  *
  * An invitation is an invitation. Nobody selected here joins anything; the
  * result panel reports exactly who was reached and who was passed over.
+ *
+ * The invitations already out sit directly under the form
+ * (`ModToolsPendingInvites`, PRD-140): "who have we already asked" and "who
+ * shall we ask" are one question, and the answer to the first belongs beside
+ * the control that acts on the second.
  */
-export function ModToolsInvites({ slug }: { slug: string }) {
+export function ModToolsInvites({
+  slug,
+  role,
+}: {
+  slug: string;
+  /** The viewer's own role on this roster, straight from the detail DTO's
+   *  `myRole`. It gates the pending-invitations read, which the server serves
+   *  to owner, co-owner and moderator alone. */
+  role: CommunityRole | null;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
@@ -144,6 +161,8 @@ export function ModToolsInvites({ slug }: { slug: string }) {
       {result && (
         <ModToolsInviteResult result={result} nameForSlug={nameForSlug} />
       )}
+
+      <ModToolsPendingInvites slug={slug} isStaff={isCommunityStaff(role)} />
     </div>
   );
 }

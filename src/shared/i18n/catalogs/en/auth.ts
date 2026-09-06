@@ -13,6 +13,9 @@ export const auth: Catalog = {
   "common.backToProfile": "Back to profile",
   "common.copied": "Copied",
   "common.copy": "Copy",
+  /** PRD-306. The way to `/auth/invite-code` from every page a person holding
+   *  a bare code might land on first. */
+  "common.haveAnInviteCode": "Have an invite code? Use it here",
   "common.notAMemberYet": "Not a member yet?",
   "common.optionalSuffix": "(optional)",
 
@@ -253,6 +256,28 @@ export const auth: Catalog = {
 
   // ── Magic link sign-in ──
 
+  // ── Invite-code entry (/auth/invite-code) ──
+  // PRD-306. A code with no link around it used to be a dead end. The only
+  // doors in were the whole invite URL or Google sign-in, so a person holding
+  // a perfectly good code had to apply again, spend one of their three
+  // requests an hour, and wait in the review queue for an invite that already
+  // existed. This page takes the code and hands off to the invite landing
+  // page, which owns every answer about it: valid, expired, used, revoked.
+  "inviteCode.eyebrow": "Have a code?",
+  "inviteCode.title": "Type your <em>invite code.</em>",
+  "inviteCode.sub":
+    "Codes get read out loud and passed on without the link that carried them. Put yours in below and we'll take you straight to your invite.",
+  "inviteCode.field.label": "Invite code",
+  "inviteCode.field.placeholder": "QP-XXXX-XXXX",
+  "inviteCode.field.helper":
+    "Codes look like QP-XXXX-XXXX. Lower case and stray spaces are fine, we'll tidy those up.",
+  "inviteCode.error.missing": "Type the code you were given.",
+  "inviteCode.error.unusable":
+    "That doesn't look like an invite code. Check it and try again.",
+  "inviteCode.submit": "Open my invite",
+  "inviteCode.requestInsteadLink": "No code? Ask for an invite",
+  "inviteCode.alreadyMemberLink": "Already a member? Sign in",
+
   // ── Request an invite (prospective-member ask-to-join form + confirmation) ──
   "requestInvite.eyebrow": "Request an invite",
   "requestInvite.title": "Ask to come <em>in.</em>",
@@ -396,6 +421,17 @@ export const auth: Catalog = {
     "There's nothing for you to do while you wait. Come back to this page whenever you like, your code keeps working.",
   "joinRequestStatus.underReview.foot":
     "Something changed, or you'd like to add to your request? <a>Get in touch</a>",
+  // PRD-304. The deadline the queue holds itself to, told to the one person
+  // waiting on it. The review queue has always stamped every request with a
+  // three-day answer date and coloured a request that ran past it; the
+  // applicant was told none of that, so day four felt exactly like day one and
+  // someone writing in had nothing to point at. Nothing else will ever carry
+  // this: no email is sent, and an applicant has no account to be notified in.
+  "joinRequestStatus.underReview.dueBy": "We aim to answer you by {date}.",
+  "joinRequestStatus.underReview.overdue":
+    "We said we'd answer by {date}, and we're past it. We're sorry.",
+  "joinRequestStatus.underReview.overdueFoot":
+    "Waiting longer than we promised? <a>Get in touch</a> and we'll find out where your request got to.",
 
   // Approved, invite still live. The actual win.
   "joinRequestStatus.approved.eyebrow": "You're in",
@@ -732,7 +768,11 @@ export const auth: Catalog = {
   "gettingStarted.xpSources.seeBadgesPage": "Go to Badges page",
   "gettingStarted.stepXp": "+{xp} XP",
   "gettingStarted.stepXpEarned": "+{xp} XP earned",
-  "gettingStarted.success.badge": "You earned the First Steps badge.",
+  // The badge NAME is interpolated from `badgeDisplayMetaFor("first-steps")`
+  // rather than written here, so it cannot drift from the badge catalogue.
+  // It used to be hardcoded in both languages, which meant a Portuguese
+  // member read an English badge name at the end of onboarding. DES-143.
+  "gettingStarted.success.badge": "You earned the {badge} badge.",
   "gettingStarted.meterAria": "{done} of {total} first steps done",
   "gettingStarted.checking": "Checking your progress…",
   "gettingStarted.doneLabel": "Done",

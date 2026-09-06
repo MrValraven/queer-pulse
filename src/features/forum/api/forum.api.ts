@@ -10,6 +10,7 @@ import type {
   ForumPostHistoryResponse,
   ForumPostResponse as BaseForumPostResponse,
   ForumThreadResponse as BaseForumThreadResponse,
+  PageInfo,
   Paginated,
 } from "../../../shared/contracts/contracts";
 
@@ -17,7 +18,7 @@ import type {
  * The forum DTOs, plus the fields SOC-13 added to them.
  *
  * Declared here rather than edited into `shared/contracts/contracts.ts`
- * because these four fields are read by exactly one feature. The base
+ * because these fields are read by exactly one feature. The base
  * interfaces stay the shared cross-feature contract; the forum's own
  * extensions live next to the calls that produce them.
  */
@@ -31,6 +32,30 @@ export interface ForumThreadResponse extends BaseForumThreadResponse {
   /** May the viewer replace the tag set (author or moderator)? Wider than
    *  `canEdit`, which is the author-only title permission. */
   canEditTags: boolean;
+  /** Has the whole thread been withdrawn by its author or taken down by staff
+   *  (PRD-160)? Only ever `true` in a platform moderator's view: every
+   *  member-facing read path filters withdrawn threads out of the result set,
+   *  and a direct read of one 404s. */
+  isDeleted: boolean;
+  /** A short plain-text taste of the opening post for the list row and the
+   *  feed's forum card (PRD-167). HTML-stripped, cut on a word boundary at 180
+   *  characters with a trailing ellipsis when the body ran past it.
+   *
+   *  NULL whenever the OP has nothing showable behind it: no OP resolved on
+   *  this echo, an OP its author tombstoned, or an OP a moderator hid or
+   *  removed. Render nothing at all in that case: a takedown must not leak
+   *  through the one field that now carries body text into the list. */
+  excerpt: string | null;
+  /** Replies posted since the viewer last opened this thread (PRD-170),
+   *  capped at 99 by the server.
+   *
+   *  `null` is "there is no watermark to compare against": an anonymous
+   *  reader, a thread never opened, or a write echo from
+   *  follow/unfollow/lock/pin/delete/create/update, which do not carry the
+   *  read state. `0` is "opened, nothing new since". Only `1..99` is a badge.
+   *  Populated on the list, the pinned bucket, `/threads/:slug`, search and
+   *  the community pulse lane. */
+  unreadReplyCount: number | null;
 }
 
 export interface ForumPostResponse extends BaseForumPostResponse {
@@ -39,13 +64,21 @@ export interface ForumPostResponse extends BaseForumPostResponse {
   image: string | null;
   /** Is this post its thread's accepted answer? */
   isAccepted: boolean;
+  /** Is this the thread's GENUINE opening post (ENG-130)? Read off the post's
+   *  own `is_op` column, never inferred from position, and still `true` when
+   *  that post is tombstoned or removed by a moderator. The client used to
+   *  take `data[0]` as the OP, so on any page whose first item was a reply
+   *  that reply was rendered as the question, wearing its author's name and
+   *  permissions, and vanished from the reply list. */
+  isOp: boolean;
 }
 
 // ── Forum DTOs + raw calls ───────────────────────────────────────────────────
 // Shapes come from src/shared/contracts/contracts.ts. PAGINATION: cursor-based
 // (`Paginated<T>` = { data, pageInfo }) for both the thread list and a thread's
-// posts — both are infinite. A thread's opening post is the FIRST item of its
-// posts page; the remainder are replies.
+// posts — both are infinite. A thread's opening post is the one the server
+// flags `isOp`, never "the first item of the page" (ENG-130): a page can carry
+// no OP at all, and `opAvailable` says so.
 
 export type { ForumPostHistoryResponse };
 
@@ -114,16 +147,87 @@ export async function getThreadCounts(q?: string, tag?: string) {
 export const getThread = (slug: string) =>
   apiGet<ForumThreadResponse>(`/forum/threads/${slug}`);
 
-/** GET /forum/threads/:slug/posts?cursor= — OP + replies, oldest-first. */
-export async function getThreadPosts(slug: string, cursor?: string) {
-  const q = new URLSearchParams();
-  if (cursor) q.set("cursor", cursor);
-  const qs = q.toString();
-  const res = await apiGet<ForumPostResponse[] | Paginated<ForumPostResponse>>(
-    `/forum/threads/${slug}/posts${qs ? `?${qs}` : ""}`,
-  );
-  return toPage(res);
+/**
+ * Server-supported orderings for a thread's REPLIES (PRD-162).
+ *
+ * `oldest` (the default, and what omitting `?sort=` has always meant) reads the
+ * conversation top to bottom; `newest` is `created_at DESC`; `top` is
+ * `vote_count DESC` with the oldest reply as the tie-break, and is what the
+ * reply bar's "Most helpful" button sends. Anything else is a 400.
+ */
+export type ReplySort = "oldest" | "newest" | "top";
+
+/** The posts envelope, which carries one key beyond `Paginated` (ENG-130). */
+export interface ForumPostsPage {
+  data: ForumPostResponse[];
+  pageInfo: PageInfo;
+  /**
+   * Can THIS viewer see the thread's opening post at all?
+   *
+   * Carried on every page, because it describes the thread rather than the
+   * page: false when the OP's author is muted or blocked for this viewer, when
+   * a moderator hid the post, or when the thread carries no `is_op` post. It is
+   * the difference between "the OP has not loaded yet" and "there is no OP here
+   * for you", which is the whole reason a reply used to be promoted into the OP
+   * card. Absent on an older/array response, which is read as `true`.
+   */
+  opAvailable: boolean;
 }
+
+/**
+ * GET /forum/threads/:slug/posts?cursor=&sort= — the opening post plus a page
+ * of replies.
+ *
+ * `limit` counts TOP-LEVEL replies rather than posts: a page carries its roots
+ * PLUS every reply nested under them, so `data.length` can exceed the limit and
+ * a reply never arrives before its parent. Order is
+ * `[OP?] [accepted answer?] [roots in sort order] [descendants in sort order]`
+ * and is rendered verbatim — see `buildReplyTree`, which groups but never
+ * reorders.
+ *
+ * Each sort mints its OWN cursor format, and a cursor from one decodes as "no
+ * cursor" under another (silently restarting the paging rather than erroring),
+ * so `sort` is part of the react-query key in `useThread`: changing it starts a
+ * fresh infinite query with no cursor instead of feeding the old one across.
+ */
+export async function getThreadPosts(
+  slug: string,
+  cursor?: string,
+  sort?: ReplySort,
+): Promise<ForumPostsPage> {
+  const params = new URLSearchParams();
+  if (cursor) params.set("cursor", cursor);
+  if (sort) params.set("sort", sort);
+  const qs = params.toString();
+  const res = await apiGet<
+    | ForumPostResponse[]
+    | (Paginated<ForumPostResponse> & { opAvailable?: boolean })
+  >(`/forum/threads/${slug}/posts${qs ? `?${qs}` : ""}`);
+  const page = toPage(res);
+  return {
+    ...page,
+    // Only an explicit `false` withholds the OP card. A bare-array response (or
+    // any envelope without the key) is read as "the OP is fine", so a stale
+    // backend never blanks the opening post of every thread.
+    opAvailable: Array.isArray(res) ? true : res?.opAvailable !== false,
+  };
+}
+
+/**
+ * POST /forum/threads/:slug/read — stamp the member's read watermark on this
+ * thread, which is what clears its unread badge (PRD-170).
+ *
+ * READING IS NOT FOLLOWING. This is a different route from
+ * `POST /forum/threads/:slug/follow` and writes a different field: opening a
+ * thread records where the member got to and signs them up for nothing, so
+ * `isSubscribed` is untouched. 404s on a thread the viewer could not have read.
+ *
+ * Call it AFTER rendering: `GET /forum/threads/:slug` deliberately answers with
+ * the count from before the stamp, which is what lets the page show a member
+ * where they left off on the very visit that clears it.
+ */
+export const markThreadRead = (slug: string) =>
+  apiPost<{ ok: true }>(`/forum/threads/${slug}/read`);
 
 export interface CreateThreadDto {
   title: string;
@@ -188,6 +292,25 @@ export const restorePost = (id: string) =>
 /** PATCH /forum/threads/:slug — author edits the thread title. */
 export const editThreadTitle = (slug: string, title: string) =>
   apiPatch<ForumThreadResponse>(`/forum/threads/${slug}`, { title });
+
+/** PATCH /forum/threads/:slug, moving the thread to another category (PRD-163).
+ *  Accepted from the AUTHOR within the thread's first 24 hours, or from a
+ *  moderator at any time; the server is the authority and answers 403 outside
+ *  that (`canMoveThreadCategory` keeps the affordance off the row rather than
+ *  offering an action that will fail). `category` is free text on the wire
+ *  (there is no backend enum), so the ids come from the frontend's own `CATS`
+ *  list in `forum.data.ts`. `"all"` is reserved and rejected. */
+export const moveThreadCategory = (slug: string, category: string) =>
+  apiPatch<ForumThreadResponse>(`/forum/threads/${slug}`, { category });
+
+/** DELETE /forum/threads/:slug, withdrawing a WHOLE thread (soft delete), from
+ *  its author or platform staff (PRD-160). Distinct from
+ *  `DELETE /forum/posts/:id`, which tombstones one post: that used to be the
+ *  only delete the forum had, so deleting your opening post blanked its body
+ *  and left the thread, its title and its link standing. Stamps the thread and
+ *  tombstones the OP; replies are left alone. Idempotent. */
+export const deleteThread = (slug: string) =>
+  apiDelete<ForumThreadResponse>(`/forum/threads/${slug}`);
 
 /** PATCH /forum/threads/:slug — replace the thread's tag set. Accepted from
  *  the author OR a moderator (filing a thread is janitorial, unlike the

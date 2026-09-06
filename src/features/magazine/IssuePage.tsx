@@ -74,6 +74,14 @@ export function IssuePage() {
             title={cover?.title}
             dek={cover?.dek}
             publishedLabel={cover?.publishedLabel}
+            // PRD-104 — the desk's own cover art and the newsstand flag. Demo
+            // mode supplies its stock photograph the same way, so `IssueCover`
+            // no longer hardcodes one for both modes.
+            coverUrl={cover?.coverUrl}
+            // Only a live issue can carry a saved reframe: `liveIssue` is null
+            // in demo mode, so this is undefined there.
+            coverCrop={liveIssue?.coverCrop}
+            isCurrent={cover?.isCurrent ?? false}
           />
           {demoMode ? (
             <IssueContents />

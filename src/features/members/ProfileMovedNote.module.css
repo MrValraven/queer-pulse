@@ -1,0 +1,34 @@
+/* The forwarded-from-an-old-username note (PRD-204). A quiet row rather than a
+   warning strip: nothing went wrong, the visitor is simply somewhere other
+   than the address they followed and deserves to be told which. */
+
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 34rem;
+  margin: 20px auto 0;
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  font-size: var(--text-18);
+  line-height: 1;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.body {
+  flex: 1 1 auto;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  margin: 0;
+  color: rgba(var(--ink-rgb), 0.75);
+  overflow-wrap: anywhere;
+}
+
+.dismiss {
+  flex: none;
+  margin: -6px -6px 0 0;
+}

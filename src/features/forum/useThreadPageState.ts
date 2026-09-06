@@ -10,9 +10,13 @@ import { useSaved } from "../../app/providers/useSaved";
 import { thread as threadPath } from "../../app/routeMap";
 import { CATS, type Reply, type ReplySortId } from "./forum.data";
 import { useThread } from "./api/useForum";
-import { useReply, useVotePost } from "./api/useForumMutations";
+import {
+  useMarkThreadRead,
+  useReply,
+  useVotePost,
+} from "./api/useForumMutations";
 import { ApiError } from "../../shared/api/client";
-import { buildReplyTree } from "./buildReplyTree";
+import { buildReplyTree, sortDemoReplies } from "./buildReplyTree";
 import { useThreadModeration } from "./useThreadModeration";
 import { useNestedReplyComposer } from "./useNestedReplyComposer";
 import type { StagedPostImage } from "../communities/usePostImageAttach";
@@ -57,7 +61,11 @@ export function useThreadPageState() {
   // demo. Detail source: demo returns the scripted mock, live fetches meta + a
   // cursor page of posts (further pages append via the "Load more" button).
   const { id: routeParam = "" } = useParams();
-  const threadQuery = useThread(routeParam);
+  // The reply ordering is declared BEFORE the query, because it is part of the
+  // query: `useThread` puts it in the react-query key so each sort is its own
+  // infinite query with its own cursor (PRD-162).
+  const [sort, setSort] = useState<ReplySortId>("oldest");
+  const threadQuery = useThread(routeParam, sort);
   // NEVER fall back to the mock registry here — that leaked demo threads into
   // live mode. Live simply has no thread until the fetch resolves (or 404s).
   // `threadData` is the optional pre-guard binding; the consumer aliases it to
@@ -93,7 +101,6 @@ export function useThreadPageState() {
     });
   };
 
-  const [sort, setSort] = useState<ReplySortId>("oldest");
   const [reply, setReply] = useState("");
   // DEMO-ONLY overlay for the OP upvote. LIVE drives the OP vote through the real
   // posts-cache patch (thread.myVote / thread.upvotes updated in place). The demo
@@ -184,6 +191,26 @@ export function useThreadPageState() {
     setDemoOpVoted(false);
   }, [threadData?.id]);
 
+  // PRD-170: stamp the read watermark once the thread has actually rendered, so
+  // the badge the member came here to clear is still the one this page is
+  // showing them (the GET deliberately answers with the pre-stamp count). This
+  // does NOT follow the thread — reading and following are separate routes
+  // writing separate fields, and opening a thread must never sign anybody up
+  // for a notification per reply.
+  //
+  // The ref keys on the slug, so it fires once per thread rather than once per
+  // render, and again when the member navigates to a different thread on the
+  // same mounted page.
+  const { markRead } = useMarkThreadRead();
+  const stampedReadSlugRef = useRef<string | null>(null);
+  const loadedThreadSlug = threadData?.slug;
+  useEffect(() => {
+    if (demoMode || !loadedThreadSlug) return;
+    if (stampedReadSlugRef.current === loadedThreadSlug) return;
+    stampedReadSlugRef.current = loadedThreadSlug;
+    markRead({ slug: loadedThreadSlug });
+  }, [demoMode, loadedThreadSlug, markRead]);
+
   const catMeta = CATS.find((c) => c.id === threadData?.category);
 
   // Safety filter, mirroring `useFeed`: a member I have muted or blocked does
@@ -204,9 +231,18 @@ export function useThreadPageState() {
     [localReplies, hiddenAuthorHandles],
   );
 
+  // LIVE: the server already applied the requested ordering, across the whole
+  // thread and at every depth, so the array is rendered verbatim. DEMO: there
+  // is no server, so the mock is ordered here — once, on the flat list, since
+  // `buildReplyTree` groups without reordering (PRD-162).
+  const orderedReplies = useMemo(
+    () => (demoMode ? sortDemoReplies(visibleReplies, sort) : visibleReplies),
+    [demoMode, visibleReplies, sort],
+  );
+
   const replyTree = useMemo(
-    () => buildReplyTree(visibleReplies, sort),
-    [visibleReplies, sort],
+    () => buildReplyTree(orderedReplies),
+    [orderedReplies],
   );
 
   // Pressed-state map for the reply like controls, derived from the server's

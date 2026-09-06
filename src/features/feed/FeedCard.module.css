@@ -311,3 +311,59 @@
   font-size: var(--text-12-5);
   color: var(--ink-60);
 }
+
+/* ── Magazine article card (PRD-107) ──────────────────────────────────────
+   The lead art strip. `ImageSlot` reserves the box and draws its own tinted
+   placeholder, so this wrapper only clips the corners and draws the same
+   hairline the card shell uses, which keeps a pale photograph from bleeding
+   into the paper it sits on. */
+.articleArt {
+  overflow: hidden;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The byline credit inside the card's meta line. Reads as text until it is
+   hovered or focused, so the headline stays the card's loudest thing. */
+.bylineLink {
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .bylineLink:hover {
+    text-decoration: underline;
+  }
+}
+.bylineLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-4);
+}
+
+/* "In English" / "Em português", shown only when the piece the reader got is
+   not in the language they are reading the app in. */
+.articleLanguage {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+/* ── Forum thread card (PRD-167) ───────────────────────────────────────────
+   The opening post's preview, sitting under the thread title in `.quote`.
+   Body copy rather than a second pull-quote: the title above is the card's
+   quoted line, and this is the paragraph it opens onto. `--ink-60` is the
+   body-copy ink and flips with the theme, so it reads on paper in both.
+   Clamped to three lines so a full 180-character excerpt can never make one
+   card taller than the grid row beside it. */
+.threadExcerpt {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

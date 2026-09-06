@@ -53,6 +53,7 @@ export function ProfileCommunityCard({
       countLabel={community.countLabel}
       activeThisWeek={activeThisWeek}
       coverImageUrl={coverImageUrl}
+      avatarImageUrl={community.avatarImageUrl ?? undefined}
       tags={community.tags}
       roster={roster}
       badge={

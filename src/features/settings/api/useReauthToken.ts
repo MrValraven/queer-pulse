@@ -22,8 +22,16 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
  * (DeleteAccountSection, AccountDataStepAway, AccountDataExport, useDsar,
  * useExportFlow) checks `getCachedReauthToken()` first and only calls
  * `beginReauth()` when it's null; the member has to press the same confirm
- * button again after landing back, which is the deliberate safety margin —
- * nothing destructive ever fires as a side effect of a page load.
+ * button again after landing back, which is the deliberate safety margin:
+ * nothing DESTRUCTIVE ever fires as a side effect of a page load.
+ *
+ * One deliberate exception, PRD-305: the data export resumes itself on the
+ * landing (see `readReauthLandingToken`). It is the one step-up call site that
+ * destroys nothing, and asking for a second press there cost the member their
+ * chosen category set. The resume is armed by the landing FRAGMENT rather than
+ * the cached token, so it fires once, on the trip the member started, and
+ * never again while the token stays cached. Deactivation, deletion and the
+ * DSAR keep the second press.
  */
 
 const TOKEN_KEY = "qp_reauth_token";
@@ -44,10 +52,52 @@ export function getCachedReauthToken(): string | null {
 }
 
 /**
+ * The reauth token carried by THIS page load's URL fragment, or `null`.
+ *
+ * `useReauthCompletion` caches that token into `sessionStorage`, but it does so
+ * in an effect at the app root, and React runs a child's effects before its
+ * parent's. A page that wants to act on the landing itself (the data export
+ * resumes there, PRD-305) would therefore call `getCachedReauthToken()` a beat
+ * too early, read `null`, and bounce the member straight back into another
+ * OAuth round trip. This reads the same fragment the provider reads, with no
+ * side effects of its own, so a page can capture the token during its FIRST
+ * render and hand it to the call it is resuming.
+ *
+ * Returns `null` once the provider has cleared the fragment, which is exactly
+ * the property the resume relies on: it can fire on the landing and never on a
+ * later visit while the cached token is still valid.
+ */
+export function readReauthLandingToken(): string | null {
+  if (!window.location.hash) return null;
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  const token = params.get("reauthToken");
+  const expiresAt = params.get("reauthExpiresAt");
+  if (!token || !expiresAt) return null;
+  const expiryMs = new Date(expiresAt).getTime();
+  if (!Number.isFinite(expiryMs) || expiryMs <= Date.now()) return null;
+  return token;
+}
+
+/**
  * Navigates the browser to `GET /auth/google?reauth=1&redirect=<here>` to
  * begin the step-up round trip. Full-page navigation, not an API call — has
  * no return value because the page is about to unload. The member lands back
  * on this exact path (`useReauthCompletion` picks up the result).
+ *
+ * THE QUERY STRING SURVIVES THE ROUND TRIP, so a caller may park state in it
+ * and find it intact on landing. Traced hop by hop: `redirect` is packed into
+ * the OAuth `state` as base64url JSON (`encodeOAuthState`), which is opaque to
+ * its contents; `decodeOAuthState` restores it verbatim; the callback's reauth
+ * branch runs it through `safeRedirectPath`, which rejects only a value that
+ * does not start with `/`, a protocol-relative or backslash prefix, any
+ * backslash, an embedded `://`, and control characters or spaces. `?`, `&` and
+ * `=` all pass. `resolvePostLoginRedirect` then rebuilds it with
+ * `new URL(safe, base)`, which preserves the search verbatim, and the token
+ * itself rides back in the FRAGMENT, so the two never compete for the space.
+ *
+ * Two rules for anything parked there: keep it SHORT (the whole path travels
+ * inside Google's `state` parameter) and re-validate it on landing, because it
+ * came back through an external redirect and is untrusted input.
  */
 export function beginReauth(): void {
   const returnPath = window.location.pathname + window.location.search;

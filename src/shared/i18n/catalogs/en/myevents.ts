@@ -119,7 +119,16 @@ export const myevents: Catalog = {
   "card.selectAria": "Select {title}",
   "card.joinLinkCta": "Join link",
   "card.directionsCta": "Directions",
-  "card.joinLinkToast": "Opening the join link…",
+  // PRD-182 — the "Join link" button now opens the host's real room. It used
+  // to fire a toast and nothing else, so an attendee of an online gathering
+  // had no way to reach it and a host no way to hand it over. The three
+  // outcomes it can have, said in words: no server to ask (demo), the host
+  // never added one, and the request fell over.
+  "card.joinLinkDemoToast": "There's no real room to join in the demo.",
+  "card.joinLinkMissingToast":
+    "The host hasn't added a join link yet. It shows up here once they do.",
+  "card.joinLinkErrorToast":
+    "Couldn't fetch the join link. Try again in a moment.",
   "card.directionsToast": "Opening directions to {venue}",
 
   // ── Live-data labels (api/myEvents.adapters.ts) ───────────────────────────
@@ -206,19 +215,6 @@ export const myevents: Catalog = {
     "You'll get a reminder in the app before this starts",
   "tools.addToCalendar": "Add to calendar",
   "tools.addedToCalendarToast": "Added to your calendar",
-  "tools.addToCalendarModalTitle": "Add to calendar",
-  "tools.addToCalendarGoogle": "Google Calendar",
-  "tools.addToCalendarOutlook": "Outlook",
-  "tools.addToCalendarYahoo": "Yahoo Calendar",
-  "tools.addToCalendarApple": "Apple Calendar",
-  "tools.addToCalendarIcs":
-    "Using another calendar app? Download the file (.ics)",
-  "tools.addToCalendarToastGoogle": "Opened in Google Calendar",
-  "tools.addToCalendarToastOutlook": "Opened in Outlook",
-  "tools.addToCalendarToastYahoo": "Opened in Yahoo Calendar",
-  "tools.addToCalendarToastApple":
-    "Downloaded. Open it to add to Apple Calendar",
-  "tools.addToCalendarToastIcs": "Downloaded. Open it in your calendar app",
   "tools.moreOptionsAria": "More options",
   "tools.more": "More",
   "tools.switchToGoing": "Switch to going",

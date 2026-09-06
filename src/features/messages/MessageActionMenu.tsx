@@ -25,6 +25,10 @@ export interface MessageActionMenuProps {
   onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
+  /** "Delete for me" (PRD-227) — hides this message from the caller's own
+   *  view only. Unconditional (unlike `onDelete`/`canDelete`): ANY
+   *  participant may do this, not just the author or staff. */
+  onDeleteForMe: () => void;
   onReport: () => void;
   /** Called after any action runs, so the parent surface closes. */
   onClose: () => void;
@@ -53,6 +57,7 @@ export function MessageActionMenu({
   onEdit,
   onCopy,
   onDelete,
+  onDeleteForMe,
   onReport,
   onClose,
 }: MessageActionMenuProps) {
@@ -153,6 +158,17 @@ export function MessageActionMenu({
         onClick={runThenClose(onCopy)}
       >
         {t("messages:actions.copy")}
+      </button>
+      {/* "Delete for me" (PRD-227) is unconditional — every participant may
+          hide a message from their own view, not just the author/staff who
+          can tombstone it for everyone below. */}
+      <button
+        type="button"
+        className={styles.overlayMenuItem}
+        role="menuitem"
+        onClick={runThenClose(onDeleteForMe)}
+      >
+        {t("messages:actions.deleteForMe")}
       </button>
       {canDelete && (
         <button

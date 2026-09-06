@@ -55,6 +55,15 @@ function buildDemoArchive(
 type StartArgs = {
   categories: string[];
   format: ExportFormat;
+  /**
+   * A step-up token to use INSTEAD of the cached one, for the resume that runs
+   * on the reauth landing (PRD-305). `useReauthCompletion` writes the cache in
+   * an effect at the app root, and a page's own effects run before its
+   * parents', so the resume would otherwise read an empty cache and redirect
+   * the member into a second OAuth round trip. It passes the token it read
+   * straight off the landing fragment.
+   */
+  reauthToken?: string;
 };
 
 /**
@@ -99,7 +108,7 @@ export function useExportFlow() {
   );
 
   const start = useCallback(
-    async ({ categories, format }: StartArgs) => {
+    async ({ categories, format, reauthToken: presented }: StartArgs) => {
       if (isStartingRef.current) return;
       stopPoll();
       if (demoMode) {
@@ -137,10 +146,17 @@ export function useExportFlow() {
       // deactivation flows use — a stolen session cookie alone shouldn't be
       // enough to exfiltrate someone's entire account. Resolved here rather
       // than by the caller so the demo branch above never touches the network
-      // and no page has to know the flow needs a token at all. No fresh token
-      // cached yet: redirect instead of proceeding — no job state change, the
-      // member just presses "start" again after landing back.
-      const reauthToken = getReauthToken();
+      // and no page has to know the flow needs a token at all.
+      //
+      // No fresh token: redirect instead of proceeding, with no job state
+      // change. The member's chosen categories and format ride out in the
+      // page's query string and come back intact (see `beginReauth`), and
+      // DataExportPage resumes this call for them on the landing, so the
+      // second run exports exactly the set they picked (PRD-305). Before that,
+      // both choices lived in component state, the round trip reset them to
+      // the defaults, and the 3-per-hour throttle capped how many times a
+      // member could correct it.
+      const reauthToken = presented ?? getReauthToken();
       if (!reauthToken) {
         beginReauth();
         return;

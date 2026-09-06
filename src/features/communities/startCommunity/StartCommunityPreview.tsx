@@ -31,7 +31,18 @@ const ACCESS_ICON = {
 } as const;
 
 /** Sticky live community-card preview that fills in as the wizard progresses. */
-export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
+export function StartCommunityPreview({
+  draft,
+  avatarPreviewUrl,
+}: {
+  draft: CommunityDraft;
+  /** A locally renderable URL for the avatar picked on chapter 6, when one was
+   *  picked this session. `draft.avatarImageUrl` is a private storage key in
+   *  live mode and cannot be rendered, so the mark falls back to the
+   *  community's initials whenever this is absent (a reloaded parked draft,
+   *  or no avatar at all) — exactly what the real card does. */
+  avatarPreviewUrl?: string | null;
+}) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const owner = ownerStewardFrom(user);
@@ -79,7 +90,17 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
           <div className={`${styles.cpvCover} ${COVER[draft.tint]}`} />
           <div className={styles.cpvBody}>
             <div className={`${styles.cpvAvatar} ${AV[draft.tint]}`}>
-              {initialsOf(draft.name)}
+              {avatarPreviewUrl ? (
+                // Decorative: the community's name is the very next line, so
+                // naming the image again would only repeat it.
+                <img
+                  className={styles.cpvAvatarImg}
+                  src={avatarPreviewUrl}
+                  alt=""
+                />
+              ) : (
+                initialsOf(draft.name)
+              )}
             </div>
             <div className={styles.cpvName}>{draft.name}</div>
             <div className={styles.cpvHandle}>

@@ -574,6 +574,10 @@ interface StaffRoleMutationVars {
   slug: string;
   role: StaffRoleId;
   isSystem: boolean;
+  /** The admin's own words for why, recorded on the audit row (PRD-288).
+   *  `AdminMemberStaffRoles` collects it in the confirmation before either
+   *  mutation is fired, so it is never empty on the wire. */
+  reason: string;
 }
 
 /**
@@ -609,7 +613,8 @@ export function useGrantStaffRole() {
       slug,
       staffRoles: [role],
     }),
-    live: ({ memberId, role }) => grantStaffRole(memberId, role),
+    live: ({ memberId, role, reason }) =>
+      grantStaffRole(memberId, role, reason),
     onMutate: ({ memberId, role }) =>
       patchStaffRolesInCache(queryClient, demoMode, memberId, (current) =>
         current.includes(role) ? current : [...current, role],
@@ -645,7 +650,8 @@ export function useRevokeStaffRole() {
       slug,
       staffRoles: [],
     }),
-    live: ({ memberId, role }) => revokeStaffRole(memberId, role),
+    live: ({ memberId, role, reason }) =>
+      revokeStaffRole(memberId, role, reason),
     onMutate: ({ memberId, role }) =>
       patchStaffRolesInCache(queryClient, demoMode, memberId, (current) =>
         current.filter((heldRole) => heldRole !== role),

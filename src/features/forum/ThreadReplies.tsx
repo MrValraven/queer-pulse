@@ -47,6 +47,16 @@ export function ModeratorByline({ mod }: { mod?: string }) {
   );
 }
 
+/**
+ * The reply count plus the three ordering buttons.
+ *
+ * DES-121: the ordering buttons are ONE control, and it says so — the same
+ * `role="group"` + group label + `aria-pressed` pattern the thread-list sort
+ * has carried all along (see `ForumThreadList`). Without it the three read as
+ * three unrelated buttons and nothing announced which order was active, so a
+ * screen-reader member could press "Newest" and hear no confirmation that
+ * anything had changed.
+ */
 export function ReplySortBar({
   count,
   sort,
@@ -54,7 +64,7 @@ export function ReplySortBar({
 }: {
   count: number;
   sort: ReplySortId;
-  setSort: (s: ReplySortId) => void;
+  setSort: (nextSort: ReplySortId) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -63,17 +73,22 @@ export function ReplySortBar({
       <span className={styles.replyCount}>
         {t("forum:repliesCount", { count, formatted: fmt.number(count) })}
       </span>
-      <div className={styles.replySort}>
-        {REPLY_SORTS.map((s) => (
+      <div
+        className={styles.replySort}
+        role="group"
+        aria-label={t("forum:replySort.groupAria")}
+      >
+        {REPLY_SORTS.map((option) => (
           <button
             type="button"
-            key={s.id}
-            className={[styles.sortBtn, sort === s.id && styles.sortBtnOn]
+            key={option.id}
+            aria-pressed={sort === option.id}
+            className={[styles.sortBtn, sort === option.id && styles.sortBtnOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setSort(s.id)}
+            onClick={() => setSort(option.id)}
           >
-            {t(s.labelKey)}
+            {t(option.labelKey)}
           </button>
         ))}
       </div>

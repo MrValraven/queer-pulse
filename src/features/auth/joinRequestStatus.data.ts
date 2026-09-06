@@ -25,6 +25,10 @@ const demoToken = (label: string): string => label.padEnd(43, "0").slice(0, 43);
 /** The demo codes, one per state. Keys are display states, not wire values. */
 export const DEMO_STATUS_TOKENS = {
   underReview: demoToken("demoUnderReview"),
+  /** PRD-304: still under review, and past the three-day date the platform
+   *  promised. The state the row exists for, and the only one where the page
+   *  apologises and points at a person. */
+  underReviewOverdue: demoToken("demoUnderReviewLate"),
   approved: demoToken("demoApproved"),
   approvedInviteSpent: demoToken("demoApprovedSpent"),
   /** Approved, invite already redeemed. The one spent state that is NOT
@@ -47,12 +51,27 @@ const daysFromNow = (days: number): string =>
 const DEMO_STATUSES: Record<string, JoinRequestStatusDTO> = {
   [DEMO_STATUS_TOKENS.underReview]: {
     status: "under_review",
-    submittedAt: daysAgo(3),
+    submittedAt: daysAgo(2),
     decidedAt: null,
     declineReason: null,
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,
+    // Three days from submission, matching the backend's review window, so the
+    // date on screen is one a reader can check against "you sent it 2 days ago".
+    dueAt: daysFromNow(1),
+  },
+  // PRD-304: the promise the queue missed. Nothing chases this applicant, so
+  // the page is the only place the overrun is ever admitted.
+  [DEMO_STATUS_TOKENS.underReviewOverdue]: {
+    status: "under_review",
+    submittedAt: daysAgo(9),
+    decidedAt: null,
+    declineReason: null,
+    inviteCode: null,
+    inviteStatus: null,
+    inviteExpiresAt: null,
+    dueAt: daysAgo(6),
   },
   [DEMO_STATUS_TOKENS.approved]: {
     status: "approved",
@@ -64,6 +83,9 @@ const DEMO_STATUSES: Record<string, JoinRequestStatusDTO> = {
     // The window runs from the applicant's FIRST look, not from the decision,
     // which is why this sits six days out on a decision made yesterday.
     inviteExpiresAt: daysFromNow(6),
+    // Decided, so the backend withholds the review deadline: `decidedAt` is
+    // the answer now, and the date it was owed by adds nothing.
+    dueAt: null,
   },
   [DEMO_STATUS_TOKENS.approvedExpiringSoon]: {
     status: "approved",
@@ -73,6 +95,7 @@ const DEMO_STATUSES: Record<string, JoinRequestStatusDTO> = {
     inviteCode: "QPDEMO-4K7M-2XQR",
     inviteStatus: "valid",
     inviteExpiresAt: daysFromNow(1),
+    dueAt: null,
   },
   // Approved, and the window ran out. THE RECOVERABLE ONE: the status page
   // offers to mint a fresh window on this same invite.
@@ -84,6 +107,7 @@ const DEMO_STATUSES: Record<string, JoinRequestStatusDTO> = {
     inviteCode: null,
     inviteStatus: "expired",
     inviteExpiresAt: daysAgo(3),
+    dueAt: null,
   },
   // Approved and already redeemed. Not recoverable, and the page must not
   // offer it: someone already has an account on this invite.
@@ -95,6 +119,7 @@ const DEMO_STATUSES: Record<string, JoinRequestStatusDTO> = {
     inviteCode: null,
     inviteStatus: "used",
     inviteExpiresAt: daysAgo(45),
+    dueAt: null,
   },
   [DEMO_STATUS_TOKENS.declined]: {
     status: "declined",
@@ -104,6 +129,7 @@ const DEMO_STATUSES: Record<string, JoinRequestStatusDTO> = {
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,
+    dueAt: null,
   },
   [DEMO_STATUS_TOKENS.declinedUnderage]: {
     status: "declined",
@@ -113,6 +139,7 @@ const DEMO_STATUSES: Record<string, JoinRequestStatusDTO> = {
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,
+    dueAt: null,
   },
 };
 
@@ -145,5 +172,6 @@ export function demoRefreshedJoinRequestInvite(
     inviteCode: "QPDEMO-4K7M-2XQR",
     inviteStatus: "valid",
     inviteExpiresAt: expiresAt,
+    dueAt: null,
   };
 }

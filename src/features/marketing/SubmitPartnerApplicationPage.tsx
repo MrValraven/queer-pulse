@@ -1,11 +1,17 @@
 import { type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
-import { Button, FadeIn, SuccessPanel } from "../../shared/components/ui";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { FiArrowRight, FiLogIn } from "react-icons/fi";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  SuccessPanel,
+} from "../../shared/components/ui";
 import { PageShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
 import { useSubmitPartnerForm } from "./useSubmitPartnerForm";
 import { useSubmitPartnerApplication } from "./api/useSubmitPartnerApplication";
 import { SubmitPartnerFields } from "./SubmitPartnerFields";
@@ -17,9 +23,24 @@ import styles from "./SubmitPartnerApplicationPage.module.css";
 export function SubmitPartnerApplicationPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const { showToast } = useToast();
-  const form = useSubmitPartnerForm(t);
+  const { loggedIn, checking, signIn } = useAuth();
+  // PRD-266. The For Organisations page hands the organisation's name over as
+  // `?org=` so the applicant does not retype what they already typed there.
+  // Read once, into the form's initial state (see `useSubmitPartnerForm`).
+  const [searchParams] = useSearchParams();
+  const form = useSubmitPartnerForm(t, searchParams.get("org") ?? "");
   const submitApp = useSubmitPartnerApplication();
+
+  // `POST /partner-applications` is `ActiveMemberGuard`ed and stamps the
+  // submitter on the row, because the decision notification and the "where is
+  // my application?" page are both addressed to that account, and the in-app
+  // bell is the only reply path there is. So a logged-out visitor is told that
+  // before filling anything in, rather than after being 401'd on submit. The
+  // page itself stays public: a prospective partner has to be able to READ
+  // what is being asked of them before deciding to join.
+  const isSignedOut = !checking && !loggedIn;
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -59,7 +80,24 @@ export function SubmitPartnerApplicationPage() {
             </p>
           </div>
 
-          {submitted ? (
+          {isSignedOut ? (
+            <FadeIn className={styles.successWrap}>
+              <EmptyState
+                icon={<FiLogIn />}
+                title={t("marketing:submitPartner.signedOut.title")}
+                description={t("marketing:submitPartner.signedOut.body")}
+                action={{
+                  label: t("marketing:submitPartner.signedOut.signInCta"),
+                  onClick: () =>
+                    signIn(`${location.pathname}${location.search}`),
+                }}
+                secondaryAction={{
+                  label: t("marketing:submitPartner.signedOut.contactCta"),
+                  to: `${routes.contact}?topic=partnership`,
+                }}
+              />
+            </FadeIn>
+          ) : submitted ? (
             <FadeIn className={styles.successWrap}>
               <SuccessPanel
                 title={t("marketing:submitPartner.success.title")}

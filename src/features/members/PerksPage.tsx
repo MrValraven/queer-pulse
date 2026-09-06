@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PerkGroups, PerksSidebar } from "./PerksSections";
 import { useRecognition } from "./api/useRecognition";
+import { levelNameKeyFor } from "./levelLadder.data";
 import styles from "./PerksPage.module.css";
 
 function StarIcon() {
@@ -30,6 +31,10 @@ export function PerksPage() {
   const recognition = useRecognition();
   const { level, perks } = recognition;
   const perksEmpty = perks.groups.length === 0;
+  // The ladder's words are owned by the frontend and keyed on the level
+  // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
+  // own English name.
+  const levelNameKey = levelNameKeyFor(level.level);
 
   let body;
   if (recognition.isLoading) {
@@ -85,7 +90,7 @@ export function PerksPage() {
                 {t("members:profile.hero.levelLabel", {
                   number: level.level,
                 })}{" "}
-                · {level.name}
+                · {levelNameKey ? t(levelNameKey) : level.name}
               </span>
               <span className={styles.perksAvail}>
                 {t("members:perks.page.availableToRedeem", {

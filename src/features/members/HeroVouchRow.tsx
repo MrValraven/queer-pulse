@@ -70,10 +70,101 @@ function resolveSelfFace(
 }
 
 /**
+ * The overlapping stack of voucher avatars. Split out of {@link HeroVouchRow}
+ * so that component stays well under the line cap once it branches on all the
+ * ways a roster can be empty.
+ *
+ * Every face is an interactive control that carries its own accessible name:
+ * a named voucher is a `<Link>` to their profile, labelled by the tooltip text
+ * and the `Avatar`'s `alt`; an anonymous voucher has nowhere to go, so it stays
+ * a non-interactive `<span>` out of the tab order, named by `aria-label` for a
+ * screen reader that walks the row. The stack is never decorative: the faces
+ * ARE the content of this row.
+ */
+function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.vouchFaces}>
+      {faces.map((face, index) => {
+        const stackStyle = {
+          marginLeft: index === 0 ? 0 : -12,
+          zIndex: faces.length - index,
+        };
+        // An anonymous voucher has no slug — render an un-linked face with
+        // a generic name so the identity is never exposed or navigable.
+        if (face.anonymous) {
+          const anonymousName = t("members:hero.vouch.anonymous");
+          return (
+            // Named faces are <Link>s (focusable); an anonymous face has no
+            // destination and performs no action, so it stays a plain,
+            // non-interactive span and is kept OUT of the tab order
+            // (jsx-a11y/no-noninteractive-tabindex). Its name remains
+            // accessible via this aria-label and the Avatar's own alt text.
+            <span
+              key={`anon-${index}`}
+              className={styles.vouchFace}
+              style={stackStyle}
+              aria-label={anonymousName}
+            >
+              <span className={styles.vouchTip}>
+                <span className={styles.nameRow}>{anonymousName}</span>
+              </span>
+              <Avatar
+                initials={face.initials}
+                tint={face.tint}
+                size={52}
+                alt={anonymousName}
+              />
+            </span>
+          );
+        }
+        return (
+          <Link
+            key={face.slug}
+            to={`/members/${face.slug}`}
+            className={styles.vouchFace}
+            style={stackStyle}
+          >
+            <span className={styles.vouchTip}>
+              <span className={styles.nameRow}>
+                {face.name}
+                <MemberStaffBadge slug={face.slug} />
+              </span>
+            </span>
+            <Avatar
+              initials={face.initials}
+              tint={face.tint}
+              size={52}
+              src={face.avatarUrl}
+              alt={face.name}
+            />
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
  * The hero's vouch row: overlapping voucher avatars and the "Vouched for by …"
- * caption (or an empty-state prompt). Extracted from `ProfileHero` so that
- * component stays under the line cap. `realSelf`/`isSelf` are resolved by the
- * caller against the authenticated user.
+ * caption. Extracted from `ProfileHero` so that component stays under the line
+ * cap. `realSelf`/`isSelf` are resolved by the caller against the authenticated
+ * user.
+ *
+ * There are three things this row can be looking at, and only one of them means
+ * nobody has vouched:
+ *
+ * 1. **A resolvable roster** — faces, names, texture chips. Also what the
+ *    profile's OWNER sees on a roster they have hidden, because the backend
+ *    exempts the owner from their own `vouchersVisible` gate. They get an extra
+ *    line saying so, since the row they are reading is not the row a visitor
+ *    reads.
+ * 2. **A count with no roster** — the member turned `vouchersVisible` off and
+ *    the backend returned the true `count` with an empty `vouchers` array. The
+ *    row states the number and says the names are hidden. It also covers the
+ *    brief window before the fetch resolves, where a true count is already on
+ *    the profile and no faces are yet.
+ * 3. **Genuinely nothing** — count zero. The only case that may ask for a vouch.
  */
 export function HeroVouchRow({
   profile,
@@ -149,6 +240,57 @@ export function HeroVouchRow({
   const youFace = youAdded ? resolveSelfFace(demoMode, user) : null;
   const faces: VoucherFace[] = youFace ? [...baseFaces, youFace] : baseFaces;
 
+  // The member's true vouch tally. `Member.vouchers` looks like a roster and is
+  // not one in live mode: `cardToMember` fills it with exactly `dto.vouchCount`
+  // placeholder entries, so its LENGTH is the profile DTO's `vouchCount` and
+  // nothing else. That is the number the backend contract says to print, and it
+  // is the same expression `ProfileTrustSignals` reads a few lines below on this
+  // very profile, so the hero and the trust row cannot disagree about one
+  // person. Never count `useVouchers`' faces instead: that array is a bounded
+  // page (20 by default) and is empty outright on a hidden roster.
+  const vouchCount = profile.vouchers?.length ?? 0;
+
+  // The member turned their voucher roster off. The backend still sends the
+  // true `count` and withholds only the names, and it exempts the owner: the
+  // owner's own fetch carries the full roster (backend `listVouchers`, and the
+  // profile DTO ships `vouchersVisible` unchanged to every viewer, precisely so
+  // a visitor can tell an empty roster apart from an absent one). So this is
+  // "hidden from the person currently looking", which is never the owner.
+  const isRosterHidden = profile.vouchersVisible === false;
+  const isRosterHiddenFromViewer = isRosterHidden && !isSelf;
+
+  if (faces.length === 0) {
+    // No faces to draw. Whether that means "nobody has vouched" is decided by
+    // the count, never by the emptiness of the roster: a hidden roster arrives
+    // empty with a real number attached, and asking for a vouch there would be
+    // soliciting on a falsehood the trust row directly below contradicts.
+    return (
+      <div className={styles.vouchRow}>
+        <div className={styles.vouchText}>
+          {vouchCount > 0 ? (
+            <>
+              <Translation
+                i18nKey="members:hero.vouch.countOnly"
+                components={{ b: <b /> }}
+                values={{ count: vouchCount }}
+              />
+              {isRosterHiddenFromViewer && (
+                <>
+                  <br />
+                  {t("members:hero.vouch.namesHidden")}
+                </>
+              )}
+            </>
+          ) : isSelf ? (
+            t("members:hero.vouch.emptySelf")
+          ) : (
+            t("members:hero.vouch.emptyOther", { first: profile.first })
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // Base voucher names for the caption. `profile.voucherNames` is only populated
   // in demo; live derives the names from the fetched faces (the adapter leaves it
   // empty), which also fixes the stray leading comma the old live path showed.
@@ -172,104 +314,45 @@ export function HeroVouchRow({
 
   return (
     <div className={styles.vouchRow}>
-      {faces.length > 0 ? (
-        <>
-          <div className={styles.vouchFaces}>
-            {faces.map((face, index) => {
-              const stackStyle = {
-                marginLeft: index === 0 ? 0 : -12,
-                zIndex: faces.length - index,
-              };
-              // An anonymous voucher has no slug — render an un-linked face with
-              // a generic name so the identity is never exposed or navigable.
-              if (face.anonymous) {
-                const anonName = t("members:hero.vouch.anonymous");
-                return (
-                  // Named faces are <Link>s (focusable); an anonymous face has no
-                  // destination and performs no action, so it stays a plain,
-                  // non-interactive span and is kept OUT of the tab order
-                  // (jsx-a11y/no-noninteractive-tabindex). Its name remains
-                  // accessible via this aria-label and the Avatar's own alt text.
-                  <span
-                    key={`anon-${index}`}
-                    className={styles.vouchFace}
-                    style={stackStyle}
-                    aria-label={anonName}
-                  >
-                    <span className={styles.vouchTip}>
-                      <span className={styles.nameRow}>{anonName}</span>
-                    </span>
-                    <Avatar
-                      initials={face.initials}
-                      tint={face.tint}
-                      size={52}
-                      alt={anonName}
-                    />
-                  </span>
-                );
-              }
-              return (
-                <Link
-                  key={face.slug}
-                  to={`/members/${face.slug}`}
-                  className={styles.vouchFace}
-                  style={stackStyle}
-                >
-                  <span className={styles.vouchTip}>
-                    <span className={styles.nameRow}>
-                      {face.name}
-                      <MemberStaffBadge slug={face.slug} />
-                    </span>
-                  </span>
-                  <Avatar
-                    initials={face.initials}
-                    tint={face.tint}
-                    size={52}
-                    src={face.avatarUrl}
-                    alt={face.name}
-                  />
-                </Link>
-              );
-            })}
-          </div>
-          <div className={styles.vouchText}>
-            <Translation
-              i18nKey="members:hero.vouch.by"
-              components={{ b: <b /> }}
-              values={{ names: namesText }}
-            />
+      <VoucherFaceStack faces={faces} />
+      <div className={styles.vouchText}>
+        <Translation
+          i18nKey="members:hero.vouch.by"
+          components={{ b: <b /> }}
+          values={{ names: namesText }}
+        />
+        <br />
+        {t(
+          isSelf
+            ? "members:hero.vouch.onlyNumberMattersSelf"
+            : "members:hero.vouch.onlyNumberMatters",
+        )}
+        {/* The owner is looking at a roster their visitors cannot see. Say so
+            here rather than leaving them to guess from the privacy sheet. */}
+        {isSelf && isRosterHidden && (
+          <>
             <br />
-            {t(
-              isSelf
-                ? "members:hero.vouch.onlyNumberMattersSelf"
-                : "members:hero.vouch.onlyNumberMatters",
+            {t("members:hero.vouch.namesHiddenSelf")}
+          </>
+        )}
+        {(textureRelationships.length > 0 ||
+          mutualsCount > 0 ||
+          mutualVoucherCount > 0) && (
+          <div className={styles.hereFor}>
+            {textureRelationships.map((relationship) => (
+              <span key={relationship} className={styles.hereForChip}>
+                {t(RELATIONSHIP_CHIP_LABEL_KEY[relationship])}
+              </span>
+            ))}
+            {mutualsCount > 0 && (
+              <span className={styles.hereForChip}>
+                {t("members:card.mutualsCount", { count: mutualsCount })}
+              </span>
             )}
-            {(textureRelationships.length > 0 ||
-              mutualsCount > 0 ||
-              mutualVoucherCount > 0) && (
-              <div className={styles.hereFor}>
-                {textureRelationships.map((relationship) => (
-                  <span key={relationship} className={styles.hereForChip}>
-                    {t(RELATIONSHIP_CHIP_LABEL_KEY[relationship])}
-                  </span>
-                ))}
-                {mutualsCount > 0 && (
-                  <span className={styles.hereForChip}>
-                    {t("members:card.mutualsCount", { count: mutualsCount })}
-                  </span>
-                )}
-                <MutualVouchersChip count={mutualVoucherCount} />
-              </div>
-            )}
+            <MutualVouchersChip count={mutualVoucherCount} />
           </div>
-        </>
-      ) : (
-        <div className={styles.vouchText}>
-          {isSelf
-            ? t("members:hero.vouch.emptySelf")
-            : t("members:hero.vouch.emptyOther", { first: profile.first })}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -31,18 +32,6 @@ const FEATURES: { labelKey: string; detailKey: string }[] = [
 ];
 
 type Platform = InstallPlatform;
-
-const CheckIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2.4}
-    strokeLinecap="round"
-  >
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
 
 export function PwaPromptPage() {
   const navigate = useNavigate();
@@ -112,7 +101,7 @@ export function PwaPromptPage() {
           {FEATURES.map((f) => (
             <div key={f.labelKey} className={styles.featureRow}>
               <div className={styles.featureIc}>
-                <CheckIcon />
+                <FiCheck aria-hidden />
               </div>
               <div>
                 <b>{t(f.labelKey)}</b>

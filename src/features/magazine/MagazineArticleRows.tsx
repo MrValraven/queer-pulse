@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { SkeletonLine } from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ArticleTagList } from "./ArticleTagList";
 import { firstPlainText, type Article } from "./data/articles";
 import styles from "./MagazineArticleRows.module.css";
@@ -60,30 +61,61 @@ export function MagazineArticleRow({
  * the empty/error states, because what "nothing here" means differs per
  * surface (an empty section reads differently from a search that found
  * nothing).
+ *
+ * PRD-103: the "load more" footer lives here rather than in each page, so the
+ * search results, the tag browse and the section drill-down all continue past
+ * the backend's 20-row page the same way, and a reader who is told "43 pieces
+ * found" can reach all 43. A caller that has nothing more to load simply omits
+ * `onLoadMore` and the footer never renders.
  */
 export function MagazineArticleRows({
   articles,
   isLoading,
   activeTag,
+  hasMore = false,
+  isLoadingMore = false,
+  onLoadMore,
 }: {
   articles: Article[];
   isLoading: boolean;
   activeTag?: string;
+  /** True while the server still holds pieces this list has not fetched. */
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
+  onLoadMore?: () => void;
 }) {
+  const { t } = useTranslation();
   const skeletonCount = articles.length || ROW_SKELETON_COUNT;
   return (
-    <div className={styles.list}>
-      {isLoading
-        ? Array.from({ length: skeletonCount }).map((_, index) => (
-            <ArticleRowSkeleton key={index} />
-          ))
-        : articles.map((article) => (
-            <MagazineArticleRow
-              key={article.id}
-              article={article}
-              activeTag={activeTag}
-            />
-          ))}
-    </div>
+    <>
+      <div className={styles.list}>
+        {isLoading
+          ? Array.from({ length: skeletonCount }).map((_, index) => (
+              <ArticleRowSkeleton key={index} />
+            ))
+          : articles.map((article) => (
+              <MagazineArticleRow
+                key={article.id}
+                article={article}
+                activeTag={activeTag}
+              />
+            ))}
+      </div>
+
+      {!isLoading && hasMore && onLoadMore && (
+        <div className={styles.loadMore}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isLoadingMore}
+            onClick={onLoadMore}
+          >
+            {isLoadingMore
+              ? t("magazine:articleRows.loadingMore")
+              : t("magazine:articleRows.loadMoreCta")}
+          </Button>
+        </div>
+      )}
+    </>
   );
 }

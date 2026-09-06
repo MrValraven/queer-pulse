@@ -34,7 +34,29 @@ export interface CoopJoinRequestBody {
   note?: string;
 }
 
+/** The three states a co-op join request moves through. Mirrors the backend
+ *  `JoinRequestStatus` enum exactly. */
+export type CoopJoinRequestStatus = "pending" | "accepted" | "declined";
+
+/**
+ * The APPLICANT's own view of a co-op join request (PRD-242). Deliberately
+ * leaner than the admin row: it carries which co-op was asked and where the
+ * request stands, and none of the triage material (`householdSize`, `note`)
+ * that belongs to the review console.
+ */
+export interface MyCoopJoinRequestDTO {
+  id: string;
+  status: CoopJoinRequestStatus;
+  createdAt: string;
+  coop: { slug: string; name: string } | null;
+}
+
 export const getHousingCoops = () => apiGet<HousingCoopDTO[]>("/housing/coops");
+
+/** The caller's own co-op applications across every co-op, newest first.
+ *  Signed-in callers only. */
+export const getMyCoopJoinRequests = () =>
+  apiGet<MyCoopJoinRequestDTO[]>("/housing/coops/join-requests/mine");
 
 export const submitCoopJoinRequest = (
   slug: string,

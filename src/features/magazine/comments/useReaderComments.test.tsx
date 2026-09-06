@@ -16,6 +16,15 @@ describe("useReaderComments (demo mode)", () => {
     });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.comments).toEqual(DEMO_READER_COMMENTS);
-    expect(result.current.total).toBe(DEMO_READER_COMMENTS.length);
+    expect(result.current.totalThreads).toBe(DEMO_READER_COMMENTS.length);
+  });
+
+  it("is a single terminal page in demo mode, so nothing offers to load more", async () => {
+    const { result } = renderHook(() => useReaderComments("any-slug"), {
+      wrapper,
+    });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.hasMore).toBe(false);
+    expect(result.current.isLoadingMore).toBe(false);
   });
 });

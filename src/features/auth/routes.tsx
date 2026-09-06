@@ -5,6 +5,13 @@ import { auth, lazyNamed } from "../../app/routeHelpers";
 
 const SignInPage = lazyNamed(() => import("./SignInPage"), "SignInPage");
 const InvitePage = lazyNamed(() => import("./InvitePage"), "InvitePage");
+// PRD-306. Type a code you were given without the link around it. Public like
+// the landing page it hands off to: someone holding an unredeemed invite has
+// no account yet, which is the whole point.
+const InviteCodePage = lazyNamed(
+  () => import("./InviteCodePage"),
+  "InviteCodePage",
+);
 const RequestInvitePage = lazyNamed(
   () => import("./RequestInvitePage"),
   "RequestInvitePage",
@@ -32,6 +39,9 @@ export function authRoutes() {
     <>
       <Route path={routes.signIn} element={auth(<SignInPage />)} />
       <Route path={routes.invite} element={auth(<InvitePage />)} />
+      {/* `/auth/invite-code` is its own exact path, so it can never be read as
+          a `:code` under `/auth/invite/` and order does not matter here. */}
+      <Route path={routes.enterInviteCode} element={auth(<InviteCodePage />)} />
       <Route
         path={`${routes.invite}/:code`}
         element={auth(<InviteLandingPage />)}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -58,7 +59,13 @@ export function PressKitPage() {
           >
             {t("marketing:pressKit.hero.downloadKitCta")}
           </Button>
-          <Button href="mailto:hello@queerpulse.com" variant="ghost">
+          {/* PRD-272. Every press call on this page used to be a
+              `mailto:hello@queerpulse.com`, so a journalist on deadline
+              landed in a shared mailbox with no queue, no assignment and no
+              status. `?topic=press` is the Contact page's own press route:
+              the same tracked `inquiries` row the Contact form writes, worked
+              in `/admin/inquiries`. */}
+          <Button to={`${routes.contact}?topic=press`} variant="ghost">
             {t("marketing:pressKit.hero.askPersonCta")}
           </Button>
         </div>
@@ -71,9 +78,15 @@ export function PressKitPage() {
               i18nKey="marketing:pressKit.contact.deskLabel"
               components={{ b: <b /> }}
             />{" "}
-            <a href="mailto:hello@queerpulse.com">
+            {/* The desk address stays PUBLISHED — a press page that hides how
+                to reach the desk is not a press page — but it is no longer a
+                `mailto:` affordance, because the tracked route is the button
+                above and a link that opens a mail client is exactly what
+                PRD-272 is about. Plain text: copyable, honest, untracked only
+                if a journalist chooses it. */}
+            <span className={styles.contactEmail}>
               {t("marketing:pressKit.contact.email")}
-            </a>
+            </span>
           </span>
           <span className={styles.sep}>·</span>
           <span>
@@ -125,8 +138,7 @@ export function PressKitPage() {
           <br />
           <Translation
             i18nKey="marketing:pressKit.footerNote.commercial"
-            // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
-            components={{ a: <a href="mailto:hello@queerpulse.com" /> }}
+            components={{ a: <Link to={`${routes.contact}?topic=press`} /> }}
           />
         </div>
       </div>
@@ -140,8 +152,8 @@ export function PressKitPage() {
         }
         sub={t("marketing:pressKit.outro.sub")}
       >
-        <Button size="lg" href="mailto:hello@queerpulse.com">
-          {t("marketing:pressKit.outro.contactCta")}
+        <Button size="lg" to={`${routes.contact}?topic=press`}>
+          {t("marketing:pressKit.outro.askCta")}
         </Button>
       </Outro>
 

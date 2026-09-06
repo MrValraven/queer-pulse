@@ -90,6 +90,32 @@
   flex-wrap: wrap;
 }
 
+/* "This gathering was cancelled" / "This gathering has ended" (PRD-181,
+   PRD-183). Coral-tinted rather than the plum success panel: this is a state
+   the member needs to notice, and the page beneath it still reads normally. */
+.stateBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin-top: 32px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  border-radius: var(--radius-badge);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--ink);
+  font-size: var(--text-14-5);
+  line-height: 1.5;
+  max-width: 62ch;
+}
+
+.stateBannerIcon {
+  display: inline-flex;
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
+  font-size: var(--text-17);
+}
+
 .sidebar {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -216,6 +242,14 @@
 .calloutWrap {
   margin-top: 40px;
 }
+/* PRD-284: the "Report this gathering" trigger at the foot of the main column.
+   `ReportSubjectControl` centres its own text, so this only sets the hairline
+   that separates it from the content above and the space around it. */
+.reportRow {
+  margin-top: 32px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
 .fullBtn {
   width: 100%;
   justify-content: center;
@@ -254,6 +288,15 @@
   display: inline-flex;
   flex: none;
   color: var(--jade);
+  font-size: var(--text-22);
+}
+/* The closed-state icon (cancelled / already over). Not jade: nothing here is
+   a success, and a green tick on "this was called off" reads as confirmation
+   of the wrong thing. Cream at reduced weight on the plum panel. */
+.rsvpClosedIcon {
+  display: inline-flex;
+  flex: none;
+  color: rgba(var(--cream-rgb), 0.72);
   font-size: var(--text-22);
 }
 .rsvpConfirmNote {

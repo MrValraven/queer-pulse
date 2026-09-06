@@ -5,6 +5,17 @@ import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 export type UploadContentType =
   "image/jpeg" | "image/png" | "image/webp" | "image/gif";
 
+/** Document content types the `message-document` upload kind accepts
+ *  (PRD-226): PDFs, spreadsheets, and plain text. Never video/audio/voice —
+ *  that stays a deliberate scope boundary. Mirrors the backend's
+ *  `DOCUMENT_UPLOAD_TYPES` (`queerpulse-backend/src/storage/
+ *  upload-content-types.ts`). */
+export type DocumentContentType =
+  | "application/pdf"
+  | "text/plain"
+  | "text/csv"
+  | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
 /** Which surface an upload belongs to — drives per-kind size/dimension limits. */
 export type UploadKind =
   | "avatar"
@@ -15,7 +26,9 @@ export type UploadKind =
   | "group-avatar"
   | "listing-photo"
   | "community-cover"
-  | "message-image";
+  | "community-avatar"
+  | "message-image"
+  | "message-document";
 
 /**
  * ============================================================================
@@ -82,7 +95,7 @@ export type UploadKind =
  */
 export interface PresignRequest {
   kind: UploadKind;
-  contentType: UploadContentType;
+  contentType: UploadContentType | DocumentContentType;
   /** Byte size of the file being uploaded, so the server can reject over-cap early. */
   byteSize: number;
 }
@@ -108,7 +121,7 @@ export interface PresignedUpload {
  */
 export const requestUpload = (
   kind: UploadKind,
-  contentType: UploadContentType,
+  contentType: UploadContentType | DocumentContentType,
   byteSize: number,
 ) =>
   apiPost<PresignedUpload>("/uploads/presign", {

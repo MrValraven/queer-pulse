@@ -2,9 +2,11 @@ import type { Dispatch, SetStateAction } from "react";
 import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import { nextLocalId } from "./useMessagesController.helpers";
 import type { useStartConversation } from "./api/useMessageMutations";
 import type { CreationOutcome } from "./messageCreation.types";
+import type { MediaKind } from "./messageSending.helpers";
 
 interface ForwardingDeps {
   demoMode: boolean;
@@ -30,8 +32,8 @@ interface ForwardingDeps {
     localId: string,
     replyToId?: string,
     forwarded?: boolean,
-    attachment?: GifAttachment,
-    mediaKind?: "gif" | "image",
+    attachment?: GifAttachment | DocumentAttachment,
+    mediaKind?: MediaKind,
   ) => void;
   /** From the sending sub-hook — re-keys and re-drives any outbox entries
    *  queued under a placeholder id once its real conversation exists. */
@@ -42,8 +44,8 @@ export interface MessageForwarding {
   forwardMessage: (
     recipient: Conversation,
     text: string,
-    attachment?: GifAttachment,
-    mediaKind?: "gif" | "image",
+    attachment?: GifAttachment | DocumentAttachment,
+    mediaKind?: MediaKind,
     outcome?: CreationOutcome,
   ) => void;
 }
@@ -76,8 +78,8 @@ export function useMessageForwarding({
   function forwardMessage(
     recipient: Conversation,
     text: string,
-    attachment?: GifAttachment,
-    mediaKind?: "gif" | "image",
+    attachment?: GifAttachment | DocumentAttachment,
+    mediaKind?: MediaKind,
     outcome?: CreationOutcome,
   ) {
     const localId = nextLocalId();

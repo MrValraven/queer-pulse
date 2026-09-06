@@ -8,11 +8,18 @@ import {
   type RefObject,
   type SetStateAction,
 } from "react";
-import { FiMoreHorizontal, FiSlash, FiVolumeX, FiX } from "react-icons/fi";
+import {
+  FiFlag,
+  FiMoreHorizontal,
+  FiSlash,
+  FiVolumeX,
+  FiX,
+} from "react-icons/fi";
 import { useSocial } from "../../app/providers/useSocial";
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ConnectionReportModal } from "../connect/ConnectionReportModal";
 import type { BlockOptions } from "../social/api/social.api";
 import { BlockMemberModal } from "./BlockMemberModal";
 import styles from "./ProfileSafetyMenu.module.css";
@@ -20,11 +27,22 @@ import styles from "./ProfileSafetyMenu.module.css";
 /**
  * Overflow "safety" menu shown on another member's profile hero (never your
  * own — the caller gates on the page's resolved `self`). Offers withdraw-vouch
- * (when currently vouched), mute/unmute, and block/unblock, wired straight to
- * `useSocial()` so demo and live both work. Mute and unblock are immediate;
- * withdrawing a vouch and blocking are destructive, so both confirm first —
- * withdraw-vouch via the shared `ConfirmDialog`, block via `BlockMemberModal`
- * (which also forwards the optional `{ reason, alsoReport }`).
+ * (when currently vouched), report, mute/unmute, and block/unblock, wired
+ * straight to `useSocial()` so demo and live both work. Mute and unblock are
+ * immediate; withdrawing a vouch and blocking are destructive, so both confirm
+ * first — withdraw-vouch via the shared `ConfirmDialog`, block via
+ * `BlockMemberModal` (which also forwards the optional
+ * `{ reason, alsoReport, reasonCode }`).
+ *
+ * "Report" is its own item rather than a checkbox inside Block (PRD-285). The
+ * safety copy sends everyone to "always start from someone's profile", and
+ * until this existed the only route from here was to BLOCK the person, which is
+ * a different decision: somebody who wants a moderator to look at a member does
+ * not necessarily want to sever the connection, and somebody who does want to
+ * sever it should not have to in order to be heard. It opens
+ * `ConnectionReportModal`, the app's existing `member`-subject report form,
+ * which files through `POST /reports` and only shows its success panel once the
+ * server has acknowledged.
  */
 /**
  * Outside-click dismiss, first-item focus on open, and roving-tabindex
@@ -112,6 +130,7 @@ export function ProfileSafetyMenu({
   const { isBlocked, isMuted, toggleBlock, toggleMute } = useSocial();
   const [open, setOpen] = useState(false);
   const [confirmingBlock, setConfirmingBlock] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const [confirmingWithdrawVouch, setConfirmingWithdrawVouch] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -148,6 +167,13 @@ export function ProfileSafetyMenu({
     setConfirmingWithdrawVouch(true);
   };
 
+  // No toast here: `ConnectionReportModal` confirms only in its own
+  // `onSuccess`, the rule PRD-202 applied to block one menu item down.
+  const handleReport = () => {
+    setOpen(false);
+    setReporting(true);
+  };
+
   const confirmWithdrawVouch = () => {
     setConfirmingWithdrawVouch(false);
     onWithdrawVouch?.();
@@ -157,14 +183,24 @@ export function ProfileSafetyMenu({
     );
   };
 
+  // Block and unblock confirm only once the server has answered. `toggleBlock`
+  // flips the store optimistically and rolls back with its own error toast if
+  // the call fails, so toasting on the click showed "You blocked X" and the
+  // rollback error together. Believing a block worked when it did not is the
+  // one place a false success matters. `ConnectionMoreMenu` already waits for
+  // `onSettled(didSucceed)`; this now matches it. In demo mode the local store
+  // is the record and `onSettled(true)` fires synchronously. PRD-202.
   const handleBlockClick = () => {
     if (blocked) {
       setOpen(false);
-      toggleBlock(slug);
-      showToast(
-        t("safety:profileMenu.unblockedToast", { name: firstName }),
-        "success",
-      );
+      toggleBlock(slug, undefined, (didSucceed) => {
+        if (didSucceed) {
+          showToast(
+            t("safety:profileMenu.unblockedToast", { name: firstName }),
+            "success",
+          );
+        }
+      });
       return;
     }
     setOpen(false);
@@ -173,16 +209,19 @@ export function ProfileSafetyMenu({
 
   const confirmBlock = (options: BlockOptions) => {
     setConfirmingBlock(false);
-    toggleBlock(slug, options);
-    showToast(
-      t(
-        options.alsoReport
-          ? "safety:profileMenu.blockedReportedToast"
-          : "safety:profileMenu.blockedToast",
-        { name: firstName },
-      ),
-      "success",
-    );
+    toggleBlock(slug, options, (didSucceed) => {
+      if (didSucceed) {
+        showToast(
+          t(
+            options.alsoReport
+              ? "safety:profileMenu.blockedReportedToast"
+              : "safety:profileMenu.blockedToast",
+            { name: firstName },
+          ),
+          "success",
+        );
+      }
+    });
   };
 
   return (
@@ -226,6 +265,16 @@ export function ProfileSafetyMenu({
             role="menuitem"
             tabIndex={-1}
             className={styles.item}
+            onClick={handleReport}
+          >
+            <FiFlag aria-hidden />
+            {t("safety:profileMenu.report", { name: firstName })}
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            tabIndex={-1}
+            className={styles.item}
             onClick={handleMute}
           >
             <FiVolumeX aria-hidden />
@@ -253,10 +302,13 @@ export function ProfileSafetyMenu({
       )}
 
       <ProfileSafetyMenuDialogs
+        slug={slug}
         firstName={firstName}
         confirmingBlock={confirmingBlock}
         onCancelBlock={() => setConfirmingBlock(false)}
         onConfirmBlock={confirmBlock}
+        reporting={reporting}
+        onCloseReport={() => setReporting(false)}
         confirmingWithdrawVouch={confirmingWithdrawVouch}
         onCloseWithdrawVouch={() => setConfirmingWithdrawVouch(false)}
         onConfirmWithdrawVouch={confirmWithdrawVouch}
@@ -265,21 +317,28 @@ export function ProfileSafetyMenu({
   );
 }
 
-/** The two destructive-action confirmations this menu can open, kept out of
- * the main component to stay under the repo's 200-line-per-component rule. */
+/** The dialogs this menu can open: the two destructive-action confirmations
+ * plus the report form, kept out of the main component to stay under the
+ * repo's 200-line-per-component rule. */
 function ProfileSafetyMenuDialogs({
+  slug,
   firstName,
   confirmingBlock,
   onCancelBlock,
   onConfirmBlock,
+  reporting,
+  onCloseReport,
   confirmingWithdrawVouch,
   onCloseWithdrawVouch,
   onConfirmWithdrawVouch,
 }: {
+  slug: string;
   firstName: string;
   confirmingBlock: boolean;
   onCancelBlock: () => void;
   onConfirmBlock: (options: BlockOptions) => void;
+  reporting: boolean;
+  onCloseReport: () => void;
   confirmingWithdrawVouch: boolean;
   onCloseWithdrawVouch: () => void;
   onConfirmWithdrawVouch: () => void;
@@ -292,6 +351,17 @@ function ProfileSafetyMenuDialogs({
           firstName={firstName}
           onCancel={onCancelBlock}
           onConfirm={onConfirmBlock}
+        />
+      )}
+
+      {/* `subjectId` is the member's slug: `CreateReportInput.subjectId` takes
+          a slug or a uuid for a `member` subject, and the backend's subject
+          resolver looks a member up either way. */}
+      {reporting && (
+        <ConnectionReportModal
+          subjectId={slug}
+          name={firstName}
+          onClose={onCloseReport}
         />
       )}
       <ConfirmDialog

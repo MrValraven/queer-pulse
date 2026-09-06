@@ -35,6 +35,49 @@ export const subprofiles: Catalog = {
   "directory.resultCount_other": "{count} personas",
   "directory.showMore": "Ver mais",
   "directory.shownOfTotal": "{shown} de {total}",
+  "directory.showMoreLoading": "A carregar…",
+
+  // Separador "personas que segues" (PRD-208). Seguir nao dava nada a quem
+  // seguia: a unica consequencia era uma notificacao para quem e dona da
+  // persona. Esta e a metade da lista.
+  "directory.tabs.ariaLabel": "Personas",
+  "directory.tabs.browse": "Toda a gente",
+  "directory.tabs.following": "Que segues",
+  "following.loading": "A carregar as personas que segues",
+  "following.error.title": "Não conseguimos carregar as personas que segues",
+  "following.error.description":
+    "Correu algo mal do nosso lado. Tenta outra vez daqui a pouco.",
+  "following.empty.title": "Ainda não segues ninguém",
+  "following.empty.description":
+    "Segue uma persona e o trabalho novo dela aparece aqui, e nas tuas notificações.",
+  "following.empty.cta": "Ver personas",
+  "following.countLine_one": "Segues 1 persona",
+  "following.countLine_other": "Segues {count} personas",
+  "following.previousPage": "Anterior",
+  "following.nextPage": "Seguinte",
+  "following.unfollow": "Deixar de seguir",
+  "following.unfollowing": "A deixar de seguir…",
+  "following.unfollowLabel": "Deixar de seguir {name}",
+  "following.unfollowedToast": "Já não segues {name}.",
+  "following.unfollowError":
+    "Não conseguimos deixar de seguir essa. Tenta outra vez.",
+  "following.followerCount_one": "1 seguidor",
+  "following.followerCount_other": "{count} seguidores",
+  "following.since": "Desde {date}",
+  "following.noAddress": "Sem página pública neste momento",
+
+  // Nota de reencaminhamento em `/p/:handle` (PRD-204). Chaves proprias, nao as
+  // de `members:profile.moved.*`: o nome do endereco aqui e um identificador de
+  // persona e nao um nome de utilizador. "identificador" segue a escolha ja
+  // feita em metaForm.handleLabel, em vez do estrangeirismo "handle".
+  "page.moved.body":
+    "Seguiste uma ligação para @{oldHandle}. Esse identificador mudou, e agora leva aqui: @{handle}.",
+  "page.moved.announcement": "Encaminhado de @{oldHandle} para @{handle}.",
+  "page.moved.ariaLabel": "Encaminhado a partir de um identificador antigo",
+  "page.moved.dismiss": "Dispensar esta nota",
+
+  "directory.narrowedNote":
+    "Profissão, etiquetas e disponibilidade filtram as personas já carregadas. Mostra mais para procurar mais longe.",
 
   // Lembrete final do diretório (SubprofileDirectoryFooterPrompt — descoberta
   // de personas, Fase 5, Momento 2). Dispensável; texto estático, sem dados ao vivo.
@@ -436,8 +479,13 @@ export const subprofiles: Catalog = {
   "mine.deleteModalConfirm": "Eliminar",
   "mine.deleteModalDeleting": "A eliminar…",
   "mine.deleteModalBody": "Isto não pode ser desfeito.",
-  "mine.deleteModalBodyShared":
-    "Isto remove {name} para todos os {n} coproprietários. Não pode ser desfeito.",
+  // Conta toda a gente MENOS quem lê. Quem lê é sempre quem criou a persona, a
+  // única pessoa que chega a esta janela, por isso a chave substituída
+  // contava-a entre as pessoas a quem estava a tirar a persona. PRD-207.
+  "mine.deleteModalBodyCoOwned_one":
+    "Isto remove {name} para ti e para mais 1 coproprietário. Não pode ser desfeito.",
+  "mine.deleteModalBodyCoOwned_other":
+    "Isto remove {name} para ti e para mais {count} coproprietários. Não pode ser desfeito.",
   "mine.rowEdit": "Editar",
   "mine.rowDelete": "Eliminar",
   "mine.endorsementCount_one": "{count} recomendação",
@@ -505,7 +553,7 @@ export const subprofiles: Catalog = {
   "metaForm.accentLabel": "Cor de destaque",
   "metaForm.bannerEdgeLabel": "Borda do banner",
   "metaForm.bannerEdgeHelper":
-    "Escolha como a capa encontra a página. Adicione uma imagem de capa para ativar.",
+    "Escolhe como a capa encontra a página. Adiciona uma imagem de capa para ativar.",
   "metaForm.bannerEdgeContained": "Contida",
   "metaForm.bannerEdgeBleed": "Sangrar na página",
   "metaForm.availabilityLabel": "Disponibilidade",
@@ -896,6 +944,13 @@ export const subprofiles: Catalog = {
   // Controlo de partilha (SubprofileShare, MySubprofilesPage)
   "share.cta": "Partilhar",
   "share.ariaLabel": "Partilhar esta persona",
+  // Aviso de último recurso quando o endereço de partilha é nulo, e o nome
+  // acessivel do botao Partilhar DESATIVADO numa persona sem endereco.
+  // PRD-206.
+  "share.noAddressYet":
+    "Esta persona ainda não tem endereço, por isso não há nada para partilhar.",
+  "share.noAddressAria":
+    "Partilhar esta persona. Indisponível até ter um endereço.",
   "share.copied": "Link copiado",
   "share.copyFailed":
     "O teu navegador não nos deixou copiar. O link está aqui, seleciona-o e copia-o à mão.",
@@ -917,7 +972,7 @@ export const subprofiles: Catalog = {
     "Não conseguimos gerar o código QR. Aqui tens o link em alternativa.",
 
   // Destaque do item em foco (SubprofileSpotlight)
-  "spotlight.eyebrow": "Comece aqui",
+  "spotlight.eyebrow": "Começa aqui",
   "spotlight.open": "Abrir",
 
   // Créditos de colaboração num item público (ItemCollaborators, em
@@ -1018,6 +1073,10 @@ export const subprofiles: Catalog = {
   "side.noTagline": "Ainda sem linha",
   "side.statusLive": "Ativo",
   "side.viewCta": "Ver",
+  // Por cima da linha de acoes quando Ver e Partilhar estao desativados, e
+  // alvo do `aria-describedby` de ambos. PRD-206.
+  "side.noAddressNote":
+    "Ainda sem endereço. Dá-lhe um handle e publica-a, e Ver e Partilhar ganham vida.",
   "side.thingsLeft_one": "Falta {count} coisa",
   "side.thingsLeft_other": "Faltam {count} coisas",
   "side.readyToPublish": "Pronto para publicar",
@@ -1177,7 +1236,7 @@ export const subprofiles: Catalog = {
   "reportModal.error": "Não conseguimos enviar essa denúncia. Tenta outra vez.",
   "reportModal.success.title": "Denúncia enviada",
   "reportModal.success.body":
-    "Obrigado. Uma pessoa moderadora vai rever esta persona. Podemos contactar-te para mais detalhes, mas nunca partilhamos a tua denúncia com quem denunciaste.",
+    "Obrigade. Uma pessoa moderadora vai rever esta persona. Podemos contactar-te para mais detalhes, mas nunca partilhamos a tua denúncia com quem denunciaste.",
   "reportModal.success.doneCta": "Concluído",
 
   // Modal de pessoas (SubprofilePeopleModal) — lista de seguidores/recomendações,
@@ -1530,14 +1589,14 @@ export const subprofiles: Catalog = {
   // por email o registo de autoria do item, apenas para o dono, mostrado na
   // gaveta assim que o item está guardado (ver `authorshipRecord.ts` para o
   // conteúdo do registo em si).
-  "protect.heading": "Proteja este trabalho",
+  "protect.heading": "Protege este trabalho",
   "protect.blurb":
-    "Descarregue um registo datado do seu trabalho e envie-o para si próprio. É uma prova independente que pode guardar.",
+    "Descarrega um registo datado do teu trabalho e envia-o para ti. É uma prova independente que podes guardar.",
   "protect.download": "Descarregar registo de autoria",
   "protect.copy": "Copiar registo",
   "protect.copied": "Copiado para a área de transferência",
   "protect.email": "Enviar para o meu email",
-  "protect.failed": "Não foi possível gerar o registo. Tente novamente.",
+  "protect.failed": "Não foi possível gerar o registo. Tenta novamente.",
   "protect.emailSubject": "Registo de autoria: {title}",
   // O texto do próprio registo (rights/authorshipRecord.ts). Só as etiquetas
   // são traduzidas; os valores ao lado (título, autoria, data, hash) são dados,
@@ -1563,7 +1622,7 @@ export const subprofiles: Catalog = {
     "Ainda não há versões anteriores. As edições guardadas aparecem aqui.",
   "history.restored": "Versão restaurada",
   "history.restoreFailed":
-    "Não foi possível restaurar esta versão. Tente novamente.",
+    "Não foi possível restaurar esta versão. Tenta novamente.",
 
   // Campos ricos por secção (richFields.data.ts, mostrados por
   // SubprofileItemDrawerFields) — detalhes de concertos, suporte/edição de
@@ -1621,6 +1680,9 @@ export const subprofiles: Catalog = {
   "publishPanel.deleteCopy":
     "Eliminar esta persona remove-a, e tudo o que está nela, para sempre.",
   "publishPanel.deleteCta": "Eliminar esta persona",
+  // Ramo de quem copossui a persona. Quem a criou mantem deleteCopy.
+  "publishPanel.leaveCopy":
+    "Partilhas esta persona. Eliminá-la fica a cargo de quem a criou, e podes sair quando quiseres: os outros mantêm tudo como está.",
 
   // Medidor da lista de verificação (PublishChecklist) — a barra `.meter`
   // ao lado das linhas de passa/falha acima.

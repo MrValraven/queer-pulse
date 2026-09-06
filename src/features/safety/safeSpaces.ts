@@ -759,10 +759,20 @@ export function getSpace(slug: string | undefined): AnySpace | undefined {
  * arrays the same way the live backend derives them from real rows. `reviews`
  * sums each verified space's review count out of its "N reviews" string.
  */
+/**
+ * The newest badge date in the demo registry, as the `YYYY-MM-DD` the live
+ * `stats.lastReVerifiedAt` carries. Stated once here rather than parsed out of
+ * the fixtures' `reVerified` strings, which are hand-written English display
+ * text ("19 May 2026") and would need an English-only date parser to read.
+ * Like every demo fixture it is deliberately dated into the past.
+ */
+const DEMO_LAST_RE_VERIFIED_AT = "2026-05-19";
+
 export function demoStats(): {
   verified: number;
   reviews: number;
   removed: number;
+  lastReVerifiedAt: string | null;
 } {
   const reviews = VERIFIED_SPACES.reduce(
     (total, space) => total + (parseInt(space.reviews, 10) || 0),
@@ -772,5 +782,6 @@ export function demoStats(): {
     verified: VERIFIED_SPACES.length,
     reviews,
     removed: REMOVED_SPACES.length,
+    lastReVerifiedAt: DEMO_LAST_RE_VERIFIED_AT,
   };
 }

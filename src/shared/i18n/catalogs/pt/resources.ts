@@ -52,6 +52,16 @@ export const resources: Catalog = {
     "Algo nesta página desatualizado ou errado? Diz-nos o que corrigir.",
   "suggestEdit.body.introPicker":
     "Diz-nos qual o guia que precisa de uma atualização, e o que mudarias.",
+  // PRD-264: ver a nota no catálogo EN.
+  "suggestEdit.newTerm.modalTitle": "Sugerir um termo",
+  "suggestEdit.body.introNewTerm":
+    "Falta uma palavra que ouves a toda a hora? Diz-nos o termo e o que significa para ti, e a equipa editorial trata do resto.",
+  "suggestEdit.form.newTermNameLabel": "O termo",
+  "suggestEdit.form.newTermNamePlaceholder":
+    "A palavra ou expressão, tal como as pessoas a dizem",
+  "suggestEdit.form.newTermDefinitionLabel": "O que significa",
+  "suggestEdit.form.newTermDefinitionPlaceholder":
+    "Como explicarias isto a alguém que ouve o termo pela primeira vez. Onde o ouviste usar também ajuda.",
   "suggestEdit.form.termLabel": "Qual termo",
   "suggestEdit.form.subjectLabel": "Sobre o que é isto?",
   "suggestEdit.form.subjectFixedLabel": "A sugerir uma alteração para",
@@ -240,7 +250,8 @@ export const resources: Catalog = {
   "safety.outro.title":
     "A segurança é uma funcionalidade, <em>não uma nota de rodapé.</em>",
   "safety.outro.sub": "Alguma questão sobre como a rede funciona? Escreve-nos.",
-  "safety.outro.cta": "hello@queerpulse.com",
+  // PRD-272: ver a nota no catálogo EN.
+  "safety.outro.contactCta": "Escreve-nos",
 
   "safety.subpageIndex.eyebrow": "Segurança",
   "safety.subpageIndex.title": "Denúncias e direitos",
@@ -394,13 +405,22 @@ export const resources: Catalog = {
   "queer101.outro.exploreCta": "Explorar comunidades",
 
   // ── GlossaryPage ────────────────────────────────────────────────────────
+  // PRD-267: ver a nota no catálogo EN.
+  "glossary.category.essential": "Essencial",
+  "glossary.category.healthcare": "Saúde",
+  "glossary.category.identity": "Identidade",
+  "glossary.category.identityContested": "Identidade · contestado",
+  "glossary.category.lisbon": "Lisboa",
+  "glossary.category.performance": "Performance",
+  "glossary.category.portugueseInCommunity": "Português · na comunidade",
+  "glossary.category.queerpulsePlatform": "QueerPulse · plataforma",
   "glossary.meta.title": "Glossário LGBTQ+: termos queer explicados (EN/PT)",
   "glossary.meta.description":
     "Um glossário vivo de termos LGBTQ+ (identidade, saúde e palavras específicas de Lisboa) em inglês e português, atualizado e aberto a sugestões da comunidade.",
   // Nota: a GlossaryPage tem o seu PRÓPRIO alternador EN/PT para os termos
-  // (`GLOSSARY_COPY`, `BLOCKS` em glossary.data.tsx), independente do idioma
-  // global do site — deliberadamente não mexido (ver relatório). Só a parte
-  // fixa (independente do alternador) passa a usar o catálogo.
+  // (`GLOSSARY_COPY`, `BLOCKS` em glossary.data.tsx). A partir do PRD-267 esse
+  // alternador COMEÇA no idioma do site e só fica independente dele depois de
+  // a pessoa o mudar à mão. A parte fixa continua a usar o catálogo.
   "glossary.backLink": "Biblioteca de Recursos",
   "glossary.hero.title": "Um <em>glossário</em> em construção.",
   "glossary.hero.dek":
@@ -707,10 +727,10 @@ export const resources: Catalog = {
 
   "transHub.legal.title": "Jurídico e <em>administrativo</em>",
   "transHub.legal.lead":
-    "Navegar as mudanças de nome legal e marcador de género em Portugal. A Lei da Identidade de Género de 2018 (Lei 38/2018) simplificou significativamente o processo.",
+    "Navegar as mudanças de nome legal e de menção de sexo em Portugal. A Lei da Identidade de Género de 2018 (Lei 38/2018) simplificou significativamente o processo.",
   "transHub.legal.step1.title": "Mudança de nome legal e género",
   "transHub.legal.step1.body":
-    "Desde 2018, podes mudar o teu nome legal e marcador de género em qualquer conservatória do registo civil sem documentação médica. Basta uma declaração, sem avaliação psiquiátrica. A taxa é de aproximadamente 200 €.",
+    "Desde 2018, podes mudar o teu nome legal e a menção de sexo em qualquer conservatória do registo civil sem documentação médica. Basta uma declaração, sem avaliação psiquiátrica. A taxa é de aproximadamente 200 €.",
   "transHub.legal.step2.title": "Atualizar os teus documentos",
   "transHub.legal.step2.body":
     "Depois de atualizado o teu Cartão de Cidadão, os outros documentos seguem-se. A tua entidade empregadora, o banco e os registos de saúde podem todos ser atualizados com o novo documento. Temos uma checklist de tudo o que precisa de ser atualizado e em que ordem.",
@@ -753,8 +773,12 @@ export const resources: Catalog = {
   "transHub.outro.cta": "Pedir um convite",
 
   // ── TransHealthcarePage ──────────────────────────────────────────────────
-  // FLAGGED, partially swept — see sweep report. transHealthcare.data.ts's
-  // ~26 procedural steps + CONTACTS stay English pending native review.
+  // Varrido por completo (DES-150). Tempos, custos, citações legais e nomes de
+  // clínicas preservados exatamente como em EN. Nomes próprios (SNS, ILGA
+  // Portugal, APAV, Conservatória do Registo Civil, Loja do Cidadão, Cartão de
+  // Cidadão, NIF, NISS, Synlab, Germano de Sousa) não são traduzidos.
+  // Vários termos clínicos e jurídicos estão sinalizados para revisão nativa —
+  // ver o handoff DES-150.
   "transHealthcare.meta.title":
     "Saúde trans em Lisboa: clínicas, mudança de nome e por onde começar",
   "transHealthcare.meta.description":
@@ -771,7 +795,7 @@ export const resources: Catalog = {
   "transHealthcare.path.hrtSns.label": "Hormonoterapia via SNS",
   "transHealthcare.path.hrtPrivate.label": "Hormonoterapia em privado",
   "transHealthcare.path.legalName.label": "Mudança de nome legal",
-  "transHealthcare.path.genderMarker.label": "Marcador de género",
+  "transHealthcare.path.genderMarker.label": "Menção de sexo",
   "transHealthcare.path.surgery.label": "Acesso a cirurgia",
 
   "transHealthcare.section.gettingIntoSystem": "Entrar no sistema",
@@ -781,7 +805,7 @@ export const resources: Catalog = {
     "Encontrar um prestador privado",
   "transHealthcare.section.ongoing": "Continuado",
   "transHealthcare.section.legalProcess": "O processo (Lei n.º 38/2018)",
-  "transHealthcare.section.genderMarkerChange": "Mudar o marcador de género",
+  "transHealthcare.section.genderMarkerChange": "Mudar a menção de sexo",
   "transHealthcare.section.surgeryInPortugal":
     "Cirurgia de afirmação de género em Portugal",
 
@@ -802,6 +826,227 @@ export const resources: Catalog = {
   "transHealthcare.outro.sub":
     "A comunidade QueerPulse inclui médicos de família, terapeutas e profissionais jurídicos trans-afirmativos. Não precisas de navegar isto sozinhe.",
   "transHealthcare.outro.cta": "Encontrar tarifas solidárias",
+
+  // Etapas do percurso — hormonoterapia via SNS
+  "transHealthcare.hrtSns.step1.title": "Inscreve-te num centro de saúde",
+  "transHealthcare.hrtSns.step1.description":
+    "Precisas de estar inscrite num centro de saúde em Lisboa. Se não estiveres, liga para o SNS 24 (808 24 24 24) ou vai ao centro de saúde mais próximo com o teu NIF, comprovativo de morada e documento de identificação.",
+  "transHealthcare.hrtSns.step1.time": "No próprio dia",
+  "transHealthcare.hrtSns.step1.cost": "Gratuito",
+  "transHealthcare.hrtSns.step1.tip":
+    "Se não estiveres inscrite ou não tiveres médico de família atribuído, a ILGA Portugal pode ajudar-te a navegar o processo de inscrição.",
+
+  "transHealthcare.hrtSns.step2.title":
+    "Marca uma consulta com o teu médico de família",
+  "transHealthcare.hrtSns.step2.description":
+    'Pede especificamente uma referenciação para avaliação de disforia de género. Não precisas de usar o termo "disforia de género": podes dizer que queres ser referenciade para apoio especializado em identidade de género.',
+  "transHealthcare.hrtSns.step2.time": "Dias a semanas",
+  "transHealthcare.hrtSns.step2.cost": "Gratuito",
+  "transHealthcare.hrtSns.step2.tip":
+    "Se o teu médico de família não ajudar ou não tiveres um atribuído, pede a mudança de médico ou recorre ao serviço de acompanhamento da ILGA.",
+
+  "transHealthcare.hrtSns.step3.title":
+    "O médico de família referencia-te para psiquiatria ou psicologia",
+  "transHealthcare.hrtSns.step3.description":
+    "O percurso do SNS exige normalmente uma avaliação psiquiátrica ou psicológica antes da hormonoterapia. O teu médico de família emite uma referenciação para a equipa de saúde mental do hospital da tua área ou para a consulta de identidade de género do CHULN, no Hospital de Santa Maria.",
+  "transHealthcare.hrtSns.step3.time": "2–8 semanas",
+  "transHealthcare.hrtSns.step3.cost": "Gratuito",
+
+  "transHealthcare.hrtSns.step4.title": "Primeira consulta de avaliação",
+  "transHealthcare.hrtSns.step4.description":
+    "No Hospital de Santa Maria (CHULN) ou no hospital de referência. A primeira consulta é uma sessão de informação. Ninguém está a avaliar se mereces isto. Leva a carta de referenciação do teu médico de família, documento de identificação, e o historial de saúde mental que for relevante.",
+  "transHealthcare.hrtSns.step4.time": "4–18 meses de espera",
+  "transHealthcare.hrtSns.step4.cost": "Gratuito (SNS)",
+  "transHealthcare.hrtSns.step4.tip":
+    "A lista de espera é longa. Inscreve-te cedo, mesmo que ainda tenhas dúvidas. Podes desistir a qualquer momento.",
+
+  "transHealthcare.hrtSns.step5.title":
+    "Acompanhamento psiquiátrico ou psicológico continuado",
+  "transHealthcare.hrtSns.step5.description":
+    "Normalmente 2–4 consultas ao longo de 3–6 meses. São consultas de acompanhamento, e ninguém te está a pedir que proves a tua identidade. Ter terapeuta no privado em paralelo pode ajudar.",
+  "transHealthcare.hrtSns.step5.time": "3–6 meses",
+  "transHealthcare.hrtSns.step5.cost": "Gratuito (SNS)",
+
+  "transHealthcare.hrtSns.step6.title": "Prescrição de hormonoterapia",
+  "transHealthcare.hrtSns.step6.description":
+    "Assim que a equipa apoiar a hormonoterapia, o teu endocrinologista ou médico de família prescreve as hormonas. A receita é válida em qualquer farmácia. Alguns medicamentos são comparticipados pelo SNS.",
+  "transHealthcare.hrtSns.step6.time": "Depois da aprovação",
+  "transHealthcare.hrtSns.step6.cost": "10–40 €/mês (comparticipado)",
+  "transHealthcare.hrtSns.step6.tip":
+    "Guarda todos os recibos. Alguns custos podem ser parcialmente reembolsados. Pergunta ao teu médico de família sobre a comparticipação.",
+
+  "transHealthcare.hrtSns.step7.title":
+    "Análises de sangue regulares e seguimento",
+  "transHealthcare.hrtSns.step7.description":
+    "Normalmente de 3 em 3 meses no primeiro ano, e depois de 6 em 6 meses. As análises são feitas no hospital ou no teu centro de saúde. Os resultados são avaliados pelo médico que te prescreve.",
+  "transHealthcare.hrtSns.step7.time": "Contínuo",
+  "transHealthcare.hrtSns.step7.cost": "Gratuito (SNS)",
+  "transHealthcare.hrtSns.step7.tip":
+    "Pede sempre uma cópia das tuas análises. Tens direito a elas, e ajudam se mudares de prestador.",
+
+  "transHealthcare.hrtSns.step8.title": "Monitorização e ajustes de dose",
+  "transHealthcare.hrtSns.step8.description":
+    "Os níveis hormonais vão sendo ajustados ao longo do tempo. É um processo feito em conjunto. Conta ao teu médico o que estás a sentir. Muitas pessoas trans em Lisboa complementam o acompanhamento do SNS com endocrinologia no privado, para ajustes mais rápidos.",
+  "transHealthcare.hrtSns.step8.time": "Contínuo",
+  "transHealthcare.hrtSns.step8.cost": "Gratuito (SNS)",
+
+  // Etapas do percurso — hormonoterapia em privado
+  "transHealthcare.hrtPrivate.step1.title":
+    "Encontra endocrinologia ou medicina geral trans-afirmativa no privado",
+  "transHealthcare.hrtPrivate.step1.description":
+    "O Registo de Tarifas Solidárias da QueerPulse lista médicos de família trans-afirmativos com honorários ajustados ao rendimento. A ILGA Portugal também mantém uma lista de prestadores recomendados.",
+  "transHealthcare.hrtPrivate.step1.time": "Dias",
+  "transHealthcare.hrtPrivate.step1.cost": "50–150 € na primeira consulta",
+  "transHealthcare.hrtPrivate.step1.tip":
+    "Pergunta explicitamente se têm experiência a prescrever hormonoterapia a pessoas trans antes de marcares.",
+
+  "transHealthcare.hrtPrivate.step2.title": "Primeira consulta",
+  "transHealthcare.hrtPrivate.step2.description":
+    "Leva os registos anteriores que sejam relevantes (avaliações de saúde mental, análises, receitas anteriores). Os prestadores privados podem prescrever hormonoterapia sem avaliação psiquiátrica. Pergunta quando marcares.",
+  "transHealthcare.hrtPrivate.step2.time": "Pode ser em poucos dias",
+  "transHealthcare.hrtPrivate.step2.cost": "60–150 €",
+  "transHealthcare.hrtPrivate.step2.tip":
+    "Modelo de consentimento informado: muitos prestadores privados em Lisboa já trabalham assim. Não precisas de um diagnóstico psiquiátrico.",
+
+  "transHealthcare.hrtPrivate.step3.title": "Receita e farmácia",
+  "transHealthcare.hrtPrivate.step3.description":
+    "Recebes uma receita particular, válida em qualquer farmácia. Alguns medicamentos não são comparticipados com receita particular. Pergunta ao teu médico que alternativas existem.",
+  "transHealthcare.hrtPrivate.step3.time": "No próprio dia",
+  "transHealthcare.hrtPrivate.step3.cost": "20–80 €/mês",
+
+  "transHealthcare.hrtPrivate.step4.title": "Análises de sangue",
+  "transHealthcare.hrtPrivate.step4.description":
+    "Podem ser feitas em laboratórios privados (Synlab, Germano de Sousa) ou por convenção com o SNS. Os resultados chegam normalmente em 24–48 horas.",
+  "transHealthcare.hrtPrivate.step4.time": "De 3 em 3 ou de 6 em 6 meses",
+  "transHealthcare.hrtPrivate.step4.cost": "30–80 € por painel",
+
+  "transHealthcare.hrtPrivate.step5.title": "Consultas de seguimento",
+  "transHealthcare.hrtPrivate.step5.description":
+    "A frequência varia. A maioria dos prestadores quer ver-te aos 3 meses, e depois de 6 em 6 meses quando estiveres estável.",
+  "transHealthcare.hrtPrivate.step5.time": "Contínuo",
+  "transHealthcare.hrtPrivate.step5.cost": "50–120 €/consulta",
+  "transHealthcare.hrtPrivate.step5.tip":
+    "Quando estiveres estável, pondera passar a monitorização para o SNS, para reduzir custos. É possível e é comum.",
+
+  // Etapas do percurso — mudança de nome legal
+  "transHealthcare.legalName.step1.title": "Conhece os teus direitos",
+  "transHealthcare.legalName.step1.description":
+    "Ao abrigo da Lei n.º 38/2018 (em vigor desde 2018), qualquer pessoa maior de 18 anos pode mudar o nome próprio e a menção de sexo nos documentos civis por autodeterminação. Não é exigida prova médica, cirurgia ou relatório psiquiátrico. Jovens de 16 e 17 anos podem requerer com autorização dos representantes legais.",
+  "transHealthcare.legalName.step1.time": "Lê primeiro",
+  "transHealthcare.legalName.step1.cost": "Gratuito",
+  "transHealthcare.legalName.step1.tip":
+    "A ILGA Portugal tem um guia detalhado e gratuito em português e inglês. Descarrega-o antes de começares.",
+
+  "transHealthcare.legalName.step2.title":
+    "Marca um atendimento na Conservatória do Registo Civil",
+  "transHealthcare.legalName.step2.description":
+    'Podes fazê-lo online em agendamento.mj.pt ou por telefone. A Conservatória em Lisboa fica na Rua Rodrigo da Fonseca 226. Pede um atendimento para "alteração de nome e sexo ao abrigo da Lei n.º 38/2018".',
+  "transHealthcare.legalName.step2.time": "1–4 semanas até ao atendimento",
+  "transHealthcare.legalName.step2.cost": "Gratuito",
+
+  "transHealthcare.legalName.step3.title": "O atendimento",
+  "transHealthcare.legalName.step3.description":
+    "Compareces presencialmente e fazes uma declaração. Vais precisar do teu Bilhete de Identidade ou Cartão de Cidadão, do NIF e do NISS. Declaras o nome e a menção de sexo que escolheste. Não são exigidos documentos comprovativos.",
+  "transHealthcare.legalName.step3.time": "30–60 minutos",
+  "transHealthcare.legalName.step3.cost": "Gratuito",
+
+  "transHealthcare.legalName.step4.title": "Período de espera",
+  "transHealthcare.legalName.step4.description":
+    "Há um período de espera de um mês após a declaração, durante o qual podes desistir. Passado esse mês, a alteração é registada automaticamente. A Conservatória notifica-te.",
+  "transHealthcare.legalName.step4.time": "1 mês",
+  "transHealthcare.legalName.step4.cost": "Gratuito",
+  "transHealthcare.legalName.step4.tip":
+    "A ILGA Portugal recomenda aproveitar este período para avisar a entidade empregadora, os médicos e o senhorio, para que tudo seja atualizado ao mesmo tempo.",
+
+  "transHealthcare.legalName.step5.title": "Documentos novos",
+  "transHealthcare.legalName.step5.description":
+    "Depois do registo: pede um novo Cartão de Cidadão em qualquer Loja do Cidadão ou no IRN. Atualiza também: NIF, NISS, registos do SNS, passaporte (se precisares), contas bancárias e os registos de recursos humanos da entidade empregadora.",
+  "transHealthcare.legalName.step5.time": "1–4 semanas para o novo CC",
+  "transHealthcare.legalName.step5.cost": "15 € pelo Cartão de Cidadão",
+  "transHealthcare.legalName.step5.tip":
+    "Leva a certidão de alteração de nome a cada atualização. Pede várias certidões na Conservatória no momento do registo.",
+
+  // Etapas do percurso — menção de sexo
+  "transHealthcare.genderMarker.step1.title":
+    "Incluído no processo da Lei n.º 38/2018",
+  "transHealthcare.genderMarker.step1.description":
+    "Em Portugal, a alteração da menção de sexo (M/F) nos documentos civis é feita no mesmo atendimento que a mudança de nome legal. São um único processo. Não precisas de fazer requerimentos separados.",
+  "transHealthcare.genderMarker.step1.time": "O mesmo que a mudança de nome",
+  "transHealthcare.genderMarker.step1.cost": "Gratuito",
+  "transHealthcare.genderMarker.step1.tip":
+    "A Conservatória atualiza o teu registo de nascimento com a menção de sexo que escolheste. A partir daí, a alteração propaga-se a todos os outros documentos.",
+
+  "transHealthcare.genderMarker.step2.title":
+    "Depois da alteração: atualizar registos",
+  "transHealthcare.genderMarker.step2.description":
+    "Registos do SNS: contacta o teu centro de saúde com o Cartão de Cidadão atualizado. Autoridade Tributária (AT): atualiza no Portal das Finanças ou presencialmente. Segurança Social (NISS): atualiza na Segurança Social Direta ou presencialmente.",
+  "transHealthcare.genderMarker.step2.time": "Dias a semanas",
+  "transHealthcare.genderMarker.step2.cost": "Gratuito",
+
+  "transHealthcare.genderMarker.step3.title":
+    "Passaporte e documentos de viagem",
+  "transHealthcare.genderMarker.step3.description":
+    "Pede um novo passaporte depois de o teu Cartão de Cidadão estar atualizado. Entrega o pedido em qualquer Loja do Cidadão ou no Serviço de Passaportes, com o CC novo e a taxa de 65 €. O passaporte urgente custa 100 €.",
+  "transHealthcare.genderMarker.step3.time": "1–4 semanas",
+  "transHealthcare.genderMarker.step3.cost": "65–100 €",
+  "transHealthcare.genderMarker.step3.tip":
+    "Se viajas com frequência, pede o passaporte novo assim que o CC chegar. Não esperes.",
+
+  "transHealthcare.genderMarker.step4.title": "Não-binárie ou fora de M/F",
+  "transHealthcare.genderMarker.step4.description":
+    "A lei portuguesa prevê atualmente apenas as menções M e F nos documentos civis. O trabalho de advocacia por uma menção X ou não-binária continua. A ILGA Portugal é a melhor fonte sobre a situação atual.",
+  "transHealthcare.genderMarker.step4.time": "Advocacia em curso",
+  "transHealthcare.genderMarker.step4.cost": "N/A",
+
+  // Etapas do percurso — acesso a cirurgia
+  "transHealthcare.surgery.step1.title":
+    "Percurso do SNS: pela consulta de identidade de género",
+  "transHealthcare.surgery.step1.description":
+    "As cirurgias de afirmação de género estão disponíveis no SNS, no CHULN (Hospital de Santa Maria), seguindo o percurso da consulta de identidade de género. Tens de estar no percurso do SNS e ter feito hormonoterapia durante um período mínimo (normalmente 12 meses para a maioria das cirurgias).",
+  "transHealthcare.surgery.step1.time": "2–5+ anos desde a referenciação",
+  "transHealthcare.surgery.step1.cost": "Gratuito (SNS)",
+  "transHealthcare.surgery.step1.tip":
+    "As listas de espera para cirurgia são muito longas. Entra no percurso do SNS o mais cedo possível, mesmo que a cirurgia não seja já o teu objetivo.",
+
+  "transHealthcare.surgery.step2.title": "Carta de apoio psiquiátrico",
+  "transHealthcare.surgery.step2.description":
+    "Para cirurgia através do SNS, é normalmente exigida uma carta de um psiquiatra ou psicólogo envolvido no teu acompanhamento. É documentação, e é a equipa da consulta de identidade de género que a emite.",
+  "transHealthcare.surgery.step2.time": "Incluído no percurso",
+  "transHealthcare.surgery.step2.cost": "Gratuito (SNS)",
+
+  "transHealthcare.surgery.step3.title": "Cirurgia no privado em Portugal",
+  "transHealthcare.surgery.step3.description":
+    "Há cirurgia de afirmação de género no privado em Portugal, com cirurgiões plásticos e urologistas especializados. Os custos variam muito. Pede à ILGA Portugal recomendações atuais de cirurgiões e preços transparentes.",
+  "transHealthcare.surgery.step3.time": "Mais rápido do que no SNS",
+  "transHealthcare.surgery.step3.cost":
+    "4.000–20.000 €+ conforme o procedimento",
+  "transHealthcare.surgery.step3.tip":
+    "Algumas seguradoras em Portugal cobrem cirurgia de afirmação de género. Verifica a tua apólice. A ILGA Portugal tem experiência em recursos junto de seguradoras.",
+
+  "transHealthcare.surgery.step4.title": "Cirurgia no estrangeiro",
+  "transHealthcare.surgery.step4.description":
+    "Muitas pessoas da comunidade fazem cirurgia em Espanha (Barcelona, Madrid), na Tailândia e na Alemanha. A ILGA Portugal pode aconselhar sobre prestadores de confiança. Pode haver apoio para viagem e recuperação através de ajuda mútua.",
+  "transHealthcare.surgery.step4.time": "Variável",
+  "transHealthcare.surgery.step4.cost": "Varia consoante o país",
+  "transHealthcare.surgery.step4.tip":
+    "A comunidade QueerPulse tem pessoas com experiência direta de cirurgia no estrangeiro. Publica no fórum ou contacta-nos para te ligarmos a elas.",
+
+  // Contactos da barra lateral. Os valores `.contact` são números de telefone
+  // e endereços web: repetidos byte a byte a partir de EN, de propósito.
+  // Só `chlc.contact` é prosa.
+  "transHealthcare.contact.ilga.role":
+    "Apoio jurídico, encaminhamento, advocacia",
+  "transHealthcare.contact.ilga.contact": "ilga-portugal.pt · 213 887 615",
+  "transHealthcare.contact.redeExAequo.role":
+    "Apoio a jovens LGBTQ+ (até aos 30)",
+  "transHealthcare.contact.redeExAequo.contact": "rea.pt · apoio@rea.pt",
+  "transHealthcare.contact.apav.role": "Apoio a vítimas, crimes de ódio",
+  "transHealthcare.contact.apav.contact": "apav.pt · 116 006",
+  "transHealthcare.contact.sns24.role":
+    "Encaminhamento de saúde, atribuição de médico de família",
+  "transHealthcare.contact.sns24.contact": "808 24 24 24",
+  "transHealthcare.contact.chuln.role": "Hospital de Santa Maria, Lisboa",
+  "transHealthcare.contact.chuln.contact": "Necessária referenciação do SNS",
 
   // ── HarmReductionPage (+ HarmReductionSections.tsx + harmReduction.data.tsx) ──
   "harmReduction.meta.title":
@@ -1677,7 +1922,7 @@ export const resources: Catalog = {
   "firstMeetupGuide.hero.title":
     "O teu primeiro encontro, <em>sem pressão.</em>",
   "firstMeetupGuide.hero.lead":
-    'O que esperar, o que "sem agenda" realmente significa, e respostas às coisas que estás demasiado nervoso/a para perguntar. Vem sozinho, vem ansioso, vais ser bem cuidade.',
+    'O que esperar, o que "sem agenda" realmente significa, e respostas às coisas que estás demasiado nervoso/a para perguntar. Vem sozinhe, vem ansiose, vais ser bem cuidade.',
   "firstMeetupGuide.hero.anchor.expect": "O que esperar",
   "firstMeetupGuide.hero.anchor.values": "Os nossos valores",
   "firstMeetupGuide.hero.anchor.faq": "Perguntas nervosas",
@@ -1925,7 +2170,36 @@ export const resources: Catalog = {
   "qtipocArchive.outro.cta": "Falar com o grupo",
 
   // ── QtipocOrganisationsPage (+ qtipocOrganisations.data.ts) ─────────────
-  // ORGS (name/mission/offers/tags) are a directory record — kept English.
+  // Varrido por completo (DES-150). O nome próprio e o `href` de cada
+  // organização ficam literais no ficheiro de dados; a missão, a linha de
+  // oferta e as etiquetas são traduzidas. As chaves de etiqueta são partilhadas.
+  "qtipocOrganisations.org.casaT.mission":
+    "Habitação e apoio a pessoas trans e de género diverso, com atenção particular a pessoas migrantes e racializadas.",
+  "qtipocOrganisations.org.casaT.offers":
+    "Alojamento de emergência, apoio entre pares, encaminhamento.",
+  "qtipocOrganisations.org.djass.mission":
+    "Associação que defende os direitos e a visibilidade das pessoas afrodescendentes em Portugal.",
+  "qtipocOrganisations.org.djass.offers":
+    "Advocacia, programação cultural, eventos comunitários.",
+  "qtipocOrganisations.org.redeExAequo.mission":
+    "Associação nacional de jovens LGBTQ+, com grupos de trabalho interseccionais por todo o país.",
+  "qtipocOrganisations.org.redeExAequo.offers":
+    "Grupos de jovens, apoio nas escolas, redes de pares.",
+  "qtipocOrganisations.org.ilga.mission":
+    "A organização LGBTQ+ mais antiga do país, com serviços de apoio jurídico e social.",
+  "qtipocOrganisations.org.ilga.offers":
+    "Linha de apoio jurídico, grupos de apoio, ajuda com documentação.",
+
+  "qtipocOrganisations.tag.housing": "Habitação",
+  "qtipocOrganisations.tag.trans": "Trans",
+  "qtipocOrganisations.tag.migrant": "Migrante",
+  "qtipocOrganisations.tag.afrodescendant": "Afrodescendente",
+  "qtipocOrganisations.tag.advocacy": "Advocacia",
+  "qtipocOrganisations.tag.youth": "Juventude",
+  "qtipocOrganisations.tag.national": "Nacional",
+  "qtipocOrganisations.tag.legal": "Jurídico",
+  "qtipocOrganisations.tag.support": "Apoio",
+
   "qtipocOrganisations.meta.title":
     "Organizações QTIPOC em Portugal e como contactá-las",
   "qtipocOrganisations.meta.description":
@@ -2407,7 +2681,7 @@ export const resources: Catalog = {
   "rating.prompt": "Isto foi útil?",
   "rating.helpfulCta": "Sim",
   "rating.notHelpfulCta": "Não",
-  "rating.thanks": "Obrigado pelo feedback.",
+  "rating.thanks": "Obrigade pelo feedback.",
   "rating.changeCta": "Alterar a tua resposta",
 
   // ── CNT-14: diretório real de recursos + via de sugestão ────────────────

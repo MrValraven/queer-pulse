@@ -22,12 +22,17 @@ import styles from "./MagazineSectionArticlesPage.module.css";
  * piece prints its tags as links into `?tag=`, and the masthead search field
  * is mounted here too: a reader who has drilled into a section is exactly the
  * reader who might want to search the rest of the archive.
+ *
+ * PRD-103: the list continues past the backend's 20-row page through the
+ * shared "load more" footer, so a busy section no longer hides everything
+ * after its twentieth piece.
  */
 export function MagazineSectionArticlesPage() {
   const { t } = useTranslation();
   const { section: sectionParam = "" } = useParams();
   const section = decodeURIComponent(sectionParam);
-  const { articles, isLoading, isError } = useSectionArticles(section);
+  const { articles, isLoading, isError, hasMore, loadMore, isLoadingMore } =
+    useSectionArticles(section);
   const showEmpty = !isLoading && (isError || articles.length === 0);
 
   return (
@@ -69,7 +74,13 @@ export function MagazineSectionArticlesPage() {
               }
             />
           ) : (
-            <MagazineArticleRows articles={articles} isLoading={isLoading} />
+            <MagazineArticleRows
+              articles={articles}
+              isLoading={isLoading}
+              hasMore={hasMore}
+              isLoadingMore={isLoadingMore}
+              onLoadMore={loadMore}
+            />
           )}
         </div>
       </section>

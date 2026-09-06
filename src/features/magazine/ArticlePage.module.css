@@ -39,6 +39,17 @@
   font-style: italic;
   font-weight: 400;
 }
+/* PRD-102 — the standfirst the desk wrote for this exact slot, in the same
+   voice as the desk's own reader preview (`ArticleDocument.module.css`). */
+.standfirst {
+  font-family: var(--serif);
+  font-size: var(--text-21);
+  font-weight: 300;
+  line-height: 1.45;
+  color: var(--ink-60);
+  max-width: 46ch;
+  margin-bottom: 28px;
+}
 .bylineRow {
   display: flex;
   align-items: center;
@@ -85,8 +96,23 @@
 .bodyInner {
   grid-column: 2;
 }
+/* DES-102: the reader's text-size control, resolved to REM tokens so the
+   article scales with the reader's own browser font size exactly like the rest
+   of the type scale. The px values this replaced meant a member who had raised
+   that setting got a SMALLER article than every other page, and "A+" stopped
+   dead at 22px. The step lives on a data attribute rather than an inline px
+   custom property so the tokens stay in the stylesheet. */
+.body {
+  --article-body-size: var(--text-19);
+}
+.body[data-text-size="sm"] {
+  --article-body-size: var(--text-17);
+}
+.body[data-text-size="lg"] {
+  --article-body-size: var(--text-22);
+}
 .body p {
-  font-size: var(--article-body-size, 19px);
+  font-size: var(--article-body-size);
   line-height: 1.84;
   color: var(--ink);
   margin-bottom: 1.5em;
@@ -144,6 +170,9 @@
   color: inherit;
 }
 .heading {
+  /* PRD-113: the contents list jumps here, and the reading toolbar is sticky
+     over the top of the column. */
+  scroll-margin-top: calc(var(--sticky-top) + var(--gap-lg));
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-heading);

@@ -40,8 +40,10 @@ export function emptyDraft(owner: Steward): CommunityDraft {
     stewards: [owner],
     features: ["discussion"],
     rules: [...RULE_PRESET_KEYS],
+    welcomeMessage: "",
     tint: "coral",
     coverImageUrl: "",
+    avatarImageUrl: "",
     tagline: "",
     invites: [],
     handle: "",
@@ -54,9 +56,20 @@ export function emptyDraft(owner: Steward): CommunityDraft {
 export function useCommunityForm(initial?: CommunityDraft) {
   const { user } = useAuth();
   const owner = useMemo(() => ownerStewardFrom(user), [user]);
-  const [draft, setDraft] = useState<CommunityDraft>(
-    initial ?? emptyDraft(owner),
+  // Merged over the empty draft rather than used as-is: a parked wizard read
+  // back from sessionStorage was written by an OLDER build and can be missing
+  // any field added since (`welcomeMessage` and `avatarImageUrl` are the most
+  // recent two). Without the merge those come back `undefined` and their
+  // inputs flip from uncontrolled to controlled on the first keystroke.
+  const [draft, setDraft] = useState<CommunityDraft>(() =>
+    initial ? { ...emptyDraft(owner), ...initial } : emptyDraft(owner),
   );
+  // The locally renderable preview of a freshly picked avatar. Deliberately
+  // NOT part of the draft: in live mode `draft.avatarImageUrl` holds a private
+  // storage key that no `<img>` can fetch, and this `blob:`/resolved URL is
+  // only valid for this tab, so parking it in sessionStorage would restore a
+  // dead image. `ImageUploadField` reports it through `onPreviewChange`.
+  const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(null);
 
   // In live mode `user` resolves after GET /auth/me settles, so the owner
   // steward seeded at init may start as a placeholder; keep the locked owner
@@ -88,6 +101,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
   const reset = useCallback(
     (next?: CommunityDraft) => {
       setDraft(next ?? emptyDraft(owner));
+      setAvatarPreviewUrl(null);
     },
     [owner],
   );
@@ -196,12 +210,16 @@ export function useCommunityForm(initial?: CommunityDraft) {
     draft.whoFor.trim().length > 0 ||
     Boolean(draft.accessTier) ||
     draft.tagline.trim().length > 0 ||
+    draft.welcomeMessage.trim().length > 0 ||
+    draft.avatarImageUrl.length > 0 ||
     draft.handle.trim().length > 0 ||
     draft.stewards.length > 1 ||
     draft.invites.length > 0;
 
   return {
     draft,
+    avatarPreviewUrl,
+    setAvatarPreviewUrl,
     isDirty,
     set,
     reset,

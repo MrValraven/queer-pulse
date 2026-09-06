@@ -10,6 +10,13 @@ import styles from "../CreateGatheringPage.module.css";
 export function DatePlaceStep({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
   const fieldId = useId();
+  // An online gathering has no door, so it asks a different question: the join
+  // link instead of a street address and arrival directions (PRD-182). The
+  // wizard used to ask every host for a street address and collect no link at
+  // all, so a host running something on video had nowhere to put it and their
+  // attendees were shown a locked "the exact address is shared with the people
+  // going" row about an address that did not exist.
+  const isOnline = form.hood === "Online";
   return (
     <div>
       <div className={styles.stepTitle}>
@@ -106,28 +113,54 @@ export function DatePlaceStep({ form }: { form: GatheringForm }) {
           form.setVenueListing(selection.venueListing);
         }}
       />
-      <label className={styles.label} htmlFor={`${fieldId}-address`}>
-        {t("gatherings:create.step2.addressLabel")}
-      </label>
-      <input
-        id={`${fieldId}-address`}
-        className={styles.input}
-        type="text"
-        placeholder={t("gatherings:create.step2.addressPlaceholder")}
-        value={form.address}
-        onChange={(e) => form.setAddress(e.target.value)}
-      />
-      <label className={styles.label} htmlFor={`${fieldId}-directions`}>
-        {t("gatherings:create.step2.directionsLabel")}
-      </label>
-      <input
-        id={`${fieldId}-directions`}
-        className={styles.input}
-        type="text"
-        placeholder={t("gatherings:create.step2.directionsPlaceholder")}
-        value={form.directions}
-        onChange={(e) => form.setDirections(e.target.value)}
-      />
+      {isOnline ? (
+        <>
+          <label className={styles.label} htmlFor={`${fieldId}-onlineUrl`}>
+            {t("gatherings:create.step2.joinLinkLabel")}
+          </label>
+          <input
+            id={`${fieldId}-onlineUrl`}
+            className={styles.input}
+            type="url"
+            inputMode="url"
+            placeholder={t("gatherings:create.step2.joinLinkPlaceholder")}
+            aria-invalid={!form.onlineUrlValid}
+            aria-describedby={`${fieldId}-onlineUrl-hint`}
+            value={form.onlineUrl}
+            onChange={(e) => form.setOnlineUrl(e.target.value)}
+          />
+          <p id={`${fieldId}-onlineUrl-hint`} className={styles.hint}>
+            {form.onlineUrlValid
+              ? t("gatherings:create.step2.joinLinkHint")
+              : t("gatherings:create.step2.joinLinkInvalid")}
+          </p>
+        </>
+      ) : (
+        <>
+          <label className={styles.label} htmlFor={`${fieldId}-address`}>
+            {t("gatherings:create.step2.addressLabel")}
+          </label>
+          <input
+            id={`${fieldId}-address`}
+            className={styles.input}
+            type="text"
+            placeholder={t("gatherings:create.step2.addressPlaceholder")}
+            value={form.address}
+            onChange={(e) => form.setAddress(e.target.value)}
+          />
+          <label className={styles.label} htmlFor={`${fieldId}-directions`}>
+            {t("gatherings:create.step2.directionsLabel")}
+          </label>
+          <input
+            id={`${fieldId}-directions`}
+            className={styles.input}
+            type="text"
+            placeholder={t("gatherings:create.step2.directionsPlaceholder")}
+            value={form.directions}
+            onChange={(e) => form.setDirections(e.target.value)}
+          />
+        </>
+      )}
     </div>
   );
 }

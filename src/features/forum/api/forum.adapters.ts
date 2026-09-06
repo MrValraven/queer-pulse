@@ -101,7 +101,13 @@ export function threadToCard(
     category: dto.category,
     pinned: dto.isPinned,
     title: dto.title,
-    excerpt: "",
+    // PRD-167: the list DTO now carries a short, HTML-stripped taste of the
+    // opening post; this used to be hardcoded `""`, so no forum row (and no
+    // feed forum card) ever showed a word of the body. Null is the server's
+    // "there is nothing showable here" (no OP, an author tombstone, or a
+    // moderator takedown) and collapses to the empty string the row already
+    // treats as "render nothing". Never a placeholder.
+    excerpt: dto.excerpt ?? "",
     author: {
       initials: initialsFromName(dto.author.displayName),
       name: dto.author.displayName,
@@ -112,6 +118,12 @@ export function threadToCard(
       official: dto.author.official,
     },
     posted: relative(dto.lastActivityAt, t, fmt),
+    // Kept RAW (not the relative string above): the author's 24-hour
+    // category-move window is measured against it (PRD-163).
+    createdAt: dto.createdAt,
+    // Only ever true for a platform moderator: every member-facing read path
+    // filters withdrawn threads out entirely (PRD-160).
+    isDeleted: dto.isDeleted ?? false,
     // `views` is deliberately ABSENT: `ForumThreadResponse` carries no view
     // count, and hardcoding 0 printed "0 views" under every live thread as if
     // nobody had ever opened it. Undefined hides the stat instead.
@@ -124,6 +136,11 @@ export function threadToCard(
     tags: dto.tags ?? [],
     body: [],
     replies: [],
+    // PRD-170: replies posted since this member last opened the thread, capped
+    // at 99 by the server. `null` (no watermark: anonymous, never opened, or a
+    // write echo) and `0` (caught up) both mean "no badge" — see
+    // `ForumThreadRow`, which is the only place that reads it.
+    unreadReplyCount: dto.unreadReplyCount ?? null,
     // SOC-13 — following, the accepted answer, and the two permissions that
     // gate the Follow / Accept / tag-edit affordances.
     isSubscribed: dto.isSubscribed ?? false,
@@ -134,6 +151,13 @@ export function threadToCard(
     // row can render its ⋯ menu without fetching the OP post. `canLock` is the
     // thread-level moderator permission (close / reopen replies).
     canEdit: dto.canEdit,
+    // The same DTO flag under a name `threadDetail` does NOT overwrite.
+    // `canEdit` on the merged thread detail is replaced by the OPENING POST's
+    // permission (that is what `deriveOpView` reads), and the two are different
+    // rights that happen to share a word: the post one goes false the moment
+    // that post is tombstoned, while the author's right to withdraw or refile
+    // their own THREAD does not. The thread-level gates read this one.
+    canEditTitle: dto.canEdit,
     canDelete: dto.canDelete,
     canRestore: dto.canRestore,
     canViewHistory: dto.canViewHistory,
@@ -191,31 +215,55 @@ export function postToReply(
   };
 }
 
-/** Combine thread meta + its posts page into the full `Thread` detail. */
+/**
+ * Combine thread meta + its loaded posts into the full `Thread` detail.
+ *
+ * ENG-130: the opening post is the post the SERVER flags `isOp`, found by
+ * search. It used to be `data[0]`, which is only the OP on a first page that
+ * actually carries one. Whenever it did not — the OP filtered out for this
+ * viewer, or any page after the first — the first REPLY was promoted into the
+ * OP card and read as the question, wearing that replier's name, edit mark and
+ * permissions, while disappearing from the reply list underneath.
+ *
+ * `isOpAvailable` is the server's `opAvailable`, carried on every page: `false`
+ * is "there is no opening post here for you", which the OP card states plainly
+ * rather than guessing at a reason, and every post that DID come back is
+ * rendered as a reply.
+ */
 export function threadDetail(
   dto: ForumThreadResponse,
   posts: ForumPostResponse[],
   t: TFunction,
   fmt: Formatters,
+  isOpAvailable?: boolean,
 ): Thread {
   const card = threadToCard(dto, t, fmt);
-  const [op, ...rest] = posts;
+  // Explicit `false` only: undefined is "the page has not resolved yet", which
+  // must not read as a missing opening post.
+  const op =
+    isOpAvailable === false ? undefined : posts.find((post) => post.isOp);
+  const rest = op ? posts.filter((post) => post.id !== op.id) : posts;
   // Display name per loaded post id, so a quote-reply can be attributed to the
   // post it quotes without a second request.
   const authorNameByPostId = new Map(
     posts.map((post) => [post.id, post.author.displayName]),
   );
+  // Who counts as "OP" on a reply badge. Falls back to the THREAD's author when
+  // the opening post itself is unavailable, so the marker survives a page that
+  // carries no OP instead of silently going missing from every reply.
+  const opAuthorHandle = op?.author.handle ?? dto.author.handle;
   const mappedReplies = rest.map((post) =>
     postToReply(
       post,
       t,
       fmt,
-      post.author.handle === op?.author.handle,
+      post.author.handle === opAuthorHandle,
       post.parentPostId ? authorNameByPostId.get(post.parentPostId) : undefined,
     ),
   );
   return {
     ...card,
+    isOpAvailable,
     excerpt: op ? (paragraphs(op.body)[0] ?? "") : "",
     body: op ? paragraphs(op.body) : [],
     // OP fields come from the fetched OP post itself here (not the card's
@@ -223,12 +271,13 @@ export function threadDetail(
     // count + the viewer's own vote and stays consistent with `useVotePost`.
     upvotes: op?.voteCount ?? card.upvotes,
     myVote: op?.myVote ?? card.myVote,
-    // No client-side "most helpful" pass any more (SOC-13). It ranked only the
-    // replies that happened to have loaded, so the badge moved as you paged,
-    // and it was a guess dressed as an answer. The server now hoists the
-    // thread's ACCEPTED answer to the top of the first page and flags it
-    // (`isAccepted` → `Reply.accepted`), which is a real, author-given signal.
-    // The order here is the server's order, verbatim.
+    // No client-side "most helpful" pass any more (SOC-13/PRD-162). Ranking the
+    // replies that happened to have loaded moved the badge as you paged, and it
+    // was a guess dressed as an answer. The server now hoists the thread's
+    // ACCEPTED answer to the top of the first page and flags it (`isAccepted` →
+    // `Reply.accepted`), which is a real, author-given signal, and it applies
+    // the reply ORDER the member asked for across the whole thread rather than
+    // across one page. The order here is the server's order, verbatim.
     replies: mappedReplies,
     opPostId: op?.id ?? card.opPostId,
     opImage: op?.image ?? undefined,

@@ -1,5 +1,6 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import type { Partner } from "./partnerDetails";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./PartnerDetailPage.module.css";
@@ -84,10 +85,14 @@ export function PartnerDetailSidebar({ p }: { p: Partner }) {
       <div className={[s.sideCard, s.becomeCard].join(" ")}>
         <h4>{t("marketing:partnerDetail.sidebar.becomeTitle")}</h4>
         <p>{t("marketing:partnerDetail.sidebar.becomeBody")}</p>
+        {/* PRD-272. Was a `mailto:hello@queerpulse.com`. "Become a partner" has
+            a real intake — the application form, with a queue, a due clock, a
+            triage assignment and an in-app decision — so the card that invites
+            it now points there instead of at a shared mailbox. */}
         <Button
           variant="primary"
           className={s.becomeBtn}
-          href="mailto:hello@queerpulse.com"
+          to={routes.partnerApply}
         >
           {t("marketing:partnerDetail.sidebar.becomeCta")}{" "}
           <FiArrowRight aria-hidden />

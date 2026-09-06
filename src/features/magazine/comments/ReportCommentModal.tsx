@@ -18,8 +18,14 @@ import { logError } from "../../../shared/observability/logger";
 import styles from "./ArticleComments.module.css";
 
 interface ReportCommentModalProps {
-  /** Whose comment is being reported — shown in the heading. */
-  authorName: string;
+  /**
+   * Whose comment is being reported, shown in the heading. `null` when the
+   * comment carries no author name (a tombstoned or moderation-blanked row),
+   * and the sheet then uses its subject-free copy. ENG-102: the caller used to
+   * fall back to the VIEWER's own initials here, so the sheet named the
+   * reporter as the person they were reporting.
+   */
+  authorName: string | null;
   /** The reported comment's real id (the report's `subjectId`). */
   subjectId: string;
   onClose: () => void;
@@ -48,7 +54,9 @@ export function ReportCommentModal({
   // See `ReportReplyModal`: server taxonomy, local instant fallback, and the
   // labels are now translated rather than the English `REASON_LABELS`.
   const REASONS = useReportReasons("magazine_comment");
-  const firstName = authorName.split(" ")[0] ?? authorName;
+  const reportedFirstName = authorName
+    ? (authorName.split(" ")[0] ?? authorName)
+    : null;
 
   const submit = () => {
     if (!reason) return;
@@ -91,7 +99,11 @@ export function ReportCommentModal({
             />
           </h2>
           <p className={styles.confirmBody}>
-            {t("magazine:comments.report.confirmBody", { name: firstName })}
+            {reportedFirstName
+              ? t("magazine:comments.report.confirmBody", {
+                  name: reportedFirstName,
+                })
+              : t("magazine:comments.report.confirmBodyUnknown")}
           </p>
           <div className={styles.confirmActions}>
             <Button variant="ghost-dark" onClick={onClose}>
@@ -139,7 +151,9 @@ export function ReportCommentModal({
     >
       <h2 className={styles.title}>{t("magazine:comments.report.title")}</h2>
       <p className={styles.sub}>
-        {t("magazine:comments.report.sub", { name: firstName })}
+        {reportedFirstName
+          ? t("magazine:comments.report.sub", { name: reportedFirstName })
+          : t("magazine:comments.report.subUnknown")}
       </p>
       <RadioCardGroup
         className={styles.reasons}

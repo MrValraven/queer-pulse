@@ -6,8 +6,13 @@
  * such as `Activity.what`).
  */
 
+import { DEMO_SECTIONS as CANONICAL_DEMO_SECTIONS } from "../magazineSections.data";
+
 export type PieceFormat = "article" | "deck";
 
+/** The editorial pipeline, in order. `Published` is terminal: a piece reaches
+ *  it by being published (from the piece record or by shipping its issue),
+ *  never by being dragged there, and leaves it only by being unpublished. */
 export type Stage =
   | "Commissioned"
   | "Drafting"
@@ -15,7 +20,8 @@ export type Stage =
   | "Edit"
   | "Sensitivity read"
   | "Layout"
-  | "Ready";
+  | "Ready"
+  | "Published";
 
 export type WaitOn = "writer" | "you" | "nobody";
 
@@ -178,6 +184,7 @@ export const DEMO_STAGES: Stage[] = [
   "Sensitivity read",
   "Layout",
   "Ready",
+  "Published",
 ];
 
 export const DEMO_PIECES: Piece[] = [
@@ -400,18 +407,18 @@ export const DEMO_PITCHES: Pitch[] = [
   },
 ];
 
-export const DEMO_SECTIONS: Section[] = [
-  { name: "Cover", target: 1, note: "One piece, always commissioned first" },
-  { name: "Features", target: 2, note: "Reported, 1200–3000 words" },
-  { name: "Reported", target: 2, note: "Data-led; deck or prose" },
-  { name: "Interview", target: 1, note: "Q&A format" },
-  { name: "Essays", target: 3, note: "At least one new voice" },
-  { name: "Service", target: 2, note: "Practical, checked twice" },
-  { name: "Photo", target: 1, note: "Deck only" },
-  { name: "Review", target: 1, note: "Books, film, nightlife" },
-  { name: "Column", target: 1, note: "Standing column" },
-  { name: "Last word", target: 1, note: "Written last, by an editor" },
-];
+/**
+ * PRD-130 — the desk's section list, re-exported from the canonical demo
+ * taxonomy rather than restated here. It used to be a second hand-curated
+ * copy of `magazineSections.data.ts`, which is the shape of drift that hides
+ * until an editor commissions into a section the seeded rows do not have.
+ * The values are identical; only the single source of truth moved.
+ *
+ * This stays DEMO-ONLY data. Live surfaces read the seeded rows through
+ * `useMagazineSections` (`GET /magazine/sections`), which returns the same
+ * `name`/`target`/`note` fields, so both modes hand consumers a `Section`.
+ */
+export const DEMO_SECTIONS: Section[] = CANONICAL_DEMO_SECTIONS;
 
 export const DEMO_ACTIVITY: Activity[] = [
   {

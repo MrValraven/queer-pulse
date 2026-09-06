@@ -11,6 +11,14 @@ import type { TFunction } from "../../../shared/i18n/types";
 
 export const TOTAL_STEPS = 9;
 
+/**
+ * Character cap on `CommunityDraft.welcomeMessage`, mirroring the backend's
+ * `@MaxLength(2000)` on `CreateCommunityDto.welcomeMessage`. Kept here so the
+ * wizard and `EditCommunityModal` stop the founder at the same place the
+ * server would, rather than letting them write past it into a 400.
+ */
+export const MAX_WELCOME_MESSAGE_LENGTH = 2000;
+
 export type TintKey = "coral" | "jade" | "plum";
 
 /** A person helping run the space (owner or co-steward). */
@@ -41,11 +49,20 @@ export interface CommunityDraft {
   features: string[]; // FEATURE_OPTIONS ids
   /** Chapter 5 — tone */
   rules: string[];
+  /** The once-only greeting a new member reads right after joining. Optional
+   *  and never gates the wizard: a community that says nothing here simply
+   *  renders no welcome card. Plain text, capped at
+   *  `MAX_WELCOME_MESSAGE_LENGTH` to match the backend's own validator. */
+  welcomeMessage: string;
   /** Chapter 6 — feeling */
   tint: TintKey;
   /** Optional cover image — a `community-cover` storage key (or resolved URL
    *  when seeded from an existing community's detail DTO); "" means none. */
   coverImageUrl: string;
+  /** Optional square identity mark — a `community-avatar` storage key (or a
+   *  resolved URL when seeded from an existing community's detail DTO); ""
+   *  means none and the surface falls back to the community's initials. */
+  avatarImageUrl: string;
   tagline: string;
   /** Chapter 7 — people */
   invites: string[]; // member slugs of connections you're inviting

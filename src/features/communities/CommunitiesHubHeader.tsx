@@ -3,7 +3,11 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
 import { useHowCommunitiesWorkModal } from "../marketing/useHowCommunitiesWorkModal";
+import { Link } from "react-router-dom";
+import { FiMail } from "react-icons/fi";
 import { CommunitiesToolbar } from "./CommunitiesToolbar";
+import { COMMUNITY_INVITATIONS_PATH } from "./communityInvitations.path";
+import { useMyCommunityInvites } from "./api/useCommunityInvites";
 import {
   useMyCommunities,
   useMyCommunitiesResolving,
@@ -52,7 +56,34 @@ function HubMineHeading({ helpAction }: { helpAction: HubHelpAction }) {
           {t("communities:hub.sub", { count: Object.keys(memberships).length })}
         </p>
       )}
+      <HubInvitationsLink />
     </div>
+  );
+}
+
+/**
+ * The way into the invitations shelf (PRD-140), and the only one there is.
+ *
+ * An invitation to a `private` community exists NOWHERE else a member can
+ * reach: the community 404s anyone off its roster, so it never appears in
+ * Discover, in search, or on any card. Before the shelf, the invitation lived
+ * only in a bell row that scrolls away. This link is what makes it findable
+ * again the next day.
+ *
+ * Rendered only when something is waiting, so it never sits on the page as a
+ * dead affordance. It is deliberately on the "My communities" tab rather than
+ * Discover: an invitation is about the member's own standing, not about
+ * browsing.
+ */
+function HubInvitationsLink() {
+  const { t } = useTranslation();
+  const { invites } = useMyCommunityInvites();
+  if (invites.length === 0) return null;
+  return (
+    <Link to={COMMUNITY_INVITATIONS_PATH} className={styles.invitesLink}>
+      <FiMail aria-hidden />
+      {t("communities:hub.invitesLink", { count: invites.length })}
+    </Link>
   );
 }
 

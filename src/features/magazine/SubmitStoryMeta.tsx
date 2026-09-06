@@ -1,11 +1,67 @@
 import type { ReactNode } from "react";
 import { Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { formatDate } from "../../shared/lib/date";
+import { useOpenIssue } from "./api/useSubmissionWindow";
 import type { DraftForm } from "./submitStory.data";
-import { ISSUE, SECTION_OPTIONS } from "./submitStory.data";
+import { SECTION_OPTIONS } from "./submitStory.data";
 import styles from "./SubmitStoryPage.module.css";
+
+/**
+ * The "Issue N · Month Year · Submission deadline D" strip above the form
+ * (PRD-106).
+ *
+ * Every line here is backed by a real issue row. `publishedOn` is null while
+ * the desk has opened a number without dating it, and `submissionDeadline` is
+ * null until an editor sets one, and each null DROPS ITS LINE rather than
+ * falling back to a constant. While the read is in flight, or if it fails,
+ * the strip renders nothing at all and the form works exactly as it does with
+ * it: naming an issue is the one thing this component must not guess at.
+ */
+function OpenIssueStrip() {
+  const { t, language } = useTranslation();
+  const { openIssue, isLoading, isError } = useOpenIssue();
+
+  if (isLoading || isError) return null;
+
+  if (openIssue === null) {
+    return (
+      <div className={styles.issueRow}>
+        <div className={styles.issueName}>
+          {t("magazine:submitStory.issue.noneOpen")}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.issueRow}>
+      <span className={styles.issueBadge}>
+        {t("magazine:submitStory.issue.badge", { number: openIssue.number })}
+      </span>
+      <div>
+        <div className={styles.issueName}>
+          {openIssue.publishedOn
+            ? t("magazine:submitStory.issue.name", {
+                monthYear: formatDate(openIssue.publishedOn, language, {
+                  month: "long",
+                  year: "numeric",
+                }),
+              })
+            : t("magazine:submitStory.issue.nameUndated")}
+        </div>
+        {openIssue.submissionDeadline ? (
+          <div className={styles.issueDeadline}>
+            {t("magazine:submitStory.issue.deadline", {
+              date: formatDate(openIssue.submissionDeadline, language),
+            })}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
 
 export function SubmitStoryMeta({
   values,
@@ -17,7 +73,6 @@ export function SubmitStoryMeta({
   statusPill: ReactNode;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   return (
     <div className={styles.metaCard}>
       <div className={styles.metaHead}>
@@ -30,30 +85,7 @@ export function SubmitStoryMeta({
         {statusPill}
       </div>
 
-      <div className={styles.issueRow}>
-        <span className={styles.issueBadge}>
-          {t("magazine:submitStory.issue.badge", { number: ISSUE.number })}
-        </span>
-        <div>
-          <div className={styles.issueName}>
-            {t("magazine:submitStory.issue.name", {
-              monthYear: fmt.date(ISSUE.openDate, {
-                month: "long",
-                year: "numeric",
-              }),
-            })}
-          </div>
-          <div className={styles.issueDeadline}>
-            {t("magazine:submitStory.issue.deadline", {
-              date: fmt.date(ISSUE.deadlineDate, {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              }),
-            })}
-          </div>
-        </div>
-      </div>
+      <OpenIssueStrip />
 
       <label className={styles.fieldLabel} htmlFor="ss-section">
         {t("magazine:submitStory.meta.sectionLabel")}

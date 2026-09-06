@@ -7,6 +7,7 @@ import {
   FiType,
 } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useShareLink } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
@@ -42,6 +43,17 @@ function deriveIdentity(articleId?: string) {
   return { slug, href: `${window.location.pathname}${window.location.search}` };
 }
 
+/**
+ * PRD-113: whether this browser can open the platform's own share sheet.
+ * Read at call time rather than at module load, so a test that stubs
+ * `navigator.share` is honoured and a prerender (no `navigator`) says no.
+ */
+function canOpenShareSheet(): boolean {
+  return (
+    typeof navigator !== "undefined" && typeof navigator.share === "function"
+  );
+}
+
 export function ArticleToolbar({
   textSize,
   onTextSize,
@@ -54,6 +66,13 @@ export function ArticleToolbar({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { isSaved, toggleSave: toggleSaved } = useSaved();
+  // PRD-113: the clipboard half of sharing is the shared primitive every other
+  // surface uses, so the toast copy and the reset behaviour stay identical.
+  const { share: copyArticleLink } = useShareLink({
+    copied: t("magazine:toolbar.linkCopiedToast"),
+    failed: t("magazine:toolbar.linkCopyErrorToast"),
+  });
+  const hasShareSheet = canOpenShareSheet();
 
   const { slug, href } = deriveIdentity(articleId);
   const id = `article:${slug}`;
@@ -87,14 +106,38 @@ export function ArticleToolbar({
     );
   }
 
+  /**
+   * PRD-113: the platform share sheet where the browser has one (every mobile
+   * browser does), and the clipboard everywhere else. On a phone "Share" used
+   * to mean a clipboard toast, which is the one place a reader expects to be
+   * handed the OS list of apps to send a piece to.
+   */
   async function share() {
     const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast(t("magazine:toolbar.linkCopiedToast"), "success");
-    } catch {
-      showToast(t("magazine:toolbar.linkCopyErrorToast"), "info");
+    if (canOpenShareSheet()) {
+      try {
+        await navigator.share({
+          title:
+            articleTitle ??
+            (typeof document !== "undefined" ? document.title : undefined),
+          text: articleDescription,
+          url,
+        });
+        return;
+      } catch (shareError) {
+        // Dismissing the sheet raises AbortError. The reader chose not to
+        // share, so quietly copying the link instead would be a surprise.
+        if (
+          shareError instanceof DOMException &&
+          shareError.name === "AbortError"
+        ) {
+          return;
+        }
+        // Anything else (no permission, an unsupported payload) falls through
+        // to the clipboard, which is still a way to share the piece.
+      }
     }
+    await copyArticleLink(url);
   }
 
   return (
@@ -162,7 +205,11 @@ export function ArticleToolbar({
         type="button"
         className={styles.action}
         onClick={() => void share()}
-        aria-label={t("magazine:toolbar.copyLinkAriaLabel")}
+        aria-label={
+          hasShareSheet
+            ? t("magazine:toolbar.shareArticleAriaLabel")
+            : t("magazine:toolbar.copyLinkAriaLabel")
+        }
       >
         <FiShare2 aria-hidden />
         <span>{t("magazine:toolbar.shareCta")}</span>

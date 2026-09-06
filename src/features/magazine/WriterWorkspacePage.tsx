@@ -3,7 +3,7 @@ import { AppShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { cx } from "../../shared/lib/cx";
-import { formatDate } from "../../shared/lib/date";
+import { deskDateText } from "./magazineFormat";
 import { useWriterWorkspace } from "./api/useWriterWorkspace";
 import { useWriterMutations } from "./api/useWriterMutations";
 import type { WriterAssignmentDto } from "./api/writerWorkspace.api";
@@ -143,8 +143,9 @@ export function WriterWorkspacePage() {
 
   const nextDue = nextDueValue(assignments);
   // "2 assignments open · next due 29 Aug", collapsing to a quiet line when the
-  // desk is clear. `formatDate` returns an unparseable value unchanged, so the
-  // demo fixture's "4 Aug" passes straight through.
+  // desk is clear. `deskDateText` is the same helper every assignment card uses,
+  // and it returns an unparseable value unchanged, so the demo fixture's
+  // "4 Aug" passes straight through.
   const workloadSummary =
     assignments.length === 0
       ? t("magazine:writer.page.nothingOpen")
@@ -152,10 +153,7 @@ export function WriterWorkspacePage() {
           t("magazine:writer.page.openCount", { count: assignments.length }),
           nextDue
             ? t("magazine:writer.page.nextDue", {
-                date: formatDate(nextDue, language, {
-                  day: "numeric",
-                  month: "short",
-                }),
+                date: deskDateText(nextDue, language),
               })
             : null,
         ]
@@ -216,8 +214,20 @@ export function WriterWorkspacePage() {
         <FileDraftModal
           assignment={filingAssignment}
           onClose={() => setFilingAssignment(null)}
-          onFile={(pieceId, blocks) =>
-            fileDraft.mutate({ pieceId, body: blocks ? { blocks } : undefined })
+          // `mutateAsync`, not `mutate`, and the promise is RETURNED: that is
+          // what lets the modal hold the writer's text on screen until the
+          // filing lands and render the 409 conflict state instead of closing
+          // over a failure. Returning nothing here would silently disable both.
+          //
+          // `options` carries `expectedVersion` (read from the writer's own
+          // draft GET, so a filing cannot overwrite an editor who saved in the
+          // meantime) and `mode` (append or replace). Dropping them here would
+          // leave the modal's controls inert while still looking live.
+          onFile={(pieceId, blocks, options) =>
+            fileDraft.mutateAsync({
+              pieceId,
+              body: { ...(blocks ? { blocks } : {}), ...options },
+            })
           }
         />
       )}

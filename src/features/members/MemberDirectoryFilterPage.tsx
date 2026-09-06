@@ -78,6 +78,7 @@ export function MemberDirectoryFilterPage() {
     isLoading,
     isError,
     refetch,
+    search,
   } = useMemberDirectoryQuery(filters, sort, demoMode);
 
   // The prototype's fake fetch delay is DEMO-ONLY. OR-ing it in unconditionally
@@ -118,6 +119,7 @@ export function MemberDirectoryFilterPage() {
   // age range carries no chip, so fold it in alongside the chip count.
   const hasActiveFilters =
     chips.length > 0 ||
+    search.term !== "" ||
     filters.yearsFrom !== EMPTY_FILTERS.yearsFrom ||
     filters.yearsTo !== EMPTY_FILTERS.yearsTo;
   // Server pagination drives "load more" now; client-side filtering/sorting runs
@@ -138,11 +140,13 @@ export function MemberDirectoryFilterPage() {
 
   const clearAllFilters = () => {
     applyFilters(EMPTY_FILTERS);
+    search.onChange("");
     showToast(t("members:directory.toast.filtersCleared"), "info");
   };
 
   const resetAll = () => {
     applyFilters(EMPTY_FILTERS);
+    search.onChange("");
     setSort("Recently joined");
   };
 
@@ -182,6 +186,7 @@ export function MemberDirectoryFilterPage() {
         )}
 
         <MemberDirectoryLayout
+          search={search}
           filters={filters}
           sourceMembers={sourceMembers}
           facets={facets}

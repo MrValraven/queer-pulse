@@ -29,6 +29,9 @@ interface MessagesThreadRowProps {
   pinnedCount: number;
   onOpen: (id: string) => void;
   onRequestDelete: (thread: Conversation) => void;
+  /** Row menu "Mark as read"/"Mark as unread" (PRD-225). */
+  onMarkThreadRead: (conversationId: string) => void;
+  onMarkThreadUnread: (conversationId: string) => void;
 }
 
 /**
@@ -59,6 +62,8 @@ function MessagesThreadRowImpl({
   pinnedCount,
   onOpen,
   onRequestDelete,
+  onMarkThreadRead,
+  onMarkThreadUnread,
 }: MessagesThreadRowProps) {
   const { t } = useTranslation();
   const isUnread = isThreadUnread(thread, activeId, readIds);
@@ -90,6 +95,16 @@ function MessagesThreadRowImpl({
     toggleMute.mutate({ conversationId: thread.id, muted: isMuted });
   const handleToggleArchive = () =>
     toggleArchive.mutate({ conversationId: thread.id, archived: isArchived });
+  // PRD-225: one row-menu entry that flips between "Mark as read" and "Mark
+  // as unread" depending on what the row is CURRENTLY showing (`isUnread`,
+  // the same value driving its own badge) — mirroring the other toggles
+  // above exactly. "Mark as read" reuses the SAME mutation opening the
+  // thread fires (`useMarkRead`), so it advances the real watermark AND
+  // clears a manual mark in one request; "Mark as unread" sets the manual
+  // flag without ever touching the read watermark (see `markThreadUnread`'s
+  // own doc for why it also has to clear this row out of `readIds`).
+  const handleToggleReadUnread = () =>
+    isUnread ? onMarkThreadRead(thread.id) : onMarkThreadUnread(thread.id);
 
   const rowRef = useRef<HTMLButtonElement>(null);
   const leadingIconRef = useRef<HTMLSpanElement>(null);
@@ -211,10 +226,12 @@ function MessagesThreadRowImpl({
       </div>
       <ThreadRowMenu
         thread={thread}
+        isUnread={isUnread}
         onTogglePin={handleTogglePin}
         onToggleFavorite={handleToggleFavorite}
         onToggleMute={handleToggleMute}
         onToggleArchive={handleToggleArchive}
+        onToggleReadUnread={handleToggleReadUnread}
         onDelete={() => onRequestDelete(thread)}
       />
     </div>
@@ -249,6 +266,8 @@ function areRowPropsEqual(
   if (previous.pinnedCount !== next.pinnedCount) return false;
   if (previous.onOpen !== next.onOpen) return false;
   if (previous.onRequestDelete !== next.onRequestDelete) return false;
+  if (previous.onMarkThreadRead !== next.onMarkThreadRead) return false;
+  if (previous.onMarkThreadUnread !== next.onMarkThreadUnread) return false;
   const wasActive = previous.thread.id === previous.activeId;
   const isActive = next.thread.id === next.activeId;
   if (wasActive !== isActive) return false;

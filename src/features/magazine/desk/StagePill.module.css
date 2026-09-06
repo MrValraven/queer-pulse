@@ -24,6 +24,16 @@
   color: var(--jade-ink);
 }
 
+/* Published is terminal, so it reads as the same jade family as Ready with a
+   heavier wash: "out of the pipeline", one step past ready. No ring or border,
+   which would change the pill's box and break its alignment in a row of
+   others. Both jade tokens flip correctly in dark mode. */
+.published {
+  background: rgba(var(--jade-rgb), 0.3);
+  color: var(--jade-ink);
+  font-weight: 700;
+}
+
 .sens,
 .lay {
   background: var(--desk-violet-soft);

@@ -3,6 +3,7 @@ import { routes } from "../../app/routeMap";
 import { ParamRedirect } from "../../app/routes.redirects";
 import { lazyNamed } from "../../app/routeHelpers";
 import { MY_HOUSING_LISTINGS_PATH } from "./housing.data";
+import { LANDLORD_REPLY_REQUEST_PATH } from "./landlordReplyRequest";
 import { MY_BARTER_PROPOSALS_PATH } from "./barterProposals.paths";
 
 const JobsPage = lazyNamed(() => import("./JobsPage"), "JobsPage");
@@ -55,6 +56,14 @@ const HousingViewingsPage = lazyNamed(
   "HousingViewingsPage",
 );
 const LandlordPage = lazyNamed(() => import("./LandlordPage"), "LandlordPage");
+// PRD-249. The one PUBLIC page in this feature. A landlord named in the
+// community directory holds no account and cannot open the member-only page
+// that rates them, so their right of reply has to live outside the gate. See
+// `landlordReplyRequest.ts`.
+const LandlordReplyRequestPage = lazyNamed(
+  () => import("./LandlordReplyRequestPage"),
+  "LandlordReplyRequestPage",
+);
 const GrantsPage = lazyNamed(() => import("./GrantsPage"), "GrantsPage");
 const BarterPage = lazyNamed(() => import("./BarterPage"), "BarterPage");
 const BarterDetailPage = lazyNamed(
@@ -179,6 +188,12 @@ export function economyRoutes() {
         element={<HousingListingPage />}
       />
       <Route path="/work/landlord/:slug" element={<LandlordPage />} />
+      {/* Deliberately NOT under /work or /local/housing: `authGate` gates both
+          prefixes, and the person this page exists for has no account. */}
+      <Route
+        path={LANDLORD_REPLY_REQUEST_PATH}
+        element={<LandlordReplyRequestPage />}
+      />
       <Route path={routes.housingCoop} element={<HousingCoopPage />} />
       <Route
         path={`${routes.housingCoop}/templates/:slug`}

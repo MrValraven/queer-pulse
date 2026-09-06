@@ -39,6 +39,58 @@ export const subprofiles: Catalog = {
   "directory.resultCount_other": "{count} personas",
   "directory.showMore": "Show more",
   "directory.shownOfTotal": "{shown} of {total}",
+  "directory.showMoreLoading": "Loading…",
+  // Shown only when a browser-side facet is active AND further pages exist.
+  // The endpoint has no `tags` param and its `kind` takes one value, so those
+  // three chips cut the pages already fetched rather than the whole
+  // directory, and a partial count must never read as a total one. Retire
+  // this the moment the endpoint grows tags, repeated kind and facets.
+
+  // The "personas you follow" tab on the persona hub (PRD-208). Following used
+  // to give the follower nothing: the only consumer of a follow was one
+  // notification to the persona OWNER, so the follower got a "Following" pill
+  // and never heard from that persona again. This is the list half.
+  "directory.tabs.ariaLabel": "Personas",
+  "directory.tabs.browse": "Everyone",
+  "directory.tabs.following": "You follow",
+  "following.loading": "Loading the personas you follow",
+  "following.error.title": "We couldn't load the personas you follow",
+  "following.error.description":
+    "Something went wrong on our side. Try again in a moment.",
+  "following.empty.title": "You're not following anyone yet",
+  "following.empty.description":
+    "Follow a persona and its new work turns up here, and in your notifications.",
+  "following.empty.cta": "Browse personas",
+  "following.countLine_one": "Following 1 persona",
+  "following.countLine_other": "Following {count} personas",
+  "following.previousPage": "Previous",
+  "following.nextPage": "Next",
+  "following.unfollow": "Unfollow",
+  "following.unfollowing": "Unfollowing…",
+  "following.unfollowLabel": "Unfollow {name}",
+  "following.unfollowedToast": "You no longer follow {name}.",
+  "following.unfollowError": "We couldn't unfollow that one. Try again.",
+  "following.followerCount_one": "1 follower",
+  "following.followerCount_other": "{count} followers",
+  "following.since": "Since {date}",
+  "following.noAddress": "No public page right now",
+
+  // Forwarded-from-an-old-handle note on `/p/:handle` (PRD-204). Its own keys
+  // rather than the `members:profile.moved.*` set, for two reasons: that
+  // component names its destination from `useParams().slug` and this route has
+  // no `slug`, and the member copy says "username", which a persona handle is
+  // not. Both handles here belong to the SAME persona and neither is a member
+  // username, so the note never links a persona to a person. The NESTED route
+  // `/members/:slug/:subslug` forwards on an OWNER rename, which really is a
+  // username change, and reuses the members keys unchanged.
+  "page.moved.body":
+    "You followed a link to @{oldHandle}. That handle has changed, and this is where it now leads: @{handle}.",
+  "page.moved.announcement": "Forwarded from @{oldHandle} to @{handle}.",
+  "page.moved.ariaLabel": "Forwarded from an old handle",
+  "page.moved.dismiss": "Dismiss this note",
+
+  "directory.narrowedNote":
+    "Profession, tags and availability narrow the personas loaded so far. Show more to search wider.",
 
   // Directory closing nudge (SubprofileDirectoryFooterPrompt — personas
   // discovery Phase 5, Moment 2). Dismissible; static copy, no live data.
@@ -434,8 +486,14 @@ export const subprofiles: Catalog = {
   "mine.deleteModalConfirm": "Delete",
   "mine.deleteModalDeleting": "Deleting…",
   "mine.deleteModalBody": "This can't be undone.",
-  "mine.deleteModalBodyShared":
-    "This removes {name} for all {n} co-owners. It can't be undone.",
+  // Counts everyone ELSE. The reader is always the creator, the only member who
+  // can reach this modal, so the superseded `mine.deleteModalBodyShared`
+  // counted them among the co-owners they were taking the persona from.
+  // PRD-207.
+  "mine.deleteModalBodyCoOwned_one":
+    "This removes {name} for you and 1 other co-owner. It can't be undone.",
+  "mine.deleteModalBodyCoOwned_other":
+    "This removes {name} for you and {count} other co-owners. It can't be undone.",
   "mine.rowEdit": "Edit",
   "mine.rowDelete": "Delete",
   "mine.endorsementCount_one": "{count} endorsement",
@@ -886,6 +944,13 @@ export const subprofiles: Catalog = {
   // Share control (SubprofileShare, MySubprofilesPage)
   "share.cta": "Share",
   "share.ariaLabel": "Share this persona",
+  // Toast of last resort when the share URL resolves to null, and the
+  // accessible name of the DISABLED Share button on an addressless persona.
+  // The aria one REPLACES the name, so it reads as a whole label. PRD-206.
+  "share.noAddressYet":
+    "This persona has no address yet, so there is nothing to share.",
+  "share.noAddressAria":
+    "Share this persona. Unavailable until it has an address.",
   "share.copied": "Link copied",
   "share.copyFailed":
     "Your browser wouldn't let us copy that. The link is right there, select it and copy it by hand.",
@@ -996,6 +1061,11 @@ export const subprofiles: Catalog = {
   "side.noTagline": "No line yet",
   "side.statusLive": "Live",
   "side.viewCta": "View",
+  // Above the dashboard card action row when View and Share are disabled,
+  // and the `aria-describedby` target for both. "View" and "Share" here must
+  // match `side.viewCta` and `share.cta` in each language. PRD-206.
+  "side.noAddressNote":
+    "No address yet. Give it a handle and publish it, and View and Share come alive.",
   "side.thingsLeft_one": "{count} thing left",
   "side.thingsLeft_other": "{count} things left",
   "side.readyToPublish": "Ready to publish",
@@ -1577,6 +1647,11 @@ export const subprofiles: Catalog = {
   "publishPanel.deleteCopy":
     "Deleting this persona removes it, and everything on it, for good.",
   "publishPanel.deleteCta": "Delete this persona",
+  // The co-owner branch of the danger zone. The creator keeps deleteCopy.
+  // Offers the action that applies rather than explaining a permission, so
+  // it does not read as a scolding. CTA beside it is `owners.leaveCta`.
+  "publishPanel.leaveCopy":
+    "You co-own this persona. Deleting it stays with the member who created it, and you can step away whenever you like: the others keep everything as it is.",
 
   // Publish-checklist meter (PublishChecklist) — the `.meter` progress bar
   // alongside the pass/fail rows above.

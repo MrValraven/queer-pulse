@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   assignPiecesToIssue as sendAssignPiecesToIssue,
   createPiece,
@@ -11,7 +12,7 @@ import {
   type PieceStage,
   type UpdatePieceDto,
 } from "./pieces.api";
-import { STAGE_DTO_TO_VIEW } from "./pieces.adapters";
+import { STAGE_LABEL_KEY } from "../desk/stageLabels";
 import { DEMO_PIECES } from "../data/desk.data";
 
 /**
@@ -26,6 +27,7 @@ export function usePieceMutations() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   function invalidateDesk(pieceId?: string): void {
     void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] });
@@ -41,7 +43,7 @@ export function usePieceMutations() {
   const commission = useMutation<{ id: string }, Error, CreatePieceDto>({
     mutationFn: async (body) => {
       if (demoMode) {
-        showToast("Commissioned", "success");
+        showToast(t("magazine:desk.pieceToast.commissioned"), "success");
         return { id: "demo" };
       }
       const piece = await createPiece(body);
@@ -67,7 +69,7 @@ export function usePieceMutations() {
   const startDraft = useMutation<{ id: string }, Error, CreatePieceDto>({
     mutationFn: async (body) => {
       if (demoMode) {
-        showToast("Draft started", "success");
+        showToast(t("magazine:desk.pieceToast.draftStarted"), "success");
         // Demo's article draft fixture ignores the piece id, so any id opens
         // the editor. Live mode returns the real one to navigate to.
         return { id: "demo" };
@@ -118,7 +120,14 @@ export function usePieceMutations() {
   >({
     mutationFn: async ({ id, stage }) => {
       if (demoMode) {
-        showToast(`Moved to ${STAGE_DTO_TO_VIEW[stage]}`, "success");
+        // The stage goes in translated: `STAGE_DTO_TO_VIEW` would have put the
+        // English display label into a Portuguese sentence.
+        showToast(
+          t("magazine:desk.pieceToast.movedToStage", {
+            stage: t(STAGE_LABEL_KEY[stage]),
+          }),
+          "success",
+        );
         return { id };
       }
       const piece = await sendUpdatePiece(id, { stage });
@@ -135,7 +144,7 @@ export function usePieceMutations() {
   >({
     mutationFn: async ({ id, editorId, writerId }) => {
       if (demoMode) {
-        showToast("Handed off", "success");
+        showToast(t("magazine:desk.pieceToast.handedOff"), "success");
         return { id };
       }
       const piece = await sendUpdatePiece(id, { editorId, writerId });
@@ -177,7 +186,7 @@ export function usePieceMutations() {
   const remove = useMutation<void, Error, string>({
     mutationFn: async (id) => {
       if (demoMode) {
-        showToast("Deleted", "success");
+        showToast(t("magazine:desk.pieceToast.deleted"), "success");
         return;
       }
       await deletePiece(id);

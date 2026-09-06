@@ -2,6 +2,7 @@ import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useSocial } from "../../../app/providers/useSocial";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { FeedTab } from "../feed.data";
 import { getFeed, type FeedItem } from "./feed.api";
 
@@ -19,14 +20,20 @@ interface FeedPage {
  * deliberately does NOT partition by type or adapt items to a card
  * view-model (e.g. via `feedItemToPost`) — the render layer switches on
  * `item.type` per card so the merge order survives to the screen.
- * `queryKey` includes `demoMode` + `tab` so caches never cross the boundary.
+ * `queryKey` includes `demoMode` + `tab` + `language` so caches never cross
+ * the boundary.
  */
 export function useFeed(tab: FeedTab) {
   const { demoMode } = useDemoMode();
   const { blocked, muted } = useSocial();
+  // PRD-107: the reader's chrome language doubles as their content language
+  // for the magazine source, the same way every magazine hook uses it. It is
+  // part of the key because it changes WHICH row of a translated piece the
+  // page holds, not merely how it is formatted.
+  const { language } = useTranslation();
 
   const query = useInfiniteQuery<FeedPage>({
-    queryKey: ["feed", tab, demoMode],
+    queryKey: ["feed", tab, demoMode, language],
     enabled: !demoMode,
     // Keep the previous tab's data on screen while the new tab fetches, so
     // switching tabs swaps content smoothly instead of flashing the skeleton
@@ -34,7 +41,7 @@ export function useFeed(tab: FeedTab) {
     placeholderData: keepPreviousData,
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }) => {
-      const res = await getFeed(tab, pageParam as string | undefined);
+      const res = await getFeed(tab, pageParam as string | undefined, language);
       return { items: res.data, nextCursor: res.pageInfo.nextCursor };
     },
     getNextPageParam: (last) => last.nextCursor ?? undefined,

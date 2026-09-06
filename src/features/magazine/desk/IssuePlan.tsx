@@ -1,6 +1,7 @@
 import type { KeyboardEvent } from "react";
 import { FiPlus } from "react-icons/fi";
 import { FormatBadge } from "./FormatBadge";
+import { viewStageLabelKey } from "./stageLabels";
 import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece, Section, Stage } from "../data/desk.data";
@@ -134,7 +135,9 @@ function SlotCard({
         />
       </div>
       <span className={styles.tiny}>
-        {piece.stage}
+        {/* `piece.stage` IS its own English label, so it goes through the
+            stage-key lookup rather than straight onto the screen. */}
+        {t(viewStageLabelKey(piece.stage))}
         {piece.late ? t("magazine:desk.issuePlan.lateSuffix") : ""}
       </span>
     </div>

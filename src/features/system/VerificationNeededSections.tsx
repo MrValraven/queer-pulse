@@ -1,4 +1,4 @@
-import { FiArrowRight, FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -23,10 +23,13 @@ import styles from "./VerificationNeededPage.module.css";
  * truth about the real mechanism: step-up re-auth on QueerPulse is a Google
  * sign-in round trip (`beginReauth()` in `features/settings/api/
  * useReauthToken.ts`), which is what the live surfaces that need it
- * (DeleteAccountSection, AccountDataExport, useDsar) actually call. This
- * page itself is a prototype preview: nothing links to it outside the
- * dev-only simulations gallery, and its confirm button still resolves
- * locally rather than leaving for Google.
+ * (DeleteAccountSection, AccountDataExport, useDsar) actually call, and what
+ * this page's live mode now calls too.
+ *
+ * `isLiveStepUp` is what separates the two: on the live build the confirm
+ * button leaves for Google and the copy names no address, because the page has
+ * no idea which account is signed in; in demo mode it resolves locally against
+ * `REAUTH_EMAIL` so the prototype still reads end to end.
  */
 
 function Spinner() {
@@ -35,24 +38,34 @@ function Spinner() {
 
 /* ── Confirm it's you ─────────────────────────────────────── */
 export function ConfirmMethod({
-  busy,
+  isBusy,
+  isLiveStepUp,
   onVerify,
 }: {
-  busy: boolean;
+  isBusy: boolean;
+  isLiveStepUp: boolean;
   onVerify: () => void;
 }) {
   const { t } = useTranslation();
   return (
     <div className={styles.magicIntro}>
       <p className={styles.magicCopy}>
-        <Translation
-          i18nKey="system:verificationNeeded.confirm.intro"
-          values={{ email: REAUTH_EMAIL }}
-          components={{ b: <b /> }}
-        />
+        {isLiveStepUp ? (
+          t("system:verificationNeeded.confirm.introLive")
+        ) : (
+          <Translation
+            i18nKey="system:verificationNeeded.confirm.intro"
+            values={{ email: REAUTH_EMAIL }}
+            components={{ b: <b /> }}
+          />
+        )}
       </p>
-      <Button className={styles.confirmBtn} onClick={onVerify} disabled={busy}>
-        {busy ? (
+      <Button
+        className={styles.confirmBtn}
+        onClick={onVerify}
+        disabled={isBusy}
+      >
+        {isBusy ? (
           <>
             <Spinner /> {t("system:verificationNeeded.confirm.verifyingCta")}
           </>
@@ -72,7 +85,13 @@ export function ConfirmMethod({
 // trailing <FiArrowRight> glyph, but the shared panel's closeLabel is typed as
 // a plain string, so props don't map cleanly. Already follows the success
 // pattern (jade tick, coral <em>).
-export function SuccessPanel({ onContinue }: { onContinue: () => void }) {
+export function SuccessPanel({
+  isLiveStepUp = false,
+  onContinue,
+}: {
+  isLiveStepUp?: boolean;
+  onContinue: () => void;
+}) {
   const { t } = useTranslation();
   return (
     <div className={styles.success}>
@@ -85,15 +104,27 @@ export function SuccessPanel({ onContinue }: { onContinue: () => void }) {
           components={{ em: <em /> }}
         />
       </h2>
+      {/* The demo sub promises "taking you on to cancel your membership".
+          Nothing carries a live member on: the token is cached and they press
+          their original confirm button again, which is the deliberate margin
+          against a destructive action firing on a page load. */}
       <p className={styles.successSub}>
-        {t("system:verificationNeeded.success.sub")}
+        {t(
+          isLiveStepUp
+            ? "system:verificationNeeded.successLive.sub"
+            : "system:verificationNeeded.success.sub",
+        )}
       </p>
       <Button
         variant="ghost-dark"
         className={styles.successBtn}
         onClick={onContinue}
       >
-        {t("system:verificationNeeded.success.continueCta")}{" "}
+        {t(
+          isLiveStepUp
+            ? "system:verificationNeeded.successLive.continueCta"
+            : "system:verificationNeeded.success.continueCta",
+        )}{" "}
         <FiArrowRight aria-hidden />
       </Button>
     </div>
@@ -106,10 +137,7 @@ export function ExpiredPanel({ onRestart }: { onRestart: () => void }) {
   return (
     <div className={styles.expired}>
       <div className={styles.expiredIc}>
-        <svg viewBox="0 0 24 24" aria-hidden>
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 7v5l3 2" />
-        </svg>
+        <FiClock aria-hidden />
       </div>
       <h2 className={styles.expiredTitle}>
         <Translation

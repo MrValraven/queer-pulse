@@ -32,6 +32,7 @@ import {
   CommunityPostCard,
   GatheringCard,
   ForumThreadCard,
+  ArticleCard,
 } from "./FeedCards";
 import { FeedLoadMore } from "./FeedLoadMore";
 import { useFeedPage } from "./useFeedPage";
@@ -115,11 +116,12 @@ function FeedTabs({
 }
 
 /** Render the right card for one live `FeedItem`, switching on `type`. The
- *  backend merges all four types into a single ordered `/feed` page (Task 7),
+ *  backend merges all five types into a single ordered `/feed` page (Task 7,
+ *  plus `article` from PRD-107),
  *  so the render layer — not the hook — is what adapts each item to its
  *  card. `community_post` is the one type whose card still speaks the
  *  prototype's `FeedPost` shape, so it's the one adapted via
- *  `feedItemToPost`; the other three cards render straight off the raw
+ *  `feedItemToPost`; the other four cards render straight off the raw
  *  `FeedItem`. `default` is a defensive no-op for a future item type the
  *  backend ships before this switch is updated for it. */
 function renderLiveFeedCard(item: FeedItem, fmt: Formatters): React.ReactNode {
@@ -155,6 +157,8 @@ function renderLiveFeedCard(item: FeedItem, fmt: Formatters): React.ReactNode {
       return <ForumThreadCard item={item} />;
     case "new_member":
       return <MemberCard item={item} />;
+    case "article":
+      return <ArticleCard item={item} />;
     default:
       return null;
   }

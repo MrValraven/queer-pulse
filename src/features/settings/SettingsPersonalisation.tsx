@@ -1,7 +1,7 @@
 import { type RefCallback } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useReduceMotion } from "../../app/providers/accessibilityContext";
+import { useAccessibilityPrefs } from "../../app/providers/accessibilityContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Pane } from "./SettingsControls";
@@ -38,22 +38,39 @@ export function ProfileThemePane({ onChange }: { onChange: () => void }) {
 /**
  * Accessibility preferences.
  *
- * Only two of these are real: "Reduce motion" (AccessibilityProvider, reflected
- * onto <html data-reduce-motion>) and "Skip to content link" (skipLinkPref).
- * Both persist the instant they are flipped, so the pane never joins the save
- * bar's dirty flow and never reports a save it did not make. Everything else is
- * badged `comingSoon` and inert until there is a store and a stylesheet behind
- * it: a toggle that moves and changes nothing is worse than one that says so.
+ * Every row on this pane is applied. Four of the five ride on
+ * `AccessibilityProvider` (reduce motion, text size, open-out spacing, always
+ * show focus), which persists each to localStorage and stamps it onto <html>
+ * before paint; the fifth is the skip link, whose own store (`skipLinkPref`)
+ * predates the provider because `AppShell` and `PageShell` subscribe to it.
+ * All of them persist the instant they are flipped, so the pane never joins
+ * the save bar's dirty flow and never reports a save it did not make.
+ *
+ * Until PRD-307 ten of twelve rows were badged `comingSoon` and rendered
+ * inert. They are gone rather than restyled: a settings page full of dead
+ * toggles is worse than a shorter honest one, and this is the page a member
+ * reaches precisely when they need something to work.
  */
 export function AccessibilityPane() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { reduceMotion, setReduceMotion } = useReduceMotion();
+  const {
+    reduceMotion,
+    setReduceMotion,
+    textScale,
+    setTextScale,
+    wideSpacing,
+    setWideSpacing,
+    alwaysShowFocus,
+    setAlwaysShowFocus,
+  } = useAccessibilityPrefs();
   const isSkipLinkOn = useSkipLinkPref();
   const prefs: A11yPrefs = {
-    ...DEFAULT_PREFS,
     reduceMotion,
+    wideSpacing,
+    focusRings: alwaysShowFocus,
     skipLink: isSkipLinkOn,
+    textSize: textScale,
   };
 
   function toggle(key: keyof A11yPrefs) {
@@ -61,13 +78,19 @@ export function AccessibilityPane() {
       setReduceMotion((current) => !current);
     } else if (key === "skipLink") {
       setSkipLinkPref((current) => !current);
+    } else if (key === "wideSpacing") {
+      setWideSpacing((current) => !current);
+    } else if (key === "focusRings") {
+      setAlwaysShowFocus((current) => !current);
     }
-    // Every other key is inert (comingSoon): nothing to move, nothing to save.
   }
 
   function resetAll() {
     setSkipLinkPref(DEFAULT_PREFS.skipLink);
     setReduceMotion(DEFAULT_PREFS.reduceMotion);
+    setTextScale(DEFAULT_PREFS.textSize);
+    setWideSpacing(DEFAULT_PREFS.wideSpacing);
+    setAlwaysShowFocus(DEFAULT_PREFS.focusRings);
     showToast(t("settings:personalisation.accessibility.resetToast"), "info");
   }
 
@@ -81,7 +104,12 @@ export function AccessibilityPane() {
       }
       sub={t("settings:personalisation.accessibility.sub")}
     >
-      <A11yDisplaySection prefs={prefs} onToggle={toggle} sectionRef={noRef} />
+      <A11yDisplaySection
+        prefs={prefs}
+        onToggle={toggle}
+        onTextSizeChange={setTextScale}
+        sectionRef={noRef}
+      />
       <A11yMotionSection prefs={prefs} onToggle={toggle} sectionRef={noRef} />
       <A11yReadingSection prefs={prefs} onToggle={toggle} sectionRef={noRef} />
       <A11yInteractionSection

@@ -38,11 +38,39 @@ function AppealLoadingSkeleton() {
 }
 
 /**
+ * Format an API timestamp, or null when there is nothing honest to print.
+ *
+ * `slaDueAt` and `decidedAt` are real columns on the appeal and reach the
+ * client through `MemberAppealDTO`, so on the happy path this always returns a
+ * date. It still guards, because `new Date("")` and `new Date(undefined)` both
+ * produce an Invalid Date, and `Intl.DateTimeFormat` renders that as the
+ * literal string "Invalid Date" on the one page a member reads to find out
+ * whether their suspension is being reconsidered. A missing row says less than
+ * a wrong one.
+ */
+function formattedDate(
+  value: string | null | undefined,
+  fmt: ReturnType<typeof useFormat>,
+): string | null {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : fmt.date(parsed);
+}
+
+/**
  * The real reference rows for the member's own appeal — a truncated id (the
- * full UUID is not something a member needs to read in full) and the actual
- * filing date, plus the tone-appropriate outcome value once decided. No
- * invented "expected response" or "decided on" date: the appeal entity has no
- * SLA/decided-at column, so this only ever shows facts that actually exist.
+ * full UUID is not something a member needs to read in full), the filing date,
+ * the deadline or the decision date, and the tone-appropriate outcome value.
+ *
+ * The deadline row is the point of this (TS-11, PRD-286). The Code of Conduct
+ * §05 publishes a decision window, the backend stamps every appeal with the
+ * `slaDueAt` it computes from it, and the API sends that field to the MEMBER
+ * for exactly this purpose. It was arriving and going unrendered, so the page
+ * said "usually within a few days" and the member had no date to hold the
+ * platform to. A member locked out by the decision they are appealing has no
+ * other surface to read it from.
+ *
+ * Nothing here is computed. Every date shown is one the server sent.
  */
 function buildLiveRefRows(
   appeal: MemberAppealDTO,
@@ -60,7 +88,16 @@ function buildLiveRefRows(
       value: fmt.date(new Date(appeal.createdAt)),
     },
   ];
-  if (tone === "overturned") {
+  const dueDate = formattedDate(appeal.slaDueAt, fmt);
+  const decidedDate = formattedDate(appeal.decidedAt, fmt);
+  if (tone === "pending") {
+    if (dueDate) {
+      rows.push({
+        label: t("safety:appeal.pending.expectedLabel"),
+        value: dueDate,
+      });
+    }
+  } else if (tone === "overturned") {
     rows.push({
       label: t("safety:appeal.decisionLabel"),
       value: t("safety:appeal.overturned.decisionValue"),
@@ -69,6 +106,12 @@ function buildLiveRefRows(
     rows.push({
       label: t("safety:appeal.upheld.outcomeLabel"),
       value: t("safety:appeal.upheld.outcomeValue"),
+    });
+  }
+  if (tone !== "pending" && decidedDate) {
+    rows.push({
+      label: t("safety:appeal.decidedOnLabel"),
+      value: decidedDate,
     });
   }
   // `decision` degrades to the literal 'uphold'/'overturn' when the reviewing

@@ -1,55 +1,51 @@
 import { type RefCallback } from "react";
-import { ComingSoon, Toggle } from "../../shared/components/ui";
+import { Toggle } from "../../shared/components/ui";
+import {
+  TEXT_SCALE_MAX,
+  TEXT_SCALE_MIN,
+  TEXT_SCALE_STEP,
+} from "../../app/providers/accessibilityContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type A11yPrefs } from "./accessibilityPreferences.data";
 import styles from "./AccessibilityPrefSections.module.css";
 
-type ToggleKey = keyof A11yPrefs;
+type ToggleKey = "reduceMotion" | "wideSpacing" | "focusRings" | "skipLink";
 
 /**
  * One preference row.
  *
- * `isComingSoon` marks a preference nothing is wired to yet: the row renders the
- * badge and goes inert, so it can never report a change the app will not make.
- * Only the two rows backed by a real store (reduce motion, skip link) stay live,
- * and those persist the instant they are flipped.
+ * Every row here is live. Until PRD-307 the component also carried an
+ * `isComingSoon` mode that rendered the row inert behind a badge, which ten of
+ * the twelve rows used: the page members reach when they need help said
+ * "later" almost all the way down. The unbacked rows are gone, so the inert
+ * mode has nothing left to serve.
  */
 export function TglRow({
   title,
   description,
   checked,
   onChange,
-  isComingSoon,
   hint,
 }: {
   title: string;
   description: string;
   checked: boolean;
   onChange: () => void;
-  isComingSoon?: boolean;
   hint?: string;
 }) {
   return (
     <div className={styles.tglRow}>
       <div>
-        <div className={styles.tglTitle}>
-          {title} {isComingSoon && <ComingSoon />}
-        </div>
+        <div className={styles.tglTitle}>{title}</div>
         <div className={styles.tglDesc}>{description}</div>
         {hint && <div className={styles.tglHint}>{hint}</div>}
       </div>
-      <div
-        className={isComingSoon ? styles.inertControl : undefined}
-        inert={isComingSoon}
-      >
+      <div>
         <Toggle
           tone="coral"
           checked={checked}
           label={title}
-          onChange={() => {
-            if (isComingSoon) return;
-            onChange();
-          }}
+          onChange={onChange}
         />
       </div>
     </div>
@@ -62,11 +58,25 @@ interface SectionProps {
   sectionRef: RefCallback<HTMLElement>;
 }
 
+interface DisplaySectionProps extends SectionProps {
+  onTextSizeChange: (percent: number) => void;
+}
+
+/**
+ * Text size.
+ *
+ * The whole type scale is already in `rem`, so a root font-size preference IS
+ * the implementation: `AccessibilityProvider` writes `font-size: <n>%` onto
+ * <html> and every `--text-*` token follows. The preview below the slider is
+ * a plain paragraph, so it scales with the rest of the page rather than
+ * simulating the change with an inline pixel size the way the inert version
+ * did.
+ */
 export function A11yDisplaySection({
   prefs,
-  onToggle,
+  onTextSizeChange,
   sectionRef,
-}: SectionProps) {
+}: DisplaySectionProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.section} id="display" ref={sectionRef}>
@@ -76,54 +86,34 @@ export function A11yDisplaySection({
       <div className={styles.secDesc}>
         {t("settings:a11y.section.display.desc")}
       </div>
-      <div className={styles.toggleList}>
-        <TglRow
-          isComingSoon
-          title={t("settings:a11y.toggle.highContrast.title")}
-          description={t("settings:a11y.toggle.highContrast.desc")}
-          checked={prefs.highContrast}
-          onChange={() => onToggle("highContrast")}
-        />
-        <TglRow
-          isComingSoon
-          title={t("settings:a11y.toggle.largerText.title")}
-          description={t("settings:a11y.toggle.largerText.desc")}
-          checked={prefs.largerText}
-          onChange={() => onToggle("largerText")}
-        />
-        <TglRow
-          isComingSoon
-          title={t("settings:a11y.toggle.dyslexia.title")}
-          description={t("settings:a11y.toggle.dyslexia.desc")}
-          checked={prefs.dyslexia}
-          onChange={() => onToggle("dyslexia")}
-        />
-      </div>
       <div className={styles.sliderCard}>
         <div className={styles.sliderLabelRow}>
           <div className={styles.sliderLabel}>
-            {t("settings:a11y.textSize.label")} <ComingSoon />
+            {t("settings:a11y.textSize.label")}
           </div>
-          <div className={styles.sliderVal}>{prefs.textSize}%</div>
+          <div className={styles.sliderVal}>
+            {t("settings:a11y.textSize.value", { percent: prefs.textSize })}
+          </div>
         </div>
-        <div className={styles.inertControl} inert>
-          <input
-            type="range"
-            className={styles.sliderInput}
-            aria-label={t("settings:a11y.textSize.label")}
-            min={80}
-            max={160}
-            step={10}
-            value={prefs.textSize}
-            readOnly
-          />
+        <input
+          type="range"
+          className={styles.sliderInput}
+          aria-label={t("settings:a11y.textSize.label")}
+          aria-valuetext={t("settings:a11y.textSize.value", {
+            percent: prefs.textSize,
+          })}
+          min={TEXT_SCALE_MIN}
+          max={TEXT_SCALE_MAX}
+          step={TEXT_SCALE_STEP}
+          value={prefs.textSize}
+          onChange={(event) => onTextSizeChange(Number(event.target.value))}
+        />
+        <div className={styles.tglHint}>
+          {t("settings:a11y.instantSaveHint")}
         </div>
-        <div
-          className={styles.previewText}
-          style={{ fontSize: `${(prefs.textSize / 100) * 16}px` }}
-        >
+        <p className={styles.previewText}>
           {t("settings:a11y.textSize.preview")}
-        </div>
+        </p>
       </div>
     </div>
   );
@@ -151,13 +141,6 @@ export function A11yMotionSection({
           checked={prefs.reduceMotion}
           onChange={() => onToggle("reduceMotion")}
         />
-        <TglRow
-          isComingSoon
-          title={t("settings:a11y.toggle.pauseDecorative.title")}
-          description={t("settings:a11y.toggle.pauseDecorative.desc")}
-          checked={prefs.pauseDecorative}
-          onChange={() => onToggle("pauseDecorative")}
-        />
       </div>
       <div className={styles.motionPreview}>
         <div className={styles.mpLabel}>
@@ -181,24 +164,6 @@ export function A11yMotionSection({
   );
 }
 
-const SWATCH_OPTIONS = [
-  {
-    theme: "default",
-    swatchClassName: styles.swatchPlum,
-    titleKey: "settings:a11y.colorTheme.default",
-  },
-  {
-    theme: "softer",
-    swatchClassName: styles.swatchInk,
-    titleKey: "settings:a11y.colorTheme.softer",
-  },
-  {
-    theme: "high-contrast",
-    swatchClassName: styles.swatchBlack,
-    titleKey: "settings:a11y.colorTheme.highContrast",
-  },
-] as const;
-
 export function A11yReadingSection({
   prefs,
   onToggle,
@@ -215,46 +180,19 @@ export function A11yReadingSection({
       </div>
       <div className={styles.toggleList}>
         <TglRow
-          isComingSoon
           title={t("settings:a11y.toggle.wideSpacing.title")}
           description={t("settings:a11y.toggle.wideSpacing.desc")}
+          hint={t("settings:a11y.instantSaveHint")}
           checked={prefs.wideSpacing}
           onChange={() => onToggle("wideSpacing")}
         />
         <TglRow
-          isComingSoon
           title={t("settings:a11y.toggle.focusRings.title")}
           description={t("settings:a11y.toggle.focusRings.desc")}
+          hint={t("settings:a11y.instantSaveHint")}
           checked={prefs.focusRings}
           onChange={() => onToggle("focusRings")}
         />
-      </div>
-      <div className={styles.sliderCard}>
-        <div className={styles.sliderLabelRow}>
-          <div className={styles.sliderLabel}>
-            {t("settings:a11y.colorTheme.label")} <ComingSoon />
-          </div>
-        </div>
-        <div className={styles.colorThemeLabel}>
-          {t("settings:a11y.colorTheme.headingLabel")}
-        </div>
-        <div className={`${styles.colorSwatches} ${styles.inertControl}`} inert>
-          {SWATCH_OPTIONS.map(({ theme, swatchClassName, titleKey }) => (
-            <span
-              key={theme}
-              role="img"
-              title={t(titleKey)}
-              aria-label={t(titleKey)}
-              className={[
-                styles.colorSwatch,
-                swatchClassName,
-                prefs.colorTheme === theme && styles.colorSwatchSelected,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            />
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -275,20 +213,6 @@ export function A11yInteractionSection({
         {t("settings:a11y.section.interaction.desc")}
       </div>
       <div className={styles.toggleList}>
-        <TglRow
-          isComingSoon
-          title={t("settings:a11y.toggle.largeTargets.title")}
-          description={t("settings:a11y.toggle.largeTargets.desc")}
-          checked={prefs.largeTargets}
-          onChange={() => onToggle("largeTargets")}
-        />
-        <TglRow
-          isComingSoon
-          title={t("settings:a11y.toggle.stickyNav.title")}
-          description={t("settings:a11y.toggle.stickyNav.desc")}
-          checked={prefs.stickyNav}
-          onChange={() => onToggle("stickyNav")}
-        />
         <TglRow
           title={t("settings:a11y.toggle.skipLink.title")}
           description={t("settings:a11y.toggle.skipLink.desc")}

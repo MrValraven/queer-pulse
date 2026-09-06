@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useId, useState } from "react";
+import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminModal, AdminSeg, type AdminSegOption } from "./ui";
 import { MOD_REASONS } from "./adminModeration.data";
+import {
+  MIN_MEMBER_FACING_NOTE_LENGTH,
+  isMemberFacingModAction,
+} from "./reportDrawerOptions";
 import type { ModActionCode } from "./api/moderation.api";
 import styles from "./AdminModerationPage.module.css";
 
@@ -31,6 +36,19 @@ export interface BulkActionDecision {
  * fifteen rows selected was recoverable only inside the 5.6s undo window.
  *
  * A suspend also collects a duration, which the backend requires.
+ *
+ * PRD-287: the note floor is the SAME rule the single-report drawer runs, read
+ * from the one place it is written down (`reportDrawerOptions.ts`), because the
+ * backend holds `ModBulkActionDto` to exactly what it holds `ModActionDto` to.
+ * It bites harder here. A batch refused for a short note takes every decision
+ * in it down at once, and the 400 does not say which row was the problem, so a
+ * moderator who selected fifteen reports loses all fifteen and has to guess.
+ * The four actions that can open this modal (`remove_content`, `warn`,
+ * `suspend`, `ban`) are all member-facing, so in practice the floor always
+ * applies; the predicate is still asked, because `action` is typed as the full
+ * `ModActionCode` union and a `dismiss` arriving here later must not silently
+ * inherit a rule the server does not apply to it. Every action keeps the
+ * non-empty floor this modal already had.
  */
 export function BulkActionModal({
   count,
@@ -47,12 +65,18 @@ export function BulkActionModal({
   const [reasonCode, setReasonCode] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [duration, setDuration] = useState<string>("7d");
+  const confirmBlockedNoticeId = useId();
 
   const needsDuration = action === "suspend";
-  const canConfirm = reasonCode !== null && note.trim().length > 0;
+  const trimmedNoteLength = note.trim().length;
+  const isMemberFacingAction = isMemberFacingModAction(action);
+  const isNoteTooShort =
+    trimmedNoteLength <
+    (isMemberFacingAction ? MIN_MEMBER_FACING_NOTE_LENGTH : 1);
+  const canConfirm = reasonCode !== null && !isNoteTooShort;
 
   const confirm = () => {
-    if (reasonCode === null || note.trim().length === 0) return;
+    if (!canConfirm) return;
     onConfirm({
       reasonCode,
       note: note.trim(),
@@ -76,7 +100,12 @@ export function BulkActionModal({
           <Button variant="ghost" onClick={onClose}>
             {t("admin:common.cancel")}
           </Button>
-          <Button variant="primary" disabled={!canConfirm} onClick={confirm}>
+          <Button
+            variant="primary"
+            disabled={!canConfirm}
+            onClick={confirm}
+            aria-describedby={canConfirm ? undefined : confirmBlockedNoticeId}
+          >
             {t("admin:moderation.bulk.confirm.applyCta", { count })}
           </Button>
         </>
@@ -132,6 +161,23 @@ export function BulkActionModal({
       <p className={styles.dTransparency}>
         {t("admin:moderation.bulk.confirm.transparency", { count })}
       </p>
+
+      {/* Why Apply is unavailable, beside the field it is asking for. The same
+          explanation the single-report drawer gives, for the same rule, with
+          the live character count: a greyed button that says nothing is how a
+          moderator ends up believing the batch is broken. */}
+      {!canConfirm && (
+        <p className={styles.dTransparency} id={confirmBlockedNoticeId}>
+          <FiAlertCircle aria-hidden />{" "}
+          {reasonCode === null
+            ? t("admin:moderation.bulk.confirm.pickReasonNotice")
+            : t("admin:moderation.bulk.confirm.noteRequiredNotice", {
+                count,
+                min: isMemberFacingAction ? MIN_MEMBER_FACING_NOTE_LENGTH : 1,
+                current: trimmedNoteLength,
+              })}
+        </p>
+      )}
     </AdminModal>
   );
 }

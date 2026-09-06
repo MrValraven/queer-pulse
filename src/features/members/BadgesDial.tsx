@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RecognitionLevel } from "./api/recognition.adapters";
+import { levelNameKeyFor } from "./levelLadder.data";
 import styles from "./BadgesPage.module.css";
 
 interface BadgesDialProps {
@@ -15,6 +16,12 @@ export function BadgesDial({ level }: BadgesDialProps) {
   const { t } = useTranslation();
   const percentStyle = { "--p": level.percent } as CSSProperties;
   const atMaxLevel = !level.nextName;
+  // The ladder's words are owned here and keyed on the level NUMBER (see
+  // `levelLadder.data.ts`); the server's English name is the fallback for a
+  // rung this build does not know. `nextName` still decides whether there IS
+  // a next rung, because only the server knows where the ladder ends.
+  const nameKey = levelNameKeyFor(level.level);
+  const nextNameKey = levelNameKeyFor(level.level + 1);
 
   return (
     <div className={styles.dialWrap}>
@@ -27,7 +34,9 @@ export function BadgesDial({ level }: BadgesDialProps) {
             {t("members:badges.hero.levelWord")}
           </div>
           <div className={styles.dialNum}>{level.level}</div>
-          <div className={styles.dialName}>{level.name}</div>
+          <div className={styles.dialName}>
+            {nameKey ? t(nameKey) : level.name}
+          </div>
         </div>
       </div>
       <div className={styles.xpWrap}>
@@ -48,7 +57,7 @@ export function BadgesDial({ level }: BadgesDialProps) {
               components={{ b: <b /> }}
               values={{
                 xp: level.xpToNext.toLocaleString(),
-                nextName: level.nextName,
+                nextName: nextNameKey ? t(nextNameKey) : level.nextName,
               }}
             />
           )}

@@ -1,7 +1,6 @@
 import { toAbsoluteUrl } from "../../shared/seo";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { socialHref } from "../../shared/social/socialPlatforms";
-import { personaShareUrl } from "./personaLinks.data";
 import { personaTitleName } from "./subprofile-kinds";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
@@ -18,12 +17,21 @@ export function escapeVCard(value: string): string {
 }
 
 /**
- * Build a VERSION:3.0 vCard for a persona's public view — a portable contact
+ * Build a VERSION:3.0 vCard for a persona's public view: a portable contact
  * card a scanner/contacts app can import directly from the QR/download flow.
  * Pure and synchronous so it's trivially testable and safe to call from a
  * click handler with no loading state.
+ *
+ * `shareUrl` is passed in rather than derived here, so the `URL:` line, the QR
+ * code and the copy-link row of one share card are all the SAME resolved
+ * address and cannot drift. It is `null` when the persona has no public address
+ * yet (`personaShareUrl`), and the `URL:` line is then omitted: a saved contact
+ * carrying a link that resolves nowhere outlives every chance to correct it.
  */
-export function buildVCard(view: PublicSubprofileView): string {
+export function buildVCard(
+  view: PublicSubprofileView,
+  shareUrl: string | null,
+): string {
   const lines: string[] = ["BEGIN:VCARD", "VERSION:3.0"];
 
   // A contact saved as just "Poet" is useless in a phone book, so a persona
@@ -45,7 +53,7 @@ export function buildVCard(view: PublicSubprofileView): string {
     lines.push(`ORG:${escapeVCard(primaryAffiliation.name)}`);
   }
 
-  lines.push(`URL:${personaShareUrl(view)}`);
+  if (shareUrl) lines.push(`URL:${shareUrl}`);
 
   if (view.avatarUrl) {
     lines.push(`PHOTO;VALUE=URI:${toAbsoluteUrl(view.avatarUrl)}`);
@@ -70,9 +78,12 @@ export function buildVCard(view: PublicSubprofileView): string {
 }
 
 /** Build the vCard for `view` and trigger a browser download of it as a
- *  `.vcf` file, named after the persona's slug/handle. Client-only — no
+ *  `.vcf` file, named after the persona's slug/handle. Client-only: no
  *  network round-trip, works identically in demo and live mode. */
-export function downloadVCard(view: PublicSubprofileView): void {
+export function downloadVCard(
+  view: PublicSubprofileView,
+  shareUrl: string | null,
+): void {
   const filename = `${view.slug || view.handle || "persona"}.vcf`;
-  downloadBlob(filename, buildVCard(view), "text/vcard");
+  downloadBlob(filename, buildVCard(view, shareUrl), "text/vcard");
 }

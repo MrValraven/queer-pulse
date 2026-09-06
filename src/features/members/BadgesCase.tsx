@@ -3,6 +3,10 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Badge, BadgeDrawerEntry } from "./badges.data";
 import { progressPercent, rarestBadge } from "./badgeSelectors";
+import {
+  badgeCategoryLabelKeyFor,
+  badgeDisplayMetaFor,
+} from "./badgeCatalog.data";
 import { BadgeGridCard } from "./BadgeGridCard";
 import { BadgeMedallion } from "./BadgeMedallion";
 import { BadgesCaseControls, type BadgeSortMode } from "./BadgesCaseControls";
@@ -57,6 +61,14 @@ export function BadgesCase({
   onOpenBadge,
 }: BadgesCaseProps) {
   const { t } = useTranslation();
+  // Categories arrive from the server catalogue as English display words
+  // (`cat: 'Attendance'`) and head each group in the sort-by-category view.
+  // Same spelling as `BadgesCaseControls`: `badgeCatalog.data.ts` owns the
+  // words, an unmapped category falls back to the server's own.
+  const categoryLabel = (category: string): string => {
+    const labelKey = badgeCategoryLabelKeyFor(category);
+    return labelKey ? t(labelKey) : category;
+  };
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortMode, setSortMode] = useState<BadgeSortMode>("close");
   const [showLocked, setShowLocked] = useState(true);
@@ -112,10 +124,7 @@ export function BadgesCase({
           </div>
           <div className={styles.caseEmptyMeds}>
             {previewBadges.map((badge) => (
-              <div key={badge.key} className={styles.caseEmptyMed}>
-                <BadgeMedallion badge={badge} earned={false} size="sm" />
-                <span>{badge.name}</span>
-              </div>
+              <CaseEmptyMedallion key={badge.key} badge={badge} />
             ))}
           </div>
         </div>
@@ -167,7 +176,7 @@ export function BadgesCase({
                   {rows.filter((badge) => earnedKeys.has(badge.key)).length}/
                   {rows.length}
                 </span>
-                <h3>{category}</h3>
+                <h3>{categoryLabel(category)}</h3>
               </div>
               <div className={styles.bxGrid} role="list">
                 {rows.map((badge) => (
@@ -214,6 +223,21 @@ export function BadgesCase({
         </div>
       )}
     </section>
+  );
+}
+
+/** One of the three teaser medallions shown to a member with nothing earned
+ *  yet. The catalogue ships a stable id beside its English display words, so
+ *  the name resolves here rather than off the wire (see
+ *  `badgeCatalog.data.ts`); an unmapped id keeps the server's own English. */
+function CaseEmptyMedallion({ badge }: { badge: Badge }) {
+  const { t } = useTranslation();
+  const displayMeta = badgeDisplayMetaFor(badge.key);
+  return (
+    <div className={styles.caseEmptyMed}>
+      <BadgeMedallion badge={badge} earned={false} size="sm" />
+      <span>{displayMeta ? t(displayMeta.nameKey) : badge.name}</span>
+    </div>
   );
 }
 

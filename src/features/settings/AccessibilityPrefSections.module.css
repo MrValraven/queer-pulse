@@ -133,13 +133,6 @@
   line-height: 1.5;
 }
 
-/* Preferences with nothing behind them yet: dimmed and non-interactive, so the
-   control can never move without the app changing with it. */
-.inertControl {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
 /* Slider card */
 .sliderCard {
   background: var(--paper);
@@ -229,48 +222,6 @@
 .mpText {
   font-size: var(--text-13-5);
   color: var(--ink);
-}
-
-/* Color swatches */
-.colorSwatches {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.colorSwatch {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 3px solid transparent;
-  transition:
-    border-color 0.18s var(--ease),
-    box-shadow 0.18s var(--ease);
-}
-
-.colorSwatchSelected {
-  border-color: var(--line-strong);
-  box-shadow: 0 0 0 2px var(--plum);
-}
-
-.swatchPlum {
-  background: var(--plum);
-}
-
-.swatchInk {
-  background: var(--ink);
-}
-
-.swatchBlack {
-  background: var(--ink);
-}
-
-.colorThemeLabel {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  margin-bottom: 10px;
 }
 
 /* Reset card */

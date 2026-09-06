@@ -100,8 +100,19 @@ function priceRange(price?: string): { priceMin?: number; priceMax?: number } {
   };
 }
 
-/** GET /events card → the Events Hub / calendar `CalendarEvent` shape. */
-export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
+/**
+ * GET /events card → the Events Hub / calendar `CalendarEvent` shape.
+ *
+ * `t` renders the one label this shape carries that is chrome rather than
+ * content: the "Online" neighbourhood, which stood as a hardcoded English
+ * literal here while the My Events adapter translated the identical label
+ * (DES-130). Same language-trail cost as `hostName` below: the resolved string
+ * sits in the query cache in the language it was fetched in.
+ */
+export function cardToCalendarEvent(
+  dto: EventCardDTO,
+  t: TFunction,
+): CalendarEvent {
   // A QueerPulse-run gathering always sets `org`, so an absent one is
   // community-run whether or not its host row survived erasure. This used to
   // read a missing host as "QueerPulse" and byline the platform for a member's
@@ -115,9 +126,14 @@ export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
     org,
     orgColor: orgColorFor(org),
     title: dto.title,
-    hood: dto.neighbourhood ?? dto.venue ?? (dto.isOnline ? "Online" : ""),
+    hood: onlineAwareHood(dto, t),
     to: gatheringPath(dto.slug),
     kind: dto.host ? "gathering" : "event",
+    // Discovery lists never carry a cancelled row, but the member's own
+    // "going"/"saved"/"hosting" lists do, and the card knows how to render
+    // the state (PRD-181). Carrying it is what stops a called-off gathering
+    // from sitting in My Events looking exactly like a live one.
+    ...(dto.status === "cancelled" ? { cancelled: true } : {}),
     // The wizard's own gathering type, when the host picked one (LOC-04).
     ...(dto.eventType ? { eventType: dto.eventType } : {}),
     // LOC-18 — the host's own words about what it costs, plus the server's
@@ -156,7 +172,7 @@ export function detailToGathering(
     // `eventZoneFormat` — absent falls back to the reader's own zone.
     ...(dto.timezone ? { timezone: dto.timezone } : {}),
     title: dto.title,
-    hood: dto.neighbourhood ?? dto.venue ?? (dto.isOnline ? "Online" : ""),
+    hood: onlineAwareHood(dto, t),
     host: hostName(dto.host, dto.org, t),
     hostSlug: dto.host?.slug ?? "",
     hostFirst: dto.host?.firstName,
@@ -208,7 +224,38 @@ export function detailToGathering(
     isFree: dto.isFree ?? true,
     announcements: dto.announcements ?? [],
     seatsTaken: dto.seatsTaken ?? dto.goingCount ?? 0,
+    // Withheld under the same `hideCount` rule as the `spots` line above
+    // (ENG-140), so no consumer of this view-model can render a head count the
+    // host has chosen to keep private — the wire still carries `goingCount`
+    // on the summary, and this is where that stops mattering to the UI.
+    goingCount: hideCount ? undefined : (dto.goingCount ?? 0),
+    // The gathering has been called off (PRD-181). Without this the detail
+    // page rendered a live-looking RSVP button that the server answered 400.
+    ...(dto.status === "cancelled" ? { cancelled: true } : {}),
+    // ── Online gatherings (PRD-182) ──────────────────────────────────────
+    // `isOnline` comes off the DTO rather than being inferred from the `hood`
+    // string, which is now a translated label. `onlineUrl` is gated by the
+    // server exactly like `address`, so an absent one on an online gathering
+    // is the same "not yours yet" fact the Where panel already states.
+    isOnline: dto.isOnline ?? false,
+    onlineUrl: dto.onlineUrl ?? null,
+    ...(dto.updatedAt ? { updatedAt: new Date(dto.updatedAt) } : {}),
   };
+}
+
+/**
+ * The neighbourhood line, with "Online" translated (DES-130).
+ *
+ * An online gathering has no neighbourhood and usually no venue, so the label
+ * IS the answer to "where is this". It used to be the English literal
+ * `"Online"` on both the card and the detail while the My Events adapter
+ * rendered `myevents:card.online` for the same fact, so the same gathering
+ * read in two languages on two screens.
+ */
+function onlineAwareHood(dto: EventCardDTO, t: TFunction): string {
+  if (dto.neighbourhood) return dto.neighbourhood;
+  if (dto.isOnline) return t("gatherings:common.online");
+  return dto.venue ?? "";
 }
 
 /**
@@ -355,6 +402,14 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
         ? Intl.DateTimeFormat().resolvedOptions().timeZone
         : "Europe/Lisbon",
     venue: isOnline ? undefined : form.venue.trim() || form.hood || undefined,
+    // The join link, for an online gathering only (PRD-182). The column, the
+    // URL validation and the DTO field all already existed server-side and
+    // nothing ever sent one, so a host had no way to give attendees the video
+    // link through the platform at all. Sent only when the gathering IS
+    // online: a physical gathering has a door, not a link.
+    ...(isOnline && form.onlineUrl.trim()
+      ? { onlineUrl: form.onlineUrl.trim() }
+      : {}),
     // Only carried when the organiser actually picked a directory listing
     // (never for an online gathering, which has no physical venue at all).
     ...(!isOnline && form.venueListingId

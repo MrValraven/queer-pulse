@@ -44,6 +44,71 @@ export const notifications: Catalog = {
     "A new home in {area} matches your saved search: {title}.",
   "type.housing_listing_match.meta": "Housing alert",
 
+  // PRD-240. The viewing lifecycle, which raised no notification at all before
+  // this: a lister learned somebody wanted to see their home only by opening
+  // /local/housing/viewings, and a requester never learned they were accepted.
+  //
+  // These rows carry a real actor (the requester, the lister, whoever
+  // cancelled) and so show that person's avatar, but they are deliberately NOT
+  // in `PERSONALIZED_KINDS`: a `textNamed` string can interpolate `{name}` and
+  // nothing else, and which HOME this is about matters more to a lister with
+  // three rooms listed than the requester's first name does. So the copy names
+  // the listing and lets the avatar name the person. That also rules out
+  // "Someone asked...", which reads as a bug beside a named face.
+  "type.housing_viewing_requested.text": "New viewing request for {title}.",
+  "type.housing_viewing_requested.meta": "Viewing request",
+
+  // Three outcomes on one type, keyed by `payload.decision`.
+  //
+  // DIRECTION-NEUTRAL ON PURPOSE, and this is load-bearing rather than a style
+  // choice. A viewing is a negotiation either side can answer: `accept`,
+  // `propose` and `decline` are each guarded by `if (viewing.proposedBy ===
+  // role) throw`, so the acting party is whoever did NOT make the proposal on
+  // the table. That is the lister on the first pass and the REQUESTER once the
+  // lister has counter-proposed. So "your viewing request was declined" is
+  // wrong half the time, and it is wrong precisely for the lister, who never
+  // made a request. The recipient is named by the avatar; the copy names the
+  // home and the outcome.
+  //
+  // For the same reason the accepted string does not mention the address
+  // unlock, true though it is: an accepted viewing is one of the three gates
+  // that release the exact address, but only to the requester. Telling a lister
+  // the address to their own home is now visible would read as nonsense.
+  "type.housing_viewing_decided.accepted.text":
+    "The viewing of {title} was accepted.",
+  "type.housing_viewing_decided.declined.text":
+    "The viewing of {title} was declined.",
+  "type.housing_viewing_decided.proposed.text":
+    "A different time was proposed for the viewing of {title}.",
+  // Fallback for a row whose payload carries no decision this build knows.
+  "type.housing_viewing_decided.text":
+    "There is an update on the viewing of {title}.",
+  "type.housing_viewing_decided.meta": "Viewing",
+
+  "type.housing_viewing_cancelled.text":
+    "The viewing of {title} was cancelled.",
+  "type.housing_viewing_cancelled.meta": "Viewing",
+
+  // PRD-242. The outcome of a co-op or vetted housing-group application. One
+  // pair of strings covers both surfaces: `payload.kind` picks the deep link,
+  // and `{name}` already names the co-op or the group, so splitting the copy by
+  // kind would write the same sentence twice.
+  "type.housing_join_decided.accepted.text":
+    "Your request to join {name} was accepted.",
+  "type.housing_join_decided.declined.text":
+    "Your request to join {name} was declined.",
+  "type.housing_join_decided.text":
+    "There is a decision on your request to join {name}.",
+  "type.housing_join_decided.meta": "Housing",
+
+  // PRD-244. The one warning that arrives BEFORE a listing lapses. Deliberately
+  // carries no date token: `expiresAt` is on the wire as a raw ISO string and
+  // the bell has no formatter for it, so interpolating it would print
+  // "2026-11-05T00:00:00.000Z" to a member. The listing page has the date.
+  "type.housing_listing_expiring.text":
+    "Your listing {title} is about to expire. Extend it to keep it on the board.",
+  "type.housing_listing_expiring.meta": "Housing",
+
   "type.promoted_to_member.text": "You're a full member now. Welcome in.",
   "type.promoted_to_member.meta": "Membership",
 
@@ -186,6 +251,14 @@ export const notifications: Catalog = {
 
   "type.report_resolved.text": "We've followed up on a report you filed.",
   "type.report_resolved.meta": "Report update",
+  // PRD-289. The reporter's own receipt, written when they file. Before this
+  // their first in-app word about their own report was `report_resolved`, up
+  // to seven days later at the low severity band, so anyone who dismissed the
+  // success toast held no record at all. Token-free on purpose: the payload
+  // carries the case reference, and a sentence interpolating it renders broken
+  // on any row whose payload allowlist entry has not landed.
+  "type.report_received.text": "Your report is with the safety team.",
+  "type.report_received.meta": "Report filed",
 
   // Duty mail for whoever can act on a new report. The bell never names the
   // reporter, so this copy never promises one. The `.emergency.*` variants are
@@ -244,6 +317,34 @@ export const notifications: Catalog = {
   // them: QueerPulse sends no email, and there is no way to message a
   // community's moderators. A timed bar and a permanent one get separate
   // sentences rather than one hedged string.
+  // PRD-147. The author's own bell row for a takedown. Eight variants, because
+  // the reason and the cited rule are each optional and the copy must not
+  // promise either when it is absent. Names no moderator: the payload carries
+  // no actor, following `community_banned`.
+  "type.community_post_removed.post.meta": "A post was taken down",
+  "type.community_post_removed.post.reason.meta": "A post was taken down",
+  "type.community_post_removed.post.reason.text":
+    "A moderator took your post in {communityName} down. The reason given: {reason}",
+  "type.community_post_removed.post.reasonRule.meta": "A post was taken down",
+  "type.community_post_removed.post.reasonRule.text":
+    "A moderator took your post in {communityName} down, under its rule “{ruleText}”. The reason given: {reason}",
+  "type.community_post_removed.post.rule.meta": "A post was taken down",
+  "type.community_post_removed.post.rule.text":
+    "A moderator took your post in {communityName} down, under its rule “{ruleText}”.",
+  "type.community_post_removed.post.text":
+    "A moderator took your post in {communityName} down. No reason was recorded.",
+  "type.community_post_removed.reply.meta": "A reply was taken down",
+  "type.community_post_removed.reply.reason.meta": "A reply was taken down",
+  "type.community_post_removed.reply.reason.text":
+    "A moderator took your reply in {communityName} down. The reason given: {reason}",
+  "type.community_post_removed.reply.reasonRule.meta": "A reply was taken down",
+  "type.community_post_removed.reply.reasonRule.text":
+    "A moderator took your reply in {communityName} down, under its rule “{ruleText}”. The reason given: {reason}",
+  "type.community_post_removed.reply.rule.meta": "A reply was taken down",
+  "type.community_post_removed.reply.rule.text":
+    "A moderator took your reply in {communityName} down, under its rule “{ruleText}”.",
+  "type.community_post_removed.reply.text":
+    "A moderator took your reply in {communityName} down. No reason was recorded.",
   "type.community_banned.permanent.text":
     "You have been removed from {communityName}. The reason given: {reason}",
   "type.community_banned.permanent.meta": "Removed from a community",
@@ -329,6 +430,15 @@ export const notifications: Catalog = {
   "type.appeal_resolved.text": "There's a decision on your appeal.",
   "type.appeal_resolved.meta": "Appeal update",
 
+  // PRD-140. A community moderator inviting a member in. The type was absent
+  // from the client's `NotificationKind` union, so this row rendered the
+  // generic unknown copy: an invitation arrived as an unnamed nudge. The
+  // community's name now travels in the payload so the row can be acted on.
+  "type.community_invite_received.text":
+    "You have been invited to {communityName}.",
+  "type.community_invite_received.textNamed":
+    "<profile>{name}</profile> invited you to {communityName}.",
+  "type.community_invite_received.meta": "Community invitation",
   "type.invite_accepted.text": "Someone you invited just joined.",
   "type.invite_accepted.textNamed":
     "<profile>{name}</profile> joined on your invite.",
@@ -349,6 +459,57 @@ export const notifications: Catalog = {
     "Issue {issueNumber} is out: {issueTitle}. See what's in it.",
   "type.magazine_issue_published.meta": "New issue",
 
+  // The magazine desk speaking to the WRITER of one piece (PRD-121), plus the
+  // pre-existing `magazine_piece_message` kind, which had no copy at all and
+  // so rendered the unknown-kind fallback for months.
+  //
+  // `titleFallback` is shared by all three PRD-121 rows through
+  // `pieceTitleToken`, the same way the listing Q&A shares one subject
+  // fallback: it is read inside quote marks in every sentence, so it has to
+  // read like a title.
+  "type.magazine_piece_commissioned.text":
+    "You have a new piece to write: \u201C{title}\u201D.",
+  "type.magazine_piece_commissioned.meta": "New assignment",
+  "type.magazine_piece_commissioned.titleFallback": "Untitled",
+
+  // The eight stage labels mirror the backend's `PieceStage` machine values,
+  // which is what the payload carries. Translated here rather than borrowed
+  // from the `magazine` namespace: that catalog is a separate lazily-loaded
+  // chunk a member reading their bell has no reason to have loaded, and the
+  // desk's own stage chips are a deliberately untranslated editorial
+  // vocabulary while a bell row is member-facing copy. Same call
+  // `type.verification_update.level.*` already made. The fallback covers a
+  // stage added on the backend before this catalog learns about it, so a
+  // writer never reads `sensitivity_read` on screen.
+  "type.magazine_piece_stage_changed.text":
+    "Your piece \u201C{title}\u201D moved to a new stage: {stage}.",
+  "type.magazine_piece_stage_changed.meta": "Piece update",
+  "type.magazine_piece_stage_changed.stage.commissioned": "Commissioned",
+  "type.magazine_piece_stage_changed.stage.drafting": "Drafting",
+  "type.magazine_piece_stage_changed.stage.in_review": "In review",
+  "type.magazine_piece_stage_changed.stage.edit": "Edit",
+  "type.magazine_piece_stage_changed.stage.sensitivity_read":
+    "Sensitivity read",
+  "type.magazine_piece_stage_changed.stage.layout": "Layout",
+  "type.magazine_piece_stage_changed.stage.ready": "Ready to publish",
+  "type.magazine_piece_stage_changed.stage.published": "Published",
+  "type.magazine_piece_stage_changed.stageFallback": "A new stage",
+
+  "type.magazine_piece_published.text":
+    "Your piece \u201C{title}\u201D is live in the magazine.",
+  "type.magazine_piece_published.meta": "Published",
+
+  // `textNamed` carries the `<profile>` slot, like every other entry in
+  // `PERSONALIZED_KINDS`. This row names no piece because the backend's
+  // `PAYLOAD_ALLOWLIST` has no entry for `magazine_piece_message`, so
+  // `pieceId`/`messageId` are stripped before the client sees them. The
+  // message body never reaches a bell and no copy here may quote it.
+  "type.magazine_piece_message.text":
+    "You have a new message about a piece on the magazine desk.",
+  "type.magazine_piece_message.textNamed":
+    "<profile>{name}</profile> sent you a message about a piece on the desk.",
+  "type.magazine_piece_message.meta": "Desk message",
+
   // Concern outcome — headline per terminal status (resolved/dismissed); the
   // flat keys are the fallback for an unrecognised status.
   "type.concern_update.text": "There's an update on a concern you raised.",
@@ -359,6 +520,13 @@ export const notifications: Catalog = {
   "type.concern_update.dismissed.text":
     "The concern you raised has been reviewed and closed.",
   "type.concern_update.dismissed.meta": "Concern update",
+  // PRD-261: the bell used to fire only on a terminal outcome, so a submitter
+  // heard nothing while their concern was being worked on. `reviewing` now
+  // fires too. Built at runtime by `concernUpdateKeyFor`, so neither key
+  // appears as a literal anywhere: an unused-key scan will call both dead.
+  "type.concern_update.reviewing.text":
+    "Someone is looking at the concern you raised.",
+  "type.concern_update.reviewing.meta": "Concern update",
 
   // ── Intake outcomes ──────────────────────────────────────────────────────
   // Every form in the backend's `intake_submissions` table EXCEPT a governance
@@ -470,6 +638,19 @@ export const notifications: Catalog = {
     "{subprofileName} credited you on {itemTitle}.",
   "type.subprofile_credit.meta": "Persona credit",
 
+  // PRD-208. New work from a persona this member follows. Names the PERSONA
+  // and never the human behind it: the payload carries no actor key at all, so
+  // an unlinked persona stays pseudonymous. `{subprofileName}` is the payload's
+  // own field name, the same one `subprofile_credit` above interpolates.
+  // CLDR-pluralised: `formatNotification` mirrors the payload's `newItemCount`
+  // onto `count`, and the flat `.text` covers a row that arrived without one.
+  "type.persona_update.text": "{subprofileName} published something new.",
+  "type.persona_update.text_one":
+    "{subprofileName} published a new piece of work.",
+  "type.persona_update.text_other":
+    "{subprofileName} published {count} new pieces of work.",
+  "type.persona_update.meta": "Persona you follow",
+
   // Sent when the XP/badge awarding engine credits a member across a level
   // threshold. System-driven (no actor); {level}/{name} come from the payload.
   "type.xp_level_up.text": "You reached Level {level}, {name}.",
@@ -545,6 +726,11 @@ export const notifications: Catalog = {
     "We couldn't mark that as read. It's still waiting for you. Try again in a moment.",
   "page.markAllReadError":
     "We couldn't mark those as read. They're still waiting for you. Try again in a moment.",
+  // PRD-224: clearing a row deletes it server-side, so it stays gone on every
+  // device. The error puts the row back, and says so.
+  "page.dismissedToast": "Notification cleared",
+  "page.dismissError":
+    "We couldn't clear that notification. It's still in your list. Try again in a moment.",
   "page.dayRecent": "Today & recent",
   "page.dayEarlier": "Earlier",
   "page.empty.title": "All caught up",
@@ -571,6 +757,9 @@ export const notifications: Catalog = {
   "tabs.mentions": "Mentions",
 
   // Shared action-button labels across the demo notification list
+  // PRD-224: accessible name for the icon-only clear button on every row. Never
+  // rendered as visible text, so it names what is being cleared.
+  "actions.dismiss": "Clear this notification",
   "actions.viewThread": "View thread",
   "actions.viewEvent": "View event",
   "actions.viewProfile": "View profile",

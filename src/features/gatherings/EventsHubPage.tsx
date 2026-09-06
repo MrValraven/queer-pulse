@@ -42,9 +42,15 @@ export function EventsDiscover() {
   const queryClient = useQueryClient();
   const { view } = useEventsHubView();
   const now = useMemo(() => new Date(), []);
-  const { items, isLoading, isError, refetch } = useEvents({
-    filter: "upcoming",
-  });
+  const {
+    items,
+    isLoading,
+    isError,
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useEvents({ filter: "upcoming" });
   const lead = useMemo(
     () => pickHighlights(items, now, { count: 1 })[0] ?? null,
     [items, now],
@@ -82,6 +88,11 @@ export function EventsDiscover() {
             queryClient.invalidateQueries({ queryKey: eventKeys.listRoot })
           }
         >
+          {/* Highlights is the one view that is correct on page 1 alone: it
+              ranks by soonness, so the soonest 20 rows already contain
+              everything that could win a slot. It grows anyway whenever the
+              Calendar tab has pulled more, since all three views share this
+              one query. */}
           {view === "highlights" && (
             <HighlightsView events={items} now={now} isLoading={isLoading} />
           )}
@@ -90,7 +101,20 @@ export function EventsDiscover() {
               slice of already-loaded rows. With no filters set it shares this
               same request. */}
           {view === "browse" && <BrowseView />}
-          {view === "calendar" && <CalendarView events={items} now={now} />}
+          {/* The calendar is the one view that can ask for rows it has not
+              got: the month grid pages forward indefinitely while `useEvents`
+              had only ever fetched page 1, so month two of a busy season and
+              "all upcoming" both read as empty (PRD-184). It now pulls more
+              pages as the member walks forward. */}
+          {view === "calendar" && (
+            <CalendarView
+              events={items}
+              now={now}
+              hasMore={hasNextPage}
+              isLoadingMore={isFetchingNextPage}
+              onLoadMore={fetchNextPage}
+            />
+          )}
         </PullToRefresh>
       </div>
     </div>

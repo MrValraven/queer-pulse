@@ -28,7 +28,6 @@ import {
   buildPublishChecklist,
   isPublishReady,
 } from "./desk/editor/articlePublishChecklist";
-import { savedLabelKey } from "./desk/editor/articleSavedLabel";
 import { isFutureInstant } from "./desk/editor/scheduleValidity";
 import { deriveLiveStatus } from "./desk/editor/articleLiveStatus";
 import type { PublishStatus } from "./desk/editor/PublishRail";
@@ -59,18 +58,26 @@ interface SlashState {
  * `publish` directly at all — it's disabled with copy explaining the piece
  * ships automatically when its issue does (via `shipIssue`), so picking it
  * can never look like a direct publish that silently did nothing.
+ *
+ * Two things can stop the editor from writing, and both are honest states
+ * rather than toasts that vanish. A 409 on a save means the draft moved on
+ * underneath this tab (ENG-111): `useArticleEditorDraftState` latches the
+ * conflict, autosave stops, publishing is disabled, and the header renders
+ * the blocking banner offering a reload. A refused publish comes back naming
+ * the care-gate or readiness items still open, and `PublishRail` lists them.
  */
 export function ArticleEditorPage() {
   const { t } = useTranslation();
   const { id } = useParams();
   const pieceId = id!;
-  const { article, isLoading, isError } = useArticleDraft(pieceId);
+  const { article, isLoading, isError, isReloading, reload } =
+    useArticleDraft(pieceId);
   const { record } = usePieceRecord(pieceId);
   const { save, publish } = useArticleMutations(pieceId);
   const { moveStage } = usePieceMutations();
   const docRef = useRef<HTMLDivElement | null>(null);
-  const draft = useArticleEditorDraftState(pieceId, article, save);
-  const handlePublish = useArticlePublishHandler(publish, draft.saveNow);
+  const draft = useArticleEditorDraftState(pieceId, article, save, reload);
+  const publishAction = useArticlePublishHandler(publish, draft.saveNow);
 
   const [mode, setMode] = useState<EditorMode>("draft");
   const [publishStatus, setPublishStatus] = useState<PublishStatus>("now");
@@ -119,26 +126,25 @@ export function ArticleEditorPage() {
   );
   const scheduleValid = isFutureInstant(scheduledAt);
   const publishDisabled =
-    // A save still in flight would race the publish — both PATCH the same
+    // A save still in flight would race the publish: both PATCH the same
     // draft, and either can land last.
     save.isPending ||
+    // ENG-111. A conflicted draft cannot be flushed, so publishing would ship
+    // whatever the server holds rather than what is on screen.
+    draft.hasSaveConflict ||
     (!published &&
       (publishStatus === "issue" ||
         !checklistReady ||
         (publishStatus === "schedule" && !scheduleValid)));
-  const savedLabel = t(
-    savedLabelKey({
-      isSavePending: save.isPending,
-      isSaveError: save.isError,
-      isDirty: draft.isDirty,
-    }),
-  );
   const issueLabel = record?.issueId
     ? t("magazine:write.header.issueScheduled")
     : t("magazine:piece.header.notScheduled");
   const publishNow = () =>
-    void handlePublish(published, publishStatus, scheduledAt, () =>
-      setScheduledAt(null),
+    void publishAction.handlePublish(
+      published,
+      publishStatus,
+      scheduledAt,
+      () => setScheduledAt(null),
     );
 
   const nextStage = record ? nextPieceStage(record.stage) : null;
@@ -154,10 +160,8 @@ export function ArticleEditorPage() {
 
   function handleSlashOpen(element: HTMLElement, index: number) {
     const rect = element.getBoundingClientRect();
-    setSlashState({
-      afterIndex: index,
-      at: { x: rect.left, y: rect.bottom + 8 },
-    });
+    const menuPoint = { x: rect.left, y: rect.bottom + 8 };
+    setSlashState({ afterIndex: index, at: menuPoint });
   }
 
   function handleSlashPick(kind: ArticleBlockKind) {
@@ -178,9 +182,13 @@ export function ArticleEditorPage() {
           title={title}
           section={section}
           issueLabel={issueLabel}
-          savedLabel={savedLabel}
-          canRetrySave={save.isError}
+          isSavePending={save.isPending}
+          isSaveError={save.isError}
+          isDirty={draft.isDirty}
+          hasSaveConflict={draft.hasSaveConflict}
           onRetrySave={() => void draft.saveNow().catch(() => undefined)}
+          isReloadingDraft={isReloading}
+          onReloadDraft={() => void draft.reloadFromServer()}
           mode={mode}
           onModeChange={setMode}
           liveStatus={liveStatus}
@@ -242,6 +250,8 @@ export function ArticleEditorPage() {
               published={published}
               publishPending={publish.isPending}
               onPublish={publishNow}
+              publishGateFailure={publishAction.gateFailure}
+              hasSaveConflict={draft.hasSaveConflict}
               section={section}
               onSectionChange={draft.setSection}
               tags={tags}

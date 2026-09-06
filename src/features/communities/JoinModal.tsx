@@ -4,6 +4,7 @@ import { reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccessTier } from "./membership.types";
 import {
+  isInviteRequiredResult,
   joinRefusalFor,
   type JoinCommunityPayload,
   type JoinInvolvement,
@@ -30,12 +31,18 @@ export interface JoinModalCommunity {
 export function JoinModal({
   community,
   tier = "public",
+  isInvited = false,
   onClose,
   onJoined,
   onRequested,
 }: {
   community: JoinModalCommunity;
   tier?: AccessTier;
+  /** PRD-140: the viewer holds a standing invitation to this community, so the
+   *  gated tiers admit them straight to the roster instead of opening a
+   *  request. The wizard words itself as joining, because that is what
+   *  happens. */
+  isInvited?: boolean;
   onClose: () => void;
   /** Instant (public-tier) join. May return a promise: the modal waits for it
    *  and only shows the welcome step once it resolves. */
@@ -54,13 +61,15 @@ export function JoinModal({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const rulesState = useCommunityRules(community.slug);
 
-  // `invite` gets the same pending-request treatment as `request`/`private`:
-  // the backend has no invite-code concept, so an invite-tier join is just a
-  // request an owner/mod reviews (see `communities.service.ts#join`). `isInvite`
-  // stays separate purely so the intro step can name the invite context in its
+  // The gated tiers open a request an owner/mod reviews. The one exception is
+  // an invitation holder (PRD-140): `POST /join` spends their invitation and
+  // puts them on the roster in the same call, whatever the tier, so the wizard
+  // must not promise them a review that will never happen. `isInvite` stays
+  // separate purely so the intro step can name the invite context in its
   // eyebrow/hint copy.
   const isRequest =
-    tier === "request" || tier === "private" || tier === "invite";
+    !isInvited &&
+    (tier === "request" || tier === "private" || tier === "invite");
   const isInvite = tier === "invite";
 
   // The rules step only exists for a community that HAS rules, so a space with
@@ -93,7 +102,18 @@ export function JoinModal({
     setErrorMessage(null);
     setIsSubmitting(true);
     try {
-      await (isRequest ? onRequested?.(payload) : onJoined?.(payload));
+      const result = await (isRequest
+        ? onRequested?.(payload)
+        : onJoined?.(payload));
+      // PRD-141. The `invite` tier answers an uninvited caller with a
+      // SUCCESSFUL 201 carrying `outcome: "invite_required"`, so this refusal
+      // never reaches the `catch` below and `joinRefusalFor` can never see it.
+      // Rendered by the same panel as the other two answers-rather-than-faults
+      // instead of the "You're in" step, which is what it used to show.
+      if (isInviteRequiredResult(result)) {
+        setRefusal({ kind: "inviteRequired" });
+        return;
+      }
       setStep(total + 1);
     } catch (error) {
       const refused = joinRefusalFor(error);
@@ -146,6 +166,7 @@ export function JoinModal({
               community={community}
               isRequest={isRequest}
               isInvite={isInvite}
+              isInvited={isInvited}
               onNext={() => setStep(2)}
             />
           )}

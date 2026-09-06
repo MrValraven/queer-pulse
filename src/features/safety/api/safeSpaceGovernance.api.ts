@@ -241,6 +241,13 @@ export interface DecideNominationInput {
   reason: string;
   tier?: number;
   verifierLabel?: string;
+  /**
+   * Why a badge is being granted below the three-independent-visit bar. The
+   * backend refuses the award without it (`SAFE_SPACE_VISIT_BAR_NOT_MET`) and
+   * writes it onto the audit row when it is used, so this is the only way past
+   * a published guarantee and it is never silent.
+   */
+  belowVisitBarReason?: string;
 }
 
 export const decideNomination = (id: string, body: DecideNominationInput) =>
@@ -251,6 +258,9 @@ export const decideNomination = (id: string, body: DecideNominationInput) =>
       reason: body.reason,
       ...(body.tier ? { tier: body.tier } : {}),
       ...(body.verifierLabel ? { verifierLabel: body.verifierLabel } : {}),
+      ...(body.belowVisitBarReason
+        ? { belowVisitBarReason: body.belowVisitBarReason }
+        : {}),
     },
   );
 

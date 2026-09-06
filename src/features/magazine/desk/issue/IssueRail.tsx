@@ -32,7 +32,11 @@ export function IssueRail({
 
   return (
     <>
-      <ShipChecklistCard checklist={production.shipChecklist} onShip={onShip} />
+      <ShipChecklistCard
+        checklist={production.shipChecklist}
+        lastShip={production.lastShip}
+        onShip={onShip}
+      />
       <PublishDateCard
         // Remounts when the saved date changes so the picker's draft restarts
         // from what the server now holds instead of keeping a stale "changed"

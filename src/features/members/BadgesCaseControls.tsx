@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useOutsideDismiss } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { badgeCategoryLabelKeyFor } from "./badgeCatalog.data";
 import styles from "./BadgesPage.module.css";
 
 export type BadgeSortMode = "close" | "rare" | "xp" | "cat";
@@ -37,6 +38,15 @@ export function BadgesCaseControls({
   onSortModeChange,
 }: BadgesCaseControlsProps) {
   const { t } = useTranslation();
+  // Categories arrive from the server catalogue as English display words
+  // (`cat: 'Attendance'`). They are the chip labels AND the accessible name of
+  // each mute switch, so an untranslated one is invisible to sighted testing.
+  // `badgeCatalog.data.ts` owns the words; an unmapped category falls back to
+  // the server's own, which is readable English rather than an identifier.
+  const categoryLabel = (category: string): string => {
+    const labelKey = badgeCategoryLabelKeyFor(category);
+    return labelKey ? t(labelKey) : category;
+  };
   const [mutePopoverOpen, setMutePopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const muteTriggerRef = useRef<HTMLButtonElement>(null);
@@ -81,7 +91,7 @@ export function BadgesCaseControls({
             onClick={() => onCategoryFilterChange(category)}
             aria-pressed={categoryFilter === category}
           >
-            {category}{" "}
+            {categoryLabel(category)}{" "}
             <span className={styles.fchipCount}>
               {countsByCategory[category] ?? 0}
             </span>
@@ -116,13 +126,15 @@ export function BadgesCaseControls({
               <p>{t("members:badges.case.muteDesc")}</p>
               {categories.map((category) => (
                 <div key={category} className={styles.mrow}>
-                  <span>{category}</span>
+                  <span>{categoryLabel(category)}</span>
                   <button
                     type="button"
                     className={styles.swSwitch}
                     role="switch"
                     aria-checked={!isCategoryMuted(category)}
-                    aria-label={category}
+                    aria-label={t("members:badges.case.categoryToggleLabel", {
+                      category: categoryLabel(category),
+                    })}
                     onClick={() => toggleCategory(category)}
                   >
                     <span className={styles.swTrack} />
@@ -151,10 +163,10 @@ export function BadgesCaseControls({
           <span>
             {mutedCategories.length === 1
               ? t("members:badges.case.mutedNoteSingle", {
-                  category: mutedCategories[0],
+                  category: categoryLabel(mutedCategories[0]!),
                 })
               : t("members:badges.case.mutedNotePlural", {
-                  categories: mutedCategories.join(", "),
+                  categories: mutedCategories.map(categoryLabel).join(", "),
                 })}
           </span>
         </div>

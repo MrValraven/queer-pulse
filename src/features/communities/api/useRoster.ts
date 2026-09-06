@@ -1,8 +1,11 @@
 import { useMemo } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { getRoster } from "./communities.api";
+import { apiGet } from "../../../shared/api/client";
+import { toItemsPage } from "../../../shared/api/pagination";
+import type { Paginated } from "../../../shared/api/refs";
+import { getRoster, type RosterEntryDTO } from "./communities.api";
 import { rosterEntryToRosterMember } from "./communities.adapters";
 import { getLiving } from "../livingCommunities.data";
 import type { RosterMember } from "../community.model";
@@ -75,5 +78,93 @@ export function useRoster(slug: string | undefined): RosterResult {
     // it has one member (DES-22).
     isError: query.isError,
     refetch: () => void query.refetch(),
+  };
+}
+
+/**
+ * Longest search term the server will accept. `RosterQuery.q` is
+ * `@MaxLength(200)`, so anything longer comes back a 400 rather than a result
+ * set: the term is clipped here so a paste into the search box still searches.
+ */
+const ROSTER_SEARCH_MAX_LENGTH = 200;
+
+export interface RosterSearchResult {
+  /** The matching roster rows, or an empty list before the first answer. */
+  members: RosterMember[];
+  /** A search is in flight and has nothing to show yet. */
+  isSearching: boolean;
+  /** The search request failed. Never render this as "nobody matches". */
+  isError: boolean;
+  retry: () => void;
+}
+
+/**
+ * One page of a community's roster filtered SERVER-SIDE by `q`.
+ *
+ * `getRoster` covers the plain paginated read the Members pane walks; this
+ * variant carries the search term and an `AbortSignal`, so react-query can drop
+ * a superseded request on the wire instead of letting a slow answer for "an"
+ * land after the answer for "anna".
+ */
+async function fetchRosterSearch(
+  slug: string,
+  term: string,
+  signal?: AbortSignal,
+) {
+  const searchParams = new URLSearchParams({ q: term });
+  const response = await apiGet<RosterEntryDTO[] | Paginated<RosterEntryDTO>>(
+    `/communities/${slug}/roster?${searchParams.toString()}`,
+    undefined,
+    undefined,
+    signal,
+  );
+  return toItemsPage(response);
+}
+
+/**
+ * Search a community's whole roster from the server (PRD-149).
+ *
+ * `useRoster` above answers "who is on page N", which is the wrong question for
+ * a picker: filtering the pages a client happens to hold can never find the
+ * member on page nine, so in a 200-member community a search box over the
+ * loaded pages returns nothing for most of the roster. This asks the server
+ * instead, which matches first name, last name, full name and handle
+ * case-insensitively across every member.
+ *
+ * The term is part of the query key, so each term caches on its own and going
+ * back to a term already typed is instant. Demo mode never fans out: the caller
+ * holds the flagship's mock roster already and filters it locally, the same way
+ * every other live/demo pair in this feature splits.
+ *
+ * Pass an already-debounced term. This hook does no debouncing of its own, so
+ * the caller decides when a keystroke becomes a request.
+ */
+export function useRosterSearch(
+  slug: string | undefined,
+  term: string,
+): RosterSearchResult {
+  const { demoMode } = useDemoMode();
+  // `language` is in the key for the same reason `useRoster`'s is: a nulled-out
+  // member ref maps to a translated placeholder inside the adapter.
+  const { t, language } = useTranslation();
+  const searchTerm = term.trim().slice(0, ROSTER_SEARCH_MAX_LENGTH);
+  // An empty `q` is a 400 (`@MinLength(1)`), and an empty search box is not a
+  // question anyway.
+  const isEnabled = !demoMode && Boolean(slug) && searchTerm.length > 0;
+
+  const query = useQuery<RosterMember[]>({
+    queryKey: ["rosterSearch", slug, searchTerm, demoMode, language],
+    enabled: isEnabled,
+    queryFn: async ({ signal }) => {
+      const page = await fetchRosterSearch(slug!, searchTerm, signal);
+      return page.items.map((entry) => rosterEntryToRosterMember(entry, t));
+    },
+  });
+
+  return {
+    members: isEnabled ? (query.data ?? []) : [],
+    isSearching: isEnabled && query.isPending,
+    isError: isEnabled && query.isError,
+    retry: () => void query.refetch(),
   };
 }

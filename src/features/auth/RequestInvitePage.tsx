@@ -76,22 +76,22 @@ export function RequestInvitePage() {
         />
       )}
 
+      {/* DES-170: the type, colour and weight of these links are `.footer a`
+          in auth.module.css, so they carry no inline style. */}
       <div className={styles.footer}>
-        <Link
-          to={routes.signIn}
-          style={{ fontSize: 13.5, color: "var(--ink-60)", fontWeight: 500 }}
-        >
-          {t("auth:requestInvite.alreadyMember")}
-        </Link>
+        <Link to={routes.signIn}>{t("auth:requestInvite.alreadyMember")}</Link>
         {/* The only in-app way back to the status page for someone who kept
             their reference code but lost the link that carried it, and whose
             browser storage has since been cleared. Without it that applicant
             would have to know the URL by heart. */}
-        <Link
-          to={routes.joinRequestStatus}
-          style={{ fontSize: 13.5, color: "var(--ink-60)", fontWeight: 500 }}
-        >
+        <Link to={routes.joinRequestStatus}>
           {t("auth:requestInvite.checkStatusLink")}
+        </Link>
+        {/* PRD-306. The single most valuable place for this link: someone
+            already holding a code is one submit away from spending one of
+            their three requests an hour on an invite that already exists. */}
+        <Link to={routes.enterInviteCode}>
+          {t("auth:common.haveAnInviteCode")}
         </Link>
       </div>
     </AuthLayout>

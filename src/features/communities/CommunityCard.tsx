@@ -51,6 +51,11 @@ export function CommunityCard({
       countLabel={community.count}
       activeThisWeek={activeThisWeek}
       coverImageUrl={coverImageUrl}
+      /* The community's own square mark, on the same terms as the cover: only
+         the live card DTO carries one, so a demo card and a live community that
+         set none draw no mark at all rather than a placeholder. Read off the
+         view-model, never off `living` — `getLiving` is the demo registry. */
+      avatarImageUrl={community.avatarImageUrl}
       tags={community.tags}
       roster={roster}
       className={[joined && styles.joinedCard, isPrivate && styles.privateCard]

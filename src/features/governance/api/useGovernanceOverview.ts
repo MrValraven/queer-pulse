@@ -10,6 +10,11 @@ import {
 import { MdAccessible } from "react-icons/md";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
+  authoredGovernanceText,
+  seededGovernanceText,
+  type GovernanceText,
+} from "../governanceText";
+import {
   getGovernanceOverview,
   type GovernanceOverviewResponseDTO,
 } from "./governance.api";
@@ -34,18 +39,24 @@ export interface ModerationStepView {
 export interface CouncilSeatView {
   name: string;
   initials: string;
-  roleKey: string;
+  /** PRD-265. Seeded i18n key or the editor's own EN/PT; the component
+   *  resolves it through `resolveGovernanceText` either way. */
+  role: GovernanceText;
   background: string;
   color: string;
 }
 export interface PrincipleView {
+  /** Stable React key: the seeded content key, else the entry's position. */
+  id: string;
   icon: IconType;
-  titleKey: string;
-  textKey: string;
+  title: GovernanceText;
+  text: GovernanceText;
 }
 export interface DecisionView {
-  leadKey: string;
-  bodyKey: string;
+  /** Stable React key: the seeded content key, else the entry's position. */
+  id: string;
+  lead: GovernanceText;
+  body: GovernanceText;
 }
 
 export interface GovernanceOverviewResult {
@@ -102,24 +113,31 @@ async function buildDemo(): Promise<
       titleKey: step.titleKey,
       textKey: step.textKey,
     })),
+    // The demo mocks are all seeded-key entries — the prototype has no admin
+    // to author one — so every text goes through `seededGovernanceText`.
     council: COUNCIL.map((seat) => ({
       name: seat.name,
       initials: seat.initials,
-      roleKey: seat.roleKey,
+      role: seededGovernanceText(seat.roleKey),
       background: seat.background,
       color: seat.color,
     })),
     principles: PRINCIPLES.map((principle) => ({
+      id: principle.titleKey,
       icon: principle.icon,
-      titleKey: principle.titleKey,
-      textKey: principle.textKey,
+      title: seededGovernanceText(principle.titleKey),
+      text: seededGovernanceText(principle.textKey),
     })),
     decisions: DECISIONS.map((decision) => ({
-      leadKey: decision.leadKey,
-      bodyKey: decision.bodyKey,
+      id: decision.leadKey,
+      lead: seededGovernanceText(decision.leadKey),
+      body: seededGovernanceText(decision.bodyKey),
     })),
   };
 }
+
+/** An entry carrying neither a key nor authored text — see `fromDto`. */
+const EMPTY_TEXT: GovernanceText = { key: null, authored: null };
 
 const EMPTY: Omit<GovernanceOverviewResult, "loading" | "error" | "retry"> = {
   health: [],
@@ -148,20 +166,37 @@ function fromDto(
       titleKey: `governance:steps.${step.key}.title`,
       textKey: `governance:steps.${step.key}.text`,
     })),
+    // PRD-265. Each entry is seeded (a short key, prefixed here) or authored
+    // (the editor's EN/PT, carried through as-is). `EMPTY_TEXT` is the
+    // last-resort branch for a jsonb row that carries neither, which the
+    // backend's exclusive-or forbids and a hand-edited database could still
+    // produce: an entry with no words renders as nothing, never as a crash.
     council: dto.council.map((seat) => ({
       name: seat.name,
       initials: seat.initials,
-      roleKey: `governance:council.${seat.roleKey}`,
+      role: seat.roleKey
+        ? seededGovernanceText(`governance:council.${seat.roleKey}`)
+        : (authoredGovernanceText(seat.role) ?? EMPTY_TEXT),
       ...(TINT_BY_KEY[seat.tint] ?? TINT_BY_KEY.plum),
     })),
-    principles: dto.principles.map((principle) => ({
+    principles: dto.principles.map((principle, index) => ({
+      id: principle.key ?? `authored-${index}`,
       icon: ICON_BY_KEY[principle.icon] ?? FiLock,
-      titleKey: `governance:principles.${principle.key}.title`,
-      textKey: `governance:principles.${principle.key}.text`,
+      title: principle.key
+        ? seededGovernanceText(`governance:principles.${principle.key}.title`)
+        : (authoredGovernanceText(principle.title) ?? EMPTY_TEXT),
+      text: principle.key
+        ? seededGovernanceText(`governance:principles.${principle.key}.text`)
+        : (authoredGovernanceText(principle.text) ?? EMPTY_TEXT),
     })),
-    decisions: dto.decisions.map((decision) => ({
-      leadKey: `governance:decisions.${decision.key}.lead`,
-      bodyKey: `governance:decisions.${decision.key}.body`,
+    decisions: dto.decisions.map((decision, index) => ({
+      id: decision.key ?? `authored-${index}`,
+      lead: decision.key
+        ? seededGovernanceText(`governance:decisions.${decision.key}.lead`)
+        : (authoredGovernanceText(decision.lead) ?? EMPTY_TEXT),
+      body: decision.key
+        ? seededGovernanceText(`governance:decisions.${decision.key}.body`)
+        : (authoredGovernanceText(decision.body) ?? EMPTY_TEXT),
     })),
   };
 }

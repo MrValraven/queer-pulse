@@ -43,7 +43,12 @@ function ResolvedStatus({
   refreshRefusal: JoinRequestInviteRefreshRefusal | "unknown" | null;
 }) {
   if (status.status === "under_review") {
-    return <UnderReviewState submittedAt={status.submittedAt} />;
+    // PRD-304: `dueAt` is only ever populated here. The backend withholds it
+    // the moment a decision lands, so an undecided request is the only place
+    // the answer deadline is a live fact.
+    return (
+      <UnderReviewState submittedAt={status.submittedAt} dueAt={status.dueAt} />
+    );
   }
   if (status.status === "approved") {
     // Approved with no code is not an error and not the same screen: the

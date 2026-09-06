@@ -4,7 +4,17 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SAFE_SPACE_TIERS } from "./adminSafeSpaceGovernance.data";
 import { useAdminSafeSpaceNominationAction } from "../safety/api/useAdminSafeSpaceNominations";
+import type { AdminSafeSpaceNominationDTO } from "../safety/api/safeSpaceGovernance.api";
+import { readVisitBarOverrideCounts } from "./api/safeSpaceVisitBarError";
 import styles from "./AdminSafeSpaceGovernance.module.css";
+
+/**
+ * The backend's `@MinLength(20)` on `belowVisitBarReason`, mirrored so the
+ * award button is disabled rather than the server answering with a 400 the
+ * reviewer has to decode. Overriding a published guarantee is held to the same
+ * floor as a member-facing moderation note.
+ */
+const MINIMUM_OVERRIDE_REASON_LENGTH = 20;
 
 /**
  * Step three and four of the published six: the review team decides, and a
@@ -15,20 +25,48 @@ import styles from "./AdminSafeSpaceGovernance.module.css";
  * being fixed here, and a decline with no stated basis is a member being told
  * nothing.
  *
- * The three-visit bar is reported above this form and deliberately does not
- * gate the award: a reviewer may have grounds a count cannot see, and the
- * audit row then says plainly that they awarded with fewer.
+ * The three-visit bar now GATES the award. Under three independent visits the
+ * service refuses with `SAFE_SPACE_VISIT_BAR_NOT_MET` unless a second, longer
+ * reason is written, so this form asks for that reason in place rather than
+ * letting the reviewer discover the refusal by hitting it. The override lands
+ * on the audit row and forces the public provenance line to state the real
+ * count, which is why the helper text says so before it is used.
  */
 export function AdminSafeSpaceDecideForm({
   nominationId,
+  visits,
 }: {
   nominationId: string;
+  visits: AdminSafeSpaceNominationDTO["visits"];
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const action = useAdminSafeSpaceNominationAction();
   const [reason, setReason] = useState("");
   const [tier, setTier] = useState(2);
+  const [belowVisitBarReason, setBelowVisitBarReason] = useState("");
+  // Set only by a 403 from the server, because the form cannot know the
+  // caller's account tier from here. The first attempt is what reveals it, so
+  // the refusal has to explain itself rather than read as a plain failure.
+  const [overrideForbiddenCounts, setOverrideForbiddenCounts] = useState<{
+    independentVisitCount: number;
+    requiredVisitCount: number;
+  } | null>(null);
+
+  // A nomination with no listing tied to it has no tally yet, and the service
+  // refuses that award earlier for a different reason. Treat it as "bar not
+  // yet in play" so this field never appears asking for an exception to a
+  // count nobody has taken.
+  const isBelowVisitBar = Boolean(visits) && !visits?.hasMetVisitBar;
+  const hasUsableOverrideReason =
+    belowVisitBarReason.trim().length >= MINIMUM_OVERRIDE_REASON_LENGTH;
+  // Once the server has said the override is not this caller's to use, asking
+  // them for a longer reason is asking for something that cannot be accepted.
+  // The award stays blocked while the count is short, and declining is
+  // unaffected, which is the part of their job the narrowing does not touch.
+  const canAward =
+    Boolean(reason.trim()) &&
+    (!isBelowVisitBar || (hasUsableOverrideReason && !overrideForbiddenCounts));
 
   function decide(outcome: "award" | "decline") {
     action.mutate(
@@ -38,6 +76,9 @@ export function AdminSafeSpaceDecideForm({
         outcome,
         reason: reason.trim(),
         ...(outcome === "award" ? { tier } : {}),
+        ...(outcome === "award" && isBelowVisitBar
+          ? { belowVisitBarReason: belowVisitBarReason.trim() }
+          : {}),
       },
       {
         onSuccess: () => {
@@ -50,8 +91,22 @@ export function AdminSafeSpaceDecideForm({
             "success",
           );
           setReason("");
+          setBelowVisitBarReason("");
         },
-        onError: () => showToast(t("safety:governance.toast.failed"), "error"),
+        onError: (error) => {
+          // The platform-staff-only refusal on the override is its own state,
+          // never the generic failure. A delegate who reached this endpoint on
+          // the `directory_moderator` grant alone may decide this nomination
+          // and may award it above the bar; what they may not do is waive a
+          // guarantee the platform publishes. Telling them "that failed" would
+          // send them back to rewrite a reason that can never be accepted.
+          const overrideCounts = readVisitBarOverrideCounts(error);
+          if (overrideCounts) {
+            setOverrideForbiddenCounts(overrideCounts);
+            return;
+          }
+          showToast(t("safety:governance.toast.failed"), "error");
+        },
       },
     );
   }
@@ -85,10 +140,38 @@ export function AdminSafeSpaceDecideForm({
         </select>
       </FormField>
 
+      {overrideForbiddenCounts && (
+        <p className={styles.visitNote} role="alert">
+          <strong>{t("admin:adminSafeSpaces.underBar.forbiddenTitle")}</strong>{" "}
+          {t("admin:adminSafeSpaces.underBar.forbiddenBody", {
+            required: overrideForbiddenCounts.requiredVisitCount,
+          })}
+        </p>
+      )}
+
+      {isBelowVisitBar && !overrideForbiddenCounts && (
+        <FormField
+          label={t("safety:governance.action.belowBarLabel")}
+          helper={t("safety:governance.action.belowBarHelper", {
+            count: visits?.independentVisitCount ?? 0,
+            required: visits?.requiredVisitCount ?? 0,
+            min: MINIMUM_OVERRIDE_REASON_LENGTH,
+          })}
+          required
+        >
+          <textarea
+            className={styles.textarea}
+            rows={3}
+            value={belowVisitBarReason}
+            onChange={(event) => setBelowVisitBarReason(event.target.value)}
+          />
+        </FormField>
+      )}
+
       <div className={styles.actionRow}>
         <Button
           variant="jade"
-          disabled={!reason.trim() || action.isPending}
+          disabled={!canAward || action.isPending}
           onClick={() => decide("award")}
         >
           {t("safety:governance.action.awardCta")}

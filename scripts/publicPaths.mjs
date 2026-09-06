@@ -38,6 +38,9 @@ export const GATED_PATTERNS = [
   "/members",
   "/members/*",
   "/member-directory-filter",
+  // The persona directory (ENG-156). `/p/:handle` is deliberately absent: the
+  // standalone persona page is public.
+  "/subprofiles",
   "/dating",
   "/reading-groups",
   "/family",
@@ -73,7 +76,10 @@ export const GATED_PATTERNS = [
   // has no :param support, and no :slug path is ever emitted here — see the
   // "Dynamic :slug routes are excluded" note on QUIET_PUBLIC_PATHS. The
   // opportunity DETAIL page stays public either way.)
-  // The writer pitch tracker (also capability-gated on magazine_writer).
+  // The member's own pitch tracker. Member-only and nothing more — the
+  // `magazine_writer` capability gate that used to sit on top of it was removed
+  // in PRD-125, because the endpoint it reads
+  // (`GET /magazine/submissions/mine`) admits every active member.
   "/magazine/pitches",
   // Block & mute is account settings living under the public /safety prefix.
   "/safety/block-mute",

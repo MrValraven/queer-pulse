@@ -52,9 +52,11 @@ export function MessagesPage() {
     send,
     sendGif,
     sendImage,
+    sendDocument,
     retrySend,
     forwardMessage,
     markThreadRead,
+    markThreadUnread,
   } = useMessagesController();
 
   // The message being forwarded (its recipient is picked in NewMessageModal's
@@ -97,6 +99,8 @@ export function MessagesPage() {
               onDelete={deleteThread}
               onSelectResult={openThreadAtMessage}
               deletePending={deletePending}
+              onMarkThreadRead={markThreadRead}
+              onMarkThreadUnread={markThreadUnread}
             />
           )}
 
@@ -108,6 +112,7 @@ export function MessagesPage() {
                 onSend={send}
                 onSendGif={sendGif}
                 onSendImage={sendImage}
+                onSendDocument={sendDocument}
                 blocked={activeBlocked}
                 onBack={isMobile ? () => setView("list") : undefined}
                 onRetry={retrySend}
@@ -168,7 +173,9 @@ export function MessagesPage() {
               recipient,
               forwardSource.text,
               forwardSource.attachment,
-              forwardSource.kind === "gif" || forwardSource.kind === "image"
+              forwardSource.kind === "gif" ||
+                forwardSource.kind === "image" ||
+                forwardSource.kind === "document"
                 ? forwardSource.kind
                 : undefined,
               { onSuccess: () => setForwardSource(null) },

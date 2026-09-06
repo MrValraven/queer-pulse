@@ -4,6 +4,11 @@ import type { DeckDraft } from "./deckDraft";
 export interface DeckLoad {
   draft: DeckDraft;
   published: boolean;
+  /** The stored publish instant, or `null` for a draft. A FUTURE value means
+   *  the deck is SCHEDULED: the public reads gate on `published_at <= now`,
+   *  so `published` being true does not by itself mean readers can see it
+   *  yet (PRD-131). */
+  publishedAt: string | null;
 }
 
 /** A `Slide`'s text-ish fields (and the mock deck registry's `title`) are
@@ -23,6 +28,10 @@ export async function loadMockDraft(id: string): Promise<DeckLoad | null> {
   if (!deck) return null;
   return {
     published: true,
+    // The mock registry carries a display date, never a real instant, so
+    // there is nothing honest to put here. The rail simply shows no
+    // scheduled-for line in demo mode.
+    publishedAt: null,
     draft: {
       slug: deck.id,
       title: asPlainText(deck.title),

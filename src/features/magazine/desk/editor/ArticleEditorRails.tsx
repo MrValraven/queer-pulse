@@ -1,4 +1,5 @@
 import type { ArticleBlock, ArticleDraftDto } from "../../api/pieces.api";
+import type { PublishGateFailure } from "./articlePublishAction";
 import { PublishRail, type PublishStatus } from "./PublishRail";
 import { ArticleMetaRail } from "./ArticleMetaRail";
 import { NotesRail } from "./NotesRail";
@@ -19,6 +20,11 @@ export interface ArticleEditorRailsProps {
   published: boolean;
   publishPending: boolean;
   onPublish: () => void;
+  /** Threaded straight to `PublishRail` (see its own prop doc): the server's
+   *  structured refusal from the last publish attempt. */
+  publishGateFailure: PublishGateFailure | null;
+  /** Threaded straight to `PublishRail`: a conflicted draft publishes nothing. */
+  hasSaveConflict: boolean;
   section: string;
   onSectionChange: (value: string) => void;
   tags: string[];
@@ -62,6 +68,8 @@ export function ArticleEditorRails(props: ArticleEditorRailsProps) {
         published={props.published}
         publishPending={props.publishPending}
         onPublish={props.onPublish}
+        hasSaveConflict={props.hasSaveConflict}
+        gateFailure={props.publishGateFailure}
       />
       <ArticleMetaRail
         section={props.section}

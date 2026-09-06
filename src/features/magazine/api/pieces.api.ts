@@ -1,4 +1,5 @@
 import {
+  ApiError,
   apiDelete,
   apiGet,
   apiPatch,
@@ -21,7 +22,11 @@ export type PieceStage =
   | "edit"
   | "sensitivity_read"
   | "layout"
-  | "ready";
+  | "ready"
+  // Terminal, and reached only by a publish, never by "Send on". Every place
+  // that maps a stage to a label, a pill colour or a stepper position has to
+  // handle it, or the raw machine value lands on an editor's screen.
+  | "published";
 
 export type PitchStatus = "waiting" | "maybe" | "passed" | "commissioned";
 
@@ -253,6 +258,17 @@ export interface PieceRecordDto extends PieceListItemDto {
   letters: LetterDto[];
   corrections: CorrectionDto[];
   publishGate: PublishGateItemDto[];
+  /** Whether the piece's linked article/deck is live to readers right now.
+   *  Strictly narrower than "has a `publishedAt`": a scheduled piece carries a
+   *  future instant and is still invisible, so the desk must not call it live. */
+  isPublished: boolean;
+  /** ISO instant the linked article/deck goes (or went) live, or `null` while
+   *  it is a draft. A FUTURE value means scheduled, so compare against the
+   *  clock rather than treating any value as "already published". */
+  publishedAt: string | null;
+  /** Reader-facing path for the live piece (`/magazine/article?id=<slug>` or
+   *  the deck equivalent), or `null` when nothing is published yet. */
+  publicHref: string | null;
 }
 
 // ── Article draft (Phase 3 block editor) ────────────────────────────────
@@ -368,6 +384,17 @@ export interface ArticleDraftDto {
   blocks: ArticleBlock[];
   readMinutes: number;
   publishedAt: string | null;
+  /**
+   * ENG-111. The article row's optimistic-concurrency counter. Every read of
+   * the draft carries the version it was read at, and every write declares
+   * that version back as `expectedVersion` below. The server refuses a write
+   * whose declared version has moved on with a 409
+   * (`assertArticleVersionCurrent`), which is what stops a second editor's
+   * autosave, or the writer filing a draft, from silently replacing this
+   * tab's whole `blocks` array. Autosaves are never snapshotted, so text lost
+   * that way is gone for good.
+   */
+  version: number;
 }
 
 /**
@@ -397,6 +424,19 @@ export type UpdateArticleDraftDto = Partial<
    * on the wire and the backend normalises it. `""` clears the art.
    */
   heroImageKey?: string;
+  /**
+   * ENG-111. The `version` this client last READ, declared as the write's
+   * precondition. The server compares it against the stored row and answers
+   * 409 when they disagree, instead of applying the patch over whatever
+   * landed in between (`assertArticleVersionCurrent`, plus the guarded
+   * `UPDATE ... WHERE version = :baseVersion` behind it).
+   *
+   * Optional only because the wire contract still accepts a caller that has
+   * not read a version yet. The editor always sends it once seeded: omitting
+   * it gives up the whole cross-request guarantee and reinstates the silent
+   * overwrite this exists to stop.
+   */
+  expectedVersion?: number;
 };
 
 // ── Admin request bodies ─────────────────────────────────────────────────
@@ -622,6 +662,23 @@ export const updateArticleDraft = (
   body: UpdateArticleDraftDto,
 ) =>
   apiPatch<ArticleDraftDto>(`/magazine/admin/pieces/${pieceId}/article`, body);
+
+/**
+ * ENG-111. Whether a failed draft write is the optimistic-concurrency refusal
+ * rather than an ordinary outage.
+ *
+ * 409 is the ONLY status `updateArticleDraft` answers with when the version
+ * moved (`assertArticleVersionCurrent`, and the guarded UPDATE that re-checks
+ * it inside the transaction), and it is the one failure a client must never
+ * retry: the retry would carry the same stale `expectedVersion` and fail
+ * identically, and forcing it through would be the silent overwrite the
+ * version exists to prevent. Callers stop autosaving and ask the editor to
+ * reload instead. The writer side's file-draft route answers the same way,
+ * so the two surfaces read the same wire signal.
+ */
+export function isArticleDraftConflict(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 409;
+}
 
 /**
  * Body of `PATCH /magazine/admin/pieces/:id/article/publish` — mirrors

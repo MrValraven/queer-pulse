@@ -85,6 +85,7 @@ export const routes = {
   /** ID-04: the data-subject request (DSAR) review queue. Statutory 30-day
    *  clock per request, so the queue is sorted by deadline, never by arrival. */
   adminDsar: "/admin/dsar",
+  adminQueues: "/admin/queues",
   /** PRD-31: ban-evasion escalations raised by community moderators, each
    *  carrying the full cross-community assessment their own console withholds.
    *  `@Roles(Moderator, Admin)`, so it is listed in
@@ -115,6 +116,10 @@ export const routes = {
   /** CON-08/CON-09: the resource guide console — edit a guide's prose
    *  and stamp its editorial review, stalest first. */
   adminResourceGuides: "/admin/resource-guides",
+  /** PRD-264: the glossary console. Nested under the guide console's path on
+   *  purpose — `authGate`'s `${adminResourceGuides}/*` pattern already grants
+   *  it to a `resource_curator`, and the two are one editorial job. */
+  adminGlossary: "/admin/resource-guides/glossary",
   adminResourceSuggestions: "/admin/resource-suggestions",
   adminCommunityTagRequests: "/admin/community-tag-requests",
   adminPartnerApplications: "/admin/partner-applications",
@@ -148,6 +153,11 @@ export const routes = {
    *  (free text over the published archive) and `?tag=` (every article
    *  carrying one tag); the two combine. Tag pills link here. */
   magazineSearch: "/magazine/search",
+  /** PRD-105 — the decks index (`DecksPage`), the browse surface decks never
+   *  had: the front only ever showed the newest one, and search and the
+   *  section browse both query articles. Distinct from `deck` above, which is
+   *  one deck's reader (`/magazine/deck?id=<slug>`). */
+  magazineDecks: "/magazine/decks",
   barter: "/work/barter",
   /** PRD-42/43 — the member's own swap board: listings they posted (close,
    *  edit) and the proposals they SENT, which had no surface at all. Sits
@@ -238,6 +248,12 @@ export const routes = {
   gatherings: "/gatherings",
   glossary: "/resources/glossary",
   governance: "/about/governance",
+  /** PRD-261. Where someone who submitted a concern checks what happened to
+   *  it, using the reference code they were handed on submit. PUBLIC by
+   *  construction: a concern can be raised without an account, and the code is
+   *  the entire credential. `authGate.ts` gates by denylist and nothing under
+   *  `/about` is on it, so this stays reachable logged out. */
+  concernStatus: "/about/governance/concern-status",
   grants: "/work/grants",
   guidelines: "/policies/guidelines",
   harmReduction: "/resources/harm-reduction",
@@ -298,6 +314,11 @@ export const routes = {
   partner: "/about/partners",
   partners: "/about/partners",
   partnerApply: "/about/partners/apply",
+  /** PRD-263: where an APPROVED partner maintains its own public profile.
+   *  Under `/account` on purpose, not under `/about/partners/*`: it is a
+   *  member surface, so it inherits the `/account/*` auth gate and robots
+   *  Disallow that already exist rather than needing a new gated prefix. */
+  partnerProfileEdit: "/account/partner-profile",
   perks: "/account/perks",
   pitchTracker: "/magazine/pitches",
   platforms: "/about/platforms",
@@ -394,6 +415,13 @@ export const routes = {
    *  the opaque token shown once at submission (`?token=`). Public: there is
    *  no account behind an applicant. */
   joinRequestStatus: "/auth/request-invite/status",
+  /** PRD-306: type an invite code you were given without the link around it.
+   *  Codes get read out loud, screenshotted and pasted on their own, and the
+   *  only doors in were the full `/auth/invite/:code` link or Google sign-in.
+   *  This page normalises what was typed and hands off to that same landing
+   *  route, which already owns every valid / expired / used / revoked state.
+   *  NOT `/auth/invite`: that path is the MEMBER's send-an-invite page above. */
+  enterInviteCode: "/auth/invite-code",
   inviteExpired: "/system/invite-expired",
   verificationNeeded: "/system/verification-needed",
   rsvp: "/rsvp",

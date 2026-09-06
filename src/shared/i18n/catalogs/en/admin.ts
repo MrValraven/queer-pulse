@@ -895,6 +895,44 @@ export const admin: Catalog = {
   "adminSafeSpaces.modal.savingCta": "Saving…",
   "adminSafeSpaces.modal.savedToast": "{name}'s safe space profile was saved",
 
+  // PRD-247 follow-up. The independent-visit bar on the DIRECT badge path
+  // (`PATCH /admin/listings/:ref/safe-space`). The reviewed nomination queue
+  // states the same rule in the `safety:governance.action.belowBar*` strings,
+  // and the direct editor renders those rather than a second wording, so one
+  // rule reads the same whichever door the moderator came through.
+  //
+  // `underBar.summaryNote` must keep both halves. A badge under the bar predates
+  // enforcement AND a low count can mean the visits were never written up, so
+  // the panel must never read as an accusation about the venue.
+  "adminSafeSpaces.underBar.title": "Below the visit bar",
+  "adminSafeSpaces.underBar.verifierIgnored":
+    "The “Verified by” line above is ignored while the count is short. The badge will state the real visit count in public.",
+  "adminSafeSpaces.underBar.queueHint":
+    "This place has a nomination open in the review queue. Deciding it there tells the person who nominated it.",
+  "adminSafeSpaces.underBar.reasonCount": "{count} of {min} characters",
+  "adminSafeSpaces.underBar.reasonShort":
+    "Write at least {min} characters to grant the badge below the bar.",
+  "adminSafeSpaces.underBar.refusedTitle": "The badge was refused",
+  "adminSafeSpaces.underBar.refusedBody":
+    "{count} of {required} independent visits are on file. Write the reason above and save again.",
+  "adminSafeSpaces.underBar.chip": "{count}/{required} visits",
+  "adminSafeSpaces.underBar.chipTitle":
+    "Independent member visits on file, against a bar of {required}.",
+  "adminSafeSpaces.underBar.summary_one":
+    "1 verified listing is under the visit bar.",
+  "adminSafeSpaces.underBar.summary_other":
+    "{count} verified listings are under the visit bar.",
+  "adminSafeSpaces.underBar.summaryNote":
+    "These badges were granted before the bar was enforced, and a low count can also mean the visits were never written up. Read it as paperwork to check.",
+  "adminSafeSpaces.underBar.forbiddenTitle": "This one is not yours to waive",
+  "adminSafeSpaces.underBar.forbiddenBody":
+    "Granting a badge below the visit bar is limited to platform moderators and admins. You can still grant it once {required} independent visits are on file, or ask a platform moderator to take this one.",
+  "adminSafeSpaces.markWithReasonCta": "Mark with a reason",
+  "adminSafeSpaces.toast.visitBarRefused":
+    "{name} is under the visit bar. Write the reason in the editor.",
+  "adminSafeSpaces.modal.saveFailed":
+    "That didn't save. Check your connection and try again.",
+
   // ── Directory listings queue ──────────────────────────────────────────────
   // ── Admin invite oversight (/admin/invites) ──────────────────────────
   "adminInvites.title": "Invite <em>oversight</em>",
@@ -1139,6 +1177,10 @@ export const admin: Catalog = {
   "adminIntakes.kind.panel_signup": "Grant panel signup",
   "adminIntakes.kind.incubator_cohort": "Incubator application",
   "adminIntakes.kind.incubator_mentor": "Mentor offer",
+  // PRD-249. A named landlord asking to answer a recommendation written about
+  // them. The submitter has no account and never will, so this queue is the only
+  // place their words can be established as theirs before anything is published.
+  "adminIntakes.kind.landlord_reply_request": "Landlord right of reply",
   "adminIntakes.kind.incubator_session": "Mentoring session request",
   "adminIntakes.kind.culture_suggest_pick": "Book club suggestion",
   "adminIntakes.kind.culture_post_project": "Commission board project",
@@ -1184,6 +1226,11 @@ export const admin: Catalog = {
   "adminIntakes.payload.empty":
     "This submission arrived with no fields filled in.",
   "adminIntakes.field.about": "About the work",
+  // PRD-249, the landlord right-of-reply payload.
+  "adminIntakes.field.contact": "How to reach them",
+  "adminIntakes.field.landlordSlug": "Landlord entry",
+  "adminIntakes.field.recommendationId": "Recommendation",
+  "adminIntakes.field.reply": "What they want published",
   "adminIntakes.field.applicantName": "Applicant",
   "adminIntakes.field.author": "Author",
   "adminIntakes.field.budgetItems": "Budget lines",
@@ -1249,6 +1296,16 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.row.replyLabel": "Reply to the writer",
   "adminMagazineSubmissions.row.replyPlaceholder":
     "Optional reply to the writer",
+  // PRD-124: accepting a reader story now creates the desk piece and files the
+  // member's text as its article draft, so an accepted row links straight to
+  // the record an editor works in. The pair below shows only on a row decided
+  // `accepted` whose `acceptedPieceId` is still null (decided before this
+  // build): re-sending the same decision finishes the job without touching the
+  // reply note, the decider, the decision date, or ringing the member again.
+  "adminMagazineSubmissions.row.openDeskPiece": "Open the desk piece",
+  "adminMagazineSubmissions.row.acceptNotOnDesk":
+    "This story was accepted before an acceptance created a desk piece, so there is nothing for an editor to open yet.",
+  "adminMagazineSubmissions.row.createDeskPieceCta": "Create the desk piece",
   "adminMagazineSubmissions.row.declineCta": "Decline",
   "adminMagazineSubmissions.row.acceptCta": "Accept",
   "adminMagazineSubmissions.row.commissionCta": "Commission",
@@ -1270,6 +1327,9 @@ export const admin: Catalog = {
   "adminWriterApplications.row.sampleLink": "Linked sample",
   "adminWriterApplications.row.approveCta": "Approve",
   "adminWriterApplications.row.declineCta": "Decline",
+  // Gives the review-note input a real accessible name, mirroring how
+  // `adminMagazineSubmissions.row.replyLabel` sits beside its placeholder.
+  "adminWriterApplications.row.reviewNoteLabel": "Note to the applicant",
   "adminWriterApplications.row.reviewNotePlaceholder":
     "Optional note to the applicant",
   "adminWriterApplications.unknownMember": "A member",
@@ -2404,6 +2464,27 @@ export const admin: Catalog = {
     "The affected member was shown this reason and given the right to appeal. This entry can never be edited or deleted.",
 
   // ── Partner applications ──────────────────────────────────────────────────
+  // PRD-266: the old For Organisations form's partner rows are not orphaned,
+  // they live in the intake console under Inquiries. This cross-links them so
+  // staff stop working two queues for one pipeline.
+  "partners.legacyInquiries":
+    "Partner messages sent through the old For Organisations form live in the <a>intake console</a>, under Inquiries, filtered by the partner kind.",
+  // PRD-263: the staff edit modal widened from the testimonial trio to the
+  // whole profile. Tier, since and the card kicker stay staff-only because
+  // they are claims about the relationship rather than facts about the org.
+  "partnerProfile.name": "Organisation name",
+  "partnerProfile.tier": "Partnership tier",
+  "partnerProfile.since": "Partner since",
+  "partnerProfile.eyebrow": "Card kicker",
+  "partnerProfile.tagline": "Tagline",
+  "partnerProfile.desc": "Short description",
+  "partnerProfile.city": "City",
+  "partnerProfile.regionLabel": "Region label",
+  "partnerProfile.phone": "Phone",
+  "partnerProfile.phoneNote": "When to call",
+  "partnerProfile.email": "Contact email",
+  "partnerProfile.website": "Website",
+  "partnerProfile.address": "Address",
   "partners.title": "Partner applications · <em>review</em>",
   "partners.header.eyebrow": "Partnerships",
   "partners.header.title": "Who wants to <em>partner</em>.",
@@ -3867,6 +3948,20 @@ export const admin: Catalog = {
   "adminResourceSuggestions.row.by": "Suggested by {name}",
   "adminResourceSuggestions.row.sent": "Sent {date}",
   "adminResourceSuggestions.unknownMember": "A member",
+  // PRD-269: approving now creates the public listing in the same transaction,
+  // so the admin confirms the fields the member typed from memory first.
+  "adminResourceSuggestions.approve.eyebrow": "Approve and publish",
+  "adminResourceSuggestions.approve.title":
+    "Review the listing before it goes live",
+  "adminResourceSuggestions.approve.body":
+    "Approving publishes {name} to the public directory straight away. Check every field first: a member typed these details from memory and nobody has confirmed them.",
+  "adminResourceSuggestions.approve.confirmCta": "Approve and publish",
+  "adminResourceSuggestions.approve.noteLabel": "Note for the member",
+  "adminResourceSuggestions.approve.notePlaceholder":
+    "Optional. The person who suggested this reads it.",
+  "adminResourceSuggestions.approve.contactRequired":
+    "Add a phone number, an email or a website. A listing nobody can reach is not worth publishing.",
+  "adminResourceSuggestions.publishedChip": "In the directory",
   "adminResourceSuggestions.empty": "No suggestions yet.",
   "adminResourceSuggestions.error": "Couldn't load resource suggestions.",
   "adminResourceSuggestions.loadMore": "Load more",
@@ -3954,6 +4049,23 @@ export const admin: Catalog = {
   "governance.overview.edit.saved": "Section updated.",
   "governance.overview.edit.noChanges": "Nothing changed.",
   "governance.overview.edit.error": "Couldn't save. Please try again.",
+  // PRD-265: authored (non-seeded) overview entries. `{label}` is the field
+  // name, so a screen reader hears "Decision, English" rather than five
+  // identical "English" boxes down a reorderable list.
+  "governance.overview.edit.textEn": "{label}, English",
+  "governance.overview.edit.textPt": "{label}, Portuguese",
+  "governance.overview.edit.restoreSeeded": "Restore a bundle entry",
+  "governance.overview.edit.needsBothLanguages":
+    "Fill in English and Portuguese for every entry you wrote. Nothing here gets translated later.",
+  "governance.overview.decisions.addDecision": "Add a decision",
+  "governance.overview.decisions.newEntry": "New decision",
+  "governance.overview.decisions.field.lead": "Decision",
+  "governance.overview.decisions.field.body": "What happened",
+  "governance.overview.principles.addPrinciple": "Add a principle",
+  "governance.overview.principles.newEntry": "New principle",
+  "governance.overview.principles.field.titleText": "Principle",
+  "governance.overview.principles.field.bodyText": "What it means",
+  "governance.overview.council.newSeat": "New seat",
   "governance.overview.health.title": "Community <em>health</em>",
   "governance.overview.health.sub":
     "The stats on the public Governance page, in the order members see them. Active members is counted live and can't be typed here.",
@@ -4248,6 +4360,57 @@ export const admin: Catalog = {
   // ── Resource guide console (CON-08 / CON-09) ────────────────────────────
   // The editorial surface for the ~31 resource guides: edit the prose,
   // stamp a review, see what is stale.
+  // ── PRD-264: the admin glossary console ─────────────────────────────────
+  // Nested under /admin/resource-guides so it inherits that path's
+  // `resource_curator` entry in authGate's CAPABILITY_ELEVATED_PATTERNS.
+  "adminGlossary.title": "The <em>glossary</em>",
+  "adminGlossary.guidesBreadcrumb": "Resource guides",
+  "adminGlossary.header.eyebrow": "Editorial",
+  "adminGlossary.header.sub":
+    "Every term readers see, stalest first. Add a word, fix a definition, and finish the Portuguese: a term with no Portuguese still shows the English one, so the gap is invisible from the outside.",
+  "adminGlossary.searchLabel": "Search terms",
+  "adminGlossary.searchPlaceholder": "Term, slug or category",
+  "adminGlossary.newTermCta": "Add a term",
+  "adminGlossary.untranslatedBanner":
+    "{count} terms have no Portuguese definition yet.",
+  "adminGlossary.empty":
+    "No terms yet. Add the first one, or run the backfill migration.",
+  "adminGlossary.noMatches": "No term matches that search.",
+  "adminGlossary.viewPublicGlossaryCta": "Open the public glossary",
+  "adminGlossary.loadError.title": "We couldn't load the <em>glossary.</em>",
+  "adminGlossary.loadError.body":
+    "The term list didn't come back. Try again in a moment.",
+  "adminGlossary.row.noPortuguese": "No Portuguese",
+  "adminGlossary.editor.createTitle": "Add a glossary term",
+  "adminGlossary.editor.editTitle": "Edit this term",
+  "adminGlossary.editor.createCta": "Add term",
+  "adminGlossary.editor.saveCta": "Save changes",
+  "adminGlossary.field.term": "Term",
+  "adminGlossary.field.slug": "Slug",
+  "adminGlossary.field.slugHint":
+    "Lowercase words joined by single hyphens. It is filled in from the term and cannot be changed later, so links into this term keep working.",
+  "adminGlossary.field.category": "Category",
+  "adminGlossary.field.categoryHint":
+    "The chip on the public page. Reuse an existing category where you can: a new one shows in English in both languages until it is added to the catalog.",
+  "adminGlossary.field.definition": "Definition (English)",
+  "adminGlossary.field.definitionPt": "Definition (Portuguese)",
+  "adminGlossary.field.definitionPtHint":
+    "Leave it empty and the page shows the English definition to a Portuguese reader without saying so.",
+  "adminGlossary.review.title": "Mark this term reviewed",
+  "adminGlossary.review.body":
+    "Confirm you have read this definition and it still holds: the wording people actually use, what it does and does not cover, and whether the community has moved on from it.",
+  "adminGlossary.delete.title": "Delete this term?",
+  "adminGlossary.delete.body":
+    '"{term}" disappears from the glossary and from every page that links to it. There is no undo.',
+  "adminGlossary.delete.confirmCta": "Delete term",
+  "adminGlossary.toast.created": "Added {term}.",
+  "adminGlossary.toast.saved": "Saved {term}.",
+  "adminGlossary.toast.reviewed": "{term} marked reviewed.",
+  "adminGlossary.toast.deleted": "Deleted {term}.",
+  "adminGlossary.error.save": "Couldn't save the term.",
+  "adminGlossary.error.review": "Couldn't record the review.",
+  "adminGlossary.error.delete": "Couldn't delete the term.",
+
   "adminResourceGuides.title": "Resource <em>guides</em>",
   "adminResourceGuides.header.eyebrow": "Editorial",
   "adminResourceGuides.header.sub":
@@ -4258,6 +4421,11 @@ export const admin: Catalog = {
   "adminResourceGuides.sort.updated": "Recently updated",
   "adminResourceGuides.staleBanner":
     "{count} guides have never been reviewed by anyone.",
+  // PRD-270: a guide already reviewed once but now past `review_due_on`
+  // was invisible here, because staleCount only counted never-reviewed
+  // guides. Kept non-pluralised to match the sibling above.
+  "adminResourceGuides.overdueBanner":
+    "{count} guides are past their review date.",
   "adminResourceGuides.empty":
     "No guides yet. Once the backfill migration has run, every guide appears here.",
   "adminResourceGuides.viewPublicIndexCta": "Open the public guide index",
@@ -4944,6 +5112,10 @@ export const admin: Catalog = {
   "moderationHealth.queue.partner_applications": "Partner applications",
   "moderationHealth.queue.changemaker_nominations": "Changemaker nominations",
   "moderationHealth.queue.roadmap_ideas": "Member ideas",
+  "moderationHealth.queue.guide_reviews": "Guide reviews",
+  "moderationHealth.queue.ban_evasion_escalations": "Ban-evasion escalations",
+  "moderationHealth.queue.community_owner_review_requests":
+    "Owner review requests",
 
   // Which of the three axes tripped, said as what it means rather than as the
   // field name.
@@ -5378,4 +5550,62 @@ export const admin: Catalog = {
   "moderation.reportDrawer.photoEvidence.uploadedAt":
     "Posted to the album on {date}",
   "moderation.reportDrawer.photoEvidence.fullSizeCta": "Open at full size",
+
+  // ── PRD-282, the staff triage console (`AdminQueuesPage`) ──────────────
+  // The three "null" cells below are three different sentences on purpose and
+  // must stay that way. `cell.noDeadline` is a queue that never promised
+  // anything, so calling it "on time" would invent a promise; `cell.onTime` is
+  // a queue with a real clock and nothing late; `cell.notTracked` is a queue
+  // that keeps no record of what has been worked, and must never drift towards
+  // "nothing waiting". The queue NAMES are not here: they reuse the existing
+  // `moderationHealth.queue.*` block, because two hand-curated lists mirroring
+  // one taxonomy drift apart silently.
+  "adminQueues.title": "What is <em>waiting</em>",
+  "adminQueues.header.eyebrow": "Triage",
+  "adminQueues.header.title": "What is <em>waiting</em>",
+  "adminQueues.header.sub":
+    "Every queue you can work, on one screen, with the oldest thing waiting in each.",
+  "adminQueues.asOf": "Counted at {time}",
+  "adminQueues.refresh": "Refresh",
+  "adminQueues.refreshing": "Refreshing",
+  "adminQueues.verdict.overdueTitle": "Something is past its deadline",
+  "adminQueues.verdict.overdueBody":
+    "Start with the rows marked overdue below. Each one is a promise the platform already made.",
+  "adminQueues.verdict.clearTitle": "Nothing is overdue",
+  "adminQueues.verdict.clearBody":
+    "Every queue that runs on a deadline is inside it. What is below is still waiting for you.",
+  "adminQueues.verdict.heroLabel_one": "thing past its deadline",
+  "adminQueues.verdict.heroLabel_other": "things past their deadline",
+  "adminQueues.stat.waiting": "Waiting on staff",
+  "adminQueues.stat.queuesWithWork": "Queues with work",
+  "adminQueues.stat.queuesWithWorkNote": "of {total} you can work",
+  "adminQueues.stat.untracked": "Cannot be counted",
+  "adminQueues.stat.untrackedNote":
+    "These queues keep no record of what has been worked.",
+  "adminQueues.table.caption": "Queues with something waiting",
+  "adminQueues.table.queue": "Queue",
+  "adminQueues.table.waiting": "Waiting",
+  "adminQueues.table.oldest": "Oldest wait",
+  "adminQueues.table.deadline": "Deadline",
+  "adminQueues.cell.notTracked": "Not tracked",
+  "adminQueues.cell.noDeadline": "No deadline",
+  "adminQueues.cell.onTime": "On time",
+  "adminQueues.cell.overdue_one": "{count} overdue",
+  "adminQueues.cell.overdue_other": "{count} overdue",
+  "adminQueues.age.hours_one": "{count} hour",
+  "adminQueues.age.hours_other": "{count} hours",
+  "adminQueues.age.days_one": "{count} day",
+  "adminQueues.age.days_other": "{count} days",
+  "adminQueues.clear.summary_one": "{count} queue is clear",
+  "adminQueues.clear.summary_other": "{count} queues are clear",
+  "adminQueues.deskClear.title": "Your desk is clear",
+  "adminQueues.deskClear.body_one": "Nothing is waiting in the queue you work.",
+  "adminQueues.deskClear.body_other":
+    "Nothing is waiting in any of the {count} queues you work.",
+  "adminQueues.noQueues.title": "No queues are yours yet",
+  "adminQueues.noQueues.body":
+    "Your account reaches no staff queue right now. Ask an admin for the grant that covers the work you do.",
+  "adminQueues.error.title": "We could not read the queue counts",
+  "adminQueues.error.body":
+    "Try again. If it keeps failing, open the queues themselves: the counts are the only thing missing here.",
 };

@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { FiArrowLeft, FiArrowRight, FiCalendar } from "react-icons/fi";
+import { FiArrowLeft, FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
-  Button,
   EmptyState,
   FeatureHelp,
   SkeletonLine,
@@ -11,15 +9,15 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useMemberContact } from "../connect/useMemberContact";
+import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import { routes } from "../../app/routeMap";
 import { JoinVouchCallout } from "./JoinVouchCallout";
 import { MeetTheTable } from "./table/MeetTheTable";
 import { GatheringSidebar } from "./GatheringSidebar";
-import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
+import { GatheringHeroActions } from "./GatheringHeroActions";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineupSection } from "./GatheringLineupSection";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
@@ -30,10 +28,9 @@ import {
   resolveGathering,
   type GatheringDetail,
 } from "./data";
+import { useGatheringRsvp } from "./useGatheringRsvp";
 import { eventZoneFormat } from "./eventTimezone";
 import { useEvent } from "./api/useEvent";
-import { useRsvp, useUnrsvp } from "./api/useEventMutations";
-import { rsvpErrorMessage } from "./rsvpErrors";
 
 import styles from "./GatheringPage.module.css";
 
@@ -84,9 +81,6 @@ function GatheringUnavailable({ loading }: { loading: boolean }) {
 
 export function GatheringPage() {
   const { slug: param } = useParams();
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const simLoading = useSimulatedLoad();
   const { data, isLoading } = useEvent(param);
@@ -97,29 +91,35 @@ export function GatheringPage() {
     ? resolveGathering(param)
     : (data?.gathering ?? null);
   const loading = demoMode ? simLoading : isLoading;
-  const { connected, contact } = useMemberContact(gathering?.hostSlug ?? "");
-  const rsvp = useRsvp(gathering?.slug ?? "");
-  const unrsvp = useUnrsvp(gathering?.slug ?? "");
-  // Local optimistic mirror of `myRsvpStatus`: the mutation no-ops the network
-  // call in demo, so the confirmed state has to be held here (re-synced when a
-  // live refetch resolves new server truth) — same pattern as
-  // GatheringBookmarkButton's "Save" toggle and the sidebar's RSVP control.
-  const myRsvpStatus = gathering?.myRsvpStatus ?? null;
-  const [prevMyRsvpStatus, setPrevMyRsvpStatus] =
-    useState<GatheringDetail["myRsvpStatus"]>(myRsvpStatus);
-  const [rsvpStatus, setRsvpStatus] =
-    useState<GatheringDetail["myRsvpStatus"]>(myRsvpStatus);
-  // Adjusted during render (not an effect) so the re-sync lands in the same
-  // commit instead of a follow-up render.
-  if (prevMyRsvpStatus !== myRsvpStatus) {
-    setPrevMyRsvpStatus(myRsvpStatus);
-    setRsvpStatus(myRsvpStatus);
-  }
 
   if (!gathering) return <GatheringUnavailable loading={loading} />;
+  return <GatheringDetailBody gathering={gathering} routeParam={param} />;
+}
+
+/**
+ * The gathering itself, once it has resolved.
+ *
+ * Split from the loader above for one reason: the hero's RSVP button and the
+ * sidebar's RSVP panel are two views of ONE decision, so they have to share one
+ * `useGatheringRsvp` — and a hook cannot live above the loader's "not found"
+ * early return, which has no gathering to give it. Two independent copies (what
+ * this page shipped with) meant the hero could read "Cancel RSVP" while the
+ * sidebar beside it still offered "Reserve a seat".
+ */
+function GatheringDetailBody({
+  gathering,
+  routeParam,
+}: {
+  gathering: GatheringDetail;
+  routeParam: string | undefined;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const { demoMode } = useDemoMode();
+  const { connected, contact } = useMemberContact(gathering.hostSlug);
+  const rsvp = useGatheringRsvp(gathering);
 
   const kind = gatheringKind(gathering);
-  const rsvpConfirmed = rsvpStatus === "going" || rsvpStatus === "waitlisted";
   // Date + start time read in the gathering's own zone, with the short zone
   // name appended when that zone differs from the reader's.
   const zone = eventZoneFormat(gathering.timezone, gathering.date);
@@ -186,71 +186,11 @@ export function GatheringPage() {
                 </span>
               </div>
               <p className={styles.body}>{gathering.body}</p>
-              <div className={styles.cta}>
-                <Button
-                  size="lg"
-                  disabled={rsvp.isPending || unrsvp.isPending}
-                  onClick={() => {
-                    if (rsvpConfirmed) {
-                      setRsvpStatus(null);
-                      unrsvp.mutate(undefined, {
-                        onSuccess: () =>
-                          showToast(
-                            t("gatherings:rsvpControl.cancelledToast"),
-                            "success",
-                          ),
-                        onError: () =>
-                          setRsvpStatus(gathering.myRsvpStatus ?? null),
-                      });
-                      return;
-                    }
-                    // A full gathering waitlists the member: the request body
-                    // is still "going", but the mutation is told the intent so
-                    // the optimistic going head-count doesn't bump (see
-                    // `RsvpIntent`).
-                    const next: "going" | "waitlisted" = gathering.isFull
-                      ? "waitlisted"
-                      : "going";
-                    setRsvpStatus(next);
-                    rsvp.mutate(next, {
-                      onSuccess: () =>
-                        showToast(
-                          t(
-                            next === "waitlisted"
-                              ? "gatherings:rsvpControl.waitlistToast"
-                              : "gatherings:rsvpControl.goingToast",
-                          ),
-                          "success",
-                        ),
-                      // Barred, or blocked in either direction: said plainly,
-                      // and never naming who decided it (`rsvpErrors.ts`).
-                      onError: (error) => {
-                        setRsvpStatus(gathering.myRsvpStatus ?? null);
-                        showToast(rsvpErrorMessage(error, t), "error");
-                      },
-                    });
-                  }}
-                >
-                  {rsvpConfirmed
-                    ? t("gatherings:rsvpControl.cancelCta")
-                    : rsvp.isPending
-                      ? t("gatherings:rsvpControl.pendingCta")
-                      : t(
-                          gathering.isFull
-                            ? "gatherings:rsvpControl.waitlistCta"
-                            : gathering.ctaKey,
-                        )}{" "}
-                  <FiArrowRight aria-hidden />
-                </Button>
-                <GatheringBookmarkButton
-                  slug={gathering.slug}
-                  param={param}
-                  bookmarked={gathering.bookmarked ?? false}
-                />
-                <Button size="lg" variant="ghost" to={routes.calendar}>
-                  {t("gatherings:gathering.seeAllCta")}
-                </Button>
-              </div>
+              <GatheringHeroActions
+                gathering={gathering}
+                routeParam={routeParam}
+                rsvp={rsvp}
+              />
 
               <GoingAttendeesPreview gathering={gathering} />
 
@@ -277,12 +217,42 @@ export function GatheringPage() {
               </div>
 
               <GatheringLineupSection gathering={gathering} />
+
+              {/* PRD-284. Reporting a gathering used to live only in the
+                  member's own "My events" list, so raising a suspicious event
+                  meant RSVP'ing to it first, which puts the reporter on the
+                  host's attendee list. This is the same `event` report, on the
+                  page where a member first meets the gathering and where
+                  everyone who has not RSVP'd is looking at it.
+
+                  Deliberately quiet and deliberately ungated: the same
+                  `ReportSubjectControl` the per-photo trigger uses a level
+                  down, and `POST /reports` is public (PRD-280), so a visitor
+                  reading a public gathering page can raise it too.
+
+                  `subjectId` is the SLUG. The moderation console resolves an
+                  `event` subject with `WHERE e.slug = ANY(...)`, and
+                  `myEvents.adapters` already files these as `dto.slug`, so
+                  both entry points name the same row. It reads no clock, so
+                  the demo registry's past-dated gatherings keep it. */}
+              <div className={styles.reportRow}>
+                <ReportSubjectControl
+                  subjectType="event"
+                  subjectId={gathering.slug}
+                  subjectName={gathering.title}
+                  label={t("gatherings:gathering.reportCta")}
+                  ariaLabel={t("gatherings:gathering.reportAriaLabel", {
+                    title: gathering.title,
+                  })}
+                />
+              </div>
             </div>
 
             <GatheringSidebar
               gathering={gathering}
               connected={connected}
               contact={contact}
+              rsvp={rsvp}
             />
           </div>
 

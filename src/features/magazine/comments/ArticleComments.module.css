@@ -88,16 +88,24 @@
   font-weight: 600;
   color: var(--text-strong);
   font-size: var(--text-14);
+  overflow-wrap: anywhere;
 }
 .commentTime {
   font-size: var(--text-12);
   color: var(--ink-40);
 }
+/* PRD-108: a comment is plain text typed into a textarea, so the paragraph
+   breaks a member put in are part of what they wrote. Without `pre-wrap` every
+   comment posted as a wall of text. `anywhere` is the companion: a pasted URL
+   or an unbroken 300-character string would otherwise push the whole thread
+   sideways on a phone. */
 .commentText {
   margin-top: 2px;
   color: var(--text-strong);
   font-size: var(--text-15);
   line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .editedMark {
   color: var(--text-strong);
@@ -126,6 +134,13 @@
   flex-direction: column;
   gap: 12px;
   margin-top: 8px;
+}
+/* "Load more" for the paged thread list (PRD-108), same centred ghost button
+   the community post page uses under its replies. */
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
 }
 .empty {
   color: var(--ink-40);

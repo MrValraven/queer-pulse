@@ -7,9 +7,11 @@ import { socialHref } from "../../shared/social/socialPlatforms";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   usePublicSubprofile,
-  type PublicSubprofileArgs,
   type RestrictedState,
 } from "./api/usePublicSubprofile";
+import { ProfileMovedNote } from "../members/ProfileMovedNote";
+import { useMovedPersonaAddressRedirect } from "./useMovedPersonaRedirect";
+import { PersonaMovedNote } from "./PersonaMovedNote";
 import { SubprofilePageBody } from "./SubprofilePageBody";
 import { SubprofilePageStates } from "./SubprofilePageStates";
 import { SubprofilePageSkeleton } from "./SubprofilePageSkeleton";
@@ -26,7 +28,7 @@ import { usePoemDeepLink } from "./usePoemDeepLink";
 import { PoemReaderModal } from "./poem/PoemReaderModal";
 import { slugify } from "./poem/poemModel";
 import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
-import { personaPublicPath, personaShareUrl } from "./personaLinks.data";
+import { personaPublicPathOrNull, personaShareUrl } from "./personaLinks.data";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
@@ -71,10 +73,19 @@ export function SubprofilePage() {
   const { t } = useTranslation();
   const { handle, slug, subslug } = useParams();
 
-  const args: PublicSubprofileArgs = handle
-    ? { handle }
-    : { ownerSlug: slug ?? "", subslug: subslug ?? "" };
-  const result = usePublicSubprofile(args);
+  // The two public entry points, discriminated: a standalone `/p/:handle`
+  // persona, or a linked one nested under `/members/:slug/:subslug`.
+  const result = usePublicSubprofile(
+    handle ? { handle } : { ownerSlug: slug ?? "", subslug: subslug ?? "" },
+  );
+  // PRD-204: forward an address released by a rename that is still inside its
+  // reclaim cooldown. See `useMovedPersonaAddressRedirect` for which of this
+  // page's two addresses moves for which reason.
+  const isForwardingToMovedAddress = useMovedPersonaAddressRedirect(
+    handle,
+    slug,
+    result.state === "moved" ? result.error : undefined,
+  );
   const lightbox = useStudioLightbox(
     result.state === "ok" ? result.data.sections : undefined,
   );
@@ -107,7 +118,11 @@ export function SubprofilePage() {
     }
   }
 
-  if (result.state === "loading") {
+  // The forwarding checks are held ABOVE every wall below, which would
+  // otherwise claim the moved 404 as an absence and paint for a frame on the
+  // way through. The navigation can only run from an effect, so this ordering
+  // is the fix, and reversing it would silently undo the whole thing.
+  if (result.state === "loading" || isForwardingToMovedAddress) {
     return (
       <PageShell>
         <SubprofilePageSkeleton />
@@ -124,7 +139,11 @@ export function SubprofilePage() {
     );
   }
 
-  if (result.state === "not-found") {
+  // A `moved` result that produced no navigation has nowhere to send anyone: the
+  // payload named the address already being viewed, or demo mode gated the
+  // forwarding out. Either way this URL leads nowhere, which is what the
+  // not-found wall says.
+  if (result.state === "not-found" || result.state === "moved") {
     return (
       <PageShell>
         <PageMeta title={t("subprofiles:page.notFoundMetaTitle")} noIndex />
@@ -159,7 +178,11 @@ export function SubprofilePage() {
   const skinStyle = skinVars(data.accent ?? DEFAULT_ACCENT);
 
   const craftLabel = t(KIND_LABEL_KEYS[data.kind]);
-  const canonicalPath = personaPublicPath(data);
+  // Reaching this page means the URL resolved, so an address exists in every
+  // real case. It stays nullable because the builder refuses to invent one, and
+  // an absent canonical is dropped rather than pointed at a dead path.
+  const canonicalPath = personaPublicPathOrNull(data);
+  const poemShareUrl = personaShareUrl(data);
   // A persona still named after its profession ("Poet") is titled "Owner Name |
   // Poet". The three sinks below each already carry the craft as its own field,
   // so they take the owner's name alone rather than the composed title, which
@@ -194,7 +217,7 @@ export function SubprofilePage() {
         image={cardImage}
         imageAlt={cardImageAlt}
         twitterCard={twitterCard}
-        canonical={canonicalPath}
+        canonical={canonicalPath ?? undefined}
         // An owner's own unpublished draft preview must never index — only a
         // published persona is meant to be publicly discoverable.
         noIndex={isOwnerDraftPreview || undefined}
@@ -203,7 +226,7 @@ export function SubprofilePage() {
 
       {/* Structured data for the public persona — never for an owner's own
           unpublished draft preview, which must not be discoverable at all. */}
-      {!isOwnerDraftPreview && (
+      {!isOwnerDraftPreview && canonicalPath && (
         <JsonLd
           schema={buildPersonProfileSchema({
             // schema.org Person: the human's name in `name`, the craft in
@@ -218,6 +241,12 @@ export function SubprofilePage() {
           })}
         />
       )}
+
+      {/* Says which address was followed and where it now leads. Each renders
+          only when this very navigation carried its own forwarding state, so a
+          first-hand visit and a reload show nothing. See `PersonaMovedNote`. */}
+      <PersonaMovedNote />
+      <ProfileMovedNote />
 
       {isOwnerDraftPreview && (
         <SubprofileDraftBanner
@@ -246,7 +275,11 @@ export function SubprofilePage() {
         <PoemReaderModal
           item={poemItem}
           authorName={data.displayName}
-          shareUrl={`${personaShareUrl(data)}?poem=${slugify(poemItem.title)}`}
+          shareUrl={
+            poemShareUrl
+              ? `${poemShareUrl}?poem=${slugify(poemItem.title)}`
+              : null
+          }
           onClose={closePoem}
         />
       )}

@@ -126,6 +126,11 @@ export const communities: Catalog = {
   "hub.digest.active": "pessoas ativas",
   "hub.digest.events": "eventos a caminho",
   "hub.digest.joined": "pessoas juntaram-se",
+  // PRD-144. Ver o comentario na versao EN.
+  "hub.todos.reportsIn_one": "{count} denúncia aberta em {name}",
+  "hub.todos.reportsIn_other": "{count} denúncias abertas em {name}",
+  "hub.todos.requestsIn_one": "{count} pedido à espera em {name}",
+  "hub.todos.requestsIn_other": "{count} pedidos à espera em {name}",
   "hub.todos.label": "Precisa da tua atenção",
   "hub.todos.requests_one": "{count} pedido",
   "hub.todos.requests_other": "{count} pedidos",
@@ -135,6 +140,14 @@ export const communities: Catalog = {
   "hub.pulse.empty.title": "Tudo calmo por agora",
   "hub.pulse.empty.description":
     "Quando as tuas comunidades publicarem algo, aparece aqui.",
+  // PRD-144. The LIVE sidebar row. `GET /me/communities/digest` counts gatherings
+  // without naming them, so the live row says how many are ahead and links in,
+  // where the demo row shows a dated title.
+  // PRD-140. Ver o comentario na versao EN.
+  "hub.invitesLink_one": "{count} convite à espera",
+  "hub.invitesLink_other": "{count} convites à espera",
+  "hub.sidebar.upcomingCount_one": "{count} encontro a caminho",
+  "hub.sidebar.upcomingCount_other": "{count} encontros a caminho",
   "hub.sidebar.upcoming": "A caminho nas tuas comunidades",
   "hub.sidebar.suggestions": "Comunidades que podes gostar",
   "hub.pulseCard.announcement": "Anúncio",
@@ -156,10 +169,32 @@ export const communities: Catalog = {
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
   "detail.breadcrumb": "Comunidades e Coletivos",
+  // PRD-141. The `invite` tier refuses an uninvited join outright now
+  // (`outcome: 'invite_required'`) rather than filing a request nobody asked
+  // for. Before this the tier behaved exactly like `request`.
+  "detail.join.inviteOnly": "Apenas por convite",
+  "detail.join.inviteOnlyHint":
+    "Um moderador tem de te convidar antes de te poderes juntar a esta.",
   "detail.join.invite": "Junta-te com convite",
   "detail.join.public": "Junta-te à comunidade",
   "detail.join.request": "Pedir para entrar",
   "detail.joined": "Já és membro",
+  // PRD-148. The `Requested` chip was a disabled label with no way out. The body
+  // names the wait on purpose: withdrawing costs nothing, while waiting for a
+  // decline can write a 30 or 180 day reapply lock.
+  "detail.withdraw.ariaLabel":
+    "Pedido enviado. Retirar o teu pedido para entrar.",
+  "detail.withdraw.confirm.title": "Retirar o teu pedido para {name}?",
+  "detail.withdraw.confirm.body":
+    "O teu pedido desaparece da fila da moderação e ninguém fica a saber que o retiraste. Podes pedir outra vez de imediato. Esperar por uma recusa pode impor uma espera de 30 ou 180 dias antes de poderes pedir de novo, por isso retirá-lo agora deixa-te livre.",
+  "detail.withdraw.confirm.cancel": "Deixar pendente",
+  "detail.withdraw.confirm.confirmCta": "Retirar pedido",
+  // PRD-148. Ver o comentario na versao EN.
+  "detail.withdraw.alreadyApprovedToast":
+    "O teu pedido foi aprovado antes disso. Já estás dentro.",
+  "detail.withdraw.alreadyDeclinedToast":
+    "A moderação respondeu ao teu pedido antes disso. Podes pedir outra vez a {date}.",
+  "detail.withdraw.doneToast": "Pedido retirado.",
   "detail.requested": "Pedido enviado",
   "detail.frozen.title": "Esta comunidade está em pausa",
   // Uma frase por motivo. Uma pausa manual não tem denúncia nenhuma por trás,
@@ -234,6 +269,25 @@ export const communities: Catalog = {
   "detail.share.cta": "Partilhar",
   "detail.share.ariaLabel": "Partilhar {name}",
   "detail.share.copiedToast": "Link copiado para a área de transferência.",
+  // PRD-140. Holding an invitation: the hero offers the door instead of a
+  // request, and declining is the member's own act that nobody is told about.
+  "detail.invite.banner": "Foste convidade para esta comunidade.",
+  "detail.invite.accept": "Aceitar convite",
+  "detail.invite.decline": "Recusar",
+  "detail.invite.declineConfirm.title": "Recusar o convite para {name}?",
+  "detail.invite.declineConfirm.body":
+    "Ninguém fica a saber que recusaste. A comunidade pode voltar a convidar-te mais tarde.",
+  "detail.invite.declineConfirm.cancel": "Guardar",
+  "detail.invite.declineConfirm.confirmCta": "Recusar convite",
+  "detail.invite.declinedToast": "Convite recusado.",
+  "detail.leave.owner.title": "És a pessoa responsável por {name}",
+  "detail.leave.owner.body":
+    "Uma comunidade não pode ficar sem quem responda por ela. Passa {name} a alguém que já seja membro e ficas como moderação, livre para saíres quando quiseres.",
+  "detail.leave.owner.cancel": "Agora não",
+  "detail.leave.owner.transferCta": "Transferir responsabilidade",
+  "leave.doneToast": "Saíste de {name}.",
+  "leave.failedToast":
+    "Não conseguimos sair dessa comunidade. Tenta daqui a pouco.",
   "detail.leave.confirm.title": "Sair de {name}?",
   "detail.leave.confirm.body":
     "Deixas de ver o pulso e os convívios desta comunidade. As tuas publicações e respostas ficam na comunidade exatamente onde estão, com o teu nome. Podes voltar sempre que quiseres. Só precisas de entrar de novo.",
@@ -316,6 +370,12 @@ export const communities: Catalog = {
 
   // ── Separador Eventos (hub completo) ──────────────────────────────────────
   "detail.events.upcoming": "Próximos convívios",
+  // PRD-145. The Events tab as a PROSPECTIVE member sees it. The endpoint behind
+  // it deliberately omits gatherings a community keeps to its roster, so the
+  // note is what stops a short list from reading as an empty calendar.
+  "detail.events.nonMemberNote":
+    "Os convívios que esta comunidade reserva a quem já é membro não aparecem aqui.",
+  "detail.events.loadMore": "Ver mais convívios",
   "detail.events.noUpcoming":
     "Ainda não há convívios no calendário. Volta em breve.",
   "detail.events.past": "Convívios passados",
@@ -614,6 +674,20 @@ export const communities: Catalog = {
   "detail.dangerZone.transfer.confirm.confirmCta": "Transferir titularidade",
   "detail.dangerZone.transfer.confirm.empty":
     "Ainda não há mais ninguém na lista de pessoas para passar isto.",
+  // PRD-149. The transfer picker searches the SERVER (`roster?q=`) instead of
+  // filtering the pages already loaded, so an owner of a 200-member community
+  // finds their successor by typing rather than by pressing Load more nine
+  // times. `searchMatches` is read by a visually hidden live region.
+  "detail.dangerZone.transfer.confirm.searchAria":
+    "Procurar pessoas desta comunidade",
+  "detail.dangerZone.transfer.confirm.searchErrorTitle":
+    "Não conseguimos procurar na lista de pessoas",
+  "detail.dangerZone.transfer.confirm.searchErrorBody":
+    "As pessoas abaixo são as que já estavam carregadas. Tenta a pesquisa outra vez.",
+  "detail.dangerZone.transfer.confirm.searchMatches_one":
+    "{count} pessoa corresponde",
+  "detail.dangerZone.transfer.confirm.searchMatches_other":
+    "{count} pessoas correspondem",
   "detail.dangerZone.transfer.confirm.searchPlaceholder": "Procurar pessoas…",
 
   // ── Ferramentas de moderação · tendências (12 semanas) ────────────────────
@@ -700,6 +774,31 @@ export const communities: Catalog = {
   "detail.modtools.ban.edit.sub":
     "Define quanto tempo dura, indica a regra da casa em que assenta e reescreve o motivo registado.",
   "detail.modtools.ban.edit.durationLegend": "Quanto tempo dura",
+  // Ver o comentario na versao EN.
+  "detail.modtools.takedown.cancelCta": "Cancelar",
+  "detail.modtools.takedown.confirmCta": "Remover",
+  "detail.modtools.takedown.errorToast":
+    "Não foi possível concluir. Tenta outra vez daqui a pouco.",
+  "detail.modtools.takedown.noteHint":
+    "Só a organização, a co-organização e a moderação veem isto. Nunca é enviado a quem escreveu e fica no histórico de governação.",
+  "detail.modtools.takedown.noteLabel": "Nota para a moderação",
+  "detail.modtools.takedown.notePlaceholder":
+    "Aquilo que a restante equipa deve saber.",
+  "detail.modtools.takedown.post.body":
+    "Deixa de estar visível para toda a gente aqui. Quem escreveu é avisada e lê aquilo que escreveres abaixo, por isso escreve a pensar nessa pessoa. A moderação pode voltar a colocá-la.",
+  "detail.modtools.takedown.post.successToast":
+    "A publicação foi removida e quem a escreveu foi avisada.",
+  "detail.modtools.takedown.post.title": "Remover esta publicação?",
+  "detail.modtools.takedown.reasonHint":
+    "A pessoa lê isto tal e qual, e é a única coisa que recebe. Se deixares em branco, a publicação sai na mesma e a pessoa fica a saber disso.",
+  "detail.modtools.takedown.reasonLabel": "O que a pessoa vai ler",
+  "detail.modtools.takedown.reasonPlaceholder":
+    "Diz o que aconteceu, pelas tuas palavras.",
+  "detail.modtools.takedown.reply.body":
+    "Deixa de estar visível para toda a gente aqui. Quem escreveu é avisada e lê aquilo que escreveres abaixo, por isso escreve a pensar nessa pessoa. A moderação pode voltar a colocá-la.",
+  "detail.modtools.takedown.reply.successToast":
+    "A resposta foi removida e quem a escreveu foi avisada.",
+  "detail.modtools.takedown.reply.title": "Remover esta resposta?",
   "detail.modtools.ban.edit.days_one": "{count} dia",
   "detail.modtools.ban.edit.days_other": "{count} dias",
   "detail.modtools.ban.edit.permanent": "Permanente",
@@ -842,6 +941,26 @@ export const communities: Catalog = {
   "detail.modtools.invites.result.skipRow": "{name}: {reason}",
   "detail.modtools.invites.result.note":
     "Quem aparece em Ignoradas ficou de fora e não recebeu nada. Quem foi convidade decide por si se quer entrar.",
+  // PRD-140. Ver o comentario na versao EN.
+  "detail.modtools.invites.pending.empty": "Não há convites à espera.",
+  "detail.modtools.invites.pending.emptyDescription":
+    "Os convites que enviares no formulário acima ficam aqui à espera de resposta.",
+  "detail.modtools.invites.pending.errorToast":
+    "Não foi possível retirar esse convite. Tenta novamente.",
+  "detail.modtools.invites.pending.intro":
+    "Pessoas com um convite em aberto que ainda não responderam.",
+  "detail.modtools.invites.pending.label": "Convites à espera",
+  "detail.modtools.invites.pending.revokeAriaLabel":
+    "Retirar o convite para {name}",
+  "detail.modtools.invites.pending.revokeConfirm.body":
+    "O convite deixa de funcionar. Ninguém é avisade de que foi retirado.",
+  "detail.modtools.invites.pending.revokeConfirm.title":
+    "Retirar este convite?",
+  "detail.modtools.invites.pending.revokeCta": "Retirar",
+  "detail.modtools.invites.pending.revokedToast": "Convite retirado.",
+  "detail.modtools.invites.pending.sentBy": "Convidade por {name}",
+  "detail.modtools.invites.pending.sentByGone":
+    "Convidade por alguém da moderação que já saiu",
   "detail.modtools.invites.skip.unknownMember": "Não encontrámos esta pessoa.",
   "detail.modtools.invites.skip.self": "Esta é a tua própria conta.",
   "detail.modtools.invites.skip.systemAccount":
@@ -849,6 +968,8 @@ export const communities: Catalog = {
   "detail.modtools.invites.skip.alreadyMember": "Já está nesta comunidade.",
   "detail.modtools.invites.skip.pendingRequest":
     "Já pediu para entrar. Responde-lhe na fila de pedidos acima.",
+  // Ver o comentario na versao EN.
+  "detail.modtools.invites.skip.alreadyInvited": "Já tem um convite à espera.",
   "detail.modtools.invites.skip.banned": "Está barrade desta comunidade.",
 
   // ── Zona de perigo · o teu papel + ausência de quem é responsável ─────────
@@ -1172,6 +1293,10 @@ export const communities: Catalog = {
   "join.intro.eyebrow.request": "A pedir para entrar",
   "join.intro.eyebrow.invite": "A entrar com um convite",
   "join.intro.eyebrow.public": "A Junta-te",
+  // PRD-141. Somebody who HOLDS an invitation is admitted at once, so the wizard
+  // must not word itself to them as a request.
+  "join.intro.invitedHint":
+    "Tens um convite para esta comunidade, por isso entras logo. Lê as regras da casa pelo caminho.",
   "join.intro.inviteHint":
     "Esta comunidade é só com convite, por isso o teu pedido segue para a moderação para ser revisto, tal como qualquer pedido para entrar.",
   "join.intro.continueCta": "Continuar",
@@ -1420,6 +1545,15 @@ export const communities: Catalog = {
     '"Aqui cuidamos umas das outras. Calor primeiro, sempre, e sem espaço para quem tornar este lugar inseguro."',
   "start.tone.addPlaceholder": "Acrescenta um valor por tuas palavras",
   "start.tone.addCta": "Adicionar",
+  // PRD-146, the wizard's half of the welcome note.
+  "start.tone.welcomeHeading": "A primeira coisa que um novo membro lê",
+  "start.tone.welcomeSub":
+    "Opcional. Quem entra vê isto uma vez, logo a seguir a entrar, por cima de tudo o resto no Pulso.",
+  "start.tone.welcomeLabel": "Uma nota de boas-vindas",
+  "start.tone.welcomePlaceholder":
+    "Ainda bem que estás aqui. Começa pelos valores partilhados acima e depois diz olá no Pulso.",
+  "start.tone.welcomeHint":
+    "Diz olá pelas tuas palavras e mostra-lhes o que ler primeiro.",
   "start.tone.wrongHeading": "Quando algo corre mal",
   "start.tone.wrongSub":
     "Não vais ter de improvisar. Toda a comunidade começa com a mesma escala gentil. Podes ajustá-la depois, lá dentro.",
@@ -1448,6 +1582,10 @@ export const communities: Catalog = {
   "start.tint.coral": "Coral quente",
   "start.tint.jade": "Jade calmo",
   "start.tint.plum": "Ameixa profundo",
+  // PRD-146, the wizard's half of the community mark.
+  "start.feeling.avatarLabel": "Uma marca da comunidade",
+  "start.feeling.avatarHint":
+    "Opcional: uma imagem pequena e quadrada mostrada ao lado do nome da tua comunidade. Pelo menos 200 × 200px.",
   "start.feeling.coverLabel": "Uma imagem de capa",
   "start.feeling.coverHint":
     "Opcional: uma foto larga que recebe as pessoas no cartão da tua comunidade. Pelo menos 1200 × 600px.",
@@ -1494,6 +1632,11 @@ export const communities: Catalog = {
   "start.confirm.recap.toneFeeling": "Tom e sentir",
   "start.confirm.recap.sharedValues": "Valores partilhados",
   "start.confirm.sharedValuesCount": "{count} combinados",
+  // PRD-146. The recap rows for the two new fields. An unset value reuses the
+  // existing `start.confirm.notSetYet`.
+  "start.confirm.recap.avatar": "Marca da comunidade",
+  "start.confirm.recap.welcome": "Nota de boas-vindas",
+  "start.confirm.avatarChosen": "Escolhida",
   "start.confirm.recap.tagline": "Frase de assinatura",
   "start.confirm.recap.firstPeople": "Primeiras pessoas",
   "start.confirm.recap.inviting": "A convidar",
@@ -1584,6 +1727,19 @@ export const communities: Catalog = {
   "edit.cancel": "Cancelar",
   "edit.field.name": "Nome",
   "edit.field.tagline": "Frase de assinatura",
+  // PRD-146. The community mark and the welcome note. Both were accepted by
+  // create and update and rendered by the welcome card, and no surface had a
+  // field for either, so neither could ever be set. `mark` rather than
+  // `avatar`: an avatar reads as a person here, and the roster faces sit
+  // beside it on the same card.
+  "edit.field.avatar": "Marca da comunidade",
+  "edit.field.avatarHint":
+    "Uma imagem pequena e quadrada mostrada ao lado do nome da tua comunidade. Pelo menos 200 × 200px.",
+  "edit.field.welcome": "Nota de boas-vindas",
+  "edit.field.welcomeHint":
+    "Mostrada uma vez a cada novo membro, logo a seguir a entrar. Deixa vazio para não haver boas-vindas.",
+  "edit.field.welcomePlaceholder":
+    "Ainda bem que estás aqui. Começa pelos valores partilhados e depois diz olá no Pulso.",
   "edit.field.cover": "Imagem de capa",
   "edit.field.coverHint":
     "Uma foto larga mostrada no cartão da tua comunidade. Pelo menos 1200 × 600px.",
@@ -1602,6 +1758,39 @@ export const communities: Catalog = {
     "Estas etiquetas costumam sobrepor-se, escolhe a que encaixa melhor.",
   "edit.suggestTag.trigger":
     "Não encontras a etiqueta que precisas? Sugere uma",
+  // PRD-140. The invitations shelf: everything a member has been invited to, in
+  // one place, because the notification alone used to lead to a page that
+  // redirected them away with no explanation. `Open` rather than `Accept`:
+  // accepting is the ordinary join, so the house rules are still read on the
+  // way in.
+  "invites.title": "Os teus convites",
+  "invites.intro":
+    "Comunidades que te pediram para entrar. Entrar é sempre decisão tua.",
+  "invites.from": "Convite de {name}",
+  "invites.fromUnknown": "Convite de um moderador",
+  "invites.openCta": "Abrir a comunidade",
+  "invites.acceptAriaLabel": "Abrir {name} para aceitar o convite",
+  "invites.declineAriaLabel": "Recusar o convite para {name}",
+  "invites.empty.title": "Sem convites de momento",
+  "invites.empty.description":
+    "Quando uma comunidade te convidar, o convite fica à tua espera aqui.",
+  // Ver o comentario na versao EN.
+  "edit.suggestTag.closeCta": "Fechar",
+  "edit.suggestTag.log.empty": "Ainda ninguém aqui sugeriu uma etiqueta.",
+  "edit.suggestTag.log.emptyHint":
+    "Tudo o que enviares neste formulário aparece aqui, com o ponto de situação.",
+  "edit.suggestTag.log.errorTitle":
+    "Não conseguimos carregar as vossas sugestões",
+  "edit.suggestTag.log.resolvedOn": "Lida a {date}",
+  "edit.suggestTag.log.sentBy": "Sugerida por {name}",
+  "edit.suggestTag.log.sentOn": "Enviada a {date}",
+  "edit.suggestTag.log.status.pending": "À espera de ser lida",
+  "edit.suggestTag.log.status.resolved": "Lida pela equipa",
+  "edit.suggestTag.log.statusHint":
+    "Lida quer dizer que alguém da equipa da plataforma viu a tua sugestão. A lista de etiquetas é feita à mão, por isso uma etiqueta só aparece depois de ser adicionada.",
+  "edit.suggestTag.log.sub":
+    "O que esta comunidade já pediu e em que ponto está cada sugestão.",
+  "edit.suggestTag.log.title": "Etiquetas sugeridas aqui",
   "edit.suggestTag.title": "Sugerir uma etiqueta",
   "edit.suggestTag.sub":
     "Vamos analisar e podemos adicioná-la à lista selecionada.",
@@ -1613,7 +1802,7 @@ export const communities: Catalog = {
   "edit.suggestTag.cancel": "Cancelar",
   "edit.suggestTag.submit": "Enviar sugestão",
   "edit.suggestTag.submitting": "A enviar…",
-  "edit.suggestTag.successToast": "Obrigado, vamos analisar essa etiqueta.",
+  "edit.suggestTag.successToast": "Obrigade, vamos analisar essa etiqueta.",
   "edit.suggestTag.errorToast":
     "Não foi possível enviar a tua sugestão. Tenta novamente.",
   "edit.rules.add": "Adicionar",

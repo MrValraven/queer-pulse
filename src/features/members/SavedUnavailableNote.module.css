@@ -1,0 +1,30 @@
+/* Sized in em throughout so the whole note tracks the reader's font size, the
+   icon included. See docs/design-system.md on the rem type scale. */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+  margin: 10px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.note svg {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  margin-top: 0.15em;
+  color: var(--ink-40);
+}
+
+.label {
+  display: block;
+  font-weight: 700;
+  color: var(--ink-60);
+}
+
+.hint {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-40);
+}

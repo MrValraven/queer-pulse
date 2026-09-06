@@ -16,6 +16,7 @@ import {
   type GroupMemberView,
 } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import styles from "./MessagesPage.module.css";
 
 interface ConversationPanelProps {
@@ -32,6 +33,13 @@ interface ConversationPanelProps {
   onSendImage?: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
+  ) => void;
+  /** Sends an uploaded document as its own message (PRD-226, from the
+   *  composer's document attach button). `localAttachment` is the upload's
+   *  local blob preview, for the optimistic bubble to render instantly. */
+  onSendDocument?: (
+    attachment: DocumentAttachment,
+    localAttachment?: DocumentAttachment,
   ) => void;
   /** True when the counterpart is blocked — the composer is severed. */
   blocked?: boolean;
@@ -104,6 +112,7 @@ export function ConversationPanel({
   onSend,
   onSendGif,
   onSendImage,
+  onSendDocument,
   blocked = false,
   onBack,
   onRetry,
@@ -144,10 +153,13 @@ export function ConversationPanel({
     setActionTarget,
     deleteTarget,
     setDeleteTarget,
+    deleteForMeTarget,
+    setDeleteForMeTarget,
     reportTarget,
     setReportTarget,
     editingMessageId,
     confirmDelete,
+    confirmDeleteForMe,
     beginEdit,
     submitEdit,
     cancelEdit,
@@ -155,6 +167,7 @@ export function ConversationPanel({
     copyMessage,
     handleReactionToggle,
     deletePending,
+    deleteForMePending,
   } = useMessageActionMenu(active.id);
 
   // Presence for JUST this counterpart — re-renders only on THEIR status flip,
@@ -252,6 +265,7 @@ export function ConversationPanel({
         onSend={onSend}
         onSendGif={onSendGif}
         onSendImage={onSendImage}
+        onSendDocument={onSendDocument}
         blocked={blocked}
         replyDraft={replyDraft}
         onCancelReply={onCancelReply}
@@ -263,6 +277,7 @@ export function ConversationPanel({
         overlays={{
           actionTarget,
           deleteTarget,
+          deleteForMeTarget,
           reportTarget,
           onReactionToggle: handleReactionToggle,
           onSetReply,
@@ -273,9 +288,12 @@ export function ConversationPanel({
           onToggleStar,
           setActionTarget,
           setDeleteTarget,
+          setDeleteForMeTarget,
           setReportTarget,
           onConfirmDelete: confirmDelete,
+          onConfirmDeleteForMe: confirmDeleteForMe,
           deletePending,
+          deleteForMePending,
         }}
         groupModals={{
           active,

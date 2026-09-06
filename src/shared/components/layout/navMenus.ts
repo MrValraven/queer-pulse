@@ -399,9 +399,13 @@ export const NAV_MENUS: MegaMenu[] = [
             labelKey: "shared:megaNav.culture.col.magazine.allIssues",
             href: routes.issues,
           },
+          // PRD-101 — this row used to point at `routes.story`, which
+          // redirects to a demo-only article slug: in a live build it landed
+          // on the "Article not found" wall. The section browse is the
+          // magazine's real live index of published pieces.
           {
-            labelKey: "shared:megaNav.culture.col.magazine.stories",
-            href: routes.story,
+            labelKey: "shared:megaNav.culture.col.magazine.sections",
+            href: routes.magazineSections,
           },
           {
             labelKey: "shared:megaNav.culture.col.magazine.writeForUs",

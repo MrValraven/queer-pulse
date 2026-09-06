@@ -37,6 +37,20 @@ const en: Record<string, string> = {
     "{event} has new details — tap to see what changed.",
   "push:event.cancelled.title": "Event cancelled",
   "push:event.cancelled.body": "{event} has been cancelled.",
+  // ENG-141 — a series cancellation is ONE message covering every date it took
+  // off the calendar. Cancelling a weekly group thirty weeks out used to send
+  // thirty separate pushes in a burst, one per occurrence.
+  //
+  // TWO KEYS, because this catalog is the service worker's and has no CLDR
+  // plural support — `formatPushCopy` does plain `{token}` interpolation, so a
+  // single "{count} later dates" string renders "1 later dates" for a
+  // two-date series. The SENDER picks the key; it is the side that knows the
+  // count. The singular drops the number entirely, since "1" says nothing the
+  // word "next" does not.
+  "push:event.cancelled.seriesBodyOne":
+    "{event} has been cancelled, and so has the next date.",
+  "push:event.cancelled.seriesBody":
+    "{event} has been cancelled, and so have the next {count} dates.",
   "push:safeSpace.vouch.title": "New vouch for your safe space",
   "push:safeSpace.vouch.body": "{name} vouched for {space}.",
   "push:housing.match.title": "A home matches your search",
@@ -44,6 +58,21 @@ const en: Record<string, string> = {
   "push:housing.match.bodyNoArea": "{title} matches a search you saved.",
   "push:topic.newPost.title": "New post in a topic you follow",
   "push:topic.newPost.body": "{name} posted in #{topic}.",
+  // PRD-208: a persona you follow published something.
+  //
+  // NAMES THE PERSONA, NEVER ITS OWNER. A persona is pseudonymous, and the
+  // whole point of an unlinked one is that the human behind it is not
+  // discoverable from it. `{persona}` is the persona's own public display
+  // name; there is no actor, no avatar and no member name anywhere in this
+  // path, and the sender deliberately carries no user id for this type.
+  //
+  // These three MUST stay word-for-word identical to the English fallbacks in
+  // `PushNotificationListener.pushPersonaUpdate`, because iOS renders the
+  // fallback directly and never reads this catalog. A divergence here means
+  // the same notification reads differently depending on the phone.
+  "push:personaUpdate.title": "New work from a persona you follow",
+  "push:personaUpdate.body": "{persona} published something new.",
+  "push:personaUpdate.bodyWithTitle": "{persona} published {itemTitle}.",
   // Shown INSTEAD of the real title/body when the member has turned on
   // "hide previews" (see pushPrivacy.ts). Says something arrived without
   // naming who it is from or what it said.
@@ -128,6 +157,13 @@ const pt: Record<string, string> = {
     "{event} tem novos detalhes — toca para ver o que mudou.",
   "push:event.cancelled.title": "Convívio cancelado",
   "push:event.cancelled.body": "{event} foi cancelado.",
+  // ENG-141 — duas chaves, sem plural CLDR neste catálogo. Ver a nota EN.
+  // A forma escolhida evita também a concordância de género: o sujeito
+  // misturava um título masculino com "datas", que é feminino.
+  "push:event.cancelled.seriesBodyOne":
+    "{event} foi cancelado, e a data seguinte também.",
+  "push:event.cancelled.seriesBody":
+    "{event} foi cancelado, e mais {count} datas seguintes também.",
   "push:safeSpace.vouch.title": "Novo aval para o teu espaço seguro",
   "push:safeSpace.vouch.body": "{name} avalizou {space}.",
   "push:housing.match.title": "Uma casa corresponde à tua procura",
@@ -137,6 +173,11 @@ const pt: Record<string, string> = {
     "{title} corresponde a uma procura que guardaste.",
   "push:topic.newPost.title": "Nova publicação num tópico que segues",
   "push:topic.newPost.body": "{name} publicou em #{topic}.",
+  // PRD-208: ver a nota no bloco EN. Nomeia a persona, nunca quem está
+  // por trás dela.
+  "push:personaUpdate.title": "Novidades de uma persona que segues",
+  "push:personaUpdate.body": "{persona} publicou algo novo.",
+  "push:personaUpdate.bodyWithTitle": "{persona} publicou {itemTitle}.",
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "Tens uma notificação nova.",
   "push:preview.hidden.message": "Tens uma mensagem nova.",

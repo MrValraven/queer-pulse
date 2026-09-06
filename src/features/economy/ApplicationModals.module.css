@@ -641,6 +641,18 @@
 .successBtn {
   animation: riseIn 0.5s var(--ease) 0.34s both;
 }
+/* PRD-242. The one line under a submitted application saying where its outcome
+   will show up. Quieter than `.successLink` because it points at the page the
+   modal is already on rather than somewhere else to go. */
+.successNote {
+  margin-top: 14px;
+  font-size: var(--text-13);
+  color: rgba(var(--cream-rgb), 0.62);
+  line-height: 1.6;
+  max-width: 38ch;
+  margin-inline: auto;
+  animation: riseIn 0.5s var(--ease) 0.4s both;
+}
 .successLink {
   display: inline-block;
   margin-top: 16px;

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 import {
   Button,
@@ -13,10 +13,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
 import { ComposeTagsField } from "./ComposeTagsField";
 import { ForumImageAttach } from "./ForumImageAttach";
-import { usePostImageAttach } from "../communities/usePostImageAttach";
-import { useForumComposerDraft } from "./useForumComposerDraft";
-import { NEW_THREAD_DRAFT_ID } from "./api/forumDrafts.api";
-import { routes } from "../../app/routeMap";
+import { useComposeThreadDraft } from "./useComposeThreadDraft";
 import styles from "./ComposeThreadModal.module.css";
 
 /**
@@ -61,7 +58,11 @@ interface ComposeThreadModalProps {
 }
 
 // Selectable categories — exclude the synthetic "all" bucket.
-const POST_CATS = CATS.filter((c) => c.id !== "all");
+const POST_CATS = CATS.filter((category) => category.id !== "all");
+const DEFAULT_CAT = POST_CATS[0]!.id;
+// Module-level so the identity is stable across renders: a restored draft's
+// stored category is only honoured when it is still one of these.
+const POST_CAT_IDS = POST_CATS.map((category) => category.id);
 
 /** Compose dialog that prepends a new thread, ending in a plum-panel confirmation. */
 export function ComposeThreadModal({
@@ -76,28 +77,31 @@ export function ComposeThreadModal({
   const isAdmin = role === "admin";
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState("");
-  const [cat, setCat] = useState(POST_CATS[0]!.id);
+  const [cat, setCat] = useState(DEFAULT_CAT);
   const [tags, setTags] = useState<string[]>(initialTags);
   const [communitySlug, setCommunitySlug] = useState("");
   const [isOfficial, setIsOfficial] = useState(false);
   const myCommunityOptions = useMyCommunityOptions();
-  // The shared presigned upload pipeline, same hook the community composers
-  // use — no forum-only upload path.
-  const attach = usePostImageAttach();
-  const onRestoreDraft = useCallback(
-    (restored: string) => setBody(restored),
-    [],
-  );
-  // Autosave, through the EXISTING generic drafts module (`/me/drafts`) rather
-  // than a second drafts system. One draft per member for this composer, under
-  // a stable id, so an interrupted post is still there on the next visit.
-  const { status: draftStatus, clearDraft } = useForumComposerDraft({
-    draftId: NEW_THREAD_DRAFT_ID,
-    body,
-    onRestore: onRestoreDraft,
+  // Autosave + the photo attachment (PRD-165). See `useComposeThreadDraft`:
+  // one draft per member, so an interrupted post is there IN FULL next visit.
+  const {
+    attach,
+    stagedImage,
+    status: draftStatus,
+    clearDraft,
+  } = useComposeThreadDraft({
     title,
-    href: routes.forum,
-    kind: t("forum:draft.threadKind"),
+    setTitle,
+    body,
+    setBody,
+    category: cat,
+    setCategory: setCat,
+    communitySlug,
+    setCommunitySlug,
+    tags,
+    setTags,
+    defaultCategory: DEFAULT_CAT,
+    categoryIds: POST_CAT_IDS,
   });
 
   const isPublishing = status === "publishing";
@@ -121,10 +125,10 @@ export function ComposeThreadModal({
             tags,
             ...(communitySlug ? { communitySlug } : {}),
             ...(isAdmin && isOfficial ? { isOfficial: true } : {}),
-            ...(attach.image
+            ...(stagedImage
               ? {
-                  image: attach.image.key,
-                  imagePreviewUrl: attach.image.previewUrl,
+                  image: stagedImage.key,
+                  imagePreviewUrl: stagedImage.previewUrl,
                 }
               : {}),
           });
@@ -159,9 +163,9 @@ export function ComposeThreadModal({
           <Select
             value={cat}
             onChange={(value) => setCat(value ?? cat)}
-            options={POST_CATS.map((c) => ({
-              value: c.id,
-              label: t(c.nameKey),
+            options={POST_CATS.map((option) => ({
+              value: option.id,
+              label: t(option.nameKey),
             }))}
           />
         </label>

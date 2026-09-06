@@ -1,11 +1,13 @@
 // src/features/messages/ComposerInputRow.tsx
 import type { RefObject } from "react";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
+import { DocumentComposerButton } from "./DocumentComposerButton";
 import { GifComposerButton } from "./GifComposerButton";
 import { ImageComposerButton } from "./ImageComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
 import type { ComposerPopover } from "./useComposerPopovers";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import styles from "./MessagesPage.module.css";
 
 interface ComposerInputRowProps {
@@ -18,6 +20,11 @@ interface ComposerInputRowProps {
   onSendImage?: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
+  ) => void;
+  /** Sends an uploaded document as its own message (PRD-226). */
+  onSendDocument?: (
+    attachment: DocumentAttachment,
+    localAttachment?: DocumentAttachment,
   ) => void;
   onInsertShortcut: (sigil: string) => void;
   placeholder: string;
@@ -46,6 +53,7 @@ export function ComposerInputRow({
   onClosePopover,
   onSendGif,
   onSendImage,
+  onSendDocument,
   onInsertShortcut,
   placeholder,
   draft,
@@ -60,6 +68,9 @@ export function ComposerInputRow({
     <div className={styles.composerRow}>
       <div className={styles.composerControls} ref={popoverGroupRef}>
         {onSendImage && <ImageComposerButton onSendImage={onSendImage} />}
+        {onSendDocument && (
+          <DocumentComposerButton onSendDocument={onSendDocument} />
+        )}
         {onSendGif && (
           <GifComposerButton
             onSendGif={onSendGif}

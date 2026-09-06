@@ -11,7 +11,28 @@ export interface LandlordCardDTO {
   hood: string;
   note: string;
   tagline: string;
-  rating: { score: string; count: number };
+  rating: LandlordRatingDTO;
+  /**
+   * PRD-249. Always `true`, served on every card and every detail read.
+   *
+   * It is a constant on the wire rather than a rule each surface has to
+   * remember: this whole directory rates real third parties who have no account
+   * here, from claims nothing can check, so the score may never be rendered as
+   * a bare number. Reading this field is what keeps a new card honest.
+   */
+  isRatingSelfReported: true;
+}
+
+/**
+ * The headline rating and what it is made of. `attestedCount` is how many of
+ * the `count` recommendations carry an author attestation that they rented from
+ * this landlord: always `<= count`, and lower on any landlord with
+ * recommendations written before the attestation was asked for.
+ */
+export interface LandlordRatingDTO {
+  score: string;
+  count: number;
+  attestedCount: number;
 }
 
 export interface RecommendationDTO {
@@ -37,6 +58,38 @@ export interface RecommendationDTO {
   stars: number;
   text: string;
   createdAt: string;
+  /**
+   * PRD-249. Always `true`, on every recommendation. Nothing on the platform
+   * has checked any of this: a landlord is not a member, there is no lease on
+   * file, and no interaction gate was possible (almost every tenancy worth
+   * writing about started off-platform). What varies row to row is
+   * `attestation`; what never varies is that it is unverified.
+   */
+  isSelfAttested: true;
+  /** The author's own claim that they rented from this landlord, and roughly
+   *  when. `null` on a recommendation written before the platform asked. */
+  attestation: RecommendationAttestationDTO | null;
+  /** The named landlord's answer, published by staff on their behalf because
+   *  they have no account here. `null` when there is none. */
+  landlordReply: LandlordReplyDTO | null;
+}
+
+/** Month precision (`YYYY-MM`) on purpose: people remember the season, not the
+ *  day, and a date input would print a precision the author never had. */
+export interface RecommendationAttestationDTO {
+  tenancyStartedOn: string;
+  /** `null` when the author says they still rent from this landlord. */
+  tenancyEndedOn: string | null;
+  attestedAt: string;
+}
+
+/** `publishedByStaff` is always `true` and must be rendered: these words
+ *  reached the page through a staff member, since the landlord holds no
+ *  account to post them from. */
+export interface LandlordReplyDTO {
+  text: string;
+  publishedAt: string;
+  publishedByStaff: true;
 }
 
 export interface LandlordDetailDTO extends LandlordCardDTO {
@@ -60,6 +113,16 @@ export interface CreateLandlordBody {
 export interface RecommendBody {
   stars: number;
   text: string;
+  /**
+   * PRD-249. Must be `true`; the backend refuses anything else. Only somebody
+   * who rented from this landlord may rate them, and this is the author saying
+   * so. It is an attestation, never a verification.
+   */
+  hasRentedFromThisLandlord: true;
+  /** `YYYY-MM`. Required alongside the attestation. */
+  tenancyStartedOn: string;
+  /** `YYYY-MM`, or omitted when the author still rents from them. */
+  tenancyEndedOn?: string;
 }
 export interface IntroRequestBody {
   name: string;

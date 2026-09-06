@@ -63,6 +63,16 @@ export interface ServerToClientEvents {
    *  each member's user room (they aren't in the conversation room yet), so the
    *  client just invalidates `["conversations"]` and re-fetches the DTO. */
   "conversation:new": { conversationId: string };
+  /** `chat.gateway.ts` → `namespace.to('user:'+id).emit('conversation:message', …)`
+   *  — a message landed in a conversation this member has NOT joined the
+   *  socket room for (a different thread open, or elsewhere in the app
+   *  entirely). Fanned to every other still-active participant's `user:<id>`
+   *  room alongside (not instead of) the room-scoped `message:new` above —
+   *  the two overlap for a participant who DOES have the thread open, and
+   *  that overlap is a harmless, idempotent re-affirmation on the client
+   *  (ENG-160). Carries the same hydrated `MessageResponse` as `message:new`
+   *  so the client can patch the conversation-list row without a refetch. */
+  "conversation:message": { conversationId: string; message: MessageResponse };
   /** `namespace.to(conversationId).emit('reaction', …)` — a reaction was added
    *  or removed on a message in this conversation. Carries the reactor's
    *  `userId` (so a client can skip the echo of its OWN reaction, already

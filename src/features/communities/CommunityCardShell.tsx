@@ -12,10 +12,17 @@ import {
 } from "./communityTags.data";
 import styles from "./CommunitiesPage.module.css";
 
+/** The identity mark's rendered edge, in CSS pixels. Mirrors `.cardMarkImg`'s
+ *  own width/height in `CommunitiesPage.module.css`; it is spelled onto the
+ *  `<img>` as well so the browser reserves the box before the file decodes and
+ *  the shoulder cannot reflow under it. */
+const CARD_MARK_PX = 44;
+
 /**
  * The community card's shared visual skeleton: the category-coloured shoulder
- * letterhead (with its optional cover photo, scrim and avatar roster), the
- * serif name, the three-line description, the tag pills, and the footer.
+ * letterhead (with its optional cover photo, scrim, identity mark and avatar
+ * roster), the serif name, the three-line description, the tag pills, and the
+ * footer.
  *
  * Every surface that shows a community as a card renders through this, so the
  * discover grid (`CommunityCard`) and a member's profile pins
@@ -42,6 +49,7 @@ export function CommunityCardShell({
   countLabel,
   activeThisWeek,
   coverImageUrl,
+  avatarImageUrl,
   tags,
   roster,
   badge,
@@ -59,6 +67,14 @@ export function CommunityCardShell({
   /** Omitted where the source carries no activity number (the demo registry). */
   activeThisWeek?: number;
   coverImageUrl?: string | null;
+  /** The community's own square identity mark (PRD-146), hung on the shoulder's
+   *  bottom edge. Absent/null draws NOTHING: no frame, no reserved gap, no
+   *  initials block. The card already carries the name in full one line below,
+   *  so a generated initials tile here would only repeat it, and it would sit in
+   *  the exact spot the roster faces use and so read as one more member. The
+   *  detail hero falls back to an initial because there the mark is the only
+   *  thing in that position. */
+  avatarImageUrl?: string | null;
   tags?: string[];
   /** Faces overlapping the shoulder's bottom edge. Demo-only in practice —
    *  see `CommunityCard`'s `getLiving` lookup. */
@@ -76,6 +92,11 @@ export function CommunityCardShell({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const shownRoster = roster ?? [];
+  // A mark is a plain view-model field on both sides of the mode split: live
+  // cards get it from the card DTO through `cardDtoToCommunity`, the edit
+  // modal's preview from the draft the owner is typing into. Nothing here
+  // reads a demo registry, and a source that carries no mark draws none.
+  const hasMark = Boolean(avatarImageUrl);
 
   const face = (
     <>
@@ -84,6 +105,7 @@ export function CommunityCardShell({
           styles.shoulder,
           styles[type],
           coverImageUrl && styles.hasPhoto,
+          hasMark && styles.hasMark,
         ]
           .filter(Boolean)
           .join(" ")}
@@ -111,6 +133,23 @@ export function CommunityCardShell({
           <span className={styles.type}>{typeLabel}</span>
           {badge}
         </div>
+        {avatarImageUrl && (
+          // Decorative: the card's own accessible name is already the
+          // community's name, one line below this, so labelling the image
+          // would only say it twice to a screen reader. Given explicit pixel
+          // dimensions so the shoulder cannot reflow as it decodes.
+          <span className={styles.cardMark} aria-hidden>
+            <img
+              className={styles.cardMarkImg}
+              src={avatarImageUrl}
+              alt=""
+              width={CARD_MARK_PX}
+              height={CARD_MARK_PX}
+              loading="lazy"
+              referrerPolicy="no-referrer"
+            />
+          </span>
+        )}
         {shownRoster.length > 0 && (
           <div className={styles.cardAvStack}>
             {shownRoster.map((member) => (

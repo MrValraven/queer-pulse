@@ -53,3 +53,24 @@ export function usePersonaCreatorSlug(
   if (!isShared) return profile.slug;
   return query.data?.find((member) => member.isCreator)?.slug;
 }
+
+/**
+ * Whether the signed-in member CREATED this persona, which is the only role the
+ * backend lets delete it (`SubprofilesService.remove` throws `Forbidden` for
+ * every other co-owner). A co-owner leaves instead, via
+ * `DELETE /subprofiles/:id/members/me`.
+ *
+ * Reads the same members query `usePersonaCreatorSlug` does, so gating a Delete
+ * affordance costs no extra request. `undefined` while the answer isn't known:
+ * callers must treat that as "not yet", never as "yes", or a co-owner is handed
+ * a destructive confirmation that can only end in a generic failure toast.
+ */
+export function usePersonaIsCreator(
+  id: string | undefined,
+  memberCount: number,
+): boolean | undefined {
+  const { profile } = useProfileData();
+  const creatorSlug = usePersonaCreatorSlug(id, memberCount);
+  if (!creatorSlug) return undefined;
+  return creatorSlug === profile.slug;
+}

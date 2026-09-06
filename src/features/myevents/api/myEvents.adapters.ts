@@ -152,6 +152,11 @@ export function eventCardToMyEvent(
         ? dto.goingCount >= dto.capacity
         : undefined,
     maybe: dto.myRsvp === "maybe",
+    // The gathering has been called off (PRD-181). The card already knows how
+    // to render this — a cancelled badge, a struck-through row, no day-of
+    // actions — and nothing was ever setting it in live mode, so a cancelled
+    // gathering sat in "Going" looking exactly like one that was still on.
+    cancelled: dto.status === "cancelled",
     series: toMyEventSeries(dto.series, t),
   };
 }

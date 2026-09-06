@@ -153,6 +153,32 @@ export const members: Catalog = {
   "profile.hero.vouchedShort": "Com voto de confiança",
   "profile.hero.withdrawVouchCta": "Retirar voto de confiança",
   "profile.hero.vouchForCta": "Dar voto de confiança a {first}",
+  // Nota de perfil limitado (PRD-203). Uma fronteira respeitada, nunca uma
+  // repreensao a quem visita. O ramo privado NAO promete mais conteudo: um
+  // perfil privado continua privado mesmo para quem tem ligacao.
+  // Nota de reencaminhamento (PRD-204). Diz os DOIS nomes de utilizador, para
+  // que quem seguiu uma ligacao antiga perceba que o endereco mudou.
+  // "Encaminhado" descreve a ligacao, nao quem le.
+  "profile.moved.body":
+    "Seguiste uma ligação para @{oldSlug}. Esse nome de utilizador mudou, e agora leva aqui: @{slug}.",
+  "profile.moved.announcement": "Encaminhado de @{oldSlug} para @{slug}.",
+  "profile.moved.ariaLabel":
+    "Encaminhado a partir de um nome de utilizador antigo",
+  "profile.moved.dismiss": "Dispensar esta nota",
+  "profile.limited.ariaLabel": "Sobre este perfil",
+  "profile.limited.network.title": "{name} partilha mais com quem tem ligação",
+  "profile.limited.network.body":
+    "O resto deste perfil abre-se assim que ficarem ligados.",
+  "profile.limited.private.title": "{name} mantém o perfil privado",
+  "profile.limited.private.body":
+    "Isto é o que toda a gente vê. Ligarem-se não abre o resto, mas permite que troquem mensagens.",
+  "profile.limited.generic.title": "Este perfil tem mais",
+  "profile.limited.generic.body":
+    "{name} partilha o resto com um círculo mais pequeno.",
+  "profile.limited.askToConnect": "Pedir ligação",
+  "profile.limited.answerRequest": "Responder ao pedido de {name}",
+  "profile.limited.requestSent":
+    "Já pediste ligação. {name} vai ver o pedido da próxima vez que vier.",
   "profile.hero.levelLabel": "Nível {number}",
   "profile.hero.badgesChip": "{earned} / {total} emblemas",
   "profile.hero.perksChip": "{count} vantagens",
@@ -490,6 +516,15 @@ export const members: Catalog = {
     "Um rosto conhecido deu-lhes um voto de confiança.",
   "hero.vouch.onlyNumberMattersSelf":
     "Um rosto conhecido deu-te um voto de confiança.",
+  // Ramo só-com-número (PRD-201): quem esconde a lista continua a receber o
+  // número verdadeiro, por isso o herói diz o número em vez de cair no ramo
+  // vazio e afirmar que não há nenhum.
+  "hero.vouch.countOnly_one": "<b>{count} pessoa</b> deu um voto de confiança.",
+  "hero.vouch.countOnly_other":
+    "<b>{count} pessoas</b> deram um voto de confiança.",
+  "hero.vouch.namesHidden": "Os nomes são privados. Só o número é público.",
+  "hero.vouch.namesHiddenSelf":
+    "Só tu vês quem te deu voto de confiança. Quem visita vê só o número.",
   "hero.vouch.emptySelf":
     "Ainda sem votos de confiança. Vão aparecer aqui à medida que quem te conhece juntar o nome. É o único número que importa.",
   "hero.vouch.emptyOther":
@@ -728,9 +763,13 @@ export const members: Catalog = {
   "directory.sort.aToZ": "De A a Z",
   "directory.sort.mostVouched": "Com mais votos de confiança",
   "directory.removeChipLabel": "Remover {label}",
-  "directory.emptyFiltered.title": "Nada corresponde aos teus filtros",
+  // Nome acessivel do campo (PRD-205). Infinitivo "Procurar", a par de
+  // subprofiles:directory.searchAria, para que os dois diretorios combinem.
+  "directory.searchLabel": "Procurar pessoas pelo nome",
+  "directory.searchPlaceholder": "Nome, ou parte de um",
+  "directory.emptyFiltered.title": "Ainda não há nada que corresponda",
   "directory.emptyFiltered.description":
-    "Não há pessoas que cumpram tudo isto agora. Alivia um ou dois filtros e vai aparecer mais gente.",
+    "Ninguém corresponde a esse nome e a esses filtros agora. Experimenta menos letras, ou alivia um filtro, e vai aparecer mais gente.",
   "directory.clearFiltersCta": "Limpar filtros",
   "directory.emptyAll.title": "Ainda não há pessoas aqui",
   "directory.emptyAll.description":
@@ -1084,128 +1123,8 @@ export const members: Catalog = {
   "drafts.bulkBar.selectedCount_other": "<b>{count}</b> selecionados",
   "drafts.bulkBar.deleteCta": "Eliminar selecionados",
   "drafts.bulkBar.cancel": "Cancelar",
-
-  // ── Vocabulário de privacidade das coleções (collections.data.tsx) ─────────
-  "collections.privacy.private": "Privada",
-  "collections.privacy.shared": "Partilhada",
-  "collections.privacy.public": "Pública",
-  "collections.privacy.sharedWithCount_one": "Partilhada com {count}",
-  "collections.privacy.sharedWithCount_other": "Partilhada com {count}",
-
-  // ── Chrome da página de coleções (CollectionsPage) ──────────────────────────
-  "collections.header.eyebrow": "Coleções · pastas para guardados",
-  "collections.header.title": "Coisas a que voltas <em>sempre.</em>",
-  "collections.header.lead":
-    "Itens guardados, agrupados como fizer sentido para ti. As pastas podem ser privadas (padrão), partilhadas com pessoas específicas, ou públicas.",
-  "collections.header.newCta": "+ Nova coleção",
-  "collections.newCard.title": "Nova coleção",
-  "collections.newCard.subtitle": "Agrupa guardados pelo que significam",
-  "collections.recentSaves.heading":
-    "Guardado recentemente · ainda sem coleção",
-  "collections.recentSaves.unfiledCount": "+ {count} por arquivar",
-  "collections.recentSaves.addCta": "+ Adicionar a uma coleção",
-  "collections.toast.created": "Coleção criada",
-  "collections.toast.createError":
-    "Não foi possível criar essa coleção. Tenta de novo.",
-  "collections.toast.addError":
-    "Não foi possível adicionar isso à tua coleção. Tenta de novo.",
-  "collections.toast.removed": "Removido da coleção",
-  "collections.toast.removeError":
-    "Não foi possível remover esse item. Tenta de novo.",
-  "collections.toast.renamed": "Coleção renomeada",
-  "collections.toast.renameError":
-    "Não foi possível renomear essa coleção. Tenta de novo.",
-  "collections.toast.deleted": "Coleção eliminada",
-  "collections.toast.deleteError":
-    "Não foi possível eliminar essa coleção. Tenta de novo.",
-  "collections.newCollection.defaultMeta":
-    "Acabada de criar. Começa a adicionar guardados",
-  "collections.updatedJustNow": "Atualizado agora mesmo",
-  // Card de coleção em modo live (valores vêm do servidor).
-  "collections.live.updated": "Atualizado {time}",
-  "collections.live.itemCount_one": "{count} guardado",
-  "collections.live.itemCount_other": "{count} guardados",
-  "collections.emptyLive.title": "Ainda sem coleções",
-  "collections.emptyLive.description":
-    "Agrupa os artigos, convívios e lugares que guardas em pastas. Cria a tua primeira coleção para começar.",
-
-  // ── Modais de coleções (CollectionsModals) ──────────────────────────────────
-  "collections.modal.defaultDialogLabel": "Diálogo",
-  "collections.modal.close": "Fechar",
-  "collections.modal.newCollection.dialogLabel": "Nova coleção",
-  "collections.modal.newCollection.eyebrow": "Nova coleção",
-  "collections.modal.newCollection.title": "O que estás a <em>reunir?</em>",
-  "collections.modal.newCollection.nameLabel": "Nome da coleção",
-  "collections.modal.newCollection.namePlaceholder":
-    "ex.: Recomendações de Lisboa, Levar à terapia…",
-  "collections.modal.newCollection.visibilityLabel": "Quem pode ver",
-  "collections.modal.newCollection.privateOnlyNote":
-    "As coleções são privadas. Mais ninguém vê o que arquivas aqui.",
-  "collections.modal.newCollection.cancel": "Cancelar",
-  "collections.modal.newCollection.submit": "Criar coleção",
-  "collections.modal.privacyOption.private": "Privada",
-  "collections.modal.privacyOption.shared":
-    "Partilhada com pessoas da comunidade",
-  "collections.modal.privacyOption.public": "Pública",
-  "collections.modal.view.dialogLabel": "Ver coleção",
-  "collections.modal.view.emptyText":
-    "Ainda não há nada aqui. Adiciona guardados a partir da lista abaixo da grelha.",
-  "collections.modal.view.close": "Fechar",
-  "collections.modal.view.removeItem": "Remover da coleção",
-  "collections.modal.view.rename": "Mudar o nome",
-  "collections.modal.view.renameLabel": "Nome da coleção",
-  "collections.modal.view.renameSave": "Guardar",
-  "collections.modal.view.renameCancel": "Cancelar",
-  "collections.modal.view.delete": "Eliminar coleção",
-  "collections.modal.view.deleteConfirm.title": "Eliminar {name}?",
-  "collections.modal.view.deleteConfirm.body":
-    "A coleção desaparece, os guardados ficam. Tudo o que arquivaste aqui continua nos teus guardados.",
-  "collections.modal.view.deleteConfirm.cta": "Eliminar coleção",
-  "collections.modal.add.dialogLabel": "Adicionar a uma coleção",
-  "collections.modal.add.eyebrow": "Adicionar a uma coleção",
-  "collections.modal.add.title": "Onde deve ficar isto?",
-  "collections.modal.add.filing": "A arquivar…",
-  "collections.modal.add.cancel": "Cancelar",
-  "collections.modal.add.success.dialogLabel": "Adicionado à coleção",
-  "collections.modal.add.success.title": "Adicionado à <em>tua coleção.</em>",
-  "collections.modal.add.success.body":
-    "Guardado em <b>{name}</b>. Vais encontrá-lo lá sempre que voltares.",
-  "collections.modal.add.success.done": "Concluído",
-
-  // ── Tipos de cartão guardados por ti (savedByYou.data.ts) ───────────────────
-  "savedByYou.kind.magazine.label": "Revista",
-  "savedByYou.kind.magazine.cta": "Ler",
-  "savedByYou.kind.film.label": "Cinema",
-  "savedByYou.kind.film.cta": "Ver",
-  "savedByYou.kind.job.label": "Trabalho",
-  "savedByYou.kind.job.cta": "Ver vaga",
-  "savedByYou.kind.event.label": "Convívio",
-  "savedByYou.kind.event.cta": "Ver",
-  "savedByYou.kind.post.label": "Conversa",
-  "savedByYou.kind.post.cta": "Abrir conversa",
-  "savedByYou.kind.group.label": "Comunidade",
-  "savedByYou.kind.group.cta": "Abrir",
-  "savedByYou.kind.housing.label": "Habitação",
-  "savedByYou.kind.housing.cta": "Ver anúncio",
-  "savedByYou.kind.flatmate.label": "Colega de casa",
-  "savedByYou.kind.flatmate.cta": "Ver perfil",
-  "savedByYou.kind.landlord.label": "Pessoa proprietária",
-  "savedByYou.kind.landlord.cta": "Ver pessoa proprietária",
-  "savedByYou.kind.listing.label": "Negócio",
-  "savedByYou.kind.listing.cta": "Ver anúncio",
-
-  // ── Chrome de guardados por ti (SavedByYou) ─────────────────────────────────
-  "savedByYou.removeAriaLabel": "Remover {title} dos guardados",
-  "savedByYou.removeTitle": "Remover dos guardados",
-  "savedByYou.heading": "Guardado por ti · em toda a QueerPulse",
-  "savedByYou.empty.title": "Ainda não guardaste nada",
-  "savedByYou.empty.description":
-    "Guarda artigos, filmes, vagas e publicações à medida que exploras. Vão reunir-se aqui para voltares a eles e organizá-los em coleções.",
-  "savedByYou.empty.browseMagazineCta": "Explorar a revista",
-  "savedByYou.empty.exploreCinemaCta": "Explorar o Cinema",
-  "savedByYou.count_one": "{count} guardado",
-  "savedByYou.count_other": "{count} guardados",
-  "savedByYou.toast.removed": "Removido dos guardados",
+  "savedItem.unavailable.label": "Já não está disponível",
+  "savedItem.unavailable.hint": "Podes retirá-lo quando quiseres.",
 
   // ── Espaços (PlacesSection) ──────────────────────────────────────────────────
   // Mesmo vocabulário de estado do registo que "Os teus espaços" acima,
@@ -1472,6 +1391,156 @@ export const members: Catalog = {
   "badges.ledger.emptyTitle": "Ainda sem histórico.",
   "badges.ledger.emptyBody":
     "Cada ponto fica aqui com uma data e uma descrição, para veres sempre de onde veio o teu nível.",
+
+  // Distintivos e razoes do registo de XP (DES-141, DES-143). O backend
+  // guarda IDs de maquina estaveis, persistidos em
+  // recognition_awards.badge_key, por isso as palavras vivem aqui.
+  "badges.ledger.reason.moderationRemoval":
+    "Nova contagem depois de uma remoção pela moderação",
+  "badges.ledger.reason.moderationRemovalWhy":
+    "Existe uma remoção de conteúdo decidida pela moderação ativa na tua conta, por isso o conteúdo removido deixou de contar. Volta a contar na contagem seguinte depois de a decisão ser levantada.",
+  "badges.ledger.reason.rebase": "Pontos reequilibrados",
+  "badges.ledger.reason.rebaseWhy":
+    "Os pontos passaram a vir só de atividade em que outra pessoa participou. Esta linha é a correção única que acertou o teu total.",
+  "badges.ledger.reason.adjustment": "Correção ao teu total",
+  "badges.ledger.reason.adjustmentWhy":
+    "Esta linha foi escrita pela plataforma. Fala com a equipa da comunidade se quiseres saber o detalhe.",
+  "perks.sidebar.explainBody":
+    "As vantagens não são um programa de fidelização. São a forma de quem aparece receber um pouco mais de volta. Cada nível representa algo real: tempo aqui, encontros a que foste, pessoas que ligaste. O que desbloqueias é uma fatia maior do que a plataforma já faz.",
+  "perks.sidebar.suggestLabel":
+    "O que tornaria mais valioso seres membro a longo prazo?",
+  "badges.case.categoryToggleLabel": "Mostrar distintivos de {category}",
+  "badges.category.attendance": "Presença",
+  "badges.category.community": "Comunidade",
+  "badges.category.culture": "Cultura",
+  "badges.category.exploration": "Exploração",
+  "badges.category.hosting": "Organização",
+  "badges.category.milestones": "Marcos",
+  "badges.category.platform": "Plataforma",
+  "badges.catalog.localScout.name": "Explorador do Bairro",
+  "badges.catalog.localScout.locked": "Guarda 3 sítios no diretório Local",
+  "badges.catalog.localScout.earned": "Guardaste 3 sítios no diretório Local",
+  "badges.catalog.wellRead.name": "Boa Leitura",
+  "badges.catalog.wellRead.locked": "Guarda 5 artigos ou recursos",
+  "badges.catalog.wellRead.earned": "Guardaste 5 artigos ou recursos",
+  "badges.catalog.firstGathering.name": "Primeiro Encontro",
+  "badges.catalog.firstGathering.locked": "Vai ao teu primeiro encontro",
+  "badges.catalog.firstGathering.earned": "Foste a um encontro QueerPulse",
+  "badges.catalog.threeCompany.name": "Três é Companhia",
+  "badges.catalog.threeCompany.locked": "Vai a 3 encontros",
+  "badges.catalog.threeCompany.earned": "3 encontros a que foste",
+  "badges.catalog.regularAttendee.name": "Presença Habitual",
+  "badges.catalog.regularAttendee.locked": "Vai a 5 encontros num ano",
+  "badges.catalog.regularAttendee.earned": "5 encontros num ano",
+  "badges.catalog.decade.name": "Aniversário",
+  "badges.catalog.decade.locked": "Sê membro durante 1 ano",
+  "badges.catalog.decade.earned": "Membro há 1 ano",
+  "badges.catalog.connector.name": "Elo de Ligação",
+  "badges.catalog.connector.locked": "Faz 10 ligações",
+  "badges.catalog.connector.earned": "10 ligações feitas",
+  "badges.catalog.vouch.name": "Aval",
+  "badges.catalog.vouch.locked": "Dá o teu aval a um novo membro",
+  "badges.catalog.vouch.earned": "Deste o teu aval a um novo membro",
+  "badges.catalog.threadStarter.name": "Início de Conversa",
+  "badges.catalog.threadStarter.locked": "Começa uma conversa na comunidade",
+  "badges.catalog.threadStarter.earned": "Começaste uma conversa na comunidade",
+  "badges.catalog.networker.name": "Rede Alargada",
+  "badges.catalog.networker.locked": "Liga-te a 50 membros",
+  "badges.catalog.networker.earned": "Ligaste-te a 50 membros",
+  "badges.catalog.contributor.name": "Quem Contribui",
+  "badges.catalog.contributor.locked": "Envia uma história de membro",
+  "badges.catalog.contributor.earned": "Enviaste uma história de membro",
+  "badges.catalog.twoHomes.name": "Duas Casas",
+  "badges.catalog.twoHomes.locked": "Entra numa segunda comunidade",
+  "badges.catalog.twoHomes.earned": "Entraste numa segunda comunidade",
+  "badges.catalog.foundingMember.name": "Membro Fundador",
+  "badges.catalog.foundingMember.locked":
+    "Entra entre os primeiros 500 membros",
+  "badges.catalog.foundingMember.earned": "Entraste entre os primeiros 500",
+  "badges.catalog.sustainer.name": "Com Raízes",
+  "badges.catalog.sustainer.locked": "Sê membro durante 6 meses",
+  "badges.catalog.sustainer.earned": "Membro há 6 meses",
+  "badges.catalog.workReady.name": "Perfil de Trabalho Pronto",
+  "badges.catalog.workReady.locked":
+    "Preenche o teu Perfil de Trabalho (competências e áreas de foco)",
+  "badges.catalog.workReady.earned": "Completaste o Perfil de Trabalho",
+  "badges.catalog.eventHost.name": "Quem Organiza",
+  "badges.catalog.eventHost.locked": "Organiza um encontro QueerPulse",
+  "badges.catalog.eventHost.earned": "Organizaste um encontro QueerPulse",
+  "badges.catalog.serialHost.name": "Organização em Série",
+  "badges.catalog.serialHost.locked": "Organiza 3 encontros aprovados",
+  "badges.catalog.serialHost.earned": "Organizaste 3 encontros aprovados",
+  "badges.catalog.firstSteps.name": "Primeiros Passos",
+  "badges.catalog.firstSteps.locked": "Termina a tua lista de primeiros passos",
+  "badges.catalog.firstSteps.earned": "Terminaste a lista de primeiros passos",
+  "badges.catalog.pride2026.name": "Pride 2026",
+  "badges.catalog.pride2026.locked": "Desfila com o bloco QueerPulse",
+  "badges.catalog.pride2026.earned": "Desfilaste com o bloco QueerPulse",
+  "badges.catalog.firstTable2026.name": "Ano Novo, Primeira Mesa",
+  "badges.catalog.firstTable2026.locked": "Vai ao primeiro encontro do ano",
+  "badges.catalog.firstTable2026.earned": "Foste ao primeiro encontro do ano",
+  "badges.catalog.winterWarmth2026.name": "Calor de Inverno",
+  "badges.catalog.winterWarmth2026.locked":
+    "Leva alguém novo a um encontro de dezembro",
+  "badges.catalog.winterWarmth2026.earned":
+    "Levaste alguém novo a um encontro de dezembro",
+
+  "badges.catalog.pride2026.window": "Aberto até {date}",
+  "badges.catalog.firstTable2026.window": "Só em janeiro",
+  "badges.catalog.winterWarmth2026.window": "Abre a {date}",
+
+  // Os sete degraus da escada de XP. Nada persiste o NOME de um nivel, so o
+  // xp, por isso o numero e o id estavel e as palavras vivem aqui.
+  //
+  // Escritos como um arco por onde se anda, no mesmo registo neutro "Quem .."
+  // e "Com .." dos distintivos, e nenhum flexiona em genero. O nivel 3 e
+  // "Sempre Por Ca" e NAO "Presenca Habitual", que e o distintivo
+  // `regular-attendee`: sao coisas diferentes e tem de se ler como tal.
+  "levels.newcomer": "Quem Chega",
+  "levels.explorer": "À Descoberta",
+  "levels.regular": "Sempre Por Cá",
+  "levels.familiar": "Cara Conhecida",
+  "levels.trusted": "De Confiança",
+  "levels.anchor": "Âncora",
+  "levels.pillar": "Pilar",
+
+  // Escada de vantagens. A lista chegava ao cliente como frases em INGLES, por
+  // isso quem le portugues lia a escada toda em ingles. Passa a levar ids
+  // estaveis, com o ingles como reserva. As chaves de PERK_CATALOG sao
+  // PERSISTIDAS e nunca podem ser renomeadas.
+  "perks.group.available": "Disponível para resgatar",
+  "perks.group.coming": "Chega no Nível {level} · {name}",
+  "perks.group.claimed": "Já resgatadas",
+  "perks.ladder.statusDone": "Concluído",
+  "perks.ladder.statusCurrent": "Atual",
+  "perks.ladder.statusXpAway_one": "falta {count} XP",
+  "perks.ladder.statusXpAway_other": "faltam {count} XP",
+  "perks.ladder.statusLocked": "Bloqueado",
+  "perks.claim.unlocksAt": "Abre no Nível {level} · {name}",
+  "perks.claim.claimedOn": "Resgatado a {date}",
+  "perks.claim.higherAllowanceCta": "Resgatar o limite maior",
+  "perks.claim.higherAllowanceToast":
+    "Resgatado. O teu limite mensal de convites é maior a partir de agora",
+  "perks.category.community": "Comunidade",
+  "perks.category.membership": "Adesão",
+  "perks.catalog.vouchAccess.title": "Acesso a dar aval",
+  "perks.catalog.vouchAccess.desc":
+    "Poderes dar aval a outros membros, um sinal de confiança que os ajuda a destacar-se. Todos os membros ativos têm isto desde o primeiro dia.",
+  "perks.catalog.vouchAccess.autoLabel":
+    "Disponível para todos os membros ativos",
+  "perks.catalog.inviteQuotaLevel4.title": "Mais convites por mês",
+  "perks.catalog.inviteQuotaLevel4.desc":
+    "Resgata e o teu limite mensal de convites passa de {base} para {total}. Os convites renovam-se no primeiro dia de cada mês.",
+  "perks.catalog.inviteQuotaLevel5.title": "O limite mais alto de convites",
+  "perks.catalog.inviteQuotaLevel5.desc":
+    "Resgata e o teu limite mensal de convites passa de {base} para {total}. A comunidade cresce por causa de pessoas como tu.",
+  "perks.base.browseDirectory": "Ver o diretório de membros",
+  "perks.base.joinGatherings": "Ir a encontros e confirmar presença",
+  "perks.base.directMessages": "Falar diretamente com outros membros",
+  "perks.base.saveArticles": "Guardar artigos e recursos",
+  "perks.base.joinCommunities": "Entrar em comunidades",
+  "perks.base.hostGathering": "Organizar um encontro",
+
   "badges.ledger.integrityHeading": "Porque podes confiar nisto",
   "badges.ledger.integrity1Title": "Contado a partir do que já fizeste.",
   "badges.ledger.integrity1Body":
@@ -1479,9 +1548,11 @@ export const members: Catalog = {
   "badges.ledger.integrity2Title": "Cada ponto tem uma linha.",
   "badges.ledger.integrity2Body":
     "Cada aumento entra nesta lista com data e descrição, para o total poder ser conferido com ela.",
-  "badges.ledger.integrity3Title": "Os pontos nunca são retirados.",
+  // Era "Os pontos nunca sao retirados.", uma promessa absoluta mesmo por
+  // cima de uma linha negativa real. DES-141.
+  "badges.ledger.integrity3Title": "Os pontos só são retirados num caso.",
   "badges.ledger.integrity3Body":
-    "O teu total só sobe. Um aval retirado ou uma publicação apagada deixam-no onde estava.",
+    "As tuas edições e o que apagas nunca baixam o total: um aval retirado ou uma publicação que arrumaste deixam-no onde estava. Enquanto uma remoção decidida pela moderação estiver ativa na tua conta, o conteúdo removido deixa de contar, e os convites mensais extra que o teu nível dá vão com ele. Quando a decisão é levantada, a contagem seguinte repõe o que a tua atividade ainda sustenta.",
   "badges.ledger.integrity4Title": "Escolhes o que se vê.",
   "badges.ledger.integrity4Body":
     "Qualquer emblema que ganhes pode ser escondido do teu perfil, um a um. Um emblema escondido fica nesta página para ti.",
@@ -1839,6 +1910,8 @@ export const members: Catalog = {
   "savedLists.shared.count_other": "{count} coisas",
   "savedLists.shared.note":
     "Alguém fez esta lista na QueerPulse e enviou-te o link. Pode desligá-lo quando quiser, e esta página deixa de funcionar quando o fizer.",
+  "savedLists.shared.allUnavailable":
+    "Nenhuma destas coisas pode ser aberta agora. Quem te enviou a lista pode ter uma mais recente.",
   "savedLists.shared.gone.title": "Esta lista não está disponível",
   "savedLists.shared.gone.body":
     "O link pode ter sido desligado, ou pode nunca ter sido real. Pede um link novo a quem to enviou.",

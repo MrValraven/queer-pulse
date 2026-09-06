@@ -6,6 +6,7 @@ import {
   FiLock,
   FiMapPin,
   FiTag,
+  FiVideo,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -56,6 +57,12 @@ function WhereRow({
  * COST is free text the host wrote, rendered and nothing more (LOC-18). There
  * is no payment integration on this platform, so no button, link or sentence
  * on this panel may imply one.
+ *
+ * ONLINE GATHERINGS have no door, so they answer a different question: the
+ * join link, gated by the server on exactly the same rule as the address
+ * (PRD-182). This panel used to render the locked "the exact address is shared
+ * with the people going" row for an online gathering too, which promised a
+ * confirmed attendee a street that was never going to exist.
  */
 export function GatheringWherePanel({
   gathering,
@@ -63,6 +70,8 @@ export function GatheringWherePanel({
   gathering: GatheringDetail;
 }) {
   const { t } = useTranslation();
+  const isOnline = gathering.isOnline === true;
+  const joinLink = gathering.onlineUrl?.trim() ?? "";
   const address = gathering.address?.trim() ?? "";
   const arrivalNotes = gathering.arrivalNotes?.trim() ?? "";
   const cost = gathering.cost?.trim() ?? "";
@@ -89,7 +98,41 @@ export function GatheringWherePanel({
           </WhereRow>
         )}
 
-        {address ? (
+        {isOnline ? (
+          joinLink ? (
+            <WhereRow
+              icon={FiVideo}
+              label={t("gatherings:gathering.where.joinLinkLabel")}
+            >
+              {/* An external video room, so it opens in a new tab and carries
+                  `noreferrer` — the host's meeting URL should not learn which
+                  QueerPulse page an attendee came from. */}
+              <a
+                className={styles.joinLink}
+                href={joinLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {joinLink}
+              </a>
+            </WhereRow>
+          ) : (
+            <WhereRow
+              icon={FiLock}
+              withheld
+              label={t("gatherings:gathering.where.joinLinkLabel")}
+            >
+              {/* Two different absences, said differently. An organiser reading
+                  this knows there is no link because they never added one; a
+                  passer-by knows there is one and that it comes with a seat. */}
+              {t(
+                gathering.viewerIsOrganizer
+                  ? "gatherings:gathering.where.joinLinkMissing"
+                  : "gatherings:gathering.where.joinLinkWithheld",
+              )}
+            </WhereRow>
+          )
+        ) : address ? (
           <WhereRow
             icon={FiMapPin}
             label={t("gatherings:gathering.where.addressLabel")}
@@ -106,7 +149,7 @@ export function GatheringWherePanel({
           </WhereRow>
         )}
 
-        {arrivalNotes && (
+        {!isOnline && arrivalNotes && (
           <WhereRow
             icon={FiCompass}
             label={t("gatherings:gathering.where.arrivalLabel")}

@@ -1,0 +1,28 @@
+/* Sits inside a plum `PageHero`, so every colour is a cream alpha rather than
+   an ink one. Matches the weight of `VisasPage.module.css`'s `.heroNote`, which
+   it sits directly under. */
+.stamp {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 62ch;
+}
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.58);
+}
+.row svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 3px;
+  opacity: 0.75;
+}
+.reviewed {
+  color: rgba(var(--cream-rgb), 0.72);
+}

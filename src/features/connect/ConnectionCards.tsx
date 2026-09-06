@@ -17,10 +17,15 @@ import styles from "./ConnectionsPage.module.css";
 export function CardHead({
   view,
   more,
+  isAccepted,
   onMessage,
 }: {
   view: ConnectionView;
   more?: boolean;
+  /** True on an accepted, unblocked connection: the kebab then offers
+   *  "Remove connection", which is the only state the backend's DELETE
+   *  applies to. Pending and blocked cards leave it out. */
+  isAccepted?: boolean;
   /** Opens the conversation from the kebab; omit where messaging isn't apt. */
   onMessage?: () => void;
 }) {
@@ -47,6 +52,7 @@ export function CardHead({
           slug={view.slug}
           id={view.meta.id}
           name={view.name}
+          isAccepted={isAccepted}
           onMessage={onMessage}
         />
       )}
@@ -195,7 +201,7 @@ export function AllConnectionCard({
         .filter(Boolean)
         .join(" ")}
     >
-      <CardHead view={view} more onMessage={onMessage} />
+      <CardHead view={view} more isAccepted={!blocked} onMessage={onMessage} />
       {blocked && (
         <span className={styles.blockedBadge}>
           {t("connect:card.blockedBadge")}

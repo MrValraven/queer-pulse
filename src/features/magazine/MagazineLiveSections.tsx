@@ -162,7 +162,29 @@ export function MagazineLiveSections() {
             />
           ))}
 
-          {featuredDeck && <LiveFeaturedDeck deck={featuredDeck} />}
+          {featuredDeck && (
+            // PRD-105 — the front shows the NEWEST deck and nothing else, and
+            // neither search, the section browse nor an issue's run order
+            // carries decks, so every older deck used to leave the magazine
+            // the moment a second one published. The heading above the
+            // showcase is the way through to the full index. No `.section`
+            // wrapper class: `.featuredDeck` already carries the bottom
+            // margin, and both would stack it twice.
+            <section>
+              <div className={styles.asHead}>
+                <h2 className={styles.asTitle}>
+                  <Translation
+                    i18nKey="magazine:decks.frontRailTitle"
+                    components={{ em: <em /> }}
+                  />
+                </h2>
+                <Link to={routes.magazineDecks} className={styles.asSeeAll}>
+                  {t("magazine:decks.allCta")} <FiArrowRight aria-hidden />
+                </Link>
+              </div>
+              <LiveFeaturedDeck deck={featuredDeck} />
+            </section>
+          )}
 
           {tailArticles.length > 0 && (
             <section className={styles.section}>
@@ -312,7 +334,11 @@ function LiveArticleCard({ article }: { article: ArticleListItemDTO }) {
   // `ImageSlotTint` itself just for this one call site.
   const imageTint = tint === "default" || tint === "auth" ? "plum" : tint;
   return (
-    <Reveal as={Link} to={`/article?id=${article.slug}`} className={styles.ac}>
+    <Reveal
+      as={Link}
+      to={`${routes.article}?id=${article.slug}`}
+      className={styles.ac}
+    >
       <div className={styles.acImg}>
         <ImageSlot
           tint={imageTint}
@@ -396,9 +422,27 @@ function LiveArchiveSection() {
             to={`${routes.issue}/${issue.number}`}
             className={styles.archiveIssue}
           >
-            <div className={styles.aiCover}>
-              <div className={styles.aiCoverTitle}>{issue.numberLabel}</div>
-            </div>
+            {/* PRD-104 — the desk's uploaded cover, the same art the issue
+                page and the archive tiles now show. Absent (every demo issue,
+                and any live issue the desk never gave a file), the tinted
+                caption tile below is what this row has always shown. */}
+            {issue.coverUrl ? (
+              <ImageSlot
+                className={styles.aiCover}
+                src={issue.coverUrl}
+                focus={issue.coverCrop}
+                alt={issue.cover}
+                placeholder={issue.cover}
+                radius={10}
+                width="100%"
+                height="auto"
+                style={{ aspectRatio: "3 / 4" }}
+              />
+            ) : (
+              <div className={styles.aiCover}>
+                <div className={styles.aiCoverTitle}>{issue.numberLabel}</div>
+              </div>
+            )}
             <div className={styles.aiMonth}>{issue.date}</div>
           </Link>
         ))}

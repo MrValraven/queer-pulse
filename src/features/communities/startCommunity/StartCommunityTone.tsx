@@ -2,14 +2,18 @@ import { useState } from "react";
 import { FiCheck, FiPlus } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { ENFORCEMENT_LADDER, RULE_PRESET_KEYS } from "./startCommunity.data";
+import {
+  ENFORCEMENT_LADDER,
+  MAX_WELCOME_MESSAGE_LENGTH,
+  RULE_PRESET_KEYS,
+} from "./startCommunity.data";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
 
 /** Chapter 5 — Tone: the covenant, plus how the group holds it. */
 export function StepTone({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
-  const { draft, toggleRule, addRule } = form;
+  const { draft, set, toggleRule, addRule } = form;
   const [custom, setCustom] = useState("");
 
   // Preset keys first (in their canonical order — a stable, language-
@@ -74,6 +78,29 @@ export function StepTone({ form }: { form: CommunityForm }) {
         <Button variant="ghost" onClick={add} disabled={!custom.trim()}>
           <FiPlus size={15} aria-hidden /> {t("communities:start.tone.addCta")}
         </Button>
+      </div>
+
+      <div className={styles.groupH}>
+        {t("communities:start.tone.welcomeHeading")}
+      </div>
+      <p className={styles.groupSub}>
+        {t("communities:start.tone.welcomeSub")}
+      </p>
+      <div className={styles.field}>
+        <label htmlFor="sc-welcome">
+          {t("communities:start.tone.welcomeLabel")}
+        </label>
+        <textarea
+          id="sc-welcome"
+          className={styles.textarea}
+          placeholder={t("communities:start.tone.welcomePlaceholder")}
+          value={draft.welcomeMessage}
+          maxLength={MAX_WELCOME_MESSAGE_LENGTH}
+          onChange={(event) => set({ welcomeMessage: event.target.value })}
+        />
+        <span className={styles.hint}>
+          {t("communities:start.tone.welcomeHint")}
+        </span>
       </div>
 
       <div className={styles.groupH}>

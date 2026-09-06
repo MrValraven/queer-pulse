@@ -98,6 +98,12 @@ const PartnerDetailPage = lazyNamed(
   () => import("./PartnerDetailPage"),
   "PartnerDetailPage",
 );
+// PRD-263. An approved partner maintaining its own public profile. Lives under
+// `/account/*`, so the existing member gate covers it.
+const PartnerProfileEditPage = lazyNamed(
+  () => import("./PartnerProfileEditPage"),
+  "PartnerProfileEditPage",
+);
 const ActivismPage = lazyNamed(() => import("./ActivismPage"), "ActivismPage");
 const PlatformsPage = lazyNamed(
   () => import("./PlatformsPage"),
@@ -162,6 +168,10 @@ export function marketingRoutes() {
       <Route
         path={routes.partnerApply}
         element={<SubmitPartnerApplicationPage />}
+      />
+      <Route
+        path={routes.partnerProfileEdit}
+        element={<PartnerProfileEditPage />}
       />
       <Route
         path={`${routes.partners}/:slug`}

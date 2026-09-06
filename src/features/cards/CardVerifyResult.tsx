@@ -3,6 +3,7 @@ import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CardVerdictBanner } from "./CardVerdictBanner";
+import { cardRoleLabelKey } from "./cardRoles";
 import { STATUS_ICON } from "./cardVerify.data";
 import type { CardVerificationDTO } from "./api/cards.api";
 import styles from "./CardVerifyPage.module.css";
@@ -54,7 +55,13 @@ export function CardVerifyResult({
         <dl className={styles.meta}>
           <div>
             <dt>{t("cards:verify.role")}</dt>
-            <dd>{t(`cards:role.${verification.role}`)}</dd>
+            {/* Never interpolate the wire value into the key. The roster's
+                roles are snake_case on the wire (`co_owner`) and camelCase in
+                the catalog (`role.coOwner`), so building the key by hand
+                printed the literal `cards:role.co_owner` at the door.
+                `cardRoleLabelKey` owns that mapping for every card face and
+                falls back to `role.member` for a value it does not know. */}
+            <dd>{t(cardRoleLabelKey(verification.role))}</dd>
           </div>
           <div>
             <dt>{t("cards:verify.serial")}</dt>

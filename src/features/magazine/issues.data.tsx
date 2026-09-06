@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 
 export type Tint = "a" | "b" | "c" | "d";
 
@@ -9,7 +10,15 @@ export interface Issue {
   title: ReactNode;
   date: string;
   tint: Tint;
+  /** Caption for the cover slot, and the label a tile shows when there is no
+   *  cover art to show. */
   cover: string;
+  /** PRD-104 — the desk's uploaded cover art. Absent on the demo mock (the
+   *  prototype never shipped cover files), where the tinted caption tile below
+   *  stays exactly as it was. */
+  coverUrl?: string | null;
+  /** PRD-104 — the saved reframe for `coverUrl`, applied as a FOCAL POINT. */
+  coverCrop?: CropRect;
   dek: string;
   meta: { season: string; detail: string };
 }

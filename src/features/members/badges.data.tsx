@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { FiCheck } from "react-icons/fi";
 import { currentUser, fullName } from "./data/members";
 
 export type BadgeRarity = "common" | "rare" | "legendary";
@@ -78,12 +77,35 @@ export interface LadderPill {
 
 export type PerkRowState = "achieved" | "current" | "locked";
 
+/** One capability named on a level's ladder row. `id` is a baseline
+ *  capability id (`BASE_PERKS_BY_LEVEL`) or a claimable perk's catalogue key;
+ *  `label` is the English fallback for an id this build does not know. See
+ *  `perkCatalog.data.ts`. */
+export interface PerkLadderEntry {
+  id: string;
+  label: string;
+}
+
+/**
+ * How a ladder row's status reads. `xp-away` carries the gap in `xpAway`.
+ *
+ * `locked` is DEMO-ONLY: the live backend always knows how much XP is left,
+ * so it only ever sends `done`, `current` or `xp-away`. The prototype's top
+ * two rungs say a plain "Locked" instead, and this keeps that reading the way
+ * it always has without inventing a number the demo never computed.
+ */
+export type PerkLadderStatusKind = "done" | "current" | "xp-away" | "locked";
+
 export interface PerkLadderRow {
   number: number;
   name: string;
   state: PerkRowState;
-  perks: string[];
-  status: ReactNode;
+  perks: PerkLadderEntry[];
+  statusKind: PerkLadderStatusKind;
+  /** XP still to go, set only when `statusKind` is `xp-away`. */
+  xpAway?: number;
+  /** English fallback for the status label. */
+  status: string;
 }
 
 /** Total badges still to discover (more exist in the catalogue than are shown). */
@@ -127,61 +149,58 @@ export const perksLadder: PerkLadderRow[] = [
     number: 1,
     name: "Newcomer",
     state: "achieved",
-    status: (
-      <>
-        <FiCheck /> Done
-      </>
-    ),
+    statusKind: "done",
+    status: "Done",
     perks: [
-      "Browse the member directory",
-      "Join gatherings & RSVP",
-      "Message other members directly",
-      "Save articles & resources",
-      "Join communities",
-      "Host a gathering",
-      "Vouch access",
+      { id: "browse-directory", label: "Browse the member directory" },
+      { id: "join-gatherings", label: "Join gatherings & RSVP" },
+      { id: "direct-messages", label: "Message other members directly" },
+      { id: "save-articles", label: "Save articles & resources" },
+      { id: "join-communities", label: "Join communities" },
+      { id: "host-gathering", label: "Host a gathering" },
+      { id: "vouch-access", label: "Vouch access" },
     ],
   },
   {
     number: 2,
     name: "Explorer",
     state: "achieved",
-    status: (
-      <>
-        <FiCheck /> Done
-      </>
-    ),
+    statusKind: "done",
+    status: "Done",
     perks: [],
   },
   {
     number: 3,
     name: "Regular",
     state: "achieved",
-    status: (
-      <>
-        <FiCheck /> Done
-      </>
-    ),
+    statusKind: "done",
+    status: "Done",
     perks: [],
   },
   {
     number: 4,
     name: "Familiar",
     state: "current",
+    statusKind: "current",
     status: "Current",
-    perks: ["More invites each month"],
+    perks: [{ id: "invite-quota-level-4", label: "More invites each month" }],
   },
   {
     number: 5,
     name: "Trusted",
     state: "locked",
+    statusKind: "xp-away",
+    xpAway: 320,
     status: "320 XP away",
-    perks: ["The highest invite allowance"],
+    perks: [
+      { id: "invite-quota-level-5", label: "The highest invite allowance" },
+    ],
   },
   {
     number: 6,
     name: "Anchor",
     state: "locked",
+    statusKind: "locked",
     status: "Locked",
     perks: [],
   },
@@ -189,6 +208,7 @@ export const perksLadder: PerkLadderRow[] = [
     number: 7,
     name: "Pillar",
     state: "locked",
+    statusKind: "locked",
     status: "Locked",
     perks: [],
   },

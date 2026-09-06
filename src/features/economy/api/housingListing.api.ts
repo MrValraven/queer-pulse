@@ -79,6 +79,9 @@ export interface HousingListingDTO {
   timezone: string;
   area: string;
   rentEuros: number;
+  /** Up-front deposit in whole euros, or null when the lister stated none.
+   * Null is UNKNOWN: render it as "not stated", never as "no deposit". */
+  depositEuros: number | null;
   /** Bedroom count (0 = studio), or null when the lister didn't set it. */
   bedrooms: number | null;
   billsIncluded: boolean;
@@ -111,6 +114,18 @@ export interface HousingListingDTO {
   preciseLongitude: number | null;
   addressLine: string | null;
   locationPrecision: "area" | "exact";
+  /**
+   * Whether YOU have passed the address-privacy gate: you own the listing, you
+   * and the lister are connected, or the lister accepted your viewing request.
+   *
+   * Distinct from `locationPrecision`, which says what you are HOLDING rather
+   * than what you are ENTITLED to. The two disagree in a real case: an unlocked
+   * viewer on a listing whose lister never filled in an address gets
+   * `locationPrecision: "area"` with `isLocationUnlocked: true`. Render that as
+   * "the lister has not added an exact address", never as "connect to see it" —
+   * they already did.
+   */
+  isLocationUnlocked: boolean;
 }
 
 /** The full directory-browse filter set — mirrors the backend's
@@ -127,7 +142,16 @@ export interface HousingListingFilters {
   bedroomsMin?: number;
   billsIncluded?: boolean;
   hasAccessibilityInfo?: boolean;
+  /** Carries the `Furnished` chip in `features` (case-insensitive, whole
+   * entry). */
+  furnished?: boolean;
+  /** Carries the `Pets welcome` chip in `features` (case-insensitive, whole
+   * entry). */
+  petsWelcome?: boolean;
   verifiedOnly?: boolean;
+  /** Maximum up-front deposit in euros. A listing that stated no deposit is
+   * EXCLUDED, because an unstated deposit is unknown rather than zero. */
+  depositMax?: number;
   /** Move-in-by date (YYYY-MM-DD): listings available on/before it, plus those
    * with no set date. */
   availableBy?: string;
@@ -154,7 +178,24 @@ export interface CreateHousingListingBody {
   city?: string;
   /** The neighbourhood, kept separate from the city above. */
   area?: string;
+  /**
+   * The full street address. PRIVATE: the backend hands it out only to the
+   * lister, a moderator, a connected member, or someone whose viewing the
+   * lister accepted. It never appears on browse. Send `""` to clear a stored
+   * address (that also drops the exact pin derived from it).
+   */
+  addressLine?: string;
   rentEuros: number;
+  /**
+   * Up-front deposit in whole euros. `null` is "not stated", which is never
+   * read as zero, and it is what a blank field sends.
+   *
+   * `null` rather than an omitted key on purpose. `UpdateHousingListingBody` is
+   * a `Partial` of this shape and the PATCH applies only the keys it receives,
+   * so an omitted blank would leave the previously stored deposit in place and
+   * a lister could never clear one. Same reasoning as `addressLine` above.
+   */
+  depositEuros?: number | null;
   bedrooms?: number;
   blurb?: string;
   description?: string;
@@ -204,7 +245,11 @@ export async function getHousingListings(
     query.set("bedroomsMin", String(filters.bedroomsMin));
   if (filters.billsIncluded) query.set("billsIncluded", "true");
   if (filters.hasAccessibilityInfo) query.set("hasAccessibilityInfo", "true");
+  if (filters.furnished) query.set("furnished", "true");
+  if (filters.petsWelcome) query.set("petsWelcome", "true");
   if (filters.verifiedOnly) query.set("verifiedOnly", "true");
+  if (filters.depositMax !== undefined)
+    query.set("depositMax", String(filters.depositMax));
   if (filters.availableBy) query.set("availableBy", filters.availableBy);
   if (filters.page) query.set("page", String(filters.page));
   const qs = query.toString();

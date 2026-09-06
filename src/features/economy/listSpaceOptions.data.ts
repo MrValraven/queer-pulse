@@ -20,9 +20,22 @@ export interface ListSpaceChipOption {
   labelKey: string;
 }
 
+/**
+ * The two feature chips the housing board also FILTERS on, named so the
+ * filter code never restates the literal. Changing either string changes what
+ * matches, and the backend holds the same pair in
+ * `queerpulse-backend/src/housing-listings/housing-features.ts`: keep the four
+ * values in step.
+ */
+export const HOUSING_FURNISHED_FEATURE = "Furnished";
+export const HOUSING_PETS_WELCOME_FEATURE = "Pets welcome";
+
 /** What the home has. Stored in `features`. */
 export const LIST_SPACE_FEATURE_OPTIONS: ListSpaceChipOption[] = [
-  { value: "Furnished", labelKey: "economy:listSpace.feature.furnished" },
+  {
+    value: HOUSING_FURNISHED_FEATURE,
+    labelKey: "economy:listSpace.feature.furnished",
+  },
   { value: "Natural light", labelKey: "economy:listSpace.feature.light" },
   { value: "Balcony", labelKey: "economy:listSpace.feature.balcony" },
   { value: "Outdoor space", labelKey: "economy:listSpace.feature.outdoor" },
@@ -35,7 +48,10 @@ export const LIST_SPACE_FEATURE_OPTIONS: ListSpaceChipOption[] = [
   { value: "Private bathroom", labelKey: "economy:listSpace.feature.bathroom" },
   { value: "Shared kitchen", labelKey: "economy:listSpace.feature.kitchen" },
   { value: "Bike storage", labelKey: "economy:listSpace.feature.bike" },
-  { value: "Pets welcome", labelKey: "economy:listSpace.feature.pets" },
+  {
+    value: HOUSING_PETS_WELCOME_FEATURE,
+    labelKey: "economy:listSpace.feature.pets",
+  },
   { value: "Quiet street", labelKey: "economy:listSpace.feature.quiet" },
 ];
 

@@ -2,6 +2,7 @@ import { FiCheck } from "react-icons/fi";
 import { Button, Modal } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { WriterAssignmentDto } from "../../api/writerWorkspace.api";
+import { deskDateText } from "../../magazineFormat";
 import { KV } from "../KV";
 import pieceStyles from "../pieceTabs.module.css";
 import modalStyles from "../DeskModals.module.css";
@@ -22,7 +23,7 @@ export function BriefDetailModal({
   assignment,
   onClose,
 }: BriefDetailModalProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const hasBrief =
     assignment.note.length > 0 ||
     assignment.wants.length > 0 ||
@@ -77,7 +78,10 @@ export function BriefDetailModal({
             />
             <KV
               label={t("magazine:writer.brief.commissionedOnLabel")}
-              value={assignment.commissionedOn}
+              // `brief.commissionedOn` is free text an editor typed, so it can
+              // be either a date-picker value or already-human wording;
+              // `deskDateText` formats the first and returns the second as is.
+              value={deskDateText(assignment.commissionedOn, language)}
             />
           </div>
 

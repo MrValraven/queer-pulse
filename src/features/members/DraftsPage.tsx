@@ -57,6 +57,21 @@ function DraftRowSkeleton() {
   );
 }
 
+/**
+ * Gives a server-backed draft its way back to the composer it came from.
+ *
+ * `/me/drafts` rows arrive with `actions: []` — the action list is client-only
+ * presentation that the DTO never carried (see `dtoToDraft`) — so a real draft
+ * rendered with no control at all, and the only route back to the member's
+ * words was the title link. Any draft that knows where it came from now gets
+ * the same "Resume" the mock rows have, which `runAction` navigates to. A draft
+ * with its own actions, or with nowhere to go, is left exactly as it was.
+ */
+function withResumeAction(draft: Draft): Draft {
+  if (draft.actions.length > 0 || !draft.href) return draft;
+  return { ...draft, actions: [{ label: "Resume", variant: "primary" }] };
+}
+
 export function DraftsPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -88,12 +103,13 @@ export function DraftsPage() {
   // are demo-only — live mode shows just the member's real drafts.
   const base = useMemo(() => {
     return [...userDrafts, ...(demoMode ? DRAFTS : [])]
-      .filter((d) => !hidden.has(d.id))
-      .map((d): Draft =>
-        kept.has(d.id)
-          ? { ...d, status: "draft", deadlineDays: null, meta: keptMeta }
-          : d,
-      );
+      .filter((draft) => !hidden.has(draft.id))
+      .map((draft): Draft =>
+        kept.has(draft.id)
+          ? { ...draft, status: "draft", deadlineDays: null, meta: keptMeta }
+          : draft,
+      )
+      .map(withResumeAction);
   }, [userDrafts, hidden, kept, demoMode, keptMeta]);
 
   const counts = useMemo(() => countByCategory(base), [base]);

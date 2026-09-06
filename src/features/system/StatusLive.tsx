@@ -40,13 +40,16 @@ export function StatusLive() {
   if (isLoading) {
     return (
       <section className={`wrap ${styles.section}`} aria-busy="true">
-        <SkeletonLine height={96} style={{ borderRadius: 18 }} />
+        <SkeletonLine
+          height={96}
+          style={{ borderRadius: "var(--radius-18)" }}
+        />
         <div className={styles.skeletonRows}>
           {[0, 1, 2, 3].map((rowIndex) => (
             <SkeletonLine
               key={rowIndex}
               height={56}
-              style={{ borderRadius: 14 }}
+              style={{ borderRadius: "var(--radius-14)" }}
             />
           ))}
         </div>

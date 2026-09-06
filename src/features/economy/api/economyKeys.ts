@@ -98,6 +98,19 @@ export const economyKeys = {
   myGroupListings: (slug: string | undefined, demoMode: boolean) =>
     ["my-group-listings", slug, demoMode] as const,
 
+  // The caller's OWN co-op applications, across every co-op (PRD-242) — read by
+  // `useMyCoopJoinRequests`; invalidated after a successful ask-to-join so the
+  // new pending row comes back from the server rather than from a guess.
+  myCoopJoinRequestsRoot: ["my-coop-join-requests"] as const,
+  myCoopJoinRequests: (demoMode: boolean) =>
+    ["my-coop-join-requests", demoMode] as const,
+
+  // The caller's OWN group applications, across every group (PRD-242) — read by
+  // `useMyGroupJoinRequests`; invalidated after a successful ask-to-join.
+  myGroupJoinRequestsRoot: ["my-group-join-requests"] as const,
+  myGroupJoinRequests: (demoMode: boolean) =>
+    ["my-group-join-requests", demoMode] as const,
+
   // A job's applications, poster-side (BE-HSG-16) — read by
   // `useJobApplications`; patched in place by the decide mutation.
   jobApplications: (slug: string | undefined, demoMode: boolean) =>

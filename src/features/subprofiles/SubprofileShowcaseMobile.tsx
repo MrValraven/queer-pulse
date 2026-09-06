@@ -77,7 +77,16 @@ export function SubprofileShowcaseMobile({
       <div className={styles.mobileAccordion}>
         <SubprofileFeatureCard
           persona={persona}
-          href={nestedPersonaPath(ownerSlug, persona.slug)}
+          // Addressed by the persona's OWN `ownerSlug`, which the server
+          // resolves per persona to its CREATOR's profile slug. Same rule as
+          // the desktop path in `SubprofileShowcase`: a co-owned persona shows
+          // on every co-owner's profile while the nested route resolves
+          // `slug` + creator only, so building the link from whichever profile
+          // is being viewed 404s, and, where that co-owner has a persona of
+          // their own under the same slug, opens the OTHER persona. The
+          // `ownerSlug` prop stays as the fallback for the self view, whose
+          // owner list carries no per-persona owner.
+          href={nestedPersonaPath(persona.ownerSlug ?? ownerSlug, persona.slug)}
           ownerControls={
             canEdit ? (
               <SubprofileEditButton subprofileId={meta?.id ?? persona.id} />
@@ -113,7 +122,12 @@ export function SubprofileShowcaseMobile({
           >
             <SubprofileFeatureCard
               persona={persona}
-              href={nestedPersonaPath(ownerSlug, persona.slug)}
+              // Per-persona creator slug, same rule as the single-persona
+              // branch above and as the desktop hero.
+              href={nestedPersonaPath(
+                persona.ownerSlug ?? ownerSlug,
+                persona.slug,
+              )}
               ownerControls={
                 canEdit ? (
                   <SubprofileEditButton subprofileId={meta?.id ?? persona.id} />

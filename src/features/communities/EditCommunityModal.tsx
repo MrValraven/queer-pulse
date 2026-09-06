@@ -10,6 +10,7 @@ import {
   ACCESS_OPTIONS,
   CATEGORY_OPTIONS,
   FEATURE_OPTIONS,
+  MAX_WELCOME_MESSAGE_LENGTH,
 } from "./startCommunity/startCommunity.data";
 import { MAX_COMMUNITY_TAGS } from "./communityTags.data";
 import { CommunityTagPicker } from "./CommunityTagPicker";
@@ -98,6 +99,12 @@ export function EditCommunityModal({
     // sending that is fine; clearing sends "".
     if (draft.coverImageUrl === initialDraft.coverImageUrl) {
       delete dto.coverImageUrl;
+    }
+    // The avatar carries the same ownership caveat as the cover above, for the
+    // same reason: an unchanged value is the ORIGINAL uploader's storage key,
+    // and replaying it is what turns a moderator's unrelated edit into a 403.
+    if (draft.avatarImageUrl === initialDraft.avatarImageUrl) {
+      delete dto.avatarImageUrl;
     }
     updateCommunity.mutate(
       { slug, dto },
@@ -242,6 +249,20 @@ function EditCommunityFields({
         />
       </FormField>
 
+      <FormField
+        label={t("communities:edit.field.avatar")}
+        helper={t("communities:edit.field.avatarHint")}
+      >
+        <ImageUploadField
+          kind="community-avatar"
+          circle
+          value={draft.avatarImageUrl}
+          onChange={(avatarImageUrl) => set({ avatarImageUrl })}
+          size={112}
+          placeholder={draft.name || t("communities:edit.field.avatar")}
+        />
+      </FormField>
+
       <FormField label={t("communities:edit.field.type")} required>
         <Select
           value={draft.type}
@@ -282,6 +303,18 @@ function EditCommunityFields({
             value: option.tier,
             label: t(option.nameKey),
           }))}
+        />
+      </FormField>
+
+      <FormField
+        label={t("communities:edit.field.welcome")}
+        helper={t("communities:edit.field.welcomeHint")}
+      >
+        <textarea
+          value={draft.welcomeMessage}
+          maxLength={MAX_WELCOME_MESSAGE_LENGTH}
+          placeholder={t("communities:edit.field.welcomePlaceholder")}
+          onChange={(event) => set({ welcomeMessage: event.target.value })}
         />
       </FormField>
 

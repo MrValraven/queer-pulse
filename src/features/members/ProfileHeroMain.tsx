@@ -13,6 +13,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { type MemberProfile } from "./data/memberProfiles";
 import { useRecognition } from "./api/useRecognition";
+import { levelNameKeyFor } from "./levelLadder.data";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { ProfileBioLanguageToggle } from "./ProfileBioLanguageToggle";
@@ -224,6 +225,10 @@ export function ProfileHeroMain({
 function HeroRecognition() {
   const { t } = useTranslation();
   const { level, badges, perks, hasRealData } = useRecognition();
+  // The ladder's words are owned by the frontend and keyed on the level
+  // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
+  // own English name.
+  const levelNameKey = levelNameKeyFor(level.level);
   // Until real recognition data lands in live mode, skeleton the chips rather
   // than flash the demo placeholder's fictional level/badge/perk counts.
   if (!hasRealData) {
@@ -243,7 +248,7 @@ function HeroRecognition() {
         className={`${styles.heroRecogChip} ${styles.accent}`}
       >
         {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
-        {level.name}
+        {levelNameKey ? t(levelNameKey) : level.name}
       </Link>
       <Link to={routes.badges} className={styles.heroRecogChip}>
         {t("members:profile.hero.badgesChip", {
@@ -282,6 +287,10 @@ function HeroRecognition() {
 function OtherMemberRecognition({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { level, badges, hasRealData } = useRecognition(slug);
+  // The ladder's words are owned by the frontend and keyed on the level
+  // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
+  // own English name.
+  const levelNameKey = levelNameKeyFor(level.level);
   if (!hasRealData) {
     return (
       <div className={styles.heroRecog} aria-hidden>
@@ -295,7 +304,7 @@ function OtherMemberRecognition({ slug }: { slug: string }) {
     <div className={styles.heroRecog}>
       <span className={`${styles.heroRecogChip} ${styles.accent}`}>
         {t("members:profile.hero.levelLabel", { number: level.level })} ·{" "}
-        {level.name}
+        {levelNameKey ? t(levelNameKey) : level.name}
       </span>
       <span className={styles.heroRecogChip}>
         {t("members:profile.hero.badgesChip", {

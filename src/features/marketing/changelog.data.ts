@@ -90,6 +90,1078 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "a-safe-space-badge-has-to-be-earned",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("a-safe-space-badge-has-to-be-earned"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safeSpaces",
+          to: routes.safeSpaces,
+        },
+      },
+      {
+        id: "rooms-in-a-vetted-group-are-for-its-members",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("rooms-in-a-vetted-group-are-for-its-members"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housingGroups,
+        },
+      },
+      {
+        id: "a-viewing-that-tells-you-what-happened",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("a-viewing-that-tells-you-what-happened"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housingViewings",
+          to: routes.housingViewings,
+        },
+      },
+      {
+        id: "the-exact-address-once-you-connect",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("the-exact-address-once-you-connect"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "an-answer-on-your-housing-application",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("an-answer-on-your-housing-application"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "filter-for-pets-furnishing-and-deposit",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("filter-for-pets-furnishing-and-deposit"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "a-warning-before-your-listing-expires",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("a-warning-before-your-listing-expires"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "landlord-recommendations-say-what-they-are",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("landlord-recommendations-say-what-they-are"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "counts-and-dates-you-can-trust",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("counts-and-dates-you-can-trust"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "reporting-without-an-account",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("reporting-without-an-account"),
+        tag: { labelKey: "marketing:changelog.tag.report", to: routes.report },
+      },
+      {
+        id: "report-from-where-you-are",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("report-from-where-you-are"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "a-receipt-when-you-report",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("a-receipt-when-you-report"),
+        tag: { labelKey: "marketing:changelog.tag.report", to: routes.report },
+      },
+      {
+        id: "every-decision-carries-a-reason",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("every-decision-carries-a-reason"),
+      },
+      {
+        id: "appeal-dates-you-can-hold-us-to",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("appeal-dates-you-can-hold-us-to"),
+        tag: {
+          labelKey: "marketing:changelog.tag.appealOutcome",
+          to: routes.appealOutcome,
+        },
+      },
+      {
+        id: "help-centre-search",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("help-centre-search"),
+        tag: { labelKey: "marketing:changelog.tag.help", to: routes.help },
+      },
+      {
+        id: "guides-and-partners-without-signing-in",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("guides-and-partners-without-signing-in"),
+        tag: {
+          labelKey: "marketing:changelog.tag.glossary",
+          to: routes.glossary,
+        },
+      },
+      {
+        id: "a-code-to-follow-your-concern",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("a-code-to-follow-your-concern"),
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
+      },
+      {
+        id: "the-decision-log-can-grow",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-decision-log-can-grow"),
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
+      },
+      {
+        id: "partners-keep-their-own-page",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("partners-keep-their-own-page"),
+        tag: {
+          labelKey: "marketing:changelog.tag.partners",
+          to: routes.partners,
+        },
+      },
+      {
+        id: "one-way-to-apply-as-a-partner",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("one-way-to-apply-as-a-partner"),
+        tag: {
+          labelKey: "marketing:changelog.tag.partners",
+          to: routes.partners,
+        },
+      },
+      {
+        id: "the-glossary-reads-in-portuguese",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-glossary-reads-in-portuguese"),
+        tag: {
+          labelKey: "marketing:changelog.tag.glossary",
+          to: routes.glossary,
+        },
+      },
+      {
+        id: "suggest-a-glossary-term",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("suggest-a-glossary-term"),
+        tag: {
+          labelKey: "marketing:changelog.tag.glossary",
+          to: routes.glossary,
+        },
+      },
+      {
+        id: "reach-the-team-behind-an-opportunity",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("reach-the-team-behind-an-opportunity"),
+        tag: {
+          labelKey: "marketing:changelog.tag.volunteer",
+          to: routes.volunteer,
+        },
+      },
+      {
+        id: "approved-resources-appear-straight-away",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("approved-resources-appear-straight-away"),
+        tag: {
+          labelKey: "marketing:changelog.tag.resources",
+          to: routes.resources,
+        },
+      },
+      {
+        id: "guides-get-reviewed-on-time",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("guides-get-reviewed-on-time"),
+        tag: {
+          labelKey: "marketing:changelog.tag.resources",
+          to: routes.resources,
+        },
+      },
+      {
+        id: "the-trans-healthcare-guide-in-portuguese",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-trans-healthcare-guide-in-portuguese"),
+        tag: {
+          labelKey: "marketing:changelog.tag.resources",
+          to: routes.transHealthcare,
+        },
+      },
+      {
+        id: "forms-instead-of-email-links",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("forms-instead-of-email-links"),
+        tag: {
+          labelKey: "marketing:changelog.tag.contact",
+          to: routes.contact,
+        },
+      },
+      {
+        id: "send-a-document-in-a-message",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("send-a-document-in-a-message"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "delete-a-message-just-for-you",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("delete-a-message-just-for-you"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "mark-a-conversation-unread",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("mark-a-conversation-unread"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "new-messages-reach-you-wherever-you-are",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("new-messages-reach-you-wherever-you-are"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "an-enquiry-reply-no-longer-fails-in-silence",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("an-enquiry-reply-no-longer-fails-in-silence"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "notifications-you-can-clear-that-open-the-right-thing",
+        category: "improvement",
+        date: "6 Sep 2026",
+        // No tag chip: the only near-fit label is "Notification settings",
+        // which would send a reader to the preferences screen rather than the
+        // list this entry is about. An honest missing chip beats a wrong one.
+        ...entryKeys("notifications-you-can-clear-that-open-the-right-thing"),
+      },
+      {
+        id: "you-can-step-back-from-a-connection-without-blocking",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("you-can-step-back-from-a-connection-without-blocking"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "hiding-your-photo-now-holds-everywhere",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("hiding-your-photo-now-holds-everywhere"),
+        tag: {
+          labelKey: "marketing:changelog.tag.editProfile",
+          to: routes.editProfile,
+        },
+      },
+      {
+        id: "someone-you-blocked-can-no-longer-vouch-for-you",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("someone-you-blocked-can-no-longer-vouch-for-you"),
+        tag: {
+          labelKey: "marketing:changelog.tag.vouch",
+          to: routes.vouch,
+        },
+      },
+      {
+        id: "a-hidden-vouch-list-no-longer-reads-as-none",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("a-hidden-vouch-list-no-longer-reads-as-none"),
+      },
+      {
+        id: "a-private-profile-now-says-so-instead-of-looking-abandoned",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "a-private-profile-now-says-so-instead-of-looking-abandoned",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "hiding-yourself-now-holds-on-the-people-like-you-row",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("hiding-yourself-now-holds-on-the-people-like-you-row"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "renaming-your-username-no-longer-breaks-every-link-to-you",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "renaming-your-username-no-longer-breaks-every-link-to-you",
+        ),
+      },
+      {
+        id: "you-can-search-the-member-directory-by-name",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("you-can-search-the-member-directory-by-name"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "the-persona-directory-now-searches-all-of-it-at-once",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-persona-directory-now-searches-all-of-it-at-once"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "a-co-owned-persona-link-opens-the-right-persona",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("a-co-owned-persona-link-opens-the-right-persona"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "no-more-persona-share-links-and-qr-codes-that-lead-nowhere",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "no-more-persona-share-links-and-qr-codes-that-lead-nowhere",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "co-owners-are-offered-leave-instead-of-a-delete-that-fails",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "co-owners-are-offered-leave-instead-of-a-delete-that-fails",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "the-personas-you-follow-now-have-a-home",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("the-personas-you-follow-now-have-a-home"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "badges-levels-and-perks-now-read-in-your-language",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("badges-levels-and-perks-now-read-in-your-language"),
+      },
+      {
+        id: "a-membership-card-check-shows-a-real-role-name",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("a-membership-card-check-shows-a-real-role-name"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "invite-only-communities-can-finally-let-people-in",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("invite-only-communities-can-finally-let-people-in"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "your-invitations-now-wait-for-you-in-one-place",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("your-invitations-now-wait-for-you-in-one-place"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "an-archived-community-stays-readable-to-its-members",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("an-archived-community-stays-readable-to-its-members"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "leaving-a-community-you-run-now-points-you-somewhere",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("leaving-a-community-you-run-now-points-you-somewhere"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "the-communities-home-tab-shows-your-real-week",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-communities-home-tab-shows-your-real-week"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "you-can-see-a-communitys-gatherings-before-you-join",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("you-can-see-a-communitys-gatherings-before-you-join"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "communities-can-set-a-mark-and-a-welcome-note",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("communities-can-set-a-mark-and-a-welcome-note"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "a-post-taken-down-now-comes-with-a-reason",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("a-post-taken-down-now-comes-with-a-reason"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "you-can-take-back-a-request-to-join",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("you-can-take-back-a-request-to-join"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "finding-the-busiest-communities-is-instant",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("finding-the-busiest-communities-is-instant"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "a-post-you-start-on-one-device-reopens-on-another",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("a-post-you-start-on-one-device-reopens-on-another"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "link-previews-no-longer-run-out-on-shared-wifi",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("link-previews-no-longer-run-out-on-shared-wifi"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "saved-lists-flag-a-dead-item-before-you-file-it",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("saved-lists-flag-a-dead-item-before-you-file-it"),
+        tag: {
+          labelKey: "marketing:changelog.tag.saved",
+          to: routes.collections,
+        },
+      },
+      {
+        id: "you-can-take-down-a-whole-forum-post",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("you-can-take-down-a-whole-forum-post"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "a-thread-always-shows-its-real-opening-post",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("a-thread-always-shows-its-real-opening-post"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "sorting-replies-reorders-the-whole-conversation",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("sorting-replies-reorders-the-whole-conversation"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "the-forum-opens-on-active-and-top-means-this-month",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-forum-opens-on-active-and-top-means-this-month"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "forum-search-looks-inside-replies",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("forum-search-looks-inside-replies"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "you-can-move-a-post-to-the-right-category",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("you-can-move-a-post-to-the-right-category"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "see-how-many-replies-arrived-since-you-last-looked",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("see-how-many-replies-arrived-since-you-last-looked"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "the-composer-keeps-your-whole-draft",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-composer-keeps-your-whole-draft"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "links-in-threads-and-the-feed-open-up",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("links-in-threads-and-the-feed-open-up"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "votes-on-the-forum-are-honest",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("votes-on-the-forum-are-honest"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "threads-show-a-preview-of-what-was-asked",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("threads-show-a-preview-of-what-was-asked"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "hidden-members-stay-hidden-in-the-feed",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("hidden-members-stay-hidden-in-the-feed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "new-this-week-now-means-this-week",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("new-this-week-now-means-this-week"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "saved-items-tell-you-when-something-is-gone",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("saved-items-tell-you-when-something-is-gone"),
+        tag: {
+          labelKey: "marketing:changelog.tag.saved",
+          to: routes.collections,
+        },
+      },
+      {
+        id: "a-piece-can-no-longer-go-live-with-consent-unresolved",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("a-piece-can-no-longer-go-live-with-consent-unresolved"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "the-desk-can-see-what-is-published-and-take-it-down",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("the-desk-can-see-what-is-published-and-take-it-down"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "writers-hear-when-they-are-commissioned-and-when-they-are-published",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "writers-hear-when-they-are-commissioned-and-when-they-are-published",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineWriter",
+          to: routes.magazineWriter,
+        },
+      },
+      {
+        id: "an-issue-dated-for-later-now-ships-on-that-morning",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("an-issue-dated-for-later-now-ships-on-that-morning"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "shipping-an-issue-holds-back-what-is-not-ready-and-says-why",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "shipping-an-issue-holds-back-what-is-not-ready-and-says-why",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "an-accepted-story-now-arrives-on-the-desk-as-a-real-piece",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "an-accepted-story-now-arrives-on-the-desk-as-a-real-piece",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "your-submitted-stories-page-is-open-to-everyone-who-submitted-one",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "your-submitted-stories-page-is-open-to-everyone-who-submitted-one",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.pitchTracker,
+        },
+      },
+      {
+        id: "you-can-withdraw-a-story-you-submitted",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("you-can-withdraw-a-story-you-submitted"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.pitchTracker,
+        },
+      },
+      {
+        id: "two-editors-can-no-longer-overwrite-each-other-silently",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("two-editors-can-no-longer-overwrite-each-other-silently"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineWriter",
+          to: routes.magazineWriter,
+        },
+      },
+      {
+        id: "a-published-deck-can-no-longer-vanish-from-under-readers",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "a-published-deck-can-no-longer-vanish-from-under-readers",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "issue-cover-art-can-be-uploaded-from-the-desk",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("issue-cover-art-can-be-uploaded-from-the-desk"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "the-writer-workspace-reads-in-plain-language",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-writer-workspace-reads-in-plain-language"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineWriter",
+          to: routes.magazineWriter,
+        },
+      },
+      {
+        id: "every-story-on-the-magazine-front-now-opens",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("every-story-on-the-magazine-front-now-opens"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "articles-show-the-kicker-and-standfirst-the-desk-wrote",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("articles-show-the-kicker-and-standfirst-the-desk-wrote"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "issue-pages-show-the-cover-the-desk-chose",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("issue-pages-show-the-cover-the-desk-chose"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.issues,
+        },
+      },
+      {
+        id: "interactive-decks-have-their-own-index",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("interactive-decks-have-their-own-index"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineDecks,
+        },
+      },
+      {
+        id: "magazine-lists-no-longer-stop-at-twenty",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("magazine-lists-no-longer-stop-at-twenty"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineSearch",
+          to: routes.magazineSearch,
+        },
+      },
+      {
+        id: "the-magazine-now-browses-in-your-language",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("the-magazine-now-browses-in-your-language"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "long-reads-have-contents-progress-and-a-resume-point",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("long-reads-have-contents-progress-and-a-resume-point"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "published-pieces-now-reach-your-feed",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("published-pieces-now-reach-your-feed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "blocks-and-mutes-now-apply-under-magazine-articles",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("blocks-and-mutes-now-apply-under-magazine-articles"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safety",
+          to: routes.blockMute,
+        },
+      },
+      {
+        id: "article-comments-page-and-keep-your-paragraphs",
+        category: "improvement",
+        date: "6 Sep 2026",
+        ...entryKeys("article-comments-page-and-keep-your-paragraphs"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "the-submit-form-names-the-issue-that-is-actually-open",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("the-submit-form-names-the-issue-that-is-actually-open"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.submitStory,
+        },
+      },
+      {
+        id: "unshipped-headlines-no-longer-appear-on-issue-pages",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("unshipped-headlines-no-longer-appear-on-issue-pages"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.issues,
+        },
+      },
+      {
+        id: "the-authors-directory-only-lists-writers-who-have-published",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "the-authors-directory-only-lists-writers-who-have-published",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazineAuthors,
+        },
+      },
+      {
+        id: "your-reminder-and-cancellation-links-now-open-the-gathering",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "your-reminder-and-cancellation-links-now-open-the-gathering",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.events,
+        },
+      },
+      {
+        id: "online-gatherings-now-have-a-join-link",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("online-gatherings-now-have-a-join-link"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.events,
+        },
+      },
+      {
+        id: "a-cancelled-gathering-now-says-so",
+        category: "fix",
+        date: "6 Sep 2026",
+        ...entryKeys("a-cancelled-gathering-now-says-so"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
+      },
+      {
+        id: "maybe-add-to-calendar-and-your-details-on-the-gathering-itself",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "maybe-add-to-calendar-and-your-details-on-the-gathering-itself",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.events,
+        },
+      },
+      {
+        id: "choose-when-your-gathering-reminder-arrives",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys("choose-when-your-gathering-reminder-arrives"),
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.settings,
+        },
+      },
+      {
+        id: "hosts-can-run-a-gathering-again-and-take-the-door-list-offline",
+        category: "feature",
+        date: "6 Sep 2026",
+        ...entryKeys(
+          "hosts-can-run-a-gathering-again-and-take-the-door-list-offline",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.events,
+        },
+      },
+      {
         id: "the-install-tip-now-opens-the-steps-in-place",
         category: "improvement",
         date: "3 Sep 2026",
@@ -4198,10 +5270,20 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         },
       },
       {
-        id: "crisp-profile-photos",
-        category: "fix",
+        // The 11 Aug photo work. It shared the `crisp-profile-photos` id with
+        // the 3 Aug entry until 6 Sep, so the same words rendered on two dates.
+        // Both shipments were real and distinct: 3 Aug made the profile hero
+        // request a resolution matching its slot; 11 Aug (e9b37d2a) made every
+        // image ask for the viewer's ACTUAL device pixel ratio instead of a
+        // hardcoded 2x, and rewrote the photo picker and the upload field.
+        id: "photos-match-your-screen-instead-of-a-guess",
+        category: "improvement",
         date: "11 Aug 2026",
-        ...entryKeys("crisp-profile-photos"),
+        ...entryKeys("photos-match-your-screen-instead-of-a-guess"),
+        tag: {
+          labelKey: "marketing:changelog.tag.editProfile",
+          to: routes.editProfile,
+        },
       },
       {
         id: "developer-persona-banner",

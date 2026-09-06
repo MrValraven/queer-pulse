@@ -10,7 +10,7 @@ import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import styles from "./ForOrganisationsPage.module.css";
 import { NOT_DO_KEYS, PROCESS } from "./forOrganisationsPage.data";
 import { useFeaturedPartners } from "./api/useFeaturedPartners";
-import { TiersSection, PartnerContactForm } from "./ForOrganisationsSections";
+import { TiersSection, PartnerApplyStart } from "./ForOrganisationsSections";
 
 export function ForOrganisationsPage() {
   const { t } = useTranslation();
@@ -135,7 +135,7 @@ export function ForOrganisationsPage() {
         </section>
       )}
 
-      <PartnerContactForm />
+      <PartnerApplyStart />
     </PageShell>
   );
 }

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getArticleDraft, type ArticleDraftDto } from "./pieces.api";
@@ -16,6 +17,13 @@ import { DEMO_ARTICLE } from "../data/articleDraft.data";
  * The query key is prefixed `["magazine-article-draft", pieceId]` so
  * `useArticleMutations`' invalidation (and any future desk-wide bust) can
  * target it precisely.
+ *
+ * `reload` (ENG-111) is the escape hatch out of a save conflict: it forces a
+ * fresh read and hands the draft straight back to the caller, because the
+ * editor seeds its local state once per piece and does NOT re-seed on a mere
+ * refetch (see `useArticleEditorDraftState`). Returning the draft rather than
+ * relying on the query result reaching the caller a render later is what lets
+ * the reload be a single awaited step.
  */
 export function useArticleDraft(pieceId: string) {
   const { demoMode } = useDemoMode();
@@ -27,9 +35,17 @@ export function useArticleDraft(pieceId: string) {
     },
   });
 
+  const { refetch } = query;
+  const reload = useCallback(async (): Promise<ArticleDraftDto | undefined> => {
+    const result = await refetch();
+    return result.data;
+  }, [refetch]);
+
   return {
     article: query.data,
     isLoading: query.isLoading,
     isError: query.isError,
+    isReloading: query.isRefetching,
+    reload,
   };
 }

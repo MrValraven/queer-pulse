@@ -128,6 +128,14 @@ export const communities: Catalog = {
   "hub.digest.active": "active members",
   "hub.digest.events": "upcoming events",
   "hub.digest.joined": "people joined",
+  // PRD-144. The to-do chips' accessible names. Each chip's visible text is a
+  // bare count, so the name has to say which queue and which community it
+  // leads to. Staff-only: the counts behind them are never sent to a plain
+  // member.
+  "hub.todos.reportsIn_one": "{count} report open in {name}",
+  "hub.todos.reportsIn_other": "{count} reports open in {name}",
+  "hub.todos.requestsIn_one": "{count} request waiting in {name}",
+  "hub.todos.requestsIn_other": "{count} requests waiting in {name}",
   "hub.todos.label": "Needs your attention",
   "hub.todos.requests_one": "{count} request",
   "hub.todos.requests_other": "{count} requests",
@@ -137,6 +145,15 @@ export const communities: Catalog = {
   "hub.pulse.empty.title": "Quiet for now",
   "hub.pulse.empty.description":
     "When your communities post, it shows up here.",
+  // PRD-144. The LIVE sidebar row. `GET /me/communities/digest` counts gatherings
+  // without naming them, so the live row says how many are ahead and links in,
+  // where the demo row shows a dated title.
+  // PRD-140. The only route to the invitations shelf, shown on "My
+  // communities" and only when something is waiting.
+  "hub.invitesLink_one": "{count} invitation waiting",
+  "hub.invitesLink_other": "{count} invitations waiting",
+  "hub.sidebar.upcomingCount_one": "{count} gathering coming up",
+  "hub.sidebar.upcomingCount_other": "{count} gatherings coming up",
   "hub.sidebar.upcoming": "Upcoming in your communities",
   "hub.sidebar.suggestions": "Communities you might like",
   "hub.pulseCard.announcement": "Announcement",
@@ -159,10 +176,32 @@ export const communities: Catalog = {
 
   // ── Community detail page (hero + sidebar) ────────────────────────────────
   "detail.breadcrumb": "Communities & Collectives",
+  // PRD-141. The `invite` tier refuses an uninvited join outright now
+  // (`outcome: 'invite_required'`) rather than filing a request nobody asked
+  // for. Before this the tier behaved exactly like `request`.
+  "detail.join.inviteOnly": "Invitation only",
+  "detail.join.inviteOnlyHint":
+    "A moderator has to invite you before you can join this one.",
   "detail.join.invite": "Join with invite",
   "detail.join.public": "Join community",
   "detail.join.request": "Request to join",
   "detail.joined": "Joined",
+  // PRD-148. The `Requested` chip was a disabled label with no way out. The body
+  // names the wait on purpose: withdrawing costs nothing, while waiting for a
+  // decline can write a 30 or 180 day reapply lock.
+  "detail.withdraw.ariaLabel": "Requested. Withdraw your request to join.",
+  "detail.withdraw.confirm.title": "Withdraw your request to {name}?",
+  "detail.withdraw.confirm.body":
+    "Your request disappears from the moderators' queue and nobody is told you took it back. You can ask again straight away. Waiting for a decline instead can set a wait of 30 or 180 days before you may reapply, so taking it back now leaves you free.",
+  "detail.withdraw.confirm.cancel": "Leave it pending",
+  "detail.withdraw.confirm.confirmCta": "Withdraw request",
+  // PRD-148. The server answers 409 only when a decision landed first, so
+  // these replace the generic failure rather than sitting beside it.
+  "detail.withdraw.alreadyApprovedToast":
+    "Your request was approved first. You are in.",
+  "detail.withdraw.alreadyDeclinedToast":
+    "The moderators answered your request first. You can apply again on {date}.",
+  "detail.withdraw.doneToast": "Request withdrawn.",
   "detail.requested": "Requested",
   "detail.frozen.title": "This community is paused",
   // One line per reason. A manual pause has no report behind it, so it must
@@ -236,6 +275,25 @@ export const communities: Catalog = {
   "detail.share.cta": "Share",
   "detail.share.ariaLabel": "Share {name}",
   "detail.share.copiedToast": "Link copied to your clipboard.",
+  // PRD-140. Holding an invitation: the hero offers the door instead of a
+  // request, and declining is the member's own act that nobody is told about.
+  "detail.invite.banner": "You have been invited to this community.",
+  "detail.invite.accept": "Accept invitation",
+  "detail.invite.decline": "Decline",
+  "detail.invite.declineConfirm.title": "Decline the invitation to {name}?",
+  "detail.invite.declineConfirm.body":
+    "Nobody is told you said no. The community can invite you again later.",
+  "detail.invite.declineConfirm.cancel": "Keep it",
+  "detail.invite.declineConfirm.confirmCta": "Decline invitation",
+  "detail.invite.declinedToast": "Invitation declined.",
+  "detail.leave.owner.title": "You are the owner of {name}",
+  "detail.leave.owner.body":
+    "A community cannot be left without a successor: somebody has to be accountable for it. Hand {name} to a current member first, and you stay on as a moderator, free to leave whenever you like.",
+  "detail.leave.owner.cancel": "Not now",
+  "detail.leave.owner.transferCta": "Transfer ownership",
+  "leave.doneToast": "You have left {name}.",
+  "leave.failedToast":
+    "We couldn't leave that community. Try again in a moment.",
   "detail.leave.confirm.title": "Leave {name}?",
   "detail.leave.confirm.body":
     "You'll stop seeing this community's pulse and gatherings. Your posts and replies stay in the community exactly where they are, under your name. You can always come back. You'll just need to join again.",
@@ -318,6 +376,12 @@ export const communities: Catalog = {
 
   // ── Events tab (living hub) ────────────────────────────────────────────────
   "detail.events.upcoming": "Upcoming gatherings",
+  // PRD-145. The Events tab as a PROSPECTIVE member sees it. The endpoint behind
+  // it deliberately omits gatherings a community keeps to its roster, so the
+  // note is what stops a short list from reading as an empty calendar.
+  "detail.events.nonMemberNote":
+    "Gatherings this community keeps to its members are not listed here.",
+  "detail.events.loadMore": "Show more gatherings",
   "detail.events.noUpcoming":
     "No gatherings on the calendar yet. Check back soon.",
   "detail.events.past": "Past gatherings",
@@ -619,6 +683,20 @@ export const communities: Catalog = {
   "detail.dangerZone.transfer.confirm.confirmCta": "Transfer ownership",
   "detail.dangerZone.transfer.confirm.empty":
     "There's nobody else on the roster to hand this to yet.",
+  // PRD-149. The transfer picker searches the SERVER (`roster?q=`) instead of
+  // filtering the pages already loaded, so an owner of a 200-member community
+  // finds their successor by typing rather than by pressing Load more nine
+  // times. `searchMatches` is read by a visually hidden live region.
+  "detail.dangerZone.transfer.confirm.searchAria":
+    "Search this community's members",
+  "detail.dangerZone.transfer.confirm.searchErrorTitle":
+    "We couldn't search the roster",
+  "detail.dangerZone.transfer.confirm.searchErrorBody":
+    "The members below are the ones already loaded. Try the search again.",
+  "detail.dangerZone.transfer.confirm.searchMatches_one":
+    "{count} member matches",
+  "detail.dangerZone.transfer.confirm.searchMatches_other":
+    "{count} members match",
   "detail.dangerZone.transfer.confirm.searchPlaceholder": "Search members…",
 
   // ── Mod tools · insight trends (12-week sparklines) ───────────────────────
@@ -707,6 +785,33 @@ export const communities: Catalog = {
   "detail.modtools.ban.edit.sub":
     "Set how long it lasts, cite the house rule it rests on, and rewrite the reason on the record.",
   "detail.modtools.ban.edit.durationLegend": "How long it lasts",
+  // PRD-147. A moderator taking a post or reply down may say why and cite a
+  // house rule. The reason and the rule reach the AUTHOR; the note does not,
+  // it stops at the community's own governance log.
+  "detail.modtools.takedown.cancelCta": "Cancel",
+  "detail.modtools.takedown.confirmCta": "Take it down",
+  "detail.modtools.takedown.errorToast":
+    "That did not go through. Try again in a moment.",
+  "detail.modtools.takedown.noteHint":
+    "Only owners, co-owners and moderators see this. It is never sent to the author and it stays on the governance history.",
+  "detail.modtools.takedown.noteLabel": "Note for the moderators",
+  "detail.modtools.takedown.notePlaceholder":
+    "Anything the rest of the team should know.",
+  "detail.modtools.takedown.post.body":
+    "It comes down for everyone here. The author is told it was removed and reads whatever you write below, so write it for them. A moderator can put it back.",
+  "detail.modtools.takedown.post.successToast":
+    "The post was taken down and its author was told.",
+  "detail.modtools.takedown.post.title": "Take this post down?",
+  "detail.modtools.takedown.reasonHint":
+    "They read this exactly as you write it, and it is the only thing they get. Leaving it empty still takes the post down, and they are told that much.",
+  "detail.modtools.takedown.reasonLabel": "What the author is told",
+  "detail.modtools.takedown.reasonPlaceholder":
+    "Say what happened, in your own words.",
+  "detail.modtools.takedown.reply.body":
+    "It comes down for everyone here. The author is told it was removed and reads whatever you write below, so write it for them. A moderator can put it back.",
+  "detail.modtools.takedown.reply.successToast":
+    "The reply was taken down and its author was told.",
+  "detail.modtools.takedown.reply.title": "Take this reply down?",
   "detail.modtools.ban.edit.days_one": "{count} day",
   "detail.modtools.ban.edit.days_other": "{count} days",
   "detail.modtools.ban.edit.permanent": "Permanent",
@@ -856,6 +961,29 @@ export const communities: Catalog = {
   "detail.modtools.invites.result.skipRow": "{name}: {reason}",
   "detail.modtools.invites.result.note":
     "Everyone under Skipped was passed over and received nothing. Everyone invited decides for themselves whether to join.",
+  // PRD-140. The community's own pending invitations, under the send form.
+  // Withdrawing is SILENT: no notification reaches the invitee, and the copy
+  // must never imply one. Telling somebody they have been uninvited from a
+  // survivors' or coming-out group is worse than saying nothing.
+  "detail.modtools.invites.pending.empty": "No invitations are waiting.",
+  "detail.modtools.invites.pending.emptyDescription":
+    "Invitations you send with the form above wait here until they are answered.",
+  "detail.modtools.invites.pending.errorToast":
+    "We could not withdraw that invitation. Try again.",
+  "detail.modtools.invites.pending.intro":
+    "People with an invitation open who have not answered yet.",
+  "detail.modtools.invites.pending.label": "Invitations waiting",
+  "detail.modtools.invites.pending.revokeAriaLabel":
+    "Withdraw the invitation to {name}",
+  "detail.modtools.invites.pending.revokeConfirm.body":
+    "The invitation stops working. Nobody is told it was withdrawn.",
+  "detail.modtools.invites.pending.revokeConfirm.title":
+    "Withdraw this invitation?",
+  "detail.modtools.invites.pending.revokeCta": "Withdraw",
+  "detail.modtools.invites.pending.revokedToast": "Invitation withdrawn.",
+  "detail.modtools.invites.pending.sentBy": "Invited by {name}",
+  "detail.modtools.invites.pending.sentByGone":
+    "Invited by a moderator who has since left",
   "detail.modtools.invites.skip.unknownMember":
     "We could not find this member.",
   "detail.modtools.invites.skip.self": "This is your own account.",
@@ -863,6 +991,10 @@ export const communities: Catalog = {
   "detail.modtools.invites.skip.alreadyMember": "Already a member here.",
   "detail.modtools.invites.skip.pendingRequest":
     "Already asked to join. Answer them in the requests queue above.",
+  // PRD-140. An invitation is a durable record now, so re-inviting somebody who
+  // already holds one is answered rather than passed over in silence.
+  "detail.modtools.invites.skip.alreadyInvited":
+    "They already have an invitation waiting.",
   "detail.modtools.invites.skip.banned": "Barred from this community.",
 
   // ── Mod tools · governance history (PRD-26) ───────────────────────────────
@@ -1182,6 +1314,10 @@ export const communities: Catalog = {
   "join.intro.eyebrow.request": "Asking to join",
   "join.intro.eyebrow.invite": "Joining with an invitation",
   "join.intro.eyebrow.public": "Joining",
+  // PRD-141. Somebody who HOLDS an invitation is admitted at once, so the wizard
+  // must not word itself to them as a request.
+  "join.intro.invitedHint":
+    "You have an invitation to this community, so joining takes you straight in. Read the house rules on the way.",
   "join.intro.inviteHint":
     "This community is invite-only, so your request goes to the mods for review, the same as anyone else asking to join.",
   "join.intro.continueCta": "Continue",
@@ -1429,6 +1565,15 @@ export const communities: Catalog = {
     '"We look after each other here. Warmth first, always, and no room for anyone who\'d make this space unsafe."',
   "start.tone.addPlaceholder": "Add a value in your own words",
   "start.tone.addCta": "Add",
+  // PRD-146, the wizard's half of the welcome note.
+  "start.tone.welcomeHeading": "The first thing a new member reads",
+  "start.tone.welcomeSub":
+    "Optional. Whoever joins sees this once, right after they are in, above everything else in Pulse.",
+  "start.tone.welcomeLabel": "A welcome note",
+  "start.tone.welcomePlaceholder":
+    "Glad you're here. Start with the shared values above, then say hello in Pulse.",
+  "start.tone.welcomeHint":
+    "Say hello in your own words, and point them at what to read first.",
   "start.tone.wrongHeading": "When something goes wrong",
   "start.tone.wrongSub":
     "You won't have to improvise. Every community starts with the same gentle ladder. You can adjust it inside.",
@@ -1455,6 +1600,10 @@ export const communities: Catalog = {
   "start.tint.coral": "Warm coral",
   "start.tint.jade": "Calm jade",
   "start.tint.plum": "Deep plum",
+  // PRD-146, the wizard's half of the community mark.
+  "start.feeling.avatarLabel": "A community mark",
+  "start.feeling.avatarHint":
+    "Optional: a small square image shown beside your community's name. At least 200 × 200px.",
   "start.feeling.coverLabel": "A cover image",
   "start.feeling.coverHint":
     "Optional: a wide photo that greets people on your community's card. At least 1200 × 600px.",
@@ -1501,6 +1650,11 @@ export const communities: Catalog = {
   "start.confirm.recap.toneFeeling": "Tone & feeling",
   "start.confirm.recap.sharedValues": "Shared values",
   "start.confirm.sharedValuesCount": "{count} agreed",
+  // PRD-146. The recap rows for the two new fields. An unset value reuses the
+  // existing `start.confirm.notSetYet`.
+  "start.confirm.recap.avatar": "Community mark",
+  "start.confirm.recap.welcome": "Welcome note",
+  "start.confirm.avatarChosen": "Chosen",
   "start.confirm.recap.tagline": "Tagline",
   "start.confirm.recap.firstPeople": "First people",
   "start.confirm.recap.inviting": "Inviting",
@@ -1592,6 +1746,19 @@ export const communities: Catalog = {
   "edit.cancel": "Cancel",
   "edit.field.name": "Name",
   "edit.field.tagline": "Tagline",
+  // PRD-146. The community mark and the welcome note. Both were accepted by
+  // create and update and rendered by the welcome card, and no surface had a
+  // field for either, so neither could ever be set. `mark` rather than
+  // `avatar`: an avatar reads as a person here, and the roster faces sit
+  // beside it on the same card.
+  "edit.field.avatar": "Community mark",
+  "edit.field.avatarHint":
+    "A small square image shown beside your community's name. At least 200 × 200px.",
+  "edit.field.welcome": "Welcome note",
+  "edit.field.welcomeHint":
+    "Shown once to each new member, right after they join. Leave it empty for no welcome.",
+  "edit.field.welcomePlaceholder":
+    "Glad you're here. Start with the shared values, then say hello in Pulse.",
   "edit.field.cover": "Cover image",
   "edit.field.coverHint":
     "A wide photo shown on your community's card. At least 1200 × 600px.",
@@ -1609,6 +1776,40 @@ export const communities: Catalog = {
   "tagPicker.overlapHint":
     "These often go together, pick the one that fits best.",
   "edit.suggestTag.trigger": "Don't see the tag you need? Suggest one",
+  // PRD-140. The invitations shelf: everything a member has been invited to, in
+  // one place, because the notification alone used to lead to a page that
+  // redirected them away with no explanation. `Open` rather than `Accept`:
+  // accepting is the ordinary join, so the house rules are still read on the
+  // way in.
+  "invites.title": "Your invitations",
+  "invites.intro":
+    "Communities that have asked you in. Joining is always your decision.",
+  "invites.from": "Invited by {name}",
+  "invites.fromUnknown": "Invited by a moderator",
+  "invites.openCta": "Open the community",
+  "invites.acceptAriaLabel": "Open {name} to accept the invitation",
+  "invites.declineAriaLabel": "Decline the invitation to {name}",
+  "invites.empty.title": "No invitations right now",
+  "invites.empty.description":
+    "When a community invites you, it waits for you here.",
+  // PRD-150. The log of what this community has already suggested. `resolved`
+  // means an admin has READ it and never that the tag now exists: the tag
+  // vocabulary is a hand-curated, code-reviewed list by deliberate decision.
+  "edit.suggestTag.closeCta": "Close",
+  "edit.suggestTag.log.empty": "Nobody here has suggested a tag yet.",
+  "edit.suggestTag.log.emptyHint":
+    "Anything you send from this form shows up here, with where it stands.",
+  "edit.suggestTag.log.errorTitle": "We couldn't load your suggestions",
+  "edit.suggestTag.log.resolvedOn": "Read {date}",
+  "edit.suggestTag.log.sentBy": "Suggested by {name}",
+  "edit.suggestTag.log.sentOn": "Sent {date}",
+  "edit.suggestTag.log.status.pending": "Waiting to be read",
+  "edit.suggestTag.log.status.resolved": "Read by the team",
+  "edit.suggestTag.log.statusHint":
+    "Read means somebody on the platform team has seen your suggestion. The tag list itself is curated by hand, so a tag only appears once it is added.",
+  "edit.suggestTag.log.sub":
+    "What this community has asked for, and where each one stands.",
+  "edit.suggestTag.log.title": "Tags suggested here",
   "edit.suggestTag.title": "Suggest a tag",
   "edit.suggestTag.sub": "We'll review it and may add it to the curated list.",
   "edit.suggestTag.labelField": "Tag name",

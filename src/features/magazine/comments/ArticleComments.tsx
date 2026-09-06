@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { ConfirmDialog, SkeletonLine } from "../../../shared/components/ui";
-import { useProfileData } from "../../../app/providers/useProfile";
+import {
+  Button,
+  ConfirmDialog,
+  SkeletonLine,
+} from "../../../shared/components/ui";
 import { useReaderComments } from "./useReaderComments";
 import { useReaderCommentMutations } from "./useReaderCommentMutations";
 import { ArticleCommentComposer } from "./ArticleCommentComposer";
@@ -18,8 +21,14 @@ import styles from "./ArticleComments.module.css";
  *  `ThreadReplies`/`ThreadReplyNode`. */
 export function ArticleComments({ articleSlug }: { articleSlug: string }) {
   const { t } = useTranslation();
-  const { profile } = useProfileData();
-  const { comments, total, isLoading } = useReaderComments(articleSlug);
+  const {
+    comments,
+    totalThreads,
+    hasMore,
+    loadMore,
+    isLoading,
+    isLoadingMore,
+  } = useReaderComments(articleSlug);
   const { create, edit, remove } = useReaderCommentMutations(articleSlug);
   const [reportTarget, setReportTarget] = useState<ReaderCommentDTO | null>(
     null,
@@ -49,8 +58,11 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
       aria-labelledby="article-comments-heading"
     >
       <div className="wrap">
+        {/* PRD-108: the server's `total` counts top-level THREADS, so the
+            heading names conversations. It used to say "34 comments" while
+            counting nothing a reply added. */}
         <h2 id="article-comments-heading" className={styles.heading}>
-          {t("magazine:comments.heading", { count: total })}
+          {t("magazine:comments.headingThreads", { count: totalThreads })}
         </h2>
 
         <div className={styles.topComposer}>
@@ -69,20 +81,37 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
         ) : comments.length === 0 ? (
           <p className={styles.empty}>{t("magazine:comments.empty")}</p>
         ) : (
-          <div className={styles.list}>
-            {comments.map((comment) => (
-              <ArticleCommentItem
-                key={comment.id}
-                comment={comment}
-                onReply={(parentId, body) =>
-                  create.mutateAsync({ body, parentId })
-                }
-                onEdit={(id, body) => edit.mutateAsync({ id, body })}
-                onDelete={setDeleteTarget}
-                onReport={setReportTarget}
-              />
-            ))}
-          </div>
+          <>
+            <div className={styles.list}>
+              {comments.map((comment) => (
+                <ArticleCommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onReply={(parentId, body) =>
+                    create.mutateAsync({ body, parentId })
+                  }
+                  onEdit={(id, body) => edit.mutateAsync({ id, body })}
+                  onDelete={setDeleteTarget}
+                  onReport={setReportTarget}
+                />
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className={styles.loadMore}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={isLoadingMore}
+                  onClick={loadMore}
+                >
+                  {isLoadingMore
+                    ? t("magazine:comments.loadingMore")
+                    : t("magazine:comments.loadMore")}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -98,8 +127,12 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
       />
 
       {reportTarget && (
+        // ENG-102: this used to fall back to the REPORTER's own initials when
+        // the reported comment carried no author name, so the sheet asked a
+        // member what was wrong with their own comment. A nameless comment now
+        // gets the subject-free copy instead.
         <ReportCommentModal
-          authorName={reportTarget.author.displayName || profile.initials}
+          authorName={reportTarget.author.displayName.trim() || null}
           subjectId={reportTarget.id}
           onClose={() => setReportTarget(null)}
         />

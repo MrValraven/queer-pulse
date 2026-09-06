@@ -79,6 +79,23 @@
   font-weight: 700;
 }
 
+/* The two bulk controls sit side by side and wrap together on a narrow
+   screen, so "sign out the other devices" and "sign out everywhere" read as a
+   pair of choices rather than one button and a stray. */
+.bulkActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* `em`, so the icon tracks its button's type rather than pinning a pixel gap
+   that stops matching once the member raises their text size. */
+.bulkActionIcon {
+  margin-right: 0.45em;
+  vertical-align: -0.15em;
+}
+
 /* Section header */
 .sectionH {
   font-size: var(--text-11-5);

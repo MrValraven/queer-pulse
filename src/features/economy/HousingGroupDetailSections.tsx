@@ -2,7 +2,11 @@ import { FiCheck, FiLock, FiUsers } from "react-icons/fi";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { GroupListing, VettedGroup } from "./housingGroups.data";
+import type {
+  GroupListing,
+  GroupMembershipStanding,
+  VettedGroup,
+} from "./housingGroups.data";
 import { GroupListingCard } from "./GroupListingCard";
 import styles from "./HousingGroupsPage.module.css";
 
@@ -84,6 +88,59 @@ export function GroupNorms({ norms }: { norms: string[] }) {
  * `MyGroupListings` below, where ownership comes from the query rather than
  * from a control that hopes for the best and answers with a 403.
  */
+/** What each standing is told, in place of the rooms. Three sentences rather
+ *  than one, because the next step differs: wait, ask, or accept the answer. */
+const LOCKED_BODY_KEY: Record<GroupMembershipStanding, string> = {
+  pending: "economy:housingGroups.listings.locked.pending",
+  declined: "economy:housingGroups.listings.locked.declined",
+  none: "economy:housingGroups.listings.locked.none",
+};
+
+/**
+ * The same section, for a reader an access-gated group has not let in
+ * (ENG-172). It stands in for the grid deliberately: an empty grid would read
+ * as "this group has no rooms", which is a claim the client cannot make and the
+ * server refuses to answer.
+ *
+ * The way in is offered only to somebody who has not asked yet. A reader whose
+ * request is still being read is told to wait, and one who was turned down is
+ * given the answer rather than a button that asks the same stewards again.
+ */
+export function GroupListingsLocked({
+  membershipStanding,
+  onJoin,
+}: {
+  membershipStanding: GroupMembershipStanding;
+  onJoin: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <section className={styles.listingsSection}>
+      <div className="wrap">
+        <div className={styles.listingsHead}>
+          <h2 className={styles.listingsTitle}>
+            {t("economy:housingGroups.listings.title")}
+          </h2>
+        </div>
+        <div className={styles.listingsLocked}>
+          <FiLock aria-hidden className={styles.listingsLockedIcon} />
+          <h3 className={styles.listingsLockedTitle}>
+            {t("economy:housingGroups.listings.locked.title")}
+          </h3>
+          <p className={styles.listingsLockedBody}>
+            {t(LOCKED_BODY_KEY[membershipStanding])}
+          </p>
+          {membershipStanding === "none" && (
+            <Button variant="ghost" onClick={onJoin}>
+              {t("economy:housingGroups.detail.askToJoin")}
+            </Button>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function GroupListings({ listings }: { listings: GroupListing[] }) {
   const { t } = useTranslation();
   return (

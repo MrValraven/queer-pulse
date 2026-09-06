@@ -10,9 +10,13 @@ import {
 import { useFocusOnMount } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
-import type { SavedItem } from "../../app/providers/useSaved";
+import {
+  isSavedItemUnavailable,
+  type SavedItem,
+} from "../../app/providers/useSaved";
 import type { SavedListDTO } from "./api/SavedLists.api";
 import { SavedListShareControls } from "./SavedListShareControls";
+import { SavedUnavailableNote } from "./SavedUnavailableNote";
 import styles from "./SavedListDetailModal.module.css";
 
 /** The inline rename field. Its own component so `useFocusOnMount` runs when
@@ -74,8 +78,10 @@ function SavedListRenameForm({
   );
 }
 
-/** One filed item. Links out where the save carried an href, and offers the
- *  unfile control only where taking it out of this list is allowed. */
+/** One filed item. Links out where the save carried an href AND the API still
+ *  reports the subject openable, and offers the unfile control only where
+ *  taking it out of this list is allowed. An unavailable item keeps its title
+ *  and meta and drops the link, so nobody is sent to a not-found page. */
 function SavedListItemRow({
   item,
   onRemove,
@@ -86,13 +92,18 @@ function SavedListItemRow({
   onNavigate: () => void;
 }) {
   const { t } = useTranslation();
+  const isUnavailable = isSavedItemUnavailable(item);
+  const canOpen = !isUnavailable && Boolean(item.href);
+
   return (
-    <div className={styles.row}>
+    <div
+      className={`${styles.row}${isUnavailable ? ` ${styles.rowUnavailable}` : ""}`}
+    >
       <span className={styles.rowBadge}>
         {item.kind.slice(0, 3).toUpperCase()}
       </span>
       <div className={styles.rowInfo}>
-        {item.href ? (
+        {canOpen && item.href ? (
           <Link
             to={linkToPath(item.href)}
             className={styles.rowTitle}
@@ -104,6 +115,9 @@ function SavedListItemRow({
           <span className={styles.rowTitle}>{item.title}</span>
         )}
         {item.meta && <span className={styles.rowMeta}>{item.meta}</span>}
+        {isUnavailable && (
+          <SavedUnavailableNote shouldShowRemoveHint={Boolean(onRemove)} />
+        )}
       </div>
       {onRemove && (
         <button

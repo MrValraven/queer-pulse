@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiClock, FiTag } from "react-icons/fi";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -40,28 +40,32 @@ export function TransHealthcareJourney({ path }: { path: Path }) {
   const { t } = useTranslation();
   return (
     <div className={styles.journey}>
-      {path.sections.map((sec) => (
-        <div className={styles.jSection} key={sec.titleKey}>
-          <div className={styles.jSectionTitle}>{t(sec.titleKey)}</div>
-          {sec.steps.map((s) => (
-            <div className={styles.step} key={s.n}>
-              <div className={styles.stepNum}>{s.n}</div>
+      {path.sections.map((section) => (
+        <div className={styles.jSection} key={section.titleKey}>
+          <div className={styles.jSectionTitle}>{t(section.titleKey)}</div>
+          {section.steps.map((step) => (
+            <div className={styles.step} key={step.n}>
+              <div className={styles.stepNum}>{step.n}</div>
               <div className={styles.stepBody}>
-                <div className={styles.stepTitle}>{s.title}</div>
-                <div className={styles.stepDesc}>{s.description}</div>
+                <div className={styles.stepTitle}>{t(step.titleKey)}</div>
+                <div className={styles.stepDesc}>{t(step.descriptionKey)}</div>
                 <div className={styles.stepMeta}>
-                  {s.time && (
+                  {step.timeKey && (
                     <span className={`${styles.metaPill} ${styles.pillTime}`}>
-                      ⏱ {s.time}
+                      <FiClock aria-hidden />
+                      {t(step.timeKey)}
                     </span>
                   )}
-                  {s.cost && (
+                  {step.costKey && (
                     <span className={`${styles.metaPill} ${styles.pillCost}`}>
-                      € {s.cost}
+                      <FiTag aria-hidden />
+                      {t(step.costKey)}
                     </span>
                   )}
                 </div>
-                {s.tip && <div className={styles.stepTip}>{s.tip}</div>}
+                {step.tipKey && (
+                  <div className={styles.stepTip}>{t(step.tipKey)}</div>
+                )}
               </div>
             </div>
           ))}
@@ -79,11 +83,11 @@ export function TransHealthcareSidebar() {
         <div className={styles.sbcTitle}>
           {t("resources:transHealthcare.sidebar.keyContacts")}
         </div>
-        {CONTACTS.map((c) => (
-          <div className={styles.sbcItem} key={c.org}>
-            <div className={styles.sbcOrg}>{c.org}</div>
-            <div className={styles.sbcRole}>{c.role}</div>
-            <div className={styles.sbcContact}>{c.contact}</div>
+        {CONTACTS.map((contact) => (
+          <div className={styles.sbcItem} key={contact.org}>
+            <div className={styles.sbcOrg}>{contact.org}</div>
+            <div className={styles.sbcRole}>{t(contact.roleKey)}</div>
+            <div className={styles.sbcContact}>{t(contact.contactKey)}</div>
           </div>
         ))}
       </div>

@@ -4,6 +4,7 @@ import { FiMapPin } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
+import { ApiError } from "../../shared/api/client";
 import { useImagesReady } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlace } from "./api/useDirectory";
@@ -18,7 +19,14 @@ import s from "./DirectorySpacePage.module.css";
 export function DirectorySpacePage() {
   const { t } = useTranslation();
   const { slug } = useParams();
-  const { place, isLoading, isError, refetch } = useDirectoryPlace(slug);
+  const { place, isLoading, isError, error, refetch } = useDirectoryPlace(slug);
+  // A genuine 404 is an ANSWER ("no listing has this slug"), so it earns the
+  // not-found panel below rather than the retry panel. Everything else that
+  // failed (5xx, a network drop) is retryable. The demo miss (settled, no
+  // error, no place) is the same answer reached without a request. Same shape
+  // as `HousingListingPage`'s `isNotFound`.
+  const isNotFound =
+    (error instanceof ApiError && error.status === 404) || (!isError && !place);
   // Owner detection: match the viewer's own listings against this slug.
   // `useDirectoryListings` is the same demo-aware "is this mine" source
   // `PlacesSection` reads (the session overlay in demo, overlay + GET
@@ -58,19 +66,13 @@ export function DirectorySpacePage() {
         </div>
       </PageShell>
     );
-    // The read failed for a reason OTHER than "no such listing" (5xx, network):
-    // offer a retry instead of a misleading redirect to the directory.
-  } else if (isError) {
-    body = (
-      <PageShell>
-        <ErrorFallback onReset={refetch} level="route" />
-      </PageShell>
-    );
     // Settled with no matching listing (a genuine 404 or demo miss). Show an
     // honest not-found state — a stale or mistyped link deserves an explanation
     // and a way back, not a silent bounce to the directory that leaves the
     // visitor wondering what happened. `noIndex` keeps the miss out of search.
-  } else if (!place) {
+    // Checked BEFORE `isError`: a 404 arrives as a rejected query now, and
+    // reading it as an outage would offer a retry that can only 404 again.
+  } else if (isNotFound) {
     body = (
       <PageShell>
         <PageMeta
@@ -88,6 +90,15 @@ export function DirectorySpacePage() {
             }}
           />
         </div>
+      </PageShell>
+    );
+    // The read failed for a reason OTHER than "no such listing" (5xx, network):
+    // offer a retry instead of a misleading not-found panel. `!place` rides
+    // along so the branch below has a narrowed place rather than a cast.
+  } else if (isError || !place) {
+    body = (
+      <PageShell>
+        <ErrorFallback onReset={refetch} level="route" />
       </PageShell>
     );
   } else {

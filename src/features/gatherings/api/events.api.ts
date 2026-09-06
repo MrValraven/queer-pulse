@@ -1,5 +1,6 @@
 import {
   apiGet,
+  apiGetText,
   apiPost,
   apiPatch,
   apiPut,
@@ -88,8 +89,17 @@ export interface EventCardDTO {
   venue?: string;
   neighbourhood?: string;
   isOnline?: boolean;
+  /** The video link for an online gathering. Present on the DETAIL only, and
+   *  only for an organiser or a confirmed attendee — the backend gates it on
+   *  exactly the same rule as the street address (PRD-182). Never populated on
+   *  a list card. */
   onlineUrl?: string;
   visibility?: EventVisibility;
+  /** The gathering's lifecycle state. `"cancelled"` matters on every surface
+   *  that can still show a member a gathering they had a stake in: the
+   *  discovery/browse lists filter cancelled rows out server-side, but "going",
+   *  "saved", "hosting" and "past" deliberately keep them so the member is told
+   *  rather than left with a row that quietly disappeared (PRD-181). */
   status?: EventStatus;
   coverImageUrl?: string | null;
   /** Org / category label shown on the card ("QueerPulse", "Community", …). */
@@ -252,6 +262,10 @@ export interface EventDetailDTO extends EventCardDTO {
    *  (that's the raw, unfiltered "N going" spots number). Drives the FE's
    *  "+N more" line. Backend `EventDetail.goingAttendeesPreviewTotal`. */
   goingAttendeesPreviewTotal?: number;
+  /** ISO 8601 — when the gathering was last edited. Drives the manage
+   *  dashboard's "last edited N days ago" line, which used to read a mock
+   *  constant on every real gathering (PRD-191). */
+  updatedAt?: string;
 }
 
 /** Who can see an attendee's own RSVP details — the same three ids
@@ -491,6 +505,20 @@ export const getAttendees = (
   if (page) q.set("page", String(page));
   return apiGet<AttendeesPageDTO>(`/events/${slug}/attendees?${q.toString()}`);
 };
+
+/**
+ * The organiser's door list as a CSV body (PRD-190).
+ *
+ * NOT paginated, unlike `getAttendees` above: a door list missing its second
+ * half is not a door list. The server caps it and formula-guards every cell
+ * (attendee free text lands in a spreadsheet), so the client's only job is to
+ * hand the body to the browser as a file.
+ *
+ * `apiGetText`, not `apiGet` — the body is `text/csv`, and the JSON client
+ * would reject it as a malformed response.
+ */
+export const getAttendeesCsv = (slug: string) =>
+  apiGetText(`/events/${slug}/attendees.csv`);
 
 export const rsvpEvent = (slug: string, status: "going" | "maybe") =>
   apiPost<{ status: RsvpStatus }>(`/events/${slug}/rsvp`, { status });

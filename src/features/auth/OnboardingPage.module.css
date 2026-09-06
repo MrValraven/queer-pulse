@@ -168,6 +168,18 @@
   line-height: 1.65;
   margin-bottom: 24px;
 }
+/* DES-170: the notification toggle while its subscribe/unsubscribe call is in
+   flight. Paired with `inert`, so this only says visually what `inert` already
+   says to assistive tech. */
+.toggleBusy {
+  opacity: 0.6;
+}
+
+/* DES-170: the communities step wants its intro tighter to the grid below.
+   Was an inline `marginBottom: 20`. */
+.pTight {
+  margin-bottom: 20px;
+}
 
 .checkWrap {
   width: 72px;
@@ -532,6 +544,13 @@
 /* Spacing only — layout/appearance comes from the shared <ChipSelect>. */
 .chips {
   margin-bottom: 24px;
+}
+/* DES-170: the loading placeholders for the chips. <SkeletonLine> takes no
+   className, so the pill radius is applied from the row rather than from a
+   literal `999` in an inline style on each line. Scoped to this modifier so it
+   can never reach the real chips the row holds once they load. */
+.chipSkeletons > div {
+  border-radius: var(--radius-pill);
 }
 
 .communityGrid {

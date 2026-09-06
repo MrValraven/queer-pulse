@@ -226,3 +226,50 @@ describe("notificationDtoToView", () => {
     });
   });
 });
+
+// PRD-221. A mention written inside a DM or group thread used to build no
+// href at all, so the row opened the sender's profile instead of the message
+// the member was told about.
+//
+// A sibling top-level describe rather than a nested one: the block above had
+// grown past the 200-line `max-lines-per-function` cap, which is an ESLint
+// ERROR here and so blocks the build.
+describe("notificationDtoToView: message mention source href", () => {
+  it("opens the conversation at the mentioning message", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "mention",
+        payload: {
+          source: "message",
+          conversationId: "conv-1",
+          messageId: "msg-9",
+          entityKind: "member",
+        },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(`${routes.messages}?c=conv-1&m=msg-9`);
+  });
+
+  it("opens the conversation alone when no message id was carried", () => {
+    const view = notificationDtoToView(
+      dto({
+        type: "mention",
+        payload: { source: "message", conversationId: "conv-1" },
+      }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(`${routes.messages}?c=conv-1`);
+  });
+
+  it("builds no link at all without a conversation id", () => {
+    const view = notificationDtoToView(
+      dto({ type: "mention", payload: { source: "message" } }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBeUndefined();
+  });
+});

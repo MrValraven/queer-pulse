@@ -1,10 +1,8 @@
-import { useState, type ReactElement } from "react";
-import { AnimatePresence, m } from "motion/react";
-import { Link, useLocation } from "react-router-dom";
-import { FiChevronRight } from "react-icons/fi";
-import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { FiSearch, FiX } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
+import { Button, EmptyState, SearchInput } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -14,197 +12,66 @@ import {
   buildFaqSchema,
   buildBreadcrumbSchema,
 } from "../../shared/seo";
+import { HELP_CATEGORIES } from "./help.data";
+import { HelpAnswerList, type HelpAnswerEntry } from "./HelpAnswerList";
+import {
+  searchHelpCategories,
+  stripMarkupTags,
+  toSearchTerms,
+} from "./helpSearch";
 import s from "./HelpPage.module.css";
-
-interface QA {
-  qKey: string;
-  aKey: string;
-  aComponents?: Record<string, ReactElement>;
-}
-interface Category {
-  id: string;
-  labelKey: string;
-  headKey: string;
-  qa: QA[];
-}
-
-const CATEGORIES: Category[] = [
-  {
-    id: "getting-started",
-    labelKey: "marketing:help.category.gettingStarted.label",
-    headKey: "marketing:help.category.gettingStarted.head",
-    qa: [
-      {
-        qKey: "marketing:help.qa.invite.q",
-        aKey: "marketing:help.qa.invite.a",
-        aComponents: { strong: <strong /> },
-      },
-      {
-        qKey: "marketing:help.qa.afterAccept.q",
-        aKey: "marketing:help.qa.afterAccept.a",
-      },
-      {
-        qKey: "marketing:help.qa.lisbonOnly.q",
-        aKey: "marketing:help.qa.lisbonOnly.a",
-      },
-      {
-        qKey: "marketing:help.qa.free.q",
-        aKey: "marketing:help.qa.free.a",
-      },
-    ],
-  },
-  {
-    id: "account",
-    labelKey: "marketing:help.category.account.label",
-    headKey: "marketing:help.category.account.head",
-    qa: [
-      {
-        qKey: "marketing:help.qa.changeName.q",
-        aKey: "marketing:help.qa.changeName.a",
-        aComponents: { settingsLink: <Link to={routes.settings} /> },
-      },
-      {
-        qKey: "marketing:help.qa.privateProfile.q",
-        aKey: "marketing:help.qa.privateProfile.a",
-        aComponents: {
-          settingsLink: <Link to={routes.settings} />,
-          strong: <strong />,
-        },
-      },
-      {
-        qKey: "marketing:help.qa.unknownSession.q",
-        aKey: "marketing:help.qa.unknownSession.a",
-        aComponents: {
-          sessionsLink: <Link to={routes.sessions} />,
-          contactLink: <Link to={`${routes.contact}?topic=account`} />,
-        },
-      },
-      {
-        qKey: "marketing:help.qa.deleteAccount.q",
-        aKey: "marketing:help.qa.deleteAccount.a",
-        aComponents: { settingsLink: <Link to={routes.settings} /> },
-      },
-      {
-        qKey: "marketing:help.qa.levels.q",
-        aKey: "marketing:help.qa.levels.a",
-      },
-    ],
-  },
-  {
-    id: "gatherings",
-    labelKey: "marketing:help.category.gatherings.label",
-    headKey: "marketing:help.category.gatherings.head",
-    qa: [
-      {
-        qKey: "marketing:help.qa.rsvp.q",
-        aKey: "marketing:help.qa.rsvp.a",
-        aComponents: {
-          calendarLink: <Link to={routes.calendar} />,
-          strong: <strong />,
-        },
-      },
-      {
-        qKey: "marketing:help.qa.hostGathering.q",
-        aKey: "marketing:help.qa.hostGathering.a",
-        aComponents: { hostLink: <Link to={routes.host} /> },
-      },
-      {
-        qKey: "marketing:help.qa.cantMakeIt.q",
-        aKey: "marketing:help.qa.cantMakeIt.a",
-      },
-      {
-        qKey: "marketing:help.qa.waitlist.q",
-        aKey: "marketing:help.qa.waitlist.a",
-      },
-    ],
-  },
-  {
-    id: "safety",
-    labelKey: "marketing:help.category.safety.label",
-    headKey: "marketing:help.category.safety.head",
-    qa: [
-      {
-        qKey: "marketing:help.qa.reportMember.q",
-        aKey: "marketing:help.qa.reportMember.a",
-      },
-      {
-        qKey: "marketing:help.qa.afterReport.q",
-        aKey: "marketing:help.qa.afterReport.a",
-        aComponents: { strong: <strong /> },
-      },
-      {
-        qKey: "marketing:help.qa.appeal.q",
-        aKey: "marketing:help.qa.appeal.a",
-        aComponents: { governanceLink: <Link to={routes.governance} /> },
-      },
-      {
-        qKey: "marketing:help.qa.blockMute.q",
-        aKey: "marketing:help.qa.blockMute.a",
-        aComponents: { strong: <strong /> },
-      },
-    ],
-  },
-  {
-    id: "membership",
-    labelKey: "marketing:help.category.membership.label",
-    headKey: "marketing:help.category.membership.head",
-    qa: [
-      {
-        qKey: "marketing:help.qa.invitesWork.q",
-        aKey: "marketing:help.qa.invitesWork.a",
-      },
-      {
-        qKey: "marketing:help.qa.vouching.q",
-        aKey: "marketing:help.qa.vouching.a",
-      },
-      {
-        qKey: "marketing:help.qa.perks.q",
-        aKey: "marketing:help.qa.perks.a",
-      },
-    ],
-  },
-  {
-    id: "technical",
-    labelKey: "marketing:help.category.technical.label",
-    headKey: "marketing:help.category.technical.head",
-    qa: [
-      {
-        qKey: "marketing:help.qa.emailNotifications.q",
-        aKey: "marketing:help.qa.emailNotifications.a",
-        aComponents: { settingsLink: <Link to={routes.settings} /> },
-      },
-      {
-        qKey: "marketing:help.qa.browserSupport.q",
-        aKey: "marketing:help.qa.browserSupport.a",
-      },
-      {
-        qKey: "marketing:help.qa.somethingBroken.q",
-        aKey: "marketing:help.qa.somethingBroken.a",
-        aComponents: { contactLink: <Link to={routes.contact} /> },
-      },
-    ],
-  },
-];
 
 export function HelpPage() {
   const { t } = useTranslation();
-  const { reducedMotion } = useMotionPrefs();
   // A link may address one category directly (`/about/help#account`), so a page
   // that sends someone here for a specific answer lands them on it.
   const { hash } = useLocation();
   const requestedCategory = hash.replace("#", "");
-  const initialCategory = CATEGORIES.some(
-    (candidate) => candidate.id === requestedCategory,
-  )
-    ? requestedCategory
-    : CATEGORIES[0]!.id;
-  const [tab, setTab] = useState(initialCategory);
-  const [open, setOpen] = useState<string | null>(`${initialCategory}-0`);
-  const category = CATEGORIES.find((c) => c.id === tab)!;
+  const initialCategory =
+    HELP_CATEGORIES.find((candidate) => candidate.id === requestedCategory) ??
+    HELP_CATEGORIES[0]!;
+  const [activeCategoryId, setActiveCategoryId] = useState(initialCategory.id);
+  const [openQuestionId, setOpenQuestionId] = useState<string | null>(
+    initialCategory.questions[0]!.id,
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Searching reads the strings as this reader sees them, so a Portuguese
+  // member finds a Portuguese answer, accents optional.
+  const searchTerms = useMemo(() => toSearchTerms(searchQuery), [searchQuery]);
+  const isSearching = searchTerms.length > 0;
+  const results = useMemo(
+    () =>
+      isSearching ? searchHelpCategories(HELP_CATEGORIES, t, searchTerms) : [],
+    [isSearching, searchTerms, t],
+  );
+
+  const activeCategory = HELP_CATEGORIES.find(
+    (candidate) => candidate.id === activeCategoryId,
+  )!;
+  const browseEntries: HelpAnswerEntry[] = activeCategory.questions.map(
+    (question) => ({ question }),
+  );
+  const resultEntries: HelpAnswerEntry[] = results.map((result) => ({
+    question: result.question,
+    categoryLabel: t(result.category.labelKey),
+    ...(result.answerExcerpt ? { answerExcerpt: result.answerExcerpt } : {}),
+  }));
+
+  const toggleQuestion = (questionId: string) =>
+    setOpenQuestionId((current) =>
+      current === questionId ? null : questionId,
+    );
+  const clearSearch = () => setSearchQuery("");
+
   const pageTitle = t("marketing:help.meta.title");
   const pageDescription = t("marketing:help.meta.description");
-  const faqEntries = CATEGORIES.flatMap((c) =>
-    c.qa.map((item) => ({ question: t(item.qKey), answer: t(item.aKey) })),
+  const trimmedQuery = searchQuery.trim();
+  const faqEntries = HELP_CATEGORIES.flatMap((category) =>
+    category.questions.map((question) => ({
+      question: t(question.questionKey),
+      answer: stripMarkupTags(t(question.answerKey)),
+    })),
   );
 
   return (
@@ -228,79 +95,99 @@ export function HelpPage() {
         }
         sub={t("marketing:help.hero.sub")}
       >
-        <div className={s.tabs}>
-          {CATEGORIES.map((c) => (
+        <SearchInput
+          className={s.search}
+          value={searchQuery}
+          onChange={setSearchQuery}
+          ariaLabel={t("marketing:help.search.label")}
+          placeholder={t("marketing:help.search.placeholder")}
+        />
+        <div
+          className={[s.searchState, isSearching && s.searchStateOn]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {/* Mounted in both states so the count is announced when it changes. */}
+          <p className={s.searchStatus} role="status">
+            {isSearching
+              ? t("marketing:help.search.summary", {
+                  count: results.length,
+                  query: trimmedQuery,
+                })
+              : ""}
+          </p>
+          {isSearching && (
             <button
               type="button"
-              key={c.id}
-              className={[s.tab, tab === c.id && s.tabOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => {
-                setTab(c.id);
-                setOpen(`${c.id}-0`);
-              }}
+              className={s.clearSearch}
+              onClick={clearSearch}
             >
-              {t(c.labelKey)}
+              <FiX aria-hidden />
+              {t("marketing:help.search.clear")}
             </button>
-          ))}
+          )}
         </div>
+        {/* The tab row steps aside while a search is running: results already
+            span every category, so a selected tab would only mislead. */}
+        {!isSearching && (
+          <div className={s.tabs}>
+            {HELP_CATEGORIES.map((category) => (
+              <button
+                type="button"
+                key={category.id}
+                className={[s.tab, activeCategoryId === category.id && s.tabOn]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => {
+                  setActiveCategoryId(category.id);
+                  setOpenQuestionId(category.questions[0]!.id);
+                }}
+              >
+                {t(category.labelKey)}
+              </button>
+            ))}
+          </div>
+        )}
       </PageHero>
 
       <div className="wrap">
         <div className={s.body}>
-          <h2 className={s.hsHead}>
-            <Translation
-              i18nKey={category.headKey}
-              components={{ em: <em /> }}
+          {isSearching && results.length === 0 ? (
+            <EmptyState
+              icon={<FiSearch />}
+              title={t("marketing:help.search.emptyTitle", {
+                query: trimmedQuery,
+              })}
+              description={t("marketing:help.search.emptyBody")}
+              action={{
+                label: t("marketing:help.stillStuck.cta"),
+                to: routes.contact,
+              }}
+              secondaryAction={{
+                label: t("marketing:help.search.clear"),
+                onClick: clearSearch,
+              }}
             />
-          </h2>
-          <div className={s.accordion}>
-            {category.qa.map((item, i) => {
-              const key = `${category.id}-${i}`;
-              const isOpen = open === key;
-              return (
-                <div key={key} className={s.accItem}>
-                  <button
-                    type="button"
-                    className={s.accQ}
-                    onClick={() => setOpen(isOpen ? null : key)}
-                  >
-                    {t(item.qKey)}
-                    <span
-                      className={[s.chevron, isOpen && s.chevronOpen]
-                        .filter(Boolean)
-                        .join(" ")}
-                    >
-                      <FiChevronRight aria-hidden />
-                    </span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <m.div
-                        key="answer"
-                        className={s.accReveal}
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{
-                          duration: reducedMotion ? 0 : 0.24,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                      >
-                        <div className={s.accA}>
-                          <Translation
-                            i18nKey={item.aKey}
-                            components={item.aComponents}
-                          />
-                        </div>
-                      </m.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </div>
+          ) : (
+            <>
+              <h2 className={s.hsHead}>
+                <Translation
+                  i18nKey={
+                    isSearching
+                      ? "marketing:help.search.resultsHead"
+                      : activeCategory.headKey
+                  }
+                  components={{ em: <em /> }}
+                />
+              </h2>
+              <HelpAnswerList
+                entries={isSearching ? resultEntries : browseEntries}
+                openQuestionId={openQuestionId}
+                onToggle={toggleQuestion}
+                highlightTerms={isSearching ? searchTerms : []}
+              />
+            </>
+          )}
 
           <div className={s.helpContact}>
             <div>

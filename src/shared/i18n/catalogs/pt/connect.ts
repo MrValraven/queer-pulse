@@ -43,6 +43,14 @@ export const connect: Catalog = {
   "moreMenu.message": "Mensagem",
   "moreMenu.mute": "Silenciar {name}",
   "moreMenu.unmute": "Deixar de silenciar {name}",
+  // A vizinha discreta do Bloquear (PRD-200). "vocês" e "vossa" sao o plural
+  // informal de "tu", que o portugues europeu nao escreve de outra forma.
+  "moreMenu.removeConnection": "Terminar a ligação com {name}",
+  "moreMenu.removeConfirm.title": "Queres terminar a tua ligação com {name}?",
+  "moreMenu.removeConfirm.body":
+    "{name} não recebe qualquer aviso, e nada do que já disseram um ao outro é apagado. A vossa conversa continua na tua caixa de entrada, mas nenhum dos dois pode enviar mensagens novas enquanto não voltarem a estar ligados. Qualquer um de vocês pode pedir ligação outra vez quando quiser.",
+  "moreMenu.removeConfirm.action": "Terminar ligação",
+  "moreMenu.toastRemoved": "Tu e {name} já não estão ligados.",
   "moreMenu.block": "Bloquear {name}",
   "moreMenu.unblock": "Desbloquear {name}",
   "moreMenu.report": "Denunciar",

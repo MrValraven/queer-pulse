@@ -452,3 +452,17 @@
 }
 
 /* Outro */
+
+/* DES-170: styles that were inline numeric literals on the JSX. */
+
+.submitButton {
+  width: 100%;
+  justify-content: center;
+}
+
+/* `em`, so the icon tracks the button's own type size rather than pinning a
+   pixel gap that stops matching once the member raises their text size. */
+.downloadIcon {
+  vertical-align: -0.15em;
+  margin-right: 0.55em;
+}

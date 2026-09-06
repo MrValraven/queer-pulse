@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiChevronRight, FiCalendar } from "react-icons/fi";
-import { EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -176,9 +181,17 @@ export function MonthGrid({
 export function AllUpcomingEvents({
   loading,
   upcoming,
+  hasMore = false,
+  isLoadingMore = false,
+  onLoadMore,
 }: {
   loading: boolean;
   upcoming: CalendarEvent[];
+  /** More upcoming gatherings exist server-side than have been fetched
+   *  (PRD-184). Without this the list silently ended at the soonest 20. */
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
+  onLoadMore?: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -205,6 +218,22 @@ export function AllUpcomingEvents({
           ))
         )}
       </div>
+      {hasMore && (
+        <div className={styles.loadMore}>
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={isLoadingMore}
+            onClick={onLoadMore}
+          >
+            {t(
+              isLoadingMore
+                ? "gatherings:calendar.loadingMore"
+                : "gatherings:calendar.loadMore",
+            )}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

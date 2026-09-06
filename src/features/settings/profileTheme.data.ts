@@ -108,20 +108,50 @@ export const FLAG_SWATCHES: {
   },
 ];
 
-export interface BadgeOption {
-  id: string;
-  labelKey: string;
-}
-
-// The <select>'s persisted `badge` value is this stable `id` (never the
-// translated label) — see ThemeStudio.tsx.
-export const BADGE_OPTIONS: BadgeOption[] = [
-  {
-    id: "foundingMember",
-    labelKey: "settings:themeStudio.badge.foundingMember",
-  },
-  { id: "eventHost", labelKey: "settings:themeStudio.badge.eventHost" },
-  { id: "sustainer", labelKey: "settings:themeStudio.badge.sustainer" },
-  { id: "regular", labelKey: "settings:themeStudio.badge.regular" },
-  { id: "vouch", labelKey: "settings:themeStudio.badge.vouch" },
+/**
+ * Which badges the profile picker offers, as the badge catalogue's own stable
+ * ids. Nothing here is a display word.
+ *
+ * This list used to carry a second, hand-written set of badge names
+ * (`settings:themeStudio.badge.*`: "Founding Member (Legendary)", "Sustainer
+ * (Rare)", ...), a copy of words that already live in
+ * `features/members/badgeCatalog.data.ts`. It had already drifted in both
+ * languages: the catalogue calls `sustainer` "Rooted" while this said
+ * "Sustainer", and the PT copy read "Pessoa Fundadora" where /badges said
+ * "Membro Fundador". A member picked one name here and saw another on their
+ * own badge case.
+ *
+ * Only the SELECTION is curated now. Every word comes from
+ * `badgeDisplayMetaFor()` at render, the same lookup every other badge surface
+ * uses, so this picker can no longer disagree with /badges about anything.
+ *
+ * The value the member's theme persists is the id itself, which is also the id
+ * persisted in `recognition_awards.badge_key`, so it never carries a
+ * translated word.
+ */
+export const PROFILE_BADGE_KEYS: readonly string[] = [
+  "founding-member",
+  "event-host",
+  "sustainer",
+  "regular-attendee",
+  "vouch",
 ];
+
+/** Ids this picker persisted before it moved onto catalogue ids. A theme saved
+ *  by an older build still holds one of these in localStorage, so it is mapped
+ *  on read and the member keeps the badge they chose. */
+const LEGACY_BADGE_IDS: Record<string, string> = {
+  foundingMember: "founding-member",
+  eventHost: "event-host",
+  sustainer: "sustainer",
+  regular: "regular-attendee",
+  vouch: "vouch",
+};
+
+/** The catalogue id for a persisted theme's `badge` value, translating an id
+ *  written by an older build. An id this build does not recognise is returned
+ *  untouched rather than reset, so a newer build's choice survives a
+ *  downgrade. */
+export function normalizeProfileBadgeId(badgeId: string): string {
+  return LEGACY_BADGE_IDS[badgeId] ?? badgeId;
+}

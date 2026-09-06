@@ -29,6 +29,12 @@ export const messages: Catalog = {
   "thread.archiveChat": "Arquivar conversa",
   "thread.unarchiveChat": "Desarquivar conversa",
   "thread.archivedIndicator": "Conversa arquivada",
+  // PRD-225. Uma entrada do menu que alterna consoante o estado da conversa,
+  // como todos os pares acima. "Marcar como lida" reutiliza a mutação normal
+  // de leitura, por isso avança a marca real e limpa a marcação manual no
+  // mesmo pedido.
+  "thread.markUnread": "Marcar como não lida",
+  "thread.markRead": "Marcar como lida",
   "thread.deleteChat": "Apagar conversa",
   // Separadores de filtro da caixa de entrada
   "thread.tabAll": "Todas",
@@ -137,6 +143,19 @@ export const messages: Catalog = {
   "conversation.composerGroupPlaceholder": "Mensagem para o grupo…",
   "conversation.leftGroupNotice":
     "Saíste deste grupo. O histórico fica aqui, mas já não podes enviar mensagens novas.",
+  // PRD-220: um contacto inicial (casa, colegas de casa) abre uma conversa a
+  // dois entre pessoas que ainda não estão ligadas, e as respostas de ambos os
+  // lados são recusadas até isso mudar. Aparece no lugar da caixa de escrita,
+  // com a ação que resolve. O estado depende do pedido de ligação até agora.
+  "conversation.connectionRequiredNotice":
+    "Para responderes aqui, precisas primeiro de uma ligação com {name}.",
+  "conversation.connectionRequiredSendCta": "Enviar pedido de ligação",
+  "conversation.connectionRequiredPendingNotice":
+    "O teu pedido de ligação a {name} continua à espera de resposta.",
+  "conversation.connectionRequiredIncomingNotice":
+    "{name} quer ligar-se a ti. Aceita para continuarem esta conversa.",
+  "conversation.connectionRequiredAcceptCta": "Aceitar e responder",
+  "conversation.connectionRequiredDeclineCta": "Agora não",
   "conversation.send": "Enviar",
   "conversation.composeAria": "Escreve uma mensagem",
   "conversation.backToList": "Voltar às conversas",
@@ -160,6 +179,10 @@ export const messages: Catalog = {
   "actions.more": "Mais",
   "actions.report": "Denunciar",
   "actions.delete": "Eliminar",
+  // PRD-227. Aparece a todos os participantes em todas as mensagens, ao
+  // contrário do `actions.delete` acima, que só a autoria ou a equipa alcança:
+  // esconder uma mensagem do teu lado é sempre teu.
+  "actions.deleteForMe": "Eliminar só para mim",
 
   // Overlay de pressão longa/clique direito (MessageActionOverlay) — reutiliza
   // actions.report/actions.delete acima para os seus próprios itens de menu.
@@ -185,6 +208,14 @@ export const messages: Catalog = {
   "delete.confirmTitle": "Eliminar esta mensagem?",
   "delete.confirmBody": "Será removida para todos nesta conversa.",
   "delete.confirmCta": "Eliminar",
+  // PRD-227 "eliminar só para mim": uma SEGUNDA coisa, por pessoa, ao lado da
+  // lápide acima, nunca em vez dela. O texto tem de ser claro sobre quem
+  // continua a ver a mensagem, porque as duas opções ficam lado a lado e
+  // escolher a errada não se desfaz.
+  "delete.confirmForMeTitle": "Eliminar esta mensagem só para ti?",
+  "delete.confirmForMeBody":
+    "A mensagem sai apenas do teu lado da conversa. A outra pessoa continua a vê-la.",
+  "delete.confirmForMeCta": "Eliminar só para mim",
   "delete.cancelCta": "Cancelar",
   "report.title": "Denunciar esta mensagem",
 

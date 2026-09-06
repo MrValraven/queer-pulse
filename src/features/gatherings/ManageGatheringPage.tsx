@@ -222,6 +222,7 @@ function ManageGatheringMain({
               details={gatheringState.details}
               description={gatheringState.description}
               overviewCounts={overviewCounts}
+              updatedAt={gathering?.updatedAt}
               venueListingId={gatheringState.venueListingId}
               venueListing={gatheringState.venueListing}
               cohosts={gathering?.cohosts}

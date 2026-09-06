@@ -6,15 +6,25 @@ import {
   type SubmitAppealInput,
   type SubmittedAppealDTO,
 } from "./appeals.api";
+import { APPEAL_DECISION_WINDOW_DAYS } from "../../system/accountWindows";
 
 /** How long the demo mode pretends the round-trip takes, to keep the UX honest. */
 const DEMO_LATENCY_MS = 700;
 
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
 function demoAppeal(): SubmittedAppealDTO {
+  const filedAt = new Date();
   return {
     id: `demo-appeal-${Date.now()}`,
     status: "awaiting",
-    createdAt: new Date().toISOString(),
+    createdAt: filedAt.toISOString(),
+    // The demo stands in for the server's `appealDecisionDueAt(filedAt)`, so
+    // the confirmation panel shows a plausible deadline offline instead of a
+    // blank row. Live mode always uses the date the server actually stored.
+    slaDueAt: new Date(
+      filedAt.getTime() + APPEAL_DECISION_WINDOW_DAYS * MS_PER_DAY,
+    ).toISOString(),
   };
 }
 
@@ -31,6 +41,14 @@ function demoAppeal(): SubmittedAppealDTO {
 export function useSubmitAppeal() {
   const { demoMode } = useDemoMode();
   return useMutation<SubmittedAppealDTO, Error, SubmitAppealInput>({
+    // `AppealSubmitPage` renders this write's failure itself: a toast for a
+    // retryable refusal, and an in-place panel for the one that is permanent
+    // (the filing window has closed — see `api/appealSubmissionError.ts`).
+    // Without this opt-out the MutationCache handler ALSO toasts
+    // `messageFor(error)`, so a member appealing a suspension got the backend's
+    // English sentence twice over, and the window-closed panel was announced
+    // under a toast repeating the very prose it exists to replace.
+    meta: { silentError: true },
     mutationFn: async (body) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));

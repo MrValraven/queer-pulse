@@ -16,18 +16,44 @@ export interface HealthStatDTO {
 export interface ModerationStepDTO {
   key: string;
 }
+/**
+ * PRD-265. The EN/PT an editor typed for an entry with no i18n key. Both
+ * languages are required by the backend: nothing on this platform will ever go
+ * back and translate a governance entry later, so the moment it is written is
+ * the only moment the second language can be got.
+ */
+export interface AuthoredTextDTO {
+  en: string;
+  pt: string;
+}
+
+/**
+ * A council seat, a principle and a decision each come in one of two forms and
+ * the backend enforces the exclusive-or (`IsSeededOrAuthored`):
+ *
+ *  - SEEDED — `key` (or `roleKey`), one of the fixed content keys whose EN+PT
+ *    already live in the frontend catalogs. Its words are not editable here;
+ *    they are in the bundle.
+ *  - AUTHORED — the editor's own EN/PT text, for everything added after the
+ *    bundle shipped. This is what makes the record growable without a deploy.
+ */
 export interface CouncilSeatDTO {
   name: string;
   initials: string;
-  roleKey: string;
+  roleKey?: string;
+  role?: AuthoredTextDTO;
   tint: "jade" | "violet" | "plum";
 }
 export interface PrincipleDTO {
-  key: string;
+  key?: string;
+  title?: AuthoredTextDTO;
+  text?: AuthoredTextDTO;
   icon: string;
 }
 export interface DecisionDTO {
-  key: string;
+  key?: string;
+  lead?: AuthoredTextDTO;
+  body?: AuthoredTextDTO;
 }
 
 export interface AdminOverviewSectionMeta {

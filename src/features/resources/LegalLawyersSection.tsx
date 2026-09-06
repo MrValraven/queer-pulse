@@ -11,6 +11,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
 import { useResourceListings } from "./api/useResourceListings";
@@ -27,7 +28,14 @@ import styles from "./resources.module.css";
 export function LegalLawyersSection() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
   const navigate = useNavigate();
+  // The directory itself reads `GET /resources/listings`, which is public
+  // (PRD-260) so somebody looking for a lawyer never has to sign up first.
+  // Suggesting one is a WRITE (`POST /resources/suggestions`, member-only), so
+  // the affordance is hidden for a signed-out visitor rather than offered and
+  // then answered with a 401.
+  const canSuggestResource = loggedIn;
   const loading = useSimulatedLoad();
   const {
     listings,
@@ -97,21 +105,27 @@ export function LegalLawyersSection() {
                   />
                 ))}
               </CardGrid>
-              <div style={{ marginTop: 20, textAlign: "center" }}>
-                <Button variant="ghost" onClick={() => setSuggestOpen(true)}>
-                  {t("resources:suggest.cta")}
-                </Button>
-              </div>
+              {canSuggestResource && (
+                <div style={{ marginTop: 20, textAlign: "center" }}>
+                  <Button variant="ghost" onClick={() => setSuggestOpen(true)}>
+                    {t("resources:suggest.cta")}
+                  </Button>
+                </div>
+              )}
             </>
           ) : (
             <EmptyState
               icon={<FiBriefcase />}
               title={t("resources:legal.lawyers.live.title")}
               description={t("resources:legal.lawyers.live.body")}
-              action={{
-                label: t("resources:suggest.cta"),
-                onClick: () => setSuggestOpen(true),
-              }}
+              action={
+                canSuggestResource
+                  ? {
+                      label: t("resources:suggest.cta"),
+                      onClick: () => setSuggestOpen(true),
+                    }
+                  : undefined
+              }
             />
           )
         ) : (

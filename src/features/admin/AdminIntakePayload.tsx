@@ -42,6 +42,16 @@ const INTAKE_PAYLOAD_FIELDS: Record<string, readonly string[]> = {
   culture_post_project: ["title", "description", "lookingFor"],
   culture_submit_work: ["title", "medium", "link", "about"],
   culture_submit_playlist: ["name", "link", "vibes", "note"],
+  // PRD-249. `economy/LandlordReplyRequestPage`. Reading order is the order an
+  // admin works it: which recommendation is being answered, who says they are
+  // the landlord, how to reach them, then the words they want published.
+  landlord_reply_request: [
+    "landlordSlug",
+    "recommendationId",
+    "name",
+    "contact",
+    "reply",
+  ],
 };
 
 /** Field names with a translated label in `admin:adminIntakes.field.*`. Any key
@@ -54,12 +64,14 @@ const LABELLED_PAYLOAD_FIELDS = new Set<string>([
   "budgetItems",
   "budgetTotal",
   "change",
+  "contact",
   "context",
   "description",
   "detail",
   "email",
   "expertise",
   "format",
+  "landlordSlug",
   "link",
   "lookingFor",
   "medium",
@@ -72,6 +84,8 @@ const LABELLED_PAYLOAD_FIELDS = new Set<string>([
   "pitch",
   "projectName",
   "projectSummary",
+  "recommendationId",
+  "reply",
   "term",
   "title",
   "vibes",

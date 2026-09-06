@@ -28,7 +28,15 @@ export interface IssueDTO {
   dek: string;
   /** YYYY-MM-DD, or null while the issue is still unscheduled. */
   publishedOn: string | null;
+  /** The desk's uploaded cover art, already resolved to a fetchable URL by the
+   *  backend. `null` when no cover was uploaded, in which case every reader
+   *  surface keeps its tinted `ImageSlot` placeholder. */
   coverUrl: string | null;
+  /** The reframe rect a staff editor saved for `coverUrl`. Rendered as
+   *  `ImageSlot`'s `focus` (a focal point), never as `crop` (an exact frame):
+   *  a cover slot is a fixed 3/4 box whose aspect never matches an arbitrary
+   *  rect, and the exact-frame prop would distort the art. */
+  crop?: CropRect;
 }
 
 /** A row as returned by GET /magazine/articles (list) — no `body`. */
@@ -52,6 +60,15 @@ export interface ArticleListItemDTO {
   /** CON-16 — the language this row is written in. An issue is often only
    *  partly translated, so each card states its own language. */
   locale: ContentLocale;
+  /**
+   * PRD-102 — the desk's own kicker and section for this piece. Required on
+   * the detail read (`ArticleDTO` below narrows both to `string`); optional
+   * here because `GET /magazine/articles` does not project the two columns
+   * yet. Every adapter therefore falls back to the derived label when they are
+   * absent, so a card is never blank while the list read catches up.
+   */
+  kicker?: string;
+  section?: string;
 }
 
 /**

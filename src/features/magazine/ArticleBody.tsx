@@ -6,26 +6,39 @@ import {
   type ArticleBlock,
   type TypedArticleBlock,
 } from "./data/articles";
+import { articleHeadingAnchorId } from "./articleOutline";
 import styles from "./ArticlePage.module.css";
 
-/** Render one typed (kinded) body block as its own block-level element. */
-function TypedBlock({ block }: { block: TypedArticleBlock }) {
+/** Render one typed (kinded) body block as its own block-level element.
+ *  `anchorId` is the id a heading renders with, so the reader's contents list
+ *  (PRD-113) has something to jump to. */
+function TypedBlock({
+  block,
+  anchorId,
+}: {
+  block: TypedArticleBlock;
+  anchorId: string;
+}) {
   switch (block.kind) {
     case "paragraph":
       return (
         <p className={block.lead ? styles.lead : undefined}>{block.text}</p>
       );
     case "heading":
-      return <h2 className={styles.heading}>{block.text}</h2>;
+      return (
+        <h2 id={anchorId} className={styles.heading}>
+          {block.text}
+        </h2>
+      );
     case "pullQuote":
       return <blockquote className={styles.pull}>{block.text}</blockquote>;
     case "quote":
       return (
         <blockquote className={styles.quote}>
           <p>{block.text}</p>
-          {block.cite && (
-            <cite className={styles.quoteCite}>— {block.cite}</cite>
-          )}
+          {/* DES-100: no dash glyph in front of the attribution; see
+              ArticleBlockView.tsx for the same fix on the block renderer. */}
+          {block.cite && <cite className={styles.quoteCite}>{block.cite}</cite>}
         </blockquote>
       );
     case "image":
@@ -85,7 +98,14 @@ export function ArticleBody({ blocks }: { blocks: ArticleBlock[] }) {
     <>
       {blocks.map((block, index) => {
         const typed = asTypedBlock(block);
-        if (typed) return <TypedBlock key={index} block={typed} />;
+        if (typed)
+          return (
+            <TypedBlock
+              key={index}
+              block={typed}
+              anchorId={articleHeadingAnchorId(index)}
+            />
+          );
         if (isPullQuote(block)) {
           return (
             <blockquote key={index} className={styles.pull}>

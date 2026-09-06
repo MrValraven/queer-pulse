@@ -3,6 +3,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { STAGE_DTO_TO_VIEW } from "../api/pieces.adapters";
 import type { PieceStage } from "../api/pieces.api";
 import { DEMO_STAGES } from "../data/desk.data";
+import { viewStageLabelKey } from "./stageLabels";
 import styles from "./pieceTabs.module.css";
 
 export interface StageStepperProps {
@@ -12,9 +13,10 @@ export interface StageStepperProps {
 }
 
 /**
- * "Where it is" — the 7 editorial stages in order, with the piece's current
- * stage and everything before it marked active. Lives in the piece record's
- * `.erail` sidebar, alongside the publish gate.
+ * "Where it is": every editorial stage in order (`DEMO_STAGES`, ending at the
+ * terminal `Published`), with the piece's current stage and everything before
+ * it marked active. Lives in the piece record's `.erail` sidebar, alongside
+ * the publish gate.
  */
 export function StageStepper({ stage }: StageStepperProps) {
   const { t } = useTranslation();
@@ -33,7 +35,10 @@ export function StageStepper({ stage }: StageStepperProps) {
               className={cx(styles.step, isActive && styles.stepOn)}
             >
               <span className={styles.dot} />
-              {stageName}
+              {/* `DEMO_STAGES` holds the view's `Stage` values, which double as
+                  their own English labels, so each one is resolved through the
+                  shared stage-key lookup before it is shown. */}
+              {t(viewStageLabelKey(stageName))}
             </div>
           );
         })}

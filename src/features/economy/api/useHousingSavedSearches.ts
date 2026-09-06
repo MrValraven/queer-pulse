@@ -33,7 +33,11 @@ export function filtersToCriteria(
     criteria.bedroomsMin = filters.bedroomsMin;
   if (filters.billsIncluded) criteria.billsIncluded = true;
   if (filters.hasAccessibilityInfo) criteria.hasAccessibilityInfo = true;
+  if (filters.furnished) criteria.furnished = true;
+  if (filters.petsWelcome) criteria.petsWelcome = true;
   if (filters.verifiedOnly) criteria.verifiedOnly = true;
+  if (filters.depositMax !== undefined)
+    criteria.depositMax = filters.depositMax;
   if (filters.availableBy) criteria.availableBy = filters.availableBy;
   return criteria;
 }

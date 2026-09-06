@@ -10,6 +10,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import type { Author } from "./authorContent.data";
 import {
@@ -32,15 +33,38 @@ function ArtCardSkeleton() {
   );
 }
 
+/**
+ * A writer's featured piece, their selected work and their reading list.
+ *
+ * PRD-112: two fixes live here. "All {count} articles" used to link to the
+ * magazine FRONT, which is not this writer's work at all; it now opens their
+ * real back catalogue at `/magazine/search?author=<slug>`, which pages through
+ * every piece (the author page itself can only hold the backend's first 20).
+ * The count is the byline's true `pieceCount` rather than the length of the
+ * one page that reached this component. And `useSimulatedLoad` is a DEMO
+ * device: on a live author page it painted 600ms of fake skeleton over data
+ * that had already arrived, so it is gated to demo mode.
+ */
 export function AuthorWork({ author }: { author: Author }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const loading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
+  const isSimulatedLoading = useSimulatedLoad();
+  // Demo only. Live data is already resolved by the time this renders (the
+  // page holds its own skeleton while `useAuthorPageData` is in flight), so a
+  // simulated delay there is a skeleton over content, not a loading state.
+  const shouldShowSkeletons = demoMode && isSimulatedLoading;
   // A freshly live-only author (CNT-9: no curated mock profile to fall back
   // on) may genuinely have zero published pieces yet — the backend's authors
   // table isn't gated on having a byline. Show an honest empty state instead
   // of a broken featured block with nothing to point at.
   const hasArticles = author.articles.length > 0;
+  // The byline's full published count, which can exceed the page of articles
+  // this component was handed. Demo mode has no paginated catalogue behind it,
+  // and its grid below already lists every curated piece, so the link is a
+  // live-mode affordance.
+  const totalPieces = author.pieceCount ?? author.articles.length;
+  const shouldShowAllArticlesLink = !demoMode;
   const featuredMeta = [
     publishedText(fmt.date(author.featured.publishedDate), t),
     minReadText(author.featured.minutes, t),
@@ -86,18 +110,24 @@ export function AuthorWork({ author }: { author: Author }) {
 
           <div className={styles.sec}>
             <h2>{t("magazine:author.work.selectedWorkHeading")}</h2>
-            <Link to={routes.magazine}>
-              {t("magazine:author.work.allArticlesCta", {
-                count: author.articles.length,
-              })}{" "}
-              <FiArrowRight aria-hidden />
-            </Link>
+            {shouldShowAllArticlesLink && (
+              <Link
+                to={`${routes.magazineSearch}?author=${encodeURIComponent(
+                  author.slug,
+                )}`}
+              >
+                {t("magazine:author.work.allArticlesCta", {
+                  count: totalPieces,
+                })}{" "}
+                <FiArrowRight aria-hidden />
+              </Link>
+            )}
           </div>
           <div className={styles.articles}>
-            {loading
-              ? Array.from({ length: author.articles.length }).map((_, i) => (
-                  <ArtCardSkeleton key={i} />
-                ))
+            {shouldShowSkeletons
+              ? Array.from({ length: author.articles.length }).map(
+                  (_, index) => <ArtCardSkeleton key={index} />,
+                )
               : author.articles.map((article, index) => (
                   <FadeIn
                     as={Link}

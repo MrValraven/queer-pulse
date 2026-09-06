@@ -2,6 +2,7 @@ import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import { nextLocalId } from "./useMessagesController.helpers";
 import { mediaKindOf, type MediaKind } from "./messageSending.helpers";
 
@@ -24,7 +25,7 @@ interface SendActionsDeps {
     localId: string,
     replyToId?: string,
     forwarded?: boolean,
-    attachment?: GifAttachment,
+    attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
   ) => void;
 }
@@ -46,6 +47,12 @@ export interface MessageSendActions {
   sendImage: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
+  ) => void;
+  /** Send an uploaded document as its own message (PRD-226), through the same
+   *  pipeline as `sendImage`. */
+  sendDocument: (
+    attachment: DocumentAttachment,
+    localAttachment?: DocumentAttachment,
   ) => void;
 }
 
@@ -196,6 +203,53 @@ export function useMessageSendActions({
     ],
   );
 
+  /** Send an uploaded document as its own message (PRD-226) — the same
+   *  optimistic → idempotent → outbox path as `sendImage`, with the same
+   *  local-preview/real-payload split: `localAttachment` (the upload's local
+   *  blob preview) paints the OPTIMISTIC bubble instantly, `attachment` (the
+   *  private storage key) is what `deliver` actually sends. */
+  const sendDocument = useCallback(
+    (attachment: DocumentAttachment, localAttachment?: DocumentAttachment) => {
+      if (activeBlocked || !active) return;
+      const convId = active.id;
+      const localId = nextLocalId();
+      const replyTo = currentReplyPreview();
+      const fallbackText = t("messages:attachments.documentFallbackText");
+      appendOptimistic(convId, {
+        from: "me",
+        text: fallbackText,
+        kind: "document",
+        attachment: localAttachment ?? attachment,
+        sendAttachment: attachment,
+        time: t("messages:time.justNow"),
+        status: "sending",
+        localId,
+        replyTo,
+      });
+      const replyToId = replyDraft?.id;
+      setReplyDraft(null);
+      deliver(
+        convId,
+        fallbackText,
+        localId,
+        replyToId,
+        false,
+        attachment,
+        "document",
+      );
+    },
+    [
+      activeBlocked,
+      active,
+      currentReplyPreview,
+      appendOptimistic,
+      t,
+      replyDraft,
+      setReplyDraft,
+      deliver,
+    ],
+  );
+
   const retrySend = useCallback(
     (message: ChatMessage) => {
       if (!active || !message.localId) return;
@@ -206,9 +260,9 @@ export function useMessageSendActions({
         message.localId,
         message.replyTo?.id,
         message.forwarded,
-        // Resend the real payload (`sendAttachment`, an image's storage key)
-        // when present — `attachment` alone may be the local blob preview,
-        // which the server can't validate/store.
+        // Resend the real payload (`sendAttachment`, an image/document's
+        // storage key) when present — `attachment` alone may be the local
+        // blob preview, which the server can't validate/store.
         message.sendAttachment ?? message.attachment,
         mediaKindOf(message),
       );
@@ -216,5 +270,5 @@ export function useMessageSendActions({
     [active, setStatus, deliver],
   );
 
-  return { send, sendGif, sendImage, retrySend };
+  return { send, sendGif, sendImage, sendDocument, retrySend };
 }

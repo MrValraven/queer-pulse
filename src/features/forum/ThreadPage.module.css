@@ -782,3 +782,112 @@
     transform: none;
   }
 }
+
+/* ── Link unfurl card (PRD-171) ──
+   Sits under a post body (the opening post or any reply) for the FIRST link it
+   carries. Horizontal on anything wider than a phone so it reads as a citation
+   rather than a second post; stacks below that. Tokens only, and every colour
+   here flips in dark mode: --paper, --ink, --ink-60 and --line-rgb all do, and
+   --accent-ink is the coral tuned for small text. */
+.linkPreview {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  max-width: 30rem;
+  margin: 4px 0 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .linkPreview:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-card-hover);
+  }
+}
+.linkPreviewThumb {
+  display: block;
+  width: 7.5rem;
+  align-self: stretch;
+  object-fit: cover;
+  flex: none;
+  background: rgba(var(--line-rgb), 0.06);
+}
+.linkPreviewBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 13px;
+  min-width: 0;
+}
+.linkPreviewSite {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.linkPreviewTitle {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-strong);
+  /* Two lines, so a long headline can't run away with the card. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.linkPreviewDesc {
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 560px) {
+  .linkPreview {
+    flex-direction: column;
+  }
+  .linkPreviewThumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .linkPreview {
+    transition: none;
+  }
+  .linkPreview:hover {
+    transform: none;
+  }
+}
+
+/* ── "We can't show you the opening post" (ENG-130) ──
+   Stands in for the OP body when the server says `opAvailable: false`. Same
+   restrained voice as the tombstone above it: a fact, with no invented reason
+   and no dead action. */
+.opUnavailable {
+  color: var(--ink-60);
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  padding: 14px 16px;
+  border: 1px dashed rgba(var(--line-rgb), 0.2);
+  border-radius: var(--radius-14);
+  background: rgba(var(--line-rgb), 0.03);
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiCheck, FiCircle } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -67,7 +68,7 @@ export function ServicesGrid() {
   const { t } = useTranslation();
   const loading = useSimulatedLoad();
   return (
-    <section className="wrap" style={{ paddingBottom: 60 }}>
+    <section className={`wrap ${styles.servicesSection}`}>
       <p className={styles.sectionEye}>
         {t("system:status.services.sectionEye")}
       </p>
@@ -102,7 +103,7 @@ export function UptimeSection() {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
-    <section className="wrap" style={{ padding: "60px 0" }}>
+    <section className={`wrap ${styles.uptimeSection}`}>
       <p className={styles.sectionEye}>
         {t("system:status.uptime.sectionEye")}
       </p>
@@ -172,7 +173,7 @@ export function IncidentsSection() {
   const fmt = useFormat();
   const loading = useSimulatedLoad();
   return (
-    <section className="wrap" style={{ paddingBottom: 80 }}>
+    <section className={`wrap ${styles.incidentsSection}`}>
       <p className={styles.sectionEye}>
         {t("system:status.incidents.sectionEye")}
       </p>
@@ -192,22 +193,12 @@ export function IncidentsSection() {
                   .filter(Boolean)
                   .join(" ")}
               >
+                {/* Size and stroke moved to `.incDot svg` in the module: the
+                    inline stroke was a raw `rgba(45,27,61,.4)`, the plum
+                    channels spelled out by hand, which does not flip in dark
+                    mode the way `--plum-rgb` through a token does. */}
                 <div className={styles.incDot} aria-hidden>
-                  <svg
-                    width={14}
-                    height={14}
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    stroke={inc.resolved ? "var(--jade)" : "rgba(45,27,61,.4)"}
-                    strokeWidth={1.8}
-                    strokeLinecap="round"
-                  >
-                    {inc.resolved ? (
-                      <polyline points="2,7 5.5,10.5 12,3.5" />
-                    ) : (
-                      <circle cx={7} cy={7} r={5} />
-                    )}
-                  </svg>
+                  {inc.resolved ? <FiCheck /> : <FiCircle />}
                 </div>
                 <div>
                   <div className={styles.incDate}>{fmt.date(inc.date)}</div>

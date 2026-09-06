@@ -18,7 +18,9 @@ export function PitchCard({
   onStub,
 }: {
   pitch: Pitch;
-  onWithdraw: (p: Pitch) => void;
+  /** Opens the withdraw confirmation. Withdrawing is destructive in live mode,
+   *  so the card never performs it directly. */
+  onWithdraw: (pitch: Pitch) => void;
   onStub: (label: string) => void;
 }) {
   const { t } = useTranslation();
@@ -65,25 +67,37 @@ export function PitchCard({
       {pitch.outline && <p className={styles.outline}>{pitch.outline}</p>}
 
       <div className={styles.actions}>
-        {pitch.actions.map((a) => {
-          const cls = [styles.action, a.primary && styles.actionPrimary]
+        {pitch.actions.map((action) => {
+          // `labelKey` is what the live adapter emits (translated); `label` is
+          // the demo registry's plain-English copy. See `PitchAction`.
+          const label = action.labelKey
+            ? t(action.labelKey)
+            : (action.label ?? "");
+          const className = [
+            styles.action,
+            action.primary && styles.actionPrimary,
+            action.withdraw && styles.actionDanger,
+          ]
             .filter(Boolean)
             .join(" ");
-          if (a.to) {
+          const key = action.labelKey ?? action.label ?? "";
+          if (action.to) {
             return (
-              <Link key={a.label} to={a.to} className={cls}>
-                {a.label}
+              <Link key={key} to={action.to} className={className}>
+                {label}
               </Link>
             );
           }
           return (
             <button
-              key={a.label}
+              key={key}
               type="button"
-              className={cls}
-              onClick={() => (a.withdraw ? onWithdraw(pitch) : onStub(a.label))}
+              className={className}
+              onClick={() =>
+                action.withdraw ? onWithdraw(pitch) : onStub(label)
+              }
             >
-              {a.label}
+              {label}
             </button>
           );
         })}

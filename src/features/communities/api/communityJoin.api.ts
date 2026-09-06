@@ -8,9 +8,11 @@
  *   GET    /communities/:slug                       (rules + version, for the wizard)
  *   GET    /communities/:slug/join-requests         (with reviewer context)
  *   PATCH  /communities/:slug/join-requests/:id     (approve / kinded decline)
+ *   DELETE /communities/:slug/join-requests/mine    (withdraw your own request)
  */
 import {
   ApiError,
+  apiDelete,
   apiGet,
   apiPatch,
   apiPost,
@@ -63,9 +65,33 @@ export interface CommunityJoinRequestReviewDTO {
 }
 
 export interface JoinResultDTO {
-  outcome: "joined" | "requested";
+  /**
+   * `invite_required` (PRD-141) is the `invite` tier's refusal: the caller
+   * holds no pending invitation, so there is no door for them yet. It arrives
+   * as a 201 with `role` and `request` both null rather than as an error,
+   * because it is a state of the community ("invitation only") rather than
+   * something the member did wrong. A `private` community answers the same
+   * caller with a 404 instead: that tier does not confirm it exists.
+   */
+  outcome: "joined" | "requested" | "invite_required";
   role: "member" | null;
   request: CommunityJoinRequestReviewDTO | null;
+}
+
+/**
+ * Whether a settled join says "you need an invitation first". Read off the
+ * RESOLVED value rather than off a thrown error, because this refusal is a
+ * successful response: `joinRefusalFor` below can never see it.
+ *
+ * Typed against `unknown` so the join wizard can call it on whatever its
+ * `onJoined`/`onRequested` prop resolved to (demo mode resolves `null`).
+ */
+export function isInviteRequiredResult(result: unknown): boolean {
+  return (
+    typeof result === "object" &&
+    result !== null &&
+    (result as { outcome?: unknown }).outcome === "invite_required"
+  );
 }
 
 /** Just the house-rules slice of `GET /communities/:slug`. Typed narrowly so
@@ -139,6 +165,19 @@ export const triageJoinRequest = (
   );
 
 /**
+ * `DELETE /communities/:slug/join-requests/mine` (PRD-148) — the applicant
+ * takes their own pending request back.
+ *
+ * Applicant-side only: the backend finds the row by the CALLER'S user id, so
+ * this is never a way to reach somebody else's request. The row is deleted
+ * rather than moved to a fourth status, which is what makes the member whole
+ * immediately: they can ask again in the same breath, and no reapply lock is
+ * left behind. Nobody is notified.
+ */
+export const withdrawMyJoinRequest = (slug: string) =>
+  apiDelete<void>(`/communities/${slug}/join-requests/mine`);
+
+/**
  * The three machine-readable refusals `POST /join` can answer with, read off
  * the error body's `code` rather than its prose (which is server-worded and
  * not translatable).
@@ -154,7 +193,15 @@ export const triageJoinRequest = (
 export type JoinRefusal =
   | { kind: "rulesChanged"; rulesVersion: number | null }
   | { kind: "banned" }
-  | { kind: "reapplyTooSoon"; reapplyAfter: string | null };
+  | { kind: "reapplyTooSoon"; reapplyAfter: string | null }
+  /**
+   * PRD-141. The `invite` tier with no invitation on file. It reaches the
+   * wizard through `isInviteRequiredResult` on a SUCCESSFUL response, never
+   * through `joinRefusalFor` below, and it is rendered by the same refusal
+   * panel as the two above because it is the same kind of thing: an answer
+   * about the community, not a fault of the person reading it.
+   */
+  | { kind: "inviteRequired" };
 
 export function joinRefusalFor(error: unknown): JoinRefusal | null {
   if (!(error instanceof ApiError)) return null;

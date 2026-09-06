@@ -416,6 +416,45 @@ class RealtimeClient {
         queryKey: ["conversations-unread-count"],
       });
     });
+    // ENG-160: a message landed in a conversation this socket has NOT joined
+    // the room for — a different thread open, or the member elsewhere in the
+    // app entirely (this frame reaches us via our `user:<id>` room, joined at
+    // handshake, regardless of which thread is active). Without this, only the
+    // ACTIVE thread's `message:new` kept the inbox/badge live, so a message in
+    // any OTHER thread produced no badge bump and no inbox-row update until a
+    // remount or reload. The gateway never fans this out to the sender, so
+    // there is no own-echo to skip here (unlike `message:new` above).
+    //
+    // `patchConversationPreview` is a no-op if the row isn't cached yet (a
+    // brand-new thread — that case is `conversation:new`'s job, above). The
+    // unread-count invalidate mirrors `message:new`'s own non-active-thread
+    // branch exactly, so a participant who DOES have this conversation open
+    // (and therefore gets BOTH frames for the same message) still only ever
+    // skips it, never double-counts.
+    socket.on("conversation:message", ({ conversationId, message }) => {
+      patchConversationPreview(this.qc, conversationId, message);
+      if (conversationId !== this.activeConversationId) {
+        void this.qc.invalidateQueries({
+          queryKey: ["conversations-unread-count"],
+        });
+      }
+      // We received it (over our OWN user room, even though this thread isn't
+      // the open one) → ack delivery so the SENDER's tick advances from one
+      // check to two. Without this, "the sender's tick stays at one check
+      // until the recipient opens the thread" (ENG-160) even though the
+      // message genuinely reached this device — `delivered` is a
+      // reached-the-device signal, not a read one (see `markDelivered` in
+      // conversations.service.ts: it stamps only `deliveredAt`, a column
+      // distinct from `lastReadAt`/"Seen", and never emits a `read` frame).
+      //
+      // Same own-echo skip as the `message:new` handler above: the gateway's
+      // fan-out already excludes the sender server-side
+      // (`fanOutConversationMessage`), so this can't fire for our own send in
+      // practice — kept for parity with the sibling handler and as a second
+      // line of defence if that server-side exclusion ever changes.
+      if (this.myHandle && message.sender.handle === this.myHandle) return;
+      this.scheduleDeliveredAck(conversationId);
+    });
     // A reaction changed on a message in this room. The frame carries the
     // authoritative per-key counts, so patch them in place (deduped by message
     // id) instead of refetching the whole thread — a full invalidate here would

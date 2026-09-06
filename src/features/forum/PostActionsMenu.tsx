@@ -24,6 +24,12 @@ interface PostActionsMenuProps {
   onDelete: () => void;
   onRestore: () => void;
   onHistory: () => void;
+  /** Re-file this thread into another category (PRD-163). The gate is the
+   *  thread endpoint's: a moderator at any time, the author inside the
+   *  thread's first 24 hours (see `canMoveThreadCategory`). Post-level menus
+   *  (a reply) never pass it — a reply has no category of its own. */
+  canMoveCategory?: boolean;
+  onMoveCategory?: () => void;
   /** Mod-only: pin/unpin this post to the top of its feed. `pinned` reflects
    *  the post's current state so the menu label toggles ("Pin" ↔ "Unpin"). */
   canPin?: boolean;
@@ -47,6 +53,8 @@ export function PostActionsMenu({
   onDelete,
   onRestore,
   onHistory,
+  canMoveCategory,
+  onMoveCategory,
   canPin,
   pinned,
   onTogglePin,
@@ -105,6 +113,7 @@ export function PostActionsMenu({
     !canDelete &&
     !canRestore &&
     !canViewHistory &&
+    !canMoveCategory &&
     !canPin &&
     !canReport &&
     safety.actions.length === 0
@@ -126,6 +135,13 @@ export function PostActionsMenu({
       key: "edit",
       label: t("forum:postMenu.edit"),
       run: onEdit,
+    },
+    // Filing sits next to editing: both are "put this right", neither is
+    // destructive (PRD-163).
+    canMoveCategory && {
+      key: "move",
+      label: t("forum:postMenu.moveCategory"),
+      run: () => onMoveCategory?.(),
     },
     canViewHistory && {
       key: "history",

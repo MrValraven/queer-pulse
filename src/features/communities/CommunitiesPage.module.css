@@ -453,6 +453,46 @@
   flex: none;
 }
 
+/* ── The community's own square identity mark (PRD-146) ───────────────────
+   Hung on the shoulder's bottom edge the way an avatar sits on a banner, and
+   sized to clear the 26px roster faces so the two never read as the same kind
+   of thing. It hangs 16px past the shoulder, which is inside the 20px of
+   margin + flex gap before `.name`, so the mark never touches the name and a
+   card WITHOUT one is byte-for-byte unchanged: no frame, no reserved gap.
+
+   The ground under it is a member's own cover photograph, which this code does
+   not control, so the edge is drawn on BOTH values: a dark 1px ground (this
+   wrapper's background, showing through its own padding) with a light hairline
+   inside it (the image's border). Whichever of the two contrasts carries the
+   edge and the other is simply not seen. Both channels are fixed rather than
+   theme-flipping, because a photograph does not flip either. The photo itself
+   is never filtered or dimmed. */
+.cardMark {
+  position: absolute;
+  left: 24px;
+  bottom: -16px;
+  z-index: 2;
+  padding: 1px;
+  background: rgba(var(--plum-rgb), 0.5);
+  border-radius: var(--radius-14);
+  /* The soft well that stops a busy photograph competing at the mark's border,
+     plus the lift. Both token rings: a hand-written shadow here is a build
+     failure (scripts/check-css-scale.mjs). */
+  box-shadow: var(--ring-plum-soft), var(--shadow-e2);
+  line-height: 0;
+}
+.cardMarkImg {
+  display: block;
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border: 1px solid rgba(var(--cream-rgb), 0.6);
+  border-radius: var(--radius-13);
+  /* A mark with transparency still lands on something solid rather than on the
+     cover photo showing through its own frame. */
+  background: var(--paper);
+}
+
 /* The avatar roster overlaps the shoulder band's own bottom edge (anchored
    to .shoulder, which is `position: relative`) rather than sitting inline in
    the footer next to the member count. */
@@ -463,6 +503,14 @@
   display: flex;
   align-items: center;
   z-index: 2;
+}
+/* Both the mark and the roster want the shoulder's bottom-left corner. The
+   mark is the community's own identity, so it keeps the corner and the faces
+   step clear of it (24px + the 46px mark + 8px of air). In practice this only
+   fires in the edit modal's preview: the demo registry that supplies rosters
+   carries no marks, and a live card carries a mark but no roster. */
+.hasMark .cardAvStack {
+  left: 78px;
 }
 .cardAv {
   margin-left: -7px;

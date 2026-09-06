@@ -69,6 +69,7 @@ function posterFrom(
     initials: initialsFromParts(lister.firstName, lister.lastName),
     name: `${lister.firstName} ${lister.lastName.charAt(0)}.`.trim(),
     fullName: full,
+    slug: lister.slug,
     tint: tintForSlug(lister.slug),
     memberSince: lister.memberSince
       ? t("economy:housing.lister.memberSince", {
@@ -114,6 +115,16 @@ export function listingDtoToHousingListing(
       value: dto.availableFrom ?? t("economy:housing.fact.availableNow"),
     },
   ];
+  // Only when the lister actually stated one. A null deposit is unknown, and a
+  // "Deposit: €0" fact would invent a term the lister never agreed to.
+  if (dto.depositEuros !== null) {
+    facts.push({
+      label: t("economy:housing.fact.deposit"),
+      value: fmt.currency(dto.depositEuros, "EUR", {
+        maximumFractionDigits: 0,
+      }),
+    });
+  }
   if (dto.bedrooms !== null) {
     facts.push({
       label: t("economy:housing.filterBar.beds"),
@@ -169,6 +180,7 @@ export function listingDtoToHousingListing(
     verified: dto.listingVerified,
     verifiedReason: dto.listingVerifiedReason,
     bedrooms: dto.bedrooms ?? undefined,
+    depositEuros: dto.depositEuros ?? undefined,
     virtualTourUrl: dto.virtualTourUrl ?? undefined,
     location: {
       approxLatitude: dto.approxLatitude,
@@ -177,6 +189,7 @@ export function listingDtoToHousingListing(
       preciseLongitude: dto.preciseLongitude,
       addressLine: dto.addressLine,
       precision: dto.locationPrecision,
+      isUnlocked: dto.isLocationUnlocked,
     },
   };
 }
@@ -200,10 +213,15 @@ export function dtoToMyHousingListingRow(
     city: dto.city,
     area: dto.area,
     rentEuros: dto.rentEuros,
+    depositEuros: dto.depositEuros,
     bedrooms: dto.bedrooms ?? undefined,
     billsIncluded: dto.billsIncluded,
     accessibilityInfo: dto.accessibilityInfo,
     listerKind: dto.listerKind,
+    // Owner reads map with the address gate open, so this is the lister's own
+    // stored address (undefined when they never added one). It seeds the edit
+    // form; it is never rendered on a public surface.
+    addressLine: dto.addressLine ?? undefined,
     virtualTourUrl: dto.virtualTourUrl ?? undefined,
     blurb: dto.blurb,
     description: dto.description,

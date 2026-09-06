@@ -1,6 +1,7 @@
 import { apiGet, apiPost, apiDelete } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
+import type { ReasonCode } from "../../safety/reportReasons";
 
 /**
  * Blocks & mutes API — the live-mode source of truth for the two safety
@@ -35,6 +36,23 @@ export interface MuteDTO {
 export interface BlockOptions {
   reason?: string;
   alsoReport?: boolean;
+  /**
+   * Why the companion report is being filed. Only read by the server when
+   * `alsoReport` is true; ignored (never rejected) otherwise, and the block
+   * itself is unaffected either way.
+   *
+   * This decides the queue the report lands in. `ReportsService.create` derives
+   * severity and SLA from it, so `outing`/`doxxing` reach the one-hour
+   * emergency band while the old behaviour, omitting the field, falls back to
+   * `other` and its seven-day low band. Somebody blocking a member for outing
+   * them was filing into the slowest queue with no code the emergency band or
+   * the transparency report could see (PRD-285).
+   *
+   * Validated server-side against the real taxonomy (`@IsIn(REASON_CODES)`), so
+   * an unknown code is a 400 and the block does not happen either. Send a code
+   * that came from the taxonomy (`useReportReasons`) or send nothing.
+   */
+  reasonCode?: ReasonCode;
 }
 
 /** GET /blocks — members the actor has blocked, newest first. */

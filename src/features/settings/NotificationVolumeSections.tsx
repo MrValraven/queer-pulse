@@ -15,6 +15,11 @@ import {
 import type { NotificationDeliveryDTO } from "./api/notificationDelivery.api";
 import { detectTimeZone } from "./api/notificationDelivery.api";
 import { useNotificationPreferences } from "./api/useNotificationPreferences";
+import {
+  REMINDER_LEAD_OPTIONS,
+  reminderLeadLabelKey,
+} from "./api/eventReminders.api";
+import { useEventReminderLead } from "./api/useEventReminderLead";
 import { Section, SelectRow, ToggleList } from "./SettingsControls";
 import styles from "./SettingsPage.module.css";
 
@@ -69,6 +74,36 @@ export function ConsentToggleRow({
 }
 
 /**
+ * How long before a gathering its reminder fires (PRD-186).
+ *
+ * The backend has stored this per member since reminders were built and no
+ * frontend ever read it, so everyone sat on the default day-before lead while
+ * the server quietly held a field for the choice. Saved on change, like every
+ * other row in this pane. Rendered inside the gatherings group, immediately
+ * under the "Event reminders" switch it qualifies: turning reminders off makes
+ * the lead moot, so it belongs beside the switch rather than in a section of
+ * its own.
+ */
+function ReminderLeadRow() {
+  const { t } = useTranslation();
+  const { leadMinutes, setLeadMinutes } = useEventReminderLead();
+  return (
+    <SelectRow
+      title={t("settings:notifications.reminderLead.title")}
+      description={t("settings:notifications.reminderLead.desc")}
+      // Stable numeric ids round-trip through the select, never the translated
+      // label — the same rule the quiet-hours window picker follows.
+      options={REMINDER_LEAD_OPTIONS.map((minutes) => ({
+        value: String(minutes),
+        label: t(reminderLeadLabelKey(minutes)),
+      }))}
+      value={String(leadMinutes)}
+      onChange={(value) => setLeadMinutes(Number(value))}
+    />
+  );
+}
+
+/**
  * Every switched notification category, grouped. Each row is one real
  * preference, saved the moment it is flipped.
  */
@@ -90,6 +125,7 @@ export function NotificationCategorySections() {
               />
             ))}
           </ToggleList>
+          {group.id === "gatherings" && <ReminderLeadRow />}
         </Section>
       ))}
       {/* Naming what stays unmutable, rather than leaving a member to discover

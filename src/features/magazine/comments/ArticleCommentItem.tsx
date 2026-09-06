@@ -6,6 +6,17 @@ import type { ReaderCommentDTO } from "./readerComments.api";
 import { ArticleCommentComposer } from "./ArticleCommentComposer";
 import styles from "./ArticleComments.module.css";
 
+/**
+ * A comment with nothing left to read: tombstoned by its author, removed by a
+ * moderator, or blanked on the way out because it is hidden (the response
+ * empties `body` and the author for all three, ENG-102). Everything a member
+ * could do TO the comment hangs off this: an empty card must never carry a
+ * live Reply, Report, Edit or Delete.
+ */
+function isUnavailableComment(comment: ReaderCommentDTO): boolean {
+  return comment.deleted || comment.body.trim().length === 0;
+}
+
 export function ArticleCommentItem({
   comment,
   onReply,
@@ -29,24 +40,31 @@ export function ArticleCommentItem({
   const [editingId, setEditingId] = useState<string | null>(null);
 
   function renderOne(item: ReaderCommentDTO, isReply: boolean) {
+    const isUnavailable = isUnavailableComment(item);
+    const authorName = item.author.displayName.trim();
+    // A blanked row arrives with an empty author, so the name slot would
+    // otherwise render as a gap beside the timestamp.
+    const displayedName =
+      isUnavailable || !authorName
+        ? t("magazine:comments.unknownAuthor")
+        : authorName;
+
     return (
       <div key={item.id} className={isReply ? styles.reply : styles.comment}>
         <Avatar
-          initials={(item.author.displayName || "?").slice(0, 1)}
-          src={item.author.avatarUrl ?? undefined}
-          name={item.author.displayName}
+          initials={displayedName.slice(0, 1)}
+          src={isUnavailable ? undefined : (item.author.avatarUrl ?? undefined)}
+          name={displayedName}
           size={isReply ? 30 : 38}
         />
         <div className={styles.commentBody}>
           <div className={styles.commentHead}>
-            <span className={styles.commentName}>
-              {item.author.displayName}
-            </span>
+            <span className={styles.commentName}>{displayedName}</span>
             <span className={styles.commentTime}>
               {fmt.date(new Date(item.createdAt))}
             </span>
           </div>
-          {item.deleted ? (
+          {isUnavailable ? (
             <p className={styles.tombstone}>
               {t("magazine:comments.tombstone")}
             </p>
@@ -114,7 +132,7 @@ export function ArticleCommentItem({
               </div>
             </>
           )}
-          {!isReply && replying && (
+          {!isReply && !isUnavailable && replying && (
             <ArticleCommentComposer
               placeholderKey="magazine:comments.composer.replyPlaceholder"
               submitLabelKey="magazine:comments.composer.postReply"

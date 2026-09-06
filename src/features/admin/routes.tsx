@@ -30,6 +30,10 @@ const AdminDsarPage = lazyNamed(
   () => import("./AdminDsarPage"),
   "AdminDsarPage",
 );
+const AdminQueuesPage = lazyNamed(
+  () => import("./AdminQueuesPage"),
+  "AdminQueuesPage",
+);
 const AdminBanEvasionEscalationsPage = lazyNamed(
   () => import("./AdminBanEvasionEscalationsPage"),
   "AdminBanEvasionEscalationsPage",
@@ -171,6 +175,10 @@ const AdminResourceGuidesPage = lazyNamed(
   () => import("./AdminResourceGuidesPage"),
   "AdminResourceGuidesPage",
 );
+const AdminGlossaryPage = lazyNamed(
+  () => import("./AdminGlossaryPage"),
+  "AdminGlossaryPage",
+);
 const AdminResourceSuggestionsPage = lazyNamed(
   () => import("./AdminResourceSuggestionsPage"),
   "AdminResourceSuggestionsPage",
@@ -201,6 +209,7 @@ export function adminRoutes() {
       <Route path={routes.adminConcerns} element={<AdminConcernsPage />} />
       <Route path={routes.adminIntakes} element={<AdminIntakesPage />} />
       <Route path={routes.adminDsar} element={<AdminDsarPage />} />
+      <Route path={routes.adminQueues} element={<AdminQueuesPage />} />
       {/* PRD-31: the ban-evasion escalations community moderators raise from
           their own join-request queue. `@Roles(Moderator, Admin)`, so it is
           listed in MOD_ACCESSIBLE_ADMIN_PATTERNS. */}
@@ -297,6 +306,9 @@ export function adminRoutes() {
         path={routes.adminResourceGuides}
         element={<AdminResourceGuidesPage />}
       />
+      {/* PRD-264. Nested under the guide console's path so `authGate`'s
+          `${adminResourceGuides}/*` capability pattern already covers it. */}
+      <Route path={routes.adminGlossary} element={<AdminGlossaryPage />} />
       <Route
         path={routes.adminResourceListings}
         element={<AdminResourceListingsPage />}

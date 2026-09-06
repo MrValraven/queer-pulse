@@ -70,6 +70,13 @@ export function JoinCoopModal({
           em={t("economy:joinCoop.success.em")}
           onClose={onClose}
           closeLabel={t("economy:joinCoop.success.closeLabel")}
+          // PRD-242. Says where the answer will show up. Without it the panel
+          // was the last thing anyone ever heard about the application.
+          footer={
+            <p className={styles.successNote}>
+              {t("economy:joinCoop.success.whereToCheck")}
+            </p>
+          }
         >
           <Translation
             i18nKey="economy:joinCoop.success.body"

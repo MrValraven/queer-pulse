@@ -308,3 +308,26 @@
   color: var(--ink-60);
   overflow-wrap: anywhere;
 }
+
+/* ---- pending invitations, under the send form (ModToolsPendingInvites) ---- */
+
+/* Separated from the picker above it by more than a paragraph gap: it is a
+   second question on the same pane, and it has its own section label. */
+.pendingSection {
+  margin-top: 28px;
+}
+
+/* Who sent the invitation, and when. Two independent phrases rather than one
+   sentence, so neither has to be rebuilt in the other's grammar and a long
+   name wraps without stranding the date. */
+.metaLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-40);
+  overflow-wrap: anywhere;
+}

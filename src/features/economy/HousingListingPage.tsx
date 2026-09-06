@@ -7,6 +7,7 @@ import { PageShell } from "../../shared/components/layout";
 import { FadeIn, FeatureHelp, SaveButton } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ApiError } from "../../shared/api/client";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILTERS } from "./housing.data";
@@ -31,7 +32,14 @@ export function HousingListingPage() {
   const [messaging, setMessaging] = useState(false);
   const [requestingViewing, setRequestingViewing] = useState(false);
   const [reporting, setReporting] = useState(false);
-  const loading = useSimulatedLoad();
+  const { demoMode } = useDemoMode();
+  // `useSimulatedLoad` is a DEMO device (ENG-172). Demo mode hands
+  // `useHousingListing` its fixture as `initialData`, so the query is never
+  // pending there and the short fake beat is the only loading state the
+  // prototype has. Live mode has a real `isLoading`, and the fake 600ms sat on
+  // top of it, painting a skeleton over a listing that had already arrived.
+  const isSimulatedLoading = useSimulatedLoad();
+  const loading = demoMode && isSimulatedLoading;
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
 

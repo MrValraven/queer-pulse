@@ -3,8 +3,12 @@ import { FiCheck, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Button, SideSheet } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { BadgeDrawerEntry, BadgeVerification } from "./badges.data";
+import type { Badge, BadgeDrawerEntry, BadgeVerification } from "./badges.data";
 import { progressPercent, RARITY_LABEL_KEY } from "./badgeSelectors";
+import {
+  badgeCategoryLabelKeyFor,
+  badgeDisplayMetaFor,
+} from "./badgeCatalog.data";
 import { BadgeMedallion } from "./BadgeMedallion";
 import { useBadgeStoryNotes } from "./useBadgePreferences";
 import { useSetBadgeVisibility } from "./api/useRecognitionMutations";
@@ -46,6 +50,74 @@ interface BadgeDrawerProps {
   onClose: () => void;
 }
 
+/**
+ * The backend catalogue ships stable ids alongside English display words, so
+ * the words are resolved here rather than rendered off the wire (see
+ * `badgeCatalog.data.ts`). An id this build has no entry for falls back to the
+ * server's own English, which is at least readable.
+ */
+function badgeDisplayText(badge: Badge, t: (key: string) => string) {
+  const displayMeta = badgeDisplayMetaFor(badge.key);
+  const categoryLabelKey = badgeCategoryLabelKeyFor(badge.category);
+  return {
+    badgeName: displayMeta ? t(displayMeta.nameKey) : badge.name,
+    categoryLabel: categoryLabelKey ? t(categoryLabelKey) : badge.category,
+    // "What it takes" is the requirement, so it reads from the locked wording
+    // whether or not the badge is already earned.
+    criteriaText: displayMeta
+      ? t(displayMeta.lockedContextKey)
+      : (badge.criteria ?? badge.when),
+  };
+}
+
+interface BadgeDrawerHeroProps {
+  badge: Badge;
+  earned: boolean;
+  percentComplete: number;
+  badgeName: string;
+  categoryLabel: string;
+  criteriaText: string;
+}
+
+/** Medallion, category, name and the one-line status: when it was earned, how
+ *  far along it is, or what it takes. */
+function BadgeDrawerHero({
+  badge,
+  earned,
+  percentComplete,
+  badgeName,
+  categoryLabel,
+  criteriaText,
+}: BadgeDrawerHeroProps) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.drHero}>
+      <BadgeMedallion
+        badge={badge}
+        earned={earned}
+        progressPercent={percentComplete}
+        size="big"
+      />
+      <div className={styles.drCat}>
+        {badge.seasonal
+          ? t("members:badges.drawer.seasonalTag")
+          : categoryLabel}
+      </div>
+      <h3>{badgeName}</h3>
+      <p className={styles.drStatus}>
+        {earned
+          ? badge.when || t("members:badges.drawer.earnedThisWeek")
+          : badge.progress
+            ? t("members:badges.drawer.progressCount", {
+                units: badge.progress.units,
+                target: badge.progress.target,
+              })
+            : criteriaText}
+      </p>
+    </div>
+  );
+}
+
 /** Full badge detail: criteria, progress, rarity/worth/verification, the
  *  earned date or how far along it is, a private note (earned badges), and
  *  prev/next paging through whichever list opened it. */
@@ -70,6 +142,7 @@ export function BadgeDrawer({
   if (!current) return null;
   const { badge, earned } = current;
   const percent = progressPercent(badge);
+  const { badgeName, categoryLabel, criteriaText } = badgeDisplayText(badge, t);
   const isHiddenFromProfile =
     pendingHiddenByKey[badge.key] ?? badge.hiddenFromProfile === true;
   const isVisibleOnProfile = !isHiddenFromProfile;
@@ -96,7 +169,7 @@ export function BadgeDrawer({
   };
 
   return (
-    <SideSheet title={badge.name} onClose={onClose}>
+    <SideSheet title={badgeName} onClose={onClose}>
       <div className={styles.drNav}>
         <button
           type="button"
@@ -124,30 +197,14 @@ export function BadgeDrawer({
         </span>
       </div>
 
-      <div className={styles.drHero}>
-        <BadgeMedallion
-          badge={badge}
-          earned={earned}
-          progressPercent={percent}
-          size="big"
-        />
-        <div className={styles.drCat}>
-          {badge.seasonal
-            ? t("members:badges.drawer.seasonalTag")
-            : badge.category}
-        </div>
-        <h3>{badge.name}</h3>
-        <p className={styles.drStatus}>
-          {earned
-            ? badge.when || t("members:badges.drawer.earnedThisWeek")
-            : badge.progress
-              ? t("members:badges.drawer.progressCount", {
-                  units: badge.progress.units,
-                  target: badge.progress.target,
-                })
-              : (badge.criteria ?? badge.when)}
-        </p>
-      </div>
+      <BadgeDrawerHero
+        badge={badge}
+        earned={earned}
+        percentComplete={percent}
+        badgeName={badgeName}
+        categoryLabel={categoryLabel}
+        criteriaText={criteriaText}
+      />
 
       <div className={styles.drSec}>
         <h5>{t("members:badges.drawer.whatItTakes")}</h5>
@@ -155,7 +212,7 @@ export function BadgeDrawer({
           <span className={styles.critIcon}>
             {earned && <FiCheck aria-hidden />}
           </span>
-          <span>{badge.criteria ?? badge.when}</span>
+          <span>{criteriaText}</span>
         </div>
         <div className={styles.drStrip}>
           <div>

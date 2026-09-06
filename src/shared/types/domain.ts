@@ -49,4 +49,10 @@ export interface Community {
    *  page. Absent when the source doesn't carry it (an older cached card, or
    *  a community with none picked yet). */
   tags?: string[];
+  /** Resolved URL of the community's own square identity mark (PRD-146), when
+   *  the source knows it (the live card DTO). Absent or null when the community
+   *  set none, and in sources that don't carry it (the demo registry) — a card
+   *  draws no mark at all in that case rather than a placeholder, since it
+   *  already carries the community's name in full. */
+  avatarImageUrl?: string | null;
 }

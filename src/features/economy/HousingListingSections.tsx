@@ -2,6 +2,7 @@ import { FiArrowRight, FiBriefcase, FiCalendar } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Avatar, Button } from "../../shared/components/ui";
+import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { HousingListing } from "./housingListings";
@@ -15,6 +16,15 @@ import s from "./HousingListingPage.module.css";
 
 export function HousingListingMain({ listing }: { listing: HousingListing }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  // Owner detection with what the wire already carries: the lister's member
+  // slug against the signed-in member's own. `isLocationUnlocked` cannot answer
+  // this on its own, because it is true for the owner, for a connected member
+  // AND for an accepted viewing alike. Demo fixtures carry no lister slug, so
+  // demo reads correctly as "not your listing".
+  const isOwnListing = Boolean(
+    listing.poster.slug && user && listing.poster.slug === user.profile.slug,
+  );
   return (
     <div>
       <section className={s.sec}>
@@ -82,6 +92,7 @@ export function HousingListingMain({ listing }: { listing: HousingListing }) {
         <HousingLocationCard
           location={listing.location}
           title={listing.title}
+          isOwnListing={isOwnListing}
         />
       </section>
 

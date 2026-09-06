@@ -3,6 +3,13 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { AdminGovernanceDecisionRow } from "./AdminGovernanceDecisionRow";
+import {
+  decisionRowLabel,
+  EMPTY_AUTHORED_TEXT,
+  hasIncompleteAuthoredText,
+  SEEDED_DECISION_KEYS,
+} from "./adminGovernanceOverviewRows.utils";
 import { OverviewEditedBadge } from "./OverviewEditedBadge";
 import { OverviewEditorRow } from "./OverviewEditorRow";
 import { useOverviewRowReorder } from "./useOverviewRowReorder";
@@ -13,13 +20,15 @@ import type {
 } from "./api/adminGovernanceOverview.api";
 import styles from "./AdminGovernancePage.module.css";
 
-const DECISION_KEYS = [
-  "slidingScale",
-  "forumLaunched",
-  "visibilityDefaults",
-  "languageToggle",
-] as const;
-
+/**
+ * PRD-265. The public decision log, editable.
+ *
+ * Before this, the editor could only toggle the four entries the i18n bundle
+ * happened to carry, so the page the platform presents as its accountability
+ * record stopped at four decisions and the next real one could not be logged
+ * by the people who took it. "Add a decision" now writes a genuinely new entry,
+ * in both languages, persisted as data.
+ */
 export function AdminGovernanceDecisionsEditor({
   rows,
   meta,
@@ -39,22 +48,53 @@ export function AdminGovernanceDecisionsEditor({
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(rows);
 
-  const onRemove = (index: number): void => {
-    setDraft((prev) => prev.filter((_, i) => i !== index));
+  const patch = (index: number, partial: Partial<DecisionDTO>): void => {
+    setDraft((previous) =>
+      previous.map((row, rowIndex) =>
+        rowIndex === index ? { ...row, ...partial } : row,
+      ),
+    );
   };
 
-  const availableKeys = DECISION_KEYS.filter(
+  const onRemove = (index: number): void => {
+    setDraft((previous) =>
+      previous.filter((_, rowIndex) => rowIndex !== index),
+    );
+  };
+
+  const availableKeys = SEEDED_DECISION_KEYS.filter(
     (key) => !draft.some((row) => row.key === key),
   );
-  const onAdd = (): void => {
+
+  /** A new, empty authored entry — the path that no longer needs a deploy. */
+  const onAddAuthored = (): void => {
+    setDraft((previous) => [
+      ...previous,
+      { lead: EMPTY_AUTHORED_TEXT, body: EMPTY_AUTHORED_TEXT },
+    ]);
+  };
+
+  /** Put back a bundle entry that was removed from the list. */
+  const onRestoreSeeded = (): void => {
     const nextKey = availableKeys[0];
     if (!nextKey) return;
-    setDraft((prev) => [...prev, { key: nextKey }]);
+    setDraft((previous) => [...previous, { key: nextKey }]);
   };
+
+  const hasIncompleteAuthoredRow = draft.some(
+    (row) => !row.key && hasIncompleteAuthoredText([row.lead, row.body]),
+  );
 
   const onSave = () => {
     if (!dirty) {
       showToast(t("admin:governance.overview.edit.noChanges"), "info");
+      return;
+    }
+    if (hasIncompleteAuthoredRow) {
+      showToast(
+        t("admin:governance.overview.edit.needsBothLanguages"),
+        "error",
+      );
       return;
     }
     update.mutate(
@@ -87,17 +127,18 @@ export function AdminGovernanceDecisionsEditor({
 
       <div className={styles.ovList} ref={containerRef}>
         {draft.map((row, index) => (
+          // Index-keyed, like the council editor: a list that mixes seeded and
+          // authored entries has no field that is unique across both.
           <OverviewEditorRow
-            key={row.key}
-            {...rowProps(
-              index,
-              t(`admin:governance.overview.decisions.key.${row.key}`),
-            )}
+            key={index}
+            {...rowProps(index, decisionRowLabel(row, t))}
             onRemove={() => onRemove(index)}
           >
-            <span className={styles.editLineLabel}>
-              {t(`admin:governance.overview.decisions.key.${row.key}`)}
-            </span>
+            <AdminGovernanceDecisionRow
+              row={row}
+              index={index}
+              onPatch={(partial) => patch(index, partial)}
+            />
           </OverviewEditorRow>
         ))}
       </div>
@@ -107,15 +148,26 @@ export function AdminGovernanceDecisionsEditor({
         {announcement}
       </p>
 
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onAdd}
-        disabled={availableKeys.length === 0}
-        className={styles.ovAddBtn}
-      >
-        {t("admin:governance.overview.edit.addRow")}
-      </Button>
+      <div className={styles.ovAddRow}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onAddAuthored}
+          className={styles.ovAddBtn}
+        >
+          {t("admin:governance.overview.decisions.addDecision")}
+        </Button>
+        {availableKeys.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRestoreSeeded}
+            className={styles.ovAddBtn}
+          >
+            {t("admin:governance.overview.edit.restoreSeeded")}
+          </Button>
+        )}
+      </div>
 
       <div className={styles.ovFooter}>
         <span />

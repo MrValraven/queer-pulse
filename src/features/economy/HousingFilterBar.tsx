@@ -34,7 +34,8 @@ interface FilterBarProps {
 /**
  * The housing directory's whole control block: one always-visible row with the
  * "Refine" toggle and the List/Map switcher, the richer filters (area, price,
- * beds, move-in, bills, accessibility, verified) as bands in the drawer below,
+ * beds, move-in, deposit, bills, furnished, pets, accessibility, verified) as
+ * bands in the drawer below,
  * and the chip row saying which are currently on. The type chips stay in the
  * board above, as the board's top-level cut.
  *
@@ -60,15 +61,24 @@ export function HousingFilterBar({
   const priceLabelId = useId();
   const bedsLabelId = useId();
   const availableLabelId = useId();
+  const depositLabelId = useId();
   const flagsLabelId = useId();
   const activeFilters = useHousingActiveFilters({ filters, onChange });
 
-  const setNumber = (key: "priceMin" | "priceMax", raw: string) => {
+  const setNumber = (
+    key: "priceMin" | "priceMax" | "depositMax",
+    raw: string,
+  ) => {
     const value = raw.trim() === "" ? undefined : Number(raw);
     onChange({ ...filters, [key]: value });
   };
   const toggle = (
-    key: "billsIncluded" | "hasAccessibilityInfo" | "verifiedOnly",
+    key:
+      | "billsIncluded"
+      | "hasAccessibilityInfo"
+      | "furnished"
+      | "petsWelcome"
+      | "verifiedOnly",
   ) => onChange({ ...filters, [key]: filters[key] ? undefined : true });
 
   return (
@@ -175,6 +185,31 @@ export function HousingFilterBar({
           </RefineGroup>
         </RefineSplit>
 
+        <RefineSplit>
+          {/* A cap on the up-front deposit, the other money a renter has to
+              find. A listing whose lister stated no deposit is left out while
+              this is set: an unstated deposit is unknown, and showing it under
+              a cap would read as a promise nobody made. */}
+          <RefineGroup
+            label={t("economy:housing.filterBar.deposit")}
+            labelId={depositLabelId}
+          >
+            <div className={s.narrowField}>
+              <input
+                type="number"
+                min={0}
+                className={s.filterInput}
+                value={filters.depositMax ?? ""}
+                onChange={(event) =>
+                  setNumber("depositMax", event.target.value)
+                }
+                placeholder={t("economy:housing.filterBar.max")}
+                aria-label={t("economy:housing.filterBar.depositMax")}
+              />
+            </div>
+          </RefineGroup>
+        </RefineSplit>
+
         <RefineGroup
           label={t("economy:housing.filterBar.flagsLabel")}
           labelId={flagsLabelId}
@@ -185,6 +220,8 @@ export function HousingFilterBar({
             {(
               [
                 ["billsIncluded", "economy:housing.filterBar.bills"],
+                ["furnished", "economy:housing.filterBar.furnished"],
+                ["petsWelcome", "economy:housing.filterBar.pets"],
                 [
                   "hasAccessibilityInfo",
                   "economy:housing.filterBar.accessibility",

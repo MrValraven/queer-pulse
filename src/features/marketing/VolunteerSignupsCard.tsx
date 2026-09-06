@@ -10,11 +10,15 @@ import { routes } from "../../app/routeMap";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 /**
- * Poster-only roster of CONFIRMED volunteers (GET /volunteering/:slug/signups,
- * filtered to `status === "accepted"`) plus the "Close opportunity" control.
- * Pending applications aren't reviewed here — a link to the manage-applicants
- * dashboard (`VolunteerApplicantsDashboardPage`) handles that. Only mounted
- * when the viewer is the poster.
+ * The roster of CONFIRMED volunteers (GET /volunteering/:slug/signups, filtered
+ * to `status === "accepted"`) plus the "Close opportunity" control. Pending
+ * applications aren't reviewed here — a link to the manage-applicants dashboard
+ * (`VolunteerApplicantsDashboardPage`) handles that.
+ *
+ * Mounted for the whole review tier: the poster, or an owner/mod of the
+ * community the opportunity is attributed to. Closing is NOT part of that tier
+ * (`canCloseOpportunity`), so a community organiser reviews and accepts
+ * applicants without being able to end someone else's posting.
  */
 export function VolunteerSignupsCard({
   signups,
@@ -22,6 +26,7 @@ export function VolunteerSignupsCard({
   onClose,
   closing,
   closed,
+  canCloseOpportunity,
   opportunitySlug,
 }: {
   signups: SignupRow[];
@@ -29,6 +34,8 @@ export function VolunteerSignupsCard({
   onClose: () => void;
   closing: boolean;
   closed: boolean;
+  /** Poster-only. False for a community owner/mod reviewing this posting. */
+  canCloseOpportunity: boolean;
   opportunitySlug: string;
 }) {
   const { t } = useTranslation();
@@ -113,10 +120,12 @@ export function VolunteerSignupsCard({
 
       <div className={styles.posterActions}>
         {closed ? (
+          // The closed state is worth stating to every reviewer; only the
+          // poster is offered the control that gets there.
           <span className={styles.closedTag}>
             {t("marketing:volunteer.signups.closedTag")}
           </span>
-        ) : (
+        ) : canCloseOpportunity ? (
           <Button
             variant="ghost"
             className={styles.ctaBtn}
@@ -128,7 +137,7 @@ export function VolunteerSignupsCard({
               ? t("marketing:volunteer.signups.closing")
               : t("marketing:volunteer.signups.closeCta")}
           </Button>
-        )}
+        ) : null}
       </div>
     </div>
   );

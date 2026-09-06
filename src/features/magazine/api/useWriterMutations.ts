@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   fileDraft as sendFileDraft,
   submitPitch as sendSubmitPitch,
@@ -25,6 +26,7 @@ export function useWriterMutations() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   function invalidateWorkspace(): void {
     void queryClient.invalidateQueries({ queryKey: ["magazine-writer"] });
@@ -38,7 +40,7 @@ export function useWriterMutations() {
   >({
     mutationFn: async (body) => {
       if (demoMode) {
-        showToast("Pitch sent", "success");
+        showToast(t("magazine:writer.pitches.sentToast"), "success");
         return null;
       }
       return sendSubmitPitch(body);
@@ -54,7 +56,7 @@ export function useWriterMutations() {
   >({
     mutationFn: async ({ pieceId, body }) => {
       if (demoMode) {
-        showToast("Byline updated", "success");
+        showToast(t("magazine:writer.byline.updatedToast"), "success");
         return null;
       }
       return sendUpdateMyByline(pieceId, body);
@@ -63,9 +65,17 @@ export function useWriterMutations() {
   });
 
   /** POST /magazine/writer/pieces/:id/file — file a draft for review.
-   *  `body.blocks`, when present, is a whole pasted draft already converted
-   *  to paragraph blocks (`FileDraftModal`'s data-loss fix) — appended
-   *  server-side to the article draft before the piece advances stage. */
+   *  `body.blocks`, when present, is a whole pasted draft already converted to
+   *  paragraph blocks (`FileDraftModal`'s data-loss fix), written into the
+   *  article draft before the piece advances stage.
+   *
+   *  `body.mode` picks how: `append` (the default, and what older clients get
+   *  by omitting it) adds only the paragraphs the draft does not already end
+   *  with, so refiling the same text is a true no-op rather than doubling the
+   *  article; `replace` swaps the body wholesale, snapshotting the previous
+   *  one as an article version first. `body.expectedVersion` is the version
+   *  the writer last read, so a filing answers 409 rather than overwriting an
+   *  editor who saved in the meantime. */
   const fileDraft = useMutation<
     WriterAssignmentDto | null,
     Error,
@@ -73,7 +83,7 @@ export function useWriterMutations() {
   >({
     mutationFn: async ({ pieceId, body }) => {
       if (demoMode) {
-        showToast("Draft filed", "success");
+        showToast(t("magazine:writer.fileDraft.filedToast"), "success");
         return null;
       }
       return sendFileDraft(pieceId, body);

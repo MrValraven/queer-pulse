@@ -41,6 +41,46 @@ export interface InviteDTO {
 export const getInvite = (code: string) =>
   apiGet<InviteDTO>(`/invites/${encodeURIComponent(code)}`);
 
+/** Any run of whitespace, including the newline a paste out of a chat carries. */
+const CODE_WHITESPACE = /\s+/g;
+
+/**
+ * PRD-306. What a typed invite code has to become before it can be looked up.
+ *
+ * The backend matches the code EXACTLY (`invites.service.ts`,
+ * `findOne({ where: { code } })`), and mints every code from an uppercase
+ * alphabet in the shape `QP-XXXX-XXXX`. So two things a person typing by hand
+ * gets wrong are recoverable here and nowhere else:
+ *
+ *   - CASE. Upper-casing can never break a real code, because no code has ever
+ *     contained a lowercase character, and it rescues every code read out loud
+ *     or typed on a phone keyboard.
+ *   - WHITESPACE, anywhere. A code copied out of a message brings a trailing
+ *     newline or a stray space with it, and the lookup would answer 404 for
+ *     something the person holds correctly.
+ *
+ * Deliberately nothing else. No shape check, no hyphen repair: this platform
+ * has codes that predate the current generator, the demo fixtures use their
+ * own, and a client-side format rule would reject a valid code with a
+ * confident error rather than letting the server answer honestly.
+ */
+export function normalizeInviteCode(raw: string): string {
+  return raw.replace(CODE_WHITESPACE, "").toUpperCase();
+}
+
+/**
+ * Characters that would break out of the `/auth/invite/:code` path segment
+ * rather than resolve to a missing invite. Answered in the field, because
+ * navigating with one produces a route miss rather than the honest
+ * "we could not find that invite" the landing page renders.
+ */
+const CODE_PATH_BREAKING = /[/?#\\]/;
+
+/** True when `code` (already normalized) can safely be put in the invite URL. */
+export function isRoutableInviteCode(code: string): boolean {
+  return code.length > 0 && !CODE_PATH_BREAKING.test(code);
+}
+
 /** What the member types when generating a share link. */
 export interface CreateInvitePayload {
   /**

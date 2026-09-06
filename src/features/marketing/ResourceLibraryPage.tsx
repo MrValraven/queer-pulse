@@ -8,6 +8,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { CATEGORIES } from "../resources/library.data";
 import { useLibraryData } from "../resources/api/useLibraryData";
+import { SuggestEditModal } from "../resources/SuggestEditModal";
 import { SuggestEditTrigger } from "../resources/SuggestEditTrigger";
 import { LIBRARY_SUBPAGES, ORGANISATIONS } from "./resourceLibrary.data";
 import {
@@ -27,6 +28,13 @@ export function ResourceLibraryPage() {
   const { t } = useTranslation();
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
+  // PRD-272. The outro's "Suggest a resource" call used to be a
+  // `mailto:hello@queerpulse.com?subject=Resource suggestion`, which walked
+  // past the tracked intake this very page already offers a few hundred pixels
+  // higher up (`SuggestEditTrigger`, `context: "library"`). Both now open the
+  // same modal and land in the same queue, so a suggestion carries a status
+  // and an in-app answer instead of disappearing into a shared mailbox.
+  const [isSuggestOpen, setIsSuggestOpen] = useState(false);
   const {
     guides,
     loading: dataLoading,
@@ -184,13 +192,18 @@ export function ResourceLibraryPage() {
         }
         sub={t("marketing:resourceLibrary.outro.sub")}
       >
-        <Button
-          size="lg"
-          href="mailto:hello@queerpulse.com?subject=Resource suggestion"
-        >
+        <Button size="lg" type="button" onClick={() => setIsSuggestOpen(true)}>
           {t("marketing:resourceLibrary.outro.cta")}
         </Button>
       </Outro>
+
+      {isSuggestOpen && (
+        <SuggestEditModal
+          subjectOptions={guides.map((guide) => guide.title)}
+          context="library"
+          onClose={() => setIsSuggestOpen(false)}
+        />
+      )}
 
       <SubpageIndex
         eyebrow={t("marketing:resourceLibrary.subpages.eyebrow")}

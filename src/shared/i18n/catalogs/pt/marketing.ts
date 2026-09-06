@@ -819,6 +819,19 @@ export const marketing: Catalog = {
   "help.hero.eyebrow": "Ajuda",
   "help.hero.title": "Perguntas, <em>respondidas.</em>",
   "help.hero.sub": "Pesquisa abaixo, ou navega por tema.",
+  // PRD-271: ver a nota no catálogo EN.
+  "help.search.label": "Pesquisa no centro de ajuda",
+  "help.search.placeholder": "Pesquisa todas as respostas",
+  "help.search.summary_one":
+    "1 resposta corresponde a \u201c{query}\u201d, em todos os temas.",
+  "help.search.summary_other":
+    "{count} respostas correspondem a \u201c{query}\u201d, em todos os temas.",
+  "help.search.clear": "Limpar pesquisa",
+  "help.search.inCategory": "No tema:",
+  "help.search.resultsHead": "Respostas <em>encontradas</em>",
+  "help.search.emptyTitle": "Nada aqui corresponde a \u201c{query}\u201d",
+  "help.search.emptyBody":
+    "Tenta uma palavra mais curta ou outra grafia. Ou fala connosco: uma pessoa real lê todas as mensagens.",
   "help.category.gettingStarted.label": "Começar",
   "help.category.gettingStarted.head": "Para <em>começar</em>",
   "help.category.account.label": "Conta",
@@ -949,7 +962,7 @@ export const marketing: Catalog = {
   "partners.become.body":
     "Se a tua organização faz um trabalho alinhado em Lisboa ou arredores, gostaríamos de saber de ti.",
   "partners.become.applyCta": "Candidatar como parceiro",
-  "partners.become.emailCta": "hello@queerpulse.com",
+  "partners.become.contactCta": "Fala connosco primeiro",
   "partners.outro.title":
     "Conheces uma organização que <em>devia estar aqui?</em>",
   "partners.outro.sub":
@@ -978,7 +991,7 @@ export const marketing: Catalog = {
   "pressKit.outro.title": "Precisas de <em>algo específico?</em>",
   "pressKit.outro.sub":
     "Contacta diretamente o gabinete de imprensa: a maioria dos pedidos tem resposta no mesmo dia.",
-  "pressKit.outro.contactCta": "Enviar email ao gabinete de imprensa",
+  "pressKit.outro.askCta": "Fala com a redação de imprensa",
   "pressKit.downloadModal.eyebrow": "Kit completo · ZIP",
   "pressKit.downloadModal.title": "Descarrega o <em>kit completo.</em>",
   "pressKit.downloadModal.lead":
@@ -1720,10 +1733,10 @@ export const marketing: Catalog = {
     "As imagens ajudam as pessoas a sentir a sala antes de chegarem. E gostamos de saber quem está por trás da porta.",
   "listBusiness.step4.photosLabel": "Algumas fotos (opcional)",
   "listBusiness.step4.photosHelper":
-    "O plano geral é a sua capa: é a foto que aparece no seu cartão no diretório. Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
+    "O plano geral é a tua capa: é a foto que aparece no teu cartão no diretório. Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
   "listBusiness.step4.gallery.wide": "Plano geral do espaço",
   "listBusiness.step4.gallery.wideNote":
-    "Foto de capa · aparece no seu cartão no diretório",
+    "Foto de capa · aparece no teu cartão no diretório",
   "listBusiness.step4.gallery.detail": "Um detalhe",
   "listBusiness.step4.gallery.vibe": "Pessoas / ambiente",
   "listBusiness.step4.alt.wide": "Plano geral · texto alternativo",
@@ -2313,6 +2326,243 @@ export const marketing: Catalog = {
   "changelog.badge.fix": "Correção",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   // Section 11, core member journeys (PRD-01..PRD-18).
+  // Seccao 4 (Comunidades), 6 Set 2026.
+  "changelog.entries.photos-match-your-screen-instead-of-a-guess.title":
+    "As fotos passam a acertar com o teu ecrã em vez de adivinhar",
+  "changelog.entries.photos-match-your-screen-instead-of-a-guess.body":
+    "Todas as imagens pediam o dobro dos pixels do espaço que ocupavam, fosse qual fosse o teu ecrã. Isso é quatro vezes mais do que um portátil normal consegue mostrar, e ainda assim pouco para um telemóvel nítido, por isso as fotos eram ao mesmo tempo mais pesadas do que precisavam e menos nítidas do que deviam. As imagens passam a pedir o que o teu ecrã mostra de facto. Escolher e recortar uma foto foi refeito na mesma passagem, para a tua foto de perfil e para as imagens de uma persona.",
+  "changelog.entries.you-can-step-back-from-a-connection-without-blocking.title":
+    "Podes afastar-te de uma ligação sem bloquear",
+  "changelog.entries.you-can-step-back-from-a-connection-without-blocking.body":
+    "Terminar uma ligação discretamente não tinha botão, por isso a única forma de te afastares de alguém era bloquear, o que cria um registo de bloqueio, tira essa pessoa das tuas conversas e esconde os dois perfis um do outro. Agora há uma ação Terminar ligação no menu da ligação. Pede confirmação, e a confirmação diz exatamente o que acontece: a outra pessoa não recebe aviso, nada do que já escreveram é apagado, a conversa continua na tua caixa de entrada, e qualquer um pode pedir ligação outra vez mais tarde. Nenhum dos dois pode enviar mensagens novas enquanto não estiverem ligados.",
+  // ── Secção 10 (Recursos, sobre e cívico), 6 set 2026 ────────────────────
+  "changelog.entries.help-centre-search.title": "Pesquisa no centro de ajuda",
+  "changelog.entries.help-centre-search.body":
+    "O centro de ajuda tinha seis separadores por tema e nenhum sítio para escrever. Agora há uma caixa de pesquisa que percorre todas as respostas ao mesmo tempo, por isso uma pergunta encontra a resposta mesmo quando ela está num separador que não terias aberto. Também encontra em português, com ou sem acentos.",
+  "changelog.entries.a-safe-space-badge-has-to-be-earned.title":
+    "Um emblema de espaço seguro tem de ser conquistado",
+  "changelog.entries.a-safe-space-badge-has-to-be-earned.body":
+    "A página dos espaços seguros dizia que cada espaço tinha sido visitado por várias pessoas sem interesse nele. A contagem das três visitas era calculada e registada, e depois nada a verificava antes de o emblema ser atribuído. Agora é verificada. Um emblema ainda pode ser atribuído com menos visitas quando a equipa tem uma razão, e nesse caso a razão fica registada e o emblema mostra a contagem real. Isto vale para os emblemas atribuídos a partir de hoje; os anteriores mantêm a data e voltam a revisão passado um ano.",
+  "changelog.entries.rooms-in-a-vetted-group-are-for-its-members.title":
+    "Os quartos de um grupo vetado são para os seus membros",
+  "changelog.entries.rooms-in-a-vetted-group-are-for-its-members.body":
+    "Um grupo de habitação com triagem existe precisamente porque os quartos vêm de quem já foi deixado entrar, e até agora qualquer pessoa os podia ler, mesmo sem sessão iniciada. Agora ficam lá dentro. O grupo, a cidade e as regras da casa continuam abertos a toda a gente, por isso podes encontrá-lo e pedir para entrar, e publicar um quarto num deles também passa a exigir um pedido aprovado.",
+  "changelog.entries.a-viewing-that-tells-you-what-happened.title":
+    "Uma visita que te diz o que aconteceu",
+  "changelog.entries.a-viewing-that-tells-you-what-happened.body":
+    "Pedir para ver uma casa, ser aceite, receber outra proposta de horário, ser recusado ou ver a visita cancelada acontecia tudo em silêncio. Quem anunciava só sabia que alguém queria visitar se abrisse a página das visitas, e ninguém era avisado de que tinha sido aceite. As cinco coisas chegam-te agora, na aplicação.",
+  "changelog.entries.the-exact-address-once-you-connect.title":
+    "A morada exata, assim que se ligam",
+  "changelog.entries.the-exact-address-once-you-connect.body":
+    "Todos os anúncios prometiam que a morada exata aparecia assim que tu e a pessoa ficassem ligados, e nenhum formulário alguma vez pediu uma morada, por isso a promessa não podia ser cumprida. Quem anuncia já pode indicar a morada. Fica privada, visível só para quem se liga ou a quem aceita uma visita, e todos os outros continuam a ver o bairro.",
+  "changelog.entries.an-answer-on-your-housing-application.title":
+    "Uma resposta à tua candidatura de habitação",
+  "changelog.entries.an-answer-on-your-housing-application.body":
+    "Pedir para entrar numa cooperativa ou num grupo de habitação acabava num painel de sucesso. Não havia notificação quando alguém decidia nem página para consultar, por isso o pedido simplesmente desaparecia. Agora ficas a saber quando é decidido, e as duas páginas mostram-te o ponto de situação.",
+  "changelog.entries.filter-for-pets-furnishing-and-deposit.title":
+    "Filtra por animais, mobília e caução",
+  "changelog.entries.filter-for-pets-furnishing-and-deposit.body":
+    "Quem anuncia marca Mobilado e Aceita animais desde que o quadro abriu, e não havia forma de procurar por nenhum dos dois, por isso quem tinha um cão lia todas as descrições à mão. Já são filtros. Quem anuncia também pode indicar a caução, e tu podes definir um limite. Uma casa sem caução indicada fica de fora de uma pesquisa com limite, em vez de contar como zero.",
+  "changelog.entries.a-warning-before-your-listing-expires.title":
+    "Um aviso antes de o teu anúncio expirar",
+  "changelog.entries.a-warning-before-your-listing-expires.body":
+    "Os anúncios duram sessenta dias e depois saem do quadro sem barulho. Todos os sinais que tinhas chegavam depois disso. O teu anúncio avisa-te agora com uma semana de antecedência, e o cartão diz quantos dias faltam em vez de uma data seca, para prolongar ser uma decisão e não um salvamento.",
+  "changelog.entries.landlord-recommendations-say-what-they-are.title":
+    "As recomendações de senhorios dizem o que são",
+  "changelog.entries.landlord-recommendations-say-what-they-are.body":
+    "Uma recomendação é um juízo público e nomeado sobre uma pessoa real que não tem conta aqui. Escrever uma passa a implicar dizeres que arrendaste a essa pessoa e mais ou menos quando, cada recomendação fica marcada como declarada pelo próprio e não verificada porque nada aqui consegue confirmá-la, e quem é nomeado pode pedir para responder. A resposta é publicada ao lado das palavras a que responde.",
+  "changelog.entries.counts-and-dates-you-can-trust.title":
+    "Contagens e datas em que podes confiar",
+  "changelog.entries.counts-and-dates-you-can-trust.body":
+    "O diretório dizia que era atualizado mensalmente, a lista de espaços seguros dizia junho de 2025, uma página afirmava quarenta e sete espaços verificados, e outras duas contavam remoções deste ano que eram afinal de sempre. Nada disto era verificável. Todos os números dessas páginas são agora os reais, todas as datas são verdadeiras, e as afirmações que não conseguíamos sustentar desapareceram. Os guias de vistos e de chegada passam a ter data de revisão e enviam-te à fonte oficial para os valores que mudam todos os anos.",
+  "changelog.entries.reporting-without-an-account.title":
+    "Denunciar sem ter conta",
+  "changelog.entries.reporting-without-an-account.body":
+    "O formulário de denúncia sempre disse que estava aberto a qualquer pessoa, e até agora não estava: sem conta, o envio falhava. Já funciona. Podes denunciar a partir das páginas de segurança, de um anúncio, de um encontro ou do perfil de alguém, tenhas ou não sessão iniciada.",
+  "changelog.entries.report-from-where-you-are.title":
+    "Denuncia a partir de onde encontras o problema",
+  "changelog.entries.report-from-where-you-are.body":
+    "Um encontro pode agora ser denunciado a partir da própria página, por isso já não tens de confirmar presença primeiro e pôr o teu nome na lista do anfitrião para dizer que algo está errado. As oportunidades de voluntariado passam a poder ser denunciadas pela primeira vez, e um perfil tem uma ação de denúncia própria em vez de a esconder dentro do Bloquear.",
+  "changelog.entries.a-receipt-when-you-report.title":
+    "Um comprovativo assim que denuncias",
+  "changelog.entries.a-receipt-when-you-report.body":
+    "Fazer uma denúncia coloca já uma confirmação nas tuas notificações, com a referência do caso. Antes, se fechasses a mensagem de sucesso, ficavas sem nada até um moderador terminar o caso, o que pode demorar dias.",
+  "changelog.entries.every-decision-carries-a-reason.title":
+    "Todas as decisões vêm com a sua justificação",
+  "changelog.entries.every-decision-carries-a-reason.body":
+    "O Código de Conduta diz que te explicamos sempre porquê. Um moderador já não pode registar um aviso, uma restrição, uma suspensão, um bloqueio ou uma remoção sem escrever a justificação que recebes. Bloquear alguém e denunciar ao mesmo tempo passa também a levar o motivo real, por isso uma denúncia sobre exposição ou divulgação de dados chega à fila mais rápida em vez da mais lenta.",
+  "changelog.entries.appeal-dates-you-can-hold-us-to.title":
+    "Prazos de recurso a que nos podes obrigar",
+  "changelog.entries.appeal-dates-you-can-hold-us-to.body":
+    "A página de recurso mostra agora quanto tempo tens para o apresentar, e o teu recurso mostra a data em que te devemos uma resposta. O texto antigo indicava dois prazos diferentes e nenhum correspondia ao que a plataforma faz. Se a janela já fechou, a página di-lo e nomeia o dia em que fechou, em vez de simplesmente recusar.",
+  "changelog.entries.guides-and-partners-without-signing-in.title":
+    "Páginas públicas que abrem mesmo sem sessão iniciada",
+  "changelog.entries.guides-and-partners-without-signing-in.body":
+    "O glossário, as páginas de parceiros, a lista de voluntariado, o registo de governação e as listas de apoio jurídico e de testagem são para qualquer pessoa ler. Pediam ao servidor dados só para membros, por isso quem não tinha sessão via um painel de erro e um botão de tentar outra vez que nunca podia funcionar. Já abrem.",
+  "changelog.entries.a-code-to-follow-your-concern.title":
+    "Um código para acompanhar uma preocupação que levantaste",
+  "changelog.entries.a-code-to-follow-your-concern.body":
+    "Levantar uma preocupação sem conta acabava em silêncio, porque o formulário prometia uma confirmação por email e o QueerPulse não envia nenhum. Passas a receber um código de referência ao submeter. Guarda-o, e podes ver a qualquer momento se a tua preocupação está à espera, em análise, ou fechada. Não recolhe nada sobre ti.",
+  "changelog.entries.the-decision-log-can-grow.title":
+    "O registo de decisões já pode receber a próxima decisão",
+  "changelog.entries.the-decision-log-can-grow.body":
+    "O registo público de decisões, princípios e lugares do conselho estava fixo no que vinha na aplicação, por isso quem tomava uma decisão não a conseguia registar. A equipa de governação pode agora escrever uma entrada nova em inglês e português, editá-la e reordená-la, sem esperar por uma atualização.",
+  "changelog.entries.partners-keep-their-own-page.title":
+    "As organizações parceiras mantêm a sua própria página",
+  "changelog.entries.partners-keep-their-own-page.body":
+    "Uma organização parceira aprovada não tinha forma de corrigir o próprio telefone, morada ou descrição. Passa a haver um editor do perfil de parceiro na tua conta. O nível de parceria e a data de entrada continuam com a equipa de parcerias, porque descrevem a relação e não a organização.",
+  "changelog.entries.one-way-to-apply-as-a-partner.title":
+    "Uma só forma de te candidatares a parceria",
+  "changelog.entries.one-way-to-apply-as-a-partner.body":
+    "Havia dois formulários para o mesmo pedido. O da página Para Organizações criava uma mensagem que nunca chegava a ser parceria, enquanto o formulário de candidatura tinha fila e resposta. Os dois levam agora à candidatura verdadeira, e a resposta chega dentro da aplicação.",
+  "changelog.entries.the-glossary-reads-in-portuguese.title":
+    "O glossário abre na tua língua",
+  "changelog.entries.the-glossary-reads-in-portuguese.body":
+    "O glossário abria em inglês fosse qual fosse a língua do resto do site, as etiquetas de categoria ficavam em inglês depois de mudares, e pesquisar em português não encontrava nada. Passa a seguir a tua língua até seres tu a mudar, e a pesquisa lê as definições em português.",
+  "changelog.entries.suggest-a-glossary-term.title":
+    "Sugerir um termo que falta",
+  "changelog.entries.suggest-a-glossary-term.body":
+    "Sugerir uma palavra ia parar ao formulário de contacto geral e chegava como uma mensagem sem estrutura. Passa a chegar à equipa editorial como sugestão, e essa equipa tem uma consola para acrescentar o termo e terminar a definição em português.",
+  "changelog.entries.reach-the-team-behind-an-opportunity.title":
+    "Falar com a equipa por trás de uma oportunidade de voluntariado",
+  "changelog.entries.reach-the-team-behind-an-opportunity.body":
+    'Depois de te candidatares, "Enviar mensagem à equipa" deixava-te numa caixa de entrada vazia sem ninguém a quem escrever. Passa a abrir uma conversa com quem publicou a oportunidade. Quem organiza uma comunidade e pode rever candidaturas também vê a lista de candidaturas na publicação, em vez de lhe ser oferecido o botão de candidatura na sua própria oportunidade.',
+  "changelog.entries.approved-resources-appear-straight-away.title":
+    "Um recurso aprovado aparece no diretório",
+  "changelog.entries.approved-resources-appear-straight-away.body":
+    "Aprovar a sugestão de recurso de um membro dizia-lhe que tinha sido aceite e deixava o diretório na mesma até alguém a reescrever à mão. A aprovação passa a publicar a ficha no mesmo passo, com os dados confirmados antes, para que um telefone numa lista de apoio jurídico ou de uma clínica seja o que o membro enviou.",
+  "changelog.entries.guides-get-reviewed-on-time.title":
+    "Os guias são revistos a tempo",
+  "changelog.entries.guides-get-reviewed-on-time.body":
+    "Todos os guias ficam escondidos de quem lê até alguém da equipa editorial confirmar que continuam corretos, e cada um volta a ficar por rever ao fim de algum tempo. Nada avisava ninguém quando isso acontecia, por isso páginas de redução de riscos e de saúde trans podiam ficar escondidas durante meses. Os guias fora de prazo passam a levantar um sinal na fila de administração e a tocar a quem os cuida.",
+  "changelog.entries.the-trans-healthcare-guide-in-portuguese.title":
+    "O guia de saúde trans, em português",
+  "changelog.entries.the-trans-healthcare-guide-in-portuguese.body":
+    "Os percursos clínicos do guia de saúde trans, e o diretório de organizações QTIPOC, estavam escritos só em inglês mesmo para quem lê em português. Ambos estão agora traduzidos por completo, incluindo tempos de espera, custos e referências legais.",
+  "changelog.entries.forms-instead-of-email-links.title":
+    "Formulários em vez de ligações de email",
+  "changelog.entries.forms-instead-of-email-links.body":
+    "Várias páginas pediam que enviasses email para uma caixa partilhada, que não tinha fila nem forma de te dizer o que aconteceu. Essas páginas passam a abrir os mesmos formulários que o resto da plataforma usa, para que uma sugestão ou uma pergunta de imprensa possa ser acompanhada e respondida onde a enviaste.",
+  "changelog.entries.send-a-document-in-a-message.title":
+    "Já podes enviar um documento numa mensagem",
+  "changelog.entries.send-a-document-in-a-message.body":
+    "As mensagens levavam fotos e GIFs e mais nada, por isso partilhar um contrato de arrendamento, um cartaz ou uma folha de cálculo obrigava a sair da plataforma para o email, precisamente o momento em que uma conversa sobre casa ou voluntariado costumava morrer. Agora podes anexar um PDF, um ficheiro de texto, um CSV ou uma folha de cálculo, até 20 MB, e chega como um cartão com o nome, o formato e o tamanho. Os documentos são servidos com a mesma proteção que as fotos já tinham: só quem está na conversa os consegue abrir, e ter o link não chega. Uma ressalva honesta enquanto tratamos disto: numa foto os dados escondidos são removidos ao preparar o envio, e num documento ainda não, por isso um ficheiro que envies leva consigo o que já disser sobre autoria e programa usado.",
+  "changelog.entries.delete-a-message-just-for-you.title":
+    "Já podes eliminar uma mensagem só para ti",
+  "changelog.entries.delete-a-message-just-for-you.body":
+    "Eliminar uma mensagem tirava-a para toda a gente, por isso a única forma de limpares algo do teu lado era apagar a conversa inteira e perder o histórico que querias guardar. Agora existe Eliminar só para mim, ao lado da outra opção. A mensagem sai da tua vista e continua fora dela em todos os teus dispositivos: na conversa, na pesquisa, nas mensagens fixadas, nas guardadas e na pré-visualização da conversa. Para a outra pessoa não muda nada, e não fica com ar de eliminada.",
+  "changelog.entries.mark-a-conversation-unread.title":
+    "Já podes marcar uma conversa como não lida",
+  "changelog.entries.mark-a-conversation-unread.body":
+    "Abrir uma conversa a caminho de outra coisa marcava-a como lida, e não havia forma de a assinalar para voltares lá. Marcar como não lida está agora no menu da conversa, ao lado de fixar, favorito, silenciar e arquivar. Vale em todos os teus dispositivos, aguenta saíres da página e voltares, e volta a limpar-se quando abres a conversa outra vez.",
+  "changelog.entries.new-messages-reach-you-wherever-you-are.title":
+    "As mensagens novas chegam-te onde quer que estejas",
+  "changelog.entries.new-messages-reach-you-wherever-you-are.body":
+    "Uma mensagem nova só te chegava na hora se calhasse teres aquela conversa aberta. Se estivesses noutra conversa, ou em qualquer outro sítio da aplicação, não vias nada até recarregares, e quem te escreveu continuava a ver um só visto, como se nunca tivesse chegado. A tua caixa de entrada e o teu contador atualizam-se agora assim que chega mensagem a qualquer uma das tuas conversas, e o segundo visto de quem enviou aparece quando a mensagem te chega, não quando te lembras de a abrir.",
+  "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.title":
+    "Responder a um contacto sobre casa já não falha em silêncio",
+  "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.body":
+    "Perguntar por um quarto ou por uma casa partilhada abria uma conversa com alguém a quem não estavas ligado, e todas as respostas a seguir à primeira mensagem eram recusadas, dos dois lados. A caixa de escrita parecia perfeitamente normal, por isso quem alugava o quarto respondia a uma pergunta, via a mensagem ficar vermelha, e quem tinha perguntado assumia que a tinham ignorado. A conversa passa a dizer com clareza que responder precisa de uma ligação, e oferece o pedido de ligação ali mesmo, para a conversa continuar em vez de morrer sem explicação.",
+  "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.title":
+    "Notificações que consegues limpar e que abrem o que dizem",
+  "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.body":
+    "Havia três coisas erradas ao mesmo tempo. Responder a um pedido de ligação a partir de uma notificação só limpava a linha no dispositivo onde respondeste, por isso voltava por ler em todos os outros, com botões de Aceitar e Recusar ativos num pedido já resolvido, e não havia forma de limpar uma linha que simplesmente não querias. Tocar numa notificação sobre uma publicação de comunidade ou uma menção numa mensagem levava-te à lista de notificações e não à publicação ou à mensagem. E o número no topo da página não batia certo com o número do sino ao lado. As linhas passam a limpar-se de vez em todos os dispositivos, abrem aquilo de que falam, e os dois números vêm agora do mesmo sítio.",
+  "changelog.entries.hiding-your-photo-now-holds-everywhere.title":
+    "Desligar a tua foto passa a valer em todo o lado",
+  "changelog.entries.hiding-your-photo-now-holds-everywhere.body":
+    "A definição Mostrar a tua foto era respeitada no mural e no fórum e ignorada em quase todo o resto, por isso quem a tinha desligado continuava a mostrar a cara a toda a gente nas mensagens diretas, a quem estava no mesmo encontro, às suas ligações, a quem visitasse um perfil a que tinha dado voto de confiança, e a quem gere uma comunidade de que tem cartão. Também continuava publicada na página pública que os motores de busca leem. Tudo isso passa agora pela mesma verificação, para a definição querer dizer o que diz.",
+  "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.title":
+    "Quem bloqueaste já não te pode dar voto de confiança",
+  "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.body":
+    "Os votos de confiança não sabiam nada sobre bloqueios. Alguém que tivesses bloqueado podia continuar a dar-te voto de confiança, a fazer subir a tua contagem, e a ter a cara na fila de quem confia em ti, à vista tua e de quem visitasse, sem forma de a tirares. Bloquear passa a recusar o voto, e um voto de quem bloqueaste depois deixa de contar e de aparecer, para ti e para toda a gente. Desbloquear repõe tudo.",
+  "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.title":
+    "Uma lista de votos escondida já não se lê como nenhum voto",
+  "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.body":
+    "Se tinhas escolhido manter privada a lista de quem te deu voto de confiança, o teu perfil dizia a quem visitava que ainda não tinhas nenhum, enquanto o número verdadeiro aparecia umas linhas abaixo na mesma página, e a página convidava a pessoa a ser a primeira. O cabeçalho passa a dizer o número verdadeiro sem nomear ninguém, e a dizer que os nomes são privados. Tu continuas a ver a tua lista, e há uma linha a dizer-te que quem visita vê só o número.",
+  "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.title":
+    "Um perfil privado passa a dizê-lo em vez de parecer abandonado",
+  "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.body":
+    "Abrir o perfil de quem o mantém privado, ou só o partilha com as suas ligações, mostrava um nome e mais nada, o que se lê como uma conta abandonada e não como uma decisão. Agora há uma nota curta a dizer de quem foi a escolha e o que mudaria. Os dois casos dizem coisas diferentes, porque são diferentes: um perfil de rede abre-se quando ficarem ligados, e um perfil privado continua privado, embora ligarem-se permita trocarem mensagens.",
+  "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.title":
+    "Esconderes-te passa a valer na fila Pessoas como tu",
+  "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.body":
+    "A fila de pessoas relacionadas no fundo de um perfil não aplicava nenhuma das verificações que todas as outras listas aplicam. Quem te tinha bloqueado, quem se tinha escondido de ti em particular, ou quem tinha ligado Esconder-me durante 24 horas continuava a aparecer ali com nome, pronomes e foto, e o mesmo acontecia a quem a moderação tinha removido. As quatro passam a aplicar-se, para que escolher estar escondida não seja desfeito por uma fila de sugestões.",
+  "changelog.entries.renaming-your-username-no-longer-breaks-every-link-to-you.title":
+    "Mudar de nome de utilizador já não parte todas as ligações para ti",
+  "changelog.entries.renaming-your-username-no-longer-breaks-every-link-to-you.body":
+    "Mudar o nome de utilizador libertava logo o antigo, por isso todos os cartões impressos, ligações partilhadas e menções coladas que apontavam para ti morriam numa página de não encontrado no momento em que mudavas. As ligações antigas passam a encaminhar para o teu endereço novo e a dizer-te que o fizeram, tanto no perfil de membro como na página pública. O encaminhamento é temporário de propósito: dura só enquanto o nome antigo está reservado, para que, a partir do momento em que outra pessoa o possa reclamar legitimamente, pare em vez de mandar quem te procura para uma desconhecida.",
+  "changelog.entries.you-can-search-the-member-directory-by-name.title":
+    "Podes procurar no diretório de pessoas pelo nome",
+  "changelog.entries.you-can-search-the-member-directory-by-name.body":
+    "O diretório tinha filtros mas não tinha onde escrever um nome, por isso encontrar a pessoa que conheceste ontem obrigava a sair dali para a pesquisa geral. Agora há uma caixa de procura que encontra parte de um nome, e funciona ao lado dos filtros que já tinhas.",
+  "changelog.entries.the-persona-directory-now-searches-all-of-it-at-once.title":
+    "O diretório de personas passa a procurar em tudo de uma vez",
+  "changelog.entries.the-persona-directory-now-searches-all-of-it-at-once.body":
+    "A procura de personas acontecia no teu navegador, sobre o que já tinha sido descarregado, o que obrigava a página a ir buscar até vinte lotes de cem um atrás do outro antes de te mostrar seja o que for, e mesmo assim a procura não via para lá da persona número dois mil. A procura passa a correr no servidor sobre todas as personas, e a página carrega num único pedido.",
+  "changelog.entries.a-co-owned-persona-link-opens-the-right-persona.title":
+    "Uma persona partilhada abre a persona certa",
+  "changelog.entries.a-co-owned-persona-link-opens-the-right-persona.body":
+    "Uma persona partilhada por várias pessoas era ligada a partir do perfil de cada uma usando o nome dessa pessoa, mas uma persona só se encontra sob o nome de quem a criou. Todas essas ligações falhavam, e se quem copossui tivesse uma persona sua com o mesmo nome curto, a ligação abria essa outra persona. Cada persona passa a ter um endereço só, e o cartão no telemóvel e no computador usam ambos esse.",
+  "changelog.entries.no-more-persona-share-links-and-qr-codes-that-lead-nowhere.title":
+    "Acabaram as ligações e códigos QR de personas que não levam a lado nenhum",
+  "changelog.entries.no-more-persona-share-links-and-qr-codes-that-lead-nowhere.body":
+    "Partilhar, código QR, cartão de contacto e Ver no teu painel de personas inventavam um endereço para uma persona que nunca tinha sido publicada ou ainda não tinha handle, por isso podias copiar uma ligação ou imprimir um código QR que não levava a lado nenhum e só descobrias quando alguém o lesse. Os quatro passam a vir do único sítio que sabe o endereço real de uma persona. Quando ainda não há endereço, ficam visivelmente indisponíveis com uma linha a dizer o que fazer, em vez de errados em silêncio.",
+  "changelog.entries.co-owners-are-offered-leave-instead-of-a-delete-that-fails.title":
+    "Quem copossui recebe Sair em vez de um Eliminar que falha",
+  "changelog.entries.co-owners-are-offered-leave-instead-of-a-delete-that-fails.body":
+    "Eliminar uma persona sempre esteve reservado a quem a criou, mas o botão Eliminar aparecia a toda a gente que a copossui. Podias ler o aviso sobre o que todos estavam prestes a perder, escrever o nome da persona para confirmar, e receber uma falha genérica sem explicação e sem indicação da ação Sair, que é a que se te aplica. Agora recebes Sair no sítio onde procuravas Eliminar. O aviso de quem criou também passa a contar bem: antes incluía quem estava a ler entre as pessoas a quem estava a tirar a persona.",
+  "changelog.entries.the-personas-you-follow-now-have-a-home.title":
+    "As personas que segues passam a ter um sítio",
+  "changelog.entries.the-personas-you-follow-now-have-a-home.body":
+    "Seguir uma persona não dava nada a quem seguia. Não havia lista de quem segues e nunca mais te chegava nada, por isso o botão era decorativo. Agora há um separador Que segues no diretório de personas com todas as que segues, com deixar de seguir em cada linha, e passas a saber quando uma persona que segues publica trabalho novo. É uma notificação por persona e não uma por peça, e há um interruptor para desligar isso mantendo a lista. A notificação nomeia a persona e nunca quem está por trás dela.",
+  "changelog.entries.badges-levels-and-perks-now-read-in-your-language.title":
+    "Distintivos e níveis passam a ler-se na tua língua",
+  "changelog.entries.badges-levels-and-perks-now-read-in-your-language.body":
+    "Os nomes dos distintivos, o que é preciso para cada um, os filtros por categoria e os nomes dos sete níveis estavam escritos em inglês no servidor e eram mostrados tal e qual, por isso quem lê português via Local Scout, Save 3 places in the Local directory e Newcomer numa página traduzida no resto. O nome do nível aparece no cabeçalho do teu perfil, o que fazia dele o inglês mais visível que restava na aplicação. Tudo isso passa a ler-se na língua que escolheste. Duas listas mais pequenas que tinham sido copiadas à mão já divergiam dos nomes verdadeiros, em inglês e em português, e passam a ler de uma só fonte.",
+  "changelog.entries.a-membership-card-check-shows-a-real-role-name.title":
+    "A verificação de um cartão mostra um nome de função a sério",
+  "changelog.entries.a-membership-card-check-shows-a-real-role-name.body":
+    "Ler o cartão de quem copossui uma comunidade à porta mostrava um código interno em bruto onde devia estar a função, precisamente no ecrã pensado para ser lido por alguém de fora sem contexto. Passa a mostrar o nome da função, e uma função desconhecida mostra algo legível em vez de um código.",
+  "changelog.entries.invite-only-communities-can-finally-let-people-in.title":
+    "As comunidades por convite já conseguem deixar entrar",
+  "changelog.entries.invite-only-communities-can-finally-let-people-in.body":
+    "Se tens uma comunidade privada ou por convite, um convite abre mesmo a porta. Até agora, quem convidavas ia parar a uma página que dizia que a comunidade não existia. Um convite passou a ser uma coisa real que a pessoa tem: mostra-lhe a comunidade, deixa-a entrar directamente, e podes retirá-lo se mudares de ideias.",
+  "changelog.entries.your-invitations-now-wait-for-you-in-one-place.title":
+    "Os teus convites ficam à tua espera num só sítio",
+  "changelog.entries.your-invitations-now-wait-for-you-in-one-place.body":
+    "Os convites viviam só numa notificação que desaparecia. Agora há uma página com todas as comunidades que te pediram para entrar, quem te convidou, e a escolha de abrir ou recusar. Recusar é discreto: ninguém fica a saber.",
+  "changelog.entries.an-archived-community-stays-readable-to-its-members.title":
+    "Uma comunidade arquivada continua legível para quem a construiu",
+  "changelog.entries.an-archived-community-stays-readable-to-its-members.body":
+    "Arquivar uma comunidade dizia que ela ficava visível como registo só de leitura. Não ficava: toda a gente menos a moderação perdia tudo o que lá tinha escrito. Agora o arquivo é o que sempre prometeu ser. Quem era membro continua a ler tudo, e ninguém pode publicar, responder, reagir ou entrar.",
+  "changelog.entries.leaving-a-community-you-run-now-points-you-somewhere.title":
+    "Sair de uma comunidade que é tua já te leva a algum lado",
+  "changelog.entries.leaving-a-community-you-run-now-points-you-somewhere.body":
+    "Quem era responsável via o mesmo botão de sair que toda a gente, confirmava, e recebia um erro sem explicação. Uma comunidade não pode ficar sem quem responda por ela, por isso agora dizemos isso com clareza e levamos-te à passagem de testemunho.",
+  "changelog.entries.the-communities-home-tab-shows-your-real-week.title":
+    "O separador inicial das comunidades mostra a tua semana a sério",
+  "changelog.entries.the-communities-home-tab-shows-your-real-week.body":
+    "A vista geral mostrava a mesma semana vazia a toda a gente. Agora lê das tuas comunidades: o que foi publicado, o que vem aí, e o que está à tua espera.",
+  "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.title":
+    "Já podes ver os convívios de uma comunidade antes de entrares",
+  "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.body":
+    "Todas as comunidades onde ainda não tinhas entrado te diziam que não havia convívios, mesmo com três no calendário. Os convívios são das melhores razões para entrar algures, por isso já vês os que são abertos a partir de fora. O que uma comunidade reserva a quem já é membro continua reservado, e dizemo-lo na página.",
+  "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.title":
+    "As comunidades podem ter uma marca e uma nota de boas-vindas",
+  "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.body":
+    "Duas coisas que a plataforma já sabia guardar e ninguém conseguia preencher: uma marca pequena e quadrada ao lado do nome da comunidade, e uma nota que a próxima pessoa lê assim que chega. Ambas são opcionais e ambas estão agora na criação e nas definições.",
+  "changelog.entries.a-post-taken-down-now-comes-with-a-reason.title":
+    "Uma publicação removida passa a vir com um motivo",
+  "changelog.entries.a-post-taken-down-now-comes-with-a-reason.body":
+    "Quando a moderação removia algo que escreveste, encontravas um espaço em branco e ficavas a adivinhar que regra tinhas quebrado, ou se tinhas quebrado alguma. A moderação pode agora dar um motivo e citar a regra da casa que está a aplicar, e isso chega-te. A remoção fica também registada no histórico da comunidade.",
+  "changelog.entries.you-can-take-back-a-request-to-join.title":
+    "Já podes retirar um pedido para entrar",
+  "changelog.entries.you-can-take-back-a-request-to-join.body":
+    "Pediste para entrar algures por engano, ou mudaste de ideias enquanto esperavas? O botão de pedido enviado já faz alguma coisa. Retirar não te custa nada e deixa-te livre para pedir outra vez de imediato, enquanto esperar por um não pode impor uma espera de meses.",
+  "changelog.entries.finding-the-busiest-communities-is-instant.title":
+    "Encontrar as comunidades mais activas é instantâneo",
+  "changelog.entries.finding-the-busiest-communities-is-instant.body":
+    "Ordenar o Descobrir por mais activas ia buscar em silêncio todas as páginas de todas as comunidades para o teu navegador e reordenava-as lá, atrás de um ecrã de carregamento que podia demorar. A ordenação passou para o nosso lado, e os primeiros resultados chegam de uma vez.",
   "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.title":
     "Uma falha já não parece uma página vazia",
   "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.body":
@@ -2492,7 +2742,7 @@ export const marketing: Catalog = {
   "changelog.tag.cinema": "Visitar o Cinema",
   "changelog.tag.forum": "Visitar o fórum",
   "changelog.tag.sessions": "Vê as tuas sessões ativas",
-  "changelog.tag.profile": "Abrir o seu perfil",
+  "changelog.tag.profile": "Abrir o teu perfil",
   "changelog.tag.gatherings": "Ver encontros",
   "changelog.tag.members": "Conhecer os membros",
   "changelog.tag.events": "Abrir o Events Hub",
@@ -2531,6 +2781,8 @@ export const marketing: Catalog = {
   "changelog.tag.flatmates": "Ver o quadro de colegas de casa",
   "changelog.tag.tenantRights": "Conhece os teus direitos",
   "changelog.tag.workProfile": "Abrir o teu perfil de trabalho",
+  "changelog.tag.help": "Abrir o centro de ajuda",
+  "changelog.tag.glossary": "Abrir o glossário",
   "changelog.tag.governance": "Ver como o QueerPulse é gerido",
   "changelog.tag.appealOutcome": "Ver o estado do teu recurso",
   "changelog.tag.hateCrime": "Ler recursos sobre crimes de ódio",
@@ -2686,9 +2938,9 @@ export const marketing: Catalog = {
   "changelog.entries.directory-cards-show-who-runs-the-place.body":
     "Cada cartão do diretório local termina com uma linha que nomeia o membro que gere o espaço, e ao lado desse nome ficava um pequeno círculo com as iniciais do negócio. Um cartão do Maison Du Tiago, gerido pelo Tiago, mostrava MD ao lado de Tiago, o que se lia como um segundo logótipo onde devia estar uma pessoa. Esse círculo passa a mostrar a fotografia de perfil do próprio membro, a mesma que aparece no seu perfil, e mostra a inicial quando ainda não há fotografia. A fotografia segue exatamente as mesmas regras do nome ao lado: uma ficha cujo dono escolheu ficar anónimo, ou aparecer apenas pelo cargo, continua a não mostrar nenhum dos dois, e quem desligou a sua fotografia no resto do site mantém-na desligada aqui também.",
   "changelog.entries.members-can-put-something-to-a-vote.title":
-    "Pode submeter algo a votação",
+    "Podes submeter algo a votação",
   "changelog.entries.members-can-put-something-to-a-vote.body":
-    "As votações de governação eram algo em que podia participar mas que nunca podia iniciar. As propostas na página de governação eram abertas por administradores, por isso, se achasse que a comunidade devia decidir alguma coisa, não havia nenhum botão que lhe permitisse dizê-lo. Passa a poder apresentar uma moção: um título, uma descrição e a questão que quer ver colocada à comunidade. Uma moção tem de merecer o seu lugar no boletim de voto. São precisos dez membros que assinem por baixo, e você conta como o primeiro, por isso outras nove pessoas têm de concordar que merece ser votada. Ao chegar aos dez, segue para apreciação da equipa e, se for aprovada, esta define o período de votação e a moção abre como qualquer outra votação. Se for recusada, o motivo fica escrito na moção, à vista de todos. Uma moção que nunca chegue aos dez membros encerra sozinha ao fim de trinta dias. Também pode juntar o seu nome à moção de outra pessoa e retirá-lo enquanto a recolha estiver a decorrer.",
+    "As votações de governação eram algo em que podias participar mas que nunca podias iniciar. As propostas na página de governação eram abertas por administradores, por isso, se achasses que a comunidade devia decidir alguma coisa, não havia nenhum botão que te permitisse dizê-lo. Passas a poder apresentar uma moção: um título, uma descrição e a questão que queres ver colocada à comunidade. Uma moção tem de merecer o seu lugar no boletim de voto. São precisos dez membros que assinem por baixo, e tu contas como a primeira pessoa, por isso outras nove pessoas têm de concordar que merece ser votada. Ao chegar aos dez, segue para apreciação da equipa e, se for aprovada, esta define o período de votação e a moção abre como qualquer outra votação. Se for recusada, o motivo fica escrito na moção, à vista de todos. Uma moção que nunca chegue aos dez membros encerra sozinha ao fim de trinta dias. Também podes juntar o teu nome à moção de outra pessoa e retirá-lo enquanto a recolha estiver a decorrer.",
   "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.title":
     "Uma votação de governação passa a precisar de gente suficiente para contar",
   "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.body":
@@ -2882,9 +3134,9 @@ export const marketing: Catalog = {
   "changelog.entries.filters-keep-your-place.body":
     "Alternar o diret\u00f3rio local entre mapa e lista atirava a p\u00e1gina toda para o in\u00edcio, e o mesmo acontecia ao ativar um filtro ou escrever mais uma letra numa pesquisa. Tudo o que vive na barra de endere\u00e7o contava como uma p\u00e1gina nova. Agora a aplica\u00e7\u00e3o distingue um filtro de uma navega\u00e7\u00e3o a s\u00e9rio: muda de vista ou afina uma lista e ficas exatamente onde estavas a ler.",
   "changelog.entries.directory-card-cover-photo.title":
-    "A foto do seu neg\u00f3cio j\u00e1 aparece no diret\u00f3rio",
+    "A foto do teu neg\u00f3cio j\u00e1 aparece no diret\u00f3rio",
   "changelog.entries.directory-card-cover-photo.body":
-    "Todos os cart\u00f5es do diret\u00f3rio local diziam \u201cFoto brevemente\u201d, mesmo para neg\u00f3cios cujos donos tinham carregado um plano geral h\u00e1 meses. A foto sempre l\u00e1 esteve; a grelha \u00e9 que nunca a pedia. Os cart\u00f5es passam a mostrar o plano geral da sua ficha, enquadrado como o recortou, e o passo das fotos diz claramente qual delas fica como capa.",
+    "Todos os cart\u00f5es do diret\u00f3rio local diziam \u201cFoto brevemente\u201d, mesmo para neg\u00f3cios cujos donos tinham carregado um plano geral h\u00e1 meses. A foto sempre l\u00e1 esteve; a grelha \u00e9 que nunca a pedia. Os cart\u00f5es passam a mostrar o plano geral da tua ficha, enquadrado como o recortaste, e o passo das fotos diz claramente qual delas fica como capa.",
   "changelog.entries.persona-banner-reposition.title":
     "Põe o banner da tua persona exatamente onde queres",
   "changelog.entries.persona-banner-reposition.body":
@@ -2917,7 +3169,7 @@ export const marketing: Catalog = {
   "changelog.entries.card-check-page-rebuild.title":
     "A p\u00e1gina de verifica\u00e7\u00e3o do cart\u00e3o passa a mostrar a fotografia",
   "changelog.entries.card-check-page-rebuild.body":
-    "Ler um cart\u00e3o de s\u00f3cie dava uma linha de texto e um aviso a dizer para olhar para a fotografia do cart\u00e3o. A verifica\u00e7\u00e3o passa a chegar como o pr\u00f3prio cart\u00e3o: o nome de quem o tem numa linha s\u00f3, os pronomes por baixo, a comunidade, o papel e o n\u00famero do cart\u00e3o, e a fotografia que o cart\u00e3o cont\u00e9m, vinda dos registos da pr\u00f3pria comunidade, para que esteja a comparar a pessoa \u00e0 sua frente com uma c\u00f3pia que ningu\u00e9m \u00e0 porta poderia ter alterado. Um cart\u00e3o que n\u00e3o passa a verifica\u00e7\u00e3o passa a explicar o que pode causar isso, o que fazer a seguir, e que isso n\u00e3o \u00e9 um ju\u00edzo sobre a pessoa. E uma leitura que falha por falta de rede passa a dizer isso mesmo em vez de parecer uma recusa.",
+    "Ler um cart\u00e3o de s\u00f3cie dava uma linha de texto e um aviso a dizer para olhar para a fotografia do cart\u00e3o. A verifica\u00e7\u00e3o passa a chegar como o pr\u00f3prio cart\u00e3o: o nome de quem o tem numa linha s\u00f3, os pronomes por baixo, a comunidade, o papel e o n\u00famero do cart\u00e3o, e a fotografia que o cart\u00e3o cont\u00e9m, vinda dos registos da pr\u00f3pria comunidade, para que estejas a comparar a pessoa \u00e0 tua frente com uma c\u00f3pia que ningu\u00e9m \u00e0 porta poderia ter alterado. Um cart\u00e3o que n\u00e3o passa a verifica\u00e7\u00e3o passa a explicar o que pode causar isso, o que fazer a seguir, e que isso n\u00e3o \u00e9 um ju\u00edzo sobre a pessoa. E uma leitura que falha por falta de rede passa a dizer isso mesmo em vez de parecer uma recusa.",
   "changelog.entries.persona-rights-footer-once.title":
     "Um s\u00f3 aviso de direitos por p\u00e1gina de persona",
   "changelog.entries.persona-rights-footer-once.body":
@@ -3562,7 +3814,7 @@ export const marketing: Catalog = {
     'Os controlos de reprodução e avançar da Rádio costumavam fingir que funcionavam. Agora são honestos sobre o que está realmente no ar, e "Tornar-me curador" abre o formulário real de submissão de playlist.',
 
   "changelog.entries.newsletter-unsubscribe.title":
-    "Cancela a subscrição da newsletter tu mesmo/a",
+    "Cancela tu a subscrição da newsletter",
   // Ver a nota em en/marketing.ts: corpo corrigido a 26 de agosto de 2026.
   "changelog.entries.newsletter-unsubscribe.body":
     "Subscrever a newsletter regista o teu endereço, e não havia forma de o tirares da lista sem ajuda. Existe agora uma ligação e uma página reais de cancelamento: abre-a com o teu código e o endereço sai da lista. A QueerPulse não envia email, por isso nunca chegou nada. Isto é sobre o teu endereço não ficar numa lista onde não querias estar.",
@@ -3756,9 +4008,9 @@ export const marketing: Catalog = {
     "O formulário “Submeter uma preocupação” na página de governação chega agora à equipa. Denúncias, contestações e problemas aparecem num painel da equipa, onde são triados e acompanhados até à resolução. Os membros com sessão iniciada são identificados pela sua conta; se estiveres com sessão terminada, deixa um email e entraremos em contacto.",
 
   "changelog.entries.housing-neighbourhoods-map.title":
-    "Escolha vários bairros e explore casas num mapa",
+    "Escolhe vários bairros e explora casas num mapa",
   "changelog.entries.housing-neighbourhoods-map.body":
-    "A procura de casa passa a permitir filtrar por mais do que um bairro de Lisboa ao mesmo tempo, e uma nova vista de mapa mostra as casas agrupadas por bairro. Toque num bairro no mapa para o juntar aos filtros.",
+    "A procura de casa passa a permitir filtrar por mais do que um bairro de Lisboa ao mesmo tempo, e uma nova vista de mapa mostra as casas agrupadas por bairro. Toca num bairro no mapa para o juntares aos filtros.",
 
   "changelog.entries.housing-outro-band.title":
     "Um convite de fecho no quadro de habitação",
@@ -3854,9 +4106,9 @@ export const marketing: Catalog = {
     "O onboarding já não te pede para criar uma persona enquanto ainda te estás a ambientar. Primeiro instalas-te; quando quiseres, podes criar uma persona para o teu ofício a qualquer momento a partir da tua página de personas.",
 
   "changelog.entries.pin-favorite-chats-inbox-tabs.title":
-    "Fixe, marque como favorita e filtre a sua caixa de entrada",
+    "Fixa, marca como favorita e filtra a tua caixa de entrada",
   "changelog.entries.pin-favorite-chats-inbox-tabs.body":
-    "Fixe as conversas a que volta sempre (até 3) e elas ficam no topo da sua caixa de entrada. Marque as que importam como favoritas e depois filtre por Todas, Não lidas, Favoritas ou Grupos para as encontrar rapidamente.",
+    "Fixa as conversas a que voltas sempre (até 3) e elas ficam no topo da tua caixa de entrada. Marca as que importam como favoritas e depois filtra por Todas, Não lidas, Favoritas ou Grupos para as encontrares rapidamente.",
 
   "changelog.entries.identity-verification-honest-badges.title":
     "Verificação de identidade real com selos honestos",
@@ -3929,7 +4181,7 @@ export const marketing: Catalog = {
     "As Diretrizes da Comunidade passam a começar pelas linhas vermelhas, explicam como denunciar e o que acontece a quem as ultrapassa, de um aviso à remoção, e pedem que as leias até ao fim antes de a caixa de concordância desbloquear.",
 
   "changelog.entries.guidelines-in-sheet.title":
-    "Leia as diretrizes da comunidade sem perder o que escreveu",
+    "Lê as diretrizes da comunidade sem perderes o que escreveste",
   "changelog.entries.guidelines-in-sheet.body":
     "No pedido de convite e no acolhimento, tocar em “diretrizes da comunidade” levava-te para uma página separada, e para longe de tudo o que já tinhas escrito. Agora as diretrizes sobem numa folha que podes ler e fechar ali mesmo, sem perder nada do que escreveste.",
 
@@ -4165,9 +4417,9 @@ export const marketing: Catalog = {
     'Endossar a persona de alguém passa a abrir uma janela onde podes acrescentar uma breve nota sobre o que torna o trabalho digno de apoio. Já endossaste? Toca em "Endossado" para editar a tua nota ou retirar o endosso quando quiseres.',
 
   "changelog.entries.persona-banner-bleed.title":
-    "Deixe o banner do seu perfil sangrar na página",
+    "Deixa o banner do teu perfil sangrar na página",
   "changelog.entries.persona-banner-bleed.body":
-    "Os perfis agora podem suavizar a emenda onde a foto de capa encontra a página. Nas configurações do seu perfil, em Presença, a nova opção “Borda do banner” permite manter o banner contido (como antes) ou deixá-lo sangrar, com a imagem de capa a desvanecer suavemente na página abaixo. Funciona com qualquer visual de perfil, dissolvendo-se na cor que estiver sob o banner.",
+    "Os perfis agora podem suavizar a emenda onde a foto de capa encontra a página. Nas configurações do teu perfil, em Presença, a nova opção “Borda do banner” permite manter o banner contido (como antes) ou deixá-lo sangrar, com a imagem de capa a desvanecer suavemente na página abaixo. Funciona com qualquer visual de perfil, dissolvendo-se na cor que estiver sob o banner.",
 
   "changelog.entries.persona-hero-actions-tidy.title":
     "Uma linha de ações mais arrumada nas páginas de persona",
@@ -5039,7 +5291,7 @@ export const marketing: Catalog = {
     "O painel de anfitrião é uma pré-visualização honesta",
   "changelog.entries.gathering-manage-coming-soon.body":
     "O painel de anfitrião de encontros era um protótipo de demonstração, por isso em modo ao vivo mostra agora um claro “em breve” em vez de agir sobre dados de exemplo. Explorar e confirmar presença estão totalmente ativos; explora as ferramentas de anfitrião em modo de demonstração.",
-  "changelog.entries.search-member-avatars.title": "Veja quem está a procurar",
+  "changelog.entries.search-member-avatars.title": "Vê quem está a procurar",
   "changelog.entries.search-member-avatars.body":
     "Os resultados de membros na pesquisa (⌘K e a página de pesquisa) mostram agora a foto de perfil de cada pessoa em vez de um ícone genérico, para reconheceres de relance o rosto que procuras.",
   "changelog.entries.search-real-topics.title":
@@ -5209,30 +5461,30 @@ export const marketing: Catalog = {
   "changelog.entries.composer-reaction-polish.title":
     "Caixa de mensagem mais ampla e reações mais arrumadas",
   "changelog.entries.composer-reaction-polish.body":
-    "A caixa de mensagem passa agora a ocupar toda a largura do compositor e, no telemóvel, fica encostada sem uma barra de deslocação a mais quando a mensagem é curta, crescendo apenas à medida que escreve. As reações também passam a comportar-se como deve ser: tocar num emoji com que já reagiu remove-o, em vez de empilhar o mesmo vezes sem conta.",
-  "changelog.entries.chat-mentions.title": "Mencione pessoas e lugares no chat",
+    "A caixa de mensagem passa agora a ocupar toda a largura do compositor e, no telemóvel, fica encostada sem uma barra de deslocação a mais quando a mensagem é curta, crescendo apenas à medida que escreves. As reações também passam a comportar-se como deve ser: tocar num emoji com que já reagiste remove-o, em vez de empilhar o mesmo vezes sem conta.",
+  "changelog.entries.chat-mentions.title": "Menciona pessoas e lugares no chat",
   "changelog.entries.chat-mentions.body":
-    "Escreva @ para um membro, ou c/ b/ e/ t/ # para uma comunidade, negócio, encontro, tópico de fórum ou tema: escolha das sugestões e vira uma ligação tocável, numa mensagem direta ou num grupo. Funciona enquanto escreve e enquanto edita uma mensagem. As suas conversas continuam privadas: as menções apenas ligam, nunca notificam ninguém.",
+    "Escreve @ para um membro, ou c/ b/ e/ t/ # para uma comunidade, negócio, encontro, tópico de fórum ou tema: escolhe das sugestões e vira uma ligação tocável, numa mensagem direta ou num grupo. Funciona enquanto escreves e enquanto editas uma mensagem. As tuas conversas continuam privadas: as menções apenas ligam, nunca notificam ninguém.",
   "changelog.entries.group-chats.title": "Conversas de grupo",
   "changelog.entries.group-chats.body":
-    "Crie um grupo com as pessoas que quer lá dentro, dê-lhe um nome e mostre quem é quem. Os administradores podem adicionar ou remover membros e arrumar a informação do grupo, vê quem já leu uma mensagem, e uma bolha de escrita aparece quando alguém está a escrever.",
-  "changelog.entries.message-search.title": "Procure nas suas mensagens",
+    "Cria um grupo com as pessoas que queres lá dentro, dá-lhe um nome e mostra quem é quem. Os administradores podem adicionar ou remover membros e arrumar a informação do grupo, vês quem já leu uma mensagem, e uma bolha de escrita aparece quando alguém está a escrever.",
+  "changelog.entries.message-search.title": "Procura nas tuas mensagens",
   "changelog.entries.message-search.body":
-    "À procura daquela morada, daquela data, daquilo que alguém disse? Pesquise em todas as suas conversas e salte diretamente para lá.",
+    "À procura daquela morada, daquela data, daquilo que alguém disse? Pesquisa em todas as tuas conversas e salta diretamente para lá.",
   "changelog.entries.link-previews.title": "As ligações abrem-se",
   "changelog.entries.link-previews.body":
-    "Partilhe uma ligação e ela desdobra-se num cartão de pré-visualização (título, imagem e tudo) para que as pessoas vejam para onde vai antes de tocar.",
-  "changelog.entries.forward-pin-star.title": "Reencaminhe, fixe e marque",
+    "Partilha uma ligação e ela desdobra-se num cartão de pré-visualização (título, imagem e tudo) para que as pessoas vejam para onde vai antes de tocar.",
+  "changelog.entries.forward-pin-star.title": "Reencaminha, fixa e marca",
   "changelog.entries.forward-pin-star.body":
-    "Passe uma mensagem para outra conversa, fixe as que um grupo está sempre a revisitar, e marque com estrela as que quer voltar a encontrar. As mensagens marcadas ficam só para si.",
+    "Passa uma mensagem para outra conversa, fixa as que um grupo está sempre a revisitar, e marca com estrela as que queres voltar a encontrar. As mensagens marcadas ficam só para ti.",
   "changelog.entries.safe-space-view-page.title":
-    "Pré-visualize espaços seguros antes de verificar",
+    "Pré-visualiza espaços seguros antes de verificar",
   "changelog.entries.safe-space-view-page.body":
     "A ferramenta de revisão de Espaços seguros passa a ter um botão “Ver página” em cada listagem, abrindo a sua página pública num novo separador para que a moderação veja um espaço por inteiro antes de o marcar como verificado.",
   "changelog.entries.swipe-members-highlight.title":
-    "Deslize pelos membros em destaque",
+    "Desliza pelos membros em destaque",
   "changelog.entries.swipe-members-highlight.body":
-    "Na página inicial, o cartão de membro em destaque agora acompanha o seu dedo: deslize para a esquerda ou direita no telemóvel para passar entre membros, e ele encaixa no seguinte.",
+    "Na página inicial, o cartão de membro em destaque agora acompanha o teu dedo: desliza para a esquerda ou direita no telemóvel para passar entre membros, e ele encaixa no seguinte.",
   "changelog.entries.mention-names.title": "As menções mostram nomes reais",
   "changelog.entries.mention-names.body":
     "Menciona uma pessoa, comunidade ou lugar numa conversa, tópico do fórum ou discussão de comunidade e agora aparece o nome por extenso, Tiago Costa em vez de @tiago-costa. Toca e continuas a ir para o sítio certo; passa o cursor para ver o identificador.",
@@ -5242,17 +5494,17 @@ export const marketing: Catalog = {
     "O reencaminhamento agora chega às tuas conversas de grupo, não só às mensagens individuais. Mantém premida qualquer mensagem, escolhe Reencaminhar e seleciona qualquer grupo de que fazes parte.",
   "changelog.entries.read-receipts.title": "Recibos de entrega e de leitura",
   "changelog.entries.read-receipts.body":
-    "Os visto contam agora a história toda: enviada, entregue no telemóvel, e lida, para saber onde a sua mensagem chegou.",
+    "Os visto contam agora a história toda: enviada, entregue no telemóvel, e lida, para saberes onde a tua mensagem chegou.",
   "changelog.entries.message-gestures.title":
-    "Deslize para responder, toque para reagir",
+    "Desliza para responder, toca para reagir",
   "changelog.entries.message-gestures.body":
-    "Deslize uma mensagem para o lado para lhe responder, e toque duas vezes para reagir: os gestos rápidos que os seus polegares já conhecem.",
-  "changelog.entries.message-drafts.title": "Os seus rascunhos esperam por si",
+    "Desliza uma mensagem para o lado para lhe responder, e toca duas vezes para reagir: os gestos rápidos que os teus polegares já conhecem.",
+  "changelog.entries.message-drafts.title": "Os teus rascunhos esperam por ti",
   "changelog.entries.message-drafts.body":
-    "Meia mensagem que ainda não enviou? Guardamo-la para aquela conversa, por isso continua lá quando voltar.",
+    "Meia mensagem que ainda não enviaste? Guardamo-la para aquela conversa, por isso continua lá quando voltares.",
   "changelog.entries.offline-outbox.title": "Envios que não se perdem",
   "changelog.entries.offline-outbox.body":
-    "Tocou em enviar sem rede? A sua mensagem fica em fila e parte assim que voltar a ter ligação. Nada desaparece pelo caminho.",
+    "Tocaste em enviar sem rede? A tua mensagem fica em fila e parte assim que voltares a ter ligação. Nada desaparece pelo caminho.",
   "changelog.entries.typing-indicator.title":
     "Bolha de escrita e cuidado com o leitor de ecrã",
   "changelog.entries.typing-indicator.body":
@@ -5262,19 +5514,19 @@ export const marketing: Catalog = {
   "changelog.entries.moderation-actions.body":
     "Abrir uma denúncia na fila de moderação passa a mostrar sempre o conjunto completo de ações (ocultar, avisar, restringir, remover e mais, cada uma com um motivo que a pessoa vai ler) em vez de a fechar em silêncio. O título da fila também reflete o número real de denúncias em espera.",
   "changelog.entries.listing-preview-and-ask.title":
-    "Pré-visualize um anúncio, faça uma pergunta",
+    "Pré-visualiza um anúncio, faz uma pergunta",
   "changelog.entries.listing-preview-and-ask.body":
     "Os moderadores podem agora pré-visualizar um negócio submetido tal como ficará publicado e enviar uma pergunta que chega ao autor como mensagem direta.",
-  "changelog.entries.business-map-pin.title": "Coloque o seu negócio no mapa",
+  "changelog.entries.business-map-pin.title": "Coloca o teu negócio no mapa",
   "changelog.entries.business-map-pin.body":
-    "A listar um negócio? Cole uma ligação do Google Maps para marcar um ponto, e os anúncios ativos passam a aparecer no mapa local. As novas submissões passam por uma fila de moderação antes de ficarem visíveis.",
-  "changelog.entries.profile-editing.title": "Edite o seu perfil no lugar",
+    "A listar um negócio? Cola uma ligação do Google Maps para marcar um ponto, e os anúncios ativos passam a aparecer no mapa local. As novas submissões passam por uma fila de moderação antes de ficarem visíveis.",
+  "changelog.entries.profile-editing.title": "Edita o teu perfil no lugar",
   "changelog.entries.profile-editing.body":
-    "O seu quadro, competências e grupos passam a ser editáveis diretamente no perfil, com proteção contra alterações não guardadas para nunca perder uma edição por engano.",
+    "O teu quadro, competências e grupos passam a ser editáveis diretamente no perfil, com proteção contra alterações não guardadas para nunca perderes uma edição por engano.",
   "changelog.entries.profile-communities-save.title":
     "Comunidades em destaque que ficam",
   "changelog.entries.profile-communities-save.body":
-    "As comunidades que fixa no seu perfil passam a ficar guardadas, entre sessões e dispositivos, e aparecem para quem visita, cada uma com a sua função.",
+    "As comunidades que fixas no teu perfil passam a ficar guardadas, entre sessões e dispositivos, e aparecem para quem visita, cada uma com a sua função.",
   "changelog.entries.mention-types.title": "Mais formas de mencionar",
   "changelog.entries.mention-types.body":
     "As menções vão agora além de pessoas e comunidades (tópicos, negócios, eventos e discussões), e os donos e responsáveis são notificados quando são referidos.",
@@ -5284,23 +5536,23 @@ export const marketing: Catalog = {
   "changelog.entries.messaging-reactions.title":
     "Reações a mensagens mais fluidas",
   "changelog.entries.messaging-reactions.body":
-    "As reações atualizam-se instantaneamente para todos na conversa, e as suas mensagens enviadas já não mudam de posição quando reage a elas.",
+    "As reações atualizam-se instantaneamente para todos na conversa, e as tuas mensagens enviadas já não mudam de posição quando reages a elas.",
   "changelog.entries.event-photos.title": "Galerias de fotos de eventos",
   "changelog.entries.event-photos.body":
     "Organizadores e participantes podem partilhar fotos num encontro, visíveis apenas para quem esteve presente.",
-  "changelog.entries.mentions.title": "Mencione pessoas e comunidades",
+  "changelog.entries.mentions.title": "Menciona pessoas e comunidades",
   "changelog.entries.mentions.body":
-    "Escreva @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas do fórum e das comunidades: quem for mencionado recebe uma notificação.",
+    "Escreve @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas do fórum e das comunidades: quem for mencionado recebe uma notificação.",
   "changelog.entries.push-notifications.title":
     "Notificações push para mensagens",
   "changelog.entries.push-notifications.body":
-    "Ative para receber uma notificação no telemóvel quando chega uma nova mensagem direta enquanto está ausente: privado, apenas para mensagens diretas e desativado por predefinição.",
+    "Ativa para receberes uma notificação no telemóvel quando chega uma nova mensagem direta enquanto estás ausente: privado, apenas para mensagens diretas e desativado por predefinição.",
   "changelog.entries.delete-conversation.title": "Apagar uma conversa",
   "changelog.entries.delete-conversation.body":
-    "Limpe uma conversa da sua caixa de entrada sem afetar a cópia da outra pessoa, ao estilo do WhatsApp.",
-  "changelog.entries.profile-communities.title": "Destaque as suas comunidades",
+    "Limpa uma conversa da tua caixa de entrada sem afetar a cópia da outra pessoa, ao estilo do WhatsApp.",
+  "changelog.entries.profile-communities.title": "Destaca as tuas comunidades",
   "changelog.entries.profile-communities.body":
-    "Fixe as comunidades que gere ou de que faz parte no seu perfil, cada uma com um crachá de função.",
+    "Fixa as comunidades que geres ou de que fazes parte no teu perfil, cada uma com um crachá de função.",
   "changelog.entries.subprofiles-upgrade.title": "Subperfis mais ricos",
   "changelog.entries.subprofiles-upgrade.body":
     "Os subperfis ganharam presença e multimédia, pré-visualizações de ligações partilháveis e exportação por código QR e vCard.",
@@ -5339,7 +5591,7 @@ export const marketing: Catalog = {
     "Toda a interface passou a estar disponível em inglês e português, alternável a partir da navegação.",
   "changelog.entries.subprofiles.title": "Subperfis",
   "changelog.entries.subprofiles.body":
-    "Crie várias presenças públicas numa só conta: para a sua arte, o seu negócio ou um projeto.",
+    "Cria várias presenças públicas numa só conta: para a tua arte, o teu negócio ou um projeto.",
   "changelog.entries.live-backend.title": "Backend em produção",
   "changelog.entries.live-backend.body":
     "A aplicação ligou-se ao seu backend real, mantendo o modo de demonstração autónomo a par dos dados em produção, com perfis editáveis.",
@@ -5628,10 +5880,10 @@ export const marketing: Catalog = {
   "postOpportunity.core.basicsHeading": "O essencial",
   "postOpportunity.core.orgLabel": "Organização",
   "postOpportunity.core.orgHelper":
-    "Escolha uma comunidade que possui ou modera, ou uma organização parceira aprovada.",
+    "Escolhe uma comunidade que possuis ou moderas, ou uma organização parceira aprovada.",
   "postOpportunity.core.orgEmptyState":
-    "Precisa de possuir ou moderar uma comunidade, ou ser uma organização parceira aprovada, antes de poder publicar uma oportunidade em nome dela.",
-  "postOpportunity.core.orgPlaceholder": "ex.: a sua organização",
+    "Precisas de possuir ou moderar uma comunidade, ou ser uma organização parceira aprovada, antes de poderes publicar uma oportunidade em nome dela.",
+  "postOpportunity.core.orgPlaceholder": "ex.: a tua organização",
   "postOpportunity.core.orgLinkLabel": "Associar a uma organização",
   "postOpportunity.core.orgLinkHelper":
     "Opcional: associe esta publicação a uma comunidade que possui ou modera, ou a uma organização parceira aprovada.",
@@ -5707,7 +5959,7 @@ export const marketing: Catalog = {
     "ex.: 18 voluntários de sensibilização ativos este trimestre.",
   "postOpportunity.rich.teamLabel": "Membros da equipa",
   "postOpportunity.rich.teamHelper":
-    "Escolha entre as suas ligações ou as comunidades a que pertence.",
+    "Escolhe entre as tuas ligações ou as comunidades a que pertences.",
   "postOpportunity.rich.teamPlaceholder": "Selecionar ligações ou comunidades",
   "postOpportunity.rich.teamGroupConnections": "Ligações",
   "postOpportunity.rich.teamGroupCommunities": "Comunidades",
@@ -5756,6 +6008,9 @@ export const marketing: Catalog = {
   "volunteerDetail.main.goodForTitle": "Para <em>quem é indicada</em>",
   "volunteerDetail.main.teamTitle": "Quem <em>já está cá</em>",
   "volunteerDetail.sidebar.appliedTitle": "Estás <em>na lista.</em>",
+  // PRD-262 / PRD-260: ver a nota no catálogo EN.
+  "volunteerDetail.sidebar.connectToMessage": "Ligar à equipa",
+  "volunteerDetail.sidebar.signInToApply": "Inicia sessão para te candidatares",
   "volunteerDetail.sidebar.messageTeam": "Enviar mensagem à equipa",
   "volunteerDetail.sidebar.withdrawing": "A retirar…",
   "volunteerDetail.sidebar.withdraw": "Retirar o meu interesse",
@@ -5787,6 +6042,9 @@ export const marketing: Catalog = {
   "volunteerDetail.signupModal.cancel": "Cancelar",
   "volunteerDetail.signupModal.submit": "Enviar candidatura",
   "volunteerDetail.signupModal.sending": "A enviar…",
+  "volunteerDetail.report.cta": "Denunciar esta oportunidade",
+  "volunteerDetail.report.ariaLabel":
+    "Denunciar a oportunidade {role} em {org}",
 
   // ── Detalhe do Parceiro — chrome da página. O conteúdo sobre/trabalho
   //    conjunto/linha do tempo/como trabalhamos, as estatísticas, e os
@@ -5935,39 +6193,20 @@ export const marketing: Catalog = {
   "forOrgs.tiers.funder.list4": "Auditoria independente anual incluída",
   "forOrgs.tiers.funder.list5":
     "Discriminação pública no relatório de transparência",
+  // PRD-266: ver a nota no catálogo EN.
+  "forOrgs.apply.lead":
+    "Diz-nos quem és e levamos-te à candidatura de parceria. É um formulário só, entra na fila de parcerias, e podes ver em que ponto está a partir da tua conta quando quiseres.",
+  "forOrgs.apply.note":
+    "Lemos todas as candidaturas, por mais rascunho que sejam. A resposta chega dentro da app, na tua página de submissões e nas notificações. Nunca enviamos email.",
   "forOrgs.cta.title": "Começa uma <em>conversa.</em>",
-  "forOrgs.cta.body":
-    'Conta-nos sobre a tua organização num parágrafo. Lemos todas as mensagens no prazo de 5 dias úteis e respondemos pessoalmente, mesmo que a resposta seja "isto não é para nós, para já".',
   "forOrgs.cta.list1": "Para parcerias, normalmente ligamos antes de escrever",
   "forOrgs.cta.list2":
     "Candidaturas a financiamento: inclui uma página de resumo",
   "forOrgs.cta.pressInquiry": "Pedidos de imprensa: <a>Kit de Imprensa</a>",
   "forOrgs.cta.partnerQuestion":
     "Já tens uma parceria connosco e alguma pergunta? <a>Contacta-nos</a>",
-  "forOrgs.form.nameLabel": "O teu nome",
-  "forOrgs.form.namePlaceholder": "Filipa Mendes",
   "forOrgs.form.orgLabel": "Organização",
-  "forOrgs.form.orgPlaceholder": "A sua organização",
-  "forOrgs.form.emailLabel": "Email",
-  "forOrgs.form.emailPlaceholder": "tu@organizacao.exemplo",
-  "forOrgs.form.interestLabel": "Área de interesse",
-  "forOrgs.form.interest.operational": "Parceria operacional",
-  "forOrgs.form.interest.employer": "Empregador verificado",
-  "forOrgs.form.interest.funding": "Financiamento de programa",
-  "forOrgs.form.interest.other": "Outra coisa (explica na nota)",
-  "forOrgs.form.messageLabel": "O que gostarias de construir, num parágrafo",
-  "forOrgs.form.messagePlaceholder": "Temos uma linha de apoio LGBTQ+ e…",
-  "forOrgs.form.submitCta": "Enviar à equipa de parcerias",
-  "forOrgs.form.sendingCta": "A enviar…",
-  "forOrgs.form.sent.title": "Enviado à nossa <em>equipa de parcerias.</em>",
-  "forOrgs.form.sent.body":
-    "Obrigade, recebemos a tua mensagem. A nossa equipa de parcerias lê cada uma e responde pessoalmente dentro de 5 dias úteis, por email, de hello@queerpulse.com para o endereço que indicaste acima. Vale a pena juntá-lo aos teus contactos, para a resposta não cair no spam.",
-  "forOrgs.form.error":
-    "Algo correu mal ao enviar. Tenta novamente, ou escreve diretamente à equipa de parcerias para hello@queerpulse.com.",
-  "forOrgs.form.small":
-    "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só a resposta de uma pessoa, por email, no prazo de 5 dias úteis.",
-  "forOrgs.form.toast":
-    "Enviado à nossa equipa de parcerias. Vão responder-te por email no prazo de 5 dias úteis",
+  "forOrgs.form.orgPlaceholder": "A tua organização",
 
   // ── Diretório — chrome do diretório de negócios + página de detalhe. Os
   //    registos de locais (`directoryPlaces.ts`: nomes, taglines,
@@ -5981,7 +6220,13 @@ export const marketing: Catalog = {
   "directory.hero.title": "Encontra <em>os lugares da tua gente.</em>",
   "directory.hero.sub":
     "Negócios queer e profissionais queer-friendly em Lisboa. Avaliados pela comunidade, mantidos pela comunidade. Quer tenhas acabado de chegar, quer já cá estejas há anos.",
-  "directory.hero.note": "Verificado pela comunidade · atualizado mensalmente",
+  // "atualizado mensalmente" era uma cadência que nada agendava, media ou
+  // conseguia mostrar: o `DirectoryCardDTO` não traz data de atualização, por
+  // isso a página não tinha como a sustentar. Substituída por quem mantém o
+  // diretório, que os fluxos de reivindicação, confirmação e contestação
+  // sustentam mesmo.
+  "directory.hero.note":
+    "Verificado pela comunidade · mantido por membros e pelos próprios negócios",
   "directory.search.placeholder": "Pesquisa por nome, bairro, ou tipo…",
   "directory.cat.all": "Tudo",
   "directory.cat.food": "Comida e bebida",
@@ -5994,10 +6239,30 @@ export const marketing: Catalog = {
   "directory.cat.fitness": "Ginásio e Fitness",
   "directory.loading": "A carregar lugares…",
   "directory.loadingMore": "A carregar mais lugares…",
+  // Pluralizado em `count`, definido no componente como o tamanho do conjunto
+  // que está a ser contado. A chave simples fica como recurso.
   "directory.count": "A mostrar <b>{shown}</b> de {total} lugares",
+  "directory.count_one": "A mostrar <b>{shown}</b> de {total} lugar",
+  "directory.count_other": "A mostrar <b>{shown}</b> de {total} lugares",
+  // PRD-246. A contagem citava o total do SERVIDOR contra um número já filtrado
+  // no cliente, por isso lia-se "A mostrar 3 de 120 lugares", uma frase cujos
+  // dois números descrevem conjuntos diferentes. Quando um filtro só do cliente
+  // está a reduzir um conjunto ainda incompleto, a contagem diz o que está
+  // mesmo a contar e o total do diretório passa para a nota ao lado.
+  "directory.countLoaded":
+    "A mostrar <b>{shown}</b> de {loaded} lugares carregados até agora",
+  "directory.countLoaded_one":
+    "A mostrar <b>{shown}</b> de {loaded} lugar carregado até agora",
+  "directory.countLoaded_other":
+    "A mostrar <b>{shown}</b> de {loaded} lugares carregados até agora",
+  "directory.countLoadedTotal": "{total} em todo o diretório",
   "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
   "directory.empty.body":
     "Tenta uma categoria mais ampla, menos ambientes ou outra pesquisa, ou limpa os filtros para ver tudo.",
+  // PRD-246. O mesmo estado vazio, para quando ainda faltam páginas por chegar.
+  "directory.emptyPartial.title": "Ainda não há correspondências",
+  "directory.emptyPartial.body":
+    "Nenhum dos {loaded} lugares carregados até agora corresponde a esses filtros, e ainda estão a chegar mais. Espera um momento, ou limpa os filtros para ver tudo.",
   "directory.noListings.title": "Ainda não há lugares",
   "directory.noListings.body":
     "Este diretório cresce a partir da comunidade. Se tens ou conheces um lugar queer-owned ou queer-friendly em Lisboa, sê o primeiro a adicioná-lo.",
@@ -6058,7 +6323,7 @@ export const marketing: Catalog = {
   "directory.verify.eyebrow": "Verificado pela comunidade",
   "directory.verify.title": "Como funciona a <em>verificação.</em>",
   "directory.verify.lead":
-    "O selo de verificação não é auto-declarado. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada espaço é reavaliado todos os anos, por isso também o pode perder.",
+    "O selo de verificação não é auto-declarado. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada selo volta à fila de revisão um ano depois de ser atribuído, por isso também o pode perder.",
   "directory.verify.cta": "Ver a história de confiança completa",
   "directory.verify.pillar.nominate.title": "Proposto por membros",
   "directory.verify.pillar.nominate.body":
@@ -6289,7 +6554,7 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.sendCta": "Enviar denúncia",
   "directory.detail.reportReview.sending": "A enviar…",
   "directory.detail.reportReview.confirmTitle":
-    "Obrigado. <em>Estamos a tratar disso.</em>",
+    "Agradecemos. <em>Estamos a tratar disso.</em>",
   "directory.detail.reportReview.confirmBody":
     "Um moderador vai analisar esta avaliação.",
   "directory.detail.reportReview.done": "Concluído",
@@ -6551,6 +6816,15 @@ export const marketing: Catalog = {
 
   "directory.editThisListing": "Editar este anúncio",
 
+  // ── Carimbo de revisão (`PageReviewStamp`), partilhado pelas duas páginas
+  //    de orientação de Lisboa, /local/visas e /local/arriving. Uma data e uma
+  //    equipa com nome, de propósito sem cadência nenhuma: nada agenda uma
+  //    releitura destas páginas, por isso "revisto trimestralmente" seria o
+  //    mesmo tipo de promessa sem suporte que o carimbo veio substituir.
+  //    `{date}` é localizado por `fmt.date`.
+  "reviewStamp.reviewed":
+    "Revisto pela última vez pela equipa da QueerPulse a {date}.",
+
   // ── Arriving (guia para quem chega a Lisboa) — apenas chrome da página e
   //    das secções. As descrições de bairros, organizações e comunidades
   //    (`arrivingPage.data.ts`, `arrivingPageCards.data.ts`) são conteúdo de
@@ -6569,6 +6843,8 @@ export const marketing: Catalog = {
   "arriving.hero.title": "Queer e acabaste de chegar? <em>Bem-vinde.</em>",
   "arriving.hero.body":
     "Esta cidade tem muito para nós: uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer trabalho sério, e pessoas que te vão mesmo ajudar a assentar. Aqui fica o que convém saber primeiro.",
+  "arriving.review.verify":
+    "Rendas, taxas e horários mudam mais depressa do que esta página. Trata tudo o que está aqui como ponto de partida e confirma o detalhe atual junto do próprio serviço.",
 
   // Aparece ao lado de um link cujo destino precisa de conta na QueerPulse,
   // para que quem não tem sessão iniciada saiba antes de clicar.
@@ -6690,7 +6966,7 @@ export const marketing: Catalog = {
     "O mercado de habitação em Lisboa é caro e competitivo. Aqui fica um retrato honesto do que esperar, e de onde pedir ajuda.",
   "arriving.housing.cards.market.title": "Como é o mercado, na realidade",
   "arriving.housing.cards.market.body":
-    "As rendas subiram muito nos últimos cinco anos. Conta com cerca de 800 a 1100 euros por um quarto num bairro central. Arroios e Mouraria ainda têm melhor relação preço-qualidade. Os bons anúncios saem em dias, por isso avança depressa quando vires um.",
+    "As rendas subiram muito nos últimos cinco anos, e um quarto num bairro central é de longe a maior despesa mensal da maioria das pessoas. Define o teu orçamento pelo que está mesmo a ser pedido este mês, no quadro de habitação e nos sites de anúncios, e não por um valor escrito num guia. Arroios e Mouraria ainda têm melhor relação preço-qualidade. Os bons anúncios saem em dias, por isso avança depressa quando vires um.",
   "arriving.housing.cards.board.title":
     "Quartos partilhados dentro da comunidade",
   "arriving.housing.cards.board.body":
@@ -6782,6 +7058,8 @@ export const marketing: Catalog = {
     "Informação prática sobre vistos, residência e cidadania em Portugal, e aquilo que os casais e famílias queer precisam de saber que a informação oficial nem sempre esclarece.",
   "visas.hero.note":
     "Informação da comunidade. Isto não é aconselhamento jurídico. A lei da imigração muda, confirma sempre com uma pessoa especialista.",
+  "visas.review.verify":
+    "Confirma antes de entregares o pedido. Esta página indica as regras e o organismo que publica cada valor, e não escreve limiares de rendimento nem taxas: esses são revistos todos os anos, e um número desatualizado é a única coisa aqui que te pode custar um pedido.",
   "visas.routePicker.label": "De onde estás a <em>partir?</em>",
   "visas.routePicker.euCitizen.name": "Cidadania da UE / EEE",
   "visas.routePicker.euCitizen.desc":
@@ -6811,7 +7089,7 @@ export const marketing: Catalog = {
   "visas.tabs.eu.card1.eyebrow": "Registo",
   "visas.tabs.eu.card1.title": "Certificado de Registo",
   "visas.tabs.eu.card1.body":
-    "Pessoas cidadãs da UE que fiquem mais de 3 meses têm de se registar na Câmara Municipal da sua área. Vais precisar do passaporte, comprovativo de morada e comprovativo de rendimento ou de emprego. O certificado é normalmente emitido no próprio dia. Custo: 15 €.",
+    "Pessoas cidadãs da UE que fiquem mais de 3 meses têm de se registar na Câmara Municipal da sua área. Vais precisar do passaporte, comprovativo de morada e comprovativo de rendimento ou de emprego. O certificado é normalmente emitido no próprio dia. Há uma pequena taxa, definida por cada Câmara: pergunta à tua qual é neste momento.",
   "visas.tabs.eu.card1.tag": "Simples, baixo custo",
   "visas.tabs.eu.card2.eyebrow": "Os teus direitos",
   "visas.tabs.eu.card2.title": "O que a residência na UE te dá",
@@ -6832,8 +7110,9 @@ export const marketing: Catalog = {
   "visas.tabs.d7.card1.eyebrow": "Para quem é",
   "visas.tabs.d7.card1.title": "Elegibilidade",
   "visas.tabs.d7.card1.body":
-    "Pessoas de fora da UE que consigam demonstrar um rendimento passivo ou remoto estável. O limiar mínimo de rendimento ronda os 820 €/mês (o salário mínimo português), mas alguns consulados pedem bastante mais. Os pedidos são feitos no consulado português do teu país de origem, antes de chegares.",
+    "Pessoas de fora da UE que consigam demonstrar um rendimento passivo ou remoto estável. O limiar mínimo de rendimento está indexado ao salário mínimo português, que é revisto todos os anos, e alguns consulados pedem bastante mais. Vê o valor atual na AIMA e no consulado onde vais entregar o pedido, antes de construíres um processo à volta dele. Os pedidos são feitos no consulado português do teu país de origem, antes de chegares.",
   "visas.tabs.d7.card1.tag": "Pede antes de chegar",
+  "visas.tabs.d7.card1.link": "O limiar atual em aima.gov.pt",
   "visas.tabs.d7.card2.eyebrow": "O que obténs",
   "visas.tabs.d7.card2.title": "Condições do visto",
   "visas.tabs.d7.card2.body":
@@ -6865,8 +7144,9 @@ export const marketing: Catalog = {
   "visas.tabs.d8.card1.eyebrow": "Requisitos",
   "visas.tabs.d8.card1.title": "O que precisas para te qualificares",
   "visas.tabs.d8.card1.body":
-    "Comprovativo de emprego remoto ou contratos com clientes não portugueses. O requisito de rendimento é normalmente 4× o salário mínimo português (cerca de 3 280 €/mês). Seguro de saúde com cobertura em Portugal. Registo criminal limpo. NIF português (nalguns casos pode ser obtido antes do visto).",
+    "Comprovativo de emprego remoto ou contratos com clientes não portugueses. O requisito de rendimento é normalmente quatro vezes o salário mínimo português, e esse salário é revisto todos os anos, por isso tira o valor atual da AIMA e não de uma página que escreva um montante. Seguro de saúde com cobertura em Portugal. Registo criminal limpo. NIF português (nalguns casos pode ser obtido antes do visto).",
   "visas.tabs.d8.card1.tag": "Limiar de rendimento mais alto do que o D7",
+  "visas.tabs.d8.card1.link": "O limiar atual em aima.gov.pt",
   "visas.tabs.d8.card2.eyebrow": "Processo",
   "visas.tabs.d8.card2.title": "Como pedir",
   "visas.tabs.d8.card2.body":
@@ -7284,6 +7564,51 @@ export const marketing: Catalog = {
   //    validação). `REGION_OPTIONS`/`DEFAULT_REGION_LABEL` mantêm o id
   //    canónico de `Region` ("pt"/"eu"/"int") como valor guardado; só o
   //    rótulo apresentado é traduzido (i18n brief §5.1).
+  // PRD-266 / PRD-263: ver as notas no catálogo EN.
+  "submitPartner.signedOut.title": "Entra na conta para te candidatares",
+  "submitPartner.signedOut.body":
+    "Uma candidatura a parceria fica ligada a uma conta, porque é aí que a resposta aparece. Entra e trazemos-te de volta a esta página com o que já escreveste.",
+  "submitPartner.signedOut.signInCta": "Entrar e continuar",
+  "submitPartner.signedOut.contactCta": "Só fazer uma pergunta",
+
+  "partnerProfileEdit.meta.title": "O perfil da tua organização",
+  "partnerProfileEdit.meta.description":
+    "Mantém atualizada a página pública da tua organização na QueerPulse: contactos, descrição, etiquetas e financiamento.",
+  "partnerProfileEdit.hero.eyebrow": "Parceiros · O teu perfil",
+  "partnerProfileEdit.hero.title": "Mantém a tua página <em>verdadeira.</em>",
+  "partnerProfileEdit.hero.sub":
+    "Esta é a página que as pessoas encontram quando te procuram. Muda o que mudou, guarda, e fica no ar.",
+  "partnerProfileEdit.empty.title": "Não geres nenhum perfil de parceiro",
+  "partnerProfileEdit.empty.body":
+    "Esta página é para organizações já aprovadas como parceiras. Se a tua foi aprovada e não a vês aqui, pede-nos para passar o perfil para a tua conta.",
+  "partnerProfileEdit.empty.applyCta": "Candidatar a parceria",
+  "partnerProfileEdit.picker.label": "Qual organização?",
+  "partnerProfileEdit.staffFields.title": "Definido pela equipa de parcerias",
+  "partnerProfileEdit.staffFields.tier": "Nível de parceria",
+  "partnerProfileEdit.staffFields.since": "Parceiros desde",
+  "partnerProfileEdit.staffFields.eyebrow": "Etiqueta do cartão",
+  "partnerProfileEdit.staffFields.note":
+    "Estes quatro dizem algo sobre a relação entre nós, por isso definimo-los em conjunto e não cada lado por si. Pede-nos e alteramos.",
+  "partnerProfileEdit.fields.regionLabel.label":
+    "Região, tal como deve aparecer",
+  "partnerProfileEdit.fields.regionLabel.helper":
+    'As palavras impressas no teu cartão, por exemplo "Portugal" ou "Lisboa e Setúbal".',
+  "partnerProfileEdit.fields.about.label": "Sobre a tua organização",
+  "partnerProfileEdit.fields.about.helper":
+    "Alguns parágrafos, separados por uma linha em branco. É o texto longo da tua página.",
+  "partnerProfileEdit.fields.funding.label": "Como és financiada",
+  "partnerProfileEdit.fields.funding.helper":
+    "As pessoas leem isto. Diz de onde vem o dinheiro, com clareza.",
+  "partnerProfileEdit.fields.phone.label": "Telefone",
+  "partnerProfileEdit.fields.phoneNote.label": "Quando ligar",
+  "partnerProfileEdit.fields.phoneNote.helper":
+    'Por exemplo "Dias úteis, das 14:00 às 20:00". Deixa vazio se a linha está sempre aberta.',
+  "partnerProfileEdit.actions.save": "Guardar alterações",
+  "partnerProfileEdit.actions.saving": "A guardar\u2026",
+  "partnerProfileEdit.actions.viewPublic": "Ver a tua página pública",
+  "partnerProfileEdit.savedToast":
+    "Guardado. A tua página pública está atualizada.",
+  "partnerProfileEdit.errorToast": "Não foi possível guardar o teu perfil.",
   "submitPartner.hero.eyebrow": "Parceiros · Candidatura",
   "submitPartner.hero.title": "Candidata-te a <em>parceria.</em>",
   "submitPartner.hero.sub":
@@ -8152,4 +8477,214 @@ export const marketing: Catalog = {
     "Podes corrigir uma avaliação de visita até ela ficar pública",
   "changelog.entries.correct-a-review-until-it-goes-public.body":
     "As avaliações depois de uma visita a uma casa são escritas às cegas: nenhum dos lados vê a do outro até ambos terem escrito ou o prazo terminar. Não havia forma de corrigir uma gralha, nunca. Passas a poder editar a tua avaliação até ao momento em que fica pública, e não depois, para que uma correcção nunca possa tornar-se uma reacção ao que a outra pessoa escreveu. O formulário diz-te o prazo enquanto escreves.",
+
+  // ── Deep-scan section 2 (Magazine: the reader), built 2026-09-06 ─────────
+  "changelog.entries.a-piece-can-no-longer-go-live-with-consent-unresolved.title":
+    "Uma peça já não pode ir para o ar com consentimentos por resolver",
+  "changelog.entries.a-piece-can-no-longer-go-live-with-consent-unresolved.body":
+    "Cada peça tem um registo de cuidado: quem é nomeado nela, se concordou com isso, e se a leitura de sensibilidade está feita. O cartão que mostra esse registo prometia que ninguém sozinho o podia contornar e, no único botão que publicava mesmo, ninguém verificava nada. Um editor podia pôr uma história no ar com o consentimento de uma pessoa nomeada ainda por confirmar. Agora a publicação pára e diz-te que itens de cuidado faltam, em todos os caminhos que publicam. Retirar uma peça do ar nunca fica bloqueado.",
+  "changelog.entries.the-desk-can-see-what-is-published-and-take-it-down.title":
+    "A redação vê o que está publicado e pode retirá-lo",
+  "changelog.entries.the-desk-can-see-what-is-published-and-take-it-down.body":
+    "O circuito acabava em Pronto. Uma peça no ar há meses continuava a dizer Pronto a quem a escreveu, sem link nenhum para ela em lado nenhum, e a redação não distinguia as duas coisas sem abrir o editor. Agora existe a fase Publicado, publicar move a peça para lá, e o registo da peça liga direito à página no ar. Retirar uma coisa do ar é um clique.",
+  "changelog.entries.writers-hear-when-they-are-commissioned-and-when-they-are-published.title":
+    "Quem escreve fica a saber quando lhe encomendam uma peça e quando é publicada",
+  "changelog.entries.writers-hear-when-they-are-commissioned-and-when-they-are-published.body":
+    "Receber uma peça, vê-la avançar na redação e vê-la ir para o ar acontecia tudo em silêncio. A única forma de saber era abrir o teu espaço e ir ver. Agora cada uma dessas coisas toca-te o sino, a da publicação liga para a própria peça, e nenhuma delas dispara por algo que fizeste tu.",
+  "changelog.entries.an-issue-dated-for-later-now-ships-on-that-morning.title":
+    "Uma edição datada para mais tarde sai agora nessa manhã",
+  "changelog.entries.an-issue-dated-for-later-now-ships-on-that-morning.body":
+    "A revista promete que as peças de uma edição vão para o ar juntas às 09:00 do dia dela. Publicar mandava tudo para o ar no momento em que se carregava no botão, por isso quem publicasse à sexta uma edição de segunda punha todos os artigos no ar à sexta, enquanto a página da edição ficava escondida até segunda. Agora publicar uma edição com data à frente agenda as peças para as 09:00 desse dia, e o botão diz-te qual das duas coisas vai fazer.",
+  "changelog.entries.shipping-an-issue-holds-back-what-is-not-ready-and-says-why.title":
+    "Publicar uma edição segura o que não está pronto e diz porquê",
+  "changelog.entries.shipping-an-issue-holds-back-what-is-not-ready-and-says-why.body":
+    "Publicar mandava para o ar qualquer peça com o registo de cuidado completo, fosse qual fosse o estado do texto. Uma peça ainda em escrita podia sair com o resumo vazio, e uma imagem sem texto alternativo ia com ela. Agora só saem as peças prontas que passam as mesmas verificações do botão Publicar, e no fim ficas a saber o que ficou para trás e o que falta a cada uma.",
+  "changelog.entries.an-accepted-story-now-arrives-on-the-desk-as-a-real-piece.title":
+    "Uma história aceite chega agora à redação como peça a sério",
+  "changelog.entries.an-accepted-story-now-arrives-on-the-desk-as-a-real-piece.body":
+    "Aceitar uma história que enviaste marcava-a como aceite, dizia-te isso, e não criava rigorosamente nada. Não havia peça por trás dela, nem editor, nem pagamento, e como a decisão era final também nunca mais podia ser encomendada. Agora aceitar cria o registo na redação no mesmo gesto: o teu texto passa a ser o rascunho, ficas com o crédito de o ter escrito, e a linha de administração liga para lá. As histórias aceites antes disto podem ser terminadas no mesmo ecrã.",
+  "changelog.entries.your-submitted-stories-page-is-open-to-everyone-who-submitted-one.title":
+    "A página das histórias que enviaste está aberta a quem as enviou",
+  "changelog.entries.your-submitted-stories-page-is-open-to-everyone-who-submitted-one.body":
+    "O menu da tua conta mostrava uma página de Propostas a todos os membros, e a página mandava quase toda a gente embora à porta, editores incluídos. Ela mostra as tuas próprias submissões, e o servidor por trás dela nunca pediu mais do que sessão iniciada, por isso a fechadura estava simplesmente errada. Agora abre para quem enviou alguma coisa. Os números no topo também passaram a ser contados a partir das tuas submissões, quando antes eram inventados.",
+  "changelog.entries.you-can-withdraw-a-story-you-submitted.title":
+    "Podes retirar uma história que enviaste",
+  "changelog.entries.you-can-withdraw-a-story-you-submitted.body":
+    "Depois de enviada, a única forma de a tirar de lá era pedir a alguém. Agora podes retirá-la tu, enquanto a redação ainda não a tiver respondido, e ela sai da fila deles logo. Se entretanto chegar uma decisão enquanto estás a decidir, a página avisa-te e mostra-te o que eles disseram.",
+  "changelog.entries.two-editors-can-no-longer-overwrite-each-other-silently.title":
+    "Dois editores já não se sobrepõem em silêncio",
+  "changelog.entries.two-editors-can-no-longer-overwrite-each-other-silently.body":
+    "O editor de artigos gravava o corpo todo de cada vez, sem registo de que versão tinha partido. Duas pessoas na mesma peça, ou um editor a gravar enquanto quem escreve entregava um rascunho, significava que um deles perdia tudo o que tinha escrito, sem aviso e sem nada para recuperar. Agora cada gravação diz de que versão parte e, se o rascunho mudou por baixo de ti, o editor pára, mantém o teu texto no ecrã e oferece-se para recarregar.",
+  "changelog.entries.writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it.title":
+    "Quem escreve pode ler o rascunho editado, e voltar a entregar já não o duplica",
+  "changelog.entries.writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it.body":
+    "Entregar um rascunho servia apenas para empurrar texto para uma peça que não tinhas como abrir, por isso a promessa de que vês as tuas edições antes de saírem não era verdade. Entregar uma segunda vez acrescentava tudo outra vez e o artigo saía a dobrar. Agora podes ler o rascunho tal como está na redação, partir dele, e voltar a entregar acrescentando ou substituindo. Entregar o mesmo texto duas vezes não faz absolutamente nada.",
+  "changelog.entries.a-published-deck-can-no-longer-vanish-from-under-readers.title":
+    "Um deck publicado já não desaparece por baixo de quem o lê",
+  "changelog.entries.a-published-deck-can-no-longer-vanish-from-under-readers.body":
+    "Apagar um deck levava-o com uma só confirmação mesmo estando no ar, e deixava a peça por trás dele a apontar para o nada. Agora um deck no ar tem de ser retirado primeiro, um que ainda esteja a ser usado por uma peça não pode ser apagado de todo, e a confirmação diz o que vai mesmo acontecer. O agendamento de decks também faz o que diz, e o editor de decks vai gravando à medida que trabalhas.",
+  "changelog.entries.issue-cover-art-can-be-uploaded-from-the-desk.title":
+    "A capa da edição pode ser carregada a partir da redação",
+  "changelog.entries.issue-cover-art-can-be-uploaded-from-the-desk.body":
+    "A capa é a única imagem de que todas as edições precisam, e era o único sítio de arte da revista sem carregamento por trás: tinhas de alojar a imagem noutro lado e colar um link. Agora aceita um carregamento como qualquer outra imagem, com o mesmo recorte e a mesma pré-visualização que o resto da redação usa.",
+  "changelog.entries.the-writer-workspace-reads-in-plain-language.title":
+    "O espaço de quem escreve lê-se em linguagem normal",
+  "changelog.entries.the-writer-workspace-reads-in-plain-language.body":
+    "O teu próprio espaço mostrava uma data de entrega como 2026-09-12, um pagamento como approved_unpaid, e uma edição como uma longa sequência de letras e números, enquanto todos os ecrãs de edição mostravam essas mesmas coisas por palavras. Agora as datas, os estados de pagamento e os números de edição leem-se como em todo o resto da revista, e um rascunho entregue mostra finalmente a contagem de palavras face ao que foi pedido.",
+  "changelog.entries.every-story-on-the-magazine-front-now-opens.title":
+    "Todos os textos da capa da revista abrem agora",
+  "changelog.entries.every-story-on-the-magazine-front-now-opens.body":
+    "Todos os cartões da capa da revista apontavam para um endereço antigo, e o reencaminhamento que devia tratar disso deitava fora a parte que dizia qual era o texto. Ou seja: tocavas num título e a revista dizia-te que ele não existia. Agora os cartões vão direitos à peça, e os endereços antigos levam o texto com eles, por isso um link que alguém te enviou no ano passado continua a funcionar.",
+  "changelog.entries.articles-show-the-kicker-and-standfirst-the-desk-wrote.title":
+    "Os artigos mostram o que a redação escreveu por cima do título",
+  "changelog.entries.articles-show-the-kicker-and-standfirst-the-desk-wrote.body":
+    'Um artigo deitava fora o seu próprio antetítulo, secção, lead e entrada a caminho da página, por isso vias "Edição 09" onde alguém da redação tinha escrito uma frase, e uma etiqueta onde devia estar a secção. Os quatro chegam-te agora, no artigo e em todos os cartões que lhe apontam.',
+  "changelog.entries.issue-pages-show-the-cover-the-desk-chose.title":
+    "As páginas de edição mostram a capa que a redação escolheu",
+  "changelog.entries.issue-pages-show-the-cover-the-desk-chose.body":
+    'Todas as edições usavam a mesma fotografia de stock e todas se diziam "Atual", por isso o arquivo eram doze mosaicos iguais. Cada edição mostra agora a sua própria capa, só a edição em banca leva o selo de atual, e "Todas as edições" vai para o arquivo em vez de voltar à capa.',
+  "changelog.entries.interactive-decks-have-their-own-index.title":
+    "Os decks interativos passam a ter índice próprio",
+  "changelog.entries.interactive-decks-have-their-own-index.body":
+    "A capa mostrava o deck interativo mais recente e mais nada, e nem a pesquisa nem a navegação por secção incluíam decks, por isso assim que um segundo era publicado o primeiro saía da revista para quem não o tivesse guardado. Há agora um índice de decks com todos, do mais recente ao mais antigo, acessível a partir da capa e do cabeçalho. Também podes partilhar um deck, e o link partilhado mostra o título do próprio deck.",
+  "changelog.entries.magazine-lists-no-longer-stop-at-twenty.title":
+    "As listas da revista já não param nos vinte",
+  "changelog.entries.magazine-lists-no-longer-stop-at-twenty.body":
+    'A pesquisa, a navegação por etiqueta e a navegação por secção carregavam vinte peças e paravam, enquanto o cabeçalho anunciava alegremente "43 peças encontradas". Agora percorrem o arquivo todo. E "Todos os 25 artigos" de quem escreve abre mesmo o trabalho dessa pessoa, em vez de te deixar na página inicial.',
+  "changelog.entries.the-magazine-now-browses-in-your-language.title":
+    "A revista navega agora no teu idioma",
+  "changelog.entries.the-magazine-now-browses-in-your-language.body":
+    "Só a página do artigo sabia em que idioma lias. A capa, a pesquisa, a navegação por etiqueta e por secção, o teu feed e a secção de escrita de um membro listavam títulos em inglês e só mudavam depois de clicares. Agora pedem todos o teu idioma, por isso um texto que existe em português chega-te em português logo no primeiro ecrã.",
+  "changelog.entries.long-reads-have-contents-progress-and-a-resume-point.title":
+    "As leituras longas têm índice, progresso e um sítio onde retomar",
+  "changelog.entries.long-reads-have-contents-progress-and-a-resume-point.body":
+    "Uma peça de vinte e cinco minutos não te dava forma nenhuma, nem noção de quanto já tinhas lido, nem maneira de voltar ao ponto onde paraste. Os artigos longos passam a ter um índice construído a partir dos próprios subtítulos, uma barra de progresso e um convite para continuar onde ficaste. Partilhar abre a folha de partilha do teu telemóvel em vez de copiar um link em silêncio.",
+  "changelog.entries.published-pieces-now-reach-your-feed.title":
+    "As peças publicadas chegam agora ao teu feed",
+  "changelog.entries.published-pieces-now-reach-your-feed.body":
+    "A revista faltava no único ecrã onde toda a gente aterra: uma peça podia ser publicada e nunca aparecer no teu feed. Os artigos publicados ficam agora ao lado das publicações, dos tópicos e dos encontros, no teu idioma, e uma peça de alguém que bloqueaste fica de fora.",
+  "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.title":
+    "Os bloqueios e os silenciamentos passam a valer nos artigos da revista",
+  "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.body":
+    "Os comentários dos artigos eram o único sítio da plataforma que ignorava bloqueios e silenciamentos, por isso alguém que tinhas bloqueado podia continuar a aparecer debaixo de uma peça e a responder-te ali. Agora são filtrados como no fórum e no feed, tanto nos comentários como nas respostas. Um comentário que a moderação retirou já não fica como um cartão vazio com botões de responder e denunciar.",
+  "changelog.entries.article-comments-page-and-keep-your-paragraphs.title":
+    "Os comentários dos artigos paginam, e guardam os teus parágrafos",
+  "changelog.entries.article-comments-page-and-keep-your-paragraphs.body":
+    "Numa peça movimentada as conversas mais antigas eram simplesmente inalcançáveis: carregavam vinte e não havia como pedir mais. Há agora um botão para carregar mais, o cabeçalho conta o que conta mesmo, e um comentário que escreveste em parágrafos fica em parágrafos em vez de se juntar todo.",
+  "changelog.entries.the-submit-form-names-the-issue-that-is-actually-open.title":
+    "O formulário de envio diz qual é a edição realmente aberta",
+  "changelog.entries.the-submit-form-names-the-issue-that-is-actually-open.body":
+    "O formulário anunciava um número de edição fixo e um prazo de submissão que já tinha passado, escritos na página há meses e nunca atualizados. Agora diz qual é a edição para que a redação está mesmo a aceitar propostas, mostra prazo só quando alguém da redação o definiu, e diz claramente quando não há nada aberto.",
+  "changelog.entries.unshipped-headlines-no-longer-appear-on-issue-pages.title":
+    "Os títulos por sair já não aparecem nas páginas de edição",
+  "changelog.entries.unshipped-headlines-no-longer-appear-on-issue-pages.body":
+    "A página de uma edição listava tudo o que estava agendado para ela, incluindo peças datadas para a semana seguinte, por isso um título que a redação ainda não tinha publicado ficava à vista e tocar nele não levava a lado nenhum. O índice mostra agora apenas o que já foi publicado.",
+  "changelog.entries.the-authors-directory-only-lists-writers-who-have-published.title":
+    "O diretório de autoria lista só quem já publicou",
+  "changelog.entries.the-authors-directory-only-lists-writers-who-have-published.body":
+    'Abrir um rascunho criava uma assinatura, e o diretório listava todas as assinaturas, por isso anunciava pessoas com "0 peças" cujas páginas diziam que ainda não tinham publicado nada. Agora lista as pessoas cujo trabalho podes mesmo ler.',
+
+  // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
+  "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.title":
+    "Os links de lembrete e de cancelamento abrem agora o encontro",
+  "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.body":
+    'Todos os lembretes de eventos, todos os avisos de cancelamento e todas as entradas de um calendário subscrito apontavam para um endereço sem página na app, por isso tocar num deles dava "não encontrado". Agora abrem todos o encontro, no telemóvel e a partir do Google ou Apple Calendar.',
+
+  "changelog.entries.online-gatherings-now-have-a-join-link.title":
+    "Os encontros online passam a ter link de entrada",
+  "changelog.entries.online-gatherings-now-have-a-join-link.body":
+    'A organizar algo por vídeo? O assistente pede o link e ele chega a quem vai. É partilhado nas mesmas condições que uma morada, por isso nunca fica na página pública. O antigo botão "Link para entrar", que só mostrava um aviso, abre agora a sala.',
+
+  "changelog.entries.a-cancelled-gathering-now-says-so.title":
+    "Um encontro cancelado passa a dizê-lo",
+  "changelog.entries.a-cancelled-gathering-now-says-so.body":
+    "Um encontro que quem organiza cancelou ficava na tua lista exatamente igual a um que se mantinha, com um botão de confirmação a funcionar por trás. Agora diz que foi cancelado, onde quer que o encontres. Quem tem um convite também é avisado, em vez de ficar com um convite para nada.",
+
+  "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.title":
+    "Talvez, adicionar ao calendário e os teus detalhes, na própria página do encontro",
+  "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.body":
+    "Podes marcar-te como talvez sem ocupar um lugar, pôr a data no teu calendário assim que confirmas e contar a quem organiza que levas mais alguém ou que precisas de acesso. As três coisas viviam noutro sítio, ou em lado nenhum. Um encontro que já aconteceu deixa de aceitar confirmações e explica porquê.",
+
+  "changelog.entries.choose-when-your-gathering-reminder-arrives.title":
+    "Escolhe quando chega o lembrete do encontro",
+  "changelog.entries.choose-when-your-gathering-reminder-arrives.body":
+    "Uma hora antes, um dia antes ou uma semana antes. As definições de notificações só tinham um interruptor, por isso toda a gente recebia o mesmo aviso na véspera.",
+
+  "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.title":
+    "Quem organiza pode repetir um encontro e levar a lista da porta offline",
+  "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.body":
+    '"Repetir este encontro" abre o assistente já preenchido a partir de um encontro que organizaste, por isso um mensal é uns toques em vez do formulário todo. O botão Exportar da lista de presenças descarrega agora um ficheiro a sério. A linha "última edição" da visão geral passa finalmente a refletir quando editaste.',
+
+  // Section 5 of the 2026-09-05 deep scan: forum, feed and saved items.
+  "changelog.tag.saved": "Abrir as tuas coleções",
+  "changelog.entries.you-can-take-down-a-whole-forum-post.title":
+    "Podes remover uma publicação do fórum por inteiro",
+  "changelog.entries.you-can-take-down-a-whole-forum-post.body":
+    "Apagar limpava só a mensagem inicial e deixava a publicação de pé, com o título ainda no fórum e na página inicial de toda a gente. Agora sai tudo: o título, a mensagem inicial e a ligação. As respostas continuam escritas, mas deixam de ser alcançáveis a partir do fórum, e as contagens das categorias atualizam logo.",
+  "changelog.entries.a-thread-always-shows-its-real-opening-post.title":
+    "Um tópico mostra sempre a mensagem inicial verdadeira",
+  "changelog.entries.a-thread-always-shows-its-real-opening-post.body":
+    "Se a mensagem inicial fosse de alguém que tinhas silenciado, ou se a moderação a tivesse escondido, a primeira resposta era promovida ao cartão de abertura com o nome e as permissões dessa pessoa, e essa resposta desaparecia da conversa. A mensagem inicial passa a ser identificada como deve ser e, quando de facto não está disponível para ti, o cartão diz isso e todas as respostas ficam no lugar certo.",
+  "changelog.entries.sorting-replies-reorders-the-whole-conversation.title":
+    "Ordenar as respostas reorganiza a conversa toda",
+  "changelog.entries.sorting-replies-reorders-the-whole-conversation.body":
+    "Mais recentes e Mais úteis só reorganizavam as respostas já visíveis, por isso num tópico longo Mais recentes mostrava as vinte respostas mais antigas ao contrário. A ordenação passa a correr sobre todas as respostas do tópico, e cada resposta continua aninhada por baixo daquela a que responde.",
+  "changelog.entries.the-forum-opens-on-active-and-top-means-this-month.title":
+    "O fórum abre em Ativos, e Melhores passa a ser do mês",
+  "changelog.entries.the-forum-opens-on-active-and-top-means-this-month.body":
+    "O fórum abria em Melhores, ordenado por votos e sem limite de tempo, por isso num fórum jovem quase nenhuma publicação tinha votos e voltava numa ordem baralhada que nunca mudava à medida que as pessoas publicavam. Agora abre em Ativos, e Melhores ordena pelos votos do último mês antes de cair para a atividade recente, para que uma pergunta nova fique à vista em vez de enterrada.",
+  "changelog.entries.forum-search-looks-inside-replies.title":
+    "A pesquisa do fórum procura dentro das respostas",
+  "changelog.entries.forum-search-looks-inside-replies.body":
+    "A pesquisa do fórum só encontrava títulos, por isso uma pergunta respondida três respostas abaixo não devolvia nada. Agora procura também nas respostas, e a dica por baixo da caixa diz isso em vez de te apontar para outro lado.",
+  "changelog.entries.you-can-move-a-post-to-the-right-category.title":
+    "Podes mover uma publicação para a categoria certa",
+  "changelog.entries.you-can-move-a-post-to-the-right-category.body":
+    "A categoria ficava fixa no momento em que publicavas, por isso uma pergunta de saúde arrumada em Geral ficava invisível para quem a procurava. Agora podes mover a tua durante as primeiras 24 horas, a partir da etiqueta de categoria ou do menu da publicação, e quem modera pode reorganizar a qualquer momento.",
+  "changelog.entries.see-how-many-replies-arrived-since-you-last-looked.title":
+    "Vê quantas respostas chegaram desde a última vez",
+  "changelog.entries.see-how-many-replies-arrived-since-you-last-looked.body":
+    "Seguir cinco conversas obrigava a reabrir cada uma para perceber o que tinha mexido. As linhas do fórum passam a mostrar quantas respostas surgiram desde a última vez que abriste essa publicação. Abri-la marca-a como lida sem te inscrever nas notificações, que continua a ser uma escolha à parte.",
+  "changelog.entries.the-composer-keeps-your-whole-draft.title":
+    "O editor guarda o teu rascunho inteiro",
+  "changelog.entries.the-composer-keeps-your-whole-draft.body":
+    "Uma publicação por acabar voltava só com o texto, perdendo o título, a categoria, a comunidade, as etiquetas e a fotografia. Agora fica tudo guardado, uma publicação por acabar aparece no próprio fórum com um caminho direto de volta, e uma resposta escrita por baixo de outra resposta também é guardada, por isso tocar no botão Responder errado deixa de a perder.",
+  "changelog.entries.links-in-threads-and-the-feed-open-up.title":
+    "As ligações nos tópicos e na página inicial abrem-se",
+  "changelog.entries.links-in-threads-and-the-feed-open-up.body":
+    "Uma ligação colada numa publicação era texto simples, por isso tinhas de sair da página para saber se valia a pena ler. As ligações passam a abrir num cartão com o título, a descrição e a imagem da página, tal como já acontecia nas mensagens.",
+  "changelog.entries.votes-on-the-forum-are-honest.title":
+    "Os votos no fórum são honestos",
+  "changelog.entries.votes-on-the-forum-are-honest.body":
+    "Votar não verificava nada: podias votar na tua própria publicação para subir na ordenação, continuar a votar em quem te tinha bloqueado, e votar dentro de uma comunidade privada de que não fazias parte. As três situações passam a ser recusadas, e os votos que as pessoas tinham dado às suas próprias publicações foram retirados das contagens.",
+  "changelog.entries.threads-show-a-preview-of-what-was-asked.title":
+    "As publicações mostram uma antevisão do que foi perguntado",
+  "changelog.entries.threads-show-a-preview-of-what-was-asked.body":
+    "As linhas do fórum e os cartões de fórum da página inicial traziam um título e mais nada, o que fazia deles a coisa menos convidativa da página. Agora mostram as primeiras linhas, e a contagem de respostas deixa de incluir as respostas apagadas.",
+  "changelog.entries.hidden-members-stay-hidden-in-the-feed.title":
+    "Quem se esconde continua escondido na página inicial",
+  "changelog.entries.hidden-members-stay-hidden-in-the-feed.body":
+    "Se escondesses o teu perfil por 24 horas, ou o escondesses de uma pessoa em concreto, a página inicial continuava a anunciar-te a essa pessoa como alguém que acabou de chegar, com o teu nome, a tua frase e uma ligação para o perfil. A página inicial passa a aplicar os mesmos limites que o diretório e a tua página de perfil já respeitavam.",
+  "changelog.entries.new-this-week-now-means-this-week.title":
+    "Novos esta semana passa a significar esta semana",
+  "changelog.entries.new-this-week-now-means-this-week.body":
+    "A lista lateral não tinha limite de data, por isso numa semana calma enchia-se de pessoas que tinham chegado meses antes, debaixo de um título que dizia outra coisa. Agora mostra só quem chegou nos últimos sete dias, e diz com clareza quando não chegou ninguém.",
+  "changelog.entries.saved-items-tell-you-when-something-is-gone.title":
+    "Os itens guardados dizem-te quando algo já não existe",
+  "changelog.entries.saved-items-tell-you-when-something-is-gone.body":
+    "Uma publicação, anúncio ou lugar guardado cuja página tinha entretanto saído continuava a parecer ativo e levava-te a uma página que não existia. A tua lista de guardados, uma lista que partilhaste e as tuas coleções passam a marcar esses itens como indisponíveis, mantendo o título para veres o que era, e podes na mesma removê-los.",
+
+  // Section 5 follow-up: cross-device drafts, link previews, saved lists.
+  "changelog.entries.a-post-you-start-on-one-device-reopens-on-another.title":
+    "Uma publicação começada num dispositivo reabre noutro",
+  "changelog.entries.a-post-you-start-on-one-device-reopens-on-another.body":
+    "Uma publicação por acabar guardava o título e o texto no servidor, mas a comunidade, as etiquetas e a fotografia ficavam só no navegador onde começaste, por isso retomá-la no portátil perdia essas escolhas sem avisar. Agora o rascunho inteiro viaja contigo. Uma publicação guardada antes de escreveres o corpo também passa a ser mantida, em vez de ser descartada assim que o texto ficava vazio.",
+  "changelog.entries.link-previews-no-longer-run-out-on-shared-wifi.title":
+    "As antevisões de ligações deixam de esgotar em wifi partilhado",
+  "changelog.entries.link-previews-no-longer-run-out-on-shared-wifi.body":
+    "Os cartões de antevisão eram racionados por endereço de rede, por isso toda a gente num café, espaço ou escritório partilhava uma única quota pequena, e uma página inicial cheia esgotava-a em dois deslizes. A quota passa a ser só tua e chega para uma página inteira de ligações.",
+  "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.title":
+    "As listas de guardados assinalam um item morto antes de o arrumares",
+  "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.body":
+    "A linha de guardados recentes nas tuas listas continuava a oferecer itens cuja página tinha entretanto saído, por isso podias arrumar algo e só descobrir mais tarde. Agora assinala-os da mesma forma que o resto dos teus guardados.",
 };

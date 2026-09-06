@@ -7,7 +7,7 @@ import {
   ownerViewToShowcaseView,
   type SubprofileView,
 } from "./api/subprofiles.adapters";
-import { personaPublicPathForOwner } from "./personaLinks.data";
+import { personaPublicPathForOwnerOrNull } from "./personaLinks.data";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import { skinFor, SKIN_META } from "./subprofile-skins";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
@@ -90,7 +90,7 @@ export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
   // it must NOT follow the live-edited slug. Rendered only once the creator
   // slug is known.
   const liveHref = creatorSlug
-    ? personaPublicPathForOwner(subprofile, creatorSlug)
+    ? personaPublicPathForOwnerOrNull(subprofile, creatorSlug)
     : null;
 
   return (

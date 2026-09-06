@@ -1,6 +1,7 @@
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { ArticleBlock } from "../../api/pieces.api";
 import type { ArticleBlockKind } from "./blockKinds";
+import { htmlToPlainText } from "./plainText";
 
 /** A fresh id for a newly-inserted block. Prefers `crypto.randomUUID` (every
  * evergreen browser this app targets has it); the timestamp+random fallback
@@ -28,13 +29,58 @@ function escapeHtml(text: string): string {
 /** One paragraph block per (already split, already trimmed, non-empty) text
  * — the paste-as-blocks shape, shared by `pasteParagraphsAfter` below (split
  * out of a document paste) and `FileDraftModal` (split out of a whole pasted
- * draft), so the two paths never produce structurally different blocks. */
+ * draft), so the two paths never produce structurally different blocks.
+ *
+ * Every block gets a FRESH id on every call, which is correct for an insert
+ * and is why the server can never dedup a refile by id (PRD-122b): the same
+ * pasted draft filed twice arrives with entirely new ids both times. Filing is
+ * made idempotent server-side, on block CONTENT (`appendFiledBlocks` in
+ * `magazine-piece.service.ts`), so nothing here needs to mint stable ids. */
 export function createParagraphBlocks(texts: string[]): ArticleBlock[] {
   return texts.map((text) => ({
     id: freshBlockId(),
     kind: "paragraph",
     html: escapeHtml(text),
   }));
+}
+
+/**
+ * The inverse of `createParagraphBlocks` + `splitIntoParagraphTexts`: the
+ * prose of an existing draft, one string per block, ready to be joined with a
+ * blank line back into a textarea.
+ *
+ * PRD-122a. `FileDraftModal` uses it to seed the paste box from the draft as it
+ * stands, so a writer can revise the version their EDITOR worked on instead of
+ * retyping from a copy that no longer matches. The round trip is deliberately
+ * lossy in one direction: a block with no prose (an image, a stats row) has no
+ * text to carry and is dropped, and rich-text markup inside a paragraph is
+ * flattened, which is exactly what the paste box can hold.
+ */
+export function paragraphTextsFromBlocks(blocks: ArticleBlock[]): string[] {
+  return blocks
+    .map((block) => {
+      switch (block.kind) {
+        case "paragraph":
+        case "heading":
+        case "pullQuote":
+        case "quote":
+          return htmlToPlainText(block.html);
+        case "qa":
+          return [htmlToPlainText(block.q), htmlToPlainText(block.html)]
+            .filter(Boolean)
+            .join(" ");
+        case "image":
+        case "stats":
+          return "";
+        default: {
+          // Exhaustiveness guard: TypeScript rejects an unhandled kind here.
+          const exhaustive: never = block;
+          return exhaustive;
+        }
+      }
+    })
+    .map((text) => text.trim())
+    .filter(Boolean);
 }
 
 /** Splits raw pasted text into paragraph strings on blank lines, trimmed and

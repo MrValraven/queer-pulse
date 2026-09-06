@@ -29,9 +29,12 @@ export function ThreadComposer({
    *  while the server's own `/files/` URL is still a round-trip away. */
   onPost: (body: string, image?: StagedPostImage) => void;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
-  /** Autosave this composer's text under a stable draft id. Omitted on the
-   *  inline nested-reply composers, whose text is a few seconds old at most
-   *  and belongs to a target that disappears when the composer closes. */
+  /** Autosave this composer's text under a stable draft id. Passed by BOTH
+   *  the bottom composer (keyed to the thread) and every inline nested-reply
+   *  composer (keyed to the thread AND the reply being answered, see
+   *  `nestedReplyDraftId`) — the inline one is where quotes and threaded
+   *  answers get written, and used to lose them on a mis-tap (PRD-166).
+   *  Omitted only while a composer has no thread to belong to yet. */
   draft?: { draftId: string; title: string; href: string };
 }) {
   const { t } = useTranslation();

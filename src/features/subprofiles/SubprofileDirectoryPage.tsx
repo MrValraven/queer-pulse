@@ -1,42 +1,55 @@
-import { useMemo } from "react";
-import { FiLayers, FiAlertTriangle } from "react-icons/fi";
+import { useSearchParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import {
-  Button,
-  EmptyState,
-  FeatureHelp,
-  Reveal,
-  SkeletonAvatar,
-  SkeletonLine,
-  SuccessPanel,
-} from "../../shared/components/ui";
+import { FeatureHelp } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useSubprofileDirectory } from "./api/useSubprofileDirectory";
-import { SubprofileCard } from "./SubprofileCard";
-import { SubprofileDirectoryToolbar } from "./SubprofileDirectoryToolbar";
-import { SubprofileDirectoryFooterPrompt } from "./SubprofileDirectoryFooterPrompt";
-import { useSubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters";
+import { FollowedPersonasPanel } from "./FollowedPersonasPanel";
+import { SubprofileDirectoryBrowse } from "./SubprofileDirectoryBrowse";
+import {
+  SubprofileDirectoryTabs,
+  type SubprofileDirectoryView,
+} from "./SubprofileDirectoryTabs";
 import styles from "./SubprofileDirectoryPage.module.css";
 
 /**
- * Browse standalone (unlinked + published) personas across the community,
- * filterable by profession, tag, free-text search, and open-to-collabs.
- * Wrapped in `AppShell` (logged-in). Personas redesign Phase 4 (Decision §2):
- * the directory fetches the FULL standalone set once and applies every filter
- * (profession, tags, search, collabs) client-side, via
- * `useSubprofileDirectoryFilters`. The controls themselves live in
- * `SubprofileDirectoryToolbar`, so this component stays under the 200-line
- * cap.
+ * The persona hub, in two tabs.
+ *
+ * **Everyone** browses standalone (unlinked + published) personas across the
+ * community, filterable by profession, tag, free-text search and
+ * open-to-collabs. That body lives in `SubprofileDirectoryBrowse`.
+ *
+ * **You follow** is the personal list of personas this member follows
+ * (PRD-208), in `FollowedPersonasPanel`.
+ *
+ * WHY FOLLOWING LIVES HERE. It is a list of somebody else's personas, so it
+ * does not belong on `/account/subprofiles`, which is the dashboard for the
+ * personas you RUN. The hub is where personas are found, which makes the
+ * empty state's "go and find some" the tab next door rather than another
+ * page, and it needs no new route: `/subprofiles` is already gated to
+ * signed-in members in `authGate.ts`.
+ *
+ * The active tab is addressed by `?view=following`, so the choice survives a
+ * refresh and a shared link, and a notification or an empty state elsewhere
+ * can point straight at the list. Anything else in that param reads as the
+ * default browse tab rather than an error. Wrapped in `AppShell` (logged-in).
  */
 export function SubprofileDirectoryPage() {
   const { t } = useTranslation();
-  const { data, isLoading, isError, refetch } = useSubprofileDirectory();
-  const cards = useMemo(() => data ?? [], [data]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const view: SubprofileDirectoryView =
+    searchParams.get("view") === "following" ? "following" : "browse";
 
-  const directory = useSubprofileDirectoryFilters(cards);
-  const { visibleCards, shownCards, hasMore, onShowMore, onClearFilters } =
-    directory;
+  // `replace` so tab switching never fills the back stack: Back should leave
+  // the hub, the way it does on every other tabbed surface here.
+  const setView = (next: SubprofileDirectoryView) => {
+    const params = new URLSearchParams(searchParams);
+    if (next === "following") {
+      params.set("view", "following");
+    } else {
+      params.delete("view");
+    }
+    setSearchParams(params, { replace: true });
+  };
 
   return (
     <AppShell>
@@ -56,123 +69,22 @@ export function SubprofileDirectoryPage() {
             <p className={styles.sub}>{t("subprofiles:directory.subtitle")}</p>
           </header>
 
-          <SubprofileDirectoryToolbar
-            directory={directory}
-            isCountKnown={!isLoading && !isError}
-          />
+          <SubprofileDirectoryTabs active={view} onChange={setView} />
 
-          {isLoading ? (
-            <DirectoryLoadingGrid />
-          ) : isError ? (
-            // Distinct from the empty state: a failed fetch must not read as
-            // "no personas yet". Per docs/STYLE-RULES.md an error surface is the
-            // plum panel (never a light card) — the same `SuccessPanel`
-            // treatment `ErrorSides` gives the dashboard, its jade check swapped
-            // for a coral alert and its action repurposed as a retry.
-            <SuccessPanel
-              title={t("subprofiles:directory.error.title")}
-              icon={
-                <FiAlertTriangle size={26} color="var(--accent)" aria-hidden />
-              }
-              iconTone="coral"
-              onClose={() => void refetch()}
-              closeLabel={t("subprofiles:directory.error.retry")}
-            >
-              {t("subprofiles:directory.error.description")}
-            </SuccessPanel>
-          ) : visibleCards.length === 0 ? (
-            <EmptyState
-              icon={<FiLayers />}
-              title={t("subprofiles:directory.empty.title")}
-              description={t("subprofiles:directory.empty.description")}
-              action={{
-                label: t("subprofiles:directory.empty.clear"),
-                onClick: onClearFilters,
-              }}
-            />
-          ) : (
-            <>
-              <div className={styles.grid}>
-                {shownCards.map((card, i) => (
-                  <Reveal key={card.handle} delay={Math.min(i, 8) * 60}>
-                    <SubprofileCard card={card} />
-                  </Reveal>
-                ))}
-              </div>
-              <div className={styles.pager}>
-                <span className={styles.pagerCount}>
-                  {t("subprofiles:directory.shownOfTotal", {
-                    shown: shownCards.length,
-                    total: visibleCards.length,
-                  })}
-                </span>
-                {hasMore && (
-                  <Button variant="ghost" size="sm" onClick={onShowMore}>
-                    {t("subprofiles:directory.showMore")}
-                  </Button>
-                )}
-              </div>
-              <SubprofileDirectoryFooterPrompt />
-            </>
-          )}
+          <div
+            className={styles.panel}
+            id={`subprofile-directory-panel-${view}`}
+            role="tabpanel"
+            aria-labelledby={`subprofile-directory-tab-${view}`}
+          >
+            {view === "following" ? (
+              <FollowedPersonasPanel onBrowse={() => setView("browse")} />
+            ) : (
+              <SubprofileDirectoryBrowse />
+            )}
+          </div>
         </div>
       </div>
     </AppShell>
-  );
-}
-
-/** How many placeholder cards the loading grid renders — roughly a first
- *  viewport's worth, matching the directory's initial `PER_PAGE` reveal. */
-const DIRECTORY_SKELETON_COUNT = 6;
-
-/**
- * Card-skeleton grid shown while the standalone-persona set loads. Renders into
- * the SAME `.grid` the real `SubprofileCard`s use, so the real data lands with
- * no layout jump, and reuses the dashboard's skeleton vocabulary
- * (`SkeletonAvatar` over shimmer `SkeletonLine` bars — mirrors `LoadingSides`)
- * shaped to the directory card's header-wash + cut-out-avatar silhouette. One
- * `aria-busy` region rather than one announcement per cell; the cells
- * themselves are decorative.
- */
-function DirectoryLoadingGrid() {
-  const { t } = useTranslation();
-  return (
-    <div
-      className={styles.grid}
-      role="status"
-      aria-busy="true"
-      aria-label={t("subprofiles:directory.loading")}
-    >
-      {Array.from({ length: DIRECTORY_SKELETON_COUNT }, (_, index) => (
-        <div className={styles.skCard} key={index} aria-hidden>
-          <div className={styles.skHeader} />
-          <div className={styles.skAvatar}>
-            <SkeletonAvatar size={60} />
-          </div>
-          <div className={styles.skBody}>
-            <SkeletonLine width="42%" height={12} />
-            <SkeletonLine width="70%" height={20} />
-            <SkeletonLine width="90%" height={14} />
-            <div className={styles.skTags}>
-              <SkeletonLine
-                width={54}
-                height={22}
-                style={{ borderRadius: 999 }}
-              />
-              <SkeletonLine
-                width={68}
-                height={22}
-                style={{ borderRadius: 999 }}
-              />
-              <SkeletonLine
-                width={46}
-                height={22}
-                style={{ borderRadius: 999 }}
-              />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
   );
 }

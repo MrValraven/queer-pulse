@@ -3,35 +3,56 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { type Thread } from "./forum.data";
+import { CATS, type Thread } from "./forum.data";
 import {
-  useDeletePost,
+  useDeleteThread,
+  useMoveThreadCategory,
   usePinThread,
   useRestorePost,
 } from "./api/useForumMutations";
 
 /**
- * Row-level moderation for the forum thread LIST: delete / restore / view
- * history / pin on a thread's OPENING post (via `thread.opPostId`/`slug`),
- * reusing the exact same mutations + confirm-delete / edit-history modals the
- * thread page uses.
+ * Row-level moderation for the forum thread LIST: withdraw the thread, move it
+ * to another category, restore a tombstoned opening post, view its edit history
+ * and pin it, reusing the same mutations + confirm-delete / edit-history modals
+ * the thread page uses.
  *
- * Live-only: demo threads carry no `opPostId`/`canPin`, so every handler
- * guards and no-ops (their row menu shows only "Edit"). The delete/restore
- * mutations themselves only invalidate the thread PAGE's posts/meta, so after
- * a live action we also invalidate the thread LIST here so the row reflects
- * the change (`usePinThread` invalidates the list + pinned bucket itself).
+ * Live-only: demo threads carry no `slug`/`opPostId`/`canPin`, so every handler
+ * guards and no-ops (their row menu shows only "Edit"). The restore mutation
+ * only invalidates the thread PAGE's posts/meta, so after a live action we also
+ * invalidate the thread LIST here so the row reflects the change; the withdraw,
+ * move and pin mutations each invalidate their own affected keys.
+ *
+ * PRD-160: "Delete" on a row used to call `DELETE /forum/posts/:id` on the
+ * thread's OPENING post. That tombstoned the body and left the thread itself in
+ * the list and the feed, title and link intact, which is the opposite of what a
+ * member means by deleting their post. It now withdraws the whole thread.
  */
-export function useForumRowModeration() {
+export function useForumRowModeration({
+  onThreadDeleted,
+}: {
+  /** Called with the withdrawn thread's slug once the server has taken it
+   *  down, so the page can drop any OPTIMISTIC copy it is still holding. The
+   *  query invalidations below only reach the server-backed list; a thread the
+   *  member published seconds earlier lives in local state and would otherwise
+   *  stay on screen after they withdrew it. */
+  onThreadDeleted?: (slug: string) => void;
+} = {}) {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const deletePost = useDeletePost();
+  const deleteThread = useDeleteThread();
+  const moveCategory = useMoveThreadCategory();
   const restorePost = useRestorePost();
   const pinThread = usePinThread();
-  const [confirmDelete, setConfirmDelete] = useState<{ postId: string } | null>(
-    null,
-  );
+  const [confirmDelete, setConfirmDelete] = useState<{
+    slug: string;
+    title: string;
+  } | null>(null);
+  const [movingThread, setMovingThread] = useState<{
+    slug: string;
+    category: string;
+  } | null>(null);
   const [historyPostId, setHistoryPostId] = useState<string | null>(null);
 
   const onError = () => showToast(t("forum:toast.error"), "error");
@@ -61,7 +82,13 @@ export function useForumRowModeration() {
   }
 
   function requestDelete(thread: Thread) {
-    if (thread.opPostId) setConfirmDelete({ postId: thread.opPostId });
+    if (thread.slug)
+      setConfirmDelete({ slug: thread.slug, title: thread.title });
+  }
+
+  function requestMoveCategory(thread: Thread) {
+    if (thread.slug)
+      setMovingThread({ slug: thread.slug, category: thread.category });
   }
 
   function requestHistory(thread: Thread) {
@@ -84,15 +111,36 @@ export function useForumRowModeration() {
 
   function confirmDeleteNow() {
     if (!confirmDelete) return;
-    const { postId } = confirmDelete;
+    const { slug } = confirmDelete;
     setConfirmDelete(null);
-    deletePost.mutate(
-      { postId },
+    deleteThread.mutate(
+      { slug },
       {
         onError,
         onSuccess: () => {
-          refreshList();
-          showToast(t("forum:toast.deleted"), "success");
+          onThreadDeleted?.(slug);
+          showToast(t("forum:toast.threadDeleted"), "success");
+        },
+      },
+    );
+  }
+
+  function confirmMoveNow(category: string) {
+    if (!movingThread) return;
+    const { slug } = movingThread;
+    setMovingThread(null);
+    moveCategory.mutate(
+      { slug, category },
+      {
+        onError,
+        onSuccess: () => {
+          const moved = CATS.find((option) => option.id === category);
+          showToast(
+            t("forum:toast.categoryMoved", {
+              category: moved ? t(moved.nameKey) : category,
+            }),
+            "success",
+          );
         },
       },
     );
@@ -101,14 +149,19 @@ export function useForumRowModeration() {
   return {
     confirmDelete,
     setConfirmDelete,
+    movingThread,
+    setMovingThread,
     historyPostId,
     setHistoryPostId,
     requestDelete,
+    requestMoveCategory,
     requestHistory,
     requestRestore,
     requestTogglePin,
     confirmDeleteNow,
-    deleteBusy: deletePost.isPending,
+    confirmMoveNow,
+    deleteBusy: deleteThread.isPending,
+    moveBusy: moveCategory.isPending,
     pinBusy: pinThread.isPending,
   };
 }

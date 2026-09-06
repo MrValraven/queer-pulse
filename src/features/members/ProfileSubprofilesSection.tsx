@@ -49,7 +49,13 @@ export function ProfileSubprofilesSection({
   const ownerQuery = useSubprofiles({ enabled: isSelf });
   const publicQuery = useProfileSubprofiles(ownerSlug);
 
-  const isLoading = isSelf ? ownerQuery.isLoading : publicQuery.isLoading;
+  // Self view waits for the public list too: it is where the per-persona
+  // creator slug comes from (see `creatorSlugById`), and rendering the
+  // showcase before it lands would paint every co-owned persona's link with
+  // the wrong member for a beat. A wrong link is worse than a moment's wait.
+  const isLoading = isSelf
+    ? ownerQuery.isLoading || publicQuery.isLoading
+    : publicQuery.isLoading;
   const ownerList = ownerQuery.data ?? [];
   const publicList = publicQuery.data ?? [];
 
@@ -68,11 +74,37 @@ export function ProfileSubprofilesSection({
     ]),
   );
 
+  // A linked persona is addressed by its CREATOR's profile slug, and
+  // `/subprofiles/mine` returns co-owned personas too, so adapting the whole
+  // owner list against the signed-in member's own slug handed every co-owned
+  // persona a dead-end link (and, where the member had a persona of their own
+  // under the same slug, a link to that other persona). The dashboard resolves
+  // the same thing per card with `usePersonaCreatorSlug`; a list cannot call a
+  // hook per row, so this reads the creator the server already resolved on the
+  // public list running alongside. No extra request, and the exact value the
+  // public path renders.
+  //
+  // Keyed by persona id: two personas on one profile can share a slug once one
+  // of them was created by somebody else, which is the collision this whole
+  // fix is about. A persona missing from the public list (draft, unlisted, or
+  // under a takedown) keeps the viewed profile's slug, which is right for
+  // every persona the member created themselves.
+  const creatorSlugById = new Map<string, string>(
+    publicList.flatMap((view) =>
+      view.ownerSlug ? [[view.id, view.ownerSlug] as [string, string]] : [],
+    ),
+  );
+
   // Self view sees every persona (incl. drafts/unlisted) via the owner
   // query, adapted to the shared showcase shape; a visitor sees only the
   // linked + published ones the public hook already scopes to (spec §4).
   const personas = isSelf
-    ? ownerList.map((view) => ownerViewToShowcaseView(view, ownerSlug))
+    ? ownerList.map((view) =>
+        ownerViewToShowcaseView(
+          view,
+          creatorSlugById.get(view.id) ?? ownerSlug,
+        ),
+      )
     : publicList;
   const hasPersonas = personas.length > 0;
 

@@ -2,7 +2,6 @@ import { FiCopy, FiDownload } from "react-icons/fi";
 import { Button, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { personaShareUrl } from "./personaLinks.data";
 import { downloadVCard } from "./vcard";
 import { personaAddressName } from "./subprofile-kinds";
 import { SubprofileQR } from "./SubprofileQR";
@@ -11,21 +10,29 @@ import styles from "./SubprofileShareCard.module.css";
 
 /**
  * Share-card modal: a scannable QR to the persona's public page, a one-click
- * `.vcf` contact-card download, and a copy-link fallback — everything a person
+ * `.vcf` contact-card download, and a copy-link fallback. Everything a person
  * would want to hand someone in person or drop in a bio, in one place. Fully
  * client-side (no API round-trip), so it works identically in demo and live.
  * Self-contained: only mounted while `open`, so `Modal` owns the scroll-lock.
+ *
+ * `shareUrl` is a REQUIRED prop rather than something derived here from `view`.
+ * All three affordances hand out the same address, and a QR code is the one
+ * that survives being printed and scanned by a stranger weeks later, so the
+ * address is resolved once by the caller (`personaOwnerAddress`) and this
+ * modal cannot be mounted for a persona that has none.
  */
 export function SubprofileShareCard({
   view,
+  shareUrl,
   onClose,
 }: {
   view: PublicSubprofileView;
+  /** The persona's resolved absolute public URL. */
+  shareUrl: string;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const shareUrl = personaShareUrl(view);
   // Both strings below read "{name}'s page", so they take the ADDRESS name
   // (the owner's first name for a persona still called "Poet") rather than the
   // composed "Owner Name | Poet" title, which would not survive a possessive.
@@ -65,7 +72,7 @@ export function SubprofileShareCard({
         <Button
           variant="primary"
           className={styles.downloadButton}
-          onClick={() => downloadVCard(view)}
+          onClick={() => downloadVCard(view, shareUrl)}
         >
           <FiDownload aria-hidden /> {t("subprofiles:shareCard.download")}
         </Button>

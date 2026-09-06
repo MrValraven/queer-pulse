@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import type { IconType } from "react-icons";
 import {
   FiArrowRight,
+  FiCheck,
   FiMail,
   FiShield,
   FiFileText,
@@ -23,8 +24,6 @@ import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useSubmitInquiry } from "./api/useSubmitInquiry";
 import s from "./ContactPage.module.css";
-
-const CONTACT_EMAIL = "hello@queerpulse.com";
 
 /** The topic selector's values. Each one has a `contact.form.topic.<value>`
  *  label, and any of them may arrive preselected as `?topic=<value>` from a
@@ -51,37 +50,53 @@ function toTopic(value: string | null): ContactTopic | "" {
   return TOPICS.includes(value as ContactTopic) ? (value as ContactTopic) : "";
 }
 
+/**
+ * The four contact routes. `background` is the icon tile's tint, written as
+ * `rgba(var(--*-rgb), …)` rather than raw channels so each one flips with the
+ * theme: the press tile rides `--line-rgb` (plum in light, cream in dark),
+ * because `--plum-rgb` does NOT flip and painted a near-black square on the
+ * dark page.
+ */
 const ROUTES: {
   icon: IconType;
   background: string;
   titleKey: string;
   descKey: string;
+  /** The topic this card preselects in the form below (PRD-272). */
+  topic: ContactTopic;
 }[] = [
   {
     icon: FiMail,
-    background: "rgba(232,119,90,.12)",
+    background: "rgba(var(--accent-rgb), .12)",
     titleKey: "marketing:contact.routes.general.title",
     descKey: "marketing:contact.routes.general.desc",
+    topic: "general",
   },
   {
     icon: FiShield,
-    background: "rgba(74,140,111,.12)",
+    background: "rgba(var(--jade-rgb), .12)",
     titleKey: "marketing:contact.routes.safety.title",
     descKey: "marketing:contact.routes.safety.desc",
+    topic: "safety",
   },
   {
     icon: FiFileText,
-    background: "rgba(45,27,61,.08)",
+    background: "rgba(var(--line-rgb), .08)",
     titleKey: "marketing:contact.routes.press.title",
     descKey: "marketing:contact.routes.press.desc",
+    topic: "press",
   },
   {
     icon: FiUsers,
-    background: "rgba(232,119,90,.1)",
+    background: "rgba(var(--accent-rgb), .1)",
     titleKey: "marketing:contact.routes.partnerships.title",
     descKey: "marketing:contact.routes.partnerships.desc",
+    topic: "partnership",
   },
 ];
+
+/** Anchor for the "pick a route, land in the form" jump (PRD-272). */
+const CONTACT_FORM_ID = "contact-form";
 
 export function ContactPage() {
   const { t } = useTranslation();
@@ -100,6 +115,15 @@ export function ContactPage() {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
     form.topic &&
     form.message.trim();
+
+  /** Preselect a topic from one of the route cards and take the reader to the
+   *  form, which is what those cards used to do by opening a mail client. */
+  const chooseTopic = (topic: ContactTopic) => {
+    setForm((previous) => ({ ...previous, topic }));
+    document
+      .getElementById(CONTACT_FORM_ID)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const handleSubmit = () => {
     if (!valid || submitInquiry.isPending) return;
@@ -142,12 +166,19 @@ export function ContactPage() {
               />
             </h1>
             <p>{t("marketing:contact.hero.body")}</p>
+            {/* PRD-272. These four cards were `mailto:` links carrying the
+                card title as a subject line, on a page whose own form writes a
+                tracked `inquiries` row with exactly that topic on it. They now
+                preselect the topic and jump to the form, so a "Safety concern"
+                or "Press & media" arrives in the queue staff actually work
+                instead of in a shared mailbox. */}
             <div className={s.routes}>
               {ROUTES.map((r) => (
-                <a
+                <button
                   key={r.titleKey}
-                  className={s.route}
-                  href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t(r.titleKey))}`}
+                  type="button"
+                  className={`${s.route} ${s.routeButton}`}
+                  onClick={() => chooseTopic(r.topic)}
                   aria-label={t(r.titleKey)}
                 >
                   <span
@@ -164,7 +195,7 @@ export function ContactPage() {
                       <FiArrowRight aria-hidden />
                     </span>
                   </div>
-                </a>
+                </button>
               ))}
             </div>
           </Reveal>
@@ -173,15 +204,7 @@ export function ContactPage() {
             {sent ? (
               <div className={s.sent}>
                 <div className={s.tyIcon}>
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M5 12.5l4 4L19 7"
-                      stroke="var(--jade)"
-                      strokeWidth={2.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <FiCheck aria-hidden />
                 </div>
                 <h2>
                   <Translation
@@ -196,6 +219,7 @@ export function ContactPage() {
               </div>
             ) : (
               <form
+                id={CONTACT_FORM_ID}
                 onSubmit={(e) => {
                   e.preventDefault();
                   handleSubmit();

@@ -174,8 +174,17 @@ export function SafetyPage() {
         }
         sub={t("resources:safety.outro.sub")}
       >
-        <Button href="mailto:hello@queerpulse.com" variant="primary" size="lg">
-          {t("resources:safety.outro.cta")}
+        {/* PRD-272. Was a `mailto:hello@queerpulse.com` whose visible label
+            WAS the address. A safety question about how the network works has
+            a tracked route — the Contact form's `safety` topic, worked in
+            `/admin/inquiries` — and a shared mailbox has no queue, no owner
+            and no way to answer in-app. */}
+        <Button
+          to={`${routes.contact}?topic=safety`}
+          variant="primary"
+          size="lg"
+        >
+          {t("resources:safety.outro.contactCta")}
         </Button>
       </Outro>
 

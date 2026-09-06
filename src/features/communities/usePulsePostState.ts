@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Post, PostReply } from "./community.model";
 import type { Person } from "./communityDetails";
+import type { CommunityTakedownInput } from "./api/communities.api";
 import {
   useDeleteCommunityPost,
   useRestoreCommunityPost,
@@ -126,22 +127,45 @@ export function usePulsePostState(post: Post) {
     );
   }
 
-  function runDelete() {
+  /**
+   * Take the post down.
+   *
+   * `takedown` is present only when a MODERATOR acted on somebody else's post
+   * (PRD-147): it carries the reason and the cited house rule the author is
+   * sent, plus a note only the moderators read. An author deleting their own
+   * post passes nothing, and the toast stays the plain one, because nothing
+   * was logged and nobody was told.
+   */
+  function runDelete(takedown?: CommunityTakedownInput) {
+    const successToast = () =>
+      showToast(
+        takedown
+          ? t("communities:detail.modtools.takedown.post.successToast")
+          : t("communities:detail.thread.deletedToast"),
+        "success",
+      );
     if (demoMode) {
       setIsConfirmingDelete(false);
       setDemoOverride((prev) => ({ ...prev, deleted: true }));
-      showToast(t("communities:detail.thread.deletedToast"), "success");
+      successToast();
       return;
     }
     deletePost.mutate(
-      { id: post.id },
+      { id: post.id, takedown },
       {
         onSuccess: () => {
           setIsConfirmingDelete(false);
-          showToast(t("communities:detail.thread.deletedToast"), "success");
+          successToast();
         },
         onError: () => {
           setIsConfirmingDelete(false);
+          if (takedown) {
+            showToast(
+              t("communities:detail.modtools.takedown.errorToast"),
+              "error",
+            );
+            return;
+          }
           onError();
         },
       },

@@ -14,6 +14,14 @@ export interface ConfirmDialogReason {
   placeholder?: string;
   /** When true, Confirm stays disabled until the reason is non-empty. */
   required?: boolean;
+  /**
+   * With `required`, the trimmed length the reason must reach before Confirm
+   * enables. Defaults to 1, which is the plain non-empty rule every existing
+   * caller already gets. Set it where the server enforces a floor of its own,
+   * so the dialog stops the moderator instead of sending a request that comes
+   * back 400: the staff-role grant/revoke reason takes 10 (PRD-288).
+   */
+  minLength?: number;
   /** Caps the textarea length and shows a live `used/max` counter. */
   maxLength?: number;
 }
@@ -43,7 +51,8 @@ export interface ConfirmDialogProps {
  * send-back, delete-conversation): title + optional description/children, an
  * optional reason textarea, and a Cancel + Confirm footer. The confirm button
  * takes the `danger` variant when `tone="destructive"`, and stays disabled
- * while `loading` or when a `required` reason is still empty.
+ * while `loading` or while a `required` reason is short of its
+ * `minLength` (empty, by default).
  *
  * Mount only while open (the caller gates on `open`, and `Modal`'s a11y setup
  * runs per open) — this component also returns `null` when closed as a guard.
@@ -65,7 +74,8 @@ export function ConfirmDialog({
   if (!open) return null;
 
   const reasonMissing = Boolean(
-    reason?.required && reason.value.trim().length === 0,
+    reason?.required &&
+    reason.value.trim().length < Math.max(1, reason.minLength ?? 1),
   );
   const confirmDisabled = loading || reasonMissing;
 

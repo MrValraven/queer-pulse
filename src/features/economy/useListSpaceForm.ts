@@ -31,7 +31,23 @@ export interface ListSpaceValues {
   title: string;
   /** The NEIGHBOURHOOD. The city is a constant, never typed here. */
   area: string;
+  /**
+   * The full street address. Optional, and PRIVATE: the backend hands it out
+   * only to the lister, a moderator, a connected member, or someone whose
+   * viewing the lister accepted. Blank clears a stored address (and the exact
+   * map pin derived from it), which is why it is always sent rather than
+   * conditionally spread.
+   */
+  addressLine: string;
   rent: string;
+  /**
+   * Up-front deposit in euros, as typed. Blank means "not stated", which the
+   * board reads as unknown and never as zero, so a blank keeps the listing out
+   * of a renter's deposit-capped search rather than into it. Blanking it on the
+   * edit form CLEARS a stored deposit, which is why `buildBody` always sends
+   * the field rather than dropping it when empty.
+   */
+  deposit: string;
   type: string;
   bedrooms: string;
   accessibility: string;
@@ -87,7 +103,9 @@ function resolveBlurb(values: ListSpaceValues): string {
 const EMPTY_VALUES: ListSpaceValues = {
   title: "",
   area: "",
+  addressLine: "",
   rent: "",
+  deposit: "",
   type: "",
   bedrooms: "",
   accessibility: "",
@@ -183,6 +201,7 @@ export function useListSpaceForm(
   const buildBody = useCallback((): CreateHousingListingBody => {
     const trimmedTour = values.virtualTour.trim();
     const trimmedBedrooms = values.bedrooms.trim();
+    const trimmedDeposit = values.deposit.trim();
     const trimmedMinStay = values.minStayMonths.trim();
     const trimmedDescription = values.description.trim();
     const blurb = resolveBlurb(values);
@@ -191,7 +210,20 @@ export function useListSpaceForm(
       title: values.title.trim(),
       city: HOUSING_CITY,
       area: values.area.trim(),
+      // Always sent, including empty: an omitted field would leave a stored
+      // address in place forever, so a lister could never take their exact
+      // address back off the record.
+      addressLine: values.addressLine.trim(),
       rentEuros: Number(values.rent),
+      // Always sent, like `addressLine` above and for the same reason. A blank
+      // is an explicit `null` ("not stated"), never a 0, which would claim
+      // there is no deposit to pay. Omitting the key on a blank looked
+      // harmless, but this body is also the EDIT body
+      // (`EditHousingListingModal`), and the backend's PATCH applies only the
+      // keys that are present: a lister who set a deposit by mistake, or whose
+      // deposit went away, could never take it back off. A deposit is a money
+      // term renters filter on, so a stale one is worse than none.
+      depositEuros: trimmedDeposit !== "" ? Number(trimmedDeposit) : null,
       ...(trimmedBedrooms !== "" ? { bedrooms: Number(trimmedBedrooms) } : {}),
       accessibilityInfo: values.accessibility.trim(),
       billsIncluded: values.billsIncluded,

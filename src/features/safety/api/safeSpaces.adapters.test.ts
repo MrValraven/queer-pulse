@@ -126,14 +126,33 @@ describe("safeSpaceListToView", () => {
     const dto: SafeSpaceListDTO = {
       verified: [verifiedCard],
       removed: [removedCard],
-      stats: { verified: 1, reviews: 54, removed: 1 },
+      stats: {
+        verified: 1,
+        reviews: 54,
+        removed: 1,
+        lastReVerifiedAt: "2026-05-19",
+      },
     };
     const view = safeSpaceListToView(dto);
     expect(view.verified).toHaveLength(1);
     expect(view.verified[0]?.slug).toBe("purex");
     expect(view.removed).toHaveLength(1);
     expect(view.removed[0]?.slug).toBe("bar-atlas");
-    expect(view.stats).toEqual({ verified: 1, reviews: 54, removed: 1 });
+    expect(view.stats).toEqual({
+      verified: 1,
+      reviews: 54,
+      removed: 1,
+      lastReVerifiedAt: "2026-05-19",
+    });
+  });
+
+  it("normalizes an absent badge date to null, so the hub has one empty case", () => {
+    const dto: SafeSpaceListDTO = {
+      verified: [],
+      removed: [],
+      stats: { verified: 0, reviews: 0, removed: 0 },
+    };
+    expect(safeSpaceListToView(dto).stats.lastReVerifiedAt).toBeNull();
   });
 });
 

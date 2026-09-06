@@ -1,5 +1,11 @@
 import { useId, type FormEvent } from "react";
-import { FiAlertCircle, FiBell, FiClock } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiBell,
+  FiClock,
+  FiMinusCircle,
+  FiTrash2,
+} from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -45,14 +51,10 @@ export function DeleteOptionCards({
           <div className={styles.optRadioInner} />
         </div>
         <div className={`${styles.optIcon} ${styles.optIconDefault}`}>
-          <svg
-            className={styles.optIconSvg}
-            viewBox="0 0 20 20"
-            stroke="var(--plum)"
-          >
-            <circle cx="10" cy="10" r="8" />
-            <line x1="7" y1="10" x2="13" y2="10" />
-          </svg>
+          {/* react-icons, never a hand-rolled glyph (DES-170). The stroke
+              colour moved to `.optIconDefault .optIconSvg` in the module,
+              since the pack paints from `currentColor`. */}
+          <FiMinusCircle className={styles.optIconSvg} aria-hidden />
         </div>
         <div className={styles.optTitle}>
           {t("settings:deleteAccount.options.deactivate.title")}
@@ -87,14 +89,7 @@ export function DeleteOptionCards({
           <div className={styles.optRadioInner} />
         </div>
         <div className={`${styles.optIcon} ${styles.optIconDanger}`}>
-          <svg
-            className={styles.optIconSvg}
-            viewBox="0 0 20 20"
-            stroke="var(--accent-ink)"
-          >
-            <polyline points="4,5 16,5" />
-            <path d="M7 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M6 5l.6 11h6.8l.6-11" />
-          </svg>
+          <FiTrash2 className={styles.optIconSvg} aria-hidden />
         </div>
         <div className={`${styles.optTitle} ${styles.optTitleDanger}`}>
           {t("settings:deleteAccount.options.delete.title")}
@@ -145,7 +140,7 @@ export function DeletePendingBanner({
           variant="primary"
           onClick={onCancel}
           disabled={cancelling}
-          style={{ marginTop: 12 }}
+          className={styles.stripAction}
         >
           {cancelling
             ? t("settings:deleteAccount.pending.cancelling")
@@ -263,7 +258,7 @@ export function PauseNotificationsStrip({
           <Button
             variant="ghost"
             onClick={onOpenNotificationSettings}
-            style={{ marginTop: 12 }}
+            className={styles.stripAction}
           >
             {label}
           </Button>
@@ -271,7 +266,7 @@ export function PauseNotificationsStrip({
           <Button
             variant="ghost"
             to={`${routes.settings}?pane=notifications`}
-            style={{ marginTop: 12 }}
+            className={styles.stripAction}
           >
             {label}
           </Button>

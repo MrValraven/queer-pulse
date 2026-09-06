@@ -19,12 +19,28 @@ export interface HousingLocation {
   preciseLongitude: number | null;
   addressLine: string | null;
   precision: "area" | "exact";
+  /**
+   * Whether the reader has passed the address-privacy gate (owner, connected,
+   * or an accepted viewing). Carried alongside `precision` because the pair
+   * describes two different things: `precision` is the pin you HOLD,
+   * `isUnlocked` is the access you HAVE. Unlocked with `precision: "area"` is a
+   * real state, and it means the lister never added an address.
+   */
+  isUnlocked: boolean;
 }
 
 export interface Poster {
   initials: string;
   name: string;
   fullName: string;
+  /**
+   * The lister's member slug (`HousingListingDTO.lister.slug`), when the wire
+   * carried one. Present so a reader can be told apart from the lister without
+   * a second request or a new DTO field: compare it with the signed-in
+   * member's own `profile.slug`. Absent in demo fixtures and whenever the
+   * lister's profile row is gone, both of which correctly mean "not you".
+   */
+  slug?: string;
   tint: AvatarTint;
   /** Empty when we have no join date on file (live listings): the line is
    *  omitted rather than rendered blank. */
@@ -80,6 +96,10 @@ export interface HousingListing {
   /** Bedroom count (0 = studio); absent when the lister didn't set one. Powers
    * the beds filter and the fact row. */
   bedrooms?: number;
+  /** Up-front deposit in euros; ABSENT means the lister stated none. Absent is
+   * unknown rather than zero, so a listing without it is left out of a
+   * deposit-capped search instead of shown under the cap. */
+  depositEuros?: number;
   /** Optional 360°/virtual-tour link (https). Absent → no tour section. */
   virtualTourUrl?: string;
 }
@@ -95,6 +115,8 @@ function areaLocation(hood: string): HousingLocation {
     preciseLongitude: null,
     addressLine: null,
     precision: "area",
+    // Demo mode never connects you to a fixture lister, so the gate is closed.
+    isUnlocked: false,
   };
 }
 
@@ -112,6 +134,9 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     description:
       "Beautiful first-floor flat with a view of the garden square. Fully furnished, excellent light. Available while I travel for two months.",
     price: "€1,100",
+    // Demo only: the euro figure behind this fixture's hand-written
+    // "Deposit" fact, so the board's deposit cap can evaluate it.
+    depositEuros: 1100,
     period: "month",
     image:
       "https://images.unsplash.com/photo-1665249934445-1de680641f50?q=80&w=600&auto=format&fit=crop",
@@ -136,7 +161,8 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "It's fully furnished and ready to live in: everything from the coffee machine to good bedding is here. I'm away on a two-month residency and would much rather a community member had it than a holiday-let stranger. Queer household. The neighbours are genuinely lovely.",
     ],
     features: [
-      "Fully furnished",
+      "Furnished",
+      "Pets welcome",
       "Great light",
       "Garden-square view",
       "Fast wifi",
@@ -175,6 +201,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       preciseLongitude: -9.1487,
       addressLine: "Rua da Escola Politécnica 42, 1250-102 Lisboa",
       precision: "exact",
+      isUnlocked: true,
     },
   },
   {
@@ -190,6 +217,9 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     description:
       "Quiet three-bed flat shared with two queer women. Big room, own bathroom, good wifi. Looking for someone who keeps to themselves but is up for the occasional dinner.",
     price: "€750",
+    // Demo only: the euro figure behind this fixture's hand-written
+    // "Deposit" fact, so the board's deposit cap can evaluate it.
+    depositEuros: 750,
     period: "month",
     image:
       "https://images.unsplash.com/photo-1543709525-e8764409abff?q=80&w=800&auto=format&fit=crop",
@@ -213,6 +243,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "We're after someone for the long term who keeps mostly to themselves but is up for the occasional shared dinner. No party house, no drama: just a calm, kind home. References both ways.",
     ],
     features: [
+      "Furnished",
       "Ensuite bathroom",
       "Double bed",
       "Desk",
@@ -254,6 +285,9 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     description:
       "Small but well-designed studio in a converted building in Graça. Perfect for someone newly arrived or between places. The building has a rooftop with views.",
     price: "€85",
+    // Demo only: the euro figure behind this fixture's hand-written
+    // "Deposit" fact, so the board's deposit cap can evaluate it.
+    depositEuros: 150,
     period: "night",
     image:
       "https://images.unsplash.com/photo-1579632151052-92f741fb9b79?q=80&w=800&auto=format&fit=crop",
@@ -277,6 +311,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "I keep it as a short-stay landing pad, perfect for someone newly arrived in Lisbon or between places. Two weeks minimum. The building has a shared rooftop with one of the best views in the neighbourhood.",
     ],
     features: [
+      "Furnished",
       "Well-designed",
       "Kitchenette",
       "Rooftop access",
@@ -319,6 +354,9 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     description:
       "Large warehouse converted to four bedrooms. Three of us currently live here: a musician, an engineer, and a photographer. Looking for a fourth.",
     price: "€800",
+    // Demo only: the euro figure behind this fixture's hand-written
+    // "Deposit" fact, so the board's deposit cap can evaluate it.
+    depositEuros: 800,
     period: "month",
     image:
       "https://images.unsplash.com/photo-1587842044997-8b6714110fa6?q=80&w=800&auto=format&fit=crop",
@@ -383,6 +421,9 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     description:
       "My own flat while I go on residency. One bed, good light, close to everything. Priority to LGBTQ+ tenants. References exchanged.",
     price: "€1,350",
+    // Demo only: the euro figure behind this fixture's hand-written
+    // "Deposit" fact, so the board's deposit cap can evaluate it.
+    depositEuros: 1350,
     period: "month",
     image:
       "https://images.unsplash.com/photo-1587842060723-d99f4f34ff83?q=80&w=800&auto=format&fit=crop",
@@ -401,6 +442,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "I want it lived in and looked after by someone from the community. Priority to LGBTQ+ tenants. References exchanged both ways, and a relaxed handover before I leave.",
     ],
     features: [
+      "Furnished",
       "Whole flat",
       "Lots of books",
       "Great light",
@@ -442,6 +484,9 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     description:
       "Traditional building, recently renovated. Two bedrooms, could work for a couple or two friends. Very central, heart of Mouraria.",
     price: "€950",
+    // Demo only: the euro figure behind this fixture's hand-written
+    // "Deposit" fact, so the board's deposit cap can evaluate it.
+    depositEuros: 950,
     period: "month",
     image:
       "https://images.unsplash.com/photo-1605086554166-da2bd45804da?q=80&w=800&auto=format&fit=crop",
@@ -471,6 +516,7 @@ export const HOUSING_LISTINGS: HousingListing[] = [
       "Tiled hallway",
       "Very central",
       "Furnished",
+      "Pets welcome",
     ],
     facts: [
       { label: "Price", value: "€950 / month" },

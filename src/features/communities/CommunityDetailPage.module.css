@@ -84,6 +84,95 @@
   gap: 10px;
   margin-bottom: 12px;
 }
+
+/* ── The community's own mark (PRD-146) ───────────────────────────────────
+   An owner could upload a square identity mark and it was displayed nowhere
+   in the app. It sits beside the name, on a plum hero, over an image nobody
+   controls, so it carries the two-value edge this repo uses for art on an
+   unknown ground: a light border that reads against a dark photo, and a dark
+   ring outside it that reads against a light one. The content itself is never
+   filtered. A community with no mark falls back to its generated initial, the
+   same mark the founding wizard's card preview draws. */
+.heroMark {
+  flex: none;
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-14);
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--cream-rgb), 0.12);
+  border: 1px solid rgba(var(--cream-rgb), 0.5);
+  box-shadow: 0 0 0 1px rgba(var(--plum-rgb), 0.45);
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(var(--cream-rgb), 0.92);
+}
+.heroMarkImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Events tab, prospective-member half (PRD-145) ────────────────────────
+   Both rules live here rather than in the hub-tabs module because this is the
+   detail page's own stylesheet and the tab already reads from it. */
+.eventsLoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+.eventsNonMemberNote {
+  margin-top: 18px;
+  font-size: var(--text-13);
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 58ch;
+}
+
+/* ── The standing invitation (PRD-140) ────────────────────────────────────
+   Stated above the actions so "Accept invitation" is never the first the
+   reader hears of it. */
+.inviteBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 9px 15px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--jade-rgb), 0.18);
+  border: 1px solid rgba(var(--jade-rgb), 0.34);
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--jade-soft);
+}
+
+/* ── Invitation-only, with no invitation (PRD-141) ────────────────────────
+   A statement, never a control: only a moderator of this community can open
+   the door, and a disabled button would read as "try again later". */
+.inviteOnlyNote {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 44ch;
+}
+.inviteOnlyLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-15);
+  font-weight: 700;
+  color: rgba(var(--cream-rgb), 0.92);
+}
+.inviteOnlyHint {
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: rgba(var(--cream-rgb), 0.6);
+}
 .h1 {
   font-family: var(--serif);
   font-weight: 300;

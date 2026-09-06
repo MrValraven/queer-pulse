@@ -5,10 +5,8 @@ import { PageMeta } from "../../shared/seo";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { JoinModal } from "./JoinModal";
-import { EditCommunityModal } from "./EditCommunityModal";
-import { LeaveCommunityModal } from "./LeaveCommunityModal";
 import { CommunityDetailHero } from "./CommunityDetailHero";
+import { CommunityDetailDialogs } from "./CommunityDetailDialogs";
 import { CommunityFrozenBanner } from "./CommunityFrozenBanner";
 import { CommunityRulesUpdateNotice } from "./CommunityRulesUpdateNotice";
 import { CommunityHubLayout } from "./CommunityHubLayout";
@@ -56,42 +54,41 @@ export function CommunityDetailPage() {
     );
   }
 
+  // Only what this LAYOUT renders. Everything the five dialogs need stays on
+  // `state` and is handed to `CommunityDetailDialogs` whole.
   const {
     slug,
     community,
-    cardStats,
     detail,
-    editable,
     living,
     discussionThreads,
     joined,
     requested,
     role,
     canEdit,
-    tier,
+    isInvited,
+    isInviteOnlyLocked,
+    canDeclineInvite,
+    canWithdrawRequest,
     joinLabel,
     memberNum,
     hasCount,
     members,
     heroAvatars,
+    avatarImageUrl,
     saved,
     onToggleSave,
     onShare,
-    onJoined,
-    onRequested,
-    performLeave,
     posts,
     discussionPaging,
     rosterResult,
     related,
     communityPulse,
-    leaveMutation,
-    joining,
     setJoining,
-    editing,
     setEditing,
-    confirmingLeave,
     setConfirmingLeave,
+    setConfirmingWithdraw,
+    setDecliningInvite,
   } = state;
 
   // Rendered only from the loaded branch: the not-found / error / loading
@@ -120,8 +117,13 @@ export function CommunityDetailPage() {
       <CommunityDetailHero
         community={community}
         detail={detail}
+        avatarImageUrl={avatarImageUrl}
         joined={joined}
         requested={requested}
+        isInvited={isInvited}
+        isInviteOnlyLocked={isInviteOnlyLocked}
+        canDeclineInvite={canDeclineInvite}
+        canWithdrawRequest={canWithdrawRequest}
         joinLabel={joinLabel}
         canEdit={canEdit}
         heroAvatars={heroAvatars}
@@ -134,6 +136,12 @@ export function CommunityDetailPage() {
         }}
         onJoin={() => setJoining(true)}
         onLeave={() => setConfirmingLeave(true)}
+        // Accepting is the ordinary front door: the same wizard, so the house
+        // rules are still read and agreed to on the way in. The backend
+        // spends the invitation and admits them straight to the roster.
+        onAcceptInvite={() => setJoining(true)}
+        onDeclineInvite={() => setDecliningInvite(true)}
+        onWithdrawRequest={() => setConfirmingWithdraw(true)}
         onEdit={() => setEditing(true)}
       />
 
@@ -175,43 +183,7 @@ export function CommunityDetailPage() {
         </div>
       </div>
 
-      {joining && (
-        <JoinModal
-          community={{
-            name: community.name,
-            typeLabel: detail.badge,
-            count: community.count,
-            description: community.description,
-            tags: detail.tags,
-            // Lets the wizard read this community's house rules + their
-            // current version for the rules step.
-            slug,
-          }}
-          tier={tier}
-          onClose={() => setJoining(false)}
-          onJoined={onJoined}
-          onRequested={onRequested}
-        />
-      )}
-
-      {editing && slug && editable && (
-        <EditCommunityModal
-          slug={slug}
-          editable={editable}
-          canChangeAccess={role === "owner"}
-          previewStats={cardStats}
-          onClose={() => setEditing(false)}
-        />
-      )}
-
-      {confirmingLeave && (
-        <LeaveCommunityModal
-          name={community.name}
-          pending={leaveMutation.isPending}
-          onConfirm={performLeave}
-          onClose={() => setConfirmingLeave(false)}
-        />
-      )}
+      <CommunityDetailDialogs state={state} />
     </PageShell>
   );
 }

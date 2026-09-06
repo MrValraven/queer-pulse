@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   getEvents,
   type EventBrowseFilters,
@@ -50,6 +51,7 @@ export function useEvents(
   params: { filter?: EventFilter; browse?: EventBrowseFilters } = {},
 ): EventsResult {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const browse = params.browse;
   const query = useInfiniteQuery<EventsPageVM>({
     queryKey: eventKeys.list(params.filter, demoMode, browse),
@@ -67,7 +69,7 @@ export function useEvents(
         ...browse,
       });
       return {
-        items: res.items.map(cardToCalendarEvent),
+        items: res.items.map((card) => cardToCalendarEvent(card, t)),
         total: res.total,
         page: res.page,
       };

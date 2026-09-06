@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type InfiniteData,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../../app/providers/useProfile";
 import {
@@ -7,20 +11,19 @@ import {
   updateReaderComment,
   type CreateReaderCommentInput,
   type ReaderCommentDTO,
+  type ReaderCommentsPage,
 } from "./readerComments.api";
-import { readerCommentsQueryKey } from "./useReaderComments";
+import {
+  READER_COMMENTS_PAGE_SIZE,
+  readerCommentsQueryKey,
+} from "./useReaderComments";
 
 /** Demo-only in-memory id counter so successive demo posts get distinct ids
  *  within one session (no network, no persistence — matches the rest of the
  *  app's demo-mutation fixtures). */
 let demoIdSeq = 0;
 
-interface ReaderCommentsPageData {
-  items: ReaderCommentDTO[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
+type ReaderCommentsCache = InfiniteData<ReaderCommentsPage, number>;
 
 function patchBody(
   items: ReaderCommentDTO[],
@@ -40,7 +43,13 @@ function patchDeleted(
 ): ReaderCommentDTO[] {
   return items.map((item) =>
     item.id === id
-      ? { ...item, body: "", deleted: true }
+      ? {
+          ...item,
+          body: "",
+          deleted: true,
+          canEdit: false,
+          canDelete: false,
+        }
       : { ...item, replies: patchDeleted(item.replies, id) },
   );
 }
@@ -51,20 +60,37 @@ function patchDeleted(
  * place, so posting/editing/deleting is visibly interactive with no network;
  * live mode calls the real endpoints and invalidates that same query so the
  * next read reflects the server's state (moderation, ordering).
+ *
+ * The cache is `useInfiniteQuery`'s `{ pages, pageParams }` envelope
+ * (PRD-108), so every demo patch walks all loaded pages.
  */
-export function useReaderCommentMutations(articleSlug: string, page = 1) {
+export function useReaderCommentMutations(articleSlug: string) {
   const { demoMode } = useDemoMode();
   const { profile } = useProfileData();
   const queryClient = useQueryClient();
-  const queryKey = readerCommentsQueryKey(demoMode, articleSlug, page);
+  const queryKey = readerCommentsQueryKey(demoMode, articleSlug);
 
-  function patchDemo(
+  function updateDemoPages(
+    updatePages: (pages: ReaderCommentsPage[]) => ReaderCommentsPage[],
+  ) {
+    queryClient.setQueryData<ReaderCommentsCache>(queryKey, (previous) => ({
+      pages: updatePages(
+        previous?.pages ?? [
+          { items: [], total: 0, page: 1, pageSize: READER_COMMENTS_PAGE_SIZE },
+        ],
+      ),
+      pageParams: previous?.pageParams ?? [1],
+    }));
+  }
+
+  function patchDemoItems(
     update: (items: ReaderCommentDTO[]) => ReaderCommentDTO[],
   ) {
-    queryClient.setQueryData<ReaderCommentsPageData>(queryKey, (prev) =>
-      prev
-        ? { ...prev, items: update(prev.items) }
-        : { items: update([]), total: 0, page: 1, pageSize: 20 },
+    updateDemoPages((pages) =>
+      pages.map((loadedPage) => ({
+        ...loadedPage,
+        items: update(loadedPage.items),
+      })),
     );
   }
 
@@ -88,15 +114,29 @@ export function useReaderCommentMutations(articleSlug: string, page = 1) {
           canDelete: true,
           replies: [],
         };
-        patchDemo((items) =>
-          input.parentId
-            ? items.map((item) =>
-                item.id === input.parentId
-                  ? { ...item, replies: [...item.replies, comment] }
-                  : item,
-              )
-            : [comment, ...items],
-        );
+        if (input.parentId) {
+          const parentId = input.parentId;
+          patchDemoItems((items) =>
+            items.map((item) =>
+              item.id === parentId
+                ? { ...item, replies: [...item.replies, comment] }
+                : item,
+            ),
+          );
+        } else {
+          // A new thread goes on top of the FIRST page (newest first), and the
+          // thread total every page carries moves with it.
+          updateDemoPages((pages) =>
+            pages.map((loadedPage, pageIndex) => ({
+              ...loadedPage,
+              items:
+                pageIndex === 0
+                  ? [comment, ...loadedPage.items]
+                  : loadedPage.items,
+              total: loadedPage.total + 1,
+            })),
+          );
+        }
         return comment;
       }
       const created = await createReaderComment(articleSlug, input);
@@ -108,7 +148,7 @@ export function useReaderCommentMutations(articleSlug: string, page = 1) {
   const edit = useMutation({
     mutationFn: async (input: { id: string; body: string }) => {
       if (demoMode) {
-        patchDemo((items) => patchBody(items, input.id, input.body));
+        patchDemoItems((items) => patchBody(items, input.id, input.body));
         return null;
       }
       const updated = await updateReaderComment(input.id, input.body);
@@ -120,7 +160,7 @@ export function useReaderCommentMutations(articleSlug: string, page = 1) {
   const remove = useMutation({
     mutationFn: async (id: string) => {
       if (demoMode) {
-        patchDemo((items) => patchDeleted(items, id));
+        patchDemoItems((items) => patchDeleted(items, id));
         return null;
       }
       const deleted = await deleteReaderComment(id);

@@ -7,6 +7,7 @@ import { EditVenueModal } from "./EditVenueModal";
 import { InlineEditModal } from "./InlineEditModal";
 import { LAST_EDITED_AT } from "./manageGathering.data";
 import { daysSince } from "./manageGatheringDates";
+import { DuplicateGatheringButton } from "./DuplicateGatheringButton";
 import type { VenueSelection } from "./VenuePicker";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -35,10 +36,20 @@ const Pencil = () => (
 );
 
 interface OverviewTabProps {
+  /** The gathering's slug, so "Duplicate" knows what to copy. */
+  slug: string;
   details: GatheringDetail[];
   description: string;
   /** Live going/waitlist/spots-left; absent → the static demo trio. */
   counts?: OverviewCounts;
+  /**
+   * When the host last edited this gathering, from the API (PRD-191).
+   *
+   * `undefined` in demo mode, where the tab falls back to the mock constant
+   * that used to drive this line in LIVE too — so every real host read a
+   * fabricated edit age that never moved when they edited.
+   */
+  updatedAt?: Date;
   /** The venue's directory link (or null for a free-text venue) — read
    *  alongside the "venue" row's plain-text `value` above to decide whether
    *  it renders as a link, and to seed the venue edit modal. */
@@ -50,9 +61,11 @@ interface OverviewTabProps {
 }
 
 export function OverviewTab({
+  slug,
   details,
   description,
   counts,
+  updatedAt,
   venueListingId,
   venueListing,
   onUpdateDetail,
@@ -68,7 +81,7 @@ export function OverviewTab({
     | null
   >(null);
 
-  const lastEditedDays = daysSince(LAST_EDITED_AT);
+  const lastEditedDays = daysSince(updatedAt ?? LAST_EDITED_AT);
 
   const stats: [number, string][] = [
     [counts?.going ?? 14, t("gatherings:manage.overview.stat.going")],
@@ -143,10 +156,15 @@ export function OverviewTab({
         </div>
         <div className={styles.descText}>{description}</div>
       </div>
-      <div className={styles.lastEdit}>
-        {t("gatherings:manage.overview.lastEdited", {
-          time: fmt.relativeTime(lastEditedDays, "day"),
-        })}
+      <div className={styles.overviewFooter}>
+        <div className={styles.lastEdit}>
+          {t("gatherings:manage.overview.lastEdited", {
+            time: fmt.relativeTime(lastEditedDays, "day"),
+          })}
+        </div>
+        {/* "Run this again" (PRD-190). A host with a monthly one-off used to
+            retype the entire wizard every time. */}
+        <DuplicateGatheringButton slug={slug} />
       </div>
 
       {editing?.kind === "detail" && (

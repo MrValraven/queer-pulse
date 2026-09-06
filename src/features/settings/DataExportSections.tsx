@@ -1,4 +1,10 @@
-import { FiCheck, FiChevronDown, FiDownload, FiLoader } from "react-icons/fi";
+import {
+  FiCheck,
+  FiChevronDown,
+  FiDownload,
+  FiInfo,
+  FiLoader,
+} from "react-icons/fi";
 import { Button, Stepper } from "../../shared/components/ui";
 import type { StepperStep } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -100,13 +106,11 @@ export function DataExportForm({
             }}
           >
             <div className={styles.dtCheck}>
-              <svg
-                className={styles.dtCheckIcon}
-                viewBox="0 0 10 8"
-                aria-hidden
-              >
-                <polyline points="1,4 3.5,7 9,1" />
-              </svg>
+              {/* react-icons, never a hand-rolled glyph (DES-170). The tick's
+                  size, colour and checked-state fade all still come from
+                  `.dtCheckIcon`, which out-specifies the pack's own
+                  presentation attributes. */}
+              <FiCheck className={styles.dtCheckIcon} aria-hidden />
             </div>
             <div>
               <div className={styles.dtLabel}>{t(dt.labelKey)}</div>
@@ -135,19 +139,7 @@ export function DataExportForm({
       </div>
 
       <div className={styles.legalNote}>
-        <svg
-          className={styles.legalNoteIcon}
-          viewBox="0 0 18 18"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          aria-hidden
-        >
-          <circle cx="9" cy="9" r="7.5" />
-          <line x1="9" y1="7" x2="9" y2="9.5" />
-          <circle cx="9" cy="12" r=".5" fill="currentColor" />
-        </svg>
+        <FiInfo className={styles.legalNoteIcon} aria-hidden />
         <p className={styles.legalNoteText}>
           <Translation
             i18nKey="settings:dataExport.form.legalNote"
@@ -161,7 +153,7 @@ export function DataExportForm({
         size="lg"
         onClick={onSubmit}
         disabled={submitting}
-        style={{ width: "100%", justifyContent: "center" }}
+        className={styles.submitButton}
       >
         {submitting
           ? t("settings:dataExport.form.submitting")
@@ -210,7 +202,7 @@ export function DataExportStatus({
           )}
         </p>
         <Button variant="jade" href={job.downloadUrl} download={filename}>
-          <FiDownload style={{ verticalAlign: "-2px", marginRight: 8 }} />
+          <FiDownload className={styles.downloadIcon} aria-hidden />
           {t("settings:dataExport.status.download", { filename })}
         </Button>
       </div>

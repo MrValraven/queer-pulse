@@ -4,12 +4,18 @@ import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { thread as threadPath } from "../../app/routeMap";
-import { CATS, CAT_STYLE, type Thread } from "./forum.data";
+import { type Thread } from "./forum.data";
 import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
+import { ForumCategoryBadge } from "./ForumCategoryBadge";
 import { authorHref } from "./forumAuthor.helpers";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "./PostActionsMenu";
 import styles from "./ForumPage.module.css";
+
+/** The server caps `unreadReplyCount` at 99, so 99 means "99 or more" and is
+ *  shown as such. Mirrors the backend's own ceiling; a badge is a nudge, and a
+ *  four-digit one is just noise. */
+const UNREAD_REPLY_CAP = 99;
 
 /**
  * One row of the thread list.
@@ -28,7 +34,10 @@ export function ForumThreadRow({
   onVote,
   onTagClick,
   canEditThread,
+  canMoveCategory,
+  canDeleteThread,
   onEditTitle,
+  onMoveCategory,
   onDelete,
   onRestore,
   onHistory,
@@ -39,7 +48,19 @@ export function ForumThreadRow({
   onVote: (thread: Thread) => void;
   onTagClick: (tag: string) => void;
   canEditThread: (thread: Thread) => boolean;
+  /** May the viewer refile this thread (PRD-163)? Author inside the thread's
+   *  first 24 hours, or a moderator at any time. See
+   *  `canMoveThreadCategory`. Optional so existing tests/callers that don't
+   *  wire the move affordance keep an inert category badge. */
+  canMoveCategory?: (thread: Thread) => boolean;
+  /** May the viewer withdraw this WHOLE thread (PRD-160)? The row's "Delete"
+   *  now takes the thread down rather than tombstoning its opening post, so its
+   *  gate is the thread endpoint's (author or moderator), not the OP post's
+   *  narrower `canDelete`. Optional: without it the row falls back to the OP
+   *  permission it used before. */
+  canDeleteThread?: (thread: Thread) => boolean;
   onEditTitle: (thread: Thread) => void;
+  onMoveCategory?: (thread: Thread) => void;
   onDelete: (thread: Thread) => void;
   onRestore: (thread: Thread) => void;
   onHistory: (thread: Thread) => void;
@@ -50,9 +71,21 @@ export function ForumThreadRow({
   // Real vote: pressed state + count come straight from the card (patched
   // optimistically by `useVotePost`), not a local toggle set.
   const isVoted = !!thread.myVote;
-  const catMeta = CATS.find((c) => c.id === thread.category);
-  const cs = CAT_STYLE[thread.category];
   const canModerate = canEditThread(thread);
+  // PRD-163: the category chip doubles as the move control for whoever may
+  // refile the thread (see `ForumCategoryBadge`).
+  const isMovable = !!canMoveCategory?.(thread) && !!onMoveCategory;
+  // PRD-170. `null` is "there is no watermark to compare against" (anonymous,
+  // never opened, or a write echo) and `0` is "you are caught up": both mean no
+  // badge at all, which is the difference between a quiet row and a row
+  // insisting there is nothing new. Only 1..99 shows, and 99 is the server's
+  // cap, so it reads as "99+" rather than claiming an exact ninety-nine.
+  const unreadReplyCount = thread.unreadReplyCount ?? 0;
+  const hasUnreadReplies = unreadReplyCount > 0;
+  const unreadReplyLabel =
+    unreadReplyCount >= UNREAD_REPLY_CAP
+      ? t("forum:threadList.unreadCap")
+      : fmt.number(unreadReplyCount);
   return (
     // `.rowFade` lets the open menu escape this row's stacking context — the
     // FadeIn wrapper keeps `will-change: transform` for the life of the element,
@@ -92,12 +125,17 @@ export function ForumThreadRow({
                   <TbPin /> {t("forum:threadList.pinnedBadge")}
                 </span>
               )}
-              <span
-                className={styles.catBadge}
-                style={{ background: cs?.background, color: cs?.color }}
-              >
-                {catMeta && <catMeta.icon />} {catMeta && t(catMeta.nameKey)}
-              </span>
+              {/* Withdrawn threads reach only a platform moderator's list
+                  (PRD-160); everyone else's read path filters them out. */}
+              {thread.isDeleted && (
+                <span className={styles.withdrawnBadge}>
+                  {t("forum:threadList.withdrawnBadge")}
+                </span>
+              )}
+              <ForumCategoryBadge
+                category={thread.category}
+                onMove={isMovable ? () => onMoveCategory?.(thread) : undefined}
+              />
               {thread.tags.map((tg) => (
                 <button
                   key={tg}
@@ -120,8 +158,11 @@ export function ForumThreadRow({
                 {thread.title}
               </Link>
             </div>
-            {/* The list DTO carries no OP preview, so a live row's excerpt is
-                empty — render nothing rather than an empty 6px-margin line. */}
+            {/* PRD-167: the list DTO now carries a short taste of the opening
+                post (`excerpt`). It is null whenever there is nothing showable
+                behind it (no OP, an author tombstone, a moderator takedown),
+                which maps to "" here: render nothing at all, no placeholder and
+                no reserved space. */}
             {thread.excerpt && (
               <div className={styles.threadExcerpt}>{thread.excerpt}</div>
             )}
@@ -158,6 +199,23 @@ export function ForumThreadRow({
                   formatted: fmt.number(thread.comments),
                 })}
               </span>
+              {hasUnreadReplies && (
+                <span
+                  className={styles.unreadBadge}
+                  // The visible chip is deliberately terse; the accessible name
+                  // says what the number MEANS, so it is never announced as a
+                  // bare digit floating after the reply count.
+                  aria-label={t("forum:threadList.unreadAria", {
+                    count: unreadReplyCount,
+                    formatted: unreadReplyLabel,
+                  })}
+                >
+                  {t("forum:threadList.unreadBadge", {
+                    count: unreadReplyCount,
+                    formatted: unreadReplyLabel,
+                  })}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -171,7 +229,16 @@ export function ForumThreadRow({
             // Live: the DTO boolean. Demo: no DTO flag, so fall back to the
             // persona-ownership gate (which returned true to open the menu).
             canEdit={canModerate && (thread.canEdit ?? true)}
-            canDelete={canModerate && thread.canDelete}
+            // PRD-160: "Delete" withdraws the whole thread, so this is the
+            // thread endpoint's permission (author or moderator) rather than
+            // the opening post's, which also goes false the moment that post
+            // is tombstoned, hiding the action from the very author who wanted
+            // the thread gone.
+            canDelete={
+              canDeleteThread
+                ? canDeleteThread(thread)
+                : canModerate && thread.canDelete
+            }
             canRestore={canModerate && thread.canRestore}
             canViewHistory={canModerate && thread.canViewHistory}
             canPin={canModerate && thread.canPin}

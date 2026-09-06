@@ -185,6 +185,20 @@ export function StepConfirm({
             v: draft.tagline || notSetYet,
             missing: !draft.tagline,
           },
+          {
+            k: t("communities:start.confirm.recap.avatar"),
+            // The stored value is a storage key, never something to show a
+            // founder, so the row says whether one was chosen. Both this and
+            // the greeting below are optional, so an unset one reads as a
+            // plain "not set yet" rather than as something still missing.
+            v: draft.avatarImageUrl
+              ? t("communities:start.confirm.avatarChosen")
+              : notSetYet,
+          },
+          {
+            k: t("communities:start.confirm.recap.welcome"),
+            v: draft.welcomeMessage.trim() || notSetYet,
+          },
         ]}
       />
       {invitedCount > 0 && (

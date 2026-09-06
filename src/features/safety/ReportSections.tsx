@@ -124,6 +124,26 @@ const UNLINKED_SUBJECT_ID = "unspecified";
  */
 type ReporterIdentity = "named" | "anonymous";
 
+/**
+ * Why the contact-email field is shown ONLY to a signed-out reporter (PRD-281).
+ *
+ * QueerPulse sends no email and never will, so the address was never a channel:
+ * it is a way for a person on the safety team to reach somebody who has no
+ * other route back. A signed-in member already has that route, the in-app bell,
+ * and it is the one the moderation pipeline actually writes to. Asking them for
+ * an address on top of it stored an off-platform identifier for nothing and
+ * invited them to read the silence that followed as their report being dropped.
+ *
+ * The backend refuses to store an address for a reporter who has an account
+ * (BE-INTAKE, PRD-281), so hiding the field here keeps the form honest about a
+ * value the server would discard anyway. `contactEmail` is sent only on the
+ * signed-out branch for the same reason.
+ *
+ * The anonymity semantics on each side are untouched: a signed-in member's
+ * `anonymous` is their own explicit choice above, and a signed-out reporter's
+ * blank email is still what files their report anonymously.
+ */
+
 /** The "how reporting works" preamble — flow steps 01–04. Lives on the
  *  guidelines page (ReportingGuidePage), separate from the form. */
 export function ReportFlowSection() {
@@ -175,7 +195,18 @@ export function ReportFormSection() {
       return;
     }
     const done = () => {
-      showToast(t("safety:report.toast.received"), "success");
+      // Two different truths, so two different confirmations. A member is told
+      // where the outcome lands (their notifications). A signed-out reporter is
+      // told plainly that there is no in-app place for one to land, rather than
+      // being left waiting on a follow-up this platform cannot send.
+      showToast(
+        t(
+          loggedIn
+            ? "safety:report.toast.received"
+            : "safety:report.toast.receivedSignedOut",
+        ),
+        "success",
+      );
       setCategory("");
       setInvolved("");
       setDetail("");
@@ -211,7 +242,11 @@ export function ReportFormSection() {
         reasonCode: category,
         detail: composedDetail || undefined,
         anonymous: isAnonymous,
-        contactEmail: email.trim() || undefined,
+        // Signed-out only, and stated rather than implied. The field is not
+        // rendered for a member, so `email` is already "" for them; sending it
+        // conditionally anyway means a future edit that reintroduces the input
+        // cannot quietly start posting an address the server would refuse.
+        contactEmail: loggedIn ? undefined : email.trim() || undefined,
       },
       {
         onSuccess: done,
@@ -267,14 +302,6 @@ export function ReportFormSection() {
                   onChange={(e) => setDetail(e.target.value)}
                 />
               </FormField>
-              <FormField label={t("safety:report.form.emailLabel")}>
-                <input
-                  type="email"
-                  placeholder={t("safety:report.form.emailPlaceholder")}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </FormField>
               {loggedIn ? (
                 <fieldset className={s.identity}>
                   <legend className={s.identityLegend}>
@@ -299,9 +326,22 @@ export function ReportFormSection() {
                   ))}
                 </fieldset>
               ) : (
-                <p className={s.identityNote}>
-                  {t("safety:report.form.identity.signedOutNote")}
-                </p>
+                <>
+                  <FormField
+                    label={t("safety:report.form.emailLabel")}
+                    helper={t("safety:report.form.emailHelper")}
+                  >
+                    <input
+                      type="email"
+                      placeholder={t("safety:report.form.emailPlaceholder")}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </FormField>
+                  <p className={s.identityNote}>
+                    {t("safety:report.form.identity.signedOutNote")}
+                  </p>
+                </>
               )}
               <div style={{ marginTop: 16 }}>
                 <Button type="submit" disabled={createReport.isPending}>

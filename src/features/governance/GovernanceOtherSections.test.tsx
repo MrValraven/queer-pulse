@@ -140,7 +140,9 @@ describe("CouncilSection", () => {
         {
           name: "Alex Rivera",
           initials: "AR",
-          roleKey: "governance:council.chair",
+          // PRD-265: a seat's role is now a `GovernanceText` — a seeded i18n
+          // key or the editor's own EN/PT. This fixture is the seeded form.
+          role: { key: "governance:council.chair", authored: null },
           background: "rgba(0,0,0,.1)",
           color: "var(--plum)",
         },

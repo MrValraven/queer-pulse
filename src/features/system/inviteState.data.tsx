@@ -1,4 +1,11 @@
 import type { ReactNode } from "react";
+import {
+  FiCheckCircle,
+  FiClock,
+  FiHelpCircle,
+  FiUserX,
+  FiXCircle,
+} from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import type { InviteView } from "../auth/api/useInvite";
 
@@ -31,45 +38,19 @@ export interface InviteStateConfig {
   stamp: ReactNode;
 }
 
-const ClockStamp = (
-  <svg viewBox="0 0 24 24" aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <polyline points="12 7 12 12 15 14" />
-    <path d="m18 6-2 2" />
-  </svg>
-);
+// react-icons (Feather), the pack the rest of the app uses. These were
+// hand-authored inline <svg> traced from the same set; the CSS that sizes and
+// strokes them targets a descendant `svg`, which is what react-icons renders,
+// so the styling carries over unchanged.
+const ClockStamp = <FiClock aria-hidden />;
 
-const CheckStamp = (
-  <svg viewBox="0 0 24 24" aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <polyline points="8.5 12 11 14.5 15.5 9.5" />
-  </svg>
-);
+const CheckStamp = <FiCheckCircle aria-hidden />;
 
-const RevokedStamp = (
-  <svg viewBox="0 0 24 24" aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <line x1="8.5" y1="8.5" x2="15.5" y2="15.5" />
-    <line x1="15.5" y1="8.5" x2="8.5" y2="15.5" />
-  </svg>
-);
+const RevokedStamp = <FiXCircle aria-hidden />;
 
-const QuestionStamp = (
-  <svg viewBox="0 0 24 24" aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M9.5 9.5a2.5 2.5 0 0 1 4.5 1.5c0 1.5-2 2-2 3" />
-    <line x1="12" y1="17" x2="12" y2="17.01" />
-  </svg>
-);
+const QuestionStamp = <FiHelpCircle aria-hidden />;
 
-const InactiveStamp = (
-  <svg viewBox="0 0 24 24" aria-hidden>
-    <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="10" r="2.3" />
-    <path d="M8 16.5a4 4 0 0 1 8 0" />
-    <line x1="6.5" y1="6.5" x2="17.5" y2="17.5" />
-  </svg>
-);
+const InactiveStamp = <FiUserX aria-hidden />;
 
 export const INVITE_STATE_CONFIG: Record<
   InviteFailureReason,

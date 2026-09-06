@@ -18,6 +18,12 @@ import { apiPost } from "./client";
  *    `culture_submit_playlist` — Culture's four member-submission modals
  *    (`features/culture/CultureFormModals.tsx`). Public like the resources
  *    forms above (the Culture page itself is browsable logged-out).
+ *  - `landlord_reply_request` — PRD-249, `economy/LandlordReplyRequestPage`.
+ *    The one kind whose submitter is not a member and never will be: a
+ *    landlord named in the community directory holds no account, and the
+ *    directory is member-only, so they cannot read the recommendation they are
+ *    answering. Staff establish who they are dealing with and publish the
+ *    words through `POST /admin/landlords/recommendations/:id/reply`.
  */
 export type IntakeKind =
   | "grant"
@@ -31,7 +37,8 @@ export type IntakeKind =
   | "culture_suggest_pick"
   | "culture_post_project"
   | "culture_submit_work"
-  | "culture_submit_playlist";
+  | "culture_submit_playlist"
+  | "landlord_reply_request";
 
 /** Acknowledgement returned by the submit — the new row's id and triage state. */
 export interface IntakeAck {

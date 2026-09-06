@@ -10,6 +10,7 @@ import {
   DEFAULT_PROFILE_THEME,
   type ProfileThemeSettings,
 } from "./useProfileTheme";
+import { normalizeProfileBadgeId } from "../../features/settings/profileTheme.data";
 
 const STORAGE_KEY = "qp.profileTheme.v1";
 
@@ -18,7 +19,11 @@ function readInitial(): ProfileThemeSettings {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_PROFILE_THEME;
     const parsed = JSON.parse(raw) as Partial<ProfileThemeSettings>;
-    return { ...DEFAULT_PROFILE_THEME, ...parsed };
+    const stored = { ...DEFAULT_PROFILE_THEME, ...parsed };
+    // A theme written before the picker moved onto badge-catalogue ids still
+    // holds the old camelCase id, which would match no option and blank the
+    // select. Translate it so the member keeps the badge they chose.
+    return { ...stored, badge: normalizeProfileBadgeId(stored.badge) };
   } catch {
     return DEFAULT_PROFILE_THEME;
   }

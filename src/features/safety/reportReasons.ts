@@ -55,7 +55,22 @@ export type ReportSubjectType =
   // Same grain problem, sharper: `landlord` reports the whole entry, and these
   // recommendations are how tenants warn each other, so acting on a complaint
   // about one took down every other tenant's warning with it.
-  | "landlord_recommendation";
+  | "landlord_recommendation"
+  // ONE volunteering opportunity (`volunteer_opportunities`), addressed by the
+  // opportunity's SLUG, the same handle `GET /volunteering/:slug` and the
+  // public opportunity page use.
+  //
+  // Nothing in this taxonomy reached the volunteering directory before, so a
+  // scam posting, an unsafe placement or a host organization that is not
+  // affirming could only be raised through the Contact form: a different
+  // queue, with no subject attached, that the moderation console cannot
+  // cluster or resolve against the listing. `job` is the nearest-looking
+  // neighbour and the wrong one, because a `job` subject is a slug in the paid
+  // work directory, a different table entirely.
+  //
+  // Mirrors the backend `ReportSubjectType.Volunteering`, backed by
+  // `AddVolunteeringReportSubjectAndAnonymousFloodKey1813000000000`.
+  | "volunteering";
 
 export type ReasonCode =
   | "outing"
@@ -390,6 +405,28 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "harassment",
     "hate_speech",
     "impersonation",
+    "spam",
+    "other",
+  ],
+  // A volunteering opportunity. Mirrors the backend `SUBJECT_REASONS`
+  // entry for `ReportSubjectType.Volunteering` exactly, in the same order.
+  //
+  // `not_affirming` sits high because volunteering is unpaid time handed to an
+  // organization on the strength of it being safe to be queer around, and the
+  // pledge is what that promise is made of. `venue_safety` is here because a
+  // shift puts a member in a room with strangers at a real address on a stated
+  // date. `outing` and `doxxing` lead because they are the only two codes
+  // `deriveSeverity` maps to the emergency band, and an opportunity page is the
+  // poster's prose about who is involved: a page naming the people who run an
+  // HIV service or a trans support group outs them to everyone who reads it.
+  volunteering: [
+    "outing",
+    "doxxing",
+    "not_affirming",
+    "discrimination",
+    "venue_safety",
+    "harassment",
+    "housing_scam",
     "spam",
     "other",
   ],

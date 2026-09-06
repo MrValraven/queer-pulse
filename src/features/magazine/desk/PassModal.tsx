@@ -33,7 +33,10 @@ export function PassModal({ pitch, onClose, onPass }: PassModalProps) {
     const template = PASS_TEMPLATES.find((candidate) => candidate.id === id);
     if (!template) return;
     setTemplateId(id);
-    setBody(template.body);
+    // The template holds an i18n key, and this text goes straight into the
+    // editable note the writer will read, so it is resolved to real prose here
+    // rather than anywhere further down.
+    setBody(t(template.bodyKey));
   };
 
   const send = () => {
@@ -66,7 +69,7 @@ export function PassModal({ pitch, onClose, onPass }: PassModalProps) {
           label={t("magazine:desk.modals.pass.startingPoints")}
           options={PASS_TEMPLATES.map((template) => ({
             value: template.id,
-            label: template.label,
+            label: t(template.labelKey),
           }))}
           value={templateId ?? ""}
           onChange={applyTemplate}

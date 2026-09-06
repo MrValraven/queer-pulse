@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import type { Tab } from "./visas.data";
@@ -45,7 +45,7 @@ export function VisasTabContent({
               )}
               {card.link && (
                 <div className={styles.icLink}>
-                  {card.link.href === "#" ? (
+                  {card.link.href === "#" && (
                     <button
                       type="button"
                       className={styles.linkButton}
@@ -53,7 +53,19 @@ export function VisasTabContent({
                     >
                       {t(card.link.labelKey)} <FiArrowRight aria-hidden />
                     </button>
-                  ) : (
+                  )}
+                  {card.link.href !== "#" && card.link.isExternal && (
+                    // An official source, so it leaves the app: a router
+                    // `<Link>` would try to resolve aima.gov.pt as a route.
+                    <a
+                      href={card.link.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      {t(card.link.labelKey)} <FiExternalLink aria-hidden />
+                    </a>
+                  )}
+                  {card.link.href !== "#" && !card.link.isExternal && (
                     <Link to={card.link.href}>
                       {t(card.link.labelKey)} <FiArrowRight aria-hidden />
                     </Link>

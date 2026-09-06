@@ -208,6 +208,17 @@
   color: var(--ink-60);
   line-height: 1.75;
 }
+/* "Duplicate" on one side, the edit age on the other. Wraps to two rows on a
+   phone, where a right-aligned timestamp next to a button reads as cramped. */
+.overviewFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  flex-wrap: wrap;
+  margin-top: var(--gap-sm);
+}
+
 .lastEdit {
   font-size: var(--text-12);
   color: var(--ink-40);

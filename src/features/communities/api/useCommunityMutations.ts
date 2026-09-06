@@ -28,6 +28,7 @@ import {
   type CommunityDetailDTO,
   type CommunityRemovalOutcomeDTO,
   type CommunityReplyDTO,
+  type CommunityTakedownInput,
   type CreateCommunityDto,
   type CreatePostDto,
   type JoinResultDTO,
@@ -351,6 +352,14 @@ export function useUpdateCommunity() {
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["communities"] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      // The welcome greeting an owner edits here is READ back on the member
+      // side from `GET /communities/:slug/preferences` (a different query, and
+      // the one `CommunityWelcomeCard` renders), so a saved edit has to reach
+      // that cache too. Without this an owner who writes a greeting and walks
+      // to Pulse in the same session sees the answer from before they wrote it.
+      void queryClient.invalidateQueries({
+        queryKey: ["community-preferences", slug],
+      });
     },
   });
 }
@@ -467,16 +476,23 @@ export function useTransferOwnership(slug: string) {
   });
 }
 
-/** DELETE /communities/:slug/posts/:id — soft tombstone the OP post. */
+/** DELETE /communities/:slug/posts/:id — soft tombstone the OP post.
+ *  `takedown` (PRD-147) carries a moderator's reason, cited house rule and
+ *  moderator-only note when the person deleting is NOT the author. An author
+ *  clearing their own post leaves it undefined and nothing is logged or sent. */
 export function useDeleteCommunityPost(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { id: string }>({
+  return useMutation<
+    void,
+    Error,
+    { id: string; takedown?: CommunityTakedownInput }
+  >({
     // CommunityThread toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ id }) => {
+    mutationFn: async ({ id, takedown }) => {
       if (demoMode) return;
-      await deleteCommunityPost(slug, id);
+      await deleteCommunityPost(slug, id, takedown);
     },
     onSuccess: () => {
       if (demoMode) return;
@@ -531,16 +547,21 @@ export function useEditCommunityReply(slug: string) {
   });
 }
 
-/** DELETE /communities/:slug/posts/:id/replies/:replyId — soft tombstone a reply. */
+/** DELETE /communities/:slug/posts/:id/replies/:replyId — soft tombstone a reply.
+ *  Same optional `takedown` body as the post delete above (PRD-147). */
 export function useDeleteCommunityReply(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { postId: string; replyId: string }>({
+  return useMutation<
+    void,
+    Error,
+    { postId: string; replyId: string; takedown?: CommunityTakedownInput }
+  >({
     // CommunityThread toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ postId, replyId }) => {
+    mutationFn: async ({ postId, replyId, takedown }) => {
       if (demoMode) return;
-      await deleteCommunityReply(slug, postId, replyId);
+      await deleteCommunityReply(slug, postId, replyId, takedown);
     },
     onSuccess: () => {
       if (demoMode) return;
@@ -572,11 +593,19 @@ export function useRestoreCommunityReply(slug: string) {
 }
 
 /** POST /communities/:slug/tag-requests — owner/mod "Suggest a tag" from
- *  `SuggestCommunityTagModal`. Fire-and-forget: there's no local queue of the
- *  submitter's own past requests to keep in sync (they see the outcome via
- *  the existing notification system once an admin resolves it, not here), so
- *  demo mode just resolves after a simulated delay and there's nothing to
- *  invalidate in live mode either. */
+ *  `SuggestCommunityTagModal`.
+ *
+ *  NO LONGER FIRE-AND-FORGET (PRD-150). This docstring used to say there was
+ *  no local queue of the submitter's own past requests, that the outcome
+ *  reached them only through a notification, and that there was nothing to
+ *  invalidate. All three stopped being true when `GET /communities/:slug/
+ *  tag-requests` and `CommunityTagRequestLog` landed: the community's own
+ *  suggestions are now read back with their status, and a successful send has
+ *  to invalidate `communityTagRequestsPrefix(slug)` or the log the submitter
+ *  is looking at will not show what they just sent.
+ *
+ *  That invalidation currently lives in the modal's own `onSuccess` rather
+ *  than here. Moving it into this hook would be tidier and is safe to do. */
 export function useSuggestCommunityTag(slug: string) {
   const { demoMode } = useDemoMode();
   return useMutation<void, Error, SuggestCommunityTagDto>({

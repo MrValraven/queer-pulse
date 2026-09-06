@@ -119,6 +119,10 @@ export const DEMO_ARTICLE: ArticleDraftDto = {
   blocks: BLOCKS,
   readMinutes: 2,
   publishedAt: null,
+  // ENG-111. Demo has no server to move the row on, so the version never
+  // advances and no demo save can ever conflict. It is present because the
+  // live DTO carries it, keeping the fixture the same shape as a real read.
+  version: 1,
 };
 
 export const DEMO_ARTICLE_VERSIONS: ArticleVersionSummaryDto[] = [

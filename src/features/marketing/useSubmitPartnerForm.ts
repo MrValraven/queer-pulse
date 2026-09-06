@@ -31,10 +31,13 @@ export interface SubmitPartnerState {
 /** The fictional "current" year the demo/live app renders as. */
 const CURRENT_YEAR = 2026;
 
-function buildEmptyState(): SubmitPartnerState {
+function buildEmptyState(initialName = ""): SubmitPartnerState {
   return {
-    name: "",
-    logo: "",
+    name: initialName,
+    // Derived from the prefilled name for the same reason typing one derives
+    // it: the badge is never blank on first paint, and the applicant can still
+    // overwrite it (which sets `logoTouched` and stops the derivation).
+    logo: initialName ? deriveInitials(initialName) : "",
     logoTouched: false,
     region: "pt",
     city: "",
@@ -80,8 +83,14 @@ const REQUIRED: RequiredField[] = [
  * brief §2), so this only recomputes the initializer if the hook itself
  * remounts, not on every render.
  */
-export function useSubmitPartnerForm(t: TFunction) {
-  const [state, setState] = useState<SubmitPartnerState>(buildEmptyState);
+export function useSubmitPartnerForm(t: TFunction, initialName = "") {
+  // Lazy initializer, so `initialName` seeds the FIRST render only. A later
+  // change to the query string must not reach in and overwrite what the
+  // applicant has since typed (PRD-266 hands the name over from the For
+  // Organisations page as `?org=`).
+  const [state, setState] = useState<SubmitPartnerState>(() =>
+    buildEmptyState(initialName),
+  );
 
   const set = useCallback(
     <K extends keyof SubmitPartnerState>(

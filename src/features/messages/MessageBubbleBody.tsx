@@ -1,10 +1,15 @@
 // src/features/messages/MessageBubbleBody.tsx
-import { FiImage } from "react-icons/fi";
+import { FiFile, FiImage } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { isEmojiOnly } from "./messageRuns";
 import { renderWithLinks } from "./linkify";
 import { MessageMeta, type MetaStatus } from "./MessageSendStatus";
+import {
+  AttachmentPreviewUnavailable,
+  MessageDocumentAttachment,
+} from "./MessageDocumentAttachment";
+import { isDocumentAttachment } from "../../shared/api/documentAttachment";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -72,6 +77,40 @@ export function MessageBubbleBody({
     </button>
   );
 
+  // An uploaded document (PRD-226) renders as a file-card, never inline —
+  // there are no pixels to preview. Rendered ahead of the gif/image branch for
+  // the same "never fall through to text" reason as that branch's own note.
+  // A restored outbox entry (page reload) whose local `blob:` preview was
+  // stripped before persisting (mirrors the gif/image case below) falls
+  // through to the same neutral "unavailable" stand-in.
+  if (message.kind === "document") {
+    const documentAttachment =
+      message.attachment && isDocumentAttachment(message.attachment)
+        ? message.attachment
+        : null;
+    return (
+      <>
+        {forwardedNode}
+        {replyQuoteNode}
+        {documentAttachment ? (
+          <MessageDocumentAttachment attachment={documentAttachment} />
+        ) : (
+          <AttachmentPreviewUnavailable
+            icon={<FiFile aria-hidden size={20} />}
+            label={t("messages:attachments.documentPreviewUnavailable")}
+          />
+        )}
+        {isLast && (
+          <MessageMeta
+            time={message.time}
+            isSent={isSent}
+            metaStatus={metaStatus}
+            floating={false}
+          />
+        )}
+      </>
+    );
+  }
   // A GIF or an uploaded image renders as an inline image (no text-bubble
   // chrome, like the emoji-only case) — visually identical either way, only
   // `kind` differs for copy/analytics. Rendered BEFORE the emoji/text branches
@@ -80,7 +119,8 @@ export function MessageBubbleBody({
   // bubble to tuck it into.
   if (
     (message.kind === "gif" || message.kind === "image") &&
-    message.attachment
+    message.attachment &&
+    !isDocumentAttachment(message.attachment)
   ) {
     const { url, width, height } = message.attachment;
     // Reserve the bubble's final box BEFORE the image decodes. The provider's
@@ -132,14 +172,10 @@ export function MessageBubbleBody({
       <>
         {forwardedNode}
         {replyQuoteNode}
-        <div
-          className={styles.imagePreviewUnavailable}
-          role="img"
-          aria-label={t("messages:attachments.previewUnavailable")}
-        >
-          <FiImage aria-hidden size={20} />
-          <span>{t("messages:attachments.previewUnavailable")}</span>
-        </div>
+        <AttachmentPreviewUnavailable
+          icon={<FiImage aria-hidden size={20} />}
+          label={t("messages:attachments.previewUnavailable")}
+        />
         {isLast && (
           <MessageMeta
             time={message.time}

@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useRecognition } from "../members/api/useRecognition";
+import { levelNameKeyFor } from "../members/levelLadder.data";
 import styles from "./GettingStartedPage.module.css";
 
 /**
@@ -27,6 +28,10 @@ export function LevelXpStrip({
   const recognition = useRecognition(undefined, { force });
   if (!recognition.hasRealData || recognition.isLoading) return null;
   const { level } = recognition;
+  // The ladder's words are owned by the frontend and keyed on the level
+  // NUMBER (see `levelLadder.data.ts`); an unknown rung keeps the server's
+  // own English name.
+  const levelNameKey = levelNameKeyFor(level.level);
   const dialStyle = { "--p": level.percent } as CSSProperties;
   const progressLabel = t("auth:gettingStarted.levelStrip.progress", {
     xp: String(level.xp),
@@ -54,7 +59,9 @@ export function LevelXpStrip({
         <span className={styles.levelDialRing} aria-hidden />
         <span className={styles.levelDialIn}>
           <span className={styles.levelDialNum}>{level.level}</span>
-          <span className={styles.levelDialName}>{level.name}</span>
+          <span className={styles.levelDialName}>
+            {levelNameKey ? t(levelNameKey) : level.name}
+          </span>
         </span>
       </div>
       <span className={styles.levelCardXp}>{progressLabel}</span>

@@ -42,6 +42,7 @@ const EXPECTED_CAPABILITIES: Record<string, string[]> = {
   partner_applications: ["partnerships"],
   changemaker_nominations: ["partnerships"],
   roadmap_ideas: [],
+  guide_reviews: ["resource_curator"],
 };
 
 /**
@@ -76,8 +77,8 @@ const navItemsByPath = new Map(
 );
 
 describe("admin queue routes", () => {
-  it("covers twenty-seven queues", () => {
-    expect(ADMIN_QUEUE_KEYS).toHaveLength(27);
+  it("covers twenty-eight queues", () => {
+    expect(ADMIN_QUEUE_KEYS).toHaveLength(28);
   });
 
   it("points every queue at a real admin route", () => {

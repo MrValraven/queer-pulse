@@ -20,9 +20,16 @@ import {
 } from "../../shared/seo";
 import { ALPHABET, GLOSSARY_COPY } from "./glossary.data";
 import { GlossaryTermBlocks, type Lang } from "./GlossaryTermBlocks";
+import { SuggestEditModal } from "./SuggestEditModal";
 import { useGlossaryData } from "./api/useGlossaryData";
 
-const CONTACT = routes.contact;
+/** Which structured intake a glossary CTA opens. Both land on
+ *  `POST /intakes/suggest_edit`, and the `context` tag is what tells a curator
+ *  whether they are being asked to add a term or to correct one (PRD-264). */
+type SuggestionIntent = "newTerm" | "edit";
+
+const NEW_TERM_CONTEXT = "glossary-new-term";
+const EDIT_CONTEXT = "glossary";
 
 /**
  * Recursively flattens a term's ReactNode definition (which may embed <em>,
@@ -80,9 +87,18 @@ function GlossarySkeleton() {
 }
 
 export function GlossaryPage() {
-  const { t } = useTranslation();
-  const [lang, setLang] = useState<Lang>("en");
+  const { t, language } = useTranslation();
+  // The term language starts on the reader's own locale instead of always
+  // English (PRD-267): a Portuguese reader used to land on an English glossary
+  // and had to find the toggle. A manual flip wins from then on, so the toggle
+  // stays a real choice rather than something the locale keeps overriding.
+  const [termLanguageOverride, setTermLanguageOverride] = useState<Lang | null>(
+    null,
+  );
+  const lang: Lang = termLanguageOverride ?? language;
   const [query, setQuery] = useState("");
+  const [suggestionIntent, setSuggestionIntent] =
+    useState<SuggestionIntent | null>(null);
   const {
     blocks: allBlocks,
     loading: dataLoading,
@@ -106,6 +122,12 @@ export function GlossaryPage() {
   );
   const HAS = useMemo(
     () => new Set(allBlocks.map((b) => b.letter)),
+    [allBlocks],
+  );
+  // The real term list drives the "suggest an edit" picker, so a reader points
+  // at one of the 142 entries this page actually shows.
+  const glossaryTermNames = useMemo(
+    () => allBlocks.flatMap((block) => block.terms.map((term) => term.name)),
     [allBlocks],
   );
 
@@ -177,17 +199,19 @@ export function GlossaryPage() {
               <button
                 type="button"
                 className={lang === "en" ? styles.langActive : undefined}
-                onClick={() => setLang("en")}
+                aria-pressed={lang === "en"}
+                onClick={() => setTermLanguageOverride("en")}
               >
-                {/* eslint-disable-line local/no-literal-string -- a language's own name is never translated (this toggles GLOSSARY_COPY's own term-language, independent of the site locale — see the catalog header comment) */}
+                {/* eslint-disable-line local/no-literal-string -- a language's own name is never translated (this toggles GLOSSARY_COPY's own term-language, which starts on the site locale and can then be flipped) */}
                 English
               </button>
               <button
                 type="button"
                 className={lang === "pt" ? styles.langActive : undefined}
-                onClick={() => setLang("pt")}
+                aria-pressed={lang === "pt"}
+                onClick={() => setTermLanguageOverride("pt")}
               >
-                {/* eslint-disable-line local/no-literal-string -- a language's own name is never translated (this toggles GLOSSARY_COPY's own term-language, independent of the site locale — see the catalog header comment) */}
+                {/* eslint-disable-line local/no-literal-string -- a language's own name is never translated (this toggles GLOSSARY_COPY's own term-language, which starts on the site locale and can then be flipped) */}
                 Português
               </button>
             </div>
@@ -231,7 +255,10 @@ export function GlossaryPage() {
             <div className={styles.noResults}>
               <h3>{copy.noResultsTitle}</h3>
               <p>{copy.noResultsBody}</p>
-              <Button to={CONTACT} variant="primary">
+              <Button
+                variant="primary"
+                onClick={() => setSuggestionIntent("newTerm")}
+              >
                 {copy.suggestTerm} <FiArrowRight aria-hidden />
               </Button>
             </div>
@@ -247,11 +274,31 @@ export function GlossaryPage() {
                 components={{ em: <em /> }}
               />
             </p>
-            <Button to={CONTACT} variant="primary">
+            <Button
+              variant="primary"
+              onClick={() => setSuggestionIntent("edit")}
+            >
               {copy.suggestEdit}
             </Button>
           </div>
         </section>
+
+        {/* Both CTAs used to open the generic Contact form, so a term
+            suggestion reached staff as an unstructured inquiry with no term
+            attached. They now open the structured `suggest_edit` intake, each
+            with its own `context` so the two asks stay apart (PRD-264). */}
+        {suggestionIntent && (
+          <SuggestEditModal
+            context={
+              suggestionIntent === "newTerm" ? NEW_TERM_CONTEXT : EDIT_CONTEXT
+            }
+            subjectKind={suggestionIntent === "newTerm" ? "newTerm" : "term"}
+            subjectOptions={
+              suggestionIntent === "newTerm" ? undefined : glossaryTermNames
+            }
+            onClose={() => setSuggestionIntent(null)}
+          />
+        )}
       </div>
     </PageShell>
   );

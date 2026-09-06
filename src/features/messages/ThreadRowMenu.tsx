@@ -1,32 +1,9 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type ReactNode,
-} from "react";
-import {
-  FiArchive,
-  FiBell,
-  FiBellOff,
-  FiHeart,
-  FiInbox,
-  FiMoreHorizontal,
-  FiTrash2,
-} from "react-icons/fi";
-import { TbPin, TbPinnedFilled } from "react-icons/tb";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { FiMoreHorizontal } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useThreadRowMenuItems } from "./useThreadRowMenuItems";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
-
-interface MenuItemDef {
-  key: string;
-  label: string;
-  icon: ReactNode;
-  onSelect: () => void;
-  danger?: boolean;
-}
 
 /** Row-level "⋯" menu, rendered as a SIBLING of the thread row `<button>`
  *  (never nested inside it) — see `.threadRowWrap` in MessagesPage.module.css.
@@ -34,20 +11,30 @@ interface MenuItemDef {
  *  message-level pin/star inside a thread). */
 export function ThreadRowMenu({
   thread,
+  isUnread,
   onTogglePin,
   onToggleFavorite,
   onToggleMute,
   onToggleArchive,
+  onToggleReadUnread,
   onDelete,
 }: {
   /** Carries this row's own pinned/favorite/muted/archived state — the pin cap
    *  check itself lives in `useTogglePin` (the caller computes and passes the
    *  pinned count into its `mutate()` call, not through this component). */
   thread: Conversation;
+  /** Whether the row is CURRENTLY showing as unread (real unread count OR a
+   *  manual "mark unread", PRD-225) — decides the Mark as read/unread label,
+   *  computed by the caller (`isThreadUnread`) so this stays in lockstep with
+   *  the row's own badge. */
+  isUnread: boolean;
   onTogglePin: () => void;
   onToggleFavorite: () => void;
   onToggleMute: () => void;
   onToggleArchive: () => void;
+  /** Marks read (reuses the real read-watermark mutation) when `isUnread` is
+   *  true, or marks unread (PRD-225) when it's false. */
+  onToggleReadUnread: () => void;
   /** Opens the delete-confirmation flow for this conversation. */
   onDelete: () => void;
 }) {
@@ -57,66 +44,16 @@ export function ThreadRowMenu({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const isPinned = !!thread.pinnedAt;
-  const isFavorite = !!thread.favorite;
-  const isMuted = !!thread.muted;
-  const isArchived = !!thread.archivedAt;
-
-  const items: MenuItemDef[] = useMemo(
-    () => [
-      {
-        key: "pin",
-        label: isPinned
-          ? t("messages:thread.unpinChat")
-          : t("messages:thread.pinChat"),
-        icon: isPinned ? <TbPinnedFilled aria-hidden /> : <TbPin aria-hidden />,
-        onSelect: onTogglePin,
-      },
-      {
-        key: "favorite",
-        label: isFavorite
-          ? t("messages:thread.unfavoriteChat")
-          : t("messages:thread.favoriteChat"),
-        icon: <FiHeart aria-hidden />,
-        onSelect: onToggleFavorite,
-      },
-      {
-        key: "mute",
-        label: isMuted
-          ? t("messages:thread.unmuteChat")
-          : t("messages:thread.muteChat"),
-        icon: isMuted ? <FiBellOff aria-hidden /> : <FiBell aria-hidden />,
-        onSelect: onToggleMute,
-      },
-      {
-        key: "archive",
-        label: isArchived
-          ? t("messages:thread.unarchiveChat")
-          : t("messages:thread.archiveChat"),
-        icon: isArchived ? <FiInbox aria-hidden /> : <FiArchive aria-hidden />,
-        onSelect: onToggleArchive,
-      },
-      {
-        key: "delete",
-        label: t("messages:thread.deleteChat"),
-        icon: <FiTrash2 aria-hidden />,
-        onSelect: onDelete,
-        danger: true,
-      },
-    ],
-    [
-      isPinned,
-      isFavorite,
-      isMuted,
-      isArchived,
-      onTogglePin,
-      onToggleFavorite,
-      onToggleMute,
-      onToggleArchive,
-      onDelete,
-      t,
-    ],
-  );
+  // Item definitions live in their own hook purely to keep this component
+  // under the 200-line cap — see `useThreadRowMenuItems`'s own doc.
+  const items = useThreadRowMenuItems(thread, isUnread, {
+    onTogglePin,
+    onToggleFavorite,
+    onToggleMute,
+    onToggleArchive,
+    onToggleReadUnread,
+    onDelete,
+  });
 
   useEffect(() => {
     if (!open) return;

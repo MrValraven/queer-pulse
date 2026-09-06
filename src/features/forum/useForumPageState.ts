@@ -13,7 +13,9 @@ import { useForumUrlParams } from "./useForumUrlParams";
 import { useForumFirstPostPrompt } from "./useForumFirstPostPrompt";
 import { useForumThreadTitleEdit } from "./useForumThreadTitleEdit";
 import {
+  canDeleteThread,
   canEditThread as checkCanEditThread,
+  canMoveThreadCategory,
   filterAndSortThreads,
   mergeOptimisticThreads,
 } from "./forumPageState.helpers";
@@ -84,9 +86,19 @@ export function useForumPageState() {
         );
 
   const votePost = useVotePost();
-  const moderation = useForumRowModeration();
 
   const [extraThreads, setExtraThreads] = useState<Thread[]>([]);
+
+  // Declared AFTER `extraThreads` so the withdraw flow can drop the optimistic
+  // copy of a thread the member published moments earlier: invalidating the
+  // list queries only refreshes what the server returned, so without this a
+  // just-published, just-withdrawn thread stayed on screen.
+  const moderation = useForumRowModeration({
+    onThreadDeleted: (slug) =>
+      setExtraThreads((current) =>
+        current.filter((thread) => thread.slug !== slug),
+      ),
+  });
 
   const { showFirstPostPrompt, dismissPrompt } = useForumFirstPostPrompt({
     demoMode,
@@ -208,6 +220,12 @@ export function useForumPageState() {
     dismissPrompt,
     allThreads,
     canEditThread: (thread: Thread) => checkCanEditThread(thread, demoMode),
+    // PRD-163/PRD-160: both are LIVE-only affordances. The demo mock carries
+    // neither `createdAt` nor the permission flags they read, so both return
+    // false there and neither control renders. No demo constant is consulted.
+    canMoveCategory: (thread: Thread) =>
+      !demoMode && canMoveThreadCategory(thread),
+    canDeleteThread: (thread: Thread) => !demoMode && canDeleteThread(thread),
     editingThread,
     editingTitleThreadIsBusy,
     saveThreadTitle,

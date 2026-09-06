@@ -10,6 +10,9 @@ export const auth: Catalog = {
   "common.backToProfile": "Voltar ao perfil",
   "common.copied": "Copiado",
   "common.copy": "Copiar",
+  /** PRD-306. O caminho para `/auth/invite-code` a partir de todas as páginas
+   *  onde pode cair quem tem só o código. */
+  "common.haveAnInviteCode": "Tens um código de convite? Usa-o aqui",
   "common.notAMemberYet": "Ainda não fazes parte?",
   "common.optionalSuffix": "(opcional)",
 
@@ -246,6 +249,28 @@ export const auth: Catalog = {
 
   // ── Entrar por link mágico ──
 
+  // ── Introduzir um código de convite (/auth/invite-code) ──
+  // PRD-306. Um código sem o link à volta era um beco sem saída. As únicas
+  // portas eram o URL completo do convite ou entrar com a Google, por isso
+  // quem tinha um código perfeitamente válido tinha de pedir outra vez, gastar
+  // um dos três pedidos por hora e ficar na fila de revisão à espera de um
+  // convite que já existia. Esta página recebe o código e passa-o à página de
+  // convite, que já responde a tudo: válido, expirado, usado, revogado.
+  "inviteCode.eyebrow": "Tens um código?",
+  "inviteCode.title": "Escreve o teu <em>código de convite.</em>",
+  "inviteCode.sub":
+    "Os códigos são ditos em voz alta e passados sem o link que os trazia. Escreve o teu aqui em baixo e levamos-te diretamente ao teu convite.",
+  "inviteCode.field.label": "Código de convite",
+  "inviteCode.field.placeholder": "QP-XXXX-XXXX",
+  "inviteCode.field.helper":
+    "Os códigos são assim: QP-XXXX-XXXX. Minúsculas e espaços a mais não fazem mal, nós tratamos disso.",
+  "inviteCode.error.missing": "Escreve o código que recebeste.",
+  "inviteCode.error.unusable":
+    "Isto não parece um código de convite. Confirma-o e tenta outra vez.",
+  "inviteCode.submit": "Abrir o meu convite",
+  "inviteCode.requestInsteadLink": "Sem código? Pede um convite",
+  "inviteCode.alreadyMemberLink": "Já fazes parte? Entrar",
+
   // ── Pedir um convite ──
   "requestInvite.eyebrow": "Pedir um convite",
   "requestInvite.title": "Pede para <em>entrar.</em>",
@@ -392,6 +417,18 @@ export const auth: Catalog = {
     "Não tens de fazer nada enquanto esperas. Volta a esta página quando quiseres, o teu código continua a funcionar.",
   "joinRequestStatus.underReview.foot":
     "Mudou alguma coisa, ou queres acrescentar algo ao teu pedido? <a>Falar connosco</a>",
+  // PRD-304. O prazo a que a plataforma se obriga, dito a quem está mesmo à
+  // espera. A fila de revisão sempre marcou cada pedido com uma data de
+  // resposta a três dias e sempre assinalou os pedidos que a ultrapassam; a
+  // pessoa que espera não sabia nada disso, por isso o quarto dia era igual ao
+  // primeiro e quem escrevia não tinha nada a que se agarrar. Mais nada leva
+  // esta data: não se envia email nenhum, e quem pede não tem conta onde
+  // receber notificações.
+  "joinRequestStatus.underReview.dueBy": "Queremos responder-te até {date}.",
+  "joinRequestStatus.underReview.overdue":
+    "Dissemos que respondíamos até {date}, e já passámos essa data. Pedimos desculpa.",
+  "joinRequestStatus.underReview.overdueFoot":
+    "Estás à espera há mais tempo do que prometemos? <a>Falar connosco</a> e vamos descobrir onde é que o teu pedido ficou.",
 
   // Aprovado, convite ainda válido. A boa notícia.
   "joinRequestStatus.approved.eyebrow": "Estás dentro",
@@ -736,7 +773,11 @@ export const auth: Catalog = {
   "gettingStarted.xpSources.seeBadgesPage": "Ir para a página de Emblemas",
   "gettingStarted.stepXp": "+{xp} XP",
   "gettingStarted.stepXpEarned": "+{xp} XP ganhos",
-  "gettingStarted.success.badge": "Ganhaste o crachá First Steps.",
+  // O NOME do distintivo e interpolado a partir do catalogo, para nao poder
+  // divergir. Antes estava fixo em ingles nas duas linguas. "distintivo" e a
+  // palavra usada no resto da copy dos distintivos, em vez de "cracha".
+  // DES-143.
+  "gettingStarted.success.badge": "Ganhaste o distintivo {badge}.",
   "gettingStarted.meterAria": "{done} de {total} primeiros passos feitos",
   "gettingStarted.checking": "A verificar o teu progresso…",
   "gettingStarted.doneLabel": "Feito",

@@ -49,6 +49,16 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
  * `AllExceptionsFilter.normalizeErrorBody` spreads the thrown body first and
  * only fills in a missing `statusCode`/`error`/`message`, so `code` reaches the
  * wire untouched, and `ApiError.data` hands it over already parsed.
+ *
+ * ## The one refusal that is not a 429
+ *
+ * A 401, or a 403 that survived the API client's CSRF self-heal, means the
+ * server would not take this filing from this caller at all. `POST /reports` is
+ * public (PRD-280), so for a signed-out reporter that is a fault rather than
+ * the design, and the generic "check your connection and try again" line sends
+ * them round a loop that cannot end. It gets its own `auth` kind and its own
+ * copy, naming signing in as the way through. Everything else still falls back
+ * to the calling surface's own wording, unchanged.
  */
 
 /** The backend's typed discriminator for a rolling flood-cap refusal. Mirrors
@@ -62,6 +72,19 @@ export type ReportSubmissionRefusal =
   | { kind: "cap"; message: string }
   /** The burst throttle: refused, but with no copy worth showing. */
   | { kind: "burst" }
+  /**
+   * The server would not accept this filing from this caller: a 401, or a 403
+   * that survived the API client's own CSRF re-fetch and retry.
+   *
+   * PRD-280. `POST /reports` is public, so a signed-out reporter filing from
+   * the crisis pages, the footer or the Code of Conduct is the supported case
+   * and this should not happen to them. When it does anyway, the generic
+   * "couldn't send that, check your connection" line is a dead end: the
+   * connection is fine, retrying changes nothing, and the one thing that would
+   * get the report through (signing in) goes unmentioned. This kind exists so
+   * the reporter is told that instead.
+   */
+  | { kind: "auth" }
   /** Anything else: a network failure, a 4xx, a 5xx. */
   | { kind: "failure" };
 
@@ -74,9 +97,14 @@ export type ReportSubmissionRefusal =
 export function classifyReportSubmissionError(
   error: unknown,
 ): ReportSubmissionRefusal {
-  if (!(error instanceof ApiError) || error.status !== 429) {
-    return { kind: "failure" };
-  }
+  if (!(error instanceof ApiError)) return { kind: "failure" };
+  // Read BEFORE the 429 branch: a refused-outright filing is its own answer and
+  // has nothing to do with rate limiting. 403 is included because the API
+  // client already spent its one CSRF self-heal (`request()` evicts the cached
+  // token, re-bootstraps and retries any non-safe 403 exactly once), so a 403
+  // that reaches here is a real refusal rather than the cross-tab CSRF desync.
+  if (error.status === 401 || error.status === 403) return { kind: "auth" };
+  if (error.status !== 429) return { kind: "failure" };
   const code = (error.data as { code?: unknown } | null | undefined)?.code;
   if (code !== REPORT_FLOOD_CAP_CODE) {
     return { kind: "burst" };
@@ -114,6 +142,7 @@ export function useReportSubmissionError(): (
   // toast string, a panel line), so a value resolved inside the callback would
   // be frozen at whatever the catalog held right then.
   const tooFastMessage = t("safety:report.tooFast");
+  const authRefusedMessage = t("safety:report.authRefused");
   return useCallback(
     (error: unknown, fallbackMessage: string) => {
       const refusal = classifyReportSubmissionError(error);
@@ -127,8 +156,13 @@ export function useReportSubmissionError(): (
           ? fallbackMessage
           : tooFastMessage;
       }
+      if (refusal.kind === "auth") {
+        return authRefusedMessage === "safety:report.authRefused"
+          ? fallbackMessage
+          : authRefusedMessage;
+      }
       return fallbackMessage;
     },
-    [tooFastMessage],
+    [tooFastMessage, authRefusedMessage],
   );
 }

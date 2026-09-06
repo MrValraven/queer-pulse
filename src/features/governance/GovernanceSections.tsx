@@ -11,7 +11,6 @@ import {
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -19,7 +18,9 @@ import { useFormat } from "../../shared/i18n/format";
 import { useGovernanceFinances } from "./api/useGovernanceFinances";
 import { useGovernanceOverview } from "./api/useGovernanceOverview";
 import { submitConcern, type ConcernCategory } from "./api/governance.api";
+import { ConcernSubmittedPanel } from "./ConcernSubmittedPanel";
 import { CONCERN_OPTIONS } from "./governance.data";
+import { resolveGovernanceText } from "./governanceText";
 import { FinanceLines } from "./GovernanceFinance";
 import styles from "./GovernancePage.module.css";
 
@@ -151,7 +152,9 @@ export function ModerationSection() {
 }
 
 export function CouncilSection() {
-  const { t } = useTranslation();
+  // `language` as well as `t`: a PRD-265 authored entry carries its own EN/PT
+  // rather than a key, so the active language is what picks between them.
+  const { t, language } = useTranslation();
   const { council, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="council">
@@ -179,7 +182,9 @@ export function CouncilSection() {
             </div>
             <div>
               <div className={styles.acName}>{seat.name}</div>
-              <div className={styles.acRole}>{t(seat.roleKey)}</div>
+              <div className={styles.acRole}>
+                {resolveGovernanceText(seat.role, t, language)}
+              </div>
             </div>
           </div>
         ))}
@@ -189,7 +194,9 @@ export function CouncilSection() {
 }
 
 export function PrinciplesSection() {
-  const { t } = useTranslation();
+  // `language` as well as `t`: a PRD-265 authored entry carries its own EN/PT
+  // rather than a key, so the active language is what picks between them.
+  const { t, language } = useTranslation();
   const { principles, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="principles">
@@ -205,13 +212,17 @@ export function PrinciplesSection() {
       {error && <SectionError onRetry={retry} />}
       <div className={styles.prinList}>
         {principles.map((principle) => (
-          <div key={principle.titleKey} className={styles.prinItem}>
+          <div key={principle.id} className={styles.prinItem}>
             <span className={styles.prinIcon}>
               <principle.icon />
             </span>
             <div>
-              <div className={styles.prinTitle}>{t(principle.titleKey)}</div>
-              <div className={styles.prinText}>{t(principle.textKey)}</div>
+              <div className={styles.prinTitle}>
+                {resolveGovernanceText(principle.title, t, language)}
+              </div>
+              <div className={styles.prinText}>
+                {resolveGovernanceText(principle.text, t, language)}
+              </div>
             </div>
           </div>
         ))}
@@ -410,7 +421,9 @@ export function FinancesSection() {
 }
 
 export function DecisionsSection() {
-  const { t } = useTranslation();
+  // `language` as well as `t`: a PRD-265 authored entry carries its own EN/PT
+  // rather than a key, so the active language is what picks between them.
+  const { t, language } = useTranslation();
   const { decisions, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="decisions">
@@ -426,8 +439,9 @@ export function DecisionsSection() {
       {error && <SectionError onRetry={retry} />}
       <div className={styles.prose}>
         {decisions.map((decision) => (
-          <p key={decision.leadKey}>
-            <strong>{t(decision.leadKey)}</strong> {t(decision.bodyKey)}
+          <p key={decision.id}>
+            <strong>{resolveGovernanceText(decision.lead, t, language)}</strong>{" "}
+            {resolveGovernanceText(decision.body, t, language)}
           </p>
         ))}
       </div>
@@ -435,20 +449,42 @@ export function DecisionsSection() {
   );
 }
 
+/**
+ * PRD-261. The public "Submit a concern" form, and the reference code it hands
+ * back.
+ *
+ * WHAT CHANGED AND WHY. The card used to promise "a confirmation within 48
+ * hours and an update when the matter is resolved", and collected an email
+ * "so we can update you". None of that was deliverable: QueerPulse sends no
+ * email and never will, and the in-app `ConcernUpdate` bell only reaches a
+ * submitter who was SIGNED IN. An anonymous person reporting harm, or appealing
+ * a decision that went against them, was left waiting for a confirmation that
+ * could not arrive.
+ *
+ * So the email field is gone (it collected a real address under a promise
+ * nothing could keep), and a successful submit now renders
+ * `ConcernSubmittedPanel` in place of the form: a reference code the person
+ * keeps, and a status page it opens. That code is the only thing that can ever
+ * carry an outcome back to someone without an account, which is why it replaces
+ * the toast rather than sitting beside it.
+ */
 export function RaiseSection() {
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
-  const { loggedIn } = useAuth();
   const { t } = useTranslation();
   const [category, setCategory] = useState<ConcernCategory | "">("");
   const [description, setDescription] = useState("");
-  const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  // Non-null once a submission has landed: the form is replaced by the panel
+  // that shows the code. `""` means "submitted, but the API returned no code"
+  // (an older backend), where the panel confirms receipt and offers no code it
+  // does not have.
+  const [submittedCode, setSubmittedCode] = useState<string | null>(null);
 
   const reset = () => {
     setCategory("");
     setDescription("");
-    setEmail("");
+    setSubmittedCode(null);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -460,24 +496,22 @@ export function RaiseSection() {
       showToast(t("governance:sections.raise.errorToast"), "error");
       return;
     }
-    // Demo mode has no backend — keep the prototype's simulated confirmation.
+    // Demo mode has no backend. It hands back a demo code that RESOLVES on the
+    // status page, so the whole journey (code, copy, check back) is reviewable
+    // in the sandbox rather than dead-ending on a not-found screen.
     if (demoMode) {
-      showToast(t("governance:sections.raise.submittedToast"), "success");
-      reset();
+      const { DEMO_SUBMITTED_CONCERN_CODE } =
+        await import("./concernStatus.data");
+      setSubmittedCode(DEMO_SUBMITTED_CONCERN_CODE);
       return;
     }
     setSubmitting(true);
     try {
-      await submitConcern({
+      const ack = await submitConcern({
         category,
         description: description.trim(),
-        // A signed-in member is identified by their account (attributed
-        // server-side); only a logged-out submitter supplies an email so we
-        // can follow up.
-        ...(loggedIn || !email.trim() ? {} : { email: email.trim() }),
       });
-      showToast(t("governance:sections.raise.submittedToast"), "success");
-      reset();
+      setSubmittedCode(ack.statusToken ?? "");
     } catch {
       showToast(t("governance:sections.raise.failedToast"), "error");
     } finally {
@@ -497,56 +531,51 @@ export function RaiseSection() {
       <div className={styles.prose}>
         <p>{t("governance:sections.raise.intro")}</p>
       </div>
-      <div className={styles.raiseCard}>
-        <div className={styles.rcTitle}>
-          {t("governance:sections.raise.cardTitle")}
-        </div>
-        <p className={styles.rcText}>
-          {t("governance:sections.raise.cardText")}
-        </p>
-        <form
-          className={styles.rcForm}
-          onSubmit={(event) => void handleSubmit(event)}
-        >
-          <Select
-            label={t("governance:sections.raise.selectPlaceholder")}
-            placeholder={t("governance:sections.raise.selectPlaceholder")}
-            value={category || null}
-            onChange={(value) =>
-              setCategory((value ?? "") as ConcernCategory | "")
-            }
-            options={CONCERN_OPTIONS.map((option) => ({
-              value: option.value,
-              label: t(option.labelKey),
-            }))}
-          />
-          <textarea
-            className={styles.rcTextarea}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder={t("governance:sections.raise.textareaPlaceholder")}
-            aria-label={t("governance:sections.raise.textareaPlaceholder")}
-          />
-          {/* Logged-out submitters leave an email so we can follow up; a
-              signed-in member is reached through their account. */}
-          {!loggedIn && (
-            <input
-              className={styles.rcInput}
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder={t("governance:sections.raise.emailPlaceholder")}
-              aria-label={t("governance:sections.raise.emailPlaceholder")}
+      {submittedCode !== null ? (
+        <ConcernSubmittedPanel
+          code={submittedCode || null}
+          onSubmitAnother={reset}
+        />
+      ) : (
+        <div className={styles.raiseCard}>
+          <div className={styles.rcTitle}>
+            {t("governance:sections.raise.cardTitle")}
+          </div>
+          <p className={styles.rcText}>
+            {t("governance:sections.raise.cardText")}
+          </p>
+          <form
+            className={styles.rcForm}
+            onSubmit={(event) => void handleSubmit(event)}
+          >
+            <Select
+              label={t("governance:sections.raise.selectPlaceholder")}
+              placeholder={t("governance:sections.raise.selectPlaceholder")}
+              value={category || null}
+              onChange={(value) =>
+                setCategory((value ?? "") as ConcernCategory | "")
+              }
+              options={CONCERN_OPTIONS.map((option) => ({
+                value: option.value,
+                label: t(option.labelKey),
+              }))}
             />
-          )}
-          <Button type="submit" disabled={submitting}>
-            {submitting
-              ? t("governance:sections.raise.submittingCta")
-              : t("governance:sections.raise.submitCta")}{" "}
-            <FiArrowRight aria-hidden />
-          </Button>
-        </form>
-      </div>
+            <textarea
+              className={styles.rcTextarea}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder={t("governance:sections.raise.textareaPlaceholder")}
+              aria-label={t("governance:sections.raise.textareaPlaceholder")}
+            />
+            <Button type="submit" disabled={submitting}>
+              {submitting
+                ? t("governance:sections.raise.submittingCta")
+                : t("governance:sections.raise.submitCta")}{" "}
+              <FiArrowRight aria-hidden />
+            </Button>
+          </form>
+        </div>
+      )}
     </Reveal>
   );
 }

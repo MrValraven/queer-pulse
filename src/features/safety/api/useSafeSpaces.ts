@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { ApiError } from "../../../shared/api/client";
 import {
   demoStats,
   getSpace,
@@ -21,7 +20,16 @@ export const SAFE_SPACES_KEY = "safeSpaces";
 interface SafeSpacesView {
   verified: VerifiedSpace[];
   removed: RemovedSpace[];
-  stats: { verified: number; reviews: number; removed: number };
+  stats: {
+    verified: number;
+    reviews: number;
+    removed: number;
+    /** Newest badge date on the page, `YYYY-MM-DD`, or null when nothing on
+     *  the page carries one. Null is what the hub shows before the fetch
+     *  settles too, which is why the copy branches on it rather than
+     *  rendering a date it does not have yet. */
+    lastReVerifiedAt: string | null;
+  };
 }
 
 function demoSafeSpaces(): SafeSpacesView {
@@ -61,7 +69,12 @@ export function useSafeSpaces(): SafeSpacesView & {
   return {
     verified: query.data?.verified ?? [],
     removed: query.data?.removed ?? [],
-    stats: query.data?.stats ?? { verified: 0, reviews: 0, removed: 0 },
+    stats: query.data?.stats ?? {
+      verified: 0,
+      reviews: 0,
+      removed: 0,
+      lastReVerifiedAt: null,
+    },
     isLoading: query.isLoading,
     isError: query.isError,
     refetch: () => void query.refetch(),
@@ -74,46 +87,54 @@ export function useSafeSpaces(): SafeSpacesView & {
  * public `GET /directory/safe-spaces/:slug` and adapts the discriminated
  * verified/removed payload.
  *
- * Returns `{ space, isLoading }` rather than a bare value: the live fetch is
- * async, so the detail page must distinguish "still loading" (show a
- * skeleton) from "settled, not found" (redirect) instead of redirecting on
- * the initial undefined. A 404 resolves to `undefined` with `isLoading` false.
+ * Returns `{ space, isLoading, isError, error, refetch }` rather than a bare
+ * value: the live fetch is async, so the detail page must distinguish "still
+ * loading" (show a skeleton), "settled, not found" (redirect) and "the read
+ * failed" (offer a retry) instead of redirecting on the initial undefined.
+ *
+ * The 404 is handed to the CALLER as an `ApiError`, the same shape
+ * `useHousingListing`/`HousingListingPage` settled on, rather than being caught
+ * here. Catching it and returning `undefined` looked like "resolve to not
+ * found", but react-query rejects `undefined` as query data outright (it throws
+ * `<queryHash> data is undefined`), so every 404 landed in the query's ERROR
+ * state anyway: the failure was retried once and the cache-level handler raised
+ * a "Something went wrong" toast that a real 404 is explicitly exempt from.
+ * `null` is the value that means "nothing here", and react-query accepts it.
  */
 export function useSafeSpace(slug: string | undefined): {
   space: AnySpace | undefined;
   isLoading: boolean;
-  /** True when the read failed for a reason OTHER than a 404. A 404 still
-   *  resolves to `undefined` so the page can redirect, but an outage must not
+  /** True when the read failed, a 404 included. Pair it with `error` below to
+   *  tell "this slug names no safe space" from an outage: an outage must never
    *  be reported to a member as "this safe space does not exist" (DES-22). */
   isError: boolean;
+  /** The raw failure, so a caller can tell a 404 (not found) from an outage
+   *  (retryable). Mirrors `HousingListingPage`'s `isNotFound` computation. */
+  error: unknown;
   /** Re-runs the failed fetch. */
   refetch: () => void;
 } {
   const { demoMode } = useDemoMode();
-  const query = useQuery<AnySpace | undefined>({
+  const query = useQuery<AnySpace | null>({
     queryKey: [SAFE_SPACES_KEY, "detail", slug, demoMode],
     enabled: slug !== undefined,
-    initialData: demoMode ? getSpace(slug) : undefined,
+    // `null` rather than `undefined` for a demo slug that names nothing:
+    // `undefined` reads as "no initial data" and would put the query into a
+    // pending state the demo registry can answer synchronously.
+    initialData: demoMode ? (getSpace(slug) ?? null) : undefined,
     queryFn: async () => {
-      if (demoMode) return getSpace(slug);
-      if (slug === undefined) return undefined;
-      try {
-        return safeSpaceDetailDtoToSpace(await getSafeSpace(slug));
-      } catch (error) {
-        // A 404 is an answer: this slug names no safe space, and the page
-        // redirects. Anything else is an outage, and rethrowing is what keeps
-        // it from being rendered as "not found" (DES-22).
-        if (error instanceof ApiError && error.status === 404) {
-          return undefined;
-        }
-        throw error;
-      }
+      if (demoMode) return getSpace(slug) ?? null;
+      if (slug === undefined) return null;
+      // A 404 propagates deliberately: the caller reads it off `error` and
+      // decides between not-found and retry. See the doc comment above.
+      return safeSpaceDetailDtoToSpace(await getSafeSpace(slug));
     },
   });
   return {
-    space: query.data,
+    space: query.data ?? undefined,
     isLoading: query.isLoading,
     isError: query.isError,
+    error: query.error,
     refetch: () => void query.refetch(),
   };
 }

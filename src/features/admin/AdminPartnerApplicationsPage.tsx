@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -183,6 +184,22 @@ export function AdminPartnerApplicationsPage() {
       )}
 
       <AdminApprovedPartners />
+
+      {/* PRD-266. The For Organisations page used to file its partner ask as an
+          `inquiries` row with `kind: "partner"` — a second intake for the same
+          request this queue exists to work. That page now hands the
+          organisation to the real application form, so no new rows land there,
+          but the ones already filed are still real asks from real
+          organisations. They are not orphaned: they stay readable and
+          triageable in the intake console, under Inquiries, filtered by the
+          `partner` kind. This is the pointer from the queue that inherited the
+          pipeline to the one that holds its history. */}
+      <p className={styles.legacyInquiries}>
+        <Translation
+          i18nKey="admin:partners.legacyInquiries"
+          components={{ a: <Link to={routes.adminIntakes} /> }}
+        />
+      </p>
     </AdminShell>
   );
 }

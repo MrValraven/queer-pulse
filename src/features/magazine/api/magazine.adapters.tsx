@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { leadingInitials } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Author, AuthorArticle } from "../authorContent.data";
-import type { Article } from "../data/articles";
 import type { SlideDeck } from "../data/decks";
 import type { Pitch } from "../pitchTracker.data";
+import type { ReaderArticle } from "../readerArticle";
 import type {
   ArticleDTO,
   ArticleListItemDTO,
@@ -74,7 +75,15 @@ export interface IssueTile {
   title: ReactNode;
   date: string;
   tint: "a" | "b" | "c" | "d";
+  /** Caption for the cover slot: the label a tile falls back to when the desk
+   *  uploaded no cover art. */
   cover: string;
+  /** PRD-104 — the desk's uploaded cover, or `null` when there is none and the
+   *  tinted placeholder above stands in for it. */
+  coverUrl: string | null;
+  /** PRD-104 — the saved reframe for `coverUrl`, as a FOCAL POINT (see
+   *  `IssueDTO.crop`). */
+  coverCrop?: CropRect;
   dek: string;
   meta: { season: string; detail: string };
 }
@@ -144,6 +153,11 @@ export function issueToTile(
       number: dto.number,
       title: dto.title.replace(/\.$/, ""),
     }),
+    // PRD-104 — the desk's uploaded cover reaches every issue surface. Undefined
+    // `crop` (never a fabricated rect) leaves `ImageSlot` at its default cover
+    // fit, so an unreframed cover renders exactly as it always did.
+    coverUrl: dto.coverUrl,
+    coverCrop: dto.crop,
     dek: dto.dek,
     meta: {
       season: [season, year].filter(Boolean).join(" ") || dto.publishedOn || "",
@@ -158,18 +172,26 @@ export function issueToTile(
 
 // ── Articles ─────────────────────────────────────────────────────────────
 
-/** A live article/related-list row adapted into the mock `Article` shape. */
+/** A live article/related-list row adapted into the reader's `Article` shape. */
 export function articleListItemToArticle(
   dto: ArticleListItemDTO,
   fmt: Formatters,
   t: TFunction,
-): Article {
+): ReaderArticle {
   return {
     id: dto.slug,
-    kicker: dto.issueNumber
-      ? t("magazine:live.issueBadge", { number: dto.issueNumber })
-      : t("magazine:live.fromTheMagazine"),
-    section: dto.tags[0] ?? t("magazine:live.sectionFallback"),
+    // PRD-102 — the desk writes a kicker and files the piece under a section;
+    // both used to be discarded here and reinvented from the issue number and
+    // the first tag. The desk's own values win wherever the read carries them,
+    // and the derived labels stay as the fallback for a piece the editor left
+    // blank (and for the list read until it projects the two columns).
+    kicker:
+      dto.kicker?.trim() ||
+      (dto.issueNumber
+        ? t("magazine:live.issueBadge", { number: dto.issueNumber })
+        : t("magazine:live.fromTheMagazine")),
+    section:
+      dto.section?.trim() || dto.tags[0] || t("magazine:live.sectionFallback"),
     title: dto.title,
     byline: dto.author.displayName,
     role: null,
@@ -190,6 +212,9 @@ export function articleListItemToArticle(
     // prints as a bare headline while the demo registry shows a blurb.
     body: dto.dek ? [dto.dek] : [],
     blocks: [],
+    // PRD-102 — the dek in its own right, so the detail adapter's real `body`
+    // no longer destroys it and a card can show a blurb without mining `body`.
+    dek: dto.dek.trim() || undefined,
     // CON-16 — the list row states where the piece stands and what language it
     // is in, so a card can mark an archived guide rather than presenting it as
     // current.
@@ -198,15 +223,21 @@ export function articleListItemToArticle(
   };
 }
 
-/** Full article detail (with body) adapted into the mock `Article` shape. */
+/** Full article detail (with body) adapted into the reader's `Article` shape. */
 export function articleResponseToArticle(
   dto: ArticleDTO,
   fmt: Formatters,
   t: TFunction,
   authorBio?: string | null,
-): Article {
+): ReaderArticle {
   return {
+    // `ArticleDTO` narrows `kicker`/`section` to required strings, so the
+    // spread above already carries the desk's own values (PRD-102).
     ...articleListItemToArticle(dto, fmt, t),
+    // PRD-102 — the standfirst under the headline. The dek arrives with the
+    // spread; `body` below overwrites the stand-in paragraph built from it,
+    // which is why the dek now travels as its own field.
+    standfirst: dto.standfirst.trim() || undefined,
     authorBio: authorBio ?? "",
     body: dto.body
       .split(/\n{2,}/)
@@ -468,15 +499,34 @@ function stagesFor(status: SubmissionStatus): Pitch["stages"] {
 }
 
 /**
+ * Whether the member can still pull this pitch back (PRD-129).
+ *
+ * Mirrors the server rule on the withdraw endpoint: only a pitch the desk has
+ * not answered yet. `decision` is checked first because it is the desk's answer
+ * even when `status` has not caught up with it — without that, a declined
+ * submission would keep offering a button the backend replies to with a 409.
+ */
+function isWithdrawable(dto: StorySubmissionDTO): boolean {
+  if (dto.decision !== null) return false;
+  return dto.status === "submitted" || dto.status === "in_review";
+}
+
+/**
  * `StorySubmissionResponse` -> the tracker's `Pitch` card. The backend is
  * read + one write only (no moderation/editorial workflow — see
  * `story-submissions.service.ts`), so there's no live analogue for the
  * mock's editor notes/outline/messaging actions; those stay absent rather
  * than fabricated.
+ *
+ * The one action a live card does carry is Withdraw, and only while the desk
+ * has not decided (PRD-129). A decided pitch gets no withdraw affordance at
+ * all: there is nothing the member can do about a decision, so rendering the
+ * control and then refusing it would only be a tease.
  */
 export function submissionToPitch(
   dto: StorySubmissionDTO,
   fmt: Formatters,
+  t: TFunction,
 ): Pitch {
   const pitchPreview =
     dto.pitch.length > 80 ? `${dto.pitch.slice(0, 77).trimEnd()}…` : dto.pitch;
@@ -486,15 +536,25 @@ export function submissionToPitch(
     status: PITCH_STATUS[dto.status],
     statusLabelKey: PITCH_STATUS_LABEL_KEY[dto.status],
     type: dto.format,
-    meta: [pitchPreview, `Submitted ${formatDayMonthYear(dto.createdAt, fmt)}`],
+    // DES-100 — `meta` is rendered verbatim by `PitchCard`, so the "Submitted"
+    // half is chrome and takes `t()`. The date itself stays locale-formatted
+    // through `fmt`.
+    meta: [
+      pitchPreview,
+      t("magazine:pitchTracker.card.submittedOn", {
+        date: formatDayMonthYear(dto.createdAt, fmt),
+      }),
+    ],
     stages: stagesFor(dto.status),
-    // Read-only in live: the story-submissions backend is read + one write —
-    // there's no submission-detail route to open ("View pitch" would route to a
-    // coming-soon stub, P2-17) and no withdraw endpoint (a "Withdraw" would only
-    // mutate local state and reappear on reload, P3-5). So the live card carries
-    // no actions rather than dead affordances. Demo mode keeps its own
-    // action-rich `PITCHES` registry (see `pitchTracker.data`).
-    actions: [],
+    // Withdraw is the live card's only action, and only while the pitch is
+    // still open (see `isWithdrawable`). Everything else the mock offers stays
+    // absent: there is still no submission-detail route to open ("View pitch"
+    // would route to a coming-soon stub, P2-17), and a dead affordance is worse
+    // than none. Demo mode keeps its own action-rich `PITCHES` registry (see
+    // `pitchTracker.data`).
+    actions: isWithdrawable(dto)
+      ? [{ labelKey: "magazine:pitchTracker.card.withdrawCta", withdraw: true }]
+      : [],
     dimmed: dto.status === "rejected",
   };
 }

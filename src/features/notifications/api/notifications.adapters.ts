@@ -236,6 +236,18 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // The reviewed thing is still one click away through `sourceHref`, which
   // resolves to the business page the reply is published on.
   "review_replied",
+  // The magazine desk's message thread always carries its author (the editor,
+  // or the writer answering them) as `payload.authorId`, resolved server-side
+  // into the standard `actor` field. It is the one of the four desk kinds that
+  // earns a named variant: the backend's payload allowlist has no entry for it,
+  // so this row has no piece title to name and `{name}` is the only thing it
+  // can say. The three PRD-121 kinds deliberately stay OUT of this set for the
+  // mirror-image reason — `NotificationItem` interpolates `{name}` and nothing
+  // else into a `textNamed` string, and naming the PIECE is what makes those
+  // rows useful to a writer with several open, so their generic `.text` (which
+  // carries `{title}`) wins. Their editor is still named by the avatar and the
+  // profile link beside the row.
+  "magazine_piece_message",
 ]);
 
 export function notificationDtoToView(
@@ -418,8 +430,41 @@ export function notificationDtoToView(
     ];
   }
 
+  // `persona_update` (PRD-208): one action, straight to the persona whose new
+  // work this row is about. Same contract as `subprofile_credit` above — the
+  // deep link is resolved server-side and a missing or malformed one drops the
+  // action rather than rendering a broken href, so the row still reads as a
+  // notification with no dead link on it.
+  if (dto.type === "persona_update") {
+    const deepLink = (dto.payload as { deepLink?: unknown } | null)?.deepLink;
+    if (typeof deepLink === "string" && deepLink) {
+      view.actions = [
+        {
+          label: t("notifications:actions.seeTheWork"),
+          variant: "primary",
+          href: deepLink,
+        },
+      ];
+    }
+  }
+
   return view;
 }
+
+/**
+ * Where each resource-listing category is read by the public (PRD-269).
+ *
+ * The backend's `resource_directory` deep link carries a listing CATEGORY
+ * rather than an id, because `GET /resources/listings` returns a small curated
+ * set that these two pages render inline and there is no per-listing page to
+ * open. Keyed by the backend's `ResourceListingCategory` values, which are a
+ * closed Postgres enum, so a third category would arrive here as a miss and
+ * yield no href rather than a wrong one.
+ */
+const RESOURCE_DIRECTORY_ROUTES: Record<string, string | undefined> = {
+  legal_aid: routes.legal,
+  sexual_health_testing: routes.sexualHealth,
+};
 
 /**
  * Deep-link to the thread/discussion a notification originated from, built
@@ -509,6 +554,53 @@ function sourceHrefFromPayload(
       ? `${communityPath(communitySlug)}?tab=modtools&mod=support`
       : undefined;
   }
+  // PRD-121, the three desk rows that go to a piece's WRITER. Keyed on `type`
+  // and placed above the generic branches for a reason that would otherwise
+  // bite silently: all three carry `source: "magazine"`, and that value already
+  // means "a shipped issue" further down, where it resolves to
+  // `/magazine/issue/:number` from an `issueNumber` these payloads do not have.
+  // Falling through would therefore hand a writer no link at all, which is the
+  // dead end this row exists to close.
+  //
+  // A commission and a stage change go to the writer's own workspace: it is the
+  // one desk surface a writer can open, and it holds the assignment, the brief,
+  // the agreed terms and the editor thread for the piece the row is about.
+  if (
+    type === "magazine_piece_commissioned" ||
+    type === "magazine_piece_stage_changed"
+  ) {
+    return routes.magazineWriter;
+  }
+  // A published piece goes to the PIECE, not the workspace: `payload.href` is
+  // the reader path it just went live at (`/magazine/article?id=<slug>` or
+  // `/magazine/deck?id=<slug>`, built server-side by `toPiecePublicHref`), and
+  // "your piece is live" that does not open the live piece is a row that makes
+  // the reader hunt for their own work.
+  //
+  // Validated before use rather than trusted: it is a server-written value, but
+  // this is the only payload field on the whole surface that becomes a
+  // destination verbatim, so it has to be an app-relative path. A protocol-
+  // relative `//host` would leave the app entirely. Anything else falls back to
+  // the workspace, which still reaches the piece in a click.
+  if (type === "magazine_piece_published") {
+    const href = payload?.href;
+    const isInAppPath =
+      typeof href === "string" &&
+      href.startsWith("/") &&
+      !href.startsWith("//");
+    return isInAppPath ? href : routes.magazineWriter;
+  }
+  // `magazine_piece_message` deliberately resolves NO destination, the same way
+  // `intake_reviewed` below does, and it is the one gap here worth stating
+  // plainly. The row reaches EITHER party (an editor messaging their writer, or
+  // that writer answering), and the thread lives on a different surface for
+  // each: the writer reads it in their workspace, the editor reads it on the
+  // piece record at `/magazine/editor/piece/:id`. The payload says which piece
+  // (`pieceId`) nowhere and which ROLE the recipient holds nowhere, because the
+  // backend's `PAYLOAD_ALLOWLIST` has no entry for this type, so both fields
+  // are stripped before the client sees them. Guessing would send half of these
+  // rows to a workspace that does not hold the thread. The copy still names
+  // what happened and who said it, which is what was missing entirely before.
   if (!payload) return undefined;
   if (payload.source === "forum") {
     const threadSlug = payload.threadSlug;
@@ -523,6 +615,26 @@ function sourceHrefFromPayload(
     return typeof postId === "string" && postId
       ? communityPostPath(communitySlug, postId)
       : communityPath(communitySlug);
+  }
+  // PRD-221. A mention written inside a DM or a group thread. `/messages` is a
+  // single route, so the conversation is named by the `?c=` param the inbox's
+  // own deep-link effect (`useMessageDeepLinks`) already honours, and `&m=`
+  // scrolls to and highlights the message itself once the thread is open. The
+  // same destination the push now opens, built from the same two ids.
+  //
+  // Without this the row fell through to the actor branch and opened the
+  // SENDER'S PROFILE: the member was told they were named in a message and
+  // landed on a person instead of on what was said. A payload missing the
+  // conversation id yields no href rather than the bare inbox, which would be
+  // a link that answers nothing.
+  if (payload.source === "message") {
+    const conversationId = payload.conversationId;
+    if (typeof conversationId !== "string" || !conversationId) return undefined;
+    const messageId = payload.messageId;
+    const conversationParam = encodeURIComponent(conversationId);
+    return typeof messageId === "string" && messageId
+      ? `${routes.messages}?c=${conversationParam}&m=${encodeURIComponent(messageId)}`
+      : `${routes.messages}?c=${conversationParam}`;
   }
   // A real cohost invite (SDD 2026-08-18 "cohost invite flow") has its own
   // `source` value, distinct from plain event/event_rsvp notifications. It
@@ -557,6 +669,55 @@ function sourceHrefFromPayload(
     return typeof listingSlug === "string" && listingSlug
       ? businessPath(listingSlug)
       : undefined;
+  }
+  // PRD-240/242/244. Housing. This branch did not exist before the lifecycle
+  // work, which is why `housing_listing_decision` and `housing_listing_match`
+  // both shipped with a bell row that opened nothing: the backend has emitted
+  // `source: 'housing'` since LOC-01 and nothing here resolved it.
+  //
+  // The destination depends on what happened, so the type is read before the
+  // slug. A VIEWING row opens the viewings desk rather than the listing, because
+  // the thing the member has to act on (accept, propose another time, cancel) is
+  // there and nowhere else. A JOIN decision opens the co-op or the group. Every
+  // other housing row opens the listing itself.
+  if (payload.source === "housing") {
+    if (
+      type === "housing_viewing_requested" ||
+      type === "housing_viewing_decided" ||
+      type === "housing_viewing_cancelled"
+    ) {
+      return routes.housingViewings;
+    }
+    if (type === "housing_join_decided") {
+      const joinSlug = payload.slug;
+      if (typeof joinSlug !== "string" || !joinSlug) return undefined;
+      // Only a GROUP has a per-slug page. The co-op surface is a single page
+      // listing every co-op, so a coop row opens that rather than guessing at a
+      // route that does not exist.
+      return payload.kind === "group"
+        ? `${routes.housingGroups}/${joinSlug}`
+        : routes.housingCoop;
+    }
+    const housingSlug = payload.slug;
+    return typeof housingSlug === "string" && housingSlug
+      ? `${routes.housing}/${housingSlug}`
+      : undefined;
+  }
+  // PRD-269. An approved resource suggestion now publishes a real directory
+  // listing in the same transaction as the decision, so "your suggestion was
+  // accepted" opens the public page that listing is on rather than the index
+  // the member sent it from.
+  //
+  // The slug carries the listing's CATEGORY, not an id, and that is not a
+  // shortcut: `GET /resources/listings` returns a small curated set which the
+  // two category pages render inline, so there is no per-listing page in the
+  // resource directory to link to. An unknown category yields no href rather
+  // than a guess, and the row still reads.
+  if (payload.source === "resource_directory") {
+    const listingCategory = payload.listingSlug;
+    return RESOURCE_DIRECTORY_ROUTES[
+      typeof listingCategory === "string" ? listingCategory : ""
+    ];
   }
   // Account and security rows (ID-06). Each goes to the page where the member
   // can DO the thing the row is about, which is the whole reason to notify:

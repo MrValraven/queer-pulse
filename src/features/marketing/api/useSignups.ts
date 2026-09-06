@@ -7,17 +7,22 @@ import { DEMO_POSTER_OPPORTUNITY_SLUG } from "../volunteerDemoPoster";
 import { VOLUNTEER_APPLICANTS_DEMO } from "../volunteerApplicants.data";
 
 /**
- * Poster-only signup roster (GET /volunteering/:slug/signups). Only enabled
- * when the viewer is the poster. Demo mode serves a static mock deck for the
- * one designated demo-poster opportunity (see `volunteerDemoPoster.ts`), so
- * the roster card and manage-applicants dashboard are reachable standalone;
+ * The applicant roster (GET /volunteering/:slug/signups). Only enabled for the
+ * review tier — the poster, or an owner/mod of the community the opportunity
+ * is attributed to (`OpportunityDetailDTO.canReviewApplicants`), which is the
+ * same tier the endpoint itself guards on. Demo mode serves a static mock deck
+ * for the one designated demo-poster opportunity (see `volunteerDemoPoster.ts`),
+ * so the roster card and manage-applicants dashboard are reachable standalone;
  * every other slug resolves to an empty list.
  */
-export function useSignups(slug: string | undefined, isPoster: boolean) {
+export function useSignups(
+  slug: string | undefined,
+  canReviewApplicants: boolean,
+) {
   const { demoMode } = useDemoMode();
   return useQuery<SignupRow[]>({
     queryKey: opportunityKeys.signups(slug, demoMode),
-    enabled: Boolean(slug) && isPoster,
+    enabled: Boolean(slug) && canReviewApplicants,
     queryFn: async () => {
       if (demoMode) {
         if (slug !== DEMO_POSTER_OPPORTUNITY_SLUG) return [];

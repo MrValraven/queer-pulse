@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   shipIssue as sendShipIssue,
   updateCover as sendUpdateCover,
@@ -30,6 +31,7 @@ export function useIssueMutations(number: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   function invalidateIssue(): void {
     void queryClient.invalidateQueries({
@@ -41,7 +43,7 @@ export function useIssueMutations(number: string) {
   const saveRunOrder = useMutation<void, Error, UpdateRunOrderDto>({
     mutationFn: async (body) => {
       if (demoMode) {
-        showToast("Running order saved", "success");
+        showToast(t("magazine:issue.toast.runOrderSaved"), "success");
         return;
       }
       await sendUpdateRunOrder(number, body);
@@ -49,11 +51,14 @@ export function useIssueMutations(number: string) {
     onSuccess: invalidateIssue,
   });
 
-  /** PATCH /magazine/admin/issues/:number/digest — update the members' digest. */
+  /** PATCH /magazine/admin/issues/:number/digest — update the curation behind
+   *  the issue's public "In this issue" panel. The `digest` path and key
+   *  prefix are historical (CON-05 removed the members' email); the toast
+   *  names the panel, since that is the surface an editor is looking at. */
   const saveDigest = useMutation<void, Error, UpdateDigestDto>({
     mutationFn: async (body) => {
       if (demoMode) {
-        showToast("Digest saved", "success");
+        showToast(t("magazine:issue.toast.issuePanelSaved"), "success");
         return;
       }
       await sendUpdateDigest(number, body);
@@ -65,7 +70,7 @@ export function useIssueMutations(number: string) {
   const saveCover = useMutation<void, Error, UpdateCoverDto>({
     mutationFn: async (body) => {
       if (demoMode) {
-        showToast("Cover saved", "success");
+        showToast(t("magazine:issue.toast.coverSaved"), "success");
         return;
       }
       await sendUpdateCover(number, body);
@@ -104,7 +109,7 @@ export function useIssueMutations(number: string) {
   const ship = useMutation<IssueProductionDto | void, Error, void>({
     mutationFn: async () => {
       if (demoMode) {
-        showToast("Issue shipped", "success");
+        showToast(t("magazine:issue.toast.shipped"), "success");
         return;
       }
       return sendShipIssue(number);
@@ -123,7 +128,7 @@ export function useIssueMutations(number: string) {
   >({
     mutationFn: async ({ pieceId, blurb }) => {
       if (demoMode) {
-        showToast("Contents blurb saved", "success");
+        showToast(t("magazine:issue.toast.contentsBlurbSaved"), "success");
         return;
       }
       await sendUpdatePieceContentsBlurb(pieceId, { contentsBlurb: blurb });

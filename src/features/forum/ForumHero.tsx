@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { ForumSearch } from "./ForumSearch";
+import { ForumDraftResumeNotice } from "./ForumDraftResumeNotice";
 import styles from "./ForumPage.module.css";
 
 export function ForumHero({
@@ -47,6 +48,9 @@ export function ForumHero({
           </Button>
         </div>
         <ForumSearch value={q} onChange={onSearch} />
+        {/* PRD-165 — an unsent draft is visible on the forum itself, not only
+            on /account/drafts. Renders nothing when there is none. */}
+        <ForumDraftResumeNotice onResume={onNewPost} />
       </div>
     </section>
   );

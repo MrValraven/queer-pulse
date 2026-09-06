@@ -15,15 +15,51 @@ import {
   LANGS,
   MAX_RECURRENCE_OCCURRENCES,
   MIN_RECURRENCE_OCCURRENCES,
+  TYPES,
 } from "./createGathering.data";
 
-/** What the wizard may start out with, rather than empty. Today that is only
- *  the community a gathering is filed to, seeded from the
- *  `/create-gathering?community=<slug>` deep link (see `createGatheringPath`
- *  in data.ts) so a community's Events tab can offer "host a gathering here".
- *  Read once, on mount: the host can still change or clear it in the wizard. */
+/**
+ * Everything "Duplicate this gathering" copies forward (PRD-190).
+ *
+ * NOT the date, the time or the two publish confirmations. A duplicate exists
+ * precisely because the next one is on a different night, and the Code of Care
+ * and accessibility-accuracy pledges are statements the host makes about THIS
+ * gathering — re-using a tick from a previous one would turn a promise into a
+ * default.
+ */
+export interface GatheringFormSeed {
+  type: string;
+  title: string;
+  description: string;
+  hood: string;
+  venue: string;
+  venueListingId: string | null;
+  venueListing: { slug: string; name: string } | null;
+  address: string;
+  directions: string;
+  onlineUrl: string;
+  capacity: string;
+  language: string;
+  cost: string;
+  accessibilityAnswers: AccessibilityAnswerMap;
+  accessNotes: string;
+  audienceScope: EventVisibility;
+  communitySlug: string;
+}
+
+/** What the wizard may start out with, rather than empty.
+ *
+ *  `communitySlug` is seeded from the `/create-gathering?community=<slug>`
+ *  deep link (see `createGatheringPath` in data.ts) so a community's Events tab
+ *  can offer "host a gathering here". Read once, on mount: the host can still
+ *  change or clear it in the wizard.
+ *
+ *  `seed` is the duplicate flow (PRD-190) and arrives ASYNCHRONOUSLY — the
+ *  source gathering has to be fetched first — so unlike `communitySlug` it is
+ *  applied whenever a new one lands rather than only on mount. */
 export interface GatheringFormInitial {
   communitySlug?: string;
+  seed?: GatheringFormSeed;
 }
 
 /** All wizard form state + helpers, shared by the page and its step components. */
@@ -98,6 +134,10 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
   };
   const [address, setAddress] = useState("");
   const [directions, setDirections] = useState("");
+  // The video link for an online gathering (PRD-182). Only ever sent when the
+  // host picked the "Online" neighbourhood — a gathering with a door has an
+  // address, not a link, and `formToCreateEventDto` drops this for one.
+  const [onlineUrl, setOnlineUrl] = useState("");
   const [cap, setCap] = useState("14");
   const [lang, setLang] = useState(LANGS[0]!.value);
   // Free-text door price (LOC-18): "5 to 15 EUR sliding scale", "pay what you
@@ -113,6 +153,42 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
   const [accessibilityAnswers, setAccessibilityAnswers] =
     useState<AccessibilityAnswerMap>(emptyAccessibilityAnswers);
   const [accessNotes, setAccessNotes] = useState("");
+  // Apply a duplicate's seed the moment it lands (PRD-190). Adjusted during
+  // render, React's documented way to reset state when an input changes, keyed
+  // on the seed object's own identity so it applies exactly once per fetch and
+  // never overwrites an edit the host has since made.
+  const [appliedSeed, setAppliedSeed] = useState<GatheringFormSeed | undefined>(
+    undefined,
+  );
+  if (initial.seed && initial.seed !== appliedSeed) {
+    setAppliedSeed(initial.seed);
+    setType(initial.seed.type);
+    // The icon is part of the same pick, so it is resolved from the canonical
+    // type list rather than left null — the review step renders it, and a
+    // duplicate landing there with a missing glyph would read as broken.
+    const seededType = initial.seed.type;
+    setTypeIcon(
+      TYPES.find((gatheringType) => gatheringType.value === seededType)?.icon ??
+        null,
+    );
+    setTitle(initial.seed.title);
+    setDescription(initial.seed.description);
+    setHood(initial.seed.hood);
+    setVenue(initial.seed.venue);
+    setVenueListingId(initial.seed.venueListingId);
+    setVenueListing(initial.seed.venueListing);
+    setAddress(initial.seed.address);
+    setDirections(initial.seed.directions);
+    setOnlineUrl(initial.seed.onlineUrl);
+    setCap(initial.seed.capacity);
+    setLang(initial.seed.language);
+    setCost(initial.seed.cost);
+    setAccessibilityAnswers(initial.seed.accessibilityAnswers);
+    setAccessNotes(initial.seed.accessNotes);
+    setAudienceScope(initial.seed.audienceScope);
+    setCommunitySlugValue(initial.seed.communitySlug);
+  }
+
   // Two publish-gating confirmations (Code of Care + accessibility accuracy)
   // — matches `CONFIRM_CHECK_KEYS.length` (createGathering.data.ts). The
   // third, pricing-honesty confirmation was dropped along with the pricing
@@ -165,6 +241,12 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
         !Number.isNaN(endUntilDate.getTime()) &&
         endUntilDate.getTime() > startAt.getTime());
 
+  // An online gathering's join link has to be a real absolute http(s) URL: the
+  // backend's `@IsUrl({ require_protocol: true })` rejects anything else, so
+  // catching it here turns a 400 on submit into a hint under the field. Empty
+  // is valid — a host can publish first and add the link later.
+  const onlineUrlValid = isValidJoinLink(onlineUrl);
+
   // Has the organiser entered anything worth warning them about losing? Only
   // fields they actually filled count — the pre-seeded defaults (time, capacity,
   // language) don't, so an untouched wizard never prompts on exit.
@@ -177,6 +259,7 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     venue.trim().length > 0 ||
     address.trim().length > 0 ||
     directions.trim().length > 0 ||
+    onlineUrl.trim().length > 0 ||
     accessNotes.trim().length > 0 ||
     cost.trim().length > 0 ||
     answeredAccessibilityCount > 0 ||
@@ -224,6 +307,9 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     setAddress,
     directions,
     setDirections,
+    onlineUrl,
+    setOnlineUrl,
+    onlineUrlValid,
     cap,
     setCap,
     lang,
@@ -246,3 +332,21 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
 }
 
 export type GatheringForm = ReturnType<typeof useGatheringForm>;
+
+/**
+ * Is this a join link the backend will accept?
+ *
+ * Mirrors `CreateEventDto.onlineUrl`'s `@IsUrl({ protocols: ['http','https'],
+ * require_protocol: true })`. An empty string is valid: the link is optional,
+ * and a host who has not booked the room yet should still be able to publish.
+ */
+export function isValidJoinLink(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}

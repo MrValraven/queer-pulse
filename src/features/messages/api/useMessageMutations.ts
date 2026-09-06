@@ -6,6 +6,7 @@ import {
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
+  newestCachedMessageId,
   patchConversationPreview,
   patchConversationRead,
   upsertMessage,
@@ -276,14 +277,31 @@ export function useUpdateGroup() {
  *  in place rather than invalidating — the server frame carries no new data an
  *  invalidate would have picked up (we already know it's now read: we're the
  *  one who just read it), and the counterpart's `read` socket frame carries no
- *  cache-worthy state either (see `realtime.ts`'s `message:new`/`read` notes). */
+ *  cache-worthy state either (see `realtime.ts`'s `message:new`/`read` notes).
+ *
+ *  Sends `upToMessageId` — the newest message this tab has actually fetched
+ *  into its OWN thread cache, which is exactly what `MessageArea` renders
+ *  from (see `messageCache.ts`) — instead of the caller's wall clock. A
+ *  wall-clock `lastReadAt` can stamp a message "read" that lands in the gap
+ *  between this tab's last render and this POST, before the reader ever saw
+ *  it; an id-based watermark can't, because the server derives the watermark
+ *  from that exact message's own `created_at` (see
+ *  `ConversationsService.markRead`). Falls back to the legacy wall-clock form
+ *  only when nothing is cached yet for this thread (e.g. a just-opened
+ *  conversation whose history hasn't loaded into this tab at all) — the same
+ *  "mark fully caught up" intent `openThread` already relies on, just without
+ *  a more precise id to send instead. */
 export function useMarkRead() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: async (conversationId) => {
       if (demoMode || !conversationId) return;
-      await markConversationRead(conversationId, new Date().toISOString());
+      const upToMessageId = newestCachedMessageId(queryClient, conversationId);
+      await markConversationRead(conversationId, {
+        upToMessageId: upToMessageId ?? undefined,
+        lastReadAt: upToMessageId ? undefined : new Date().toISOString(),
+      });
     },
     onSuccess: (_result, conversationId) => {
       if (demoMode) return;

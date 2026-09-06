@@ -39,6 +39,7 @@ export const forum: Catalog = {
   "replySort.oldest": "Mais antigas",
   "replySort.newest": "Mais recentes",
   "replySort.mostHelpful": "Mais úteis",
+  "replySort.groupAria": "Ordenar as respostas",
 
   // ── Hero da ForumPage ───────────────────────────────────────────────────
   "hero.title": "A <em>praça</em> pública",
@@ -104,11 +105,13 @@ export const forum: Catalog = {
   "search.placeholder": "Pesquisar no fórum…",
   "search.ariaLabel": "Pesquisar no fórum",
   "search.clearAria": "Limpar pesquisa",
+  // PRD-164: a caixa procura agora nos títulos E no texto de qualquer resposta.
   "search.hint":
-    "Pesquisa apenas nos títulos dos tópicos. O texto das publicações e respostas fica de fora.",
+    "Pesquisa nos títulos dos tópicos e nas respostas dentro deles, para que uma resposta escondida num comentário também apareça. Só no fórum.",
 
   // ── ForumThreadList ─────────────────────────────────────────────────────
-  "threadList.top": "Melhores",
+  // `top` ordena agora pelos votos dos últimos 30 dias.
+  "threadList.top": "Melhores do mês",
   "threadList.new": "Recentes",
   "threadList.active": "Ativos",
   "threadList.unanswered": "Sem resposta",
@@ -128,10 +131,16 @@ export const forum: Catalog = {
     "A praça pública está aberta a todas as pessoas da comunidade. Sê quem começa a conversa.",
   "threadList.emptyAll.action": "Escrever uma publicação",
   "threadList.pinnedBadge": "Fixado",
+  "threadList.withdrawnBadge": "Retirada",
   "threadList.upvoteAria": "Votar a favor",
   "threadList.removeUpvoteAria": "Remover voto",
   "threadList.loadingMore": "A carregar…",
   "threadList.loadMoreCta": "Carregar mais publicações",
+  "threadList.unreadBadge_one": "{formatted} nova",
+  "threadList.unreadBadge_other": "{formatted} novas",
+  "threadList.unreadAria_one": "{formatted} resposta que ainda não leste",
+  "threadList.unreadAria_other": "{formatted} respostas que ainda não leste",
+  "threadList.unreadCap": "99+",
 
   // ── Frase partilhada de contagem de respostas ────────────────────────────
   repliesCount_one: "{formatted} resposta",
@@ -169,6 +178,8 @@ export const forum: Catalog = {
   "threadOp.report": "Denunciar",
   "threadOp.voteAria": "Votar a favor desta publicação",
   "threadOp.unvoteAria": "Remover o teu voto",
+  "threadOp.unavailable":
+    "A publicação inicial não está disponível para ti. As respostas abaixo continuam aqui para leres.",
 
   // ── Tópico fechado (a moderação fechou as respostas) ────────────────────
   "locked.title": "Este tópico está fechado a novas respostas",
@@ -249,6 +260,7 @@ export const forum: Catalog = {
 
   // ── PostActionsMenu (⋯ overflow menu) ────────────────────────────────────
   "postMenu.edit": "Editar",
+  "postMenu.moveCategory": "Mover para outra categoria",
   "postMenu.delete": "Eliminar",
   "postMenu.restore": "Restaurar",
   "postMenu.history": "Ver histórico de edições",
@@ -285,6 +297,24 @@ export const forum: Catalog = {
   "deleteConfirm.cancel": "Manter",
   "deleteConfirm.deleting": "A eliminar…",
 
+  // ── Retirar um tópico inteiro (PRD-160) ──────────────────────────────────
+  "deleteThread.title": "Retirar esta publicação?",
+  "deleteThread.body":
+    "Sai o tópico inteiro: o título, a tua publicação inicial e a ligação que as pessoas seguem para chegar aqui. As respostas continuam escritas onde estão, e ninguém volta a chegar-lhes pelo fórum. Não podes desfazer isto.",
+  "deleteThread.confirm": "Retirar",
+  "deleteThread.cancel": "Manter",
+  "deleteThread.deleting": "A retirar…",
+
+  // ── Mudar um tópico de categoria (PRD-163) ───────────────────────────────
+  "moveCategory.title": "Mudar esta publicação de categoria",
+  "moveCategory.body":
+    "As pessoas encontram o fórum por categoria, por isso uma publicação arrumada no sítio certo é uma publicação que recebe resposta. Escolhe onde ela pertence.",
+  "moveCategory.fieldLabel": "Categoria",
+  "moveCategory.save": "Mudar",
+  "moveCategory.saving": "A mudar…",
+  "moveCategory.cancel": "Deixar aqui",
+  "moveCategory.badgeAria": "Tirar esta publicação de {category}",
+
   // ── Edit history modal ────────────────────────────────────────────────────
   "history.title": "Histórico de edições",
   "history.empty": "Não há versões anteriores para mostrar.",
@@ -294,6 +324,8 @@ export const forum: Catalog = {
   // ── Toasts (edit / delete / restore / lock / pin) ─────────────────────────
   "toast.editSaved": "A tua edição está publicada.",
   "toast.deleted": "Publicação eliminada.",
+  "toast.threadDeleted": "Essa publicação já não está no fórum.",
+  "toast.categoryMoved": "Movida para {category}.",
   "toast.restored": "Publicação restaurada.",
   "toast.threadLocked": "Tópico fechado a novas respostas.",
   "toast.threadUnlocked": "Tópico reaberto.",
@@ -342,4 +374,18 @@ export const forum: Catalog = {
   "draft.restored": "Rascunho recuperado",
   "draft.threadKind": "PUBLICAÇÃO",
   "draft.replyKind": "RESPOSTA",
+  // Row title for an autosaved inline nested reply, so the drafts list says
+  // who the half-written answer was for (PRD-166).
+  "draft.inlineReplyTitle": "Resposta a {name}",
+  // Row title for a saved post the member has not titled yet: they picked a
+  // community or some tags before writing anything.
+  "draft.untitledThreadTitle": "Publicação por acabar",
+
+  // ── The forum's own sight of an unsent draft (PRD-165) ────────────────────
+  "draftNotice.title": "A tua publicação por acabar continua aqui",
+  "draftNotice.resumeCta": "Retomar",
+
+  // ── Cartão de pré-visualização de link numa publicação (PRD-171) ─────────
+  "linkPreview.aria": "Pré-visualização do link: {title}",
+  "linkPreview.ariaGeneric": "Pré-visualização de link de {site}",
 };

@@ -141,6 +141,9 @@ const BASE = {
   preciseLongitude: null,
   addressLine: null,
   locationPrecision: "area",
+  // A moderator always passes the address gate; these fixture rows simply have
+  // no address on file, which is exactly the unlocked-but-area-only case.
+  isLocationUnlocked: true,
   decidedBy: null,
 } as const;
 
@@ -176,6 +179,7 @@ export const DEMO_HOUSING_REVIEW_QUEUE: AdminHousingListingDTO[] = [
     blurb: "Whole flat, furnished, ready to move into this week.",
     area: "Alvalade",
     rentEuros: 380,
+    depositEuros: null,
     accessibilityInfo: "",
     listerKind: "member",
     availableFrom: null,
@@ -224,6 +228,7 @@ export const DEMO_HOUSING_REVIEW_QUEUE: AdminHousingListingDTO[] = [
     blurb: "A calm room in a family flat with a small garden.",
     area: "Benfica",
     rentEuros: 520,
+    depositEuros: 520,
     accessibilityInfo: "Second floor, lift in the building.",
     listerKind: "member",
     availableFrom: "2026-10-01",
@@ -266,6 +271,7 @@ export const DEMO_HOUSING_REVIEW_QUEUE: AdminHousingListingDTO[] = [
     blurb: "A double room in a three-person flat two streets from the metro.",
     area: "Arroios",
     rentEuros: 610,
+    depositEuros: 1220,
     billsIncluded: true,
     accessibilityInfo: "Third floor, no lift, one flight per landing.",
     listerKind: "member",
@@ -314,6 +320,7 @@ export const DEMO_HOUSING_REVIEW_QUEUE: AdminHousingListingDTO[] = [
     blurb: "A compact studio on a quiet street, five minutes from the metro.",
     area: "Anjos",
     rentEuros: 840,
+    depositEuros: 840,
     bedrooms: 0,
     accessibilityInfo: "Ground floor, step-free entrance.",
     listerKind: "member",

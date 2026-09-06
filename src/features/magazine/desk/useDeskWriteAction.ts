@@ -24,10 +24,18 @@ export interface UseDeskWriteActionParams {
   activeMe: string;
   /** The editor directory, for resolving `activeMe` to a display byline. */
   editors: Editor[];
-  /** The section list behind the desk's filters. The first entry is the
-   *  starting section, the same default the commission modal uses; it is
-   *  changed in the editor's meta rail like every other piece of metadata. */
+  /** The section taxonomy from `useMagazineSections` (seeded rows in live
+   *  mode). The first entry is the starting section, the same default the
+   *  commission modal uses; it is changed in the editor's meta rail like
+   *  every other piece of metadata. */
   sections: { name: string }[];
+  /** PRD-130 — the taxonomy fetch is still in flight, so the list is empty
+   *  for a reason that will pass on its own. Kept apart from the error case
+   *  so the editor is told to wait rather than told something broke. */
+  areSectionsLoading: boolean;
+  /** PRD-130 — the taxonomy fetch failed. Starting a draft anyway would
+   *  stamp an empty section the backend rejects. */
+  hasSectionsError: boolean;
   /** The selected issue — a new draft files onto it on the Issue track. */
   issue: Issue;
   /** The active desk track, mirroring how the commission modal defaults. */
@@ -48,6 +56,8 @@ export function useDeskWriteAction({
   activeMe,
   editors,
   sections,
+  areSectionsLoading,
+  hasSectionsError,
   issue,
   track,
   pieceMutations,
@@ -65,9 +75,25 @@ export function useDeskWriteAction({
       return;
     }
 
+    // PRD-130 — the section list is live data now, so "empty" has three
+    // meanings and each earns different copy: still arriving, failed, or a
+    // magazine with no seeded sections at all. Starting the draft regardless
+    // would stamp an empty section, which the backend rejects and which the
+    // Issue plan could never account for.
     const section = sections[0]?.name ?? "";
     if (!section) {
-      showToast(translate("magazine:desk.write.noSection"), "error");
+      if (areSectionsLoading) {
+        showToast(translate("magazine:desk.write.sectionsLoading"), "info");
+        return;
+      }
+      showToast(
+        translate(
+          hasSectionsError
+            ? "magazine:desk.write.sectionsUnavailable"
+            : "magazine:desk.write.noSection",
+        ),
+        "error",
+      );
       return;
     }
 

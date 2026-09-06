@@ -466,3 +466,38 @@
   gap: 12px;
   flex-wrap: wrap;
 }
+
+/* DES-170: the two option glyphs are react-icons now, and the pack paints from
+   `currentColor`, so the stroke colour that used to sit on each hand-authored
+   <svg> lives here instead. */
+
+/* `--text-strong` rather than `--plum`: identical in light, and it flips in
+   dark, where a raw `--plum` glyph would go near-invisible on a dark ground. */
+.optIconDefault .optIconSvg {
+  color: var(--text-strong);
+}
+
+.optIconDanger .optIconSvg {
+  color: var(--accent-ink);
+}
+
+/* Was an inline `marginTop: 12` on all three strip buttons. */
+.stripAction {
+  margin-top: 12px;
+}
+
+/* The "what happens" dots. These were colour strings in `deleteAccount.data`,
+   applied inline; `muted` was a raw `rgba(45,27,61,.3)`, which pins the plum
+   channels rather than reading the token and so stays dark in dark mode. */
+
+.whDotMuted {
+  background: rgba(var(--line-rgb), 0.3);
+}
+
+.whDotKeeps {
+  background: var(--jade);
+}
+
+.whDotLoses {
+  background: var(--accent-ink);
+}

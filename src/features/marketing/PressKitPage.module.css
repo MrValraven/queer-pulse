@@ -35,6 +35,14 @@
   font-weight: 600;
   text-decoration: none;
 }
+/* The published press-desk address (PRD-272). Carries the same weight the
+   `mailto:` link it replaced had, so the strip reads unchanged, but it is
+   plain selectable text rather than an affordance that leaves the app. */
+.contactEmail {
+  color: var(--text-strong);
+  font-weight: 600;
+  user-select: all;
+}
 
 .page {
   max-width: var(--maxw-page);

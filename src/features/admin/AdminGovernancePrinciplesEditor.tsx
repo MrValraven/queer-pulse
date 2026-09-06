@@ -1,9 +1,17 @@
 // queerpulse/src/features/admin/AdminGovernancePrinciplesEditor.tsx
 import { useState } from "react";
-import { Button, Select } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { AdminGovernancePrincipleRow } from "./AdminGovernancePrincipleRow";
+import {
+  EMPTY_AUTHORED_TEXT,
+  hasIncompleteAuthoredText,
+  PRINCIPLE_ICONS,
+  principleRowLabel,
+  SEEDED_PRINCIPLE_KEYS,
+} from "./adminGovernanceOverviewRows.utils";
 import { OverviewEditedBadge } from "./OverviewEditedBadge";
 import { OverviewEditorRow } from "./OverviewEditorRow";
 import { useOverviewRowReorder } from "./useOverviewRowReorder";
@@ -14,24 +22,8 @@ import type {
 } from "./api/adminGovernanceOverview.api";
 import styles from "./AdminGovernancePage.module.css";
 
-const PRINCIPLE_KEYS = [
-  "noSellingData",
-  "visibilityChoice",
-  "noAlgorithms",
-  "communityVoice",
-  "transparency",
-  "accessNotConditional",
-] as const;
-
-const PRINCIPLE_ICONS = [
-  "lock",
-  "eye",
-  "slash",
-  "message",
-  "book",
-  "accessible",
-] as const;
-
+/** PRD-265. The platform principles, editable — including principles nobody
+ *  had written when the bundle shipped. */
 export function AdminGovernancePrinciplesEditor({
   rows,
   meta,
@@ -52,27 +44,57 @@ export function AdminGovernancePrinciplesEditor({
   const dirty = JSON.stringify(draft) !== JSON.stringify(rows);
 
   const patch = (index: number, partial: Partial<PrincipleDTO>): void => {
-    setDraft((prev) =>
-      prev.map((row, i) => (i === index ? { ...row, ...partial } : row)),
+    setDraft((previous) =>
+      previous.map((row, rowIndex) =>
+        rowIndex === index ? { ...row, ...partial } : row,
+      ),
     );
   };
 
   const onRemove = (index: number): void => {
-    setDraft((prev) => prev.filter((_, i) => i !== index));
+    setDraft((previous) =>
+      previous.filter((_, rowIndex) => rowIndex !== index),
+    );
   };
 
-  const availableKeys = PRINCIPLE_KEYS.filter(
+  const availableKeys = SEEDED_PRINCIPLE_KEYS.filter(
     (key) => !draft.some((row) => row.key === key),
   );
-  const onAdd = (): void => {
+
+  const onAddAuthored = (): void => {
+    setDraft((previous) => [
+      ...previous,
+      {
+        title: EMPTY_AUTHORED_TEXT,
+        text: EMPTY_AUTHORED_TEXT,
+        icon: PRINCIPLE_ICONS[0],
+      },
+    ]);
+  };
+
+  const onRestoreSeeded = (): void => {
     const nextKey = availableKeys[0];
     if (!nextKey) return;
-    setDraft((prev) => [...prev, { key: nextKey, icon: PRINCIPLE_ICONS[0] }]);
+    setDraft((previous) => [
+      ...previous,
+      { key: nextKey, icon: PRINCIPLE_ICONS[0] },
+    ]);
   };
+
+  const hasIncompleteAuthoredRow = draft.some(
+    (row) => !row.key && hasIncompleteAuthoredText([row.title, row.text]),
+  );
 
   const onSave = () => {
     if (!dirty) {
       showToast(t("admin:governance.overview.edit.noChanges"), "info");
+      return;
+    }
+    if (hasIncompleteAuthoredRow) {
+      showToast(
+        t("admin:governance.overview.edit.needsBothLanguages"),
+        "error",
+      );
       return;
     }
     update.mutate(
@@ -106,33 +128,15 @@ export function AdminGovernancePrinciplesEditor({
       <div className={styles.ovList} ref={containerRef}>
         {draft.map((row, index) => (
           <OverviewEditorRow
-            key={row.key}
-            {...rowProps(
-              index,
-              t(`admin:governance.overview.principles.key.${row.key}`),
-            )}
+            key={index}
+            {...rowProps(index, principleRowLabel(row, t))}
             onRemove={() => onRemove(index)}
           >
-            <span className={styles.editLineLabel}>
-              {t(`admin:governance.overview.principles.key.${row.key}`)}
-            </span>
-            <div className={styles.ovField}>
-              <label
-                className={styles.ovFieldLabel}
-                id={`principle-icon-${index}`}
-              >
-                {t("admin:governance.overview.principles.field.icon")}
-              </label>
-              <Select
-                labelledBy={`principle-icon-${index}`}
-                value={row.icon}
-                onChange={(value) => patch(index, { icon: value ?? row.icon })}
-                options={PRINCIPLE_ICONS.map((icon) => ({
-                  value: icon,
-                  label: t(`admin:governance.overview.principles.icon.${icon}`),
-                }))}
-              />
-            </div>
+            <AdminGovernancePrincipleRow
+              row={row}
+              index={index}
+              onPatch={(partial) => patch(index, partial)}
+            />
           </OverviewEditorRow>
         ))}
       </div>
@@ -142,15 +146,26 @@ export function AdminGovernancePrinciplesEditor({
         {announcement}
       </p>
 
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onAdd}
-        disabled={availableKeys.length === 0}
-        className={styles.ovAddBtn}
-      >
-        {t("admin:governance.overview.edit.addRow")}
-      </Button>
+      <div className={styles.ovAddRow}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onAddAuthored}
+          className={styles.ovAddBtn}
+        >
+          {t("admin:governance.overview.principles.addPrinciple")}
+        </Button>
+        {availableKeys.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRestoreSeeded}
+            className={styles.ovAddBtn}
+          >
+            {t("admin:governance.overview.edit.restoreSeeded")}
+          </Button>
+        )}
+      </div>
 
       <div className={styles.ovFooter}>
         <span />

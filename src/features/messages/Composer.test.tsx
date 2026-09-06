@@ -37,3 +37,25 @@ it("grows the textarea height with content", () => {
   fireEvent.input(textarea, { target: { value: "line1\nline2\nline3" } });
   expect(textarea.style.height).toBe("84px");
 });
+
+it("renders a connection-request notice instead of the input for a thread the server flags replyRequiresConnection (PRD-220)", () => {
+  // e.g. a housing/flatmate enquiry that opened this DM cold — the ordinary
+  // send path 403s a reply from either side until the two connect, so the
+  // composer must not render as if a normal send would work.
+  const gatedConvo = {
+    ...convo,
+    slug: "sam-rivera",
+    replyRequiresConnection: true,
+  } as Conversation;
+  render(
+    <Composer
+      active={gatedConvo}
+      conversationId={gatedConvo.id}
+      onSend={() => {}}
+      blocked={false}
+    />,
+    { wrapper: TestProviders },
+  );
+  expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+  expect(screen.getByRole("status")).toBeInTheDocument();
+});

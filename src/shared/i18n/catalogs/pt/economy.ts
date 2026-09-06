@@ -144,7 +144,7 @@ export const economy: Catalog = {
   "salary.helpBody":
     "Ajuda a comunidade partilhando o que ganhas. Quantas mais entradas, mais útil isto se torna para todas as pessoas, sobretudo para quem está a começar a negociar.",
   "salary.submitLong": "Submeter o teu salário",
-  "salary.submitToast": "Submetido de forma anónima. Obrigada",
+  "salary.submitToast": "Submetido de forma anónima. Obrigade",
 
   // ── WorkHubPage ─────────────────────────────────────────────────────────
   "workHub.eyebrow": "O teu espaço de trabalho",
@@ -505,12 +505,19 @@ export const economy: Catalog = {
   "housing.filterBar.beds3": "3+",
   "housing.filterBar.availableBy": "Disponível até",
   "housing.filterBar.bills": "Despesas incluídas",
+  // PRD-250. Filtros que faltavam apesar de os dados já existirem.
+  "housing.filterBar.furnished": "Mobilado",
+  "housing.filterBar.pets": "Aceita animais",
   "housing.filterBar.accessibility": "Com info de acesso",
   "housing.filterBar.verified": "Só verificados",
   "housing.filterBar.flagsLabel": "Tem de ter",
   "housing.filterBar.chip.priceRange": "€{min}–€{max}",
   "housing.filterBar.chip.priceFrom": "A partir de €{min}",
   "housing.filterBar.chip.priceUpTo": "Até €{max}",
+  // PRD-250. `depositMax` é o aria-label do campo.
+  "housing.filterBar.deposit": "Caução",
+  "housing.filterBar.depositMax": "Caução máxima",
+  "housing.filterBar.chip.depositUpTo": "Caução até €{max}",
   "housing.filterBar.chip.beds": "{beds} quartos",
   "housing.filterBar.chip.availableBy": "Até {date}",
   "housing.map.ariaLabel": "Mapa de anúncios por bairro",
@@ -605,6 +612,8 @@ export const economy: Catalog = {
   "housingModal.charsCount_other": "{count} carateres",
   "housingModal.cancel": "Cancelar",
   "housingModal.done": "Concluído",
+  // PRD-245. Igual a `marketing:directory.detail.enquiry.openThreadCta`.
+  "housingModal.message.openThreadCta": "Abrir a conversa",
 
   "housingModal.message.ariaLabel": "Enviar mensagem a quem anunciou",
   "housingModal.message.successTitle": "Mensagem <em>enviada.</em>",
@@ -641,6 +650,17 @@ export const economy: Catalog = {
     "O que devem saber as outras pessoas?",
   "housingModal.recommend.placeholder":
     "Como foram as reparações, os contratos, os depósitos? Foi respeitada a tua privacidade e as tuas relações? Os pormenores ajudam.",
+  // PRD-249. A declaração de arrendamento, obrigatória em recomendações novas.
+  "housingModal.recommend.attestLabel": "Arrendei mesmo a {landlordName}.",
+  "housingModal.recommend.tenancyLabel":
+    "Mais ou menos quando arrendaste a esta pessoa?",
+  "housingModal.recommend.tenancyFrom": "De",
+  "housingModal.recommend.tenancyTo": "Até",
+  "housingModal.recommend.stillRenting": "Ainda arrendo a esta pessoa",
+  "housingModal.recommend.tenancyHint":
+    "O mês chega. Ninguém te está a pedir o dia.",
+  "housingModal.recommend.unverifiedNote":
+    "Isto vai para uma página sobre {landlordName}, uma pessoa real que não tem conta aqui. Vai ficar marcado como declarado pelo próprio e não verificado, porque a QueerPulse não consegue verificar nada disto, e {landlordName} pode pedir para responder.",
   "housingModal.recommend.note":
     "As recomendações são verificadas antes de aparecerem. Recomenda apenas pessoas proprietárias com quem tenhas mesmo arrendado.",
   "housingModal.recommend.submit": "Submeter recomendação",
@@ -667,6 +687,12 @@ export const economy: Catalog = {
   "listSpace.areaPlaceholder": "ex.: Arroios, Lisboa",
   "listSpace.rentLabel": "Renda mensal (€) *",
   "listSpace.rentPlaceholder": "ex.: 650",
+  // PRD-250. Opcional. Em branco significa "não indicada", e nesse caso a casa
+  // fica de fora das pesquisas com limite de caução.
+  "listSpace.depositLabel": "Caução (€)",
+  "listSpace.depositPlaceholder": "ex.: 900",
+  "listSpace.depositHint":
+    "Deixa em branco se ainda não definiste uma caução. Quem filtra por caução não vê casas que não indicaram nenhuma.",
   "listSpace.bedroomsLabel": "Quartos",
   "listSpace.bedroomsPlaceholder": "ex.: 1, usa 0 para um estúdio",
   "listSpace.typeLabel": "Tipo de espaço *",
@@ -684,6 +710,11 @@ export const economy: Catalog = {
   // ── ListSpaceDetailFields + ListSpacePhotoField (LOC-09) ───────────────
   "listSpace.areaHint":
     "Só o bairro. Todas as casas deste quadro ficam em {city}.",
+  // PRD-241. A morada, que nenhum formulário recolhia até agora.
+  "listSpace.addressLabel": "Morada",
+  "listSpace.addressPlaceholder": "ex.: Rua da Escola Politécnica 42",
+  "listSpace.addressHint":
+    "Opcional e privada. Só é partilhada com quem te ligas ou a quem aceitas uma visita. Todos os outros veem o bairro.",
   "listSpace.blurbLabel": "Resumo numa linha",
   "listSpace.blurbPlaceholder":
     "ex.: Um quarto duplo numa casa partilhada queer de quatro pessoas",
@@ -787,6 +818,11 @@ export const economy: Catalog = {
   "myHousingListings.postedOn": "Publicado {date}",
   "myHousingListings.expiresOn": "Expira {date}",
   "myHousingListings.expiredHint": "Expirado, prolonga para voltar a publicar",
+  // PRD-244. O único aviso que chega ANTES de o anúncio expirar.
+  "myHousingListings.expiringInDays_one":
+    "Expira em {count} dia, prolonga para o manteres no quadro",
+  "myHousingListings.expiringInDays_other":
+    "Expira em {count} dias, prolonga para o manteres no quadro",
   "myHousingListings.filledHint": "Marcado como ocupado, escondido do quadro",
   "myHousingListings.actions.edit": "Editar",
   "myHousingListings.actions.view": "Ver anúncio",
@@ -837,7 +873,7 @@ export const economy: Catalog = {
     "As sugestões são revistas antes de entrarem no quadro. Sugere apenas pessoas proprietárias com quem tu ou alguém de confiança já arrendou.",
   "suggestLandlord.submitting": "A enviar…",
   "suggestLandlord.submitCta": "Sugerir pessoa proprietária",
-  "suggestLandlord.success.title": "Obrigada.",
+  "suggestLandlord.success.title": "Obrigade.",
   "suggestLandlord.success.em": "Enviado para revisão.",
   "suggestLandlord.success.body":
     "Uma pessoa moderadora vai rever <strong>{name}</strong> antes de a adicionar ao quadro. Avisamos-te se precisarmos de mais alguma coisa.",
@@ -971,6 +1007,35 @@ export const economy: Catalog = {
     "Algo correu mal do nosso lado. Tenta de novo daqui a um instante.",
   "housingListing.error.retry": "Tentar de novo",
 
+  // PRD-248. Estado de erro de carregamento (não 404): mostra tentar de novo em
+  // vez de redirecionar em silêncio para o quadro.
+  // PRD-249. O formulário público de direito de resposta, a única superfície
+  // escrita para quem não é membro. Nada aqui promete resposta: a plataforma
+  // não envia email nenhum.
+  "landlordReply.eyebrow": "Direito de resposta",
+  "landlordReply.title": "Responde ao que escreveram sobre ti",
+  "landlordReply.intro":
+    "Alguém te enviou isto porque um membro da QueerPulse escreveu sobre ter arrendado a ti. A QueerPulse é só por convite, por isso não consegues ler essa página, e este formulário é a forma de responderes.",
+  "landlordReply.checkNotice":
+    "Nada do que escreves aqui é publicado logo. Alguém da equipa lê primeiro e confirma que és a pessoa nomeada. É esse passo que faz este formulário existir.",
+  "landlordReply.nameLabel": "O teu nome",
+  "landlordReply.contactLabel": "Uma forma de te contactarem",
+  "landlordReply.contactHint":
+    "Um telefone, ou onde fores mais fácil de encontrar. A equipa pode precisar de te perguntar algo antes de publicar.",
+  "landlordReply.replyLabel": "O que queres dizer",
+  "landlordReply.replyPlaceholder": "A tua resposta, nas tuas palavras.",
+  "landlordReply.replyHint":
+    "Isto é publicado como as tuas palavras, ao lado do que escreveram sobre ti.",
+  "landlordReply.send": "Enviar à equipa",
+  "landlordReply.error": "Não foi enviado. Tenta outra vez.",
+  "landlordReply.doneTitle": "A equipa recebeu",
+  "landlordReply.doneBody":
+    "Alguém vai ler isto e confirmar quem és antes de publicar seja o que for. Guarda esta página se quiseres anotar o que enviaste.",
+  "landlordPage.error.title": "Não conseguimos carregar este perfil",
+  "landlordPage.error.body":
+    "Algo correu mal do nosso lado. Tenta de novo daqui a um instante.",
+  "landlordPage.error.retry": "Tentar de novo",
+
   // ── Selo de anúncio verificado (P2.3) ──────────────────────────────────
   "verifiedListing.label": "Anúncio verificado",
   "verifiedListing.tooltip":
@@ -1061,7 +1126,7 @@ export const economy: Catalog = {
     "Não foi possível enviar a avaliação. Tenta de novo daqui a pouco.",
   "housingViewing.review.successTitle": "Avaliação <em>guardada.</em>",
   "housingViewing.review.successBody":
-    "Obrigado. Fica privada até <strong>{name}</strong> deixar a sua, ou passarem duas semanas.",
+    "Obrigade. Fica privada até <strong>{name}</strong> deixar a sua, ou passarem duas semanas.",
 
   // ── Bloco de avaliações no anúncio (P2.4) ──────────────────────────────
   "housingViewing.reviews.heading": "Avaliações",
@@ -1139,6 +1204,24 @@ export const economy: Catalog = {
   "landlordPage.section.about": "Sobre {name}",
   "landlordPage.section.whereTheyRent": "Onde arrenda",
   "landlordPage.section.recommendations": "Recomendações de pessoas membro",
+  // PRD-249. Uma recomendação é uma avaliação pública e nomeada de uma pessoa
+  // real que não tem conta aqui. Passa a estar marcada como declarada pelo
+  // próprio e não verificada, e quem é nomeado ganha direito de resposta.
+  "landlordPage.rating.selfReported_one": "Indicado por {count} membro",
+  "landlordPage.rating.selfReported_other": "Indicado por {count} membros",
+  "landlordPage.rating.attestedOf_one":
+    "{count} de {total} diz que viveu aqui.",
+  "landlordPage.rating.attestedOf_other":
+    "{count} de {total} dizem que viveram aqui.",
+  "landlordPage.section.recommendationsNote":
+    "Isto são membros a escrever sobre os seus próprios contratos com {name}. A QueerPulse não verificou nenhum deles, e {name} não é membro aqui.",
+  "landlordPage.recommendation.selfAttestedBadge":
+    "Declarado pelo próprio, não verificado",
+  "landlordPage.recommendation.noTenancyGiven":
+    "Não foram dadas datas do contrato.",
+  "landlordPage.recommendation.reply.heading": "{name} respondeu a isto",
+  "landlordPage.recommendation.reply.askCta":
+    "És {name}? Pede para responder a isto",
   "landlordPage.sidebar.atAGlance": "Resumo",
   "landlordPage.sidebar.rentedFrom": "Já arrendaste com {name}?",
   "landlordPage.sidebar.rentedFromBody":
@@ -3744,6 +3827,15 @@ export const economy: Catalog = {
     "Por agora vês a área aproximada. A morada exata aparece assim que tu e a pessoa ficarem ligados.",
   "housingListing.location.exactNote":
     "Estão ligados, por isso esta é a localização exata.",
+  // PRD-241, o terceiro estado: quem já tem acesso mas o anúncio não tem morada.
+  "housingListing.location.noAddressOnFileNote":
+    "Tens acesso à morada exata e quem anunciou ainda não a adicionou. Pede-lha quando combinares a visita.",
+  // Os dois estados de quem é dono do anúncio. As duas chaves acima apontavam
+  // uma pessoa para si própria.
+  "housingListing.location.ownExactNote":
+    "Este anúncio é teu, por isso estás a ver a morada exata que guardaste.",
+  "housingListing.location.ownNoAddressNote":
+    "Ainda não adicionaste uma morada a este anúncio. Adiciona uma e quem tiver acesso vai ver o sítio exato.",
   "housingListing.location.addressLabel": "Morada",
   "housingListing.location.mapAreaAria":
     "Mapa que mostra a área aproximada de {title}",
@@ -3815,6 +3907,15 @@ export const economy: Catalog = {
   "housingGroups.norms.sub":
     "Regras com que toda a gente aqui concorda. Quem as quebra, sai. É mesmo esse o ponto.",
   "housingGroups.listings.title": "Quartos e apartamentos lá dentro",
+  // ENG-171, o lado da leitura. "alguém da equipa" segue a escolha que o
+  // catálogo já faz para "steward" em `housingGroups.grid.sub`.
+  "housingGroups.listings.locked.title": "Os quartos ficam dentro do grupo",
+  "housingGroups.listings.locked.none":
+    "Este grupo guarda os quartos partilhados aqui para quem já deixou entrar. Pede para entrar e alguém da equipa vem dizer olá.",
+  "housingGroups.listings.locked.pending":
+    "O teu pedido para entrar ainda está com a equipa do grupo. Os quartos partilhados aqui abrem-se assim que alguém disser que sim.",
+  "housingGroups.listings.locked.declined":
+    "O teu pedido para entrar não foi aprovado, por isso os quartos partilhados aqui ficam dentro do grupo.",
   "housingGroups.listings.perMonth": "€{price} / mês",
   "housingGroups.listings.accessLabel": "Acessibilidade:",
   "housingGroups.listings.empty":
@@ -3850,6 +3951,8 @@ export const economy: Catalog = {
   "placeholder.notSet": "Sem dados",
   "member.fallbackName": "Uma pessoa da comunidade",
   "housing.fact.rent": "Renda",
+  // PRD-250. Só aparece quando quem anuncia indicou mesmo uma caução.
+  "housing.fact.deposit": "Caução",
   "housing.fact.rentPerMonth": "{amount} / mês",
   "housing.fact.area": "Zona",
   "housing.fact.available": "Disponível",
@@ -3884,6 +3987,11 @@ export const economy: Catalog = {
   "company.hiringContact.fallbackRole":
     "As candidaturas são lidas pela equipa daqui.",
   "landlord.recommendation.when": "Recomendação de {date}",
+  // PRD-249. Precisão ao mês. "Diz que": a plataforma relata uma afirmação, não
+  // a confirma.
+  "landlord.recommendation.tenancy.range": "Diz que arrendou de {from} a {to}",
+  "landlord.recommendation.tenancy.ongoing": "Diz que arrenda desde {from}",
+  "landlord.recommendation.reply.published": "Publicado pela equipa, {date}",
   "housingCoop.card.phaseLabel": "Fase {number} · {phase}",
   "housingCoop.card.phaseWord.forming": "formação",
   "housingCoop.card.phaseWord.legal": "constituição legal",
@@ -3974,7 +4082,7 @@ export const economy: Catalog = {
     "Guardado. O teu quarto voltou para revisão, por isso está fora da página do grupo até um moderador o aprovar.",
   "groupListing.toast.editFailed": "Não foi possível guardar essa alteração",
   "groupListing.toast.withdrawn":
-    "Esse quarto está fora. Obrigado por manteres o grupo em ordem.",
+    "Esse quarto está fora. Obrigade por manteres o grupo em ordem.",
   "groupListing.toast.withdrawFailed": "Não foi possível retirar esse anúncio",
 
   // ── Anúncios de grupo: publicar um quarto e ver onde estão os teus ──
@@ -4001,6 +4109,32 @@ export const economy: Catalog = {
   "groupListing.mine.empty":
     "Ainda não partilhaste nenhum quarto aqui. Quando o fizeres, aparece neste sítio com o estado da revisão.",
   "groupListing.mine.postedOn": "Publicado a {date}",
+
+  // PRD-242. Onde um membro vê o que aconteceu à sua candidatura a uma
+  // cooperativa ou a um grupo de habitação. "Notificação" é sempre o sino: a
+  // QueerPulse não envia email nenhum.
+  "housingJoinRequests.coop.title": "As tuas candidaturas",
+  "housingJoinRequests.coop.titleEm": "a cooperativas",
+  "housingJoinRequests.coop.sub":
+    "Todas as cooperativas a que pediste para entrar, e o ponto de situação de cada pedido. Recebes uma notificação assim que houver decisão.",
+  "housingJoinRequests.group.title": "A tua candidatura",
+  "housingJoinRequests.group.titleEm": "a este grupo",
+  "housingJoinRequests.group.sub":
+    "O ponto de situação do teu pedido para entrar. Recebes uma notificação assim que quem gere o grupo decidir.",
+  "housingJoinRequests.askedOn": "Pedido em {date}",
+  "housingJoinRequests.status.pending": "À espera de decisão",
+  "housingJoinRequests.status.accepted": "Estás dentro",
+  "housingJoinRequests.status.declined": "Desta vez não",
+  "housingJoinRequests.outcome.pending":
+    "Ainda ninguém decidiu. Assim que decidirem, aparece aqui.",
+  "housingJoinRequests.outcome.accepted":
+    "Foste aceite. O que vier a seguir parte de quem gere o espaço.",
+  "housingJoinRequests.outcome.declined":
+    "Este pedido não foi aprovado. Podes voltar a pedir mais tarde, ou ver os outros.",
+  "joinCoop.success.whereToCheck":
+    "Encontras esta candidatura, e a decisão sobre ela, mais abaixo nesta página.",
+  "joinGroup.success.whereToCheck":
+    "Encontras esta candidatura, e a decisão de quem gere o grupo, no topo da página do grupo.",
 
   "groupListing.mine.status.review": "À espera de revisão",
   "groupListing.mine.status.question": "Uma pergunta para ti",

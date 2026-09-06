@@ -963,7 +963,7 @@ export const gatherings: Catalog = {
   //    create-gathering wizard's DatePlaceStep ──────────────────────────────
   "venuePicker.searchPlaceholder": "Pesquisar no diretório local",
   "venuePicker.noResults": "Sem correspondências. Tenta outra pesquisa.",
-  "venuePicker.enterManually": "Não encontras? Escreve tu mesmo",
+  "venuePicker.enterManually": "Não encontras? Escreve tu",
   "venuePicker.searchInstead": "Pesquisar no diretório",
   "venuePicker.freeTextPlaceholder": "Nome do local",
   "venuePicker.fromDirectory": "Do diretório local",
@@ -1325,4 +1325,96 @@ export const gatherings: Catalog = {
   "photos.reportCaptionedAriaLabel":
     "Denunciar a fotografia com a legenda {caption}",
   "photos.reportSubjectName": "Fotografia de {gathering}",
+
+  // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
+
+  // DES-130
+  "common.online": "Online",
+
+  // PRD-182
+  "gathering.where.joinLinkLabel": "Link de entrada",
+  "gathering.where.joinLinkMissing":
+    "Ainda não adicionaste um link de entrada. É aqui que quem vai o procura.",
+  "gathering.where.joinLinkWithheld":
+    "O link de entrada é partilhado com quem vai.",
+  "gathering.joinLinkNote":
+    "O link de entrada é partilhado com quem confirma presença.",
+
+  // PRD-181 / PRD-183
+  "gathering.cancelledBanner":
+    "Este encontro foi cancelado. Não acontece nada nesta data.",
+  "gathering.endedBanner":
+    "Este encontro já aconteceu. As confirmações estão fechadas.",
+  "gathering.reportCta": "Denunciar este encontro",
+  "gathering.reportAriaLabel": "Denunciar o encontro {title}",
+
+  // PRD-188
+  "rsvpControl.maybeCta": "Talvez",
+  "rsvpControl.maybeTitle": "Estás em <em>talvez</em>",
+  "rsvpControl.maybeNote":
+    "Ainda não ocupaste um lugar. Muda para vou quando souberes.",
+  "rsvpControl.maybeToast": "Marcado como talvez",
+  "rsvpControl.switchToGoingCta": "Eu vou",
+
+  // ENG-140
+  "rsvpControl.goingCountHidden":
+    "A pessoa que organiza mantém a lista privada.",
+
+  // PRD-187
+  "rsvpControl.yourDetailsCta": "Os teus detalhes",
+
+  // PRD-181 / PRD-183
+  "rsvpControl.cancelledTitle": "Este encontro foi <em>cancelado</em>",
+  "rsvpControl.cancelledNote": "Quem organiza cancelou-o.",
+  "rsvpControl.cancelledAttendingNote":
+    "Quem organiza cancelou-o, por isso o teu lugar deixou de existir. Não há mais nada a fazer.",
+  "rsvpControl.endedTitle": "Este encontro <em>terminou</em>",
+  "rsvpControl.endedNote": "Já aconteceu.",
+  "rsvpControl.endedAttendingNote": "Esperamos que tenha corrido bem.",
+
+  // PRD-187
+  "rsvpDetails.eyebrow": "A tua presença",
+  "rsvpDetails.title": "Há alguma coisa que devamos <em>saber</em>?",
+  "rsvpDetails.sub": "Quem organiza lê isto. Mais ninguém tem de ler.",
+  "rsvpDetails.guestsLabel": "Quem vem",
+  "rsvpDetails.guestOption_one": "Eu e mais {count}",
+  "rsvpDetails.guestOption_other": "Eu e mais {count}",
+  "rsvpDetails.guestsHint":
+    "Os lugares contam por pessoa, por isso isto é quantos lugares quem organiza põe à mesa.",
+  "rsvpDetails.accessLabel": "Necessidades de acesso",
+  "rsvpDetails.accessPlaceholder":
+    "Entrada sem degraus, um lugar perto da porta, um canto sossegado…",
+  "rsvpDetails.dietaryLabel": "Comida e bebida",
+  "rsvpDetails.dietaryPlaceholder": "Vegan, sem álcool, uma alergia…",
+  "rsvpDetails.whoSeesLabel": "Quem pode ver isto",
+  "rsvpDetails.visibility.everyone": "Toda a gente que vai",
+  "rsvpDetails.visibility.connections": "As minhas ligações",
+  "rsvpDetails.visibility.justMe": "Só quem organiza",
+  "rsvpDetails.privacyNote":
+    "Quem organiza vê sempre o que escreves aqui, independentemente da escolha acima.",
+  "rsvpDetails.cancelCta": "Cancelar",
+  "rsvpDetails.saveCta": "Guardar",
+  "rsvpDetails.savedToast": "Guardado",
+  "rsvpDetails.saveErrorToast":
+    "Não foi possível guardar. Tenta outra vez daqui a pouco.",
+
+  // PRD-182
+  "create.step2.joinLinkLabel": "Link de entrada",
+  "create.step2.joinLinkPlaceholder": "https://…",
+  "create.step2.joinLinkHint":
+    "Partilhado com quem vai, nunca na página pública. Podes adicioná-lo mais tarde.",
+  "create.step2.joinLinkInvalid":
+    "Isto não parece um link. Tem de começar por https://",
+
+  // PRD-184
+  "calendar.loadMore": "Ver mais",
+  "calendar.loadingMore": "A carregar…",
+
+  // PRD-190
+  "manage.overview.duplicateCta": "Repetir este encontro",
+  "manage.attendees.exportingCta": "A exportar…",
+  "manage.attendees.exportDemoToast":
+    "Na demonstração não há uma lista real para exportar.",
+  "manage.attendees.exportFailedToast":
+    "A exportação falhou. Tenta outra vez daqui a pouco.",
 };

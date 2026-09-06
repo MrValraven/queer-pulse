@@ -219,12 +219,18 @@ export function PartnersPage() {
               <Button size="lg" to={routes.partnerApply}>
                 {t("marketing:partners.become.applyCta")}
               </Button>
+              {/* PRD-272. Was a `mailto:hello@queerpulse.com`, which took an
+                  organisation's first approach out of the platform entirely:
+                  no queue, no assignment, no status, and no way to answer it
+                  in-app. The contact intake beside the application form is the
+                  same tracked `inquiries` queue the Contact page writes to,
+                  arriving pre-tagged as a partnership question. */}
               <Button
                 size="lg"
                 variant="ghost"
-                href="mailto:hello@queerpulse.com"
+                to={`${routes.contact}?topic=partnership`}
               >
-                {t("marketing:partners.become.emailCta")}
+                {t("marketing:partners.become.contactCta")}
               </Button>
             </div>
           </div>

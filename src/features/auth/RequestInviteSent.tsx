@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiCheck } from "react-icons/fi";
 import { AuthLayout } from "./AuthLayout";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -45,28 +45,16 @@ export function RequestInviteSent({
       : "auth:requestInvite.sent.sub_noName";
   return (
     <AuthLayout wide>
-      <div className={styles.screenIn} style={{ textAlign: "center" }}>
+      {/* DES-170: centring, the confirmation copy's measure and the footer
+          link's type all live in auth.module.css now. */}
+      <div className={`${styles.screenIn} ${styles.sentScreen}`}>
         <div className={styles.sentIc}>
-          <svg
-            viewBox="0 0 24 24"
-            width={32}
-            height={32}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.7}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m5 12 5 5L20 7" />
-          </svg>
+          <FiCheck aria-hidden />
         </div>
         <h1>
           <Translation i18nKey={titleKey} components={{ em: <em /> }} />
         </h1>
-        <p
-          className={styles.sub}
-          style={{ maxWidth: "34ch", margin: "0 auto 28px" }}
-        >
+        <p className={`${styles.sub} ${styles.sentSub}`}>
           {t(subKey, { name: trimmedFirst })}
         </p>
 
@@ -85,14 +73,7 @@ export function RequestInviteSent({
         </ol>
 
         <div className={styles.footer}>
-          <Link
-            to={routes.homepage}
-            style={{
-              fontSize: 13.5,
-              color: "var(--ink-60)",
-              fontWeight: 500,
-            }}
-          >
+          <Link to={routes.homepage} className={styles.backHomeLink}>
             <FiArrowLeft aria-hidden /> {t("auth:requestInvite.sent.backHome")}
           </Link>
         </div>

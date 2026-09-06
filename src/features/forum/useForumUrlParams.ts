@@ -1,14 +1,23 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { type ForumSort } from "./api/forum.api";
-import { isForumSort } from "./forumPageState.helpers";
+import {
+  DEFAULT_FORUM_SORT as DEFAULT_SORT,
+  isForumSort,
+} from "./forumPageState.helpers";
 
 /**
  * Owns the URL-backed forum filter/sort state (`tag`, `q`, `category`, `sort`)
  * so a refresh or shared link preserves them instead of silently resetting.
- * "all"/"top" are each param's default, so they're omitted from the URL
- * entirely (never `?category=all`) — `setCat`/`setTag` still `null` the param
- * out below their default. Lifted out of `useForumPageState`.
+ * "all"/"active" are each param's default, so they're omitted from the URL
+ * entirely (never `?category=all`): `setCat`/`setSort` null the param out at
+ * their default so the default round-trips. Lifted out of `useForumPageState`.
+ *
+ * PRD-161: the sort default is `active`, matching the SERVER default. It used
+ * to be `top`, which on a young forum ranked a page of zero-vote threads in an
+ * order that never moved as people posted, so a fresh question was buried under
+ * anything that had ever collected a single vote. `active` puts the threads
+ * people are actually talking in on top, and a brand-new thread starts there.
  */
 export function useForumUrlParams() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,9 +52,9 @@ export function useForumUrlParams() {
     [setParam],
   );
   const sortParam = searchParams.get("sort");
-  const sort: ForumSort = isForumSort(sortParam) ? sortParam : "top";
+  const sort: ForumSort = isForumSort(sortParam) ? sortParam : DEFAULT_SORT;
   const setSort = useCallback(
-    (next: ForumSort) => setParam("sort", next === "top" ? null : next),
+    (next: ForumSort) => setParam("sort", next === DEFAULT_SORT ? null : next),
     [setParam],
   );
 

@@ -36,6 +36,17 @@ export type NotificationKind =
   // the decision), because this is the only channel the member has. QueerPulse
   // sends no email, and there is no way to message a community's moderators.
   | "community_banned"
+  // PRD-147. Sent to the AUTHOR of a post or reply a community moderator took
+  // down. System-toned like `community_banned` above and for the same reason:
+  // the payload carries no actor, so the row never names the moderator who
+  // acted. It does carry `subject` (`post` | `reply`, the closed vocabulary the
+  // copy branches on), the moderator's `reason` written for this member to
+  // read, and the community's own `ruleText` snapshotted at the moment of the
+  // decision. Before it existed a takedown was silent: the author found a
+  // tombstone where their words had been and had no way to learn why, since
+  // QueerPulse sends no email and there is no way to message a community's
+  // moderators.
+  | "community_post_removed"
   | "forum_thread_reply"
   // Sent to a member who follows a topic (`topic_follows`) when a new post
   // lands on it — a forum thread created with a tag matching that topic
@@ -53,8 +64,22 @@ export type NotificationKind =
   | "job_application"
   | "listing_approved"
   | "report_resolved"
+  // PRD-289. The reporter's OWN receipt, written when they file rather than
+  // when a moderator closes the case. Before this the reporter's first in-app
+  // word about their own report was `report_resolved`, up to seven days later
+  // at the low severity band, so anyone who dismissed the success toast held
+  // no record at all. Carries `reportId`, `reference` (the quotable case
+  // code), `subjectType` and `severity`; no actor, because the platform is
+  // speaking.
+  | "report_received"
   | "appeal_resolved"
   | "invite_accepted"
+  // PRD-140. A community moderator inviting a member in. Before this the type
+  // was absent from this union, so `isKnownKind` was false and the bell fell
+  // through to the generic unknown copy: the invitation arrived as an
+  // unnamed row. The invite itself is now a durable record, so the row has
+  // somewhere real to lead.
+  | "community_invite_received"
   | "listing_review"
   // Sent to the MEMBER WHO ASKED a public question on a business page when
   // that question is answered (mirrors the backend `notifications_type_enum`
@@ -117,6 +142,16 @@ export type NotificationKind =
   // resolves a `dto.actor` and stays icon-based. The first live kind whose
   // `.actions` the adapter populates — see `notificationDtoToView`.
   | "subprofile_credit"
+  // PRD-208. Sent to everyone FOLLOWING a persona when that persona publishes
+  // new work: items added to a content section of a live persona (mirrors the
+  // backend `notifications_type_enum` value added in
+  // `AddPersonaUpdateNotificationType1810000000000`, emitted from
+  // `SubprofileUpdatesService`). Payload: `{ subprofileName,
+  // subprofileSlugOrHandle, itemTitle, newItemCount, deepLink }`. Carries no
+  // actor key at all, so the row never names the human behind a pseudonymous
+  // persona; it stays icon-based and speaks in the persona's own name. The
+  // copy is CLDR-pluralised on `newItemCount`, mirrored onto `count` below.
+  | "persona_update"
   // Sent to a safe space's listing owner when a member vouches for it (mirrors
   // the backend `notifications_type_enum` value added in
   // `AddSafeSpaceVouchNotificationType1787500000000`, emitted from
@@ -131,6 +166,29 @@ export type NotificationKind =
   // `HousingSavedSearchAlertsListener`). System-driven — no actor — with
   // `title`/`area`/`slug` on the payload for the copy + deep link.
   | "housing_listing_match"
+  // PRD-240. The housing viewing lifecycle, all three emitted from
+  // `HousingViewingsService` (mirrors the backend values added in
+  // `AddHousingLifecycleNotificationTypes1817000000000`). Before them the whole
+  // lifecycle was silent and a lister only learned somebody wanted to see their
+  // home by opening /local/housing/viewings.
+  //
+  // `housing_viewing_requested` goes to the LISTER and carries the requester as
+  // its actor. `housing_viewing_decided` goes to the REQUESTER with
+  // `decision` (`accepted`/`declined`/`proposed`) selecting the copy, and the
+  // lister as its actor. `housing_viewing_cancelled` goes to whichever
+  // participant did NOT cancel. All three carry `title`/`slug`/`viewingId`.
+  | "housing_viewing_requested"
+  | "housing_viewing_decided"
+  | "housing_viewing_cancelled"
+  // PRD-242. The outcome of a co-op or vetted housing-group join request, from
+  // `HousingService.triageJoinRequest` and `HousingGroupsService.triageJoinRequest`.
+  // System-driven, no actor: the bell never names which admin decided. `kind`
+  // (`coop`/`group`) and `decision` (`accepted`/`declined`) select the copy.
+  | "housing_join_decided"
+  // PRD-244. The one-week warning before a housing listing lapses, from
+  // `HousingListingExpirySweeperService`. System-driven, fires once per listing
+  // lifetime, with `title`/`slug`/`expiresAt` on the payload.
+  | "housing_listing_expiring"
   // Sent to the submitter of a governance concern when an admin resolves or
   // dismisses it (mirrors the backend `notifications_type_enum` value added in
   // `AddConcernUpdateNotificationType1788600000000`, emitted from
@@ -332,6 +390,39 @@ export type NotificationKind =
   // the row to that issue's page, where the desk's curated "In this issue"
   // panel is.
   | "magazine_issue_published"
+  // The magazine desk speaking to the WRITER of one piece. All four rows below
+  // carry the acting editor as `payload.actorId`, so each resolves a real
+  // `actor` (avatar + profile link) and block/mute filtering applies, and all
+  // four sit in the `Magazine` preference category on the backend.
+  //
+  // `magazine_piece_message` (the editor-writer message thread, backend value
+  // added in `AddMagazinePieceMessageNotificationType1787300100000`) has been
+  // written since that migration shipped and had NO entry here, so for months
+  // it rendered the unknown-kind fallback: somebody was messaged about a piece
+  // they are writing and their bell said "You have a new notification." It is
+  // the only one of the four with no display payload at all — the backend's
+  // `PAYLOAD_ALLOWLIST` has no entry for it, so its `pieceId`/`messageId` are
+  // stripped at that boundary and the copy names no piece. It is also the only
+  // one that goes to EITHER party (editor to writer, or writer to editor),
+  // which is why it resolves no deep link: see `notifications.adapters.ts`.
+  //
+  // The other three are PRD-121, and each goes to the writer alone (the backend
+  // skips a piece somebody commissioned to themselves). Before them the desk
+  // told a writer nothing: being given a piece, every stage it moved through
+  // and its publication were all silent, so a writer learned they had work by
+  // opening `/magazine/writer` on a hunch. Payload carries `{ source:
+  // "magazine", pieceId, title, actorId }`, plus `stage` on the stage change
+  // (a machine `PieceStage` value, translated by `pieceStageToken` rather than
+  // printed) and `href` on the publication (the reader path the piece just
+  // went live at, which the row deep-links to).
+  //
+  // Nothing editorial rides along on any of them: the brief, the care record,
+  // the editor's notes and the draft body are all absent from the backend's
+  // allowlist, so none of them can reach a bell.
+  | "magazine_piece_message"
+  | "magazine_piece_commissioned"
+  | "magazine_piece_stage_changed"
+  | "magazine_piece_published"
   // A membership card thirty days from expiry (SUS-07; mirrors the backend
   // `notifications_type_enum` value added in
   // `AddCardSelfRenewAndExpiryWarning1795620000000`, emitted from
@@ -468,6 +559,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   event_rsvp: "events",
   community_reply: "community",
   community_banned: "community",
+  // A takedown of your own post or reply is community moderation, same tab as
+  // community_banned.
+  community_post_removed: "community",
   forum_thread_reply: "community",
   // A new post in a followed topic is community activity, same tab as
   // forum_thread_reply/community_reply.
@@ -476,6 +570,7 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   join_request_approved: "community",
   join_request_declined: "community",
   invite_accepted: "community",
+  community_invite_received: "community",
   listing_review: "community",
   // The answer to a question you asked on a business page is a public exchange
   // about a place, same tab as listing_review and review_replied rather than
@@ -488,18 +583,30 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   job_application: "platform",
   listing_approved: "platform",
   report_resolved: "platform",
+  report_received: "platform",
   appeal_resolved: "platform",
   roadmap_status: "platform",
   moderation_outcome: "platform",
   // A fellow member crediting you is community activity, same tab as
   // vouch_received/introduction_made.
   subprofile_credit: "community",
+  // New work from a persona you follow is somebody else's activity you asked
+  // to hear about — the community tab, same as subprofile_credit.
+  persona_update: "community",
   // A member vouching for your safe space is community activity, same tab as
   // vouch_received.
   safe_space_vouch: "community",
   // A saved-search match is the platform telling you about a new home — a
   // platform notification, like listing_approved.
   housing_listing_match: "platform",
+  // PRD-240/242/244. The housing lifecycle. All five are the platform (or a
+  // counterparty acting through it) reporting on a home you listed or asked
+  // about, which is the same tab housing_listing_match already sits in.
+  housing_viewing_requested: "platform",
+  housing_viewing_decided: "platform",
+  housing_viewing_cancelled: "platform",
+  housing_join_decided: "platform",
+  housing_listing_expiring: "platform",
   // An outcome on a concern you raised is the platform's word — platform tab.
   concern_update: "platform",
   // An outcome on a form you submitted, or on a data request you filed, is the
@@ -556,6 +663,16 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // A new issue is the magazine speaking to the whole membership — platform
   // tab, same as roadmap_status.
   magazine_issue_published: "platform",
+  // The four desk rows sit beside `magazine_issue_published` rather than under
+  // "community", even though three of them carry a named editor. The desk is
+  // WORK: a commission, a stage change and a publication are the magazine
+  // telling its writer where their piece stands, and the community tab is
+  // activity in a room the member belongs to. Filing them there would bury a
+  // deadline-bearing row under replies and mentions.
+  magazine_piece_message: "platform",
+  magazine_piece_commissioned: "platform",
+  magazine_piece_stage_changed: "platform",
+  magazine_piece_published: "platform",
   // A credential of the member's own running out is the platform's word about
   // their own standing, same tab as account_deletion_final_warning.
   card_expiring: "platform",
@@ -664,16 +781,25 @@ function moderationKeyFor(type: string, payload: unknown): string {
 
 /**
  * Resolve the i18n subkey a `concern_update` notification's copy lives under.
- * The row carries `payload.status` (`resolved | dismissed`, written by the
- * backend when an admin triages the concern) — each gets its own headline
- * ("Your concern was resolved" vs "…was reviewed and closed"), so the key
- * branches to `concern_update.<status>`. An unknown/missing status falls back
- * to the flat `concern_update.*` copy. Non-concern types pass through unchanged.
+ * The row carries `payload.status` (`reviewing | resolved | dismissed`, written
+ * by the backend when an admin triages the concern) — each gets its own
+ * headline ("Someone is looking at it" vs "Your concern was resolved" vs
+ * "…was reviewed and closed"), so the key branches to
+ * `concern_update.<status>`. An unknown/missing status falls back to the flat
+ * `concern_update.*` copy. Non-concern types pass through unchanged.
  */
 function concernUpdateKeyFor(type: string, payload: unknown): string {
   if (type !== "concern_update") return type;
   const status = (payload as { status?: string } | null)?.status;
-  return status === "resolved" || status === "dismissed"
+  // PRD-261 added `reviewing`: the backend now writes this bell when a concern
+  // is PICKED UP, not only when it reaches an outcome. "Someone is looking at
+  // it" is the transition a person waiting on a report about harm most needs,
+  // and it must not borrow the two outcome headlines, which both say the matter
+  // is closed. An unknown/missing status still falls back to the flat
+  // `concern_update.*` copy, which says only that there is an update.
+  return status === "reviewing" ||
+    status === "resolved" ||
+    status === "dismissed"
     ? `concern_update.${status}`
     : "concern_update";
 }
@@ -788,6 +914,44 @@ function volunteerApplicationDecidedKeyFor(
   return status === "accepted" || status === "declined"
     ? `volunteer_application_decided.${status}`
     : "volunteer_application_decided";
+}
+
+/**
+ * PRD-240. The catalog key for a housing viewing decision, which is one
+ * notification type covering three outcomes rather than three near-identical
+ * enum members: the lister accepted, declined, or proposed a different time.
+ *
+ * `decision` is on the backend's payload allowlist for this type, so it always
+ * survives the wire when it was written. A row whose payload is missing it, or
+ * carries a value this build has never seen, falls back to the flat key rather
+ * than rendering an empty string, matching every other discriminator here.
+ */
+function housingViewingDecidedKeyFor(type: string, payload: unknown): string {
+  if (type !== "housing_viewing_decided") return type;
+  const decision = (payload as { decision?: string } | null)?.decision;
+  return decision === "accepted" ||
+    decision === "declined" ||
+    decision === "proposed"
+    ? `housing_viewing_decided.${decision}`
+    : "housing_viewing_decided";
+}
+
+/**
+ * PRD-242. The catalog key for a co-op or housing-group join decision.
+ *
+ * Branches on `decision` alone and NOT on `payload.kind`, even though both are
+ * on the allowlist. The copy names the thing through the `{name}` token the
+ * payload already carries ("Your request to join Casa Aurora was accepted"), so
+ * splitting the key by kind as well would double the strings to say the same
+ * sentence twice. `kind` earns its place on the wire by choosing the deep link,
+ * which `sourceHrefFromPayload` reads, rather than the words.
+ */
+function housingJoinDecidedKeyFor(type: string, payload: unknown): string {
+  if (type !== "housing_join_decided") return type;
+  const decision = (payload as { decision?: string } | null)?.decision;
+  return decision === "accepted" || decision === "declined"
+    ? `housing_join_decided.${decision}`
+    : "housing_join_decided";
 }
 
 /**
@@ -937,6 +1101,73 @@ function listingQuestionSubjectToken(payload: unknown, t: TFunction): string {
 }
 
 /**
+ * The editorial stages a magazine piece moves through, mirroring `PieceStage`
+ * in `queerpulse-backend/src/magazine/` (and `PIECE_STAGE_ORDER` in the desk's
+ * own `pieces.adapters.ts`, which carries the same eight values plus
+ * `published`).
+ *
+ * A closed set rather than a free interpolation, the same reason
+ * `INTAKE_FORM_KINDS` and `SUBMISSION_KINDS` above are closed sets: `stage`
+ * arrives as a MACHINE VALUE, and `sensitivity_read` is not a thing to show a
+ * writer. A stage the backend adds before this list learns about it degrades to
+ * a neutral phrase rather than printing the identifier.
+ */
+const PIECE_STAGES = new Set<string>([
+  "commissioned",
+  "drafting",
+  "in_review",
+  "edit",
+  "sensitivity_read",
+  "layout",
+  "ready",
+  "published",
+]);
+
+/**
+ * Resolves the `{stage}` token a `magazine_piece_stage_changed` row
+ * interpolates: the name of the stage the piece just moved to, in the writer's
+ * own language.
+ *
+ * The labels live inline under `type.magazine_piece_stage_changed.stage.*`
+ * rather than reaching into the `magazine:` namespace, which is the
+ * `verification_update.level.*` precedent and holds for the same reason: the
+ * magazine namespace is a separate, lazily-chunked catalog a member reading
+ * their bell has no reason to have loaded, and every other payload-driven kind
+ * in this file keeps its label set self-contained in `notifications`. The
+ * desk's own English-only stage chips are a deliberately untranslated
+ * editorial vocabulary; a bell row is member-facing copy, so these are
+ * translated.
+ */
+function pieceStageToken(payload: unknown, t: TFunction): string {
+  const stage = (payload as { stage?: string } | null)?.stage;
+  return typeof stage === "string" && PIECE_STAGES.has(stage)
+    ? t(`notifications:type.magazine_piece_stage_changed.stage.${stage}`)
+    : t("notifications:type.magazine_piece_stage_changed.stageFallback");
+}
+
+/**
+ * Resolves the `{title}` token the three PRD-121 desk rows interpolate: the
+ * piece's own working title, which is what tells a writer WHICH piece a row is
+ * about when they have several open.
+ *
+ * Read defensively like every other payload token here. The backend writes the
+ * piece's `title` on all three, so the fallback is for a malformed payload
+ * rather than an older row shape, and it exists because the whole job of these
+ * rows is to name the piece: leaving `{title}` on screen would be the worst
+ * version of that. The fallback reads as a title, because the copy quotes it.
+ *
+ * One key serves all three kinds, the same way `listingQuestionSubjectToken`
+ * above shares one fallback across both halves of a listing's public Q&A: the
+ * phrase is identical in every sentence it lands in.
+ */
+function pieceTitleToken(payload: unknown, t: TFunction): string {
+  const title = (payload as { title?: string } | null)?.title;
+  return typeof title === "string" && title.trim() !== ""
+    ? title
+    : t("notifications:type.magazine_piece_commissioned.titleFallback");
+}
+
+/**
  * Resolve the i18n subkey a `story_submission_decided` notification's copy
  * lives under. The row carries `payload.decision`
  * (`accepted | declined | commissioned`, written by the backend when staff
@@ -948,9 +1179,15 @@ function listingQuestionSubjectToken(payload: unknown, t: TFunction): string {
 function storySubmissionDecidedKeyFor(type: string, payload: unknown): string {
   if (type !== "story_submission_decided") return type;
   const decision = (payload as { decision?: string } | null)?.decision;
+  // `reopened` is not a verdict, it CLEARS one: an admin put a declined story
+  // back in the queue. It has to be listed here rather than left to the
+  // fallback, because the flat copy reads "The magazine has decided on X",
+  // which is the precise opposite of what happened and would tell a member
+  // their story had been answered at the moment it stopped being answered.
   return decision === "accepted" ||
     decision === "declined" ||
-    decision === "commissioned"
+    decision === "commissioned" ||
+    decision === "reopened"
     ? `story_submission_decided.${decision}`
     : "story_submission_decided";
 }
@@ -1142,6 +1379,38 @@ function communityBannedKeyFor(type: string, payload: unknown): string {
   } | null;
   const term = banned?.expiresAt ? "timed" : "permanent";
   return banned?.ruleText ? `${type}.${term}.rule` : `${type}.${term}`;
+}
+
+/**
+ * Resolve the copy for a moderator takedown (PRD-147). Two axes, both read off
+ * the payload, mirroring `communityBannedKeyFor` directly above.
+ *
+ * `subject` (`post` | `reply`) is a closed vocabulary the server writes, and it
+ * decides which sentence the member reads. `reason` and `ruleText` are each
+ * optional, because a takedown is never blocked on a form: one that is blocked
+ * on a form is one that does not happen when it needs to. That gives four
+ * grounds variants rather than one hedged sentence with empty tokens in it,
+ * because "no reason was recorded" is a different thing to be told than a
+ * reason, and it is honest about what the member is being given.
+ */
+function communityPostRemovedKeyFor(type: string, payload: unknown): string {
+  if (type !== "community_post_removed") return type;
+  const removal = payload as {
+    subject?: unknown;
+    reason?: string | null;
+    ruleText?: string | null;
+  } | null;
+  const subject = removal?.subject === "reply" ? "reply" : "post";
+  const hasReason = Boolean(removal?.reason);
+  const hasRule = Boolean(removal?.ruleText);
+  const grounds = hasReason
+    ? hasRule
+      ? ".reasonRule"
+      : ".reason"
+    : hasRule
+      ? ".rule"
+      : "";
+  return `${type}.${subject}${grounds}`;
 }
 
 /**
@@ -1401,6 +1670,10 @@ export function formatNotification(
     key = verificationUpdateKeyFor(type, payload);
   } else if (type === "volunteer_application_decided") {
     key = volunteerApplicationDecidedKeyFor(type, payload);
+  } else if (type === "housing_viewing_decided") {
+    key = housingViewingDecidedKeyFor(type, payload);
+  } else if (type === "housing_join_decided") {
+    key = housingJoinDecidedKeyFor(type, payload);
   } else if (type === "story_submission_decided") {
     key = storySubmissionDecidedKeyFor(type, payload);
   } else if (type === "submission_decided") {
@@ -1409,6 +1682,8 @@ export function formatNotification(
     key = reportFiledKeyFor(type, payload);
   } else if (type === "community_banned") {
     key = communityBannedKeyFor(type, payload);
+  } else if (type === "community_post_removed") {
+    key = communityPostRemovedKeyFor(type, payload);
   } else if (type === "card_expiring") {
     key = cardExpiringKeyFor(type, payload);
   } else {
@@ -1455,6 +1730,17 @@ export function formatNotification(
       ?.daysRemaining;
     if (typeof daysRemaining === "number") {
       tokens.count = daysRemaining;
+    }
+  }
+  if (type === "persona_update") {
+    // Same reason as the three blocks above: the copy is pluralised ("a new
+    // piece of work" / "3 new pieces of work") and CLDR selection keys off
+    // `count`, while the payload names the value `newItemCount` because that
+    // is what the emit site calls it. Both names carry the same number.
+    const newItemCount = (payload as { newItemCount?: unknown } | null)
+      ?.newItemCount;
+    if (typeof newItemCount === "number") {
+      tokens.count = newItemCount;
     }
   }
   if (type === "event_nearly_full") {
@@ -1526,6 +1812,24 @@ export function formatNotification(
     // of what tells the asker which question was answered; on the question row
     // it is what tells an owner which of their listings was asked about.
     tokens.listingName = listingQuestionSubjectToken(payload, t);
+  }
+  if (
+    type === "magazine_piece_commissioned" ||
+    type === "magazine_piece_stage_changed" ||
+    type === "magazine_piece_published"
+  ) {
+    // Overrides the raw `title` `interpolationTokens` already copied through
+    // with the same value, defensively re-resolved so a row missing it still
+    // reads as a whole sentence. `magazine_piece_message` is absent because it
+    // carries no title at all: the backend's payload allowlist has no entry for
+    // it, so its copy names no piece and interpolates nothing.
+    tokens.title = pieceTitleToken(payload, t);
+  }
+  if (type === "magazine_piece_stage_changed") {
+    // Overrides the raw machine value (`sensitivity_read`) that
+    // `interpolationTokens` copied through verbatim with the translated,
+    // writer-facing label the catalog string's `{stage}` expects.
+    tokens.stage = pieceStageToken(payload, t);
   }
   if (type === "barter_proposal_received") {
     // Overrides the raw `listingOffer` `interpolationTokens` already copied

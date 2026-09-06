@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Article } from "../data/articles";
+import type { ReaderArticle } from "../readerArticle";
 import {
   articleListItemToArticle,
   articleResponseToArticle,
@@ -11,8 +12,10 @@ import { ignoreEnrichmentError, nullOnNotFound } from "./loadErrors";
 import { getArticle, getArticles, getAuthor } from "./magazine.api";
 
 export interface ArticleData {
-  article: Article | null;
-  related: Article[];
+  /** PRD-102 — a `ReaderArticle`, so the desk's dek and standfirst reach the
+   *  page. A demo mock is a plain `Article` and is assignable as-is. */
+  article: ReaderArticle | null;
+  related: ReaderArticle[];
 }
 
 /**
@@ -32,6 +35,11 @@ export function useArticle(id: string, lang?: string) {
   const fmt = useFormat();
   const { t, language } = useTranslation();
   return useQuery<ArticleData>({
+    // PRD-101 — an empty `id` is "the caller has no slug to resolve" (a bare
+    // `/magazine/article` with no `?id=`), which is a redirect, never a
+    // request. Firing it would ask the API for `/magazine/articles/` and paint
+    // a not-found wall on the way out.
+    enabled: id !== "",
     // CON-16: `lang` is part of the key because it changes WHICH article the
     // server returns (a published translation in place of the addressed
     // piece), not merely how it is formatted.

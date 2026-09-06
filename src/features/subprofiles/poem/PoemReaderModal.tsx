@@ -18,8 +18,10 @@ export interface PoemReaderModalProps {
   /** The persona's display name, shown in the copyright footer. */
   authorName: string;
   /** Absolute, deep-linkable URL for this exact poem (persona share URL +
-   *  `?poem=<slug>`) — copied by the "Copy link" affordance below. */
-  shareUrl: string;
+   *  `?poem=<slug>`), copied by the "Copy link" affordance below. `null` when
+   *  the persona has no public address yet, which drops the affordance rather
+   *  than copying a link that resolves nowhere. */
+  shareUrl: string | null;
   onClose: () => void;
 }
 
@@ -115,16 +117,18 @@ export function PoemReaderModal({
             </p>
           )}
           <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.actionButton}
-              onClick={() => void copyShareLink(shareUrl)}
-              aria-label={t("subprofiles:poem.reader.copyLinkAria", {
-                title: item.title,
-              })}
-            >
-              <FiLink aria-hidden /> {t("subprofiles:poem.reader.copyLink")}
-            </button>
+            {shareUrl && (
+              <button
+                type="button"
+                className={styles.actionButton}
+                onClick={() => void copyShareLink(shareUrl)}
+                aria-label={t("subprofiles:poem.reader.copyLinkAria", {
+                  title: item.title,
+                })}
+              >
+                <FiLink aria-hidden /> {t("subprofiles:poem.reader.copyLink")}
+              </button>
+            )}
             <button
               type="button"
               className={styles.actionButton}

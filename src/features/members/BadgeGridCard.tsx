@@ -1,6 +1,10 @@
 import { FiEyeOff } from "react-icons/fi";
 import type { Badge } from "./badges.data";
 import { progressPercent, RARITY_LABEL_KEY } from "./badgeSelectors";
+import {
+  badgeCategoryLabelKeyFor,
+  badgeDisplayMetaFor,
+} from "./badgeCatalog.data";
 import { BadgeMedallion } from "./BadgeMedallion";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./BadgesPage.module.css";
@@ -23,6 +27,12 @@ export function BadgeGridCard({
   onOpen,
 }: BadgeGridCardProps) {
   const { t } = useTranslation();
+  // The catalogue ships a stable id beside its English display words, so the
+  // words resolve here rather than off the wire (see `badgeCatalog.data.ts`).
+  // An id or category this build has no entry for falls back to the server's
+  // own English, which is readable rather than a machine id.
+  const displayMeta = badgeDisplayMetaFor(badge.key);
+  const categoryLabelKey = badgeCategoryLabelKeyFor(badge.category);
   const percent = progressPercent(badge);
   const cardClass = [
     styles.bcard,
@@ -41,9 +51,15 @@ export function BadgeGridCard({
             {t("members:badges.case.rarestFlag")}
           </span>
         )}
-        <span className={styles.bcCat}>{badge.category}</span>
-        <h4>{badge.name}</h4>
-        <span className={styles.bcCrit}>{badge.criteria ?? badge.when}</span>
+        <span className={styles.bcCat}>
+          {categoryLabelKey ? t(categoryLabelKey) : badge.category}
+        </span>
+        <h4>{displayMeta ? t(displayMeta.nameKey) : badge.name}</h4>
+        <span className={styles.bcCrit}>
+          {displayMeta
+            ? t(displayMeta.lockedContextKey)
+            : (badge.criteria ?? badge.when)}
+        </span>
         {earned && story && <span className={styles.bcStory}>{story}</span>}
         <span className={styles.bcMeta}>
           {earned ? (

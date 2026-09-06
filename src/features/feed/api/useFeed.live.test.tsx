@@ -56,12 +56,19 @@ async function loadLive() {
   const { useFeed } = await import("./useFeed");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
+  // PRD-107: `useFeed` reads the reader's language (it becomes the magazine
+  // source's content language), so the hook now needs an `I18nProvider` above
+  // it. Only `language` is read here, which the provider has synchronously;
+  // no catalog has to resolve for this suite.
+  const { I18nProvider } = await import("../../../app/providers/I18nProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
-      <DemoModeProvider>{children}</DemoModeProvider>
+      <I18nProvider>
+        <DemoModeProvider>{children}</DemoModeProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
   return { useFeed, wrapper };
@@ -135,5 +142,24 @@ describe("useFeed (live mode via MSW)", () => {
       "new_member",
       "gathering",
     ]);
+  });
+
+  it("sends the reader's language so the magazine source can answer in it (PRD-107)", async () => {
+    let requestedUrl = "";
+    server.use(
+      http.get(`${API_V1}/feed`, ({ request }) => {
+        requestedUrl = request.url;
+        return HttpResponse.json([]);
+      }),
+    );
+
+    const { useFeed, wrapper } = await loadLive();
+    const { result } = renderHook(() => useFeed("All"), { wrapper });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    // The detected chrome language rides along as `?lang=`; the backend
+    // narrows it and ignores anything the magazine does not publish in.
+    expect(new URL(requestedUrl).searchParams.get("lang")).toBeTruthy();
   });
 });

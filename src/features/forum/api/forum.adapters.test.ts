@@ -27,6 +27,7 @@ function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
     canViewHistory: false,
     image: null,
     isAccepted: false,
+    isOp: false,
     ...overrides,
   };
 }
@@ -65,15 +66,71 @@ describe("forum adapters carry the post id + flags", () => {
       acceptedPostId: null,
       canAcceptAnswer: false,
       canEditTags: false,
+      isDeleted: false,
+      excerpt: null,
+      unreadReplyCount: null,
+    };
+    // ENG-130: the opening post is the one flagged `isOp`, wherever it sits in
+    // the page — here it is SECOND, which under the old `data[0]` rule promoted
+    // the reply into the OP card and dropped it from the reply list.
+    const detail = threadDetail(
+      thread,
+      [
+        post({ id: "reply-1", canEdit: false }),
+        post({ id: "op-1", isOp: true }),
+      ],
+      t,
+      fmt,
+      true,
+    );
+    expect(detail.opPostId).toBe("op-1");
+    expect(detail.replies.map((reply) => reply.postId)).toEqual(["reply-1"]);
+  });
+
+  it("threadDetail renders every post as a reply when there is no OP", () => {
+    const thread: ForumThreadResponse = {
+      id: "thread-1",
+      slug: "welcome",
+      title: "Welcome",
+      author: { handle: "rita", displayName: "Rita V", avatarUrl: null },
+      category: "general",
+      isPinned: false,
+      isLocked: false,
+      lockReason: null,
+      replyCount: 1,
+      lastActivityAt: "2026-07-23T10:00:00Z",
+      createdAt: "2026-07-23T10:00:00Z",
+      canEdit: false,
+      canDelete: false,
+      canRestore: false,
+      canViewHistory: false,
+      canLock: false,
+      canPin: false,
+      opPostId: "op-1",
+      opVoteCount: 0,
+      myVote: 0,
+      tags: [],
+      isSubscribed: false,
+      acceptedPostId: null,
+      canAcceptAnswer: false,
+      canEditTags: false,
+      isDeleted: false,
+      excerpt: null,
+      unreadReplyCount: null,
     };
     const detail = threadDetail(
       thread,
-      [post({ id: "op-1" }), post({ id: "reply-1", canEdit: false })],
+      [post({ id: "reply-1" }), post({ id: "reply-2" })],
       t,
       fmt,
+      false,
     );
-    expect(detail.opPostId).toBe("op-1");
-    expect(detail.replies[0]?.postId).toBe("reply-1");
+    expect(detail.isOpAvailable).toBe(false);
+    expect(detail.body).toEqual([]);
+    expect(detail.replies.map((reply) => reply.postId)).toEqual([
+      "reply-1",
+      "reply-2",
+    ]);
   });
 
   it("threadToCard carries the official flag onto the author", () => {
@@ -108,6 +165,9 @@ describe("forum adapters carry the post id + flags", () => {
       acceptedPostId: null,
       canAcceptAnswer: false,
       canEditTags: false,
+      isDeleted: false,
+      excerpt: null,
+      unreadReplyCount: null,
     };
     const card = threadToCard(thread, t, fmt);
     expect(card.author.official).toBe(true);

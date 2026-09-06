@@ -241,4 +241,11 @@ export const feed: Catalog = {
   "mute.kind.forum_thread": "Tópico",
   "mute.mutedOn": "Baixado a {date}",
   "mute.unmute": "Voltar a mostrar",
+
+  // ── A revista como fonte do feed (PRD-107) ──────────────────────────────
+  "card.eyebrow.article": "Da revista",
+  "card.article.anonymousByline": "QueerPulse",
+  "article.byline": "Por {name}",
+  "article.inLanguage": "Este artigo está em {language}.",
+  "action.readPiece": "Ler o artigo",
 };

@@ -1,5 +1,5 @@
 // src/features/messages/MessageActionOverlay.tsx
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { useScrollLock, usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,11 +8,8 @@ import { MessageActionMenu } from "./MessageActionMenu";
 import { ReactionPicker } from "./ReactionPicker";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { renderWithLinks } from "./linkify";
+import { useActionOverlayFocusTrap } from "./useActionOverlayFocusTrap";
 import styles from "./MessagesPage.module.css";
-
-// Focusable-descendant selector for the Tab focus-trap (mirrors Modal.tsx).
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export interface MessageActionOverlayProps {
   /** The bubble body, rendered read-only in the lifted clone. */
@@ -41,6 +38,8 @@ export interface MessageActionOverlayProps {
   onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
+  /** "Delete for me" (PRD-227) — see `MessageActionMenu`'s own doc. */
+  onDeleteForMe: () => void;
   onReport: () => void;
   onClose: () => void;
 }
@@ -72,6 +71,7 @@ export function MessageActionOverlay({
   onEdit,
   onCopy,
   onDelete,
+  onDeleteForMe,
   onReport,
   onClose,
 }: MessageActionOverlayProps) {
@@ -80,59 +80,9 @@ export function MessageActionOverlay({
   const menuRef = useRef<HTMLDivElement>(null);
   const columnRef = useRef<HTMLDivElement>(null);
   useScrollLock();
-
-  // Close on Escape; move focus into the menu; trap Tab within the dialog so
-  // keyboard/screen-reader users can't reach the inert message list behind it;
-  // restore focus on unmount. (Trap mirrors the Modal.tsx pattern.)
-  useEffect(() => {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    menuRef.current?.focus();
-
-    const focusableItems = (): HTMLElement[] => {
-      const column = columnRef.current;
-      return column
-        ? Array.from(
-            column.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-          ).filter((element) => element.offsetParent !== null)
-        : [];
-    };
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const column = columnRef.current;
-      if (!column) return;
-      const items = focusableItems();
-      const firstItem = items[0];
-      const lastItem = items[items.length - 1];
-      const activeElement = document.activeElement;
-      if (!firstItem || !lastItem) {
-        event.preventDefault();
-        menuRef.current?.focus();
-        return;
-      }
-      if (
-        event.shiftKey &&
-        (activeElement === firstItem ||
-          activeElement === column ||
-          activeElement === menuRef.current)
-      ) {
-        event.preventDefault();
-        lastItem.focus();
-      } else if (!event.shiftKey && activeElement === lastItem) {
-        event.preventDefault();
-        firstItem.focus();
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      previouslyFocused?.focus?.();
-    };
-  }, [onClose]);
+  // Escape-to-close + Tab focus-trap — split into its own hook purely to
+  // keep this component under the 200-line cap; see its own doc.
+  useActionOverlayFocusTrap(menuRef, columnRef, onClose);
 
   // With the on-screen keyboard up, `window.innerHeight`/`innerWidth` still
   // report the LAYOUT viewport (unchanged by the keyboard), not what's
@@ -232,6 +182,7 @@ export function MessageActionOverlay({
           onEdit={onEdit}
           onCopy={onCopy}
           onDelete={onDelete}
+          onDeleteForMe={onDeleteForMe}
           onReport={onReport}
           onClose={onClose}
         />

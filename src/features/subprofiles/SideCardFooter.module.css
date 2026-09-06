@@ -1,0 +1,10 @@
+/* The "no address yet" explanation, sitting directly above the global
+   `.side-acts` row (persona-dashboard.css) rather than inside it: that row is
+   a flex track whose `> *` children each take an equal share, so a full-width
+   line placed among them would fight the buttons for space. */
+.addressNote {
+  margin: 0;
+  padding: var(--gap-xs) var(--card-pad) 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}

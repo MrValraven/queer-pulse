@@ -11,7 +11,11 @@ import {
   useAdminResourceSuggestions,
   type AdminResourceSuggestionCategoryFilter,
 } from "./api/useAdminResourceSuggestions";
-import { useAdminResourceSuggestionMutations } from "./api/useAdminResourceSuggestionMutations";
+import {
+  useAdminResourceSuggestionMutations,
+  type DecideResourceSuggestionVars,
+} from "./api/useAdminResourceSuggestionMutations";
+import { AdminResourceSuggestionApproveModal } from "./AdminResourceSuggestionApproveModal";
 import type {
   AdminResourceSuggestionDTO,
   ResourceListingCategory,
@@ -48,6 +52,24 @@ const ACTIONS: {
   { decision: "decline", status: "declined" },
   { decision: "archive", status: "archived" },
 ];
+
+/**
+ * Whether a decision is still open on this row (PRD-269).
+ *
+ * A published suggestion is finished on every action, not only approve: the
+ * organisation is live in the public directory, so declining would leave the
+ * queue and the directory contradicting each other and send the member a
+ * second, opposite answer. The backend refuses all three with a 409; the
+ * console says so by not offering them, and points at Resource listings, which
+ * is where a live row is taken down.
+ */
+function isDecisionOpen(
+  suggestion: AdminResourceSuggestionDTO,
+  status: ResourceSuggestionStatus,
+): boolean {
+  if (suggestion.createdListingId) return false;
+  return suggestion.status !== status;
+}
 
 // The status each decision resolves to — for the confirmation toast key.
 const DECISION_STATUS: Record<
@@ -119,13 +141,18 @@ function SuggestionRow({
         <AdminChip tone={STATUS_TONE[suggestion.status]} dot>
           {t(`admin:adminResourceSuggestions.status.${suggestion.status}`)}
         </AdminChip>
+        {suggestion.createdListingId && (
+          <AdminChip tone="jade" dot>
+            {t("admin:adminResourceSuggestions.publishedChip")}
+          </AdminChip>
+        )}
         <div className={styles.rowActionButtons}>
           {ACTIONS.map(({ decision, status }) => (
             <Button
               key={decision}
               variant="ghost"
               size="sm"
-              disabled={pending || suggestion.status === status}
+              disabled={pending || !isDecisionOpen(suggestion, status)}
               onClick={() => onDecide(decision)}
             >
               {t(`admin:adminResourceSuggestions.action.${decision}`)}
@@ -155,16 +182,25 @@ function RowsSkeleton() {
  * Admin resource-suggestion review queue (CNT-14): every "Suggest a
  * resource" a member has submitted for Legal Aid / Sexual Health Testing —
  * filterable by category. Demo mode reads the colocated fixture; live mode
- * calls `GET /admin/resource-suggestions` with pagination. Approving here
- * only records the decision — it never auto-creates a `ResourceListing`;
- * publishing the real, verified listing stays a deliberate, separate act on
- * Resource listings.
+ * calls `GET /admin/resource-suggestions` with pagination.
+ *
+ * Approving PUBLISHES (PRD-269). It opens a review form pre-filled from the
+ * suggestion, and the listing the reviewer confirms there is created in the
+ * same transaction as the decision, so a member told "accepted" can open the
+ * directory and find the organisation. Declining and archiving stay immediate:
+ * neither produces anything public.
  */
 export function AdminResourceSuggestionsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [filter, setFilter] =
     useState<AdminResourceSuggestionCategoryFilter>("all");
+  // The suggestion whose approval is being reviewed, or null. Approving is the
+  // one decision that opens a form first, because it is the one that publishes
+  // contact details a member typed and nobody has checked.
+  const [approving, setApproving] = useState<AdminResourceSuggestionDTO | null>(
+    null,
+  );
   const {
     suggestions,
     isLoading,
@@ -175,21 +211,34 @@ export function AdminResourceSuggestionsPage() {
   } = useAdminResourceSuggestions(filter);
   const { decide, pending } = useAdminResourceSuggestionMutations();
 
-  const handleDecide = (id: string, decision: ResourceSuggestionDecision) => {
-    decide(
-      { id, decision },
-      {
-        onSuccess: () =>
-          showToast(
-            t(
-              `admin:adminResourceSuggestions.toast.${DECISION_STATUS[decision]}`,
-            ),
-            "success",
+  const runDecision = (
+    variables: DecideResourceSuggestionVars,
+    onDone?: () => void,
+  ) => {
+    decide(variables, {
+      onSuccess: () => {
+        onDone?.();
+        showToast(
+          t(
+            `admin:adminResourceSuggestions.toast.${DECISION_STATUS[variables.decision]}`,
           ),
-        onError: () =>
-          showToast(t("admin:adminResourceSuggestions.toast.error"), "error"),
+          "success",
+        );
       },
-    );
+      onError: () =>
+        showToast(t("admin:adminResourceSuggestions.toast.error"), "error"),
+    });
+  };
+
+  const handleDecide = (
+    suggestion: AdminResourceSuggestionDTO,
+    decision: ResourceSuggestionDecision,
+  ) => {
+    if (decision === "approve") {
+      setApproving(suggestion);
+      return;
+    }
+    runDecision({ id: suggestion.id, decision });
   };
 
   return (
@@ -252,9 +301,7 @@ export function AdminResourceSuggestionsPage() {
                   <SuggestionRow
                     suggestion={suggestion}
                     pending={pending}
-                    onDecide={(decision) =>
-                      handleDecide(suggestion.id, decision)
-                    }
+                    onDecide={(decision) => handleDecide(suggestion, decision)}
                   />
                 </FadeIn>
               ))}
@@ -276,6 +323,25 @@ export function AdminResourceSuggestionsPage() {
           </>
         )}
       </FadeIn>
+
+      {approving && (
+        <AdminResourceSuggestionApproveModal
+          suggestion={approving}
+          isSaving={pending}
+          onClose={() => setApproving(null)}
+          onConfirm={(listing, note) =>
+            runDecision(
+              {
+                id: approving.id,
+                decision: "approve",
+                listing,
+                note: note.trim() ? note.trim() : undefined,
+              },
+              () => setApproving(null),
+            )
+          }
+        />
+      )}
     </AdminShell>
   );
 }

@@ -46,6 +46,18 @@ export const resources: Catalog = {
   // Shown when the modal offers a picker over a list (e.g. the guide library).
   "suggestEdit.body.introPicker":
     "Tell us which guide needs an update, and what you'd change.",
+  // PRD-264: the glossary's "Suggest a term" CTA now opens this modal in a
+  // new-term mode instead of routing to the generic Contact form, so a term
+  // suggestion arrives structured rather than as an unstructured inquiry.
+  "suggestEdit.newTerm.modalTitle": "Suggest a term",
+  "suggestEdit.body.introNewTerm":
+    "Missing a word you hear all the time? Tell us the term and what it means to you, and the editors will take it from there.",
+  "suggestEdit.form.newTermNameLabel": "The term",
+  "suggestEdit.form.newTermNamePlaceholder":
+    "The word or phrase, as people actually say it",
+  "suggestEdit.form.newTermDefinitionLabel": "What it means",
+  "suggestEdit.form.newTermDefinitionPlaceholder":
+    "How you would explain it to someone hearing it for the first time. Where you have heard it used helps too.",
   "suggestEdit.form.termLabel": "Which term",
   "suggestEdit.form.subjectLabel": "What's this about?",
   "suggestEdit.form.subjectFixedLabel": "Suggesting an edit for",
@@ -231,7 +243,8 @@ export const resources: Catalog = {
 
   "safety.outro.title": "Safety is a feature, <em>not a footnote.</em>",
   "safety.outro.sub": "Any questions about how the network works? Write to us.",
-  "safety.outro.cta": "hello@queerpulse.com",
+  // PRD-272: the mailto became the in-app intake.
+  "safety.outro.contactCta": "Write to us",
 
   "safety.subpageIndex.eyebrow": "Safety",
   "safety.subpageIndex.title": "Reporting & rights",
@@ -385,10 +398,24 @@ export const resources: Catalog = {
   "queer101.outro.exploreCta": "Explore communities",
 
   // ── GlossaryPage ────────────────────────────────────────────────────────
-  // Note: GlossaryPage has its OWN self-contained EN/PT term-language toggle
-  // (`GLOSSARY_COPY`, `BLOCKS` in glossary.data.tsx) independent of the site
-  // locale — deliberately left untouched (see sweep report). Only the
-  // language-invariant page chrome below is routed through the catalog.
+  // Note: GlossaryPage has its OWN EN/PT term-language toggle (`GLOSSARY_COPY`,
+  // `BLOCKS` in glossary.data.tsx) for the TERM content. As of PRD-267 that
+  // toggle STARTS on the site locale and becomes independent of it only after
+  // the reader flips it by hand. The page chrome below is routed through the
+  // catalog as usual.
+  // PRD-267: the category chips are a closed set of UI chrome, looked up by
+  // the English `category` string the backend stores (see
+  // GLOSSARY_CATEGORY_KEYS in glossary.data.tsx). A category outside this set
+  // falls back to its English label, which is honest rather than a chip that
+  // reads as a missing translation.
+  "glossary.category.essential": "Essential",
+  "glossary.category.healthcare": "Healthcare",
+  "glossary.category.identity": "Identity",
+  "glossary.category.identityContested": "Identity · contested",
+  "glossary.category.lisbon": "Lisbon",
+  "glossary.category.performance": "Performance",
+  "glossary.category.portugueseInCommunity": "Portuguese · in-community",
+  "glossary.category.queerpulsePlatform": "QueerPulse · platform",
   "glossary.meta.title": "LGBTQ+ glossary: queer terms explained (EN/PT)",
   "glossary.meta.description":
     "A living glossary of LGBTQ+ terms covering identity, healthcare, and Lisbon-specific words, in English and Portuguese, kept current and open to community edits.",
@@ -740,15 +767,13 @@ export const resources: Catalog = {
     "QueerPulse is a vouched-for, invite-only network. If someone you trust is already here, ask them to vouch for you.",
   "transHub.outro.cta": "Request an invite",
 
-  // ── TransHealthcarePage ──────────────────────────────────────────────────
-  // FLAGGED, partially swept — see sweep report. The ~26 detailed procedural
-  // steps in transHealthcare.data.ts (exact wait times, costs, legal
-  // citations, clinic names) and the CONTACTS list are deliberately left
-  // untranslated pending dedicated native review: this is the densest,
-  // highest-precision medical/legal content in the namespace and a rushed
-  // translation risks a subtly wrong wait-time or legal detail. Only the
-  // surrounding page chrome below (meta, hero, tab labels, section headers,
-  // sidebar, outro) is translated.
+  // ── TransHealthcarePage (+ TransHealthcareSections.tsx + transHealthcare.data.ts) ──
+  // Fully swept (DES-150). Dense medical/legal procedural detail: every wait
+  // time, cost, statute citation and clinic name is preserved exactly between
+  // EN and PT. Real-world proper nouns (SNS, ILGA Portugal, APAV, Conservatória
+  // do Registo Civil, Loja do Cidadão, Cartão de Cidadão, NIF, NISS, Synlab,
+  // Germano de Sousa) are never translated. Several items are flagged for
+  // native clinical/legal review — see the DES-150 handoff.
   "transHealthcare.meta.title":
     "Trans healthcare in Lisbon: clinics, name changes and where to start",
   "transHealthcare.meta.description":
@@ -796,6 +821,220 @@ export const resources: Catalog = {
   "transHealthcare.outro.sub":
     "The QueerPulse community includes trans-affirming GPs, therapists, and legal professionals. You do not have to navigate this alone.",
   "transHealthcare.outro.cta": "Find solidarity pricing",
+
+  // Pathway steps — HRT via SNS
+  "transHealthcare.hrtSns.step1.title": "Register with a centro de saúde",
+  "transHealthcare.hrtSns.step1.description":
+    "You need to be registered with a primary care health centre (centro de saúde) in Lisbon. If you are not, contact SNS 24 (808 24 24 24) or visit your nearest centro de saúde with your NIF, residency proof, and ID.",
+  "transHealthcare.hrtSns.step1.time": "Same day",
+  "transHealthcare.hrtSns.step1.cost": "Free",
+  "transHealthcare.hrtSns.step1.tip":
+    "If you are unregistered or do not have a local GP assigned, ILGA Portugal can help you navigate the registration system.",
+
+  "transHealthcare.hrtSns.step2.title":
+    "Book an appointment with your GP (médico de família)",
+  "transHealthcare.hrtSns.step2.description":
+    'Ask specifically for a referral for gender dysphoria assessment. You do not need to use the term "gender dysphoria". You can say you want a referral to a specialist for gender identity support.',
+  "transHealthcare.hrtSns.step2.time": "Days to weeks",
+  "transHealthcare.hrtSns.step2.cost": "Free",
+  "transHealthcare.hrtSns.step2.tip":
+    "If your GP is unhelpful or you do not have one assigned, ask to change GPs or use ILGA's accompaniment service.",
+
+  "transHealthcare.hrtSns.step3.title":
+    "GP refers you to psychiatry or psychology",
+  "transHealthcare.hrtSns.step3.description":
+    "The SNS pathway typically requires a psychiatric or psychological assessment before HRT. Your GP writes a referral to the mental health team at your local hospital or to the CHULN gender clinic at Hospital de Santa Maria.",
+  "transHealthcare.hrtSns.step3.time": "2–8 weeks",
+  "transHealthcare.hrtSns.step3.cost": "Free",
+
+  "transHealthcare.hrtSns.step4.title": "Initial assessment appointment",
+  "transHealthcare.hrtSns.step4.description":
+    "At Hospital de Santa Maria (CHULN) or the referral hospital. The first appointment is an information session. You are not being evaluated for worthiness. Bring your GP referral letter, ID, and any relevant mental health history.",
+  "transHealthcare.hrtSns.step4.time": "4–18 months waiting",
+  "transHealthcare.hrtSns.step4.cost": "Free (SNS)",
+  "transHealthcare.hrtSns.step4.tip":
+    "The waiting list is long. Register early even if you are uncertain. You can withdraw at any time.",
+
+  "transHealthcare.hrtSns.step5.title":
+    "Ongoing psychiatric or psychological support",
+  "transHealthcare.hrtSns.step5.description":
+    "Typically 2–4 appointments over 3–6 months. These are consultations, and nobody is asking you to prove your identity. Having a private therapist in parallel can help.",
+  "transHealthcare.hrtSns.step5.time": "3–6 months",
+  "transHealthcare.hrtSns.step5.cost": "Free (SNS)",
+
+  "transHealthcare.hrtSns.step6.title": "HRT prescription",
+  "transHealthcare.hrtSns.step6.description":
+    "Once the team supports HRT, your endocrinologist or GP prescribes hormones. The prescription is valid at any pharmacy. Some medications are subsidised under the SNS (comparticipados).",
+  "transHealthcare.hrtSns.step6.time": "After approval",
+  "transHealthcare.hrtSns.step6.cost": "€10–40/month (subsidised)",
+  "transHealthcare.hrtSns.step6.tip":
+    "Keep all receipts. Some costs may be partially reimbursed. Ask your GP about the comparticipação subsidy.",
+
+  "transHealthcare.hrtSns.step7.title": "Regular blood tests and follow-up",
+  "transHealthcare.hrtSns.step7.description":
+    "Typically every 3 months in the first year, then every 6 months. Blood tests are done at the hospital or your centro de saúde. Results are reviewed by your prescribing doctor.",
+  "transHealthcare.hrtSns.step7.time": "Ongoing",
+  "transHealthcare.hrtSns.step7.cost": "Free (SNS)",
+  "transHealthcare.hrtSns.step7.tip":
+    "Ask for a copy of your blood results every time. You are entitled to them, and they help if you ever switch providers.",
+
+  "transHealthcare.hrtSns.step8.title": "Monitoring and dose adjustments",
+  "transHealthcare.hrtSns.step8.description":
+    "Hormone levels are adjusted over time. This is a collaborative process. Tell your doctor what you are experiencing. Many trans people in Lisbon also supplement SNS care with private endocrinology for faster adjustments.",
+  "transHealthcare.hrtSns.step8.time": "Ongoing",
+  "transHealthcare.hrtSns.step8.cost": "Free (SNS)",
+
+  // Pathway steps — HRT privately
+  "transHealthcare.hrtPrivate.step1.title":
+    "Find a trans-affirming private endocrinologist or GP",
+  "transHealthcare.hrtPrivate.step1.description":
+    "The QueerPulse Solidarity Pricing Registry lists trans-affirming GPs offering sliding-scale fees. ILGA Portugal also maintains a list of recommended providers.",
+  "transHealthcare.hrtPrivate.step1.time": "Days",
+  "transHealthcare.hrtPrivate.step1.cost": "€50–150 first consultation",
+  "transHealthcare.hrtPrivate.step1.tip":
+    "Ask explicitly whether they have experience prescribing HRT for trans patients before booking.",
+
+  "transHealthcare.hrtPrivate.step2.title": "First consultation",
+  "transHealthcare.hrtPrivate.step2.description":
+    "Bring any previous relevant records (mental health assessments, blood tests, previous prescriptions). Private providers may prescribe HRT without a psychiatric assessment. Ask at booking.",
+  "transHealthcare.hrtPrivate.step2.time": "Can be within days",
+  "transHealthcare.hrtPrivate.step2.cost": "€60–150",
+  "transHealthcare.hrtPrivate.step2.tip":
+    "Informed consent model: many private providers in Lisbon now work this way. You do not need a psychiatric diagnosis.",
+
+  "transHealthcare.hrtPrivate.step3.title": "Prescription and pharmacy",
+  "transHealthcare.hrtPrivate.step3.description":
+    "You will receive a private prescription valid at any pharmacy. Some medications are not subsidised on a private prescription. Ask your doctor about alternatives.",
+  "transHealthcare.hrtPrivate.step3.time": "Same day",
+  "transHealthcare.hrtPrivate.step3.cost": "€20–80/month",
+
+  "transHealthcare.hrtPrivate.step4.title": "Blood tests",
+  "transHealthcare.hrtPrivate.step4.description":
+    "Can be done at private labs (Synlab, Germano de Sousa) or via a convenção (agreement) with the SNS. Results typically back within 24–48 hours.",
+  "transHealthcare.hrtPrivate.step4.time": "Every 3–6 months",
+  "transHealthcare.hrtPrivate.step4.cost": "€30–80 per panel",
+
+  "transHealthcare.hrtPrivate.step5.title": "Follow-up appointments",
+  "transHealthcare.hrtPrivate.step5.description":
+    "Frequency varies. Most providers want to see you at 3 months, then 6 months once stable.",
+  "transHealthcare.hrtPrivate.step5.time": "Ongoing",
+  "transHealthcare.hrtPrivate.step5.cost": "€50–120/appointment",
+  "transHealthcare.hrtPrivate.step5.tip":
+    "Consider switching to SNS for ongoing monitoring once you are stable, to reduce costs. This is possible and common.",
+
+  // Pathway steps — legal name change
+  "transHealthcare.legalName.step1.title": "Understand your rights",
+  "transHealthcare.legalName.step1.description":
+    "Under Lei n.º 38/2018 (in force since 2018), any person over 18 can change their first name and gender marker on civil documents through self-declaration. No medical evidence, surgery, or psychiatric report is required. 16–17 year olds can apply with parental consent.",
+  "transHealthcare.legalName.step1.time": "Read first",
+  "transHealthcare.legalName.step1.cost": "Free",
+  "transHealthcare.legalName.step1.tip":
+    "ILGA Portugal has a free, detailed guide in PT and EN. Download it before you start.",
+
+  "transHealthcare.legalName.step2.title":
+    "Book an appointment at the Conservatória do Registo Civil",
+  "transHealthcare.legalName.step2.description":
+    'You can do this online at agendamento.mj.pt or by phone. The Conservatória in Lisbon is at Rua Rodrigo da Fonseca 226. Ask for an appointment for "alteração de nome e sexo ao abrigo da Lei n.º 38/2018".',
+  "transHealthcare.legalName.step2.time": "1–4 weeks to get appointment",
+  "transHealthcare.legalName.step2.cost": "Free",
+
+  "transHealthcare.legalName.step3.title": "The appointment",
+  "transHealthcare.legalName.step3.description":
+    "You appear in person and make a declaration. You will need your Bilhete de Identidade or Cartão de Cidadão, NIF, and NISS. You declare your name and gender marker. No supporting documents are required.",
+  "transHealthcare.legalName.step3.time": "30–60 minutes",
+  "transHealthcare.legalName.step3.cost": "Free",
+
+  "transHealthcare.legalName.step4.title": "Waiting period",
+  "transHealthcare.legalName.step4.description":
+    "There is a 1-month waiting period after the declaration, during which you can withdraw. After 1 month, the change is registered automatically. You will be notified by the Conservatória.",
+  "transHealthcare.legalName.step4.time": "1 month",
+  "transHealthcare.legalName.step4.cost": "Free",
+  "transHealthcare.legalName.step4.tip":
+    "ILGA Portugal recommends using this period to prepare employers, doctors, and landlords for the change so everything updates together.",
+
+  "transHealthcare.legalName.step5.title": "New documents",
+  "transHealthcare.legalName.step5.description":
+    "After registration: request a new Cartão de Cidadão at any Loja do Cidadão or at IRN. Also update: NIF, NISS, SNS records, passport (if needed), bank accounts, employer HR records.",
+  "transHealthcare.legalName.step5.time": "1–4 weeks for new CC",
+  "transHealthcare.legalName.step5.cost": "€15 for Cartão de Cidadão",
+  "transHealthcare.legalName.step5.tip":
+    "Bring your name change certificate to every update. Request multiple certified copies from the Conservatória at the time of registration.",
+
+  // Pathway steps — gender marker
+  "transHealthcare.genderMarker.step1.title":
+    "Included in the Lei n.º 38/2018 process",
+  "transHealthcare.genderMarker.step1.description":
+    "In Portugal, gender marker (M/F) change on civil documents is done in the same appointment as the legal name change. They are a single process. You do not need separate applications.",
+  "transHealthcare.genderMarker.step1.time": "Same as name change",
+  "transHealthcare.genderMarker.step1.cost": "Free",
+  "transHealthcare.genderMarker.step1.tip":
+    "The Conservatória will update your birth registration to reflect your chosen gender marker. This flows to all other documents.",
+
+  "transHealthcare.genderMarker.step2.title":
+    "After the change: updating records",
+  "transHealthcare.genderMarker.step2.description":
+    "SNS records: contact your centro de saúde with your updated Cartão de Cidadão. Tax authority (AT): update via Portal das Finanças or in person. Social security (NISS): update at Segurança Social Direta online or in person.",
+  "transHealthcare.genderMarker.step2.time": "Days to weeks",
+  "transHealthcare.genderMarker.step2.cost": "Free",
+
+  "transHealthcare.genderMarker.step3.title": "Passport and travel documents",
+  "transHealthcare.genderMarker.step3.description":
+    "Apply for a new passport after your Cartão de Cidadão is updated. Submit at any Loja do Cidadão or the Passport Office with your new CC and €65 fee. Urgent passport available for €100.",
+  "transHealthcare.genderMarker.step3.time": "1–4 weeks",
+  "transHealthcare.genderMarker.step3.cost": "€65–100",
+  "transHealthcare.genderMarker.step3.tip":
+    "If you travel frequently, apply for the new passport as soon as your CC arrives. Do not wait.",
+
+  "transHealthcare.genderMarker.step4.title": "Non-binary or outside M/F",
+  "transHealthcare.genderMarker.step4.description":
+    "Portuguese law currently only provides for M and F markers on civil documents. Advocacy for X/non-binary markers is ongoing. ILGA Portugal is the best source for current status.",
+  "transHealthcare.genderMarker.step4.time": "Ongoing advocacy",
+  "transHealthcare.genderMarker.step4.cost": "N/A",
+
+  // Pathway steps — surgery access
+  "transHealthcare.surgery.step1.title": "SNS pathway: via the gender clinic",
+  "transHealthcare.surgery.step1.description":
+    "Gender-affirming surgeries are available through the SNS at CHULN (Hospital de Santa Maria) following the gender clinic pathway. You must be in the SNS pathway and have been receiving HRT for a minimum period (typically 12 months for most surgeries).",
+  "transHealthcare.surgery.step1.time": "2–5+ years from referral",
+  "transHealthcare.surgery.step1.cost": "Free (SNS)",
+  "transHealthcare.surgery.step1.tip":
+    "Waiting lists for surgery are very long. Register for the SNS pathway as early as possible even if surgery is not immediately your goal.",
+
+  "transHealthcare.surgery.step2.title": "Psychiatric support letter",
+  "transHealthcare.surgery.step2.description":
+    "For surgery through the SNS, a letter from a psychiatrist or psychologist involved in your care is typically required. It is documentation, and your gender clinic team provides it.",
+  "transHealthcare.surgery.step2.time": "Included in pathway",
+  "transHealthcare.surgery.step2.cost": "Free (SNS)",
+
+  "transHealthcare.surgery.step3.title": "Private surgery in Portugal",
+  "transHealthcare.surgery.step3.description":
+    "Private gender-affirming surgery is available in Portugal from specialist plastic and urological surgeons. Costs range widely. Ask ILGA Portugal for current surgeon recommendations and transparent pricing.",
+  "transHealthcare.surgery.step3.time": "Faster than SNS",
+  "transHealthcare.surgery.step3.cost": "€4,000–20,000+ depending on procedure",
+  "transHealthcare.surgery.step3.tip":
+    "Some insurers in Portugal cover gender-affirming surgery. Check your policy. ILGA Portugal has experience with insurance appeals.",
+
+  "transHealthcare.surgery.step4.title": "Surgery abroad",
+  "transHealthcare.surgery.step4.description":
+    "Many community members access surgery in Spain (Barcelona, Madrid), Thailand, and Germany. ILGA Portugal can advise on reputable providers. Travel and recovery support may be available through mutual aid.",
+  "transHealthcare.surgery.step4.time": "Varies",
+  "transHealthcare.surgery.step4.cost": "Varies by country",
+  "transHealthcare.surgery.step4.tip":
+    "The QueerPulse community has members with firsthand experience of surgery abroad. Post in the forum or contact us to be connected.",
+
+  // Sidebar key contacts. `org` stays literal in the data file. The `.contact`
+  // values below are phone numbers and web addresses: the PT catalog repeats
+  // them byte for byte on purpose. Only `chlc.contact` is prose.
+  "transHealthcare.contact.ilga.role": "Legal support, referrals, advocacy",
+  "transHealthcare.contact.ilga.contact": "ilga-portugal.pt · 213 887 615",
+  "transHealthcare.contact.redeExAequo.role": "Youth LGBTQ+ support (under 30)",
+  "transHealthcare.contact.redeExAequo.contact": "rea.pt · apoio@rea.pt",
+  "transHealthcare.contact.apav.role": "Victim support, hate crimes",
+  "transHealthcare.contact.apav.contact": "apav.pt · 116 006",
+  "transHealthcare.contact.sns24.role": "Health referrals, GP allocation",
+  "transHealthcare.contact.sns24.contact": "808 24 24 24",
+  "transHealthcare.contact.chuln.role": "Hospital de Santa Maria, Lisboa",
+  "transHealthcare.contact.chuln.contact": "SNS referral required",
 
   // ── HarmReductionPage (+ HarmReductionSections.tsx + harmReduction.data.tsx) ──
   // Overdose response / substance-safety guidance — the highest-stakes copy
@@ -1916,8 +2155,36 @@ export const resources: Catalog = {
   "qtipocArchive.outro.cta": "Talk to the group",
 
   // ── QtipocOrganisationsPage (+ qtipocOrganisations.data.ts) ─────────────
-  // ORGS (name/mission/offers/tags) are a directory record of real
-  // organisations — kept English per the scope rule. Chrome is translated.
+  // Fully swept (DES-150). Each organisation's own `name` and `href` stay
+  // literal in the data file; the mission line, the offer line and the tags
+  // are translated. Tag keys are shared across entries.
+  "qtipocOrganisations.org.casaT.mission":
+    "Housing and support for trans and gender-diverse people, with particular care for migrants and racialised communities.",
+  "qtipocOrganisations.org.casaT.offers":
+    "Emergency housing, peer support, referrals.",
+  "qtipocOrganisations.org.djass.mission":
+    "Association defending the rights and visibility of people of African descent in Portugal.",
+  "qtipocOrganisations.org.djass.offers":
+    "Advocacy, cultural programming, community events.",
+  "qtipocOrganisations.org.redeExAequo.mission":
+    "National LGBTQ+ youth association with intersectional working groups across the country.",
+  "qtipocOrganisations.org.redeExAequo.offers":
+    "Youth groups, school support, peer networks.",
+  "qtipocOrganisations.org.ilga.mission":
+    "The country's longest-running LGBTQ+ organisation, with legal and social support services.",
+  "qtipocOrganisations.org.ilga.offers":
+    "Legal helpline, support groups, documentation help.",
+
+  "qtipocOrganisations.tag.housing": "Housing",
+  "qtipocOrganisations.tag.trans": "Trans",
+  "qtipocOrganisations.tag.migrant": "Migrant",
+  "qtipocOrganisations.tag.afrodescendant": "Afrodescendant",
+  "qtipocOrganisations.tag.advocacy": "Advocacy",
+  "qtipocOrganisations.tag.youth": "Youth",
+  "qtipocOrganisations.tag.national": "National",
+  "qtipocOrganisations.tag.legal": "Legal",
+  "qtipocOrganisations.tag.support": "Support",
+
   "qtipocOrganisations.meta.title":
     "QTIPOC organisations in Portugal and how to reach them",
   "qtipocOrganisations.meta.description":

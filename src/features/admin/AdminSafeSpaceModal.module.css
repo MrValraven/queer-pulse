@@ -61,6 +61,70 @@
   color: var(--ink-60);
 }
 
+/* ── The below-the-bar exception ──────────────────────────────
+   Shown only on a transition INTO verified for a listing under the
+   independent-visit bar, mirroring the server's own gate. Amber rather than
+   danger: this is a decision the moderator is allowed to make, so it should
+   read as stop-and-read rather than as an error. */
+.overrideBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--amber-rgb), 0.35);
+  border-radius: var(--radius-14);
+  background: rgba(var(--amber-rgb), 0.1);
+}
+
+.overrideTitle {
+  margin: 0;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.overrideLabel {
+  display: block;
+  margin: 4px 0 0;
+  font-size: var(--text-11);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-60);
+}
+
+.overrideNote {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.overrideCount {
+  margin: 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+}
+
+.overrideShort {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--accent-ink);
+}
+
+.overrideRefusal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
 /* ── Repeatable promises / vouches ────────────────────────── */
 .repeatSection {
   display: flex;

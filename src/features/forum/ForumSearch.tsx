@@ -68,8 +68,11 @@ export function ForumSearch({
           </button>
         )}
       </div>
-      {/* Post/reply bodies aren't indexed (deliberate — see forum-threads.service.ts),
-          so a hint keeps a body-only match from reading as a missing result. */}
+      {/* PRD-164: the server now matches a thread's TITLE or the body of any
+          non-deleted, non-hidden reply in it, so the hint no longer sends a
+          member off to look elsewhere for something this box does. It still
+          names the boundary honestly: this searches the forum, not the whole
+          platform. */}
       <p id="forum-search-hint" className={styles.searchHint}>
         {t("forum:search.hint")}
       </p>

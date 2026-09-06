@@ -258,8 +258,18 @@ export const magazine: Catalog = {
   "deck.editor.budget.count": "{count} / {max} characters",
   "deck.editor.saved": "Draft saved",
   "deck.editor.publishedToast": "Deck published",
+  "deck.editor.scheduledToast": "Deck scheduled",
+  "deck.editor.unpublishedToast": "Deck unpublished",
   "deck.editor.deletedToast": "Deck deleted",
   "deck.editor.saveError": "We couldn't save your deck. Please try again.",
+  "deck.editor.publishNotReadyError":
+    "Add at least one slide, and alt text on every image, before publishing.",
+  // ENG-112: a published or piece-linked deck can no longer be deleted, so the
+  // refusal has to say which of the two it is and what unblocks it.
+  "deck.editor.deleteBlockedPublished":
+    "Unpublish this deck before deleting it.",
+  "deck.editor.deleteBlockedLinked":
+    "This deck belongs to a piece in the desk. Delete the piece to remove both.",
   "deck.editor.backToDashboard": "Back to dashboard",
   "deck.editor.metaTitle": "Deck details",
   "deck.editor.untitled": "Untitled deck",
@@ -269,8 +279,14 @@ export const magazine: Catalog = {
   "deck.editor.slidesHeading": "Slides",
   "deck.editor.slidesCount": "{count} of {max} · click a slide to edit",
   "deck.editor.slidesCapped": "40-slide maximum reached",
-  "deck.editor.publish.notNowNote":
-    "This ships as soon as you press Publish. Deck scheduling isn't wired up yet.",
+  // PRD-131 wired deck scheduling, so the rail now says what will actually
+  // happen: ride the issue, wait for a date, or go now.
+  "deck.editor.publish.issueLinked":
+    "Ships automatically when issue {number} goes out.",
+  "deck.editor.publish.issueUnlinked":
+    "This deck is not in an issue yet. Add it to one from its piece record, or publish it now or on a date.",
+  "deck.editor.publish.scheduledFor":
+    "Scheduled for {date} at {time}. Readers cannot see it until then.",
   "deck.editor.publish.checklist.cover": "Cover slide set",
   "deck.editor.publish.checklist.source":
     "Source line on every stat slide (optional)",
@@ -279,10 +295,20 @@ export const magazine: Catalog = {
   "deck.editor.danger.title": "Danger zone",
   "deck.editor.danger.body":
     "Deleting a deck removes it everywhere it's linked. This can't be undone.",
+  "deck.editor.danger.blockedPublished":
+    "This deck is live. Unpublish it first, then it can be deleted.",
+  "deck.editor.danger.blockedLinked":
+    "This deck belongs to a piece in the desk. Delete the piece, which removes the deck with it.",
   "deck.editor.danger.cta": "Delete this deck",
   "deck.editor.deleteModal.title": "Delete this deck?",
-  "deck.editor.deleteModal.body":
-    "This removes the deck and every slide in it. Readers who already have the link will see a 404.",
+  // Replaces the old flat body, which promised readers a 404. ENG-112 blocks
+  // deleting a published deck outright, so no reader can reach that state.
+  "deck.editor.deleteModal.detail_one":
+    "Deleting removes {title} and its {count} slide. There is no undo, and no copy is kept.",
+  "deck.editor.deleteModal.detail_other":
+    "Deleting removes {title} and its {count} slides. There is no undo, and no copy is kept.",
+  "deck.editor.deleteModal.draftOnly":
+    "Only a draft deck can be deleted, so nobody outside the desk loses anything.",
   "deck.editor.convertModal.title": "Turn this into prose?",
   "deck.editor.convertModal.body":
     "Text and image slides carry straight over into article blocks, and each stat becomes a stats block. Interactive slides (before/after, reveal) have no article equivalent and will be dropped. This can't be undone.",
@@ -577,6 +603,13 @@ export const magazine: Catalog = {
     "Still loading your editor profile. Try again in a moment.",
   "desk.write.noSection":
     "No sections are set up yet, so there is nowhere for this piece to run.",
+  // PRD-130: distinct from `noSection` above, which is the honest "this
+  // magazine has none configured" case. These two are the taxonomy fetch still
+  // in flight, and the taxonomy fetch having failed.
+  "desk.write.sectionsLoading":
+    "Still loading the section list. Try again in a moment.",
+  "desk.write.sectionsUnavailable":
+    "The section list could not be loaded, so this piece has nowhere to run. Reload the desk and try again.",
   "desk.header.produce": "Issue production",
   "desk.header.slotsFilledAria": "Issue slots filled",
   "desk.header.layoutAria": "Desk layout",
@@ -665,6 +698,10 @@ export const magazine: Catalog = {
 
   // ── SavedViews ───────────────────────────────────────────────────────────
   "desk.savedViews.saveThisView": "Save this view",
+  "desk.savedViews.lateOrAtRisk": "Late or at risk",
+  "desk.savedViews.waitingOnArt": "Waiting on art",
+  "desk.savedViews.needsSensitivityRead": "Needs a sensitivity read",
+  "desk.savedViews.unpaidAfterFiling": "Unpaid after filing",
 
   // ── PiecesPipeline ───────────────────────────────────────────────────────
   "desk.pipeline.emptyTitle": "The desk is clear",
@@ -770,7 +807,6 @@ export const magazine: Catalog = {
   "deskShell.issueEyebrow": "Issue {number} · {theme}",
   "deskShell.menuAria": "Magazine desk sections",
   "deskShell.nav.desk": "Desk",
-  "deskShell.nav.pitches": "Pitches",
   "deskShell.nav.issue": "Issue",
   "deskShell.nav.lifecycle": "Archive",
   "deskShell.openNow": "Open now",
@@ -783,6 +819,15 @@ export const magazine: Catalog = {
   "desk.modals.noteLabel": "Your note",
   "desk.modals.shortcuts.title": "Keyboard",
   "desk.modals.shortcuts.gotIt": "Got it",
+  // The chord itself ("j / k", "⌘K") is rendered verbatim and stays out of the
+  // catalog: a key name is the same in every locale. Only what it does is copy.
+  "desk.modals.shortcuts.moveBetween": "Move between pieces",
+  "desk.modals.shortcuts.openFocused": "Open the focused piece",
+  "desk.modals.shortcuts.chaseWriter": "Chase the writer",
+  "desk.modals.shortcuts.writeYourself": "Write a piece yourself",
+  "desk.modals.shortcuts.triageTopPitch": "Triage the top pitch",
+  "desk.modals.shortcuts.jumpAnywhere": "Jump anywhere, or start a piece",
+  "desk.modals.shortcuts.thisList": "This list",
 
   // ── CommissionModal ──────────────────────────────────────────────────────
   "desk.modals.commission.titleFromPitch": "Commission this pitch",
@@ -801,6 +846,12 @@ export const magazine: Catalog = {
   "desk.modals.commission.trackLabel": "Where it runs",
   "desk.modals.commission.trackUnassigned": "No issue",
   "desk.modals.commission.trackIssue": "Issue {number}",
+  // PRD-130: the Section picker and Send brief are disabled together whenever
+  // the section list is empty, and this says why rather than offering an
+  // empty dropdown.
+  "desk.modals.commission.sectionsUnavailable":
+    "The section list has not loaded, so there is nowhere for this brief to run yet.",
+  "desk.modals.commission.sectionsEmptyOption": "No sections available",
 
   // ── PassModal ────────────────────────────────────────────────────────────
   "desk.modals.pass.title": "Pass on “{title}”",
@@ -808,6 +859,21 @@ export const magazine: Catalog = {
   "desk.modals.pass.body":
     "A pass lands easier with a real reason. Pick a starting point below, or write your own. Either way, the writer hears from a real person.",
   "desk.modals.pass.startingPoints": "Starting points",
+  // Each `label` names a chip; each `body` is seeded into the editable note the
+  // writer eventually reads, so it has to stand as real prose from an editor.
+  // The deck template's chip reuses `desk.pitchRow.betterAsDeck`, so only its
+  // body is here.
+  "desk.modals.pass.templates.notForUs.label": "Not for us",
+  "desk.modals.pass.templates.notForUs.body":
+    "Thank you for trusting us with this. It is not the right fit for QueerPulse. We are not the home this piece deserves, and I would rather say so than sit on it. Please do send us the next one.",
+  "desk.modals.pass.templates.notNow.label": "Not now",
+  "desk.modals.pass.templates.notNow.body":
+    "I like this a lot, but issue 14 is full and the timing works against it. Can I come back to you for issue 16, when the theme is closer? No obligation either way.",
+  "desk.modals.pass.templates.anotherSection.label": "Try another section",
+  "desk.modals.pass.templates.anotherSection.body":
+    "This does not work as a feature, but it would sit beautifully in Service: shorter, more practical, same reporting. Want me to commission it that way?",
+  "desk.modals.pass.templates.betterAsDeck.body":
+    "The reporting is strong but the shape is wrong: this wants to be a deck. If you are up for it, I would commission it as eight or nine slides.",
 
   // ── ChaseModal (Phase 7 Wave F: embeds PieceThread, no separate compose step) ─
   "desk.modals.chase.title": "Chase {name}",
@@ -820,6 +886,40 @@ export const magazine: Catalog = {
   "desk.modals.handoff.body":
     "Hand “{title}” to another editor. They pick up right where you left off.",
   "desk.modals.handoff.toLabel": "To",
+
+  // ── Editorial pipeline stage names (desk/stageLabels.ts) ─────────────────
+  // Supersedes the "left unswept here" note in this section's header: the raw
+  // `Stage` ids that StagePill, StageStepper, PiecesBoard's column headings and
+  // stage picker, IssuePlan's slot cards and `usePieceMutations`' "Moved to
+  // {stage}" toast all echoed as display text now resolve through one lookup.
+  //
+  // Kept separate from `pitchTracker.stage.*` on purpose. That set is the
+  // MEMBER-facing pitch journey (Pitched / Accepted / First draft); this one is
+  // the desk's editorial pipeline. Three of them collide in English by
+  // accident, and the Portuguese diverges. Merging them would tie a member's
+  // vocabulary to an internal workflow. Genders agree with "peça" (feminine).
+  "desk.stage.commissioned": "Commissioned",
+  "desk.stage.drafting": "Drafting",
+  "desk.stage.inReview": "In review",
+  "desk.stage.edit": "Edit",
+  "desk.stage.sensitivityRead": "Sensitivity read",
+  "desk.stage.layout": "Layout",
+  "desk.stage.ready": "Ready",
+  "desk.stage.published": "Published",
+
+  // ── Desk mutation toasts (usePieceMutations / usePitchMutations) ─────────
+  // `TRIAGE_TOAST_KEY.commission` deliberately points at
+  // `desk.pieceToast.commissioned`: the verdict IS a commission, same copy.
+  // These stay distinct from `piece.brief.commissioned`, which is a key/value
+  // FIELD LABEL in the Brief tab and wants a different Portuguese form.
+  "desk.pieceToast.commissioned": "Commissioned",
+  "desk.pieceToast.draftStarted": "Draft started",
+  "desk.pieceToast.movedToStage": "Moved to {stage}",
+  "desk.pieceToast.handedOff": "Handed off",
+  "desk.pieceToast.deleted": "Deleted",
+  "desk.pitchToast.maybe": "Marked as maybe",
+  "desk.pitchToast.passed": "Pitch passed",
+  "desk.pitchToast.added": "Pitch added",
 
   // ── DeskView ─────────────────────────────────────────────────────────────
 
@@ -839,7 +939,6 @@ export const magazine: Catalog = {
   "piece.header.backToDesk": "Back to the desk",
   "piece.header.openDraft": "Open the draft",
   "piece.header.publish": "Publish",
-  "piece.header.publishToast": "Publishing arrives with issue production",
   "piece.header.formatArticle": "Article",
   "piece.header.formatDeck": "Deck",
   "piece.header.inAnIssue": "In an issue",
@@ -864,6 +963,61 @@ export const magazine: Catalog = {
   "piece.gate.notAdvisory":
     "The gate is not advisory. Nothing here can be overridden by one person alone.",
   "piece.gate.publish": "Publish",
+
+  // ── Publish / unpublish from the piece record (PRD-119, PRD-120) ─────────
+  // The care gate is enforced server-side, so the client copy has two jobs:
+  // say what is holding the piece before the editor presses anything, and
+  // render the desk's own refusal honestly when it comes back anyway (another
+  // editor opened a care item between the render and the click).
+  "piece.publish.openCareTab": "Open the Care tab",
+  "piece.publish.unpublish": "Unpublish",
+  "piece.publish.viewLive": "View live",
+  "piece.publish.viewLiveAria": "View “{title}” as readers see it",
+  "piece.publish.liveSince": "Live since {date}",
+  "piece.publish.scheduledFor": "Scheduled for {date}",
+  "piece.publish.blockedByGate_one":
+    "Publish is blocked: {count} care item is still open.",
+  "piece.publish.blockedByGate_other":
+    "Publish is blocked: {count} care items are still open.",
+  "piece.publish.blockedToast_one":
+    "Resolve the {count} open care item before publishing.",
+  "piece.publish.blockedToast_other":
+    "Resolve the {count} open care items before publishing.",
+  "piece.publish.publishedToast": "Published. It is live for readers now.",
+  "piece.publish.unpublishedToast":
+    "Taken down. Readers can no longer reach it.",
+  "piece.publish.failedToast": "Could not publish this piece. Try again.",
+  "piece.publish.unpublishFailedToast":
+    "Could not take this piece down. Try again.",
+  "piece.publish.refusedCareGateHeading": "Held by the care gate",
+  "piece.publish.refusedCareGateToast":
+    "This piece is still behind its care gate.",
+  "piece.publish.refusedNotReadyHeading": "Not ready to publish",
+  "piece.publish.refusedNotReadyToast":
+    "This piece is not ready to publish yet.",
+  "piece.publish.refusedNoDetail":
+    "The desk gave no reason. Reload the record and try again.",
+  "piece.publish.confirmPublishTitle": "Publish “{title}”?",
+  "piece.publish.confirmPublishSub": "It goes live to readers straight away.",
+  "piece.publish.confirmPublishBody":
+    "The writer is told it went out. You can take it down again at any time, and nothing is deleted when you do.",
+  "piece.publish.confirmPublishCta": "Publish it",
+  "piece.publish.confirmUnpublishTitle": "Take “{title}” down?",
+  "piece.publish.confirmUnpublishSub": "Readers lose access to it immediately.",
+  "piece.publish.confirmUnpublishBody":
+    "Nothing is deleted. The piece goes back to Ready and you can publish it again whenever you want.",
+  "piece.publish.confirmUnpublishCta": "Take it down",
+  "piece.publish.confirmCancel": "Not yet",
+
+  // ── Piece record demo toasts (api/useRecordMutations.ts) ─────────────────
+  // Demo mode only, where the record is static and the mutation resolves with
+  // no network call. Demo is a real surface, so they are translated.
+  "piece.recordToast.saved": "Saved",
+  "piece.recordToast.markedPaid": "Marked paid",
+  "piece.recordToast.letterAdded": "Letter added",
+  "piece.recordToast.markedRunInLetters": "Marked to run in letters",
+  "piece.recordToast.removedFromLetters": "Removed from letters",
+  "piece.recordToast.correctionPublished": "Correction published",
 
   // ── MoneyMiniCard ────────────────────────────────────────────────────────
   "piece.moneyMini.heading": "Money",
@@ -1142,9 +1296,16 @@ export const magazine: Catalog = {
   // ── PitchTrackerHeader ─────────────────────────────────────────────────
   "pitchTracker.header.eyebrow": "Magazine · your pitches",
   "pitchTracker.header.title": "Where every pitch <em>actually is.</em>",
-  "pitchTracker.header.lead":
-    "{active} pitches active · {published} published all-time. Editorial replies within <b>~ {days} days</b>.",
   "pitchTracker.header.newPitchCta": "+ New pitch",
+  // PRD-129 replaced `pitchTracker.header.lead`, which interpolated three
+  // hardcoded prototype numbers and promised a turnaround nothing measures.
+  // Two pluralized fragments over real counts, rendered by `Translation`.
+  "pitchTracker.header.leadActive_one": "{count} pitch with the desk right now",
+  "pitchTracker.header.leadActive_other":
+    "{count} pitches with the desk right now",
+  "pitchTracker.header.leadPublished_one": "<b>{count} published</b> all-time",
+  "pitchTracker.header.leadPublished_other":
+    "<b>{count} published</b> all-time",
 
   // ── PitchTabs ──────────────────────────────────────────────────────────
   "pitchTracker.tabs.ariaLabel": "Pitch status",
@@ -1161,6 +1322,25 @@ export const magazine: Catalog = {
   "pitchTracker.page.withdrawnToast": "Pitch withdrawn",
   "pitchTracker.page.undoCta": "Undo",
   "pitchTracker.page.stubToast": "{label}: coming soon in this prototype",
+  "pitchTracker.page.loadErrorTitle": "We couldn't load your pitches",
+  "pitchTracker.page.loadErrorBody":
+    "Everything you sent is still with the desk. Try again in a moment.",
+
+  // ── Withdrawing a pitch (PRD-125) ────────────────────────────────────────
+  // Live mode. `pitchTracker.page.withdrawnToast` above stays as the DEMO
+  // undo-able toast; a live withdrawal is final, so it says so and offers no
+  // Undo. The decided case is the 409 the desk answers with when it got there
+  // first, which is a real outcome rather than a failure.
+  "pitchTracker.card.withdrawCta": "Withdraw",
+  "pitchTracker.withdraw.confirmTitle": "Withdraw this pitch?",
+  "pitchTracker.withdraw.confirmBody":
+    "The desk stops seeing it and it leaves your tracker. You cannot undo this, though you are always welcome to pitch the story again.",
+  "pitchTracker.withdraw.confirmCta": "Withdraw pitch",
+  "pitchTracker.withdraw.doneToast": "Pitch withdrawn.",
+  "pitchTracker.withdraw.decidedToast":
+    "The desk has already answered this pitch, so it can no longer be withdrawn.",
+  "pitchTracker.withdraw.failedToast":
+    "We couldn't withdraw that pitch. Try again in a moment.",
 
   // ── PitchCard ─────────────────────────────────────────────────────────
   // The note author/body are an editor's own words (content); only the
@@ -1285,6 +1465,16 @@ export const magazine: Catalog = {
   "write.header.leaveConfirm":
     "Some edits haven't reached the server yet. Leave the editor?",
   "write.header.issueScheduled": "Scheduled in an issue",
+  "write.header.savedConflict": "Saving paused",
+
+  // ── Save conflict (ENG-111) ──────────────────────────────────────────────
+  // A second editor saved this article after this tab loaded it. Autosave
+  // stops instead of overwriting them, so the copy has to be blunt that
+  // reloading costs this tab's edits.
+  "write.conflict.heading": "This draft moved on",
+  "write.conflict.body":
+    "Someone else saved this article after you opened it, so we stopped saving rather than write over their work. Reloading brings in the current version and discards the edits in this tab, so copy anything you want to keep first.",
+  "write.conflict.reloadCta": "Reload the current draft",
 
   // ── Draft/Shape/Read mode seg (editorMode.ts) ────────────────────────────
   "write.mode.draft": "Draft",
@@ -1398,6 +1588,15 @@ export const magazine: Catalog = {
   "write.publish.checklist.sensitivity":
     "Sensitivity read: handled in the piece record",
   "write.publish.checklist.source": "Source line on the stat row (optional)",
+  // ENG-111: the server's own refusal, surfaced in the rail. The not-ready
+  // toast reuses `write.header.publishNotReadyError` above, which already says
+  // exactly what to add.
+  "write.publish.gate.careHeading":
+    "The care gate is still open on this piece.",
+  "write.publish.gate.notReadyHeading":
+    "The saved draft is not ready to publish.",
+  "write.publish.gate.careToast":
+    "Publish is blocked while the care gate is open.",
 
   // ── ArticleMetaRail ────────────────────────────────────────────────────────
   "write.meta.title": "Piece meta",
@@ -1506,6 +1705,31 @@ export const magazine: Catalog = {
   "issue.ship.shipIt": "Ship it",
   "issue.ship.warnNote":
     "Pieces still behind the publish gate will hold and publish later. The issue does not wait for them.",
+  // ENG-110 / PRD-126: shipping schedules rather than publishes when the issue
+  // carries a future publish date, and the outcome is reported afterwards
+  // instead of being assumed. Nothing here may describe a delivery: CON-05
+  // removed the email digest and QueerPulse sends none.
+  "issue.ship.schedulesForNote":
+    "Shipping does not publish anything today. Every eligible piece is scheduled to go live at 09:00 on {date}.",
+  "issue.ship.publishesNowNote":
+    "Every eligible piece goes live to readers as soon as you ship.",
+  "issue.ship.lastShipHeading": "Last shipped {date}",
+  "issue.ship.lastShipPublished_one": "{count} piece publishes at {date}.",
+  "issue.ship.lastShipPublished_other": "{count} pieces publish at {date}.",
+  "issue.ship.heldHeading_one": "{count} piece was held",
+  "issue.ship.heldHeading_other": "{count} pieces were held",
+  "issue.ship.heldLastTimeHeading_one": "The last ship held {count} piece",
+  "issue.ship.heldLastTimeHeading_other": "The last ship held {count} pieces",
+
+  // ── Issue production toasts ──────────────────────────────────────────────
+  // `issuePanelSaved` deliberately renames the old hardcoded "Digest saved":
+  // CON-05 retired the members' email digest and that tab is now the Issue
+  // panel. A toast naming a surface that no longer exists is a lie.
+  "issue.toast.runOrderSaved": "Running order saved",
+  "issue.toast.issuePanelSaved": "Issue panel saved",
+  "issue.toast.coverSaved": "Cover saved",
+  "issue.toast.shipped": "Issue shipped",
+  "issue.toast.contentsBlurbSaved": "Contents blurb saved",
 
   // ── IssueTabsNav ─────────────────────────────────────────────────────────
   "issue.tabs.ariaLabel": "Issue production sections",
@@ -1581,8 +1805,12 @@ export const magazine: Catalog = {
   // ── CoverContentsTab ─────────────────────────────────────────────────────
   "issue.cover.heading": "Cover",
   "issue.cover.artPlaceholder": "Cover art",
-  "issue.cover.imageUrlLabel": "Cover image URL",
-  "issue.cover.imageUrlPlaceholder": "https://…",
+  // PRD-128 replaced the raw URL field with a real upload, so the label names
+  // the artwork rather than the address it used to be pasted from.
+  "issue.cover.imageLabel": "Cover image",
+  "issue.cover.imageHelper":
+    "The plate that fronts the issue everywhere it appears. At least 1200 by 600.",
+  "issue.cover.imagePlaceholder": "No cover image yet",
   "issue.cover.coverlineLabel": "Coverline {n}",
   "issue.cover.hint":
     "Coverlines are not headlines. Shorter, flatter, no puns.",
@@ -1669,6 +1897,12 @@ export const magazine: Catalog = {
   "writer.work.messageEditor": "Message editor",
   "writer.work.activeBadge": "Active",
   "writer.work.setActive": "Use for byline & terms",
+  // Replaces the raw `magazine_payment.status` enum a writer was reading on
+  // their own card ("approved_unpaid"). Kept apart from
+  // `piece.moneyMini.status*`, which is the editor's side of the same fact.
+  "writer.work.paymentStatus.agreed": "Agreed",
+  "writer.work.paymentStatus.approvedUnpaid": "Approved, unpaid",
+  "writer.work.paymentStatus.paid": "Paid",
 
   // ── BriefDetailModal ─────────────────────────────────────────────────────
   "writer.brief.title": "Brief: {title}",
@@ -1694,12 +1928,12 @@ export const magazine: Catalog = {
   "writer.pitches.noteLabel": "What it is",
   "writer.pitches.notePlaceholder": "The idea, why now, and who it's for.",
   "writer.pitches.send": "Send it",
+  "writer.pitches.sentToast": "Pitch sent.",
 
   // ── WriterPaymentsTab ────────────────────────────────────────────────────
   "writer.payments.emptyTitle": "No payments yet",
   "writer.payments.emptyDescription":
     "Once a piece is filed and approved, its payment shows up here.",
-  "writer.payments.issueLabel": "Issue {issue}",
   "writer.payments.unscheduled": "Unscheduled",
   "writer.payments.terms":
     "21-day terms. If we're late, it says so here before you have to ask.",
@@ -1721,6 +1955,7 @@ export const magazine: Catalog = {
   "writer.byline.fieldLabel": "Byline for “{title}”",
   "writer.byline.anonymous": "Anonymous",
   "writer.byline.emptyState": "No active assignment to set a byline for yet.",
+  "writer.byline.updatedToast": "Byline updated.",
 
   // ── FileDraftModal ───────────────────────────────────────────────────────
   "writer.fileDraft.title": "File “{title}”",
@@ -1736,6 +1971,27 @@ export const magazine: Catalog = {
     "Word count is checked against your brief ({target} words). Over is fine.",
   "writer.fileDraft.wordCountNoTarget":
     "Word count is checked against your brief. Over is fine.",
+  "writer.fileDraft.filedToast": "Draft filed.",
+  "writer.fileDraft.filing": "Filing…",
+  "writer.fileDraft.failed":
+    "That did not go through. Your text is still here, try filing again.",
+  // Filing is no longer a blind overwrite: the writer picks what happens to
+  // the draft on the desk, and a version saved after they opened the modal
+  // stops the file until they have seen it.
+  "writer.fileDraft.conflictHeading": "This draft changed since you loaded it",
+  "writer.fileDraft.conflictBody":
+    "Your editor saved this article after you opened it. Reload the draft to see their version before you file, so nothing of theirs is lost. Your text stays in the box.",
+  "writer.fileDraft.conflictReload": "Reload the draft",
+  "writer.fileDraft.currentDraftWords":
+    "The draft on the desk right now: {words} words, edits included.",
+  "writer.fileDraft.loadCurrentDraft": "Start from the current draft",
+  "writer.fileDraft.modeLabel": "What happens to the draft",
+  "writer.fileDraft.modeAppend": "Add my text to the end",
+  "writer.fileDraft.modeReplace": "Replace the whole draft with my text",
+  "writer.fileDraft.modeAppendHelper":
+    "Filing the same text twice adds it once. Nothing already on the desk is touched.",
+  "writer.fileDraft.modeReplaceHelper":
+    "Your editor's version is saved first, so they can put it back from the version history.",
 
   // ── MessageEditorModal (Phase 7 Wave F) ─────────────────────────────────
   "writer.messages.title": "Messages · {title}",
@@ -1787,8 +2043,6 @@ export const magazine: Catalog = {
   "applyToWrite.approved.cta": "Start writing",
 
   // ── ArticleComments (comments/) — CNT-10 reader comments ────────────────
-  "comments.heading_one": "{count} comment",
-  "comments.heading_other": "{count} comments",
   "comments.empty": "No comments yet: be the first to say something.",
   "comments.reply": "Reply",
   "comments.edit": "Edit",
@@ -1947,4 +2201,84 @@ export const magazine: Catalog = {
   "lifecycle.languages.openFailed": "That didn't open. Try again.",
   "lifecycle.languages.allDone":
     "This piece already exists in every language we publish.",
+
+  // ── Reader: the decks index (PRD-105) ───────────────────────────────────
+  // The front showed only the newest deck, and neither search, the section
+  // browse nor an issue's run order carried decks, so every older deck left
+  // the magazine the moment a second one published.
+  "decks.metaTitle": "Interactive decks",
+  "decks.metaDescription":
+    "Every interactive deck the magazine has published, newest first.",
+  "decks.eyebrow": "Magazine · decks",
+  "decks.title": "Interactive decks.",
+  "decks.sub":
+    "Stories the magazine tells slide by slide: reported features, photo essays and data pieces you move through at your own pace.",
+  "decks.count_one": "{count} deck",
+  "decks.count_other": "{count} decks",
+  "decks.emptyTitle": "No decks yet.",
+  "decks.emptyBody":
+    "The magazine has not published an interactive deck yet. When it does, it will be here.",
+  "decks.errorTitle": "We couldn't load the decks.",
+  "decks.errorBody": "Something interrupted us on the way here. Try again.",
+  "decks.retryCta": "Try again",
+  "decks.loadMoreCta": "Load more decks",
+  "decks.loadingMore": "Loading…",
+  "decks.frontRailTitle": "Interactive <em>decks</em>",
+  "decks.allCta": "All decks",
+  "masthead.nav.decks": "Decks",
+
+  // ── Reader: the deck page's own share and meta (DES-103) ────────────────
+  "deck.share": "Share",
+  "deck.shareCopied": "Link copied",
+  "deck.metaDescription":
+    "An interactive slide deck by {byline}, in the QueerPulse magazine.",
+
+  // ── Reader: paged article lists (PRD-103) ───────────────────────────────
+  // Search, tag browse and the section drill-down all stopped at the
+  // backend's 20-row page while printing the full total.
+  "articleRows.loadMoreCta": "Load more",
+  "articleRows.loadingMore": "Loading…",
+  "search.byAuthorLabel": "Written by",
+
+  // ── Reader: long-read aids (PRD-113) ────────────────────────────────────
+  "toolbar.shareArticleAriaLabel": "Share this article",
+  "reader.progressAriaLabel": "Reading progress",
+  "reader.contentsAriaLabel": "Article contents",
+  "reader.contentsCta": "Contents",
+  "reader.resumeText": "You left off {percent}% into this piece.",
+  "reader.resumeCta": "Pick up where you were",
+  "reader.resumeDismissAriaLabel": "Dismiss",
+
+  // ── Reader comments: paging and the blanked-row label ───────────────────
+  // The heading counts THREADS, which is what the endpoint's `total` is, so
+  // it says conversations rather than claiming a comment count it does not
+  // have. Replaces the retired `comments.heading_*`.
+  "comments.headingThreads_one": "{count} conversation",
+  "comments.headingThreads_other": "{count} conversations",
+  "comments.loadMore": "Load more",
+  "comments.loadingMore": "Loading…",
+  // Fills the NAME slot on a blanked row, beside the `comments.tombstone`
+  // body. Deliberately the same words the forum's own tombstone uses
+  // (`forum:tombstone.author`), so one concept does not carry two terms.
+  "comments.unknownAuthor": "[deleted]",
+  "comments.report.subUnknown": "Tell us what's wrong with this comment.",
+  "comments.report.confirmBodyUnknown":
+    "Thanks. A moderator will review this comment.",
+
+  // ── Submit a story: the real open issue (PRD-106) ───────────────────────
+  // Replaces a hardcoded issue number and a deadline that had already passed.
+  // Both values now come from `GET /magazine/issues/open`, and the deadline
+  // line is dropped entirely when the desk has set none.
+  "submitStory.issue.nameUndated": "Open for submissions",
+  "submitStory.issue.noneOpen":
+    "No issue is open for submissions right now. Send your pitch anyway and the desk will read it for the next one.",
+  "issue.submissionDeadline.heading": "Submissions",
+  "issue.submissionDeadline.label": "Submission deadline",
+  "issue.submissionDeadline.hint":
+    "The date writers see on the submit-story form. Leave it empty and the form shows no deadline at all.",
+  "issue.submissionDeadline.savedToast": "Submission deadline saved",
+
+  // ── Pitch tracker (DES-100) ─────────────────────────────────────────────
+  // The date is locale-formatted by `fmt` before it reaches the key.
+  "pitchTracker.card.submittedOn": "Submitted {date}",
 };

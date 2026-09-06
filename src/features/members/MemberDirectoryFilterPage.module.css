@@ -386,6 +386,19 @@
   color: var(--ink-40);
 }
 
+/* The name search sits on its own row above the count/sort row. That row
+   already wraps a Filters button and a sort select on a phone, and a field
+   squeezed in beside them ends up too narrow to read a name in. */
+.searchRow {
+  display: flex;
+  margin-bottom: 14px;
+}
+.directorySearch {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 480px;
+}
+
 .topRow {
   display: flex;
   justify-content: space-between;

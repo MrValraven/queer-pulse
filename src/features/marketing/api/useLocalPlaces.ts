@@ -14,7 +14,13 @@ import {
 
 export interface LocalPlacesResult {
   places: LocalPlace[];
-  /** Server-reported grand total matching the current query/safe filter. */
+  /**
+   * The size of the whole population `places` is a window onto, so a caller can
+   * say "showing X of Y". Live: the server-reported grand total matching the
+   * current query/safe filter, which counts pages not yet fetched. Demo: the
+   * merged businesses-plus-venues set, because demo is one terminal page and
+   * `places` already holds all of it. Never smaller than `places.length`.
+   */
   total: number;
   isLoading: boolean;
   /** True when the businesses read failed (DES-25). Callers must render an
@@ -67,7 +73,15 @@ export function useLocalPlaces(
 
   return {
     places,
-    total,
+    // Demo owns its own total. `total` from the businesses page counts the
+    // `DIRECTORY_PLACES` fixture alone, but demo also merges the `VENUES`
+    // fixture on top, and every venue with no business twin survives that
+    // merge, so `places.length` exceeded it and the results header rendered
+    // "Showing 30 of 24 places". Demo is a single terminal page with nothing
+    // left to fetch, so the merged set IS the whole population and counting it
+    // is the honest fix. Live mode keeps the server's grand total, which is
+    // larger than `places.length` for the real reason: pages not fetched yet.
+    total: demoMode ? places.length : total,
     isLoading,
     isError,
     refetch,

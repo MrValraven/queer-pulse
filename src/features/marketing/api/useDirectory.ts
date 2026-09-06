@@ -21,7 +21,6 @@ import {
   getDirectoryPage,
   getDirectorySpace,
 } from "./directory.api";
-import { ApiError } from "../../../shared/api/client";
 
 export const DIRECTORY_KEY = "directory";
 
@@ -209,18 +208,30 @@ export function useDirectoryPlacesPage(
  * "Edit this listing", replying to reviews — are reachable); live fetches the
  * public `GET /directory/:slug` and adapts it.
  *
- * Returns `{ place, isLoading, isError, refetch }` rather than a bare value:
- * the live fetch is async, so the detail page must distinguish "still loading"
- * (show a skeleton), "settled, not found" (redirect), and "the read failed"
- * (show an error state) instead of redirecting on the initial undefined. Only a
- * genuine 404 resolves to `undefined` (not found) with `isLoading` false; any
- * other failure (5xx, network) propagates so `isError` is true and the page can
- * offer a retry rather than a misleading not-found redirect.
+ * Returns `{ place, isLoading, isError, error, refetch }` rather than a bare
+ * value: the live fetch is async, so the detail page must distinguish "still
+ * loading" (show a skeleton), "settled, not found" (an honest not-found panel),
+ * and "the read failed" (show a retry) instead of redirecting on the initial
+ * undefined.
+ *
+ * The 404 is handed to the PAGE as an `ApiError`, the same shape
+ * `useHousingListing`/`HousingListingPage` settled on, rather than being caught
+ * here. Catching it and returning `undefined` looked like "resolve to not
+ * found", but react-query rejects `undefined` as query data outright (it throws
+ * `<queryHash> data is undefined`), so every 404 landed in the query's ERROR
+ * state anyway: the page rendered a retry panel for a listing that genuinely
+ * does not exist, the failure was retried once, and the cache-level handler
+ * raised a "Something went wrong" toast that a real 404 is explicitly exempt
+ * from. `null` is the value that means "nothing here", and react-query accepts
+ * it.
  */
 export function useDirectoryPlace(slug: string | undefined): {
   place: DirectoryPlace | undefined;
   isLoading: boolean;
   isError: boolean;
+  /** The raw failure, so the page can tell a 404 (not found) from an outage
+   *  (retryable). Mirrors `HousingListingPage`'s `isNotFound` computation. */
+  error: unknown;
   refetch: () => void;
 } {
   const { demoMode } = useDemoMode();
@@ -239,7 +250,7 @@ export function useDirectoryPlace(slug: string | undefined): {
   // submission is always the signed-in viewer's own listing, so their real
   // profile photo (not a mock registry lookup) is the right "who runs it"
   // avatar — mirrors the live detail's resolved `owner.avatarUrl`.
-  const demoPlace = (): DirectoryPlace | undefined => {
+  const demoPlace = (): DirectoryPlace | null => {
     const fixture = getPlace(slug);
     if (fixture) return fixture;
     const submitted = submittedListings.find(
@@ -247,32 +258,29 @@ export function useDirectoryPlace(slug: string | undefined): {
     );
     return submitted
       ? submittedToPlace(submitted, user?.profile.avatarUrl)
-      : undefined;
+      : null;
   };
 
-  const query = useQuery<DirectoryPlace | undefined>({
+  const query = useQuery<DirectoryPlace | null>({
     queryKey: [DIRECTORY_KEY, "detail", slug, demoMode, language],
     enabled: slug !== undefined,
+    // `null` rather than `undefined` for a demo slug that names nothing:
+    // `undefined` reads as "no initial data" and would put the query into a
+    // pending state the demo registry can answer synchronously.
     initialData: demoMode ? demoPlace() : undefined,
     queryFn: async () => {
       if (demoMode) return demoPlace();
-      if (slug === undefined) return undefined;
-      try {
-        return detailDtoToPlace(await getDirectorySpace(slug), fmt);
-      } catch (error) {
-        // Only a real 404 means "no such listing" → resolve to undefined so the
-        // page redirects to the directory. Any other failure (5xx, network)
-        // re-throws so the query enters its error state and the page can offer
-        // a retry, rather than falsely claiming the listing doesn't exist.
-        if (error instanceof ApiError && error.status === 404) return undefined;
-        throw error;
-      }
+      if (slug === undefined) return null;
+      // A 404 propagates deliberately: the page reads it off `error` and
+      // renders its not-found panel. See the doc comment above.
+      return detailDtoToPlace(await getDirectorySpace(slug), fmt);
     },
   });
   return {
-    place: query.data,
+    place: query.data ?? undefined,
     isLoading: query.isLoading,
     isError: query.isError,
+    error: query.error,
     refetch: () => void query.refetch(),
   };
 }

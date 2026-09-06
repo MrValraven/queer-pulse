@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiClock,
+  FiLock,
+  FiShield,
+  FiUnlock,
+} from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { StatusCard } from "../../shared/components/ui";
 import { SystemStateShell } from "../../shared/components/layout";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import styles from "./AccountLockedPage.module.css";
 
 /**
@@ -17,19 +24,25 @@ import styles from "./AccountLockedPage.module.css";
  * is written matters most. There is no incident-id endpoint to derive a real
  * one from, so the line is gone and the footer leads with the next step that
  * does exist: writing to the team.
+ *
+ * DEMO vs LIVE. Nothing in the product locks an account: there is no lockout
+ * counter, no sign-in-attempt threshold, no geo check, and no timed release.
+ * The three-row reason list below is a demo showcase of exactly those things
+ * ("5 failed sign-in attempts in the last 12 minutes, from two devices", "a
+ * new location: Madrid, Spain", "lifts automatically in 23 minutes"), and it
+ * is gated on `demoMode` accordingly. On the live build the page keeps the
+ * shape it has and says only what is true: the account is locked and the team
+ * is the way through. The route stays, because it is linked from elsewhere and
+ * because a lockout state is the kind of thing a platform eventually needs.
  */
 export function AccountLockedPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
 
   return (
     <SystemStateShell>
       <StatusCard
-        icon={
-          <svg viewBox="0 0 24 24" aria-hidden>
-            <rect x="4" y="11" width="16" height="10" rx="2" />
-            <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-          </svg>
-        }
+        icon={<FiLock aria-hidden />}
         kicker={t("system:accountLocked.kicker")}
         heading={
           <Translation
@@ -37,51 +50,49 @@ export function AccountLockedPage() {
             components={{ em: <em /> }}
           />
         }
-        lead={t("system:accountLocked.lead")}
+        lead={t(
+          demoMode
+            ? "system:accountLocked.lead"
+            : "system:accountLocked.leadLive",
+        )}
       >
-        <div className={styles.reasonList}>
-          <div className={styles.reasonRow}>
-            <div className={styles.reasonIcon}>
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <circle cx="12" cy="12" r="9" />
-                <polyline points="12 7 12 12 15 14" />
-              </svg>
+        {demoMode && (
+          <div className={styles.reasonList}>
+            <div className={styles.reasonRow}>
+              <div className={styles.reasonIcon}>
+                <FiClock aria-hidden />
+              </div>
+              <div className={styles.reasonText}>
+                <Translation
+                  i18nKey="system:accountLocked.reason1"
+                  components={{ b: <b /> }}
+                />
+              </div>
             </div>
-            <div className={styles.reasonText}>
-              <Translation
-                i18nKey="system:accountLocked.reason1"
-                components={{ b: <b /> }}
-              />
+            <div className={styles.reasonRow}>
+              <div className={styles.reasonIcon}>
+                <FiShield aria-hidden />
+              </div>
+              <div className={styles.reasonText}>
+                <Translation
+                  i18nKey="system:accountLocked.reason2"
+                  components={{ b: <b /> }}
+                />
+              </div>
             </div>
-          </div>
-          <div className={styles.reasonRow}>
-            <div className={styles.reasonIcon}>
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <path d="M12 22s-8-4-8-12V4l8-2 8 2v6c0 8-8 12-8 12z" />
-              </svg>
-            </div>
-            <div className={styles.reasonText}>
-              <Translation
-                i18nKey="system:accountLocked.reason2"
-                components={{ b: <b /> }}
-              />
-            </div>
-          </div>
-          <div className={styles.reasonRow}>
-            <div className={styles.reasonIcon}>
-              <svg viewBox="0 0 24 24" aria-hidden>
-                <path d="M5 12h14" />
-                <path d="M12 5l7 7-7 7" />
-              </svg>
-            </div>
-            <div className={styles.reasonText}>
-              <Translation
-                i18nKey="system:accountLocked.reason3"
-                components={{ b: <b /> }}
-              />
+            <div className={styles.reasonRow}>
+              <div className={styles.reasonIcon}>
+                <FiUnlock aria-hidden />
+              </div>
+              <div className={styles.reasonText}>
+                <Translation
+                  i18nKey="system:accountLocked.reason3"
+                  components={{ b: <b /> }}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className={styles.whatNow}>
           <Link to={routes.contact} className={styles.wnRow}>

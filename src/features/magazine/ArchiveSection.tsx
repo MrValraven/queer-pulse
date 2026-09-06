@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   EmptyState,
   FadeIn,
+  ImageSlot,
   SegmentedControl,
   SkeletonLine,
 } from "../../shared/components/ui";
@@ -117,11 +118,27 @@ export function ArchiveSection({
                   key={issue.number}
                   delay={Math.min(index, 8) * 60}
                 >
-                  <div
-                    className={`${styles.tileCover} ${styles[TINT_CLASS[issue.tint]]}`}
-                  >
-                    {issue.cover}
-                  </div>
+                  {/* PRD-104 — the desk's uploaded cover. Without one, the
+                      tinted caption tile the prototype shipped stands in. */}
+                  {issue.coverUrl ? (
+                    <ImageSlot
+                      className={styles.tileCoverArt}
+                      src={issue.coverUrl}
+                      focus={issue.coverCrop}
+                      alt={issue.cover}
+                      placeholder={issue.cover}
+                      radius={14}
+                      width="100%"
+                      height="auto"
+                      style={{ aspectRatio: "3 / 4" }}
+                    />
+                  ) : (
+                    <div
+                      className={`${styles.tileCover} ${styles[TINT_CLASS[issue.tint]]}`}
+                    >
+                      {issue.cover}
+                    </div>
+                  )}
                   <div
                     className={[
                       styles.tileNum,

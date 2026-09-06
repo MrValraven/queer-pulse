@@ -7,6 +7,7 @@ import {
   type AuthorDTO,
 } from "./magazine.api";
 import { ignoreEnrichmentError } from "./loadErrors";
+import { useReaderLanguage } from "./useReaderLanguage";
 
 export interface MemberWriting {
   author: AuthorDTO;
@@ -29,8 +30,13 @@ export interface MemberWriting {
  */
 export function useMemberWriting(memberSlug: string | undefined) {
   const { demoMode } = useDemoMode();
+  // PRD-110 — the same language every other magazine list sends, so a member
+  // profile does not advertise a byline's work in a language the reader did
+  // not ask for. In the query key because it changes which rows come back.
+  const readerLanguage = useReaderLanguage();
+
   const query = useQuery<MemberWriting | null>({
-    queryKey: ["magazine-member-writing", demoMode, memberSlug],
+    queryKey: ["magazine-member-writing", demoMode, memberSlug, readerLanguage],
     enabled: !demoMode && Boolean(memberSlug),
     queryFn: async () => {
       if (demoMode || !memberSlug) return null;
@@ -38,9 +44,13 @@ export function useMemberWriting(memberSlug: string | undefined) {
       if (!author) return null;
       // The byline is the surface; its piece list only fills it in, so a
       // failed article fetch degrades to an empty list rather than an error.
-      const page = await getArticles({ author: author.slug }).catch(
-        ignoreEnrichmentError,
-      );
+      // PRD-103: this is page one only, and deliberately so. The section is a
+      // taste of the member's work, not their archive, and its "all pieces"
+      // route is the author-filtered search the author page's CTA uses.
+      const page = await getArticles({
+        author: author.slug,
+        lang: readerLanguage,
+      }).catch(ignoreEnrichmentError);
       return { author, articles: page?.items ?? [] };
     },
   });

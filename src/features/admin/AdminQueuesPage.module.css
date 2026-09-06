@@ -1,0 +1,309 @@
+/* The staff triage console (/admin/queues, PRD-282).
+   One screen that answers "is anything overdue right now?" before it answers
+   anything else. Tokens only: no raw hex, no raw channel triples, no literal
+   type size, radius or shadow. */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.asOf {
+  font-size: var(--text-caption);
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ── The verdict: is anything overdue at all ────────────────────────────── */
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-radius: var(--radius-panel);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* A breached deadline is the reason this screen exists, so the panel itself
+   carries the danger edge. The words and the icon say it too: colour is never
+   the only signal here. */
+.verdictOverdue {
+  border-color: rgba(var(--danger-rgb), 0.28);
+  background: rgba(var(--danger-rgb), 0.05);
+}
+
+.verdictIcon {
+  display: inline-flex;
+  font-size: var(--text-24);
+  flex: none;
+}
+
+.verdictText {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.verdictTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+
+.verdictBody {
+  margin: 4px 0 0;
+  font-size: var(--text-body-sm);
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+/* The one hero figure on the screen. Sans (inherited), proportional figures:
+   tabular widths make a standalone number at display size read loose. It only
+   renders when something has actually breached, so a calm desk never carries a
+   large red digit. */
+.hero {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.heroValue {
+  font-size: var(--text-48);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--danger);
+}
+
+.heroLabel {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--danger);
+  max-width: 12ch;
+  line-height: 1.3;
+}
+
+/* ── The supporting counts ──────────────────────────────────────────────── */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.tileLabel {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.tileValue {
+  font-size: var(--text-28);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-strong);
+}
+
+.tileNote {
+  font-size: var(--text-caption);
+  color: var(--ink-40);
+  line-height: 1.4;
+}
+
+/* ── The queue table ────────────────────────────────────────────────────── */
+
+/* Wide content scrolls inside its own box; the page body never scrolls
+   sideways on a phone. */
+.tableScroll {
+  margin-top: 18px;
+  overflow-x: auto;
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+}
+
+.table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: var(--text-body-sm);
+}
+
+.table thead th {
+  padding: 10px 14px;
+  text-align: start;
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  background: var(--paper);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
+  white-space: nowrap;
+}
+
+.table tbody td,
+.table tbody th {
+  padding: 12px 14px;
+  text-align: start;
+  font-weight: 400;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+
+.table tbody tr:last-child td,
+.table tbody tr:last-child th {
+  border-bottom: 0;
+}
+
+/* The overdue rail. Paired with the row's own "N overdue" words and triangle,
+   so the tint is a second signal rather than the only one. */
+.rowOverdue {
+  background: rgba(var(--danger-rgb), 0.05);
+}
+
+.rowOverdue .cellQueue {
+  border-inline-start: 3px solid var(--danger);
+  padding-inline-start: 11px;
+}
+
+.cellQueue {
+  min-width: 180px;
+}
+
+.queueLink {
+  color: var(--text-strong);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.queueLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.queueLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+/* A column of numbers is the one place tabular figures belong: they line up. */
+.cellNumber {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.cellAge,
+.cellDeadline {
+  white-space: nowrap;
+}
+
+.cellIcon {
+  vertical-align: -2px;
+  margin-inline-end: 5px;
+}
+
+/* ── Status tones. Reserved: each means one state and nothing else. ─────── */
+
+.toneOverdue {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.toneClear {
+  color: var(--jade-ink);
+}
+
+/* A week or more waiting, in a queue that has no deadline to breach. Loud
+   enough to catch an eye scanning the column, quiet enough that a queue with
+   four fresh rows still reads as ordinary. */
+.toneStale {
+  color: var(--amber-ink);
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--ink-40);
+}
+
+/* ── The queues with nothing in them ────────────────────────────────────── */
+
+.clear {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-badge);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: rgba(var(--jade-rgb), 0.06);
+}
+
+.clearSummary {
+  cursor: pointer;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--jade-ink);
+}
+
+.clearSummary:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.clearList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.clearLink {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.clearLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+:global([data-theme="dark"]) .verdict,
+:global([data-theme="dark"]) .tile,
+:global([data-theme="dark"]) .tableScroll,
+:global([data-theme="dark"]) .clear {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}

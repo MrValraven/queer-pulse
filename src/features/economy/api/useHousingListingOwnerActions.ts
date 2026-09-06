@@ -51,6 +51,13 @@ function applyDemoTransition(
         ...(input.body.rentEuros !== undefined
           ? { rentEuros: input.body.rentEuros }
           : {}),
+        // Deposit included so a demo edit shows what a live one would, CLEARING
+        // included: the form always sends this key and sends `null` for a blank
+        // field, which is how a lister takes a deposit back off (see
+        // `useListSpaceForm`'s `buildBody`).
+        ...(input.body.depositEuros !== undefined
+          ? { depositEuros: input.body.depositEuros }
+          : {}),
         ...(input.body.bedrooms !== undefined
           ? { bedrooms: input.body.bedrooms }
           : {}),

@@ -54,6 +54,10 @@ export function MessageAttendeesModal({
     });
   };
 
+  // `successMeta` exists ONLY as `_one`/`_other`, and `resolveEntry` selects a
+  // plural from `options.count` alone, so calling it with no options resolved
+  // to nothing and rendered the raw key on the success panel. `sentCount` is
+  // non-null inside this branch.
   if (sentCount !== null) {
     return (
       <GatheringSuccessPanel
@@ -70,7 +74,9 @@ export function MessageAttendeesModal({
             components={{ b: <b /> }}
           />
         }
-        meta={t("gatherings:manage.messageModal.successMeta")}
+        meta={t("gatherings:manage.messageModal.successMeta", {
+          count: sentCount,
+        })}
         onClose={onClose}
       />
     );

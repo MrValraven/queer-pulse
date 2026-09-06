@@ -2,7 +2,12 @@ import { currentUser, fullName } from "../members/data/members";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../app/providers/useProfile";
+import { levelNameKeyFor } from "../members/levelLadder.data";
 import styles from "./ThemeStudio.module.css";
+
+/** The level the sample profile card is drawn at. Illustrative only: it names
+ *  no real member's standing. */
+const PREVIEW_LEVEL = 4;
 
 /**
  * The live "profile card" + "directory card" preview beside the theme picker.
@@ -29,6 +34,10 @@ export function ThemeStudioPreview({
   const pronouns = previewMember.pronouns?.trim();
   const hood = previewMember.hood?.trim();
   const directoryMeta = [pronouns, hood].filter(Boolean).join(" · ");
+  // The rung this sample card illustrates. The label used to spell "Familiar"
+  // into both catalogues, a fourth hand-written copy of a ladder word; it now
+  // reads from the one level map (see `members/levelLadder.data.ts`).
+  const previewLevelNameKey = levelNameKeyFor(PREVIEW_LEVEL);
   return (
     <div>
       <div className={styles.previewLabel} style={{ marginBottom: 6 }}>
@@ -76,7 +85,10 @@ export function ThemeStudioPreview({
                 className={styles.pclLevel}
                 style={{ opacity: showLevel ? 1 : 0 }}
               >
-                {t("settings:themeStudio.levelPreview")}
+                {t("settings:themeStudio.levelPreview", {
+                  level: PREVIEW_LEVEL,
+                  name: previewLevelNameKey ? t(previewLevelNameKey) : "",
+                })}
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import type { useSendMessage } from "./api/useMessageMutations";
 import { useMessageDeliverCore } from "./useMessageDeliverCore";
 import { useMessageSendActions } from "./useMessageSendActions";
@@ -32,15 +33,16 @@ export interface MessageSending {
   appendOptimistic: (convId: string, message: ChatMessage) => void;
   /** Drive a message down the send ladder (demo-simulated, or the live
    *  mutation). `mediaKind` is required whenever `attachment` is set — it's
-   *  what tells the server (and a resend/outbox-replay) a `gif` message from
-   *  an `image` one; both carry the same `GifAttachment` shape. */
+   *  what tells the server (and a resend/outbox-replay) a `gif`/`image`
+   *  message (both carry a `GifAttachment`) from a `document` one (carries a
+   *  `DocumentAttachment`). */
   deliver: (
     convId: string,
     body: string,
     localId: string,
     replyToId?: string,
     forwarded?: boolean,
-    attachment?: GifAttachment,
+    attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
   ) => void;
   /** Send a GIF as its own message, through the same pipeline as `send()`. */
@@ -54,6 +56,14 @@ export interface MessageSending {
   sendImage: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
+  ) => void;
+  /** Send an uploaded document as its own message (PRD-226) — the same
+   *  optimistic → idempotent → outbox path as `sendImage`, with the same
+   *  local-preview/real-payload split (`localAttachment` paints the bubble
+   *  instantly; `attachment` is what's actually sent). */
+  sendDocument: (
+    attachment: DocumentAttachment,
+    localAttachment?: DocumentAttachment,
   ) => void;
   /** Re-key every optimistic send queued under a just-picked recipient's
    *  placeholder id (see `recipient.ts`) to the real server conversation id,
@@ -100,16 +110,17 @@ export function useMessageSending({
     sendMessage,
   });
 
-  const { send, sendGif, sendImage, retrySend } = useMessageSendActions({
-    active,
-    activeBlocked,
-    replyDraft,
-    setReplyDraft,
-    t,
-    appendOptimistic,
-    setStatus,
-    deliver,
-  });
+  const { send, sendGif, sendImage, sendDocument, retrySend } =
+    useMessageSendActions({
+      active,
+      activeBlocked,
+      replyDraft,
+      setReplyDraft,
+      t,
+      appendOptimistic,
+      setStatus,
+      deliver,
+    });
 
   const { migrateOutboxConversation } = useMessageOutbox({
     sent,
@@ -125,6 +136,7 @@ export function useMessageSending({
     deliver,
     sendGif,
     sendImage,
+    sendDocument,
     migrateOutboxConversation,
   };
 }

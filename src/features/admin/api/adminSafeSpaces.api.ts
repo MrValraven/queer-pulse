@@ -12,12 +12,28 @@ import type { ListingDTO } from "../../marketing/listBusiness/api/listings.api";
 
 export type SafeSpaceStatus = "none" | "verified" | "removed";
 
+/**
+ * The independent-visit tally the candidates endpoint reports for one listing.
+ *
+ * `independentVisitCount` excludes vouches from anyone with a stake in the
+ * place (the owner and any active co-manager). This endpoint has no nomination
+ * in hand, so unlike the reviewed path it cannot also exclude a nominator,
+ * which can only ever OVERSTATE the count. A listing this reports as under the
+ * bar is therefore genuinely under it.
+ */
+export interface SafeSpaceVisitTally {
+  independentVisitCount: number;
+  requiredVisitCount: number;
+  hasMetVisitBar: boolean;
+}
+
 export interface SafeSpaceCandidate {
   ref: string;
   slug: string;
   name: string;
   hood: string;
   safeSpaceStatus: SafeSpaceStatus;
+  visits: SafeSpaceVisitTally;
 }
 
 /** One safe-space promise card, as edited by the moderator. */
@@ -39,6 +55,15 @@ export interface SetSafeSpaceInput {
   status: SafeSpaceStatus;
   tier?: number;
   verifier?: string;
+  /**
+   * Why this listing is being badged below the independent-visit bar. The
+   * backend requires it on a transition INTO `verified` from any other status
+   * and refuses without it (`SAFE_SPACE_VISIT_BAR_NOT_MET`); it is ignored on
+   * every other move, so clearing a badge, removing one, or editing one that
+   * already stands never needs it. Minimum 20 characters, mirroring
+   * `UpdateSafeSpaceDto`.
+   */
+  belowVisitBarReason?: string;
   reVerifiedAt?: string;
   sub?: string;
   promises?: SafeSpacePromiseInput[];

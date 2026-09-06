@@ -118,7 +118,12 @@ export const myevents: Catalog = {
   "card.selectAria": "Selecionar {title}",
   "card.joinLinkCta": "Link para entrar",
   "card.directionsCta": "Indicações",
-  "card.joinLinkToast": "A abrir o link para entrar…",
+  // PRD-182 — ver a nota no catálogo EN.
+  "card.joinLinkDemoToast": "Na demonstração não há uma sala real para entrar.",
+  "card.joinLinkMissingToast":
+    "Quem organiza ainda não adicionou um link para entrar. Aparece aqui assim que o fizer.",
+  "card.joinLinkErrorToast":
+    "Não foi possível obter o link para entrar. Tenta outra vez daqui a pouco.",
   "card.directionsToast": "A abrir indicações para {venue}",
 
   // ── Live-data labels (api/myEvents.adapters.ts) ───────────────────────────
@@ -203,20 +208,6 @@ export const myevents: Catalog = {
     "Vais receber um lembrete na app antes disto começar",
   "tools.addToCalendar": "Adicionar ao calendário",
   "tools.addedToCalendarToast": "Adicionado ao teu calendário",
-  "tools.addToCalendarModalTitle": "Adicionar ao calendário",
-  "tools.addToCalendarGoogle": "Google Calendar",
-  "tools.addToCalendarOutlook": "Outlook",
-  "tools.addToCalendarYahoo": "Yahoo Calendar",
-  "tools.addToCalendarApple": "Calendário da Apple",
-  "tools.addToCalendarIcs":
-    "A usar outra aplicação de calendário? Descarrega o ficheiro (.ics)",
-  "tools.addToCalendarToastGoogle": "Aberto no Google Calendar",
-  "tools.addToCalendarToastOutlook": "Aberto no Outlook",
-  "tools.addToCalendarToastYahoo": "Aberto no Yahoo Calendar",
-  "tools.addToCalendarToastApple":
-    "Descarregado. Abre-o para adicionar ao Calendário da Apple",
-  "tools.addToCalendarToastIcs":
-    "Descarregado. Abre-o na tua aplicação de calendário",
   "tools.moreOptionsAria": "Mais opções",
   "tools.more": "Mais",
   "tools.switchToGoing": "Mudar para vou",

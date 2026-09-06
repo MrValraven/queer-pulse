@@ -2,6 +2,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useReplyPreviewTransition } from "./useReplyPreviewTransition";
+import { ComposerConnectionNotice } from "./ComposerConnectionNotice";
 import { ComposerInputRow } from "./ComposerInputRow";
 import { ComposerSafetyNotice } from "./ComposerSafetyNotice";
 import { ComposerReplyPreview } from "./ComposerReplyPreview";
@@ -14,6 +15,7 @@ import { useDraftSync } from "./useDraftSync";
 import { useInsertMentionShortcut } from "./useInsertMentionShortcut";
 import { clearDraft, loadDraftOrServerFallback, saveDraft } from "./drafts";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -37,6 +39,12 @@ interface ComposerProps {
   onSendImage?: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
+  ) => void;
+  /** Sends an uploaded document as its own message (PRD-226). When absent,
+   *  the document attach button is hidden. */
+  onSendDocument?: (
+    attachment: DocumentAttachment,
+    localAttachment?: DocumentAttachment,
   ) => void;
 }
 
@@ -65,6 +73,7 @@ export function Composer({
   onCancelReply,
   onSendGif,
   onSendImage,
+  onSendDocument,
 }: ComposerProps) {
   const { t } = useTranslation();
   const firstName = active.name.split(" ")[0]!;
@@ -155,6 +164,16 @@ export function Composer({
       />
     );
   }
+  // A cold enquiry (housing/flatmate, etc.) opened this DM between two
+  // members who aren't accepted connections (PRD-220): the server's ordinary
+  // send path 403s every reply from EITHER side past that first enquiry. Tell
+  // the truth and offer the fix in place, rather than rendering a normal
+  // composer whose send will fail. Checked after the severed states above:
+  // blocked/official/left-group already explain why sending is impossible and
+  // outrank this notice if both were somehow true at once.
+  if (active.replyRequiresConnection) {
+    return <ComposerConnectionNotice active={active} />;
+  }
   const composerPlaceholder = active.isGroup
     ? t("messages:conversation.composerGroupPlaceholder")
     : t("messages:conversation.composerPlaceholder", { name: firstName });
@@ -179,6 +198,7 @@ export function Composer({
         onClosePopover={closePopover}
         onSendGif={onSendGif}
         onSendImage={onSendImage}
+        onSendDocument={onSendDocument}
         onInsertShortcut={insertShortcut}
         placeholder={composerPlaceholder}
         draft={draft}

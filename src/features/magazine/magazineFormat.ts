@@ -1,4 +1,5 @@
 import type { TFunction } from "../../shared/i18n/types";
+import { formatDate } from "../../shared/lib/date";
 
 /**
  * Shared chrome-phrase composers for the Magazine feature. Several mock data
@@ -70,4 +71,20 @@ export function issueLabelText(
   t: TFunction,
 ): string {
   return t("magazine:format.issueLabel", { number: issueNumber });
+}
+
+/**
+ * The desk's short absolute date, "29 Aug". One helper because the writer
+ * workspace shows the same kind of date in four places (the header's "next
+ * due", an assignment's due date, a pitch's sent date, a brief's commissioned
+ * date) and they have to agree.
+ *
+ * Live values are machine values off Postgres: `magazine_piece.due_on` is a
+ * `date` ("2026-09-12") and a pitch's `sent` is a full ISO timestamp. Neither
+ * belongs on screen, which is what a writer used to read. `formatDate` returns
+ * an unparseable value unchanged, so the demo fixture's already-human "4 Aug"
+ * passes straight through instead of becoming "Invalid Date".
+ */
+export function deskDateText(value: string, language: string): string {
+  return formatDate(value, language, { day: "numeric", month: "short" });
 }

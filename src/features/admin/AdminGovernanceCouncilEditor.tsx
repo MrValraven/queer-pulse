@@ -1,8 +1,16 @@
 import { useState } from "react";
-import { Button, Select } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { AdminGovernanceCouncilRow } from "./AdminGovernanceCouncilRow";
+import {
+  COUNCIL_TINTS,
+  councilRowLabel,
+  EMPTY_AUTHORED_TEXT,
+  hasIncompleteAuthoredText,
+  SEEDED_COUNCIL_ROLE_KEYS,
+} from "./adminGovernanceOverviewRows.utils";
 import { OverviewEditedBadge } from "./OverviewEditedBadge";
 import { OverviewEditorRow } from "./OverviewEditorRow";
 import { useOverviewRowReorder } from "./useOverviewRowReorder";
@@ -13,24 +21,27 @@ import type {
 } from "./api/adminGovernanceOverview.api";
 import styles from "./AdminGovernancePage.module.css";
 
-const COUNCIL_ROLE_KEYS = [
-  "psychologistChair",
-  "lawyerLegalAdvisor",
-  "housingActivist",
-  "healthcareAdvocate",
-] as const;
-
-const COUNCIL_TINTS = ["jade", "violet", "plum"] as const;
-
+/**
+ * A new seat, with an AUTHORED role (PRD-265): the four role descriptors in
+ * the i18n bundle describe the four people who were on the council when it
+ * shipped, so a fifth seat that had to reuse one of them was misdescribed.
+ */
 function makeSeat(): CouncilSeatDTO {
   return {
     name: "",
     initials: "",
-    roleKey: COUNCIL_ROLE_KEYS[0],
+    role: EMPTY_AUTHORED_TEXT,
     tint: COUNCIL_TINTS[0],
   };
 }
 
+/** A seat that carries one of the four seeded role keys, for putting back a
+ *  seeded seat removed by mistake. */
+function makeSeededSeat(roleKey: string): CouncilSeatDTO {
+  return { name: "", initials: "", roleKey, tint: COUNCIL_TINTS[0] };
+}
+
+/** PRD-265. The advisory council, editable — seats and their descriptors. */
 export function AdminGovernanceCouncilEditor({
   rows,
   meta,
@@ -52,22 +63,47 @@ export function AdminGovernanceCouncilEditor({
   const dirty = JSON.stringify(draft) !== JSON.stringify(rows);
 
   const patch = (index: number, partial: Partial<CouncilSeatDTO>): void => {
-    setDraft((prev) =>
-      prev.map((row, i) => (i === index ? { ...row, ...partial } : row)),
+    setDraft((previous) =>
+      previous.map((row, rowIndex) =>
+        rowIndex === index ? { ...row, ...partial } : row,
+      ),
     );
   };
 
   const onRemove = (index: number): void => {
-    setDraft((prev) => prev.filter((_, i) => i !== index));
+    setDraft((previous) =>
+      previous.filter((_, rowIndex) => rowIndex !== index),
+    );
   };
 
+  const availableRoleKeys = SEEDED_COUNCIL_ROLE_KEYS.filter(
+    (key) => !draft.some((row) => row.roleKey === key),
+  );
+
   const onAdd = (): void => {
-    setDraft((prev) => [...prev, makeSeat()]);
+    setDraft((previous) => [...previous, makeSeat()]);
   };
+
+  const onRestoreSeeded = (): void => {
+    const nextKey = availableRoleKeys[0];
+    if (!nextKey) return;
+    setDraft((previous) => [...previous, makeSeededSeat(nextKey)]);
+  };
+
+  const hasIncompleteAuthoredRow = draft.some(
+    (row) => !row.roleKey && hasIncompleteAuthoredText([row.role]),
+  );
 
   const onSave = () => {
     if (!dirty) {
       showToast(t("admin:governance.overview.edit.noChanges"), "info");
+      return;
+    }
+    if (hasIncompleteAuthoredRow) {
+      showToast(
+        t("admin:governance.overview.edit.needsBothLanguages"),
+        "error",
+      );
       return;
     }
     update.mutate(
@@ -104,85 +140,14 @@ export function AdminGovernanceCouncilEditor({
         {draft.map((row, index) => (
           <OverviewEditorRow
             key={index}
-            {...rowProps(
-              index,
-              row.name.trim() ||
-                t(`admin:governance.overview.council.role.${row.roleKey}`),
-            )}
+            {...rowProps(index, councilRowLabel(row, t))}
             onRemove={() => onRemove(index)}
           >
-            <div className={styles.ovField}>
-              <label
-                className={styles.ovFieldLabel}
-                htmlFor={`council-name-${index}`}
-              >
-                {t("admin:governance.overview.council.field.name")}
-              </label>
-              <input
-                id={`council-name-${index}`}
-                type="text"
-                maxLength={80}
-                value={row.name}
-                onChange={(event) => patch(index, { name: event.target.value })}
-              />
-            </div>
-            <div className={styles.ovField}>
-              <label
-                className={styles.ovFieldLabel}
-                htmlFor={`council-initials-${index}`}
-              >
-                {t("admin:governance.overview.council.field.initials")}
-              </label>
-              <input
-                id={`council-initials-${index}`}
-                type="text"
-                maxLength={4}
-                value={row.initials}
-                onChange={(event) =>
-                  patch(index, { initials: event.target.value })
-                }
-              />
-            </div>
-            <div className={styles.ovField}>
-              <label
-                className={styles.ovFieldLabel}
-                id={`council-role-${index}`}
-              >
-                {t("admin:governance.overview.council.field.role")}
-              </label>
-              <Select
-                labelledBy={`council-role-${index}`}
-                value={row.roleKey}
-                onChange={(value) =>
-                  patch(index, { roleKey: value ?? row.roleKey })
-                }
-                options={COUNCIL_ROLE_KEYS.map((key) => ({
-                  value: key,
-                  label: t(`admin:governance.overview.council.role.${key}`),
-                }))}
-              />
-            </div>
-            <div className={styles.ovField}>
-              <label
-                className={styles.ovFieldLabel}
-                id={`council-tint-${index}`}
-              >
-                {t("admin:governance.overview.council.field.tint")}
-              </label>
-              <Select
-                labelledBy={`council-tint-${index}`}
-                value={row.tint}
-                onChange={(value) =>
-                  patch(index, {
-                    tint: (value ?? row.tint) as CouncilSeatDTO["tint"],
-                  })
-                }
-                options={COUNCIL_TINTS.map((tint) => ({
-                  value: tint,
-                  label: t(`admin:governance.overview.council.tint.${tint}`),
-                }))}
-              />
-            </div>
+            <AdminGovernanceCouncilRow
+              row={row}
+              index={index}
+              onPatch={(partial) => patch(index, partial)}
+            />
           </OverviewEditorRow>
         ))}
       </div>
@@ -192,14 +157,26 @@ export function AdminGovernanceCouncilEditor({
         {announcement}
       </p>
 
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onAdd}
-        className={styles.ovAddBtn}
-      >
-        {t("admin:governance.overview.council.addSeat")}
-      </Button>
+      <div className={styles.ovAddRow}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onAdd}
+          className={styles.ovAddBtn}
+        >
+          {t("admin:governance.overview.council.addSeat")}
+        </Button>
+        {availableRoleKeys.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRestoreSeeded}
+            className={styles.ovAddBtn}
+          >
+            {t("admin:governance.overview.edit.restoreSeeded")}
+          </Button>
+        )}
+      </div>
 
       <div className={styles.ovFooter}>
         <div className={styles.ovNote}>

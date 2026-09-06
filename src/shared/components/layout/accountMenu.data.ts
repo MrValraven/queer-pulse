@@ -131,11 +131,20 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       icon: FiCreditCard,
     },
   ],
-  // Career & content. Applications now lives inside the Work hub, not as its
-  // own link. Drafts/Pitches sit here, not in the staff-only RoleLinks block
-  // below: both are general-member features. Drafts spans job/post/pitch/
-  // grant drafts, and Pitches tracks any member's submitted story pitches;
-  // neither is gated to the magazine_writer staff role.
+  // Career & content. Applications now lives inside the Work hub rather than
+  // as its own link. Drafts/Pitches sit here rather than in the staff-only
+  // RoleLinks block below, because both are general-member features: Drafts
+  // spans job/post/pitch/grant drafts, and Pitches tracks any member's
+  // submitted story pitches.
+  //
+  // "Pitches" here is the MEMBER's own tracker (`routes.pitchTracker`,
+  // `/magazine/pitches`), reading `GET /magazine/submissions/mine` — a
+  // different surface from the editor desk's pitch inbox and from the writer
+  // workspace's pitches tab, both of which are staff-only. Until PRD-125 the
+  // route was capability-gated on `magazine_writer` while this entry was shown
+  // to everyone, so a member who tapped it landed on the visitor homepage.
+  // `authGate.ts` now gates it as a plain member surface, matching the
+  // `ActiveMemberGuard` on the endpoint it reads.
   [
     {
       labelKey: "shared:accountMenu.items.work",

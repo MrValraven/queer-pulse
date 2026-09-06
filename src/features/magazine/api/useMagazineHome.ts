@@ -6,6 +6,7 @@ import {
   type ArticleListItemDTO,
   type DeckListItemDTO,
 } from "./magazine.api";
+import { useReaderLanguage } from "./useReaderLanguage";
 
 export interface MagazineHomeData {
   articles: ArticleListItemDTO[];
@@ -25,15 +26,23 @@ export interface MagazineHomeData {
  * Demo mode never calls this (`MagazineSections` renders its curated mock
  * sections instead, same as `useIssues`/`useArticle`'s own demo branches),
  * so the query stays disabled there rather than duplicating that branch.
+ *
+ * PRD-110: the front used to ask for articles with no `lang`, so a Portuguese
+ * reader browsed English headlines and only got Portuguese after clicking
+ * through. The reader's content language now travels with the request, the
+ * same one `useArticle` sends, and joins the query key because it changes
+ * WHICH rows come back. Decks have no translation model, so `getDecks` is
+ * unchanged.
  */
 export function useMagazineHome() {
   const { demoMode } = useDemoMode();
+  const readerLanguage = useReaderLanguage();
   const query = useQuery<MagazineHomeData>({
-    queryKey: ["magazine-home"],
+    queryKey: ["magazine-home", readerLanguage],
     enabled: !demoMode,
     queryFn: async () => {
       const [articlesPage, decksPage] = await Promise.all([
-        getArticles({ page: 1 }),
+        getArticles({ page: 1, lang: readerLanguage }),
         getDecks({ page: 1 }),
       ]);
       return { articles: articlesPage.items, decks: decksPage.items };

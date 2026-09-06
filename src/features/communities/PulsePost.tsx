@@ -6,6 +6,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ConfirmDeleteModal } from "../forum/ConfirmDeleteModal";
 import type { Post, PostReply, Reaction, ReactionKey } from "./community.model";
 import type { Person } from "./communityDetails";
+import type { CommunityTakedownInput } from "./api/communities.api";
 import type { roleLookup } from "./communityPeople";
 import { ReactionBar } from "./CommunityBadges";
 import {
@@ -14,6 +15,7 @@ import {
 } from "./usePulsePostState";
 import { CommunityInlineTextEditor } from "./CommunityInlineTextEditor";
 import { CommunityHistoryModal } from "./CommunityHistoryModal";
+import { CommunityTakedownDialog } from "./CommunityTakedownDialog";
 import { PulsePostHeader, PulsePinnedFlag } from "./PulsePostHeader";
 import { PulsePostReplies, PulseReplyBar } from "./PulsePostReplies";
 import detail from "./CommunityDetailPage.module.css";
@@ -83,6 +85,50 @@ function PulsePostBody({
         </div>
       )}
     </>
+  );
+}
+
+/**
+ * The confirmation in front of a Pulse post's delete: two different acts
+ * behind one menu item (PRD-147).
+ *
+ * The AUTHOR clearing their own post gets the plain confirmation. Nothing is
+ * logged and nobody is told, because the only person who could be told is the
+ * one who did it. A MODERATOR taking somebody else's down gets the takedown
+ * dialog, where the reason and the cited house rule the author will read are
+ * collected, and every field there is optional: a takedown blocked on a form
+ * is a takedown that does not happen when it needs to.
+ */
+function PulsePostDeleteDialog({
+  slug,
+  isOwnPost,
+  isBusy,
+  onClose,
+  onConfirm,
+}: {
+  slug: string;
+  isOwnPost: boolean;
+  isBusy: boolean;
+  onClose: () => void;
+  onConfirm: (takedown?: CommunityTakedownInput) => void;
+}) {
+  if (isOwnPost) {
+    return (
+      <ConfirmDeleteModal
+        busy={isBusy}
+        onConfirm={() => onConfirm()}
+        onClose={onClose}
+      />
+    );
+  }
+  return (
+    <CommunityTakedownDialog
+      subject="post"
+      slug={slug}
+      isBusy={isBusy}
+      onClose={onClose}
+      onConfirm={onConfirm}
+    />
   );
 }
 
@@ -263,10 +309,12 @@ export function PulsePost({
         />
       )}
       {editing.isConfirmingDelete && (
-        <ConfirmDeleteModal
-          busy={editing.isDeletePending}
-          onConfirm={editing.runDelete}
+        <PulsePostDeleteDialog
+          slug={post.communitySlug}
+          isOwnPost={permissions.isOwnPost}
+          isBusy={editing.isDeletePending}
           onClose={() => editing.setIsConfirmingDelete(false)}
+          onConfirm={editing.runDelete}
         />
       )}
       {editing.isShowingHistory && (

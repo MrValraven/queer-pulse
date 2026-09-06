@@ -794,6 +794,22 @@ export const marketing: Catalog = {
   "help.hero.eyebrow": "Help",
   "help.hero.title": "Questions, <em>answered.</em>",
   "help.hero.sub": "Search below, or browse by topic.",
+  // PRD-271: the hero has promised "Search below" since the copy was written,
+  // on a page that had no input of any kind. These back the real search.
+  // `_one`/`_other` are the resolver's CLDR plural suffixes; interpolation is
+  // single-brace.
+  "help.search.label": "Search the help centre",
+  "help.search.placeholder": "Search every answer",
+  "help.search.summary_one":
+    "1 answer matches \u201c{query}\u201d, across every topic.",
+  "help.search.summary_other":
+    "{count} answers match \u201c{query}\u201d, across every topic.",
+  "help.search.clear": "Clear search",
+  "help.search.inCategory": "In category:",
+  "help.search.resultsHead": "Matching <em>answers</em>",
+  "help.search.emptyTitle": "Nothing here matches \u201c{query}\u201d",
+  "help.search.emptyBody":
+    "Try a shorter word or a different spelling. Or ask us directly: a real person reads every message.",
   "help.category.gettingStarted.label": "Getting started",
   "help.category.gettingStarted.head": "Getting <em>started</em>",
   "help.category.account.label": "Account",
@@ -921,7 +937,7 @@ export const marketing: Catalog = {
   "partners.become.body":
     "If your organisation does aligned work in or around Lisbon, we'd like to hear from you.",
   "partners.become.applyCta": "Apply to partner",
-  "partners.become.emailCta": "hello@queerpulse.com",
+  "partners.become.contactCta": "Ask us first",
   "partners.outro.title": "Know an org that <em>should be here?</em>",
   "partners.outro.sub": "Tell us. We're always looking for aligned partners.",
 
@@ -947,7 +963,7 @@ export const marketing: Catalog = {
   "pressKit.outro.title": "Still need <em>something specific?</em>",
   "pressKit.outro.sub":
     "Ask the press desk directly: most requests get a same-day reply.",
-  "pressKit.outro.contactCta": "Email the press desk",
+  "pressKit.outro.askCta": "Ask the press desk",
   "pressKit.downloadModal.eyebrow": "Full kit · ZIP",
   "pressKit.downloadModal.title": "Download the <em>complete kit.</em>",
   "pressKit.downloadModal.lead":
@@ -2251,6 +2267,242 @@ export const marketing: Catalog = {
   "changelog.badge.fix": "Fix",
   "changelog.tag.report": "Open the report form",
   // Section 11, core member journeys (PRD-01..PRD-18).
+  // Section 4 (Communities), 6 Sep 2026.
+  "changelog.entries.photos-match-your-screen-instead-of-a-guess.title":
+    "Photos match your screen instead of a guess",
+  "changelog.entries.photos-match-your-screen-instead-of-a-guess.body":
+    "Every image asked for twice the pixels of the space it filled, whatever screen you were on. That is four times more than an ordinary laptop can show, and still not enough for a sharp phone, so photos were heavier than they needed to be and softer than they should have been at the same time. Images now ask for what your own screen can actually display. Choosing and cropping a photo was rebuilt in the same pass, for your profile picture and for the images on a persona.",
+  "changelog.entries.you-can-step-back-from-a-connection-without-blocking.title":
+    "You can step back from a connection without blocking",
+  "changelog.entries.you-can-step-back-from-a-connection-without-blocking.body":
+    "Ending a connection quietly had no button, so the only way to step back from someone was to block them, which writes a block record, removes them from your message rooms and hides both profiles from each other. There is now a Remove connection action in the connection menu. It asks you to confirm, and the confirmation says exactly what happens: the other person is not told, nothing either of you has already written is deleted, your conversation stays in your inbox, and either of you can ask to connect again later. Neither of you can send a new message while you are not connected.",
+  // ── Section 10 (Resources, about and civic), 6 Sep 2026 ─────────────────
+  "changelog.entries.help-centre-search.title": "Search the help centre",
+  "changelog.entries.help-centre-search.body":
+    "The help centre had six topic tabs and nowhere to type. Now there is a search box that looks through every answer at once, so a question finds its answer even when it sits under a tab you would not have opened. It matches Portuguese too, accents optional.",
+  "changelog.entries.a-safe-space-badge-has-to-be-earned.title":
+    "A safe space badge has to be earned",
+  "changelog.entries.a-safe-space-badge-has-to-be-earned.body":
+    "The safe spaces page said every venue had been visited by several members with no stake in it. The three-visit count was worked out and written down, and then nothing checked it before a badge was granted. It is checked now. A badge can still be granted on fewer visits where the team has a reason, and then the reason is recorded and the badge shows the real count. That applies to badges granted from today; older ones keep their date and come back for review a year on.",
+  "changelog.entries.rooms-in-a-vetted-group-are-for-its-members.title":
+    "Rooms in a vetted group are for its members",
+  "changelog.entries.rooms-in-a-vetted-group-are-for-its-members.body":
+    "A screened housing group's whole point is that rooms come from people it has let in, and until now anyone at all could read them, signed out included. Now they stay inside. The group, its city and its house rules are still open to everyone, so you can find it and ask to join, and posting a room into one needs an approved request too.",
+  "changelog.entries.a-viewing-that-tells-you-what-happened.title":
+    "A viewing that tells you what happened",
+  "changelog.entries.a-viewing-that-tells-you-what-happened.body":
+    "Asking to see a home, being accepted, being offered another time, being turned down, or having a viewing called off all happened in silence. The person listing only found out someone wanted to visit if they opened the viewings page, and nobody was ever told they had been accepted. All five now reach you, in the app.",
+  "changelog.entries.the-exact-address-once-you-connect.title":
+    "The exact address, once you connect",
+  "changelog.entries.the-exact-address-once-you-connect.body":
+    "Every listing promised the exact address would appear once you and the person were connected, and no form ever asked for one, so the promise could not be kept. Listers can now add a street address. It stays private, shown only to people they connect with or accept a viewing from, and everyone else still sees the neighbourhood.",
+  "changelog.entries.an-answer-on-your-housing-application.title":
+    "An answer on your housing application",
+  "changelog.entries.an-answer-on-your-housing-application.body":
+    "Asking to join a co-op or a vetted housing group ended at a success panel. There was no notification when a decision was made and no page to check, so the request simply disappeared. You now hear when it is decided, and both surfaces show you where your application stands.",
+  "changelog.entries.filter-for-pets-furnishing-and-deposit.title":
+    "Filter for pets, furnishing and deposit",
+  "changelog.entries.filter-for-pets-furnishing-and-deposit.body":
+    "Listers have been ticking Furnished and Pets welcome since the board opened, and nothing let you search on either, so anyone with a dog read every description by hand. Both are filters now. Listers can also state the deposit, and you can cap it. A home with no stated deposit is left out of a capped search rather than treated as zero.",
+  "changelog.entries.a-warning-before-your-listing-expires.title":
+    "A warning before your listing expires",
+  "changelog.entries.a-warning-before-your-listing-expires.body":
+    "Listings run for sixty days and then quietly drop off the board. Every signal you had arrived afterwards. Your listing now warns you a week out, and the card says how many days are left instead of a flat date, so extending it is a decision rather than a rescue.",
+  "changelog.entries.landlord-recommendations-say-what-they-are.title":
+    "Landlord recommendations say what they are",
+  "changelog.entries.landlord-recommendations-say-what-they-are.body":
+    "A recommendation is a named, public judgement of a real person who has no account here. Writing one now means saying you rented from them and roughly when, every recommendation is labelled self-attested and unverified because nothing here can check it, and the person named can ask to answer it. Their reply is published beside the words it answers.",
+  "changelog.entries.counts-and-dates-you-can-trust.title":
+    "Counts and dates you can trust",
+  "changelog.entries.counts-and-dates-you-can-trust.body":
+    "The directory said it was updated monthly, the safe spaces list said June 2025, one page claimed forty-seven verified spaces, and two more counted removals this year that were really all-time. None of it was checkable. Every number on those pages is now the live one, every date is real, and the claims we could not stand behind are gone. The visa and arriving guides carry a review date and send you to the official source for figures that change each year.",
+  "changelog.entries.reporting-without-an-account.title":
+    "Report something without an account",
+  "changelog.entries.reporting-without-an-account.body":
+    "The report form always said it was open to anyone, and until now it was not: without an account, sending one failed. It works. You can file from the safety pages, from a listing, from a gathering or from someone's profile whether or not you are signed in.",
+  "changelog.entries.report-from-where-you-are.title":
+    "Report from where you meet it",
+  "changelog.entries.report-from-where-you-are.body":
+    "A gathering can now be reported from its own page, so you no longer have to RSVP first and put your name on the host's guest list to say something is wrong. Volunteering opportunities can be reported at all for the first time, and a profile has a Report action of its own instead of hiding one inside Block.",
+  "changelog.entries.a-receipt-when-you-report.title":
+    "A receipt the moment you report",
+  "changelog.entries.a-receipt-when-you-report.body":
+    "Filing a report now puts a confirmation in your notifications straight away, with the case reference. Before, if you closed the success message, you had nothing at all until a moderator finished the case, which can take days.",
+  "changelog.entries.every-decision-carries-a-reason.title":
+    "Every decision comes with its reason",
+  "changelog.entries.every-decision-carries-a-reason.body":
+    "The Code of Conduct says we always tell you why. A moderator can no longer record a warning, a restriction, a suspension, a ban or a takedown without writing the reason you receive. Blocking someone and reporting them at the same time now carries the real reason too, so a report about outing or doxxing reaches the fastest queue instead of the slowest.",
+  "changelog.entries.appeal-dates-you-can-hold-us-to.title":
+    "Appeal dates you can hold us to",
+  "changelog.entries.appeal-dates-you-can-hold-us-to.body":
+    "The appeal page now shows how long you have to file, and your appeal shows the date we owe you an answer by. The old copy quoted two different deadlines and neither matched what the platform actually does. If the window has closed, the page says so and names the day it closed rather than simply refusing.",
+  "changelog.entries.guides-and-partners-without-signing-in.title":
+    "Public pages that actually load when you are signed out",
+  "changelog.entries.guides-and-partners-without-signing-in.body":
+    "The glossary, the partner pages, the volunteering list, the governance record and the legal aid and testing listings are meant to be readable by anyone. They were asking the server for member-only data, so a signed-out visitor got an error panel and a retry button that could never work. They load now.",
+  "changelog.entries.a-code-to-follow-your-concern.title":
+    "A code to follow up a concern you raised",
+  "changelog.entries.a-code-to-follow-your-concern.body":
+    "Raising a concern without an account used to end in silence, because the form promised a confirmation by email and QueerPulse sends none. You now get a reference code when you submit. Keep it, and you can check at any time whether your concern is waiting, being looked at, or closed. It collects nothing about you.",
+  "changelog.entries.the-decision-log-can-grow.title":
+    "The decision log can record the next decision",
+  "changelog.entries.the-decision-log-can-grow.body":
+    "The public record of decisions, principles and council seats was fixed to what shipped in the app, so the people who take a decision could not log it. The governance team can now write a new entry in English and Portuguese, edit it and reorder it, without waiting for a release.",
+  "changelog.entries.partners-keep-their-own-page.title":
+    "Partners can keep their own page accurate",
+  "changelog.entries.partners-keep-their-own-page.body":
+    "An approved partner organisation had no way to fix its own phone number, address or description. There is now a partner profile editor in your account. The partnership tier and the date you joined stay with the partnerships team, because those describe the relationship rather than the organisation.",
+  "changelog.entries.one-way-to-apply-as-a-partner.title":
+    "One way to apply as a partner",
+  "changelog.entries.one-way-to-apply-as-a-partner.body":
+    "There were two forms for the same ask. The one on the For Organisations page created a message that never became a partnership, while the real application form had a queue and an answer. Both now lead to the real application, and the answer arrives in the app.",
+  "changelog.entries.the-glossary-reads-in-portuguese.title":
+    "The glossary opens in your language",
+  "changelog.entries.the-glossary-reads-in-portuguese.body":
+    "The glossary opened in English whatever language the rest of the site was in, its category chips stayed English after you switched, and searching in Portuguese found nothing. It now follows your language until you flip it yourself, and search reads the Portuguese definitions.",
+  "changelog.entries.suggest-a-glossary-term.title": "Suggest a missing term",
+  "changelog.entries.suggest-a-glossary-term.body":
+    "Suggesting a word used to go to the general contact form and arrive as an unstructured message. It now goes to the editors as a proper suggestion, and they have a console to add the term and finish its Portuguese definition.",
+  "changelog.entries.reach-the-team-behind-an-opportunity.title":
+    "Reach the team behind a volunteering opportunity",
+  "changelog.entries.reach-the-team-behind-an-opportunity.body":
+    'After applying, "Message the team" dropped you into an empty inbox with nobody to write to. It now opens a conversation with the person who posted it. Community organisers who are allowed to review applicants also see the applicant list on the posting instead of being offered the Apply button on their own opportunity.',
+  "changelog.entries.approved-resources-appear-straight-away.title":
+    "An approved resource appears in the directory",
+  "changelog.entries.approved-resources-appear-straight-away.body":
+    "Approving a member's resource suggestion told them it was accepted and then left the directory unchanged until somebody retyped it by hand. Approval now publishes the listing in the same step, with the details checked first, so a phone number on a legal aid or clinic list is the one the member sent.",
+  "changelog.entries.guides-get-reviewed-on-time.title":
+    "Guides get reviewed on time",
+  "changelog.entries.guides-get-reviewed-on-time.body":
+    "Every guide hides from readers until an editor confirms it is still accurate, and each one falls due again on a schedule. Nothing was telling anyone when that happened, so harm reduction and trans healthcare pages could stay hidden for months. Overdue guides now raise a flag in the admin queue and ring the curators.",
+  "changelog.entries.the-trans-healthcare-guide-in-portuguese.title":
+    "The trans healthcare guide, in Portuguese",
+  "changelog.entries.the-trans-healthcare-guide-in-portuguese.body":
+    "The clinical pathways on the trans healthcare guide, and the QTIPOC organisation directory, were written only in English even for a Portuguese reader. Both are now translated in full, wait times, costs and legal references included.",
+  "changelog.entries.forms-instead-of-email-links.title":
+    "Forms instead of email links",
+  "changelog.entries.forms-instead-of-email-links.body":
+    "Several pages asked you to email a shared mailbox, which had no queue and no way to tell you what happened. Those now open the same in-app forms the rest of the platform uses, so a suggestion or a press question can be tracked and answered where you sent it.",
+  "changelog.entries.send-a-document-in-a-message.title":
+    "You can send a document in a message",
+  "changelog.entries.send-a-document-in-a-message.body":
+    "Messages carried photos and GIFs and nothing else, so sharing a lease, a flyer or a spreadsheet meant leaving the platform for email, which is exactly the moment a housing or volunteering conversation used to fall apart. You can now attach a PDF, a plain-text file, a CSV or a spreadsheet, up to 20 MB, and it arrives as a file card showing the name, the format and the size. Documents are served the same guarded way photos already were: only the people in the conversation can open one, and a link on its own is not enough. One honest caveat while we look at it: a photo has its hidden data stripped as it is prepared for sending, and a document does not yet, so a file you send carries whatever its author and software details already say.",
+  "changelog.entries.delete-a-message-just-for-you.title":
+    "You can delete a message just for you",
+  "changelog.entries.delete-a-message-just-for-you.body":
+    "Deleting a message removed it for everyone, so the only way to clear something from your own side was to delete the whole conversation and lose the history you wanted to keep. Delete for me now sits beside it. The message goes from your view and stays gone on every device you use, in the thread, in search, in the pinned banner, in your starred messages and in the conversation preview. The other person's view does not change, and it does not look deleted to them.",
+  "changelog.entries.mark-a-conversation-unread.title":
+    "You can mark a conversation unread",
+  "changelog.entries.mark-a-conversation-unread.body":
+    "Opening a thread on your way somewhere else marked it read, and there was no way to flag it to come back to. Mark as unread is now in the conversation menu, beside pin, favourite, mute and archive. It holds on every device, it survives leaving the page and coming back, and opening the thread again clears it.",
+  "changelog.entries.new-messages-reach-you-wherever-you-are.title":
+    "New messages reach you wherever you are",
+  "changelog.entries.new-messages-reach-you-wherever-you-are.body":
+    "A new message only reached you live if you happened to have that exact thread open. Sitting in another conversation, or anywhere else in the app, you saw nothing until you reloaded, and the person who wrote to you kept seeing a single tick as though it had never arrived. Your inbox and your unread badge now update the moment a message lands in any of your conversations, and the sender's second tick appears when it reaches you rather than when you get round to opening it.",
+  "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.title":
+    "An enquiry reply no longer fails in silence",
+  "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.body":
+    "Asking about a room or a flatshare opened a conversation with someone you were not connected to, and every reply after that first message was refused, from both sides. The message box looked completely normal, so the person letting the room answered a question, watched their message turn red, and the person who asked assumed they had been ignored. The thread now tells you plainly that replying needs a connection, and offers you the connection request right there, so the conversation can carry on instead of dying quietly.",
+  "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.title":
+    "Notifications you can clear, that open the thing they name",
+  "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.body":
+    "Three things about the bell were wrong at once. Answering a connection request from a notification only cleared it on the device you answered on, so it came back unread everywhere else with live Accept and Decline buttons on a request you had already dealt with, and there was no way to clear a row you simply did not want. Tapping a notification about a community post or a mention in a message dropped you on the notifications list rather than the post or the message. And the count at the top of the page disagreed with the count on the bell beside it. Rows now clear for good on every device, they open the thing they are about, and both counts come from the same place.",
+  "changelog.entries.hiding-your-photo-now-holds-everywhere.title":
+    "Turning off your photo now holds everywhere",
+  "changelog.entries.hiding-your-photo-now-holds-everywhere.body":
+    "The Show your photo setting was honoured by the feed and the forum and quietly ignored almost everywhere else, so a member who had turned it off still had their face shown to everyone in their direct messages, to people at the same gathering, to their connections, to anyone visiting a profile they had vouched for, and to community owners holding their membership card. It was also still published on the opt-in public page that search engines can read. All of those now go through one check, so the setting means what it says.",
+  "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.title":
+    "Someone you blocked can no longer vouch for you",
+  "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.body":
+    "Vouching did not know about blocks. Somebody you had blocked could still vouch for you, raise your vouch count, and have their face sit in the row of vouchers on your profile for you and every visitor to see, with no way for you to remove it. Blocking now refuses the vouch outright, and an existing vouch from someone you later block stops counting and stops appearing, for you and for everyone else. Unblocking restores it.",
+  "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.title":
+    "A hidden vouch list no longer reads as no vouches at all",
+  "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.body":
+    "If you had chosen to keep the list of people who vouched for you private, your own profile told visitors you had no vouches yet, while the true number was printed a few lines below on the same page, and the page invited them to be the first. The header now states the real number without naming anyone, and says the names are private. You still see your own list, and there is a line telling you that visitors see only the count.",
+  "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.title":
+    "A private profile now says so instead of looking abandoned",
+  "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.body":
+    "Opening the profile of someone who keeps it private, or shares it only with their connections, showed a name and then nothing at all, which reads as an empty account rather than a decision. There is now a short note saying whose choice it was and what would change. The two cases say different things, because they are different: a network profile opens up once you are connected, and a private one stays private, though connecting does let the two of you message.",
+  "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.title":
+    "Hiding yourself now holds on the People like you row",
+  "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.body":
+    "The row of related people at the bottom of a profile applied none of the checks every other listing applies. Someone who had blocked you, hidden themselves from you specifically, or turned on Hide me for 24 hours still appeared there by name, pronouns and photo, and so did anyone a moderator had removed. All four now apply, so choosing to be hidden is not undone by a suggestion row.",
+  "changelog.entries.renaming-your-username-no-longer-breaks-every-link-to-you.title":
+    "Renaming your username no longer breaks every link to you",
+  "changelog.entries.renaming-your-username-no-longer-breaks-every-link-to-you.body":
+    "Changing your username released the old one immediately, so every printed card, shared link and pasted mention pointing at you died with a not-found page the moment you renamed. Old links now forward to your new address and tell you they did, on both your member profile and your public page. The forwarding is deliberately temporary: it lasts only as long as the old name is reserved, so once somebody else can legitimately claim that name, it stops rather than sending your visitors to a stranger.",
+  "changelog.entries.you-can-search-the-member-directory-by-name.title":
+    "You can search the member directory by name",
+  "changelog.entries.you-can-search-the-member-directory-by-name.body":
+    "The member directory had filters but no way to type a name, so finding the person you met last night meant leaving it for the site-wide search. There is now a search box that matches part of a name, and it works alongside the filters you already had.",
+  "changelog.entries.the-persona-directory-now-searches-all-of-it-at-once.title":
+    "The persona directory now searches all of it at once",
+  "changelog.entries.the-persona-directory-now-searches-all-of-it-at-once.body":
+    "Searching personas happened in your browser, on whatever had already been downloaded, which meant the page fetched up to twenty batches of a hundred one after another before it could show you anything, and a search still could not see past the two thousandth persona. The search now runs on the server across every persona, and the page loads in a single request.",
+  "changelog.entries.a-co-owned-persona-link-opens-the-right-persona.title":
+    "A co-owned persona opens the right persona",
+  "changelog.entries.a-co-owned-persona-link-opens-the-right-persona.body":
+    "A persona shared between several people was linked from each co-owner's profile using that co-owner's name, but a persona is only ever found under the name of the person who created it. Every one of those links failed, and if the co-owner happened to have their own persona with the same short name, the link opened that other persona instead. Each persona now has one address, and the card on the phone and on a computer both use it.",
+  "changelog.entries.no-more-persona-share-links-and-qr-codes-that-lead-nowhere.title":
+    "No more persona share links and QR codes that lead nowhere",
+  "changelog.entries.no-more-persona-share-links-and-qr-codes-that-lead-nowhere.body":
+    "Share, QR code, contact card and View on your persona dashboard invented an address for a persona that had never been published or had no handle yet, so you could copy a link or print a QR code that led nowhere and only find out when somebody scanned it. Those four now come from the one place that knows a persona's real address. When there is not one yet, they are visibly unavailable with a line saying what to do about it, rather than silently wrong.",
+  "changelog.entries.co-owners-are-offered-leave-instead-of-a-delete-that-fails.title":
+    "Co-owners are offered Leave instead of a Delete that fails",
+  "changelog.entries.co-owners-are-offered-leave-instead-of-a-delete-that-fails.body":
+    "Deleting a persona has always been limited to the person who created it, but the Delete button was shown to every co-owner. A co-owner could read the warning about what everyone was about to lose, type the persona's name to confirm, and get a generic failure with no explanation and no pointer to the Leave action that does apply to them. Co-owners are now offered Leave in the place they were looking for Delete. The creator's warning also counts correctly: it used to include the reader among the people they were taking the persona from.",
+  "changelog.entries.the-personas-you-follow-now-have-a-home.title":
+    "The personas you follow now have a home",
+  "changelog.entries.the-personas-you-follow-now-have-a-home.body":
+    "Following a persona did nothing for the follower. There was no list of who you follow and nothing ever reached you again, so the button was decorative. There is now a You follow tab in the persona directory listing everyone you follow, with unfollow on each row, and you are told when a persona you follow publishes new work. It is one notification per persona rather than one per item, and there is a switch to turn it off while keeping the list. The notification names the persona and never the person behind it.",
+  "changelog.entries.badges-levels-and-perks-now-read-in-your-language.title":
+    "Badges and levels now read in your language",
+  "changelog.entries.badges-levels-and-perks-now-read-in-your-language.body":
+    "Badge names, what each badge takes, the category filters and the seven level names were written in English on the server and shown as they were, so a Portuguese member read Local Scout, Save 3 places in the Local directory and Newcomer on an otherwise translated page. The level name appears on your profile header, which made it the most visible English left in the app. All of it now reads in the language you chose. Two smaller lists that had been copied by hand had drifted from the real badge names in English as well as Portuguese, and they now read from one source instead.",
+  "changelog.entries.a-membership-card-check-shows-a-real-role-name.title":
+    "A membership card check shows a real role name",
+  "changelog.entries.a-membership-card-check-shows-a-real-role-name.body":
+    "Scanning a co-owner's membership card at a door showed a raw internal code where the role should be, on the one screen designed to be read by a stranger with no context. It now shows the role name, and an unfamiliar role falls back to something readable rather than a code.",
+  "changelog.entries.invite-only-communities-can-finally-let-people-in.title":
+    "Invite-only communities can finally let people in",
+  "changelog.entries.invite-only-communities-can-finally-let-people-in.body":
+    "If you run a private or invite-only community, an invitation now actually opens the door. Before this, the people you invited were sent to a page that told them the community did not exist. An invitation is a real thing you hold now: it shows the community to the person you invited, lets them walk straight in, and can be withdrawn if you change your mind.",
+  "changelog.entries.your-invitations-now-wait-for-you-in-one-place.title":
+    "Your invitations wait for you in one place",
+  "changelog.entries.your-invitations-now-wait-for-you-in-one-place.body":
+    "Invitations used to live only in a notification that scrolled away. There is now a page that holds every community that has asked you in, who invited you, and the choice to open it or say no thank you. Declining is quiet: nobody is told.",
+  "changelog.entries.an-archived-community-stays-readable-to-its-members.title":
+    "An archived community stays readable to the people who built it",
+  "changelog.entries.an-archived-community-stays-readable-to-its-members.body":
+    "Closing a community said it would stay visible as a read-only record. It did not: everyone but the moderators lost every post and resource they had written there. Now the archive is what it always promised to be. Members keep reading everything, and nobody can post, reply, react or join.",
+  "changelog.entries.leaving-a-community-you-run-now-points-you-somewhere.title":
+    "Leaving a community you run now points you somewhere",
+  "changelog.entries.leaving-a-community-you-run-now-points-you-somewhere.body":
+    "Owners were offered the same Leave button as everyone else, confirmed it, and got an error with no explanation. A community cannot be left without a successor, so we say that plainly now and take you to the handover instead.",
+  "changelog.entries.the-communities-home-tab-shows-your-real-week.title":
+    "The communities home tab shows your real week",
+  "changelog.entries.the-communities-home-tab-shows-your-real-week.body":
+    "The overview was showing the same empty week to everyone. It now reads from your actual communities: what has been posted, what is coming up, and what is waiting for you.",
+  "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.title":
+    "You can see a community's gatherings before you join",
+  "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.body":
+    "Every community you had not joined told you it had no gatherings coming up, even with three on the calendar. Gatherings are one of the best reasons to join somewhere, so you can now see the open ones from the outside. Anything a community keeps to its members stays private, and we say so on the page.",
+  "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.title":
+    "Communities can set a mark and a welcome note",
+  "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.body":
+    "Two things the platform could already store and no one could ever fill in: a small square mark shown beside your community's name, and a note the next person reads the moment they arrive. Both are optional, and both are now in the setup flow and in your settings.",
+  "changelog.entries.a-post-taken-down-now-comes-with-a-reason.title":
+    "A post taken down now comes with a reason",
+  "changelog.entries.a-post-taken-down-now-comes-with-a-reason.body":
+    "When a moderator removed something you wrote, you found a blank space and were left to guess which rule you had broken, or whether you had broken one at all. Moderators can now give a reason and cite the house rule they are enforcing, and it reaches you. The takedown is written into the community's own record too.",
+  "changelog.entries.you-can-take-back-a-request-to-join.title":
+    "You can take back a request to join",
+  "changelog.entries.you-can-take-back-a-request-to-join.body":
+    "Asked to join somewhere by mistake, or changed your mind while waiting? The Requested button does something now. Taking it back costs you nothing and leaves you free to ask again straight away, where waiting for a no can set a wait of months.",
+  "changelog.entries.finding-the-busiest-communities-is-instant.title":
+    "Finding the busiest communities is instant",
+  "changelog.entries.finding-the-busiest-communities-is-instant.body":
+    "Sorting Discover by most active used to quietly fetch every page of every community into your browser and re-sort them there, behind a loading state that could last a while. The sorting happens on our side now, and the first results arrive in one go.",
   "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.title":
     "An outage no longer looks like an empty page",
   "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.body":
@@ -2470,6 +2722,8 @@ export const marketing: Catalog = {
   "changelog.tag.flatmates": "See the flatmate board",
   "changelog.tag.tenantRights": "Know your rights",
   "changelog.tag.workProfile": "Open your work profile",
+  "changelog.tag.help": "Open the help centre",
+  "changelog.tag.glossary": "Open the glossary",
   "changelog.tag.governance": "See how QueerPulse is run",
   "changelog.tag.appealOutcome": "Check your appeal status",
   "changelog.tag.hateCrime": "Read hate crime resources",
@@ -5655,6 +5909,11 @@ export const marketing: Catalog = {
   "volunteerDetail.main.goodForTitle": "Who's <em>good for this</em>",
   "volunteerDetail.main.teamTitle": "Who's <em>already in</em>",
   "volunteerDetail.sidebar.appliedTitle": "You're <em>on the list.</em>",
+  // PRD-262: shown when the reader is not yet connected to the poster, so the
+  // button does not promise a message it will answer with a connection
+  // request. PRD-260: the signed-out apply prompt on the now-public page.
+  "volunteerDetail.sidebar.connectToMessage": "Connect with the team",
+  "volunteerDetail.sidebar.signInToApply": "Sign in to apply",
   "volunteerDetail.sidebar.messageTeam": "Message the team",
   "volunteerDetail.sidebar.withdrawing": "Withdrawing…",
   "volunteerDetail.sidebar.withdraw": "Withdraw my interest",
@@ -5685,6 +5944,8 @@ export const marketing: Catalog = {
   "volunteerDetail.signupModal.cancel": "Cancel",
   "volunteerDetail.signupModal.submit": "Send application",
   "volunteerDetail.signupModal.sending": "Sending…",
+  "volunteerDetail.report.cta": "Report this opportunity",
+  "volunteerDetail.report.ariaLabel": "Report the opportunity {role} at {org}",
 
   // ── Partner Detail — page chrome. About/joint-work/timeline/how-we-work
   //    copy, stats, and contact details are each partner org's own content
@@ -5827,38 +6088,20 @@ export const marketing: Catalog = {
   "forOrgs.tiers.funder.list3": "No platform-wide placement, no co-branding",
   "forOrgs.tiers.funder.list4": "Annual independent audit included",
   "forOrgs.tiers.funder.list5": "Public itemisation in the transparency report",
+  // PRD-266: the For Organisations partner ask now hands over to the real
+  // /about/partners/apply flow instead of writing a parallel inquiry row.
+  "forOrgs.apply.lead":
+    "Tell us who you are and we will take you to the partner application. It is one form, it goes to the partnerships queue, and you can see where it stands from your account at any time.",
+  "forOrgs.apply.note":
+    "We read every application, however rough. The answer arrives in the app, on your submissions page and in your notifications. We send no email, ever.",
   "forOrgs.cta.title": "Start a <em>conversation.</em>",
-  "forOrgs.cta.body":
-    'Tell us about your organisation in a paragraph. We read every message within 5 working days and reply personally, even if the answer is "this isn\'t right for us right now."',
   "forOrgs.cta.list1": "For partnerships, we usually call before we write",
   "forOrgs.cta.list2": "Grant applications: include a one-pager",
   "forOrgs.cta.pressInquiry": "Press inquiries: <a>Press Kit</a>",
   "forOrgs.cta.partnerQuestion":
     "Already a partner with a question? <a>Contact us</a>",
-  "forOrgs.form.nameLabel": "Your name",
-  "forOrgs.form.namePlaceholder": "Filipa Mendes",
   "forOrgs.form.orgLabel": "Organisation",
   "forOrgs.form.orgPlaceholder": "Your organisation",
-  "forOrgs.form.emailLabel": "Email",
-  "forOrgs.form.emailPlaceholder": "you@org.example",
-  "forOrgs.form.interestLabel": "Interested in",
-  "forOrgs.form.interest.operational": "Operational partnership",
-  "forOrgs.form.interest.employer": "Verified employer",
-  "forOrgs.form.interest.funding": "Programme funding",
-  "forOrgs.form.interest.other": "Something else (tell us in the note)",
-  "forOrgs.form.messageLabel": "What you'd like to build, in a paragraph",
-  "forOrgs.form.messagePlaceholder": "We run an LGBTQ+ helpline and…",
-  "forOrgs.form.submitCta": "Send to partnerships team",
-  "forOrgs.form.sendingCta": "Sending…",
-  "forOrgs.form.sent.title": "Sent to our <em>partnerships team.</em>",
-  "forOrgs.form.sent.body":
-    "Thanks, we have your message. Our partnerships team reads every one and replies personally within 5 working days, by email, from hello@queerpulse.com to the address you gave above. Worth adding it to your contacts, so the reply does not land in spam.",
-  "forOrgs.form.error":
-    "Something went wrong sending that. Try again, or write to the partnerships team directly at hello@queerpulse.com.",
-  "forOrgs.form.small":
-    "Goes directly to our partnerships team. No sales funnel, no follow-up sequence. Just a reply from a person, by email, within 5 working days.",
-  "forOrgs.form.toast":
-    "Sent to our partnerships team. They will email you back within 5 working days",
 
   // ── Directory — business directory + detail page chrome. Place records
   //    (`directoryPlaces.ts`: names, taglines, reviews, owner bios) are each
@@ -5871,7 +6114,12 @@ export const marketing: Catalog = {
   "directory.hero.title": "Find your <em>people's places.</em>",
   "directory.hero.sub":
     "Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community. Whether you just arrived or you've been here for years.",
-  "directory.hero.note": "Community-verified · updated monthly",
+  // "updated monthly" was a cadence nothing scheduled, measured or could have
+  // shown: `DirectoryCardDTO` carries no update date, so the page had no way
+  // to stand behind it. Replaced with who maintains the directory, which the
+  // claim, confirm and dispute flows do back.
+  "directory.hero.note":
+    "Community-verified · kept up by members and the businesses themselves",
   "directory.search.placeholder": "Search by name, neighbourhood, or type…",
   "directory.cat.all": "All",
   "directory.cat.food": "Food & drink",
@@ -5884,10 +6132,46 @@ export const marketing: Catalog = {
   "directory.cat.fitness": "Gym & Fitness",
   "directory.loading": "Loading places…",
   "directory.loadingMore": "Loading more places…",
+  // Pluralised on `count`, which the call site sets to the size of the pool
+  // being counted against. The flat key is kept as the fallback `resolveEntry`
+  // lands on when no count is supplied.
   "directory.count": "Showing <b>{shown}</b> of {total} places",
+  "directory.count_one": "Showing <b>{shown}</b> of {total} place",
+  "directory.count_other": "Showing <b>{shown}</b> of {total} places",
+  // PRD-246. The count used to quote the SERVER total against a CLIENT-filtered
+  // shown count, so filtering to "Open now" on page one of a 120-place registry
+  // read "Showing 3 of 120 places", a sentence whose two numbers describe
+  // different populations. Category, open-now, sort and distance all filter
+  // client-side over the pages loaded so far, and that is deliberate: the grid
+  // is CDN-cached and a server-baked open state would go stale in the dangerous
+  // direction, saying open when shut.
+  //
+  // So when a client-only filter is narrowing an incompletely loaded set, the
+  // count says what it is really counting and the registry total moves into a
+  // note beside it. `directory.count` above is untouched and still serves the
+  // common case, which is most of the time.
+  //
+  // Flat rather than CLDR-pluralised, matching `directory.count`: the plural
+  // noun attaches to `{loaded}` and `{total}`, never to `{shown}`, and this
+  // branch is only reachable when a further server page exists, so both are at
+  // least a full page.
+  "directory.countLoaded":
+    "Showing <b>{shown}</b> of the {loaded} places loaded so far",
+  "directory.countLoaded_one":
+    "Showing <b>{shown}</b> of the {loaded} place loaded so far",
+  "directory.countLoaded_other":
+    "Showing <b>{shown}</b> of the {loaded} places loaded so far",
+  "directory.countLoadedTotal": "{total} in the whole directory",
   "directory.empty.title": "No places match those filters",
   "directory.empty.body":
     "Try a broader category, fewer vibes, or a different search, or clear the filters to see everything.",
+  // PRD-246. The same empty state, for the case where more pages are still
+  // coming. `directory.empty.*` above reads as a definitive "nothing in the
+  // whole registry matches", which is a claim the page cannot make while pages
+  // 2..N are unfetched. This one says what it actually knows.
+  "directory.emptyPartial.title": "Nothing matches yet",
+  "directory.emptyPartial.body":
+    "None of the {loaded} places loaded so far match those filters, and there are more still loading. Give it a moment, or clear the filters to see everything.",
   "directory.noListings.title": "No places listed yet",
   "directory.noListings.body":
     "This directory grows from the community. If you run or know a queer-owned or queer-friendly place in Lisbon, be the first to add it.",
@@ -5949,7 +6233,7 @@ export const marketing: Catalog = {
   "directory.verify.eyebrow": "Community verified",
   "directory.verify.title": "How verification <em>works.</em>",
   "directory.verify.lead":
-    "The verified badge isn't self-declared. A member puts a space forward, others visit and review it against a fixed set of criteria, and every listing is re-checked each year, so a space can lose it, too.",
+    "The verified badge isn't self-declared. A member puts a space forward, others visit and review it against a fixed set of criteria, and every badge comes back for review a year after it is granted, so a space can lose it, too.",
   "directory.verify.cta": "See the full trust story",
   "directory.verify.pillar.nominate.title": "Member-nominated",
   "directory.verify.pillar.nominate.body":
@@ -6431,6 +6715,14 @@ export const marketing: Catalog = {
 
   "directory.editThisListing": "Edit this listing",
 
+  // ── Review stamp (`PageReviewStamp`), shared by the two Lisbon guidance
+  //    pages, /local/visas and /local/arriving. One date and a named owner,
+  //    deliberately with NO cadence attached: nothing schedules a re-read of
+  //    these pages, so "reviewed quarterly" would be the same kind of
+  //    unbacked claim the stamp exists to replace. `{date}` is localized by
+  //    `fmt.date`. Each page supplies its own "check it yourself" line below.
+  "reviewStamp.reviewed": "Last reviewed by the QueerPulse team on {date}.",
+
   // ── Arriving (new-to-Lisbon guide) — fully translated (LOC-13). The
   //    neighbourhood, health, housing, organisation and checklist copy used to
   //    be hardcoded English inside `arrivingPage.data.ts` /
@@ -6445,6 +6737,8 @@ export const marketing: Catalog = {
   "arriving.hero.title": "Queer and new to Lisbon? <em>Welcome.</em>",
   "arriving.hero.body":
     "This city has a lot for us, a real, rooted queer community, welcoming neighbourhoods, organisations doing serious work, and people who will genuinely help you settle in. Here's what to know first.",
+  "arriving.review.verify":
+    "Rents, fees and opening hours move faster than this page does. Treat everything here as a starting point and confirm the current detail with the service itself.",
 
   // Shown beside a link whose destination needs a QueerPulse account, so a
   // logged-out reader knows before they click.
@@ -6566,7 +6860,7 @@ export const marketing: Catalog = {
     "Lisbon's housing market is expensive and competitive. Here's an honest picture of what to expect, and where to get help.",
   "arriving.housing.cards.market.title": "What the market is actually like",
   "arriving.housing.cards.market.body":
-    "Rents have risen steeply over the past five years. Budget roughly 800 to 1100 euros for a room in a central neighbourhood. Arroios and Mouraria still offer better value. Good listings go within days, so move quickly when you see one.",
+    "Rents have risen steeply over the past five years, and a room in a central neighbourhood is most people's largest monthly cost by a distance. Set your budget from what is actually being asked this month, on the housing board and the listing sites, rather than from a figure printed on a guide. Arroios and Mouraria still offer better value. Good listings go within days, so move quickly when you see one.",
   "arriving.housing.cards.board.title": "Rooms shared inside the community",
   "arriving.housing.cards.board.body":
     "Members post rooms, sublets and shares on the QueerPulse housing board. The best leads usually arrive through people rather than portals.",
@@ -6654,6 +6948,8 @@ export const marketing: Catalog = {
     "Practical information about visas, residency, and citizenship in Portugal, and what queer couples and families need to know that the official guidance doesn't always say clearly.",
   "visas.hero.note":
     "Community information. This is not legal advice: immigration law changes, so always verify with a specialist.",
+  "visas.review.verify":
+    "Verify before you apply. This page names the rules and the office that publishes each figure, and it prints no income thresholds or fees of its own: those are reset every year, and a stale number is the one thing here that could cost you an application.",
   "visas.routePicker.label": "Where are you <em>starting from?</em>",
   "visas.routePicker.euCitizen.name": "EU / EEA citizen",
   "visas.routePicker.euCitizen.desc":
@@ -6683,7 +6979,7 @@ export const marketing: Catalog = {
   "visas.tabs.eu.card1.eyebrow": "Registration",
   "visas.tabs.eu.card1.title": "Certificado de Registo",
   "visas.tabs.eu.card1.body":
-    "EU citizens staying more than 3 months must register at their local Câmara Municipal. You'll need your passport, proof of address, and proof of income or employment. The certificate is usually issued the same day. Cost: €15.",
+    "EU citizens staying more than 3 months must register at their local Câmara Municipal. You'll need your passport, proof of address, and proof of income or employment. The certificate is usually issued the same day. There is a small fee, set by each Câmara: ask yours what it is today.",
   "visas.tabs.eu.card1.tag": "Simple, low cost",
   "visas.tabs.eu.card2.eyebrow": "Your rights",
   "visas.tabs.eu.card2.title": "What EU residency gives you",
@@ -6703,8 +6999,9 @@ export const marketing: Catalog = {
   "visas.tabs.d7.card1.eyebrow": "Who it's for",
   "visas.tabs.d7.card1.title": "Eligibility",
   "visas.tabs.d7.card1.body":
-    "Non-EU citizens who can demonstrate a stable passive or remote income. The minimum income threshold is roughly €820/month (the Portuguese minimum wage), but some consulates want to see significantly more. Applications are made at the Portuguese consulate in your home country before arriving.",
+    "Non-EU citizens who can demonstrate a stable passive or remote income. The minimum income threshold is pegged to the Portuguese minimum wage, which is reset every year, and some consulates want to see significantly more. Get the current figure from AIMA and from the consulate you will apply at before you build a case around it. Applications are made at the Portuguese consulate in your home country before arriving.",
   "visas.tabs.d7.card1.tag": "Apply before arriving",
+  "visas.tabs.d7.card1.link": "The current threshold at aima.gov.pt",
   "visas.tabs.d7.card2.eyebrow": "What you get",
   "visas.tabs.d7.card2.title": "Visa conditions",
   "visas.tabs.d7.card2.body":
@@ -6737,8 +7034,9 @@ export const marketing: Catalog = {
   "visas.tabs.d8.card1.eyebrow": "Requirements",
   "visas.tabs.d8.card1.title": "What you need to qualify",
   "visas.tabs.d8.card1.body":
-    "Proof of remote employment or contracts with non-Portuguese clients. Income requirement is typically 4× the Portuguese minimum wage (roughly €3,280/month). Health insurance with Portugal coverage. Clean criminal record. Portuguese NIF (can be obtained before the visa in some cases).",
+    "Proof of remote employment or contracts with non-Portuguese clients. The income requirement is typically four times the Portuguese minimum wage, and that wage is reset every year, so take the current figure from AIMA rather than from any page quoting an amount. Health insurance with Portugal coverage. Clean criminal record. Portuguese NIF (can be obtained before the visa in some cases).",
   "visas.tabs.d8.card1.tag": "Higher income bar than D7",
+  "visas.tabs.d8.card1.link": "The current threshold at aima.gov.pt",
   "visas.tabs.d8.card2.eyebrow": "Process",
   "visas.tabs.d8.card2.title": "How to apply",
   "visas.tabs.d8.card2.body":
@@ -7154,6 +7452,52 @@ export const marketing: Catalog = {
   //    `DEFAULT_REGION_LABEL` keep the canonical `Region` id ("pt"/"eu"/
   //    "int") as the stored value; only the displayed label is translated
   //    (i18n brief §5.1).
+  // PRD-266: the application endpoint is member-guarded and stamps a NOT NULL
+  // submitter, so a signed-out visitor gets a real prompt rather than a 401.
+  "submitPartner.signedOut.title": "Sign in to apply",
+  "submitPartner.signedOut.body":
+    "A partner application is tied to an account, because that account is where the answer lands. Sign in and we bring you straight back here with what you already typed.",
+  "submitPartner.signedOut.signInCta": "Sign in and continue",
+  "submitPartner.signedOut.contactCta": "Just ask a question instead",
+
+  // PRD-263: an approved partner can now maintain its own public profile at
+  // /account/partner-profile. Tier, since and the card kicker stay staff-set.
+  "partnerProfileEdit.meta.title": "Your partner profile",
+  "partnerProfileEdit.meta.description":
+    "Keep your organisation's public page on QueerPulse accurate: contact details, description, tags and funding.",
+  "partnerProfileEdit.hero.eyebrow": "Partners · Your profile",
+  "partnerProfileEdit.hero.title": "Keep your page <em>true.</em>",
+  "partnerProfileEdit.hero.sub":
+    "This is the page people find when they are looking for you. Change what changed, save, and it is live.",
+  "partnerProfileEdit.empty.title": "You do not maintain a partner profile",
+  "partnerProfileEdit.empty.body":
+    "This page is for organisations already approved as partners. If yours has been approved and you cannot see it here, ask us to move the profile to your account.",
+  "partnerProfileEdit.empty.applyCta": "Apply to partner",
+  "partnerProfileEdit.picker.label": "Which organisation?",
+  "partnerProfileEdit.staffFields.title": "Set by the partnerships team",
+  "partnerProfileEdit.staffFields.tier": "Partnership tier",
+  "partnerProfileEdit.staffFields.since": "Partner since",
+  "partnerProfileEdit.staffFields.eyebrow": "Card kicker",
+  "partnerProfileEdit.staffFields.note":
+    "These four say something about the relationship between us, so we set them together rather than either side setting them alone. Ask us and we will change them.",
+  "partnerProfileEdit.fields.regionLabel.label": "Region, as it should read",
+  "partnerProfileEdit.fields.regionLabel.helper":
+    'The words printed on your card, for example "Portugal" or "Lisbon and Setúbal".',
+  "partnerProfileEdit.fields.about.label": "About your organisation",
+  "partnerProfileEdit.fields.about.helper":
+    "A few paragraphs, separated by a blank line. This is the long text on your page.",
+  "partnerProfileEdit.fields.funding.label": "How you are funded",
+  "partnerProfileEdit.fields.funding.helper":
+    "People read this. Say where the money comes from, plainly.",
+  "partnerProfileEdit.fields.phone.label": "Phone",
+  "partnerProfileEdit.fields.phoneNote.label": "When to call",
+  "partnerProfileEdit.fields.phoneNote.helper":
+    'For example "Weekdays, 14:00 to 20:00". Leave it empty if the line is always open.',
+  "partnerProfileEdit.actions.save": "Save changes",
+  "partnerProfileEdit.actions.saving": "Saving\u2026",
+  "partnerProfileEdit.actions.viewPublic": "See your public page",
+  "partnerProfileEdit.savedToast": "Saved. Your public page is up to date.",
+  "partnerProfileEdit.errorToast": "Could not save your profile.",
   "submitPartner.hero.eyebrow": "Partners · Apply",
   "submitPartner.hero.title": "Apply to <em>partner.</em>",
   "submitPartner.hero.sub":
@@ -8018,4 +8362,214 @@ export const marketing: Catalog = {
     "You can correct a viewing review until it goes public",
   "changelog.entries.correct-a-review-until-it-goes-public.body":
     "Reviews after a house viewing are written blind: neither side sees the other's until both have written or the window runs out. There was no way to fix a typo, ever. You can now edit your review right up until it goes public, and not after, so a correction can never become a reaction to what the other person wrote. The form tells you the deadline while you are writing it.",
+
+  // ── Deep-scan section 2 (Magazine: the reader), built 2026-09-06 ─────────
+  "changelog.entries.a-piece-can-no-longer-go-live-with-consent-unresolved.title":
+    "A piece can no longer go live with consent unresolved",
+  "changelog.entries.a-piece-can-no-longer-go-live-with-consent-unresolved.body":
+    "Every piece carries a care record: who is named in it, whether they agreed to be, and whether the sensitivity read is done. The card holding that record promised no one person could override it, and on the one button that actually published, nobody checked. An editor could put a story live while a named subject's consent was still pending. Publishing now stops and names the care items still open, on every route that publishes. Taking a piece back down is never blocked.",
+  "changelog.entries.the-desk-can-see-what-is-published-and-take-it-down.title":
+    "The desk can see what is published, and take it down",
+  "changelog.entries.the-desk-can-see-what-is-published-and-take-it-down.body":
+    "The pipeline stopped at Ready. A piece that had been live for months still read Ready to the person who wrote it, with no link to it anywhere, and the desk could not tell the two apart without opening the editor. There is a Published stage now, publishing moves the piece into it, and the piece record links straight through to the live page. Taking something down is one click.",
+  "changelog.entries.writers-hear-when-they-are-commissioned-and-when-they-are-published.title":
+    "Writers hear when they are commissioned, and when they are published",
+  "changelog.entries.writers-hear-when-they-are-commissioned-and-when-they-are-published.body":
+    "Being given a piece, watching it move through the desk, and seeing it go live all happened in silence. The only way to find out was to open your workspace and look. Each of those rings your bell now, the published one links to the piece itself, and none of them fire for something you did yourself.",
+  "changelog.entries.an-issue-dated-for-later-now-ships-on-that-morning.title":
+    "An issue dated for later now ships on that morning",
+  "changelog.entries.an-issue-dated-for-later-now-ships-on-that-morning.body":
+    "The magazine promises an issue's pieces go live together at 09:00 on its date. Shipping published everything the moment the button was pressed, so an editor who shipped on Friday for a Monday issue put every article live on Friday while the issue page itself stayed hidden until Monday. Shipping an issue dated ahead now schedules its pieces for 09:00 that day, and the button says which of the two it is about to do.",
+  "changelog.entries.shipping-an-issue-holds-back-what-is-not-ready-and-says-why.title":
+    "Shipping an issue holds back what is not ready, and says why",
+  "changelog.entries.shipping-an-issue-holds-back-what-is-not-ready-and-says-why.body":
+    "Shipping published any piece whose care record was complete, whatever state the writing was in. A piece still being drafted could go out with an empty standfirst, and an image with no alt text went with it. Shipping now takes only pieces that are ready and that pass the same checks the Publish button runs, and afterwards it lists what it held back and what each one is waiting on.",
+  "changelog.entries.an-accepted-story-now-arrives-on-the-desk-as-a-real-piece.title":
+    "An accepted story now arrives on the desk as a real piece",
+  "changelog.entries.an-accepted-story-now-arrives-on-the-desk-as-a-real-piece.body":
+    "Accepting a story you sent in marked it accepted, told you so, and created nothing at all. There was no piece behind it, no editor and no payment, and because the decision was final it could never be commissioned afterwards either. Accepting now builds the desk record in the same move: your text becomes the draft, you get the credit for writing it, and the admin row links through to it. Stories accepted before this can be finished off from the same screen.",
+  "changelog.entries.your-submitted-stories-page-is-open-to-everyone-who-submitted-one.title":
+    "Your submitted stories page is open to everyone who submitted one",
+  "changelog.entries.your-submitted-stories-page-is-open-to-everyone-who-submitted-one.body":
+    "Your account menu offered a Pitches page to every member, and the page turned almost everyone away at the door, editors included. It reads your own submissions, and the server behind it never asked for more than a signed-in member, so the lock was simply wrong. It opens now for anyone who has sent something in. The numbers at the top are counted from your own submissions too, where before they were invented.",
+  "changelog.entries.you-can-withdraw-a-story-you-submitted.title":
+    "You can withdraw a story you submitted",
+  "changelog.entries.you-can-withdraw-a-story-you-submitted.body":
+    "Once a story was in, the only way out was to ask somebody. You can pull one back yourself now, for as long as the desk has not answered it, and it leaves their queue straight away. If a decision lands while you are deciding, the page tells you and shows you what they said.",
+  "changelog.entries.two-editors-can-no-longer-overwrite-each-other-silently.title":
+    "Two editors can no longer overwrite each other silently",
+  "changelog.entries.two-editors-can-no-longer-overwrite-each-other-silently.body":
+    "The article editor saved the whole body every time, with no record of which version it had started from. Two people on one piece, or an editor saving while the writer filed a draft, meant one of them lost everything they had written, with no warning and nothing left to restore. Every save now says which version it is working from, and if the draft moved on underneath you the editor stops, keeps your text on screen, and offers to reload.",
+  "changelog.entries.writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it.title":
+    "Writers can read the edited draft, and refiling no longer doubles it",
+  "changelog.entries.writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it.body":
+    "Filing a draft only ever pushed text at a piece you had no way to open, so the promise that you see your edits before they ship was not true. Filing a second time appended the whole thing again and the article came out twice over. You can read the draft as it stands on the desk now, start from it, and file again either adding to it or replacing it. Filing the same text twice does nothing at all.",
+  "changelog.entries.a-published-deck-can-no-longer-vanish-from-under-readers.title":
+    "A published deck can no longer vanish from under readers",
+  "changelog.entries.a-published-deck-can-no-longer-vanish-from-under-readers.body":
+    "Deleting a deck took it away on a single confirm even while it was live, and left the piece behind it pointing at nothing. A live deck has to be taken down first now, one a piece still uses cannot be deleted at all, and the confirmation says what will actually happen. Deck scheduling does what it says as well, and the deck editor saves as you go.",
+  "changelog.entries.issue-cover-art-can-be-uploaded-from-the-desk.title":
+    "Issue cover art can be uploaded from the desk",
+  "changelog.entries.issue-cover-art-can-be-uploaded-from-the-desk.body":
+    "The cover is the one image every issue needs, and it was the only art slot in the magazine with no upload behind it: you had to host the picture somewhere else and paste in a link. It takes an upload now like every other image, with the same cropping and preview the rest of the desk uses.",
+  "changelog.entries.the-writer-workspace-reads-in-plain-language.title":
+    "The writer workspace reads in plain language",
+  "changelog.entries.the-writer-workspace-reads-in-plain-language.body":
+    "Your own workspace showed a due date as 2026-09-12, a payment as approved_unpaid, and an issue as a long string of letters and numbers, while every editor screen showed those same things in words. Dates, payment states and issue numbers now read the way they do everywhere else in the magazine, and a filed draft finally shows its word count against what was asked for.",
+  "changelog.entries.every-story-on-the-magazine-front-now-opens.title":
+    "Every story on the magazine front now opens",
+  "changelog.entries.every-story-on-the-magazine-front-now-opens.body":
+    "Every story card on the magazine front pointed at an old address, and the redirect that was meant to catch it threw away the part naming the story. So you tapped a headline and the magazine told you it did not exist. The cards go straight to the piece now, and the old addresses keep the story with them, so a link somebody sent you last year still works.",
+  "changelog.entries.articles-show-the-kicker-and-standfirst-the-desk-wrote.title":
+    "Articles show what the desk actually wrote above the headline",
+  "changelog.entries.articles-show-the-kicker-and-standfirst-the-desk-wrote.body":
+    'An article threw away its own kicker, section, dek and standfirst on the way to the page, so you saw "Issue 09" where an editor had written a line, and a tag where the section belonged. All four now reach you, on the article and on every card that links to it.',
+  "changelog.entries.issue-pages-show-the-cover-the-desk-chose.title":
+    "Issue pages show the cover the desk chose",
+  "changelog.entries.issue-pages-show-the-cover-the-desk-chose.body":
+    'Every issue wore the same stock photograph and every issue called itself "Current", so the archive was twelve identical tiles. Each issue now shows its own cover art, only the newsstand issue is badged as current, and "All issues" goes to the archive rather than back to the front page.',
+  "changelog.entries.interactive-decks-have-their-own-index.title":
+    "Interactive decks have their own index",
+  "changelog.entries.interactive-decks-have-their-own-index.body":
+    "The front page showed the newest interactive deck and nothing else, and no search or section browse carried decks at all, so the moment a second one published the first left the magazine for anyone who had not bookmarked it. There is now a decks index listing every one, newest first, reachable from the front page and the masthead. Decks can be shared too, and a shared link previews with the deck's own title.",
+  "changelog.entries.magazine-lists-no-longer-stop-at-twenty.title":
+    "Magazine lists no longer stop at twenty",
+  "changelog.entries.magazine-lists-no-longer-stop-at-twenty.body":
+    'Search, tag browse and section browse each loaded twenty pieces and stopped, while the heading cheerfully said "43 pieces found". They all page through the whole archive now. A writer\'s "All 25 articles" opens their real back-catalogue too, instead of dropping you on the homepage.',
+  "changelog.entries.the-magazine-now-browses-in-your-language.title":
+    "The magazine now browses in your language",
+  "changelog.entries.the-magazine-now-browses-in-your-language.body":
+    "Only the article page knew which language you read in. The front page, search, tag browse, section browse, your feed and a member's writing section all listed English headlines and only switched after you clicked. They all ask for your language now, so a piece that exists in Portuguese reaches you in Portuguese from the first screen.",
+  "changelog.entries.long-reads-have-contents-progress-and-a-resume-point.title":
+    "Long reads have contents, progress and a place to pick up",
+  "changelog.entries.long-reads-have-contents-progress-and-a-resume-point.body":
+    "A twenty-five minute piece gave you no way to see its shape, no sense of how far in you were, and no way back to where you stopped. Long articles now carry a contents list built from their own headings, a progress bar, and an offer to pick up where you left off. Sharing opens your phone's own share sheet instead of quietly copying a link.",
+  "changelog.entries.published-pieces-now-reach-your-feed.title":
+    "Published pieces now reach your feed",
+  "changelog.entries.published-pieces-now-reach-your-feed.body":
+    "The magazine was missing from the one screen everybody lands on: a piece could publish and never appear in your feed at all. Published articles now sit alongside posts, threads and gatherings, in your language, and a piece by somebody you have blocked stays out.",
+  "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.title":
+    "Blocks and mutes now apply under magazine articles",
+  "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.body":
+    "Article comments were the one place on the platform that ignored blocking and muting, so somebody you had blocked could still appear under a piece and reply directly to you there. They are now filtered the same way the forum and the feed filter them, in the comments and in the replies. A comment a moderator has taken down no longer lingers as an empty card with live reply and report buttons.",
+  "changelog.entries.article-comments-page-and-keep-your-paragraphs.title":
+    "Article comments page, and keep your paragraphs",
+  "changelog.entries.article-comments-page-and-keep-your-paragraphs.body":
+    "On a busy piece the older conversations were simply unreachable: twenty loaded and there was no way to ask for more. There is a load-more control now, the heading counts what it actually counts, and a comment you wrote in paragraphs stays in paragraphs instead of collapsing into a wall.",
+  "changelog.entries.the-submit-form-names-the-issue-that-is-actually-open.title":
+    "The submit-story form names the issue that is actually open",
+  "changelog.entries.the-submit-form-names-the-issue-that-is-actually-open.body":
+    "The form advertised a fixed issue number and a submission deadline that had already passed, written into the page months ago and never updated. It now names the issue the desk is really taking pitches for, shows a deadline only when an editor has set one, and says so plainly when nothing is open.",
+  "changelog.entries.unshipped-headlines-no-longer-appear-on-issue-pages.title":
+    "Unshipped headlines no longer appear on issue pages",
+  "changelog.entries.unshipped-headlines-no-longer-appear-on-issue-pages.body":
+    "An issue page listed everything scheduled for that issue, including pieces dated for next week, so a headline the desk had not run yet was visible and tapping it led nowhere. The contents list now shows only what has actually published.",
+  "changelog.entries.the-authors-directory-only-lists-writers-who-have-published.title":
+    "The authors directory only lists writers who have published",
+  "changelog.entries.the-authors-directory-only-lists-writers-who-have-published.body":
+    'Opening a draft created a byline, and the directory listed every byline, so it advertised writers with "0 pieces" whose pages said they had not published anything yet. It now lists the people whose work you can actually read.',
+
+  // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
+  "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.title":
+    "Reminder and cancellation links now open the gathering",
+  "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.body":
+    'Every event reminder, every cancellation notice, and every entry in a subscribed calendar feed pointed at an address the app has no page for, so tapping one landed you on "not found". They all open the gathering now, from the phone and from Google or Apple Calendar.',
+
+  "changelog.entries.online-gatherings-now-have-a-join-link.title":
+    "Online gatherings now have a join link",
+  "changelog.entries.online-gatherings-now-have-a-join-link.body":
+    'Hosting something on video? The wizard asks for the link, and it reaches the people who are going. It is shared on the same terms as a street address, so it is never on the public page. The old "Join link" button that only raised a toast now opens the room.',
+
+  "changelog.entries.a-cancelled-gathering-now-says-so.title":
+    "A cancelled gathering now says so",
+  "changelog.entries.a-cancelled-gathering-now-says-so.body":
+    "A gathering the host called off stayed in your list looking exactly like one that was still on, with a working RSVP button behind it. It now says it was cancelled, wherever you meet it. People holding an invitation are told too, instead of being left with an invitation to nothing.",
+
+  "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.title":
+    "Maybe, add to calendar, and your details, on the gathering itself",
+  "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.body":
+    "You can mark yourself a maybe without taking a seat, put the date straight in your calendar the moment you confirm, and tell the host about a plus-one or an access need right there. All three used to live somewhere else, or nowhere. A gathering that has already happened stops taking RSVPs and says why.",
+
+  "changelog.entries.choose-when-your-gathering-reminder-arrives.title":
+    "Choose when your gathering reminder arrives",
+  "changelog.entries.choose-when-your-gathering-reminder-arrives.body":
+    "An hour before, a day before, or a week before. Notification settings had only an on-off switch, so everyone got the same day-before nudge.",
+
+  "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.title":
+    "Hosts can run a gathering again, and take the door list offline",
+  "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.body":
+    '"Run this again" opens the wizard filled in from a gathering you already ran, so a monthly one-off is a few taps rather than the whole form. The Export button on your attendee list now downloads a real file. The overview\'s "last edited" line finally reflects when you last edited it.',
+
+  // Section 5 of the 2026-09-05 deep scan: forum, feed and saved items.
+  "changelog.tag.saved": "Open your collections",
+  "changelog.entries.you-can-take-down-a-whole-forum-post.title":
+    "You can take down a whole forum post",
+  "changelog.entries.you-can-take-down-a-whole-forum-post.body":
+    "Deleting used to blank the opening message and leave the post standing, with its title still on the forum and in everyone's feed. Now the whole thing goes: the title, the opening message and the link. Replies stay written but are no longer reachable from the forum, and the category counts update straight away.",
+  "changelog.entries.a-thread-always-shows-its-real-opening-post.title":
+    "A thread always shows its real opening post",
+  "changelog.entries.a-thread-always-shows-its-real-opening-post.body":
+    "If the opening post was written by someone you had muted, or a moderator had hidden it, the first reply was promoted into the opening card carrying that person's name and permissions, and their reply vanished from the conversation. The opening post is now identified properly, and when it genuinely is not available to you the card says so and every reply stays where it belongs.",
+  "changelog.entries.sorting-replies-reorders-the-whole-conversation.title":
+    "Sorting replies reorders the whole conversation",
+  "changelog.entries.sorting-replies-reorders-the-whole-conversation.body":
+    "Newest and Most helpful only reordered the replies already on screen, so on a long thread Newest showed you the twenty oldest replies in reverse. The sort now runs across every reply in the thread, and each reply stays nested under the one it answers.",
+  "changelog.entries.the-forum-opens-on-active-and-top-means-this-month.title":
+    "The forum opens on Active, and Top means this month",
+  "changelog.entries.the-forum-opens-on-active-and-top-means-this-month.body":
+    "The forum opened on Top, ordered by upvotes with no time limit, so on a young forum almost every post had no votes and came back in a shuffled order that never changed as people posted. It now opens on Active, and Top ranks by upvotes from the last month before falling back to recent activity, so a new question is visible instead of buried.",
+  "changelog.entries.forum-search-looks-inside-replies.title":
+    "Forum search looks inside replies",
+  "changelog.entries.forum-search-looks-inside-replies.body":
+    "Searching the forum matched titles only, so a question that was answered three replies down came back with nothing. It now searches the replies as well, and the hint under the box says so instead of pointing you somewhere else.",
+  "changelog.entries.you-can-move-a-post-to-the-right-category.title":
+    "You can move a post to the right category",
+  "changelog.entries.you-can-move-a-post-to-the-right-category.body":
+    "A category was fixed at the moment you posted, so a health question filed under General stayed invisible to the people browsing for it. You can now move your own post during its first 24 hours, from the category chip or the post menu, and moderators can refile one at any time.",
+  "changelog.entries.see-how-many-replies-arrived-since-you-last-looked.title":
+    "See how many replies arrived since you last looked",
+  "changelog.entries.see-how-many-replies-arrived-since-you-last-looked.body":
+    "Following five conversations meant reopening each one to find what had moved. Forum rows now carry a count of the replies added since you last opened that post. Opening it marks it read without signing you up for notifications, which stays a separate choice.",
+  "changelog.entries.the-composer-keeps-your-whole-draft.title":
+    "The composer keeps your whole draft",
+  "changelog.entries.the-composer-keeps-your-whole-draft.body":
+    "An unfinished post came back with only its body, losing the title, category, community, tags and photo. All of it is kept now, an unfinished post is visible on the forum itself with a way straight back into it, and a reply typed underneath another reply is saved too, so tapping the wrong Reply button no longer loses it.",
+  "changelog.entries.links-in-threads-and-the-feed-open-up.title":
+    "Links in threads and the feed open up",
+  "changelog.entries.links-in-threads-and-the-feed-open-up.body":
+    "A link pasted into a post was plain text, so you had to leave the page to find out whether it was worth reading. Links now open into a card carrying the page's title, description and image, the way they already did in messages.",
+  "changelog.entries.votes-on-the-forum-are-honest.title":
+    "Votes on the forum are honest",
+  "changelog.entries.votes-on-the-forum-are-honest.body":
+    "Voting checked nothing at all: you could upvote your own post to climb the ranking, keep voting on someone who had blocked you, and vote inside a private community you were not part of. All three are refused now, and votes people had cast on their own posts have been cleared from the counts.",
+  "changelog.entries.threads-show-a-preview-of-what-was-asked.title":
+    "Posts show a preview of what was asked",
+  "changelog.entries.threads-show-a-preview-of-what-was-asked.body":
+    "Forum rows and forum cards in the feed carried a title and nothing else, which made them the least inviting thing on the page. Both now show the opening lines, and the reply count no longer includes replies that were deleted.",
+  "changelog.entries.hidden-members-stay-hidden-in-the-feed.title":
+    "Hidden members stay hidden in the feed",
+  "changelog.entries.hidden-members-stay-hidden-in-the-feed.body":
+    "If you hid your profile for 24 hours, or hid it from one particular person, the feed still announced you to them as a new member, with your name, your tagline and a link to your profile. The feed now applies the same boundaries the member directory and your profile page already respected.",
+  "changelog.entries.new-this-week-now-means-this-week.title":
+    "New this week now means this week",
+  "changelog.entries.new-this-week-now-means-this-week.body":
+    "The sidebar list had no date limit, so on a quiet week it filled with people who had joined months earlier under a heading saying otherwise. It now shows only people who joined in the last seven days, and says plainly when nobody did.",
+  "changelog.entries.saved-items-tell-you-when-something-is-gone.title":
+    "Saved items tell you when something is gone",
+  "changelog.entries.saved-items-tell-you-when-something-is-gone.body":
+    "A saved post, listing or place whose page had since come down still looked live and sent you to a page that was not there. Your saved list, a list you shared and your collections now mark those as no longer available, keeping the title so you can see what it was, and you can still remove them.",
+
+  // Section 5 follow-up: cross-device drafts, link previews, saved lists.
+  "changelog.entries.a-post-you-start-on-one-device-reopens-on-another.title":
+    "A post you start on one device reopens on another",
+  "changelog.entries.a-post-you-start-on-one-device-reopens-on-another.body":
+    "An unfinished post kept its title and text on the server but its community, tags and photo only in the browser you started in, so picking it up on a laptop quietly lost those choices. The whole draft now travels with you. A post saved before you have written the body is also kept now, instead of being discarded the moment the text was empty.",
+  "changelog.entries.link-previews-no-longer-run-out-on-shared-wifi.title":
+    "Link previews no longer run out on shared wifi",
+  "changelog.entries.link-previews-no-longer-run-out-on-shared-wifi.body":
+    "Preview cards were rationed by network address, so everyone in one cafe, venue or office shared a single small allowance and a busy feed could exhaust it in two scrolls. The allowance is now yours alone and large enough for a full page of links.",
+  "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.title":
+    "Saved lists flag a dead item before you file it",
+  "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.body":
+    "The recent-saves row on your saved lists still offered items whose page had since come down, so you could file something away and only find out later. It now marks them the same way the rest of your saved items do.",
 };

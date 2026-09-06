@@ -263,3 +263,11 @@
 [data-theme="dark"] .eventCard {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
+
+/* "Show more" under the upcoming list (PRD-184). The list used to stop at the
+   soonest 20 with no way to ask for the rest, so a busy season simply ended. */
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--gap-lg);
+}

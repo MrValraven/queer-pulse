@@ -179,6 +179,9 @@ describe("subscribed events", () => {
     await mount(mod);
     const events = subscribedEvents();
     expect(events).toContain("message:new");
+    // ENG-160: fanned to our OWN user room for a message in a conversation we
+    // have NOT joined (a different thread open, or elsewhere in the app).
+    expect(events).toContain("conversation:message");
     expect(events).toContain("read");
     expect(events).toContain("notification:new");
     expect(events).toContain("exception");
@@ -239,6 +242,37 @@ describe("cache invalidation", () => {
       "c-1",
       message,
     );
+  });
+
+  // ENG-160: reaches a member via their OWN `user:<id>` room — unlike
+  // `message:new` above, this frame is NOT scoped to a conversation room the
+  // socket has joined, so it's how a thread the member does not currently
+  // have open still bumps the inbox row + badge live.
+  it("conversation:message patches the inbox preview and bumps the unread badge", async () => {
+    const mod = await loadRealtime();
+    const messageCache = await import("./messageCache");
+    const { queryClient } = await import("./queryClient");
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    await mount(mod);
+    const call = socket.on.mock.calls.find(
+      (c) => c[0] === "conversation:message",
+    );
+    const handler = call?.[1] as (data: unknown) => void;
+    const message = { id: "m-1" };
+    handler({ conversationId: "c-1", message });
+    // Patches the inbox row in place, exactly like `message:new` does — no
+    // conversation-list refetch.
+    expect(messageCache.patchConversationPreview).toHaveBeenCalledWith(
+      expect.anything(),
+      "c-1",
+      message,
+    );
+    // No thread is active in this test (nothing called `joinConversation`),
+    // so the badge is refreshed — mirrors `message:new`'s own
+    // non-active-thread branch.
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["conversations-unread-count"],
+    });
   });
 
   it("read is a watermark-only frame and does NOT refetch the conversation list", async () => {

@@ -3,8 +3,14 @@ export type DeleteOption = "deactivate" | "delete";
 // i18n note: `text` used to hold a raw ReactNode with the `<strong>` emphasis
 // baked in. It's now a catalog key resolved via `<Translation>` at render
 // (Pattern A) so the rich text can be translated at all.
+/**
+ * `tone` names the dot beside the line, resolved to a class in
+ * `DeleteAccountSection`. It held a colour STRING until 2026-09-06, including a
+ * raw `rgba(45,27,61,.3)` that hardcoded the plum channels the design tokens
+ * own and does not flip in dark mode (DES-170).
+ */
 interface WhatItem {
-  color: string;
+  tone: "muted" | "keeps" | "loses";
   textKey: string;
 }
 
@@ -25,23 +31,23 @@ export const DELETE_CONTENT: Record<
   deactivate: {
     whatHappens: [
       {
-        color: "rgba(45,27,61,.3)",
+        tone: "muted",
         textKey: "settings:deleteAccount.wh.deactivate.profileHidden",
       },
       {
-        color: "var(--jade)",
+        tone: "keeps",
         textKey: "settings:deleteAccount.wh.deactivate.dataPreserved",
       },
       {
-        color: "var(--jade)",
+        tone: "keeps",
         textKey: "settings:deleteAccount.wh.deactivate.reactivateInstantly",
       },
       {
-        color: "rgba(45,27,61,.3)",
+        tone: "muted",
         textKey: "settings:deleteAccount.wh.deactivate.nameRemoved",
       },
       {
-        color: "rgba(45,27,61,.3)",
+        tone: "muted",
         textKey: "settings:deleteAccount.wh.deactivate.attributedDeactivated",
       },
     ],
@@ -56,23 +62,23 @@ export const DELETE_CONTENT: Record<
   delete: {
     whatHappens: [
       {
-        color: "var(--accent-ink)",
+        tone: "loses",
         textKey: "settings:deleteAccount.wh.delete.queuedForDeletion",
       },
       {
-        color: "var(--accent-ink)",
+        tone: "loses",
         textKey: "settings:deleteAccount.wh.delete.messagesDeleted",
       },
       {
-        color: "var(--accent-ink)",
+        tone: "loses",
         textKey: "settings:deleteAccount.wh.delete.postsRemoved",
       },
       {
-        color: "rgba(45,27,61,.3)",
+        tone: "muted",
         textKey: "settings:deleteAccount.wh.delete.emailSuppressed",
       },
       {
-        color: "rgba(45,27,61,.3)",
+        tone: "muted",
         textKey: "settings:deleteAccount.wh.delete.exportFirst",
       },
     ],

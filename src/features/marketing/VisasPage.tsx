@@ -15,7 +15,13 @@ import {
   type TabId,
 } from "./visas.data";
 import { VisasTabContent } from "./VisasTabContent";
+import { PageReviewStamp } from "./PageReviewStamp";
 import styles from "./VisasPage.module.css";
+
+/** The day a person last read this page against the official guidance. Built
+ *  from local date parts so the stamp never renders a day early west of
+ *  Greenwich. Bump it when the page is read through again. */
+const LAST_REVIEWED_ON = new Date(2026, 8, 6);
 
 export function VisasPage() {
   const { t } = useTranslation();
@@ -70,6 +76,10 @@ export function VisasPage() {
           <span className={styles.heroNoteDot} />
           {t("marketing:visas.hero.note")}
         </div>
+        <PageReviewStamp
+          reviewedOn={LAST_REVIEWED_ON}
+          verifyKey="marketing:visas.review.verify"
+        />
       </PageHero>
 
       <section className={styles.routeSection}>

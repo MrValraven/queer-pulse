@@ -37,10 +37,20 @@ export interface MyHousingListingRow {
   city: string;
   area: string;
   rentEuros: number;
+  /** Up-front deposit in euros, or null when the lister stated none. Null is
+   * "not stated": the edit form seeds a blank from it, never a 0. */
+  depositEuros: number | null;
   bedrooms?: number;
   billsIncluded: boolean;
   accessibilityInfo: string;
   listerKind: "member" | "agent";
+  /**
+   * The lister's own street address. PRIVATE: it only ever reaches this shape
+   * because an owner read passes the backend's address gate. Absent when the
+   * lister never added one. Seeds the edit form; never render it on a surface
+   * anyone but the owner sees.
+   */
+  addressLine?: string;
   virtualTourUrl?: string;
   blurb: string;
   description: string;
@@ -70,6 +80,7 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     city: "Lisbon",
     area: "Arroios",
     rentEuros: 650,
+    depositEuros: 650,
     bedrooms: 1,
     billsIncluded: true,
     accessibilityInfo: "Third floor, no lift.",
@@ -101,6 +112,7 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     city: "Lisbon",
     area: "Anjos",
     rentEuros: 900,
+    depositEuros: 1800,
     bedrooms: 0,
     billsIncluded: false,
     accessibilityInfo: "Ground floor, step-free entrance.",
@@ -128,6 +140,7 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     city: "Lisbon",
     area: "Graça",
     rentEuros: 700,
+    depositEuros: null,
     bedrooms: 1,
     billsIncluded: true,
     accessibilityInfo: "Lift in the building.",

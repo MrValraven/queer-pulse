@@ -16,6 +16,7 @@ import { mediaMax } from "../../shared/theme/breakpoints";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta } from "../../shared/seo/PageMeta";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useLocalPlaces } from "./api/useLocalPlaces";
@@ -41,6 +42,7 @@ const DirectoryMapView = lazy(() =>
 
 export function DirectoryPage() {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const filterParams = useDirectoryFilterParams();
   const {
     view,
@@ -94,7 +96,13 @@ export function DirectoryPage() {
     activeFilters,
     distanceById,
   } = useDirectoryFilterResults(places, filterParams, myLocation.coordinates);
-  const loading = useSimulatedLoad() || placesLoading;
+  // `useSimulatedLoad` is a DEMO device (ENG-172). The demo registry resolves
+  // in the same tick, so without a short fake beat the grid pops in with no
+  // loading state at all. Live mode has a real one in `placesLoading`, and the
+  // fake 600ms only painted a skeleton on top of places that had already
+  // arrived, so it is gated to demo mode.
+  const isSimulatedLoading = useSimulatedLoad();
+  const loading = placesLoading || (demoMode && isSimulatedLoading);
   const hasActiveFilters = activeFilters.length > 0;
   // What is narrowing the list right now, as removable chips. Placed the same
   // way as `nearMe` above: on the search row on desktop, where it answers
@@ -168,6 +176,8 @@ export function DirectoryPage() {
       <DirectoryResultsHeader
         shown={filtered.length}
         total={serverTotal}
+        loadedCount={places.length}
+        hasMoreFromServer={hasNextPage}
         mappableCount={mappableCount}
         loading={loading}
         isError={hasPlacesError}
@@ -181,6 +191,7 @@ export function DirectoryPage() {
           places={filtered}
           distanceById={distanceById}
           total={serverTotal}
+          loadedCount={places.length}
           loading={loading}
           isError={hasPlacesError}
           onRetry={refetchPlaces}

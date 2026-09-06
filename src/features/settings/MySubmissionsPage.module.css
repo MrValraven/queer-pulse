@@ -186,3 +186,14 @@
   color: var(--ink-60);
   max-width: 62ch;
 }
+
+/* PRD-263: the quiet link out to the partner profile editor, under the
+   partner-applications list it belongs to. */
+.sectionAside {
+  margin: 14px 0 0;
+  font-size: var(--text-13);
+}
+.sectionAside a {
+  color: var(--accent);
+  font-weight: 600;
+}

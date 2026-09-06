@@ -54,10 +54,14 @@ export function QtipocOrganisationsPage() {
             />
           </Reveal>
           <div className={styles.grid}>
-            {ORGS.map((o, i) => (
-              <Reveal key={o.name} className={styles.card} delay={i * 55}>
+            {ORGS.map((organisation, index) => (
+              <Reveal
+                key={organisation.name}
+                className={styles.card}
+                delay={index * 55}
+              >
                 <a
-                  href={o.href}
+                  href={organisation.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.cardName}
@@ -68,14 +72,18 @@ export function QtipocOrganisationsPage() {
                     gap: 8,
                   }}
                 >
-                  {o.name} <FiArrowUpRight aria-hidden />
+                  {organisation.name} <FiArrowUpRight aria-hidden />
                 </a>
-                <div className={styles.cardSpec}>{o.mission}</div>
-                <div className={styles.archiveMeta}>{o.offers}</div>
+                <div className={styles.cardSpec}>
+                  {t(organisation.missionKey)}
+                </div>
+                <div className={styles.archiveMeta}>
+                  {t(organisation.offersKey)}
+                </div>
                 <div className={styles.tags}>
-                  {o.tags.map((tag) => (
-                    <span key={tag} className={styles.tag}>
-                      {tag}
+                  {organisation.tagKeys.map((tagKey) => (
+                    <span key={tagKey} className={styles.tag}>
+                      {t(tagKey)}
                     </span>
                   ))}
                 </div>

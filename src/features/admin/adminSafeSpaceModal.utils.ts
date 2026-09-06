@@ -24,6 +24,14 @@ export interface SafeSpaceFormDraft {
   promises: SafeSpacePromiseInput[];
   vouches: SafeSpaceVouchInput[];
   reason: string;
+  /**
+   * Why this badge is being granted below the independent-visit bar. Collected
+   * only on a transition INTO `verified`, which is the only move the backend
+   * gates, and never seeded from an existing profile: an exception is written
+   * for the award being made now, so carrying an old one forward would put
+   * someone else's words on this moderator's decision.
+   */
+  belowVisitBarReason: string;
 }
 
 /** A blank draft seeded with the candidate's current status. */
@@ -37,6 +45,7 @@ export function emptyDraft(candidate: SafeSpaceCandidate): SafeSpaceFormDraft {
     promises: [],
     vouches: [],
     reason: "",
+    belowVisitBarReason: "",
   };
 }
 
@@ -89,6 +98,24 @@ export function draftFromSpace(
   };
 }
 
+/**
+ * Whether this save is the move the visit bar gates: INTO `verified` from some
+ * other status.
+ *
+ * The backend gates exactly this transition and nothing else, so unmarking,
+ * removing, and editing the tier/verifier/promises of a badge that already
+ * stands never ask for a reason, and re-saving an already-verified listing does
+ * not re-litigate its award. One definition, shared by the editor and the row's
+ * mark control, so the frontend can never demand a reason the server would
+ * ignore or skip one it requires.
+ */
+export function isBecomingVerified(
+  currentStatus: SafeSpaceStatus,
+  nextStatus: SafeSpaceStatus,
+): boolean {
+  return nextStatus === "verified" && currentStatus !== "verified";
+}
+
 /** A blank promise row for the repeatable "Add promise" control. */
 export function emptyPromise(): SafeSpacePromiseInput {
   return { title: "", desc: "" };
@@ -104,9 +131,25 @@ export function emptyVouch(): SafeSpaceVouchInput {
  * text field, drops fully-empty optional fields and rows rather than
  * sending blanks, and only carries `reason` when the moderator is removing
  * the listing.
+ *
+ * `belowVisitBarReason` rides the same rule as the backend's gate: it is sent
+ * only on a transition INTO `verified`, because that is the only move the
+ * service reads it on. Sending it on any other save would be worse than
+ * useless, since `@MinLength(20)` still validates the field whenever it is
+ * present and a half-typed leftover would 400 an unrelated edit.
  */
-export function draftToInput(draft: SafeSpaceFormDraft): SetSafeSpaceInput {
+export function draftToInput(
+  draft: SafeSpaceFormDraft,
+  isBecomingVerified: boolean,
+): SetSafeSpaceInput {
   const input: SetSafeSpaceInput = { status: draft.status };
+
+  if (isBecomingVerified) {
+    const trimmedBelowVisitBarReason = draft.belowVisitBarReason.trim();
+    if (trimmedBelowVisitBarReason) {
+      input.belowVisitBarReason = trimmedBelowVisitBarReason;
+    }
+  }
 
   const trimmedTier = draft.tier.trim();
   if (trimmedTier) input.tier = Number(trimmedTier);

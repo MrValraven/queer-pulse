@@ -91,6 +91,14 @@ export function useVouchers(slug: string | undefined) {
         });
       }
       const res = await getVouchers(slug);
+      // `res.count` is deliberately dropped. It is the true tally even when the
+      // roster came back empty because the member hid it, so it is tempting to
+      // surface here, but the profile already carries that number
+      // (`Member.vouchers.length`, filled per `vouchCount` by `cardToMember`)
+      // and that is the one `ProfileTrustSignals` prints. A row reading its
+      // count from here and a row reading it from the profile can disagree on
+      // one screen. Callers that need "how many, with no faces" read the
+      // profile; see `HeroVouchRow`'s count-only branch.
       return res.vouchers.map((v) => {
         const relationships =
           (v as VoucherDTOWithRelationships).relationships ?? [];

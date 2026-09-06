@@ -1,8 +1,22 @@
 import { Badge, Button } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { WriterAssignmentDto } from "../../api/writerWorkspace.api";
+import { deskDateText } from "../../magazineFormat";
 import pieceStyles from "../pieceTabs.module.css";
+import { writerStageLabelKey } from "../stageLabels";
 import styles from "./writerCards.module.css";
+
+/**
+ * Translated label per `magazine_payment.status` value, which is what live
+ * mode sends on `WriterAssignmentDto.pay` (the wire carries the machine value
+ * so the client can say it in the reader's language). A writer used to read
+ * the enum itself, "approved_unpaid", on their own card.
+ */
+const PAYMENT_STATUS_LABEL_KEYS: Record<string, string> = {
+  agreed: "magazine:writer.work.paymentStatus.agreed",
+  approved_unpaid: "magazine:writer.work.paymentStatus.approvedUnpaid",
+  paid: "magazine:writer.work.paymentStatus.paid",
+};
 
 export interface AssignmentCardProps {
   assignment: WriterAssignmentDto;
@@ -50,13 +64,33 @@ export function AssignmentCard({
   onMessageEditor,
   onReadBrief,
 }: AssignmentCardProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const hasWordCount = assignment.words !== null && assignment.target !== null;
   const isOverTarget = hasWordCount && assignment.words! > assignment.target!;
   const progressPct = hasWordCount
     ? Math.min(100, Math.round((assignment.words! / assignment.target!) * 100))
     : 0;
-  const isPaymentUnpaid = assignment.pay.toLowerCase().includes("unpaid");
+  // The demo fixture predates the enum and carries already-human free text
+  // ("approved, unpaid", "on filing"), so an unrecognised value shows as it
+  // came and keeps the old word-sniff for its warn tone. Live mode never
+  // reaches those branches.
+  const paymentStatusLabelKey = PAYMENT_STATUS_LABEL_KEYS[assignment.pay];
+  const paymentLabel = paymentStatusLabelKey
+    ? t(paymentStatusLabelKey)
+    : assignment.pay;
+  const isPaymentUnpaid = paymentStatusLabelKey
+    ? assignment.pay === "approved_unpaid"
+    : assignment.pay.toLowerCase().includes("unpaid");
+  // `state` is an English sentence the SERVER composed ("With your editor"),
+  // so a Portuguese reader was reading English on their own assignment card.
+  // `stage` is the machine value beside it, and the label is chosen here.
+  // Typed as possibly missing on purpose: a live row can carry a stage a
+  // deployed client has never heard of, and the server's sentence is a better
+  // last resort than a raw code.
+  const stageLabelKey: string | undefined = writerStageLabelKey(
+    assignment.stage,
+  );
+  const stageLabel = stageLabelKey ? t(stageLabelKey) : assignment.state;
 
   return (
     <div className={pieceStyles.card}>
@@ -67,7 +101,7 @@ export function AssignmentCard({
             <Badge tone="jade">{t("magazine:writer.work.activeBadge")}</Badge>
           )}
           <Badge tone="plum" dot>
-            {assignment.state}
+            {stageLabel}
           </Badge>
         </div>
       </div>
@@ -79,7 +113,11 @@ export function AssignmentCard({
       <div className={pieceStyles.kvs}>
         <KV
           label={t("magazine:writer.work.dueLabel")}
-          value={assignment.due ?? t("magazine:writer.work.noDateSet")}
+          value={
+            assignment.due
+              ? deskDateText(assignment.due, language)
+              : t("magazine:writer.work.noDateSet")
+          }
         />
         <KV
           label={t("magazine:writer.work.lengthLabel")}
@@ -96,7 +134,7 @@ export function AssignmentCard({
         <KV label={t("magazine:writer.work.feeLabel")} value={assignment.fee} />
         <KV
           label={t("magazine:writer.work.paymentLabel")}
-          value={assignment.pay}
+          value={paymentLabel}
           warn={isPaymentUnpaid}
         />
       </div>

@@ -156,6 +156,11 @@ export function cardDtoToCommunity(
     coverImageUrl: dto.coverImageUrl,
     // Curated tag ids for the card pills — absent/empty when none picked yet.
     tags: dto.tags,
+    // The community's square identity mark (PRD-146), which every card draws on
+    // the shoulder's bottom edge. Carried here for the same reason the cover is:
+    // the grid renders it straight off the list response, with no second fetch.
+    // Null when the community set none, and the card then draws nothing.
+    avatarImageUrl: dto.avatarImageUrl ?? null,
   };
 }
 
@@ -462,6 +467,11 @@ export function draftToCreateDto(draft: CommunityDraft): CreateCommunityDto {
     rules: draft.rules,
     tagline: draft.tagline.trim(),
     coverImageUrl: draft.coverImageUrl || null,
+    // Both optional on the wizard and both cleared with an explicit null, the
+    // same shape `coverImageUrl` uses: "" and null mean "no avatar" / "no
+    // greeting" to the backend, and it normalises either to null on write.
+    avatarImageUrl: draft.avatarImageUrl || null,
+    welcomeMessage: draft.welcomeMessage.trim() || null,
     handle: draft.handle.trim(),
     stewards: draft.stewards
       .filter((s) => s.role !== "owner" && s.key !== "owner")
@@ -487,6 +497,14 @@ export interface EditableCommunityFields {
   coverImageUrl: string;
   /** Curated tag ids (⊆ `COMMUNITY_TAGS`), capped at `MAX_COMMUNITY_TAGS`. */
   tags: string[];
+  /** Resolved avatar URL (or "" for none) — the community's square identity
+   *  mark. Round-trips through the edit modal's `ImageUploadField` exactly
+   *  like `coverImageUrl` above, on the `community-avatar` upload kind. */
+  avatarImageUrl: string;
+  /** The once-only greeting a new member reads after joining (or "" for none).
+   *  The detail DTO serves it to owner/co-owner/mod only, which is exactly the
+   *  audience that can open this form. */
+  welcomeMessage: string;
 }
 
 /** Live seed: the authoritative current values straight off the detail DTO. */
@@ -505,6 +523,8 @@ export function dtoToEditable(
     rules: dto.rules,
     coverImageUrl: dto.coverImageUrl ?? "",
     tags: dto.tags ?? [],
+    avatarImageUrl: dto.avatarImageUrl ?? "",
+    welcomeMessage: dto.welcomeMessage ?? "",
   };
 }
 
@@ -591,6 +611,8 @@ export function editableToDraft(
     rules: editable.rules,
     tint: "coral",
     coverImageUrl: editable.coverImageUrl,
+    avatarImageUrl: editable.avatarImageUrl,
+    welcomeMessage: editable.welcomeMessage,
     tagline: editable.tagline,
     invites: [],
     handle: "",
@@ -679,6 +701,13 @@ export function draftToUpdateDto(draft: CommunityDraft): UpdateCommunityDto {
     // "" clears the cover; a resolved URL round-trips (the backend's ownership
     // interceptor rewrites our own `/files/*` URL back to the stored key).
     coverImageUrl: draft.coverImageUrl || null,
+    // Same "" clears / resolved URL round-trips contract as the cover. The
+    // caller strips either image field when it is UNCHANGED, so a moderator
+    // saving an unrelated edit never replays an image key they did not upload.
+    avatarImageUrl: draft.avatarImageUrl || null,
+    // "" clears the greeting; the backend strips the value to plain text on
+    // write, so what is sent here is the member's words verbatim.
+    welcomeMessage: draft.welcomeMessage.trim() || null,
     tags: draft.tags,
   };
 }

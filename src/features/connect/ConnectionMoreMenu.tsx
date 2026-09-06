@@ -4,6 +4,7 @@ import {
   FiMessageCircle,
   FiMoreVertical,
   FiSlash,
+  FiUserMinus,
   FiVolumeX,
 } from "react-icons/fi";
 import { ConfirmDialog } from "../../shared/components/ui";
@@ -25,6 +26,12 @@ interface MenuItem {
 /**
  * Keyboard-accessible per-connection menu: Message / Mute / Block / Report.
  *
+ * "Remove connection" is only offered on an accepted connection (`isAccepted`),
+ * which is the only state the backend's `DELETE /connections/:id` applies to.
+ * It is deliberately the quiet neighbour of Block: it ends the edge and nothing
+ * else, so it keeps the ordinary menu-item styling while Block keeps the danger
+ * one.
+ *
  * "Message" is only offered when the caller hands over an `onMessage` that
  * actually opens the conversation. It used to call `openConnect(slug)` for
  * every card, which reopened the reach-out form for someone the member was
@@ -37,22 +44,26 @@ export function ConnectionMoreMenu({
   slug,
   id,
   name,
+  isAccepted = false,
   onMessage,
 }: {
   slug: string;
   /** Backend connection id (live mode); absent in demo. */
   id?: string;
   name: string;
+  /** True on an accepted, unblocked connection: shows "Remove connection". */
+  isAccepted?: boolean;
   /** Opens the conversation with this member. Omit to hide the Message item. */
   onMessage?: () => void;
 }) {
   const { isBlocked, isMuted, toggleMute } = useSocial();
-  const { block, unblock } = useConnectionActions();
+  const { block, unblock, remove } = useConnectionActions();
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isReporting, setIsReporting] = useState(false);
   const [isConfirmingBlock, setIsConfirmingBlock] = useState(false);
+  const [isConfirmingRemove, setIsConfirmingRemove] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -90,6 +101,18 @@ export function ConnectionMoreMenu({
     triggerRef.current?.focus();
   }
 
+  // Wait for the server before claiming success, the same contract Block uses:
+  // the store rolls its optimistic drop back and raises its own error toast on
+  // failure, so only the success case is ours to announce.
+  async function confirmRemove() {
+    setIsConfirmingRemove(false);
+    triggerRef.current?.focus();
+    const didSucceed = await remove({ slug, id });
+    if (didSucceed) {
+      showToast(t("connect:moreMenu.toastRemoved", { name: first }), "success");
+    }
+  }
+
   const items: MenuItem[] = [
     ...(onMessage
       ? [
@@ -113,6 +136,17 @@ export function ConnectionMoreMenu({
           "success",
         ),
     },
+    ...(isAccepted && !blocked
+      ? [
+          {
+            label: t("connect:moreMenu.removeConnection", { name: first }),
+            icon: <FiUserMinus />,
+            // Ending a connection cannot be undone by this member alone (the
+            // other party has to accept a fresh request), so it asks first.
+            run: () => setIsConfirmingRemove(true),
+          },
+        ]
+      : []),
     {
       label: blocked
         ? t("connect:moreMenu.unblock", { name: first })
@@ -174,6 +208,17 @@ export function ConnectionMoreMenu({
         onConfirm={confirmBlock}
         onClose={() => {
           setIsConfirmingBlock(false);
+          triggerRef.current?.focus();
+        }}
+      />
+      <ConfirmDialog
+        open={isConfirmingRemove}
+        title={t("connect:moreMenu.removeConfirm.title", { name })}
+        description={t("connect:moreMenu.removeConfirm.body", { name: first })}
+        confirmLabel={t("connect:moreMenu.removeConfirm.action")}
+        onConfirm={() => void confirmRemove()}
+        onClose={() => {
+          setIsConfirmingRemove(false);
           triggerRef.current?.focus();
         }}
       />

@@ -5,8 +5,10 @@ import { routes } from "../../app/routeMap";
 import { useSaved } from "../../app/providers/useSaved";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
+import { ApiError } from "../../shared/api/client";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -21,6 +23,7 @@ import {
   LandlordHero,
   LandlordAbout,
   LandlordAreas,
+  LandlordError,
   LandlordRecommendations,
   LandlordSidebar,
 } from "./LandlordSections";
@@ -36,8 +39,21 @@ export function LandlordPage() {
   const [introducing, setIntroducing] = useState(false);
   const [reporting, setReporting] = useState(false);
   const [isConfirmingWithdraw, setIsConfirmingWithdraw] = useState(false);
-  const simulatedLoad = useSimulatedLoad();
-  const { data: landlord, isLoading, isError } = useLandlord(slug);
+  const { demoMode } = useDemoMode();
+  // `useSimulatedLoad` is a DEMO device (ENG-172). Demo mode hands
+  // `useLandlord` its fixture as `initialData`, so the query is never pending
+  // there and the short fake beat is the only loading state the prototype has.
+  // Live mode has a real `isLoading`, and the fake 600ms sat on top of it,
+  // painting a skeleton over a profile that had already arrived.
+  const isSimulatedLoading = useSimulatedLoad();
+  const simulatedLoad = demoMode && isSimulatedLoading;
+  const {
+    data: landlord,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useLandlord(slug);
   const requestIntro = useRequestIntro(slug ?? "");
   const memberName = user
     ? `${user.profile.firstName} ${user.profile.lastName}`.trim() ||
@@ -57,7 +73,28 @@ export function LandlordPage() {
     );
   }
 
-  if (isError || !landlord) return <Navigate to={routes.housing} replace />;
+  // Only a genuine 404 (or a demo slug that simply doesn't exist, where
+  // `initialData` is null with no error) means "not found" and earns the
+  // redirect. Any OTHER failure, a network drop, a timeout, a 5xx, keeps the
+  // member here with a retry instead of silently bouncing them to the board
+  // (PRD-248).
+  const isNotFound =
+    (error instanceof ApiError && error.status === 404) ||
+    (!isError && !landlord);
+  if (isNotFound) return <Navigate to={routes.housing} replace />;
+
+  if (isError || !landlord) {
+    return (
+      <PageShell>
+        <div className={s.page}>
+          <Link to={routes.housing} className={s.back}>
+            <FiArrowLeft aria-hidden /> {t("economy:housingListing.back")}
+          </Link>
+          <LandlordError onRetry={() => void refetch()} />
+        </div>
+      </PageShell>
+    );
+  }
 
   const firstName = landlord.name.split(" ")[0];
   const savedId = `landlord:${landlord.slug}`;

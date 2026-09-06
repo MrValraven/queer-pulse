@@ -9,6 +9,7 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { createGatheringPath, gatheringPath } from "../gatherings/data";
+import { useCommunityUpcomingGatherings } from "./api/useCommunityUpcomingGatherings";
 import type { CommunityEvent } from "./community.model";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
@@ -52,7 +53,8 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
 }
 
 /** A placeholder event row, shape-matched to the real thing, while the
- *  live-mode fetch (`GET /communities/:slug/pulse`) is in flight. */
+ *  live-mode fetch is in flight (`GET /communities/:slug/pulse` for a roster
+ *  member, `.../upcoming-gatherings` for everybody else). */
 function EventRowSkeleton() {
   return (
     <div className={styles.eventRow} aria-hidden="true">
@@ -125,6 +127,16 @@ export function EventsTab({
 }) {
   const { t } = useTranslation();
   const canHost = isMember && communitySlug.length > 0;
+  // PRD-145. A prospective member's gatherings are paged at 10 by their own
+  // endpoint, and only this tab has anywhere to put a "show more" control.
+  // Subscribing here shares the query the detail state hook already started
+  // (same key, same react-query cache entry, one request), so this reads the
+  // pages it loaded rather than fetching a second copy. Disabled for a member,
+  // whose gatherings come from the pulse, and inert in demo mode.
+  const nonMemberGatherings = useCommunityUpcomingGatherings(communitySlug, {
+    enabled: !isMember,
+  });
+  const isProspectiveMember = !isMember;
 
   if (isLoading) {
     return (
@@ -171,6 +183,19 @@ export function EventsTab({
           {upcoming.map((ev) => (
             <EventRow key={ev.id} ev={ev} />
           ))}
+          {nonMemberGatherings.hasMore && (
+            <div className={detail.eventsLoadMore}>
+              <Button
+                variant="ghost"
+                disabled={nonMemberGatherings.isLoadingMore}
+                onClick={nonMemberGatherings.loadMore}
+              >
+                {nonMemberGatherings.isLoadingMore
+                  ? t("communities:common.loading")
+                  : t("communities:detail.events.loadMore")}
+              </Button>
+            </div>
+          )}
           {canHost && (
             <HostGatheringCta
               communitySlug={communitySlug}
@@ -187,6 +212,16 @@ export function EventsTab({
             <HostGatheringCta communitySlug={communitySlug} isProminent />
           )}
         </>
+      )}
+      {/* The prospective member's endpoint deliberately omits the gatherings
+          this community keeps to its members, so a short or empty list here
+          can mean "nothing on the calendar" OR "nothing we can show you". One
+          honest line stops the tab from implying the first when it is the
+          second. Members see the full list and need no such caveat. */}
+      {isProspectiveMember && (
+        <p className={detail.eventsNonMemberNote}>
+          {t("communities:detail.events.nonMemberNote")}
+        </p>
       )}
 
       {past.length > 0 && (

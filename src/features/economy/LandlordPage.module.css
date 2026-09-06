@@ -333,3 +333,118 @@
   background: rgba(var(--plum-rgb), 0.1);
   color: var(--text-strong);
 }
+
+/* Fetch-error state (non-404), PRD-248. Mirrors the housing listing page's
+   error card so the two read as one surface. */
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  max-width: 46ch;
+  margin: 48px auto;
+  padding: 40px 28px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+.errorTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-26);
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+.errorBody {
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 40ch;
+}
+
+/* ---- PRD-249: self-attested, unverified, and the landlord's right of reply.
+
+   These recommendations rate a real third party who holds no account here and
+   never agreed to be rated, from claims this platform cannot check. The
+   labelling below is not decoration on the card: it is the only thing standing
+   between "four members said so" and a reader taking it for a verified fact.
+   Nothing here is conditional on the row. ---- */
+
+/* Under the hero's star row. The score is never printed alone. */
+.ratingSource {
+  margin: 6px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* The same statement at the head of the list, before any of it is read. */
+.recsNote {
+  margin: 0 0 14px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.6;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+/* On EVERY card: the badge plus the tenancy window the author attested to, or
+   a plain statement that no window was given (the rows written before the
+   platform asked). Quiet on purpose. It qualifies the words under it rather
+   than shouting over them. */
+.recAttest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-block: 10px 12px;
+}
+.recAttestLine {
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+
+/* The landlord's published answer, set apart from the recommendation it
+   answers so nobody reads the two as one voice. */
+.recReply {
+  margin-block-start: 14px;
+  padding: 14px 16px;
+  border-inline-start: 3px solid rgba(var(--line-rgb), 0.28);
+  background: rgba(var(--plum-rgb), 0.04);
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
+}
+.recReplyHead {
+  font-size: var(--text-12-5);
+  font-weight: 700;
+  color: var(--ink);
+  margin-block-end: 6px;
+}
+.recReplyText {
+  font-size: var(--text-14);
+  color: var(--ink);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+/* "Published by the team": the landlord holds no account, so their words got
+   here through a person, and the line that says so is load-bearing. */
+.recReplyMeta {
+  margin-block-start: 8px;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+
+/* The way in for the landlord, who cannot read this page: a member sends them
+   the link. */
+.recReplyAsk {
+  margin-block-start: 12px;
+}
+.recReplyAskLink {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.recReplyAskLink:hover {
+  color: var(--accent);
+}

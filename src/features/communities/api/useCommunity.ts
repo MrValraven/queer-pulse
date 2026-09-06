@@ -36,6 +36,16 @@ export interface CommunityResult {
   living: LivingCommunity | undefined;
   myRole: RosterRole | null;
   myJoinRequestStatus: JoinRequestStatus | null;
+  /**
+   * When this viewer's standing invitation was sent (PRD-140), or null. Only
+   * ever non-null for a NON-member who holds a pending invitation: a member is
+   * already in, so their invitation is spent whatever the table still holds.
+   * It is what lets the hero offer "Accept invitation" instead of a join
+   * request, and it is the only reason a `private` community's detail reaches
+   * a non-member at all. Always null in demo mode, which has no invitation
+   * record.
+   */
+  invitedAt: string | null;
   /** The current owner/mod-editable fields, seeded from the live DTO or (in
    *  demo) the mock view-models merged with any session edit override. */
   editable: EditableCommunityFields | null;
@@ -58,6 +68,7 @@ const EMPTY: CommunityResult = {
   living: undefined,
   myRole: null,
   myJoinRequestStatus: null,
+  invitedAt: null,
   editable: null,
   notFound: false,
   isLoading: false,
@@ -95,6 +106,11 @@ function demoEditableFields(
     // The mock view-model's own curated tags (see `communities.ts`'s `tags`
     // entries), overridden below once a session edit picks new ones.
     tags: community.tags ?? [],
+    // The demo registry carries neither a community avatar nor a welcome
+    // greeting, so both start empty here and an override can set either (demo
+    // edits live in the session store, exactly like the cover above).
+    avatarImageUrl: "",
+    welcomeMessage: "",
   };
   if (!override) return base;
   return {
@@ -109,6 +125,8 @@ function demoEditableFields(
     rules: override.rules ?? base.rules,
     coverImageUrl: override.coverImageUrl ?? base.coverImageUrl,
     tags: override.tags ?? base.tags,
+    avatarImageUrl: override.avatarImageUrl ?? base.avatarImageUrl,
+    welcomeMessage: override.welcomeMessage ?? base.welcomeMessage,
   };
 }
 
@@ -152,6 +170,9 @@ export function useCommunity(slug: string | undefined): CommunityResult {
       living: override ? applyLivingOverride(baseLiving, override) : baseLiving,
       myRole: slug ? roleIn(slug) : null,
       myJoinRequestStatus: slug && hasRequested(slug) ? "pending" : null,
+      // The demo membership store holds memberships and pending requests and
+      // nothing else, so the prototype has no invitation to report.
+      invitedAt: null,
       editable,
       notFound: false,
       isLoading: false,
@@ -172,6 +193,7 @@ export function useCommunity(slug: string | undefined): CommunityResult {
           living: detailDtoToLiving(dto),
           myRole: dto.myRole,
           myJoinRequestStatus: dto.myJoinRequestStatus,
+          invitedAt: dto.invitedAt ?? null,
           editable: dtoToEditable(dto),
           notFound: false,
           isLoading: false,

@@ -22,10 +22,18 @@ interface Props {
  * subject identity plus their own namespace's localized `label`/`ariaLabel`,
  * keeping the copy in each surface's catalog while the behaviour lives here.
  *
- * Deliberately NOT auth-gated — it mirrors the existing housing report
- * triggers (`HousingListingPage` / `LandlordPage` / `FlatmateCard`) and
- * `DirectoryReportControl`, none of which check `useAuth()`: filing a report
- * is open to anyone, signed in or not.
+ * Not auth-gated, and that is now TRUE rather than intended. `POST /reports` is
+ * public: `ReportsController` used to sit behind `ActiveMemberGuard`, so every
+ * one of these buttons opened a modal a signed-out visitor could fill in and
+ * never file, ending on the generic "couldn't submit" toast with no hint that
+ * signing in would have fixed it. The guard is gone (PRD-280), so this control
+ * and the housing triggers it mirrors (`HousingListingPage` / `LandlordPage` /
+ * `FlatmateCard`) and `DirectoryReportControl`, none of which check
+ * `useAuth()`, all keep working for a visitor who never signed in.
+ *
+ * A signed-out filing reaches the moderator with no name and no prior-report
+ * record behind it, which is the trade the standalone form spells out. What it
+ * never does is fail.
  */
 export function ReportSubjectControl({
   subjectType,

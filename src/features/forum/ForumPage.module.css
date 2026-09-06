@@ -436,11 +436,85 @@
   font-weight: 700;
   color: var(--accent-ink);
 }
+/* Only a platform moderator is ever shown a withdrawn thread (every other read
+   path filters them out), so this exists to answer "why is this still here?"
+   rather than to shame a member. Danger tone, no fill: it is a state, not an
+   action. */
+.withdrawnBadge {
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--danger);
+}
+/* Category badge (DES-120).
+   The wash and the ink used to be an INLINE style object built from literal
+   rgba() triples in forum.data.ts. `rgba(45,27,61,.08)` is plum, and neither
+   --plum nor --plum-rgb flips in dark mode, so the "general" badge stayed a
+   pale smudge carrying near-black text on the dark card. The tone classes below
+   are the whole appearance, and every token in them is one that flips:
+     --line-rgb  → plum channels in light, cream channels in dark
+     --text-strong → plum in light, light ink in dark
+     --jade-ink  → #3c7159 in light (documented at 4.51:1 over a jade-12% tint),
+                   #7cd7ad in dark
+     --violet / --danger / --accent-ink each carry a dark-mode override.
+   The wash channels that do NOT flip (--jade-rgb, --violet-rgb,
+   --accent-rgb, --danger-rgb) are all mid-to-bright hues: at 12% they read as a
+   tint of their own colour on cream AND on the dark page, which is the intent.
+   Plum was the only one that could not, because it IS the dark page. */
 .catBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: var(--text-11);
   font-weight: 600;
   padding: 3px 9px;
   border-radius: var(--radius-6);
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--text-strong);
+}
+.catToneJade {
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade-ink);
+}
+.catToneViolet {
+  background: rgba(var(--violet-rgb), 0.12);
+  color: var(--violet);
+}
+.catToneCoral {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+}
+.catToneDanger {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}
+/* The badge becomes the "move this thread" affordance for the people allowed to
+   refile it (PRD-163). It sits above the title's stretched-link overlay like
+   every other control in the row, and keeps the badge's own colours so it reads
+   as the category first and a control second. */
+.catBadgeButton {
+  position: relative;
+  z-index: 1;
+  border: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color 0.18s var(--ease),
+    box-shadow 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .catBadgeButton:hover {
+    border-color: currentColor;
+  }
+}
+.catBadgeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.catBadgeIcon {
+  display: inline-flex;
+  flex-shrink: 0;
 }
 /* Interactive filter chip: small + muted + clickable is the worst-case combo,
    so it uses the body ink tier (--ink-60, 4.72:1 on cream) at a slightly larger
@@ -464,7 +538,10 @@
 }
 @media (hover: hover) {
   .tag:hover {
-    background: rgba(var(--plum-rgb), 0.06);
+    /* --line-rgb, not --plum-rgb: plum channels do not flip, so in dark mode
+       this wash composited to under a channel of difference and the chip gave
+       no hover feedback at all. Light mode renders identically. */
+    background: rgba(var(--line-rgb), 0.06);
     color: var(--text-strong);
   }
 }
@@ -498,10 +575,21 @@
   box-shadow: var(--ring-cream);
   border-radius: var(--radius-6);
 }
+/* The opening post's first words (PRD-167). Two lines, because a list row is
+   denser than the feed's card: enough to tell what the thread is about, never
+   enough to unbalance the row against its neighbours. Rendered only when there
+   IS an excerpt, so the clamp never reserves empty space. `anywhere` keeps an
+   unbroken URL or a very long word from pushing the row sideways. */
 .threadExcerpt {
-  font-size: var(--text-14);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: var(--text-13-5);
   color: var(--ink-60);
-  line-height: 1.55;
+  line-height: 1.6;
   margin-top: 6px;
   max-width: 72ch;
 }
@@ -551,6 +639,21 @@
   color: var(--text-strong);
   font-weight: 600;
 }
+/* PRD-170 — "you have not read these yet" on a list row. A soft coral chip,
+   sized to sit inside the meta line without changing its height. Both channels
+   flip in dark mode: --accent-rgb is the coral wash and --accent-ink is the
+   coral tuned to carry small text on it. Only ever rendered for 1..99. */
+.unreadBadge {
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
 .tmDot {
   width: 3px;
   height: 3px;

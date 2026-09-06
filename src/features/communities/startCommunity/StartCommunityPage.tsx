@@ -211,7 +211,10 @@ function StartCommunityFormPanel({
           </FadeIn>
         </div>
 
-        <StartCommunityPreview draft={form.draft} />
+        <StartCommunityPreview
+          draft={form.draft}
+          avatarPreviewUrl={form.avatarPreviewUrl}
+        />
       </div>
     </div>
   );

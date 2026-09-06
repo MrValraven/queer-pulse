@@ -7,6 +7,17 @@ export interface MagazineSectionTile {
   id: string;
   name: string;
   /**
+   * How many pieces an issue wants in this section, and the desk's one-line
+   * house rule for it. Both are real columns on `MagazineSection` and real
+   * fields on `SectionResponse`, carried through so the editor desk's Issue
+   * plan and commission picker can read this one hook instead of keeping
+   * their own copy of the taxonomy (PRD-130). They satisfy the desk's
+   * `Section` shape exactly.
+   */
+  target: number;
+  note: string;
+  orderIndex: number;
+  /**
    * Only populated in demo mode, where the curated mock article registry is
    * already loaded client-side (so a client-side count is free). Live mode
    * leaves this `null` rather than fanning out one
@@ -25,6 +36,14 @@ export interface MagazineSectionTile {
  * against the canonical `DEMO_SECTIONS` list by exact `section` name match;
  * live mode calls the real `GET /magazine/sections`
  * (`MagazineService.listSections`), already ordered by `orderIndex`.
+ *
+ * PRD-130 — also the editor desk's section source (the Issue plan, the
+ * commission picker and the Write action). The desk used to read the demo
+ * `DEMO_SECTIONS` constant unconditionally, so a live editor commissioned
+ * into a hand-curated taxonomy instead of the seeded one. Callers that need
+ * a picker must respect `isLoading`/`isError`: an empty list means "we do
+ * not know the taxonomy", and commissioning into no section is worse than
+ * a disabled control.
  */
 export function useMagazineSections() {
   const { demoMode } = useDemoMode();
@@ -37,8 +56,7 @@ export function useMagazineSections() {
         const { articles } = await import("../data/articles.mock");
         const rows = Object.values(articles);
         return DEMO_SECTIONS.map((section) => ({
-          id: section.id,
-          name: section.name,
+          ...section,
           articleCount: rows.filter(
             (article) => article.section === section.name,
           ).length,
@@ -48,6 +66,9 @@ export function useMagazineSections() {
       return sections.map((section) => ({
         id: section.id,
         name: section.name,
+        target: section.target,
+        note: section.note,
+        orderIndex: section.orderIndex,
         articleCount: null,
       }));
     },

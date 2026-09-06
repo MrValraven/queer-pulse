@@ -133,12 +133,15 @@ function groupConversationToView(
     time: timeLabel(dto.updatedAt),
     updatedAt: dto.updatedAt,
     preview: groupPreview(dto.lastMessage),
-    unread: dto.unreadCount > 0,
+    // PRD-225: a manual "mark unread" is unread even with nothing new to
+    // read — ORed in alongside the count-based rule, never replacing it.
+    unread: dto.unreadCount > 0 || !!dto.markedUnreadAt,
     unreadCount: dto.unreadCount,
     pinnedAt: dto.pinnedAt ?? undefined,
     favorite: dto.favorite ?? undefined,
     muted: dto.muted ?? undefined,
     archivedAt: dto.archivedAt ?? undefined,
+    markedUnreadAt: dto.markedUnreadAt ?? undefined,
     draft: dto.draft ?? undefined,
     members,
     memberCount: dto.memberCount,
@@ -182,16 +185,21 @@ export function conversationToView(
     time: timeLabel(dto.updatedAt),
     updatedAt: dto.updatedAt,
     preview: dto.lastMessage?.body ?? "",
-    unread: dto.unreadCount > 0,
+    // PRD-225: see the matching comment in `groupConversationToView`.
+    unread: dto.unreadCount > 0 || !!dto.markedUnreadAt,
     pinnedAt: dto.pinnedAt ?? undefined,
     favorite: dto.favorite ?? undefined,
     muted: dto.muted ?? undefined,
     archivedAt: dto.archivedAt ?? undefined,
+    markedUnreadAt: dto.markedUnreadAt ?? undefined,
     draft: dto.draft ?? undefined,
     otherLastReadAt: dto.otherLastReadAt ?? undefined,
     otherDeliveredAt: dto.otherDeliveredAt ?? undefined,
     otherParticipantId: dto.otherParticipantId ?? undefined,
     official: !p,
+    // Server-authoritative (PRD-220) — see `Conversation.replyRequiresConnection`.
+    // Never set for an official thread (no real counterpart to connect with).
+    replyRequiresConnection: p ? (dto.replyRequiresConnection ?? false) : false,
     messages: [],
   };
 }
@@ -233,7 +241,9 @@ export function messageToChat(
           ? "gif"
           : dto.kind === "image"
             ? "image"
-            : undefined,
+            : dto.kind === "document"
+              ? "document"
+              : undefined,
     attachment: dto.attachment ?? undefined,
     systemEvent: dto.systemEvent
       ? {

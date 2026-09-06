@@ -348,6 +348,14 @@
 
 /* Locked until the 18+ box is ticked. Dimmed rather than hidden, so the path
    forward stays visible and the checkbox above reads as the thing to do. */
+/* Sizes <FcGoogle>, which renders at 1em by default. Matches the 18px the
+   hand-authored Google mark that used to sit here carried inline. */
+.google svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
 .google:disabled {
   opacity: 0.45;
   cursor: not-allowed;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FiX } from "react-icons/fi";
 import { Avatar, FadeIn } from "../../shared/components/ui";
 import { useConnectionActions } from "../connect/api/useConnectionActions";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -19,12 +20,15 @@ export function NotificationItem({
   isUnread,
   onMarkRead,
   onResolve,
+  onDismiss,
 }: {
   notification: Notification;
   index: number;
   isUnread: boolean;
   onMarkRead: (id: NotificationId) => void;
   onResolve: (id: NotificationId, toast: string) => void;
+  /** PRD-224. Clear this row for good, here and on the member's other devices. */
+  onDismiss: (id: NotificationId) => void;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -212,6 +216,21 @@ export function NotificationItem({
         )}
       </div>
       <div className={styles.time}>{notification.time}</div>
+      {/* PRD-224. Every row can be cleared, so a member is never stuck looking
+          at something they have already dealt with. Sits above the overlay row
+          link and stops the click there, so clearing a row never also
+          navigates into it. */}
+      <button
+        type="button"
+        className={styles.dismiss}
+        aria-label={t("notifications:actions.dismiss")}
+        onClick={(event) => {
+          event.stopPropagation();
+          onDismiss(notification.id);
+        }}
+      >
+        <FiX aria-hidden />
+      </button>
     </FadeIn>
   );
 }

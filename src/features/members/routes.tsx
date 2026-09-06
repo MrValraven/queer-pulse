@@ -49,9 +49,10 @@ export function memberRoutes() {
       />
       <Route path={routes.badges} element={<BadgesPage />} />
       <Route path={routes.perks} element={<PerksPage />} />
-      {/* Was CollectionsPage. Collections are saved lists now (SOC-12): same
-          path, same place in the account area, backed by /me/saved/lists so a
-          list can actually be shared. */}
+      {/* Collections are saved lists now (SOC-12): same path, same place in
+          the account area, backed by /me/saved/lists so a list can actually be
+          shared. The old owner-private CollectionsPage this replaced has since
+          been deleted. */}
       <Route path={routes.collections} element={<SavedListsPage />} />
       {/* A saved list somebody shared. Public by design, matching the
           backend's `@Public()` GET /saved-lists/:token: the token is the only

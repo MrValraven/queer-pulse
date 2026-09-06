@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import {
-  BADGE_OPTIONS,
+  PROFILE_BADGE_KEYS,
   type CoverStyle,
   type PatternKey,
 } from "../../features/settings/profileTheme.data";
@@ -22,8 +22,9 @@ export const DEFAULT_PROFILE_THEME: ProfileThemeSettings = {
   pattern: "none",
   showBadges: true,
   showLevel: true,
-  // Stable id, never the translated label (see profileTheme.data.ts).
-  badge: BADGE_OPTIONS[0]!.id,
+  // The badge catalogue's stable id, never a translated label (see
+  // profileTheme.data.ts).
+  badge: PROFILE_BADGE_KEYS[0]!,
 };
 
 export interface ProfileThemeContextValue {

@@ -57,14 +57,23 @@ export function AdminWriterApplicationsRow({
         </AdminChip>
         {application.status === "pending" && (
           <>
+            {/* Named the same way the sibling submissions row names its reply
+                input (`AdminMagazineSubmissionRow`): an `aria-label`, because
+                the row layout has no space for a visible label and a
+                placeholder is not an accessible name. Without it a screen
+                reader announced an unnamed text field sitting between the
+                Decline and Approve buttons. */}
             <input
               className={styles.rowNoteInput}
               type="text"
+              aria-label={t(
+                "admin:adminWriterApplications.row.reviewNoteLabel",
+              )}
               placeholder={t(
                 "admin:adminWriterApplications.row.reviewNotePlaceholder",
               )}
               value={reviewNote}
-              onChange={(e) => setReviewNote(e.target.value)}
+              onChange={(event) => setReviewNote(event.target.value)}
             />
             <div className={styles.rowActionButtons}>
               <Button

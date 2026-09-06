@@ -42,6 +42,13 @@ export const DEMO_ISSUE_COVER = {
     </>
   ),
   publishedLabel: "6 Jun 2026",
+  // PRD-104 — the stock photograph is the DEMO issue's cover, passed in like
+  // any other cover value. Live mode renders whatever the desk uploaded and
+  // falls back to the tinted placeholder, never to this image.
+  coverUrl: ISSUE_COVER_IMG,
+  // The demo page is always issue 09, which is the demo newsstand issue, so it
+  // is the one page that legitimately wears the "Current" pill.
+  isCurrent: true,
   featureCount: 12,
   pageCount: 84,
   contributorCount: 8,

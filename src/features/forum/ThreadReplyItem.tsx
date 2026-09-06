@@ -16,6 +16,8 @@ import { MentionText } from "../../shared/mentions/MentionText";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { PostActionsMenu } from "./PostActionsMenu";
 import { ForumPostImage } from "./ForumImageAttach";
+import { ForumLinkPreview } from "./ForumLinkPreview";
+import { firstLinkIn, useInViewOnce } from "./api/useForumLinkPreview";
 import { ModeratorByline } from "./ThreadReplies";
 import styles from "./ThreadPage.module.css";
 
@@ -92,6 +94,12 @@ export function ThreadReplyItem({
     ? demoOwns(reply) && !!reply.deleted
     : !!reply.canRestore;
   const canViewHistory = demoMode ? false : !!reply.canViewHistory;
+  // PRD-171: at most the FIRST link in this reply, and nothing is requested
+  // until the reply is near the viewport. A twenty-reply thread where every
+  // reply carries a link must not fire twenty unfurls on load — see the rate
+  // budget note in `useForumLinkPreview`.
+  const { ref: bodyRef, isInView } = useInViewOnce<HTMLDivElement>();
+  const firstLink = firstLinkIn(reply.body);
   return (
     <FadeIn
       delay={Math.min(index, 8) * 60}
@@ -175,7 +183,7 @@ export function ThreadReplyItem({
           />
         ) : (
           <>
-            <div className={styles.replyBody}>
+            <div className={styles.replyBody} ref={bodyRef}>
               {reply.quote && (
                 <div className={styles.quote}>
                   {/* `cite` is absent when the quoted post is not in the
@@ -190,6 +198,7 @@ export function ThreadReplyItem({
                 </p>
               ))}
               <ForumPostImage src={reply.image} />
+              <ForumLinkPreview url={firstLink} isEnabled={isInView} />
               {reply.editedAt && (
                 <span className={styles.editedMark}>
                   {t("forum:edited.mark")}

@@ -119,7 +119,12 @@ export function AdminSafeSpaceNominationActions({
         </>
       )}
 
-      {canDecide && <AdminSafeSpaceDecideForm nominationId={nomination.id} />}
+      {canDecide && (
+        <AdminSafeSpaceDecideForm
+          nominationId={nomination.id}
+          visits={nomination.visits}
+        />
+      )}
       {isDecided && <AdminSafeSpaceReopenForm nominationId={nomination.id} />}
     </div>
   );

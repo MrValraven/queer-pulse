@@ -31,6 +31,7 @@ import {
 } from "./FeedCards";
 import { DEMO_BANNER } from "./feedCards.data";
 import { useFeed } from "./api/useFeed";
+import { useNewMembersThisWeek } from "./api/useNewMembersThisWeek";
 import type { FeedItem } from "./api/feed.api";
 import { useSequencedTabSwap } from "./useSequencedTabSwap";
 
@@ -97,13 +98,18 @@ export function useFeedPage() {
 
   // Live feed source (inert in demo mode, which renders its scripted cards).
   const feed = useFeed(displayTab);
-  // The sidebar's "New this week" widget is page-global — it must stay put no
+  // The sidebar's "New this week" widget is page-global: it must stay put no
   // matter which feed tab is active. Source it from a dedicated People-tab
   // query rather than the tab-scoped `feed` above, whose `items` carries no
-  // `new_member` entries on tabs like Gatherings/Posts. When the active tab
-  // *is* People this shares `feed`'s query key, so react-query dedupes it
-  // into a single request.
-  const sidebarFeed = useFeed("People");
+  // `new_member` entries on tabs like Gatherings/Posts.
+  //
+  // PRD-168: that query is bounded to the last seven days, which is what the
+  // widget's heading promises. It used to be a plain `useFeed("People")`,
+  // sharing the People tab's query key, so on a quiet week the widget listed
+  // members who joined months ago. `useNewMembersThisWeek` holds its own key,
+  // so the People TAB keeps its unbounded behaviour and only the widget is
+  // narrowed. An empty week now falls through to the widget's empty state.
+  const sidebarFeed = useNewMembersThisWeek();
   // The sidebar's "Upcoming" widget shows the upcoming gatherings, independent of
   // the active feed tab — same page-global rationale as the members widget.
   // `useEvents` branches demo/live internally; in demo the sidebar keeps its own
@@ -184,11 +190,12 @@ export function useFeedPage() {
 
   // Sidebar "New this week" rows: the demo mock in demo mode, otherwise the live
   // recently-joined members from the tab-independent `sidebarFeed` (already
-  // block/mute filtered by `useFeed`, and already scoped to `new_member` items
-  // by the backend's People-tab filter) mapped to the widget's row shape and
-  // capped to a short list. Items without a handle can't link to a profile, so
-  // they're dropped. Sourcing this from `sidebarFeed` (not `liveItems`) keeps
-  // the widget populated across every tab switch.
+  // block/mute filtered by the hook, already scoped to `new_member` items by
+  // the backend's People-tab filter, and bounded to the last seven days by
+  // PRD-168) mapped to the widget's row shape and capped to a short list.
+  // Items without a handle can't link to a profile, so they're dropped.
+  // Sourcing this from `sidebarFeed` (not `liveItems`) keeps the widget
+  // populated across every tab switch.
   const sidebarNewMembers = demoMode ? [] : sidebarFeed.items;
   const sidebarMembers: SidebarMember[] = demoMode
     ? NEW_THIS_WEEK

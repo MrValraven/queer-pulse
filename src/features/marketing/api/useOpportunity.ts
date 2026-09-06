@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getOpportunity } from "./volunteering.api";
 import { opportunityKeys } from "./opportunityKeys";
 import { detailToOpportunity } from "./volunteering.adapters";
+import { memberRefToPerson, type Person } from "../../../shared/api/refs";
 import type { VolunteerOpportunity } from "../volunteerOpportunities";
 import { DEMO_POSTER_OPPORTUNITY_SLUG } from "../volunteerDemoPoster";
 
@@ -13,8 +14,16 @@ export interface OpportunityResult {
   /** True when every spot is taken — apply is blocked (409 on the server). */
   isFull: boolean;
   status: "open" | "closed";
-  /** The viewer posted this opportunity → the signups roster is revealed. */
-  isPoster: boolean;
+  /** The review tier — the poster, or an owner/mod of the community this
+   *  opportunity is attributed to. Reveals the roster + manage entry point and
+   *  withdraws the apply offer. */
+  canReviewApplicants: boolean;
+  /** Poster-only. Edit and close never widen to the community's organisers. */
+  canEditOpportunity: boolean;
+  /** The member to address about this opportunity, `null` when the API carried
+   *  no poster (an erased poster) or in demo mode, whose mock registry has no
+   *  ownership concept at all. */
+  poster: Person | null;
   /** The viewer already signed up → the "you're on the list" state shows. */
   mySignup: boolean;
 }
@@ -49,7 +58,11 @@ export function useOpportunity(slug: string | undefined) {
           spotsTotal: total,
           isFull: false,
           status: "open",
-          isPoster: opp?.slug === DEMO_POSTER_OPPORTUNITY_SLUG,
+          canReviewApplicants: opp?.slug === DEMO_POSTER_OPPORTUNITY_SLUG,
+          canEditOpportunity: opp?.slug === DEMO_POSTER_OPPORTUNITY_SLUG,
+          // The mock registry has no poster records (see
+          // `volunteerDemoPoster.ts`), so there is nobody to address.
+          poster: null,
           mySignup: false,
         };
       }
@@ -60,7 +73,9 @@ export function useOpportunity(slug: string | undefined) {
         spotsTotal: dto.spotsTotal,
         isFull: dto.spotsFilled >= dto.spotsTotal,
         status: dto.status,
-        isPoster: dto.isPoster,
+        canReviewApplicants: dto.canReviewApplicants,
+        canEditOpportunity: dto.canEditOpportunity,
+        poster: memberRefToPerson(dto.poster),
         mySignup: dto.mySignup,
       };
     },

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -45,7 +45,29 @@ export interface CommunitiesResult {
    * different answers and only one of them greys the chip out.
    */
   facets?: CommunityBrowseFacets;
+  /**
+   * True while the rows on screen belong to the PREVIOUS params, held there by
+   * `shouldKeepPreviousResults` until the new run's first page lands. Callers
+   * use it to hold "Load more" (its `hasNextPage` still describes the old run)
+   * and to stop reporting a count that is about to change.
+   */
+  isShowingPreviousResults: boolean;
 }
+
+/**
+ * `CommunitiesQuery` with the sort union the backend actually accepts.
+ *
+ * `CommunitiesService.list` orders by `newest` (`created_at DESC`, the default
+ * when the param is omitted), `name` (`name ASC, id ASC`) or `active`
+ * (`active_this_week DESC, created_at DESC, id ASC`, off the indexed
+ * `IDX_communities_active_this_week` counter), and `ListCommunitiesQuery.sort`
+ * validates all three. `communities.api.ts`'s own union still lists only the
+ * first two, so it is widened here until that file catches up. `getCommunities`
+ * already serialises whatever value it is given.
+ */
+export type CommunitiesListQuery = Omit<CommunitiesQuery, "sort"> & {
+  sort?: "newest" | "name" | "active";
+};
 
 interface CommunitiesPageVM {
   items: Community[];
@@ -71,10 +93,10 @@ interface CommunitiesPageVM {
  * communities from non-members (the API omits them from the list).
  */
 export function useCommunities(
-  params: CommunitiesQuery = {},
-  options: { enabled?: boolean } = {},
+  params: CommunitiesListQuery = {},
+  options: { enabled?: boolean; shouldKeepPreviousResults?: boolean } = {},
 ): CommunitiesResult {
-  const { enabled = true } = options;
+  const { enabled = true, shouldKeepPreviousResults = false } = options;
   const { demoMode } = useDemoMode();
   // `language` sits in the key because `cardDtoToCommunity` resolves catalog
   // keys ("48 members" / "Members only") — a language switch has to re-map the
@@ -118,6 +140,15 @@ export function useCommunities(
     // profile viewing another member). Demo mode's queryFn is a local no-network
     // read, but gating it too keeps the discarded-path behaviour consistent.
     enabled,
+    // Opt-in, because only the discover grid changes its params while mounted:
+    // every facet and the sort ride in the query key, so each pick is a fresh
+    // key that would otherwise drop the whole grid to `isLoading` and flash six
+    // skeletons over rows that are mostly about to come back. Holding the
+    // previous run on screen until the new first page lands makes a re-sort a
+    // swap rather than a blank (`useMembers` does the same for the member
+    // directory). The other nine call sites pass fixed params, so their loading
+    // semantics stay exactly as they were.
+    placeholderData: shouldKeepPreviousResults ? keepPreviousData : undefined,
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
@@ -164,13 +195,25 @@ export function useCommunities(
           !params.tags?.length ||
           params.tags.some((tagId) => community.tags?.includes(tagId));
         const matches = busyMatched.filter(matchesTags);
-        // Mirror the live endpoint's `sort=name` (A→Z); `newest`/omitted keeps
-        // the registry's own order, same as the backend's `created_at DESC`
-        // default reads today.
+        // Mirror the live endpoint's ordering. `name` is A→Z; `active` is the
+        // busiest first, off the same `activeThisWeek` number the registry
+        // carries and the server keeps in `communities.active_this_week`.
+        // `newest`/omitted keeps the registry's own order, same as the
+        // backend's `created_at DESC` default reads today. That is also why
+        // the `active` sort leans on `Array.prototype.sort` being stable: ties
+        // (every quiet community sits at 0) keep registry order, the demo
+        // stand-in for the server's `created_at DESC, id ASC` tiebreak.
         const sorted =
           params.sort === "name"
-            ? [...matches].sort((a, b) => a.name.localeCompare(b.name))
-            : matches;
+            ? [...matches].sort((first, second) =>
+                first.name.localeCompare(second.name),
+              )
+            : params.sort === "active"
+              ? [...matches].sort(
+                  (first, second) =>
+                    (second.activeThisWeek ?? 0) - (first.activeThisWeek ?? 0),
+                )
+              : matches;
         // Mirror the live endpoint's `facets.tags`: counted over the same set
         // MINUS this filter's own predicate (`busyMatched`, not `matches`),
         // because a tag's badge answers "how many if I picked this one" and
@@ -223,6 +266,11 @@ export function useCommunities(
       }
       const res = await getCommunities({
         ...params,
+        // `communities.api.ts` types `sort` as `"newest" | "name"` while the
+        // endpoint validates `active` too (see `CommunitiesListQuery` above).
+        // The assertion is the seam between the two, and goes away the moment
+        // that union is widened.
+        sort: params.sort as CommunitiesQuery["sort"],
         page: pageParam as number,
       });
       return {
@@ -249,5 +297,6 @@ export function useCommunities(
     isError: query.isError,
     refetch: () => void query.refetch(),
     facets: pages[0]?.facets,
+    isShowingPreviousResults: query.isPlaceholderData,
   };
 }

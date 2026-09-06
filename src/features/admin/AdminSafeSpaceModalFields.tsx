@@ -1,28 +1,49 @@
 import { AdminSeg } from "./ui";
 import { DatePicker } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { SafeSpaceStatus } from "./api/adminSafeSpaces.api";
+import type {
+  SafeSpaceStatus,
+  SafeSpaceVisitTally,
+} from "./api/adminSafeSpaces.api";
+import type { VisitBarRefusal } from "./api/safeSpaceVisitBarError";
 import {
   AdminSafeSpacePromiseFields,
   AdminSafeSpaceVouchFields,
 } from "./AdminSafeSpaceModalLists";
+import { AdminSafeSpaceBelowBarField } from "./AdminSafeSpaceBelowBarField";
+import { AdminSafeSpaceVisitBar } from "./AdminSafeSpaceVisitBar";
 import type { SafeSpaceFormDraft } from "./adminSafeSpaceModal.utils";
 import styles from "./AdminSafeSpaceModal.module.css";
 
 const STATUS_VALUES: SafeSpaceStatus[] = ["none", "verified", "removed"];
 
 /**
- * The safe-space profile form body: status, tier, verifier, re-verified
- * date, subheading, repeatable promises/vouches, and (when removing) a
- * reason. Split out of `AdminSafeSpaceModal` so that component — which also
- * owns the profile-loading/seeding logic — stays under the 200-line limit.
+ * The safe-space profile form body: the independent-visit tally, status, tier,
+ * verifier, re-verified date, subheading, repeatable promises/vouches, and
+ * (when removing) a reason. Split out of `AdminSafeSpaceModal` so that
+ * component — which also owns the profile-loading/seeding logic — stays under
+ * the 200-line limit.
+ *
+ * The tally is drawn by `AdminSafeSpaceVisitBar`, the same component the
+ * nomination drawer uses, so the number that decides a badge never grows a
+ * second visual language depending on which door the moderator came through.
  */
 export function AdminSafeSpaceModalFields({
   draft,
   onChange,
+  visits,
+  isBelowVisitBar,
+  refusal,
+  hasOpenNomination,
 }: {
   draft: SafeSpaceFormDraft;
   onChange: (patch: Partial<SafeSpaceFormDraft>) => void;
+  visits: SafeSpaceVisitTally;
+  /** Whether this save is a move INTO `verified` for a listing under the bar,
+   *  which is the only case the backend asks for a written exception. */
+  isBelowVisitBar: boolean;
+  refusal: VisitBarRefusal | null;
+  hasOpenNomination: boolean;
 }) {
   const { t } = useTranslation();
   const statusOptions = STATUS_VALUES.map((statusValue) => ({
@@ -32,6 +53,8 @@ export function AdminSafeSpaceModalFields({
 
   return (
     <>
+      <AdminSafeSpaceVisitBar visits={visits} />
+
       <label className={styles.fieldLabel}>
         {t("admin:adminSafeSpaces.modal.statusLabel")}
       </label>
@@ -40,6 +63,19 @@ export function AdminSafeSpaceModalFields({
         value={draft.status}
         onChange={(value) => onChange({ status: value as SafeSpaceStatus })}
       />
+
+      {isBelowVisitBar && (
+        <AdminSafeSpaceBelowBarField
+          independentVisitCount={visits.independentVisitCount}
+          requiredVisitCount={visits.requiredVisitCount}
+          reason={draft.belowVisitBarReason}
+          onReasonChange={(belowVisitBarReason) =>
+            onChange({ belowVisitBarReason })
+          }
+          refusal={refusal}
+          hasOpenNomination={hasOpenNomination}
+        />
+      )}
 
       <label className={styles.fieldLabel} htmlFor="safe-space-tier">
         {t("admin:adminSafeSpaces.modal.tierLabel")}

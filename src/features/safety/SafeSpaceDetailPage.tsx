@@ -2,16 +2,17 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
+import { ErrorFallback } from "../../shared/components/feedback/ErrorFallback";
+import { ApiError } from "../../shared/api/client";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes, businessPath } from "../../app/routeMap";
-import { useSafeSpace } from "./api/useSafeSpaces";
+import { useSafeSpace, useSafeSpaces } from "./api/useSafeSpaces";
 import { type RemovedSpace } from "./safeSpaces";
 import { QuickExit } from "./QuickExit";
 import styles from "./SafeSpaceDetailPage.module.css";
 
 const SAFETY = routes.safety;
-const VERIFIED_COUNT = 47;
 
 function emName(name: string) {
   const words = name.split(" ");
@@ -28,6 +29,14 @@ function emName(name: string) {
 function RemovedView({ s }: { s: RemovedSpace }) {
   const { t } = useTranslation();
   const { lead, last } = emName(s.name);
+  // The "looking for somewhere safe?" card used to say "47+ verified spaces",
+  // a constant nobody could have kept true. `useSafeSpaces` already exposes
+  // the real `stats.verified` the hub renders, and shares its react-query key
+  // with the hub, so arriving from the hub costs no extra fetch. Until the
+  // fetch settles the count is 0, which is why the copy has a countless
+  // variant instead of rendering "0 other spaces".
+  const { stats } = useSafeSpaces();
+  const verifiedCount = stats.verified;
   return (
     <div className={styles.page}>
       <Link to={routes.safeSpaces} className={styles.back}>
@@ -134,9 +143,11 @@ function RemovedView({ s }: { s: RemovedSpace }) {
           <div className={[styles.sideCard, styles.sharePlum].join(" ")}>
             <h4>{t("safety:spaces.detail.lookingForTitle")}</h4>
             <p>
-              {t("safety:spaces.detail.lookingForBody", {
-                count: VERIFIED_COUNT,
-              })}
+              {verifiedCount > 0
+                ? t("safety:spaces.detail.lookingForBody", {
+                    count: verifiedCount,
+                  })
+                : t("safety:spaces.detail.lookingForBodyPlain")}
             </p>
             <Button
               variant="ghost-dark"
@@ -167,7 +178,13 @@ function RemovedView({ s }: { s: RemovedSpace }) {
  */
 export function SafeSpaceDetailPage() {
   const { slug } = useParams();
-  const { space, isLoading } = useSafeSpace(slug);
+  const { space, isLoading, isError, error, refetch } = useSafeSpace(slug);
+  // A genuine 404 is an ANSWER ("no safe space has this slug") and earns the
+  // redirect below. Everything else that failed (5xx, a network drop) is
+  // retryable, and bouncing the reader to the hub for it would tell them a
+  // space they were looking at is gone. Same shape as `HousingListingPage`.
+  const isNotFound =
+    (error instanceof ApiError && error.status === 404) || (!isError && !space);
 
   if (isLoading) {
     return (
@@ -182,7 +199,17 @@ export function SafeSpaceDetailPage() {
     );
   }
 
-  if (!space) return <Navigate to={routes.safeSpaces} replace />;
+  if (isNotFound) return <Navigate to={routes.safeSpaces} replace />;
+
+  // The read failed for a reason other than "no such space": hold the reader
+  // here with a retry rather than redirecting, which would read as a delisting.
+  if (isError || !space) {
+    return (
+      <PageShell>
+        <ErrorFallback onReset={refetch} level="route" />
+      </PageShell>
+    );
+  }
 
   if (space.kind === "removed") {
     return (

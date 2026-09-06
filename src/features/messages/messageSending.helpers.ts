@@ -1,18 +1,21 @@
 import type { ChatMessage } from "./data";
 
-/** The two media send kinds — a picked provider GIF or a member-uploaded
- *  image — both carry a `GifAttachment` (see that type's own doc) and both
- *  render identically in the bubble; only this tag (and the DTO/DB kind it
+/** The three attachment send kinds: a picked provider GIF or a member-uploaded
+ *  image (both carry a `GifAttachment` and render identically, inline, in the
+ *  bubble) or a member-uploaded document (carries a `DocumentAttachment` and
+ *  renders as a file-card, PRD-226); only this tag (and the DTO/DB kind it
  *  becomes) tells them apart. */
-export type MediaKind = "gif" | "image";
+export type MediaKind = "gif" | "image" | "document";
 
 /** `ChatMessage.kind` → the `MediaKind` its attachment was sent as, or
  *  undefined for a plain text/system message. Used by `retrySend`/the outbox
  *  replay loop to resend a media message as the SAME kind it was, rather than
  *  re-deriving it from "an attachment is present" (which can't distinguish
- *  gif from image). */
+ *  gif from image from document). */
 export function mediaKindOf(message: ChatMessage): MediaKind | undefined {
-  return message.kind === "gif" || message.kind === "image"
+  return message.kind === "gif" ||
+    message.kind === "image" ||
+    message.kind === "document"
     ? message.kind
     : undefined;
 }

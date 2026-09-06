@@ -24,6 +24,9 @@ interface ManageGatheringTabsProps {
   /** Live going/waitlist/spots-left for the overview chips; demo omits it and
    *  the tab falls back to its static trio. */
   overviewCounts?: OverviewCounts;
+  /** When the gathering was last edited, from the API. Demo omits it and the
+   *  overview falls back to its mock constant (PRD-191). */
+  updatedAt?: Date;
   venueListingId: string | null;
   venueListing: { slug: string; name: string } | null;
   onUpdateDetail: (id: string, value: string) => void;
@@ -58,6 +61,7 @@ export function ManageGatheringTabs({
   details,
   description,
   overviewCounts,
+  updatedAt,
   venueListingId,
   venueListing,
   onUpdateDetail,
@@ -84,9 +88,11 @@ export function ManageGatheringTabs({
       />
       {tab === "overview" && (
         <OverviewTab
+          slug={slug}
           details={details}
           description={description}
           counts={overviewCounts}
+          updatedAt={updatedAt}
           venueListingId={venueListingId}
           venueListing={venueListing}
           onUpdateDetail={onUpdateDetail}

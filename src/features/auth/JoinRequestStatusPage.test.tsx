@@ -53,6 +53,9 @@ const approved = (
   inviteCode: "QP-ABCD-EFGH",
   inviteStatus: "valid",
   inviteExpiresAt: null,
+  // PRD-304: a decided request carries no review deadline. The backend drops
+  // it the moment there is an outcome, and this fixture is an approval.
+  dueAt: null,
   ...overrides,
 });
 

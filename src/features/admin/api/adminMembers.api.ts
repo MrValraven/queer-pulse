@@ -266,16 +266,34 @@ export interface AdminStaffRolesDTO {
   staffRoles: string[];
 }
 
-/** Grant one additive staff role (e.g. `magazine_editor`) to a member.
- *  Admin-only; the backend enforces the guardrails (no house account) and
- *  403/404s otherwise. */
-export const grantStaffRole = (memberId: string, role: string) =>
+/**
+ * Grant one additive staff role (e.g. `magazine_editor`) to a member.
+ * Admin-only; the backend enforces the guardrails (no house account) and
+ * 403/404s otherwise.
+ *
+ * `reason` is the admin's own words for why the grant was made, written to the
+ * `staff_role_granted` audit row beside their name (PRD-288). The grant gates
+ * which admin queues that person can work, so "who did this and why" has to
+ * survive the click.
+ */
+export const grantStaffRole = (
+  memberId: string,
+  role: string,
+  reason: string,
+) =>
   apiPost<AdminStaffRolesDTO>(`/admin/members/${memberId}/staff-roles`, {
     role,
+    reason,
   });
 
-/** Revoke one additive staff role from a member. Admin-only. */
-export const revokeStaffRole = (memberId: string, role: string) =>
+/** Revoke one additive staff role from a member. Admin-only. `reason` is
+ *  recorded the same way {@link grantStaffRole}'s is. */
+export const revokeStaffRole = (
+  memberId: string,
+  role: string,
+  reason: string,
+) =>
   apiDelete<AdminStaffRolesDTO>(
     `/admin/members/${memberId}/staff-roles/${role}`,
+    { reason },
   );

@@ -28,6 +28,10 @@ export const ADMIN_INTAKE_KINDS = [
   "culture_post_project",
   "culture_submit_work",
   "culture_submit_playlist",
+  // PRD-249. A landlord's request to answer a recommendation written about
+  // them. Listed before the confidential concern, with the rest of the kinds
+  // an admin actually works here.
+  "landlord_reply_request",
   "governance_concern",
 ] as const;
 

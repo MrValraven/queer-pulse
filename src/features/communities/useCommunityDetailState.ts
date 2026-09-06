@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useAuth } from "../../app/providers/authContext";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
-import { useSaved } from "../../app/providers/useSaved";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Person } from "./communityDetails";
 import { useCommunity } from "./api/useCommunity";
@@ -13,9 +10,9 @@ import { useRoster } from "./api/useRoster";
 import { useCommunityPosts } from "./api/useCommunityPosts";
 import { useCommunityDiscussions } from "./api/useCommunityDiscussions";
 import { useCommunityPulse } from "./api/useCommunityPulse";
-import { useRemoveMember } from "./api/useCommunityMutations";
-import type { JoinCommunityPayload } from "./api/communityJoin.api";
-import { useJoinCommunityWithRules } from "./api/useCommunityJoin";
+import { useCommunityUpcomingGatherings } from "./api/useCommunityUpcomingGatherings";
+import { useMyCommunityInvites } from "./api/useCommunityInvites";
+import { useCommunityDetailActions } from "./useCommunityDetailActions";
 
 /**
  * All queries, membership state, derived values, and action handlers for the
@@ -31,14 +28,9 @@ export function useCommunityDetailState() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const { demoMode } = useDemoMode();
-  const { user } = useAuth();
-  const { showToast } = useToast();
-  const { isSaved, toggleSave } = useSaved();
-  const { isMember, join, leave, hasRequested, requestToJoin, roleIn } =
-    useCommunityMembership();
+  const { isMember, hasRequested, roleIn } = useCommunityMembership();
   const [joining, setJoining] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [confirmingLeave, setConfirmingLeave] = useState(false);
 
   const {
     community,
@@ -46,6 +38,7 @@ export function useCommunityDetailState() {
     living: baseLiving,
     myRole,
     myJoinRequestStatus,
+    invitedAt,
     editable,
     notFound,
     isLoading,
@@ -56,14 +49,6 @@ export function useCommunityDetailState() {
   const roster = rosterResult.roster;
   const posts = useCommunityPosts(slug);
   const { threads, paging: discussionPaging } = useCommunityDiscussions(slug);
-  // The rules-aware join: the payload carries the applicant's note, their
-  // involvement answer and the house-rules version they agreed to in the
-  // wizard, and the wizard reads the refusal codes off the failure.
-  const joinMutation = useJoinCommunityWithRules(slug ?? "");
-  // Self-leave reuses the member-removal mutation with the viewer's own slug —
-  // it hits the same DELETE /communities/:slug/members/:memberSlug the backend
-  // treats as "leave the community yourself" (P1-11).
-  const leaveMutation = useRemoveMember(slug ?? "");
   const related = useRelatedCommunities(slug, community?.type);
   // `GET /communities/:slug/pulse` is roster-member-only (403 otherwise), so
   // it's only enabled once the viewer's own membership is known — computed
@@ -76,6 +61,39 @@ export function useCommunityDetailState() {
       : false
     : myRole != null;
   const communityPulse = useCommunityPulse(slug, { enabled: isRosterMember });
+  // PRD-145. The pulse's mirror image, and the two are never both live: a
+  // roster member gets the full three-arm pulse (which includes this
+  // community's members-only gatherings), and a prospective member gets the
+  // narrow public-facing list instead. Without this the Events tab told every
+  // non-member "No gatherings on the calendar yet" however full the calendar
+  // was, because the pulse it read from was disabled for them. Demo mode calls
+  // neither and keeps reading `baseLiving.events`.
+  const nonMemberGatherings = useCommunityUpcomingGatherings(slug, {
+    enabled: !isRosterMember,
+  });
+  // PRD-140. The detail DTO says THAT this viewer holds an invitation
+  // (`invitedAt`); the id needed to decline it lives on `GET
+  // /me/community-invites` and nowhere else, so that list is read here, and
+  // only for a viewer the DTO already placed outside the roster with an
+  // invitation waiting. Everybody else never fires it. It shares its cache
+  // with the invitations shelf, so opening one warms the other.
+  const hasStandingInvitation =
+    !demoMode && myRole == null && invitedAt != null;
+  const myInvites = useMyCommunityInvites({ enabled: hasStandingInvitation });
+  // The invitation row for THIS community, when the shelf has arrived. Null
+  // while it is still in flight, which is what keeps "Decline" from firing a
+  // DELETE at an id that does not exist yet.
+  const standingInviteId =
+    myInvites.invites.find((invite) => invite.community.slug === slug)?.id ??
+    null;
+  // Every write this page can make, plus the confirm dialog each destructive
+  // one sits behind. Called here, above the early returns below, because hook
+  // order can never be conditional.
+  const actions = useCommunityDetailActions({
+    slug,
+    community,
+    standingInviteId,
+  });
 
   if (notFound) return { status: "notFound" as const };
   // A non-404 failure must render a retryable error state, not an eternal
@@ -94,9 +112,28 @@ export function useCommunityDetailState() {
         roster,
         pinned: posts.pinned,
         pulse: posts.pulse,
-        events: demoMode ? baseLiving.events : communityPulse.events,
+        events: demoMode
+          ? baseLiving.events
+          : isRosterMember
+            ? communityPulse.events
+            : nonMemberGatherings.events,
       }
     : undefined;
+
+  // The Events tab reads its loading/error/retry off the pulse result. For a
+  // prospective member the gatherings come from the other endpoint, so those
+  // three fields come from it too. `threads`/`opportunities` stay `[]` here
+  // (the pulse query is disabled for them), which is what keeps the sidebar's
+  // members-only cards off a non-member's page.
+  const communityPulseForTabs =
+    demoMode || isRosterMember
+      ? communityPulse
+      : {
+          ...communityPulse,
+          isLoading: nonMemberGatherings.isLoading,
+          isError: nonMemberGatherings.isError,
+          refetch: nonMemberGatherings.refetch,
+        };
 
   // Discussion threads: real `community_post` data is the source of truth,
   // but non-flagship demo communities have no living/mock posts seeded, so
@@ -120,6 +157,21 @@ export function useCommunityDetailState() {
     : myJoinRequestStatus === "pending";
   const role = demoMode ? (slug ? roleIn(slug) : null) : myRole;
   const canEdit = role === "owner" || role === "mod";
+  // PRD-142. Only the single accountable owner is refused a self-removal by
+  // the backend (`removeMember` throws "The owner cannot be removed"); a
+  // co-owner may leave like anybody else, so this is an exact `"owner"` test
+  // rather than `isOwnerRole`. Read off the DTO's `myRole` in live mode, never
+  // `isMember()`, which is demo-only.
+  const isOwner = role === "owner";
+  // Transfer ownership lives in the mod console's danger pane, which is
+  // addressed by `?tab=modtools&mod=danger`. Linking to it (rather than
+  // reaching into `CommunityDangerZone`'s local modal state) is what lets the
+  // owner-facing leave dialog hand them the only real exit there is.
+  const transferOwnershipHref = `/community/${slug}?tab=modtools&mod=danger`;
+  // PRD-140. A standing invitation only ever reaches a non-member, and only in
+  // live mode. It replaces the join CTA with accept/decline, and for a
+  // `private` community it is the only reason this page rendered at all.
+  const isInvited = !demoMode && !joined && invitedAt != null;
 
   // Precedence: the enriched living data (flagship/live) → the community's own
   // join policy (created + live-card DTOs carry it) → the legacy `privateBadge`
@@ -136,6 +188,13 @@ export function useCommunityDetailState() {
       : tier === "public"
         ? t("communities:detail.join.public")
         : t("communities:detail.join.request");
+  // PRD-141. The `invite` tier now refuses an uninvited caller outright
+  // (`outcome: "invite_required"`), so offering them a join wizard would walk
+  // them through three steps to a refusal. The hero says so up front instead.
+  // Live only: the demo prototype has no invitation record, so its invite-tier
+  // communities keep the join flow they have always had.
+  const isInviteOnlyLocked =
+    !demoMode && !joined && !requested && !isInvited && tier === "invite";
 
   const memberNum = parseInt(community.count, 10);
   const hasCount = !Number.isNaN(memberNum);
@@ -144,100 +203,6 @@ export function useCommunityDetailState() {
   // organiser rather than fabricating a crowd that isn't there.
   const members: Person[] = roster.length > 0 ? roster : [detail.organiser];
   const heroAvatars = members.slice(0, 5);
-
-  // Bookmark this community via the backend-wired SavedProvider (kind "group") —
-  // independent of membership: you can save a community to revisit without
-  // joining it.
-  const savedId = `group:${slug}`;
-  const saved = isSaved(savedId);
-  const onToggleSave = () => {
-    const nowSaved = toggleSave({
-      id: savedId,
-      kind: "group",
-      title: community.name,
-      href: `/community/${slug}`,
-      meta: community.count,
-      description: community.description,
-    });
-    showToast(
-      t(
-        nowSaved
-          ? "communities:detail.save.savedToast"
-          : "communities:detail.save.removedToast",
-      ),
-      "success",
-    );
-  };
-
-  // Join / request-to-join. Both resolve only once the write has actually
-  // landed, so `JoinModal` can hold its welcome step until then; the demo
-  // membership store is a demo-mode fixture and is never written from a live
-  // path (live membership comes back off the refetched detail DTO).
-  const onJoined = async (payload: JoinCommunityPayload) => {
-    if (demoMode) {
-      if (slug) join(slug);
-      return;
-    }
-    await joinMutation.mutateAsync(payload);
-  };
-  const onRequested = async (payload: JoinCommunityPayload) => {
-    if (demoMode) {
-      if (slug) requestToJoin(slug);
-      return;
-    }
-    await joinMutation.mutateAsync(payload);
-  };
-  // Leave: demo drives the session provider (unchanged); live fires the real
-  // DELETE with the viewer's own slug, then invalidates so the CTA flips back to
-  // "Join". On failure the mutation's global error handler surfaces the reason —
-  // membership is never optimistically dropped, so there's no false success.
-  // Only ever reached after the member confirms in LeaveCommunityModal — leaving
-  // is destructive, so it never fires straight off the "Joined" button.
-  const performLeave = () => {
-    if (!slug) return;
-    if (demoMode) {
-      setConfirmingLeave(false);
-      leave(slug);
-      return;
-    }
-    const mySlug = user?.profile.slug;
-    if (!mySlug) {
-      setConfirmingLeave(false);
-      showToast(t("communities:common.error"), "error");
-      return;
-    }
-    // The modal stays mounted until the DELETE settles, so its `pending` state
-    // can actually render and a second tap can't fire a second request. It used
-    // to close first, which made `pending={leaveMutation.isPending}` dead.
-    leaveMutation.mutate(mySlug, {
-      onSettled: () => setConfirmingLeave(false),
-    });
-  };
-
-  // Share this community: the native share sheet on devices that support it
-  // (mobile), else copy the link to the clipboard and confirm with a toast.
-  const onShare = async () => {
-    const url = `${window.location.origin}/community/${slug}`;
-    const shareData = {
-      title: community.name,
-      text: community.description,
-      url,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        // The member dismissed the share sheet — not an error, stay silent.
-      }
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast(t("communities:detail.share.copiedToast"), "success");
-    } catch {
-      showToast(t("communities:common.error"), "error");
-    }
-  };
 
   // The two card-footer numbers the edit modal's live preview needs. `living`
   // holds the authoritative count in live mode; `memberNum` is the demo
@@ -260,29 +225,42 @@ export function useCommunityDetailState() {
     requested,
     role,
     canEdit,
+    isOwner,
+    transferOwnershipHref,
+    isInvited,
+    isInviteOnlyLocked,
+    // Null while the invitations list is still in flight, so "Decline" waits
+    // for it rather than firing at an id that does not exist yet.
+    canDeclineInvite: standingInviteId != null,
+    // PRD-148, live only: the demo membership store has no primitive for
+    // taking a pending request back, so the prototype keeps its inert
+    // "Requested" chip and behaves exactly as it did.
+    canWithdrawRequest: !demoMode,
     tier,
     joinLabel,
     memberNum,
     hasCount,
     members,
     heroAvatars,
-    saved,
-    onToggleSave,
-    onShare,
-    onJoined,
-    onRequested,
-    performLeave,
+    // PRD-146. The community's own square identity mark, straight off the
+    // detail DTO (`dtoToEditable` is the one mapper that keeps it; the card
+    // mapper drops it, since the `Community` view-model has no such field).
+    // "" for a community with no mark, in either mode, which is the hero's
+    // signal to draw the generated initial instead.
+    avatarImageUrl: editable?.avatarImageUrl ?? "",
+    // `saved` / `onToggleSave` / `onShare` / `onJoined` / `onRequested` /
+    // `performLeave` / `performWithdrawRequest` / `performDeclineInvite`, the
+    // three mutations and the three confirm-dialog flags all ride in here.
+    ...actions,
     posts,
     discussionPaging,
     rosterResult,
     related,
-    communityPulse,
-    leaveMutation,
+    communityPulse: communityPulseForTabs,
+    nonMemberGatherings,
     joining,
     setJoining,
     editing,
     setEditing,
-    confirmingLeave,
-    setConfirmingLeave,
   };
 }
