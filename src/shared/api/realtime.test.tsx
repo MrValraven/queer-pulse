@@ -296,7 +296,11 @@ describe("cache invalidation", () => {
     await mount(mod);
     const call = socket.on.mock.calls.find((c) => c[0] === "notification:new");
     const handler = call?.[1] as (data: unknown) => void;
-    handler({ notification: { id: "n-1", read: false } });
+    // The frame IS the mapped notification row, with no `{ notification }`
+    // envelope around it (the gateway emits `toNotificationResponse(...)`
+    // directly). Feeding the old envelope here is what let this handler read
+    // `undefined.read` in production while the test stayed green.
+    handler({ id: "n-1", type: "report_filed", read: false });
     // Badge patched locally (key matches useUnreadCount.ts exactly), no network.
     expect(setDataSpy).toHaveBeenCalledWith(
       ["notifications", "unread-count", false],
