@@ -10,6 +10,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
 import styles from "./SafetyPage.module.css";
 import { SAFETY_SUBPAGES } from "./safety.data";
 import { ResourceHero } from "./ResourceHero";
@@ -17,6 +18,12 @@ import { CrisisStrip } from "./CrisisStrip";
 
 export function SafetyPage() {
   const { t } = useTranslation();
+  // `/safety` is public reading; `/account/reports` is not. Rendering the
+  // "track your reports" link only for a signed-in member keeps a signed-out
+  // reader from being bounced to the sign-in wall by a page whose whole job is
+  // to be readable without an account. They have nothing to track either way:
+  // a signed-out filing carries no `reporterId`, so it can never appear there.
+  const { loggedIn } = useAuth();
   const pageTitle = t("resources:safety.meta.title");
   const pageDescription = t("resources:safety.meta.description");
   const subpages = useMemo(
@@ -145,9 +152,16 @@ export function SafetyPage() {
           <div className={styles.reportBox}>
             <h3>{t("resources:safety.report.boxTitle")}</h3>
             <p>{t("resources:safety.report.boxBody")}</p>
-            <Button to={routes.report}>
-              {t("resources:safety.report.formCta")}
-            </Button>
+            <div className={styles.reportBoxActions}>
+              <Button to={routes.report}>
+                {t("resources:safety.report.formCta")}
+              </Button>
+              {loggedIn && (
+                <Button to={routes.myReports} variant="ghost-dark">
+                  {t("resources:safety.report.trackCta")}
+                </Button>
+              )}
+            </div>
           </div>
         </Reveal>
 

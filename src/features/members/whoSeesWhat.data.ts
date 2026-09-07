@@ -1,6 +1,3 @@
-import type { BadgeTone } from "../../shared/components/ui";
-import type { MyReportEntry } from "./api/useMyReports";
-
 /**
  * The three one-tap visibility presets offered at the top of the "Who sees
  * what" sheet. Each maps directly onto the four instant-save fields
@@ -82,41 +79,5 @@ export const VISIBILITY_FIELDS: VisibilityFieldConfig[] = [
     key: "lookingForPublic",
     labelKey: "members:profile.whoSeesWhat.fields.intent.label",
     descKey: "members:profile.whoSeesWhat.fields.intent.desc",
-  },
-];
-
-/** `ReportDTO.status` (open/resolved/escalated, per `reports.api.ts`) → the
- *  shared `<Badge>` tone + a copy key. An unrecognised status still renders
- *  (falls back to `ghost`/a raw-key label) rather than throwing. */
-export const REPORT_STATUS_TONE: Record<string, BadgeTone> = {
-  open: "amber",
-  resolved: "jade",
-  escalated: "danger",
-};
-
-export const REPORT_STATUS_LABEL_KEY: Record<string, string> = {
-  open: "members:profile.whoSeesWhat.reports.status.open",
-  resolved: "members:profile.whoSeesWhat.reports.status.resolved",
-  escalated: "members:profile.whoSeesWhat.reports.status.escalated",
-};
-
-/** Demo-mode fallback for `useMyReports` — a couple of plausible entries so
- *  the section has something to render in the prototype. */
-export const DEMO_MY_REPORTS: MyReportEntry[] = [
-  {
-    id: "demo-report-1",
-    reference: "QP-RPT-1042",
-    subjectType: "post",
-    reasonCode: "off_topic",
-    status: "resolved",
-    createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: "demo-report-2",
-    reference: "QP-RPT-1187",
-    subjectType: "member",
-    reasonCode: "unwanted_contact",
-    status: "open",
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ];

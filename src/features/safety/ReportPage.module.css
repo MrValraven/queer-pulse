@@ -40,6 +40,10 @@
 }
 .heroLink {
   margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
 }
 
 .section {

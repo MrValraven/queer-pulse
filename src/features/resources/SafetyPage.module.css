@@ -131,6 +131,12 @@
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
+.reportBoxActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
 .reportBox p {
   font-size: var(--text-14-5);
   color: rgba(var(--cream-rgb), 0.7);

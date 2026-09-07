@@ -234,6 +234,7 @@ export const resources: Catalog = {
   "safety.report.boxBody":
     "Use the report form. It reaches the team directly, and we aim to respond within 24 hours.",
   "safety.report.formCta": "Open the report form",
+  "safety.report.trackCta": "Your reports",
 
   "safety.leaving.title": "Leaving the <em>network</em>",
   "safety.leaving.body1":

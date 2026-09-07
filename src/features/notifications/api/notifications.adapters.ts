@@ -500,6 +500,14 @@ function sourceHrefFromPayload(
   // payload `source` field precisely because neither destination is the
   // community/thread page a `source` value would resolve to.
   if (type === "report_filed") return routes.adminModeration;
+  // The REPORTER's own acknowledgement ("Your report is with the safety
+  // team"), and the mirror image of the branch above: same event, opposite
+  // recipient, so the opposite destination. It goes to the member's own record
+  // of what they filed, never the queue — this recipient has no access to the
+  // console, and the only thing they are owed is to see their own report
+  // standing there with a reference and a status. Keyed on `type` for the same
+  // reason its sibling is: the payload carries no `source` that resolves here.
+  if (type === "report_received") return routes.myReports;
   // TS-04. `payload.source` is `"moderation"`, and the destination is the
   // console's own queue-health tab: the alert is about the state of the work,
   // so it opens the reading rather than one of the queues it summarises.

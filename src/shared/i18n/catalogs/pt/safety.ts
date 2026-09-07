@@ -42,6 +42,26 @@ export const safety: Catalog = {
   // ── Ligações entre o formulário (ReportPage) e o guia
   //    (ReportingGuidePage) ─────────────────────────────────────────────────
   "report.howReportingWorksLink": "Como funciona a denúncia",
+
+  // ── MyReportsPage.tsx + MyReportRow.tsx (/account/reports) ──────────────
+  "myReports.eyebrow": "Segurança e denúncias",
+  "myReports.title": "As tuas <em>denúncias</em>",
+  "myReports.lead":
+    "Tudo o que denunciaste e em que ponto está cada caso. Só tu vês esta lista.",
+  "myReports.fileCta": "Fazer uma denúncia",
+  "myReports.trackLink": "As tuas denúncias",
+  "myReports.filedTemplate": "Feita {time}",
+  "myReports.closedTemplate": "Fechada a {date}",
+  "myReports.status.open": "Em aberto",
+  "myReports.status.resolved": "Resolvida",
+  "myReports.status.escalated": "Escalada",
+  "myReports.empty": "Ainda não fizeste nenhuma denúncia.",
+  "myReports.emptySignedOutNote":
+    "As denúncias feitas sem sessão iniciada não aparecem aqui. Não têm nenhuma conta associada, que é o que as mantém anónimas.",
+  "myReports.error": "Não conseguimos carregar as tuas denúncias.",
+  "myReports.retry": "Tentar de novo",
+  "myReports.footNote":
+    "As tuas 50 denúncias mais recentes. Mostramos-te a tua denúncia e o estado dela, nunca o que foi decidido sobre outra pessoa.",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
     "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",

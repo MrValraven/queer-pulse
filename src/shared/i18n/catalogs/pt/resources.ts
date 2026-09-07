@@ -240,6 +240,7 @@ export const resources: Catalog = {
   "safety.report.boxBody":
     "Usa o formulário de denúncia: chega diretamente à equipa, e procuramos responder dentro de 24 horas.",
   "safety.report.formCta": "Abrir o formulário de denúncia",
+  "safety.report.trackCta": "As tuas denúncias",
 
   "safety.leaving.title": "Sair da <em>rede</em>",
   "safety.leaving.body1":

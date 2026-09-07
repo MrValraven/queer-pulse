@@ -306,6 +306,14 @@ export const routes = {
   /** The member's own wallet of membership cards. Sits under the already
    *  gated `/account/*` pattern in authGate.ts, so no new gate is needed. */
   myCards: "/account/cards",
+  /** The member's own record of the reports they have FILED, reading
+   *  `GET /reports/mine` — a receipt list, never a moderation queue (that is
+   *  `routes.adminModeration`, staff only). Under `/account` rather than
+   *  `/safety` on purpose: the rest of `/safety/*` is public reading a
+   *  signed-out person needs, while this is one member's own record, so it
+   *  belongs behind the already gated `/account/*` pattern in authGate.ts —
+   *  no new gate and no new robots.txt Disallow needed. */
+  myReports: "/account/reports",
   microGrants: "/work/grants/micro",
   newsletterUnsubscribe: "/newsletter/unsubscribe",
   notifications: "/notifications",

@@ -1707,13 +1707,10 @@ export const members: Catalog = {
   "profile.whoSeesWhat.reports.heading": "Denúncias que fizeste",
   "profile.whoSeesWhat.reports.sub":
     "Um registo do que denunciaste e em que ponto está.",
-  "profile.whoSeesWhat.reports.filedTemplate": "Feita {time}",
   "profile.whoSeesWhat.reports.empty": "Ainda não fizeste nenhuma denúncia.",
   "profile.whoSeesWhat.reports.error":
     "Não conseguimos carregar as tuas denúncias.",
-  "profile.whoSeesWhat.reports.status.open": "Em aberto",
-  "profile.whoSeesWhat.reports.status.resolved": "Resolvida",
-  "profile.whoSeesWhat.reports.status.escalated": "Escalada",
+  "profile.whoSeesWhat.reports.viewAll": "Ver todas as tuas denúncias",
 
   "profile.whoSeesWhat.nameChange.heading": "O teu nome de utilizador",
   "profile.whoSeesWhat.nameChange.sub":

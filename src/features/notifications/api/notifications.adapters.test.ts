@@ -273,3 +273,28 @@ describe("notificationDtoToView: message mention source href", () => {
     expect(view.sourceHref).toBeUndefined();
   });
 });
+
+// The reporter's own acknowledgement used to build no href at all, so the one
+// row that tells a member their report landed was a dead end. Its sibling
+// `report_filed` (the RESPONDER's copy of the same event) goes to the staff
+// queue, so the two are asserted together: the pair is the whole point, and a
+// future edit that collapses them would break the boundary rather than a test.
+describe("notificationDtoToView: report source hrefs", () => {
+  it("sends the reporter to their own record of what they filed", () => {
+    const view = notificationDtoToView(
+      dto({ type: "report_received", payload: { reportId: "r1" } }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(routes.myReports);
+  });
+
+  it("sends the responder to the moderation queue instead", () => {
+    const view = notificationDtoToView(
+      dto({ type: "report_filed", payload: { reportId: "r1" } }),
+      t,
+      fmt,
+    );
+    expect(view.sourceHref).toBe(routes.adminModeration);
+  });
+});
