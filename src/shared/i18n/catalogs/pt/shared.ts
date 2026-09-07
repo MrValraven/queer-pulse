@@ -158,6 +158,9 @@ export const shared: Catalog = {
   "adminSidebar.badge": "Admin",
   "adminSidebar.navLabel": "Secções de administração",
   "adminSidebar.backToPlatform": "Voltar à plataforma",
+  "adminSidebar.homeAria": "Início da administração QueerPulse",
+  "adminSidebar.collapseRail": "Recolher menu",
+  "adminSidebar.expandRail": "Expandir menu",
 
   // AdminAccountMenu — o controlo de conta no fundo da barra lateral.
   "adminSidebar.account.accessHeading": "O teu acesso",

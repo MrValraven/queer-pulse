@@ -12,7 +12,7 @@ import { useTeamRole } from "../../../features/admin/adminRole";
 import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import { STAFF_ROLES } from "../../../features/admin/staffRoles.registry";
 import { useTranslation } from "../../i18n/useTranslation";
-import { Avatar } from "../ui";
+import { Avatar, Tooltip } from "../ui";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { useSidebarMenu } from "./useSidebarMenu";
 import styles from "./AdminShell.module.css";
@@ -30,7 +30,15 @@ import styles from "./AdminShell.module.css";
  * Identity comes from `useAccountIdentity`, the demo-safe resolver: the mock
  * persona is only ever a demo fallback, never a stand-in for a live session.
  */
-export function AdminAccountMenu({ onNavigate }: { onNavigate?: () => void }) {
+export function AdminAccountMenu({
+  isCollapsed = false,
+  onNavigate,
+}: {
+  /** Icon-only rail: the trigger shrinks to the avatar, the name and address
+   * move into the tooltip, and the menu floats out to its own width. */
+  isCollapsed?: boolean;
+  onNavigate?: () => void;
+}) {
   const { user, signOut } = useAuth();
   const { role } = useTeamRole();
   const staffRoles = useMyStaffRoles();
@@ -64,11 +72,50 @@ export function AdminAccountMenu({ onNavigate }: { onNavigate?: () => void }) {
     onNavigate?.();
   };
 
+  // The tooltip has to name the account, because in the collapsed rail the
+  // avatar is all that is left of it.
+  const accountLabel = [name, user?.email].filter(Boolean).join(" \u00b7 ");
+
+  const trigger = (
+    <button
+      ref={triggerRef}
+      type="button"
+      className={[styles.me, isCollapsed && styles.meIcon]
+        .filter(Boolean)
+        .join(" ")}
+      onClick={toggle}
+      aria-haspopup="menu"
+      aria-expanded={open}
+    >
+      {/* No `alt`/`name`: the visible name sits right beside it (or in the
+          visually-hidden block below, once collapsed), so the image is
+          decorative and Avatar falls back to alt="". */}
+      <Avatar initials={initials} src={photo} tint="coral" size={32} />
+      <span className={isCollapsed ? "visuallyHidden" : styles.meTx}>
+        <span className={styles.meName}>{name}</span>
+        {/* The account address, not the role: the role chip at the top of the
+            rail already carries that, and "which of my accounts is this?" is
+            the question a privileged console should answer at a glance. */}
+        <span className={styles.meRole}>{user?.email}</span>
+      </span>
+      {!isCollapsed && (
+        <FiChevronUp
+          className={[styles.meGear, open && styles.meChevOpen]
+            .filter(Boolean)
+            .join(" ")}
+          aria-hidden
+        />
+      )}
+    </button>
+  );
+
   return (
     <div className={styles.meWrap} ref={wrapRef}>
       {open && (
         <div
-          className={styles.meMenu}
+          className={[styles.meMenu, isCollapsed && styles.meMenuFloat]
+            .filter(Boolean)
+            .join(" ")}
           role="menu"
           tabIndex={-1}
           ref={menuRef}
@@ -132,31 +179,13 @@ export function AdminAccountMenu({ onNavigate }: { onNavigate?: () => void }) {
         </div>
       )}
 
-      <button
-        ref={triggerRef}
-        type="button"
-        className={styles.me}
-        onClick={toggle}
-        aria-haspopup="menu"
-        aria-expanded={open}
-      >
-        {/* No `alt`/`name`: the visible name sits right beside it, so the image
-            is decorative and Avatar falls back to alt="". */}
-        <Avatar initials={initials} src={photo} tint="coral" size={32} />
-        <span className={styles.meTx}>
-          <span className={styles.meName}>{name}</span>
-          {/* The account address, not the role: the role chip at the top of the
-              rail already carries that, and "which of my accounts is this?" is
-              the question a privileged console should answer at a glance. */}
-          <span className={styles.meRole}>{user?.email}</span>
-        </span>
-        <FiChevronUp
-          className={[styles.meGear, open && styles.meChevOpen]
-            .filter(Boolean)
-            .join(" ")}
-          aria-hidden
-        />
-      </button>
+      {isCollapsed ? (
+        <Tooltip label={accountLabel} placement="right">
+          {trigger}
+        </Tooltip>
+      ) : (
+        trigger
+      )}
     </div>
   );
 }

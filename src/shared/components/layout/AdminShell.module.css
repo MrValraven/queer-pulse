@@ -3,6 +3,18 @@
   grid-template-columns: 248px 1fr;
   min-height: 100svh;
   background: var(--cream);
+  transition: grid-template-columns var(--dur, 0.18s) var(--ease, ease);
+}
+/* The icon rail. Everything the wide rail shows is still reachable: names move
+   into tooltips, pending pills become corner dots, and the two menus float out
+   to their own width instead of matching a 68px column. */
+.shellCollapsed {
+  grid-template-columns: 68px 1fr;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell {
+    transition: none;
+  }
 }
 
 /* ── Sidebar dock ────────────────────────────────────────────────────────────
@@ -51,13 +63,65 @@
   color: rgba(var(--cream-rgb), 1);
 }
 
+/* Wordmark and the collapse toggle share a row while the rail is wide, and
+   stack while it is an icon column. */
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 14px;
+}
+.sidebarCollapsed .brandRow {
+  flex-direction: column;
+  gap: 8px;
+}
+
 .brand {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 6px 10px 16px;
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: var(--radius-11);
   text-decoration: none;
   color: rgba(var(--cream-rgb), 1);
+}
+.sidebarCollapsed .brand {
+  flex: none;
+  justify-content: center;
+  width: 44px;
+  height: 40px;
+  padding: 0;
+}
+
+.collapseBtn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 32px;
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: var(--radius-9);
+  background: rgba(var(--cream-rgb), 0.05);
+  color: rgba(var(--cream-rgb), 0.72);
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+.collapseBtn svg {
+  width: 16px;
+  height: 16px;
+}
+@media (hover: hover) {
+  .collapseBtn:hover {
+    background: rgba(var(--cream-rgb), 0.11);
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+.sidebarCollapsed .collapseBtn {
+  width: 44px;
 }
 .brandDot {
   width: 9px;
@@ -73,6 +137,9 @@
   font-size: var(--text-19);
   font-weight: 500;
   letter-spacing: -0.01em;
+  /* The collapse control shares this row now: the wordmark holds one line and
+     the badge beside it gives way, rather than the mark breaking mid-word. */
+  white-space: nowrap;
 }
 .brandName em {
   color: var(--accent);
@@ -80,6 +147,8 @@
 }
 .brandBadge {
   margin-left: auto;
+  flex: none;
+  white-space: nowrap;
   padding: 3px 8px;
   border-radius: var(--radius-pill);
   font-size: var(--text-10);
@@ -785,6 +854,15 @@
   padding: 26px 30px var(--section-y-64);
   max-width: var(--maxw);
   width: 100%;
+  min-width: 0;
+}
+
+/* Opt-in per surface, via AdminShell's `isFullBleed`. The 1240px measure is
+   right for the console's ordinary screens and wrong for a side-by-side editor
+   with three columns to fit, which the measure squeezed to the point of
+   breaking words in half. Only the surface that needs the room asks for it. */
+.contentFullBleed {
+  max-width: none;
 }
 
 @media (--wide) {
@@ -855,4 +933,78 @@
   .sidebarDock {
     transition: none;
   }
+}
+
+/* ── Collapsed rail ──────────────────────────────────────────────────────────
+   Same DOM as the wide rail, narrowed: every label is still in the markup for
+   assistive tech (`visuallyHidden`) and repeated visually by a tooltip beside
+   the icon, so nothing is lost, only folded away. */
+.sidebarCollapsed {
+  padding: 18px 12px 16px;
+}
+
+/* Identity chip and account trigger: monogram only, menus floated. */
+.switchBtnIcon {
+  justify-content: center;
+  gap: 0;
+  padding: 7px;
+}
+.meIcon {
+  justify-content: center;
+  gap: 0;
+  padding: 7px;
+}
+/* A menu the width of a 68px column would be unreadable, so it takes its own
+   width and overhangs the rail. Nothing between it and the page clips. */
+.switchMenuFloat,
+.meMenuFloat {
+  left: 0;
+  right: auto;
+  width: 248px;
+}
+
+/* Section headings become their mark, with a hairline standing in for the
+   grouping the uppercase label used to do. */
+.navSectionIcon {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(var(--cream-rgb), 0.09);
+}
+.navHeadIcon {
+  justify-content: center;
+  gap: 0;
+  padding: 9px 0;
+}
+.navHeadIconMark {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+
+/* `width: 100%` because the tooltip wrapper around each icon control is an
+   inline-flex row: without it the control is only as wide as its glyph and
+   sits against the left edge of the rail instead of centred in it. */
+.navItemIcon,
+.backToPlatformIcon {
+  width: 100%;
+  justify-content: center;
+  gap: 0;
+  padding: 10px 0;
+}
+
+/* The pending pill has no room beside a centred icon, so it becomes a dot in
+   the corner of the control. Both need a positioning context for it. */
+.navItemIcon,
+.navHeadIcon {
+  position: relative;
+}
+.navDot {
+  position: absolute;
+  top: 5px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  padding: 0;
+  min-width: 0;
 }

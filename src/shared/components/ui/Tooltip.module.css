@@ -56,3 +56,52 @@
     transition: none;
   }
 }
+
+/* ── Floating placement (collapsed icon rails) ───────────────────────────────
+   Portalled to <body> and anchored to the trigger's measured rect, so a
+   scrolling rail can't clip it and an ancestor transform can't re-anchor it.
+   It only exists while revealed, so it carries its own entrance rather than
+   transitioning from the hidden state the CSS placements start in. */
+.bubble.right {
+  position: fixed;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transform: translateY(-50%);
+  text-align: left;
+  animation: axTipIn var(--dur-fast, 0.12s) var(--ease-out, ease) both;
+}
+
+@keyframes axTipIn {
+  from {
+    opacity: 0;
+    transform: translate(-3px, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+/* Flipped to the trigger's left, for a rail against the right edge of the page.
+   Only the entrance direction changes. */
+.bubble.rightFlipped {
+  animation-name: axTipInFlipped;
+}
+
+@keyframes axTipInFlipped {
+  from {
+    opacity: 0;
+    transform: translate(3px, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble.right {
+    animation: none;
+  }
+}

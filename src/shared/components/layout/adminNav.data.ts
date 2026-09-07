@@ -19,12 +19,14 @@ import {
   FiInbox,
   FiKey,
   FiLayers,
+  FiLayout,
   FiMail,
   FiMap,
   FiMapPin,
   FiMessageSquare,
   FiPhoneCall,
   FiRadio,
+  FiServer,
   FiSettings,
   FiShield,
   FiTag,
@@ -83,6 +85,10 @@ export interface AdminNavSection {
   id: string;
   /** Catalog key for the section heading — resolve with `t()`. */
   labelKey: string;
+  /** The heading's mark. It is decoration while the rail is wide and the whole
+   * of the heading once the rail is collapsed to icons, where the name is
+   * carried by a tooltip instead. */
+  icon: IconType;
   /** Whether the section starts open the first time an admin loads the nav.
    * Later visits read the persisted map instead. */
   defaultOpen?: boolean;
@@ -102,6 +108,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "trust",
     labelKey: "shared:adminNav.sections.trust",
+    icon: FiShield,
     defaultOpen: true,
     items: [
       {
@@ -201,6 +208,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "people",
     labelKey: "shared:adminNav.sections.people",
+    icon: FiUsers,
     defaultOpen: true,
     items: [
       {
@@ -235,6 +243,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "communities",
     labelKey: "shared:adminNav.sections.communities",
+    icon: FiGlobe,
     items: [
       {
         labelKey: "nav:communities",
@@ -283,6 +292,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "directory",
     labelKey: "shared:adminNav.sections.directory",
+    icon: FiMapPin,
     items: [
       {
         labelKey: "shared:adminNav.items.safeSpaces",
@@ -348,6 +358,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "editorial",
     labelKey: "shared:adminNav.sections.editorial",
+    icon: FiFeather,
     items: [
       {
         labelKey: "shared:adminNav.items.magazineSubmissions",
@@ -378,6 +389,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "partners",
     labelKey: "shared:adminNav.sections.partners",
+    icon: FiHeart,
     items: [
       {
         labelKey: "shared:adminNav.items.partnerships",
@@ -410,6 +422,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "site",
     labelKey: "shared:adminNav.sections.site",
+    icon: FiLayout,
     items: [
       {
         labelKey: "shared:adminNav.items.landing",
@@ -433,6 +446,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
   {
     id: "platform",
     labelKey: "shared:adminNav.sections.platform",
+    icon: FiServer,
     items: [
       {
         labelKey: "shared:adminNav.items.governance",

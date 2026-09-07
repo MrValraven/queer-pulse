@@ -4,7 +4,7 @@ import { FiSearch, FiMoon, FiSun, FiBell, FiMenu } from "react-icons/fi";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useToast } from "../feedback/useToast";
 import { useTranslation } from "../../i18n/useTranslation";
-import { useMediaQuery, useScrollLock } from "../../hooks";
+import { useLocalStorage, useMediaQuery, useScrollLock } from "../../hooks";
 import { mediaMax } from "../../theme/breakpoints";
 import { AdminSidebar } from "./AdminSidebar";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
@@ -19,6 +19,14 @@ const SIDEBAR_DRAWER_ID = "admin-sidebar-drawer";
 /** Mirrors the CSS `@media (max-width: 900px)` where the sidebar goes off-canvas. */
 const MOBILE_QUERY = mediaMax("wide");
 
+/** Whether the desktop rail is showing icons only. Persisted, because an admin
+ * who has traded rail width for table width means it for the whole session. */
+const RAIL_COLLAPSED_KEY = "qp.adminNav.collapsed";
+
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
 interface Crumb {
   label: string;
   to?: string;
@@ -29,11 +37,16 @@ export function AdminShell({
   title,
   breadcrumb = [],
   searchPlaceholder,
+  isFullBleed = false,
 }: {
   children: ReactNode;
   title: ReactNode;
   breadcrumb?: Crumb[];
   searchPlaceholder?: string;
+  /** Drop the console's 1240px reading measure for this surface. Reserved for
+   * screens that genuinely need the width (a side-by-side editor); everything
+   * else keeps the measure. */
+  isFullBleed?: boolean;
 }) {
   const { theme, toggleTheme } = useTheme();
   const { showToast } = useToast();
@@ -45,6 +58,14 @@ export function AdminShell({
   // desktop it stays a static rail (the panel wrapper is `display: contents`),
   // so the drawer machinery only engages while `isMobile`.
   const isMobile = useMediaQuery(MOBILE_QUERY);
+  const [isRailCollapsed, setIsRailCollapsed] = useLocalStorage<boolean>(
+    RAIL_COLLAPSED_KEY,
+    false,
+    isBoolean,
+  );
+  // The off-canvas drawer is always full width: there is nothing to reclaim by
+  // narrowing a panel that is already covering the page.
+  const isCollapsed = !isMobile && isRailCollapsed;
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const drawerPanelRef = useRef<HTMLDivElement>(null);
   const isDrawerActive = isMobile && isDrawerOpen;
@@ -84,7 +105,11 @@ export function AdminShell({
     : {};
 
   return (
-    <div className={styles.shell}>
+    <div
+      className={[styles.shell, isCollapsed && styles.shellCollapsed]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <SkipToContentLink />
       {isDrawerActive && (
         <div
@@ -105,7 +130,15 @@ export function AdminShell({
         inert={isMobile && !isDrawerOpen}
         {...drawerDialogProps}
       >
-        <AdminSidebar onNavigate={closeDrawer} />
+        <AdminSidebar
+          isCollapsed={isCollapsed}
+          onToggleCollapse={
+            isMobile
+              ? undefined
+              : () => setIsRailCollapsed((collapsed) => !collapsed)
+          }
+          onNavigate={closeDrawer}
+        />
       </div>
 
       <div className={styles.main}>
@@ -197,7 +230,9 @@ export function AdminShell({
           tabIndex={-1}
           data-page-main
           data-shell="rail"
-          className={styles.content}
+          className={[styles.content, isFullBleed && styles.contentFullBleed]
+            .filter(Boolean)
+            .join(" ")}
         >
           {children}
         </main>

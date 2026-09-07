@@ -170,6 +170,11 @@ export const shared: Catalog = {
   "adminSidebar.badge": "Admin",
   "adminSidebar.navLabel": "Admin sections",
   "adminSidebar.backToPlatform": "Back to platform",
+  // Collapsed rail. The name of each control moves into a tooltip beside its
+  // icon, so these two are the only strings the fold itself adds.
+  "adminSidebar.homeAria": "QueerPulse admin home",
+  "adminSidebar.collapseRail": "Collapse menu",
+  "adminSidebar.expandRail": "Expand menu",
 
   // AdminAccountMenu — the staff account control at the foot of the rail.
   // "Your access" summarises the account tier plus any additive staff grants;
