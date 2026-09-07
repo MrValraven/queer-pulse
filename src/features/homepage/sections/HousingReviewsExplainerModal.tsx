@@ -4,23 +4,31 @@ import { ModalSheet } from "../../../shared/components/ui/Modal";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { requestInvitePath } from "../../auth/api/joinRequestSource";
-import { MEMBER_PILLARS } from "./membersExplainer.data";
+import { HOUSING_REVIEW_RULES } from "./housingReviewsExplainer.data";
 import styles from "./ExplainerModal.module.css";
 
 /**
- * Signed-out explainer for the "Explore members" CTA: why the member directory
- * is invite-only, and how to get in. Shown instead of bouncing a logged-out
- * visitor to the sign-in page. Rendered only while open (owns no state itself),
- * so `ModalSheet` runs its scroll-lock/focus-trap once per open.
+ * "How reviews work" for the housing showcase's landlord tab: who may write
+ * about a landlord, what the landlord can do about it, and what the words are
+ * NOT (verified). This link used to navigate to the housing board, which
+ * answered a question nobody had asked and dropped the reader out of the
+ * homepage; the question is about the rules, so the answer is a modal.
+ *
+ * The rules themselves live in `housingReviewsExplainer.data.ts`, whose comment
+ * names the backend method behind each one. Rendered only while open (owns no
+ * state itself), so `ModalSheet` runs its scroll-lock/focus-trap once per open.
  */
-export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
+export function HousingReviewsExplainerModal({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
   const { t } = useTranslation();
   return (
     <ModalSheet
       success
       onClose={onClose}
-      ariaLabel={t("homepage:membersExplainer.titlePlain")}
+      ariaLabel={t("homepage:housing.reviewsExplainer.titlePlain")}
     >
       <div className={styles.panel}>
         <button
@@ -33,18 +41,20 @@ export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
         </button>
 
         <span className={styles.eyebrow}>
-          {t("homepage:membersExplainer.eyebrow")}
+          {t("homepage:housing.reviewsExplainer.eyebrow")}
         </span>
         <h2 className={styles.title}>
           <Translation
-            i18nKey="homepage:membersExplainer.title"
+            i18nKey="homepage:housing.reviewsExplainer.title"
             components={{ em: <em /> }}
           />
         </h2>
-        <p className={styles.lede}>{t("homepage:membersExplainer.lede")}</p>
+        <p className={styles.lede}>
+          {t("homepage:housing.reviewsExplainer.lede")}
+        </p>
 
         <ul className={styles.pillars}>
-          {MEMBER_PILLARS.map(({ id, Icon, titleKey, bodyKey }) => (
+          {HOUSING_REVIEW_RULES.map(({ id, Icon, titleKey, bodyKey }) => (
             <li key={id} className={styles.pillar}>
               <span className={styles.pillarIcon} aria-hidden>
                 <Icon />
@@ -57,13 +67,17 @@ export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
           ))}
         </ul>
 
+        <p className={styles.note}>
+          {t("homepage:housing.reviewsExplainer.note")}
+        </p>
+
         <div className={styles.actions}>
-          <Button size="lg" to={requestInvitePath("members_explainer")}>
-            {t("homepage:membersExplainer.requestInviteCta")}{" "}
+          <Button size="lg" to={routes.housing}>
+            {t("homepage:housing.reviewsExplainer.browseCta")}{" "}
             <FiArrowRight aria-hidden />
           </Button>
-          <Button size="lg" variant="ghost-dark" to={routes.signIn}>
-            {t("homepage:membersExplainer.signInCta")}
+          <Button size="lg" variant="ghost-dark" onClick={onClose}>
+            {t("homepage:housing.reviewsExplainer.closeCta")}
           </Button>
         </div>
       </div>

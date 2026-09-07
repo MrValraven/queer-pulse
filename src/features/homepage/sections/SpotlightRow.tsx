@@ -1,6 +1,5 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Avatar } from "../../../shared/components/ui";
-import { MemberStaffBadge } from "../../../shared/staff/MemberStaffBadge";
 import type { SpotlightView } from "./spotlightView";
 import styles from "./Discovery.module.css";
 
@@ -40,10 +39,7 @@ export function SpotlightRow({
         verified={view.verified}
       />
       <span className={styles.rowMeta}>
-        <span className={styles.nameRow}>
-          <span className={styles.rowName}>{view.name}</span>
-          <MemberStaffBadge slug={view.key} />
-        </span>
+        <span className={styles.rowName}>{view.name}</span>
         {view.role && (
           <span className={styles.rowSub}>
             {view.role}

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   FiAlertCircle,
   FiAlertTriangle,
@@ -6,8 +6,8 @@ import {
   FiCheck,
 } from "react-icons/fi";
 import { Avatar } from "../../../shared/components/ui";
-import { routes } from "../../../app/routeMap";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { HousingReviewsExplainerModal } from "./HousingReviewsExplainerModal";
 import type { HousingLandlordContent } from "./housingShowcase.data";
 import styles from "./HousingShowcase.module.css";
 
@@ -19,12 +19,18 @@ interface HousingLandlordPanelProps {
 
 /** "The landlord" tab content for one housing listing card: past-tenant
  *  verdict and quotes when they exist, or an honest empty state when the
- *  landlord is new to the board. */
+ *  landlord is new to the board.
+ *
+ *  The foot CTA asks how reviews work, so it opens the explainer modal rather
+ *  than navigating to the housing board. Only the FRONT card is interactive
+ *  (`interactive`), so at most one of the two stacked panels can ever hold an
+ *  open modal. */
 export function HousingLandlordPanel({
   landlord,
   interactive,
 }: HousingLandlordPanelProps) {
   const { t } = useTranslation();
+  const [isExplainerOpen, setIsExplainerOpen] = useState(false);
 
   return (
     <>
@@ -104,13 +110,22 @@ export function HousingLandlordPanel({
         <span>{landlord.footNote}</span>
         {landlord.footCta &&
           (interactive ? (
-            <Link to={routes.housing} className={styles.footLink}>
+            <button
+              type="button"
+              className={styles.footLinkButton}
+              onClick={() => setIsExplainerOpen(true)}
+            >
               {landlord.footCta} <FiArrowRight aria-hidden />
-            </Link>
+            </button>
           ) : (
             <span className={styles.footLink}>{landlord.footCta}</span>
           ))}
       </div>
+      {isExplainerOpen && (
+        <HousingReviewsExplainerModal
+          onClose={() => setIsExplainerOpen(false)}
+        />
+      )}
     </>
   );
 }

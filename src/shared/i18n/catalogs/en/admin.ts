@@ -380,6 +380,7 @@ export const admin: Catalog = {
   "members.verify.source.homepage_hero": "Homepage hero",
   "members.verify.source.homepage_outro": "Homepage closing invite",
   "members.verify.source.members_explainer": "Members explainer",
+  "members.verify.source.personas_explainer": "Personas explainer",
   "members.verify.source.sign_in": "Sign-in page",
   "members.verify.source.barter": "Barter board",
   "members.verify.source.employer_reviews": "Employer reviews",

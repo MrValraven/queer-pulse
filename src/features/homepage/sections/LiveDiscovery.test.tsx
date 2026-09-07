@@ -61,7 +61,7 @@ describe("LiveDiscovery", () => {
     expect(screen.queryAllByRole("link")).toHaveLength(0);
   });
 
-  it("renders every curated member in the spotlight card, each linking to their public profile", async () => {
+  it("renders every curated member in the spotlight card, each linking to their profile", async () => {
     mockUseLandingFeaturesPublic.mockReturnValue({
       members: [
         {
@@ -102,15 +102,15 @@ describe("LiveDiscovery", () => {
     // Query the DOM directly rather than by role: inactive slides are
     // `aria-hidden`/`inert`, so the accessibility-tree role query would only see
     // the active slide's links. Every member still has a profile-linked card.
+    // The links are there at all because tests run in demo mode, where the mock
+    // session is signed in; `SpotlightFace` drops them for a signed-out visitor.
     const profileHrefs = new Set(
       Array.from(
-        container.querySelectorAll<HTMLAnchorElement>(
-          'a[href^="/public-profile/"]',
-        ),
+        container.querySelectorAll<HTMLAnchorElement>('a[href^="/members/"]'),
       ).map((link) => link.getAttribute("href")),
     );
     expect(profileHrefs).toEqual(
-      new Set(["/public-profile/ana-silva", "/public-profile/bea-costa"]),
+      new Set(["/members/ana-silva", "/members/bea-costa"]),
     );
   });
 });
