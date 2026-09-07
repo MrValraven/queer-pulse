@@ -4,6 +4,7 @@ import {
   currentUserSlug,
   memberName,
 } from "../../members/data/members";
+import { foldForSearch } from "../../connect/connectionsFilter";
 import { handleFormatError } from "../../../shared/handles";
 import { isContentSection } from "../subprofile-kinds";
 import type {
@@ -2908,6 +2909,10 @@ export const mockDirectory = (
   params: { kind?: string; query?: string } = {},
 ): SubprofileCardDTO[] => {
   const q = params.query?.trim().toLowerCase();
+  // Folded separately from `q` because the OWNER half of the predicate is
+  // accent-folded server-side and the persona half is not — see
+  // `matchesDemoOwnerName` for why the two branches differ.
+  const foldedQuery = q ? foldForSearch(q) : "";
   return DEMO_SUBPROFILES.filter(
     (s) =>
       s.status === "published" &&
@@ -2916,9 +2921,38 @@ export const mockDirectory = (
       (!params.kind || s.kind === params.kind) &&
       (!q ||
         s.displayName.toLowerCase().includes(q) ||
-        (s.tagline ?? "").toLowerCase().includes(q)),
+        (s.tagline ?? "").toLowerCase().includes(q) ||
+        matchesDemoOwnerName(s, foldedQuery)),
   ).map(toCardDto);
 };
+
+/**
+ * The owner-name branch of the directory search, mirroring the backend's
+ * `directory()` predicate so demo mode and live mode agree on what a term
+ * matches.
+ *
+ * GATED ON `linked`, exactly like `toCardDto`'s `ownerName`/`ownerSlug`: an
+ * unlinked persona's owner is deliberately unnamed on the card, so making it
+ * matchable here would hand the tie back out through the result set.
+ *
+ * Folded (`foldForSearch`) rather than a plain lowercase compare, because the
+ * server folds this branch too — "Joao" has to find "João". The persona's own
+ * name and tagline stay unfolded on both sides: those columns are matched by
+ * `ILIKE` against GIN trigram indexes built on the raw values.
+ *
+ * Name and profile slug are joined into ONE haystack so a full name typed as
+ * "ana silva" matches across first and last name rather than neither.
+ */
+function matchesDemoOwnerName(
+  subprofile: DemoSubprofile,
+  foldedQuery: string,
+): boolean {
+  if (!foldedQuery || subprofile.linkVisibility !== "linked") return false;
+  const haystack = foldForSearch(
+    [subprofile.ownerName ?? "", subprofile.ownerSlug ?? ""].join(" "),
+  );
+  return haystack.includes(foldedQuery);
+}
 
 /** Therapist-kind personas for the resources directory. Unlike `mockDirectory`,
  *  this INCLUDES linked personas (so Sofia, linked to Maria, appears). */

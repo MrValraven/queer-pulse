@@ -28,7 +28,8 @@ const SEARCH_DEBOUNCE_MS = 300;
  *
  * SEARCH IS SERVER-SIDE. The term is debounced, then handed to
  * `useSubprofileDirectory`, which sends it as `?query=`: an ILIKE over
- * displayName and tagline applied across the whole table. It used to be a
+ * displayName and tagline, plus an accent-folded match on the owner's name and
+ * profile handle for a LINKED persona, applied across the whole table. It used to be a
  * browser-side `matchesQuery` over whatever pages had been pulled, which could
  * not see past the walk's 2000-persona ceiling. That predicate is gone rather
  * than left on top of the server's: two spellings of one filter is how a

@@ -10,8 +10,13 @@ export const subprofiles: Catalog = {
   "directory.eyebrow": "Directory · personas",
   "directory.subtitle":
     "Pseudonymous professional personas from across the community. No ranking, no algorithm. Just the work.",
-  "directory.searchPlaceholder": "Search personas",
-  "directory.searchAria": "Search personas",
+  // A linked persona is titled by its owner on the card ("Ana Silva | Poet"),
+  // so the term reaches that name too — looking somebody up by the name you
+  // know them under is the directory's most obvious question. Only LINKED
+  // personas: an unlinked one's owner is unnamed on the card and stays unnamed
+  // in the results.
+  "directory.searchPlaceholder": "Search personas or owners",
+  "directory.searchAria": "Search personas by name, headline or owner name",
   "directory.loading": "Loading personas…",
   "directory.empty.title": "No personas here yet",
   "directory.empty.description":
