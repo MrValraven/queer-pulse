@@ -62,6 +62,10 @@ export function AdminGovernancePage() {
           components={{ em: <em /> }}
         />
       }
+      // The Policy tab alone: rail, five section editors and a live preview of
+      // the public page side by side do not fit the console's reading measure.
+      // Every other tab here keeps it.
+      isFullBleed={active === "policy"}
     >
       <FadeIn>
         <AdminPageHeader

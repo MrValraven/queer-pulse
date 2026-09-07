@@ -17,6 +17,10 @@ interface ModalProps {
   sub?: ReactNode;
   footer?: ReactNode;
   wide?: boolean;
+  /** Near-full-viewport editing surface (tables, multi-section editors). The
+   *  head and footer stay pinned and only the body scrolls; on mobile it is the
+   *  same bottom sheet every other <Modal> becomes. */
+  full?: boolean;
   className?: string;
   children: ReactNode;
 }
@@ -32,6 +36,7 @@ export function Modal({
   sub,
   footer,
   wide = false,
+  full = false,
   className,
   children,
 }: ModalProps) {
@@ -52,7 +57,12 @@ export function Modal({
       <div
         ref={dialogRef}
         tabIndex={-1}
-        className={[styles.modal, wide && styles.modalWide, className]
+        className={[
+          styles.modal,
+          wide && styles.modalWide,
+          full && styles.modalFull,
+          className,
+        ]
           .filter(Boolean)
           .join(" ")}
         role="dialog"

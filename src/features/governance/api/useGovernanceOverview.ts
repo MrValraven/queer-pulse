@@ -1,14 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { IconType } from "react-icons";
-import {
-  FiBookOpen,
-  FiEye,
-  FiLock,
-  FiMessageCircle,
-  FiSlash,
-} from "react-icons/fi";
-import { MdAccessible } from "react-icons/md";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { initialsOf } from "../../../shared/api/refs";
+import { COUNCIL_TINT_BY_KEY, principleIcon } from "../governanceIcons";
 import {
   authoredGovernanceText,
   seededGovernanceText,
@@ -37,8 +31,15 @@ export interface ModerationStepView {
   textKey: string;
 }
 export interface CouncilSeatView {
+  /** The seat-holder's handle. Stable React key, and the profile a signed-in
+   *  member is sent to. */
+  slug: string;
   name: string;
   initials: string;
+  /** The seat-holder's photo, or null when they have none or have hidden it —
+   *  the backend applies that gate. Null is the ordinary case, not an error:
+   *  the seat falls back to the `background`/`color` monogram. */
+  avatarUrl: string | null;
   /** PRD-265. Seeded i18n key or the editor's own EN/PT; the component
    *  resolves it through `resolveGovernanceText` either way. */
   role: GovernanceText;
@@ -74,22 +75,9 @@ export interface GovernanceOverviewResult {
   retry: () => void;
 }
 
-// Icon-key → react-icon, mirroring `governance.data.ts`'s `PRINCIPLES` icons.
-const ICON_BY_KEY: Record<string, IconType> = {
-  lock: FiLock,
-  eye: FiEye,
-  slash: FiSlash,
-  message: FiMessageCircle,
-  book: FiBookOpen,
-  accessible: MdAccessible,
-};
-
-// Tint-key → avatar `{background,color}`, mirroring `COUNCIL`'s inline palette.
-const TINT_BY_KEY = {
-  jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
-  violet: { background: "rgba(122,82,184,.12)", color: "var(--violet)" },
-  plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
-} satisfies Record<string, { background: string; color: string }>;
+// The icon-key → react-icon and tint-key → avatar palette tables live in
+// `../governanceIcons`, shared with the admin Policy tab's live preview of
+// this page so the two cannot render the same principle differently.
 
 // Demo mode reshapes the page's own mocks (which already carry full i18n keys,
 // icon components, and inline colours) into the view model — byte-for-byte the
@@ -116,8 +104,10 @@ async function buildDemo(): Promise<
     // The demo mocks are all seeded-key entries — the prototype has no admin
     // to author one — so every text goes through `seededGovernanceText`.
     council: COUNCIL.map((seat) => ({
+      slug: seat.slug,
       name: seat.name,
       initials: seat.initials,
+      avatarUrl: seat.avatarUrl,
       role: seededGovernanceText(seat.roleKey),
       background: seat.background,
       color: seat.color,
@@ -171,17 +161,23 @@ function fromDto(
     // last-resort branch for a jsonb row that carries neither, which the
     // backend's exclusive-or forbids and a hand-edited database could still
     // produce: an entry with no words renders as nothing, never as a crash.
+    // A seat's person is resolved by the backend on every read, so the name
+    // and face here are the ones on that member's profile now. `initialsOf`
+    // rather than a stored pair: the monogram is derived from the same name
+    // shown beside it, so the two cannot disagree.
     council: dto.council.map((seat) => ({
-      name: seat.name,
-      initials: seat.initials,
+      slug: seat.member.slug,
+      name: `${seat.member.firstName} ${seat.member.lastName}`.trim(),
+      initials: initialsOf(seat.member.firstName, seat.member.lastName),
+      avatarUrl: seat.member.avatarUrl ?? null,
       role: seat.roleKey
         ? seededGovernanceText(`governance:council.${seat.roleKey}`)
         : (authoredGovernanceText(seat.role) ?? EMPTY_TEXT),
-      ...(TINT_BY_KEY[seat.tint] ?? TINT_BY_KEY.plum),
+      ...(COUNCIL_TINT_BY_KEY[seat.tint] ?? COUNCIL_TINT_BY_KEY.plum),
     })),
     principles: dto.principles.map((principle, index) => ({
       id: principle.key ?? `authored-${index}`,
-      icon: ICON_BY_KEY[principle.icon] ?? FiLock,
+      icon: principleIcon(principle.icon),
       title: principle.key
         ? seededGovernanceText(`governance:principles.${principle.key}.title`)
         : (authoredGovernanceText(principle.title) ?? EMPTY_TEXT),

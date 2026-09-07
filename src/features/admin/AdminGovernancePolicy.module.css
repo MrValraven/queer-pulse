@@ -1,0 +1,1228 @@
+/* ── Admin › Governance › Policy & versions ──────────────────────────────── */
+/* One page-level draft, five section editors, and a live miniature of the
+   public Governance page beside them. The rail, the editors and the preview
+   all track the same active section, so "which part of what members read am I
+   changing" is answered in three places at once. */
+
+/* Both side columns fold, so the widths are tokens the collapse classes swap
+   rather than three hand-written grid templates per breakpoint. */
+.wrap {
+  --policy-rail-w: 184px;
+  --policy-preview-w: 420px;
+  display: grid;
+  grid-template-columns:
+    var(--policy-rail-w) minmax(0, 1fr)
+    var(--policy-preview-w);
+  gap: 26px;
+  align-items: start;
+  transition: grid-template-columns var(--dur-base) var(--ease);
+}
+.wrapRailCollapsed {
+  --policy-rail-w: 52px;
+}
+.wrapPreviewCollapsed {
+  --policy-preview-w: 44px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    transition: none;
+  }
+}
+/* Below this the preview cannot hold its 900px page at a readable scale beside
+   two other columns, so it moves behind the "Public preview" button into a
+   drawer. */
+@media (max-width: 1560px) {
+  .wrap {
+    grid-template-columns: var(--policy-rail-w) minmax(0, 1fr);
+  }
+}
+@media (max-width: 1100px) {
+  .wrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The preview's own toggle, for the widths where it lives in a drawer rather
+   than in the third column. */
+.previewToggleRow {
+  display: none;
+}
+@media (max-width: 1560px) {
+  .previewToggleRow {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+  }
+}
+
+/* ── Section rail ────────────────────────────────────────────────────────── */
+.rail {
+  position: sticky;
+  top: var(--sticky-top, 96px);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+/* Head and fold control share a row; folded, the heading is spoken only. */
+.railTop {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-bottom: 8px;
+}
+.railToggle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-9);
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.railToggle svg {
+  width: 15px;
+  height: 15px;
+}
+@media (hover: hover) {
+  .railToggle:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+    color: var(--text-strong);
+  }
+}
+.railCollapsed .railTop {
+  padding-bottom: 6px;
+}
+/* With the heading spoken-only there is nothing to sit beside, so the control
+   centres over the icon column instead of hugging its right edge. */
+.railCollapsed .railToggle {
+  margin: 0 auto;
+}
+.railHead {
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  padding: 0 0 0 10px;
+  margin: 0;
+}
+.railItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border: none;
+  border-radius: var(--radius-11);
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink-60);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.railItem:hover {
+  background: rgba(var(--plum-rgb), 0.05);
+  color: var(--text-strong);
+}
+.railItemOn {
+  background: var(--paper);
+  color: var(--text-strong);
+  font-weight: 600;
+  box-shadow: var(--shadow-e1);
+}
+.railCount {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+/* A section with unsaved rows trades its row count for an accent dot. The
+   count is still spoken: the dot carries a visually-hidden word beside it. */
+.railDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.railFoot {
+  margin-top: 14px;
+  padding: 12px 12px 13px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+  line-height: 1.5;
+}
+.railFoot b {
+  display: block;
+  color: var(--ink-60);
+  font-weight: 600;
+  font-size: var(--text-12);
+  margin-bottom: 2px;
+}
+
+/* ── Editor column ───────────────────────────────────────────────────────── */
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 8px;
+}
+.section {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-18);
+  scroll-margin-top: 104px;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+.sectionOn {
+  border-color: rgba(var(--accent-rgb), 0.34);
+  box-shadow: var(--shadow-e2);
+}
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 17px 20px 15px;
+}
+.sectionTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-19);
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin: 0;
+}
+[data-theme="dark"] .sectionTitle {
+  color: var(--ink);
+}
+.sectionTitle em {
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.sectionSub {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  flex: 1;
+  min-width: 180px;
+  line-height: 1.45;
+  margin: 0;
+}
+.sectionMeta {
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+.sectionMetaDirty {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* The column-head strip and every row share `--cols`, set per section by the
+   editor that owns it, so a header and its cells can never drift apart. */
+.columns,
+.row {
+  display: grid;
+  grid-template-columns: var(--cols);
+  column-gap: 10px;
+}
+.columns {
+  align-items: center;
+  padding: 9px 20px;
+  background: rgba(var(--line-rgb), 0.04);
+  border-block: 1px solid rgba(var(--line-rgb), 0.08);
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.row {
+  align-items: start;
+  padding: 11px 20px;
+  min-height: 56px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+  position: relative;
+  transition: background 0.15s var(--ease);
+}
+.row:hover {
+  background: rgba(var(--line-rgb), 0.03);
+}
+.rowChanged::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+.rowDragging {
+  background: var(--paper);
+  box-shadow: var(--shadow-e2);
+  z-index: 1;
+}
+.lead {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  min-height: 36px;
+}
+.grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 26px;
+  flex-shrink: 0;
+  color: rgba(var(--ink-rgb), 0.35);
+  cursor: grab;
+  touch-action: none;
+  margin-top: 5px;
+}
+.ordinal {
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  color: var(--ink-40);
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  margin-top: 7px;
+}
+.leadBody {
+  min-width: 0;
+  flex: 1;
+}
+.rowName {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  line-height: 1.3;
+}
+[data-theme="dark"] .rowName {
+  color: var(--ink);
+}
+.rowText {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-top: 8px;
+}
+/* A cell that holds nothing an editor can change: the trend-number slot on a
+   trend line whose public sentence takes no number. */
+.rowNone {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  font-style: italic;
+  padding-top: 9px;
+}
+
+/* ── Cells ───────────────────────────────────────────────────────────────── */
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+/* Stands in for the column-head strip once that strip is gone, so a stacked
+   row is still labelled. Hidden while the heads are up (see the 860px block);
+   every control carries its own `aria-label` regardless, so nothing here is
+   the only name a control has. */
+.cellLabel {
+  display: none;
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+/* The EN / PT caption on an authored field. Visible at EVERY width, unlike
+   `.cellLabel`: a column head can say "Promise", but only this can say which
+   of the two boxes under it is the Portuguese one. */
+.langLabel {
+  display: block;
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.langField + .langField {
+  margin-top: 7px;
+}
+/* Every input in a row is the same 36px so the grid reads as a table, not as a
+   form. */
+.cell input,
+.cell textarea {
+  width: 100%;
+  min-height: 36px;
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.3);
+  border-radius: var(--radius-10);
+  padding: 7px 11px;
+  outline: none;
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
+}
+.cell textarea {
+  resize: vertical;
+  line-height: 1.45;
+}
+.cell input:hover,
+.cell textarea:hover {
+  border-color: rgba(var(--line-rgb), 0.55);
+}
+.cell input:focus,
+.cell textarea:focus {
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+}
+.cell input:focus-visible,
+.cell textarea:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+.cellNumber input {
+  font-variant-numeric: tabular-nums;
+}
+/* A figure the backend recomputes on every read and every save. Shown, dashed
+   and locked, rather than hidden, so the row still carries the live count. */
+.readOnly {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 11px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--line-rgb), 0.06);
+  border: 1px dashed rgba(var(--line-rgb), 0.3);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+.readOnly svg {
+  width: 13px;
+  height: 13px;
+  color: var(--ink-40);
+  flex-shrink: 0;
+}
+.direction {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 36px;
+  min-width: 0;
+}
+.directionText {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.selectRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.selectRow > *:last-child {
+  flex: 1;
+  min-width: 0;
+}
+.tintSwatch {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-6);
+  flex-shrink: 0;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+}
+.tintJade {
+  background: rgba(var(--jade-rgb), 0.16);
+}
+.tintViolet {
+  background: rgba(var(--violet-rgb), 0.16);
+}
+.tintPlum {
+  background: rgba(var(--plum-rgb), 0.12);
+}
+
+/* ── Row actions ─────────────────────────────────────────────────────────── */
+/* Revealed on hover and on focus-within, and always present on touch and
+   narrow widths, where there is no hover to reveal them. */
+.actions {
+  display: flex;
+  gap: 1px;
+  justify-content: flex-end;
+  align-items: flex-start;
+  min-height: 36px;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease);
+}
+.row:hover .actions,
+.row:focus-within .actions {
+  opacity: 1;
+}
+@media (hover: none) {
+  .actions {
+    opacity: 1;
+  }
+}
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: rgba(var(--ink-rgb), 0.5);
+  cursor: pointer;
+  transition:
+    background 0.15s var(--ease),
+    color 0.15s var(--ease);
+}
+.actionBtn:hover:not(:disabled) {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
+}
+.actionBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.actionBtnRemove:hover:not(:disabled) {
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent);
+}
+
+/* ── Section footer ──────────────────────────────────────────────────────── */
+.sectionFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px 14px;
+}
+.sectionHint {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  margin: 0 0 0 auto;
+  line-height: 1.4;
+}
+
+/* ── Sticky draft bar ────────────────────────────────────────────────────── */
+.bar {
+  position: sticky;
+  bottom: 20px;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 22px;
+  padding: 13px 14px 13px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-16);
+  background: var(--plum);
+  /* Locked-dark fill: --plum does not flip, so its type is written on the
+     cream channels rather than on --cream, which does. */
+  color: rgba(var(--cream-rgb), 1);
+  box-shadow: var(--shadow-e3);
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.barIdle {
+  background: var(--paper);
+  color: var(--ink-60);
+  border-color: rgba(var(--line-rgb), 0.12);
+  box-shadow: var(--shadow-e1);
+}
+.barText {
+  font-size: var(--text-13-5);
+  line-height: 1.4;
+  min-width: 0;
+}
+.barCount {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-17);
+  letter-spacing: -0.01em;
+}
+.barDetail {
+  font-size: var(--text-12);
+  color: rgba(var(--cream-rgb), 0.62);
+}
+.barIdle .barDetail {
+  color: var(--ink-40);
+}
+.barSpacer {
+  flex: 1;
+}
+.barActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+/* A blocked save says why in the bar rather than only on the attempt. */
+.barBlocked {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--amber-ink);
+}
+
+/* ── Review-changes sheet ────────────────────────────────────────────────── */
+.reviewSub {
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 0 0 18px;
+}
+.diffGroup + .diffGroup {
+  margin-top: 16px;
+}
+.diffGroupHead {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 0 0 7px;
+}
+.diffRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  padding: 7px 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.diffRow:last-child {
+  border-bottom: none;
+}
+.diffKey {
+  color: var(--ink-60);
+  flex: none;
+  min-width: 148px;
+}
+.diffValue {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.diffBefore {
+  color: var(--ink-40);
+}
+.diffAfter {
+  font-weight: 600;
+  color: var(--jade-ink);
+}
+.diffArrow {
+  color: var(--ink-40);
+  margin: 0 4px;
+}
+.noteField {
+  margin-top: 18px;
+}
+.noteLabel {
+  display: block;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 7px;
+}
+.noteField input {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  padding: 11px 14px;
+  outline: none;
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
+}
+.noteField input:focus {
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+  background: var(--paper);
+}
+.noteField input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ── Live public preview ─────────────────────────────────────────────────── */
+.preview {
+  position: sticky;
+  top: var(--sticky-top, 96px);
+  min-width: 0;
+}
+@media (max-width: 1560px) {
+  .preview {
+    display: none;
+  }
+}
+.previewHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 11px;
+}
+.previewHeadLabel {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.previewDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade);
+  box-shadow: var(--ring-jade);
+  flex-shrink: 0;
+}
+.previewZoom {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+  background: rgba(var(--line-rgb), 0.06);
+  border-radius: var(--radius-9);
+  padding: 3px;
+}
+.previewZoomBtn {
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-7);
+  padding: 4px 9px;
+  cursor: pointer;
+}
+.previewZoomBtnOn {
+  background: var(--paper);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-e1);
+}
+.previewFrame {
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-16);
+  background: var(--cream);
+  overflow: hidden;
+}
+.previewBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 13px;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.previewUrl {
+  flex: 1;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+  background: rgba(var(--line-rgb), 0.05);
+  border-radius: var(--radius-pill);
+  padding: 4px 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The preview renders through the SAME i18n instance as the console around it,
+   so it can only ever show the language the console is in. Stated, rather than
+   offered as a switch that would silently show English under a PT label. */
+.previewLang {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-40);
+  background: rgba(var(--plum-rgb), 0.08);
+  border-radius: var(--radius-6);
+  padding: 3px 7px;
+  text-transform: uppercase;
+}
+.previewScroll {
+  height: calc(100vh - 300px);
+  min-height: 420px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.previewHolder {
+  position: relative;
+}
+.previewScale {
+  width: 900px;
+  transform-origin: top left;
+}
+.previewNote {
+  padding: 14px 16px;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-40);
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  background: var(--paper);
+  margin: 0;
+}
+.previewNote b {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+/* Inside the drawer the frame owns the drawer's height instead of the
+   viewport's, and the sticky wrapper has nothing to stick to. */
+.previewInDrawer {
+  position: static;
+  display: block;
+}
+.previewInDrawer .previewScroll {
+  height: auto;
+  max-height: none;
+  min-height: 0;
+  overflow: visible;
+}
+
+/* ── The public page, as members read it (drawn at 900px, then scaled) ───── */
+.page {
+  padding: 30px 44px var(--section-y-56);
+}
+.pageSection {
+  padding: 26px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  position: relative;
+}
+.pageSection:first-child {
+  border-top: none;
+  padding-top: 6px;
+}
+.pageSectionOn::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  right: -22px;
+  top: 8px;
+  bottom: 8px;
+  border: 1.5px solid rgba(var(--accent-rgb), 0.5);
+  border-radius: var(--radius-16);
+  background: rgba(var(--accent-rgb), 0.05);
+  pointer-events: none;
+}
+.pageEyebrow {
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin: 0 0 12px;
+}
+.pageTitle {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-40);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--text-strong);
+  margin: 0;
+}
+[data-theme="dark"] .pageTitle {
+  color: var(--ink);
+}
+.pageTitle em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent-ink);
+}
+.pageParagraph {
+  font-size: var(--text-16-5);
+  line-height: 1.7;
+  color: var(--ink-60);
+  max-width: 62ch;
+  margin: 16px 0 0;
+}
+.pageStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+.pageStat {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-18);
+  padding: 20px 20px 18px;
+}
+.pageStatFigure {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-44);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+[data-theme="dark"] .pageStatFigure {
+  color: var(--ink);
+}
+.pageStatLabel {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  margin-top: 8px;
+}
+.pageStatTrend {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink-40);
+  margin-top: 10px;
+}
+.pageStatTrend svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.pageStatTrendUp {
+  color: var(--jade-ink);
+}
+.pageSteps {
+  margin-top: 22px;
+}
+.pageStep {
+  display: flex;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.pageStep:last-child {
+  border-bottom: none;
+}
+.pageStepNumber {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 300;
+  color: var(--accent-ink);
+  width: 30px;
+  flex: none;
+  line-height: 1.2;
+}
+.pageStepTitle {
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .pageStepTitle {
+  color: var(--ink);
+}
+.pageStepText {
+  font-size: var(--text-15-5);
+  color: var(--ink-60);
+  margin-top: 5px;
+  line-height: 1.6;
+  max-width: 56ch;
+}
+.pageCouncil {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.pageSeat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-16);
+  padding: 15px 17px;
+}
+.pageSeatAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-17);
+}
+.pageSeatAvatarJade {
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade-ink);
+}
+.pageSeatAvatarViolet {
+  background: rgba(var(--violet-rgb), 0.16);
+  color: var(--violet);
+}
+.pageSeatAvatarPlum {
+  background: rgba(var(--plum-rgb), 0.12);
+  color: var(--text-strong);
+}
+.pageSeatName {
+  font-size: var(--text-16-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+[data-theme="dark"] .pageSeatName {
+  color: var(--ink);
+}
+.pageSeatRole {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  margin-top: 2px;
+}
+.pagePrinciples {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 26px;
+  margin-top: 24px;
+}
+.pagePrinciple {
+  display: flex;
+  gap: 14px;
+}
+.pagePrincipleIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-12);
+  flex: none;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pagePrincipleIcon svg {
+  width: 19px;
+  height: 19px;
+}
+.pagePrincipleTitle {
+  font-size: var(--text-16-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  line-height: 1.35;
+}
+[data-theme="dark"] .pagePrincipleTitle {
+  color: var(--ink);
+}
+.pagePrincipleText {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  margin-top: 5px;
+  line-height: 1.6;
+}
+.pageDecisions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.pageDecision {
+  font-size: var(--text-16-5);
+  line-height: 1.7;
+  color: var(--ink-60);
+  max-width: 62ch;
+  margin: 0;
+}
+.pageDecision strong {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+[data-theme="dark"] .pageDecision strong {
+  color: var(--ink);
+}
+/* An emptied section is the one thing a static preview cannot show by drawing
+   nothing, so it says what members would meet instead. */
+.pageEmpty {
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  font-style: italic;
+  margin-top: 14px;
+}
+
+/* ── Narrow widths ───────────────────────────────────────────────────────── */
+@media (max-width: 1240px) {
+  .directionText {
+    display: none;
+  }
+}
+@media (max-width: 1100px) {
+  .rail {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  /* The rail is already a wrapping row of chips here, so there is no column to
+     fold: the toggle goes with the heading it sat beside. Matched in JS by
+     RAIL_FOLDABLE_QUERY, which stops the fold applying below this width. */
+  .railTop,
+  .railHead,
+  .railFoot {
+    display: none;
+  }
+}
+/* Below this a five-column grid cannot hold a legible input, so each row
+   becomes a stack of labelled fields. The column-head strip goes with it: the
+   labels it stood in for are now on the fields themselves. */
+@media (max-width: 860px) {
+  .columns {
+    display: none;
+  }
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 10px;
+    padding: 14px 16px;
+  }
+  .actions {
+    justify-content: flex-start;
+    opacity: 1;
+  }
+  .cellLabel {
+    display: block;
+  }
+  .sectionHint {
+    margin-left: 0;
+  }
+}
+
+/* ── Folded section rail ──────────────────────────────────────────────────── */
+/* Each section keeps its jump target, its active state and its unsaved-rows
+   dot; the name moves into the tooltip beside the icon. */
+/* `width: 100%` because the tooltip wrapper is an inline-flex row: without it
+   the button is only as wide as its glyph and hugs the rail's left edge. */
+.railItemIcon {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  width: 100%;
+  padding: 10px 0;
+}
+.railItemIcon svg {
+  width: 17px;
+  height: 17px;
+}
+.railCountIcon {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  display: inline-flex;
+}
+
+/* ── Folded preview ───────────────────────────────────────────────────────── */
+/* The panel itself is unmounted while folded — all that stays is the tab that
+   brings it back, sticky beside the editors like the panel it replaces. */
+.previewCollapseBtn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-9);
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.previewCollapseBtn svg {
+  width: 15px;
+  height: 15px;
+}
+@media (hover: hover) {
+  .previewCollapseBtn:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+    color: var(--text-strong);
+  }
+}
+
+.previewTabDock {
+  position: sticky;
+  top: var(--sticky-top, 96px);
+  display: flex;
+  justify-content: flex-end;
+}
+/* The tab is hidden at the widths where the preview lives in the drawer: the
+   "Public preview" button above the grid is the way in there. */
+@media (max-width: 1560px) {
+  .previewTabDock {
+    display: none;
+  }
+}
+.previewTab {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  width: 44px;
+  padding: 14px 0;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.previewTab svg {
+  width: 16px;
+  height: 16px;
+}
+@media (hover: hover) {
+  .previewTab:hover {
+    background: var(--cream);
+    color: var(--text-strong);
+  }
+}

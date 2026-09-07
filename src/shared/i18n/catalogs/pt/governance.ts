@@ -104,6 +104,8 @@ export const governance: Catalog = {
   "sections.council.title": "Quem <em>supervisiona</em> isto.",
   "sections.council.intro":
     "O conselho consultivo revê contestações de moderação, propõe mudanças na plataforma, e serve como camada de responsabilização. Os mandatos duram um ano e um lugar pode ser encerrado por voto de dois terços da comunidade. Vê Propostas e votações abaixo.",
+  "sections.council.empty":
+    "Nenhum assento está ocupado neste momento. O conselho está a ser nomeado, e esta lista vai nomear quem o compõe.",
 
   "council.psychologistChair": "Psicologia · Presidência",
   "council.lawyerLegalAdvisor": "Direito · Aconselhamento jurídico",

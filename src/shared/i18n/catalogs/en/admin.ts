@@ -2370,6 +2370,22 @@ export const admin: Catalog = {
   "governance.finances.edit.saved": "Figures updated.",
   "governance.finances.edit.error": "Could not save. Please try again.",
   "governance.finances.edit.noChanges": "Nothing changed.",
+  "governance.finances.edit.noChangesYet": "No changes yet.",
+  "governance.finances.edit.changes_one": "{count} change to save",
+  "governance.finances.edit.changes_other": "{count} changes to save",
+  "governance.finances.edit.col.figure": "Figure",
+  "governance.finances.edit.col.source": "Source",
+  "governance.finances.edit.col.current": "Current",
+  "governance.finances.edit.col.newValue": "New value",
+  "governance.finances.edit.col.shown": "Shown",
+  "governance.finances.edit.col.line": "Line",
+  "governance.finances.edit.col.newAmount": "New amount",
+  "governance.finances.edit.col.note": "Note",
+  "governance.finances.edit.foot.shownCount": "{shown} of {total} shown",
+  "governance.finances.edit.foot.sumShown": "Sum of shown lines",
+  "governance.finances.edit.aria.newValue": "{label}: new value",
+  "governance.finances.edit.aria.newAmount": "{label}: new amount",
+  "governance.finances.edit.aria.note": "{label}: note",
 
   "governance.ledger.moderatorHonoraria": "Moderator honoraria",
   "governance.ledger.platformTools": "Platform & tools",
@@ -4043,12 +4059,99 @@ export const admin: Catalog = {
   // button path needs its result spoken.
   "governance.overview.edit.rowMoved":
     "{label} moved to position {position} of {total}",
-  "governance.overview.edit.addRow": "Add a row",
-  "governance.overview.edit.section.note": "Reason (optional)",
-  "governance.overview.edit.save": "Save section",
-  "governance.overview.edit.saved": "Section updated.",
-  "governance.overview.edit.noChanges": "Nothing changed.",
+  // One save now covers all five sections, and saving is only half of getting
+  // a change in front of members, so the toast says what is still owed.
+  "governance.overview.edit.saved":
+    "Saved to the draft. Publish when you are ready.",
   "governance.overview.edit.error": "Couldn't save. Please try again.",
+  // ── Policy tab: the page-level draft ────────────────────────────────────
+  // The five sections named plainly, with no markup. The rail, the review
+  // sheet's group headings and the preview's "you are editing" line all read
+  // from here, so all three call a section the same thing.
+  "governance.policy.section.health": "Community health",
+  "governance.policy.section.moderationSteps": "How moderation works",
+  "governance.policy.section.council": "Advisory council",
+  "governance.policy.section.principles": "Platform principles",
+  "governance.policy.section.decisions": "Decision log",
+  "governance.policy.section.unsaved": "Unsaved changes",
+
+  "governance.policy.rail.label": "Governance page sections",
+  "governance.policy.rail.head": "Sections",
+  // Folding the rail leaves five icons; the names carry on in their tooltips.
+  "governance.policy.rail.collapse": "Collapse sections",
+  "governance.policy.rail.expand": "Expand sections",
+  // Read beside the accent dot that replaces a clean section's row count.
+  "governance.policy.rail.changed": "Has unsaved changes",
+  "governance.policy.rail.rowCount_one": "{count} row",
+  "governance.policy.rail.rowCount_other": "{count} rows",
+  "governance.policy.rail.lastEdit": "Last edited",
+  "governance.policy.rail.lastEditValue": "{date} by {name}",
+
+  "governance.policy.bar.changes_one": "{count} change",
+  "governance.policy.bar.changes_other": "{count} changes",
+  "governance.policy.bar.changesDetail_one":
+    "in {count} section. Nothing is public until you save and publish.",
+  "governance.policy.bar.changesDetail_other":
+    "across {count} sections. Nothing is public until you save and publish.",
+  "governance.policy.bar.clean": "No unsaved changes",
+  "governance.policy.bar.cleanDetail": "The public page matches this draft.",
+  "governance.policy.bar.review": "Review changes",
+  "governance.policy.bar.discard": "Discard",
+  "governance.policy.bar.discarded": "Draft reset to the published version.",
+  "governance.policy.bar.save": "Save all changes",
+
+  "governance.policy.review.eyebrow": "Governance page",
+  "governance.policy.review.title": "Before you save",
+  "governance.policy.review.sub":
+    "These are the differences between your draft and what members can read right now.",
+  "governance.policy.review.keepEditing": "Keep editing",
+  "governance.policy.review.note": "Why (optional, shown in the audit log)",
+  "governance.policy.review.notePlaceholder":
+    "e.g. Q2 figures signed off by the council",
+
+  "governance.policy.diff.empty": "empty",
+  "governance.policy.diff.row": "Row {index}",
+  "governance.policy.diff.added": "New row: {value}",
+  "governance.policy.diff.removed": "Row removed: {value}",
+
+  "governance.policy.field.stat": "Stat",
+  "governance.policy.field.trendArrow": "Trend arrow",
+  "governance.policy.field.step": "Step",
+  "governance.policy.field.stepText": "What members read",
+  "governance.policy.field.promise": "Promise",
+  "governance.policy.field.entry": "Entry",
+
+  "governance.policy.add.stat": "Add a stat",
+  "governance.policy.add.step": "Add a step",
+
+  "governance.policy.hint.wordingInBundle":
+    "The wording lives in the translation bundle. This list controls the order and what appears.",
+
+  // Every control in a row is named by the row it belongs to. Six identical
+  // "Figure" boxes down a reorderable list is exactly what the BUDGET=0 a11y
+  // gate exists to catch, and the column head alone cannot fix it.
+  "governance.policy.aria.figure": "Figure for {label}",
+  "governance.policy.aria.trend": "Trend line for {label}",
+  "governance.policy.aria.trendCount": "Trend number for {label}",
+  "governance.policy.aria.up": "Show {label} as an increase",
+  "governance.policy.aria.seatMember": "Who holds the seat: {label}",
+  "governance.policy.aria.tint": "Avatar colour for {label}",
+  "governance.policy.aria.icon": "Icon for {label}",
+
+  "governance.policy.preview.label": "Public page, live",
+  "governance.policy.preview.open": "Public preview",
+  "governance.policy.preview.collapse": "Hide the live preview",
+  "governance.policy.preview.expand": "Show the live preview",
+  "governance.policy.preview.url": "queerpulse.com/governance",
+  "governance.policy.preview.languageHint":
+    "The preview shows the language this console is in.",
+  "governance.policy.preview.zoomLabel": "Preview zoom",
+  "governance.policy.preview.zoomFit": "Fit",
+  "governance.policy.preview.zoomFull": "100%",
+  "governance.policy.preview.editing":
+    "Editing {section}, highlighted in the preview. Nothing here is public until you save and publish.",
+  "governance.policy.preview.emptySection":
+    "Nothing listed. Members would meet an empty section here.",
   // PRD-265: authored (non-seeded) overview entries. `{label}` is the field
   // name, so a screen reader hears "Decision, English" rather than five
   // identical "English" boxes down a reorderable list.
@@ -4073,14 +4176,27 @@ export const admin: Catalog = {
   "governance.overview.health.field.trend": "Trend line",
   "governance.overview.health.field.trendCount": "Trend number",
   "governance.overview.health.field.up": "Show as an increase",
+  // The switch's state read aloud beside it, so an editor sees which way the
+  // public card will lean without decoding a bare toggle.
+  "governance.overview.health.field.upOn": "Arrow and green tint",
+  "governance.overview.health.field.upOff": "Plain, no arrow",
+  // Sits in the trend-number column for the three trend lines whose public
+  // wording has no {count} slot, so the column never reads as an empty box.
+  "governance.overview.health.field.trendCountUnused":
+    "Not used by this trend line.",
   "governance.overview.moderation.title": "How moderation <em>works</em>",
   "governance.overview.moderation.sub":
     "The steps members read on the public Governance page, in the order they happen.",
   "governance.overview.council.title": "Advisory <em>council</em>",
   "governance.overview.council.sub":
-    "Who sits on the council, and in what order they appear on the public Governance page.",
-  "governance.overview.council.field.name": "Name",
-  "governance.overview.council.field.initials": "Initials",
+    "Who sits on the council, and in what order they appear on the public Governance page. Seats are held by platform staff.",
+  "governance.overview.council.field.member": "Seat held by",
+  "governance.overview.council.pickMember": "Pick a staff member…",
+  "governance.overview.council.needsMember":
+    "Every seat needs a staff member in it before this can be saved.",
+  "governance.overview.council.offRoster": "{name} · no longer staff",
+  "governance.overview.council.unresolvedMember":
+    "This member no longer exists",
   "governance.overview.council.field.role": "Role",
   "governance.overview.council.field.tint": "Avatar colour",
   "governance.overview.council.addSeat": "Add a seat",

@@ -2362,6 +2362,22 @@ export const admin: Catalog = {
   "governance.finances.edit.error":
     "Não foi possível guardar. Tenta novamente.",
   "governance.finances.edit.noChanges": "Nada foi alterado.",
+  "governance.finances.edit.noChangesYet": "Ainda sem alterações.",
+  "governance.finances.edit.changes_one": "{count} alteração por guardar",
+  "governance.finances.edit.changes_other": "{count} alterações por guardar",
+  "governance.finances.edit.col.figure": "Valor",
+  "governance.finances.edit.col.source": "Origem",
+  "governance.finances.edit.col.current": "Atual",
+  "governance.finances.edit.col.newValue": "Novo valor",
+  "governance.finances.edit.col.shown": "Visível",
+  "governance.finances.edit.col.line": "Linha",
+  "governance.finances.edit.col.newAmount": "Novo montante",
+  "governance.finances.edit.col.note": "Nota",
+  "governance.finances.edit.foot.shownCount": "{shown} de {total} visíveis",
+  "governance.finances.edit.foot.sumShown": "Soma das linhas visíveis",
+  "governance.finances.edit.aria.newValue": "{label}: novo valor",
+  "governance.finances.edit.aria.newAmount": "{label}: novo montante",
+  "governance.finances.edit.aria.note": "{label}: nota",
 
   "governance.ledger.moderatorHonoraria": "Honorários de moderação",
   "governance.ledger.platformTools": "Plataforma e ferramentas",
@@ -4055,13 +4071,93 @@ export const admin: Catalog = {
   "governance.overview.edit.moveRowDown": "Mover {label} para baixo",
   "governance.overview.edit.rowMoved":
     "{label} passou para a posição {position} de {total}",
-  "governance.overview.edit.addRow": "Adicionar uma linha",
-  "governance.overview.edit.section.note": "Motivo (opcional)",
-  "governance.overview.edit.save": "Guardar secção",
-  "governance.overview.edit.saved": "Secção atualizada.",
-  "governance.overview.edit.noChanges": "Nada foi alterado.",
+  "governance.overview.edit.saved":
+    "Guardado no rascunho. Publica quando estiveres pronto.",
   "governance.overview.edit.error":
     "Não foi possível guardar. Tenta novamente.",
+  // ── Separador Política: o rascunho ao nível da página ───────────────────
+  "governance.policy.section.health": "Saúde da comunidade",
+  "governance.policy.section.moderationSteps": "Como funciona a moderação",
+  "governance.policy.section.council": "Conselho consultivo",
+  "governance.policy.section.principles": "Princípios da plataforma",
+  "governance.policy.section.decisions": "Registo de decisões",
+  "governance.policy.section.unsaved": "Alterações por guardar",
+
+  "governance.policy.rail.label": "Secções da página de Governação",
+  "governance.policy.rail.head": "Secções",
+  "governance.policy.rail.collapse": "Recolher secções",
+  "governance.policy.rail.expand": "Expandir secções",
+  "governance.policy.rail.changed": "Tem alterações por guardar",
+  "governance.policy.rail.rowCount_one": "{count} linha",
+  "governance.policy.rail.rowCount_other": "{count} linhas",
+  "governance.policy.rail.lastEdit": "Última edição",
+  "governance.policy.rail.lastEditValue": "{date} por {name}",
+
+  "governance.policy.bar.changes_one": "{count} alteração",
+  "governance.policy.bar.changes_other": "{count} alterações",
+  "governance.policy.bar.changesDetail_one":
+    "em {count} secção. Nada fica público até guardares e publicares.",
+  "governance.policy.bar.changesDetail_other":
+    "em {count} secções. Nada fica público até guardares e publicares.",
+  "governance.policy.bar.clean": "Sem alterações por guardar",
+  "governance.policy.bar.cleanDetail":
+    "A página pública corresponde a este rascunho.",
+  "governance.policy.bar.review": "Rever alterações",
+  "governance.policy.bar.discard": "Descartar",
+  "governance.policy.bar.discarded":
+    "Rascunho reposto para a versão publicada.",
+  "governance.policy.bar.save": "Guardar todas as alterações",
+
+  "governance.policy.review.eyebrow": "Página de Governação",
+  "governance.policy.review.title": "Antes de guardares",
+  "governance.policy.review.sub":
+    "Estas são as diferenças entre o teu rascunho e o que os membros podem ler neste momento.",
+  "governance.policy.review.keepEditing": "Continuar a editar",
+  "governance.policy.review.note":
+    "Porquê (opcional, aparece no registo de auditoria)",
+  "governance.policy.review.notePlaceholder":
+    "ex.: números do 2.º trimestre aprovados pelo conselho",
+
+  "governance.policy.diff.empty": "vazio",
+  "governance.policy.diff.row": "Linha {index}",
+  "governance.policy.diff.added": "Nova linha: {value}",
+  "governance.policy.diff.removed": "Linha removida: {value}",
+
+  "governance.policy.field.stat": "Indicador",
+  "governance.policy.field.trendArrow": "Seta de tendência",
+  "governance.policy.field.step": "Passo",
+  "governance.policy.field.stepText": "O que os membros leem",
+  "governance.policy.field.promise": "Promessa",
+  "governance.policy.field.entry": "Entrada",
+
+  "governance.policy.add.stat": "Adicionar um indicador",
+  "governance.policy.add.step": "Adicionar um passo",
+
+  "governance.policy.hint.wordingInBundle":
+    "O texto vive no pacote de traduções. Esta lista controla a ordem e o que aparece.",
+
+  "governance.policy.aria.figure": "Número de {label}",
+  "governance.policy.aria.trend": "Linha de tendência de {label}",
+  "governance.policy.aria.trendCount": "Número da tendência de {label}",
+  "governance.policy.aria.up": "Mostrar {label} como um aumento",
+  "governance.policy.aria.seatMember": "Quem ocupa o lugar: {label}",
+  "governance.policy.aria.tint": "Cor do avatar de {label}",
+  "governance.policy.aria.icon": "Ícone de {label}",
+
+  "governance.policy.preview.label": "Página pública, ao vivo",
+  "governance.policy.preview.open": "Pré-visualização pública",
+  "governance.policy.preview.collapse": "Esconder a pré-visualização",
+  "governance.policy.preview.expand": "Mostrar a pré-visualização",
+  "governance.policy.preview.url": "queerpulse.com/governance",
+  "governance.policy.preview.languageHint":
+    "A pré-visualização mostra o idioma em que esta consola está.",
+  "governance.policy.preview.zoomLabel": "Zoom da pré-visualização",
+  "governance.policy.preview.zoomFit": "Ajustar",
+  "governance.policy.preview.zoomFull": "100%",
+  "governance.policy.preview.editing":
+    "A editar {section}, destacado na pré-visualização. Nada fica público até guardares e publicares.",
+  "governance.policy.preview.emptySection":
+    "Nada listado. Os membros encontrariam aqui uma secção vazia.",
   // PRD-265: ver a nota no catálogo EN.
   "governance.overview.edit.textEn": "{label}, inglês",
   "governance.overview.edit.textPt": "{label}, português",
@@ -4084,14 +4180,22 @@ export const admin: Catalog = {
   "governance.overview.health.field.trend": "Linha de tendência",
   "governance.overview.health.field.trendCount": "Número da tendência",
   "governance.overview.health.field.up": "Mostrar como subida",
+  "governance.overview.health.field.upOn": "Seta e tom verde",
+  "governance.overview.health.field.upOff": "Simples, sem seta",
+  "governance.overview.health.field.trendCountUnused":
+    "Esta linha de tendência não usa número.",
   "governance.overview.moderation.title": "Como funciona a <em>moderação</em>",
   "governance.overview.moderation.sub":
     "Os passos que as pessoas leem na página pública de Governação, pela ordem em que acontecem.",
   "governance.overview.council.title": "Conselho <em>consultivo</em>",
   "governance.overview.council.sub":
-    "Quem tem assento no conselho, e por que ordem aparece na página pública de Governação.",
-  "governance.overview.council.field.name": "Nome",
-  "governance.overview.council.field.initials": "Iniciais",
+    "Quem tem assento no conselho, e por que ordem aparece na página pública de Governação. Os assentos são ocupados pela equipa da plataforma.",
+  "governance.overview.council.field.member": "Assento ocupado por",
+  "governance.overview.council.pickMember": "Escolhe alguém da equipa…",
+  "governance.overview.council.needsMember":
+    "Cada assento precisa de alguém da equipa antes de poderes guardar.",
+  "governance.overview.council.offRoster": "{name} · já não é da equipa",
+  "governance.overview.council.unresolvedMember": "Este membro já não existe",
   "governance.overview.council.field.role": "Papel",
   "governance.overview.council.field.tint": "Cor do avatar",
   "governance.overview.council.addSeat": "Adicionar um assento",

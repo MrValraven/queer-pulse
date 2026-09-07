@@ -1,4 +1,7 @@
-import { AdminGovernanceAuthoredText } from "./AdminGovernanceAuthoredText";
+import {
+  PolicyAuthoredCell,
+  PolicyStaticCell,
+} from "./AdminGovernancePolicyCells";
 import {
   EMPTY_AUTHORED_TEXT,
   LONG_TEXT_MAX_LENGTH,
@@ -6,53 +9,77 @@ import {
 } from "./adminGovernanceOverviewRows.utils";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { DecisionDTO } from "./api/adminGovernanceOverview.api";
-import styles from "./AdminGovernancePage.module.css";
 
 /**
- * PRD-265. The editable body of one decision-log row.
+ * PRD-265. The lead sentence of one decision-log entry: the first column.
  *
- * A SEEDED row shows its catalog label and nothing else: its EN and PT live in
- * the bundle, so there is nothing here to type. An AUTHORED row shows the two
- * language pairs the editor owns. Both forms sit in the same list and reorder
- * together, which is the point — the public decision log is one record, not a
- * bundle section followed by an "extras" section.
+ * A SEEDED entry shows the words members read and nothing to type — its EN and
+ * PT are in the bundle. An AUTHORED entry carries the editor's own pair. Both
+ * forms sit in the same list and reorder together, which is the point: the
+ * public decision log is one record, not a bundle section followed by extras.
  */
-export function AdminGovernanceDecisionRow({
+export function AdminGovernanceDecisionLead({
   row,
   index,
+  caption,
   onPatch,
 }: {
   row: DecisionDTO;
   index: number;
+  caption: string;
   onPatch: (partial: Partial<DecisionDTO>) => void;
 }) {
   const { t } = useTranslation();
 
   if (row.key) {
     return (
-      <span className={styles.editLineLabel}>
-        {t(`admin:governance.overview.decisions.key.${row.key}`)}
-      </span>
+      <PolicyStaticCell caption={caption}>
+        {t(`governance:decisions.${row.key}.lead`)}
+      </PolicyStaticCell>
     );
   }
-
   return (
-    <>
-      <AdminGovernanceAuthoredText
-        idPrefix={`decision-lead-${index}`}
-        label={t("admin:governance.overview.decisions.field.lead")}
-        value={row.lead ?? EMPTY_AUTHORED_TEXT}
-        maxLength={SHORT_TEXT_MAX_LENGTH}
-        onChange={(lead) => onPatch({ lead })}
-      />
-      <AdminGovernanceAuthoredText
-        idPrefix={`decision-body-${index}`}
-        label={t("admin:governance.overview.decisions.field.body")}
-        value={row.body ?? EMPTY_AUTHORED_TEXT}
-        maxLength={LONG_TEXT_MAX_LENGTH}
-        isMultiline
-        onChange={(body) => onPatch({ body })}
-      />
-    </>
+    <PolicyAuthoredCell
+      idPrefix={`decision-lead-${index}`}
+      caption={caption}
+      label={t("admin:governance.overview.decisions.field.lead")}
+      value={row.lead ?? EMPTY_AUTHORED_TEXT}
+      maxLength={SHORT_TEXT_MAX_LENGTH}
+      onChange={(lead) => onPatch({ lead })}
+    />
+  );
+}
+
+/** The rest of one decision-log entry: who asked, and how it was decided. */
+export function AdminGovernanceDecisionRow({
+  row,
+  index,
+  caption,
+  onPatch,
+}: {
+  row: DecisionDTO;
+  index: number;
+  caption: string;
+  onPatch: (partial: Partial<DecisionDTO>) => void;
+}) {
+  const { t } = useTranslation();
+
+  if (row.key) {
+    return (
+      <PolicyStaticCell caption={caption} isSecondary>
+        {t(`governance:decisions.${row.key}.body`)}
+      </PolicyStaticCell>
+    );
+  }
+  return (
+    <PolicyAuthoredCell
+      idPrefix={`decision-body-${index}`}
+      caption={caption}
+      label={t("admin:governance.overview.decisions.field.body")}
+      value={row.body ?? EMPTY_AUTHORED_TEXT}
+      maxLength={LONG_TEXT_MAX_LENGTH}
+      isMultiline
+      onChange={(body) => onPatch({ body })}
+    />
   );
 }

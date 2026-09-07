@@ -1,203 +1,170 @@
-import { useState } from "react";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { AdminGovernanceCouncilRow } from "./AdminGovernanceCouncilRow";
+import { AdminGovernanceGridRow } from "./AdminGovernanceGridRow";
+import { AdminGovernanceSectionCard } from "./AdminGovernanceSectionCard";
+import {
+  AdminGovernanceCouncilMemberCell,
+  NO_SEAT_HOLDER,
+} from "./AdminGovernanceCouncilMemberCell";
+import { useCouncilCandidates } from "./api/useAdminGovernanceOverview";
 import {
   COUNCIL_TINTS,
   councilRowLabel,
   EMPTY_AUTHORED_TEXT,
-  hasIncompleteAuthoredText,
   SEEDED_COUNCIL_ROLE_KEYS,
 } from "./adminGovernanceOverviewRows.utils";
-import { OverviewEditedBadge } from "./OverviewEditedBadge";
-import { OverviewEditorRow } from "./OverviewEditorRow";
+import {
+  isPolicyRowChanged,
+  type PolicyEditorProps,
+} from "./adminGovernancePolicySection.utils";
 import { useOverviewRowReorder } from "./useOverviewRowReorder";
-import { useUpdateAdminOverview } from "./api/useAdminGovernanceOverview";
-import type {
-  AdminOverviewSectionMeta,
-  CouncilSeatDTO,
-} from "./api/adminGovernanceOverview.api";
-import styles from "./AdminGovernancePage.module.css";
+import type { CouncilSeatDTO } from "./api/adminGovernanceOverview.api";
 
-/**
- * A new seat, with an AUTHORED role (PRD-265): the four role descriptors in
- * the i18n bundle describe the four people who were on the council when it
- * shipped, so a fifth seat that had to reuse one of them was misdescribed.
- */
-function makeSeat(): CouncilSeatDTO {
-  return {
-    name: "",
-    initials: "",
-    role: EMPTY_AUTHORED_TEXT,
-    tint: COUNCIL_TINTS[0],
-  };
-}
+// Three columns now the name and initials pair collapsed into one picker: the
+// seat-holder, their role, and the monogram colour.
+const GRID_COLUMNS = "minmax(0, 1.35fr) minmax(0, 1.3fr) minmax(0, 1.05fr)";
 
-/** A seat that carries one of the four seeded role keys, for putting back a
- *  seeded seat removed by mistake. */
-function makeSeededSeat(roleKey: string): CouncilSeatDTO {
-  return { name: "", initials: "", roleKey, tint: COUNCIL_TINTS[0] };
-}
+/** A seat added but not yet filled. The save bar refuses it. */
+const EMPTY_SEAT = { memberId: NO_SEAT_HOLDER, member: null } as const;
 
-/** PRD-265. The advisory council, editable — seats and their descriptors. */
+/** PRD-265. Who sits on the advisory council, and in what order members meet
+ *  them. */
 export function AdminGovernanceCouncilEditor({
   rows,
+  publishedRows,
+  setRows,
   meta,
-}: {
-  rows: CouncilSeatDTO[];
-  meta: AdminOverviewSectionMeta;
-}) {
+  isActive,
+  isChanged,
+}: PolicyEditorProps<CouncilSeatDTO>) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const update = useUpdateAdminOverview();
-  const [draft, setDraft] = useState<CouncilSeatDTO[]>(rows);
-  const [note, setNote] = useState("");
-
+  const { data: candidates } = useCouncilCandidates();
   const { containerRef, rowProps, announcement } = useOverviewRowReorder(
-    draft,
-    setDraft,
+    rows,
+    setRows,
   );
-
-  const dirty = JSON.stringify(draft) !== JSON.stringify(rows);
+  // Passed down whole rather than per-row so each select can leave out the
+  // people already sitting elsewhere on this council.
+  const seatedMemberIds = rows.map((row) => row.memberId).filter(Boolean);
 
   const patch = (index: number, partial: Partial<CouncilSeatDTO>): void => {
-    setDraft((previous) =>
+    setRows((previous) =>
       previous.map((row, rowIndex) =>
         rowIndex === index ? { ...row, ...partial } : row,
       ),
     );
   };
 
-  const onRemove = (index: number): void => {
-    setDraft((previous) =>
-      previous.filter((_, rowIndex) => rowIndex !== index),
-    );
-  };
-
+  // The four bundle role descriptors describe the four people who were on the
+  // council when the page shipped, so a fifth seat gets an authored role rather
+  // than reusing one of them and being misdescribed.
   const availableRoleKeys = SEEDED_COUNCIL_ROLE_KEYS.filter(
-    (key) => !draft.some((row) => row.roleKey === key),
+    (key) => !rows.some((row) => row.roleKey === key),
   );
 
-  const onAdd = (): void => {
-    setDraft((previous) => [...previous, makeSeat()]);
-  };
-
-  const onRestoreSeeded = (): void => {
-    const nextKey = availableRoleKeys[0];
-    if (!nextKey) return;
-    setDraft((previous) => [...previous, makeSeededSeat(nextKey)]);
-  };
-
-  const hasIncompleteAuthoredRow = draft.some(
-    (row) => !row.roleKey && hasIncompleteAuthoredText([row.role]),
-  );
-
-  const onSave = () => {
-    if (!dirty) {
-      showToast(t("admin:governance.overview.edit.noChanges"), "info");
-      return;
-    }
-    if (hasIncompleteAuthoredRow) {
-      showToast(
-        t("admin:governance.overview.edit.needsBothLanguages"),
-        "error",
-      );
-      return;
-    }
-    update.mutate(
-      { council: draft, note: note.trim() || undefined },
-      {
-        onSuccess: () => {
-          showToast(t("admin:governance.overview.edit.saved"), "success");
-          setNote("");
-        },
-        onError: () =>
-          showToast(t("admin:governance.overview.edit.error"), "error"),
-      },
-    );
+  const columnLabels = {
+    member: t("admin:governance.overview.council.field.member"),
+    role: t("admin:governance.overview.council.field.role"),
+    tint: t("admin:governance.overview.council.field.tint"),
   };
 
   return (
-    <div className={styles.card}>
-      <div className={styles.ovSectionHead}>
-        <div className={styles.cardHead}>
-          <h2 className={styles.cardTitle}>
-            <Translation
-              i18nKey="admin:governance.overview.council.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.cardSub}>
-            {t("admin:governance.overview.council.sub")}
-          </p>
-        </div>
-        <OverviewEditedBadge meta={meta} />
-      </div>
-
-      <div className={styles.ovList} ref={containerRef}>
-        {draft.map((row, index) => (
-          <OverviewEditorRow
+    <AdminGovernanceSectionCard
+      sectionId="council"
+      title={
+        <Translation
+          i18nKey="admin:governance.overview.council.title"
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("admin:governance.overview.council.sub")}
+      columns={[columnLabels.member, columnLabels.role, columnLabels.tint]}
+      gridColumns={GRID_COLUMNS}
+      meta={meta}
+      isActive={isActive}
+      isChanged={isChanged}
+      footer={
+        <>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              setRows((previous) => [
+                ...previous,
+                {
+                  ...EMPTY_SEAT,
+                  role: EMPTY_AUTHORED_TEXT,
+                  tint: COUNCIL_TINTS[0],
+                },
+              ])
+            }
+          >
+            {t("admin:governance.overview.council.addSeat")}
+          </Button>
+          {availableRoleKeys.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                const nextKey = availableRoleKeys[0];
+                if (!nextKey) return;
+                setRows((previous) => [
+                  ...previous,
+                  {
+                    ...EMPTY_SEAT,
+                    roleKey: nextKey,
+                    tint: COUNCIL_TINTS[0],
+                  },
+                ]);
+              }}
+            >
+              {t("admin:governance.overview.edit.restoreSeeded")}
+            </Button>
+          )}
+        </>
+      }
+    >
+      <div ref={containerRef}>
+        {rows.map((row, index) => (
+          // Index-keyed: a list mixing seeded and authored seats has no field
+          // that is unique across both.
+          <AdminGovernanceGridRow
             key={index}
             {...rowProps(index, councilRowLabel(row, t))}
-            onRemove={() => onRemove(index)}
+            ordinal={index + 1}
+            isChanged={isPolicyRowChanged(row, publishedRows[index])}
+            onRemove={() =>
+              setRows((previous) =>
+                previous.filter((_, rowIndex) => rowIndex !== index),
+              )
+            }
+            lead={
+              <AdminGovernanceCouncilMemberCell
+                row={row}
+                seatLabel={councilRowLabel(row, t)}
+                caption={columnLabels.member}
+                candidates={candidates ?? []}
+                seatedMemberIds={seatedMemberIds}
+                onPick={(memberId) => patch(index, { memberId })}
+              />
+            }
           >
             <AdminGovernanceCouncilRow
               row={row}
               index={index}
+              columnLabels={columnLabels}
               onPatch={(partial) => patch(index, partial)}
             />
-          </OverviewEditorRow>
+          </AdminGovernanceGridRow>
         ))}
       </div>
-      {/* Polite live region for the row move buttons: a drag is visible,
-          a button press is not, so the row's new position is spoken. */}
+      {/* Polite live region for the move buttons: a drag is visible, a button
+          press is not, so the row's new position is spoken. */}
       <p className="visuallyHidden" role="status" aria-live="polite">
         {announcement}
       </p>
-
-      <div className={styles.ovAddRow}>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onAdd}
-          className={styles.ovAddBtn}
-        >
-          {t("admin:governance.overview.council.addSeat")}
-        </Button>
-        {availableRoleKeys.length > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRestoreSeeded}
-            className={styles.ovAddBtn}
-          >
-            {t("admin:governance.overview.edit.restoreSeeded")}
-          </Button>
-        )}
-      </div>
-
-      <div className={styles.ovFooter}>
-        <div className={styles.ovNote}>
-          <label className={styles.ovFieldLabel} htmlFor="council-note">
-            {t("admin:governance.overview.edit.section.note")}
-          </label>
-          <input
-            id="council-note"
-            type="text"
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-          />
-        </div>
-        <Button
-          variant="primary"
-          onClick={onSave}
-          disabled={update.isPending || !dirty}
-        >
-          {t("admin:governance.overview.edit.save")}
-        </Button>
-      </div>
-    </div>
+    </AdminGovernanceSectionCard>
   );
 }

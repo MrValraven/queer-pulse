@@ -10,7 +10,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useRowDragReorder } from "../subprofiles/useRowDragReorder";
 import { reorder } from "./overviewEditorRow.utils";
 
-/** Everything one `OverviewEditorRow` needs to be reorderable, both ways. */
+/** Everything one `AdminGovernanceGridRow` needs to be reorderable, both ways. */
 export interface OverviewRowReorderProps {
   /** Human name of the item in this row, spoken by the move buttons. */
   label: string;
@@ -74,7 +74,7 @@ export function useOverviewRowReorder<Row>(
     );
   };
 
-  /** Spread onto each `OverviewEditorRow` — one call per row, per index. */
+  /** Spread onto each `AdminGovernanceGridRow` — one call per row, per index. */
   const rowProps = (index: number, label: string): OverviewRowReorderProps => ({
     label,
     gripHandlers: gripHandlers(index),

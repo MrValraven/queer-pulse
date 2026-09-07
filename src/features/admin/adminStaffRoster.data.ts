@@ -2,6 +2,7 @@ import type {
   AdminStaffRoleHolderDTO,
   PlatformStaffRowDTO,
 } from "./api/adminStaffRoster.api";
+import type { CouncilCandidateDTO } from "./api/adminGovernanceOverview.api";
 import { DEMO_STAFF_GRANTS } from "../../shared/staff/staffRegistry.data";
 import { isBadgedStaffRoleId } from "../../shared/staff/badgedStaffRoles";
 
@@ -80,4 +81,22 @@ export const ADMIN_STAFF_GRANTS_DEMO: AdminStaffRoleHolderDTO[] =
     lastName: staffMember.lastName,
     platformRole: staffMember.platformRole ?? "member",
     staffRoles: DEMO_STAFF_GRANTS[staffMember.slug] ?? [],
+  }));
+
+/**
+ * Demo fallback for the advisory-council picker (`GET
+ * /admin/governance/overview/council-candidates`). The same roster again — a
+ * seat may only be held by someone on it — with the user id a seat stores.
+ *
+ * Demo ids are the slug: nothing in demo mode round-trips to a database, and a
+ * legible id makes a demo seat readable in the draft diff. Live ids are uuids.
+ */
+export const COUNCIL_CANDIDATES_DEMO: CouncilCandidateDTO[] =
+  ADMIN_STAFF_ROSTER_DEMO.map((staffMember) => ({
+    id: staffMember.slug,
+    slug: staffMember.slug,
+    firstName: staffMember.firstName,
+    lastName: staffMember.lastName,
+    avatarUrl: null,
+    platformRole: staffMember.platformRole,
   }));

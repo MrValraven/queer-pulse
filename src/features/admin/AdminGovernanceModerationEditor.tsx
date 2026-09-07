@@ -1,17 +1,16 @@
-import { useState } from "react";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { OverviewEditedBadge } from "./OverviewEditedBadge";
-import { OverviewEditorRow } from "./OverviewEditorRow";
+import { AdminGovernanceGridRow } from "./AdminGovernanceGridRow";
+import { AdminGovernanceSectionCard } from "./AdminGovernanceSectionCard";
+import { PolicyStaticCell } from "./AdminGovernancePolicyCells";
+import {
+  isPolicyRowChanged,
+  type PolicyEditorProps,
+} from "./adminGovernancePolicySection.utils";
 import { useOverviewRowReorder } from "./useOverviewRowReorder";
-import { useUpdateAdminOverview } from "./api/useAdminGovernanceOverview";
-import type {
-  AdminOverviewSectionMeta,
-  ModerationStepDTO,
-} from "./api/adminGovernanceOverview.api";
-import styles from "./AdminGovernancePage.module.css";
+import type { ModerationStepDTO } from "./api/adminGovernanceOverview.api";
+import styles from "./AdminGovernancePolicy.module.css";
 
 const MODERATION_STEP_KEYS = [
   "reportFiled",
@@ -20,113 +19,98 @@ const MODERATION_STEP_KEYS = [
   "appeal",
 ] as const;
 
+const GRID_COLUMNS = "minmax(0, 1fr) minmax(0, 1.7fr)";
+
+/**
+ * The moderation steps, in the order they happen.
+ *
+ * Nothing here is typed: both halves of every step live in the translation
+ * bundle, in both languages, and this list controls which of them appear and in
+ * what order. The second column shows the sentence members actually read, so
+ * reordering is done against the words rather than against four labels.
+ */
 export function AdminGovernanceModerationEditor({
   rows,
+  publishedRows,
+  setRows,
   meta,
-}: {
-  rows: ModerationStepDTO[];
-  meta: AdminOverviewSectionMeta;
-}) {
+  isActive,
+  isChanged,
+}: PolicyEditorProps<ModerationStepDTO>) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const update = useUpdateAdminOverview();
-  const [draft, setDraft] = useState<ModerationStepDTO[]>(rows);
-
   const { containerRef, rowProps, announcement } = useOverviewRowReorder(
-    draft,
-    setDraft,
+    rows,
+    setRows,
   );
-
-  const dirty = JSON.stringify(draft) !== JSON.stringify(rows);
-
-  const onRemove = (index: number): void => {
-    setDraft((prev) => prev.filter((_, i) => i !== index));
-  };
 
   const availableKeys = MODERATION_STEP_KEYS.filter(
-    (key) => !draft.some((row) => row.key === key),
+    (key) => !rows.some((row) => row.key === key),
   );
-  const onAdd = (): void => {
-    const nextKey = availableKeys[0];
-    if (!nextKey) return;
-    setDraft((prev) => [...prev, { key: nextKey }]);
-  };
 
-  const onSave = () => {
-    if (!dirty) {
-      showToast(t("admin:governance.overview.edit.noChanges"), "info");
-      return;
-    }
-    update.mutate(
-      { moderationSteps: draft },
-      {
-        onSuccess: () =>
-          showToast(t("admin:governance.overview.edit.saved"), "success"),
-        onError: () =>
-          showToast(t("admin:governance.overview.edit.error"), "error"),
-      },
-    );
+  const columnLabels = {
+    step: t("admin:governance.policy.field.step"),
+    stepText: t("admin:governance.policy.field.stepText"),
   };
 
   return (
-    <div className={styles.card}>
-      <div className={styles.ovSectionHead}>
-        <div className={styles.cardHead}>
-          <h2 className={styles.cardTitle}>
-            <Translation
-              i18nKey="admin:governance.overview.moderation.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.cardSub}>
-            {t("admin:governance.overview.moderation.sub")}
-          </p>
-        </div>
-        <OverviewEditedBadge meta={meta} />
+    <AdminGovernanceSectionCard
+      sectionId="moderationSteps"
+      title={
+        <Translation
+          i18nKey="admin:governance.overview.moderation.title"
+          components={{ em: <em /> }}
+        />
+      }
+      sub={t("admin:governance.overview.moderation.sub")}
+      columns={[columnLabels.step, columnLabels.stepText]}
+      gridColumns={GRID_COLUMNS}
+      meta={meta}
+      isActive={isActive}
+      isChanged={isChanged}
+      hint={t("admin:governance.policy.hint.wordingInBundle")}
+      footer={
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={availableKeys.length === 0}
+          onClick={() => {
+            const nextKey = availableKeys[0];
+            if (!nextKey) return;
+            setRows((previous) => [...previous, { key: nextKey }]);
+          }}
+        >
+          {t("admin:governance.policy.add.step")}
+        </Button>
+      }
+    >
+      <div ref={containerRef}>
+        {rows.map((row, index) => {
+          const stepTitle = t(`governance:steps.${row.key}.title`);
+          return (
+            <AdminGovernanceGridRow
+              key={row.key}
+              {...rowProps(index, stepTitle)}
+              ordinal={index + 1}
+              isChanged={isPolicyRowChanged(row, publishedRows[index])}
+              onRemove={() =>
+                setRows((previous) =>
+                  previous.filter((_, rowIndex) => rowIndex !== index),
+                )
+              }
+              lead={<span className={styles.rowName}>{stepTitle}</span>}
+            >
+              <PolicyStaticCell caption={columnLabels.stepText} isSecondary>
+                {t(`governance:steps.${row.key}.text`)}
+              </PolicyStaticCell>
+            </AdminGovernanceGridRow>
+          );
+        })}
       </div>
-
-      <div className={styles.ovList} ref={containerRef}>
-        {draft.map((row, index) => (
-          <OverviewEditorRow
-            key={row.key}
-            {...rowProps(
-              index,
-              t(`admin:governance.overview.moderation.step.${row.key}`),
-            )}
-            onRemove={() => onRemove(index)}
-          >
-            <span className={styles.editLineLabel}>
-              {t(`admin:governance.overview.moderation.step.${row.key}`)}
-            </span>
-          </OverviewEditorRow>
-        ))}
-      </div>
-      {/* Polite live region for the row move buttons: a drag is visible,
-          a button press is not, so the row's new position is spoken. */}
+      {/* Polite live region for the move buttons: a drag is visible, a button
+          press is not, so the row's new position is spoken. */}
       <p className="visuallyHidden" role="status" aria-live="polite">
         {announcement}
       </p>
-
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onAdd}
-        disabled={availableKeys.length === 0}
-        className={styles.ovAddBtn}
-      >
-        {t("admin:governance.overview.edit.addRow")}
-      </Button>
-
-      <div className={styles.ovFooter}>
-        <span />
-        <Button
-          variant="primary"
-          onClick={onSave}
-          disabled={update.isPending || !dirty}
-        >
-          {t("admin:governance.overview.edit.save")}
-        </Button>
-      </div>
-    </div>
+    </AdminGovernanceSectionCard>
   );
 }

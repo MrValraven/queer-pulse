@@ -37,12 +37,44 @@ export interface AuthoredTextDTO {
  *  - AUTHORED — the editor's own EN/PT text, for everything added after the
  *    bundle shipped. This is what makes the record growable without a deploy.
  */
+/**
+ * A council seat as the EDITOR sees it.
+ *
+ * `memberId` is what the seat stores and what a save sends back: a seat names
+ * someone on the platform staff roster, and the backend refuses a save naming
+ * anyone else. `member` is the resolved person, for rendering — null when the
+ * seat-holder no longer resolves (a deleted account). The public page drops
+ * such a seat; this one keeps it, so an admin can see why a seat stopped
+ * appearing and fix it rather than watch a row vanish unexplained.
+ *
+ * `tint` is the colour of the monogram the public page falls back to when the
+ * seat-holder shows no photo, so it stays a property of the seat.
+ */
 export interface CouncilSeatDTO {
-  name: string;
-  initials: string;
+  memberId: string;
+  member: MemberRefDTO | null;
   roleKey?: string;
   role?: AuthoredTextDTO;
   tint: "jade" | "violet" | "plum";
+}
+
+/**
+ * One person who may be seated, from `GET
+ * /admin/governance/overview/council-candidates` — the platform staff roster,
+ * carrying the `id` a seat stores.
+ *
+ * Served from the admin governance controller rather than `GET /platform/staff`
+ * (which every active member can read and which deliberately carries no user
+ * ids). The seat keys on that id and not the handle: a handle can be changed,
+ * and a seat keyed on one would afterwards point at nobody.
+ */
+export interface CouncilCandidateDTO {
+  id: string;
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string | null;
+  platformRole: "moderator" | "admin" | null;
 }
 export interface PrincipleDTO {
   key?: string;
@@ -82,10 +114,22 @@ export interface AdminOverviewResponseDTO {
 // Every section is optional; each provided section is a full replacement
 // array (supports add/remove/reorder).
 
+/**
+ * What a seat looks like on the way BACK to the backend: the id and the role,
+ * without the resolved `member` the read added. The API runs
+ * `forbidNonWhitelisted`, so echoing `member` back would be a 400.
+ */
+export interface CouncilSeatEditBody {
+  memberId: string;
+  roleKey?: string;
+  role?: AuthoredTextDTO;
+  tint: "jade" | "violet" | "plum";
+}
+
 export interface UpdateAdminOverviewBody {
   health?: HealthStatDTO[];
   moderationSteps?: ModerationStepDTO[];
-  council?: CouncilSeatDTO[];
+  council?: CouncilSeatEditBody[];
   principles?: PrincipleDTO[];
   decisions?: DecisionDTO[];
   note?: string;
@@ -109,3 +153,8 @@ export const updateAdminOverview = (body: UpdateAdminOverviewBody) =>
 
 export const getAdminOverviewChanges = () =>
   apiGet<AdminOverviewChangeDTO[]>("/admin/governance/overview/changes");
+
+export const getCouncilCandidates = () =>
+  apiGet<CouncilCandidateDTO[]>(
+    "/admin/governance/overview/council-candidates",
+  );

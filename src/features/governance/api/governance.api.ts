@@ -1,5 +1,6 @@
 import { ApiError, apiGet, apiPost } from "../../../shared/api/client";
 import { routes } from "../../../app/routeMap";
+import type { MemberRefDTO } from "../../../shared/api/refs";
 import type { FinLine } from "../governance.data";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
@@ -62,8 +63,8 @@ export const getGovernanceFinances = (quarter?: string) => {
 // snapshot, moderation steps, advisory council, principles, decision log).
 // Structure-only: every `*Key`/`key` is a SHORT i18n key (no namespace/section
 // prefix — the frontend prepends it), so translated prose stays in the i18n
-// catalogs. `n`/`trendCount`, council `name`/`initials`, `icon`, `tint` are
-// non-translatable data.
+// catalogs. `n`/`trendCount`, `icon`, `tint` are non-translatable data, and a
+// council seat's person arrives as a resolved `MemberRefDTO`.
 
 export interface HealthStatDTO {
   key: string;
@@ -88,14 +89,25 @@ export interface AuthoredTextDTO {
 }
 
 /**
- * A council seat. The role descriptor arrives as EXACTLY ONE of `roleKey` (a
- * seeded i18n key) or `role` (the editor's own words) — see PRD-265; the
- * backend enforces the exclusive-or, and `useGovernanceOverview` collapses the
- * two into one `GovernanceText` so no component has to know which it got.
+ * A council seat.
+ *
+ * The seat-holder arrives as a resolved `member`, not as a typed-in name: a
+ * seat names a platform staff member, and the backend resolves that person's
+ * profile on every read, so this page shows the name and face they have now.
+ * `member.avatarUrl` is already gated on their own "show your photo" toggle
+ * and is null when they hide it, which is what `tint` is for — the monogram
+ * this page falls back to.
+ *
+ * A seat whose member no longer resolves never reaches here: the backend drops
+ * it from the public array rather than send a seat with nobody in it.
+ *
+ * The role descriptor arrives as EXACTLY ONE of `roleKey` (a seeded i18n key)
+ * or `role` (the editor's own words) — see PRD-265; the backend enforces the
+ * exclusive-or, and `useGovernanceOverview` collapses the two into one
+ * `GovernanceText` so no component has to know which it got.
  */
 export interface CouncilSeatDTO {
-  name: string;
-  initials: string;
+  member: MemberRefDTO;
   roleKey?: string;
   role?: AuthoredTextDTO;
   tint: "jade" | "violet" | "plum";
