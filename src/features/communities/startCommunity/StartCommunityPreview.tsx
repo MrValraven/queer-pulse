@@ -34,6 +34,7 @@ const ACCESS_ICON = {
 export function StartCommunityPreview({
   draft,
   avatarPreviewUrl,
+  coverPreviewUrl,
 }: {
   draft: CommunityDraft;
   /** A locally renderable URL for the avatar picked on chapter 6, when one was
@@ -42,6 +43,10 @@ export function StartCommunityPreview({
    *  community's initials whenever this is absent (a reloaded parked draft,
    *  or no avatar at all) — exactly what the real card does. */
   avatarPreviewUrl?: string | null;
+  /** The same for the cover picked on chapter 6. Absent (a reloaded parked
+   *  draft, or no cover at all) leaves the tint gradient showing, which is what
+   *  a coverless community's real card falls back to. */
+  coverPreviewUrl?: string | null;
 }) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -87,7 +92,18 @@ export function StartCommunityPreview({
         </div>
       ) : (
         <div className={styles.cpvCard}>
-          <div className={`${styles.cpvCover} ${COVER[draft.tint]}`} />
+          <div className={`${styles.cpvCover} ${COVER[draft.tint]}`}>
+            {coverPreviewUrl && (
+              // Decorative: the tint gradient underneath carries the same
+              // meaning for a community without a cover, and the name follows
+              // immediately below.
+              <img
+                className={styles.cpvCoverImg}
+                src={coverPreviewUrl}
+                alt=""
+              />
+            )}
+          </div>
           <div className={styles.cpvBody}>
             <div className={`${styles.cpvAvatar} ${AV[draft.tint]}`}>
               {avatarPreviewUrl ? (

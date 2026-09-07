@@ -1423,6 +1423,12 @@
   height: 104px;
   transition: background 0.5s var(--ease);
 }
+.cpvCoverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .coverCoral {
   background:
     radial-gradient(

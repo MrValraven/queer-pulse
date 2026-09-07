@@ -70,6 +70,10 @@ export function useCommunityForm(initial?: CommunityDraft) {
   // only valid for this tab, so parking it in sessionStorage would restore a
   // dead image. `ImageUploadField` reports it through `onPreviewChange`.
   const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(null);
+  // The same story for the cover picked on chapter 6: `draft.coverImageUrl` is a
+  // private storage key in live mode, so the sticky card preview renders this
+  // session-only URL instead, and it stays out of the parked draft.
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
 
   // In live mode `user` resolves after GET /auth/me settles, so the owner
   // steward seeded at init may start as a placeholder; keep the locked owner
@@ -212,6 +216,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
     draft.tagline.trim().length > 0 ||
     draft.welcomeMessage.trim().length > 0 ||
     draft.avatarImageUrl.length > 0 ||
+    draft.coverImageUrl.length > 0 ||
     draft.handle.trim().length > 0 ||
     draft.stewards.length > 1 ||
     draft.invites.length > 0;
@@ -220,6 +225,8 @@ export function useCommunityForm(initial?: CommunityDraft) {
     draft,
     avatarPreviewUrl,
     setAvatarPreviewUrl,
+    coverPreviewUrl,
+    setCoverPreviewUrl,
     isDirty,
     set,
     reset,

@@ -214,6 +214,7 @@ function StartCommunityFormPanel({
         <StartCommunityPreview
           draft={form.draft}
           avatarPreviewUrl={form.avatarPreviewUrl}
+          coverPreviewUrl={form.coverPreviewUrl}
         />
       </div>
     </div>
