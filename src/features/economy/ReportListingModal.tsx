@@ -139,7 +139,7 @@ export function ReportListingModal({
                     checked={reason === option.code}
                     onChange={() => setReason(option.code)}
                   />
-                  {option.label}
+                  <span className={styles.reasonLabel}>{option.label}</span>
                 </label>
               ))}
             </div>
