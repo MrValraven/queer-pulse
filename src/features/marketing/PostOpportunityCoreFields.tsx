@@ -1,10 +1,11 @@
-import { FormField, Select } from "../../shared/components/ui";
+import { ChipSelect, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { OrganizationPickerField } from "./OrganizationPickerField";
 import type { Cause, Commit } from "./api/volunteering.api";
 import type { PostOpportunityForm } from "./usePostOpportunityForm";
+import { CAUSES, MAX_CAUSES } from "./causes.data";
 import {
-  CAUSE_OPTIONS,
+  CAUSE_PICKER_CONTROL_ID,
   COMMIT_OPTIONS,
   MAX_DESCRIPTION_LENGTH,
   MAX_LOCATION_LENGTH,
@@ -13,6 +14,7 @@ import {
   MAX_SKILL_LENGTH,
   MAX_SKILLS_COUNT,
   MAX_TIME_LENGTH,
+  requiredFieldControlId,
 } from "./postVolunteerOpportunity.data";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
@@ -24,6 +26,15 @@ export function PostOpportunityCoreFields({
 }) {
   const { t } = useTranslation();
   const { state, set, errorFor } = form;
+  // Appends rather than sorts: `causes[0]` is the cause the poster led with,
+  // and it is what the card prints first and takes its tint from.
+  const toggleCause = (value: Cause) =>
+    set(
+      "causes",
+      state.causes.includes(value)
+        ? state.causes.filter((cause) => cause !== value)
+        : [...state.causes, value],
+    );
   return (
     <>
       <div className={styles.sectionHead}>
@@ -37,6 +48,7 @@ export function PostOpportunityCoreFields({
         labelAside={`${state.org.length}/${MAX_ORGANIZATION_LENGTH}`}
       >
         <input
+          id={requiredFieldControlId("org")}
           type="text"
           value={state.org}
           onChange={(e) => set("org", e.target.value)}
@@ -63,6 +75,7 @@ export function PostOpportunityCoreFields({
         labelAside={`${state.role.length}/${MAX_ROLE_LENGTH}`}
       >
         <input
+          id={requiredFieldControlId("role")}
           type="text"
           value={state.role}
           onChange={(e) => set("role", e.target.value)}
@@ -75,14 +88,24 @@ export function PostOpportunityCoreFields({
         <FormField
           label={t("marketing:postOpportunity.core.causeLabel")}
           required
+          helper={t("marketing:postOpportunity.core.causeHelper", {
+            max: MAX_CAUSES,
+          })}
         >
-          <Select
-            options={CAUSE_OPTIONS.map((cause) => ({
+          {/* Chips rather than a dropdown: an opportunity may claim up to
+              three causes, and a picker that shows the whole taxonomy at once
+              is also what stops a poster settling for the first roughly-right
+              option in a list of thirteen. */}
+          <ChipSelect
+            id={CAUSE_PICKER_CONTROL_ID}
+            label={t("marketing:postOpportunity.core.causeLabel")}
+            options={CAUSES.map((cause) => ({
               value: cause.value,
               label: t(cause.labelKey),
             }))}
-            value={state.cause}
-            onChange={(value) => set("cause", value as Cause)}
+            selected={new Set<string>(state.causes)}
+            maxSelected={MAX_CAUSES}
+            onToggle={(value) => toggleCause(value as Cause)}
           />
         </FormField>
 
@@ -116,6 +139,7 @@ export function PostOpportunityCoreFields({
           labelAside={`${state.time.length}/${MAX_TIME_LENGTH}`}
         >
           <input
+            id={requiredFieldControlId("time")}
             type="text"
             value={state.time}
             onChange={(e) => set("time", e.target.value)}
@@ -131,6 +155,7 @@ export function PostOpportunityCoreFields({
           labelAside={`${state.location.length}/${MAX_LOCATION_LENGTH}`}
         >
           <input
+            id={requiredFieldControlId("location")}
             type="text"
             value={state.location}
             onChange={(e) => set("location", e.target.value)}
@@ -149,6 +174,7 @@ export function PostOpportunityCoreFields({
         helper={t("marketing:postOpportunity.core.spotsHelper")}
       >
         <input
+          id={requiredFieldControlId("spotsTotal")}
           type="number"
           min={1}
           value={state.spotsTotal}
@@ -169,6 +195,8 @@ export function PostOpportunityCoreFields({
         labelAside={`${state.description.length}/${MAX_DESCRIPTION_LENGTH}`}
       >
         <textarea
+          id={requiredFieldControlId("description")}
+          className={styles.textarea}
           rows={3}
           value={state.description}
           onChange={(e) => set("description", e.target.value)}

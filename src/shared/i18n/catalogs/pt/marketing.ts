@@ -431,7 +431,7 @@ export const marketing: Catalog = {
   "activism.volunteer.title": "Vagas <em>abertas</em>",
   "activism.volunteer.p1":
     "Oportunidades de voluntariado atuais das nossas organizações parceiras, atualizadas regularmente.",
-  "activism.volunteer.expressInterestCta": "Mostrar interesse",
+  "activism.volunteer.seeRoleCta": "Ver a função",
   "activism.volunteer.seeAllCta": "Ver todas as vagas de voluntariado",
   "activism.outro.title": "Escolhe um degrau. <em>Começa hoje.</em>",
   "activism.outro.sub":
@@ -5739,11 +5739,25 @@ export const marketing: Catalog = {
   "volunteer.filter.all": "Todas as oportunidades",
   "volunteer.filter.low": "Compromisso baixo",
   "volunteer.filter.medium": "Compromisso médio",
-  "volunteer.filter.rights": "Direitos LGBTQ+",
-  "volunteer.filter.health": "Saúde e bem-estar",
-  "volunteer.filter.youth": "Juventude",
-  "volunteer.filter.housing": "Habitação",
-  "volunteer.filter.arts": "Artes e cultura",
+  "volunteer.filter.commitmentGroup": "Filtrar por compromisso",
+  "volunteer.filter.causeGroup": "Filtrar por causa",
+  // A taxonomia de causas do voluntariado, um conjunto de chaves partilhado
+  // pelos filtros do quadro, pelo seletor do formulário e pela etiqueta do
+  // cartão. Substituiu dois conjuntos paralelos ("volunteer.filter.*" e
+  // "postOpportunity.cause.*") que guardavam as mesmas cinco frases duas vezes.
+  "cause.rights": "Direitos LGBTQ+",
+  "cause.health": "Saúde e bem-estar",
+  "cause.youth": "Juventude",
+  "cause.housing": "Habitação",
+  "cause.arts": "Artes e cultura",
+  "cause.transCare": "Cuidados trans e de género",
+  "cause.elders": "Pessoas mais velhas",
+  "cause.mentalHealth": "Saúde mental e apoio entre pares",
+  "cause.migration": "Migração e asilo",
+  "cause.education": "Educação e formação",
+  "cause.sport": "Desporto e movimento",
+  "cause.communityEvents": "Eventos comunitários",
+  "cause.fundraising": "Angariação e apoio administrativo",
   "volunteer.hero.eyebrow": "Voluntariado",
   "volunteer.hero.title": "Dá o teu tempo à <em>comunidade</em> à tua volta.",
   "volunteer.hero.sub":
@@ -5767,7 +5781,7 @@ export const marketing: Catalog = {
   "volunteer.empty.clearCta": "Limpar filtros",
   "volunteer.card.commitLow": "Compromisso baixo",
   "volunteer.card.commitMedium": "Compromisso médio",
-  "volunteer.card.expressInterest": "Mostrar interesse",
+  "volunteer.card.seeRole": "Ver a função",
   "volunteer.loadingMore": "A carregar mais oportunidades…",
   "volunteer.loadMoreCta": "Carregar mais oportunidades",
   "volunteer.outro.title": "Queres ligar-te <em>mais a fundo?</em>",
@@ -5866,11 +5880,6 @@ export const marketing: Catalog = {
   "postOpportunity.tip3.title": "O que acontece depois de publicares",
   "postOpportunity.tip3.body":
     "A tua vaga aparece imediatamente no quadro de voluntariado. As pessoas interessadas inscrevem-se a partir da ficha, e vês a lista ali.",
-  "postOpportunity.cause.rights": "Direitos LGBTQ+",
-  "postOpportunity.cause.health": "Saúde e bem-estar",
-  "postOpportunity.cause.youth": "Juventude",
-  "postOpportunity.cause.housing": "Habitação",
-  "postOpportunity.cause.arts": "Artes e cultura",
   "postOpportunity.commit.low.label": "Compromisso baixo",
   "postOpportunity.commit.low.hint":
     "Umas horas flexíveis por semana, sem prazo fixo.",
@@ -5894,6 +5903,8 @@ export const marketing: Catalog = {
   "postOpportunity.core.rolePlaceholder":
     "ex.: Voluntário de Sensibilização Comunitária",
   "postOpportunity.core.causeLabel": "Causa",
+  "postOpportunity.core.causeHelper":
+    "Escolhe até {{max}}. A primeira que escolheres é a que aparece à frente no teu cartão.",
   "postOpportunity.core.commitLabel": "Nível de compromisso",
   "postOpportunity.core.timePlaceHeading": "Tempo e local",
   "postOpportunity.core.timeLabel": "Disponibilidade de tempo",
@@ -5920,6 +5931,12 @@ export const marketing: Catalog = {
   "postOpportunity.edit.sub":
     "Atualiza os detalhes que as pessoas voluntárias veem no anúncio.",
   "postOpportunity.edit.saveCta": "Guardar alterações",
+  "postOpportunity.missing.taskTitle": "Título da tarefa {index}",
+  "postOpportunity.missing.commitmentLabel": "Título do compromisso {index}",
+  "postOpportunity.missing.heading_one":
+    "Falta preencher {count} campo para continuares:",
+  "postOpportunity.missing.heading_other":
+    "Faltam preencher {count} campos para continuares:",
   "postOpportunity.edit.saving": "A guardar…",
   "postOpportunity.edit.successToast": "As tuas alterações estão guardadas.",
   "postOpportunity.edit.errorToast":
@@ -5970,9 +5987,6 @@ export const marketing: Catalog = {
     "Por predefinição, “Função · Organização”.",
   "postOpportunity.rich.applyRolePlaceholder":
     "Sensibilização Comunitária · uma associação LGBTQ+ local",
-  "postOpportunity.rich.partnerSlugLabel": "Slug do parceiro",
-  "postOpportunity.rich.partnerSlugHelper": "Liga à página de um parceiro.",
-  "postOpportunity.rich.partnerSlugPlaceholder": "your-organisation",
   "postOpportunity.rich.handleLabel": "Identificador de contacto",
   "postOpportunity.rich.handleHelper":
     "Onde as pessoas interessadas te podem contactar.",

@@ -4,6 +4,7 @@ import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { VolunteerOpportunity } from "./volunteerOpportunities.types";
+import { causeLabelKey } from "./causes.data";
 import s from "./VolunteerPage.module.css";
 
 export function VolunteerCardSkeleton() {
@@ -66,7 +67,14 @@ export function VolunteerRoleCard({
           </span>
           <div>
             <div className={s.orgName}>{opportunity.org}</div>
-            <div className={s.orgCause}>{opportunity.cause}</div>
+            {/* Joined with a middot rather than a comma so it reads as a set
+                of tags. Order is the poster's; the avatar beside it is tinted
+                from the first. */}
+            <div className={s.orgCause}>
+              {opportunity.causes
+                .map((cause) => t(causeLabelKey(cause)))
+                .join(" · ")}
+            </div>
           </div>
         </div>
         <div className={s.role}>{opportunity.role}</div>
@@ -94,8 +102,7 @@ export function VolunteerRoleCard({
             className={s.express}
             to={`${routes.volunteer}/opportunity/${opportunity.slug}`}
           >
-            {t("marketing:volunteer.card.expressInterest")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("marketing:volunteer.card.seeRole")} <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>

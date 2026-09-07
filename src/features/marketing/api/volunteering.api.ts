@@ -8,13 +8,28 @@ import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 
 // ── Backend DTOs ─────────────────────────────────────────────────────────────
-// Shapes the NestJS volunteering domain returns. `cause` is lowercase on the
-// wire; the adapters Title-case it for the view-model. Prototype-only display
+// Shapes the NestJS volunteering domain returns. Causes are lowercase on the
+// wire and labelled for display from `causes.data.ts`. Prototype-only display
 // fields (colours, eyebrow, urgency copy, stat tiles) aren't part of the API and
 // are derived / defaulted gracefully in volunteering.adapters.tsx.
 
-/** Cause is lowercase in the API; Title-case for display (see adapters). */
-export type Cause = "rights" | "health" | "youth" | "housing" | "arts";
+/** The wire values of the cause taxonomy, mirroring the backend's
+ *  `OpportunityCause`. Labels, order and tints live in `causes.data.ts`, which
+ *  is the one place to touch when a cause is added. */
+export type Cause =
+  | "rights"
+  | "health"
+  | "youth"
+  | "housing"
+  | "arts"
+  | "trans_care"
+  | "elders"
+  | "mental_health"
+  | "migration"
+  | "education"
+  | "sport"
+  | "community_events"
+  | "fundraising";
 export type Commit = "low" | "medium";
 
 /** A card as returned by GET /volunteering (list) — the thin listing shape. */
@@ -24,7 +39,9 @@ export interface OpportunityCardDTO {
   partner: { slug: string; name: string } | null;
   community: { slug: string; name: string } | null;
   role: string;
-  cause: Cause;
+  /** One to three, poster-ordered. `causes[0]` is the one the card leads with
+   *  and takes its avatar tint from, so never sort this for display. */
+  causes: Cause[];
   commit: Commit;
   time: string;
   location: string;
@@ -125,7 +142,9 @@ export interface CreateOpportunityDto {
   partnerSlug?: string;
   communitySlug?: string;
   role: string;
-  cause: Cause;
+  /** One to three, poster-ordered. The backend rejects an empty array or a
+   *  fourth entry; the picker caps it at `MAX_CAUSES` before it gets there. */
+  causes: Cause[];
   commit: Commit;
   time: string;
   location: string;

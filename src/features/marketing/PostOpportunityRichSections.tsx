@@ -1,4 +1,4 @@
-import { FiPlus, FiX } from "react-icons/fi";
+import { FiCheck, FiPlus, FiX } from "react-icons/fi";
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -6,38 +6,80 @@ import {
   type PostOpportunityForm,
 } from "./usePostOpportunityForm";
 import { useTeamMemberOptions } from "./useTeamMemberOptions";
+import { PostOpportunityInlineTextarea } from "./PostOpportunityInlineTextarea";
 import {
   MAX_APPLY_ROLE_LENGTH,
   MAX_COMMITMENT_DETAIL_LENGTH,
   MAX_COMMITMENT_LABEL_LENGTH,
   MAX_HANDLE_LENGTH,
-  MAX_PARTNER_SLUG_LENGTH,
   MAX_TASK_DESCRIPTION_LENGTH,
   MAX_TASK_TITLE_LENGTH,
   MAX_TEAM_COUNT,
   MAX_TEAM_INTRO_LENGTH,
   MAX_TEAM_SLUG_LENGTH,
+  commitmentLabelControlId,
+  taskTitleControlId,
 } from "./postVolunteerOpportunity.data";
 import styles from "./PostVolunteerOpportunityPage.module.css";
 
-/** Repeating "what you'd actually do" task rows. */
+/** Counters stay hidden until the row is focused, except when a field is
+ *  within a tenth of its limit: then it stays visible as a warning. */
+const isNearLimit = (length: number, max: number) => length >= max * 0.9;
+
+/** The pair of counters under an inline row. `isPinned` keeps them visible
+ *  outside focus. */
+function InlineCounters({
+  first,
+  second,
+  isPinned,
+}: {
+  first: string;
+  second: string;
+  isPinned: boolean;
+}) {
+  return (
+    <div
+      className={
+        isPinned
+          ? `${styles.inlineMeta} ${styles.inlineMetaPinned}`
+          : styles.inlineMeta
+      }
+    >
+      <span>{first}</span>
+      <span>{second}</span>
+    </div>
+  );
+}
+
+/** Repeating "what you'd actually do" task rows, laid out as the tick list
+ *  the detail page renders so the poster types straight into it. */
 export function PostOpportunityTasks({ form }: { form: PostOpportunityForm }) {
   const { t } = useTranslation();
-  const { state, setTask, addTask, removeTask } = form;
+  const { state, setTask, addTask, removeTask, isTaskTitleMissing } = form;
 
   return (
     <>
       <div className={styles.sectionHead}>
         {t("marketing:postOpportunity.rich.tasksHeading")}
       </div>
-      {state.tasks.map((task, index) => (
-        <div className={styles.repRow} key={index}>
-          <div className={styles.repFields}>
-            <div className={styles.repFieldItem}>
+      <div className={styles.taskList}>
+        {state.tasks.map((task, index) => (
+          <div className={styles.taskEditRow} key={index}>
+            <div className={styles.taskEditIcon} aria-hidden>
+              <FiCheck />
+            </div>
+            <div className={styles.taskEditFields}>
               <input
+                id={taskTitleControlId(index)}
                 type="text"
+                className={styles.taskEditTitle}
                 value={task.title}
                 onChange={(e) => setTask(index, { title: e.target.value })}
+                /* A row is only sent when it has a title, so a detail typed
+                   under an empty one is flagged here rather than silently
+                   dropped. This is also what a rejected submit's focus move
+                   looks for. */
+                aria-invalid={isTaskTitleMissing(index)}
                 maxLength={MAX_TASK_TITLE_LENGTH}
                 placeholder={t(
                   "marketing:postOpportunity.rich.taskTitlePlaceholder",
@@ -46,17 +88,10 @@ export function PostOpportunityTasks({ form }: { form: PostOpportunityForm }) {
                   index: index + 1,
                 })}
               />
-              <span className={styles.repFieldCount}>
-                {task.title.length}/{MAX_TASK_TITLE_LENGTH}
-              </span>
-            </div>
-            <div className={styles.repFieldItem}>
-              <input
-                type="text"
+              <PostOpportunityInlineTextarea
+                className={styles.taskEditDetail}
                 value={task.description}
-                onChange={(e) =>
-                  setTask(index, { description: e.target.value })
-                }
+                onValueChange={(description) => setTask(index, { description })}
                 maxLength={MAX_TASK_DESCRIPTION_LENGTH}
                 placeholder={t(
                   "marketing:postOpportunity.rich.taskDetailPlaceholder",
@@ -65,25 +100,33 @@ export function PostOpportunityTasks({ form }: { form: PostOpportunityForm }) {
                   index: index + 1,
                 })}
               />
-              <span className={styles.repFieldCount}>
-                {task.description.length}/{MAX_TASK_DESCRIPTION_LENGTH}
-              </span>
+              <InlineCounters
+                first={`${task.title.length}/${MAX_TASK_TITLE_LENGTH}`}
+                second={`${task.description.length}/${MAX_TASK_DESCRIPTION_LENGTH}`}
+                isPinned={
+                  isNearLimit(task.title.length, MAX_TASK_TITLE_LENGTH) ||
+                  isNearLimit(
+                    task.description.length,
+                    MAX_TASK_DESCRIPTION_LENGTH,
+                  )
+                }
+              />
             </div>
+            {state.tasks.length > 1 && (
+              <button
+                type="button"
+                className={styles.inlineRemove}
+                onClick={() => removeTask(index)}
+                aria-label={t("marketing:postOpportunity.rich.taskRemoveAria", {
+                  index: index + 1,
+                })}
+              >
+                <FiX aria-hidden />
+              </button>
+            )}
           </div>
-          {state.tasks.length > 1 && (
-            <button
-              type="button"
-              className={styles.repRemove}
-              onClick={() => removeTask(index)}
-              aria-label={t("marketing:postOpportunity.rich.taskRemoveAria", {
-                index: index + 1,
-              })}
-            >
-              <FiX aria-hidden />
-            </button>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
       <button type="button" className={styles.repAdd} onClick={addTask}>
         <FiPlus aria-hidden /> {t("marketing:postOpportunity.rich.addTask")}
       </button>
@@ -91,78 +134,87 @@ export function PostOpportunityTasks({ form }: { form: PostOpportunityForm }) {
   );
 }
 
-/** Repeating honest-commitment rows (hours, cadence, duration…). */
+/** Repeating honest-commitment cards (hours, cadence, duration…), laid out
+ *  as the two-column card grid the detail page renders. */
 export function PostOpportunityCommitments({
   form,
 }: {
   form: PostOpportunityForm;
 }) {
   const { t } = useTranslation();
-  const { state, setCommitment, addCommitment, removeCommitment } = form;
+  const {
+    state,
+    setCommitment,
+    addCommitment,
+    removeCommitment,
+    isCommitmentLabelMissing,
+  } = form;
 
   return (
     <>
       <div className={styles.sectionHead}>
         {t("marketing:postOpportunity.rich.commitmentsHeading")}
       </div>
-      {state.commitments.map((commitment, index) => (
-        <div className={styles.repRow} key={index}>
-          <div className={styles.repFields}>
-            <div className={styles.repFieldItem}>
-              <input
-                type="text"
-                value={commitment.label}
-                onChange={(e) =>
-                  setCommitment(index, { label: e.target.value })
-                }
-                maxLength={MAX_COMMITMENT_LABEL_LENGTH}
-                placeholder={t(
-                  "marketing:postOpportunity.rich.commitLabelPlaceholder",
-                )}
-                aria-label={t(
-                  "marketing:postOpportunity.rich.commitLabelAria",
-                  { index: index + 1 },
-                )}
-              />
-              <span className={styles.repFieldCount}>
-                {commitment.label.length}/{MAX_COMMITMENT_LABEL_LENGTH}
-              </span>
-            </div>
-            <div className={styles.repFieldItem}>
-              <input
-                type="text"
-                value={commitment.detail}
-                onChange={(e) =>
-                  setCommitment(index, { detail: e.target.value })
-                }
-                maxLength={MAX_COMMITMENT_DETAIL_LENGTH}
-                placeholder={t(
-                  "marketing:postOpportunity.rich.commitDetailPlaceholder",
-                )}
-                aria-label={t(
-                  "marketing:postOpportunity.rich.commitDetailAria",
-                  { index: index + 1 },
-                )}
-              />
-              <span className={styles.repFieldCount}>
-                {commitment.detail.length}/{MAX_COMMITMENT_DETAIL_LENGTH}
-              </span>
-            </div>
-          </div>
-          {state.commitments.length > 1 && (
-            <button
-              type="button"
-              className={styles.repRemove}
-              onClick={() => removeCommitment(index)}
-              aria-label={t("marketing:postOpportunity.rich.commitRemoveAria", {
+      <div className={styles.commitEditGrid}>
+        {state.commitments.map((commitment, index) => (
+          <div className={styles.commitEditCard} key={index}>
+            <input
+              id={commitmentLabelControlId(index)}
+              type="text"
+              className={styles.commitEditLabel}
+              value={commitment.label}
+              onChange={(e) => setCommitment(index, { label: e.target.value })}
+              aria-invalid={isCommitmentLabelMissing(index)}
+              maxLength={MAX_COMMITMENT_LABEL_LENGTH}
+              placeholder={t(
+                "marketing:postOpportunity.rich.commitLabelPlaceholder",
+              )}
+              aria-label={t("marketing:postOpportunity.rich.commitLabelAria", {
                 index: index + 1,
               })}
-            >
-              <FiX aria-hidden />
-            </button>
-          )}
-        </div>
-      ))}
+            />
+            <PostOpportunityInlineTextarea
+              className={styles.commitEditDetail}
+              value={commitment.detail}
+              onValueChange={(detail) => setCommitment(index, { detail })}
+              maxLength={MAX_COMMITMENT_DETAIL_LENGTH}
+              placeholder={t(
+                "marketing:postOpportunity.rich.commitDetailPlaceholder",
+              )}
+              aria-label={t("marketing:postOpportunity.rich.commitDetailAria", {
+                index: index + 1,
+              })}
+            />
+            <InlineCounters
+              first={`${commitment.label.length}/${MAX_COMMITMENT_LABEL_LENGTH}`}
+              second={`${commitment.detail.length}/${MAX_COMMITMENT_DETAIL_LENGTH}`}
+              isPinned={
+                isNearLimit(
+                  commitment.label.length,
+                  MAX_COMMITMENT_LABEL_LENGTH,
+                ) ||
+                isNearLimit(
+                  commitment.detail.length,
+                  MAX_COMMITMENT_DETAIL_LENGTH,
+                )
+              }
+            />
+            {state.commitments.length > 1 && (
+              <button
+                type="button"
+                className={`${styles.inlineRemove} ${styles.commitEditRemove}`}
+                onClick={() => removeCommitment(index)}
+                aria-label={t(
+                  "marketing:postOpportunity.rich.commitRemoveAria",
+                  { index: index + 1 },
+                )}
+              >
+                <FiX aria-hidden />
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
       <button type="button" className={styles.repAdd} onClick={addCommitment}>
         <FiPlus aria-hidden />{" "}
         {t("marketing:postOpportunity.rich.addCommitment")}
@@ -227,39 +279,26 @@ export function PostOpportunityTeamFields({
         </FormField>
       )}
 
-      <div className={styles.row}>
-        <FormField
-          label={t("marketing:postOpportunity.rich.applyRoleLabel")}
-          helper={t("marketing:postOpportunity.rich.applyRoleHelper")}
-          labelAside={`${state.applyRole.length}/${MAX_APPLY_ROLE_LENGTH}`}
-        >
-          <input
-            type="text"
-            value={applyRoleValue}
-            onChange={(e) => set("applyRole", e.target.value)}
-            maxLength={MAX_APPLY_ROLE_LENGTH}
-            placeholder={t(
-              "marketing:postOpportunity.rich.applyRolePlaceholder",
-            )}
-          />
-        </FormField>
-
-        <FormField
-          label={t("marketing:postOpportunity.rich.partnerSlugLabel")}
-          helper={t("marketing:postOpportunity.rich.partnerSlugHelper")}
-          labelAside={`${state.partnerSlug.length}/${MAX_PARTNER_SLUG_LENGTH}`}
-        >
-          <input
-            type="text"
-            value={state.partnerSlug}
-            onChange={(e) => set("partnerSlug", e.target.value)}
-            maxLength={MAX_PARTNER_SLUG_LENGTH}
-            placeholder={t(
-              "marketing:postOpportunity.rich.partnerSlugPlaceholder",
-            )}
-          />
-        </FormField>
-      </div>
+      {/* The organization this opportunity is attributed to is picked once,
+          in Basics, through `OrganizationPickerField`: the single control
+          that sets exactly one of `partnerSlug`/`communitySlug` and clears
+          the other. No second slug field here. The free-text one that used
+          to sit beside "Apply-as role label" only ever edited `partnerSlug`,
+          so it read empty for a community link, and typing in it left both
+          links set at once (the backend resolves the two independently). */}
+      <FormField
+        label={t("marketing:postOpportunity.rich.applyRoleLabel")}
+        helper={t("marketing:postOpportunity.rich.applyRoleHelper")}
+        labelAside={`${state.applyRole.length}/${MAX_APPLY_ROLE_LENGTH}`}
+      >
+        <input
+          type="text"
+          value={applyRoleValue}
+          onChange={(e) => set("applyRole", e.target.value)}
+          maxLength={MAX_APPLY_ROLE_LENGTH}
+          placeholder={t("marketing:postOpportunity.rich.applyRolePlaceholder")}
+        />
+      </FormField>
 
       {!editing && (
         <FormField

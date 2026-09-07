@@ -64,6 +64,14 @@
     padding: 26px 20px 22px;
   }
 }
+/* The long-text fields (pitch, why, good for). FormField pins every
+   wrapped textarea to `resize: none` at (0,1,1); this (0,2,0) rule lets
+   the poster drag the box taller to read back what they wrote. Vertical
+   only, so the form's column never widens. The size is browser-local
+   and never saved. */
+.form .textarea {
+  resize: vertical;
+}
 
 .sectionHead {
   font-family: var(--serif);
@@ -129,70 +137,187 @@
 }
 
 /* ── Repeatable rows (tasks / commitments) ────────────────────────────────── */
-.repRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.repFields {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.repFieldItem {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.repFieldCount {
-  font-size: var(--text-12);
-  color: var(--ink-40);
-  text-align: right;
-}
-.repFields input {
-  font-family: var(--sans);
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-10);
-  padding: 11px 13px;
-  width: 100%;
-  outline: none;
-  transition:
-    border-color 0.22s var(--ease),
-    box-shadow 0.22s var(--ease),
-    background 0.22s var(--ease);
-}
-.repFields input:focus {
-  border-color: var(--line-strong);
-  box-shadow: var(--ring-plum-soft);
+/* ── Repeating rows: tasks and commitments ──────────────────────────────────
+   Each row is the card the detail page renders (VolunteerOpportunityPage
+   .taskRow / .commit) with the text turned into borderless fields, so the
+   poster types into the finished layout. Counters appear on focus, or stay
+   pinned once a field nears its limit. ─────────────────────────────────── */
+.taskList {
   background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  overflow: hidden;
+  margin-bottom: 12px;
 }
-.repRemove {
+.taskEditRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  padding: 16px 16px 12px 22px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+  align-items: flex-start;
+  transition: background 0.22s var(--ease);
+}
+.taskEditRow:last-child {
+  border-bottom: none;
+}
+.taskEditRow:focus-within {
+  background: rgba(var(--plum-rgb), 0.03);
+}
+.taskEditIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-8);
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: none;
-  width: 38px;
-  height: 38px;
-  margin-top: 2px;
+}
+.taskEditIcon svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.4;
+}
+.taskEditFields {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.taskEditTitle,
+.taskEditDetail,
+.commitEditLabel,
+.commitEditDetail {
+  font-family: var(--sans);
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-8);
+  padding: 2px 4px;
+  margin: 0 -4px;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  transition: box-shadow 0.22s var(--ease);
+}
+.taskEditTitle:focus-visible,
+.taskEditDetail:focus-visible,
+.commitEditLabel:focus-visible,
+.commitEditDetail:focus-visible {
+  box-shadow: var(--ring-plum-soft);
+}
+/* A row whose detail is typed under an empty title. These inputs sit outside
+   FormField and so have nowhere to hang an error message; the ring is the
+   whole signal, and the "still missing" list under the submit button carries
+   the words. */
+.taskEditTitle[aria-invalid="true"],
+.commitEditLabel[aria-invalid="true"] {
+  box-shadow: var(--ring-accent-strong);
+}
+
+.taskEditTitle::placeholder,
+.taskEditDetail::placeholder,
+.commitEditLabel::placeholder,
+.commitEditDetail::placeholder {
+  color: var(--ink-40);
+  font-weight: 400;
+}
+.taskEditTitle {
+  font-size: var(--text-14-5);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.taskEditDetail {
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+.inlineMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: var(--text-11);
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity 0.18s var(--ease);
+}
+.taskEditRow:focus-within .inlineMeta,
+.commitEditCard:focus-within .inlineMeta,
+.inlineMetaPinned {
+  opacity: 1;
+}
+.inlineMetaPinned {
+  color: var(--accent-ink);
+}
+.inlineRemove {
+  flex: none;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-10);
-  color: var(--ink-60);
+  border: none;
+  border-radius: var(--radius-8);
+  color: var(--ink-40);
   cursor: pointer;
   transition:
     color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
+    background 0.18s var(--ease);
+}
+.inlineRemove:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 @media (hover: hover) {
-  .repRemove:hover {
+  .inlineRemove:hover {
     color: var(--accent-ink);
-    border-color: rgba(var(--accent-rgb), 0.5);
+    background: rgba(var(--accent-rgb), 0.08);
   }
+}
+.commitEditGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media (--mobile) {
+  .commitEditGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.commitEditCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 16px 44px 12px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  transition: border-color 0.22s var(--ease);
+}
+.commitEditCard:focus-within {
+  border-color: rgba(var(--line-rgb), 0.28);
+}
+.commitEditLabel {
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.commitEditDetail {
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.commitEditRemove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 .repAdd {
   display: inline-flex;
@@ -262,4 +387,68 @@
 .successWrap {
   max-width: 620px;
   margin: 0 auto;
+}
+
+/* ── "Still missing" checklist under the submit button ────────────────────── */
+/* Sits below `.actions`, explaining why the submit button reads as disabled.
+   Coral-tinted rather than a hard error state: nothing has gone wrong yet, the
+   form simply isn't finished. */
+.missing {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--accent-rgb), 0.24);
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.missingHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.missingHead svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.missingList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each entry jumps to the field it names, so it reads as the link it is. */
+.missingItem {
+  padding: 4px 10px;
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: 999px;
+  background: var(--paper);
+  font: inherit;
+  font-size: var(--text-13);
+  color: var(--accent-ink);
+  cursor: pointer;
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+
+.missingItem:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (hover: hover) {
+  .missingItem:hover {
+    background: rgba(var(--accent-rgb), 0.12);
+    border-color: rgba(var(--accent-rgb), 0.5);
+  }
 }

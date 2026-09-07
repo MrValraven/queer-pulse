@@ -76,6 +76,11 @@
   flex-wrap: wrap;
   margin-bottom: 28px;
 }
+/* The commitment row sits directly above the cause row, so the two read as one
+   control block: the 28px gap belongs under the pair, not between them. */
+.filtersCommitment {
+  margin-bottom: 10px;
+}
 .chip {
   font-family: var(--sans);
   font-size: var(--text-13);

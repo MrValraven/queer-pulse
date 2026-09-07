@@ -417,7 +417,7 @@ export const marketing: Catalog = {
   "activism.volunteer.title": "Open <em>roles</em>",
   "activism.volunteer.p1":
     "Current volunteer opportunities from our partner organisations, updated regularly.",
-  "activism.volunteer.expressInterestCta": "Express interest",
+  "activism.volunteer.seeRoleCta": "See the role",
   "activism.volunteer.seeAllCta": "See all volunteer roles",
   "activism.outro.title": "Pick a rung. <em>Start today.</em>",
   "activism.outro.sub":
@@ -5645,11 +5645,25 @@ export const marketing: Catalog = {
   "volunteer.filter.all": "All opportunities",
   "volunteer.filter.low": "Low commitment",
   "volunteer.filter.medium": "Medium commitment",
-  "volunteer.filter.rights": "LGBTQ+ Rights",
-  "volunteer.filter.health": "Health & Wellbeing",
-  "volunteer.filter.youth": "Youth",
-  "volunteer.filter.housing": "Housing",
-  "volunteer.filter.arts": "Arts & Culture",
+  "volunteer.filter.commitmentGroup": "Filter by commitment",
+  "volunteer.filter.causeGroup": "Filter by cause",
+  // The volunteering cause taxonomy, one key set shared by the board's filter
+  // chips, the post/edit form's picker and the label on a card. It replaced two
+  // parallel sets ("volunteer.filter.*" and "postOpportunity.cause.*") that held
+  // the same five strings twice. Order and tints live in `causes.data.ts`.
+  "cause.rights": "LGBTQ+ Rights",
+  "cause.health": "Health & Wellbeing",
+  "cause.youth": "Youth",
+  "cause.housing": "Housing",
+  "cause.arts": "Arts & Culture",
+  "cause.transCare": "Trans & gender care",
+  "cause.elders": "Elders",
+  "cause.mentalHealth": "Mental health & peer support",
+  "cause.migration": "Migration & asylum",
+  "cause.education": "Education & training",
+  "cause.sport": "Sport & movement",
+  "cause.communityEvents": "Community events",
+  "cause.fundraising": "Fundraising & admin",
   "volunteer.hero.eyebrow": "Volunteer",
   "volunteer.hero.title":
     "Give your time to the <em>community</em> around you.",
@@ -5673,7 +5687,7 @@ export const marketing: Catalog = {
   "volunteer.empty.clearCta": "Clear filters",
   "volunteer.card.commitLow": "Low commitment",
   "volunteer.card.commitMedium": "Medium commitment",
-  "volunteer.card.expressInterest": "Express interest",
+  "volunteer.card.seeRole": "See the role",
   "volunteer.loadingMore": "Loading more opportunities…",
   "volunteer.loadMoreCta": "Load more opportunities",
   "volunteer.outro.title": "Want to connect <em>more deeply?</em>",
@@ -5771,11 +5785,6 @@ export const marketing: Catalog = {
   "postOpportunity.tip3.title": "What happens after you post",
   "postOpportunity.tip3.body":
     "Your role appears on the volunteer board immediately. Interested members sign up from the detail page, and you'll see the roster there.",
-  "postOpportunity.cause.rights": "LGBTQ+ Rights",
-  "postOpportunity.cause.health": "Health & Wellbeing",
-  "postOpportunity.cause.youth": "Youth",
-  "postOpportunity.cause.housing": "Housing",
-  "postOpportunity.cause.arts": "Arts & Culture",
   "postOpportunity.commit.low.label": "Low commitment",
   "postOpportunity.commit.low.hint":
     "A couple of flexible hours a week, no fixed term.",
@@ -5798,6 +5807,8 @@ export const marketing: Catalog = {
   "postOpportunity.core.roleLabel": "Role title",
   "postOpportunity.core.rolePlaceholder": "e.g. Community Outreach Volunteer",
   "postOpportunity.core.causeLabel": "Cause",
+  "postOpportunity.core.causeHelper":
+    "Pick up to {{max}}. The first one you pick is the one your card leads with.",
   "postOpportunity.core.commitLabel": "Commitment level",
   "postOpportunity.core.timePlaceHeading": "Time & place",
   "postOpportunity.core.timeLabel": "Time commitment",
@@ -5824,6 +5835,12 @@ export const marketing: Catalog = {
   "postOpportunity.edit.sub":
     "Update the details volunteers see on the listing.",
   "postOpportunity.edit.saveCta": "Save changes",
+  "postOpportunity.missing.taskTitle": "Task {index} title",
+  "postOpportunity.missing.commitmentLabel": "Commitment {index} label",
+  "postOpportunity.missing.heading_one":
+    "{count} field still to fill in before you can continue:",
+  "postOpportunity.missing.heading_other":
+    "{count} fields still to fill in before you can continue:",
   "postOpportunity.edit.saving": "Saving…",
   "postOpportunity.edit.successToast": "Your changes are saved.",
   "postOpportunity.edit.errorToast":
@@ -5873,9 +5890,6 @@ export const marketing: Catalog = {
   "postOpportunity.rich.applyRoleHelper": "Defaults to “Role · Organisation”.",
   "postOpportunity.rich.applyRolePlaceholder":
     "Community Outreach · a local LGBTQ+ association",
-  "postOpportunity.rich.partnerSlugLabel": "Partner slug",
-  "postOpportunity.rich.partnerSlugHelper": "Links to a partner's page.",
-  "postOpportunity.rich.partnerSlugPlaceholder": "your-organisation",
   "postOpportunity.rich.handleLabel": "Contact handle",
   "postOpportunity.rich.handleHelper":
     "Where interested volunteers can reach you.",

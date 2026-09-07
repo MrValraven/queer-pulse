@@ -2,67 +2,30 @@ import { useCallback, useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
 import { useMyCommunitiesResolving } from "../communities/api/useMyCommunities";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
-import { useRequiredFieldValidation } from "../../shared/hooks/useWizardForm";
+import { usePostOpportunityValidation } from "./usePostOpportunityValidation";
+import {
+  EMPTY,
+  type CommitmentRow,
+  type PostOpportunityState,
+  type TaskRow,
+} from "./postOpportunityState";
+import type { RequiredField } from "./postVolunteerOpportunity.data";
 import type {
-  Cause,
-  Commit,
   CreateOpportunityDto,
   UpdateOpportunityDto,
 } from "./api/volunteering.api";
 
-export interface TaskRow {
-  title: string;
-  description: string;
-}
-export interface CommitmentRow {
-  label: string;
-  detail: string;
-}
-
-export interface PostOpportunityState {
-  org: string;
-  role: string;
-  cause: Cause;
-  commit: Commit;
-  time: string;
-  location: string;
-  skills: string;
-  description: string;
-  spotsTotal: string;
-  applyRole: string;
-  why: string;
-  goodFor: string;
-  teamIntro: string;
-  /** Slugs of connections/communities already on the team. */
-  team: string[];
-  partnerSlug: string;
-  communitySlug: string;
-  handle: string;
-  tasks: TaskRow[];
-  commitments: CommitmentRow[];
-}
-
-const EMPTY: PostOpportunityState = {
-  org: "",
-  role: "",
-  cause: "rights",
-  commit: "low",
-  time: "",
-  location: "",
-  skills: "",
-  description: "",
-  spotsTotal: "",
-  applyRole: "",
-  why: "",
-  goodFor: "",
-  teamIntro: "",
-  team: [],
-  partnerSlug: "",
-  communitySlug: "",
-  handle: "",
-  tasks: [{ title: "", description: "" }],
-  commitments: [{ label: "", detail: "" }],
-};
+/** Re-exported so call sites keep reading the form's own types from the form's
+ *  own module. `RequiredField` is defined alongside its labels and control ids
+ *  in `postVolunteerOpportunity.data`; the state shape in
+ *  `postOpportunityState`; the missing-field entry in the validation module. */
+export type { RequiredField };
+export type {
+  PostOpportunityState,
+  TaskRow,
+  CommitmentRow,
+} from "./postOpportunityState";
+export type { MissingFormField } from "./usePostOpportunityValidation";
 
 const splitLines = (s: string) =>
   s
@@ -79,19 +42,6 @@ const splitCommas = (s: string) =>
  *  used at submit time when the field itself was never touched. */
 export const defaultApplyRole = (role: string, org: string): string =>
   [role.trim(), org.trim()].filter(Boolean).join(" · ");
-
-/** Fields that must be filled before the form can submit. */
-export type RequiredField =
-  "org" | "role" | "time" | "location" | "description" | "spotsTotal";
-
-const REQUIRED: RequiredField[] = [
-  "org",
-  "role",
-  "time",
-  "location",
-  "description",
-  "spotsTotal",
-];
 
 /**
  * State + payload builder for the "Post an opportunity" form. Holds every field
@@ -184,26 +134,8 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
       commitments: s.commitments.filter((_, idx) => idx !== i),
     }));
 
-  const requiredValidation = useRequiredFieldValidation({
-    values: state,
-    requiredFields: REQUIRED,
-    buildError: () => "This field is required.",
-  });
-  const spotsNumber = Number.parseInt(state.spotsTotal, 10);
-  const spotsValid = Number.isFinite(spotsNumber) && spotsNumber > 0;
-  const valid = requiredValidation.isValid && spotsValid;
-
-  const errorFor = (field: RequiredField): string | null => {
-    if (
-      field === "spotsTotal" &&
-      state.spotsTotal.trim() &&
-      !spotsValid &&
-      requiredValidation.hasBeenSubmitted
-    ) {
-      return "Enter a number of spots greater than zero.";
-    }
-    return requiredValidation.errorFor(field);
-  };
+  const validation = usePostOpportunityValidation(state);
+  const { spotsNumber } = validation;
 
   const toDto = (): CreateOpportunityDto => {
     const org = state.org.trim();
@@ -220,7 +152,7 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
     return {
       org,
       role,
-      cause: state.cause,
+      causes: state.causes,
       commit: state.commit,
       time: state.time.trim(),
       location: state.location.trim(),
@@ -261,7 +193,7 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
     return {
       org,
       role,
-      cause: state.cause,
+      causes: state.causes,
       commit: state.commit,
       time: state.time.trim(),
       location: state.location.trim(),
@@ -288,9 +220,12 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
     setCommitment,
     addCommitment,
     removeCommitment,
-    valid,
-    errorFor,
-    markTouched: requiredValidation.markSubmitted,
+    valid: validation.isValid,
+    missingFields: validation.missingFields,
+    isTaskTitleMissing: validation.isTaskTitleMissing,
+    isCommitmentLabelMissing: validation.isCommitmentLabelMissing,
+    errorFor: validation.errorFor,
+    markTouched: validation.markTouched,
     toDto,
     toUpdateDto,
   };

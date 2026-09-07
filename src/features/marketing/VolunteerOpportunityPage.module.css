@@ -66,6 +66,9 @@
   color: var(--ink);
   line-height: 1.7;
   max-width: 56ch;
+  /* The description is typed into a plain textarea; keep the poster's
+     line breaks and spacing instead of collapsing them into one run. */
+  white-space: pre-wrap;
 }
 .sub b {
   color: var(--text-strong);
@@ -133,6 +136,9 @@
   max-width: 62ch;
   margin-bottom: 1em;
   text-wrap: pretty;
+  /* Each line of the why / good-for textareas is one paragraph; spacing
+     inside a line is the poster's own. */
+  white-space: pre-wrap;
 }
 .sec p em {
   font-style: italic;

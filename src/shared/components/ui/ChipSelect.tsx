@@ -107,6 +107,16 @@ interface ChipSelectProps extends ChipGroupLabelling {
   tone?: ChipTone;
   tint?: ChipTint;
   className?: string;
+  /** Ceiling on how many chips may be on at once. Once it is reached the
+   *  unselected chips go unpickable, so the limit is visible before it is hit
+   *  instead of a click that silently does nothing. Selected chips always stay
+   *  clickable, or the picker would lock at the cap. */
+  maxSelected?: number;
+  /** Put an id on the group. Also makes the group programmatically focusable
+   *  (`tabIndex={-1}`, so it never enters the tab order), which is what lets a
+   *  "still missing" checklist send focus here the way it sends focus to a
+   *  required input. */
+  id?: string;
 }
 
 /**
@@ -123,9 +133,14 @@ export function ChipSelect({
   className,
   label,
   labelledBy,
+  maxSelected,
+  id,
 }: ChipSelectProps) {
+  const isAtCap = maxSelected !== undefined && selected.size >= maxSelected;
   return (
     <div
+      id={id}
+      tabIndex={id ? -1 : undefined}
       className={[styles.row, className].filter(Boolean).join(" ")}
       role="group"
       aria-label={labelledBy ? undefined : label}
@@ -133,10 +148,11 @@ export function ChipSelect({
     >
       {normalize(options).map((o) => {
         const on = selected.has(o.value);
-        // Nobody left to find under this chip. Disabled rather than merely
-        // dimmed, so the affordance matches the outcome — but never while it
-        // is selected, or unticking it would be impossible.
-        const isUnavailable = o.count === 0 && !on;
+        // Either nobody is left to find under this chip, or the picker is
+        // already full and this is not one of the chips on. Disabled rather
+        // than merely dimmed, so the affordance matches the outcome, but never
+        // while it is selected, or unticking it would be impossible.
+        const isUnavailable = (o.count === 0 || isAtCap) && !on;
         return (
           <button
             key={o.value}
