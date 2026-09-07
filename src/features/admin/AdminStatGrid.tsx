@@ -53,7 +53,7 @@ function AdminStatCard({
     comma,
     decimal,
     prefix,
-    suffix,
+    unit,
     trend,
     footKey,
     footValues,
@@ -68,6 +68,11 @@ function AdminStatCard({
     active: !loading && !notMeasured,
     durationMs: 1200,
   });
+  // `Intl` owns the unit mark and the space (if any) in front of it, so the
+  // tile reads "3.2 hr" in en and "3,2 h" in pt without a catalog key. It is
+  // asked about the tile's real target rather than the mid-animation count, so
+  // a plural-sensitive mark settles on the form the finished number needs.
+  const unitSuffix = unit ? fmt.unitSuffix(value, unit) : "";
   const display = decimal
     ? (countValue / 10).toFixed(1)
     : comma
@@ -99,7 +104,7 @@ function AdminStatCard({
           <span className={styles.statNum}>
             {prefix}
             {display}
-            {suffix && <small>{suffix}</small>}
+            {unitSuffix && <small>{unitSuffix}</small>}
           </span>
         )
       }

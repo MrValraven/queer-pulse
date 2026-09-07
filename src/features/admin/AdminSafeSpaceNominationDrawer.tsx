@@ -1,6 +1,8 @@
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { intlLocale } from "../../shared/i18n/locale";
+import { useFormat } from "../../shared/i18n/format";
+import { durationLabel } from "../../shared/i18n/duration";
 import { formatDate } from "../../shared/lib/date";
 import { businessPath } from "../../app/routeMap";
 import { AdminChip, AdminDrawer } from "./ui";
@@ -24,6 +26,7 @@ export function AdminSafeSpaceNominationDrawer({
   onClose: () => void;
 }) {
   const { t, language } = useTranslation();
+  const fmt = useFormat();
   const locale = intlLocale(language);
   const { trail, isLoading } = useAdminSafeSpaceNominationAudit(nomination.id);
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
@@ -51,8 +54,7 @@ export function AdminSafeSpaceNominationDrawer({
           </div>
           <div className={styles.rowMeta}>
             {t("safety:governance.row.age", {
-              count: nomination.ageHours,
-              hours: nomination.ageHours,
+              duration: durationLabel(nomination.ageHours, fmt, "long"),
             })}
           </div>
         </>

@@ -951,8 +951,10 @@ export const safety: Catalog = {
   "governance.chip.acknowledgedLate": "Acknowledged late",
   "governance.chip.visits": "{count}/{required} visits",
   "governance.chip.unassigned": "No listing yet",
-  "governance.row.age_one": "Waiting {hours} hour",
-  "governance.row.age_other": "Waiting {hours} hours",
+  // `duration` is a fully-formed localized phrase ("12 minutes", "3.2 hours"),
+  // built by `durationLabel` from the nomination's fractional ageHours, so this
+  // key is no longer pluralized and no longer spells a unit.
+  "governance.row.age": "Waiting {duration}",
   "governance.detail.nominatorWords": "In the nominator's words",
   "governance.detail.clock": "The 48-hour clock",
   "governance.detail.received": "Received",

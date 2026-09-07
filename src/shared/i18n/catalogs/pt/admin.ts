@@ -5179,9 +5179,6 @@ export const admin: Catalog = {
   "moderationHealth.threshold.criticalAt": "Precisa de alguém aos {value}",
   "moderationHealth.threshold.pastCritical": "Já passou dos {value}",
 
-  "moderationHealth.hours_one": "{value} hora",
-  "moderationHealth.hours_other": "{value} horas",
-
   // A leitura compacta, mostrada só em alerta ou crítico.
   "moderationHealth.indicator.warning_one": "{count} fila está a encher.",
   "moderationHealth.indicator.warning_other": "{count} filas estão a encher.",
@@ -5621,8 +5618,6 @@ export const admin: Catalog = {
   "adminQueues.cell.onTime": "Dentro do prazo",
   "adminQueues.cell.overdue_one": "{count} fora do prazo",
   "adminQueues.cell.overdue_other": "{count} fora do prazo",
-  "adminQueues.age.hours_one": "{count} hora",
-  "adminQueues.age.hours_other": "{count} horas",
   "adminQueues.age.days_one": "{count} dia",
   "adminQueues.age.days_other": "{count} dias",
   "adminQueues.clear.summary_one": "{count} fila está vazia",

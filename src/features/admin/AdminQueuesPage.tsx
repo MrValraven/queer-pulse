@@ -18,6 +18,7 @@ import { AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { durationLabel } from "../../shared/i18n/duration";
 import { routes } from "../../app/routeMap";
 import { useAdminQueues } from "./api/useAdminQueues";
 import {
@@ -58,12 +59,17 @@ function useQueueName(): (queue: string) => string {
   };
 }
 
-/** The oldest wait, said in whole days once it passes a day. */
+/**
+ * The oldest wait, said in whole days once it passes a day, and under a day in
+ * whatever unit the figure actually deserves. `oldestWaitingHours` is
+ * fractional, so a request that landed two minutes ago is 0.033 and used to
+ * render as "0.03333333333333333 hours" on the row.
+ */
 function useWaitLabel(): (hours: number) => string {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (hours: number) => {
-    if (hours < FRESH_WAIT_HOURS)
-      return t("admin:adminQueues.age.hours", { count: hours });
+    if (hours < FRESH_WAIT_HOURS) return durationLabel(hours, fmt, "long");
     return t("admin:adminQueues.age.days", {
       count: Math.floor(hours / FRESH_WAIT_HOURS),
     });

@@ -296,6 +296,8 @@ describe("overviewToMetrics", () => {
     const [, , medianTile] = overviewToMetrics(measuredDto, fmt);
     expect(medianTile?.notMeasured).toBe(false);
     expect(medianTile?.value).toBe(3.2);
+    expect(medianTile?.unit).toBe("hour");
+    expect(medianTile?.decimal).toBe(true);
     expect(medianTile?.trend).toEqual({
       dir: "up",
       key: "admin:dashboard.metrics.trendWellUnder",
@@ -356,12 +358,12 @@ describe("overviewToMetrics", () => {
     expect(openReportsTile?.trend).toEqual({
       dir: "warn",
       key: "admin:dashboard.metrics.trendOldest",
-      values: { hours: "5h" },
+      values: { hours: "5 hr" },
     });
     expect(openReportsTile?.footValues).toEqual({ count: 1 });
   });
 
-  it("carries labelKey/icon/comma/decimal/suffix/to through from the fixture tiles unchanged", () => {
+  it("carries labelKey/icon/comma/to through from the fixture tiles unchanged", () => {
     const tiles = overviewToMetrics(baseDto, fmt);
     expect(tiles[0]?.labelKey).toBe(
       "admin:dashboard.metrics.activeMembers.label",
@@ -369,9 +371,53 @@ describe("overviewToMetrics", () => {
     expect(tiles[0]?.comma).toBe(true);
     expect(tiles[0]?.to).toBe("/admin/members");
     expect(tiles[1]?.to).toBe("/admin/moderation");
-    expect(tiles[2]?.decimal).toBe(true);
-    expect(tiles[2]?.suffix).toBe("h");
+    expect(tiles[2]?.unit).toBe("hour");
     expect(tiles[3]?.to).toBe("/admin/communities");
+  });
+
+  // A queue answered in minutes is the whole reason the unit is dynamic: the
+  // tile used to render 0.05218305555555556 hours as a flat "0.0h" and the
+  // oldest-report caption used to print the raw float with an "h" stuck on it.
+  it("says a sub-hour oldest report in minutes rather than a raw fractional hour", () => {
+    const freshDto: AdminOverviewDTO = {
+      ...baseDto,
+      stats: {
+        ...baseDto.stats,
+        openReports: {
+          ...baseDto.stats.openReports,
+          oldestOpenHours: 0.05218305555555556,
+        },
+      },
+    };
+    const [, openReportsTile] = overviewToMetrics(freshDto, fmt);
+    expect(openReportsTile?.trend.values).toEqual({ hours: "3 min" });
+  });
+
+  it("says a sub-minute oldest report in seconds", () => {
+    const secondsOldDto: AdminOverviewDTO = {
+      ...baseDto,
+      stats: {
+        ...baseDto.stats,
+        openReports: { ...baseDto.stats.openReports, oldestOpenHours: 0.0075 },
+      },
+    };
+    const [, openReportsTile] = overviewToMetrics(secondsOldDto, fmt);
+    expect(openReportsTile?.trend.values).toEqual({ hours: "27 sec" });
+  });
+
+  it("moves the median-response tile onto minutes, without moving the hours-based SLA verdict", () => {
+    const fastDto: AdminOverviewDTO = {
+      ...baseDto,
+      stats: { ...baseDto.stats, medianResponseHours: 0.0666 },
+    };
+    const [, , medianTile] = overviewToMetrics(fastDto, fmt);
+    expect(medianTile?.value).toBe(4);
+    expect(medianTile?.unit).toBe("minute");
+    expect(medianTile?.decimal).toBe(false);
+    expect(medianTile?.trend).toEqual({
+      dir: "up",
+      key: "admin:dashboard.metrics.trendWellUnder",
+    });
   });
 });
 

@@ -2,6 +2,25 @@ import { useMemo } from "react";
 import { useTranslation } from "./useTranslation";
 import { intlLocale } from "./locale";
 
+/** The `Intl` measurement units this app formats. Extend as call sites need. */
+export type FormatUnit = "second" | "minute" | "hour" | "day";
+
+/** Every `formatToParts` type that belongs to the NUMBER rather than the unit
+ *  mark around it. Used to split "12 min" back into "12" and " min". */
+const NUMERIC_PART_TYPES = new Set<Intl.NumberFormatPartTypes>([
+  "integer",
+  "group",
+  "decimal",
+  "fraction",
+  "minusSign",
+  "plusSign",
+  "nan",
+  "infinity",
+  "exponentInteger",
+  "exponentMinusSign",
+  "exponentSeparator",
+]);
+
 export interface Formatters {
   /** Localized date. Defaults to a medium `d de MMMM de yyyy` style in PT. */
   date: (value: Date | number, options?: Intl.DateTimeFormatOptions) => string;
@@ -20,6 +39,23 @@ export interface Formatters {
   ) => string;
   /** Relative time, e.g. `há 2 dias` / `2 days ago`. */
   relativeTime: (value: number, unit: Intl.RelativeTimeFormatUnit) => string;
+  /** A measurement with its unit, e.g. `12 min` / `3.2 hr` (en) or `12 min` /
+   *  `3,2 h` (pt). `Intl` owns the mark, the separator, AND the plural form,
+   *  so no catalog key ever has to spell "hour"/"hours" again. */
+  unit: (
+    value: number,
+    unit: FormatUnit,
+    options?: Intl.NumberFormatOptions,
+  ) => string;
+  /** The unit mark alone, with the separator that precedes it (`" min"`), for
+   *  a display that renders the number itself apart from its unit, like a
+   *  counting-up stat tile. Returns "" in a locale that puts the mark BEFORE
+   *  the number; the app ships en and pt, which both put it after. */
+  unitSuffix: (
+    value: number,
+    unit: FormatUnit,
+    options?: Intl.NumberFormatOptions,
+  ) => string;
 }
 
 const DEFAULT_DATE: Intl.DateTimeFormatOptions = {
@@ -60,7 +96,34 @@ export function createFormatters(locale: string): Formatters {
         value,
         unit,
       ),
+    unit: (value, unit, options) =>
+      unitFormat(locale, unit, options).format(value),
+    unitSuffix: (value, unit, options) => {
+      const parts = unitFormat(locale, unit, options).formatToParts(value);
+      const lastNumericIndex = parts.reduce(
+        (last, part, index) =>
+          NUMERIC_PART_TYPES.has(part.type) ? index : last,
+        -1,
+      );
+      return parts
+        .slice(lastNumericIndex + 1)
+        .map((part) => part.value)
+        .join("");
+    },
   };
+}
+
+function unitFormat(
+  locale: string,
+  unit: FormatUnit,
+  options?: Intl.NumberFormatOptions,
+): Intl.NumberFormat {
+  return new Intl.NumberFormat(locale, {
+    style: "unit",
+    unit,
+    unitDisplay: "short",
+    ...options,
+  });
 }
 
 /**
