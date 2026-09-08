@@ -384,6 +384,8 @@ export const admin: Catalog = {
   "members.verify.sourceLabel": "Veio de",
   "members.verify.source.homepage_hero": "Destaque da página inicial",
   "members.verify.source.homepage_outro": "Convite final da página inicial",
+  "members.verify.source.homepage_built":
+    "Explica\u00e7\u00e3o do que constru\u00edmos na p\u00e1gina inicial",
   "members.verify.source.members_explainer": "Explicação dos membros",
   "members.verify.source.personas_explainer":
     "Explicação dos perfis alternativos",

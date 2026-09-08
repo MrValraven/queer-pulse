@@ -8,10 +8,19 @@ export type BrandMarkState = "rest" | "compact" | "dot" | "gathering";
 /** Which of the three brand behaviours to run. `gather` only affects `gathering`. */
 export type BrandMarkMotion = "none" | "heartbeat" | "ripple" | "gather";
 
+/**
+ * `brand` is the full-colour mark (coral core). `mono` is the one-colour
+ * version from the brand guide's section 05: core, rings and satellites all
+ * `currentColor`, which is the drawing `public/icons/icon-monochrome-512-v3.png`
+ * ships as an alpha silhouette for Android themed icons.
+ */
+export type BrandMarkTone = "brand" | "mono";
+
 export interface BrandMarkProps {
   /** `rest` above 40px, `compact` from 24px, `dot` below; `gathering` needs 56px. */
   state?: BrandMarkState;
   motion?: BrandMarkMotion;
+  tone?: BrandMarkTone;
   /** Side of the square box. Defaults to `1em` so it sizes with the text beside it. */
   size?: number | string;
   /**
@@ -27,15 +36,17 @@ const CENTRE = geometry.centre;
 const VIEW_BOX = `0 0 ${geometry.viewBox} ${geometry.viewBox}`;
 
 /**
- * The QueerPulse mark, drawn inline so it takes the theme: the core is always
- * coral (`--accent`), rings and satellites follow `currentColor`, so the same
- * element is plum-ringed on cream and cream-ringed on plum. Every raster the
+ * The QueerPulse mark, drawn inline so it takes the theme: the core is coral
+ * (`--accent`), rings and satellites follow `currentColor`, so the same element
+ * is plum-ringed on cream and cream-ringed on plum. `tone="mono"` drops the
+ * core to `currentColor` too, giving the one-colour version. Every raster the
  * platform ships (favicon, icons, splash, press kit, OG) is generated from the
  * same geometry file, so this component and those files cannot drift.
  */
 export function BrandMark({
   state = "rest",
   motion = "none",
+  tone = "brand",
   size,
   label,
   className,
@@ -46,6 +57,7 @@ export function BrandMark({
     ? { role: "img", "aria-label": label }
     : { "aria-hidden": true as const };
   const isBeating = motion === "heartbeat";
+  const coreFill = tone === "mono" ? "currentColor" : "var(--accent)";
 
   return (
     <svg
@@ -56,7 +68,7 @@ export function BrandMark({
       {...accessibility}
     >
       {state === "gathering" ? (
-        <Gathering isArriving={motion === "gather"} />
+        <Gathering isArriving={motion === "gather"} coreFill={coreFill} />
       ) : (
         <>
           {state === "rest" && <RestRings />}
@@ -69,7 +81,7 @@ export function BrandMark({
             cx={CENTRE}
             cy={CENTRE}
             r={state === "dot" ? geometry.dotAlone.r : geometry.core.r}
-            fill="var(--accent)"
+            fill={coreFill}
           />
         </>
       )}
@@ -145,7 +157,13 @@ function RippleRings() {
 const ARRIVAL_STAGGER_MS = 90;
 
 /** Eight satellites drawing a Q around the core: six on the bowl, two on the tail. */
-function Gathering({ isArriving }: { isArriving: boolean }) {
+function Gathering({
+  isArriving,
+  coreFill,
+}: {
+  isArriving: boolean;
+  coreFill: string;
+}) {
   const { gathering } = geometry;
   return (
     <>
@@ -180,7 +198,7 @@ function Gathering({ isArriving }: { isArriving: boolean }) {
         cx={CENTRE}
         cy={CENTRE}
         r={gathering.coreR}
-        fill="var(--accent)"
+        fill={coreFill}
       />
     </>
   );

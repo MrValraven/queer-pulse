@@ -44,7 +44,7 @@ export const forum: Catalog = {
   // ── Hero da ForumPage ───────────────────────────────────────────────────
   "hero.title": "A <em>praça</em> pública",
   "hero.lead":
-    "A única comunidade a que todas as pessoas aqui pertencem: perguntas, propostas, guias, e o trabalho lento de construir um movimento. Cuidem-se. Estás à procura de uma sala mais pequena?",
+    "A única comunidade a que todas as pessoas aqui pertencem: perguntas, propostas, guias, e o trabalho lento de construir um movimento. Cuidem-se. Procuras algo mais pequeno?",
   "hero.findCommunitiesCta": "Encontra as tuas comunidades",
   newPostCta: "+ Nova publicação",
 

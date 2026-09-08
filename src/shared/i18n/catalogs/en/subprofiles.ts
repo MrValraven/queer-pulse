@@ -549,7 +549,7 @@ export const subprofiles: Catalog = {
     "e.g. After-hours electronics for queer dancefloors",
   "metaForm.bioLabel": "Bio",
   "metaForm.bioHelper":
-    "At least 80 characters to publish a standalone persona.",
+    "At least 80 characters to publish a standalone persona. Type @ to mention a member, c/ a community, e/ an event or t/ a forum thread, and it becomes a link.",
   "metaForm.bioPlaceholder": "A few sentences in your own words.",
   "metaForm.linkLabel": "Link to your main profile",
   "metaForm.addressLabel": "Profile address",

@@ -4,19 +4,15 @@ import { ModalSheet } from "../../shared/components/ui/Modal";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
-import {
-  COMMUNITY_STEPS,
-  COMMUNITY_TRUST_POINTS,
-} from "./communitiesAbout.data";
+import { COMMUNITY_STEPS } from "./communitiesAbout.data";
 import styles from "./HowCommunitiesWorkModal.module.css";
 
 /**
  * "How communities work" explainer, opened from CTAs on the homepage and the
  * communities hub instead of navigating to a standalone page. Built to fit one
  * desktop screen without scrolling: a one-line lede, the three-step journey
- * side by side, a strip of trust points, and the invite CTA. It goes wider than
- * the default sheet (see `.sheet` in the module) so the steps can sit in a row
- * instead of stacking. Rendered only while open (owns no state itself), so
+ * side by side, and the invite CTA. It goes wider than the default sheet (see
+ * `.sheet` in the module) so the steps can sit in a row instead of stacking. Rendered only while open (owns no state itself), so
  * `ModalSheet` runs its scroll-lock/focus-trap once per open.
  */
 export function HowCommunitiesWorkModal({ onClose }: { onClose: () => void }) {
@@ -54,15 +50,6 @@ export function HowCommunitiesWorkModal({ onClose }: { onClose: () => void }) {
           </li>
         ))}
       </ol>
-
-      <ul className={styles.trust}>
-        {COMMUNITY_TRUST_POINTS.map(({ icon: Icon, labelKey }) => (
-          <li key={labelKey} className={styles.trustItem}>
-            <Icon aria-hidden />
-            {t(labelKey)}
-          </li>
-        ))}
-      </ul>
 
       <div className={styles.outro}>
         <div className={styles.outroText}>

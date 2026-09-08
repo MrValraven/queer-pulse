@@ -604,7 +604,7 @@ export const settings: Catalog = {
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
   "editProfile.bio.title": "Bio <em>& occupation</em>",
   "editProfile.bio.sub":
-    "Tell the community who you are. No CV language required.",
+    "Tell the community who you are. No CV language required. Type @ to mention a member, c/ a community, e/ an event or t/ a forum thread, and it becomes a link.",
   "editProfile.bio.label": "Bio",
   "editProfile.bio.placeholder": "A few sentences about you…",
   "editProfile.bio.occupationLabel": "Occupation",

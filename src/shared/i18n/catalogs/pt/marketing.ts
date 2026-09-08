@@ -1048,9 +1048,6 @@ export const marketing: Catalog = {
   "communitiesAbout.how.belong.title": "Aparece e pertence",
   "communitiesAbout.how.belong.body":
     "Entra na conversa, vai aos convívios e torna-te uma cara que as pessoas gostam de ver.",
-  "communitiesAbout.trust.invite": "Só por convite",
-  "communitiesAbout.trust.keeper": "Organizadas por pessoas reais",
-  "communitiesAbout.trust.noAlgorithm": "Sem feeds, sem algoritmo",
   "communitiesAbout.outro.title": "A tua gente já está aqui.",
   "communitiesAbout.outro.sub":
     "Pede um convite e mostramos-te as comunidades que parecem casa.",
@@ -2351,6 +2348,10 @@ export const marketing: Catalog = {
     "Encontra qualquer página de administração pelo nome",
   "changelog.entries.find-any-admin-page-by-name.body":
     "O menu de administração passa a abrir com um campo de procura. Escreve parte do nome de uma página e o menu reduz-se ao que corresponde, com os títulos de secção, para nada ficar escondido dentro de um grupo fechado. Enter abre o primeiro resultado.",
+  "changelog.entries.link-people-and-places-from-your-bio.title":
+    "Liga pessoas e lugares a partir da tua biografia",
+  "changelog.entries.link-people-and-places-from-your-bio.body":
+    "A tua biografia passa a aceitar os mesmos atalhos que as mensagens e o fórum já tinham. Escreve @ para um membro, c/ para uma comunidade, e/ para um evento ou t/ para um tópico do fórum, escolhe da lista que aparece, e o nome fica uma ligação no teu perfil. Funciona também na tua biografia em português e em todas as páginas de persona. Ninguém recebe notificação quando é nomeado: uma biografia é texto permanente, por isso fica em silêncio por mais vezes que a edites.",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.title":
     "Vê o que uma gravação vai alterar antes de gravares",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.body":

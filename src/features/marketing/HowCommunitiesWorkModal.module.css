@@ -99,32 +99,6 @@
   text-wrap: pretty;
 }
 
-/* ── Trust strip ───────────────────────────────────────────────────────── */
-.trust {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  list-style: none;
-  margin: 18px 0 0;
-  padding: 0;
-}
-
-.trustItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  color: var(--ink-60);
-}
-
-.trustItem svg {
-  width: 15px;
-  height: 15px;
-  color: var(--accent);
-  flex: none;
-}
-
 /* ── Outro: motivation on the left, CTA on the right ───────────────────── */
 .outro {
   margin-block-start: clamp(20px, 3vw, 26px);

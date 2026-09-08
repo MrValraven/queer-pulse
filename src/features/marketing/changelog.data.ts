@@ -90,6 +90,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "link-people-and-places-from-your-bio",
+        category: "feature",
+        date: "8 Sep 2026",
+        ...entryKeys("link-people-and-places-from-your-bio"),
+      },
+      {
         id: "see-what-a-save-will-change-before-you-save-it",
         category: "improvement",
         date: "8 Sep 2026",

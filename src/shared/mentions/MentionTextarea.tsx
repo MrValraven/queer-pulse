@@ -1,4 +1,5 @@
 import { useId, useRef, useState, type RefObject } from "react";
+import { useAutoGrowTextarea } from "../hooks/useAutoGrowTextarea";
 import { detectTrigger } from "./detectTrigger";
 import {
   useMentionSuggestions,
@@ -22,6 +23,16 @@ interface MentionTextareaProps {
   placement?: "below" | "above";
   onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onBlur?: () => void;
+  /** Grow the box to fit its content instead of scrolling inside `rows`. The
+   *  profile and persona bio fields turn this on, since the plain textareas
+   *  they replaced grew this way; the chat and forum composers leave it off
+   *  and keep their own fixed, scrolling box. */
+  autoGrow?: boolean;
+  /** Injected by `FormField` when this is its child — see the
+   *  `formFieldControl` opt-in below. Forwarded onto the textarea. */
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean | "true" | "false";
+  "aria-required"?: boolean | "true" | "false";
 }
 
 const MAX_SUGGESTIONS = 6;
@@ -39,6 +50,10 @@ export function MentionTextarea(props: MentionTextareaProps) {
   const { value, onChange, textareaRef } = props;
   const internalRef = useRef<HTMLTextAreaElement | null>(null);
   const ref = textareaRef ?? internalRef;
+  // `?? false`, never a bare `props.autoGrow`: the hook's own `enabled`
+  // defaults to true, so passing `undefined` through would silently switch on
+  // growing boxes in the chat and forum composers that never asked for one.
+  useAutoGrowTextarea(ref, value, props.autoGrow ?? false);
   const { members, communities, topics, businesses, events, threads } =
     useMentionSuggestions();
   const [active, setActive] = useState(0);
@@ -135,6 +150,9 @@ export function MentionTextarea(props: MentionTextareaProps) {
         rows={props.rows}
         placeholder={props.placeholder}
         aria-label={props["aria-label"]}
+        aria-describedby={props["aria-describedby"]}
+        aria-invalid={props["aria-invalid"]}
+        aria-required={props["aria-required"]}
         role="combobox"
         aria-expanded={open}
         aria-controls={open ? listboxId : undefined}
@@ -199,3 +217,18 @@ export function MentionTextarea(props: MentionTextareaProps) {
     </div>
   );
 }
+
+/**
+ * Opt in to `FormField`'s control wiring: this component forwards the injected
+ * `id`/`aria-describedby`/`aria-invalid`/`aria-required` onto its own
+ * `<textarea>`, so a `<FormField label helper>` can wrap a `<MentionTextarea>`
+ * exactly like it wraps a native `<textarea>`. See FormField's
+ * `wireableControl` — without this flag the field's helper text would silently
+ * stop describing the control and its `<label>` would point at nothing.
+ *
+ * Callers inside a FormField must still pass `aria-label`, and must pass the
+ * SAME words as the visible label: `aria-label` wins over `<label htmlFor>` for
+ * the accessible name, so anything else renames the field for screen readers
+ * only.
+ */
+MentionTextarea.formFieldControl = true;

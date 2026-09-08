@@ -1019,9 +1019,6 @@ export const marketing: Catalog = {
   "communitiesAbout.how.belong.title": "Show up and belong",
   "communitiesAbout.how.belong.body":
     "Join the conversation, come to gatherings, and become a face people are glad to see.",
-  "communitiesAbout.trust.invite": "Invite-only",
-  "communitiesAbout.trust.keeper": "Run by real people",
-  "communitiesAbout.trust.noAlgorithm": "No feeds, no algorithm",
   "communitiesAbout.outro.title": "Your people are already here.",
   "communitiesAbout.outro.sub":
     "Request an invite and we'll point you to the communities that feel like home.",
@@ -2292,6 +2289,10 @@ export const marketing: Catalog = {
     "Find any admin page by name",
   "changelog.entries.find-any-admin-page-by-name.body":
     "The admin menu opens with a search field. Type part of a page name and the menu narrows to what matches, section headings and all, so nothing stays hidden inside a closed group. Enter opens the first result.",
+  "changelog.entries.link-people-and-places-from-your-bio.title":
+    "Link people and places from your bio",
+  "changelog.entries.link-people-and-places-from-your-bio.body":
+    "Your bio now takes the same shortcuts messages and the forum already had. Type @ for a member, c/ for a community, e/ for an event or t/ for a forum thread, pick from the list that appears, and the name becomes a link on your profile. It works on your Portuguese bio and on every persona page too. Nobody gets a notification when you name them: a bio is standing text, so it stays quiet however often you edit it.",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.title":
     "See what a save will change before you save it",
   "changelog.entries.see-what-a-save-will-change-before-you-save-it.body":

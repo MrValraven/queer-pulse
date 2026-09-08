@@ -3,12 +3,25 @@
   padding: clamp(36px, 7vw, 52px) 0 clamp(60px, 11vw, 108px);
   background: var(--cream);
 }
-
-/* ── Head ──────────────────────────────────────────────────────────── */
-.head {
+.wrap {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 28px var(--section-y-56);
+  padding: 0 28px;
+}
+
+/* ── The card ──────────────────────────────────────────────────────── */
+.card {
+  padding: clamp(28px, 4vw, 44px);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+/* ── Card head ─────────────────────────────────────────────────────── */
+.cardHead {
+  max-width: 56ch;
+  margin: 0 auto clamp(28px, 3.5vw, 44px);
   text-align: center;
 }
 .eyebrow {
@@ -32,16 +45,18 @@
   box-shadow: var(--ring-jade);
 }
 .title {
-  max-width: 25ch;
   margin: 0 auto;
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-title);
   line-height: 1.1;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--text-strong);
 }
+/* The title breaks on purpose before the italic, so the accent owns a whole
+   line of its own. */
 .title em {
+  display: block;
   font-style: italic;
   color: var(--accent);
 }
@@ -53,247 +68,275 @@
   color: var(--ink-60);
 }
 
-/* ── Thread + central line ─────────────────────────────────────────── */
-.thread {
-  position: relative;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 28px;
+/* The lede is set a step larger and darker than the support line under it, so
+   the two read as a hierarchy rather than a wall. */
+.lede {
+  max-width: 56ch;
+  margin-top: 24px;
+  font-size: var(--text-body-lg);
+  line-height: 1.5;
+  color: rgba(var(--ink-rgb), 0.78);
 }
-.thread::before {
-  content: "";
-  position: absolute;
-  top: 10px;
-  bottom: 40px;
-  left: 50%;
-  width: 1px;
-  background: linear-gradient(
-    rgba(var(--plum-rgb), 0.16),
-    rgba(var(--plum-rgb), 0.05)
-  );
-  transform: translateX(-0.5px);
+.support {
+  max-width: 52ch;
+  margin-top: 12px;
 }
 
-/* ── Chapter marker (masks the line) ───────────────────────────────── */
-.marker {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 32px 0 14px;
-}
-.marker::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: rgba(var(--plum-rgb), 0.12);
-}
-.marker span {
-  padding-right: 14px;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: var(--text-15);
-  color: var(--accent-ink);
-  background: var(--cream);
-}
-
-/* ── "We built this" beat ──────────────────────────────────────────── */
-.built {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-.builtChk {
+/* ── Step icon ─────────────────────────────────────────────────────── */
+.icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+}
+.icon svg {
   width: 19px;
   height: 19px;
-  border-radius: 50%;
-  background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade);
 }
-.builtChk svg {
-  width: 11px;
-  height: 11px;
+/* The heavier safety/rights half of the arc reads plum rather than coral. */
+.iconSafe {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
 }
-
-/* ── Hero panels (plum, full width) ────────────────────────────────── */
-.hero {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 40px;
-  align-items: center;
-  margin: 20px 0;
-  padding: 44px 48px;
-  border-radius: var(--radius-24);
-  background: var(--plum);
-}
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -30%;
-  right: -6%;
-  width: 440px;
-  height: 440px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--accent-rgb), 0.2),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  bottom: -34%;
-  left: -6%;
-  width: 340px;
-  height: 340px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--jade-rgb), 0.12),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-.hero > * {
-  position: relative;
-  z-index: 1;
-}
-.heroEye {
-  margin-bottom: 16px;
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-soft);
-}
-.heroBubble {
-  position: relative;
-  max-width: 38ch;
-  margin-bottom: 22px;
-  padding: 16px 20px 16px 38px;
-  border: 1px solid rgba(var(--cream-rgb), 0.14);
-  border-radius: var(--radius-18) var(--radius-18) var(--radius-18)
-    var(--radius-6);
-  background: rgba(var(--cream-rgb), 0.06);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: var(--text-16);
-  line-height: 1.45;
-  color: var(--accent-soft);
-}
-.heroBubble::before {
-  content: "\201C";
-  position: absolute;
-  top: 20px;
-  left: 12px;
-  font-family: var(--serif);
-  font-size: var(--text-38);
-  line-height: 0;
-  color: var(--accent);
-  opacity: 0.5;
-}
-.heroAns {
-  max-width: 15ch;
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-title);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  color: rgba(var(--cream-rgb), 1);
-}
-.heroAns em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--accent);
-}
-.heroBody {
-  max-width: 44ch;
-  font-size: var(--text-15-5);
-  line-height: 1.7;
-  color: rgba(var(--cream-rgb), 0.66);
-}
-.heroBuilt {
-  margin-top: 22px;
-  color: var(--jade-soft);
-}
-.heroBuilt .builtChk {
-  color: var(--jade-soft);
-}
-.heroCta {
-  margin-top: 26px;
-}
-
-/* ── Light exchange rows ───────────────────────────────────────────── */
-.exch {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: center;
-  padding: 22px 0;
-}
-.node {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 2;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--cream);
-  border: 2px solid var(--accent);
-  transform: translate(-50%, -50%);
-}
-.safe .node {
-  border-color: var(--line-strong);
-}
-.bubble {
-  position: relative;
-  max-width: 42ch;
-  padding: 20px 24px 20px 40px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-20) var(--radius-20) var(--radius-20)
-    var(--radius-6);
-  background: var(--paper);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: var(--text-17);
-  line-height: 1.45;
+/* Still being built: the tile drops its accent tint and reads as neutral ink,
+   so a launched pillar and an unbuilt one never wear the same colour. */
+.iconSoon {
+  background: rgba(var(--line-rgb), 0.07);
   color: var(--ink-60);
 }
-.bubble::before {
-  content: "\201C";
-  position: absolute;
-  top: 22px;
-  left: 12px;
+
+/* ── Rail + thread ─────────────────────────────────────────────────── */
+.focus {
+  display: grid;
+  grid-template-columns: minmax(230px, 30%) 1fr;
+  gap: clamp(20px, 3vw, 36px);
+  align-items: start;
+}
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.railBtn {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-14);
+  background: transparent;
+  color: inherit;
+  transition:
+    background var(--dur-slow) var(--ease),
+    border-color var(--dur-slow) var(--ease);
+}
+@media (hover: hover) {
+  .railBtn:hover {
+    background: rgba(var(--line-rgb), 0.045);
+  }
+}
+.railBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+/* The selected step, mirroring the thread beside it: a faint accent wash and
+   an accent-tinted border, not a full fill. */
+.railBtnOn {
+  border-color: rgba(var(--accent-rgb), 0.45);
+  background: rgba(var(--accent-rgb), 0.07);
+}
+.railLabel {
+  min-width: 0;
+  flex: 1;
   font-family: var(--serif);
-  font-size: var(--text-40);
-  line-height: 0;
-  color: var(--accent);
-  opacity: 0.35;
-}
-.safe .bubble {
-  border-color: rgba(var(--line-rgb), 0.1);
-  background: rgba(var(--plum-rgb), 0.04);
-}
-.safe .bubble::before {
+  font-weight: 500;
+  font-size: var(--text-16);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   color: var(--text-strong);
-  opacity: 0.4;
 }
-.ansH {
+.railLabelSoon {
+  color: var(--ink-60);
+}
+/* The word beside a greyed row. Colour is never the only signal. */
+.soon {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.07);
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.arrow {
+  display: inline-flex;
+  flex: none;
+  color: var(--ink-60);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+.railBtnOn .arrow {
+  color: var(--accent-ink);
+  opacity: 1;
+}
+
+/* ── The conversation ──────────────────────────────────────────────── */
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: clamp(20px, 2.4vw, 30px);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-20);
+  background: rgba(var(--line-rgb), 0.022);
+  animation: stepIn var(--dur-slow) var(--ease) both;
+}
+@keyframes stepIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .detail {
+    animation: none;
+  }
+}
+
+/* One line of the exchange: avatar, name, bubble. */
+.msg {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 90%;
+}
+.msgRight {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
+/* Line the avatar up with the bubble rather than the name above it. */
+.msgAvatar {
+  flex: none;
+  margin-top: 19px;
+}
+.msgBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+.msgRight .msgBody {
+  align-items: flex-end;
+}
+.msgName {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink-60);
+}
+.bubble {
+  max-width: 44ch;
+  padding: 13px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18) var(--radius-18) var(--radius-18)
+    var(--radius-6);
+  background: var(--paper);
+  /* Messages, so the body sans the rest of the app chats in — not the serif
+     italic this section used while the lines were pull quotes. */
+  font-size: var(--text-15-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+/* The second speaker reads as the other side of the thread: mirrored tail and
+   a faint wash, so the two voices are told apart at a glance. */
+.msgRight .bubble {
+  border-radius: var(--radius-18) var(--radius-18) var(--radius-6)
+    var(--radius-18);
+}
+.msgRight .bubble:not(.bubbleResolved) {
+  border-color: rgba(var(--line-rgb), 0.14);
+  background: rgba(var(--plum-rgb), 0.045);
+}
+/* The line spoken after we answered: jade, the platform's "this worked" tone. */
+.bubbleResolved {
+  border-color: rgba(var(--jade-rgb), 0.28);
+  background: rgba(var(--jade-rgb), 0.08);
+}
+
+/* ── Our answer, a message of ours in the middle of the thread ─────── */
+.msgUs {
+  max-width: 100%;
+}
+/* Our face in the thread is the app icon: the mark's one-colour drawing (the
+   one public/icons/icon-monochrome-512-v3.png ships) in cream on the plum
+   tile, so the voice answering reads as the product beside the two photo
+   avatars. The tile is the icon's ground and belongs here, never inside
+   BrandMark, which stays transparent and token-driven. --cream-rgb rather than
+   --cream: cream on plum has to stay light in dark mode. Plum does not flip
+   either, so the hairline only shows in dark, where the tile sits on a
+   near-black page. */
+.usAvatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  margin-top: 19px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}
+.msgUs .msgBody {
+  flex: 1;
+  min-width: 0;
+}
+.answer {
+  align-self: stretch;
+  padding: clamp(18px, 2vw, 24px);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  border-radius: var(--radius-18) var(--radius-18) var(--radius-18)
+    var(--radius-6);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+/* A quiet "time passed" rule, so the lines below read as a later reply. */
+.later {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 6px 0 2px;
+  font-size: var(--text-12);
+  color: rgba(var(--ink-rgb), 0.5);
+}
+.later::before,
+.later::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(var(--line-rgb), 0.12);
+}
+.answerH {
+  max-width: 22ch;
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-heading);
@@ -301,15 +344,15 @@
   letter-spacing: -0.012em;
   color: var(--text-strong);
 }
-.ansH em {
+.answerH em {
   font-style: italic;
   color: var(--accent-ink);
 }
-.ansBody {
-  max-width: 44ch;
+.answerBody {
+  max-width: 54ch;
   margin: 12px 0 14px;
-  font-size: var(--text-14-5);
-  line-height: 1.55;
+  font-size: var(--text-15-5);
+  line-height: 1.6;
   color: var(--ink-60);
 }
 .link {
@@ -323,6 +366,23 @@
   font-weight: 600;
   color: var(--accent-ink);
 }
+/* The same row as `.link`, for the signed-out case where the CTA opens the
+   explainer instead of navigating. */
+.linkBtn {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  cursor: pointer;
+}
+.linkBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-8);
+}
 .link svg {
   transition: transform 0.2s var(--ease);
 }
@@ -332,84 +392,75 @@
   }
 }
 
-/* Flipped exchange (answer on the left, question on the right) */
-.flip .qside {
-  order: 2;
-}
-.flip .answer {
-  order: 1;
-  text-align: right;
-}
-.flip .ansBody {
-  margin-left: auto;
-}
-.flip .link {
-  flex-direction: row-reverse;
-}
-.flip .bubble {
-  margin-left: auto;
-  border-radius: var(--radius-20) var(--radius-20) var(--radius-6)
-    var(--radius-20);
+/* Says plainly that the voices are written, not testimonials. */
+.voicesNote {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: var(--text-12);
+  color: rgba(var(--ink-rgb), 0.5);
 }
 
 /* ── Responsive ────────────────────────────────────────────────────── */
 @media (max-width: 820px) {
-  .hero {
+  /* The rail becomes a horizontal strip of icons above the thread. */
+  .focus {
     grid-template-columns: 1fr;
-    gap: 24px;
-    padding: 34px 30px;
+  }
+  .rail {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+  .railBtn {
+    flex-direction: column;
+    gap: 8px;
+    width: auto;
+    flex: none;
+    text-align: center;
+    padding: 10px;
+  }
+  .railLabel {
+    flex: none;
+    max-width: 11ch;
+    font-size: var(--text-13);
+  }
+  .arrow {
+    display: none;
   }
 }
-@media (max-width: 720px) {
-  .thread::before {
-    left: 16px;
+@media (max-width: 640px) {
+  .msg {
+    max-width: 100%;
+    gap: 9px;
   }
-  .marker {
-    padding-left: 44px;
-  }
-  .exch {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    padding: 22px 0 22px 40px;
-  }
-  .node {
-    left: 16px;
-  }
-  .flip .qside {
-    order: 0;
-  }
-  .flip .answer {
-    order: 0;
-    text-align: left;
-  }
-  .flip .ansBody {
-    margin-left: 0;
-  }
-  .flip .link {
-    flex-direction: row;
-  }
-  .bubble,
-  .flip .bubble {
-    margin-left: 0;
-    border-radius: var(--radius-16) var(--radius-16) var(--radius-16)
-      var(--radius-6);
+  .bubble {
+    font-size: var(--text-15);
   }
 }
 
-/* ── Dark mode (tokens flip cream/paper; keep borders + line legible) ─ */
-:global([data-theme="dark"]) .thread::before {
-  background: linear-gradient(
-    rgba(var(--cream-rgb), 0.16),
-    rgba(var(--cream-rgb), 0.05)
-  );
-}
-:global([data-theme="dark"]) .marker::after {
-  background: rgba(var(--cream-rgb), 0.12);
-}
+/* ── Dark mode (tokens flip cream/paper; keep borders legible) ─────── */
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .detail,
 :global([data-theme="dark"]) .bubble {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
-:global([data-theme="dark"]) .safe .bubble {
-  border-color: rgba(var(--cream-rgb), 0.1);
-  background: rgba(var(--cream-rgb), 0.04);
+:global([data-theme="dark"]) .detail {
+  background: rgba(var(--cream-rgb), 0.03);
+}
+:global([data-theme="dark"]) .msgRight .bubble:not(.bubbleResolved) {
+  border-color: rgba(var(--cream-rgb), 0.12);
+  background: rgba(var(--cream-rgb), 0.05);
+}
+:global([data-theme="dark"]) .later::before,
+:global([data-theme="dark"]) .later::after {
+  background: rgba(var(--cream-rgb), 0.12);
+}
+:global([data-theme="dark"]) .iconSafe {
+  background: rgba(var(--cream-rgb), 0.08);
 }

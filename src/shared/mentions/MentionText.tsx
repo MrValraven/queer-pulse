@@ -36,13 +36,23 @@ const MENTION_CONFIG: Record<
  *  `sigil+slug` becomes the link's `title` so same-named targets stay
  *  distinguishable on hover. Topics always keep their `#tag`. Without a provider
  *  — or when a slug can't be resolved — it renders `sigil+slug` exactly as
- *  before, so it stays lookup-free and 404s gracefully on unknown slugs. */
+ *  before, so it stays lookup-free and 404s gracefully on unknown slugs.
+ *
+ *  `linkify={false}` keeps every mention's styling but renders it as inert
+ *  text. The public profile and persona pages pass `loggedIn` here: those two
+ *  are the only mention surfaces reachable signed out, and almost everything a
+ *  bio can point at (`/members/*`, `/communities/*`) sits behind the auth gate,
+ *  so a visitor following one would land on a wall instead of the person or
+ *  place named. Auth is read at those call sites rather than here, so this
+ *  renderer stays a pure function of its props. */
 export function MentionText({
   text,
   renderText,
+  linkify = true,
 }: {
   text: string;
   renderText?: (value: string) => ReactNode;
+  linkify?: boolean;
 }) {
   const nameMap = useMentionNameMap();
   const segments = parseMentions(text);
@@ -63,14 +73,23 @@ export function MentionText({
           segment.kind === "topic"
             ? undefined
             : nameMap.get(mentionNameKey(segment.kind, segment.slug));
+        const label = resolvedName ?? sigilSlug;
+        const title = resolvedName ? sigilSlug : undefined;
+        if (!linkify) {
+          return (
+            <span key={index} className={styles.mentionFlat} title={title}>
+              {label}
+            </span>
+          );
+        }
         return (
           <Link
             key={index}
             to={config.to(segment.slug)}
             className={styles.mention}
-            title={resolvedName ? sigilSlug : undefined}
+            title={title}
           >
-            {resolvedName ?? sigilSlug}
+            {label}
           </Link>
         );
       })}

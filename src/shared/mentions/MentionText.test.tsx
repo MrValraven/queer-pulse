@@ -89,3 +89,28 @@ test("a topic keeps its #tag even if a same-slug name exists in the map", () => 
   expect(screen.getByRole("link", { name: "#housing" })).toBeInTheDocument();
   expect(screen.queryByRole("link", { name: "Housing Chat" })).toBeNull();
 });
+
+test("linkify=false renders mentions as inert text, keeping the words", () => {
+  renderInRouter(<MentionText text="hey @ana-lopes welcome" linkify={false} />);
+  expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  expect(screen.getByText("@ana-lopes")).toBeInTheDocument();
+});
+
+test("linkify=false still resolves a name when the provider knows it", () => {
+  renderWithNames(<MentionText text="with c/lisboa-queer" linkify={false} />, [
+    [mentionNameKey("community", "lisboa-queer"), "Lisboa Queer"],
+  ]);
+  expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  // The raw sigil+slug stays reachable on hover, exactly as the linked form.
+  expect(screen.getByText("Lisboa Queer")).toHaveAttribute(
+    "title",
+    "c/lisboa-queer",
+  );
+});
+
+test("plain text around an unlinked mention is untouched", () => {
+  const { container } = renderInRouter(
+    <MentionText text="hey @ana-lopes welcome" linkify={false} />,
+  );
+  expect(container.textContent).toBe("hey @ana-lopes welcome");
+});

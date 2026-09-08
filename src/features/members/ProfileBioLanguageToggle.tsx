@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Member } from "./data/members";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MentionText } from "../../shared/mentions/MentionText";
 import styles from "./ProfileHeroMain.module.css";
 
 /**
@@ -14,7 +15,9 @@ export function ProfileBioLanguageToggle({ profile }: { profile: Member }) {
   const bio = lang === "pt" && profile.bioPt ? profile.bioPt : profile.bio;
   return (
     <div className={styles.biowrap}>
-      <p className={styles.bio}>{bio}</p>
+      <p className={styles.bio}>
+        <MentionText text={bio} />
+      </p>
       {profile.bioPt && (
         <div className={styles.biolang}>
           {(["en", "pt"] as const).map((option) => (

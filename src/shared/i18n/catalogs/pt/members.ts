@@ -363,7 +363,8 @@ export const members: Catalog = {
   "profileEdit.field.neighbourhoodBackToList": "Escolher da lista",
   "profileEdit.field.bio": "Biografia",
   "profileEdit.field.bioHelp":
-    "A versão mais longa, na tua página de perfil. Se deixares a biografia curta em branco, o teu cartão no diretório usa o início desta.",
+    "A versão mais longa, na tua página de perfil. Se deixares a biografia curta em branco, o teu cartão no diretório usa o início desta. " +
+    "Escreve @ para mencionar um membro, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e fica uma ligação.",
   "profileEdit.field.tags": "Etiquetas",
   // ── Seletor de área e função (WorkFieldPicker) ──────────────────────────────
   // Aparece em três sítios — o editor de perfil, o passo "o que fazes" do
@@ -419,7 +420,8 @@ export const members: Catalog = {
   "profileEdit.pronunciation.hear": "Ouvir",
   "profileEdit.bioPt.label": "Biografia em português",
   "profileEdit.bioPt.help":
-    "Uma versão opcional da tua biografia em português. Se adicionares uma, quem visita pode alternar entre idiomas.",
+    "Uma versão opcional da tua biografia em português. Se adicionares uma, quem visita pode alternar entre idiomas. " +
+    "Escreve @ para mencionar um membro, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e fica uma ligação.",
   "profileEdit.bioPt.placeholder":
     "Escreve-a em português se quiseres que as pessoas possam alternar.",
   "profileEdit.notHereFor.label": "Não estou aqui para",

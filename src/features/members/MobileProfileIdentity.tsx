@@ -1,5 +1,6 @@
 import { Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MentionText } from "../../shared/mentions/MentionText";
 import { ProfileNetworkStats } from "./ProfileNetworkStats";
 import { ProfileWorkRow } from "./ProfileWorkRow";
 import { SocialLinksRow } from "./SocialLinksRow";
@@ -65,7 +66,9 @@ export function MobileProfileIdentity({
           chip: styles.identityHereForChip,
         }}
       />
-      <p className={styles.identityBio}>{profile.bio}</p>
+      <p className={styles.identityBio}>
+        <MentionText text={profile.bio} />
+      </p>
       <TagRow className={styles.identityTags}>
         {profile.tags.map((tag) => (
           <Tag key={tag}>{tag}</Tag>

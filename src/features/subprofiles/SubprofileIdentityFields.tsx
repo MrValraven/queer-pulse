@@ -1,4 +1,5 @@
 import { FormField } from "../../shared/components/ui";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ImageUploadField } from "./ImageUploadField";
@@ -93,16 +94,25 @@ export function SubprofileIdentityFields({
         />
       </FormField>
 
+      {/* MentionTextarea is FormField's ONLY child here: `wireableControl`
+          bails on a multi-child field and silently stops wiring the label and
+          helper, so keep any commentary outside the element.
+          `aria-label` repeats the FormField label's exact words, since it wins
+          over the field's own <label htmlFor> for the accessible name and
+          anything else would rename this box for screen readers only.
+          No `autoGrow`: FormField gives its textareas a fixed `min-height`
+          with `resize: none`, and this box scrolled before. */}
       <FormField
         label={t("subprofiles:metaForm.bioLabel")}
         labelAside={bioAside}
         helper={t("subprofiles:metaForm.bioHelper")}
       >
-        <textarea
+        <MentionTextarea
           value={bio}
           rows={4}
           placeholder={t("subprofiles:metaForm.bioPlaceholder")}
-          onChange={(event) => onBioChange(event.target.value)}
+          aria-label={t("subprofiles:metaForm.bioLabel")}
+          onChange={onBioChange}
         />
       </FormField>
     </>

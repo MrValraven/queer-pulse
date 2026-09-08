@@ -5,6 +5,8 @@ import { Avatar, FeatureHelp } from "../../shared/components/ui";
 import { ProfilePhotoViewer } from "../members/ProfilePhotoViewer";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MentionText } from "../../shared/mentions/MentionText";
+import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import { KIND_LABEL_KEYS, personaTitleName } from "./subprofile-kinds";
 import { skinFor } from "./subprofile-skins";
@@ -39,6 +41,7 @@ export function SubprofileHero({
   onAction: (action: PersonaAction) => void;
 }) {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
   const [photoOpen, setPhotoOpen] = useState(false);
   const accent = view.accent ?? DEFAULT_ACCENT;
 
@@ -201,7 +204,15 @@ export function SubprofileHero({
         <SubprofileTitleBlock view={view} />
       </div>
 
-      {view.bio && <p className="pp-bio">{view.bio}</p>}
+      {/* `/p/:handle` is public (see authGate's PUBLIC_PATHS note), but the
+          members, communities and events a bio mentions are gated — so a
+          signed-out visitor gets the mention styled and inert rather than a
+          link into a wall. */}
+      {view.bio && (
+        <p className="pp-bio">
+          <MentionText text={view.bio} linkify={loggedIn} />
+        </p>
+      )}
 
       {photoOpen && view.avatarUrl && (
         <ProfilePhotoViewer

@@ -1,4 +1,5 @@
-.mention {
+.mention,
+.mentionFlat {
   color: var(--violet);
   font-weight: 600;
   text-decoration: none;
@@ -6,4 +7,10 @@
 }
 .mention:hover {
   text-decoration: underline;
+}
+/* `linkify={false}` (a bio read signed out): a mention still reads as a named
+   thing, but nothing happens on click, so it takes no hover underline and no
+   pointer cursor that would promise one. */
+.mentionFlat {
+  cursor: inherit;
 }

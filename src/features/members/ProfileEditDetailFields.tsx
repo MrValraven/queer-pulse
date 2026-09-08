@@ -67,6 +67,7 @@ export function ProfileEditDetailFields({
           value={draft.bio}
           ariaLabel={t("members:profileEdit.field.bio")}
           className={styles.bioInput}
+          mentions
           onChange={(value) => updateDraft({ bio: value })}
         />
       </div>
@@ -83,6 +84,7 @@ export function ProfileEditDetailFields({
           ariaLabel={t("members:profileEdit.bioPt.label")}
           placeholder={t("members:profileEdit.bioPt.placeholder")}
           className={styles.bioInput}
+          mentions
           onChange={(value) => updateDraft({ bioPt: value })}
         />
       </div>

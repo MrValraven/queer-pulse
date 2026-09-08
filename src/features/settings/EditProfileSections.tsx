@@ -8,6 +8,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PronounField } from "../../shared/identity/PronounField";
 import { WorkFieldPicker } from "../members/WorkFieldPicker";
 import { type WorkFieldSelection } from "../members/workFieldPicker.data";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { IdentityPhotoField } from "./EditProfileIdentityFields";
 import styles from "./EditProfilePage.module.css";
 
@@ -189,12 +190,19 @@ export function BioSection({
             {bioText.length} / {BIO_MAX}
           </span>
         </label>
-        <textarea
+        {/* The same mention typeahead the chat and forum composers have, so a
+            bio can point at the people, communities and events it talks about.
+            `aria-label` carries just the label's words: the visible <label>
+            also holds the live character count, which has no business in the
+            field's accessible name. The `id` stays so clicking the label still
+            focuses the box. */}
+        <MentionTextarea
           id={`${fieldId}-bio`}
           className={styles.fieldTextarea}
           value={bioText}
-          onChange={(e) => onBioChange(e.target.value)}
+          onChange={onBioChange}
           placeholder={t("settings:editProfile.bio.placeholder")}
+          aria-label={t("settings:editProfile.bio.label")}
         />
       </div>
       <div className={styles.field}>

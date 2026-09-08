@@ -57,80 +57,313 @@ export const homepage: Catalog = {
 
   // ── PainPoints ("why we built this") ───────────────────────────────────────
   "painPoints.eyebrow": "Why we built this",
-  "painPoints.title": "We built <em>the community we wanted to find.</em>",
-  "painPoints.sub":
-    "Queer life in Lisbon is full of people doing incredible things, but finding your way into that community can still feel harder than it should. The right people, spaces, opportunities, resources, and support are often scattered across different places.",
-  "painPoints.sub2":
-    "QueerPulse brings them closer together, making it easier to discover what exists, find where you belong, and turn a connection into something real.",
+  "painPoints.title": "We built the community <em>we wanted to find.</em>",
+  "painPoints.lede":
+    "Queer life in Lisbon is full of people doing remarkable things, scattered across group chats, posters and word of mouth.",
+  "painPoints.support":
+    "QueerPulse gathers them in one place, so you can see what exists, meet the people running it, and turn a name into a plan.",
 
-  "painPoints.hero1.eyebrow": "The gap we felt first",
-  "painPoints.hero1.question": '"Where do I even meet people who get it?"',
-  "painPoints.hero1.heading": "So we built <em>a network.</em>",
-  "painPoints.hero1.body":
-    "Every member is vouched for by someone already inside, creating a community where you can meet people through trust and shared connections.",
-  "painPoints.hero1.builtLabel": "We built the vouch network",
-  "painPoints.hero1.cta": "Meet the community",
+  "painPoints.modal.soonNote":
+    "This one is still being built. Members get it first, and get asked what it should do.",
+  "painPoints.modal.requestInviteCta": "Request an invite",
+  "painPoints.modal.signInCta": "I'm already a member",
+  "painPoints.soon": "Soon",
+  "painPoints.us": "QueerPulse",
+  "painPoints.later": "A few weeks later",
+  "painPoints.voicesNote":
+    "Based on the conversations we kept having while working out what to build next.",
+  "painPoints.network.label": "The vouch network",
+  "painPoints.network.question":
+    "Every queer event I go to, I leave after one drink because I do not know a single person there.",
+  "painPoints.network.question2":
+    "I moved here last year and everyone I know is still someone from work.",
+  "painPoints.network.heading": "So we built <em>a network.</em>",
+  "painPoints.network.body":
+    "Every member is vouched for by someone already inside, so when you meet someone here you already have a person in common.",
+  "painPoints.network.payoff":
+    "Two dinners in and I finally have people to text on a Tuesday.",
+  "painPoints.network.payoff2":
+    "Turns out I already knew three people here, through one person.",
+  "painPoints.network.cta": "Meet the community",
+  "painPoints.network.modal.title":
+    "Everyone here <em>arrived through someone.</em>",
+  "painPoints.network.modal.lede":
+    "The vouch network is the spine of QueerPulse. Every member was let in by a member who already belongs, and that chain stays visible on every profile.",
+  "painPoints.network.modal.a.title": "How a vouch works",
+  "painPoints.network.modal.a.body":
+    "A member sends you an invite and puts their name on it. That name stays on your profile, so nobody here is a stranger to everyone.",
+  "painPoints.network.modal.b.title": "What it gives you",
+  "painPoints.network.modal.b.body":
+    "Before you message anyone you can see how you are connected: who vouched for them, and who you both already know.",
+  "painPoints.network.modal.c.title": "How it powers QueerPulse",
+  "painPoints.network.modal.c.body":
+    "Housing, gatherings and the directory all lean on it. Handing someone your address is a different decision when a member you trust put their name on them.",
 
-  "painPoints.marker1": "Once you're in the room, more doors open.",
-
-  "painPoints.exchange1.question":
-    '"I need a favour, but I don\'t know who to ask."',
-  "painPoints.exchange1.heading": "So we built <em>a community board.</em>",
-  "painPoints.exchange1.body":
-    "Ask for what you need or offer what you can, and give people a way to help each other in everyday life.",
-  "painPoints.exchange1.cta": "Browse the board",
-
-  "painPoints.exchange2.question":
-    '"I want to spend my money with people like me."',
-  "painPoints.exchange2.heading":
+  "painPoints.directory.label": "The business directory",
+  "painPoints.directory.question":
+    "I want my money going to queer-owned places, and I only hear about them when a friend happens to mention one.",
+  "painPoints.directory.question2":
+    "And I want a barber who calls me by my name and cuts exactly what I ask for.",
+  "painPoints.directory.heading":
     "So we built <em>a queer business directory.</em>",
-  "painPoints.exchange2.body":
-    "Discover queer-owned businesses and welcoming services across Lisbon, all in one place.",
-  "painPoints.exchange2.cta": "Browse the directory",
+  "painPoints.directory.body":
+    "Queer-owned businesses and queer-friendly services across Lisbon, with the address, the hours and who runs the place.",
+  "painPoints.directory.payoff":
+    "My whole Saturday list is queer-owned now. Barber included.",
+  "painPoints.directory.payoff2":
+    "Found my barber on there. Third month, same chair, same cut.",
+  "painPoints.directory.cta": "Browse the directory",
+  "painPoints.directory.modal.title":
+    "Where your money <em>actually goes.</em>",
+  "painPoints.directory.modal.lede":
+    "Queer-owned businesses and queer-friendly services across Lisbon, listed by the people who run them.",
+  "painPoints.directory.modal.a.title": "How it works",
+  "painPoints.directory.modal.a.body":
+    "Search by what you need or browse the map. Every listing carries the address, the hours and who runs the place.",
+  "painPoints.directory.modal.b.title": "What it gives you",
+  "painPoints.directory.modal.b.body":
+    "Verified safe spaces sit in the same list, and a place earns that badge only after three separate members have been there and said so.",
+  "painPoints.directory.modal.c.title": "How it powers QueerPulse",
+  "painPoints.directory.modal.c.body":
+    "Owners claim their own listing and answer for it. Money spent inside the community is what keeps the community's own places open.",
 
-  "painPoints.exchange3.question":
-    '"I want to host something, but I don\'t know where to start."',
-  "painPoints.exchange3.heading": "So we built <em>a way to host.</em>",
-  "painPoints.exchange3.body":
-    "Everything you need to turn an idea into a real gathering, with practical guidance and a community behind you.",
-  "painPoints.exchange3.cta": "Start hosting",
+  "painPoints.whatsOn.label": "Somewhere to go",
+  "painPoints.whatsOn.question":
+    "Everything I hear about starts at midnight in a bar, and I stopped drinking two years ago.",
+  "painPoints.whatsOn.question2":
+    "I want a Sunday picnic or a collage afternoon, and those never reach me in time.",
+  "painPoints.whatsOn.heading":
+    "So we built <em>one calendar for the city.</em>",
+  "painPoints.whatsOn.body":
+    "Every gathering in one place: morning walks, supper clubs, workshops, studio visits, screenings and discussions. Filter by day, neighbourhood, kind and cost, and each one says up front whether it is a sober space, step-free, or has a quiet corner.",
+  "painPoints.whatsOn.payoff":
+    "A picnic in Monsanto on Sunday, marked sober space before I had to ask.",
+  "painPoints.whatsOn.payoff2":
+    "Three things in my calendar this month, all of them before 8pm.",
+  "painPoints.whatsOn.cta": "See what's on",
+  "painPoints.whatsOn.modal.title": "The city, <em>on one calendar.</em>",
+  "painPoints.whatsOn.modal.lede":
+    "Everything members are putting on, in one place: morning walks, supper clubs, workshops, studio visits, screenings and discussions.",
+  "painPoints.whatsOn.modal.a.title": "How it works",
+  "painPoints.whatsOn.modal.a.body":
+    "Filter by day, neighbourhood, kind and cost, then RSVP. Your ticket carries the address, the host and a code for the door.",
+  "painPoints.whatsOn.modal.b.title": "What it gives you",
+  "painPoints.whatsOn.modal.b.body":
+    "Every listing says up front whether it is a sober space, step-free, or has a quiet corner, so you know what you are walking into.",
+  "painPoints.whatsOn.modal.c.title": "How it powers QueerPulse",
+  "painPoints.whatsOn.modal.c.body":
+    "This is where the network stops being a list of names. Hosts get check-in and waitlists, and the people who turn up leave knowing each other.",
 
-  "painPoints.exchange4.question":
-    '"I have something I can teach, and something I want to learn."',
-  "painPoints.exchange4.heading": "So we're building <em>skill swaps.</em>",
-  "painPoints.exchange4.body":
-    "Share what you know, learn from someone else, and make useful connections along the way.",
-  "painPoints.exchange4.cta": "See it on the roadmap",
+  "painPoints.host.label": "A way to host",
+  "painPoints.host.question":
+    "I want to run a monthly supper club and I have no idea how to find the first twelve people.",
+  "painPoints.host.question2":
+    "I have had the same idea for a year. Venue, budget and who brings the chairs is where I stop.",
+  "painPoints.host.heading": "So we built <em>a way to host.</em>",
+  "painPoints.host.body":
+    "Everything for turning an idea into a real gathering: a page people can find, RSVPs you can count, and guidance from people who have hosted before.",
+  "painPoints.host.payoff":
+    "Twelve people, one long table, and a checklist that did the worrying for me.",
+  "painPoints.host.payoff2": "I stole your checklist. Mine is in March.",
+  "painPoints.host.cta": "Start hosting",
+  "painPoints.host.modal.title":
+    "You bring the idea. <em>We carry the rest.</em>",
+  "painPoints.host.modal.lede":
+    "Everything for putting something on, from a twelve-person dinner to a workshop for thirty.",
+  "painPoints.host.modal.a.title": "How it works",
+  "painPoints.host.modal.a.body":
+    "Publish a page with the date, the price and the number of spots. RSVPs, the waitlist and check-in on the day are handled for you.",
+  "painPoints.host.modal.b.title": "What it gives you",
+  "painPoints.host.modal.b.body":
+    "A checklist built from what other hosts learned the hard way, including the access details worth stating before anyone has to ask.",
+  "painPoints.host.modal.c.title": "How it powers QueerPulse",
+  "painPoints.host.modal.c.body":
+    "There is no application to host and no committee to pass. Members run what they want to run, and the calendar fills from the inside.",
 
-  "painPoints.hero2.eyebrow": "The gap we felt hardest",
-  "painPoints.hero2.question": '"What if I\'m not okay?"',
-  "painPoints.hero2.heading": "So we built <em>a safety net.</em>",
-  "painPoints.hero2.body":
-    "Find queer-friendly therapists, peer support, and trusted resources when you need somewhere to turn.",
-  "painPoints.hero2.builtLabel": "We built the wellbeing hub",
-  "painPoints.hero2.cta": "See wellbeing resources",
+  "painPoints.skillSwaps.label": "Skill swaps",
+  "painPoints.skillSwaps.question":
+    "I can teach anyone basic first aid, and I need someone to explain how to invoice as a freelancer.",
+  "painPoints.skillSwaps.question2":
+    "I would trade illustration lessons for someone who understands taxes.",
+  "painPoints.skillSwaps.heading": "So we're building <em>skill swaps.</em>",
+  "painPoints.skillSwaps.body":
+    "Post what you can teach and what you want to learn, then trade directly with the person who matches. It is still being built.",
+  "painPoints.skillSwaps.payoff":
+    "When it opens, that trade is one post and one reply.",
+  "painPoints.skillSwaps.payoff2": "Mine is already written in my notes app.",
+  "painPoints.skillSwaps.cta": "See it on the roadmap",
+  "painPoints.skillSwaps.modal.title":
+    "Trade what you know, <em>learn what you need.</em>",
+  "painPoints.skillSwaps.modal.lede":
+    "A skills exchange where members trade time directly: illustration lessons for tax help, Portuguese for a haircut.",
+  "painPoints.skillSwaps.modal.a.title": "How it will work",
+  "painPoints.skillSwaps.modal.a.body":
+    "Post what you can teach and what you want to learn. The match is one post and one reply.",
+  "painPoints.skillSwaps.modal.b.title": "What it will give you",
+  "painPoints.skillSwaps.modal.b.body":
+    "Everything the community already knows how to do, opened up to people who do not have the money to buy it.",
+  "painPoints.skillSwaps.modal.c.title": "How it powers QueerPulse",
+  "painPoints.skillSwaps.modal.c.body":
+    "It sits in the Work hub beside the job board, mentors, grants and the freelance calculators, so one trade can turn into paid work.",
 
-  "painPoints.marker2": "And beyond the room, the harder questions.",
+  "painPoints.forum.label": "The forum",
+  "painPoints.forum.question":
+    "I have a question I do not want to put on Instagram.",
+  "painPoints.forum.question2":
+    "And when I ask it somewhere else, the answers come from strangers with opinions.",
+  "painPoints.forum.heading": "So we built <em>a forum.</em>",
+  "painPoints.forum.body":
+    "One place everyone here belongs to: questions, recommendations, proposals and guides, sorted by category, answered by verified members, moderated by people you can appeal to.",
+  "painPoints.forum.payoff":
+    "Asked about a doctor at 11pm. Three answers by morning, all from people who had been.",
+  "painPoints.forum.payoff2":
+    "I answered someone else's question this week. That is how it stays useful.",
+  "painPoints.forum.cta": "Open the forum",
+  "painPoints.forum.modal.title":
+    "One place where <em>the whole city answers.</em>",
+  "painPoints.forum.modal.lede":
+    "The forum is the single community everyone here belongs to: questions, recommendations, proposals, and the slow work of organising.",
+  "painPoints.forum.modal.a.title": "How it works",
+  "painPoints.forum.modal.a.body":
+    "Post in a category and verified members answer. Threads stay searchable, so your answer is still there for the next person who asks it.",
+  "painPoints.forum.modal.b.title": "What it gives you",
+  "painPoints.forum.modal.b.body":
+    "The question you would not put on Instagram gets a real answer from someone who has been through it, usually the same night.",
+  "painPoints.forum.modal.c.title": "How it powers QueerPulse",
+  "painPoints.forum.modal.c.body":
+    "Guides, gatherings and whole communities start as forum threads. Moderation publishes what it did each quarter, and you can appeal a decision.",
 
-  "painPoints.exchange5.question":
-    '"I want to do something about it, beyond posting."',
-  "painPoints.exchange5.heading": "So we built <em>a way to act.</em>",
-  "painPoints.exchange5.body":
-    "Find local campaigns, mutual aid initiatives, volunteer opportunities, and ways to turn care into action.",
-  "painPoints.exchange5.cta": "Get involved",
+  "painPoints.magazine.label": "The magazine",
+  "painPoints.magazine.question":
+    "Every article I find about queer people is so generic it could be about any city.",
+  "painPoints.magazine.question2":
+    "And the rest feel far-fetched. I want to read about real people in Lisbon.",
+  "painPoints.magazine.heading": "So we built <em>a magazine.</em>",
+  "painPoints.magazine.body":
+    "Essays, profiles and reporting written and edited by queer people in Lisbon. People with names, specific lives, in their own words.",
+  "painPoints.magazine.payoff":
+    "I pitched on a Tuesday and it ran in the next issue.",
+  "painPoints.magazine.payoff2":
+    "Last issue had a profile of the woman who runs the bakery on my street.",
+  "painPoints.magazine.cta": "Read the magazine",
+  "painPoints.magazine.modal.title":
+    "Written by the people <em>living it.</em>",
+  "painPoints.magazine.modal.lede":
+    "Essays, profiles and reporting from queer Lisbon, commissioned, written and edited by members.",
+  "painPoints.magazine.modal.a.title": "How it works",
+  "painPoints.magazine.modal.a.body":
+    "Pitch an idea and an editor answers. Pieces run in issues, with a named writer and a named editor on every one.",
+  "painPoints.magazine.modal.b.title": "What it gives you",
+  "painPoints.magazine.modal.b.body":
+    "Stories about people you could meet this week, with names, streets and specifics.",
+  "painPoints.magazine.modal.c.title": "How it powers QueerPulse",
+  "painPoints.magazine.modal.c.body":
+    "The magazine is how the community keeps its own record, so nobody outside decides which three stories get told about it.",
 
-  "painPoints.exchange6.question": '"Do I actually know my rights here?"',
-  "painPoints.exchange6.heading": "So we built <em>plain-language guides.</em>",
-  "painPoints.exchange6.body":
-    "Clear, accessible information about LGBTQ+ rights in Portugal, written for real life rather than legal textbooks.",
-  "painPoints.exchange6.cta": "Read the guides",
+  "painPoints.cinema.label": "Cinema",
+  "painPoints.cinema.question":
+    "My documentary screened once at a festival and then it disappeared.",
+  "painPoints.cinema.question2":
+    "And half the films I want to see never get a Lisbon date.",
+  "painPoints.cinema.heading": "So we're building <em>a film co-op.</em>",
+  "painPoints.cinema.body":
+    "A community-owned home for queer film: a weekly programme, work made here, and the people who made it there to talk about it. It is still being built.",
+  "painPoints.cinema.payoff":
+    "When it opens, the documentary finally has somewhere to live.",
+  "painPoints.cinema.payoff2": "Put me down for the first screening.",
+  "painPoints.cinema.cta": "Look inside Cinema",
+  "painPoints.cinema.modal.title":
+    "Queer film, <em>with somewhere to live.</em>",
+  "painPoints.cinema.modal.lede":
+    "A community-owned home for queer film: a weekly programme, work made here, and the people who made it there to talk about it.",
+  "painPoints.cinema.modal.a.title": "How it will work",
+  "painPoints.cinema.modal.a.body":
+    "Members programme the season, and work made here gets a run of its own with the filmmaker present.",
+  "painPoints.cinema.modal.b.title": "What it will give you",
+  "painPoints.cinema.modal.b.body":
+    "A weekly screening you can plan your month around, and films that would otherwise never get a Lisbon date.",
+  "painPoints.cinema.modal.c.title": "How it powers QueerPulse",
+  "painPoints.cinema.modal.c.body":
+    "The members who fund it own it, so what gets shown answers to the people watching.",
 
-  "painPoints.exchange7.question": '"Will I actually be safe at this job?"',
-  "painPoints.exchange7.heading":
-    "So we're building <em>employer reviews.</em>",
-  "painPoints.exchange7.body":
-    "Honest experiences from queer employees, helping you make more informed decisions about where you work.",
-  "painPoints.exchange7.cta": "See it on the roadmap",
+  "painPoints.studio.label": "Studio",
+  "painPoints.studio.question":
+    "I put an EP out last year and the platform kept most of what it earned.",
+  "painPoints.studio.question2":
+    "And I pay for streaming every month with no idea how little of it reaches the artist.",
+  "painPoints.studio.heading": "So we're building <em>a music co-op.</em>",
+  "painPoints.studio.body":
+    "Artist-owned music: releases, live sets and sheet music, with the payouts and the rules set by the people making the work. It is still being built.",
+  "painPoints.studio.payoff": "The next release goes up there first.",
+  "painPoints.studio.payoff2":
+    "When it opens, I will finally know where my ten euros a month goes.",
+  "painPoints.studio.cta": "Look inside Studio",
+  "painPoints.studio.modal.title":
+    "Artist-owned music, <em>paid properly.</em>",
+  "painPoints.studio.modal.lede":
+    "Releases, live sets and sheet music from queer artists, with the payouts and the rules set by the people making the work.",
+  "painPoints.studio.modal.a.title": "How it will work",
+  "painPoints.studio.modal.a.body":
+    "Artists upload and price their own work, and the split is published where anyone can read it.",
+  "painPoints.studio.modal.b.title": "What it will give you",
+  "painPoints.studio.modal.b.body":
+    "You can see how much of what you spend reaches the person who made the record.",
+  "painPoints.studio.modal.c.title": "How it powers QueerPulse",
+  "painPoints.studio.modal.c.body":
+    "Same co-op logic as Cinema: members own it, artists set the terms, and the money stays inside the community.",
+
+  "painPoints.wellbeing.label": "The safety net",
+  "painPoints.wellbeing.question":
+    "I want a therapist who already understands queer relationships, so the first session is about me.",
+  "painPoints.wellbeing.question2":
+    "I looked for a therapist for months and gave up twice.",
+  "painPoints.wellbeing.heading": "So we built <em>a safety net.</em>",
+  "painPoints.wellbeing.body":
+    "Queer-friendly therapists, peer support and trusted resources in one place, with how to reach each one.",
+  "painPoints.wellbeing.payoff":
+    "I had a name and a number the same evening, from someone who had been to them.",
+  "painPoints.wellbeing.payoff2":
+    "The third name was the one that stuck. Six months in now.",
+  "painPoints.wellbeing.cta": "See wellbeing resources",
+  "painPoints.wellbeing.modal.title":
+    "Somewhere to turn <em>before it is urgent.</em>",
+  "painPoints.wellbeing.modal.lede":
+    "Queer-friendly therapists, peer support and trusted resources, gathered by the members who used them.",
+  "painPoints.wellbeing.modal.a.title": "How it works",
+  "painPoints.wellbeing.modal.a.body":
+    "Browse by what you need, with how to reach each one. The crisis resources stay public and reachable without an account.",
+  "painPoints.wellbeing.modal.b.title": "What it gives you",
+  "painPoints.wellbeing.modal.b.body":
+    "Names that come from people who actually went, so the first session can be about you.",
+  "painPoints.wellbeing.modal.c.title": "How it powers QueerPulse",
+  "painPoints.wellbeing.modal.c.body":
+    "Care is the part most platforms leave out. Keeping it beside the social side is what makes the rest worth being part of.",
+
+  "painPoints.activism.label": "A way to act",
+  "painPoints.activism.question":
+    "I have two free hours on Saturdays and no idea which association actually needs them.",
+  "painPoints.activism.question2":
+    "There is a collective four streets from me. I found it from a poster in a café.",
+  "painPoints.activism.heading": "So we built <em>a way to act.</em>",
+  "painPoints.activism.body":
+    "See the associations and collectives doing the work near you, what each role asks of you, and how many hours it takes.",
+  "painPoints.activism.payoff":
+    "Two hours on a Saturday, at a food bank ten minutes from my house.",
+  "painPoints.activism.payoff2":
+    "I knew what the role involved before I said yes. That is why I kept going back.",
+  "painPoints.activism.cta": "Find a role",
+  "painPoints.activism.modal.title": "Two free hours, <em>put to work.</em>",
+  "painPoints.activism.modal.lede":
+    "The associations and collectives doing the work near you, with what each role actually asks of you.",
+  "painPoints.activism.modal.a.title": "How it works",
+  "painPoints.activism.modal.a.body":
+    "Browse roles by cause and neighbourhood. Each one states the hours, the commitment and who to talk to, and you apply through the platform.",
+  "painPoints.activism.modal.b.title": "What it gives you",
+  "painPoints.activism.modal.b.body":
+    "You know what you are saying yes to before you say it, which is why people keep going back.",
+  "painPoints.activism.modal.c.title": "How it powers QueerPulse",
+  "painPoints.activism.modal.c.body":
+    "Organisations post their own roles and review their own applicants, so the platform stays useful to groups that were doing this long before it existed.",
 
   // ── Discovery (member highlight) ─────────────────────────────────────────
   "discovery.eyebrow": "{count}+ members and counting",
@@ -169,7 +402,7 @@ export const homepage: Catalog = {
   "liveCommunities.memberCount": "{count} members",
 
   // ── Gatherings (homepage teaser) ──────────────────────────────────────────
-  "gatherings.title": "Meet in <em>real rooms.</em>",
+  "gatherings.title": "Meet <em>in person.</em>",
   "gatherings.subtitle":
     "Dinners, workshops, screenings, and walks: real gatherings happening across Lisbon this month.",
   "gatherings.spots.seatsLeft": "seats left",
@@ -201,7 +434,7 @@ export const homepage: Catalog = {
   "communities.title":
     "Community is stronger <em>when communities connect.</em>",
   "communities.sub":
-    "Search or filter the list, then open any community to see the whole room: what it is, what it does, who's inside, and what you unlock by joining.",
+    "Search or filter the list, then open any community to see it in full: what it is, what it does, who's inside, and what you unlock by joining.",
   "communities.howCommunitiesWorkCta": "How communities work",
   "communities.resultCount.all": "<b>{count}</b> communities",
   "communities.resultCount.shown": "<b>{count}</b> of {total} communities",
@@ -511,7 +744,7 @@ export const homepage: Catalog = {
   "subprofiles.personas.byline.deck.showsLine": "Clips · beats · pitch note",
 
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
-  "outro.title": "Walk into a room where you <em>already belong.</em>",
+  "outro.title": "Walk in where you <em>already belong.</em>",
   "outro.sub":
     "QueerPulse is an invite-only community built on trust, curiosity, and the belief that meaningful connections can change lives and cities.",
   "outro.cta": "Request an invite",

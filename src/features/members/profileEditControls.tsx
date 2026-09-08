@@ -1,12 +1,8 @@
-import {
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { FiGrid, FiPlus, FiX } from "react-icons/fi";
 import { RadioCardGroup } from "../../shared/components/ui";
+import { useAutoGrowTextarea } from "../../shared/hooks/useAutoGrowTextarea";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_PRESETS } from "../../shared/identity/pronouns";
@@ -40,7 +36,14 @@ export function InlineText({
   );
 }
 
-/** Auto-growing textarea that mirrors the bio paragraph's type. */
+/** Auto-growing textarea that mirrors the bio paragraph's type.
+ *
+ *  With `mentions`, it becomes the shared `MentionTextarea` instead: same type,
+ *  same growing box, plus the `@member` / `c/community` / `#topic` /
+ *  `b/business` / `e/event` / `t/thread` typeahead the chat and forum
+ *  composers already have. The bio fields opt in; the short single-purpose
+ *  fields around them stay plain, so a stray `@` in a neighbourhood name never
+ *  opens a suggestion popup. */
 export function InlineTextarea({
   value,
   onChange,
@@ -48,6 +51,7 @@ export function InlineTextarea({
   className,
   placeholder,
   rows = 3,
+  mentions = false,
 }: {
   value: string;
   onChange: (v: string) => void;
@@ -56,34 +60,24 @@ export function InlineTextarea({
   placeholder?: string;
   /** Starting height. The textarea grows past this as the value wraps. */
   rows?: number;
+  /** Offer the six mention shortcuts while typing. */
+  mentions?: boolean;
 }) {
   const ref = useRef<HTMLTextAreaElement>(null);
-  useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-    const fit = () => {
-      element.style.height = "auto";
-      element.style.height = `${element.scrollHeight}px`;
-    };
-    fit();
-    // A one-shot measure freezes a stale height when the textarea's width or the
-    // font changes after mount — e.g. measured mid-entrance in the narrow mobile
-    // editor, or before the web font loads — leaving a tall empty box. Recompute
-    // on width changes (ResizeObserver) and once fonts are ready (which reflows
-    // the text but not the explicitly-set box height, so the observer misses it).
-    const observer = new ResizeObserver(fit);
-    observer.observe(element);
-    let cancelled = false;
-    if (typeof document !== "undefined" && document.fonts) {
-      void document.fonts.ready.then(() => {
-        if (!cancelled) fit();
-      });
-    }
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-    };
-  }, [value]);
+  useAutoGrowTextarea(ref, value, !mentions);
+  if (mentions) {
+    return (
+      <MentionTextarea
+        value={value}
+        onChange={onChange}
+        aria-label={ariaLabel}
+        className={`${styles.inlineInput} ${className ?? ""}`}
+        rows={rows}
+        placeholder={placeholder}
+        autoGrow
+      />
+    );
+  }
   return (
     <textarea
       ref={ref}

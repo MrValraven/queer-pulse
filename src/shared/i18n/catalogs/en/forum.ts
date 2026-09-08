@@ -39,7 +39,7 @@ export const forum: Catalog = {
   // ── ForumPage hero ──────────────────────────────────────────────────────
   "hero.title": "The town <em>square</em>",
   "hero.lead":
-    "The one community everyone here belongs to: questions, proposals, guides, and the slow work of building a movement. Take care of each other. Looking for a smaller room?",
+    "The one community everyone here belongs to: questions, proposals, guides, and the slow work of building a movement. Take care of each other. Looking for something smaller?",
   "hero.findCommunitiesCta": "Find your communities",
   newPostCta: "+ New post",
 

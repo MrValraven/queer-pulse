@@ -538,7 +538,7 @@ export const subprofiles: Catalog = {
     "por ex. Eletrónica noturna para pistas de dança queer",
   "metaForm.bioLabel": "Biografia",
   "metaForm.bioHelper":
-    "Pelo menos 80 carateres para publicares uma persona autónoma.",
+    "Pelo menos 80 carateres para publicares uma persona autónoma. Escreve @ para mencionar um membro, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e fica uma ligação.",
   "metaForm.bioPlaceholder": "Umas frases nas tuas próprias palavras.",
   "metaForm.linkLabel": "Ligar ao teu perfil principal",
   "metaForm.addressLabel": "Endereço do perfil",

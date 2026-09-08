@@ -5,6 +5,8 @@ import {
   FeatureHelp,
 } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { MentionText } from "../../shared/mentions/MentionText";
+import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { leadingInitials } from "../../shared/lib/initials";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
@@ -37,6 +39,7 @@ export function PublicProfilePublicView({
   profile: PublicProfileDTO;
 }) {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
 
   return (
     <>
@@ -73,7 +76,13 @@ export function PublicProfilePublicView({
           <div className={styles.secH}>
             <h2>{t("members:publicBySlug.aboutHeading")}</h2>
           </div>
-          <p className={styles.bio}>{profile.bio}</p>
+          <p className={styles.bio}>
+            {/* This page is reachable signed out, and almost everything a bio
+                can mention (`/members/*`, `/communities/*`) sits behind the
+                auth gate — so for a visitor the mentions stay styled but
+                inert rather than pointing at a wall. */}
+            <MentionText text={profile.bio} linkify={loggedIn} />
+          </p>
         </FadeIn>
       )}
 

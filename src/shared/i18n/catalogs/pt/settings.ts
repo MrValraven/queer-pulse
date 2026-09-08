@@ -600,7 +600,7 @@ export const settings: Catalog = {
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
   "editProfile.bio.title": "Biografia <em>e ocupação</em>",
   "editProfile.bio.sub":
-    "Conta à comunidade quem és. Não é preciso linguagem de currículo.",
+    "Conta à comunidade quem és. Não é preciso linguagem de currículo. Escreve @ para mencionar um membro, c/ uma comunidade, e/ um evento ou t/ um tópico do fórum, e fica uma ligação.",
   "editProfile.bio.label": "Biografia",
   "editProfile.bio.placeholder": "Algumas frases sobre ti…",
   "editProfile.bio.occupationLabel": "Ocupação",

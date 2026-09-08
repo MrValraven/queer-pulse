@@ -372,7 +372,8 @@ export const members: Catalog = {
   "profileEdit.field.neighbourhoodBackToList": "Choose from the list",
   "profileEdit.field.bio": "Bio",
   "profileEdit.field.bioHelp":
-    "The longer version, on your profile page. If you leave your short bio empty, your directory card borrows the opening of this.",
+    "The longer version, on your profile page. If you leave your short bio empty, your directory card borrows the opening of this. " +
+    "Type @ to mention a member, c/ a community, e/ an event or t/ a forum thread, and it becomes a link.",
   "profileEdit.field.tags": "Tags",
   // ── Field of work / profession picker (WorkFieldPicker) ─────────────────────
   // Rendered in three places — the profile editor, onboarding's "what do you
@@ -426,7 +427,8 @@ export const members: Catalog = {
   "profileEdit.pronunciation.hear": "Hear it",
   "profileEdit.bioPt.label": "Bio in Portuguese",
   "profileEdit.bioPt.help":
-    "An optional Portuguese version of your bio. Add one and visitors can switch between languages.",
+    "An optional Portuguese version of your bio. Add one and visitors can switch between languages. " +
+    "Type @ to mention a member, c/ a community, e/ an event or t/ a forum thread, and it becomes a link.",
   "profileEdit.bioPt.placeholder":
     "Write it in Portuguese if you'd like people to be able to switch.",
   "profileEdit.notHereFor.label": "Not here for",

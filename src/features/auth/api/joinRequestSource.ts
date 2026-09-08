@@ -15,6 +15,7 @@ import { routes } from "../../../app/routeMap";
 export const JOIN_REQUEST_SOURCES = [
   "homepage_hero",
   "homepage_outro",
+  "homepage_built",
   "members_explainer",
   "personas_explainer",
   "sign_in",
