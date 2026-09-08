@@ -313,6 +313,12 @@
   --ring-plum-soft: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   --ring-paper: 0 0 0 2px var(--paper); /* punch-out ring: avatar over a card */
   --ring-cream: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+  /* Plum-on-plum edge: a cream hairline that keeps a plum surface legible on a
+     plum ground, such as a tooltip over the community hero's action row. It
+     draws depth-free EDGE, so pair it with an elevation step. Five inset
+     siblings at 0.22-0.24 are still hand-written across the tree; consolidate
+     them onto an inset variant of this when one of them next moves. */
+  --ring-cream-hairline: 0 0 0 1px rgba(var(--cream-rgb), 0.14);
 
   /* The global keyboard focus ring, as tokens, so the 170-odd component rules
      that out-specify `:focus-visible` in base.css can restate it without

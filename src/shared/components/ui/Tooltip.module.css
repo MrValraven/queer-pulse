@@ -15,7 +15,7 @@
      it would otherwise dissolve into the page. A cream hairline plus the
      floating elevation gives it an edge on any ground, dark or cream. */
   box-shadow:
-    0 0 0 1px rgba(var(--cream-rgb), 0.14),
+    var(--ring-cream-hairline),
     var(--shadow-e3);
   font-size: var(--text-11);
   font-weight: 600;
