@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useFormat } from "../../shared/i18n/format";
+import { durationLabel } from "../../shared/i18n/duration";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import type {
@@ -68,11 +69,11 @@ export function ModerationQueueHealthRow({
   const { t } = useTranslation();
   const format = useFormat();
   const formatNumber = (value: number) => format.number(value);
-  const hours = (value: number) =>
-    t("admin:moderationHealth.hours", {
-      count: value,
-      value: formatNumber(value),
-    });
+  // These readings arrive as fractional hours, so a queue answered eight
+  // minutes ago used to read "0.1 hours". The figure keeps its own unit; the
+  // threshold notes underneath stay in hours, because the bands are set in
+  // hours and the note names the band.
+  const wait = (value: number) => durationLabel(value, format, "long");
 
   return (
     <div
@@ -119,7 +120,7 @@ export function ModerationQueueHealthRow({
           value={
             entry.oldestItemHours === null
               ? t("admin:moderationHealth.stat.oldestEmpty")
-              : hours(entry.oldestItemHours)
+              : wait(entry.oldestItemHours)
           }
           isMuted={entry.oldestItemHours === null}
           note={
@@ -185,7 +186,7 @@ export function ModerationQueueHealthRow({
         {entry.medianResponseHours !== null && (
           <ModerationQueueStat
             label={t("admin:moderationHealth.stat.median")}
-            value={hours(entry.medianResponseHours)}
+            value={wait(entry.medianResponseHours)}
           />
         )}
       </dl>

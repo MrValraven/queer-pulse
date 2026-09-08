@@ -7,6 +7,10 @@ import {
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import type { Formatters } from "../../../shared/i18n/format";
+import {
+  durationFromHours,
+  durationLabel,
+} from "../../../shared/i18n/duration";
 import type { TFunction } from "../../../shared/i18n/types";
 import {
   METRICS,
@@ -86,14 +90,21 @@ function activeMembersTrend(
   };
 }
 
-function openReportsTrend(oldestOpenHours: number | null): StatCard["trend"] {
+/** `oldestOpenHours` is a raw fractional-hours reading: a report filed three
+ *  minutes ago arrives as 0.05218305555555556, and pasting it after an "h"
+ *  printed "oldest 0.05218305555555556h" on the tile. `durationLabel` picks
+ *  the unit that fits the figure and lets `Intl` localize the mark. */
+function openReportsTrend(
+  oldestOpenHours: number | null,
+  fmt: Formatters,
+): StatCard["trend"] {
   if (oldestOpenHours === null) {
     return { dir: "warn", key: "admin:dashboard.metrics.trendNoData" };
   }
   return {
     dir: "warn",
     key: "admin:dashboard.metrics.trendOldest",
-    values: { hours: `${oldestOpenHours}h` },
+    values: { hours: durationLabel(oldestOpenHours, fmt) },
   };
 }
 
@@ -136,14 +147,24 @@ function communityHealthTrend(averageScore: number | null): StatCard["trend"] {
 }
 
 /** GET /admin/overview → the 4 hero stat tiles. Reuses each fixture tile's
- *  `labelKey`/icon/format-flags (comma/decimal/prefix/suffix/`to`) as its
- *  base and only overrides the live value/trend/foot fields. */
+ *  `labelKey`/icon/format-flags (comma/prefix/`to`) as its base and only
+ *  overrides the live value/unit/trend/foot fields. The median-response tile
+ *  overrides `decimal`/`unit` as well, because its display unit follows the
+ *  size of the live figure. */
 export function overviewToMetrics(
   dto: AdminOverviewDTO,
   fmt: Formatters,
 ): StatCard[] {
   const medianResponseHours = dto.stats.medianResponseHours;
   const communityHealthAverageScore = dto.stats.communityHealth.averageScore;
+  // The tile's UNIT is live too, alongside its number. A median of four
+  // minutes is 0.067 hours, which the fixture's fixed one-decimal hours
+  // rendering showed as "0.0h": a real, fast reading displayed as no time
+  // at all.
+  const medianResponse =
+    medianResponseHours === null
+      ? null
+      : durationFromHours(medianResponseHours);
 
   return [
     {
@@ -155,13 +176,17 @@ export function overviewToMetrics(
     {
       ...OPEN_REPORTS_FIXTURE,
       value: dto.stats.openReports.value,
-      trend: openReportsTrend(dto.stats.openReports.oldestOpenHours),
+      trend: openReportsTrend(dto.stats.openReports.oldestOpenHours, fmt),
       footValues: { count: dto.stats.openReports.emergencies },
     },
     {
       ...MEDIAN_RESPONSE_FIXTURE,
-      value: medianResponseHours ?? 0,
+      value: medianResponse?.value ?? 0,
+      decimal: medianResponse?.hasDecimal ?? false,
+      unit: medianResponse?.unit ?? MEDIAN_RESPONSE_FIXTURE.unit,
       notMeasured: medianResponseHours === null,
+      // Still judged in HOURS: the SLA is written in hours and the display
+      // unit must not move the threshold it is measured against.
       trend: medianResponseTrend(medianResponseHours),
     },
     {

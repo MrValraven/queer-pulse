@@ -5148,9 +5148,6 @@ export const admin: Catalog = {
   "moderationHealth.threshold.criticalAt": "Needs someone at {value}",
   "moderationHealth.threshold.pastCritical": "Already past {value}",
 
-  "moderationHealth.hours_one": "{value} hour",
-  "moderationHealth.hours_other": "{value} hours",
-
   // The compact reading, shown only at warning or critical.
   "moderationHealth.indicator.warning_one": "{count} queue is getting busy.",
   "moderationHealth.indicator.warning_other":
@@ -5592,8 +5589,6 @@ export const admin: Catalog = {
   "adminQueues.cell.onTime": "On time",
   "adminQueues.cell.overdue_one": "{count} overdue",
   "adminQueues.cell.overdue_other": "{count} overdue",
-  "adminQueues.age.hours_one": "{count} hour",
-  "adminQueues.age.hours_other": "{count} hours",
   "adminQueues.age.days_one": "{count} day",
   "adminQueues.age.days_other": "{count} days",
   "adminQueues.clear.summary_one": "{count} queue is clear",

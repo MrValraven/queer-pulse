@@ -1,5 +1,7 @@
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
+import { durationLabel } from "../../shared/i18n/duration";
 import { AdminChip, type AdminTone } from "./ui";
 import { NOMINATION_STATUS_LABEL_KEY } from "./adminSafeSpaceGovernance.data";
 import type {
@@ -54,6 +56,7 @@ function NominationRow({
   onOpen: (nomination: AdminSafeSpaceNominationDTO) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const visits = nomination.visits;
 
   return (
@@ -89,8 +92,7 @@ function NominationRow({
 
         <div className={styles.rowMeta}>
           {t("safety:governance.row.age", {
-            count: nomination.ageHours,
-            hours: nomination.ageHours,
+            duration: durationLabel(nomination.ageHours, fmt, "long"),
           })}
           {nomination.placeType ? ` · ${nomination.placeType}` : ""}
           {nomination.address ? ` · ${nomination.address}` : ""}

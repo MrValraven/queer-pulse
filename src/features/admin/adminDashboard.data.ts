@@ -11,6 +11,7 @@ import {
   FiStar,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
+import type { DurationUnit } from "../../shared/i18n/duration";
 import { routes, adminCommunityMod } from "../../app/routeMap";
 
 // ── Hero stats ────────────────────────────────────────────────────────────────
@@ -32,7 +33,12 @@ export interface StatCard {
   /** Keep one decimal place (e.g. 3.2). */
   decimal?: boolean;
   prefix?: string;
-  suffix?: string;
+  /** The unit `value` is expressed in, when it has one. `AdminStatGrid`
+   *  renders it as a localized mark after the number (`3.2 hr`, `12 min`) by
+   *  asking `Intl`, so the tile never hard-codes an "h". Live tiles pick the
+   *  unit from the size of the figure (`durationFromHours`), so a median
+   *  response of four minutes says "4 min" instead of "0.0h". */
+  unit?: DurationUnit;
   trend: {
     dir: "up" | "down" | "warn";
     key: string;
@@ -82,7 +88,7 @@ export const METRICS: StatCard[] = [
     icon: FiClock,
     value: 3.2,
     decimal: true,
-    suffix: "h",
+    unit: "hour",
     trend: { dir: "up", key: "admin:dashboard.metrics.trendWellUnder" },
     footKey: "admin:dashboard.metrics.footSlaTarget",
     footValues: { hours: "6h" },
