@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Button, Reveal } from "../../../shared/components/ui";
+import { Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
+import { ExplorePersonasCta } from "./ExplorePersonasCta";
 import { PersonaSwitcher } from "./PersonaSwitcher";
 import { PersonaDeck } from "./PersonaDeck";
 import { PersonaGlimpse } from "./PersonaGlimpse";
@@ -52,13 +52,7 @@ export function PersonasShowcase() {
               {t("homepage:subprofiles.subtitleControl")}
             </Reveal>
             <Reveal delay={120}>
-              <Button
-                variant="ghost-dark"
-                to={routes.subprofiles}
-                className={styles.cta}
-              >
-                {t("homepage:subprofiles.cta")}
-              </Button>
+              <ExplorePersonasCta className={styles.cta} />
             </Reveal>
             <Reveal as="p" delay={160} className={styles.ctaNote}>
               {t("homepage:subprofiles.ctaNote")}

@@ -5,22 +5,22 @@ import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { requestInvitePath } from "../../auth/api/joinRequestSource";
-import { MEMBER_PILLARS } from "./membersExplainer.data";
+import { PERSONA_PILLARS } from "./personasExplainer.data";
 import styles from "./ExplainerModal.module.css";
 
 /**
- * Signed-out explainer for the "Explore members" CTA: why the member directory
- * is invite-only, and how to get in. Shown instead of bouncing a logged-out
- * visitor to the sign-in page. Rendered only while open (owns no state itself),
- * so `ModalSheet` runs its scroll-lock/focus-trap once per open.
+ * Signed-out explainer for the "Explore personas" CTA: why the persona
+ * directory is members-only, and how to get in. Shown instead of bouncing a
+ * logged-out visitor to the sign-in page. Rendered only while open (owns no
+ * state itself), so `ModalSheet` runs its scroll-lock/focus-trap once per open.
  */
-export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
+export function PersonasExplainerModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   return (
     <ModalSheet
       success
       onClose={onClose}
-      ariaLabel={t("homepage:membersExplainer.titlePlain")}
+      ariaLabel={t("homepage:personasExplainer.titlePlain")}
     >
       <div className={styles.panel}>
         <button
@@ -33,18 +33,18 @@ export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
         </button>
 
         <span className={styles.eyebrow}>
-          {t("homepage:membersExplainer.eyebrow")}
+          {t("homepage:personasExplainer.eyebrow")}
         </span>
         <h2 className={styles.title}>
           <Translation
-            i18nKey="homepage:membersExplainer.title"
+            i18nKey="homepage:personasExplainer.title"
             components={{ em: <em /> }}
           />
         </h2>
-        <p className={styles.lede}>{t("homepage:membersExplainer.lede")}</p>
+        <p className={styles.lede}>{t("homepage:personasExplainer.lede")}</p>
 
         <ul className={styles.pillars}>
-          {MEMBER_PILLARS.map(({ id, Icon, titleKey, bodyKey }) => (
+          {PERSONA_PILLARS.map(({ id, Icon, titleKey, bodyKey }) => (
             <li key={id} className={styles.pillar}>
               <span className={styles.pillarIcon} aria-hidden>
                 <Icon />
@@ -57,13 +57,15 @@ export function MembersExplainerModal({ onClose }: { onClose: () => void }) {
           ))}
         </ul>
 
+        <p className={styles.note}>{t("homepage:personasExplainer.note")}</p>
+
         <div className={styles.actions}>
-          <Button size="lg" to={requestInvitePath("members_explainer")}>
-            {t("homepage:membersExplainer.requestInviteCta")}{" "}
+          <Button size="lg" to={requestInvitePath("personas_explainer")}>
+            {t("homepage:personasExplainer.requestInviteCta")}{" "}
             <FiArrowRight aria-hidden />
           </Button>
           <Button size="lg" variant="ghost-dark" to={routes.signIn}>
-            {t("homepage:membersExplainer.signInCta")}
+            {t("homepage:personasExplainer.signInCta")}
           </Button>
         </div>
       </div>

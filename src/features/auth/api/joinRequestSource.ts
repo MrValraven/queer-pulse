@@ -16,6 +16,7 @@ export const JOIN_REQUEST_SOURCES = [
   "homepage_hero",
   "homepage_outro",
   "members_explainer",
+  "personas_explainer",
   "sign_in",
   "barter",
   "employer_reviews",

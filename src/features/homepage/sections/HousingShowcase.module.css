@@ -375,6 +375,17 @@ span.lt {
 .footLink:hover {
   color: var(--accent-text);
 }
+/* The "How reviews work" affordance opens a modal, so it is a button wearing
+   the foot link's clothes. */
+.footLinkButton {
+  composes: footLink;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
 .footReport {
   display: inline-flex;
   align-items: center;

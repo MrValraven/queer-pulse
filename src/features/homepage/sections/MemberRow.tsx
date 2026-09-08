@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Avatar } from "../../../shared/components/ui";
-import { MemberStaffBadge } from "../../../shared/staff/MemberStaffBadge";
 import type { Member } from "../data/types";
 import { profilePath } from "./Discovery.data";
 import styles from "./Discovery.module.css";
@@ -19,10 +18,7 @@ export function MemberRow({ member }: { member: Member }) {
         alt={member.name}
       />
       <span className={styles.rowMeta}>
-        <span className={styles.nameRow}>
-          <span className={styles.rowName}>{member.name}</span>
-          <MemberStaffBadge slug={member.key} />
-        </span>
+        <span className={styles.rowName}>{member.name}</span>
         <span className={styles.rowSub}>
           {member.role} · {member.hood}
         </span>

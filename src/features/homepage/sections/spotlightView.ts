@@ -13,9 +13,13 @@ import { portraitSrc } from "./portraitSrc";
  * the corresponding bits gracefully rather than inventing them.
  */
 export interface SpotlightView {
-  /** Slug/key: profile-link target and staff-badge lookup. */
+  /** Slug/key: profile-link target. */
   key: string;
-  /** Route to the member's public profile. */
+  /**
+   * Route to the member's profile in the app (`/members/:slug`). Only ever
+   * followed by a signed-in member: `SpotlightFace` drops the link entirely for
+   * a signed-out visitor, who has no business being pointed at a gated route.
+   */
   to: string;
   name: string;
   /** Fallback mark shown when there's no portrait. */
@@ -61,7 +65,7 @@ export function memberFeatureToSpotlightView(
 ): SpotlightView {
   return {
     key: member.slug,
-    to: `${routes.publicProfile}/${member.slug}`,
+    to: `${routes.members}/${member.slug}`,
     name: member.name,
     initials: initialsFromName(member.name, "?"),
     tint: tintForKey(member.slug),

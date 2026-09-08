@@ -289,9 +289,33 @@ export const homepage: Catalog = {
   "housing.tabLandlord": "O senhorio",
   "housing.postedByMember": "Publicado por uma pessoa da comunidade",
   "housing.bringToFrontAria": 'Trazer "{label}" para a frente',
+  // Ver a nota em en/homepage.ts: "editar nem remover" em vez de "responder",
+  // porque o senhorio tem mesmo direito de resposta (publicado pela equipa).
   "housing.reviewsFootNote":
-    "Escrito por pessoas que lá viveram. Os senhorios não podem responder nem remover.",
+    "Escrito por pessoas que lá viveram. Os senhorios não podem editar nem remover.",
   "housing.reviewsFootCta": "Como funcionam as avaliações",
+
+  // Modal "Como funcionam as avaliações" (HousingReviewsExplainerModal).
+  "housing.reviewsExplainer.eyebrow": "Avaliações de senhorios",
+  "housing.reviewsExplainer.title": "Escrito por quem <em>lá viveu</em>",
+  "housing.reviewsExplainer.titlePlain": "Escrito por quem lá viveu",
+  "housing.reviewsExplainer.lede":
+    "Tudo o que lês sobre um senhorio vem de alguém da comunidade que lhe alugou casa. Aqui fica quem pode escrever, o que o senhorio pode fazer e o que nunca garantimos.",
+  "housing.reviewsExplainer.rules.livedThere.title": "Só escreve quem lá morou",
+  "housing.reviewsExplainer.rules.livedThere.body":
+    "Para avaliar um senhorio tens de declarar que lhe alugaste casa e indicar os meses em que lá viveste. Uma avaliação por pessoa e por senhorio, para ninguém poder acumular, e podes voltar atrás para reescrever a tua.",
+  "housing.reviewsExplainer.rules.rightOfReply.title":
+    "Os senhorios têm direito de resposta",
+  "housing.reviewsExplainer.rules.rightOfReply.body":
+    'Os senhorios não têm conta aqui, por isso não conseguem editar uma avaliação, escondê-la nem fazê-la desaparecer. Por baixo de cada avaliação há uma ligação "És tu?" para um formulário público, e a nossa equipa publica ali a resposta deles, com as palavras deles.',
+  "housing.reviewsExplainer.rules.reportable.title":
+    "Podes denunciar o que for falso",
+  "housing.reviewsExplainer.rules.reportable.body":
+    "Cada avaliação tem uma ligação para denunciar. A moderação pode retirá-la de vista enquanto analisa, e uma avaliação retirada deixa de contar para a nota do senhorio.",
+  "housing.reviewsExplainer.note":
+    "Não verificamos os arrendamentos. Uma avaliação é o relato de uma pessoa, feito em nome próprio e com telemóvel verificado, e aparece sempre marcada como autodeclarada para que possas avaliá-la por ti.",
+  "housing.reviewsExplainer.browseCta": "Ver alojamento",
+  "housing.reviewsExplainer.closeCta": "Percebi",
 
   // Ver nota equivalente em en/homepage.ts: os dois anúncios de exemplo são
   // uma exceção intencional à regra de âmbito acima — conteúdo estático,
@@ -382,6 +406,29 @@ export const homepage: Catalog = {
   "subprofiles.cta": "Explorar perfis alternativos",
   "subprofiles.ctaNote":
     "Três perfis alternativos estão incluídos em cada conta.",
+  "personasExplainer.eyebrow": "Só para a comunidade",
+  "personasExplainer.title":
+    "Os perfis alternativos vivem <em>do lado de dentro</em>",
+  "personasExplainer.titlePlain":
+    "Os perfis alternativos vivem do lado de dentro",
+  "personasExplainer.lede":
+    "O diretório que acabaste de tentar abrir é só para quem faz parte. Eis o que está do outro lado.",
+  "personasExplainer.pillars.directory.title":
+    "Os perfis alternativos têm diretório próprio",
+  "personasExplainer.pillars.directory.body":
+    "A comunidade navega por perfil alternativo, por isso o lado de ti que aceita trabalhos é o lado que aparece numa pesquisa. Essa página só existe depois de entrares.",
+  "personasExplainer.pillars.coOwned.title":
+    "Um perfil alternativo pode ser levado por duas pessoas",
+  "personasExplainer.pillars.coOwned.body":
+    "Convida alguém como coproprietário e trabalham nele os dois. Se uma das pessoas o devolver e sair, o perfil alternativo fica de pé.",
+  "personasExplainer.pillars.behindTheDoor.title":
+    "A discrição precisa de uma porta fechada",
+  "personasExplainer.pillars.behindTheDoor.body":
+    "Define um perfil alternativo como só para a comunidade e quem estiver de fora encontra um aviso onde estaria a página. Isso só se aguenta enquanto o diretório inteiro for só por convite.",
+  "personasExplainer.note":
+    "As recomendações e quem te segue ficam num único perfil alternativo, por isso o que um lado de ti constrói fica com esse lado.",
+  "personasExplainer.requestInviteCta": "Pedir um convite",
+  "personasExplainer.signInCta": "Já faço parte",
   "subprofiles.proofHeading":
     "Mais do que um lado teu. Um perfil não consegue mostrar tudo.",
   "subprofiles.proofEverywhereNote":

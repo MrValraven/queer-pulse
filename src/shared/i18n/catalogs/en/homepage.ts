@@ -269,9 +269,39 @@ export const homepage: Catalog = {
   "housing.tabLandlord": "The landlord",
   "housing.postedByMember": "Posted by a member",
   "housing.bringToFrontAria": 'Bring "{label}" to the front',
+  // Says "edit or remove" rather than "reply or remove": a landlord genuinely
+  // cannot touch a review, and equally genuinely HAS a right of reply that
+  // staff publish for them (LandlordsService.publishLandlordReply). The
+  // explainer modal below is where that gets the room to be explained.
   "housing.reviewsFootNote":
-    "Written by members who lived there. Landlords can't reply or remove.",
+    "Written by members who lived there. Landlords can't edit or remove them.",
   "housing.reviewsFootCta": "How reviews work",
+
+  // "How reviews work" explainer modal (HousingReviewsExplainerModal). Every
+  // claim here is enforced by LandlordsService on the backend; see the comment
+  // in housingReviewsExplainer.data.ts for which method backs which line.
+  "housing.reviewsExplainer.eyebrow": "Landlord reviews",
+  "housing.reviewsExplainer.title":
+    "Written by people who <em>lived</em> there",
+  "housing.reviewsExplainer.titlePlain": "Written by people who lived there",
+  "housing.reviewsExplainer.lede":
+    "Everything you read about a landlord comes from a member who rented from them. Here is who gets to write one, what the landlord can do about it, and what we never claim.",
+  "housing.reviewsExplainer.rules.livedThere.title":
+    "Only past tenants can write one",
+  "housing.reviewsExplainer.rules.livedThere.body":
+    "To review a landlord you have to say you rented from them and give the months you were there. One review per member per landlord, so nobody can pile on, and you can go back and rewrite your own.",
+  "housing.reviewsExplainer.rules.rightOfReply.title":
+    "Landlords get a right of reply",
+  "housing.reviewsExplainer.rules.rightOfReply.body":
+    'Landlords hold no account here, so they cannot edit a review, hide one, or make it disappear. Under every review sits an "Are you this landlord?" link to a public form, and our team publishes their answer beneath it in their own words.',
+  "housing.reviewsExplainer.rules.reportable.title":
+    "Anything false can be reported",
+  "housing.reviewsExplainer.rules.reportable.body":
+    "Every review carries a report link. Moderators can withhold one while they look into it, and a withheld review stops counting towards the landlord's rating.",
+  "housing.reviewsExplainer.note":
+    "We do not verify tenancies. A review is one member's own account, made in their own name under a verified phone number, and it is labelled self-reported everywhere it appears so you can weigh it yourself.",
+  "housing.reviewsExplainer.browseCta": "Browse housing",
+  "housing.reviewsExplainer.closeCta": "Got it",
 
   // Showcase listing content below (two example listing cards) is an
   // intentional exception to the file-level i18n scope rule above: this is
@@ -357,6 +387,27 @@ export const homepage: Catalog = {
     "You decide what each person sees and how much you want to share. Some personas can be fully linked to your name, while others can exist more discreetly. Not every part of us needs to show up in the same place.",
   "subprofiles.cta": "Explore personas",
   "subprofiles.ctaNote": "Three personas are included with every account.",
+  "personasExplainer.eyebrow": "Members-only",
+  "personasExplainer.title": "Personas live <em>behind the door</em>",
+  "personasExplainer.titlePlain": "Personas live behind the door",
+  "personasExplainer.lede":
+    "The directory you just tried to open is a member surface. Here is what sits on the other side of it.",
+  "personasExplainer.pillars.directory.title":
+    "Personas get a directory of their own",
+  "personasExplainer.pillars.directory.body":
+    "Members browse by persona, so the side of you taking bookings is the side that turns up in a search. That page only exists once you're in.",
+  "personasExplainer.pillars.coOwned.title":
+    "A persona can be run by two people",
+  "personasExplainer.pillars.coOwned.body":
+    "Invite a co-owner and you both work on it. If one of you hands it back and leaves, the persona stays standing.",
+  "personasExplainer.pillars.behindTheDoor.title":
+    "Discretion needs a closed door",
+  "personasExplainer.pillars.behindTheDoor.body":
+    "Set a persona to members-only and anyone signed out meets a wall where the page would be. That only holds up while the whole directory is invite-only.",
+  "personasExplainer.note":
+    "Recommendations and followers land on a single persona, so what one side of you builds up stays with that side.",
+  "personasExplainer.requestInviteCta": "Request an invite",
+  "personasExplainer.signInCta": "I'm already a member",
   "subprofiles.proofHeading":
     "More than one side of you. One profile can't show all of it.",
   "subprofiles.proofEverywhereNote":

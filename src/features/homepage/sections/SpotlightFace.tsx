@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { type AvatarTint, Tag, TagRow } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { MemberStaffBadge } from "../../../shared/staff/MemberStaffBadge";
+import { useAuth } from "../../../app/providers/authContext";
 import type { SpotlightView } from "./spotlightView";
 import styles from "./Discovery.module.css";
 
@@ -15,9 +15,22 @@ const tintClass: Record<AvatarTint, string | undefined> = {
   auth: styles.tPlum,
 };
 
-/** One featured member: big portrait on the left, their story on the right. */
+/**
+ * One featured member: big portrait on the left, their story on the right.
+ *
+ * Profile navigation (the name link and the "View profile" footer link) is for
+ * signed-in members only, and it goes to the member's normal in-app profile at
+ * `/members/:slug`. A signed-out visitor on the marketing homepage gets the
+ * card as a teaser with nothing to click through to: member profiles are a
+ * members-only surface, and the section's own "Explore members" CTA already
+ * hands a signed-out visitor the membership explainer, so the card doesn't
+ * offer a second, dead-ending door into the same place. Demo mode is always
+ * "signed in" (mock persona), so the demo showcase keeps its links.
+ */
 export function SpotlightFace({ view }: { view: SpotlightView }) {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
+  const showVouch = view.verified && !!view.vouchedBy;
 
   return (
     <div
@@ -63,12 +76,13 @@ export function SpotlightFace({ view }: { view: SpotlightView }) {
         <span className={styles.capMeta}>
           {t("homepage:discovery.featuredMember")}
         </span>
-        <span className={styles.nameRow}>
+        {loggedIn ? (
           <Link to={view.to} className={styles.nameLink}>
             <h3 className={styles.name}>{view.name}</h3>
           </Link>
-          <MemberStaffBadge slug={view.key} />
-        </span>
+        ) : (
+          <h3 className={styles.name}>{view.name}</h3>
+        )}
         {view.role && (
           <p className={styles.role}>
             {view.hood ? `${view.role} · ${view.hood}` : view.role}
@@ -84,19 +98,28 @@ export function SpotlightFace({ view }: { view: SpotlightView }) {
           </TagRow>
         )}
 
-        <div className={styles.featFoot}>
-          {view.verified && view.vouchedBy && (
-            <span className={styles.vouch}>
-              {t("homepage:discovery.vouchedBy", { name: view.vouchedBy })}
-            </span>
-          )}
-          {/* The card is a teaser: send people to the profile to read the full
-              story first. Reaching out happens from there, so the Connect modal
-              has one entry point instead of two. */}
-          <Link to={view.to} className={styles.sayHi}>
-            {t("homepage:discovery.viewProfile")} <FiArrowRight aria-hidden />
-          </Link>
-        </div>
+        {/* The footer carries a top rule, so it only renders when it actually
+            has something in it. For a signed-out visitor with no voucher line
+            (the live feed never supplies one) it would otherwise leave a stray
+            hairline under the tags. */}
+        {(showVouch || loggedIn) && (
+          <div className={styles.featFoot}>
+            {showVouch && (
+              <span className={styles.vouch}>
+                {t("homepage:discovery.vouchedBy", { name: view.vouchedBy })}
+              </span>
+            )}
+            {/* The card is a teaser: send people to the profile to read the full
+                story first. Reaching out happens from there, so the Connect modal
+                has one entry point instead of two. */}
+            {loggedIn && (
+              <Link to={view.to} className={styles.sayHi}>
+                {t("homepage:discovery.viewProfile")}{" "}
+                <FiArrowRight aria-hidden />
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

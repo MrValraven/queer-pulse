@@ -249,12 +249,6 @@
   color: var(--tfg);
   margin-bottom: 14px;
 }
-.nameRow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  flex-wrap: wrap;
-}
 .nameLink {
   color: inherit;
   text-decoration: none;

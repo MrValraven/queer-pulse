@@ -1,3 +1,7 @@
+/* Shared chrome for the homepage explainer sheets (MembersExplainerModal,
+   HousingReviewsExplainerModal, PersonasExplainerModal): the plum panel, its
+   close button, the eyebrow/title/lede stack, the icon + title + body row list,
+   and the action row. One file so the explainers cannot drift apart visually. */
 .panel {
   position: relative;
   background: var(--plum);
@@ -100,4 +104,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+/* Closing caveat line under the rows, above the actions. Deliberately quieter
+   than .pillarBody: it qualifies what the rows promise rather than adding a
+   fourth promise. */
+.note {
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: rgba(var(--cream-rgb), 0.66);
+  margin: -12px 0 24px;
 }
