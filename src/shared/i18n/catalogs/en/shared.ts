@@ -109,6 +109,7 @@ export const shared: Catalog = {
   "accountMenu.items.settings": "Settings",
   "accountMenu.items.gettingStarted": "Getting started",
   "accountMenu.items.installApp": "Install the app",
+  "accountMenu.items.reports": "Your reports",
   "accountMenu.items.help": "Help",
   "installAppModal.title": "Install the app",
   "installAppModal.sub":

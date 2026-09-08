@@ -17,6 +17,7 @@ import {
   FiCreditCard,
   FiKey,
   FiHeart,
+  FiFlag,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 
@@ -164,6 +165,16 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
   ],
   // Support
   [
+    // The member's own record of the reports they have filed. It sits here
+    // rather than in the People cluster because filing a report is asking the
+    // platform for help, and this is where a member comes looking for the
+    // answer. Until now the list existed only inside the profile's "Who sees
+    // what" privacy sheet, which is not a place anyone thinks to look for it.
+    {
+      labelKey: "shared:accountMenu.items.reports",
+      to: routes.myReports,
+      icon: FiFlag,
+    },
     {
       labelKey: "shared:accountMenu.items.help",
       to: routes.help,

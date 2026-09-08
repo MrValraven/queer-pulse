@@ -1,0 +1,38 @@
+/* One filed report as its own reporter sees it. Moved here out of
+   `members/WhoSeesWhatSheet.module.css` when the row became shared between the
+   profile privacy sheet and `/account/reports`, so the two surfaces render an
+   identical row rather than two copies free to drift apart. */
+.reportRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+}
+.reportMain {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.rowTitle {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+.reportMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+.reportRef {
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.01em;
+}

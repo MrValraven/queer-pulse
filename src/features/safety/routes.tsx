@@ -31,6 +31,10 @@ const AppealSubmitPage = lazyNamed(
   () => import("./AppealSubmitPage"),
   "AppealSubmitPage",
 );
+const MyReportsPage = lazyNamed(
+  () => import("./MyReportsPage"),
+  "MyReportsPage",
+);
 
 /** Safety & trust-and-safety surfaces: safe-spaces directory, hate-crime
  *  reporting, block/mute, and appeal outcomes. */
@@ -40,6 +44,11 @@ export function safetyRoutes() {
       <Route path={routes.hateCrime} element={<HateCrimePage />} />
       <Route path={routes.report} element={<ReportPage />} />
       <Route path={routes.reporting} element={<ReportingGuidePage />} />
+      {/* An `/account/*` path registered from its own DOMAIN's route file, the
+          same way `cards/routes.tsx` owns `/account/cards`: the reports the
+          member filed are a safety surface that happens to live behind the
+          account gate. */}
+      <Route path={routes.myReports} element={<MyReportsPage />} />
       <Route path={routes.blockMute} element={<BlockMutePage />} />
       <Route path={routes.appealSubmit} element={<AppealSubmitPage />} />
       <Route path={routes.appealOutcome} element={<AppealOutcomePage />} />

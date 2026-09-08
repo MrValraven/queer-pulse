@@ -1732,12 +1732,9 @@ export const members: Catalog = {
   "profile.whoSeesWhat.reports.heading": "Reports you've filed",
   "profile.whoSeesWhat.reports.sub":
     "A record of what you've reported and where it stands.",
-  "profile.whoSeesWhat.reports.filedTemplate": "Filed {time}",
   "profile.whoSeesWhat.reports.empty": "You haven't filed any reports.",
   "profile.whoSeesWhat.reports.error": "We couldn't load your reports.",
-  "profile.whoSeesWhat.reports.status.open": "Open",
-  "profile.whoSeesWhat.reports.status.resolved": "Resolved",
-  "profile.whoSeesWhat.reports.status.escalated": "Escalated",
+  "profile.whoSeesWhat.reports.viewAll": "See all your reports",
 
   "profile.whoSeesWhat.nameChange.heading": "Your username",
   "profile.whoSeesWhat.nameChange.sub":

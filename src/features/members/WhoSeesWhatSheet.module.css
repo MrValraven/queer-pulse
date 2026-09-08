@@ -155,36 +155,20 @@
 }
 
 /* ── Reports ───────────────────────────────────────────────────────────── */
+/* The row itself now lives in `safety/MyReportRow.module.css`, shared with the
+   `/account/reports` page so the two surfaces cannot render one report two
+   different ways. Only the section's own list spacing and footer link stay. */
 .reportList {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.reportRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 16px;
-  border-radius: var(--radius-12);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  background: var(--paper);
-}
-.reportMain {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
-.reportMeta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--text-12);
-  color: var(--ink-40);
-}
-.reportRef {
+.reportsAllLink {
+  align-self: flex-start;
+  margin-top: 12px;
+  font-size: var(--text-13);
   font-weight: 600;
-  color: var(--ink-60);
-  letter-spacing: 0.01em;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

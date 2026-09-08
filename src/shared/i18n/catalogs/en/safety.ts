@@ -37,6 +37,29 @@ export const safety: Catalog = {
   // ── Cross-links between the form (ReportPage) and the guide
   //    (ReportingGuidePage) ─────────────────────────────────────────────────
   "report.howReportingWorksLink": "How reporting works",
+
+  // ── MyReportsPage.tsx + MyReportRow.tsx (/account/reports) ──────────────
+  //    A member's own receipt list, never a moderation queue. The copy says
+  //    what this member is owed — that their report exists, where it stands,
+  //    and a code to quote — and nothing about the person they reported.
+  "myReports.eyebrow": "Safety & Reporting",
+  "myReports.title": "Your <em>reports</em>",
+  "myReports.lead":
+    "Everything you have reported, and where each one stands. Only you can see this list.",
+  "myReports.fileCta": "File a report",
+  "myReports.trackLink": "Your reports",
+  "myReports.filedTemplate": "Filed {time}",
+  "myReports.closedTemplate": "Closed {date}",
+  "myReports.status.open": "Open",
+  "myReports.status.resolved": "Resolved",
+  "myReports.status.escalated": "Escalated",
+  "myReports.empty": "You haven't filed any reports.",
+  "myReports.emptySignedOutNote":
+    "Reports filed while signed out aren't listed here. There's no account on them to tie them to, which is also what keeps them anonymous.",
+  "myReports.error": "We couldn't load your reports.",
+  "myReports.retry": "Try again",
+  "myReports.footNote":
+    "Your 50 most recent reports. We show you your own filing and its status, never what was decided about anyone else.",
   "report.guide.meta.title": "How reporting works on QueerPulse",
   "report.guide.meta.description":
     "What happens after you submit a report on QueerPulse: our review process, the principles behind every decision, and a public log of past moderation outcomes.",
