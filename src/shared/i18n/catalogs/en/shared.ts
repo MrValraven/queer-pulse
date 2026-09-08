@@ -43,11 +43,68 @@ export const shared: Catalog = {
     "Necessary cookies keep you logged in and safe. They're always on. Everything else is up to you, and you can change it any time.",
   "consent.preferences.necessary.title": "Strictly necessary",
   "consent.preferences.necessary.desc":
-    "Your session and CSRF cookies, plus theme and language stored on your device. Required to run the platform. Never used to track you.",
+    "Four cookies that sign you in and keep the site safe, plus your own settings and unsent drafts stored on this device. Never used to track you.",
   "consent.preferences.necessary.alwaysOnAria": "Always on",
   "consent.preferences.rows.monitoring.title": "Error & crash reporting",
   "consent.preferences.rows.monitoring.desc":
     "Automatic diagnostics when something breaks, so we can fix it faster. Carries no advertising or profiling data.",
+
+  // Storage disclosure — StorageDisclosure.tsx, from the one shared inventory
+  // in shared/consent/storageInventory.ts that /cookies also renders.
+  "consent.storage.disclose_one": "What this stores ({count} item)",
+  "consent.storage.disclose_other": "What this stores ({count} items)",
+  "consent.storage.kind.cookie": "Cookie",
+  "consent.storage.kind.localStorage": "On your device",
+  "consent.storage.kind.sessionStorage": "On your device, this tab",
+  "consent.storage.kind.indexedDb": "On your device, database",
+  "consent.storage.kind.cache": "On your device, offline files",
+  "consent.storage.lifetime.minutes10": "10 minutes",
+  "consent.storage.lifetime.minutes15": "15 minutes",
+  "consent.storage.lifetime.days30": "30 days",
+  "consent.storage.lifetime.days31": "31 days",
+  "consent.storage.lifetime.untilCleared": "Until you clear it",
+  "consent.storage.lifetime.untilTabClosed": "Until you close the tab",
+  "consent.storage.lifetime.untilPostedOrCleared": "Until you post or discard",
+  "consent.storage.lifetime.untilDelivered": "Until the message is delivered",
+  "consent.storage.lifetime.onlyWhenOn": "Only while this is on",
+  "consent.storage.accessToken.purpose":
+    "Proves each request is yours. Your browser sends it, but no script can read it.",
+  "consent.storage.refreshToken.purpose":
+    "Renews your session so you aren't signed out mid-read. Sent only to the sign-in endpoints, never to the rest of the site.",
+  "consent.storage.csrfToken.purpose":
+    "A random value we compare on every write, so another site can't act as you. Takes the __Host- name on the live site.",
+  "consent.storage.oauthState.purpose":
+    "A one-time value that ties your Google sign-in to the tab that started it. Deleted the moment you come back.",
+  "consent.storage.consentChoice.purpose":
+    "This choice, and which policy version you made it under, so we don't ask again until the policy changes.",
+  "consent.storage.signInProgress.purpose":
+    "Short-lived values that carry you through signing in, confirming your password again, and accepting an invite.",
+  "consent.storage.displayPreferences.purpose":
+    "Theme, language, navigation layout, and your accessibility settings: reduced motion, text size, spacing, focus rings, skip link.",
+  "consent.storage.notificationPreferences.purpose":
+    "Your notification language and whether previews are hidden, kept where the background worker can read them.",
+  "consent.storage.onboarding.purpose":
+    "How far you got through onboarding, and the status of a join request you're waiting on.",
+  "consent.storage.drafts.purpose":
+    "Anything you started writing and haven't posted: messages, forum posts, stories, job ads, listings, a community you're setting up.",
+  "consent.storage.outbox.purpose":
+    "Messages you sent while offline, held here until they reach the server, plus your per-conversation settings.",
+  "consent.storage.yourLists.purpose":
+    "Your saved items, connections, vouches and profile theme, cached so they appear instantly. Keyed to your account on a shared device.",
+  "consent.storage.dismissals.purpose":
+    "Which prompts, banners and suggestions you've closed, so we don't show them again.",
+  "consent.storage.readingPlace.purpose":
+    "Recent searches, where you stopped reading an article, and checklists you've worked through.",
+  "consent.storage.panelLayout.purpose":
+    "Which filters and side panels you left open or collapsed.",
+  "consent.storage.calculators.purpose":
+    "The figures you type into the rate board, IVA tracker and set-aside planner. They stay on your device; we never receive them.",
+  "consent.storage.previewMode.purpose":
+    "Whether you're browsing the demo, and the sample data that mode needs.",
+  "consent.storage.offlineFiles.purpose":
+    "Copies of the site's own files, so it opens fast and still works on a bad connection. No personal content.",
+  "consent.storage.monitoring.purpose":
+    "Nothing at all while this is off. Turn it on and our error reporter (Sentry) loads and can store a diagnostic id. No session replay, no tracing, no ad or profiling data.",
 
   // Feedback: AuthLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Something broke on our <em>end</em>",

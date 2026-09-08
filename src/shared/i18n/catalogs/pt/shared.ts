@@ -35,11 +35,68 @@ export const shared: Catalog = {
     "Os cookies estritamente necessários mantêm a tua sessão iniciada e em segurança. Estão sempre ativos. O resto depende de ti, e podes alterá-lo quando quiseres.",
   "consent.preferences.necessary.title": "Estritamente necessários",
   "consent.preferences.necessary.desc":
-    "Os teus cookies de sessão e CSRF, mais o tema e o idioma guardados no teu dispositivo. Necessários para o funcionamento da plataforma. Nunca usados para te seguir.",
+    "Quatro cookies que iniciam a tua sessão e mantêm o site seguro, mais as tuas definições e rascunhos por enviar guardados neste dispositivo. Nunca usados para te seguir.",
   "consent.preferences.necessary.alwaysOnAria": "Sempre ativo",
   "consent.preferences.rows.monitoring.title": "Erros e falhas",
   "consent.preferences.rows.monitoring.desc":
     "Diagnóstico automático quando algo falha, para resolvermos mais depressa. Não inclui dados de publicidade nem de perfilagem.",
+
+  // Divulgação do que é guardado — StorageDisclosure.tsx
+  "consent.storage.disclose_one": "O que isto guarda ({count} item)",
+  "consent.storage.disclose_other": "O que isto guarda ({count} itens)",
+  "consent.storage.kind.cookie": "Cookie",
+  "consent.storage.kind.localStorage": "No teu dispositivo",
+  "consent.storage.kind.sessionStorage": "No teu dispositivo, neste separador",
+  "consent.storage.kind.indexedDb": "No teu dispositivo, base de dados",
+  "consent.storage.kind.cache": "No teu dispositivo, ficheiros offline",
+  "consent.storage.lifetime.minutes10": "10 minutos",
+  "consent.storage.lifetime.minutes15": "15 minutos",
+  "consent.storage.lifetime.days30": "30 dias",
+  "consent.storage.lifetime.days31": "31 dias",
+  "consent.storage.lifetime.untilCleared": "Até apagares",
+  "consent.storage.lifetime.untilTabClosed": "Até fechares o separador",
+  "consent.storage.lifetime.untilPostedOrCleared":
+    "Até publicares ou descartares",
+  "consent.storage.lifetime.untilDelivered": "Até a mensagem ser entregue",
+  "consent.storage.lifetime.onlyWhenOn": "Só enquanto isto estiver ativo",
+  "consent.storage.accessToken.purpose":
+    "Prova que cada pedido é teu. O teu navegador envia-o, mas nenhum script o consegue ler.",
+  "consent.storage.refreshToken.purpose":
+    "Renova a tua sessão para não seres desligado a meio de uma leitura. É enviado apenas para os endpoints de sessão, nunca para o resto do site.",
+  "consent.storage.csrfToken.purpose":
+    "Um valor aleatório que comparamos em cada escrita, para que outro site não possa agir em teu nome. No site em produção usa o nome com o prefixo __Host-.",
+  "consent.storage.oauthState.purpose":
+    "Um valor de uso único que liga o teu início de sessão com a Google ao separador que o começou. É apagado assim que voltas.",
+  "consent.storage.consentChoice.purpose":
+    "Esta escolha, e a versão da política em que a fizeste, para não voltarmos a perguntar até a política mudar.",
+  "consent.storage.signInProgress.purpose":
+    "Valores de curta duração que te acompanham ao iniciar sessão, ao confirmares a palavra-passe outra vez e ao aceitares um convite.",
+  "consent.storage.displayPreferences.purpose":
+    "Tema, idioma, disposição da navegação e as tuas definições de acessibilidade: menos movimento, tamanho do texto, espaçamento, anéis de foco, link de salto.",
+  "consent.storage.notificationPreferences.purpose":
+    "O idioma das tuas notificações e se as pré-visualizações estão ocultas, guardados onde o processo em segundo plano os consegue ler.",
+  "consent.storage.onboarding.purpose":
+    "Até onde chegaste na entrada na plataforma, e o estado de um pedido de adesão que aguarda resposta.",
+  "consent.storage.drafts.purpose":
+    "Tudo o que começaste a escrever e ainda não publicaste: mensagens, publicações no fórum, histórias, anúncios de emprego, listagens, uma comunidade que estás a criar.",
+  "consent.storage.outbox.purpose":
+    "Mensagens que enviaste sem ligação, guardadas aqui até chegarem ao servidor, mais as tuas definições de cada conversa.",
+  "consent.storage.yourLists.purpose":
+    "Os teus itens guardados, ligações, apoios e tema de perfil, em cache para aparecerem de imediato. Associados à tua conta num dispositivo partilhado.",
+  "consent.storage.dismissals.purpose":
+    "Que avisos, faixas e sugestões já fechaste, para não voltarmos a mostrá-los.",
+  "consent.storage.readingPlace.purpose":
+    "Pesquisas recentes, onde paraste de ler um artigo e listas de verificação que percorreste.",
+  "consent.storage.panelLayout.purpose":
+    "Que filtros e painéis laterais deixaste abertos ou fechados.",
+  "consent.storage.calculators.purpose":
+    "Os valores que escreves na tabela de tarifas, no registo de IVA e no planeador de reservas. Ficam no teu dispositivo; nunca os recebemos.",
+  "consent.storage.previewMode.purpose":
+    "Se estás a navegar na demonstração, e os dados de exemplo de que esse modo precisa.",
+  "consent.storage.offlineFiles.purpose":
+    "Cópias dos ficheiros do próprio site, para abrir depressa e continuar a funcionar com má ligação. Sem conteúdo pessoal.",
+  "consent.storage.monitoring.purpose":
+    "Absolutamente nada enquanto isto estiver desativado. Se o ativares, o nosso relator de erros (Sentry) carrega e pode guardar um identificador de diagnóstico. Sem gravação de sessão, sem rastreio de desempenho, sem dados de publicidade ou perfilagem.",
 
   // Feedback: AuthLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Algo correu mal do nosso <em>lado</em>",

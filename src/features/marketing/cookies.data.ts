@@ -1,78 +1,17 @@
+/**
+ * The cookie catalog that used to live here is gone. It published seven names
+ * (`qp_session`, `qp_csrf`, `qp_auth`, `qp_prefs`, `qp_theme`, `qp_lang`,
+ * `qp_notif`) that **nothing in either repo ever set** — a transparency page
+ * that was itself inaccurate. The real, verified list of every cookie and
+ * every piece of device storage now lives in ONE place, rendered by both the
+ * `/cookies` page and the in-app preference center:
+ *
+ *     src/shared/consent/storageInventory.ts
+ *
+ * Adding a cookie or a storage key means adding a row there.
+ *
+ * What remains below is unrelated to that catalog and genuinely in use.
+ */
+
 /** localStorage key that records an explicit sign-out for the prototype auth state. */
 export const AUTH_STORAGE_KEY = "qp_logged_in";
-
-/**
- * i18n Pattern A. `name` (technical cookie identifier) and `provider` (brand
- * name) are never translated. `expiresKey` resolves through `t()` since a
- * duration word ("Session", "30 days") reads differently in pt-PT.
- */
-export interface CookieRow {
-  name: string;
-  expiresKey: string;
-  provider: string;
-}
-
-export interface CookieCategory {
-  id: "essential" | "functional";
-  titleKey: string;
-  required?: boolean;
-  bodyKey: string;
-  cookies: CookieRow[];
-}
-
-export const COOKIE_CATEGORIES: CookieCategory[] = [
-  {
-    id: "essential",
-    titleKey: "marketing:cookies.essential.title",
-    required: true,
-    bodyKey: "marketing:cookies.essential.body",
-    cookies: [
-      {
-        name: "qp_session",
-        expiresKey: "marketing:cookies.expires.session",
-        provider: "QueerPulse",
-      },
-      {
-        name: "qp_csrf",
-        expiresKey: "marketing:cookies.expires.session",
-        provider: "QueerPulse",
-      },
-      {
-        name: "qp_auth",
-        expiresKey: "marketing:cookies.expires.days30",
-        provider: "QueerPulse",
-      },
-      {
-        name: "qp_prefs",
-        expiresKey: "marketing:cookies.expires.year1",
-        provider: "QueerPulse",
-      },
-    ],
-  },
-  {
-    id: "functional",
-    titleKey: "marketing:cookies.functional.title",
-    // Preference storage (theme/language/notification prefs) is strictly
-    // necessary to honour a member's own choices — the consent gate treats it
-    // as always-on, so it is shown that way rather than as a fake toggle.
-    required: true,
-    bodyKey: "marketing:cookies.functional.body",
-    cookies: [
-      {
-        name: "qp_theme",
-        expiresKey: "marketing:cookies.expires.year1",
-        provider: "QueerPulse",
-      },
-      {
-        name: "qp_lang",
-        expiresKey: "marketing:cookies.expires.year1",
-        provider: "QueerPulse",
-      },
-      {
-        name: "qp_notif",
-        expiresKey: "marketing:cookies.expires.months6",
-        provider: "QueerPulse",
-      },
-    ],
-  },
-];

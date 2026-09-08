@@ -89,9 +89,13 @@
   opacity: 0.55;
 }
 
+/* Wider than the original 1fr/90/80: rows now carry real key names (a row can
+   list every `qp:a11y:*` setting at once) rather than the seven short invented
+   ones this page used to print. `minmax(0, …)` lets the name column shrink
+   instead of forcing the grid wider than the card. */
 .rowHead {
   display: grid;
-  grid-template-columns: 1fr 90px 80px;
+  grid-template-columns: minmax(0, 1fr) 150px 130px;
   gap: 8px;
   padding-bottom: 6px;
   margin-bottom: 2px;
@@ -110,9 +114,9 @@
 }
 .row {
   display: grid;
-  grid-template-columns: 1fr 90px 80px;
-  gap: 8px;
-  padding: 9px 0;
+  grid-template-columns: minmax(0, 1fr) 150px 130px;
+  gap: 4px 8px;
+  padding: 11px 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
   font-size: var(--text-12-5);
 }
@@ -122,6 +126,18 @@
 .ckName {
   font-weight: 600;
   color: var(--ink);
+  /* Keys like `queerpulse:magazine:reading-position:*` have no space to break
+     at, so without this one row widens the whole card. */
+  overflow-wrap: anywhere;
+}
+
+/* Why the row exists, on its own line under the three columns. Plain language
+   is the point of the page: a name and a duration alone disclose nothing. */
+.ckPurpose {
+  grid-column: 1 / -1;
+  color: var(--ink-60);
+  line-height: 1.5;
+  max-width: 68ch;
 }
 .ckExp {
   color: var(--ink-60);
@@ -184,6 +200,15 @@
 .sumName {
   font-size: var(--text-14);
   color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+/* The row count, under its label. Counted from the inventory, so it moves on
+   its own the next time a cookie or storage key is added. */
+.sumCount {
+  font-size: var(--text-12);
+  color: var(--ink-40);
 }
 .sumVal {
   font-size: var(--text-13);
@@ -221,3 +246,20 @@
 }
 
 /* Outro */
+
+/* Below the card's comfortable width the three columns can't hold a real key
+   name, so the row becomes a stack: name, then the two facts side by side,
+   then the purpose. */
+@media (--sm) {
+  .rowHead {
+    display: none;
+  }
+  .row {
+    grid-template-columns: auto auto;
+    justify-content: start;
+    gap: 2px 10px;
+  }
+  .ckName {
+    grid-column: 1 / -1;
+  }
+}

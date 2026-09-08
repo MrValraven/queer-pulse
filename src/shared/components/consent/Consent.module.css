@@ -128,6 +128,117 @@
   font-size: var(--text-15);
 }
 
+/* ── "What this stores" disclosure (StorageDisclosure.tsx) ──
+   The full cookie / device-storage list for a consent row, collapsed by
+   default so the preference center stays a decision rather than a document. */
+.disclosure {
+  margin-top: 10px;
+}
+
+.disclosureButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 4px;
+  margin-left: -4px;
+  border: 0;
+  border-radius: var(--radius-badge);
+  background: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.disclosureButton:hover {
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+.disclosureButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.disclosureChevron {
+  transition: transform 0.18s var(--ease-out);
+}
+
+.disclosureChevronOpen {
+  transform: rotate(180deg);
+}
+
+.disclosureList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0 0;
+  padding: 12px;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.04);
+}
+
+.disclosureRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.disclosureRow + .disclosureRow {
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.disclosureNames {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0;
+}
+
+/* Technical identifiers are never translated. DM Sans, not `--mono`: the design
+   system reserves monospace for surfaces where column position carries meaning
+   (see tokens/typography.css), and the chip's own ground already marks these as
+   literals. `anywhere` (not `break-word`) so a long key like
+   `queerpulse:magazine:reading-position:*` wraps inside a narrow modal instead
+   of forcing the dialog to scroll sideways. */
+.disclosureName {
+  font-family: var(--sans);
+  letter-spacing: 0.01em;
+  font-size: var(--text-12);
+  color: var(--ink);
+  background: rgba(var(--line-rgb), 0.08);
+  border-radius: 4px;
+  padding: 1px 5px;
+  overflow-wrap: anywhere;
+}
+
+.disclosureMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+.disclosurePurpose {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.disclosureFacts {
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disclosureChevron {
+    transition: none;
+  }
+}
+
 .prefsFoot {
   display: flex;
   justify-content: space-between;

@@ -90,6 +90,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "every-cookie-we-set-now-has-its-real-name",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("every-cookie-we-set-now-has-its-real-name"),
+        tag: {
+          labelKey: "marketing:changelog.tag.cookies",
+          to: routes.cookies,
+        },
+      },
+      {
         id: "a-safe-space-badge-has-to-be-earned",
         category: "improvement",
         date: "6 Sep 2026",

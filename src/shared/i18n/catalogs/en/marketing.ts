@@ -582,31 +582,34 @@ export const marketing: Catalog = {
   // ── Cookies ────────────────────────────────────────────────────────────
   "cookies.meta.title": "QueerPulse Cookie Policy and preferences",
   "cookies.meta.description":
-    "Which cookies QueerPulse uses, all strictly necessary or functional, what each one does, and how to manage your privacy choices. No advertising or analytics cookies.",
+    "Every cookie QueerPulse sets and everything it keeps on your device, named in full, with what each one does and how long it lasts. No advertising or analytics cookies.",
   "cookies.eyebrow": "Cookies",
-  "cookies.h1": "The cookies we <em>use,</em> and why.",
+  "cookies.h1": "Everything we <em>store,</em> and why.",
   "cookies.sub":
-    "A short, plain-language list. Every cookie here is essential or functional. There's nothing to switch off.",
-  "cookies.essential.title": "Essential",
+    "The complete list, in plain language: every cookie we set and everything we keep on your device. Four cookies sign you in and keep the site safe. One thing is optional, and it's off until you say otherwise.",
+  "cookies.essential.title": "Strictly necessary",
   "cookies.essential.body":
-    "Needed to keep you signed in and your account secure. Can't be switched off.",
-  "cookies.functional.title": "Functional",
+    "Needed to sign you in and keep your account secure. Without these the site can't tell your requests from anyone else's, so they can't be switched off.",
+  "cookies.functional.title": "Your settings, on your device",
   "cookies.functional.body":
-    "Remember your preferences: theme, language, notification settings.",
-  "cookies.expires.session": "Session",
-  "cookies.expires.days30": "30 days",
-  "cookies.expires.year1": "1 year",
-  "cookies.expires.months6": "6 months",
+    "Not cookies: these stay in your browser and are never sent to us. They hold the choices you made and the work you haven't finished, so clearing them loses your settings and any unsent drafts.",
+  "cookies.monitoring.title": "Error & crash reporting",
+  "cookies.monitoring.body":
+    "The one thing you can switch off, and it starts off. Nothing is loaded or stored until you turn it on in your privacy choices.",
   "cookies.alwaysOn": "Always on",
+  "cookies.optIn": "Off unless you turn it on",
   "cookies.columns.name": "Name",
+  "cookies.columns.storedWhere": "Stored where",
   "cookies.columns.expires": "Expires",
-  "cookies.columns.provider": "Provider",
   "cookies.noAds.title": "We don't run ads",
   "cookies.noAds.body":
-    "So there's no ad-tech cookie category here. Nothing to sell your attention to.",
+    "So there's no ad-tech category here, and no analytics one either. Nothing on this page profiles you or follows you to another site.",
   "cookies.summary.title": "Your <em>summary</em>",
-  "cookies.summary.essential": "Essential",
-  "cookies.summary.functional": "Functional",
+  "cookies.summary.essential": "Cookies we set",
+  "cookies.summary.functional": "Stored on your device",
+  "cookies.summary.monitoring": "Error reporting",
+  "cookies.summary.count_one": "{count} entry",
+  "cookies.summary.count_other": "{count} entries",
   "cookies.actions.managePreferences": "Manage preferences",
   "cookies.info":
     "Manage your privacy choices any time in <settingsLink>Settings</settingsLink>. Full detail in the <privacyLink>Privacy Policy</privacyLink>.",
@@ -2280,6 +2283,10 @@ export const marketing: Catalog = {
   "changelog.entries.help-centre-search.title": "Search the help centre",
   "changelog.entries.help-centre-search.body":
     "The help centre had six topic tabs and nowhere to type. Now there is a search box that looks through every answer at once, so a question finds its answer even when it sits under a tab you would not have opened. It matches Portuguese too, accents optional.",
+  "changelog.entries.every-cookie-we-set-now-has-its-real-name.title":
+    "Every cookie we set now has its real name",
+  "changelog.entries.every-cookie-we-set-now-has-its-real-name.body":
+    "Our cookie page used to list seven names that nothing on the site actually set. It now lists the four real cookies, what each one does and how long it lasts, alongside everything we keep in your browser: your settings, your unsent drafts, the messages waiting to send. The same list opens inside your privacy choices, so you can read it at the moment you decide.",
   "changelog.entries.a-safe-space-badge-has-to-be-earned.title":
     "A safe space badge has to be earned",
   "changelog.entries.a-safe-space-badge-has-to-be-earned.body":
@@ -2712,6 +2719,7 @@ export const marketing: Catalog = {
   "changelog.tag.feed": "Open your feed",
   "changelog.tag.myEvents": "Open My Events",
   "changelog.tag.safeSpaces": "Find a safe space",
+  "changelog.tag.cookies": "See the full list",
   "changelog.tag.pressKit": "Open the press kit",
   "changelog.tag.pushDevices": "Manage your devices",
   "changelog.tag.magazineDesk": "Open the desk",

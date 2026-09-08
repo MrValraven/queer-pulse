@@ -4,6 +4,8 @@ import { Button, Modal, Toggle } from "../ui";
 import { Translation } from "../../i18n/Translation";
 import { useTranslation } from "../../i18n/useTranslation";
 import type { ConsentCategories } from "../../api/consent.api";
+import { entriesForConsentRow } from "../../consent/storageInventory";
+import { StorageDisclosure } from "./StorageDisclosure";
 import styles from "./Consent.module.css";
 
 interface Row {
@@ -11,6 +13,12 @@ interface Row {
   titleKey: string;
   descKey: string;
 }
+
+// Both rows disclose the storage they are answerable for, read from the one
+// shared inventory (`shared/consent/storageInventory.ts`) that `/cookies` also
+// renders — so the modal and the policy page can never publish different lists.
+const NECESSARY_ENTRIES = entriesForConsentRow("necessary");
+const MONITORING_ENTRIES = entriesForConsentRow("monitoring");
 
 const ROWS: Row[] = [
   {
@@ -73,6 +81,7 @@ export function ConsentPreferences({
             <div className={styles.prefDesc}>
               {t("shared:consent.preferences.necessary.desc")}
             </div>
+            <StorageDisclosure entries={NECESSARY_ENTRIES} />
           </div>
           <span
             className={styles.prefLock}
@@ -87,6 +96,7 @@ export function ConsentPreferences({
             <div className={styles.prefText}>
               <div className={styles.prefTitle}>{t(r.titleKey)}</div>
               <div className={styles.prefDesc}>{t(r.descKey)}</div>
+              <StorageDisclosure entries={MONITORING_ENTRIES} />
             </div>
             <Toggle
               tone="coral"

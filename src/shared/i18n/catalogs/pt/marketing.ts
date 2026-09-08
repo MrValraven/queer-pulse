@@ -597,31 +597,34 @@ export const marketing: Catalog = {
   // ── Cookies ────────────────────────────────────────────────────────────
   "cookies.meta.title": "Política de Cookies da QueerPulse e preferências",
   "cookies.meta.description":
-    "Que cookies a QueerPulse utiliza, todos estritamente necessários ou funcionais, o que cada um faz, e como gerir as tuas escolhas de privacidade. Sem cookies de publicidade nem de análise.",
+    "Todos os cookies que a QueerPulse usa e tudo o que guarda no teu dispositivo, com o nome completo, o que cada um faz e quanto tempo dura. Sem cookies de publicidade nem de análise.",
   "cookies.eyebrow": "Cookies",
-  "cookies.h1": "Os cookies que <em>usamos,</em> e porquê.",
+  "cookies.h1": "Tudo o que <em>guardamos,</em> e porquê.",
   "cookies.sub":
-    "Uma lista curta, em linguagem simples. Todos os cookies aqui são essenciais ou funcionais. Não há nada para desligar.",
-  "cookies.essential.title": "Essenciais",
+    "A lista completa, em linguagem simples: todos os cookies que usamos e tudo o que fica no teu dispositivo. Quatro cookies iniciam a tua sessão e mantêm o site seguro. Uma coisa é opcional, e está desligada até dizeres o contrário.",
+  "cookies.essential.title": "Estritamente necessários",
   "cookies.essential.body":
-    "Necessários para te manteres com sessão iniciada e a tua conta segura. Não podem ser desligados.",
-  "cookies.functional.title": "Funcionais",
+    "Necessários para iniciar a tua sessão e manter a tua conta segura. Sem eles o site não consegue distinguir os teus pedidos dos de outra pessoa, por isso não podem ser desligados.",
+  "cookies.functional.title": "As tuas definições, no teu dispositivo",
   "cookies.functional.body":
-    "Guardam as tuas preferências: tema, idioma, definições de notificação.",
-  "cookies.expires.session": "Sessão",
-  "cookies.expires.days30": "30 dias",
-  "cookies.expires.year1": "1 ano",
-  "cookies.expires.months6": "6 meses",
+    "Não são cookies: ficam no teu navegador e nunca nos são enviados. Guardam as escolhas que fizeste e o trabalho que não terminaste, por isso apagá-los faz perder as tuas definições e quaisquer rascunhos por enviar.",
+  "cookies.monitoring.title": "Erros e falhas",
+  "cookies.monitoring.body":
+    "A única coisa que podes desligar, e já começa desligada. Nada é carregado nem guardado até a ativares nas tuas escolhas de privacidade.",
   "cookies.alwaysOn": "Sempre ativo",
+  "cookies.optIn": "Desligado até o ativares",
   "cookies.columns.name": "Nome",
+  "cookies.columns.storedWhere": "Guardado onde",
   "cookies.columns.expires": "Expira",
-  "cookies.columns.provider": "Fornecedor",
   "cookies.noAds.title": "Não temos anúncios",
   "cookies.noAds.body":
-    "Por isso não há aqui categoria de cookies de publicidade. Não há a quem vender a tua atenção.",
+    "Por isso não há aqui categoria de publicidade, nem de análise. Nada nesta página traça o teu perfil nem te segue para outro site.",
   "cookies.summary.title": "O teu <em>resumo</em>",
-  "cookies.summary.essential": "Essenciais",
-  "cookies.summary.functional": "Funcionais",
+  "cookies.summary.essential": "Cookies que usamos",
+  "cookies.summary.functional": "Guardado no teu dispositivo",
+  "cookies.summary.monitoring": "Relato de erros",
+  "cookies.summary.count_one": "{count} entrada",
+  "cookies.summary.count_other": "{count} entradas",
   "cookies.actions.managePreferences": "Gerir preferências",
   "cookies.info":
     "Gere as tuas escolhas de privacidade quando quiseres em <settingsLink>Definições</settingsLink>. Detalhe completo na <privacyLink>Política de Privacidade</privacyLink>.",
@@ -2339,6 +2342,10 @@ export const marketing: Catalog = {
   "changelog.entries.help-centre-search.title": "Pesquisa no centro de ajuda",
   "changelog.entries.help-centre-search.body":
     "O centro de ajuda tinha seis separadores por tema e nenhum sítio para escrever. Agora há uma caixa de pesquisa que percorre todas as respostas ao mesmo tempo, por isso uma pergunta encontra a resposta mesmo quando ela está num separador que não terias aberto. Também encontra em português, com ou sem acentos.",
+  "changelog.entries.every-cookie-we-set-now-has-its-real-name.title":
+    "Cada cookie que usamos passa a ter o nome verdadeiro",
+  "changelog.entries.every-cookie-we-set-now-has-its-real-name.body":
+    "A nossa página de cookies listava sete nomes que nada no site chegava a usar. Passa a listar os quatro cookies reais, o que cada um faz e quanto tempo dura, a par de tudo o que guardamos no teu navegador: as tuas definições, os teus rascunhos por enviar, as mensagens à espera de seguir. A mesma lista abre dentro das tuas escolhas de privacidade, para a poderes ler no momento em que decides.",
   "changelog.entries.a-safe-space-badge-has-to-be-earned.title":
     "Um emblema de espaço seguro tem de ser conquistado",
   "changelog.entries.a-safe-space-badge-has-to-be-earned.body":
@@ -2770,6 +2777,7 @@ export const marketing: Catalog = {
   "changelog.tag.feed": "Abrir o teu feed",
   "changelog.tag.myEvents": "Abrir Meus Eventos",
   "changelog.tag.safeSpaces": "Encontrar um espaço seguro",
+  "changelog.tag.cookies": "Ver a lista completa",
   "changelog.tag.pressKit": "Abrir o kit de imprensa",
   "changelog.tag.pushDevices": "Gerir os teus dispositivos",
   "changelog.tag.magazineDesk": "Abrir a redação",

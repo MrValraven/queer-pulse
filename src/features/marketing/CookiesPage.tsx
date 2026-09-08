@@ -11,10 +11,11 @@ import { CookieConsentSummary } from "./CookieConsentSummary";
 
 export function CookiesPage() {
   const { t } = useTranslation();
-  // Every cookie we set is strictly necessary or functional — all always-on —
-  // so this page has no cookie toggles to save. The one remaining opt-in (error
-  // monitoring, spec 01) isn't cookie-based; it lives in the in-app preference
-  // center, which this page links out to.
+  // The page discloses; it doesn't decide. Everything in the necessary and
+  // functional categories is always-on, and the one opt-in (error monitoring,
+  // spec 01) is switched in the in-app preference center this button opens —
+  // so there is nothing here to save. Rows come from the shared
+  // `STORAGE_INVENTORY`, which the preference center renders too.
   const { openPreferences } = useConsent();
   const pageTitle = t("marketing:cookies.meta.title");
   const pageDescription = t("marketing:cookies.meta.description");
