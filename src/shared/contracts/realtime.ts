@@ -20,7 +20,14 @@ export interface ReactionCount {
   count: number;
 }
 
-/** A notification as the backend serves it (entity shape, `payload` is jsonb). */
+/**
+ * A notification as the backend serves it — the SAME mapped row `GET
+ * /notifications` returns (`toNotificationResponse`), so a pushed notification
+ * and a fetched one are interchangeable. Mirror any field added to
+ * `NotificationDTO` (features/notifications/api/notifications.api.ts) here.
+ * `payload` is the allowlist projection of the entity's jsonb, never the raw
+ * column.
+ */
 export interface RealtimeNotification {
   id: string;
   userId: string;
@@ -28,6 +35,9 @@ export interface RealtimeNotification {
   payload: Record<string, unknown>;
   read: boolean;
   createdAt: string;
+  /** The gateway resolves no profile, so this is always `null` on a frame. */
+  actor?: unknown;
+  otherActorCount?: number;
 }
 
 /** Frames the gateway emits to us. */
@@ -55,9 +65,11 @@ export interface ServerToClientEvents {
   presence: { userId: string; online: boolean };
   /** `client.emit('presence:snapshot', …)` on connect, or on request. */
   "presence:snapshot": { online: string[] };
-  /** Fan-out to the recipient's `user:${userId}` room (added by the A-emit
-   *  backend workstream, mirroring the `message:new` pattern). */
-  "notification:new": { notification: RealtimeNotification };
+  /** Fan-out to the recipient's `user:${userId}` room, mirroring the
+   *  `message:new` pattern. The frame is the row ITSELF, with no envelope
+   *  around it: the gateway emits `toNotificationResponse(notification,
+   *  undefined)` directly, so the frame's top level IS the notification. */
+  "notification:new": RealtimeNotification;
   /** `chat.gateway.ts` → `namespace.to('user:'+id).emit('conversation:new', …)`
    *  — a new conversation (a group #17) the member was just added to. Fanned to
    *  each member's user room (they aren't in the conversation room yet), so the

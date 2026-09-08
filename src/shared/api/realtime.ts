@@ -382,7 +382,9 @@ class RealtimeClient {
     // so bump the badge's cache LOCALLY with no network; only the feed (which
     // needs `t`/`fmt` translation this class can't supply) genuinely needs a
     // refetch, scoped to its OWN key prefix.
-    socket.on("notification:new", ({ notification }) => {
+    // The frame is the mapped row itself, NOT `{ notification }` — the gateway
+    // emits `toNotificationResponse(...)` directly (see contracts/realtime.ts).
+    socket.on("notification:new", (notification) => {
       if (!notification.read) {
         // Matches useUnreadCount.ts's `["notifications", "unread-count",
         // demoMode]` key exactly. The socket only ever exists when
