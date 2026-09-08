@@ -218,6 +218,9 @@ export const admin: Catalog = {
 
   // ── Dashboard ──────────────────────────────────────────────────────────────
   "dashboard.title": "Overview · <em>good morning, {name}</em>",
+  // The same greeting while the signed-in profile is still resolving, so the
+  // page never opens by naming the wrong person or leaving a hole.
+  "dashboard.titleNameless": "Overview · <em>good morning</em>",
   // Headline count + subtitle are derived from the real triage backlog
   // (`GET /admin/overview` → triage counts); `{count}` drives pluralization.
   "dashboard.header.titleLine1_one": "{count} thing",
@@ -724,6 +727,23 @@ export const admin: Catalog = {
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 
+  // PRD-288: a staff-role toggle files nothing on its own. It opens a confirm
+  // dialog that names what the grant opens or closes and takes a reason other
+  // admins will read in the audit feed.
+  "staffRoles.confirm.grantTitle": "Grant {role}?",
+  "staffRoles.confirm.revokeTitle": "Remove {role}?",
+  "staffRoles.confirm.grantBody":
+    "The queues this role opens are theirs from the moment you confirm. Your name and your reason go into the audit log.",
+  "staffRoles.confirm.revokeBody":
+    "They lose those queues from the moment you confirm. Everything they already decided stays on the record. Your name and your reason go into the audit log.",
+  "staffRoles.confirm.grantCta": "Grant role",
+  "staffRoles.confirm.revokeCta": "Remove role",
+  "staffRoles.confirm.reasonLabel": "Why (other admins read this)",
+  "staffRoles.confirm.reasonPlaceholder":
+    "At least {min} characters. Say what changed.",
+  "staffRoles.confirm.grantedToast": "{role} granted.",
+  "staffRoles.confirm.revokedToast": "{role} removed.",
+
   "members.timeline.title": "Moderation history: for & against",
   "members.timeline.auditLinkCta": "Every entry in the audit log",
 
@@ -754,6 +774,7 @@ export const admin: Catalog = {
   "members.message.title": "Message <em>{name}</em>",
   "members.message.sendAsLabel": "Send as",
   "members.message.sendAsSelf": "{name} (you)",
+  "members.message.sendAsSelfNameless": "You",
   "members.message.sendAsTeam": "Trust & Safety team",
   "members.message.bodyLabel": "Message",
   "members.message.placeholder":
@@ -1309,6 +1330,26 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.row.declineCta": "Decline",
   "adminMagazineSubmissions.row.acceptCta": "Accept",
   "adminMagazineSubmissions.row.commissionCta": "Commission",
+  // The one route back from a decline. Offered only on a declined row, last
+  // and quietly, because it is a correction rather than part of the daily
+  // pass over the queue.
+  "adminMagazineSubmissions.reopen.cta": "Reopen",
+  "adminMagazineSubmissions.reopen.confirmTitle": "Reopen “{title}”?",
+  "adminMagazineSubmissions.reopen.confirmBody":
+    "The decline and the reply {name} received are erased, and the story goes back into the queue. {name} is told it was reopened.",
+  "adminMagazineSubmissions.reopen.confirmCta": "Reopen submission",
+  "adminMagazineSubmissions.reopen.doneToast":
+    "“{title}” is back in the queue.",
+  "adminMagazineSubmissions.reopen.failedToast":
+    "That submission could not be reopened. Reload the queue and try again.",
+  // Kept on the row afterwards: a reopen clears the decision it undoes, so
+  // without this line the story would sit in the queue looking as if nobody
+  // had ever decided it.
+  "adminMagazineSubmissions.row.reopened": "Reopened {date}",
+  "adminMagazineSubmissions.row.reopenedBy": "Reopened {date} by {name}",
+  "adminMagazineSubmissions.row.reopenedTimes_one": "(1 time in total)",
+  "adminMagazineSubmissions.row.reopenedTimes_other":
+    "({count} times in total)",
   "adminMagazineSubmissions.loadMore": "Load more",
   "adminMagazineSubmissions.loadingMore": "Loading…",
 
@@ -1630,6 +1671,13 @@ export const admin: Catalog = {
     "The member is notified with this reason and note, and can appeal.",
   "moderation.bulk.confirm.transparency_other":
     "All {count} members are notified with this reason and note, and can appeal.",
+  // Why Apply is unavailable, beside the field it is asking for. A greyed
+  // button that says nothing is how a moderator ends up believing the batch
+  // is broken.
+  "moderation.bulk.confirm.pickReasonNotice":
+    "Pick a reason above before you can apply this.",
+  "moderation.bulk.confirm.noteRequiredNotice":
+    "Everyone in this batch reads the note, so it cannot be empty. {current}/{min} characters.",
 
   "moderation.emergency.ariaLabel": "Safety emergencies",
   "moderation.emergency.count_one": "{count} safety emergency",
@@ -1713,6 +1761,14 @@ export const admin: Catalog = {
   "moderation.reportDrawer.anotherModerator": "another moderator",
   "moderation.reportDrawer.assignToMeCta": "Assign to me",
   "moderation.reportDrawer.unassignCta": "Unassign",
+  // Why Confirm is unavailable, read under the note field rather than only on
+  // the disabled button, which is unreachable to a keyboard while disabled.
+  "moderation.reportDrawer.pickActionNotice":
+    "Pick an action above before you can confirm.",
+  "moderation.reportDrawer.noteRequiredNotice":
+    "The member reads this note, so it has to say something. At least {min} characters, {current} so far.",
+  "moderation.reportDrawer.noteRequiredToast":
+    "Write the member a note of at least {min} characters first.",
   "moderation.reportDrawer.pickActionToast":
     "Pick an action before confirming.",
   "moderation.reportDrawer.escalatedToast":

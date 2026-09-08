@@ -227,6 +227,9 @@ export const admin: Catalog = {
 
   // ── Painel principal ──────────────────────────────────────────────────────
   "dashboard.title": "Resumo · <em>bom dia, {name}</em>",
+  // A mesma saudação enquanto o perfil ainda está a carregar, para a página
+  // nunca abrir a nomear a pessoa errada nem com um buraco no lugar do nome.
+  "dashboard.titleNameless": "Resumo · <em>bom dia</em>",
   // Contagem e subtítulo derivados da fila de triagem real
   // (`GET /admin/overview` → contagens de triagem); `{count}` ativa o plural.
   "dashboard.header.titleLine1_one": "{count} coisa",
@@ -729,6 +732,23 @@ export const admin: Catalog = {
   "staffRoles.systemLocked":
     "Contas do sistema não podem ter papéis de equipa.",
 
+  // PRD-288: mexer no interruptor de um papel não submete nada. Abre um
+  // diálogo de confirmação que diz que filas são abertas ou fechadas e pede
+  // um motivo que o resto da administração vai ler no registo de auditoria.
+  "staffRoles.confirm.grantTitle": "Dar {role}?",
+  "staffRoles.confirm.revokeTitle": "Retirar {role}?",
+  "staffRoles.confirm.grantBody":
+    "As filas que este papel abre ficam acessíveis assim que confirmares. O teu nome e o teu motivo ficam no registo de auditoria.",
+  "staffRoles.confirm.revokeBody":
+    "O acesso a essas filas termina assim que confirmares. Tudo o que já foi decidido fica registado. O teu nome e o teu motivo ficam no registo de auditoria.",
+  "staffRoles.confirm.grantCta": "Dar papel",
+  "staffRoles.confirm.revokeCta": "Retirar papel",
+  "staffRoles.confirm.reasonLabel": "Porquê (o resto da administração lê isto)",
+  "staffRoles.confirm.reasonPlaceholder":
+    "Pelo menos {min} caracteres. Diz o que mudou.",
+  "staffRoles.confirm.grantedToast": "Papel {role} atribuído.",
+  "staffRoles.confirm.revokedToast": "Papel {role} retirado.",
+
   "members.timeline.title": "Histórico de moderação: a favor e contra",
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
 
@@ -756,6 +776,7 @@ export const admin: Catalog = {
   "members.message.title": "Mensagem para <em>{name}</em>",
   "members.message.sendAsLabel": "Enviar como",
   "members.message.sendAsSelf": "{name} (tu)",
+  "members.message.sendAsSelfNameless": "Tu",
   "members.message.sendAsTeam": "Equipa de Confiança e Segurança",
   "members.message.bodyLabel": "Mensagem",
   "members.message.placeholder":
@@ -1317,6 +1338,25 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.row.declineCta": "Recusar",
   "adminMagazineSubmissions.row.acceptCta": "Aceitar",
   "adminMagazineSubmissions.row.commissionCta": "Encomendar",
+  // O único caminho de volta depois de uma recusa. Só aparece numa linha
+  // recusada, em último e sem destaque, porque é uma correção e não parte da
+  // passagem diária pela fila.
+  "adminMagazineSubmissions.reopen.cta": "Reabrir",
+  "adminMagazineSubmissions.reopen.confirmTitle": "Reabrir “{title}”?",
+  "adminMagazineSubmissions.reopen.confirmBody":
+    "A recusa e a resposta que {name} recebeu são apagadas, e o texto volta para a fila. Avisamos {name} de que foi reaberto.",
+  "adminMagazineSubmissions.reopen.confirmCta": "Reabrir submissão",
+  "adminMagazineSubmissions.reopen.doneToast": "“{title}” voltou para a fila.",
+  "adminMagazineSubmissions.reopen.failedToast":
+    "Não foi possível reabrir esta submissão. Recarrega a fila e tenta outra vez.",
+  // Fica na linha depois disso: reabrir limpa a decisão que desfaz, por isso
+  // sem esta frase o texto voltaria à fila como se ninguém tivesse decidido
+  // nada.
+  "adminMagazineSubmissions.row.reopened": "Reaberto {date}",
+  "adminMagazineSubmissions.row.reopenedBy": "Reaberto {date} por {name}",
+  "adminMagazineSubmissions.row.reopenedTimes_one": "(1 vez no total)",
+  "adminMagazineSubmissions.row.reopenedTimes_other":
+    "({count} vezes no total)",
   "adminMagazineSubmissions.loadMore": "Carregar mais",
   "adminMagazineSubmissions.loadingMore": "A carregar…",
 
@@ -1632,6 +1672,13 @@ export const admin: Catalog = {
     "A pessoa é notificada com este motivo e esta nota, e pode recorrer.",
   "moderation.bulk.confirm.transparency_other":
     "As {count} pessoas são notificadas com este motivo e esta nota, e podem recorrer.",
+  // Porque é que Aplicar está indisponível, ao lado do campo que está a pedir.
+  // Um botão cinzento que não diz nada é o caminho mais curto para acreditar
+  // que o lote está avariado.
+  "moderation.bulk.confirm.pickReasonNotice":
+    "Escolhe um motivo acima antes de aplicar.",
+  "moderation.bulk.confirm.noteRequiredNotice":
+    "Toda a gente deste lote lê a nota, por isso não pode ficar vazia. {current}/{min} caracteres.",
 
   "moderation.emergency.ariaLabel": "Emergências de segurança",
   "moderation.emergency.count_one": "{count} emergência de segurança",
@@ -1708,6 +1755,14 @@ export const admin: Catalog = {
   "moderation.reportDrawer.anotherModerator": "outra pessoa moderadora",
   "moderation.reportDrawer.assignToMeCta": "Atribuir a mim",
   "moderation.reportDrawer.unassignCta": "Remover atribuição",
+  // Porque é que Confirmar está indisponível, lido debaixo do campo da nota e
+  // não só no botão desativado, que o teclado não alcança enquanto o está.
+  "moderation.reportDrawer.pickActionNotice":
+    "Escolhe uma ação acima antes de confirmar.",
+  "moderation.reportDrawer.noteRequiredNotice":
+    "A pessoa lê esta nota, por isso tem de dizer alguma coisa. Pelo menos {min} caracteres, {current} até agora.",
+  "moderation.reportDrawer.noteRequiredToast":
+    "Escreve primeiro uma nota de pelo menos {min} caracteres.",
   "moderation.reportDrawer.pickActionToast":
     "Escolhe uma ação antes de confirmar.",
   "moderation.reportDrawer.escalatedToast":
