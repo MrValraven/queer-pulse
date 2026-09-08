@@ -1,32 +1,62 @@
-/* Reason picker — the one piece of UI ApplicationModals.module.css (reused
- * for everything else in this modal) doesn't already provide. */
+/* Reason picker, the one piece of UI ApplicationModals.module.css (reused
+ * for everything else in this modal) doesn't already provide.
+ *
+ * The picker sits INSIDE the shell's `.field`, whose descendant rules
+ * (`.field label`, `.field input`, specificity 0,1,1) reach every label and
+ * radio in here and out-rank a bare module class (0,1,0). Unchecked, the
+ * radio was styled as a full-width text input (width 100%, 11px/15px
+ * padding, border) and, being `flex: none`, squeezed the option text into a
+ * zero-width column that wrapped one letter per line. Every selector below
+ * is therefore scoped `.reasons .reason …` (0,2,x) so the picker wins. */
 .reasons {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 18px;
 }
-.reason {
+.reasons .reason {
   display: flex;
   align-items: center;
   gap: 11px;
+  min-width: 0;
   padding: 12px 14px;
   border: 1.5px solid rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-12);
   cursor: pointer;
   font-size: var(--text-14);
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.4;
   color: var(--ink);
   transition:
     border-color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease);
 }
-.reasonChecked {
+.reasons .reason:hover {
+  border-color: rgba(var(--line-rgb), 0.32);
+}
+.reasons .reason:focus-within {
+  box-shadow: var(--ring-plum-soft);
+}
+.reasons .reasonChecked {
   border-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.05);
 }
-.reason input {
+.reasons .reason input {
+  /* Reset the shell's text-input treatment back to a native radio. */
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   accent-color: var(--accent);
   flex: none;
+}
+.reasons .reasonLabel {
+  flex: 1;
+  min-width: 0;
 }
 
 .counter {
