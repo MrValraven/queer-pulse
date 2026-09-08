@@ -13,7 +13,7 @@ const ORB: Record<TintKey, string> = {
 /** Chapter 6 — Feeling: a colour and a line that capture the heart. */
 export function StepFeeling({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
-  const { draft, set, setTint, setAvatarPreviewUrl } = form;
+  const { draft, set, setTint, setAvatarPreviewUrl, setCoverPreviewUrl } = form;
   return (
     <div>
       <div className={styles.field}>
@@ -63,6 +63,9 @@ export function StepFeeling({ form }: { form: CommunityForm }) {
           kind="community-cover"
           value={draft.coverImageUrl}
           onChange={(coverImageUrl) => set({ coverImageUrl })}
+          // Same as the mark above: the stored key is not fetchable, so the
+          // sticky card preview reads the freshly picked cover from here.
+          onPreviewChange={(previewUrl) => setCoverPreviewUrl(previewUrl)}
           size={150}
           placeholder={draft.name || t("communities:start.feeling.coverLabel")}
         />

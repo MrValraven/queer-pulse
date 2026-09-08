@@ -221,5 +221,9 @@ describe("the welcome greeting and the avatar survive the owner's round trip", (
     expect(created.welcomeMessage).toBe(
       "Glad you are here. Read the shared values first.",
     );
+    // The wizard picks tags on chapter 1 (`StepWhy`), so the create payload
+    // has to carry them: omitting them founded every community with an empty
+    // tag list, and the founder's picks were silently dropped on save.
+    expect(created.tags).toEqual(["sports-fitness"]);
   });
 });

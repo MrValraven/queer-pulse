@@ -477,6 +477,12 @@ export function draftToCreateDto(draft: CommunityDraft): CreateCommunityDto {
       .filter((s) => s.role !== "owner" && s.key !== "owner")
       .map((s) => s.key),
     invites: draft.invites,
+    // Picked on chapter 1 of the wizard (`StepWhy`'s `CommunityTagPicker`).
+    // `tags` is optional on `CreateCommunityDto`, so leaving it out of this
+    // payload type-checked while founding every community with no tags at
+    // all: the backend stores `dto.tags ?? []`. Same field the edit modal
+    // already sends through `draftToUpdateDto`.
+    tags: draft.tags,
   };
 }
 
