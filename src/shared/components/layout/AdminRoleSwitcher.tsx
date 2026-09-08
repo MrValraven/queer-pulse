@@ -4,6 +4,7 @@ import { useTeamRole } from "../../../features/admin/adminRole";
 import { useToast } from "../feedback/useToast";
 import { useTranslation } from "../../i18n/useTranslation";
 import { modPanel } from "../../../app/routeMap";
+import { Tooltip } from "../ui";
 import { STEWARDED, ADMIN_PROFILE } from "./adminNav.data";
 import { useAccountIdentity } from "./useAccountIdentity";
 import { useSidebarMenu } from "./useSidebarMenu";
@@ -24,10 +25,14 @@ function RoleChip({
   initials,
   role,
   scope,
+  isCollapsed,
 }: {
   initials: string;
   role: string;
   scope: string;
+  /** Icon-only rail: the monogram alone, with role and scope moved into the
+   * tooltip that names the chip. */
+  isCollapsed: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -43,7 +48,7 @@ function RoleChip({
           <FiUser aria-hidden />
         </span>
       )}
-      <span className={styles.switchTx}>
+      <span className={isCollapsed ? "visuallyHidden" : styles.switchTx}>
         <span className={styles.switchRole}>{role}</span>
         <span className={styles.switchScope}>{scope}</span>
       </span>
@@ -65,7 +70,13 @@ function RoleChip({
  * list of communities they may have no standing in. The chip itself stays so the
  * sidebar header keeps its shape.
  */
-export function AdminRoleSwitcher() {
+export function AdminRoleSwitcher({
+  isCollapsed = false,
+}: {
+  /** Icon-only rail: the chip shrinks to its monogram and the menu it opens
+   * floats out to its own width rather than matching the 68px column. */
+  isCollapsed?: boolean;
+} = {}) {
   const { role, setRole, canSwitch } = useTeamRole();
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -88,38 +99,76 @@ export function AdminRoleSwitcher() {
   // empty string, which RoleChip draws as a neutral person mark.
   const { initials } = useAccountIdentity();
 
+  const chipLabel = `${roleLabel} \u00b7 ${scopeLabel}`;
+  const chipClass = [styles.switchBtn, isCollapsed && styles.switchBtnIcon]
+    .filter(Boolean)
+    .join(" ");
+
   if (!canSwitch) {
+    const chip = (
+      <div className={chipClass}>
+        <RoleChip
+          initials={initials}
+          role={roleLabel}
+          scope={scopeLabel}
+          isCollapsed={isCollapsed}
+        />
+      </div>
+    );
     return (
       <div className={styles.switch}>
-        <div className={styles.switchBtn}>
-          <RoleChip initials={initials} role={roleLabel} scope={scopeLabel} />
-        </div>
+        {isCollapsed ? (
+          <Tooltip label={chipLabel} placement="right">
+            {chip}
+          </Tooltip>
+        ) : (
+          chip
+        )}
       </div>
     );
   }
 
-  return (
-    <div className={styles.switch} ref={wrapRef}>
-      <button
-        ref={triggerRef}
-        type="button"
-        className={styles.switchBtn}
-        onClick={toggle}
-        aria-haspopup="menu"
-        aria-expanded={open}
-      >
-        <RoleChip initials={initials} role={roleLabel} scope={scopeLabel} />
+  const trigger = (
+    <button
+      ref={triggerRef}
+      type="button"
+      className={chipClass}
+      onClick={toggle}
+      aria-haspopup="menu"
+      aria-expanded={open}
+    >
+      <RoleChip
+        initials={initials}
+        role={roleLabel}
+        scope={scopeLabel}
+        isCollapsed={isCollapsed}
+      />
+      {!isCollapsed && (
         <FiChevronDown
           className={[styles.switchChev, open && styles.switchChevOpen]
             .filter(Boolean)
             .join(" ")}
           aria-hidden
         />
-      </button>
+      )}
+    </button>
+  );
+
+  return (
+    <div className={styles.switch} ref={wrapRef}>
+      {isCollapsed ? (
+        <Tooltip label={chipLabel} placement="right">
+          {trigger}
+        </Tooltip>
+      ) : (
+        trigger
+      )}
 
       {open && (
         <div
-          className={styles.switchMenu}
+          className={[styles.switchMenu, isCollapsed && styles.switchMenuFloat]
+            .filter(Boolean)
+            .join(" ")}
           role="menu"
           tabIndex={-1}
           ref={menuRef}

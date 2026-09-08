@@ -10,6 +10,7 @@ import {
   StatTile,
 } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -19,6 +20,7 @@ import { useGovernanceFinances } from "./api/useGovernanceFinances";
 import { useGovernanceOverview } from "./api/useGovernanceOverview";
 import { submitConcern, type ConcernCategory } from "./api/governance.api";
 import { ConcernSubmittedPanel } from "./ConcernSubmittedPanel";
+import { CouncilSeatAvatar } from "./CouncilSeatAvatar";
 import { CONCERN_OPTIONS } from "./governance.data";
 import { resolveGovernanceText } from "./governanceText";
 import { FinanceLines } from "./GovernanceFinance";
@@ -155,6 +157,7 @@ export function CouncilSection() {
   // `language` as well as `t`: a PRD-265 authored entry carries its own EN/PT
   // rather than a key, so the active language is what picks between them.
   const { t, language } = useTranslation();
+  const { loggedIn } = useAuth();
   const { council, error, retry } = useGovernanceOverview();
   return (
     <Reveal as="section" className={styles.section} id="council">
@@ -171,17 +174,29 @@ export function CouncilSection() {
         <p>{t("governance:sections.council.intro")}</p>
       </div>
       {error && <SectionError onRetry={retry} />}
+      {!error && council.length === 0 && (
+        <p className={styles.acEmpty}>
+          {t("governance:sections.council.empty")}
+        </p>
+      )}
       <div className={styles.acList}>
         {council.map((seat) => (
-          <div key={seat.name} className={styles.acItem}>
-            <div
-              className={styles.acAv}
-              style={{ background: seat.background, color: seat.color }}
-            >
-              {seat.initials}
-            </div>
+          <div key={seat.slug} className={styles.acItem}>
+            <CouncilSeatAvatar seat={seat} />
             <div>
-              <div className={styles.acName}>{seat.name}</div>
+              <div className={styles.acName}>
+                {/* `/members/*` is gated, so only a signed-in member is sent to
+                    the profile; a signed-out visitor reads the same name with
+                    nothing to click, rather than being bounced to a sign-in
+                    wall by a public page. */}
+                {loggedIn ? (
+                  <Link to={`/members/${seat.slug}`} className={styles.acLink}>
+                    {seat.name}
+                  </Link>
+                ) : (
+                  seat.name
+                )}
+              </div>
               <div className={styles.acRole}>
                 {resolveGovernanceText(seat.role, t, language)}
               </div>

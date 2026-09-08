@@ -1,0 +1,446 @@
+/* The Finances "Correct the figures" surface: a near-full-screen <Modal full>
+   where every figure is a table row (what is stored, where it came from, the
+   new value). Below 720px each row collapses into a stacked card and the
+   column headers move inline, so nothing is lost on a phone. */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 10px 0 24px;
+}
+
+/* The dialog spans up to 1280px; a subtitle that long is unreadable at full
+   measure, so it wraps at a paragraph width instead. */
+.sub {
+  display: block;
+  max-width: 72ch;
+}
+
+/* ── Sections ────────────────────────────────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.sectionTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+.sectionMeta {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-panel);
+  background: var(--paper);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-14);
+}
+/* Wide enough that inputs never shrink below a readable width; past that the
+   wrapper scrolls sideways instead of squeezing the note column to nothing. */
+.tableHeadline {
+  min-width: 640px;
+}
+.tableLedger {
+  min-width: 880px;
+}
+.table thead th {
+  padding: 11px 14px;
+  text-align: start;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
+  white-space: nowrap;
+}
+.table tbody th,
+.table tbody td {
+  padding: 12px 14px;
+  text-align: start;
+  font-weight: 400;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.tableHeadline tbody tr:last-child th,
+.tableHeadline tbody tr:last-child td {
+  border-bottom: 0;
+}
+.table tfoot th,
+.table tfoot td {
+  padding: 11px 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  background: rgba(var(--plum-rgb), 0.03);
+  font-weight: 600;
+  color: var(--ink);
+}
+.footSum {
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.footLabel {
+  text-align: end;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* Column widths: the label column takes what is left. */
+.tableHeadline th:nth-child(2),
+.tableLedger th:nth-child(3) {
+  width: 132px;
+}
+.tableHeadline th:nth-child(3),
+.tableLedger th:nth-child(4) {
+  width: 150px;
+}
+.tableHeadline th:nth-child(4) {
+  width: 240px;
+}
+.tableLedger th:nth-child(5) {
+  width: 190px;
+}
+.colShown {
+  width: 72px;
+}
+.colNumber {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink-60);
+}
+.colNote {
+  min-width: 260px;
+}
+
+/* ── Rows ────────────────────────────────────────────────────────────────── */
+.row {
+  transition: background 0.15s var(--ease, ease);
+}
+/* A row that differs from what is stored: tinted plus an accent rail on its
+   first cell, so the change count in the footer can be traced back to rows. */
+.rowChanged {
+  background: rgba(var(--accent-rgb), 0.06);
+}
+.rowChanged > :first-child {
+  /* An inset shadow, not a border, so the rail never nudges the text. */
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+/* Switched off: dim the row's content, never the switch that turns it back on. */
+.rowDisabled th,
+.rowDisabled td:not(.colShown) {
+  opacity: 0.55;
+}
+.rowComputed {
+  background: rgba(var(--plum-rgb), 0.03);
+}
+.rowLabel {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+}
+.rowHint {
+  display: block;
+  margin-top: 3px;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  font-weight: 400;
+  color: var(--ink-60);
+}
+
+/* ── Cells with controls ─────────────────────────────────────────────────── */
+.amountCell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.amountWrap {
+  position: relative;
+}
+.amountUnit {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  pointer-events: none;
+}
+.amountWrapPrefix .amountUnit {
+  inset-inline-start: 12px;
+}
+.amountWrapSuffix .amountUnit {
+  inset-inline-end: 12px;
+}
+.amountInput,
+.noteInput,
+.reason {
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  color: var(--ink);
+  background: var(--cream);
+  /* 0.50 reaches the 3:1 boundary contrast a control needs on cream. */
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-10);
+  padding: 9px 12px;
+  width: 100%;
+  outline: none;
+  transition:
+    border-color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    background 0.22s var(--ease);
+}
+/* Touch: >=16px so iOS Safari never zooms the viewport on focus. */
+@media (pointer: coarse) {
+  .amountInput,
+  .noteInput,
+  .reason {
+    font-size: var(--text-16);
+  }
+}
+.amountInput {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+.amountWrapPrefix .amountInput {
+  padding-inline-start: 26px;
+}
+.amountWrapSuffix .amountInput {
+  padding-inline-end: 30px;
+}
+.amountInput:focus,
+.noteInput:focus,
+.reason:focus {
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+}
+.amountInput:disabled,
+.noteInput:disabled {
+  background: var(--paper);
+  cursor: not-allowed;
+}
+.amountInput[aria-invalid="true"] {
+  border-color: var(--accent-text);
+}
+.cellError {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--accent-text);
+}
+/* The live surplus preview sits where an input would, right-aligned to the
+   same text edge as the amount inputs above it. */
+.surplusPreview {
+  display: block;
+  padding-inline-end: 13.5px;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  color: var(--jade-ink);
+}
+.reason {
+  max-width: 720px;
+  min-height: 72px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  width: 100%;
+}
+.footStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.footCount {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+.footCountActive {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.footBlocked {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--accent-text);
+}
+.footActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── Mobile: rows become cards ───────────────────────────────────────────── */
+@media (max-width: 719.98px) {
+  .body {
+    gap: 26px;
+    padding-bottom: 12px;
+  }
+  .tableWrap {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .table,
+  .tableHeadline,
+  .tableLedger {
+    min-width: 0;
+    display: block;
+  }
+  /* Keep the column headers for assistive tech; the cards repeat them inline. */
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .table tbody,
+  .table tfoot {
+    display: block;
+  }
+  .table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(var(--line-rgb), 0.1);
+    border-radius: var(--radius-12);
+    background: var(--paper);
+  }
+  .table tbody th,
+  .table tbody td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+  .table tbody th[data-label]::before,
+  .table tbody td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    font-size: var(--text-11);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-40);
+  }
+  /* The row's name spans the card; the visibility switch sits beside it. */
+  .table tbody th {
+    grid-column: 1 / -1;
+  }
+  .tableLedger tbody th {
+    grid-column: 1 / 2;
+    grid-row: 1;
+  }
+  .tableLedger tbody .colShown {
+    grid-column: 2 / 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .colShown {
+    width: auto;
+  }
+  .colNumber {
+    text-align: start;
+  }
+  .colNote {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  .table tbody tr.rowChanged {
+    border-color: rgba(var(--accent-rgb), 0.55);
+    background: rgba(var(--accent-rgb), 0.06);
+  }
+  .rowChanged > :first-child {
+    box-shadow: none;
+  }
+  .table tfoot tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    padding: 10px 14px;
+    border-radius: var(--radius-12);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+  .table tfoot th,
+  .table tfoot td {
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  .table tfoot td:empty {
+    display: none;
+  }
+  .surplusPreview {
+    text-align: start;
+    padding-inline-end: 0;
+  }
+  .foot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .footActions {
+    justify-content: flex-end;
+  }
+}
+
+/* ── Dark theme ──────────────────────────────────────────────────────────
+   --plum-rgb does not flip, so a plum tint vanishes on the dark surface;
+   the cream channel gives the same "slightly lifted" read. */
+:global([data-theme="dark"]) .rowComputed,
+:global([data-theme="dark"]) .table tfoot th,
+:global([data-theme="dark"]) .table tfoot td,
+:global([data-theme="dark"]) .table tfoot tr {
+  background: rgba(var(--cream-rgb), 0.04);
+}
+:global([data-theme="dark"]) .rowChanged,
+:global([data-theme="dark"]) .table tbody tr.rowChanged {
+  background: rgba(var(--accent-rgb), 0.12);
+}

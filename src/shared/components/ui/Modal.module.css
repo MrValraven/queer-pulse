@@ -35,6 +35,15 @@
 .modalWide {
   max-width: 680px;
 }
+/* Near-full-viewport editor. Fixed height (not just max-height) so the footer
+   is pinned to the bottom edge and the body is the only thing that scrolls,
+   however short the content. Capped at 1280px: past that a data table's
+   columns drift apart and the eye has to travel to read one row. */
+.modalFull {
+  max-width: min(1280px, 100vw - 48px);
+  height: calc(100svh - 48px);
+  max-height: calc(100svh - 48px);
+}
 .modalHead {
   display: flex;
   align-items: flex-start;
@@ -134,9 +143,11 @@
     padding-block-end: var(--keyboard-inset, 0px);
   }
   .modal,
-  .modalWide {
+  .modalWide,
+  .modalFull {
     position: relative;
     max-width: none;
+    height: auto;
     max-height: 92svh;
     border-radius: var(--radius-card) var(--radius-card) 0 0;
     animation: sheetUp 0.4s var(--ease, cubic-bezier(0.22, 0.68, 0.16, 1));

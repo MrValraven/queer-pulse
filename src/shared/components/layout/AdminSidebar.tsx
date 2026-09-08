@@ -1,12 +1,13 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
+import { Tooltip } from "../ui";
 import { AdminAccountMenu } from "./AdminAccountMenu";
 import { AdminRoleSwitcher } from "./AdminRoleSwitcher";
 import { AdminNavGroup, AdminNavLink } from "./AdminNavGroup";
@@ -17,8 +18,15 @@ import { ADMIN_NAV_OVERVIEW, visibleAdminNavSections } from "./adminNav.data";
 import styles from "./AdminShell.module.css";
 
 export function AdminSidebar({
+  isCollapsed = false,
+  onToggleCollapse,
   onNavigate,
 }: {
+  /** Icon-only rail. Desktop only — the mobile drawer is always full width, so
+   * AdminShell never passes this while the sidebar is off-canvas. */
+  isCollapsed?: boolean;
+  /** Absent on mobile, where there is nothing to collapse to. */
+  onToggleCollapse?: () => void;
   /** Called when a navigation link is activated — the mobile off-canvas drawer
    * passes its close handler so tapping a link dismisses the drawer. Absent on
    * desktop, where the sidebar is a static rail and nothing needs closing. */
@@ -47,22 +55,63 @@ export function AdminSidebar({
     useAdminNavSections();
   useAdminNavScroll(navRef, { pathname, isActiveSectionOpen });
 
-  return (
-    <aside className={styles.sidebar}>
-      <Link to={routes.admin} className={styles.brand} onClick={onNavigate}>
-        <span className={styles.brandDot} aria-hidden />
-        <span className={styles.brandName}>
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <em /> }}
-          />
-        </span>
-        <span className={styles.brandBadge}>
-          {t("shared:adminSidebar.badge")}
-        </span>
-      </Link>
+  const homeLabel = t("shared:adminSidebar.homeAria");
+  const backLabel = t("shared:adminSidebar.backToPlatform");
+  const collapseLabel = isCollapsed
+    ? t("shared:adminSidebar.expandRail")
+    : t("shared:adminSidebar.collapseRail");
 
-      <AdminRoleSwitcher />
+  return (
+    <aside
+      className={[styles.sidebar, isCollapsed && styles.sidebarCollapsed]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <div className={styles.brandRow}>
+        <MaybeTooltip label={homeLabel} isOn={isCollapsed}>
+          <Link
+            to={routes.admin}
+            className={styles.brand}
+            onClick={onNavigate}
+            aria-label={isCollapsed ? homeLabel : undefined}
+          >
+            <span className={styles.brandDot} aria-hidden />
+            {!isCollapsed && (
+              <>
+                <span className={styles.brandName}>
+                  <Translation
+                    i18nKey="shared:brand.wordmark"
+                    components={{ em: <em /> }}
+                  />
+                </span>
+                <span className={styles.brandBadge}>
+                  {t("shared:adminSidebar.badge")}
+                </span>
+              </>
+            )}
+          </Link>
+        </MaybeTooltip>
+
+        {onToggleCollapse && (
+          <MaybeTooltip label={collapseLabel} isOn={isCollapsed}>
+            <button
+              type="button"
+              className={styles.collapseBtn}
+              onClick={onToggleCollapse}
+              aria-label={collapseLabel}
+              title={isCollapsed ? undefined : collapseLabel}
+            >
+              {isCollapsed ? (
+                <FiChevronsRight aria-hidden />
+              ) : (
+                <FiChevronsLeft aria-hidden />
+              )}
+            </button>
+          </MaybeTooltip>
+        )}
+      </div>
+
+      <AdminRoleSwitcher isCollapsed={isCollapsed} />
 
       <nav
         className={styles.nav}
@@ -77,6 +126,7 @@ export function AdminSidebar({
           <AdminNavLink
             item={ADMIN_NAV_OVERVIEW}
             count={0}
+            isCollapsed={isCollapsed}
             onNavigate={onNavigate}
           />
         )}
@@ -87,22 +137,51 @@ export function AdminSidebar({
             section={section}
             badgeCounts={badgeCounts}
             isOpen={isSectionOpen(section.id, section.defaultOpen)}
+            isCollapsed={isCollapsed}
             onToggle={() => toggleSection(section.id, section.defaultOpen)}
             onNavigate={onNavigate}
           />
         ))}
       </nav>
 
-      <Link
-        to={routes.homepage}
-        className={styles.backToPlatform}
-        onClick={onNavigate}
-      >
-        <FiArrowLeft aria-hidden />
-        <span>{t("shared:adminSidebar.backToPlatform")}</span>
-      </Link>
+      <MaybeTooltip label={backLabel} isOn={isCollapsed}>
+        <Link
+          to={routes.homepage}
+          className={[
+            styles.backToPlatform,
+            isCollapsed && styles.backToPlatformIcon,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={onNavigate}
+        >
+          <FiArrowLeft aria-hidden />
+          <span className={isCollapsed ? "visuallyHidden" : undefined}>
+            {backLabel}
+          </span>
+        </Link>
+      </MaybeTooltip>
 
-      <AdminAccountMenu onNavigate={onNavigate} />
+      <AdminAccountMenu isCollapsed={isCollapsed} onNavigate={onNavigate} />
     </aside>
+  );
+}
+
+/** The rail's icon-only controls keep their name in a tooltip; the wide rail
+ * already shows it, so the wrapper drops out entirely. */
+function MaybeTooltip({
+  label,
+  isOn,
+  children,
+}: {
+  label: string;
+  isOn: boolean;
+  children: ReactNode;
+}) {
+  if (!isOn) return <>{children}</>;
+  return (
+    <Tooltip label={label} placement="right">
+      {children}
+    </Tooltip>
   );
 }

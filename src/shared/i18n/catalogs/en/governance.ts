@@ -101,6 +101,8 @@ export const governance: Catalog = {
   "sections.council.title": "Who <em>oversees</em> this.",
   "sections.council.intro":
     "The advisory council reviews moderation appeals, proposes platform changes, and serves as an accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote. See Proposals & votes below.",
+  "sections.council.empty":
+    "No seats are filled right now. The council is being appointed, and this list will name everyone on it.",
 
   "council.psychologistChair": "Psychologist · Chair",
   "council.lawyerLegalAdvisor": "Lawyer · Legal advisor",

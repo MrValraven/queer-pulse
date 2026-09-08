@@ -25,9 +25,6 @@ export const EMPTY_AUTHORED_TEXT: AuthoredTextDTO = { en: "", pt: "" };
 export const SHORT_TEXT_MAX_LENGTH = 200;
 export const LONG_TEXT_MAX_LENGTH = 1000;
 
-export const COUNCIL_NAME_MAX_LENGTH = 80;
-export const COUNCIL_INITIALS_MAX_LENGTH = 4;
-
 /**
  * The icons the public page can draw for a principle, and the avatar colour
  * pairs it can draw for a council seat. Identifiers the reader maps to a
@@ -112,12 +109,20 @@ export function principleRowLabel(
   );
 }
 
-/** A seat is known by the person in it where there is one, then by the role. */
+/**
+ * A seat is known by the person in it where there is one, then by the role.
+ *
+ * `member` is null on a seat nobody has been picked for yet, and on one whose
+ * holder no longer resolves — a deleted account. Both fall through to the role,
+ * which is the only other thing that row says.
+ */
 export function councilRowLabel(
   row: CouncilSeatDTO,
   translate: (key: string) => string,
 ): string {
-  if (row.name.trim()) return row.name.trim();
+  if (row.member) {
+    return `${row.member.firstName} ${row.member.lastName}`.trim();
+  }
   if (row.roleKey) {
     return translate(`admin:governance.overview.council.role.${row.roleKey}`);
   }

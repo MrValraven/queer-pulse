@@ -14,7 +14,10 @@ import {
   PrinciplesSection,
   RaiseSection,
 } from "./GovernanceSections";
-import type { GovernanceOverviewResult } from "./api/useGovernanceOverview";
+import type {
+  CouncilSeatView,
+  GovernanceOverviewResult,
+} from "./api/useGovernanceOverview";
 
 /**
  * Extends the existing Health/Finances coverage to the five other governance
@@ -133,21 +136,23 @@ describe("ModerationSection", () => {
 });
 
 describe("CouncilSection", () => {
+  /** One resolved seat. A seat names a staff member, so every field about the
+   *  person comes from that member's profile. */
+  const seat = (overrides: Partial<CouncilSeatView> = {}): CouncilSeatView => ({
+    slug: "alex-rivera",
+    name: "Alex Rivera",
+    initials: "AR",
+    avatarUrl: null,
+    // PRD-265: a seat's role is a `GovernanceText` — a seeded i18n key or the
+    // editor's own EN/PT. This fixture is the seeded form.
+    role: { key: "governance:council.chair", authored: null },
+    background: "rgba(0,0,0,.1)",
+    color: "var(--plum)",
+    ...overrides,
+  });
+
   it("renders each seat's (plain-data) name on a successful load", () => {
-    overviewState = {
-      ...overviewOk(),
-      council: [
-        {
-          name: "Alex Rivera",
-          initials: "AR",
-          // PRD-265: a seat's role is now a `GovernanceText` — a seeded i18n
-          // key or the editor's own EN/PT. This fixture is the seeded form.
-          role: { key: "governance:council.chair", authored: null },
-          background: "rgba(0,0,0,.1)",
-          color: "var(--plum)",
-        },
-      ],
-    };
+    overviewState = { ...overviewOk(), council: [seat()] };
     render(
       <TestProviders>
         <CouncilSection />
@@ -155,6 +160,51 @@ describe("CouncilSection", () => {
     );
     expect(screen.getByText("Alex Rivera")).toBeInTheDocument();
     expect(querySectionErrorAlert()).toBeNull();
+  });
+
+  it("falls back to the tinted monogram when the seat-holder shows no photo", () => {
+    overviewState = { ...overviewOk(), council: [seat()] };
+    const { container } = render(
+      <TestProviders>
+        <CouncilSection />
+      </TestProviders>,
+    );
+    expect(screen.getByText("AR")).toBeInTheDocument();
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  it("draws the seat-holder's photo when they have one", () => {
+    overviewState = {
+      ...overviewOk(),
+      council: [seat({ avatarUrl: "https://example.test/alex.jpg" })],
+    };
+    const { container } = render(
+      <TestProviders>
+        <CouncilSection />
+      </TestProviders>,
+    );
+    const photo = container.querySelector("img");
+    expect(photo).not.toBeNull();
+    // The name is rendered beside the circle, so the image is decorative —
+    // announcing it too would read the same person twice.
+    expect(photo).toHaveAttribute("alt", "");
+    // Google/OAuth avatars 403 when a referrer is sent.
+    expect(photo).toHaveAttribute("referrerPolicy", "no-referrer");
+  });
+
+  it("does NOT link a signed-out visitor to a gated member profile", () => {
+    overviewState = { ...overviewOk(), council: [seat()] };
+    render(
+      <TestProviders>
+        <CouncilSection />
+      </TestProviders>,
+    );
+    // `/governance` is public and `/members/*` is not: a link here would bounce
+    // a visitor into the auth gate from a page built to be read by anyone.
+    expect(
+      screen.queryByRole("link", { name: "Alex Rivera" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("Alex Rivera")).toBeInTheDocument();
   });
 
   it("shows the retry alert and re-fetches on failure", () => {

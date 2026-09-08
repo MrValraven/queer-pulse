@@ -247,10 +247,34 @@
   font-size: var(--text-15);
   flex: none;
 }
+/* Fills the monogram circle. `.acAv` centres its glyph, so the photo has to
+   cover the box rather than sit inside it as an inline image. */
+.acAvPhoto {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
 .acName {
   font-size: var(--text-15);
   font-weight: 600;
   color: var(--text-strong);
+}
+/* The name links to the seat-holder's profile for signed-in members. It reads
+   as the name it replaced until hover/focus, so the row keeps its shape. */
+.acLink {
+  color: inherit;
+  text-decoration: none;
+}
+.acLink:hover,
+.acLink:focus-visible {
+  text-decoration: underline;
+}
+.acEmpty {
+  font-size: var(--text-14);
+  color: var(--ink-40);
+  margin: 6px 0 0;
 }
 .acRole {
   font-size: var(--text-12-5);

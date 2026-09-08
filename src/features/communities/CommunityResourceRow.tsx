@@ -29,7 +29,7 @@ interface GripDragHandlers {
  * icon, its title and URL, then move up / move down / edit / remove.
  *
  * Pointer-capture drag plus motion `layout`, the house pattern
- * (`EditorItemRow`, `OverviewEditorRow`) — never motion's `drag` gesture,
+ * (`EditorItemRow`, `AdminGovernanceGridRow`) — never motion's `drag` gesture,
  * which floats the row at an arbitrary offset that fights `layout`, and never
  * motion's `Reorder`, which this app's `LazyMotion strict` refuses outright.
  * The up/down buttons are the keyboard and assistive-tech path, which is what

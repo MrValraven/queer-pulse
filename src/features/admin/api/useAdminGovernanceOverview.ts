@@ -1,37 +1,24 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { IconType } from "react-icons";
-import {
-  FiBookOpen,
-  FiEye,
-  FiLock,
-  FiMessageCircle,
-  FiSlash,
-} from "react-icons/fi";
-import { MdAccessible } from "react-icons/md";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { PRINCIPLE_ICON_BY_KEY } from "../../governance/governanceIcons";
 import type { MemberRefDTO } from "../../../shared/api/refs";
+import { COUNCIL_CANDIDATES_DEMO } from "../adminStaffRoster.data";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 import {
   getAdminOverview,
+  getCouncilCandidates,
   updateAdminOverview,
   type AdminOverviewResponseDTO,
   type UpdateAdminOverviewBody,
 } from "./adminGovernanceOverview.api";
 
 /** `governance.data.ts`'s `PRINCIPLES.icon` stores a resolved `IconType`
- *  component (e.g. `FiLock`), not a string key — this is the reverse of
- *  `useGovernanceOverview.ts`'s `ICON_BY_KEY` map, needed to recover the
- *  short key the admin DTO expects. */
-const ICON_BY_KEY: Record<string, IconType> = {
-  lock: FiLock,
-  eye: FiEye,
-  slash: FiSlash,
-  message: FiMessageCircle,
-  book: FiBookOpen,
-  accessible: MdAccessible,
-};
+ *  component (e.g. `FiLock`), not a string key. This reads the shared
+ *  `PRINCIPLE_ICON_BY_KEY` table backwards to recover the short key the admin
+ *  DTO expects, so the two directions can never fall out of step. */
 function iconKeyFor(icon: IconType): string {
-  const entry = Object.entries(ICON_BY_KEY).find(
+  const entry = Object.entries(PRINCIPLE_ICON_BY_KEY).find(
     ([, component]) => component === icon,
   );
   return entry?.[0] ?? "lock";
@@ -77,9 +64,17 @@ async function buildDemoAdminOverview(): Promise<AdminOverviewResponseDTO> {
     moderationSteps: STEPS.map((step) => ({
       key: keyBeforeSuffix(step.titleKey),
     })),
+    // A seat names a staff member. Demo ids are the slug (see
+    // `COUNCIL_CANDIDATES_DEMO`), and the demo council is drawn from the demo
+    // staff roster, so a demo seat resolves through the picker like a live one.
     council: COUNCIL.map((seat) => ({
-      name: seat.name,
-      initials: seat.initials,
+      memberId: seat.slug,
+      member: {
+        slug: seat.slug,
+        firstName: seat.name.split(" ")[0] ?? seat.name,
+        lastName: seat.name.split(" ").slice(1).join(" "),
+        avatarUrl: seat.avatarUrl,
+      },
       // `roleKey` is "governance:council.<ROLEKEY>" — split on ".", not ":"
       // (the namespace prefix uses a colon, but the path itself is
       // dot-separated, and "governance:council" itself has no dot in it).
@@ -142,7 +137,25 @@ export function applyOverviewEdits(
     next.meta.moderationSteps = sectionMeta;
   }
   if (body.council !== undefined) {
-    next.council = body.council;
+    // The write shape drops the resolved `member` the read added, so demo mode
+    // puts it back from the same candidate list the picker offers — exactly
+    // what the live backend does from the profiles table.
+    next.council = body.council.map((seat) => {
+      const candidate = COUNCIL_CANDIDATES_DEMO.find(
+        (person) => person.id === seat.memberId,
+      );
+      return {
+        ...seat,
+        member: candidate
+          ? {
+              slug: candidate.slug,
+              firstName: candidate.firstName,
+              lastName: candidate.lastName,
+              avatarUrl: candidate.avatarUrl,
+            }
+          : null,
+      };
+    });
     next.meta.council = sectionMeta;
   }
   if (body.principles !== undefined) {
@@ -236,5 +249,25 @@ export function useUpdateAdminOverview() {
     onLiveSettled: () => {
       void queryClient.invalidateQueries({ queryKey });
     },
+  });
+}
+
+/**
+ * Who may be seated on the advisory council. The picker in
+ * `AdminGovernanceCouncilEditor` reads this; demo mode answers from the demo
+ * staff roster so a demo seat can be changed the same way a live one is.
+ *
+ * Its own query rather than a field on the overview: the roster changes when
+ * someone is made a moderator, which has nothing to do with the Policy tab's
+ * own cache, and an editor who grants a role in another tab should see the new
+ * name here without a page reload.
+ */
+export function useCouncilCandidates() {
+  const { demoMode } = useDemoMode();
+  return useQuery({
+    queryKey: ["admin-council-candidates", demoMode],
+    initialData: demoMode ? COUNCIL_CANDIDATES_DEMO : undefined,
+    queryFn: () =>
+      demoMode ? COUNCIL_CANDIDATES_DEMO : getCouncilCandidates(),
   });
 }

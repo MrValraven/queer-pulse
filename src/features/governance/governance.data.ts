@@ -141,31 +141,48 @@ export const STEPS = [
  * `role` is this page's own short descriptor of their council seat, so it's
  * translated as platform chrome via `roleKey`.
  */
+/**
+ * The demo council.
+ *
+ * A live seat names someone on the platform STAFF roster and the backend
+ * resolves their profile, so these mocks are drawn from the demo staff roster
+ * (`ADMIN_STAFF_ROSTER_DEMO`) and carry the fields a resolved seat has — slug,
+ * name, initials, photo. Seating a demo member who is not staff would show a
+ * council the real editor cannot produce.
+ */
 export const COUNCIL = [
   {
+    slug: "mariana",
     initials: MEMBERS.mariana!.initials,
     name: memberName("mariana"),
+    avatarUrl: MEMBERS.mariana!.photo ?? null,
     roleKey: "governance:council.psychologistChair",
     background: "rgba(74,140,111,.15)",
     color: "var(--jade)",
   },
   {
-    initials: MEMBERS["raquel-baptista"]!.initials,
-    name: memberName("raquel-baptista"),
+    slug: "ana",
+    initials: MEMBERS.ana!.initials,
+    name: memberName("ana"),
+    avatarUrl: MEMBERS.ana!.photo ?? null,
     roleKey: "governance:council.lawyerLegalAdvisor",
     background: "rgba(122,82,184,.12)",
     color: "var(--violet)",
   },
   {
-    initials: MEMBERS["catarina-vaz"]!.initials,
-    name: memberName("catarina-vaz"),
+    slug: "ines",
+    initials: MEMBERS.ines!.initials,
+    name: memberName("ines"),
+    avatarUrl: MEMBERS.ines!.photo ?? null,
     roleKey: "governance:council.housingActivist",
     background: "rgba(45,27,61,.1)",
     color: "var(--plum)",
   },
   {
-    initials: MEMBERS.jonas!.initials,
-    name: memberName("jonas"),
+    slug: "rui",
+    initials: MEMBERS.rui!.initials,
+    name: memberName("rui"),
+    avatarUrl: MEMBERS.rui!.photo ?? null,
     roleKey: "governance:council.healthcareAdvocate",
     background: "rgba(74,140,111,.12)",
     color: "var(--jade)",
