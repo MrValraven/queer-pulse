@@ -1,3 +1,4 @@
+import type { KeyboardEventHandler, Ref } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./SearchInput.module.css";
@@ -10,6 +11,10 @@ interface SearchInputProps {
   ariaLabel?: string;
   /** Show a clear (×) button while there's text. */
   clearable?: boolean;
+  /** Handle for callers that need to move focus into the field themselves. */
+  inputRef?: Ref<HTMLInputElement>;
+  /** Key handling on the field itself, for callers that act on Enter/Escape. */
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   className?: string;
 }
 
@@ -20,6 +25,8 @@ export function SearchInput({
   placeholder,
   ariaLabel,
   clearable = true,
+  inputRef,
+  onKeyDown,
   className,
 }: SearchInputProps) {
   const { t } = useTranslation();
@@ -29,12 +36,14 @@ export function SearchInput({
         <FiSearch />
       </span>
       <input
+        ref={inputRef}
         type="search"
         className={styles.input}
         value={value}
         placeholder={placeholder ?? t("shared:searchInput.placeholder")}
         aria-label={ariaLabel ?? t("common:cta.search")}
         onChange={(e) => onChange(e.target.value)}
+        onKeyDown={onKeyDown}
       />
       {clearable && value && (
         <button

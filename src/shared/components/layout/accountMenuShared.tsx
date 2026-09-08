@@ -6,8 +6,10 @@ import {
   FiEdit3,
   FiDatabase,
   FiPlayCircle,
+  FiGlobe,
 } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
+import { LANGUAGES } from "../../i18n/types";
 import { isSandbox } from "../../sandbox/sandbox";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMyCommunities } from "../../../features/communities/api/useMyCommunities";
@@ -132,8 +134,64 @@ export function RoleLinks({
   );
 }
 
+/**
+ * The interface-language switch in the account surfaces: a labelled row with an
+ * EN/PT segment on the right, mirroring the dark/light row it sits beside.
+ *
+ * Shared by the desktop {@link AccountMenu} and the mobile `AccountSheet` so the
+ * two never drift. Language is a client preference (`I18nProvider` persists it
+ * to localStorage and mirrors it to IndexedDB for the push service worker), so
+ * switching here is the same switch the footer `LanguageSwitcher` and the
+ * `/settings` language pane perform — and, like the theme toggle, it acts in
+ * place rather than navigating, so it never closes the menu.
+ *
+ * The pills carry the full language name as their accessible name; the visible
+ * "EN"/"PT" is derived from the code, which is why no catalog entry backs it.
+ */
+export function AccountLanguageRow() {
+  const { language, setLanguage, t } = useTranslation();
+  const label = t("common:language.label");
+  return (
+    <div className={styles.languageRow}>
+      <FiGlobe aria-hidden className={styles.itemIcon} />
+      <span className={styles.itemLabel}>{label}</span>
+      <div className={styles.languageSwitch} role="group" aria-label={label}>
+        {LANGUAGES.map((lang) => (
+          <button
+            key={lang}
+            type="button"
+            className={[
+              styles.roleBtn,
+              styles.langBtn,
+              language === lang && styles.roleBtnActive,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            aria-pressed={language === lang}
+            aria-label={t(`common:language.${lang}`)}
+            onClick={() => setLanguage(lang)}
+          >
+            {lang.toUpperCase()}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /** Controls at the foot of the menu: the demo data toggle, the navigation-layout
- * switch, and — in demo mode only — the simulated team role switch. */
+ * switch, and — in demo mode only — the simulated team role switch.
+ *
+ * All of it is QueerPulse-staff tooling, so it renders only for platform admins
+ * (`role === "admin"`, the same gate as the Admin link in {@link RoleLinks}).
+ * "Populate platform" swaps the whole app between mock and live data, and the
+ * navigation-layout switch is a maintainer choice; a member should be handed
+ * neither. Demo mode is the one exception: the simulated role there is a fiction
+ * the viewer can set to `member`, and gating on it would strand them with no way
+ * back to live data or to the role switch itself, so the sandbox keeps the
+ * controls (mirroring how demo grants every staff role). A production build
+ * without `VITE_DEMO=1` cannot reach demo mode at all, so there this is exactly
+ * "admins only". */
 export function AccountMenuControls({
   demoMode,
   available,
@@ -163,41 +221,46 @@ export function AccountMenuControls({
   onNavigate?: () => void;
 }) {
   const { t } = useTranslation();
+  const isMaintainer = demoMode || role === "admin";
+  // Dev-only entry point into the /simulations sandbox (see
+  // features/simulations/routes.tsx, which is itself a no-op in production):
+  // it never reaches a member's build, so it stays available to whoever is
+  // running the app locally rather than riding the admin gate.
+  // Hidden with !isSandbox() so a sandbox instance (itself a full app instance
+  // running inside another simulation's iframe) cannot open this link and
+  // recurse into /simulations from within itself.
+  const showSimulationsLink = import.meta.env.DEV && !isSandbox();
+  if (!isMaintainer && !showSimulationsLink) return null;
   return (
     <>
       <div className={styles.divider} />
-      <button
-        type="button"
-        aria-pressed={demoMode}
-        className={styles.populate}
-        disabled={!available}
-        onClick={() => toggle()}
-      >
-        <FiDatabase aria-hidden className={styles.itemIcon} />
-        <span className={styles.itemLabel}>
-          {t("shared:accountMenu.controls.populatePlatform")}
-        </span>
-        <span
-          className={[styles.populateState, demoMode && styles.populateOn]
-            .filter(Boolean)
-            .join(" ")}
-          aria-hidden
+      {isMaintainer && (
+        <button
+          type="button"
+          aria-pressed={demoMode}
+          className={styles.populate}
+          disabled={!available}
+          onClick={() => toggle()}
         >
-          {available
-            ? demoMode
-              ? t("shared:accountMenu.controls.on")
-              : t("shared:accountMenu.controls.off")
-            : t("shared:accountMenu.controls.noApi")}
-        </span>
-      </button>
-      {/* Dev-only entry point into the /simulations sandbox (see
-          features/simulations/routes.tsx, which is itself a no-op in
-          production): sits next to the demo-data toggle above since both are
-          maintainer/dev tooling, not member-facing account settings.
-          Hidden with !isSandbox() so a sandbox instance (itself a full app
-          instance running inside another simulation's iframe) cannot open
-          this link and recurse into /simulations from within itself. */}
-      {import.meta.env.DEV && !isSandbox() && (
+          <FiDatabase aria-hidden className={styles.itemIcon} />
+          <span className={styles.itemLabel}>
+            {t("shared:accountMenu.controls.populatePlatform")}
+          </span>
+          <span
+            className={[styles.populateState, demoMode && styles.populateOn]
+              .filter(Boolean)
+              .join(" ")}
+            aria-hidden
+          >
+            {available
+              ? demoMode
+                ? t("shared:accountMenu.controls.on")
+                : t("shared:accountMenu.controls.off")
+              : t("shared:accountMenu.controls.noApi")}
+          </span>
+        </button>
+      )}
+      {showSimulationsLink && (
         <Link
           to={routes.simulations}
           className={styles.item}
@@ -241,7 +304,7 @@ export function AccountMenuControls({
           </div>
         </>
       )}
-      {showNavModeSwitch && (
+      {showNavModeSwitch && isMaintainer && (
         <>
           <div className={styles.divider} />
           <div className={styles.roleLabel}>

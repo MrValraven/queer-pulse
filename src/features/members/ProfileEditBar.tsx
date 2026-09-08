@@ -12,8 +12,10 @@ import styles from "./ProfileEdit.module.css";
 
 /**
  * Sticky bottom bar for the self-profile edit flow. While editing it offers
- * Discard / Save profile; just after a save it shows the plum confirmation
- * banner with a jade check (the design-system success pattern).
+ * Discard / Save profile; with nothing changed yet, Save is disabled and the
+ * ghost button reads "Go back" instead of "Discard". Just after a save it shows
+ * the plum confirmation banner with a jade check (the design-system success
+ * pattern).
  */
 export function ProfileEditBar() {
   const { t } = useTranslation();
@@ -70,12 +72,14 @@ export function ProfileEditBar() {
         </span>
         <div className={styles.saveActions}>
           <Button variant="ghost" onClick={requestCancel} disabled={isSaving}>
-            {t("members:profileEdit.bar.discard")}
+            {isDirty
+              ? t("members:profileEdit.bar.discard")
+              : t("members:profileEdit.bar.goBack")}
           </Button>
           <Button
             variant="primary"
             onClick={() => void save()}
-            disabled={isSaving}
+            disabled={isSaving || !isDirty}
           >
             {isSaving
               ? t("members:profileEdit.bar.saving")

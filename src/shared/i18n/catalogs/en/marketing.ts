@@ -1009,33 +1009,22 @@ export const marketing: Catalog = {
   "communitiesAbout.hero.title":
     "How communities work, and why they <em>matter</em>",
   "communitiesAbout.hero.sub":
-    "Real rooms, kept by real people. No feeds, no algorithm. Here's what that means, and how to find the one that feels like yours.",
-  "communitiesAbout.outro.title": "Ready to find your people?",
-  "communitiesAbout.outro.sub":
-    "Request an invite and we'll help you find the rooms that feel like home.",
-  "communitiesAbout.what.title": "What a community is here",
-  "communitiesAbout.what.rooms.title": "Rooms with a purpose",
-  "communitiesAbout.what.rooms.body":
-    "A community is a room with a purpose and someone who keeps it. You always know whose space you're in.",
-  "communitiesAbout.what.kept.title": "Kept by real people",
-  "communitiesAbout.what.kept.body":
-    "Every community has a keeper who sets the tone, welcomes new faces, and looks out for the room.",
-  "communitiesAbout.what.safe.title": "A space you can trust",
-  "communitiesAbout.what.safe.body":
-    "Communities are invite-only and moderated, so the room stays somewhere you can actually be yourself.",
-  "communitiesAbout.how.title": "How it works",
-  "communitiesAbout.how.find.title": "Find your room",
+    "Community is the backbone of queer life. We look after each other, and that only works when we show up together. Here's how to find yours, in three steps.",
+  "communitiesAbout.how.find.title": "Find your people",
   "communitiesAbout.how.find.body":
     "Browse communities by interest, scene, or neighbourhood until one feels like yours.",
-  "communitiesAbout.how.welcome.title": "A keeper welcomes you",
+  "communitiesAbout.how.welcome.title": "Get a real welcome",
   "communitiesAbout.how.welcome.body":
-    "The keeper and members say hello, so you're never starting from nothing.",
-  "communitiesAbout.how.belong.title": "You show up and belong",
+    "The people who run it say hello and show you around, so you never start from nothing.",
+  "communitiesAbout.how.belong.title": "Show up and belong",
   "communitiesAbout.how.belong.body":
-    "Join the conversation, come to gatherings, and become one of the faces others are glad to see.",
-  "communitiesAbout.why.title": "Why communities matter",
-  "communitiesAbout.why.body":
-    "Belonging isn't a feature. It's the <em>whole point</em>: where you find your people, feel safe, and stay close to what's happening near you.",
+    "Join the conversation, come to gatherings, and become a face people are glad to see.",
+  "communitiesAbout.trust.invite": "Invite-only",
+  "communitiesAbout.trust.keeper": "Run by real people",
+  "communitiesAbout.trust.noAlgorithm": "No feeds, no algorithm",
+  "communitiesAbout.outro.title": "Your people are already here.",
+  "communitiesAbout.outro.sub":
+    "Request an invite and we'll point you to the communities that feel like home.",
 
   // ── Privacy Policy ─────────────────────────────────────────────────────
   "privacy.meta.title": "QueerPulse Privacy Policy: what we collect and why",
@@ -2274,412 +2263,469 @@ export const marketing: Catalog = {
   "changelog.entries.photos-match-your-screen-instead-of-a-guess.title":
     "Photos match your screen instead of a guess",
   "changelog.entries.photos-match-your-screen-instead-of-a-guess.body":
-    "Every image asked for twice the pixels of the space it filled, whatever screen you were on. That is four times more than an ordinary laptop can show, and still not enough for a sharp phone, so photos were heavier than they needed to be and softer than they should have been at the same time. Images now ask for what your own screen can actually display. Choosing and cropping a photo was rebuilt in the same pass, for your profile picture and for the images on a persona.",
+    "Images now request the resolution your screen can show, so they load lighter and look sharper. Picking and cropping a photo was rebuilt too.",
   "changelog.entries.you-can-step-back-from-a-connection-without-blocking.title":
     "You can step back from a connection without blocking",
   "changelog.entries.you-can-step-back-from-a-connection-without-blocking.body":
-    "Ending a connection quietly had no button, so the only way to step back from someone was to block them, which writes a block record, removes them from your message rooms and hides both profiles from each other. There is now a Remove connection action in the connection menu. It asks you to confirm, and the confirmation says exactly what happens: the other person is not told, nothing either of you has already written is deleted, your conversation stays in your inbox, and either of you can ask to connect again later. Neither of you can send a new message while you are not connected.",
+    "The connection menu now has a Remove connection action. It asks you to confirm, the other person is not told, and your messages stay in your inbox.",
   // ── Section 10 (Resources, about and civic), 6 Sep 2026 ─────────────────
   "changelog.entries.help-centre-search.title": "Search the help centre",
   "changelog.entries.help-centre-search.body":
-    "The help centre had six topic tabs and nowhere to type. Now there is a search box that looks through every answer at once, so a question finds its answer even when it sits under a tab you would not have opened. It matches Portuguese too, accents optional.",
+    "A search box now looks through every answer at once, so your question finds its answer even under a tab you would not have opened. It matches Portuguese too, accents optional.",
+  "changelog.entries.how-communities-work-fits-on-one-screen.title":
+    "How communities work now fits on one screen",
+  "changelog.entries.how-communities-work-fits-on-one-screen.body":
+    "The communities explainer is now one wider screen: the three steps to joining sit side by side, with the invite button at the end.",
+  "changelog.entries.pick-your-neighbourhood-from-a-list.title":
+    "Pick your neighbourhood from a list",
+  "changelog.entries.pick-your-neighbourhood-from-a-list.body":
+    "Your profile neighbourhood is now a select: the 24 Lisbon freguesias plus bairros like Príncipe Real. The same list drives the directory filter.",
+  "changelog.entries.one-place-to-switch-between-light-and-dark.title":
+    "One place to switch between light and dark",
+  "changelog.entries.one-place-to-switch-between-light-and-dark.body":
+    "The footer carried a second theme switch right beside the language buttons. It is gone. Light and dark still live in the account menu and the top bar, alongside the rest of your own settings.",
+  "changelog.entries.a-library-of-shared-values-to-choose-from.title":
+    "A library of shared values to choose from",
+  "changelog.entries.a-library-of-shared-values-to-choose-from.body":
+    "Founding a community no longer starts at an empty field. Browse eighty shared values grouped under ten themes, from consent and privacy to access, money, conflict and repair, search them by wording, and tick the ones that fit. Writing your own is still there and still first. The same picker is in the edit panel, so an existing community can pick up a value it never got around to writing down.",
+  "changelog.entries.find-any-admin-page-by-name.title":
+    "Find any admin page by name",
+  "changelog.entries.find-any-admin-page-by-name.body":
+    "The admin menu opens with a search field. Type part of a page name and the menu narrows to what matches, section headings and all, so nothing stays hidden inside a closed group. Enter opens the first result.",
+  "changelog.entries.see-what-a-save-will-change-before-you-save-it.title":
+    "See what a save will change before you save it",
+  "changelog.entries.see-what-a-save-will-change-before-you-save-it.body":
+    "The community settings form now lists what pressing Save is about to write, right above the button. Shared values name the ones going in and the ones coming out, and the form says plainly that changing them asks every member to agree again. The governance trail reads the same way: a values edit shows what was added and what was removed instead of printing the whole list twice.",
+  "changelog.entries.the-tag-list-folds-away-once-you-have-picked.title":
+    "The tag list folds away once you have picked",
+  "changelog.entries.the-tag-list-folds-away-once-you-have-picked.body":
+    "Editing a community used to mean scrolling past all 53 tags to reach anything below them. The list now shows only the tags you chose, with a button to open the rest when you want to change them.",
+  "changelog.entries.switch-language-from-your-account-menu.title":
+    "Switch language from your account menu",
+  "changelog.entries.switch-language-from-your-account-menu.body":
+    "English and Portugu\u00eas now sit in your account menu, beside the light and dark switch, and in your account sheet on a phone. One tap, no trip to Settings.",
+  "changelog.entries.the-theme-switch-moves-into-your-account-menu.title":
+    "The theme switch moves into your account menu",
+  "changelog.entries.the-theme-switch-moves-into-your-account-menu.body":
+    "The light and dark switch now lives in your account menu, beside Saved and Settings, or your account sheet on a phone. Signed out, it stays in the top bar.",
+  "changelog.entries.the-account-menu-drops-the-maintenance-controls.title":
+    "The account menu drops the maintenance controls",
+  "changelog.entries.the-account-menu-drops-the-maintenance-controls.body":
+    "Populate platform, Flow simulations and the Navigation switch now appear only for platform admins. Your menu ends at your own settings and sign out.",
+  "changelog.entries.the-homepage-personas-take-turns.title":
+    "The homepage personas take turns",
+  "changelog.entries.the-homepage-personas-take-turns.body":
+    "The persona showcase now advances every twenty seconds and stops for good once you pick one. It pauses under your pointer and never starts with reduced motion on.",
+  "changelog.entries.persona-cards-now-show-the-banner.title":
+    "Persona cards now show the banner",
+  "changelog.entries.persona-cards-now-show-the-banner.body":
+    "Cards in the persona directory now carry your banner across the top, framed the way you positioned it. A persona without one keeps the soft colour wash.",
+  "changelog.entries.save-profile-stays-off-until-you-change-something.title":
+    "Save profile stays off until you change something",
+  "changelog.entries.save-profile-stays-off-until-you-change-something.body":
+    "Save profile is dimmed until you actually change something, and while the draft is untouched the other button reads Go back.",
+  "changelog.entries.hear-your-name-before-you-save-it.title":
+    "Hear your name before you save it",
+  "changelog.entries.hear-your-name-before-you-save-it.body":
+    "The editor now has a hear it button under the name pronunciation field, using the same voice visitors get, so you can try a spelling and adjust until it sounds like you.",
   "changelog.entries.every-cookie-we-set-now-has-its-real-name.title":
     "Every cookie we set now has its real name",
   "changelog.entries.every-cookie-we-set-now-has-its-real-name.body":
-    "Our cookie page used to list seven names that nothing on the site actually set. It now lists the four real cookies, what each one does and how long it lasts, alongside everything we keep in your browser: your settings, your unsent drafts, the messages waiting to send. The same list opens inside your privacy choices, so you can read it at the moment you decide.",
+    "The cookie page now lists the four cookies we really set, what each does and how long it lasts. The same list opens inside your privacy choices.",
   "changelog.entries.a-safe-space-badge-has-to-be-earned.title":
     "A safe space badge has to be earned",
   "changelog.entries.a-safe-space-badge-has-to-be-earned.body":
-    "The safe spaces page said every venue had been visited by several members with no stake in it. The three-visit count was worked out and written down, and then nothing checked it before a badge was granted. It is checked now. A badge can still be granted on fewer visits where the team has a reason, and then the reason is recorded and the badge shows the real count. That applies to badges granted from today; older ones keep their date and come back for review a year on.",
+    "The three-visit bar is now checked before a badge is granted. The team can still grant one on fewer visits with a recorded reason, and the badge shows the real count.",
   "changelog.entries.rooms-in-a-vetted-group-are-for-its-members.title":
     "Rooms in a vetted group are for its members",
   "changelog.entries.rooms-in-a-vetted-group-are-for-its-members.body":
-    "A screened housing group's whole point is that rooms come from people it has let in, and until now anyone at all could read them, signed out included. Now they stay inside. The group, its city and its house rules are still open to everyone, so you can find it and ask to join, and posting a room into one needs an approved request too.",
+    "Rooms posted inside a screened housing group are now visible only to its members. The group, its city and its house rules stay open.",
   "changelog.entries.a-viewing-that-tells-you-what-happened.title":
     "A viewing that tells you what happened",
   "changelog.entries.a-viewing-that-tells-you-what-happened.body":
-    "Asking to see a home, being accepted, being offered another time, being turned down, or having a viewing called off all happened in silence. The person listing only found out someone wanted to visit if they opened the viewings page, and nobody was ever told they had been accepted. All five now reach you, in the app.",
+    "Viewing requests, acceptances, alternative times, refusals and cancellations all reach you in the app now. Before, it happened in silence and you had to open the viewings page to find out.",
   "changelog.entries.the-exact-address-once-you-connect.title":
     "The exact address, once you connect",
   "changelog.entries.the-exact-address-once-you-connect.body":
-    "Every listing promised the exact address would appear once you and the person were connected, and no form ever asked for one, so the promise could not be kept. Listers can now add a street address. It stays private, shown only to people they connect with or accept a viewing from, and everyone else still sees the neighbourhood.",
+    "Listers can now add a street address. It stays private, shown only to people they connect with or accept a viewing from, and everyone else sees the neighbourhood.",
   "changelog.entries.an-answer-on-your-housing-application.title":
     "An answer on your housing application",
   "changelog.entries.an-answer-on-your-housing-application.body":
-    "Asking to join a co-op or a vetted housing group ended at a success panel. There was no notification when a decision was made and no page to check, so the request simply disappeared. You now hear when it is decided, and both surfaces show you where your application stands.",
+    "You now get a notification when a co-op or a vetted group decides on your request to join, and both pages show where your application stands.",
   "changelog.entries.filter-for-pets-furnishing-and-deposit.title":
     "Filter for pets, furnishing and deposit",
   "changelog.entries.filter-for-pets-furnishing-and-deposit.body":
-    "Listers have been ticking Furnished and Pets welcome since the board opened, and nothing let you search on either, so anyone with a dog read every description by hand. Both are filters now. Listers can also state the deposit, and you can cap it. A home with no stated deposit is left out of a capped search rather than treated as zero.",
+    "Furnished and Pets welcome are filters now. Listers can also state the deposit and you can cap it, and a home with no stated deposit is left out of a capped search.",
   "changelog.entries.a-warning-before-your-listing-expires.title":
     "A warning before your listing expires",
   "changelog.entries.a-warning-before-your-listing-expires.body":
-    "Listings run for sixty days and then quietly drop off the board. Every signal you had arrived afterwards. Your listing now warns you a week out, and the card says how many days are left instead of a flat date, so extending it is a decision rather than a rescue.",
+    "Listings run for sixty days. Yours now warns you a week before it drops off the board, and the card shows how many days are left.",
   "changelog.entries.landlord-recommendations-say-what-they-are.title":
     "Landlord recommendations say what they are",
   "changelog.entries.landlord-recommendations-say-what-they-are.body":
-    "A recommendation is a named, public judgement of a real person who has no account here. Writing one now means saying you rented from them and roughly when, every recommendation is labelled self-attested and unverified because nothing here can check it, and the person named can ask to answer it. Their reply is published beside the words it answers.",
+    "Writing a landlord recommendation now means saying you rented from them and roughly when. Each one is labelled self-attested and unverified, and the person named can reply.",
   "changelog.entries.counts-and-dates-you-can-trust.title":
     "Counts and dates you can trust",
   "changelog.entries.counts-and-dates-you-can-trust.body":
-    "The directory said it was updated monthly, the safe spaces list said June 2025, one page claimed forty-seven verified spaces, and two more counted removals this year that were really all-time. None of it was checkable. Every number on those pages is now the live one, every date is real, and the claims we could not stand behind are gone. The visa and arriving guides carry a review date and send you to the official source for figures that change each year.",
+    "Every count on the directory and the safe spaces list is now live, and every date is real. The visa and arriving guides carry a review date.",
   "changelog.entries.reporting-without-an-account.title":
     "Report something without an account",
   "changelog.entries.reporting-without-an-account.body":
-    "The report form always said it was open to anyone, and until now it was not: without an account, sending one failed. It works. You can file from the safety pages, from a listing, from a gathering or from someone's profile whether or not you are signed in.",
+    "Sending a report without an account used to fail. It works now, whether you are signed in or out, from the safety pages, a listing, a gathering or someone's profile.",
   "changelog.entries.report-from-where-you-are.title":
     "Report from where you meet it",
   "changelog.entries.report-from-where-you-are.body":
-    "A gathering can now be reported from its own page, so you no longer have to RSVP first and put your name on the host's guest list to say something is wrong. Volunteering opportunities can be reported at all for the first time, and a profile has a Report action of its own instead of hiding one inside Block.",
+    "A gathering can now be reported from its own page, without joining the guest list first. Volunteering opportunities and profiles have their own Report action too.",
   "changelog.entries.a-receipt-when-you-report.title":
     "A receipt the moment you report",
   "changelog.entries.a-receipt-when-you-report.body":
-    "Filing a report now puts a confirmation in your notifications straight away, with the case reference. Before, if you closed the success message, you had nothing at all until a moderator finished the case, which can take days.",
+    "Filing a report now puts a confirmation in your notifications straight away, with the case reference, so you keep it even if you close the success message.",
   "changelog.entries.every-decision-carries-a-reason.title":
     "Every decision comes with its reason",
   "changelog.entries.every-decision-carries-a-reason.body":
-    "The Code of Conduct says we always tell you why. A moderator can no longer record a warning, a restriction, a suspension, a ban or a takedown without writing the reason you receive. Blocking someone and reporting them at the same time now carries the real reason too, so a report about outing or doxxing reaches the fastest queue instead of the slowest.",
+    "A moderator now has to write the reason you receive before recording a warning, restriction, suspension, ban or takedown. Blocking and reporting at once carries it too.",
   "changelog.entries.appeal-dates-you-can-hold-us-to.title":
     "Appeal dates you can hold us to",
   "changelog.entries.appeal-dates-you-can-hold-us-to.body":
-    "The appeal page now shows how long you have to file, and your appeal shows the date we owe you an answer by. The old copy quoted two different deadlines and neither matched what the platform actually does. If the window has closed, the page says so and names the day it closed rather than simply refusing.",
+    "The appeal page now shows how long you have to file, and your appeal shows the date we owe you an answer by.",
   "changelog.entries.guides-and-partners-without-signing-in.title":
     "Public pages that actually load when you are signed out",
   "changelog.entries.guides-and-partners-without-signing-in.body":
-    "The glossary, the partner pages, the volunteering list, the governance record and the legal aid and testing listings are meant to be readable by anyone. They were asking the server for member-only data, so a signed-out visitor got an error panel and a retry button that could never work. They load now.",
+    "The glossary, the partner pages, the volunteering list, the governance record and the legal aid and testing listings now load for signed-out visitors.",
   "changelog.entries.a-code-to-follow-your-concern.title":
     "A code to follow up a concern you raised",
   "changelog.entries.a-code-to-follow-your-concern.body":
-    "Raising a concern without an account used to end in silence, because the form promised a confirmation by email and QueerPulse sends none. You now get a reference code when you submit. Keep it, and you can check at any time whether your concern is waiting, being looked at, or closed. It collects nothing about you.",
+    "Raising a concern without an account now gives you a reference code. Keep it and you can check whether your concern is waiting, being looked at, or closed.",
   "changelog.entries.the-decision-log-can-grow.title":
     "The decision log can record the next decision",
   "changelog.entries.the-decision-log-can-grow.body":
-    "The public record of decisions, principles and council seats was fixed to what shipped in the app, so the people who take a decision could not log it. The governance team can now write a new entry in English and Portuguese, edit it and reorder it, without waiting for a release.",
+    "The governance team can now write a new entry in the public record in English and Portuguese, edit it and reorder it, without waiting for a release.",
   "changelog.entries.partners-keep-their-own-page.title":
     "Partners can keep their own page accurate",
   "changelog.entries.partners-keep-their-own-page.body":
-    "An approved partner organisation had no way to fix its own phone number, address or description. There is now a partner profile editor in your account. The partnership tier and the date you joined stay with the partnerships team, because those describe the relationship rather than the organisation.",
+    "An approved partner organisation now has a partner profile editor in its account, for the phone number, address and description. The partnership tier and join date stay with the partnerships team.",
   "changelog.entries.one-way-to-apply-as-a-partner.title":
     "One way to apply as a partner",
   "changelog.entries.one-way-to-apply-as-a-partner.body":
-    "There were two forms for the same ask. The one on the For Organisations page created a message that never became a partnership, while the real application form had a queue and an answer. Both now lead to the real application, and the answer arrives in the app.",
+    "The For Organisations page and the application form were two separate asks. Both now lead to the real partnership application, and the answer arrives in the app.",
   "changelog.entries.the-glossary-reads-in-portuguese.title":
     "The glossary opens in your language",
   "changelog.entries.the-glossary-reads-in-portuguese.body":
-    "The glossary opened in English whatever language the rest of the site was in, its category chips stayed English after you switched, and searching in Portuguese found nothing. It now follows your language until you flip it yourself, and search reads the Portuguese definitions.",
+    "The glossary now opens in your language, category chips included, until you flip it yourself, and search reads the Portuguese definitions.",
   "changelog.entries.suggest-a-glossary-term.title": "Suggest a missing term",
   "changelog.entries.suggest-a-glossary-term.body":
-    "Suggesting a word used to go to the general contact form and arrive as an unstructured message. It now goes to the editors as a proper suggestion, and they have a console to add the term and finish its Portuguese definition.",
+    "Suggesting a word now reaches the editors as a proper suggestion, and they have a console to add the term and finish its Portuguese definition.",
   "changelog.entries.reach-the-team-behind-an-opportunity.title":
     "Reach the team behind a volunteering opportunity",
   "changelog.entries.reach-the-team-behind-an-opportunity.body":
-    'After applying, "Message the team" dropped you into an empty inbox with nobody to write to. It now opens a conversation with the person who posted it. Community organisers who are allowed to review applicants also see the applicant list on the posting instead of being offered the Apply button on their own opportunity.',
+    "Message the team now opens a conversation with the person who posted the opportunity. Organisers allowed to review applicants see the applicant list on their own posting.",
   "changelog.entries.approved-resources-appear-straight-away.title":
     "An approved resource appears in the directory",
   "changelog.entries.approved-resources-appear-straight-away.body":
-    "Approving a member's resource suggestion told them it was accepted and then left the directory unchanged until somebody retyped it by hand. Approval now publishes the listing in the same step, with the details checked first, so a phone number on a legal aid or clinic list is the one the member sent.",
+    "Approving a member's resource suggestion now publishes the listing in the same step, with the details checked first, so the phone number shown is the one they sent.",
   "changelog.entries.guides-get-reviewed-on-time.title":
     "Guides get reviewed on time",
   "changelog.entries.guides-get-reviewed-on-time.body":
-    "Every guide hides from readers until an editor confirms it is still accurate, and each one falls due again on a schedule. Nothing was telling anyone when that happened, so harm reduction and trans healthcare pages could stay hidden for months. Overdue guides now raise a flag in the admin queue and ring the curators.",
+    "A guide stays hidden until an editor confirms it is still accurate. Overdue guides now raise a flag in the admin queue and ring the curators.",
   "changelog.entries.the-trans-healthcare-guide-in-portuguese.title":
     "The trans healthcare guide, in Portuguese",
   "changelog.entries.the-trans-healthcare-guide-in-portuguese.body":
-    "The clinical pathways on the trans healthcare guide, and the QTIPOC organisation directory, were written only in English even for a Portuguese reader. Both are now translated in full, wait times, costs and legal references included.",
+    "The clinical pathways on the guide and the QTIPOC organisation directory are now fully translated, wait times, costs and legal references included.",
   "changelog.entries.forms-instead-of-email-links.title":
     "Forms instead of email links",
   "changelog.entries.forms-instead-of-email-links.body":
-    "Several pages asked you to email a shared mailbox, which had no queue and no way to tell you what happened. Those now open the same in-app forms the rest of the platform uses, so a suggestion or a press question can be tracked and answered where you sent it.",
+    "Pages that asked you to email a shared mailbox now open in-app forms instead, so a suggestion or a press question gets a queue and an answer.",
   "changelog.entries.send-a-document-in-a-message.title":
     "You can send a document in a message",
   "changelog.entries.send-a-document-in-a-message.body":
-    "Messages carried photos and GIFs and nothing else, so sharing a lease, a flyer or a spreadsheet meant leaving the platform for email, which is exactly the moment a housing or volunteering conversation used to fall apart. You can now attach a PDF, a plain-text file, a CSV or a spreadsheet, up to 20 MB, and it arrives as a file card showing the name, the format and the size. Documents are served the same guarded way photos already were: only the people in the conversation can open one, and a link on its own is not enough. One honest caveat while we look at it: a photo has its hidden data stripped as it is prepared for sending, and a document does not yet, so a file you send carries whatever its author and software details already say.",
+    "You can now attach a PDF, text file, CSV or spreadsheet up to 20 MB. It arrives as a card with the name, format and size.",
   "changelog.entries.delete-a-message-just-for-you.title":
     "You can delete a message just for you",
   "changelog.entries.delete-a-message-just-for-you.body":
-    "Deleting a message removed it for everyone, so the only way to clear something from your own side was to delete the whole conversation and lose the history you wanted to keep. Delete for me now sits beside it. The message goes from your view and stays gone on every device you use, in the thread, in search, in the pinned banner, in your starred messages and in the conversation preview. The other person's view does not change, and it does not look deleted to them.",
+    "Delete for me now sits beside delete for everyone. The message leaves your view on every device you use, and the other person's view stays as it was.",
   "changelog.entries.mark-a-conversation-unread.title":
     "You can mark a conversation unread",
   "changelog.entries.mark-a-conversation-unread.body":
-    "Opening a thread on your way somewhere else marked it read, and there was no way to flag it to come back to. Mark as unread is now in the conversation menu, beside pin, favourite, mute and archive. It holds on every device, it survives leaving the page and coming back, and opening the thread again clears it.",
+    "Mark as unread is now in the conversation menu, beside pin, favourite, mute and archive. It holds on every device, survives a reload, and clears when you open the thread again.",
   "changelog.entries.new-messages-reach-you-wherever-you-are.title":
     "New messages reach you wherever you are",
   "changelog.entries.new-messages-reach-you-wherever-you-are.body":
-    "A new message only reached you live if you happened to have that exact thread open. Sitting in another conversation, or anywhere else in the app, you saw nothing until you reloaded, and the person who wrote to you kept seeing a single tick as though it had never arrived. Your inbox and your unread badge now update the moment a message lands in any of your conversations, and the sender's second tick appears when it reaches you rather than when you get round to opening it.",
+    "Your inbox and unread badge now update the moment a message lands in any of your conversations, including ones you have closed, and the sender's second tick appears when it reaches you.",
   "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.title":
     "An enquiry reply no longer fails in silence",
   "changelog.entries.an-enquiry-reply-no-longer-fails-in-silence.body":
-    "Asking about a room or a flatshare opened a conversation with someone you were not connected to, and every reply after that first message was refused, from both sides. The message box looked completely normal, so the person letting the room answered a question, watched their message turn red, and the person who asked assumed they had been ignored. The thread now tells you plainly that replying needs a connection, and offers you the connection request right there, so the conversation can carry on instead of dying quietly.",
+    "Replying to a housing enquiry needs a connection. The thread now says so plainly and offers you the connection request right there, so the conversation can carry on.",
   "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.title":
     "Notifications you can clear, that open the thing they name",
   "changelog.entries.notifications-you-can-clear-that-open-the-right-thing.body":
-    "Three things about the bell were wrong at once. Answering a connection request from a notification only cleared it on the device you answered on, so it came back unread everywhere else with live Accept and Decline buttons on a request you had already dealt with, and there was no way to clear a row you simply did not want. Tapping a notification about a community post or a mention in a message dropped you on the notifications list rather than the post or the message. And the count at the top of the page disagreed with the count on the bell beside it. Rows now clear for good on every device, they open the thing they are about, and both counts come from the same place.",
+    "Notification rows now clear for good on every device, they open the post or message they name, and the count at the top matches the bell.",
   "changelog.entries.hiding-your-photo-now-holds-everywhere.title":
     "Turning off your photo now holds everywhere",
   "changelog.entries.hiding-your-photo-now-holds-everywhere.body":
-    "The Show your photo setting was honoured by the feed and the forum and quietly ignored almost everywhere else, so a member who had turned it off still had their face shown to everyone in their direct messages, to people at the same gathering, to their connections, to anyone visiting a profile they had vouched for, and to community owners holding their membership card. It was also still published on the opt-in public page that search engines can read. All of those now go through one check, so the setting means what it says.",
+    "Show your photo now goes through one check everywhere: direct messages, gatherings, your connections, membership cards and your public page. Turning it off holds in all of them.",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.title":
     "Someone you blocked can no longer vouch for you",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.body":
-    "Vouching did not know about blocks. Somebody you had blocked could still vouch for you, raise your vouch count, and have their face sit in the row of vouchers on your profile for you and every visitor to see, with no way for you to remove it. Blocking now refuses the vouch outright, and an existing vouch from someone you later block stops counting and stops appearing, for you and for everyone else. Unblocking restores it.",
+    "Blocking someone now refuses their vouch, and a vouch from someone you block later stops counting and stops showing on your profile, for you and for everyone else. Unblocking restores it.",
   "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.title":
     "A hidden vouch list no longer reads as no vouches at all",
   "changelog.entries.a-hidden-vouch-list-no-longer-reads-as-none.body":
-    "If you had chosen to keep the list of people who vouched for you private, your own profile told visitors you had no vouches yet, while the true number was printed a few lines below on the same page, and the page invited them to be the first. The header now states the real number without naming anyone, and says the names are private. You still see your own list, and there is a line telling you that visitors see only the count.",
+    "If you keep your voucher list private, your profile header now states the real number and says the names are private.",
   "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.title":
     "A private profile now says so instead of looking abandoned",
   "changelog.entries.a-private-profile-now-says-so-instead-of-looking-abandoned.body":
-    "Opening the profile of someone who keeps it private, or shares it only with their connections, showed a name and then nothing at all, which reads as an empty account rather than a decision. There is now a short note saying whose choice it was and what would change. The two cases say different things, because they are different: a network profile opens up once you are connected, and a private one stays private, though connecting does let the two of you message.",
+    "A profile kept private, or shared only with connections, now carries a short note saying it was the member's choice and what would change.",
   "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.title":
     "Hiding yourself now holds on the People like you row",
   "changelog.entries.hiding-yourself-now-holds-on-the-people-like-you-row.body":
-    "The row of related people at the bottom of a profile applied none of the checks every other listing applies. Someone who had blocked you, hidden themselves from you specifically, or turned on Hide me for 24 hours still appeared there by name, pronouns and photo, and so did anyone a moderator had removed. All four now apply, so choosing to be hidden is not undone by a suggestion row.",
+    "The People like you row now applies the same checks as every other listing: blocks, hiding yourself from one person, Hide me for 24 hours, and moderator removals.",
   "changelog.entries.renaming-your-username-no-longer-breaks-every-link-to-you.title":
     "Renaming your username no longer breaks every link to you",
   "changelog.entries.renaming-your-username-no-longer-breaks-every-link-to-you.body":
-    "Changing your username released the old one immediately, so every printed card, shared link and pasted mention pointing at you died with a not-found page the moment you renamed. Old links now forward to your new address and tell you they did, on both your member profile and your public page. The forwarding is deliberately temporary: it lasts only as long as the old name is reserved, so once somebody else can legitimately claim that name, it stops rather than sending your visitors to a stranger.",
+    "Old links to your username now forward to your new address and tell you they did, on your member profile and your public page.",
   "changelog.entries.you-can-search-the-member-directory-by-name.title":
     "You can search the member directory by name",
   "changelog.entries.you-can-search-the-member-directory-by-name.body":
-    "The member directory had filters but no way to type a name, so finding the person you met last night meant leaving it for the site-wide search. There is now a search box that matches part of a name, and it works alongside the filters you already had.",
+    "A search box in the member directory matches part of a name, and it works alongside the filters you already had.",
   "changelog.entries.the-persona-directory-now-searches-all-of-it-at-once.title":
     "The persona directory now searches all of it at once",
   "changelog.entries.the-persona-directory-now-searches-all-of-it-at-once.body":
-    "Searching personas happened in your browser, on whatever had already been downloaded, which meant the page fetched up to twenty batches of a hundred one after another before it could show you anything, and a search still could not see past the two thousandth persona. The search now runs on the server across every persona, and the page loads in a single request.",
+    "Persona search now runs on the server across every persona, so it sees past the two thousandth one and the page loads in a single request.",
   "changelog.entries.a-co-owned-persona-link-opens-the-right-persona.title":
     "A co-owned persona opens the right persona",
   "changelog.entries.a-co-owned-persona-link-opens-the-right-persona.body":
-    "A persona shared between several people was linked from each co-owner's profile using that co-owner's name, but a persona is only ever found under the name of the person who created it. Every one of those links failed, and if the co-owner happened to have their own persona with the same short name, the link opened that other persona instead. Each persona now has one address, and the card on the phone and on a computer both use it.",
+    "Each persona now has one address, used by the card on the phone and on a computer, so a link from a co-owner's profile opens the persona you meant.",
   "changelog.entries.no-more-persona-share-links-and-qr-codes-that-lead-nowhere.title":
     "No more persona share links and QR codes that lead nowhere",
   "changelog.entries.no-more-persona-share-links-and-qr-codes-that-lead-nowhere.body":
-    "Share, QR code, contact card and View on your persona dashboard invented an address for a persona that had never been published or had no handle yet, so you could copy a link or print a QR code that led nowhere and only find out when somebody scanned it. Those four now come from the one place that knows a persona's real address. When there is not one yet, they are visibly unavailable with a line saying what to do about it, rather than silently wrong.",
+    "Share, QR code, contact card and View now use a persona's real address. When there is not one yet, they show as unavailable with a line saying what to do.",
   "changelog.entries.co-owners-are-offered-leave-instead-of-a-delete-that-fails.title":
     "Co-owners are offered Leave instead of a Delete that fails",
   "changelog.entries.co-owners-are-offered-leave-instead-of-a-delete-that-fails.body":
-    "Deleting a persona has always been limited to the person who created it, but the Delete button was shown to every co-owner. A co-owner could read the warning about what everyone was about to lose, type the persona's name to confirm, and get a generic failure with no explanation and no pointer to the Leave action that does apply to them. Co-owners are now offered Leave in the place they were looking for Delete. The creator's warning also counts correctly: it used to include the reader among the people they were taking the persona from.",
+    "Delete only ever worked for the person who created a persona, so co-owners are now offered Leave in that spot. The creator's warning also counts the people affected correctly.",
   "changelog.entries.the-personas-you-follow-now-have-a-home.title":
     "The personas you follow now have a home",
   "changelog.entries.the-personas-you-follow-now-have-a-home.body":
-    "Following a persona did nothing for the follower. There was no list of who you follow and nothing ever reached you again, so the button was decorative. There is now a You follow tab in the persona directory listing everyone you follow, with unfollow on each row, and you are told when a persona you follow publishes new work. It is one notification per persona rather than one per item, and there is a switch to turn it off while keeping the list. The notification names the persona and never the person behind it.",
+    "A You follow tab in the persona directory lists everyone you follow, with unfollow on each row, and tells you when they publish new work.",
   "changelog.entries.badges-levels-and-perks-now-read-in-your-language.title":
     "Badges and levels now read in your language",
   "changelog.entries.badges-levels-and-perks-now-read-in-your-language.body":
-    "Badge names, what each badge takes, the category filters and the seven level names were written in English on the server and shown as they were, so a Portuguese member read Local Scout, Save 3 places in the Local directory and Newcomer on an otherwise translated page. The level name appears on your profile header, which made it the most visible English left in the app. All of it now reads in the language you chose. Two smaller lists that had been copied by hand had drifted from the real badge names in English as well as Portuguese, and they now read from one source instead.",
+    "Badge names, what each one takes, the category filters and the seven level names now read in the language you chose, including the level on your profile header.",
   "changelog.entries.a-membership-card-check-shows-a-real-role-name.title":
     "A membership card check shows a real role name",
   "changelog.entries.a-membership-card-check-shows-a-real-role-name.body":
-    "Scanning a co-owner's membership card at a door showed a raw internal code where the role should be, on the one screen designed to be read by a stranger with no context. It now shows the role name, and an unfamiliar role falls back to something readable rather than a code.",
+    "Scanning a co-owner's card at a door now shows the role name instead of an internal code, and an unfamiliar role falls back to something readable.",
   "changelog.entries.invite-only-communities-can-finally-let-people-in.title":
     "Invite-only communities can finally let people in",
   "changelog.entries.invite-only-communities-can-finally-let-people-in.body":
-    "If you run a private or invite-only community, an invitation now actually opens the door. Before this, the people you invited were sent to a page that told them the community did not exist. An invitation is a real thing you hold now: it shows the community to the person you invited, lets them walk straight in, and can be withdrawn if you change your mind.",
+    "An invitation to a private or invite-only community now opens the door: the person you invited can see it, walk straight in, and you can withdraw the invitation.",
   "changelog.entries.your-invitations-now-wait-for-you-in-one-place.title":
     "Your invitations wait for you in one place",
   "changelog.entries.your-invitations-now-wait-for-you-in-one-place.body":
-    "Invitations used to live only in a notification that scrolled away. There is now a page that holds every community that has asked you in, who invited you, and the choice to open it or say no thank you. Declining is quiet: nobody is told.",
+    "A page now holds every community that has asked you in, who invited you, and the choice to open it or decline. Declining is quiet: nobody is told.",
   "changelog.entries.an-archived-community-stays-readable-to-its-members.title":
     "An archived community stays readable to the people who built it",
   "changelog.entries.an-archived-community-stays-readable-to-its-members.body":
-    "Closing a community said it would stay visible as a read-only record. It did not: everyone but the moderators lost every post and resource they had written there. Now the archive is what it always promised to be. Members keep reading everything, and nobody can post, reply, react or join.",
+    "The archive now works as promised. Everyone who was a member keeps reading every post and resource, and nobody can post, reply, react or join.",
   "changelog.entries.leaving-a-community-you-run-now-points-you-somewhere.title":
     "Leaving a community you run now points you somewhere",
   "changelog.entries.leaving-a-community-you-run-now-points-you-somewhere.body":
-    "Owners were offered the same Leave button as everyone else, confirmed it, and got an error with no explanation. A community cannot be left without a successor, so we say that plainly now and take you to the handover instead.",
+    "A community cannot be left without a successor, so instead of a bare error you now get that said plainly and a route to the handover.",
   "changelog.entries.the-communities-home-tab-shows-your-real-week.title":
     "The communities home tab shows your real week",
   "changelog.entries.the-communities-home-tab-shows-your-real-week.body":
-    "The overview was showing the same empty week to everyone. It now reads from your actual communities: what has been posted, what is coming up, and what is waiting for you.",
+    "The overview now reads from your actual communities: what has been posted, what is coming up, and what is waiting for you.",
   "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.title":
     "You can see a community's gatherings before you join",
   "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.body":
-    "Every community you had not joined told you it had no gatherings coming up, even with three on the calendar. Gatherings are one of the best reasons to join somewhere, so you can now see the open ones from the outside. Anything a community keeps to its members stays private, and we say so on the page.",
+    "You can now see a community's open gatherings from the outside. Anything it keeps to its members stays private, and the page says so.",
   "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.title":
     "Communities can set a mark and a welcome note",
   "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.body":
-    "Two things the platform could already store and no one could ever fill in: a small square mark shown beside your community's name, and a note the next person reads the moment they arrive. Both are optional, and both are now in the setup flow and in your settings.",
+    "You can now set a small square mark shown beside your community's name and a welcome note the next person reads on arrival. Both are optional, in setup and in settings.",
   "changelog.entries.a-post-taken-down-now-comes-with-a-reason.title":
     "A post taken down now comes with a reason",
   "changelog.entries.a-post-taken-down-now-comes-with-a-reason.body":
-    "When a moderator removed something you wrote, you found a blank space and were left to guess which rule you had broken, or whether you had broken one at all. Moderators can now give a reason and cite the house rule they are enforcing, and it reaches you. The takedown is written into the community's own record too.",
+    "Moderators can now give a reason and cite the house rule when they remove something you wrote, and it reaches you. The takedown goes into the community's record too.",
   "changelog.entries.you-can-take-back-a-request-to-join.title":
     "You can take back a request to join",
   "changelog.entries.you-can-take-back-a-request-to-join.body":
-    "Asked to join somewhere by mistake, or changed your mind while waiting? The Requested button does something now. Taking it back costs you nothing and leaves you free to ask again straight away, where waiting for a no can set a wait of months.",
+    "The Requested button now takes your request back. It costs you nothing and you can ask again straight away, where waiting for a no can set a wait of months.",
   "changelog.entries.finding-the-busiest-communities-is-instant.title":
     "Finding the busiest communities is instant",
   "changelog.entries.finding-the-busiest-communities-is-instant.body":
-    "Sorting Discover by most active used to quietly fetch every page of every community into your browser and re-sort them there, behind a loading state that could last a while. The sorting happens on our side now, and the first results arrive in one go.",
+    "Sorting Discover by most active now happens on our side, so the first results arrive in one go instead of behind a long loading state.",
   "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.title":
     "An outage no longer looks like an empty page",
   "changelog.entries.an-outage-no-longer-looks-like-an-empty-page.body":
-    'When a request failed, the page used to shrug and show its empty state. A failed search told you there were no results for your word. A failed listings fetch on the sexual-health tab said the clinic directory was still coming. The local directory said Lisbon had no queer-owned places, and your own cards, connections and applications could all report that you had none. Every one of those was the platform blaming you for its own outage. Screens across the app now tell you plainly when something failed to load and give you a Try again button, and they keep saying "nothing here yet" only when that is actually true.',
+    'Screens across the app now tell you plainly when something failed to load and give you a Try again button. "Nothing here yet" appears only when it is true.',
   "changelog.entries.onboarding-never-guesses-your-visibility.title":
     "Onboarding never guesses your visibility",
   "changelog.entries.onboarding-never-guesses-your-visibility.body":
-    "On the intentions step, if we failed to load the choices you had saved before, the form quietly assumed your intentions were public and could save them that way. Since intentions can say you are looking for dating, housing or flatmates, that was a real outing risk. The step now tells you when it could not load, offers a retry, and will never write a visibility setting it did not successfully read.",
+    "The intentions step now tells you when it could not load your saved choices and offers a retry. It will never write a visibility setting it did not successfully read.",
   "changelog.entries.reporting-a-person-says-what-actually-happens.title":
     "Reporting a person says what actually happens",
   "changelog.entries.reporting-a-person-says-what-actually-happens.body":
-    "The confirmation after reporting someone from a DM or a connection was written for flagging a venue's safe-space badge. It talked about badge suspension and promised we would never contact the venue, when there was no badge and no venue anywhere in sight, and it printed its formatting tags on screen. Reporting a person now has its own confirmation that describes what a moderator will actually do.",
+    "Reporting a person now has its own confirmation describing what a moderator will do, in place of text written for flagging a venue's safe-space badge.",
   "changelog.entries.mod-tools-bans-read-in-words-again.title":
     "Mod tools bans read in words again",
   "changelog.entries.mod-tools-bans-read-in-words-again.body":
-    'Opening Mod tools and then Bans showed raw internal codes instead of text: a ban\'s length read as a key rather than "Permanent", and the rule citation and the edit-ban editor were codes from top to bottom. The missing wording has been written in English and Portuguese.',
+    "Under Mod tools, Bans now reads in words: ban length, the rule citation and the edit-ban editor, in English and Portuguese.",
   "changelog.entries.offline-no-longer-clears-what-youre-typing.title":
     "Losing signal no longer clears what you were typing",
   "changelog.entries.offline-no-longer-clears-what-youre-typing.body":
-    "Walking into a tunnel or switching from wifi to data used to replace the whole page with the offline screen, which threw away a half-written message, an unsent gathering form or a draft in progress. The page now stays exactly where it was and a small bar tells you the connection dropped. The full offline screen is still there for when you open the app with no connection at all.",
+    "Losing signal now keeps the page exactly where it was, with a small bar telling you the connection dropped. The full offline screen stays for opening the app with no connection.",
   "changelog.entries.back-button-leaves-an-editor-cleanly.title":
     "Back leaves an editor in one press",
   "changelog.entries.back-button-leaves-an-editor-cleanly.body":
-    "Pages that warn you about unsaved edits left a hidden extra step in your browser history. After leaving one, Back would bring you to the editor a second time before it took you anywhere else. That step is now cleaned up whichever way you leave the page.",
+    "Pages that warn about unsaved edits left a hidden extra step in your history, so Back returned to the editor once more. That step is now cleaned up however you leave.",
   "changelog.entries.signed-out-tab-bar-is-whole-again.title":
     "The signed-out tab bar is whole again",
   "changelog.entries.signed-out-tab-bar-is-whole-again.body":
-    "On a phone, a visitor without an account saw a tab bar with a single tab in it. Two of its three destinations had become member-only, so they were being filtered out of the bar without being replaced. It now offers the resource library, the safe-spaces guide and About, all of which open without an account.",
+    "Without an account, the phone tab bar now offers the resource library, the safe-spaces guide and About, all of which open without signing in.",
   "changelog.entries.installing-the-app-takes-one-tap-again.title":
     "Installing the app takes one tap again",
   "changelog.entries.installing-the-app-takes-one-tap-again.body":
-    "The browser offers an app one chance to capture its install prompt, and whichever part of QueerPulse asked first was keeping it to itself. The install page and the install dialog were left showing manual step-by-step instructions on browsers that support installing in a single tap. All three now share the same offer.",
+    "The install page, the install dialog and the app now share the browser's single install offer, so a one-tap install shows up instead of manual instructions.",
   "changelog.entries.notification-taps-land-on-the-right-screen.title":
     "Tapping a notification lands on the right screen",
   "changelog.entries.notification-taps-land-on-the-right-screen.body":
-    "In the installed app, tapping a message notification could raise QueerPulse on whichever screen it was last showing instead of opening the conversation, because the app could be put to sleep mid-jump. It now finishes opening the notification before anything else can interrupt it.",
+    "In the installed app, tapping a message notification now finishes opening the conversation before anything can interrupt it.",
   "changelog.entries.the-installed-app-keeps-itself-current.title":
     "The installed app keeps itself current",
   "changelog.entries.the-installed-app-keeps-itself-current.body":
-    "An installed app left open for days could keep running an old version until it was closed and reopened, and would sometimes reload itself abruptly when it reached for a part of the app that had since changed. It now checks for a new version about once an hour and offers you the usual update pill instead.",
+    "An installed app left open now checks for a new version about once an hour and offers you the usual update pill, instead of running old code for days.",
   "changelog.entries.pausing-your-account-now-pauses-it.title":
     "Pausing your account now actually pauses it",
   "changelog.entries.pausing-your-account-now-pauses-it.body":
-    "The pause button in Settings used to show you a success screen without doing anything: your profile stayed visible, you stayed messageable, and your session stayed open. It now runs the real thing, and the screen that confirms it can only appear once the account has genuinely been paused.",
+    "The pause button in Settings now runs the real thing: your profile comes down, you stop being messageable, and your session ends. The confirmation appears only once that is done.",
   "changelog.entries.pause-and-delete-live-in-one-place.title":
     "Pausing and deleting live in one place",
   "changelog.entries.pause-and-delete-live-in-one-place.body":
-    "Both used to exist on three separate screens with three separate confirmations, which is how the broken one went unnoticed. There is now a single page that explains what each does, and everywhere else takes you to it.",
+    "One page now explains what pausing and deleting each do, and every other screen takes you there.",
   "changelog.entries.content-settings-actually-filter-your-feed.title":
     "The content settings on Interests work now",
   "changelog.entries.content-settings-actually-filter-your-feed.body":
-    "Dating, mental health, and sexuality and identity were switches with nothing behind them. Turning one off now hides that kind of community from your feed. It never touches your access to those spaces, and it deliberately does not filter health, disability or race, because those are people rather than content.",
+    "Turning off dating, mental health, or sexuality and identity now hides that kind of community from your feed. Your access to those spaces stays the same.",
   "changelog.entries.you-can-stop-being-suggested-to-strangers.title":
     "You can stop being suggested to people you have not met",
   "changelog.entries.you-can-stop-being-suggested-to-strangers.body":
-    "Under Visibility. You still see suggestions yourself, and you stay in the member directory. It only takes you out of other people's suggestion strip.",
+    "Under Visibility, you can leave other people's suggestion strip. You still see suggestions yourself and you stay in the member directory.",
   "changelog.entries.the-activity-switch-is-one-switch.title":
     "The activity switch is the same switch in both places",
   "changelog.entries.the-activity-switch-is-one-switch.body":
-    "Settings advertised the recently-active opt-out as coming soon while the working one already shipped on your profile. They are now one control on one setting: flip it in either place and it holds in both, and each tells you what you currently read as.",
+    "The recently-active setting is now one control: change it in Settings or on your profile and it holds in both, and each says how you currently read.",
   "changelog.entries.answer-a-connection-request-where-you-read-it.title":
     "You can answer a connection request where you read it",
   "changelog.entries.answer-a-connection-request-where-you-read-it.body":
-    "If someone had already asked to connect, their profile still offered to say hello, then refused the message and told you it was waiting with them, which was the opposite of what happened. The profile now offers to accept, the notification carries accept and decline, and anything you had typed comes with you into the conversation instead of being thrown away.",
+    "A profile with a pending connection request now offers to accept, the notification carries accept and decline, and anything you typed comes with you into the conversation.",
   "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.title":
     "A gathering can tell you when it is down to the last few spots",
   "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.body":
-    "For gatherings you saved or said maybe to. It is off unless you want it, it is one notification per gathering, and it goes quiet again if seats free up.",
+    "For gatherings you saved or said maybe to, you can be told when spots run low. Off unless you want it, one notification per gathering, quiet again if seats free up.",
   "changelog.entries.blocked-and-muted-in-one-place.title":
     "Blocked and muted people are in one list",
   "changelog.entries.blocked-and-muted-in-one-place.body":
-    "Muting someone was easy and reviewing it was impossible: nothing anywhere listed who you had muted, so undoing it meant remembering the name. The pane now shows both, with the date and a one-tap undo.",
+    "The pane now lists everyone you blocked and everyone you muted, with the date and a one-tap undo.",
   "changelog.entries.your-join-request-shows-its-deadline.title":
     "Your join request shows its deadline, and a lapsed invite is not the end",
   "changelog.entries.your-join-request-shows-its-deadline.body":
-    "An approved request used to hold an invite that quietly expired seven days later. The clock now starts when you are told rather than when the decision is made, the status page shows the deadline while there is still time to use it, and an invite that did lapse can be revived from that page. If you lost the link entirely, signing in with Google gets you back to your own request.",
+    "An invite's seven days now start when you are told. The status page shows the deadline, a lapsed invite can be revived there, and signing in with Google finds your request again.",
   "changelog.entries.losing-your-google-account-is-no-longer-final.title":
     "Losing your Google account no longer means losing your membership",
   "changelog.entries.losing-your-google-account-is-no-longer-final.body":
-    "It used to be permanent, with no way back short of us editing the database by hand. An admin can now reconnect your membership to a new Google account, but only to one that has already proved it controls your address, and never by typing an identity in by hand.",
+    "An admin can now reconnect your membership to a new Google account, only to one that has already proved it controls your address.",
   "changelog.entries.vouching-has-a-front-door.title":
     "Vouching for someone has a way in",
   "changelog.entries.vouching-has-a-front-door.body":
-    "The page existed and nothing linked to it. It now sits in your account menu and beside your connections, and the getting-started step takes you there instead of to the member list.",
+    "The vouching page now sits in your account menu and beside your connections, and the getting-started step takes you straight there.",
   "changelog.entries.recognition-counts-people-not-volume.title":
     "Recognition counts people rather than volume",
   "changelog.entries.recognition-counts-people-not-volume.body":
-    "Posting into a community you made by yourself, or turning up to your own gatherings, could carry you most of the way to the levels that grant extra invitations. Points now come from things another person was part of. Badges you can earn alone are still yours to earn and still shown.",
+    "Recognition points now come only from things another person was part of. Badges you can earn alone are still yours to earn and still shown.",
   "changelog.tag.vouch": "Vouch for someone",
 
   "changelog.entries.declining-a-connection-request-now-holds.title":
     "Declining a connection request now holds",
   "changelog.entries.declining-a-connection-request-now-holds.body":
-    "When you declined a connection request, the person who sent it could send another one straight away, with a new written message attached, as many times as they liked. The request note was effectively a way to keep writing to someone who had already said no, and the only thing that actually stopped it was blocking, which you have no reason to think you need yet. A decline now holds on its own. A repeat request has to wait, the wait gets longer each time you decline the same person, and after enough refusals they cannot ask again at all. None of this tells them how many times you have declined.",
+    "A decline now holds on its own. A repeat request has to wait, the wait grows each time you decline the same person, and enough refusals end it.",
 
   "changelog.entries.you-can-report-a-whole-community.title":
     "You can report a whole community",
   "changelog.entries.you-can-report-a-whole-community.body":
-    "You could report a post, and a reply, and a person, but never the community itself. If a community was organised around doing harm, the only thing you could do was report its posts one at a time, and none of that ever put the community in front of a moderator as a community. You can now report one from its own page, and the reasons you can pick from include the serious ones: outing, sharing someone personal details, harassment, hate speech and discrimination. Before this, the worst thing you could say about a community was that it was spam.",
+    "You can now report a community from its own page, with reasons that include outing, sharing someone's personal details, harassment, hate speech and discrimination.",
 
   "changelog.entries.housing-reports-can-reach-the-urgent-queue.title":
     "Housing reports can reach the urgent queue",
   "changelog.entries.housing-reports-can-reach-the-urgent-queue.body":
-    "Two things kept the most serious housing reports out of the fastest queue. The first was that no housing report, about a listing, a flatmate or a landlord, offered outing or doxxing as a reason. A landlord threatening to tell your family, or a flatmate posting your address or the fact that you are trans, is the central danger in queer housing, and there was no word for it on the form. Those reasons now exist on all three. The second was that after three reports about the same subject in a week, a fourth was refused, and that refusal was applied before we looked at what the report was about. So the one kind of report we promise to answer within an hour was the one kind that could be turned away. Urgent reports are now never refused for that reason, and the message you get if a limit does apply points somewhere real.",
+    "Housing reports now offer outing and doxxing as reasons, and an urgent report is never turned away by the weekly limit on repeat reports.",
 
   "changelog.entries.hiding-a-housing-profile-now-hides-it.title":
     "Hiding a housing profile now hides it",
   "changelog.entries.hiding-a-housing-profile-now-hides-it.body":
-    "When a moderator hid or removed a flatmate profile or a landlord after a report, the report closed as dealt with, you were told it had been actioned, and the profile stayed exactly where it was. It was still in browse, still in search, still there if you had the link. Every other part of QueerPulse already checked for this and housing did not. It does now, on every way in.",
+    "When a moderator hides or removes a flatmate profile or a landlord, it now disappears from browse, from search and from a direct link.",
 
   "changelog.entries.you-choose-whether-a-report-is-anonymous.title":
     "You choose whether a report is anonymous",
   "changelog.entries.you-choose-whether-a-report-is-anonymous.body":
-    "The report form worked out whether you wanted to be anonymous by looking at whether you had filled in the optional email field. Leaving it blank made your report anonymous, and nothing on the page said so. That matters more than it sounds: an anonymous report reaches the moderator without your name and without the record of your previous reports, which is part of how they weigh what you are telling them. So a member who filled in the form expecting the team to know who they were was quietly not identified. It is now a choice you make, it says what each option costs you, and the email field is only an email field.",
+    "Whether a report is anonymous is now a choice you make, with what each option costs you spelled out. The email field is only an email field.",
 
   "changelog.entries.barring-someone-forever-needs-two-people.title":
     "Barring someone forever needs two people",
   "changelog.entries.barring-someone-forever-needs-two-people.body":
-    "Removing a member from a community barred them from coming back, and unless an end date was set, that bar was permanent. One owner or one moderator could do it alone. A permanent ban from QueerPulse itself already needed a second moderator to agree, on the reasoning that barring a person forever is too much for one person to decide, and the community version, which is the one most people actually meet, had no such check. It does now. The removal still happens immediately and the bar starts at thirty days, so nobody stays in a room they were just removed from. Making it permanent waits for a second owner or moderator to agree, and the person who proposed it cannot be the one who agrees. If nobody signs within three days the bar simply stays at thirty days. In a community with nobody else who could sign, a permanent bar is not available at all.",
+    "Removing a member still happens immediately and bars them for thirty days. Making that bar permanent now waits for a second owner or moderator to agree.",
 
   "changelog.entries.a-community-can-read-its-own-history.title":
     "A community can read its own history",
   "changelog.entries.a-community-can-read-its-own-history.body":
-    "Every community already kept a record of who removed a member, who changed a role, who froze or unfroze the room and who switched it between public and private. Only QueerPulse staff could read it. The community own owners and moderators, the people that record exists to hold to account, could not. They can now, from Mod tools. Anything platform staff did is labelled as such, so an override is never mistaken for a decision somebody in the community made.",
+    "Community owners and moderators can now read their own community's record from Mod tools: removals, role changes, freezes and public-private switches.",
 
   "changelog.entries.we-now-publish-government-data-requests.title":
     "We now publish government and legal data requests",
   "changelog.entries.we-now-publish-government-data-requests.body":
-    "The transparency report counted reports, appeals and moderator decisions, and said nothing at all about how often a court, a police force or a government body had asked us to hand over information about a member. It did not report the number and it did not mention that it was missing, which for a platform whose whole point is queer safety is the line that matters most. There is now a section for it. It counts the demands we received, what they asked for, what we did about each one, how many accounts were named and how many of those people we told. Small numbers are withheld, because a demand naming one or two accounts is a specific person to anyone who knows them, and zero is published as a real zero. Records struck from the register are counted too, so it cannot be quietly emptied.",
+    "The transparency report now has a section for government and legal demands: how many we received, what they asked for, and what we did.",
 
   "changelog.entries.dark-mode-gives-feedback-again.title":
     "Dark mode gives feedback again",
   "changelog.entries.dark-mode-gives-feedback-again.body":
-    "If you use QueerPulse in dark mode, a lot of the app had stopped answering you. The tint that shows a row is under your cursor, or that a dropdown option is the one your keyboard is currently on, was built from a colour that never switched for the dark theme, so on a dark page it painted almost exactly the page itself. Sixty-nine surfaces used it. In practice that meant hovering a calendar day showed nothing, and arrowing through a dropdown gave you no way to see where you were. The same problem was hiding other things: the selected option in a menu, chart axis labels, the shimmer that shows a link preview or a housing card is still loading, the coloured circle behind someone initials, and the focus edge on a date field. All of it is fixed, and light mode looks exactly as it did before.",
+    "In dark mode the hover and keyboard highlight painted almost the page colour on sixty-nine surfaces. That is fixed, along with menu selection and loading shimmer.",
 
   "changelog.entries.persona-pages-had-text-you-could-barely-read.title":
     "Persona pages had text you could barely read",
   "changelog.entries.persona-pages-had-text-you-could-barely-read.body":
-    "Every persona skin restyles your page to suit it, and part of that is picking its own ink colour. Thirteen of those skins were also making the faintest text fainter than the rest of QueerPulse allows, going back to a setting we corrected everywhere else after a contrast review. The text it affected was the quiet kind that still matters: dates and metadata, placeholder text in a field, and the helper line under a form question. On some skins it measured under 3 to 1 against its own background, where the floor is 4.5. Every skin has been remeasured against the actual colour it sits on and raised until it clears, and a note in the file records the floor so a new skin starts from it.",
+    "Thirteen persona skins rendered quiet text, dates and helper lines too faint to read. Each skin was remeasured and raised until it clears the 4.5 to 1 floor.",
 
   "changelog.entries.things-that-were-meant-to-move-now-move.title":
     "Things that were meant to move now move",
   "changelog.entries.things-that-were-meant-to-move-now-move.body":
-    "Eleven animations in the app had been silently doing nothing. They were written correctly and referred to motion defined elsewhere, but the way stylesheets are packaged renamed them on the way out, so the reference pointed at nothing and no error was ever raised. Dropdowns and date pickers appeared instantly instead of easing open, the live dot on a featured community never pulsed, switching between your personas cut rather than crossfaded, and a control you cannot use yet stayed still when you clicked it instead of giving the small shake that says so. Separately, a handful of headings had been asking for a typeface by a name that did not exist, so they quietly rendered in the body font rather than the serif they were meant to have, including the one on the printed membership card sheet.",
+    "Eleven animations had been silently doing nothing, so dropdowns and date pickers snapped open and switching personas cut instead of crossfading. They run again.",
 
   "changelog.entries.your-identity-details-now-reach-only-real-matches.title":
     "Your identity details now reach only real matches",
   "changelog.entries.your-identity-details-now-reach-only-real-matches.body":
-    'On a flatmate profile you can share gender identity, safe-space needs and how you want your household to work around being trans. Those are the most sensitive things the platform holds, and the setting guarding them offered an option labelled "Only people I could share a home with". It did not mean that. It meant anyone whose profile was set to the opposite of yours, and that is a box a person ticks on their own profile, so in practice any member could tick it and read that half of the board, no like and no match required. It now means what it says: your details reach someone only once the two of you have liked each other. The option is relabelled "Only people I have matched with" so nobody has to guess. Two other things changed with it. Profiles on that setting no longer carry these details in the board listing at all, so they cannot be collected in bulk, and they appear on a profile\'s own page once you match. If you chose "Anyone on the board" or "Any member" instead, nothing changes for you: that was a deliberate choice to be visible, and the cards and the discovery deck still show it.',
+    "Your gender identity and safe-space needs on a flatmate profile now reach someone only once you have both liked each other. The option says so.",
 
   "changelog.entries.review-queues-no-longer-hide-people-who-are-waiting.title":
     "Review queues no longer hide people who are waiting",
   "changelog.entries.review-queues-no-longer-hide-people-who-are-waiting.body":
-    "If you moderate a community, review claims on a directory listing, look after a housing group, or review who is joining a housing co-op, your review queue had a limit nobody told you about. It loaded the first 200 requests and stopped, and it said nothing about the ones it left out, so a busy queue quietly ended at 200 and the requests it dropped were the ones that had waited least. Every one of these queues now loads a page at a time, tells you how many people are waiting altogether, and gives you a way to reach the rest. The two housing queues had a second problem underneath that one: each fetched the 200 most recent requests in any state and then hid the decided ones in your browser, so a group or co-op with 200 recently approved or declined requests showed you an empty queue while someone was still waiting in it. Both now ask for pending requests specifically, so what you see is what is actually outstanding.",
+    "Community, listing-claim and housing review queues stopped at the first 200 requests without saying so. They now page through everything and show the total waiting.",
 
   "changelog.entries.press-kit-photos-can-be-uploaded-again.title":
     "Press kit photos can be uploaded",
   "changelog.entries.press-kit-photos-can-be-uploaded-again.body":
-    "The photo on a press contact could only ever be a link to an image hosted somewhere else. An uploaded one was refused, which meant the only way to fill the field was to point it at another site, and whoever ran that site could then see the address and browser of everyone who read our press kit. Uploads work now, and links are limited to the handful of places we already serve images from. Photos already uploaded elsewhere on QueerPulse are also safe from being tidied away by mistake: the cleanup that removes unused images now knows a press kit photo counts as in use.",
+    "A press contact photo could only be a link to another site. You can upload one now, and links are limited to hosts we already serve images from.",
 
   "changelog.entries.a-mistyped-address-says-not-found.title":
     "A mistyped address says not found",
   "changelog.entries.a-mistyped-address-says-not-found.body":
-    "Some addresses on QueerPulse end in a long identifier, the kind a link carries rather than something you would type. If that identifier arrived damaged, from a truncated link in a message, a copy that lost its last characters, or an old bookmark, the page answered with a server error rather than telling you the thing was not there. Around twenty of those addresses now recognise a malformed identifier for what it is and answer not found, which is what the page always promised to do.",
+    "A damaged identifier in a link used to answer with a server error. Around twenty addresses now recognise it and say the thing was not found.",
   "changelog.tag.about": "Read where we stand",
   "changelog.tag.partners": "See our partners",
   "changelog.tag.aboutCommunities": "See how communities work",
   "changelog.tag.work": "Open your Work hub",
   "changelog.tag.settings": "Notification settings",
   "changelog.tag.messages": "Open messages",
+  "changelog.tag.startCommunity": "Start a community",
   "changelog.tag.communities": "Browse communities",
   "changelog.tag.subprofiles": "See subprofiles",
   "changelog.tag.personas": "See personas",
@@ -2742,47 +2788,47 @@ export const marketing: Catalog = {
   "changelog.entries.menu-resizes-smoothly.title":
     "The main menu changes size smoothly between sections",
   "changelog.entries.menu-resizes-smoothly.body":
-    "Moving across the top menu, from Work to About say, made the open panel snap to its new height in a single step, which read as a flicker. The panel now eases between sizes as you move from one section to the next, in step with the fade of the links inside it. With reduced motion turned on it still resizes instantly.",
+    "The open panel now eases between heights as you move from one top-menu section to the next, in step with the links fading inside it. With reduced motion it still resizes instantly.",
   "changelog.entries.nearby-places-full-cards.title":
     "Places within a short walk now show their full card",
   "changelog.entries.nearby-places-full-cards.body":
-    "The \u201cWithin a short walk\u201d suggestions at the foot of a listing were a line of text: a name, a category and a distance. They now appear as the same cards you see in the local directory, with the photo, the safer-space badge, the rating, the description and whether the door is open right now. The walking distance sits on the photo, so you can still plan the evening by how far apart things are.",
+    'The "Within a short walk" suggestions were one line of text. They now use the full local directory card, with the photo, safer-space badge, rating and walking distance.',
   "changelog.entries.map-pin-opens-place.title":
     "Tapping a place on the map now opens it",
   "changelog.entries.map-pin-opens-place.body":
-    "If you had picked a neighbourhood on the local map and then tapped a place somewhere else, the panel beside the map kept showing that neighbourhood and often said nothing matched your filters. Tapping a pin now drops the area filter and gives the whole panel over to that one place, with the map easing in on it. \u201cAll places\u201d takes you back to the full list.",
+    "Tapping a pin now drops the area filter and gives the whole side panel to that place, with the map easing in on it.",
   "changelog.entries.review-line-breaks.title":
     "Reviews keep your paragraphs, and fold up when they run long",
   "changelog.entries.review-line-breaks.body":
-    "A review typed as several paragraphs landed on the page as one unbroken block: every line break and blank line you wrote was quietly dropped when it was displayed. Your breaks are now kept exactly as you typed them. Long reviews also fold down to their first few lines with a Read more link, so one very long review no longer buries every review beneath it.",
+    "The paragraph breaks you type in a review are now kept exactly as you wrote them, and long reviews fold down to their first few lines behind a Read more link.",
   "changelog.entries.directory-filters-in-one-row.title":
     "The directory filter bar is now one tidy row",
   "changelog.entries.directory-filters-in-one-row.body":
-    "Scrolling the directory used to slide the search field up behind the floating navigation, so the filter bar and the top bar sat on top of each other. The filter bar now parks just below the navigation and stays readable the whole way down the page, in every layout: the floating pill, the sidebar rail, and the slim bar on phones. The place types have moved inside the Refine button, alongside verified safe spaces and vibe, so the bar is one line of search plus a single control. Refine carries a count of everything you have applied, and each active filter still shows as a removable chip above the results.",
+    "The filter bar now parks below the navigation and stays readable down the page. Place types moved inside Refine, which carries a count of the filters you applied.",
   "changelog.entries.volunteer-applicants-community-organisers.title":
     "Communities can review their own volunteer applicants",
   "changelog.entries.volunteer-applicants-community-organisers.body":
-    'Reviewing who signed up for a volunteering opportunity used to rest entirely on the one person who posted it. If they went quiet, applicants waited. Now owners, co-owners, and moderators of the community an opportunity is posted under can open it, read the applications, and accept or decline, so a community is never one person away from answering people who offered their time. Editing and closing an opportunity stay with whoever posted it. The "Manage applicants" button on the volunteering page also stops appearing for members who have nothing to review.',
+    "Owners, co-owners and moderators of the community an opportunity sits under can now read the applications and accept or decline, so an answer never rests on the one person who posted it.",
   "changelog.entries.invites-go-out-by-hand.title":
     "Approving a join request now says plainly what happens next",
   "changelog.entries.invites-go-out-by-hand.body":
-    "When a reviewer welcomed someone in, the confirmation said an invite email was on its way to them. QueerPulse has no mail service, so nothing was ever sent and the invite could sit unclaimed while both people waited. The card now says that invites go out by hand and puts the link to copy right there, and its three decision buttons no longer spill past the edge of the card.",
+    "The confirmation used to promise an invite email, and QueerPulse sends none. It now says invites go out by hand and puts the link to copy right there.",
   "changelog.entries.sessions-page-links-reach-a-person.title":
     "Your active sessions can now reach a person",
   "changelog.entries.sessions-page-links-reach-a-person.body":
-    "\u201cSomething looks wrong? Tell us what happened\u201d on your active sessions opened a page announcing that your account was locked, which was alarming and untrue. Both links on that page now land where they say they will: \u201cwhat to do next\u201d opens the Account section of Help, which walks through an unfamiliar device, and \u201ctell us what happened\u201d opens the contact form with its topic already set to account access, so your message reaches the team. The Back link at the top of the page returns to Settings \u2192 Account, where you opened it from.",
+    "The two links under your active sessions now open the Account section of Help and the contact form with its topic set to account access.",
   "changelog.entries.mod-tools-sections-fade-in-as-you-switch.title":
     "Mod tools sections arrive instead of snapping into place",
   "changelog.entries.mod-tools-sections-fade-in-as-you-switch.body":
-    "Moving between Overview, Requests, Reports, Members, Invites and the rest of the moderation console swapped the whole panel in one frame, which made every switch feel like the page had jumped rather than turned. Each section now fades and rises into place over a fraction of a second, so the eye can follow the highlight on the left across to the surface it just opened. If you have asked your device to reduce motion, the panel still changes instantly with no animation at all.",
+    "Switching between Overview, Requests, Reports and the rest of the moderation console now fades and rises into place over a fraction of a second. With reduced motion the panel still changes instantly.",
   "changelog.entries.member-rows-in-mod-tools-hold-their-actions-in-one-menu.title":
     "Managing a community's members reads as a list of people again",
   "changelog.entries.member-rows-in-mod-tools-hold-their-actions-in-one-menu.body":
-    "The Members section of mod tools put every role control on the row itself, so each person arrived behind three buttons competing for attention and the name you were actually looking for got squeezed into whatever space was left. Making someone a mod, handing over co-ownership and removing them from the community now live behind a single ⋯ button at the end of the row, opening as a short menu when you want it. The row shows the person, their avatar and their role, and the actions you are allowed to take are still exactly the ones offered: nothing appears in the menu that your own role would not let you do.",
+    "Making someone a mod, handing over co-ownership and removing a person now sit behind one menu button at the end of the row.",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.title":
     "Studio and Cinema speak Portuguese in more places",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.body":
-    "Switching the site to Portuguese left parts of Studio and Cinema still reading in English. The buttons, headings, tab labels, empty states and image descriptions across the music and film sections now follow the language you picked, along with the founder setup screen, the glossary, the invoice and contract tools, and several magazine and partner pages. What has deliberately stayed in English is the work itself: track and album titles, lyrics, artist biographies, film synopses, credits and curator notes. Those are written by the people who made them, and translating someone\u2019s own words without asking would be the wrong call, so they read exactly as their author wrote them in either language.",
+    "Buttons, headings, tabs and empty states across Studio and Cinema now follow the language you picked. The work itself stays as its author wrote it: track titles, lyrics, biographies, synopses and credits.",
   "changelog.tag.magazineSearch": "Search the magazine",
   "changelog.tag.resources": "Browse the guides",
   "changelog.tag.readingGroups": "Find a reading group",
@@ -2792,375 +2838,375 @@ export const marketing: Catalog = {
   "changelog.entries.post-a-room-in-a-housing-group.title":
     "Share a room inside a housing group",
   "changelog.entries.post-a-room-in-a-housing-group.body":
-    "You can post a room straight into a vetted housing group, with the rent and the access details the group asks for. A moderator reads it before it goes on the group page, and your own rooms now sit in one place showing exactly where each one stands, including anything a moderator wrote back to you.",
+    "You can post a room straight into a vetted housing group, with the rent and access details it asks for. A moderator reads it first.",
   "changelog.entries.the-housing-board-is-open.title":
     "The housing board is open",
   "changelog.entries.the-housing-board-is-open.body":
-    "Rooms and homes listed by members now actually reach the board. Every listing goes to a moderator first, and you see the decision and the reason on your own listing rather than waiting in the dark. Listings carry photos, a description, an available-from date and what the place is like, and saved-search alerts fire again.",
+    "Rooms and homes listed by members now reach the board. Each one goes to a moderator first and shows you the decision and the reason on your listing.",
   "changelog.entries.gatherings-say-where-and-what-they-cost.title":
     "Gatherings say where they are and what they cost",
   "changelog.entries.gatherings-say-where-and-what-they-cost.body":
-    "The address, arrival directions, neighbourhood and access details a host fills in are kept and shown, instead of being thrown away at the last step. The exact address is shared with the people who are going. A gathering can say it is free, or name a sliding scale, and you can filter what is on by date, neighbourhood, kind and cost.",
+    "The address, arrival directions, neighbourhood and access details a host fills in are now kept and shown, with the exact address going to the people who are coming.",
   "changelog.entries.hosts-run-their-own-door.title":
     "Hosts run their own door",
   "changelog.entries.hosts-run-their-own-door.body":
-    "You can message everyone coming, check people in at the door, see the access needs your guests chose to share, and bar someone from one gathering without cancelling it. Someone you have blocked can no longer turn up. And if you are going somewhere new, you can tell one person you trust where you will be.",
+    "You can message everyone coming, check people in at the door, see the access needs your guests shared, and bar someone from one gathering without cancelling it.",
   "changelog.entries.the-safe-space-badge-has-a-mechanism.title":
     "The safe-space badge means what the page says",
   "changelog.entries.the-safe-space-badge-has-a-mechanism.body":
-    "Nominations are acknowledged on a clock, three members with no stake in a place have to visit it, and a decision carries a written reason. Any member can raise a concern about a badged space: three separate flags pause the badge straight away and open a review. Your name never reaches the venue.",
+    "Three members with no stake in a place must visit before it gets the badge, and every decision carries a written reason. Your name never reaches the venue.",
   "changelog.entries.the-directory-answers-is-it-open-and-can-i-get-in.title":
     "Is it open, and can I get in?",
   "changelog.entries.the-directory-answers-is-it-open-and-can-i-get-in.body":
-    "The directory now shows whether a place is open right now, and you can filter to only what is open. You can also filter by the access you need, step-free entry, an accessible toilet, a gender-neutral toilet and more, without opening every listing one at a time. And if you turn it on, the list can sort by what is nearest with a walking time; your location stays on your device.",
+    "The directory shows whether a place is open now, filters by the access you need such as step-free entry, and sorts by nearest with a walking time.",
   "changelog.entries.a-venue-is-asked-before-it-hosts-you.title":
     "A venue is asked before it hosts you",
   "changelog.entries.a-venue-is-asked-before-it-hosts-you.body":
-    "Anyone could name a business as the venue for their gathering and the owner was never told. Now the owner is asked, can confirm or remove it, and an unconfirmed gathering stays off the venue's public page.",
+    "Naming a business as your venue now asks the owner, who can confirm it or remove it. An unconfirmed gathering stays off the venue's public page.",
   "changelog.entries.arriving-points-at-real-things.title":
     "Arriving in Lisbon points at real things",
   "changelog.entries.arriving-points-at-real-things.body":
-    "The page for people who just moved here used to advertise one invented gathering on a date that had already passed. It now shows real gatherings coming up, links to real places and communities, and gives you a first-fortnight checklist you can tick off. It reads in Portuguese too.",
+    "The page for people who just moved here now shows real gatherings coming up, links to real places and communities, and a first-fortnight checklist you can tick off.",
   "changelog.entries.what-you-send-in-now-gets-an-answer.title":
     "What you send in now gets an answer",
   "changelog.entries.what-you-send-in-now-gets-an-answer.body":
-    "Several things you could submit reached us and then stopped. A proposed reading group now becomes a real community with you as its owner. Rooms posted into a housing group, landlord suggestions and introduction requests all get a decision, with the reason, and you are told either way.",
+    "A proposed reading group now becomes a real community with you as its owner, and housing rooms, landlord suggestions and introduction requests each get a decision with the reason.",
   "changelog.entries.the-magazine-has-pictures.title":
     "The magazine has pictures",
   "changelog.entries.the-magazine-has-pictures.body":
-    "It is a magazine, and photography and illustration are half of it, but there was no way for an editor to get a commissioned image onto a page. Every card and every article header fell back to a coloured placeholder. Editors can now upload lead art for a piece and place real photographs inside the body of a story, and that art runs on the article, on the front page and on every card pointing at it.",
+    "Editors can now upload lead art and place photographs inside a story. That art runs on the article, the front page and every card pointing at it.",
   "changelog.entries.an-older-piece-tells-you-where-it-stands.title":
     "An older piece tells you where it stands",
   "changelog.entries.an-older-piece-tells-you-where-it-stands.body":
-    "We publish about legal rights, healthcare access and organisations, and all of that changes. Until now the only options were leaving a piece looking current or taking it down, which also removed it from the archive. A piece can now be marked as under review, archived, or replaced by a newer one, and it stays readable with a dated note at the top saying how old it is, when we last looked at it and what we would say about it today. Articles can also be published in Portuguese as their own piece, with the translator credited and a language switcher on the page.",
+    "A piece can be marked under review, archived, or replaced by a newer one, and stays readable with a dated note. Articles can also run in Portuguese.",
   "changelog.entries.corrections-and-content-notes-reach-the-reader.title":
     "Corrections and content notes now reach you",
   "changelog.entries.corrections-and-content-notes-reach-the-reader.body":
-    "The magazine promises that a correction is published as a dated note at the foot of the piece and that we never edit silently. Until now editors filed those corrections and no reader ever saw one. They appear on the article from today, dated, in the order they were made. Content notes have the same story: a piece cannot be published without one, and they were being collected and then withheld from the people they are for. They now sit above the body where you can read them first and dismiss them if you would rather not.",
+    "Corrections now appear on the article, dated, in the order they were made, and content notes sit above the body, where you can dismiss them.",
   "changelog.entries.the-magazine-front-page-is-editors-work.title":
     "The magazine front page is the editors' work again",
   "changelog.entries.the-magazine-front-page-is-editors-work.body":
-    "The front page used to be the nine newest pieces in the order they happened to publish. It now opens on the story the editors led with and follows the current issue's own running order, grouped into its sections, with everything else below. The masthead names the issue you are reading and the date it came out.",
+    "The front page now opens on the story editors led with and follows the current issue's running order, grouped into sections. The masthead names the issue and its date.",
   "changelog.entries.search-the-whole-magazine-archive.title":
     "Search everything the magazine has published",
   "changelog.entries.search-the-whole-magazine-archive.body":
-    "There was no way to search inside the magazine, so anything below the front page's first screen was effectively gone. You can now search the full archive by headline, standfirst, body and tag, ranked by how well each piece matches. Every article's tags are links too, so you can follow one to see what else we have run on the subject.",
+    "You can now search the full magazine archive by headline, standfirst, body and tag, ranked by relevance. Article tags are links too, so you can follow one by subject.",
   "changelog.entries.a-byline-is-a-person-now.title":
     "A magazine byline is a real person",
   "changelog.entries.a-byline-is-a-person-now.body":
-    "A byline used to be a name and nothing else: no photo, no biography, no way to edit it without a database, and no link back to the member who wrote the piece. Writers now have an author profile they can edit, bylines link to member profiles where the writer is one of us, and published pieces are credited on the writer's own profile.",
+    "Writers now have an author profile they can edit, bylines link to member profiles where the writer is one of us, and published pieces are credited on the writer's own profile.",
   "changelog.entries.your-story-submission-gets-an-answer.title":
     "Your story submission gets a real answer",
   "changelog.entries.your-story-submission-gets-an-answer.body":
-    "Writing for the magazine meant filling in a full piece, uploading a cover, and then watching the tracker say “submitted” forever, because nothing on the other side could accept or decline it. Editors can now accept, decline or commission a submission and write you a note back. The outcome reaches you on your tracker and in your notifications, and a commissioned piece goes straight onto the desk. Your deck, your body text and your cover image are all kept now instead of being flattened into one field.",
+    "Editors can now accept, decline or commission a submission and write you a note back. The outcome reaches your tracker and your notifications.",
   "changelog.entries.every-guide-says-when-it-was-last-checked.title":
     "Every guide says when it was last checked",
   "changelog.entries.every-guide-says-when-it-was-last-checked.body":
-    "Our guides cover healthcare pathways, harm reduction, sexual health, crisis lines and legal aid, and none of them told you whether anyone had looked at them this year. Every guide now carries a review date, and the team can see which ones are due. Editors can also update guide text and the glossary directly instead of waiting for a release. There is a new index at the guides page listing all of them, including around seventeen that previously had no link anywhere and could only be reached by typing the address.",
+    "Every guide now carries a review date and the team can see which ones are due. A new index lists them all, including seventeen that had no link anywhere.",
   "changelog.entries.the-reading-group-directory-is-real.title":
     "The reading group directory is real",
   "changelog.entries.the-reading-group-directory-is-real.body":
-    "Reading groups lived only in the browser: the directory emptied on refresh, and asking to join was switched off. An approved proposal now becomes a real group you can find, open and ask to join, with the person who proposed it as its host.",
+    "An approved reading group proposal now becomes a real group you can find, open and ask to join, hosted by whoever proposed it.",
   "changelog.entries.in-this-issue-replaces-the-members-digest.title":
     "“In this issue” replaces the members' digest",
   "changelog.entries.in-this-issue-replaces-the-members-digest.body":
-    "The desk had been curating a digest that was set up to be emailed. QueerPulse sends no email and never will, so that whole path is gone. The curation stays and now has somewhere to land: every issue page carries an “In this issue” panel in the order the editors chose, and one notification tells you when an issue ships.",
+    'QueerPulse sends no email, so the members\' digest stays as an "In this issue" panel on every issue page, plus one notification when an issue ships.',
   "changelog.entries.the-press-kit-carries-real-brand-assets.title":
     "The press kit carries real brand assets",
   "changelog.entries.the-press-kit-carries-real-brand-assets.body":
-    "Every download in the press kit was a placeholder built in your browser, so a journalist asking for the logo got a file that said so. The kit now serves real files: the mark in vector and high resolution, a monochrome version, the app icon, and a printable colour and typography reference generated from the platform's own design tokens.",
+    "The press kit now serves real files: the mark in vector and high resolution, a monochrome version, the app icon, and a printable colour and typography reference.",
   "changelog.entries.cinema-and-culture-say-what-they-are.title":
     "Cinema and Culture stopped advertising what does not exist",
   "changelog.entries.cinema-and-culture-say-what-they-are.body":
-    "Cinema was publicly offering monthly memberships and quoting a ledger of money paid to filmmakers, with no way to pay and no catalogue behind it. Culture sat in the menu as four empty sections with the contribute buttons switched off. Both now say plainly that they are not open yet. The magazine also stopped telling logged-out visitors it was coming soon when it has been publishing for a while: it asks you to sign in and takes you back to the piece you wanted.",
+    "Cinema and Culture now say plainly that they are not open yet, and the magazine asks logged-out visitors to sign in.",
   "changelog.entries.an-issue-stays-under-wraps-until-it-ships.title":
     "An issue stays under wraps until it ships",
   "changelog.entries.an-issue-stays-under-wraps-until-it-ships.body":
-    "The number, title, theme and cover of an issue that had not been published yet were readable by anyone with an account, and the issue showed up in the archive. Unpublished issues are now held back everywhere a reader can look, and the desk keeps its full view.",
+    "An unpublished issue's number, title, theme and cover are now held back everywhere a reader can look, and the desk keeps its full view.",
 
   "changelog.entries.the-directory-stopped-going-blank.title":
     "The local directory stopped going blank",
   "changelog.entries.the-directory-stopped-going-blank.body":
-    "Depending on which page you arrived from, the directory and the list-your-business form could load to an empty screen instead of the places. Two files each needed the other before either had finished loading, so whichever went first found the opening hours half-built and stopped. The category names now live on their own, so nothing waits on anything.",
+    "The directory and the list-your-business form could load to an empty screen. The category names now stand on their own, so both pages open.",
   "changelog.entries.notification-previews-stay-hidden-on-iphone.title":
     "Hidden notification previews now work on iPhone",
   "changelog.entries.notification-previews-stay-hidden-on-iphone.body":
-    "The setting was honoured only by browsers that run our code in the background, which iPhone never does, so a lock screen kept naming who wrote to you while the toggle read “on”. Your choice now travels with your account, and the notification leaves our side already stripped: it says something arrived without saying who from or what it said. It is on by default, on every device you are signed in on.",
+    "Hiding notification previews now travels with your account, so it works on iPhone too, and the notification leaves our side already stripped. It is on by default.",
   "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.title":
     "Leaving no longer deletes other people’s gatherings",
   "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.body":
-    "Erasing an account used to take every gathering that person had ever hosted with it, including future ones, along with everyone’s RSVPs. Now a future gathering passes to a co-host, or is cancelled with a notification to everyone who said they were coming. Listings, jobs and volunteering close rather than vanish, and reviews stay readable without the author’s name.",
+    "Erasing an account used to delete every gathering that person hosted. A future gathering now passes to a co-host, or is cancelled with a notification to everyone coming.",
   "changelog.entries.a-new-device-signing-in-tells-you.title":
     "You hear about it when a new device signs in",
   "changelog.entries.a-new-device-signing-in-tells-you.body":
-    "If your account is opened on a device it has not seen before, you now get a notification saying which kind of device and when. Your active sessions list names each one, like “Chrome on macOS”, and marks the one you are reading on, so you can tell your own laptop from someone else’s.",
+    "A sign-in from a device your account has not seen before now sends you a notification naming the device and the time. Your sessions list names each one.",
   "changelog.entries.nothing-promises-you-an-email-any-more.title":
     "Nothing promises you an email any more",
   "changelog.entries.nothing-promises-you-an-email-any-more.body":
-    "QueerPulse sends no email, so every screen that said it would was asking you to wait for something that was never coming. The gathering waitlist, directory listings, Culture submissions, grant applications and the sober-host checklist now name where the answer actually arrives, in your QueerPulse notifications and messages.",
+    "QueerPulse sends no email. The gathering waitlist, directory listings, Culture submissions and grant applications now say the answer arrives in your QueerPulse notifications and messages.",
   "changelog.entries.the-status-page-works-without-an-account.title":
     "The status page works without an account",
   "changelog.entries.the-status-page-works-without-an-account.body":
-    "If you cannot sign in, the hardest question is whether the problem is ours or yours. The status page now shows real service health and any incidents we have written up, and it works with no account at all, so you can tell an outage apart from something wrong with your own sign-in.",
+    "The status page now shows real service health and any incidents we have written up, and it works with no account at all.",
   "changelog.entries.data-requests-get-a-real-answer.title":
     "Data requests get a real answer",
   "changelog.entries.data-requests-get-a-real-answer.body":
-    "A request about your data used to be recorded and then sit where nobody could see the clock running on it. It now lands in a review queue sorted by its legal deadline, and when we reach a decision you get a notification naming your request and its reference number.",
+    "A request about your data now lands in a review queue sorted by its legal deadline, and when we decide you get a notification naming your request and its reference number.",
   "changelog.entries.we-ask-again-when-the-rules-change.title":
     "We ask again when the Terms or Guidelines change",
   "changelog.entries.we-ask-again-when-the-rules-change.body":
-    "Agreeing once at sign-up was treated as agreeing forever, so a rule could change without anyone ever seeing it. When either document moves materially, you are now asked to read what changed and agree again, and we keep a dated record of it. This matters most if you are ever moderated under a rule added after you joined.",
+    "When the Terms or Guidelines change materially, you are now asked to read what changed and agree again, and we keep a dated record of it.",
   "changelog.entries.iphone-notifications-explain-the-install-step.title":
     "iPhone notifications explain the install step",
   "changelog.entries.iphone-notifications-explain-the-install-step.body":
-    "Safari only delivers notifications to QueerPulse once it is added to your Home Screen, and nothing said so: turning them on simply failed with a note that your browser could not do this yet. The setting now explains the install step and links straight to it.",
+    "Safari only delivers QueerPulse notifications once the app is added to your Home Screen. The setting now explains that step and links straight to it.",
   "changelog.entries.a-heads-up-before-your-account-is-deleted.title":
     "A heads-up before your account is deleted",
   "changelog.entries.a-heads-up-before-your-account-is-deleted.body":
-    "Asking to delete your account starts a grace period that was easy to forget about entirely, with nothing heard until it was gone. You now get one notification three days before it becomes permanent, while cancelling is still a single step.",
+    "You now get one notification three days before your account deletion becomes permanent, and cancelling is still a single step.",
   "changelog.entries.moderators-see-the-positions-at-the-queue.title":
     "Moderators see the positions at the queue",
   "changelog.entries.moderators-see-the-positions-at-the-queue.body":
-    "Both report queues, the community mod console and the platform staff one, now open with the three rules a moderator has to get right: criticism of a state is political speech and Palestine advocacy is welcome, advocacy against a class of member is not, whether a member deserves rights is not a debate we host, and nobody is ever asked to prove their gender. Until now no moderation surface linked the Guidelines at all.",
+    "Both report queues now open with the three rules that matter most: criticism of a state is political speech, and nobody is ever asked to prove their gender.",
   "changelog.entries.where-we-stand-intersectionality-and-palestine.title":
     "Where we stand: trans lives, Palestine, and the rest of it",
   "changelog.entries.where-we-stand-intersectionality-and-palestine.body":
-    "The About page now carries a position rather than only a set of product values. A new \u201cWhere we stand\u201d section says why intersectionality is inseparable from queer liberation, names the genocide in Gaza plainly, refuses pinkwashing, and sets out three commitments we can be held to: Palestine advocacy is political speech and moderated as such, we take no money from entities complicit in the occupation, and the mutual-aid pot can fund solidarity work. It leads on trans lives (self-identification as the standard, no \u201cboth sides\u201d debate about whether members deserve rights, and trans-exclusionary campaigning treated as a Code of Conduct matter), then Palestine, then shorter positions on sex work, migration and racism in Portugal, and serophobia. It closes on the test that decides when we speak at all. The homepage manifesto links to it, and the Community Guidelines gained a matching clause spelling out where political speech ends and a Code of Conduct matter begins.",
+    "The About page now carries a position: intersectionality, trans self-identification, the genocide in Gaza named plainly, and three commitments you can hold us to.",
   "changelog.entries.directory-cards-show-who-runs-the-place.title":
     "The person who runs a place now shows their face on its card",
   "changelog.entries.directory-cards-show-who-runs-the-place.body":
-    "Every card in the local directory ends with a line naming the member who runs the place, and beside that name sat a small circle holding the business’s initials. A card for Maison Du Tiago, run by Tiago, showed MD next to Tiago, which read as a second logo where a person should be. That circle now carries the member’s own profile photo, the same picture their profile shows, and falls back to their initial when they have not set one. The photo follows exactly the same rules as the name beside it: a listing whose owner chose to stay anonymous, or to appear only by their role, still shows neither, and a member who has turned their photo off across the site keeps it off here too.",
+    "The circle beside the owner's name on a directory card now holds their profile photo, with their initial as a fallback. An anonymous listing still shows neither.",
   "changelog.entries.members-can-put-something-to-a-vote.title":
     "You can put something to a vote",
   "changelog.entries.members-can-put-something-to-a-vote.body":
-    "Governance votes were something you could take part in but never start. The proposals on the governance page were opened by admins, so if you thought the community should decide something, there was no button anywhere that let you say so. You can now file a motion: a title, a description, and the question you want put to the community. A motion has to earn its way onto a ballot. Ten members need to put their names to it, and you count as the first, so nine other people have to agree it deserves a vote. Once it reaches ten it goes to the team for a look, and if they approve it they set the voting window and it opens as an ordinary vote like any other. If they turn it down, the reason is written on the motion where everyone can read it. A motion that never reaches ten members closes on its own after thirty days. You can also add your name to someone else's motion, and take it back off again while the drive is still running.",
+    "You can now put something to your community: file a motion, gather ten signatures including your own, and the team sets the voting window.",
   "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.title":
     "A governance vote now needs enough people to count",
   "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.body":
-    "A proposal used to pass on two thirds of whoever happened to vote, with no floor under how many that was. One person voting in favour and nobody voting against was two thirds of the votes cast, so it passed. That is not a community decision, and the governance page was describing it as one. Every vote now also has to clear a quorum: a minimum number of ballots before the result counts at all, set at a tenth of the active membership or ten people, whichever is larger. The number a proposal was measured against is recorded on it when it closes, so an old result always shows the bar it actually cleared rather than a bar that moved afterwards. Proposals now show turnout against quorum while voting is open, and a proposal that failed because too few people voted says exactly that, so it is never mistaken for one that lost the argument.",
+    "Every vote now has to clear a quorum before the result counts: a tenth of active members or ten people, whichever is larger. Proposals show turnout while voting is open.",
   "changelog.entries.anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet.title":
     "Anyone in a community can flag an owner who has gone quiet",
   "changelog.entries.anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet.body":
-    "When a community's owner disappears, the community freezes: nobody can change the settings, hand ownership on, or appoint a moderator to unstick it. Reporting an absent owner was limited to moderators and co-owners, which missed the case it was most needed for, because a small community whose owner vanished before appointing anyone had nobody who could file. Any member of a community can now raise it, once a day, and one open review at a time per community. Two related things also changed. If an owner erases their account, ownership now passes to a co-owner first if there is one, since that is the person the owner had already trusted with owner-level powers, and only then to the longest-standing moderator. And a community whose owner has not been seen in a long time is now flagged for the team automatically, so an abandoned community surfaces even when nobody inside thinks to report it.",
+    "Any member can now report an absent community owner, once a day. If an owner erases their account, ownership passes to a co-owner, then to the longest-standing moderator.",
   "changelog.entries.the-constitution-links-through-to-the-code-of-conduct.title":
     "The Constitution links through to the Code of Conduct",
   "changelog.entries.the-constitution-links-through-to-the-code-of-conduct.body":
-    "The foot of the Constitution offered three things to click and none of them did anything. Read the Code of Conduct now goes to the Code of Conduct. The other two, Download PDF and See the Assembly, pointed at a file and a page that do not exist, so they have been taken off rather than left sitting there looking like something you could open.",
+    "Read the Code of Conduct, at the foot of the Constitution, now opens the Code of Conduct. Download PDF and See the Assembly pointed nowhere, so they have been taken off.",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.title":
     "Your devices list stops collecting old sign-ins",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.body":
-    "Where you're signed in could fill up with entries for a device you only ever used once. Every sign-in started a session, and signing in again on the same browser started another one beside it instead of taking over from the first, so a cleared cookie, a private window or a session that had simply lapsed each left an entry behind. Those entries then sat there for a month, all reading the same thing, which made the one question the page exists to answer, is anything here not me, almost impossible to answer. Signing in now replaces whatever this browser was already holding, and sessions that have run out drop off the list instead of lingering until they're deleted. If your list is already crowded, Sign out all other sessions clears it in one go and keeps you signed in here.",
+    "Signing in now replaces the session this browser already held, and expired sessions drop off the list. Sign out all other sessions clears the rest in one go.",
   "changelog.entries.devices-say-when-you-signed-in-and-when-you-were-last-there.title":
     "Each device says when you signed in and roughly when you were last there",
   "changelog.entries.devices-say-when-you-signed-in-and-when-you-were-last-there.body":
-    "Signed in on each device was measuring the wrong thing. Your session quietly renews itself in the background every few minutes, and the page was reporting the most recent renewal, so the laptop you've been signed in on since June announced itself as having arrived seven minutes ago. It now shows when you actually signed in on that device, and adds a rough last activity line when the device has been back since. A device you signed in on and never returned to shows only the sign-in, because that's all we know about it.",
+    "Signed in now shows when you actually signed in on that device, plus a rough last activity line when the device has been back.",
   "changelog.entries.profile-sections-share-one-left-edge.title":
     "Every section of your profile lines up down one edge",
   "changelog.entries.profile-sections-share-one-left-edge.body":
-    "On a wide screen the sections down your profile sat slightly out of line with each other: Communities, your work, your skills and the rest were all indented by a hair that \u201cPlaces you run\u201d did not have, so the column read as crooked. The page was quietly applying its side gutter twice to those sections, once for the page and once for the section itself. They now share the same left edge as \u201cPlaces you run\u201d, from the top of the page to the bottom. On a phone, \u201cPlaces you run\u201d picks up the same side margin every other section already had, so its cards clear the edge of the screen.",
+    'The sections down your profile now share one left edge with "Places you run", so the column reads straight, on a phone too.',
   "changelog.entries.my-communities-waits-instead-of-saying-you-have-none.title":
     "My communities waits for your list instead of saying you have none",
   "changelog.entries.my-communities-waits-instead-of-saying-you-have-none.body":
-    "Opening Communities used to greet you with \u201cYou haven\u2019t joined any communities yet\u201d for the moment it took to fetch your memberships, even when you belonged to six of them. The tab now holds a skeleton in the shape of your cards until your list arrives, and the line under the heading stays quiet until it can quote the real number, so it never reads \u201cacross your 0 communities\u201d on the way. The empty state still appears the moment we know it is true, with the same invitation to go and find a community.",
+    "Communities now holds a skeleton until your memberships load, and the line under the heading waits for the real number.",
   "changelog.entries.say-what-you-do-on-your-profile.title":
     "You can say what you do on your profile, and be found for it",
   "changelog.entries.say-what-you-do-on-your-profile.body":
-    "The member directory has always let people filter by field of work and profession, but the only place to set yours was buried in Settings, so most profiles had nothing to match against. You can now pick your field, and the roles within it, straight from the edit view on your profile, and the wizard asks new members the same question while they are setting up. What you pick shows on your profile under \u201cWorks in\u201d, and it is what puts you in the results when someone filters the directory for a photographer, a nurse, or a lawyer. Choosing a role selects its field for you, and the roles stay hidden until you pick a field, so you never face seventy chips at once.",
+    'Pick your field of work and the roles within it in your profile editor. It shows under "Works in" and puts you in the member directory filters.',
   "changelog.entries.admin-account-menu-is-real.title":
     "The admin sidebar's account button actually does something now",
   "changelog.entries.admin-account-menu-is-real.body":
-    "The button at the foot of the admin rail showed a name that was never yours and a job title nobody holds, and clicking it did nothing at all. It now shows the account you are really signed in as, with the address alongside your name, and opens a menu with the things admin had no route to: your profile, your account settings, your active sessions, and a sign out. Signing out mattered most. Back to platform leaves the console but keeps the session open, so genuinely signing off used to mean three more navigations out on the main site, which is a long walk on a shared machine. The menu also spells out the access this account holds, including the staff grants that decide which sidebar sections work at all.",
+    "The admin rail's account button now names the account you are signed in as and opens a menu with your profile, settings, sessions, access and sign out.",
   "changelog.entries.admin-sidebar-grouped-sections.title":
     "The admin sidebar is grouped into sections you can collapse",
   "changelog.entries.admin-sidebar-grouped-sections.body":
-    "The admin rail had grown to thirty-two links in one flat list, long enough that finding anything meant scrolling past most of it. Those links now sit in eight labelled sections: Trust & safety, People & access, Communities, Directory, Editorial, Partners & recognition, Site content, and Platform. Every heading opens and closes with a short slide, and the rail remembers which ones you left open. A closed heading still shows the total number of items waiting inside it, so a collapsed section can never hide a queue that needs attention, and landing on a page inside a closed section opens that section for you.",
+    "Thirty-two admin links now sit in eight labelled sections, from Trust and safety to Platform. The rail remembers what you left open, and closed headings show their counts.",
   "changelog.entries.since-friday-panel-removed.title":
     "The magazine desk's Since Friday panel is gone",
   "changelog.entries.since-friday-panel-removed.body":
-    "The editor's left rail carried a Since Friday button that opened a panel listing what had happened on the desk while you were away. It duplicated what the desk already shows you: the activity feed in the sidebar reads the same record, and every piece keeps its own History tab. The button and the panel have been removed, and the rail is shorter for it.",
+    "The Since Friday button and panel are gone. The activity feed reads the same record and every piece keeps its History tab, so the left rail is shorter.",
   "changelog.entries.writer-desk-header-says-whats-due.title":
     "The writer's desk header now says what's due",
   "changelog.entries.writer-desk-header-says-whats-due.body":
-    "The top of your writing workspace showed your own avatar, your name and the word Contributor, all of which the navigation bar already carries a few pixels above it. That word was also fixed in place: it read Contributor for everyone, always, and stayed in English on the Portuguese site. The bar now names the page and tells you where your work stands, with how many assignments are open and when the nearest one is due, or a quiet line saying nothing is open when your desk is clear.",
+    "The writer desk header now names the page and tells you how many assignments are open and when the nearest one is due, or that your desk is clear.",
   "changelog.entries.editors-can-write-their-own-pieces.title":
     "Magazine editors can write a piece themselves, not only commission one",
   "changelog.entries.editors-can-write-their-own-pieces.body":
-    "The editor desk had one way to start a piece: commission it. That meant an editor who simply wanted to write something had to send themselves a brief, complete with a fee and a deadline, before they could type a word. Write is now the desk's main action, and Commission sits beside it for the times a piece really is going out to somebody else. Write skips the form entirely: the piece is created with you as its own writer, it starts in drafting rather than waiting on a brief that will never arrive, and you land straight in the article editor with the cursor ready. Its title, section, byline and issue are all set in the editor's own side rail, where they were always going to be edited anyway. A piece started this way files onto whichever issue you are working on, or stays unfiled if you started from the Unassigned tab, and the desk's history reads \"started writing\" instead of a commission that never happened. Pressing w on the desk does the same thing, as does the Write button in the left rail and in the command palette.",
+    "Write is now the desk's main action, beside Commission. It skips the brief form, creates the piece with you as its writer, and drops you straight into the editor.",
   "changelog.entries.editor-pages-start-at-the-top.title":
     "The magazine editor's pages no longer start with a band of empty cream",
   "changelog.entries.editor-pages-start-at-the-top.body":
-    "Every screen in the magazine editor reserved a strip of space at the top for the site's floating navigation bar, which those screens never show: they run on their own left rail instead. The result was a tall empty band above the desk, the pitch tracker and the issue plan, and it pushed the sticky title bars on a piece, an issue and a deck down off the edge of the window. That space is no longer held back, so each editor page starts where its content starts and the sticky bars sit flush at the top. Editors who use the app's left sidebar navigation also had the desk pushed sideways by the width of a rail that isn't drawn on those pages; that offset is gone too.",
+    "Every magazine editor screen was reserving a strip of space for a navigation bar it never shows. That space is released, so each page starts at its content.",
   "changelog.entries.issue-publish-date-optional.title":
     "A magazine issue no longer needs a date to exist",
   "changelog.entries.issue-publish-date-optional.body":
-    "Creating an issue on the editor desk demanded a publish date before anything else could happen, which meant an editor had to invent one to open a number. The date is now optional: fill in the number, the title and the theme, and the issue exists. Its own production page carries a Publish date card in the right rail where the date can be set later, moved, or cleared again if the plan changes. An issue with no date reads as unscheduled everywhere it appears instead of showing a made-up day, and shipping still stamps the day it went out if nobody ever set one.",
+    "Fill in the number, the title and the theme and the issue exists. The date moves to a Publish date card, where you can set or clear it later.",
   "changelog.entries.cohost-invite-form-reads-properly.title":
     "Inviting a co-host reads properly now",
   "changelog.entries.cohost-invite-form-reads-properly.body":
-    "The second step of the co-host invite, where a host sets the terms, was showing raw internal labels instead of real words: every field name, both dropdowns and both buttons printed a code. It now reads in full, in English and Portuguese. The person being invited stays visible at the top of the form with their photo and pronouns, and a single button goes back to the picker if it is the wrong person. Choosing a role or a time commitment shows the same description the invited person will read on their invite, so nobody picks blind. The note field counts down to its 500-character limit, the reply-by date can no longer be set in the past and says it is optional, and the send and cancel buttons stay inside the panel at any window width. The same fix reached the co-host invite page, which was missing its line about which powers a co-host gets on accepting and which stay with the lead host, and Settings, where the public part of your profile (your field, your role and the languages you speak) had lost its headings.",
+    "The terms step of the co-host invite now reads in full in both languages, shows the invited person with their photo and pronouns, and describes each role.",
   "changelog.entries.desk-activity-reads-in-plain-language.title":
     "Magazine desk activity now reads in plain language",
   "changelog.entries.desk-activity-reads-in-plain-language.body":
-    "Two places in the magazine desk printed their lines straight out of the database: the Activity panel in the right rail, and the History trail on a piece's own record. Both showed a long identifier where a name belongs, an internal code like \u201carticle_edited\u201d where the action belongs, and a machine timestamp. Nobody could tell who had touched what. Both now read as sentences: the editor or writer by name, what they did in plain words, and when. The desk feed names each piece by its title and says how long ago it happened; a piece's own History says \u201cthis piece\u201d and gives the date and time, since that trail is the permanent record. Notes left on a draft, restored drafts and slideshows converted to articles get proper wording too. Lines from an automatic step read as System, and a piece that has since been deleted reads neutrally instead of showing an id.",
+    "The Activity panel and a piece's History now read as sentences: who did it, what they did in plain words, and when. Automatic steps read as System.",
   "changelog.entries.mod-tools-became-a-console.title":
     "Mod tools is now a console with a section rail",
   "changelog.entries.mod-tools-became-a-console.body":
-    "A community's Mod tools tab stacked eight surfaces in one long scroll, so the two things that are actually time-sensitive, people asking to join and reported posts, sat buried under a statistics panel and above the full member roster. Mod tools now opens on an overview that answers one question first: is anything waiting on you. Beside it runs a rail with Overview, Requests, Reports, Members, Invites, Member card and Danger zone, and each opens on its own, one at a time. Requests and Reports carry a count when something is waiting. Bans moved in under Members, where a member\u2019s standing is already being read. Each section has its own web address now, so a moderator can link a co-moderator straight to the reports queue and the back button walks out of it. On a phone the rail becomes a row of chips above the section.",
+    "Mod tools opens on an overview of anything waiting on you, with a rail for Requests, Reports, Members, Invites, Member card and Danger zone.",
   "changelog.entries.share-card-shows-your-own-gathering.title":
     "A gathering's share card now shows that gathering",
   "changelog.entries.share-card-shows-your-own-gathering.body":
-    "On the manage dashboard for a gathering you are hosting, the share card in the sidebar always showed the same sample event: one fixed title, one fixed date and neighbourhood, and a link that led to the gatherings index rather than to your listing. It now shows the gathering you are managing, with its own title, date and venue, and its cover photo when you have uploaded one. Copy puts the gathering's real public link on your clipboard, and \u201cView public listing\u201d opens that gathering's own page.",
+    "The share card on your manage dashboard now shows the gathering you are managing, with its title, date, venue and cover photo. Copy gives you its public link.",
   "changelog.entries.place-page-reads-in-one-piece.title":
     "A place's page now reads as one thing",
   "changelog.entries.place-page-reads-in-one-piece.body":
-    "On a business page in the directory, the opening hours sat in a narrow table with a wide empty strip beside it, the line saying who last confirmed the details drifted underneath it, and the map was a small square with the address stranded below. Hours now sit in one card: the week in two columns, any upcoming changes to it, and the confirmation line along the bottom. The live status reads beside the heading, as in \u201cHours \u00b7 Open now\u201d. \u201cWhere it is\u201d became a single card too, with the map running down one side and the address, every way to reach the place and the main action beside it. Getting back to the directory is now a quiet link under that card, and a hairline separates each section of the page from the next.",
+    'Opening hours now sit in one card, with the week in two columns and the live status beside the heading. "Where it is" became a single card too.',
   "changelog.entries.place-pages-open-all-at-once.title":
     "A place's page now opens with its photos already there",
   "changelog.entries.place-pages-open-all-at-once.body":
-    "Opening a business in the queer business directory used to paint the name, the details and four empty photo frames, which then filled in one at a time as each picture arrived. The page now waits behind a short loading screen that tells you which step it is on, and lands with the photos in place. If a photo is slow or missing the page comes through anyway rather than leaving you waiting.",
+    "A business page now waits behind a short loading screen that names the step it is on, and arrives with the photos already in place.",
   "changelog.entries.browse-every-tag-by-category.title":
     "Browse every tag by category instead of guessing the word",
   "changelog.entries.browse-every-tag-by-category.body":
-    "The tags field on your profile only ever showed six popular chips and a search box, so you had to already know a tag existed to find it. There is now a \u201cBrowse all\u201d button that opens the full list grouped by category: design and visual craft, words and communication, tech, community and care, practical and professional, music and performance. Tap a tag to add it, tap it again to take it off, and search across every category from the top of the panel. Your picks land on the profile as you make them.",
+    'A "Browse all" button on the tags field opens the full list grouped by category. Tap a tag to add or remove it, or search across every category.',
   "changelog.entries.backspace-keeps-your-tags.title":
     "Backspace no longer eats the tags you already picked",
   "changelog.entries.backspace-keeps-your-tags.body":
-    "In every field where you build up a row of tags, the skills on your profile, what you are open to, and the tags on a forum post, holding backspace to clear what you had typed carried on into the tags sitting to the left of the cursor and removed them one by one, with no way to undo it. Backspace now only clears the text you are typing. Tags come off when you press the \u00d7 on the tag itself.",
+    "Holding backspace in a tag field now clears only the text you are typing. Tags come off with the x on the tag itself.",
   "changelog.entries.map-loader-stays-in-its-panel.title":
     "The directory map now loads inside its own panel",
   "changelog.entries.map-loader-stays-in-its-panel.body":
-    "The first time you switched the queer business directory from List to Map, the loading screen covered the whole window instead of sitting in the map panel, so the page appeared to disappear for a moment. The loader now fills the same rounded panel the map lands in, and the page around it stays put.",
+    "Switching the directory from List to Map covered the whole window with a loading screen. It now fills the rounded panel the map lands in, and the page around it stays put.",
   "changelog.entries.plum-headers-reach-the-top.title":
     "Plum page headers now run all the way to the top",
   "changelog.entries.plum-headers-reach-the-top.body":
-    "On pages with a deep plum header, such as Safe spaces, Culture, Jobs and Housing, a thin strip of cream page stayed behind the floating navigation bar, so the colour appeared to start a little way down the screen. The plum now fills that strip on every one of these pages, and it stays correct in the sidebar and mobile layouts too.",
+    "On Safe spaces, Culture, Jobs and Housing a thin strip of cream stayed behind the floating navigation bar. The plum now fills it, in the sidebar and mobile layouts too.",
   "changelog.entries.footer-closes-the-page.title":
     "Short pages now end at the bottom of the window",
   "changelog.entries.footer-closes-the-page.body":
-    "A page with little on it, such as your membership cards before a community has issued you one, used to stop short: the footer landed partway down the screen with a band of empty page showing underneath it, as though the layout had come loose. Every page now reaches the bottom edge of the window, so the footer always closes it. Longer pages are untouched.",
+    "Every page now reaches the bottom edge of the window, so the footer sits at the bottom even on a short page like your membership cards.",
   "changelog.entries.tab-title-follows-the-page.title":
     "The browser tab names the page you are on",
   "changelog.entries.tab-title-follows-the-page.body":
-    "Opening a public page such as the magazine and then heading back to your feed or the local directory left the old name sitting in the browser tab, so a window kept open for later could read \u201cThe Magazine\u201d while showing your feed. Pages that carry a name of their own still set it, and every other page now shows the plain QueerPulse name the moment you arrive.",
+    "Pages with a name of their own set the browser tab title, and every other page now shows the plain QueerPulse name as you arrive.",
   "changelog.entries.magazine-issues-run-the-desk.title":
     "Magazine issues now run the desk",
   "changelog.entries.magazine-issues-run-the-desk.body":
-    "The editor desk could only ever work on one issue: whichever had the highest number. There was no way to make a new one, and no way back to an older one. Now there is a \u201cNew issue\u201d button, and a switcher in the header that says which issue you are working on. Pieces start with no issue at all, sitting in an Unassigned track until someone files them. You can file one from its row, select several and assign them together, or sit inside an issue and pull work in from its own page. A piece can move straight from one issue to another. And shipping an issue now files its articles under it, so the issue's public contents page actually lists what ran.",
+    'The desk now has a "New issue" button and a switcher for the issue you are on. Pieces wait in an Unassigned track until you file them, and shipping an issue files its articles.',
   "changelog.entries.local-map-reads-clearly.title":
     "The local map reads clearly again",
   "changelog.entries.local-map-reads-clearly.body":
-    "The map on the local directory had gone hazy. Its streets were drawn in white and pale grey, colours meant for a different background, so against our cream they all but disappeared. Every place name carried a soft white glow that left the text looking out of focus, and some parish names were printed twice a few pixels apart. Streets now sit on a warm scale with an edge of their own, so you can follow a road across the city. Names are cut cleanly out of the background, and each parish is named once. Maps also lost their sharpness whenever the browser was zoomed or the window moved to a second screen, and stayed soft until you reloaded the page. Every map is now drawn at a finer resolution than the screen asks for and stays sharp at any zoom level, on any display.",
+    "Streets now sit on a warm scale with an edge of their own, names are cut cleanly out of the background, and each parish is named once.",
   "changelog.entries.reviews-sort-on-quiet-listings.title":
     "Sorting and filtering reviews now works on quieter listings",
   "changelog.entries.reviews-sort-on-quiet-listings.body":
-    "The review list carried a line reading \u201cNewest first\u201d with nothing you could use to change it. The controls were built, they were simply held back until a place had gathered four reviews, so most listings never showed them at all. Reviews now sort and filter from the second review onwards. Order them by newest, oldest, most helpful, or highest and lowest rating; narrow the list to one star rating; and keep only the reviews that came with a photo or that the owner has answered. If a combination leaves nothing on screen, one tap clears it.",
+    "Sort and filter controls now appear from a listing's second review: order by newest, oldest, most helpful or rating, or keep only reviews with a photo or answer.",
   "changelog.entries.map-narrows-to-the-area-you-pick.title":
     "Picking an area on the map clears the rest",
   "changelog.entries.map-narrows-to-the-area-you-pick.body":
-    "Clicking a parish on the local map highlighted it and filtered the list beside it, yet every other pin stayed put, so the area you had just chosen was still buried under the whole city. Choosing an area now leaves only that area\u2019s pins on the map. Every other parish keeps its name and a number for how much sits inside it, so you can still tell where the rest of the city is. Click the highlighted area again to bring everything back.",
+    "Choosing a parish on the local map now leaves only that area's pins. Click the highlighted area again to bring everything back.",
   "changelog.entries.pages-open-at-the-top.title":
     "Changing pages lands you at the top straight away",
   "changelog.entries.pages-open-at-the-top.body":
-    "Leaving a page you had scrolled a long way down, say the bottom of the listings directory, and opening another one such as your profile, made the browser glide all the way back up before the new page settled. On a long list that glide took a while, and anything you tapped during it fought the animation. Page changes now land at the top instantly. Browser back still returns you to the exact spot you left, and tapping the tab you are already on still glides up as before.",
+    "Changing pages now lands at the top straight away. Browser back still returns you to where you left off, and tapping your current tab still glides up.",
   "changelog.entries.queer-owned-says-queer-owned.title":
     "Queer-owned places say so on their card",
   "changelog.entries.queer-owned-says-queer-owned.body":
-    "A business whose owner told us it is queer-owned was still labelled \u201cLGBTQ+ friendly\u201d in the directory. Two things were wrong: the card was reading a completely different setting (whether the owner shows the listing on their profile), and a verified safe space took over the badge corner entirely, so those places could not say what they were at all. Cards now carry the ownership badge in three honest steps: verified queer-owned, queer-owned, or LGBTQ+ friendly. The safe-space mark has moved beside it as a jade shield, and hovering or focusing it names it.",
+    "The badge on a card now has three honest steps: verified queer-owned, queer-owned, or LGBTQ+ friendly, with the safe-space jade shield beside it.",
   "changelog.entries.review-appears-immediately.title":
     "Your review shows up the moment you post it",
   "changelog.entries.review-appears-immediately.body":
-    "Posting a review on a place told you it had worked, then left the page looking exactly as it did before: your words only turned up if you reloaded. The page had been quietly handed a copy of the listing saved just before you wrote. Your review now appears in the list the instant it is posted, with the star rating already counting it. The same stale copy could reach any public page, so persona pages, community teasers, housing groups, co-ops, the roadmap and the changemaker directory all now show your changes straight away too.",
+    "Your review now appears the instant you post it, with the star rating already counting it. Persona pages, housing groups and the roadmap update straight away too.",
   "changelog.entries.star-pickers-follow-your-cursor.title":
     "Star pickers now follow your cursor properly",
   "changelog.entries.star-pickers-follow-your-cursor.body":
-    "Rating a place or a company meant aiming at each star exactly: the gaps between them counted as nowhere, so the preview kept dropping back to empty as you moved along the row, and the colour arrived in a hard snap. The stars now sit shoulder to shoulder, so anywhere in the row lights up the rating you are pointing at, and the coral pours in instead of jumping.",
+    "Stars in a rating picker now sit shoulder to shoulder, so anywhere in the row lights up the rating you point at and the coral pours in.",
   "changelog.entries.review-stars-hint.title":
     "Reviews now tell you why the post button is greyed out",
   "changelog.entries.review-stars-hint.body":
-    "You could write a whole review of a place, reach for the button, and find it dead, with nothing to say the star picker further up was still untouched. Now, the moment you start writing, a line appears beside the button asking for a star rating, so the one missing piece is named where you are actually looking.",
+    "You could write a whole review and find the button dead, with nothing to explain it. As soon as you start writing, a line beside the button asks for a star rating.",
   "changelog.entries.filters-keep-your-place.title":
     "Filtering a page no longer throws you back to the top",
   "changelog.entries.filters-keep-your-place.body":
-    "Flipping the local directory between map and list used to fling the page back to the very top, and so did ticking a filter or typing another letter into a search box. Anything that lives in the address bar counted as a whole new page. Now the app can tell a filter from a real navigation: switch views or narrow a list and you stay exactly where you were reading.",
+    "Ticking a filter, typing in a search box or switching the local directory between map and list now keeps you where you were reading.",
   "changelog.entries.directory-card-cover-photo.title":
     "Your listing's photo now shows up in the directory",
   "changelog.entries.directory-card-cover-photo.body":
-    "Every card in the local directory read \u201cPhoto coming\u201d, even for businesses whose owners had uploaded a wide shot months ago. The photo was there the whole time; the grid simply never asked for it. Cards now show the wide shot from your listing, framed the way you cropped it, and the photos step says plainly which one becomes your cover.",
+    "Directory cards now show the listing's wide photo, framed the way you cropped it, and the photos step says which one becomes your cover.",
   "changelog.entries.persona-banner-reposition.title":
     "Put your persona banner exactly where you want it",
   "changelog.entries.persona-banner-reposition.body":
-    "Your banner no longer has to sit wherever the crop landed. Hover it on your own persona page, take “Reposition”, and drag the image up or down until the part you care about is in frame. Arrow keys work too. Save, and that's how everyone sees it.",
+    'Hover your banner on your own persona page, take "Reposition", and drag the image up or down until the right part is in frame. Arrow keys work too.',
 
   "changelog.entries.listing-owner-photo.title":
     "The face behind a listing actually shows up",
   "changelog.entries.listing-owner-photo.body":
-    "The \u201cWho runs it\u201d card on a business page fell back to initials even when the owner had a profile photo, and the same thing happened to the photos beside reviews and questions. Their pictures were being pointed at the wrong place and never loaded. They now load properly, and anyone who has turned their photo off in their privacy settings still shows initials, as they chose.",
+    'The "Who runs it" card and the photos beside reviews and questions now load properly. Anyone who turned their photo off still shows initials.',
   "changelog.entries.persona-savebar-compact.title":
     "More room to type when editing a persona on a phone",
   "changelog.entries.persona-savebar-compact.body":
-    "The unsaved-changes bar in the persona editor used to list every edit in full, which on a small screen left barely any space above the keyboard. On phones it now shows a single line telling you how many changes are waiting, and you can tap it open whenever you want the full list. Save and Discard stay exactly where they were.",
+    "On phones the unsaved-changes bar in the persona editor now shows one line with how many changes are waiting. Tap it open for the full list.",
   "changelog.entries.sharper-photos.title":
     "Photos that stay sharp on every screen",
   "changelog.entries.sharper-photos.body":
-    "Photos you upload now keep more of their detail. Large pictures are shrunk in careful stages rather than one rough pass, which is what used to leave a banner or a profile photo looking slightly soft, and they are saved in a newer format that holds more detail for the same size. Screenshots and drawings stay pixel-perfect. Pictures are also requested at the size your screen can actually show, so a sharp phone gets a sharp picture and nobody pays for detail they cannot see.",
+    "Large uploads are shrunk in careful stages and saved in a newer format, so a banner or profile photo keeps its sharpness at the size your screen shows.",
   "changelog.entries.listing-pages-rebuild.title":
     "Business pages, rebuilt around what you came to find out",
   "changelog.entries.listing-pages-rebuild.body":
-    "Every business page now opens with what you actually came for: whether it is open right now, where it is, what it is, and how easy it is to get into. Accessibility questions are answered yes, no, or nobody has told us, so a question no one has answered stops looking like a no. You can ask a business something in public and read what other people asked, see when a review was written, mark one helpful, and add a photo to your own. Places that have closed, moved, or paused now say so instead of quietly looking open.",
+    "A business page now opens with whether it is open, where it is, and how easy it is to get into. You can ask a question in public or mark a review helpful.",
   "changelog.entries.listing-owner-control.title":
     "More control if you run a place",
   "changelog.entries.listing-owner-control.body":
-    "Editing your listing no longer takes it off the directory while it waits to be checked again. Once you are approved, your corrections go live as you save them. The editor is one screen instead of six steps, it keeps a draft if you get interrupted, and it shows you the real page before you publish. You can set holiday hours, mark yourself temporarily closed or moved, pause a listing without deleting it, list your services and prices, and see what people have suggested or asked.",
+    "Once you are approved, your corrections go live as you save them. The editor is one screen with a preview, with holiday hours, closed or moved notices, and a pause switch.",
   "changelog.entries.persona-banner-framing.title":
     "Persona banners, framed the way you framed them",
   "changelog.entries.persona-banner-framing.body":
-    "Persona banners now reframe at 3:1, the shape they actually paint at, in place of the 2:1 used for magazine covers, and the page keeps whatever you centred in the frame rather than slicing an arbitrary strip out of the middle. Banners upload at a higher resolution too, so they stay sharp edge to edge on a big screen, and they now run all the way up to the top of the page.",
+    "Banners now reframe at 3:1, the shape they actually paint at, so the page keeps what you centred. They also upload at a higher resolution.",
   "changelog.entries.card-check-page-rebuild.title":
     "The card check page now shows the member\u2019s photo",
   "changelog.entries.card-check-page-rebuild.body":
-    "Scanning a membership card used to give a plain line of text and a note telling you to look at the photo on the card. The check now comes back as the card itself: the holder\u2019s name on its own line with their pronouns beneath it, the community, role and card number, and the photo the card carries, served from the community\u2019s own records so you are comparing the person in front of you against a copy nobody at the door could have edited. A card that does not check out now says what can cause that, what to try next, and that it is not a judgement about the person. And a scan that fails because your phone lost its connection now says so instead of reading as a refusal.",
+    "A card check now comes back as the card itself: name and pronouns, community, role, number and the photo from the community's records. A failed card says why.",
   "changelog.entries.persona-rights-footer-once.title":
     "One copyright notice per persona page",
   "changelog.entries.persona-rights-footer-once.body":
-    "The \u201cAll rights reserved\u201d notice used to repeat beside every single item on a persona page. It now appears once, at the end of the page, covering all of that persona\u2019s work. Opening a poem or an artwork on its own still shows its own notice.",
+    "The rights notice now appears once at the end of a persona page, covering all of that persona's work. Opening a single poem or artwork still shows its own.",
   "changelog.entries.community-card-live-preview.title":
     "See your community's card while you edit it",
   "changelog.entries.community-card-live-preview.body":
-    "Editing a community meant guessing: the name, tagline, cover photo, kind of space, tags and who can find it all change the card people meet you through, and the only way to see the result was to save and go look. The edit dialog now shows that card beside the form, drawn from what you are typing, so you can see a cover crop or a shorter tagline land before you commit to it.",
+    "The community edit dialog now shows your card beside the form, drawn from what you are typing, so you see a cover crop or shorter tagline before saving.",
 
   "changelog.entries.card-co-owner-role.title":
     "Membership cards name co-owners correctly",
   "changelog.entries.card-co-owner-role.body":
-    "Communities can hand a member owner-level powers as a co-owner. Membership cards did not know that role yet, so a co-owner's card called them a member on the card itself, in the holders panel and on the page a scanned card opens. Cards now print the role the roster actually holds, and promoting someone updates their card straight away instead of waiting for the page to reload.",
+    "Membership cards now print co-owner where a member holds that role, on the card, in the holders panel and on the page a scan opens. Promoting someone updates their card straight away.",
 
   "changelog.entries.profile-community-cards.title":
     "Your communities look the same on your profile as on the communities page",
   "changelog.entries.profile-community-cards.body":
-    "The communities you feature on your profile were a plain compact card. They are now the same card the communities page shows: the category letterhead with its cover photo, the faces already in the room, the full description, the tags and this week's activity. The badge tells visitors how you stand in each one, whether you run it, moderate it or are simply a member.",
+    "The communities you feature on your profile now use the same card as the communities page: cover photo, faces, description, tags and this week's activity, with a badge showing your role.",
 
   "changelog.entries.profile-places-directory-cards.title":
     "Your places look the same on your profile as in the directory",
   "changelog.entries.profile-places-directory-cards.body":
-    "The “Places you run” cards on your profile were a plain text summary. They are now the same card the local directory shows: cover photo, queer-owned or safe-space badge, category, tags and today's opening hours. Your listing's status and the edit, quick edit and delete actions sit underneath, so you can still see at a glance whether something is live or still being read.",
+    "Your places on your profile now use the same card as the local directory: cover photo, badges, category, tags and today's hours.",
 
   "changelog.entries.community-co-owners.title":
     "Owners can share a community with a co-owner",
   "changelog.entries.community-co-owners.body":
-    "From Mod tools, a community owner can make any member a co-owner. Co-owners run the place alongside you: join requests, moderation, settings and the roster. Transferring ownership, archiving the community and changing a co-owner's role stay with the owner alone, and co-ownership can be taken back at any time.",
+    "From Mod tools, an owner can make any member a co-owner, sharing join requests, moderation, settings and the roster. You can take it back any time.",
 
   "changelog.entries.card-art-counted-as-in-use.title":
     "Members card artwork now counts as an image in use",
   "changelog.entries.card-art-counted-as-in-use.body":
-    "The crest and the background a community picks for its members card were showing as having no references in your uploads, which made live card artwork look safe to delete. Both now count as in use and link back to the community that prints them. Community avatars, magazine article and deck pictures, and photos sent in a conversation are counted too.",
+    "The crest and background a community picks for its members card now count as images in use and link back to that community.",
 
   "changelog.entries.community-house-rules.title":
     "House rules now come with the invitation",
   "changelog.entries.community-house-rules.body":
-    "Joining a community with house rules means reading them and agreeing first. If an owner later changes the rules, everyone already inside is asked once to read the new version, and what you agreed to is recorded.",
+    "Joining a community with house rules means reading and agreeing to them first. If the rules change, everyone already inside is asked once to read the new version.",
   "changelog.entries.community-removal-bars-return.title":
     "Being removed from a community now means it",
   "changelog.entries.community-removal-bars-return.body":
-    "When a moderator removes someone, that person can no longer walk straight back in. Moderators can still remove someone and leave the door open when it is a simple tidy-up, and every bar can be lifted later from Mod tools.",
+    "Someone removed by a moderator is now barred from coming straight back in. Moderators can still remove and leave the door open, and any bar can be lifted from Mod tools.",
   "changelog.entries.community-announcements.title":
     "Owners can say something that carries",
   "changelog.entries.community-announcements.body":
@@ -3168,353 +3214,353 @@ export const marketing: Catalog = {
   "changelog.entries.community-notification-levels.title":
     "Choose how much each community reaches you",
   "changelog.entries.community-notification-levels.body":
-    "Every community now has its own setting: everything, announcements only, mentions only, or muted. Set it per community from the tab row. New members start on announcements only.",
+    "Each community now has its own setting: everything, announcements only, mentions only, or muted. Set it from the tab row. New members start on announcements only.",
   "changelog.entries.community-invites-any-time.title":
     "Invite people to your community any time",
   "changelog.entries.community-invites-any-time.body":
-    "Inviting members used to be possible only on the day you founded a community. Owners, co-owners and moderators can now invite from Mod tools. An invitation is a message, and joining stays the other person's decision.",
+    "Owners, co-owners and moderators can now invite from Mod tools at any time. An invitation is a message, and joining stays the other person's decision.",
   "changelog.entries.community-join-review-context.title":
     "Reviewing a join request shows you the person",
   "changelog.entries.community-join-review-context.body":
-    "A request now arrives with pronouns, how long they have been on QueerPulse, connections you share, and communities you share, with their name linked to their profile. Declining asks whether it is 'not right now' or 'not a fit', so the person knows whether to try again.",
+    "A join request now arrives with pronouns, time on QueerPulse, and connections and communities you share, with the name linked to the profile.",
   "changelog.entries.community-resources-shelf.title":
     "A real shelf for a community's links",
   "changelog.entries.community-resources-shelf.body":
-    "Owners, co-owners and moderators can build a community's resource shelf: crisis lines, legal guides, a reading list, whatever the community keeps coming back to. Reorderable, and it shows on the About tab.",
+    "Owners, co-owners and moderators can build a community's resource shelf: crisis lines, legal guides, a reading list. It is reorderable and shows on the About tab.",
   "changelog.entries.community-co-ownership.title":
     "Co-owners, and a way to flag an absent owner",
   "changelog.entries.community-co-ownership.body":
-    "A community can now have a co-owner who shares the day-to-day powers, while transferring ownership and archiving stay with the owner. If an owner becomes unreachable, moderators can ask platform staff to look, and the owner can withdraw that request by simply showing up.",
+    "A community can have a co-owner who shares the day-to-day powers, while transfers and archiving stay with the owner. If an owner goes unreachable, moderators can ask platform staff to look.",
   "changelog.entries.community-governance-history.title":
     "Every community can see its own history",
   "changelog.entries.community-governance-history.body":
-    "Owners, co-owners and moderators can read the record of what happened in their community: role changes, removals, bans lifted, pauses and transfers. It used to be visible only to platform staff.",
+    "Owners, co-owners and moderators can now read their community's record: role changes, removals, bans lifted, pauses and transfers. It used to be visible only to platform staff.",
   "changelog.entries.community-public-teaser.title":
     "Share a community with someone outside",
   "changelog.entries.community-public-teaser.body":
-    "Owners can let a community show a short public page to people who are not signed in: what it is, who it is for, and how to ask for an invite. Off by default, available only to open and request-to-join communities, and it never shows the member list or a single post.",
+    "Owners can turn on a short public page for signed-out visitors: what the community is, who it is for, and how to ask for an invite. It never shows members or posts.",
   "changelog.entries.community-place-and-language.title":
     "Find communities near you, in your language",
   "changelog.entries.community-place-and-language.body":
-    "Communities can say where they meet and which languages they run in, and Discover can filter on both. Sorting by most active is also now done properly on the server, so the results are right past the first page.",
+    "Communities can say where they meet and which languages they run in, and Discover filters on both. Sorting by most active now happens on the server, so later pages stay right.",
   "changelog.entries.community-welcome-and-search.title":
     "A welcome on arrival, and search inside a community",
   "changelog.entries.community-welcome-and-search.body":
-    "Owners can write a greeting that a new member sees once when they arrive. Every community's posts are now searchable, across the whole history rather than the part you have scrolled.",
+    "Owners can write a greeting a new member sees once on arrival, and every community's posts are now searchable across the whole history.",
   "changelog.entries.community-insight-trends.title":
     "Community stats now show direction",
   "changelog.entries.community-insight-trends.body":
-    "The owner's stats panel adds twelve weeks of members and posts, so you can see whether a community is growing or going quiet. Whole-community totals only: nobody's individual activity is shown.",
+    "The owner's stats panel adds twelve weeks of members and posts, so you can see whether a community is growing or going quiet. Whole-community totals only.",
   "changelog.entries.community-pause-reason.title":
     "A paused community explains itself honestly",
   "changelog.entries.community-pause-reason.body":
-    "The pause banner used to say moderators were reviewing reports even when an owner had simply paused things themselves. It now says which of the three it is, when it started, and carries the moderator's note when there is one.",
+    "The pause banner now says which of the three reasons applies, when the pause started, and carries the moderator's note when there is one.",
   "changelog.entries.community-card-covers.title":
     "Communities show their photo",
   "changelog.entries.community-card-covers.body":
-    "A community card led with a flat band of colour, so a community that had picked a cover photo never showed it anywhere except its own page. The card now uses that photo as its header, with the category and the access label set on a soft dark wash so they stay readable over any image. A community without a photo keeps the coloured band. Every card in the grid is also the same height now, whatever the length of its tagline, so the member counts and the buttons line up along one row instead of drifting.",
+    "A community card now uses its cover photo as the header, with the category and access label on a soft dark wash. All cards are the same height.",
   "changelog.entries.community-founded-month.title":
     "Founded, down to the month",
   "changelog.entries.community-founded-month.body":
-    "A community page said only the year it was founded, so anything started this year read as \u201cFounded 2026\u201d and told you very little. It now names the month too, written the way your language writes it: \u201cFounded August 2026\u201d.",
+    "A community page now names the month it was founded as well as the year, written the way your language writes it: “Founded August 2026”.",
   "changelog.entries.card-text-legibility.title":
     "Cards you can read across a room",
   "changelog.entries.card-text-legibility.body":
-    "A membership card set on a flag or a photo has always darkened whatever sits under its print, but one treatment cannot suit every image: the gradient that works over a striped flag gets lost in a busy illustration. Owners now choose between three. A panel puts a small dark plate behind your community\u2019s name and behind the member\u2019s name and leaves the rest of the artwork uncovered. A shade darkens the top and bottom of the card. A veil dims the whole card evenly. The preview in the designer follows the choice as you make it, and a printed card carries the same treatment as the one on the phone. Every card also prints larger: the type is now sized against the card itself, so a card shown big on screen has big type on it rather than phone-sized print on a blown-up object.",
+    "Owners now choose how a card darkens its background: a panel behind the names, a shade top and bottom, or a veil over the whole card. Big cards get big print.",
   "changelog.entries.my-communities-cards.title":
     "Your communities, as communities",
   "changelog.entries.my-communities-cards.body":
-    "My communities used to name the communities you belong to in a small list down the side of the page, while everyone else\u2019s got a proper card. Now yours lead the page: the same cards, the same search, categories and sort you already use to find a community, pointed at the ones you are already in. Each card is marked as one of yours and shows how many people were around this week, and the tabs carry a count so you can see at a glance how many you are in. What was there before \u2014 anything waiting on you as a moderator, and the week across your communities \u2014 now sits underneath.",
+    "My communities now leads with your own communities as full cards, with the same search, categories and sort. Each card shows how many people were around this week.",
   "changelog.entries.cards-load-whole.title": "Your card arrives in one piece",
   "changelog.entries.cards-load-whole.body":
-    "A membership card used to assemble itself in front of you: the community\u2019s flag, its crest and your photo each appeared whenever they happened to finish loading. Now the card waits until all three are ready and arrives complete, with a placeholder holding its exact shape while it comes. Showing the same card again is instant. On a slow connection the card still appears rather than leaving you waiting at a door.",
+    "A membership card now waits for the flag, the crest and your photo, then arrives complete, with a placeholder holding its shape while it comes. Showing the same card again is instant.",
   "changelog.entries.pronouns-on-membership-cards.title":
     "Pronouns on a membership card",
   "changelog.entries.pronouns-on-membership-cards.body":
-    "A community can now print each member's pronouns beside their name on their card, so the person reading it knows how to address the member holding it. The pronouns come from the member's own profile, so a card only ever shows what they have already set there, and updating them updates every card at once. It is off until a community turns it on, and any member can switch their own off from their cards page. Where a card carries them, they also appear on the page someone lands on after scanning the code.",
+    "A community can print each member's pronouns beside their name, taken from their profile, so updating them updates every card. Any member can switch their own off.",
   "changelog.entries.printed-membership-cards.title":
     "Membership cards you can print",
   "changelog.entries.printed-membership-cards.body":
-    "Communities can now print physical membership cards for their members, on a sheet you cut and fold. A printed card shows the same code as the one on a member's phone, so anyone can check it at a door. If a card is lost, moderators can replace it: every printed copy stops working straight away, and the member's card on their phone keeps going.",
+    "Communities can print physical membership cards on a sheet you cut and fold, with the same code as the phone card. Replacing a lost card stops every printed copy working.",
   "changelog.entries.profile-back-to-origin.title":
     "The way out of a profile goes back where you were",
   "changelog.entries.profile-back-to-origin.body":
-    'Profiles are opened from everywhere: a community\'s member list, a forum thread, a gathering, a search, the header of a chat. The link above every profile always said "Back to the room" and always dropped you in the members directory, which for most people was a page they had never been on, and it cost them the scroll position they left behind. It now returns to the page you actually came from, says where that is, and lands you at the exact spot in the list you tapped from. Arriving straight from a shared link, a refresh or a notification still offers the directory, because in that case there is nowhere else to go back to.',
+    "The link above a profile now returns to the page you came from, says where that is, and lands you at the spot in the list you tapped.",
 
   "changelog.entries.card-holder-open-card.title":
     "Open a member's card from the holder list",
   "changelog.entries.card-holder-open-card.body":
-    "A community's card holder list showed a name, a card number and two buttons, so the one thing an owner or moderator actually wanted to check, the card itself, was the one thing they could not look at. Any row now opens, showing that member's real card at full size: the community's design, the dates it carries, the role it prints and the photo it does or does not show. The code on the back is the exception, and it says so: it is minted for the person holding the card, so only they can produce a working one. Pausing, revoking and reinstating are right there on the open card too, so checking a card and acting on it are no longer separate trips.",
+    "Any row in a community's card holder list now opens that member's real card at full size, with pausing, revoking and reinstating on the open card.",
 
   "changelog.entries.card-photo-legibility.title":
     "Photos that stay readable on any card",
   "changelog.entries.card-photo-legibility.body":
-    "A member's photo and a community's crest used to sit straight on top of whatever the card was wearing, so a pale photo on a pale flag lost its edges and a busy illustration behind it competed with the face. Both now carry a two-tone edge and a soft shadow that darkens the few pixels of card they sit on, which holds up on a flag, on an uploaded picture and on a flat colour alike. Communities that print photos can also choose to print them in black and white, and the designer says plainly that this is a choice being made about other people's pictures.",
+    "A member's photo and a community's crest now carry a two-tone edge and a soft shadow, so they hold their shape on a flag, a photo or a flat colour.",
 
   "changelog.entries.card-member-photos.title":
     "Photo membership cards, with the last word left to the member",
   "changelog.entries.card-member-photos.body":
-    "A community can now put each member's photo on their card, so someone on a door can match the card to the person without scanning anything. The photo comes from the member's own profile and sits on the front, beside the community's name, where a physical card would carry it. It is off until a community turns it on, and any member can switch their own off from their cards page without leaving the community: a face on a credential naming a queer community is not a small thing to ask of someone who is not out.",
+    "A community can put each member's photo on their card, taken from their profile, so someone at a door can match card to person. Any member can switch their own off.",
 
   "changelog.entries.card-two-sides.title":
     "Your membership card now has a back, and a front worth looking at",
   "changelog.entries.card-two-sides.body":
-    "A membership card used to be one flat side with everything crowded onto it. It now works the way a real card does. The front is the object: your community's flag, photo or colour, its crest, and your name, under a laminate that catches the light as you move across it. Turn it over with the button in the corner and the back carries the credential: a much larger code, the card number, when you joined, when it stops being valid, and your role in the community. The code is only prepared once you actually turn the card over, so a card sitting face-up on a table has nothing to prove and mints nothing.",
+    "Your membership card now has two sides. The front carries your community's flag or colour, its crest and your name; the back carries a large code, card number, dates and your role.",
 
   "changelog.entries.cohost-invite-copy.title":
     "Co-host invites read like words again, and Portuguese weeks start on Monday",
   "changelog.entries.cohost-invite-copy.body":
-    "Inviting someone to co-host a gathering showed internal placeholders where the roles and time commitments should have been, and the invite page said the same thing when a link had expired or was already answered. All of it now reads as written, in English and Portuguese, including the notification that lands when someone asks you to co-host. Date pickers in Portuguese also start the week on Monday, as they should, instead of borrowing a Sunday-first calendar.",
+    "Co-host invites now read properly in English and Portuguese, including the roles, time commitments, expired links and the notification. Portuguese date pickers start the week on Monday.",
 
   "changelog.entries.card-backgrounds.title":
     "Put a flag, or your own photo, on your community's card",
   "changelog.entries.card-backgrounds.body":
-    "A membership card no longer has to be a flat colour. Choose one of thirteen pride flags, from the rainbow and Progress Pride to trans, bi, lesbian, pan, ace, aro, non-binary, genderfluid, genderqueer, agender and intersex, or upload a photo of your own. Whatever you choose, the card keeps itself readable: a fixed scrim sits between the background and the text, so nobody has to squint at a door. The code stays scannable on every one of them.",
+    "A community's card can carry one of thirteen pride flags or a photo you upload, with a fixed scrim between the background and the text so the code stays scannable.",
 
   "changelog.entries.card-designer.title":
     "A real design tool for your community's membership card",
   "changelog.entries.card-designer.body":
-    "Designing a card now happens on a full-width canvas: a large live preview of the card as a member holds it, card styles shown as miniature cards rather than colour dots, your own crest on the card, a light and dark check, and the exact date a card issued today would stop working. Closing with unsaved changes asks first. Saving a design no longer issues cards to everyone behind your back: issuing is its own button, it says what it will do before it does it, and cards you paused or revoked now stay that way.",
+    "Designing a card now happens on a full-width canvas: a large live preview, styles as miniature cards, a light and dark check, and the expiry date. Issuing cards is its own button.",
 
   "changelog.entries.membership-cards.title":
     "Communities can now give you a membership card",
   "changelog.entries.membership-cards.body":
-    "Any community you belong to can issue you a membership card, kept under your account alongside your other cards. It stays covered until you choose to show it, hides itself again the moment you leave the screen, and anyone can verify it by scanning the code.",
+    "Any community you belong to can issue you a membership card, kept with your other cards. It stays covered until you show it, and anyone can verify it by scanning the code.",
 
   "changelog.entries.push-preview-privacy.title":
     "Hide what your notifications say on a locked screen",
   "changelog.entries.push-preview-privacy.body":
-    "Notification previews show the sender and the message text on your lock screen, where anyone holding your phone can read them. There is now a switch in Settings, under phone notifications, that shows only that something arrived. The app still shows everything once it is open.",
+    "A switch under phone notifications keeps the sender and message text off your lock screen, showing only that something arrived.",
 
   "changelog.entries.honest-success-states.title":
     "Buttons stopped saying things worked when they had not",
   "changelog.entries.honest-success-states.body":
-    "Across communities, the forum, messages, connections, settings and the moderator tools, a lot of actions confirmed success the moment you tapped, before the server had answered. If the request then failed you got a success message and an error message together, and the change you thought you had made was not there. Those now wait for the real answer, and put the content back if it fails.",
+    "Across communities, the forum, messages, connections, settings and the moderator tools, actions now wait for the server's real answer before confirming, and put your content back if it fails.",
 
   "changelog.entries.reports-really-filed.title":
     "Reports that fail now say so",
   "changelog.entries.reports-really-filed.body":
-    "Reporting a post, an event or a member could show the confirmation panel even when the report never reached us. Every report path now confirms only once it has been filed, and keeps what you wrote on screen so you can try again.",
+    "Every report path now confirms only once the report has actually been filed, and keeps what you wrote on screen so you can try again.",
 
   "changelog.entries.message-previews-and-drafts.title":
     "Messages you send before a chat exists no longer disappear",
   "changelog.entries.message-previews-and-drafts.body":
-    "Starting a new conversation and typing straight away could lose that first message, and keep retrying it invisibly on every reconnect. Unsent messages are also kept per account now, so on a shared device one person's draft can no longer be sent from someone else's session. Opening a thread marks it read as new messages arrive, so the other person's seen mark keeps up.",
+    "The first message in a new conversation now arrives. Unsent drafts are kept per account, so on a shared device nobody else can send yours.",
 
   "changelog.entries.moderation-holds.title":
     "Moderator decisions can no longer be undone by the author",
   "changelog.entries.moderation-holds.body":
-    "A post or reply that a moderator had taken down could be restored by the person who wrote it. Deletions now record who made them, and only a moderator can undo a moderator's. Overturning an appeal also puts the content back, which it previously did not.",
+    "Deletions now record who made them, so only a moderator can undo a moderator's takedown. Overturning an appeal also puts the content back.",
 
   "changelog.entries.housing-listings-stay-reviewed.title":
     "Edits to a live listing go back through review",
   "changelog.entries.housing-listings-stay-reviewed.body":
-    "A listing that had been approved could be edited afterwards without anyone looking again, so the text people read was not always the text that was checked. Editing the parts that moderation covers now returns the listing to review, and the form says so before you submit. Asking for a viewing also requires the affirming pledge, like every other way of making contact.",
+    "Editing the parts of a live listing that moderation covers now returns it to review, and the form says so before you submit. Asking for a viewing requires the affirming pledge too.",
 
   "changelog.entries.article-titles-render-plain.title":
     "Magazine headlines with an ampersand read properly again",
   "changelog.entries.article-titles-render-plain.body":
-    "A headline containing characters like & could show its raw markup on the published article, the cards linking to it and the share preview. Headlines are stored as plain text now, and existing ones are cleaned up.",
+    "Headlines are stored as plain text now, so characters like & read properly on the article, the cards linking to it and the share preview. Existing headlines are cleaned up.",
 
   "changelog.entries.communities-hub-hero-restore.title":
     "Communities got its welcome back",
   "changelog.entries.communities-hub-hero-restore.body":
-    "The top of Communities had drifted too far from the nav, with a big empty gap above a bare title. It's back to sitting right under the nav, with the full welcome restored: a proper title, a line about what the space is for, and the My communities/Discover switch grouped together above the actions.",
+    "The top of Communities sits right under the nav again, with the full welcome: a title, a line about the space, and the My communities and Discover switch.",
 
   "changelog.entries.community-tags-discovery.title":
     "Find communities through tags and connections",
   "changelog.entries.community-tags-discovery.body":
-    "A community's page now shows similar communities based on shared tags, and Discover surfaces communities people you're connected to have already joined. Owners and mods can also suggest a tag that isn't on the list yet, an admin reviews it from there.",
+    "A community's page now shows similar communities by shared tags, and Discover surfaces communities your connections have joined. The people who run a community can suggest new tags.",
 
   "changelog.entries.community-tags.title": "Communities can now add tags",
   "changelog.entries.community-tags.body":
-    "Owners and mods can pick up to 8 tags for their community from a curated list, things like Trans & Nonbinary, Peer Support, Book Club, Housing & Roommates. They show as pills on every community card, and Discover now has a tags filter so you can find communities by what they're actually about.",
+    "The people who run a community can pick up to 8 tags from a curated list. They show on every community card, and Discover has a tags filter.",
 
   "changelog.entries.account-menu-install-app.title":
     "Install the app from your account menu",
   "changelog.entries.account-menu-install-app.body":
-    "On a phone, your account menu now has an \"Install the app\" row right under Getting started. It opens a quick modal with steps for your device. On Android, tap once and the browser's real install prompt shows up; on iPhone, it walks you through adding QueerPulse to your home screen from Safari. Already installed? The row just doesn't show up.",
+    'On a phone, your account menu has an "Install the app" row with steps for your device, and it hides once the app is installed.',
 
   "changelog.entries.member-directory-filter-crossfade.title":
     "Smoother filtering in the member directory",
   "changelog.entries.member-directory-filter-crossfade.body":
-    "Changing a filter in the member directory used to make the results pop in and out abruptly. Now the grid gently cross-fades: the old results fade out for a beat while the new matches settle in, then the cards ease back in together. It respects reduced-motion settings and swaps instantly for anyone who prefers less movement.",
+    "Change a filter in the member directory and the grid now cross-fades gently between results. If you prefer less movement, results swap instantly.",
 
   "changelog.entries.excerpt-line-editor-reorder.title":
     "A cleaner way to write and reorder page lines",
   "changelog.entries.excerpt-line-editor-reorder.body":
-    "The list editor for things like excerpt lines on your page now matches the poem editor: each line sits on its own tidy row that fills the width, so no more cramped fields. Drag the handle to reorder, or use the up and down arrows, and remove a line with a single tap. The reorder handle works with touch, keyboard, and assistive tech.",
+    "List editors like your page's excerpt lines give each line a full-width row. Drag the handle or use the arrows to reorder, and remove one with a tap.",
 
   "changelog.entries.collaborator-member-picker.title":
     "Credit collaborators by searching for members",
   "changelog.entries.collaborator-member-picker.body":
-    "When you add collaborators to something on your persona, you no longer have to remember and type an exact handle. Just start typing a name or handle and pick the member from a searchable list, with their photo, so you credit the right person every time. Your picks show as neat tags, and you can remove any of them just as easily.",
+    "Adding collaborators on your persona now works by search: type a name or handle, pick the member from the list, and they show as a tag you can remove.",
 
   "changelog.entries.unified-searchable-select.title":
     "Dropdown menus you can type to search",
   "changelog.entries.unified-searchable-select.body":
-    "Across the platform, the little dropdown menus for choosing things, a category, a language, a neighbourhood, a role, now share one friendlier design. When a list is long you can just start typing to filter it down, then pick with the keyboard or a tap. Menus that let you choose several options show your picks as neat little tags. It looks and behaves the same everywhere, and reads clearly for screen readers.",
+    "Dropdowns for things like a category, a language or a neighbourhood now share one design. Start typing to filter a long list, and multi-choice menus show your picks as tags.",
 
   "changelog.entries.persona-date-month-picker.title":
     "Pick a month and year for your work, no more typing it out",
   "changelog.entries.persona-date-month-picker.body":
-    'When you add or edit an item on a persona page, poems, exhibitions, releases and the rest, the date field is now a proper month-and-year picker instead of a free-text box. Choose the month, and it shows up neatly as "July 2025" in your language. Dates you\'d already written by hand keep showing exactly as you left them.',
+    "Dates on persona items are now a month-and-year picker, showing up as “July 2025” in your language. Dates you typed by hand stay exactly as you left them.",
 
   "changelog.entries.unified-date-picker.title":
     "A new date picker across the app, friendlier and fully keyboard-accessible",
   "changelog.entries.unified-date-picker.body":
-    "A new date picker across the app: a friendlier, fully keyboard-accessible calendar for every date and time field. Pick a day with a click or the keyboard, type it straight in, or jump between months and years fast, and it reads clearly for screen readers.",
+    "Every date and time field now uses one calendar you can drive with the keyboard, type into directly, or jump through by month and year.",
 
   "changelog.entries.protect-your-work.title": "Protect your work",
   "changelog.entries.protect-your-work.body":
-    "Every published piece now shows a copyright and first-published line, you can download a dated authorship record to keep as proof, and your saved edits are kept as version history you can view and restore.",
+    "Published pieces now carry a copyright and first-published line, you can download a dated authorship record, and saved edits become version history you can restore.",
 
   "changelog.entries.verification-signals-bulk-keyboard.title":
     "Reviewers can spot duplicates, act in bulk, and fly through the queue",
   "changelog.entries.verification-signals-bulk-keyboard.body":
-    "Verification requests now carry real signals: how old the account is, any past rejections, and a flag when a provider reference or phone number turns up on more than one account, so a reviewer has context before deciding. Reviewers can select several requests at once to approve, reject, or mark them in review together, and move through the queue by keyboard: J and K to navigate, A to approve, R to reject, and / to search, with the next request opening on its own after a decision.",
+    "Verification requests now show account age, past rejections, and a flag when a phone number or reference appears on two accounts. Reviewers can act on several at once.",
 
   "changelog.entries.verification-request-review.title":
     "Request verification, and see where it stands",
   "changelog.entries.verification-request-review.body":
-    "Send a request for email, phone, or ID verification whenever you need one, with a short note if it helps someone recognise you. From there you can watch it move: submitted, in review, approved, or needs another step, and appeal a decision if something doesn't feel right. On the review side, moderators work through a real queue with your note and history alongside each request, so every decision has a reason behind it.",
+    "You can request email, phone or ID verification with a short note, then watch it move from submitted to in review to a decision, and appeal if it feels wrong.",
 
   "changelog.entries.verification-audit-trail.title":
     "You'll know when your verification status changes",
   "changelog.entries.verification-audit-trail.body":
-    "Every time an admin updates your verification level, whether it's raised, lowered, or overridden, you now get notified with the reason why. Behind the scenes, the admin console keeps a full history of every decision: who made it, when, and why, plus whether a level was earned automatically or granted by an admin, so nothing changes without a paper trail.",
+    "When an admin changes your verification level you now get a notification with the reason, and the admin console keeps a full record of who decided what and when.",
 
   "changelog.entries.community-safety-enforcement.title":
     "Community safety settings that actually do something",
   "changelog.entries.community-safety-enforcement.body":
-    "The two community safety settings now actually take effect. When a community requires a second vouch to join, someone is only let in once a current member has vouched for them. And when auto-freeze is on, the community pauses itself the moment a serious report (like doxxing) lands or reports pile up, blocking new posts and joins and showing a clear banner, until a moderator lifts the pause once they've handled it.",
+    "Both community safety settings now take effect: a second vouch is required before someone joins, and auto-freeze pauses posts and joins when a serious report lands.",
 
   "changelog.entries.community-settings-persist.title":
     "Community settings that actually save",
   "changelog.entries.community-settings-persist.body":
-    "In the admin community view, the Settings button now opens the full settings panel where you can edit a community's name, description, membership mode and rules. And on the community's own Settings tab, the two safety toggles, requiring a second vouch to join and auto-freezing on a report, now save for real and stay put after a reload, instead of only flashing a message.",
+    "The admin Settings button now opens the full panel for a community's name, description, membership mode and rules, and the two safety toggles save and stay saved after a reload.",
 
   "changelog.entries.community-health-explainer.title":
     "See exactly how a community's health score is worked out",
   "changelog.entries.community-health-explainer.body":
-    "The health-score explainer now has a \"How it's calculated\" view. It lays out the four signals and how much each one counts, walks through how that community's own numbers add up to its published score, explains why smaller communities are judged more gently, and shows the score bands so you can see where a community sits. Sentiment is shown as not counted yet, because nothing on the platform measures it so far.",
+    "The health-score explainer has a new \"How it's calculated\" view: the four signals and their weights, that community's own numbers, and the score bands.",
 
   "changelog.entries.modals-cover-full-screen.title":
     "Pop-up dialogs now dim the whole screen",
   "changelog.entries.modals-cover-full-screen.body":
-    "When a dialog opens (a health-score explainer, an invite, a resource, a print order and more) its dimmed backdrop now covers the entire screen and sits centred, instead of being boxed inside part of the page on certain layouts. The dialogs always worked, they just were not always framed against the full window.",
+    "A dialog's dimmed backdrop now covers the whole window and sits centred, on every layout.",
 
   "changelog.entries.inbox-menu-dropdown-visibility.title":
     "The chat actions menu now shows up properly",
   "changelog.entries.inbox-menu-dropdown-visibility.body":
-    "Opening the “⋯” menu on a conversation in your inbox now shows its Pin, Favourite and Delete options on top, instead of them hiding behind the chat below. The menu was always working, it just was not always visible.",
+    "The actions menu on an inbox conversation now opens above the chat below it, so Pin, Favourite and Delete are visible.",
 
   "changelog.entries.member-directory-filters-fix.title":
     "Member directory filters now actually filter",
   "changelog.entries.member-directory-filters-fix.body":
-    "Most of the filters in Find members (Open to, Where they're based, What they do, Profession, Member age, Languages) were only changing what was checked on screen, not what showed up. They now search the real directory, and you can set your own field, profession and languages in Settings so others can find you by them.",
+    "Open to, Where they're based, What they do, Profession, Member age and Languages now search the real directory. Set your own field, profession and languages in Settings so people can find you.",
 
   "changelog.entries.directory-ownership-claims.title":
     "Real ownership for the local directory",
   "changelog.entries.directory-ownership-claims.body":
-    "The “verified queer-owned” badge on local directory listings now reflects a moderator's actual confirmation. If a business you run is already listed by someone else, you can request to claim it, with a moderator reviewing before anything changes.",
+    "The “verified queer-owned” badge on a local listing now means a moderator confirmed it, and you can request to claim a listing for a business you run.",
 
   "changelog.entries.session-expired-toast-fix.title":
     "Fixed a false “session expired” message",
   "changelog.entries.session-expired-toast-fix.body":
-    "Some pages were telling people their session expired even when they'd never signed in. That message only appears now if you actually had a session that ran out.",
+    "That message now appears only when you actually had a session that ran out.",
 
   "changelog.entries.join-request-form-fix.title":
     "Cleaned up the community join request form",
   "changelog.entries.join-request-form-fix.body":
-    "Requesting to join a community used to ask for your email again, even though you're already signed in, and never actually sent it anywhere. That field is gone, and the “how involved would you like to be” question now shares a step with the note you leave for the mods, instead of asking twice.",
+    "The email field is gone from the join request form, and “how involved would you like to be” now shares a step with the note you leave for the moderators.",
 
   "changelog.entries.community-pulse-and-insights.title":
     "Communities now show their real events, discussions, and volunteer opportunities",
   "changelog.entries.community-pulse-and-insights.body":
-    "A community's Events tab now shows its real upcoming gatherings instead of always being empty, and the sidebar surfaces recent discussion threads and open volunteer opportunities filed to that community. Owners and mods also get a new insights panel on membership growth and post activity.",
+    "A community's Events tab now lists its real upcoming gatherings, and the sidebar shows recent discussions and open volunteer opportunities. Owners and mods get a new insights panel on growth and posts.",
 
   "changelog.entries.onboarding-identity-and-notifications.title":
     "Onboarding now asks for pronouns and notification preferences",
   "changelog.entries.onboarding-identity-and-notifications.body":
-    "The setup wizard now has a spot for your pronouns and a short bio, and a moment to turn on notifications if you want them. Both are optional. The final step also points you to Getting Started, so the rest of your setup is easy to find.",
+    "Setup now has optional steps for your pronouns and a short bio, and for turning on notifications. The last step points you to Getting Started.",
 
   "changelog.entries.getting-started-vouch-fix.title":
     "Fixed the “vouch for someone” checklist step",
   "changelog.entries.getting-started-vouch-fix.body":
-    "It was marking itself done the moment you joined through a personal invite, since being vouched for and vouching for someone else were being counted as the same thing. It now only completes once you've actually vouched for someone.",
+    "The step now completes only once you have vouched for someone. Being vouched for through a personal invite was ticking it off by mistake.",
 
   "changelog.entries.admin-invite-quota-controls.title":
     "Admins can set invite quotas per member",
   "changelog.entries.admin-invite-quota-controls.body":
-    "The invite oversight page now lets admins raise or lower how many invites a specific member can send each month, instead of that only being possible with direct database access.",
+    "The invite oversight page lets admins raise or lower how many invites a specific member can send each month.",
 
   "changelog.entries.invite-approval-email.title":
     "Invite approvals now send themselves",
   "changelog.entries.invite-approval-email.body":
-    "Approving a join request emails the applicant their invite link right away. Reviewers can still copy the link by hand as a backup, but sending it is no longer something they have to remember to do.",
+    "Approving a join request emails the applicant their invite link right away. Reviewers can still copy the link by hand as a backup.",
 
   "changelog.entries.join-request-mutual-member-field.title":
     "Naming a member who can vouch for you is now a real match",
   "changelog.entries.join-request-mutual-member-field.body":
-    "The request-invite form's “member who can vouch for you” field used to get folded into your message as plain text. It's now sent as its own field, so a reviewer can match it directly instead of reading the whole message to find it.",
+    "The “member who can vouch for you” field is now sent as its own field, so a reviewer can match it directly.",
 
   "changelog.entries.post-opportunity-team-picker.title":
     "Posting an opportunity now fills in your own details",
   "changelog.entries.post-opportunity-team-picker.body":
-    "The Team & contact step now fills in your own contact handle, and your partner slug too if you steward a community. Team members come from a picker of your connections and communities.",
+    "The Team and contact step fills in your contact handle, plus your partner slug if you help run a community, and team members come from a picker of your connections and communities.",
 
   "changelog.entries.side-quests-getting-started.title":
     "Side quests once you're all set",
   "changelog.entries.side-quests-getting-started.body":
-    "Finishing the getting-started checklist used to be a dead end. Now it opens onto side quests: the badges you haven't earned yet, each with a button straight to where you'd go to work on it, plus any perk you've unlocked but haven't claimed. Four new badges came with it, for exploring the Local directory, saving articles, joining a second community, and filling out your Work Profile.",
+    "Finishing the getting-started checklist now opens side quests: the badges you have left, each with a button to where you earn it, plus any unclaimed perk. Four new badges came with it.",
 
   // Corrected on 26 Aug 2026. This entry described a send that no code path
   // ever performed. It was wrong on the day it was published.
   "changelog.entries.join-request-invite-email.title":
     "Correction: approved applicants were never emailed an invite",
   "changelog.entries.join-request-invite-email.body":
-    "This entry claimed approval sent the invite link straight to the applicant. No code ever did that, and QueerPulse sends no email at all, so the entry was wrong the day it was written. What is true: approving a join request mints the invite link in the review queue, and a reviewer passes it on themselves. We have corrected the entry rather than quietly removing it.",
+    "QueerPulse sends no email, so approval never mailed anyone. What happens: approving a join request mints the invite link in the review queue, and a reviewer passes it on.",
   "changelog.entries.article-editor-header-and-send-on.title":
     "Article editor header fixed, and Send on now works",
   "changelog.entries.article-editor-header-and-send-on.body":
-    'The article editor\'s toolbar was sticking 76px below the top of the screen instead of right at it, so scrolled text showed through above and below it. It now sits flush against the top. "Send on" also used to just show a toast, and now actually moves the piece to its next editorial stage.',
+    "The article editor's toolbar now sits flush against the top of the screen, and “Send on” moves the piece to its next editorial stage.",
   "changelog.entries.gathering-rsvp-fix.title":
     "RSVP buttons now confirm your spot",
   "changelog.entries.gathering-rsvp-fix.body":
-    "Tapping \"I'm going\" on a gathering's page wasn't visibly doing anything. It now confirms right away, with a toast and a Cancel RSVP option in the same spot.",
+    "“I'm going” on a gathering now confirms right away, with a toast and a Cancel RSVP option in the same spot.",
   "changelog.entries.add-to-calendar-modal.title":
     "Add gatherings to your calendar",
   "changelog.entries.add-to-calendar-modal.body":
-    '"Add to calendar" on a gathering you\'re going to or hosting now opens a picker for Google Calendar or a downloadable .ics file that works with Apple Calendar, Outlook, and most other calendar apps.',
+    "“Add to calendar” now opens a picker for Google Calendar or a .ics file that works with Apple Calendar, Outlook and most other apps.",
   "changelog.entries.recognition-xp.title": "Earn XP, levels, and badges",
   "changelog.entries.recognition-xp.body":
-    "Your activity now earns experience toward levels and badges. Finishing your getting started checklist, joining communities, attending gatherings, and connecting with members all move you up. Track your progress on the Badges page.",
+    "Your activity now earns experience toward levels and badges: finishing your checklist, joining communities, attending gatherings, connecting with members. Track it on the Badges page.",
 
   "changelog.entries.governance-editable-finances.title":
     "Editable finance figures, with a note on where each number comes from",
   "changelog.entries.governance-editable-finances.body":
-    "Admins can now correct the figures on the governance Finances tab instead of them being fixed. Every number carries a small tag showing where it comes from: an unverified placeholder, a value an admin entered, or one that is calculated (like the surplus). Corrections are recorded, so it is always clear who changed what and when.",
+    "Admins can correct the figures on the governance Finances tab, and each number is tagged by origin: a placeholder, an admin entry, or a calculated value.",
 
   "changelog.entries.push-devices-list.title":
     "See and remove every device getting your push notifications",
   "changelog.entries.push-devices-list.body":
-    "Settings now has a Devices list under Notifications: every device registered for QueerPulse push, when it was registered, and when it was last notified. Lost a phone, or don't recognise one? Remove it right from there.",
+    "Settings has a new Devices list under Notifications: every device registered for push, when it registered, and when it was last notified. Remove any you do not recognise.",
 
   "changelog.entries.admin-sitewide-announcement.title":
     "Admins can post a sitewide announcement banner",
   "changelog.entries.admin-sitewide-announcement.body":
-    "The only platform-wide messaging tool was the lockdown banner, admin-facing only. Admins can now write a real announcement banner that shows to every visitor, signed in or not, with an optional auto-expiry so a scheduled-maintenance notice doesn't have to be remembered and manually turned off. Each member can dismiss it individually; editing the message brings it back for anyone who already dismissed the old one.",
+    "Admins can post an announcement banner that every visitor sees, signed in or signed out, with optional auto-expiry. Each member can dismiss it, and editing the message brings it back.",
 
   "changelog.entries.admin-reports-page.title":
     "New consolidated admin Reports page",
   "changelog.entries.admin-reports-page.body":
-    "Growth, moderation-report volume, community health, and governance finance figures used to live scattered across different admin pages, with no way to adjust the time window or export the numbers. A new Reports page pulls them into one place, with a real adjustable date range (4/8/12/26 weeks) and CSV export for growth and report volume.",
+    "A new Reports page gathers growth, report volume, community health and governance finances in one place, with an adjustable date range (4, 8, 12 or 26 weeks) and CSV export.",
 
   "changelog.entries.magazine-sections-browse.title":
     "Browse the magazine by section",
   "changelog.entries.magazine-sections-browse.body":
-    "Every article and issue already carried a real editorial section (Features, Interview, Essays, and the rest). Now there's a Sections page that groups everything by it, instead of leaving you to stumble onto a topic through search.",
+    "A new Sections page groups every article and issue by its editorial section: Features, Interview, Essays and the rest.",
 
   // Corrected on 26 Aug 2026. This entry announced a real send that never
   // reached anybody; the correction stays in place of a deletion so the record
@@ -3522,2006 +3568,2006 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-digest-real-send.title":
     "Correction: issue digests never really sent",
   "changelog.entries.magazine-digest-real-send.body":
-    "This entry first said the magazine desk could email a test digest to the editor who clicked, and queue the digest to go out with the issue. Neither ever reached you. QueerPulse sends no email, and the mailer that briefly made it look possible was removed on 26 August 2026. The desk still assembles an issue's digest; nothing leaves for an inbox. We have corrected the entry rather than deleting it, because deleting it would hide what you were told.",
+    "QueerPulse sends no email, so no test or issue digest ever reached an inbox. The desk still assembles an issue's digest.",
 
   "changelog.entries.magazine-deck-convert-to-article.title":
     "Decks can convert into articles",
   "changelog.entries.magazine-deck-convert-to-article.body":
-    "The desk's deck editor can now turn a finished deck into a real article, carrying over its text, images, and stat slides. Interactive slides have no article equivalent, so those are called out honestly rather than silently dropped.",
+    "The deck editor can turn a finished deck into an article, carrying over text, images and stat slides. Interactive slides have no article equivalent, so they are flagged for you.",
 
   "changelog.entries.magazine-writer-read-brief.title":
     "Writers can read their actual assignment brief",
   "changelog.entries.magazine-writer-read-brief.body":
-    '"Read the brief" used to be a placeholder toast. It now opens the real brief for the piece, including the angle, what to include, what to avoid, the rate, and who commissioned it.',
+    "“Read the brief” now opens the real brief for your piece: the angle, what to include, what to avoid, the rate, and who commissioned it.",
 
   "changelog.entries.admin-trust-network-cite-evidence.title":
     "Admins can cite evidence from the trust network graph",
   "changelog.entries.admin-trust-network-cite-evidence.body":
-    "The graph inspector's \"Cite\" button used to fire a success toast and do nothing else. It now writes a real note to the member's audit trail describing the vouch relationship being cited, visible the next time an admin reviews that member.",
+    "The graph inspector's “Cite” button now writes a real note to the member's audit trail describing the vouch relationship, ready for the next admin review.",
 
   "changelog.entries.admin-trust-network-ring-detection.title":
     "Trust network ring detection is now a real graph analysis",
   "changelog.entries.admin-trust-network-ring-detection.body":
-    'Flagging a "vouch ring" used to just mean an account was suspended, frozen, or carrying two or more open reports, a much broader signal than an actual closed loop. The graph now detects real clusters of new accounts vouching only for each other, with no outside vouch to back them up.',
+    "A “vouch ring” flag now comes from real graph analysis: clusters of new accounts vouching only for each other, with no vouch from outside.",
 
   "changelog.entries.admin-reporter-credibility.title":
     "Moderation queue now shows reporter history alongside reported-party history",
   "changelog.entries.admin-reporter-credibility.body":
-    "The report queue always showed how many prior reports the reported member has. It now shows the same signal for the reporter: how many reports they've filed and how many were dismissed, so a moderator can weigh both sides.",
+    "The report queue now shows the reporter's history too: how many reports they have filed and how many were dismissed, alongside the reported member's.",
 
   "changelog.entries.admin-housing-moderator-role.title":
     "New Housing-only moderator staff role",
   "changelog.entries.admin-housing-moderator-role.body":
-    "Staff roles used to only cover the magazine desk. A member can now be granted a Housing moderator role that lets them moderate Housing listings and groups without handing them the full platform Moderator tier.",
+    "A member can now be given a Housing moderator role, covering Housing listings and groups without the full platform Moderator tier.",
 
   "changelog.entries.gatherings-manage-attendees-remove-promote.title":
     "Hosts can now remove a guest or promote from the waitlist",
   "changelog.entries.gatherings-manage-attendees-remove-promote.body":
-    "The Attendees tab's Remove and Promote buttons now actually do something: removing a guest frees their spot for the waitlist, and promoting pulls a specific waitlisted guest onto the list, out of turn if you want.",
+    "On the Attendees tab, removing a guest frees their spot for the waitlist, and Promote pulls a specific waitlisted guest onto the list, out of turn if you want.",
 
   "changelog.entries.myevents-calendar-feed-subscribe.title":
     "Subscribe to your events in Google or Apple Calendar",
   "changelog.entries.myevents-calendar-feed-subscribe.body":
-    '"Subscribe to your feed" in My Events now copies a real, private feed link. Add it to Google or Apple Calendar and it keeps itself up to date with everything you\'re going to.',
+    "“Subscribe to your feed” in My Events copies a private feed link. Add it to Google or Apple Calendar and it keeps itself up to date.",
 
   "changelog.entries.gatherings-recap-more-from-host.title":
     "Recaps now point you to more from the same host",
   "changelog.entries.gatherings-recap-more-from-host.body":
-    "A gathering's recap page now shows a few other upcoming gatherings from the same host, so a good night doesn't end without a way to book the next one.",
+    "A recap page now shows a few other upcoming gatherings from the same host, so you can book the next one from there.",
 
   "changelog.entries.myevents-rsvp-actions-real.title":
     "My Events actions now actually update your RSVP",
   "changelog.entries.myevents-rsvp-actions-real.body":
-    "Marking yourself maybe or going, accepting or declining an invite, saying you can't make it, and leaving a waitlist all now write to your real RSVP instead of just changing what the card shows you.",
+    "Marking yourself maybe or going, accepting or declining an invite, and leaving a waitlist now write to your real RSVP.",
 
   "changelog.entries.myevents-block-host-real.title":
     '"Block the host" from My Events now really blocks them',
   "changelog.entries.myevents-block-host-real.body":
-    "The block option in an event card's overflow menu now uses the same block as everywhere else on QueerPulse, instead of just showing a confirmation toast.",
+    "The block option in an event card's menu now uses the same block as everywhere else on QueerPulse.",
 
   "changelog.entries.myevents-reminder-indicator-honest.title":
     "The reminder bell on event cards is now a status, not a toggle",
   "changelog.entries.myevents-reminder-indicator-honest.body":
-    "Reminders are sent to everyone going or maybe-going, based on your reminder-lead setting in Preferences, not per event. The bell on a card now shows that plainly instead of looking like a per-event switch it never was.",
+    "The bell now reads as a status. Reminders go to everyone going or maybe going, timed by your reminder-lead setting in Preferences.",
 
   "changelog.entries.gatherings-edit-date-time-fix.title":
     "Editing a gathering's date and time now actually reschedules it",
   "changelog.entries.gatherings-edit-date-time-fix.body":
-    'The manage dashboard\'s "Edit details" date field used to save a label, not a real date. It now reschedules the gathering for real, and everyone with an RSVP gets notified of the change.',
+    "The date field in Edit details now saves a real date and reschedules the gathering. Everyone with an RSVP gets notified of the change.",
 
   "changelog.entries.gatherings-cancelled-page-real-content.title":
     "A cancelled gathering's page now shows the real gathering",
   "changelog.entries.gatherings-cancelled-page-real-content.body":
-    "Opening a cancellation notice used to always show the same fictional example gathering. It now shows the actual gathering that was cancelled: its real title, date, host, and venue.",
+    "A cancellation notice now carries the real title, date, host and venue of the gathering that was called off.",
 
   "changelog.entries.gatherings-cohost-roster-visible.title":
     "Hosts can now see who's already co-hosting",
   "changelog.entries.gatherings-cohost-roster-visible.body":
-    "The manage dashboard's cohost panel used to always start empty, even for gatherings with cohosts already on board. It now shows the real roster.",
+    "The cohost panel in the manage dashboard now lists the people already cohosting your gathering.",
 
   "changelog.entries.gatherings-remove-pricing-step.title":
     "Removed the pricing step from creating a gathering",
   "changelog.entries.gatherings-remove-pricing-step.body":
-    "QueerPulse doesn't handle payments, so the wizard's ticket-pricing step never did anything with what you typed into it. It's gone now rather than sitting there looking functional.",
+    "QueerPulse handles no payments, so the ticket-pricing step is gone from the create wizard.",
 
   "changelog.entries.messages-message-requests.title":
     "Message someone new, right from your inbox",
   "changelog.entries.messages-message-requests.body":
-    "Not connected with someone yet? Search for them from New Message and send a first message. It becomes a request they can accept or decline, and any requests waiting for you now show up under a new Requests tab.",
+    "Search for anyone from New Message and send a first message. It arrives as a request they can accept or decline, and requests waiting for you sit in a new Requests tab.",
 
   "changelog.entries.messages-mute-conversation.title":
     "Mute a chat's notifications",
   "changelog.entries.messages-mute-conversation.body":
-    "Every chat's options menu now has Mute, alongside Pin and Favorite. A muted chat stops sending you push notifications while staying exactly where it is in your inbox.",
+    "Every chat's options menu now has Mute, alongside Pin and Favorite. A muted chat stays where it is in your inbox and stops sending push notifications.",
 
   "changelog.entries.messages-search-in-chat.title":
     "Search inside a single conversation",
   "changelog.entries.messages-search-in-chat.body":
-    "Open a chat and tap the search icon to look through just that conversation, instead of your whole inbox.",
+    "Open a chat and tap the search icon to search that conversation on its own.",
 
   "changelog.entries.governance-proposals-voting.title":
     "Governance decisions now go to a real community vote",
   "changelog.entries.governance-proposals-voting.body":
-    "Removing an advisory-council seat needs a two-thirds vote, and accepting funding outside our usual sources needs a majority. Open proposals show a live tally on the Governance page, and every past one stays visible with its result.",
+    "Removing an advisory-council seat needs a two-thirds vote, outside funding a majority. Open proposals show a live tally on the Governance page, and past ones keep their result.",
 
   "changelog.entries.governance-figures-honesty.title":
     "Governance's active-member count is now live",
   "changelog.entries.governance-figures-honesty.body":
-    "The active-member figure on the Governance page is now calculated straight from real accounts instead of typed in by hand. The finance figures stay reported by the team each quarter, and the page now says so plainly instead of implying they're computed automatically.",
+    "The active-member figure on the Governance page is now counted from real accounts. The page also states plainly that the team reports the finance figures each quarter.",
 
   "changelog.entries.communities-sister-demo-only.title":
     "Sister-community suggestions stay in demo mode",
   "changelog.entries.communities-sister-demo-only.body":
-    '"Sister communities" and "also in" suggestions were rendering from sample data on real community pages too. They now only show up when you\'re looking at the demo.',
+    'Sister-community and "also in" suggestions run on sample data, so they now appear only in the demo.',
 
   "changelog.entries.communities-category-filter.title":
     "Community category filters work past the first page",
   "changelog.entries.communities-category-filter.body":
-    'Filtering communities by category now asks the server for a real match instead of only filtering whatever had already loaded, so it stops wrongly saying "no communities match" once you scroll past page one.',
+    "Category filtering now asks the server for matches, so it keeps working once you scroll past the first page.",
 
   "changelog.entries.communities-archive-reversible.title":
     "Archived communities can be brought back",
   "changelog.entries.communities-archive-reversible.body":
-    "Admins can now unarchive a community, the same way freezing a community already had an unfreeze. Archiving one by mistake no longer has to be permanent.",
+    "Admins can now unarchive a community, so archiving one by mistake is reversible.",
 
   "changelog.entries.changemakers-nomination-reason.title":
     "Changemaker nominations now ask for the sentence they promise",
   "changelog.entries.changemakers-nomination-reason.body":
-    'The nomination form always said "a name and a sentence is enough," but only asked for a name. It now has a real field for your sentence, and reviewers can read what you wrote.',
+    "The nomination form now has a real field for your sentence about the person, and reviewers can read what you wrote.",
 
   "changelog.entries.changemakers-nomination-review.title":
     "Changemaker nominations get a real answer",
   "changelog.entries.changemakers-nomination-review.body":
-    "Admins can now approve or dismiss a nomination, and you'll be notified of the decision instead of hearing nothing back after submitting one.",
+    "Admins can approve or dismiss a nomination, and you get notified of the decision.",
 
   "changelog.entries.changemakers-connect-honest.title":
     'A Changemaker profile\'s "Connect" button is honest about what it does',
   "changelog.entries.changemakers-connect-honest.body":
-    'Changemaker profiles are editorial features, not linked member accounts, so "Connect" could never actually message that person. It now routes you to our general contact channel and says so.',
+    "Changemaker profiles are editorial features with no member account behind them, so Connect now routes you to our general contact channel and says so.",
 
   "changelog.entries.moderation-assign-to-me.title":
     "Moderators can claim reports in the queue",
   "changelog.entries.moderation-assign-to-me.body":
-    'The "Assigned to me" filter in the moderation queue used to always come back empty. Moderators can now claim or release a report from the report drawer, and the filter reflects real claims.',
+    'Moderators can claim or release a report from the report drawer, and the "Assigned to me" filter now reflects real claims.',
 
   "changelog.entries.moderation-report-history-link.title":
     "See a member's full report history from the queue",
   "changelog.entries.moderation-report-history-link.body":
-    'The "prior reports" count on a report used to be just a number. It\'s now a link straight to every other report about that same person.',
+    'The "prior reports" count on a report is now a link to every other report about that person.',
 
   "changelog.entries.moderation-resolution-detail.title":
     "Resolved reports show what actually happened",
   "changelog.entries.moderation-resolution-detail.body":
-    'Resolved reports now show who resolved them, what they decided, and when, instead of a generic placeholder. "Closed X ago" reflects the real resolution time now, not when the report was filed.',
+    'Resolved reports now show who resolved them, what they decided, and when. "Closed X ago" counts from the resolution time.',
 
   "changelog.entries.moderation-sla-overdue.title":
     "Overdue reports are flagged in the queue",
   "changelog.entries.moderation-sla-overdue.body":
-    "Reports already had a computed response deadline behind the scenes. It's now visible, with an overdue badge once a report passes it.",
+    "Each report's response deadline is now visible in the queue, with an overdue badge once it passes.",
 
   "changelog.entries.moderation-bulk-actions-expanded.title":
     "Bulk moderation now covers warn, suspend, and ban",
   "changelog.entries.moderation-bulk-actions-expanded.body":
-    "The bulk action bar used to only handle dismiss, spam, and reassign. It now also handles warn, suspend (with a duration picker), and ban, so a wave of coordinated reports doesn't have to be handled one at a time.",
+    "The bulk action bar now also handles warn, suspend with a duration picker, and ban, so a wave of coordinated reports can be cleared in one pass.",
 
   "changelog.entries.moderation-appeal-integrity.title":
     "Appeal reviews show the real evidence, and can't be self-reviewed",
   "changelog.entries.moderation-appeal-integrity.body":
-    "Reviewing an appeal now shows the original reported content, not just the moderator's own summary of why they acted. A moderator can no longer review the appeal of their own original decision.",
+    "An appeal review now shows the original reported content alongside the moderator's summary, and the moderator who decided a case is blocked from reviewing its appeal.",
 
   "changelog.entries.forum-write-rate-limit.title":
     "Forum posting gets its own rate limit",
   "changelog.entries.forum-write-rate-limit.body":
-    "Creating threads, replies, and votes now has its own dedicated abuse guard, matching the protection communities already had, instead of relying on the site-wide default.",
+    "Threads, replies and votes now have their own abuse guard, matching the protection communities already had.",
 
   "changelog.entries.forum-first-post-accuracy.title":
     'The "first post" prompt checks your real history',
   "changelog.entries.forum-first-post-accuracy.body":
-    "The forum's invitation to make your first post used to only track the current browsing session, so it wrongly greeted repeat posters as brand new. It now checks whether you've actually ever posted.",
+    "The invitation to make your first forum post now checks whether you have ever posted, so it stops greeting regulars as newcomers.",
 
   "changelog.entries.forum-lock-reason.title": "Locked threads can say why",
   "changelog.entries.forum-lock-reason.body":
-    "When a moderator locks a thread, they can now add a short reason, and it shows in the locked banner instead of every locked thread reading identically.",
+    "A moderator can add a short reason when locking a thread, and it shows in the locked banner.",
 
   "changelog.entries.forum-shareable-filters.title":
     "Forum category and sort survive a refresh",
   "changelog.entries.forum-shareable-filters.body":
-    'Picking a category or sort tab on the forum now updates the page\'s link, so refreshing or sharing it keeps your view instead of silently resetting to "All."',
+    "Picking a category or sort tab now updates the page link, so a refresh or a shared link keeps your view.",
 
   "changelog.entries.forum-search-hint.title":
     "Forum search now says what it searches",
   "changelog.entries.forum-search-hint.body":
-    "A small hint under the forum search box now clarifies it matches thread titles, not the text of posts and replies.",
+    "A short hint under the forum search box now explains that it matches thread titles.",
 
   "changelog.entries.forum-most-helpful-real.title":
     '"Most helpful" sort reflects real votes',
   "changelog.entries.forum-most-helpful-real.body":
-    'Sorting replies by "most helpful" now uses real upvotes, and the top-voted reply gets the star badge, instead of only working in the demo.',
+    'Sorting replies by "most helpful" now uses real upvotes everywhere, and the top-voted reply carries the star badge.',
 
   "changelog.entries.recognition-locked-badges-honest.title":
     "The badge case only shows badges you can actually earn",
   "changelog.entries.recognition-locked-badges-honest.body":
-    "A few badges were listed as \"locked\" with earning instructions that led nowhere. They're no longer shown until there's a real way to earn them.",
+    "The badge case now lists only badges with a real way to earn them. A few locked ones led nowhere, and they stay hidden until that changes.",
 
   "changelog.entries.recognition-vouch-perk-copy.title":
     '"Vouch access" perk description matches reality',
   "changelog.entries.recognition-vouch-perk-copy.body":
-    "The perk case said vouch access unlocked at Level 3. Vouching has never actually had a level requirement, so the description now says what's true: it's available to every active member from the start.",
+    "Vouching has never had a level requirement, so the perk case now says what is true: every active member can vouch from the start.",
 
   "changelog.entries.recognition-visible-on-profiles.title":
     "See other members' level and badges",
   "changelog.entries.recognition-visible-on-profiles.body":
-    "Level and badges used to only ever show on your own profile. They now show on other members' profiles too, so recognition works as a visible signal between members.",
+    "Level and badges now show on other members' profiles too, so recognition reads as a visible signal between members.",
 
   "changelog.entries.vouch-daily-cap.title":
     "A daily cap on vouches, to keep the signal meaningful",
   "changelog.entries.vouch-daily-cap.body":
-    "Vouching for people already had a short cooldown between vouches. There's now also a generous daily cap, so the signal stays meaningful even over time.",
+    "Alongside the cooldown between vouches, there is now a generous daily cap, so the signal keeps its weight over time.",
 
   "changelog.entries.magazine-article-publish-schedule.title":
     "Publish and schedule articles for real",
   "changelog.entries.magazine-article-publish-schedule.body":
-    "The article editor's Publish and Schedule controls used to be decorative. They now actually publish your article, right away or at a future date and time you choose, and articles that aren't tied to an issue can finally go live without waiting on issue production.",
+    "Publish and Schedule in the article editor now work: your piece goes live at once or at a time you pick, with or without an issue attached.",
 
   "changelog.entries.magazine-writer-draft-paste-fix.title":
     'Pasting a draft into "File a draft" no longer loses it',
   "changelog.entries.magazine-writer-draft-paste-fix.body":
-    "Pasting your draft text when filing a piece used to vanish the moment you confirmed. It now flows straight into the article editor as real paragraphs, ready to keep shaping.",
+    "Draft text you paste when filing a piece now flows into the article editor as real paragraphs, ready to keep shaping.",
 
   "changelog.entries.magazine-live-discovery.title":
     "The magazine now has somewhere to browse",
   "changelog.entries.magazine-live-discovery.body":
-    "Readers could only reach an article through a direct link before. The magazine front, issue archive, and author pages are now backed by real data, and issue links open the actual issue instead of always the current one. There's also a new authors directory to browse everyone writing for the magazine.",
+    "The magazine front, issue archive and author pages now run on real data, and a new authors directory lists everyone writing for the magazine.",
 
   "changelog.entries.culture-submissions-real.title":
     "Club, Showcase, and Radio submissions are now real",
   "changelog.entries.culture-submissions-real.body":
-    "Suggesting a pick, posting a commission project, submitting showcase work, or sending in a playlist used to show a success message and go nowhere. Every one of these now saves for real.",
+    "Suggesting a pick, posting a commission project, submitting showcase work and sending in a playlist now save for real.",
 
   "changelog.entries.culture-radio-honest.title":
     "Radio's controls tell the truth",
   "changelog.entries.culture-radio-honest.body":
-    "The Radio panel's play and skip controls used to pretend to work. They're now honest about what's actually live, and \"Become a curator\" opens the real playlist-submission form.",
+    'The Radio panel\'s play and skip controls now reflect what is actually live, and "Become a curator" opens the real playlist-submission form.',
 
   "changelog.entries.newsletter-unsubscribe.title":
     "Unsubscribe from the newsletter yourself",
   // Body corrected on 26 Aug 2026: the original implied a confirmation email.
   "changelog.entries.newsletter-unsubscribe.body":
-    "Signing up for the newsletter records your address, and there was no way to take it back off the list yourself. There's now a real unsubscribe link and page: open it with your unsubscribe token and the address comes off. QueerPulse sends no email, so nothing was arriving in the first place. This is about your address not sitting on a list you didn't want to be on.",
+    "There is now a real unsubscribe link and page: open it with your unsubscribe token and your address comes off the list.",
 
   "changelog.entries.resources-crisis-hotline-coverage.title":
     "Crisis hotlines now show on every crisis-adjacent resource page",
   "changelog.entries.resources-crisis-hotline-coverage.body":
-    "Legal, Trans Healthcare, Harm Reduction, Sexual Health, Safety and Mental Health all now surface the same crisis line strip Wellbeing already had, so help is one tap away wherever you land.",
+    "Legal, Trans Healthcare, Harm Reduction, Sexual Health, Safety and Mental Health now carry the same crisis line strip as Wellbeing, so help is one tap away.",
 
   "changelog.entries.resources-library-consolidated.title":
     "Resources home is now backed by real guide data",
   "changelog.entries.resources-library-consolidated.body":
-    "The Resources home page now shows the same backend-driven guides as the rest of the app, with freshness tracked per guide.",
+    "The Resources home page now shows the same real guides as the rest of the app, with freshness tracked per guide.",
 
   "changelog.entries.resources-guide-freshness.title":
     "Guides now show when they were last checked",
   "changelog.entries.resources-guide-freshness.body":
-    'Every guide card shows the date an editor last verified it, or an honest "not yet verified" when it hasn\'t been reviewed yet.',
+    'Every guide card shows the date an editor last verified it, or an honest "not yet verified".',
 
   "changelog.entries.resources-suggest-edit-expanded.title":
     "Suggest an edit, beyond the Glossary",
   "changelog.entries.resources-suggest-edit-expanded.body":
-    'The "suggest an edit" form used to work only on the Glossary. It now opens from Legal, Trans Healthcare, Harm Reduction, Mental Health and the guide library too.',
+    '"Suggest an edit" now opens from Legal, Trans Healthcare, Harm Reduction, Mental Health and the guide library, alongside the Glossary.',
 
   "changelog.entries.directory-review-reporting.title":
     "Report a single review in the local directory",
   "changelog.entries.directory-review-reporting.body":
-    "Every review on a business's page now has a Report action, so you can flag an abusive or fake review on its own instead of only being able to dispute the whole listing. A moderator reviews every report the same way as elsewhere on the platform.",
+    "Every review on a business page now has a Report action, so you can flag one abusive or fake review on its own. A moderator handles it like any other report.",
 
   "changelog.entries.directory-search-pagination.title":
     "Faster, more complete search in the local directory",
   "changelog.entries.directory-search-pagination.body":
-    "Searching the local directory now filters on our servers instead of quietly capping out after the first couple hundred places. Scroll to the end of the list and more load automatically, so a broad search or the full directory no longer stops short of the real count.",
+    "Directory search now filters on our servers and loads more places as you reach the end of the list, so a broad search reaches the real count.",
 
   "changelog.entries.directory-edit-suggestions-applied.title":
     "Accepted listing corrections now actually update the listing",
   "changelog.entries.directory-edit-suggestions-applied.body":
-    "When you suggest an edit to a business listing (wrong hours, address, phone, website, or description) and a moderator accepts it, the listing itself now updates and its owner is notified. Accepting used to do nothing you could see.",
+    "When a moderator accepts your correction to a business listing (hours, address, phone, website or description), the listing updates and its owner is notified.",
 
   "changelog.entries.housing-my-listings.title":
     "Manage the room or place you posted, from your own My Listings page",
   "changelog.entries.housing-my-listings.body":
-    "Housing listings now have a home of their own. Edit any listing you posted, mark it as filled once you've found someone, extend it before it expires, or take it down entirely. A listing also expires automatically after a couple of months if you never come back to update it, so the directory doesn't fill up with stale ones.",
+    "My Listings gathers the housing you posted: edit it, mark it filled, extend it, or take it down. A listing expires on its own after a couple of months without an update.",
 
   "changelog.entries.appeal-outcome-tracking.title":
     "Appeal outcomes now show your real status",
   "changelog.entries.appeal-outcome-tracking.body":
-    "The appeal outcome page used to show a demo toggle regardless of what actually happened to your appeal. It now shows your real appeal: upheld, overturned, or still awaiting review, pulled straight from the moderator's decision.",
+    "The appeal outcome page now shows your real status, straight from the moderator's decision: upheld, overturned, or awaiting review.",
 
   "changelog.entries.quickexit-more-pages.title":
     "Quick exit is available on more safety pages",
   "changelog.entries.quickexit-more-pages.body":
-    "The quick-exit button for leaving the page fast now also appears on Block & Mute, both appeal pages, and Safe Space listings, not just the hate-crime and reporting pages.",
+    "The quick-exit button now also appears on Block & Mute, both appeal pages and Safe Space listings.",
 
   "changelog.entries.legal-links-reconciled.title":
     "Every legal document is now listed in both the footer and the menu",
   "changelog.entries.legal-links-reconciled.body":
-    "Terms of Service was missing from the footer, and a few policies, including the data request page, were missing from the About menu's legal section. Both now list the same complete set: privacy, terms, cookies, imprint, guidelines, and data requests.",
+    "The footer and the About menu now list the same complete set: privacy, terms, cookies, imprint, guidelines and data requests.",
 
   "changelog.entries.hate-crime-resources-linked.title":
     "Hate Crime Resources is now linked from the footer",
   "changelog.entries.hate-crime-resources-linked.body":
-    "This page used to be reachable only through Resources or a direct link. It's now in the footer's Support column too, alongside Legal Aid and Report & Safety.",
+    "Hate Crime Resources now sits in the footer's Support column, next to Legal Aid and Report & Safety.",
 
   "changelog.entries.listing-quick-edit.title":
     "Quick edit for your directory listing",
   "changelog.entries.listing-quick-edit.body":
-    "Fixing a typo in your blurb or updating your phone number used to mean re-entering the whole multi-step listing wizard. Your account's Places section now offers a Quick Edit for the basics (blurb, hours note, phone, website), with the full editor still one click away for anything bigger.",
+    "Your account's Places section now has a Quick Edit for the basics: blurb, hours note, phone, website. The full editor stays one click away.",
 
   "changelog.entries.topics-follow-notifications-and-directory.title":
     "Following a topic now actually notifies you, plus a new Topics directory",
   "changelog.entries.topics-follow-notifications-and-directory.body":
-    "Following a topic (the Follow button on any #tag page) used to have no effect. Now, when a forum thread is posted with that topic's tag, everyone following it gets notified. There's also a new Topics page listing every topic with a follow toggle, linked from the Community menu next to Forum. A topic's \"Write a post\" button now opens the forum composer with that topic's tag already attached.",
+    "Follow a topic and you now get told when a forum thread is posted with its tag. A new Topics page in the Community menu lists every topic with a follow toggle.",
 
   "changelog.entries.search-topics-real-results.title":
     "Topics now show up in global search",
   "changelog.entries.search-topics-real-results.body":
-    'Searching for a hashtag topic now returns real matches from global search, alongside members, communities, and everything else. Categories with more results than fit on screen now offer a "See all" link.',
+    'Global search now returns hashtag topics alongside members and communities, and any category with more results than fit offers a "See all" link.',
 
   "changelog.entries.feed-connections-tab.title":
     'A new "Connections" tab in your feed',
   "changelog.entries.feed-connections-tab.body":
-    "The feed's tab bar now includes Connections: posts, forum threads, and gatherings from people you're connected with, gathered in one place. Haven't connected with anyone yet? The tab points you to the members directory to get started.",
+    "The feed's tab bar now has Connections: posts, forum threads and gatherings from your connections, gathered in one place.",
 
   "changelog.entries.connections-report-now-files.title":
     "Fixed: Reporting a connection now files a real report",
   "changelog.entries.connections-report-now-files.body":
-    '"Report" in a connection\'s more-menu used to show a "Report sent" confirmation without actually sending anything. It now opens the same reason-and-detail form used elsewhere in the app and files a real report with the moderation team.',
+    "Report in a connection's options menu now opens the usual reason and detail form and files a real report with the moderation team.",
 
   "changelog.entries.getting-started-xp-not-awarded-fix.title":
     "Fixed: Getting Started XP not showing up",
   "changelog.entries.getting-started-xp-not-awarded-fix.body":
-    "Completing Getting Started steps could leave your XP total stuck at 0 for a while, and finished steps didn't show how much XP they'd earned. Both are fixed: your level now updates promptly as you complete steps, and each finished step shows its XP.",
+    "Your level now updates promptly as you complete Getting Started steps, and each finished step shows the XP it earned.",
 
   "changelog.entries.badges-levels-v2-redesign.title":
     "Badges & levels redesigned",
   "changelog.entries.badges-levels-v2-redesign.body":
-    "The Badges & Levels page has a new look: a level dial, closest-to-earning suggestions, a filterable badge case with a detail view for each one, a seasonal badges band, and a receipts view showing where your XP came from.",
+    "Badges & Levels has a new look: a level dial, the badges you are closest to earning, a filterable badge case, seasonal badges, and a view of where your XP came from.",
 
   "changelog.entries.listing-preview-matches-card.title":
     "The listing preview now matches your real directory card",
   "changelog.entries.listing-preview-matches-card.body":
-    'The live preview when you add or edit a directory listing now renders the exact same card people see in the directory, cover photo included. If you haven\'t added one yet, the preview shows an "Add cover photo" button that jumps straight to the photos step.',
+    'The preview while you edit a directory listing now renders the exact card people see in the directory, cover photo included, with an "Add cover photo" shortcut when you have none.',
 
   "changelog.entries.profile-shapings-editor.title":
     'Edit your "What shaped me" section',
   "changelog.entries.profile-shapings-editor.body":
-    "The film, book, song, and moment that shaped you can now be added and edited from your profile, alongside your other lists. It was previously view-only.",
+    "The film, book, song and moment that shaped you can now be added and edited from your profile, alongside your other lists.",
 
   "changelog.entries.xp-breakdown.title": "See what earned your XP",
   "changelog.entries.xp-breakdown.body":
-    "Getting Started now shows the top sources behind your current XP, and the Badges page breaks down every source (profile, communities, vouches, gatherings, and more) with how much each has earned you and what's still open.",
+    "Getting Started now shows the top sources behind your XP, and the Badges page breaks down every source with how much it earned you and what is still open.",
 
   "changelog.entries.profile-hero-rail-redesign.title":
     "Profile hero and rail redesigned",
   "changelog.entries.profile-hero-rail-redesign.body":
-    "Your profile page has a cleaner hero and a new side rail: trust signals (verified, staff, vouch count) now come with a plain-language explainer, and a section nav lets visitors jump straight to what they're looking for, no scrolling required.",
+    "Your profile has a cleaner hero and a new side rail: trust signals like verified, staff and vouch count come with a plain-language explainer, plus a section nav.",
   "changelog.entries.profile-rail-stats-redesign.title":
     "Your profile stats, at a glance",
   "changelog.entries.profile-rail-stats-redesign.body":
-    "Your connections, vouches given and vouches received now show as clearly labeled numbers instead of icon-only pills, so they're readable without a hover. Your privacy controls (who sees what, hide me, your data) moved into a settings menu at the top of your profile, right next to Edit.",
+    "Connections, vouches given and vouches received now show as clearly labeled numbers you can read without hovering. Your privacy controls moved into a settings menu next to Edit.",
   "changelog.entries.profile-who-sees-what-controls.title":
     "Choose exactly who sees what on your profile",
   "changelog.entries.profile-who-sees-what-controls.body":
-    "A new \"Who sees what\" panel gathers your visibility controls in one place: quick presets, instant switches for your photo, neighbourhood, vouchers and what you're looking for, per-identity discoverability, hiding your profile from specific people, and a record of the reports you've filed.",
+    'A new "Who sees what" panel gathers your visibility controls: presets, switches for your photo, neighbourhood and vouchers, per-identity discoverability, and hiding from specific people.',
   "changelog.entries.profile-your-data-panel.title":
     'A "Your data" panel for your account',
   "changelog.entries.profile-your-data-panel.body":
-    "Download a copy of everything QueerPulse holds on you, step away or request erasure with a 30-day grace period, or file a data request, all from one panel on your profile. Any owned community or live listing standing in the way of erasure now shows up there with its own fix.",
+    'A new "Your data" panel on your profile lets you download everything QueerPulse holds on you, step away, request erasure with a 30-day grace period, or file a data request.',
   "changelog.entries.profile-board-work-name-qr-updates.title":
     "Board posts can be marked found, work entries get a second link, and more",
   "changelog.entries.profile-board-work-name-qr-updates.body":
-    "Your board posts can now be marked as found when you close them. Selected-work entries support a second link alongside the first. You can add how your name is pronounced and a Portuguese version of your bio, and a scannable QR code for your profile is one tap away.",
+    "You can now mark a board post as found, record how your name is pronounced, write a Portuguese bio, and open a QR code for your profile.",
 
   "changelog.entries.gathering-venue-directory-link.title":
     "Link a gathering's venue to its local directory listing",
   "changelog.entries.gathering-venue-directory-link.body":
-    "When you set a venue while creating a gathering, or edit one from its manage page, you can now search the local directory and pick a real business instead of only typing a name. Pick one and the venue name becomes a link straight to its listing, so guests can see photos, hours, and reviews before they show up. Typing a name freehand still works too.",
+    "Setting a gathering's venue now lets you search the local directory and pick a real business, so the venue name links to its listing.",
   "changelog.entries.add-to-calendar-picker-redesign.title":
     "Add to calendar now offers Google, Apple, Outlook, and Yahoo",
   "changelog.entries.add-to-calendar-picker-redesign.body":
-    "The add-to-calendar modal is now a proper picker: Google, Apple, Outlook, and Yahoo each get their own row with a brand icon and a one-click add (Apple downloads a file, since it has no web link), ordered by your platform, plus a fallback download link for any other app. We also fixed a bug where an event's listed timezone wasn't actually used when building the calendar entry, which could add the wrong time to your calendar.",
+    "Add to calendar is now a picker with a row each for Google, Apple, Outlook and Yahoo, and it uses the event's listed timezone, so times land right.",
   "changelog.entries.local-directory-card-redesign.title":
     "Directory and venue cards now show a photo, rating, and open status",
   "changelog.entries.local-directory-card-redesign.body":
-    "Local directory and venue cards were redesigned around a photo, star rating, price and tag pills, and a save button, plus an open-till status and the host on business cards. Venues now carry demo photos and ratings to match.",
+    "Directory and venue cards were redesigned around a photo, star rating, price and tag pills, a save button, and an open-till status.",
 
   "changelog.entries.forum-thread-pinning.title":
     "Moderators can pin forum threads to the top",
   "changelog.entries.forum-thread-pinning.body":
-    "Moderators and admins can now pin a thread from its ⋯ menu, holding it above the regular list (up to 3 at a time) no matter which sort tab you're on. Unpin the same way to send it back into the normal order.",
+    "Moderators and admins can pin a thread from its options menu, holding up to 3 above the list on any sort tab. Unpin the same way.",
 
   "changelog.entries.magazine-desk-notifications-cleanup.title":
     "Fewer duplicate desk notifications, and a working Mark all as read",
   "changelog.entries.magazine-desk-notifications-cleanup.body":
-    "The magazine desk's Since Friday panel used to log a new notification for nearly every autosave, so one edit to a still-untitled draft could show up five or six times. Repeated edits to the same piece by the same person now collapse into a single line until something else happens on it. Mark all as read also used to just close the panel without changing anything, leaving the bell badge stuck. It now clears for real.",
+    "Repeated edits to the same piece by the same person now collapse into one desk notification, and Mark all as read really clears the bell badge.",
 
   "changelog.entries.volunteer-opportunity-edit-parity.title":
     "Editing an opportunity now uses the same form as posting one",
   "changelog.entries.volunteer-opportunity-edit-parity.body":
-    "Posters editing a volunteer opportunity get the exact same screen used to create it, including the why/tasks/commitments fields the old edit screen didn't offer at all.",
+    "Editing a volunteer opportunity now uses the same screen as posting one, including the why, tasks and commitment fields.",
 
   "changelog.entries.local-directory-sort-fix.title":
     "Fixed the Local Business directory's sort menu",
   "changelog.entries.local-directory-sort-fix.body":
-    "The Sort dropdown on the Local Business directory (renamed from “Local directory”) could squeeze so narrow that its options wrapped mid-word. It now always has enough room to show “Featured”, “A–Z” and “By neighbourhood” on one line.",
+    'The Sort menu on the Local Business directory now always has room to show "Featured", "A to Z" and "By neighbourhood" on one line.',
 
   "changelog.entries.governance-chart-upgrade.title":
     "A clearer income-vs-spending chart in the governance area",
   "changelog.entries.governance-chart-upgrade.body":
-    "The quarter-by-quarter finance chart now sizes to its space and reads more clearly. Hover or keyboard-focus any bar to see that quarter's income, spending and the surplus saved to the reserve, and a dashed band over each spending bar marks the surplus at a glance.",
+    "The quarterly finance chart now fits its space and reads more clearly. Hover or focus a bar for that quarter's income, spending and the surplus saved to the reserve.",
 
   "changelog.entries.landing-live-preview.title":
     "A live homepage preview while curating the landing page",
   "changelog.entries.landing-live-preview.body":
-    "The team curating the signed-out homepage now sees a live preview of each section right beside the editor. Add, reorder, hide or reword a featured member, community or changemaker and the preview updates instantly, showing the real homepage card before anyone visits.",
+    "The team curating the signed-out homepage now sees a live preview beside the editor: add, reorder, hide or reword a featured card and it updates instantly.",
 
   "changelog.entries.personas-in-directory.title":
     "Profile personas show up in the directory",
   "changelog.entries.personas-in-directory.body":
-    "Personas linked to your member profile now appear in the persona directory alongside standalone ones, so a therapist or practitioner whose profile lives on their main page is just as discoverable. Standalone personas stay pseudonymous.",
+    "Personas linked to your member profile now appear in the persona directory alongside standalone ones. Standalone personas stay pseudonymous.",
 
   "changelog.entries.therapist-personas-directory.title":
     "Therapist directories, powered by real profiles",
   "changelog.entries.therapist-personas-directory.body":
-    "The queer-affirming therapist directories now show real, community-verified therapist profiles, each with how they work, fees, availability, where they practise, and vouches from the community. Therapists build and manage their own profile.",
+    "The queer-affirming therapist directories now show real, community-verified profiles: how each therapist works, fees, availability, where they practise, and vouches. Therapists manage their own profile.",
 
   "changelog.entries.concern-intake-live.title":
     "Raise a concern, and we'll actually see it",
   "changelog.entries.concern-intake-live.body":
-    "The “Submit a concern” form on the governance page now reaches the team. Reports, appeals, and issues land in a staff dashboard where they're triaged and tracked to resolution. Signed-in members are identified by their account; if you're logged out, leave an email and we'll follow up.",
+    'The "Submit a concern" form on the governance page now reaches the team, landing in a staff dashboard where it is triaged and tracked.',
 
   "changelog.entries.housing-neighbourhoods-map.title":
     "Pick several neighbourhoods, and browse homes on a map",
   "changelog.entries.housing-neighbourhoods-map.body":
-    "Housing search now lets you filter by more than one Lisbon neighbourhood at once, and a new map view shows homes grouped by neighbourhood. Tap a neighbourhood on the map to add it to your filters.",
+    "Housing search now filters by several Lisbon neighbourhoods at once, and a new map view groups homes by neighbourhood. Tap one on the map to add it to your filters.",
 
   "changelog.entries.housing-outro-band.title":
     "A closing invitation on the housing board",
   "changelog.entries.housing-outro-band.body":
-    "The main housing board now ends with the same warm closing band as the rest of the site, with quick ways to list your space or ask the forum. The flatmates tab already had one; now both do.",
+    "The main housing board now ends with the same warm closing band as the rest of the site, with quick ways to list your space or ask the forum.",
 
   "changelog.entries.gathering-audience-scope.title":
     "Choose who can see your gathering",
   "changelog.entries.gathering-audience-scope.body":
-    "When you host a gathering, you can now set exactly how far it reaches: open to everyone on QueerPulse, just the people your connections know, just your own connections, members of the community you're posting to, or an invite-only list. Public stays the default, and you can change it anytime from the manage page.",
+    "Hosting a gathering now lets you set how far it reaches: everyone on QueerPulse, the people your connections know, your own connections, one community, or invite-only.",
 
   "changelog.entries.unified-pronoun-picker.title":
     "One consistent pronoun picker across your profiles",
   "changelog.entries.unified-pronoun-picker.body":
-    "Your pronoun options are now the same everywhere you set them (your profile, your work profile, and housing) drawn from one shared list, so a set you can pick in one place is available in all of them. You can also select more than one set and add your own.",
+    "Your pronoun options now come from one shared list everywhere you set them: your profile, your work profile and housing. You can pick more than one set and add your own.",
   "changelog.entries.work-profile-skills-focus.title":
     "Pick your skills and focus areas on your work profile",
   "changelog.entries.work-profile-skills-focus.body":
-    "The “Skills & focus” section on your work profile used to be a fixed display you couldn't change. Now the chips are yours to choose: tap the skills you can offer and the focus areas you'd want support with, and they save with the rest of your work profile. It's what we'll use to match you in the skills exchange and with mentors. Pick as many or as few as fit.",
+    'You now pick the "Skills and focus" chips on your work profile: what you can offer and where you want support, used to match you in the skills exchange.',
   "changelog.entries.profile-personal-fields.title":
     "Your name, pronouns and location now sit together",
   "changelog.entries.profile-personal-fields.body":
-    "We tidied the top of both your profile editors so the essentials read as one block. In your profile settings, pronouns moved up to sit right alongside your name and location instead of a separate section, and your Work profile now leads with the same three (name, pronouns, location) before anything else. Nothing was removed; it's just easier to see and fill in who you are at a glance.",
+    "Your name, pronouns and location now sit together at the top of both profile editors, so the essentials read as one block.",
   "changelog.entries.feed-avatar-to-profile.title":
     "Tap anyone's photo in the feed to open their profile",
   "changelog.entries.feed-avatar-to-profile.body":
-    "Someone catch your eye in the feed? Their photo is now a doorway. Tap or click the avatar on any post, new-member note, forum thread, or gathering card and you land straight on that person's profile, no hunting for a separate link.",
+    "Tap the avatar on any post, new-member note, forum thread or gathering card in the feed and you land straight on that person's profile.",
   "changelog.entries.affirming-housing-baseline.title":
     "Every home and housemate here is LGBTQ+ affirming. Now it's the standard",
   "changelog.entries.affirming-housing-baseline.body":
-    'Being LGBTQ+ affirming is no longer a box a listing might tick. It\'s the baseline for every home, room, and person on the housing board. Before you post a place, publish a flatmate profile, or reach out about a home, you take a short affirming pledge once, and it applies everywhere. Every listing now carries an "LGBTQ+ affirming" badge as the standard for everyone, and if a home or person breaks that pledge you can report it. This is a community commitment. Nobody is ever sorted by identity.',
+    "LGBTQ+ affirming is now the baseline on the housing board. You take a short pledge before posting or reaching out, and every listing carries the badge.",
   // ── Wave B2: verified listings, viewing scheduling, two-sided blind reviews ─
   "changelog.entries.housing-listing-discovery.title":
     "Find the right home, real photos, a filter that fits, and a heads-up when one comes up",
   "changelog.entries.housing-listing-discovery.body":
-    "Every listing now opens into a proper photo viewer. Swipe or arrow through the rooms full-screen, with captions and a virtual-tour walkthrough when the lister added one. The board has real filters too: price range, neighbourhood, bedrooms, bills included, step-free access, move-in date, and verified-only. Found a search you like? Save it, and we'll quietly let you know when a new home that fits goes live: no refreshing, no scrolling. Listing your own place is clearer as well, with a few gentle pointers on photos that help people picture living there.",
+    "Listings now open into a full-screen photo viewer with captions. The board has real filters for price, neighbourhood, bedrooms, access and move-in date, and you can save a search.",
 
   "changelog.entries.housing-viewings-reviews.title":
     "See a place before you pay, and reviews that can't be gamed",
   "changelog.entries.housing-viewings-reviews.body":
-    "You can now request a viewing right from a listing, over video or in person, and propose a couple of times; the person offering the home accepts one, suggests another, or declines, all tracked under Your viewings. Once a viewing is accepted, the exact address opens up to you. It's the research-backed way to avoid a housing scam: see the home live before any money is discussed. Some listings now carry a Verified listing chip, earned only when the lister is ID-verified, the listing has passed our review, and it raised no red flags. It's never something anyone can switch on themselves. And after a viewing, both sides can leave a blind review: neither of you sees the other's words until you've both written (or two weeks pass), so no review is written in fear of the reply. The rating you see on a home is worked out from those revealed reviews.",
+    "You can now request a viewing, by video or in person, and see the exact address once it is accepted. Both sides can then leave a blind review.",
 
   // ── Wave B1: housing listing integrity — risk scoring, evidence, transparency ─
   "changelog.entries.housing-listing-integrity.title":
     "Housing listings you can trust a little more",
   "changelog.entries.housing-listing-integrity.body":
-    "Every new listing now carries an honest access line, step-free or two flights up, lift or none, and says plainly whether it's a member or an agent offering the place. Agents are welcome here; we just show a small badge so you know. Behind the scenes, a listing is quietly checked before it reaches the board, an implausibly low rent, contact details or pay-before-you-view language, or wording that would gate a home on who you are all raise a flag for a moderator to look at first. And if you report a listing, the report now sorts your concern into a clear reason (scam, discrimination, off-platform, and more), keeps a snapshot of what you saw, and, for discrimination, gently points out you can also raise it with an equality body.",
+    "Every new listing now states its access honestly and says whether a member or an agent is offering it. Listings are screened before they reach the board.",
 
   // ── Wave A: housing safety, map privacy, messaging safety, flatmates, groups ─
   "changelog.entries.housing-scam-safety-tenant-rights.title":
     "Rent without getting scammed, and know your rights",
   "changelog.entries.housing-scam-safety-tenant-rights.body":
-    "Looking for a home shouldn't mean second-guessing everyone. When you reach out about a place or list one, a short safety note now reminds you of the few things that keep you safe: never pay before you've signed, video-call first, keep the conversation here, never rent a place you haven't seen. There's a new Housing safety page too, with a plain-language guide to your rights as a tenant in Portugal (written and registered leases, the deposit cap, how much rent can rise, and what a landlord can never do) plus a rough sense of what Lisbon rents actually cost. It's general guidance, not legal advice, but it's the context that helps you walk away from a bad deal.",
+    "A short safety note now appears when you reach out about a place: never pay before signing, video-call first, keep the conversation here. A new Housing safety page covers your tenant rights.",
 
   "changelog.entries.housing-map-area-privacy.title":
     "See the area first, the exact address once you're connected",
   "changelog.entries.housing-map-area-privacy.body":
-    "Housing listings now show where a place is on a map, but only the rough neighbourhood until you and the person are actually connected. The exact address stays private until then, so posting a listing doesn't put your front door on the internet. Once you're connected, the map upgrades to the precise spot and the full address.",
+    "Listings now show a place on a map at neighbourhood level, and the map sharpens to the precise spot and the full address once you and the person are connected.",
 
   "changelog.entries.messaging-safety-block-report-pii.title":
     "Block, report, and a gentle nudge before you overshare",
   "changelog.entries.messaging-safety-block-report-pii.body":
-    "You can now block or report someone straight from a conversation, and blocking takes effect right away. Blocked people drop out of your inbox and can't reach you. If a draft contains a phone number, an email, or bank details, a quiet note reminds you to keep things here and never send money before you trust someone. It never stops you sending. It's just a gentle hint.",
+    "You can block or report someone from a conversation, and blocking takes effect at once. A quiet note appears if a draft holds a phone number, email or bank details.",
 
   "changelog.entries.flatmate-pronoun-pre-share.title":
     "Share your pronouns with a hello, only when you choose",
   "changelog.entries.flatmate-pronoun-pre-share.body":
-    "When you say hello to a potential flatmate, you can now choose to share your pronouns along with your message, off by default, and only ever with that one person. It's a small thing that makes a first message land warmer, on your terms.",
+    "Saying hello to a potential flatmate now lets you share your pronouns with your message, off by default and only with that person.",
 
   "changelog.entries.flatmate-discovery-mode.title":
     "A calmer way to browse flatmates",
   "changelog.entries.flatmate-discovery-mode.body":
-    "The flatmate board now has a Discovery view alongside the list, one profile at a time, with a clear reason it matched you. Pass or like at your own pace; when you both like each other, you can say hello and start the conversation. Prefer the old grid? The List view is one tap away.",
+    "The flatmate board now has a Discovery view: one profile at a time, with a clear reason it matched you. When you both say yes, you can say hello.",
 
   "changelog.entries.vetted-housing-groups.title":
     "Vetted housing groups queer renters actually trust",
   "changelog.entries.vetted-housing-groups.body":
-    "Some of the safest housing happens in small, screened groups rather than open listing sites. There's now a home for them: vetted housing groups where every listing states the rent up front, describes accessibility honestly, and keeps brokers out. Ask to join and a steward reads your request, the group's house rules are right there so you know what you're agreeing to.",
+    "Vetted housing groups now have a home here: every listing states the rent up front and describes accessibility honestly. Ask to join and someone from the group reads your request.",
 
   "changelog.entries.vouch-multiple-relationships.title":
     "Say all the ways you know someone",
   "changelog.entries.vouch-multiple-relationships.body":
-    "When you vouch for someone, you can now pick more than one way you know them, friends and collaborators, neighbours you also met through QueerPulse. A vouch rarely comes from a single thread, so it no longer asks you to choose just one.",
+    "When you vouch for someone, you can now pick every way you know them: friends, collaborators, neighbours you also met here.",
 
   "changelog.entries.getting-started-checklist.title":
     "A gentle checklist for your first steps",
   "changelog.entries.getting-started-checklist.body":
-    "A new Getting started page walks you through the first moves, fill in your profile, join a community, create a persona, vouch for and connect with someone, share a post. Each step ticks itself off as you go, so it always reflects what you've actually done. Find it under your account menu.",
+    "A new Getting started page in your account menu walks you through the first moves: fill in your profile, join a community, vouch for someone, share a post. Steps tick themselves off.",
 
   "changelog.entries.onboarding-set-up-personas-after.title":
     "A calmer welcome, set up personas once you're in",
   "changelog.entries.onboarding-set-up-personas-after.body":
-    "Onboarding no longer asks you to build a persona while you're still finding your feet. Getting settled comes first; when you're ready, you can create a persona for your craft anytime from your personas page.",
+    "Onboarding now leaves personas for later. Get settled first, then create a persona for your craft whenever you like from your personas page.",
 
   "changelog.entries.pin-favorite-chats-inbox-tabs.title":
     "Pin, favorite, and filter your inbox",
   "changelog.entries.pin-favorite-chats-inbox-tabs.body":
-    "Pin the chats you keep coming back to (up to 3) and they'll stay at the top of your inbox. Favorite the ones that matter, then filter by All, Unread, Favorites, or Groups to find them fast.",
+    "Pin up to 3 chats to the top of your inbox, mark the ones that matter as favorites, and filter by All, Unread, Favorites or Groups.",
 
   "changelog.entries.identity-verification-honest-badges.title":
     "Real identity verification with honest badges",
   "changelog.entries.identity-verification-honest-badges.body":
-    "Housing is where trust matters most, so a badge now means something real. Confirm a phone number in a quick step to post a listing or flatmate profile, or reach out about a home, and an optional external ID check earns an ID-verified badge. A badge only ever appears for a verification that actually happened, and its tooltip says exactly what it does and doesn't prove. We never see or store your ID document or biometrics. An external partner runs the check and only tells us it passed.",
+    "Confirm a phone number to post a listing or reach out about a home. An optional ID check earns an ID-verified badge; a partner runs it, so we never see your document.",
 
   "changelog.entries.flatmate-explainable-matching.title":
     "Smarter, explainable flatmate matching",
   "changelog.entries.flatmate-explainable-matching.body":
-    "Flatmate matches now show you why they matched, budget, neighbourhood, shared lifestyle, timing, safe-space values, and household basics, each a factor you can see. Add a short co-living questionnaire (noise, shared vs private space) and your household basics feed the score, so a match reads as more than a number. Safe-space specifics stay private: a reason only names what someone shares when they've let you see it. All optional, and never used to filter anyone out.",
+    "Every flatmate match now shows why it matched: budget, neighbourhood, timing, lifestyle and household basics. Fill in a short co-living questionnaire to sharpen it.",
 
   "changelog.entries.flatmate-safe-space-identity.title":
     "Say who you are on the flatmate board, on your terms",
   "changelog.entries.flatmate-safe-space-identity.body":
-    "Your flatmate profile can now hold your pronouns, gender, and the things that make a home feel safe, trans-inclusive, no outing, affirming flatmates. It's all opt-in: nothing is stored or shown until you say yes, you choose who sees it, and you can clear it anytime. These details help you find an affirming home; they're never used to filter anyone out.",
+    "Your flatmate profile can hold your pronouns, gender, and what makes a home feel safe. It is all opt-in: you choose who sees it, and you can clear it anytime.",
 
   "changelog.entries.privacy-policy-refresh.title":
     "The Privacy Policy now matches what the platform actually does",
   "changelog.entries.privacy-policy-refresh.body":
-    "We refreshed the Privacy Policy end to end. It now explains Sign in with Google, push notifications and device data, how your identity details stay under your control, the location and messaging data we hold, and the exact services we rely on, and we removed things we don't offer. The Cookie Policy and your privacy settings now match, with the unused analytics option removed. No analytics, no ads, no data sales, still true.",
+    "The policy now covers Sign in with Google, push notifications, location and messaging data, and the exact services we rely on. Your privacy settings and the Cookie Policy match it.",
 
   "changelog.entries.gatherings-manage-rsvp-recap-live.title":
     "Hosting a gathering now works for real",
   "changelog.entries.gatherings-manage-rsvp-recap-live.body":
-    "Managing your gathering, RSVPing, and sharing the recap afterwards are now fully live. RSVP is now a button right on the gathering, say you're going, or join the waitlist when it's full, and your spot is still there when you come back. Organisers can edit details, cancel, see who's coming, and add co-hosts against the real event, and the after-photos album attaches to it too. (Inviting a co-host to accept is still on the way.)",
+    "RSVP is now a button on the gathering itself, with a waitlist when it is full. Organisers can edit details, cancel, see who is coming, add co-hosts, and post the after-photos album.",
 
   "changelog.entries.coop-template-portuguese.title":
     "The co-op formation templates now speak Portuguese",
   "changelog.entries.coop-template-portuguese.body":
-    "Our co-operative starter documents (the values charter, model statutes, member share agreement and the rest) now read in European Portuguese as well as English. It's a first draft meant to get you moving; have a lawyer review the specifics before you file anything.",
+    "The values charter, model statutes, member share agreement and the rest now read in European Portuguese as well as English. Have a lawyer check the specifics before you file anything.",
 
   "changelog.entries.members-explainer-modal.title":
     "The landing “Explore members” button now explains itself",
   "changelog.entries.members-explainer-modal.body":
-    "Signed-out visitors used to hit the sign-in wall when they clicked “Explore members” on the homepage. Now they get a short, friendly explainer on how membership works, with a clear way to request an invite or sign in.",
+    "Signed-out visitors who tap “Explore members” now get a short explainer on how membership works, with a clear way to request an invite or sign in.",
 
   "changelog.entries.invite-request-mutual-email.title":
     "Asking to join now asks for a member's email",
   "changelog.entries.invite-request-mutual-email.body":
-    "When you request an invite and know someone here, the form now asks for their email rather than a name. It's how we actually match them and vouch you in faster. The field stays optional, but if you fill it in we check it's a real email.",
+    "The form now asks for the email of someone you know here, so we can match them and vouch you in faster. The field stays optional.",
 
   "changelog.entries.report-form-guide-split.title":
     "The report form and the reporting guide are now separate pages",
   "changelog.entries.report-form-guide-split.body":
-    "Making a report is its own focused page, no essay to scroll past. How reporting works, the principles behind each decision, and the public moderation log now live on a dedicated “How reporting works” page, linked from both directions.",
+    "Making a report is now its own focused page. How reporting works, the principles behind each decision, and the public moderation log moved to a dedicated page, linked both ways.",
 
   "changelog.entries.safety-page-report-form.title":
     "Reporting a concern goes straight to the form",
   "changelog.entries.safety-page-report-form.body":
-    "The safety page now points you to the in-app report form instead of an email address, and its explanation of vouching reads truer to how joining actually works.",
+    "The safety page now sends you to the in-app report form, and its explanation of vouching matches how joining really works.",
 
   "changelog.entries.public-profile-eligibility-live.title":
     "Public profiles you can actually earn.",
   "changelog.entries.public-profile-eligibility-live.body":
-    "Your progress toward a public profile now reflects your real activity, the writing you've published, events you've hosted, vouches and endorsements, and time spent showing up. Open your profile to see exactly where you are.",
+    "Your progress now tracks real activity: writing you published, gatherings you hosted, vouches and endorsements, and time spent showing up. Open your profile to see where you stand.",
 
   "changelog.entries.public-profile-eligibility-tracker.title":
     "A clearer path to a public profile.",
   "changelog.entries.public-profile-eligibility-tracker.body":
-    "Public profiles now show exactly where you are, the essentials you need, how your contributions, community trust, and participation add up, and the next thing that moves you forward.",
+    "You now see the essentials you need, how contributions, community trust and participation add up, and the next step that moves you forward.",
 
   "changelog.entries.how-communities-work-page.title":
     "A clearer welcome to communities",
   "changelog.entries.how-communities-work-page.body":
-    "The homepage used to offer a “Join” button before you even had an account. Now the community cards lead to a new page that explains how communities work and why they matter, so you know what you're joining before you ask for an invite.",
+    "Community cards on the homepage now lead to a page explaining how communities work and why they matter, so you know what you are joining before you ask for an invite.",
 
   "changelog.entries.guidelines-read-gate.title":
     "Read the guidelines through before you agree",
   "changelog.entries.guidelines-read-gate.body":
-    "The Community Guidelines now open with the hard lines, spell out how to report harm and what happens to people who cross them, from a warning to removal, and ask you to read to the end before the agree box unlocks.",
+    "The guidelines now open with the hard lines and spell out how to report harm and what happens when someone crosses them, from a warning to removal.",
 
   "changelog.entries.guidelines-in-sheet.title":
     "Read the community guidelines without losing your place",
   "changelog.entries.guidelines-in-sheet.body":
-    "On the invite request and onboarding, tapping “community guidelines” used to take you off to a separate page, and back over everything you'd typed. The guidelines now slide up in a sheet you can read and close right where you are, so nothing you've written gets lost.",
+    "On the invite request and onboarding, the guidelines now slide up in a sheet you can read and close right where you are, so everything you typed stays.",
 
   "changelog.entries.meganav-highlight-illustrations.title":
     "Illustrated menus in the top navigation",
   "changelog.entries.meganav-highlight-illustrations.body":
-    "Each menu in the top navigation now opens with a hand-drawn illustration of its highlight (people gathering, the city, support, culture, work) instead of a plain placeholder.",
+    "Each top navigation menu now opens with a hand-drawn illustration of its highlight: people gathering, the city, support, culture, work.",
 
   "changelog.entries.coming-out-guide-public.title":
     "The coming-out guide is open to everyone again",
   "changelog.entries.coming-out-guide-public.body":
-    "The coming-out guide was accidentally locked behind sign-in. It's a support page, like our resources and safety pages, it should reach anyone who's questioning, whether or not they have an account. It's public again.",
+    "It was locked behind sign-in by accident. It is a support page, so it is public once more and reaches anyone who is questioning, with an account or without one.",
 
   "changelog.entries.poem-editor-v2.title":
     "Writing a poem now feels like writing a poem",
   "changelog.entries.poem-editor-v2.body":
-    "The poem editor got a full pass: a live preview sits right beside what you're typing, you can drag stanzas into place or drop in a quick section break, and pasted lines stay exactly where you put them. Every poem also gets its own shareable link, and the reading view is wider and calmer now, with a one-tap copy for anyone who wants to keep your words.",
+    "A live preview sits beside what you type, and you can drag stanzas into place or drop in a section break. Every poem gets a shareable link and a calmer reading view.",
 
   "changelog.entries.under18-open-invite.title":
     "The under-18 message now opens a door instead of closing one",
   "changelog.entries.under18-open-invite.body":
-    "If you tell us you're not 18 yet, the note used to dwell on the account you can't have. It now leads with what's open to everyone, the library, the magazine and our resources are all yours to read, no login needed.",
+    "If you are under 18, the note now leads with what is open to everyone: the library, the magazine and our resources, free to read without an account.",
 
   "changelog.entries.communities-explained.title":
     "A clearer look at how communities work",
   "changelog.entries.communities-explained.body":
-    "The page that explains communities has been redesigned around what a community is, how you join, and why it matters, with a way straight into the ones already here. You'll now find it from the Communities page and the homepage, rather than tucked away in the top menu.",
+    "The explainer page was redesigned around what a community is, how you join and why it matters, with a way into the ones already here.",
 
   "changelog.entries.smoother-drag-reorder.title": "Smoother drag-to-reorder",
   "changelog.entries.smoother-drag-reorder.body":
-    "Reordering the pieces in a persona section now uses fluid drag-and-drop. Grab a row by its handle and the others glide out of the way as you move it. The up and down arrows are still there for keyboard and screen-reader users.",
+    "Grab a row in a persona section by its handle and the others glide out of the way. The arrows stay for keyboard and screen reader use.",
 
   "changelog.entries.poem-translations.title": "Add translations of a poem",
   "changelog.entries.poem-translations.body":
-    "A poem can now hold more than one version, the original alongside its translations. Add each one, give it a name like Português or English, and readers can switch between them with a tap. The first version is the default everyone sees first.",
+    "A poem can hold several versions, the original beside its translations. Name each one, like Português or English, and readers switch with a tap.",
 
   "changelog.entries.reframe-your-photos.title": "Reframe your photos",
   "changelog.entries.reframe-your-photos.body":
-    "When you upload a photo, you can now pan and zoom it to choose exactly how it's framed before you save it, so profile photos, personas, and other images look just right.",
+    "Upload a photo and you can pan and zoom to choose exactly how it is framed before you save, for profile photos, personas and anything else.",
 
   "changelog.entries.guidelines-agree-self-tick.title":
     "The guidelines box now ticks itself once you've read to the end",
   "changelog.entries.guidelines-agree-self-tick.body":
-    "On the join and onboarding forms, the “I've read the community guidelines” box can no longer be ticked with a stray click. The guidelines open in a sheet, the confirm button unlocks only when you've scrolled to the end, and finishing there is what ticks the box for you. The button also sits at the bottom of the sheet now instead of floating over the text.",
+    "The guidelines open in a sheet, the confirm button unlocks when you reach the end, and finishing there ticks the box for you. A stray click leaves it alone.",
 
   "changelog.entries.adults-only-explainer-modal.title":
     "“Here's why we're 18+” opens right where you are",
   "changelog.entries.adults-only-explainer-modal.body":
-    "The “here's why” link on the age check used to navigate away to the Terms, so you lost your place in the form. It now opens the explainer in a quiet sheet over the page. Read why QueerPulse is adults-only, close it, and keep going without losing a word you'd typed.",
+    "The “here's why” link on the age check now opens a quiet sheet over the page. Read it, close it, and carry on with everything you typed still there.",
 
   "changelog.entries.adults-only-explainer.title":
     "“Here's why we're 18+” now actually says why",
   "changelog.entries.adults-only-explainer.body":
-    "The “here's why” link on the age check used to land on the Terms without explaining anything. The Eligibility section now says plainly why QueerPulse is adults-only, and why under-18s still belong in queer community.",
+    "The Eligibility section now says plainly why QueerPulse is adults-only, and why under-18s still belong in queer community. The “here's why” link takes you there.",
 
   "changelog.entries.persona-excerpt-crash-fix.title":
     "Adding a page excerpt no longer breaks the profile",
   "changelog.entries.persona-excerpt-crash-fix.body":
-    "Starting an excerpt or menu detail on a persona page, filling in one field before the rest, no longer causes the page to go blank. It now shows what you've added and fills in the rest as you go.",
+    "Filling in one field of a persona excerpt or menu detail before the rest no longer leaves the page blank. It shows what you added so far.",
 
   "changelog.entries.poem-line-break-fix.title": "Poem line breaks now stick",
   "changelog.entries.poem-line-break-fix.body":
-    "Pasting a poem into the editor no longer runs its lines together when you read it back. Each verse line keeps its own line, just as you typed or pasted it.",
+    "Pasting a poem into the editor no longer runs the lines together. Each verse keeps its own line, exactly as you typed or pasted it.",
 
   "changelog.entries.poet-rich-poems.title": "Write and read poems in full",
   "changelog.entries.poet-rich-poems.body":
-    "Poet profiles now have a proper poem editor (stanzas, section breaks, and notes, with italics and bold) and readers can tap any poem to open it in a spacious reading view.",
+    "Poet profiles now have a proper poem editor, with stanzas, section breaks, notes, italics and bold. Readers tap any poem to open it in a spacious reading view.",
 
   "changelog.entries.persona-editor-drag-reorder.title":
     "Drag to reorder items on a persona",
   "changelog.entries.persona-editor-drag-reorder.body":
-    "The grip handle on each item in a persona section (projects, roles, links…) now actually drags. Grab it and drop the item where you want it (on a phone with your finger, or with a mouse) and the list reshuffles live. The up and down arrows are still there for keyboard use, so nothing changed for that.",
+    "The grip handle on each item in a persona section now drags for real, with a finger or a mouse, and the list reshuffles live. The arrows stay for keyboard use.",
 
   "changelog.entries.persona-item-link-picker-size.title":
     "Fixed oversized inline fields in a few editors",
   "changelog.entries.persona-item-link-picker-size.body":
-    "A handful of compact side-by-side fields had quietly ballooned to full size, the link-type picker when adding a link to a persona project (which was crowding out the address field next to it), the content-note rows in the film submission form, and the photo-link boxes when listing a business. They now sit at their intended size, so each row lines up the way it was designed.",
+    "The link-type picker on a persona project, the content-note rows in the film submission form, and the photo-link boxes when listing a business are back at their compact size.",
 
   "changelog.entries.persona-editor-wide-sheet.title":
     "Editing a persona section now opens a roomy sheet from the bottom",
   "changelog.entries.persona-editor-wide-sheet.body":
-    "When you edit an item in one of your persona's sections (a project, a role, a photo) the editor now rises from the bottom of the screen as a wide sheet instead of a narrow panel pinned to the side. The fields sit two side by side, so titles, descriptions and links have room to breathe instead of feeling crammed. On phones it stays the familiar full-width sheet.",
+    "Editing a project, role or photo on your persona now opens a wide sheet from the bottom, with fields side by side. Phones keep the full-width sheet.",
 
   "changelog.entries.community-featured-cards.title":
     "Featured communities get the full spotlight card, plus cover photos",
   "changelog.entries.community-featured-cards.body":
-    "Communities featured on the homepage now show the same rich card the showcase uses (a cover image, category, who keeps the space, how you join, the year it started, what you get inside, and real member faces) instead of a bare name and headcount. Community owners can now add a cover photo when starting a community or from its edit panel, and it greets people on the card.",
+    "Featured communities on the homepage now use the full card: cover image, category, who runs it, and real member faces. Owners can add a cover photo.",
 
   "changelog.entries.media-in-use-references.title":
     "See where each uploaded image is used, and what's safe to delete",
   "changelog.entries.media-in-use-references.body":
-    "Your uploads, and the admin images console, now show every place a picture is still in use, with a link straight to each one. Anything with no references left is flagged as safe to remove, so you can clear out old duplicates without worrying you'll break a live page.",
+    "Your uploads and the admin images console now list where each picture is still used, with a link to each. Unreferenced pictures are flagged as safe to remove.",
 
   "changelog.entries.homepage-featured-photo-fix.title":
     "Featured members' photos show on the homepage again",
   "changelog.entries.homepage-featured-photo-fix.body":
-    "The curated “Real people, not a directory” spotlight was serving each featured member's uploaded portrait as an unresolved link, so it rendered as a broken image. The homepage now resolves those photos the same way every other avatar is, and the portraits load correctly.",
+    "The homepage spotlight was serving each featured member's portrait as a broken image. It now resolves those photos the way every other avatar does, so they load.",
 
   "changelog.entries.admin-media-filter-by-uploader.title":
     "Admins can filter uploaded images by who sent them",
   "changelog.entries.admin-media-filter-by-uploader.body":
-    "The uploaded-images console now lets an admin narrow the whole grid to a single member (search by name or handle, or tap an uploader's name on any file) to review everything one person has put into storage in one place.",
+    "An admin can now narrow the uploaded-images grid to one member, by searching a name or handle or tapping an uploader's name on any file.",
 
   "changelog.entries.persona-preview-banner-bleed.title":
     "Persona banners now run edge-to-edge on your profile",
   "changelog.entries.persona-preview-banner-bleed.body":
-    "The cover on the “Also working as” card now fills the card edge-to-edge, the same full-bleed look your personas already have on their own pages, so your profile and each persona page feel like one piece.",
+    "The cover on the “Also working as” card now fills it edge to edge, matching the look your personas already have on their own pages.",
 
   "changelog.entries.magazine-archive-truthful-hero.title":
     "The magazine archive shows only real editions now",
   "changelog.entries.magazine-archive-truthful-hero.body":
-    "The all-editions page opened with a fixed headline and tally (“nine issues since 2024” and counts of articles, contributors and languages) that were placeholder figures standing in for your real archive. Those now stay in the preview only; the live page leads straight into the real back issues.",
+    "The all-editions page used to open with placeholder figures like “nine issues since 2024”. Those stay in the preview only, and the live page leads straight into the real back issues.",
 
   "changelog.entries.persona-families-expansion.title":
     "Personas now fit many more crafts",
   "changelog.entries.persona-families-expansion.body":
-    "Personas reach well beyond the stage now. There are six new page styles (a salon chair, a runway, a gallery, an oral-history record, a movement poster, and a classroom) plus dozens of new professions, each with a look built for the work you actually do.",
+    "Six new page styles: a salon chair, a runway, a movement poster, plus dozens of new professions, each with a look built for the work you do.",
 
   "changelog.entries.pole-dancer-persona.title": "Pole dancer personas",
   "changelog.entries.pole-dancer-persona.body":
-    "Pole dancers can now build a persona that shows both sides of the craft, the shows they perform and the classes they teach.",
+    "You can build a persona that holds both sides of the craft: the shows you perform and the classes you teach.",
 
   "changelog.entries.astrologer-persona.title":
     "New astrologer personas, with their own celestial page",
   "changelog.entries.astrologer-persona.body":
-    "You can now make an astrologer persona. It gets its own “chart” page, an indigo, star-flecked ephemeris with your readings numbered like houses, the sky today, what you need from a querent before a reading, and a plain statement of what a reading is not.",
+    "An astrologer persona gets its own chart page: an indigo, star-flecked ephemeris with your readings numbered like houses, the sky today, and what you need before a reading.",
 
   "changelog.entries.crisp-profile-photos.title":
     "Profile photos are sharper on member pages",
   "changelog.entries.crisp-profile-photos.body":
-    "Some member portraits looked soft on the profile page while others were crisp. The large photo now requests a resolution that matches the space it fills, so every profile shows a clear, sharp portrait.",
+    "The large portrait on a member page now requests a resolution that matches the space it fills, so it comes through sharp.",
 
   "changelog.entries.developer-persona-banner.title":
     "Developer personas can show a banner again",
   "changelog.entries.developer-persona-banner.body":
-    "Developer, maker and other builder personas quietly hid the banner image you uploaded. If you've added a cover, it now shows across the top of the persona, and if you haven't, the page stays clean with no empty band.",
+    "Developer, maker and other builder personas were quietly hiding the banner you uploaded. Your cover now shows across the top, and with no cover the page stays clean.",
 
   "changelog.entries.persona-preview-edit-hidden.title":
     "Previewing your profile as a visitor now hides your Edit controls",
   "changelog.entries.persona-preview-edit-hidden.body":
-    "When you previewed your own profile as a visitor, the Edit button still showed on your personas, so the preview didn't quite match what others see. It's now hidden, and the preview reflects the real visitor experience.",
+    "The Edit button on your personas is now hidden while you preview your profile as a visitor, so the preview matches what other people see.",
 
   "changelog.entries.persona-solo-card-wide.title":
     "A single persona with a cover now fills the space",
   "changelog.entries.persona-solo-card-wide.body":
-    "If your profile has just one persona and it has a cover photo, its card now lays out wide, cover beside the details, instead of sitting in a narrow column with an empty gap next to it. Sparser personas keep the compact card.",
+    "If your profile has one persona and it has a cover photo, its card now lays out wide, cover beside the details. Sparser personas keep the compact card.",
 
   "changelog.entries.persona-performance-row-mobile.title":
     "Persona performance lists now read cleanly on phones",
   "changelog.entries.persona-performance-row-mobile.body":
-    "On a narrow screen the year, title and venue of a performance used to fight for one line, squeezing the title until it broke one letter per line. Each part now takes its own line, so a dancer's, or any persona's, performances stay legible on mobile.",
+    "On a narrow screen the year, title and venue of a performance each take their own line, so titles stop breaking one letter per line.",
 
   "changelog.entries.endorse-persona-by-owner-name.title":
     "Endorsing an unnamed persona now uses your name",
   "changelog.entries.endorse-persona-by-owner-name.body":
-    "When someone leaves a persona named only after its craft (“Dancer”, “Developer”) the endorse dialog now addresses the person by their first name (“Endorse Philippine”) instead of the bare profession, so the words read like they're about a human.",
+    "When a persona is named only after its craft, the endorse dialog now uses the person's first name, so the words read like they are about a human.",
 
   "changelog.entries.landing-featured-member-card.title":
     "A richer featured-member card on the homepage",
   "changelog.entries.landing-featured-member-card.body":
-    "The members our team features on the homepage now appear in the same full spotlight card as our demo (a large portrait, their own words, and a link straight to their profile) rotating through everyone we've highlighted. It replaces the plainer little card that showed just a name and a line.",
+    "Featured members on the homepage now appear in the full spotlight card: a large portrait, their own words, and a link to their profile, rotating through everyone we have highlighted.",
 
   "changelog.entries.session-expiry-csrf-fix.title":
     "Fewer surprise “session expired” sign-outs",
   "changelog.entries.session-expiry-csrf-fix.body":
-    "We fixed a bug that could log you out with a “session expired” message even though your session was still fine, the giveaway was that reloading the page signed you straight back in. It happened most often with the app open in more than one tab. Your session now quietly recovers on its own instead of dropping you to the sign-in screen.",
+    "A bug could sign you out with “session expired” while your session was fine, most often with the app open in several tabs. Your session now recovers quietly on its own.",
 
   "changelog.entries.persona-image-remove-confirm.title":
     "A quick check before you remove a persona photo",
   "changelog.entries.persona-image-remove-confirm.body":
-    "Tapping the trash icon on an avatar, cover or item image no longer clears it instantly. You'll get a short confirmation first, so an accidental tap won't wipe a photo you meant to keep.",
+    "Removing an avatar, cover or item image now asks you to confirm first, so an accidental tap on the trash icon will not wipe a photo you meant to keep.",
 
   "changelog.entries.persona-craft-pass.title":
     "Personas look and feel better everywhere",
   "changelog.entries.persona-craft-pass.body":
-    "A craft pass across the whole feature. Dark mode is fixed throughout, skin details, menus and state icons that used to wash out now stay crisp. The persona directory no longer stops at 40 people, loads with a proper skeleton instead of a spinner, and reads faster because persona styles no longer weigh down every other page. On a phone, the endorsers, report and delete dialogs are now bottom sheets you can swipe away, tap targets are bigger, address and link fields bring up the right keyboard, and you can preview your persona while editing. Sharing is tidier too: link previews no longer crop your photo, and the editor shows real art when something goes wrong.",
+    "Dark mode stays crisp across skins and menus, the persona directory goes past 40 people and opens faster, and you can preview a persona while editing.",
 
   "changelog.entries.persona-audit-hardening.title":
     "Personas: a polish and safety pass",
   "changelog.entries.persona-audit-hardening.body":
-    "A broad sweep across personas. The editor now protects your work. It warns before the back button loses unsaved edits, keeps typing safe while a save is in flight, and asks you to save before publishing so what you see is what goes live. Public persona pages load their banner faster, read cleanly for screen readers, and never flash a stray placeholder. Followers stay private, links are scheme-checked for safety, and the persona directory loads quicker. Co-owners can edit freely, but only the creator can rename, unpublish, delete, or remove a co-owner, and everyone's notified if a shared persona is deleted.",
+    "The persona editor warns you before the back button loses unsaved edits, and only the creator can rename, unpublish or delete a shared persona.",
 
   "changelog.entries.persona-followers-owner-view.title":
     "See who follows your persona",
   "changelog.entries.persona-followers-owner-view.body":
-    "The owner of a persona can now open its followers and see exactly who's there, the people quietly keeping up with your work. For everyone else, following stays private: no one else can see who follows a persona, and your own following never shows up to anyone.",
+    "If a persona is yours, you can now open its followers and see who is quietly keeping up with your work. For everyone else, following stays private.",
 
   "changelog.entries.persona-image-reuse-uploads.title":
     "Reuse a photo you've already uploaded",
   "changelog.entries.persona-image-reuse-uploads.body":
-    "Every image slot in your persona editor (the avatar or logo, the cover banner, and each item's picture) can now pull from photos you've uploaded before, alongside a fresh file from your device. Choosing an image opens a picker with your past uploads, so you can reuse the same shot across personas in a couple of taps, or delete ones you no longer need.",
+    "Every image slot in the persona editor now offers photos you uploaded before alongside a new file, so you can reuse the same shot across personas in a couple of taps.",
 
   "changelog.entries.persona-banner-quality.title": "Crisper persona banners",
   "changelog.entries.persona-banner-quality.body":
-    "Persona banner images now keep more of their detail, so a full-width cover stays sharp instead of looking soft on larger screens. We've also added a little breathing room between a bled banner and your name and photo. Re-upload an existing banner to pick up the higher quality.",
+    "Persona banners keep more of their detail now, so a full-width cover stays sharp on larger screens. Re-upload an existing banner to pick up the higher quality.",
 
   "changelog.entries.modal-close-scroll-jump.title":
     "No more page jump when closing a dialog",
   "changelog.entries.modal-close-scroll-jump.body":
-    "Closing a pop-up such as a persona's info card no longer snaps the page to the top and scrolls back down. Your scroll position is restored instantly, exactly where you left it.",
+    "Closing a dialog now leaves you exactly where you were on the page, with your scroll position restored instantly.",
 
   "changelog.entries.persona-gallery-multi-add.title":
     "Add several photos to your gallery at once",
   "changelog.entries.persona-gallery-multi-add.body":
-    "Building your persona's photo gallery is quicker now. Pick a batch from your device or your past uploads and they all go in together, up to the six-photo limit.",
+    "Pick a batch of photos from your device or your past uploads and they all go into your persona gallery together, up to the six-photo limit.",
 
   "changelog.entries.persona-gallery-lightbox.title":
     "Tap a persona photo to see it full-screen",
   "changelog.entries.persona-gallery-lightbox.body":
-    "Photos in a persona's gallery now open full-screen when you tap them, the whole shot, uncropped, with arrow keys and on-screen arrows to move between them.",
+    "Tap a photo in a persona gallery to open it full-screen and uncropped, with on-screen arrows and arrow keys to move between shots.",
 
   "changelog.entries.persona-gig-images.title": "Add a photo to your gigs",
   "changelog.entries.persona-gig-images.body":
-    "Gig and show items in your persona editor now take an image, so your featured set list shines with a real photo instead of an empty slot.",
+    "Gig and show items in the persona editor now take an image, so your featured set list has a real photo.",
 
   "changelog.entries.persona-save-all-changes.title":
     "Save your persona in one go",
   "changelog.entries.persona-save-all-changes.body":
-    "Your persona editor now saves everything at once, with a running list that shows exactly what you changed before you hit Save.",
+    "The persona editor now saves everything in one go, with a running list of what you changed before you press Save.",
 
   "changelog.entries.persona-page-motion.title":
     "Persona pages that move with you",
   "changelog.entries.persona-page-motion.body":
-    "Persona pages now come alive as you arrive and scroll, the header settles in, and each section eases into view as you reach it. Every persona look keeps its own rhythm: some snap, some drift, and the quiet ones stay calm. It all respects your device's reduced-motion setting, so if you prefer things still, they stay still.",
+    "Persona pages now settle in as you arrive, and each section eases into view as you scroll, with a rhythm that suits each look. Your device's reduced-motion setting is respected.",
 
   "changelog.entries.endorse-with-note.title": "Endorse a persona with a note",
   "changelog.entries.endorse-with-note.body":
-    'Endorsing someone\'s persona now opens a proper window where you can add a short note about what makes their work worth backing. Already endorsed? Tap "Endorsed" to edit your note or withdraw your endorsement anytime.',
+    "Endorsing a persona now opens a window where you can add a short note about what makes the work worth backing. Tap Endorsed later to edit your note or withdraw it.",
 
   "changelog.entries.persona-banner-bleed.title":
     "Let your persona banner bleed into the page",
   "changelog.entries.persona-banner-bleed.body":
-    "Personas can now soften the seam where the cover photo meets the page. In your persona settings, under Presence, the new “Banner edge” option lets you keep the banner contained (as before) or have it bleed, the cover image fades gently into the page below it. It works on every persona look, dissolving into whatever colour sits beneath the banner.",
+    "Under Presence in your persona settings, the new Banner edge option lets your cover stay contained or bleed, fading gently into the page below. It works with every persona look.",
 
   "changelog.entries.persona-hero-actions-tidy.title":
     "A tidier action row on persona pages",
   "changelog.entries.persona-hero-actions-tidy.body":
-    "The buttons at the top of a persona now read as a clear menu. Message and Follow lead, and the less-used actions, Share and Report, tuck into a “⋯” menu so the row isn't crowded. Your follower and endorsement counts moved into a single quiet line beneath, instead of being repeated on the buttons themselves.",
+    "Message and Follow now lead the action row on a persona, with Share and Report tucked into an overflow menu. Your follower and endorsement counts sit on one quiet line beneath.",
 
   "changelog.entries.fix-member-filter-collapse.title":
     "Tidier filters on the member directory",
   "changelog.entries.fix-member-filter-collapse.body":
-    "When a filter group in the member directory was collapsed, a sliver of its contents (a checkbox or a chip) could still peek out beneath the heading. Collapsed groups now show only their heading, so the filter panel reads as a clean menu, and everything slides in as before when you open a group.",
+    "A collapsed filter group on the member directory now shows only its heading, so the filter panel reads as a clean menu.",
 
   "changelog.entries.fix-persona-hero-theme-colors.title":
     "Persona status and social links now match your theme",
   "changelog.entries.fix-persona-hero-theme-colors.body":
-    "On personas with a dark theme (like the stage look), the availability status and the social-link icons were washed out, dim text and a stark white icon chip. They now follow your persona's colours, so the status label stays readable and each social icon becomes a subtle, accent-tinted button that fits the theme.",
+    "On dark persona looks like the stage style, the availability status and social-link icons now follow your persona's colours, so they stay readable and fit the theme.",
 
   "changelog.entries.persona-photo-gallery.title":
     "Add a photo gallery to your persona",
   "changelog.entries.persona-photo-gallery.body":
-    "Personas can now show a photo gallery of up to 6 photos.",
+    "Your persona can now show a gallery of up to six photos.",
 
   "changelog.entries.persona-project-links.title":
     "Add links to individual projects",
   "changelog.entries.persona-project-links.body":
-    "Add links (like GitHub) to individual projects.",
+    "You can now add a link, such as a GitHub repo, to each individual project on your persona.",
 
   "changelog.entries.fix-persona-avatar-overlap.title":
     "Persona photos no longer overlap the title",
   "changelog.entries.fix-persona-avatar-overlap.body":
-    "On some persona looks (like the developer and therapist styles), the profile photo could spill out of its frame and overlap the name, tagline, or buttons beside it. The photo now sits neatly inside its frame at the right size for each look, so the top of every persona reads cleanly.",
+    "On some looks the persona photo could spill out and overlap the name or the buttons beside it. It now sits inside its frame at the right size.",
 
   "changelog.entries.network-modal-search.title": "Search your network lists",
   "changelog.entries.network-modal-search.body":
-    'The "Connected" and "Vouched for" lists on your profile now have a search box, so you can filter a long list down to a name instantly.',
+    "The Connected and Vouched for lists on your profile now have a search box, so a long list filters down to a name instantly.",
 
   "changelog.entries.profile-your-network.title":
     "See your network on your own profile",
   "changelog.entries.profile-your-network.body":
-    "Your profile hero now shows a private row of \"Your network\" chips, just for you: how many people you're connected with, who you've vouched for, and who's vouched for you. Tap a chip to see the full list, newest first, with when each happened. Only you can see it, and it stays hidden when you preview your profile as a visitor.",
+    "Your profile hero now shows a private Your network row: your connections, who you vouched for, and who vouched for you. Tap a chip for the full list.",
 
   "changelog.entries.fix-page-top-nav-overlap.title":
     "Page content no longer hides under the top menu",
   "changelog.entries.fix-page-top-nav-overlap.body":
-    "The floating top menu used to overlap the very top of some pages, clipping a heading or button beneath it. Every page now reserves that space in one shared place, so nothing sits under the menu, and each page keeps its own breathing room.",
+    "Every page now reserves space for the floating top menu in one shared place, so a heading or button stays clear of it.",
 
   "changelog.entries.nav-rail-redesign.title": "A clearer main menu",
   "changelog.entries.nav-rail-redesign.body":
-    "The desktop menu now keeps every section in view. Pick one from the rail and its links, plus a little preview, appear beside it. Same destinations, less hunting.",
+    "The desktop menu keeps every section in view: pick one from the rail and its links appear beside it, with a small preview. Same destinations, less hunting.",
 
   "changelog.entries.persona-photo-enlarge.title":
     "Tap a persona's photo to see it full-size",
   "changelog.entries.persona-photo-enlarge.body":
-    "Just like on a regular profile, you can now tap a persona's avatar to open the photo full-screen, a proper look at who's behind the persona. Tap outside, hit the close button, or press Esc to dismiss it.",
+    "Tap a persona's avatar to open the photo full-screen, just as you can on a regular profile. Tap outside, use the close button, or press Esc to dismiss it.",
 
   "changelog.entries.persona-mobile-hero.title":
     "Personas look at home on your phone",
   "changelog.entries.persona-mobile-hero.body":
-    "A persona's header now settles into the same clean, centred column your own profile uses on a phone, the avatar, name, tagline and links stacked in the middle, with the action buttons stretched full-width and easy to reach with one thumb. No more cramped top-left pile on a narrow screen.",
+    "On a phone, a persona header now uses the same centred column as your own profile: avatar, name, tagline and links stacked in the middle, with full-width action buttons within thumb reach.",
 
   "changelog.entries.fix-persona-save-conflict.title":
     "Saving a second persona no longer throws an error",
   "changelog.entries.fix-persona-save-conflict.body":
-    "Editing and saving a persona could fail with an “address already in use” error once you had more than one, even when you'd never set a public handle on either. A blank handle is now treated as “none” rather than an empty value that quietly collided with your other personas, so your changes save cleanly. If two personas ever do share the same address, we now tell you exactly which field to change.",
+    "Saving a persona could fail with an address already in use error once you had more than one. A blank handle now counts as none, so your changes save cleanly.",
 
   "changelog.entries.magazine-desk-two-tracks.title":
     "Two tracks on the magazine desk: Highlights and Issue",
   "changelog.entries.magazine-desk-two-tracks.body":
-    "Editors can now keep standalone platform highlights separate from the pieces being assembled into a full issue. Switch between the two tracks with a tap, and move any piece from one to the other, send a highlight into the current issue, or lift an issue piece back out to stand on its own. Search, filters and saved views all work within whichever track you're in, and new commissions land in the track you choose.",
+    "The desk now keeps standalone highlights separate from pieces being assembled into an issue. Switch tracks with a tap and move any piece between them.",
 
   "changelog.entries.photo-metadata-strip-hardening.title":
     "Stronger removal of hidden location data from your photos",
   "changelog.entries.photo-metadata-strip-hardening.body":
-    "Every photo you upload has its hidden metadata, including the GPS location many phones bake into a picture, removed in your browser before it ever leaves your device. We closed the gaps: if that removal can't complete for any reason, the upload is now blocked rather than sent as-is, and animated GIFs are cleaned in place without losing their animation. Your location stays yours.",
+    "Hidden metadata, including GPS location, is stripped from a photo in your browser before it leaves your device. If that cleaning cannot finish, the upload is blocked.",
 
   "changelog.entries.fix-persona-cover-overlay-leak.title":
     "Persona banners show cleanly once you upload one",
   "changelog.entries.fix-persona-cover-overlay-leak.body":
-    "On musician & DJ personas, the textured overlay meant for the empty, no-banner state was still painting over your banner after you'd uploaded one, dimming and speckling the photo. It now clears the moment a banner image is set, so your cover shows exactly as chosen.",
+    "On musician and DJ personas, the textured empty-state overlay kept dimming and speckling your banner after you uploaded one. It now clears the moment a banner image is set.",
 
   "changelog.entries.members-filter-panel-polish.title":
     "A calmer member-directory filter panel",
   "changelog.entries.members-filter-panel-polish.body":
-    "The filters on the member directory used to sit as seven near-identical floating boxes that read as visual clutter when collapsed. They're now one tidy panel with clean dividers between each group, and every filter header responds to hover and keyboard focus so it's clear you can open it.",
+    "The member-directory filters are now one tidy panel with clean dividers between groups, and every filter header responds to hover and keyboard focus so it is clear you can open it.",
 
   "changelog.entries.fix-persona-stage-dark-legibility.title":
     "Persona pages stay readable in dark mode",
   "changelog.entries.fix-persona-stage-dark-legibility.body":
-    "Two persona styles broke in dark mode, most visible in the editor's live preview. On the stage layout (musicians and DJs) the name, section headings and type pill turned dark-on-dark and all but vanished; the writer layout went almost entirely unreadable, its warm-ink text stranded on a near-black page. Both now stay light and legible in either theme, and the small ⓘ help icon beside a persona's name no longer reads as an empty ring on dark surfaces.",
+    "The stage and writer persona styles turned dark on dark in dark mode. Both stay legible in either theme now.",
 
   "changelog.entries.fix-persona-preview-avatar.title":
     "Persona photos now appear in the live preview, and the avatar is round again",
   "changelog.entries.fix-persona-preview-avatar.body":
-    "In the persona editor, a freshly picked avatar or cover showed only a placeholder in the live preview until you saved. It now renders the moment you choose it. We also fixed a stray square that framed the circular avatar on the preview and the public persona page.",
+    "A freshly picked avatar or cover now appears in the persona editor preview right away, and the round avatar sits on its own without a stray square around it.",
 
   "changelog.entries.fix-vouch-success-self-face.title":
     "Your vouch confirmation now shows your real face",
   "changelog.entries.fix-vouch-success-self-face.body":
-    'When you vouched for someone, the confirmation panel could pair the member\'s photo with a demo profile instead of yours. It now always shows your real avatar and initials beside theirs, so the "backed" moment reflects the actual person doing the vouching.',
+    "The vouch confirmation could show a demo profile in place of yours. It now always shows your real avatar and initials beside the person you backed.",
 
   "changelog.entries.persona-readiness-estimate.title":
     "The persona readiness estimate now reflects what's really left",
   "changelog.entries.persona-readiness-estimate.body":
-    "The \"Quick estimate\" on a persona's Get it live page now counts everything that's still worth adding (a cover image, your availability, a social link and enough content) instead of jumping to 100 the moment you could technically publish. The number only fills up once there's genuinely nothing left to polish.",
+    "A persona's Quick estimate now counts everything still worth adding, such as a cover image or a social link, so it fills only when nothing is left.",
 
   "changelog.entries.fix-persona-item-drawer-scroll.title":
     "Scroll to every field when editing a showcase item",
   "changelog.entries.fix-persona-item-drawer-scroll.body":
-    "The edit panel for a showcase item (like a gig or a project) no longer ran off the bottom of the screen on phones. You can now scroll through every field and reach Save.",
+    "The edit panel for a showcase item, like a gig or a project, stays within the screen on phones now, so you can scroll through every field and reach Save.",
 
   "changelog.entries.my-uploads.title":
     "See and manage everything you've uploaded",
   "changelog.entries.my-uploads.body":
-    "A new My uploads screen in Settings shows every picture you've uploaded, so you can spot and delete accidental double-uploads. It flags any picture that's still in use before you remove it.",
+    "A new My uploads screen in Settings lists every picture you have uploaded, so you can delete accidental duplicates. It flags a picture that is still in use.",
 
   "changelog.entries.profile-photo-picker.title":
     "Reuse a photo you've already uploaded",
   "changelog.entries.profile-photo-picker.body":
-    "The new photo picker lets you set your profile photo from your past uploads, your device, or your Google photo, and tidy up old uploads you no longer need.",
+    "The new photo picker sets your profile photo from your past uploads, your device, or your Google photo, and lets you tidy up old uploads you no longer need.",
 
   "changelog.entries.fix-persona-image-persistence.title":
     "Uploaded photos stay put after editing",
   "changelog.entries.fix-persona-image-persistence.body":
-    "Fixed a bug where an uploaded photo could vanish after you edited something and reloaded. It showed at first, then reverted to the placeholder. This affected persona covers and avatars, your profile photo and work images, and business-listing photos. Saving no longer overwrites an untouched image, so your photos stick.",
+    "Saving no longer overwrites an image you did not touch, so persona, profile, work and listing photos stay put instead of reverting to the placeholder.",
 
   "changelog.entries.dark-ghost-button-contrast.title":
     "Outlined buttons are legible in dark mode",
   "changelog.entries.dark-ghost-button-contrast.body":
-    "Secondary outlined buttons, like Share on a persona, were nearly invisible against dark backgrounds. Their outline and label now meet contrast guidelines, so they're clearly readable while staying subordinate to the primary action.",
+    "Outlined secondary buttons, like Share on a persona, were nearly invisible on dark backgrounds. Their outline and label now meet contrast guidelines while staying quieter than the main action.",
 
   "changelog.entries.admin-media-delete-and-preview-fix.title":
     "Admins can delete stored files, and large previews no longer hide the controls",
   "changelog.entries.admin-media-delete-and-preview-fix.body":
-    "In the admin media console, tall image previews used to push the file actions off the bottom of the screen, previews are now capped so every control stays reachable. Admins can also permanently delete a stored file straight from its details panel, with a confirmation step that warns when something still references it.",
+    "Tall image previews in the admin media console are capped, so the file actions stay reachable. Admins can also permanently delete a stored file from its details panel.",
 
   "changelog.entries.persona-editor-live-preview.title":
     "The persona editor preview updates as you type",
   "changelog.entries.persona-editor-live-preview.body":
-    "The live preview beside the persona editor now reflects your changes to name, tagline, bio, avatar, cover, accent and call-to-action instantly, before you save, so you can see exactly how your persona will look while you edit.",
+    "The preview beside the persona editor updates as you type, covering name, tagline, bio, avatar, cover, accent and call to action, so you see how your persona looks before you save.",
 
   "changelog.entries.fix-uploaded-avatar-not-showing.title":
     "Uploaded profile photos now show after saving",
   "changelog.entries.fix-uploaded-avatar-not-showing.body":
-    "Fixed a bug where a profile photo you'd uploaded and saved appeared as a broken image once the page reloaded. Your saved portrait now displays reliably everywhere.",
+    "A profile photo you uploaded and saved could come back as a broken image after a reload. Your saved portrait now shows reliably everywhere.",
 
   "changelog.entries.fix-image-preview-csp.title":
     "Image previews show again when uploading",
   "changelog.entries.fix-image-preview-csp.body":
-    "Fixed a bug where the preview of a photo you'd just picked wouldn't appear while uploading, a security policy was blocking the local preview image. Your selected photo now shows immediately as it uploads.",
+    "A security policy was blocking the local preview of a photo you had just picked. Your selected photo now shows straight away while it uploads.",
 
   "changelog.entries.use-google-profile-photo.title":
     "Use your Google photo on your profile",
   "changelog.entries.use-google-profile-photo.body":
-    "If you signed in with Google and haven't set a profile photo yet, the profile editor now offers a one-tap “Use Google photo” button, so you can fill in your portrait from your Google account without hunting for a file to upload.",
+    "If you signed in with Google and have no profile photo yet, the profile editor now offers a one-tap Use Google photo button.",
 
   "changelog.entries.skip-link-keyboard-only.title":
     "“Skip to main content” now stays out of the way",
   "changelog.entries.skip-link-keyboard-only.body":
-    "The “Skip to main content” shortcut, there to help keyboard users jump past the navigation, was occasionally flashing into view during ordinary browsing. It now appears only when you actually tab to it with the keyboard, and stays hidden the rest of the time.",
+    "The Skip to main content shortcut sometimes flashed into view during ordinary browsing. It now appears only when you tab to it with the keyboard.",
 
   "changelog.entries.enlarge-profile-photo.title":
     "Tap a profile photo to see it up close",
   "changelog.entries.enlarge-profile-photo.body":
-    "On any member's profile, tap their photo to open a large, full version, so you can see exactly who they are before you reach out. Tap anywhere or press Escape to close.",
+    "Tap a member's photo on their profile to open the full version in large, so you can see who they are before you reach out. Tap anywhere or press Escape to close.",
 
   "changelog.entries.tap-notification-to-profile.title":
     "Tap a notification to open the profile",
   "changelog.entries.tap-notification-to-profile.body":
-    "When someone accepts your invite or your connection, the whole notification is now tappable and takes you straight to their profile. Notifications that point somewhere more specific, like a thread or an event, still open that instead.",
+    "When someone accepts your invite or your connection, the whole notification is tappable and opens their profile. More specific notifications still open where they point.",
 
   "changelog.entries.more-push-notifications.title":
     "More of what matters now reaches you as a push",
   "changelog.entries.more-push-notifications.body":
-    "Push used to be just direct messages and event reminders. Now more of the moments that count can reach your lock screen, connection requests and accepts, mentions, replies on threads you're in, and vouches you receive, plus a heads-up whenever an event you're going to changes or is called off. There's a brand-new one for hosts too: a nudge when someone vouches for a safe space you look after. New on/off switches in settings let you keep Mentions and Vouches as loud or as quiet as you like, and a “Send yourself a test” button confirms it all lands on your device.",
+    "Push now covers connection requests, mentions, replies on your threads, vouches, and changes to an event you are going to, with new switches in settings.",
 
   "changelog.entries.localized-push-notifications.title":
     "Push notifications in your language",
   "changelog.entries.localized-push-notifications.body":
-    "System push notifications, like an event reminder, now render in Portuguese for members who've set the app to Portuguese, instead of always showing up in English. Direct-message previews were already in your own words; this brings the app's own copy in line with them.",
+    "If you have set the app to Portuguese, system push notifications like an event reminder now arrive in Portuguese instead of English.",
 
   "changelog.entries.magazine-desk-workspace-nav.title":
     "A dedicated workspace for the magazine desk",
   "changelog.entries.magazine-desk-workspace-nav.body":
-    "The magazine editor now has its own left-hand navigation, Desk, Pitches and Issue, with jump-to (⌘K) and the “Since Friday” activity panel, in place of the general site menu, on every editor screen.",
+    "Every editor screen now has its own left-hand navigation with Desk, Pitches and Issue, plus jump-to (Cmd+K) and a Since Friday activity panel.",
   "changelog.entries.richer-push-notifications.title":
     "Push notifications that show who and what",
   "changelog.entries.richer-push-notifications.body":
-    "Push notifications got richer, a direct message now shows who it's from, with their photo, and an event reminder shows the event's cover. Both come with a quick tap to jump straight in, and messages group neatly by conversation so your lock screen stays calm.",
+    "A direct message now shows who it is from, with their photo, and an event reminder shows the event cover. Tap to jump straight in, and messages group by conversation.",
 
   "changelog.entries.admin-uploaded-images.tag": "Open admin",
   "changelog.entries.admin-uploaded-images.title":
     "Admins can browse every uploaded image",
   "changelog.entries.admin-uploaded-images.body":
-    "Admins can now browse every uploaded image stored on the platform, with per-file details (owner, storage metadata, and an on-demand real content-type check) for security review.",
+    "Admins can now browse every uploaded image on the platform, with per-file details like owner, storage metadata and a real content-type check, for security review.",
 
   "changelog.entries.events-and-my-events-merged.title":
     "Events and Your events are now one page",
   "changelog.entries.events-and-my-events-merged.body":
-    "Your events dashboard and finding new events now live together at /events, with a My events / Discover switch up top. It opens on your dashboard when you have events on, and on Discover when you don't.",
+    "Your events dashboard and finding new events now live together at /events, with a My events / Discover switch up top. It opens on your dashboard when you have events on.",
 
   "changelog.entries.trust-network-legend-withdrawn.title":
     "The trust-network legend now explains dashed lines",
   "changelog.entries.trust-network-legend-withdrawn.body":
-    "On the Trust Network map, a vouch that was later retracted is drawn as a dashed red line. The legend now names it, “Withdrawn vouch”, so the dashed lines are no longer a mystery.",
+    "On the Trust Network map, the legend now names the dashed red line as Withdrawn vouch, so you can spot a retracted vouch at a glance.",
 
   "changelog.entries.trust-network-replay-timeline.title":
     "Trust Network replay now tells the story person by person",
   "changelog.entries.trust-network-replay-timeline.body":
-    "The Trust Network replay used to scrub month by month, lumping everyone who joined in the same month into one blur. Now it walks the network one connection at a time, in the real order people joined. Each step names who connected and when, and the matching row in the side list lights up as it plays.",
+    "Replay now walks the network one connection at a time, in the real order people joined. Each step names who connected and when, and the matching side-list row lights up.",
 
   "changelog.entries.pronouns-on-member-cards.title":
     "Richer new-member cards in the feed",
   "changelog.entries.pronouns-on-member-cards.body":
-    "New-member cards in your feed now show a member's pronouns right next to their name, plus where they're based and what they're into, so you get a sense of someone before you even open their profile. Location stays hidden for members whose profile isn't public.",
+    "New-member cards in your feed now show pronouns beside the name, plus where someone is based and what they are into. Location stays hidden for private profiles.",
 
   "changelog.entries.onboarding-join-and-leave.title":
     "Join (and leave) communities during sign-up",
   "changelog.entries.onboarding-join-and-leave.body":
-    "In the onboarding step that suggests communities, you can now tap a joined community again to leave it if you change your mind. The suggestions are also limited to fully open communities you can join in one tap, private and invite-only ones no longer appear here, since they can't be joined on the spot.",
+    "In the sign-up step that suggests communities, tap a joined one again to leave it. Suggestions now cover only fully open communities you can join in one tap.",
 
   "changelog.entries.saved-and-searched-lists-load.title":
     "Saved events and searched lists load again instead of erroring",
   "changelog.entries.saved-and-searched-lists-load.body":
-    "A handful of lists could fail to load and show an error instead of results: your Saved events tab (and the Going, Waitlisted and Past tabs), searching your messages, filtering the magazine by a single author, and searching the moderation queue. Each of these combined a lookup with paging in a way that tripped up the database query and returned nothing. They now load their results reliably.",
+    "Your Saved events tab, message search, filtering the magazine by one author and searching the moderation queue all load their results again instead of erroring.",
 
   "changelog.entries.admin-overview-stat-grid-responsive.title":
     "The admin dashboard stat cards fit the screen on mobile",
   "changelog.entries.admin-overview-stat-grid-responsive.body":
-    "The four headline stat cards at the top of the admin dashboard used to stay in a fixed four-across row on narrow screens, squeezing each card until its label broke apart and the row ran off the side. They now cap at four across on wide screens and gracefully wrap down to two, then one, as the screen narrows, so every card stays readable on a phone.",
+    "The four headline stat cards on the admin dashboard now wrap down to two, then one, as the screen narrows, so each card stays readable on a phone.",
 
   "changelog.entries.trust-network-mobile-graph-first.title":
     "The Trust Network opens on the graph on mobile",
   "changelog.entries.trust-network-mobile-graph-first.body":
-    "Opening a member's Trust Network on a phone now shows the connection graph straight away, instead of springing open a details sheet over it. Tap any person in the graph to slide up their vouch details and actions, and swipe or tap away to get back to the full picture.",
+    "On a phone, a member's Trust Network opens straight on the connection graph. Tap anyone to slide up their vouch details, then swipe away for the full picture.",
 
   "changelog.entries.magazine-article-versions.title":
     "Article drafts now keep a full version history",
   "changelog.entries.magazine-article-versions.body":
-    "Every filed draft and manual save now keeps a version, editors can compare against the current draft and restore any earlier one without losing work.",
+    "Every filed draft and manual save now keeps a version. Editors can compare it against the current draft and restore any earlier one.",
 
   "changelog.entries.magazine-article-comments.title":
     "Threaded notes on article drafts",
   "changelog.entries.magazine-article-comments.body":
-    "Editors can leave threaded notes on an article, reply to each other, and resolve a note once it's handled.",
+    "Editors can leave threaded notes on an article, reply to each other, and resolve a note once it is handled.",
 
   "changelog.entries.magazine-desk-live-notifications.title":
     "The magazine desk's activity panel now shows real editorial events",
   "changelog.entries.magazine-desk-live-notifications.body":
-    "The magazine desk's activity panel now shows real editorial events (who did what, when) linking straight to the piece, instead of the same fixed demo list every time.",
+    "The desk's activity panel now shows real editorial events, who did what and when, each linking straight to the piece.",
 
   "changelog.entries.magazine-desk-wave-b-fixes.title":
     "Archive search, contents blurbs, and kill-fee terms, now real",
   "changelog.entries.magazine-desk-wave-b-fixes.body":
-    "Archive search now finds published pieces live, instead of a static demo list. Issue contents blurbs and reader-letter “run in letters” selections now actually save, the letters toggle used to accidentally create a duplicate letter instead of updating the one you clicked. Contributors also see the real kill-fee terms on each commission.",
+    "Archive search now finds published pieces live. Issue contents blurbs and the run-in-letters choice save properly, and contributors see the real kill-fee terms on each commission.",
 
   "changelog.entries.magazine-commission-editor-fix.title":
     "Commissioning a piece works on a brand-new magazine",
   "changelog.entries.magazine-commission-editor-fix.body":
-    "Commissioning a piece from the editor desk could fail with an “editorId must be a UUID” error. It happened on a fresh magazine that had no pieces assigned to anyone yet. Commissions are now stamped with your own signed-in editor identity, so they go through straight away.",
+    "Commissioning a piece on a fresh magazine could fail with an editorId error. Commissions now carry your own signed-in editor identity, so they go through straight away.",
 
   "changelog.entries.magazine-issue-production.title": "Issue production",
   "changelog.entries.magazine-issue-production.body":
-    "Added issue production, arrange the running order, set the cover and coverlines, curate the members' digest and social cards, and ship the whole issue at once with a pre-ship checklist.",
+    "Arrange the running order, set the cover and coverlines, curate the members' digest and social cards, then ship the whole issue at once with a pre-ship checklist.",
 
   "changelog.entries.events-page-utility-redesign.title":
     "A cleaner, faster events page",
   "changelog.entries.events-page-utility-redesign.body":
-    "Events is now a utility-first page: a compact header with the My events / Discover switch and one place to host, no oversized hero, a small “Next up” highlight when something's on, and search in Browse.",
+    "Events now leads with a compact header carrying the My events / Discover switch and one place to host, a small Next up highlight, and search in Browse.",
 
   "changelog.entries.magazine-writer-workspace.title": "The writer workspace",
   "changelog.entries.magazine-writer-workspace.body":
-    "Opened the contributor workspace, writers now see their own assignments, pitches and payments, choose their byline, and file drafts, all in one place.",
+    "Writers now have one place for their own assignments, pitches and payments, where they choose their byline and file drafts.",
 
   "changelog.entries.persona-discovery-nudges.title":
     "Personas, easier to discover",
   "changelog.entries.persona-discovery-nudges.body":
-    "A persona of your own is now easier to notice, whenever it's relevant: a quiet suggestion on your profile if you haven't made one yet, a closing nudge at the bottom of the persona directory, a step during onboarding, a prompt after a gathering you performed at, and a highlighted credit when someone credits your work on theirs. Every one of these is dismissible.",
+    "Quiet, dismissible suggestions to make a persona of your own now appear on your profile, at the foot of the persona directory, and during sign-up.",
 
   "changelog.entries.magazine-deck-editor-redesign.title":
     "The slide-deck editor, redesigned",
   "changelog.entries.magazine-deck-editor-redesign.body":
-    "Redesigned the slide-deck editor to match the magazine desk, a live slide preview that mirrors exactly what readers see, per-slide character budgets, and a pre-publish checklist.",
+    "The slide-deck editor now matches the magazine desk, with a live preview of exactly what readers see, per-slide character budgets and a pre-publish checklist.",
 
   "changelog.entries.magazine-desk-redesign.title":
     "The magazine editor desk, redesigned",
   "changelog.entries.magazine-desk-redesign.body":
-    "Redesigned the magazine editor desk, a live editorial dashboard with pipeline, board and issue-plan views, a pitch inbox, saved views, command palette (⌘K) and keyboard shortcuts.",
+    "The desk is now a live editorial dashboard with pipeline, board and issue-plan views, a pitch inbox, saved views, a command palette (Cmd+K) and keyboard shortcuts.",
 
   "changelog.entries.persona-directory-redesign.title":
     "The persona directory, redesigned",
   "changelog.entries.persona-directory-redesign.body":
-    'Browsing personas is now organised by six craft families (Stage, Studio, Page, Workshop, Practice and Table) so you can narrow in on the kind of work you\'re after before you even search. Cards now show tags and a follower count at a glance, and a lighter "Also working as" block on member profiles gives each linked persona the same clearer, richer look.',
+    "Personas are now grouped into six craft families: Stage, Studio, Page, Workshop, Practice and Table. Cards show tags and a follower count at a glance.",
 
   "changelog.entries.persona-editor-redesign.title":
     "A redesigned editor for your personas",
   "changelog.entries.persona-editor-redesign.body":
-    "Editing a persona now has its own dedicated space: a section rail on the left, a live preview docked next to your edits, richer fields for gigs, visual work and projects, and a clear heads-up before an already-published address changes.",
+    "Editing a persona now has its own space: a section rail on the left, a live preview beside your edits, and richer fields for gigs and projects.",
 
   "changelog.entries.magazine-article-editor.title":
     "The block-based article editor, live",
   "changelog.entries.magazine-article-editor.body":
-    "Added the block-based article editor, write in paragraphs, headings, pull quotes, images, Q&As and stat rows, with inline emphasis, a slash menu, a live word and read-time count, and a pre-publish checklist.",
+    "Write in paragraphs, headings, pull quotes, images, Q&As and stat rows, with a slash menu, inline emphasis, live word and read-time counts, and a pre-publish checklist.",
 
   "changelog.entries.magazine-piece-record.title":
     "The full piece record, opened",
   "changelog.entries.magazine-piece-record.body":
-    "Opened the full piece record (brief, care & consent, money, history and reader letters) with a publish gate that holds a piece until consent and the sensitivity read are settled.",
+    "Each piece now has a full record covering brief, care and consent, money, history and reader letters, with a publish gate that holds it until consent and the sensitivity read are settled.",
 
   "changelog.entries.persona-dashboard-redesign.title":
     "Your personas, in one redesigned dashboard",
   "changelog.entries.persona-dashboard-redesign.body":
-    "Your personas dashboard got a redesign: each card now shows a draft-readiness ring or a live status pill, its tie and availability at a glance, and how many co-owners it has. Starting a new persona is now a guided two-step flow. Pick what it's for, then give it a name and choose whether it's linked to your profile or stands on its own.",
+    "Each persona card now shows a readiness ring or a live status pill, its availability and its co-owners. Starting a new one is a guided two-step flow.",
 
   "changelog.entries.persona-pages-redesigned.title":
     "Persona pages, redesigned for every craft",
   "changelog.entries.persona-pages-redesigned.body":
-    "Every persona now gets a page built for how that craft actually shows up: performers get a stage marquee with booking details, visual artists get a studio wall with a full-screen work lightbox, writers get a page-like layout with pull-quotes, coders and makers get a workshop sheet, therapists get a calm practice layout with session logistics, and chefs and mixologists get a printed menu card. Reporting a persona and seeing who's endorsed or following them also moved into their own focused screens.",
+    "Every persona page is now built for its craft: a stage marquee with booking details, a studio wall with a lightbox, a workshop sheet or a menu card.",
 
   "changelog.entries.persona-page-unavailable-reasons.title":
     "Persona pages now tell you why they're unavailable",
   "changelog.entries.persona-page-unavailable-reasons.body":
-    "If a persona is private, members-only, or has been removed, its page now says which one instead of a plain \"not found.\" And if you're the owner (or co-owner) of a persona you haven't published yet, its address now shows you a preview of your own draft with a publish-readiness banner, rather than nothing at all.",
+    "A persona page now tells you when it is private, members-only or removed. Your own unpublished page shows you a preview with a publish-readiness banner.",
 
   "changelog.entries.meet-the-table.title": "See who's at the table",
   "changelog.entries.meet-the-table.body":
-    "Supper club pages now show a warm, top-down view of the table, who's hosting, who's already coming, and which seats are still open. Tap someone to read a little about them before you arrive. We also retired an old placeholder ticket-checkout screen that was never a real payment.",
+    "Supper club pages now show a top-down view of the table: who is hosting, who is coming and which seats are open. Tap someone to read a little about them.",
 
   "changelog.entries.settings-mobile-nav-strips.title":
     "Easier settings and profile editing on your phone",
   "changelog.entries.settings-mobile-nav-strips.body":
-    "On a phone, Settings and Edit profile now carry a compact strip of tabs that stays pinned to the top as you scroll, so you can jump straight to a section instead of scrolling past everything. On Edit profile the current section highlights itself as you move down the page.",
+    "On a phone, Settings and Edit profile now carry a compact tab strip pinned to the top as you scroll, so you can jump straight to a section.",
 
   "changelog.entries.places-card-mobile-foot.title":
     "Tidier “Places you run” cards on mobile",
   "changelog.entries.places-card-mobile-foot.body":
-    "On a phone, the reference number and the Edit / Delete / View listing actions on your directory-listing cards no longer squeeze onto one cramped line, the reference now sits on its own row above a clean row of actions.",
+    "On a phone, your directory-listing cards now put the reference number on its own row above a clean row of Edit, Delete and View listing.",
 
   "changelog.entries.vouch-for-a-safe-space.title": "Vouch for a safe space",
   "changelog.entries.vouch-for-a-safe-space.body":
-    "If a venue has been good to you, you can now add your own vouch to its safe-space page, with an optional note and how you know the place, or anonymously. Your vouch joins the ones other members and moderators have left, so newcomers can see who stands behind a space.",
+    "If a venue has been good to you, add your own vouch to its safe-space page, with an optional note and how you know the place, or anonymously.",
 
   "changelog.entries.my-events-change-list-live.title":
     "See what's changed in My Events",
   "changelog.entries.my-events-change-list-live.body":
-    "The bell on your My Events page now works outside the demo. Open it for a running list of updates to events you've RSVP'd to or been invited to (a changed time, a new place, a cancellation) each one marked unread until you've seen it.",
+    "The bell on My Events now opens a running list of updates to events you have RSVP'd to or been invited to, each marked unread.",
 
   "changelog.entries.applications-inside-work-hub.title":
     "Applications moved into your Work hub",
   "changelog.entries.applications-inside-work-hub.body":
-    "Applications no longer has its own line in the profile menu. It now lives at the top of your Work hub, alongside mentorship, skills and everything else career-related. Open Work from the profile menu and you'll find your applications waiting there in both demo and live mode.",
+    "Applications now sit at the top of your Work hub, alongside mentorship and skills. Open Work from the profile menu to find them.",
 
   "changelog.entries.invite-only-community-tier.title":
     "Invite-only communities are gated again",
   "changelog.entries.invite-only-community-tier.body":
-    "Communities set to invite-only or request-to-join were showing an “Open to all” label and a one-tap Join button, the same as a fully open community. They now display their real join policy everywhere (the directory cards, the community page and the join sheet), so an invite-only space asks for an invite instead of letting anyone straight in.",
+    "Communities set to invite-only or request-to-join now show their real join policy on directory cards, the community page and the join sheet, so they ask for an invite.",
 
   "changelog.entries.navbar-wordmark-no-wrap.title":
     "The QueerPulse logo no longer stacks up",
   "changelog.entries.navbar-wordmark-no-wrap.body":
-    "On some screen sizes the QueerPulse wordmark in the top bar could break apart, dropping each letter onto its own line and puffing the bar into an oversized bubble. The logo now stays on a single line at every width.",
+    "The QueerPulse wordmark in the top bar now stays on a single line at every screen width.",
 
   "changelog.entries.mobile-edit-profile-refresh.title":
     "Editing your profile matches the new look",
   "changelog.entries.mobile-edit-profile-refresh.body":
-    "On a phone, editing your profile now uses the same centered layout as your profile itself, a round photo up top and tidier fields, and the Status & Visibility options no longer spill onto a second line.",
+    "On a phone, editing your profile now uses the same centered layout as your profile, with a round photo up top, tidier fields, and Status and Visibility on one line.",
 
   "changelog.entries.mobile-profile-header-refresh.title":
     "A cleaner profile on your phone",
   "changelog.entries.mobile-profile-header-refresh.body":
-    "Member profiles now lead with a centered photo and name, a roomier stats row, and a tidier set of buttons, so saying hello and vouching feel calmer and clearer on mobile.",
+    "Member profiles now lead with a centered photo and name, a roomier stats row and tidier buttons, so saying hello and vouching feel clearer on mobile.",
 
   "changelog.entries.profile-edit-save-bar-mobile.title":
     "Saving your profile on a phone just works",
   "changelog.entries.profile-edit-save-bar-mobile.body":
-    "While editing your profile on mobile, the Save and Discard buttons no longer hide behind the bottom navigation bar. The editing bar now sits cleanly above it, and on narrow screens the two buttons share the full width so they're easy to tap.",
+    "The Save and Discard buttons now sit cleanly above the bottom navigation while you edit your profile on a phone, and share the full width on narrow screens.",
 
   "changelog.entries.follow-topics-you-care-about.title":
     "Follow the topics you care about",
   "changelog.entries.follow-topics-you-care-about.body":
-    "Tap Follow on any topic to keep it close. Your follows are saved to your account, so the subjects that matter to you travel with you across devices.",
+    "Tap Follow on any topic to keep it close. Your follows are saved to your account, so they travel with you across devices.",
 
   "changelog.entries.event-change-alerts.title": "Know when an event changes",
   "changelog.entries.event-change-alerts.body":
-    "If an event you've RSVP'd to or been invited to moves its time or place, you'll get a notification, so a last-minute change never catches you out.",
+    "If an event you have RSVP'd to or been invited to moves its time or place, you now get a notification.",
 
   "changelog.entries.forms-that-really-submit.title":
     "Forms across the app now really submit",
   // Body corrected on 26 Aug 2026: "send" read as email. They store; the team
   // picks the submissions up in the app.
   "changelog.entries.forms-that-really-submit.body":
-    "Newsletter signup, the contact and partner enquiry forms, grant / panel / sober-host applications, and safe-space nominations stopped showing a preview and started really storing what you write, where the team picks it up in the app. Nothing reaches anyone by email: QueerPulse sends no email. Your event defaults also save for real.",
+    "Newsletter signup, contact enquiries, grant and panel applications, and safe-space nominations now store what you write, for the team to pick up in the app. QueerPulse sends no email.",
 
   "changelog.entries.save-events-for-later.title": "Save events for later",
   "changelog.entries.save-events-for-later.body":
-    "Found a gathering you're not ready to RSVP to yet? Tap Save to bookmark it. Everything you save shows up under the Saved tab in My Events, so nothing you were curious about slips away.",
+    "Tap Save on any gathering to bookmark it for later. Everything you save shows up under the Saved tab in My Events.",
 
   "changelog.entries.collections-are-here.title":
     "Group your saves into collections",
   "changelog.entries.collections-are-here.body":
-    "You can now gather the people, places, and posts you've saved into your own named collections, a reading list, a trip, a shortlist of spaces. Create as many as you like and add or remove things whenever you want.",
+    "Gather the people, places and posts you have saved into your own named collections, like a reading list or a shortlist of spaces. Make as many as you like.",
 
   "changelog.entries.your-mentions-in-one-place.title":
     "Every mention, in one place",
   "changelog.entries.your-mentions-in-one-place.body":
-    "When someone @-mentions you in a forum thread or a community post, it now lands in your Mentions inbox so you can catch up on everything that named you without hunting through notifications.",
+    "When someone @-mentions you in a forum thread or a community post, it now lands in your Mentions inbox so you can catch up in one place.",
 
   "changelog.entries.new-moderation-tools.title":
     "More tools for the moderation team",
   "changelog.entries.new-moderation-tools.body":
-    "Behind the scenes, the team gained real controls: verify or restrict a member, add and remove community moderators, act on reading-group proposals, and publish or export governance records, all wired to the platform instead of standing in as previews.",
+    "The team gained real controls to verify or restrict a member, add and remove community moderators, act on reading-group proposals, and publish or export governance records.",
 
   "changelog.entries.reports-reach-the-team.title":
     "Reports now reach the moderation team",
   "changelog.entries.reports-reach-the-team.body":
-    'When you report a forum post, it now reaches the moderators reliably, and if sending ever fails, you\'ll see a clear error and a way to try again, instead of a false "done". You can also report any individual reply, as well as the opening post.',
+    "Reporting a forum post now reaches the moderators reliably, and a failed send shows a clear error with a way to try again. You can also report any individual reply.",
 
   "changelog.entries.chat-recovers-after-reconnect.title":
     "Chat catches up when you're back online",
   "changelog.entries.chat-recovers-after-reconnect.body":
-    "If a message can't send because you lost connection, it now sends itself as soon as you're reconnected, no need to reload or resend by hand. A small banner tells you when you're offline or reconnecting so you always know where a message stands.",
+    "A message that fails while you are offline sends itself as soon as you reconnect. A small banner tells you when you are offline or reconnecting.",
 
   "changelog.entries.honest-live-states.title": "What you see is real",
   "changelog.entries.honest-live-states.body":
-    "We swept the app so that pages only ever show real people and content. Placeholder press clippings, sample voices, and example inventory no longer appear as if they were real, and controls that aren't wired up yet are clearly marked instead of pretending to save.",
+    "Pages now show only real people and content. Sample press clippings, voices and inventory are gone, and controls that are still being wired up are clearly marked.",
 
   "changelog.entries.community-activity-in-your-feed.title":
     "Your feed now shows what's happening in your communities",
   "changelog.entries.community-activity-in-your-feed.body":
-    "Your home feed pulls in real activity from the communities you're part of, posts, announcements, new gatherings, forum threads, and the people who just joined. When you create a gathering or start a forum thread, you can share it straight to one of your communities.",
+    "Your home feed now pulls in real activity from your communities: posts, announcements, new gatherings, forum threads and new members. You can also share a gathering or thread straight to a community.",
 
   "changelog.entries.assignable-staff-roles.title":
     "Admins can now assign magazine staff roles",
   "changelog.entries.assignable-staff-roles.body":
-    "From the member directory, admins can grant two functional roles on top of a member's account level: Magazine Editor and Magazine Writer. Access to the magazine editorial desk now follows the Magazine Editor role rather than any moderator, admins keep access, as before.",
+    "From the member directory, admins can grant two roles beyond a member's account level: Magazine Editor and Magazine Writer. The editorial desk now follows the Editor role.",
   "changelog.entries.assignable-staff-roles.tag": "Open the member directory",
 
   "changelog.entries.feed-scroll-no-longer-sticks.title":
     "Your feed scrolls smoothly again",
   "changelog.entries.feed-scroll-no-longer-sticks.body":
-    "On the home feed, notifications, members and gatherings, scrolling with a mouse or trackpad over the content could get stuck, moving nothing while the page stayed put. It now scrolls the page the way it should, everywhere.",
+    "Scrolling with a mouse or trackpad over the home feed, notifications, members and gatherings could stick in place. It now scrolls the page the way it should, everywhere.",
 
   "changelog.entries.fresh-feed-card-layout.title":
     "A fresh look for your feed",
   "changelog.entries.fresh-feed-card-layout.body":
-    "Every card in your home feed (new members, gatherings, communities and community posts) now shares one cleaner layout, and packs two-to-a-row on wider screens so you can browse more at a glance.",
+    "Every card in your home feed shares one cleaner layout, and cards sit two to a row on wider screens so you can browse more at a glance.",
 
   "changelog.entries.feature-communities-cta-jump.title":
     "“Choose communities” now takes you straight to the picker",
   "changelog.entries.feature-communities-cta-jump.body":
-    "On your profile, the Communities block's “Choose communities” button now opens Edit profile scrolled right to the communities picker, instead of dropping you at the top of the page to find it yourself.",
+    "The Communities block's “Choose communities” button now opens Edit profile scrolled straight to the communities picker.",
   "changelog.entries.feature-communities-cta-jump.tag": "Choose communities",
 
   "changelog.entries.live-homepage-curated-sections.title":
     "The homepage now shows real, admin-curated people and communities",
   "changelog.entries.live-homepage-curated-sections.body":
-    "The public homepage's member, community, and changemaker sections now pull from the admin-curated list, real people and communities the team has chosen to introduce. A section stays hidden until something's been curated for it.",
+    "The member, community and changemaker sections on the public homepage now show real people and communities the team has curated. A section stays hidden until something is chosen for it.",
 
   "changelog.entries.featured-homepage-consent-toggle.title":
     "Opt in to being featured on the homepage",
   "changelog.entries.featured-homepage-consent-toggle.body":
-    "Privacy settings now has a toggle letting admins feature you on the admin-curated homepage, a member quote or highlight, chosen only from public, opted-in profiles. It's off by default, only available once your profile is set to “Open to connect,” and you can turn it off again any time.",
+    'Privacy settings has a new toggle letting admins feature you on the curated homepage. It is off by default and needs your profile set to "Open to connect".',
   "changelog.entries.featured-homepage-consent-toggle.tag":
     "Open your privacy settings",
 
   "changelog.entries.mobile-profile-top-breathing-room.title":
     "A calmer top on mobile profiles",
   "changelog.entries.mobile-profile-top-breathing-room.body":
-    "Profile pages on phones now have more breathing room at the top, so the avatar and details no longer sit crammed under the header. We also dropped the “Queer Pulse” wordmark from the top strip on inner pages, the back arrow and the home button in the bottom bar already get you where you need to go, so it was just clutter.",
+    "Profile pages on phones have more room at the top, so your avatar and details sit clear of the header. The “Queer Pulse” wordmark has left the top strip on inner pages.",
 
   "changelog.entries.accessible-names-screen-readers.title":
     "Screen readers now name every control",
   "changelog.entries.accessible-names-screen-readers.body":
-    "Buttons and switches that showed only an icon (the send button in a livestream chat, the payment buttons at checkout, the toggles in your studio settings, moderation and notification cards) now announce a clear name to screen readers, so nothing reads as an unlabelled “button”. We also added an automatic check that holds the whole app at zero missing labels from here on. Nothing about how anything looks or works has changed; it's purely an accessibility pass.",
+    "Icon-only buttons and switches across the app now announce a clear name to screen readers, so nothing reads as an unlabelled “button”. An automatic check keeps it that way.",
 
   "changelog.entries.icons-not-text-symbols.title":
     "Crisper icons in place of text symbols",
   "changelog.entries.icons-not-text-symbols.body":
-    "Across the platform, the little directional and status marks (the “next” and “back” arrows on buttons and links, dropdown carets, the drag handles, the clock and play marks) are now drawn with proper icons instead of typed-in text characters. They render sharply and identically on every device and font, line up neatly with their labels, and read correctly to screen readers. Purely a polish and accessibility pass; nothing about what the buttons do has changed.",
+    "Arrows, dropdown carets, drag handles and clock marks are now drawn as proper icons. They stay sharp on every device and font, and read correctly to screen readers.",
 
   "changelog.entries.message-alerts-out-of-notifications.title":
     "New-message alerts moved out of the notifications centre",
   "changelog.entries.message-alerts-out-of-notifications.body":
-    "Your Notifications tab no longer fills up with “You have a new message” rows. New direct messages now show only where you'd expect them, the unread count on the message icon and, if you've opted in, a push notification. Nothing changed about the messages themselves; the notifications centre is just quieter and focused on the things you can't already see in your inbox.",
+    'Your Notifications tab no longer fills with "You have a new message" rows. New direct messages show in the unread count on the message icon.',
 
   "changelog.entries.shared-ui-consistency.title":
     "Smoother, more consistent dialogs and forms",
   "changelog.entries.shared-ui-consistency.body":
-    "We rebuilt dozens of pop-ups, confirmations, pickers and forms on one shared set of building blocks. In practice that means every dialog now traps keyboard focus, closes on Escape in the right order when several are open, and returns you exactly where you were, so the whole app feels tidier and works better with a keyboard or screen reader. No feature moved; things just behave the same way everywhere now.",
+    "Dozens of pop-ups, confirmations, pickers and forms now share one set of building blocks. Every dialog traps keyboard focus, closes on Escape in the right order, and returns you where you were.",
 
   "changelog.entries.balanced-feed-grid.title": "A more balanced home feed",
   "changelog.entries.balanced-feed-grid.body":
-    "Your home feed now lays its cards out as a tidy grid instead of one tall stack. Light cards (new members, saved reads, gathering recaps) sit two or more to a row on a wide screen, so you see more people at a glance and the People tab reads like a proper directory. Richer cards like posts, community pulse and gatherings still take the full width where the extra room helps. On a phone it all folds back to a single column.",
+    "Your home feed now lays cards out as a grid: light cards like new members sit two or more to a row, while posts keep the full width.",
 
   "changelog.entries.moderation-outcome-notifications.title":
     "You'll now hear the outcome of a moderation decision",
   "changelog.entries.moderation-outcome-notifications.body":
-    "When the moderation team warns, suspends, or closes an account, the member now receives a notification explaining what happened and why, in their own language, with the reason the moderator wrote and a link to appeal the decision. A suspended or banned member is also taken straight to a page that shows the same reason and, for a suspension, when it lifts, instead of a blank screen that won't load. Until now only the person who filed a report was told the outcome; the member it affected was left in the dark. Moderation notifications are always delivered and can't be muted.",
+    "When the moderation team warns, suspends or closes an account, the member now gets a notification with the reason and a link to appeal.",
 
   "changelog.entries.community-page-polish.title":
     "A friendlier community page",
   "changelog.entries.community-page-polish.body":
-    "The single community page got a pass of polish: you can now share a community with a friend, leaving one asks you to confirm first so it never happens by accident, the Events tab lists every upcoming gathering instead of just the next, and switching tabs updates the link so you can share or bookmark a specific view. Non-members can read along without stray reply boxes, and your own posts now show your real name and photo the moment you share them.",
+    "On a community page you can now share it, leaving asks you to confirm, the Events tab lists every upcoming gathering, and switching tabs updates the link.",
 
   "changelog.entries.job-application-status.title":
     "See where your job applications stand",
   "changelog.entries.job-application-status.body":
-    "The application tracker now shows your real applications (what you applied to, when, and where each one is in the process) instead of a placeholder. Open any card to revisit the answers you sent.",
+    "The tracker now shows your real applications: what you applied to, when, and where each one stands. Open a card to revisit the answers you sent.",
 
   "changelog.entries.data-request-history.title":
     "Your data-request history, in one place",
   "changelog.entries.data-request-history.body":
-    "The privacy page now lists your real past data requests (access, correction, objection and the rest) with their reference and current status, so you can follow one up without guessing.",
+    "The privacy page now lists your past data requests with their reference and current status, so you can follow one up.",
 
   "changelog.entries.community-settings-controls.title":
     "Save, archive, or hand over your community",
   "changelog.entries.community-settings-controls.body":
-    "If you run a community, the moderation panel's settings now do what they say: editing the name, description and house rules saves for real, you can archive a community, and you can transfer ownership to another member. No more changes that quietly went nowhere.",
+    "If you run a community, the moderation panel's settings now save for real: name, description and house rules. You can also archive a community or transfer ownership to another member.",
 
   "changelog.entries.feed-keeps-loading.title":
     "The feed keeps loading as you scroll",
   "changelog.entries.feed-keeps-loading.body":
-    "The community feed used to stop after the first page. It now loads more on its own as you reach the end, and there's a keyboard-friendly “Load more” for when you'd rather tap.",
+    "The community feed used to stop after the first page. It now loads more as you reach the end, and there is a keyboard-friendly “Load more” button too.",
 
   "changelog.entries.faster-first-load.title": "A faster first load",
   "changelog.entries.faster-first-load.body":
-    "We now load each part of the interface's wording only when a screen needs it, instead of shipping all of it up front. The app opens noticeably quicker, especially on a phone or a slower connection.",
+    "Interface wording now loads per screen as each one needs it, so the app opens noticeably quicker on a phone or a slower connection.",
 
   "changelog.entries.readable-text-contrast.title":
     "Easier-to-read text across the app",
   "changelog.entries.readable-text-contrast.body":
-    "A set of faint captions, hints and labels (in collections, the GIF picker, profile cards and a few other spots) were too light against the background. They now meet accessible contrast, in both light and dark mode.",
+    "Faint captions, hints and labels in collections, the GIF picker and profile cards now meet accessible contrast, in both light and dark mode.",
 
   "changelog.entries.ios-splash-screens.title":
     "A polished launch screen on iPhone",
   "changelog.entries.ios-splash-screens.body":
-    "When you open QueerPulse from your iPhone home screen, it now shows a proper branded launch screen while it starts up, instead of a blank white flash. Android notifications also get a cleaner badge.",
+    "Opening QueerPulse from your iPhone home screen now shows a branded launch screen while it starts up. Android notifications get a cleaner badge.",
 
   "changelog.entries.removed-content-stays-hidden.title":
     "Removed content stays hidden everywhere",
   "changelog.entries.removed-content-stays-hidden.body":
-    "When a moderator takes something down, it now consistently disappears everywhere it could show (including direct messages, business and housing listings, and personas) and taken-down messages no longer count toward your unread badges.",
+    "Content a moderator takes down now disappears everywhere it could show, including direct messages, business and housing listings, and personas. Removed messages stop counting toward your unread badges.",
 
   "changelog.entries.help-demo-example-live-hidden.title":
     "Help panels no longer show demo examples in live mode",
   "changelog.entries.help-demo-example-live-hidden.body":
-    "The “About this screen” help used to end with an “In the demo” example even in live mode, where that sample data doesn't exist. That aside now only appears when you're exploring the demo.",
+    "The “In the demo” example at the end of “About this screen” help now appears only while you are exploring the demo.",
 
   "changelog.entries.smaller-help-icon.title":
     "A smaller “About this screen” help icon",
   "changelog.entries.smaller-help-icon.body":
-    "The little ⓘ help icon next to a page title used to grow with the heading and could look oversized next to the big display titles. It's now a discreet, consistent size on every screen.",
+    "The help icon beside a page title used to grow with the heading. It is now a discreet, consistent size on every screen.",
 
   "changelog.entries.community-rules-and-tags-polish.title":
     "Clearer house rules and tags in community details",
   "changelog.entries.community-rules-and-tags-polish.body":
-    "A community's house rules now show their proper wording instead of an internal code, and the tags at the bottom of the About page stay legible in dark mode.",
+    "A community's house rules now show their proper wording in place of an internal code, and the tags on the About page stay legible in dark mode.",
 
   "changelog.entries.co-owned-subprofiles.title":
     "Co-own a persona with someone else",
   "changelog.entries.co-owned-subprofiles.body":
-    "Some work is a duet: a DJ act, a band, a joint studio. You can now invite another member to co-own a subprofile: once they accept, you both fully manage it, it shows up on both your profiles, and either of you can invite someone new, leave, or edit what's shared. Deleting a co-owned persona now tells you upfront how many people it affects.",
+    "You can invite another member to co-own a subprofile. Once they accept, you both manage it fully and it shows on both profiles.",
 
   "changelog.entries.smoother-mobile-navigation.title":
     "A smoother way to move around on your phone",
   "changelog.entries.smoother-mobile-navigation.body":
-    "Getting around QueerPulse on a phone should feel like moving. The bottom tab bar now stays with you in the browser too, even before you've installed the app, and pages settle into place with a smooth transition instead of snapping. Each tab remembers exactly where you left it, and tapping the one you're already on carries you straight back to the top. Swipe in from the left edge of the screen to go back, and pull down on your feed, events, members, messages or notifications to refresh with a quick tug instead of a reload.",
+    "The bottom tab bar stays with you in the browser, each tab remembers where you left it, and tapping the current tab carries you to the top.",
 
   "changelog.entries.no-sideways-scroll-on-mobile.title":
     "Pages scroll top-to-bottom on your phone again",
   "changelog.entries.no-sideways-scroll-on-mobile.body":
-    "On some phones a page could drift sideways and feel stuck, everything looked too wide and cramped, and the whole screen slid left and right instead of scrolling up and down. That's fixed across the app. Long links, handles and words now wrap onto the next line instead of stretching a card past the edge of the screen, and the page is held to your phone's width so it only ever scrolls the way it should: down.",
+    "Pages no longer drift sideways on a phone. Long links, handles and words wrap onto the next line, and the page is held to your screen's width.",
 
   "changelog.entries.no-placeholder-people-in-live.title":
     "Live mode now shows only real people",
   "changelog.entries.no-placeholder-people-in-live.body":
-    "A few corners of QueerPulse were quietly showing example people from the demo to real members, a wellbeing directory of made-up therapists, a job application that arrived pre-filled with someone else's name and email, and magazine stories written by placeholder authors. That's fixed. You'll now see real content where it exists, your own details where a form asks for them, and an honest “still being built” note where something isn't ready yet. Never a stand-in pretending to be a person.",
+    'Demo people are gone from live mode: the wellbeing directory, prefilled job applications and magazine bylines. You now see real content, or a "still being built" note.',
 
   "changelog.entries.honest-roadmap-promises.title":
     "The roadmap now keeps its promises, and says no, honestly",
   "changelog.entries.honest-roadmap-promises.body":
-    "When something on the roadmap carries a Committed badge, that's a real promise you can count on, and if its date ever moves, you'll see the actual reason why, published right there instead of quietly disappearing. There's also a new “Not building this, and why” list, so a request that isn't happening gets an honest answer instead of silence. Behind it, the team's roadmap tools got a full rebuild, a proper board for moving work from idea to shipped, a timeline, and a real queue for reading and responding to what members ask for, so what you see here stays current.",
+    'A Committed badge on the roadmap is a real promise: if its date moves, you see the published reason. A new "Not building this, and why" list covers turned-down requests.',
 
   "changelog.entries.invite-resend-and-qr.title":
     "Resend an invite that ran out, and share it with a QR code",
   "changelog.entries.invite-resend-and-qr.body":
-    "An invite that expired before your friend got to it no longer means starting over. Open your sent invites, tap “Send again” on the expired one, and the same link comes back to life for another week. Every invite you generate now also comes with a QR code, so someone can join by scanning it straight from your phone, across a table or at an event, no link to copy. And if an invite was addressed to a different email, or the person who invited you is no longer on QueerPulse, you'll now get a clear, kind explanation instead of a puzzling error.",
+    'Open your sent invites and tap "Send again" on an expired one to revive the same link for another week. Every invite now comes with a QR code.',
   "changelog.entries.invite-resend-and-qr.tag": "Invite someone",
 
   "changelog.entries.smoother-onboarding-first-minutes.title":
     "A gentler welcome for your first few minutes",
   "changelog.entries.smoother-onboarding-first-minutes.body":
-    "Setting up your space just got kinder. If you step away partway through, we now remember where you were and pick up right there instead of starting you over. The “here for” tags you choose show on your profile from the start, and coming back to onboarding will never quietly overwrite them. Moving through the steps with a keyboard or screen reader now lands you in the right place each time, and you can step back a page whenever you want a second look.",
+    'If you step away partway through setting up, you pick up where you left off. The "here for" tags you choose show on your profile from the start.',
 
   "changelog.entries.events-open-at-top.title": "Events opens at the top",
   "changelog.entries.events-open-at-top.body":
-    "Opening Events (or any tab) now always starts you at the top of the page. It used to drop you back at wherever you'd last scrolled to, which on the tall Events cover left you stranded mid-page. Pressing your browser's Back button still returns you to exactly where you were.",
+    "Opening Events, or any tab, now starts you at the top of the page. Your browser's Back button still returns you to exactly where you were.",
   "changelog.entries.events-open-at-top.tag": "Browse events",
 
   "changelog.entries.chat-header-tap-to-profile.title": "A calmer chat header",
   "changelog.entries.chat-header-tap-to-profile.body":
-    "The top of a conversation now works the way you'd expect: tap the person's name or photo to open their profile, no separate button needed. The layout is tidier too, with the info and starred-messages controls gathered into one neat pair in the corner instead of floating out of place.",
+    "Tap the person's name or photo at the top of a conversation to open their profile. The info and starred-messages controls now sit together in the corner.",
   "changelog.entries.chat-header-tap-to-profile.tag": "Open messages",
 
   "changelog.entries.sheet-close-scroll-jump-fix.title":
     "No more jumping back to the top",
   "changelog.entries.sheet-close-scroll-jump-fix.body":
-    "If you opened your account sheet partway down a page and closed it again, the page would sometimes snap back up to the top, losing your place. It now stays exactly where you left it.",
+    "Closing your account sheet partway down a page used to snap you back to the top. The page now stays exactly where you left it.",
 
   "changelog.entries.mobile-account-you-tab.title":
     "Your account, one tap away on mobile",
   "changelog.entries.mobile-account-you-tab.body":
-    "On a phone, tapping your photo in the bottom bar now opens a space that's just yours: your profile, connections, saved places, applications and settings, gathered into one tidy sheet instead of scattered down a long menu. Messages moved up top beside notifications, so the people you're talking to stay within reach, and the “More” menu is now just for exploring the rest of QueerPulse.",
+    "Tapping your photo in the bottom bar opens one sheet with your profile, connections, saved places, applications and settings. Messages moved up beside notifications.",
 
   "changelog.entries.instagram-style-mobile-profile.title":
     "Your profile, redesigned for your phone",
   "changelog.entries.instagram-style-mobile-profile.body":
-    "On a phone, your profile now opens the way the apps you already know do: a compact avatar wrapped in a soft pride-gradient ring, a stat row you can take in at a glance (vouches, communities, personas) a highlights strip of your personas right up top, and the rest of your profile organised into swipeable, tabbed sections instead of one long scroll.",
+    "On a phone your profile now opens with a compact avatar, a stat row of vouches, communities and personas, a highlights strip, and swipeable tabbed sections.",
 
   "changelog.entries.forum-upvotes-tags-search.title":
     "The forum grew up, upvotes, tags, search and lockable threads",
   "changelog.entries.forum-upvotes-tags-search.body":
-    "The commons got a proper set of tools. You can now upvote a thread or a reply for real, so the answers people found most useful rise to where you'll see them. Sort the board by Active or Unanswered, as well as Top and New, to find the conversations that need a voice or the ones still waiting for a first reply. When you start a post you can add a few tags like #housing or #health, and tapping any tag filters the whole board down to that topic. There's a search box now, so you can look for a thread instead of scrolling for it. And moderators can close a thread to new replies when a conversation has run its course. It stays readable, just paused.",
+    "The forum now has working upvotes on threads and replies, Active and Unanswered sorting, tappable tags like #housing, a search box, and moderators can close a thread.",
   "changelog.entries.forum-upvotes-tags-search.tag": "Open the forum",
   "changelog.entries.list-business-wizard-overhaul.title":
     "Adding your space to the directory just got a lot easier",
   "changelog.entries.list-business-wizard-overhaul.body":
-    "We rebuilt the whole “list a business” flow. If you're just recommending a place you love, we now only ask for what you can actually know, a name, where it is and a line about why, instead of demanding owner details and opening hours you don't have. Can't paste a Google Maps link? Type the address and tap “Locate this address”, or drop a pin on the neighbourhood and nudge it into place. You're never stuck. Opening hours now handle lunch-break splits and late nights that run past midnight, and as you type a name we check the real directory so you don't accidentally add a place that's already there. Your progress saves as you go and now follows you across devices, so you can start on your phone and finish on a laptop. Every business also gets a clear way to claim its own listing or dispute one added without its say-so, and anyone can still flag a listing that shouldn't be there.",
+    "Recommending a place now asks only for a name, where it is and a line about why. Type the address or drop a pin on the map.",
   "changelog.entries.list-business-wizard-overhaul.tag": "List your space",
   "changelog.entries.mobile-experience-pass.title":
     "The whole app, tuned for your thumb",
   "changelog.entries.mobile-experience-pass.body":
-    "We went screen by screen to make QueerPulse feel right in one hand. Buttons, chips and switches are bigger and easier to hit, and menus, filters and dialogs now rise up from the bottom of the screen as sheets you can flick away, right where your thumb already is. There's a clear back arrow at the top of every page you can reach without installing the app, and when you open a chat it fills the screen so nothing gets in the way, with the message box always sitting just above the keyboard. Slide-deck stories, the events calendar, the directory filters and the admin tools all read comfortably on a phone now, in portrait, without pinching or scrolling sideways.",
+    "Buttons, chips and switches are bigger and easier to hit, and menus, filters and dialogs now rise from the bottom as sheets you can flick away.",
 
   "changelog.entries.magazine-deck-authoring.title":
     "Editors can now build their own interactive decks",
   "changelog.entries.magazine-deck-authoring.body":
-    "The interactive slide-deck format from the magazine's front page used to be something we assembled by hand. Now editors get a full authoring tool right in the dashboard. Add slides in five layouts (text, full-bleed image, a big animated stat, a before-and-after slider, or a tap-to-reveal moment), fill in the byline and metadata, and preview it exactly as readers will see it. Save a draft while you're still shaping it, then publish when it's ready, it'll show up with the “Interactive” tag on the magazine's front page.",
+    "Editors can now build interactive slide decks in the dashboard: five slide layouts, byline and metadata, a reader preview, saved drafts, and publishing with the “Interactive” tag on the magazine's front page.",
 
   "changelog.entries.listings-moderation-console.title":
     "The listings queue is now a real moderation console",
   "changelog.entries.listings-moderation-console.body":
-    "Reviewing directory submissions is faster now: the queue has real pagination, search by name, submitter or reference, and sort by newest, oldest, or name, with a live count for each status. Moderators can select several submissions at once to publish, send back, or remove them together, and every row now shows how long a listing has been waiting so nothing sits forgotten. Sending a listing back or removing it can carry a short reason for the record, and opening a listing's preview now shows its full moderation history alongside any question-and-answer thread with the person who submitted it. An empty queue finally looks like good news, with its own illustration instead of a blank space.",
+    "The listings queue now has pagination, search by name, submitter or reference, and sorting, with a live count per status. Moderators can act on several submissions at once.",
 
   "changelog.entries.magazine-slide-decks.title":
     "Interactive slide-deck stories, now in the magazine",
   "changelog.entries.magazine-slide-decks.body":
-    "Some magazine stories can now be read as a slide deck: full-screen slides you tap through like a presentation, mixing text, full-bleed photos, big animated numbers, before-and-after image sliders and moments you tap to reveal. Open “Present” for a distraction-free, full-screen read. Look for the “Interactive” tag on the magazine's front page, the first one, “Ten years in Mouraria,” is live now.",
+    'Some magazine stories can now be read as full-screen slides you tap through, mixing text, photos, animated numbers and before-and-after sliders. Look for the "Interactive" tag.',
 
   "changelog.entries.real-notification-settings.title":
     "Notification settings that actually do something",
   "changelog.entries.real-notification-settings.body":
-    "The toggles in Settings → Notifications used to be for show, flipping them changed nothing. Now they're real: turn gathering invites, RSVP reminders, new-message alerts, connection requests and thread replies on or off per type, and your choice is saved and respected everywhere, including phone push. Safety and account messages (moderation, appeals, account changes) always come through and aren't hidden behind a toggle. A few rows with no feature behind them yet are still honestly marked “coming soon” rather than pretending to work.",
+    "The toggles in Settings, Notifications now work: turn each type of alert on or off, phone push included. Safety and account messages always come through.",
   "changelog.entries.platform-wide-search.title":
     "Search now covers the whole platform",
   "changelog.entries.platform-wide-search.body":
-    "Global search reached only members, communities, events, forum threads and businesses. It now spans magazine articles, jobs, housing listings, resources, workshops and subprofiles too, so one search finds the thing you're looking for wherever it lives, in both English and Portuguese.",
+    "Global search now spans magazine articles, jobs, housing listings, resources, workshops and subprofiles, alongside members, communities, events, forum threads and businesses, in both English and Portuguese.",
   "changelog.entries.save-events-communities.title":
     "Save events and communities, and saves that really stick",
   "changelog.entries.save-events-communities.body":
-    "You can now save a gathering or a community to your collection with the same bookmark you already use elsewhere. We also fixed two Save buttons, on a job's detail page and on short films, that looked like they worked but forgot everything the moment you left. Every save now persists to your collection.",
+    "You can now save a gathering or a community to your collection, with the same bookmark you use elsewhere. Save on job details and short films now sticks.",
   "changelog.entries.invite-revoke-oversight.title":
     "Take back an invite you've sent",
   "changelog.entries.invite-revoke-oversight.body":
-    "Changed your mind about an invitation? You can now revoke a pending invite from your sent list and the link stops working immediately. Admins also get a new platform-wide Invites view to see every invitation and its status, filterable at a glance.",
+    "You can now revoke a pending invite from your sent list, and the link stops working right away. Admins get a platform-wide Invites view with filters by status.",
   "changelog.entries.moderation-completeness.title":
     "A more complete moderation toolkit",
   "changelog.entries.moderation-completeness.body":
-    "Moderators can now take down a member's profile and individual business reviews, as well as posts and listings. A removed profile or review stops showing to everyone else (and a removed review stops counting toward a place's rating). Moderators can also lift a suspension and reinstate a member directly, instead of only through the appeal flow.",
+    "Moderators can now take down a member's profile or a single business review, and a removed review stops counting toward the place's rating. They can also lift a suspension directly.",
   "changelog.entries.account-media-safety.title":
     "Safer handles, cleaner storage",
   "changelog.entries.account-media-safety.body":
-    "A few quiet safety improvements. When you change your username, the old one is now held for you for 30 days before anyone else can take it, so a freed handle can't be instantly grabbed and old @mentions can't be quietly redirected to a stranger. Photos you replace (avatars, listing pictures, post images) are now deleted from storage instead of lingering, a suspended member's images stop being served to others, and finishing onboarding records your agreement to the community guidelines.",
+    "Change your username and the old handle is held for 30 days. Photos you replace are deleted from storage, and a suspended member's images stop being served.",
   "changelog.entries.legal-notice-imprint.title":
     "A legal notice (imprint) page",
   "changelog.entries.legal-notice-imprint.body":
-    "Added a Legal Notice page under Policies, linked from the footer, setting out who operates QueerPulse and how to reach us, the kind of imprint that's expected of a service operating in Europe.",
+    "A Legal Notice page now sits under Policies, linked from the footer, setting out who operates QueerPulse and how to reach us.",
   "changelog.entries.messages-list-virtualization.title":
     "Long chats now scroll smoothly, however big they get",
   "changelog.entries.messages-list-virtualization.body":
-    "A very long or very active conversation used to keep every message it had ever loaded sitting in the page at once, which could make scrolling feel heavy the longer a chat went on. Messages now render only the ones actually near your screen, so a thread with thousands of messages feels just as light as a brand-new one, loading older history, jumping to a reply, and scrolling to the latest message all still land exactly where you'd expect.",
+    "Long conversations now render only the messages near your screen, so a thread with thousands of messages scrolls as lightly as a brand-new one.",
   "changelog.entries.live-mode-honesty-sweep.title":
     "No more placeholder people, fake confirmations or dead-end buttons",
   "changelog.entries.live-mode-honesty-sweep.body":
-    "A platform-wide honesty pass so nothing you see is invented and nothing you tap pretends to work. Prototype pages that hadn't been wired up yet (parts of the homepage, the magazine, the therapist and clinic directories, skill-swaps, the incubator and gatherings tools) now show a clear “coming soon” instead of made-up members, events, “verified” providers or statistics. Forms that had no home yet (contact, newsletter, cookie preferences, micro-grant and panel applications, safe-space vouches, perk claims, and admin actions like publish/export) no longer flash a false “done”: they either save for real or tell you honestly they're not open yet, and cookie choices now actually stick. Health and legal directories in particular will never show an unverified provider as if we'd vetted them.",
+    "Prototype pages now show a clear coming soon in place of invented members, events or providers, and forms with no home yet say so. Cookie choices stick.",
   "changelog.entries.frontend-reliability-hardening.title":
     "Fewer lost drafts, honest error states and safer shared devices",
   "changelog.entries.frontend-reliability-hardening.body":
-    "A correctness pass across the app so nothing quietly loses your work or misleads you. Leaving a half-finished gathering, community or profile edit now warns you before your changes disappear, and Settings no longer discards edits when you navigate away. When something goes wrong, you see an honest message with a retry instead of an eternal loading state or a false “done”, and a passing wobble in your connection no longer nags you with an error toast for data you're already looking at. On a shared device your saved items, drafts and vouches are now kept separate per account and cleared when you sign out, so the next person never sees your things; and the “Follow a writer” button only appears where following actually works. Under the hood the app also recovers gracefully from a bad response or an out-of-date tab instead of showing a crash screen.",
+    "Leaving a half-finished gathering, community or profile edit now warns you first, errors come with a retry, and your saved items and drafts clear when you sign out.",
   "changelog.entries.screen-help-signs.title":
     "“About this screen” help on every feature",
   "changelog.entries.screen-help-signs.body":
-    "New to a part of QueerPulse? Look for the small ⓘ info button next to a screen's title. Tap it and a short, friendly card explains what the screen is for, how to use it, and gives one concrete example, so you always have a sense of how each feature fits into the platform. It's there across the main screens (Members, Communities, Forum, Events, Messages, the local directory, housing, work, culture, settings and more), in both English and Portuguese, and it never gets in the way. Open it when you want it, ignore it when you don't.",
+    "Look for the small info button beside a screen's title. It opens a short card explaining what the screen is for and how to use it.",
   "changelog.entries.performance-cost-hardening.title":
     "Faster search, lighter uploads and steadier busy pages",
   "changelog.entries.performance-cost-hardening.body":
-    'A behind-the-scenes pass to keep QueerPulse quick and affordable as it fills up. Global search now uses proper text indexes, so finding people, communities, events, listings and threads stays fast no matter how many members join instead of slowing down as the platform grows. Photos you upload are gently resized before they leave your device, so posting is quicker on mobile data and pages load lighter for everyone. Busy community threads, member rosters and event guest lists now load in tidy pages with a "load more" button rather than pulling in everything at once, and popular pages the whole community shares can now be served from the cache instead of rebuilt every time. Event reminders and push notifications go out in a single efficient batch, images at the top of a page load first for a snappier first paint, and switching pages mid-load no longer wastes a request. Long lists, the local directory and busy forum threads, now reveal more as you scroll instead of rendering everything at once, so they stay smooth on a phone. Nothing you see changes. It just holds up better under a crowd.',
+    "Global search now uses proper text indexes, photos are resized before they leave your device, and busy lists load in pages with a load more button.",
   "changelog.entries.accessibility-i18n-pwa-hardening.title":
     "Accessibility, translation and offline polish",
   "changelog.entries.accessibility-i18n-pwa-hardening.body":
-    "A sweep to make QueerPulse work for more people, in more places. Every form field now announces its label to screen readers, so signing up, posting a job, checking out or editing your profile all read cleanly with assistive tech. Sharing a link finally shows a preview image instead of a broken thumbnail. Lose your connection and you get a real offline page in place of the browser's error, and the app installs lighter and updates with a pill that waits for you instead of a toast that vanishes. Toasts can now be dismissed and pause while you read them; removing someone from a group asks first; buttons are a little bigger to tap; and message timestamps plus a few stray labels now follow the language you chose, in both English and Portuguese.",
+    "Every form field now announces its label to screen readers, shared links show a preview image, and losing your connection gives you a real offline page.",
   "changelog.entries.launch-hardening-p1.title":
     "Safety, honesty and reliability hardening",
   "changelog.entries.launch-hardening-p1.body":
-    "A broad pre-launch pass. Blocking someone now truly stops them everywhere, no more DMs, presence, typing or push slipping through, and your profile is hidden from anyone you've blocked. Live mode tells the truth: pages that used to show placeholder people or fake a submission now either use real data or say plainly when something isn't ready yet, and requesting your data (GDPR) is a real request. Editing, cancelling or RSVPing to a gathering, and leaving a community, now refresh the screen straight away; an outage shows a retry instead of an empty page. And where we can't yet email you, we no longer pretend we will.",
+    "Blocking someone now stops messages, presence, typing and push everywhere, and hides your profile from them. Editing, cancelling or RSVPing to a gathering refreshes the screen right away.",
   "changelog.entries.remove-listings-from-moderation.title":
     "Moderators can remove directory listings",
   "changelog.entries.remove-listings-from-moderation.body":
-    "The listings review queue now has a Remove action, so a moderator can permanently delete a spam, duplicate or inappropriate submission instead of only sending it back to review. Removing a live listing also takes it off the public directory. Every removal asks for confirmation first.",
+    "The listings review queue now has a Remove action: a moderator can permanently delete a spam or duplicate submission and take a live listing off the public directory.",
 
   "changelog.entries.sent-invites-status-filter.title":
     "Filter the invites you've sent by status",
   "changelog.entries.sent-invites-status-filter.body":
-    "The list of invites you've already sent now has tabs (All, Pending, Accepted, Expired) each showing a count, so you can jump straight to the ones still waiting for a reply or the ones that landed. Each invite also shows the exact day and time it was sent and when it expires, instead of just the date.",
+    "Your sent invites now have All, Pending, Accepted and Expired tabs with a count each, and every invite shows the exact day and time it was sent and when it expires.",
 
   "changelog.entries.onboarding-one-time-guard.title":
     "Finishing onboarding now sticks",
   "changelog.entries.onboarding-one-time-guard.body":
-    "The welcome flow you go through right after joining is meant to happen once. If your browser later autofilled the saved onboarding address, though, it would drop you straight back into the wizard as if you'd never done it, and clicking through could quietly reset choices like your “Here for” intents. We now record when you finish onboarding and send you on to your feed if you land back on it, so it can't replay or overwrite what you already set.",
+    "We now record when you finish the welcome flow and send you straight to your feed if you land back on it, so it can't overwrite your choices.",
 
   "changelog.entries.trust-network-replay-by-joins.title":
     "Trust-network replay now follows the people, connection by connection",
   "changelog.entries.trust-network-replay-by-joins.body":
-    "In the admin trust network, the “Replay” of how vouches formed over time used to advance one calendar month at a time, so it crawled through quiet months where nothing happened and flashed past the busy ones. It now steps through the moments people were actually vouched for, giving each real event equal time. The result tracks how the community grew instead of the passage of the calendar. Dragging the timeline slider by hand works exactly as before.",
+    "In the admin trust network, Replay now steps through the moments people were vouched for, giving each equal time, so it tracks how the community grew.",
   "changelog.entries.trust-network-invite-vs-vouch.title":
     "See who was invited vs vouched for",
   "changelog.entries.trust-network-invite-vs-vouch.body":
-    "The admin trust network now shows invite connections, people you brought onto QueerPulse yourself, in a distinct colour from vouches added later, with a legend and hover labels so the two are easy to tell apart at a glance.",
+    "The admin trust network now draws invite connections in their own colour, separate from vouches added later, with a legend and hover labels.",
   "changelog.entries.chef-mixologist-therapist-personas.title":
     "Three new persona types: chef, mixologist and therapist",
   "changelog.entries.chef-mixologist-therapist-personas.body":
-    "You can now build a subprofile as a chef (menus + residencies), a mixologist (cocktails + residencies) or a therapist (specialisms + credentials), each with its own sections, starter template and directory filter, alongside the crafts already there.",
+    "You can now build a subprofile as a chef (menus and residencies), a mixologist (cocktails and residencies) or a therapist (specialisms and credentials), each with its own starter template and directory filter.",
   "changelog.entries.connections-card-polish.title": "Tidier connection cards",
   "changelog.entries.connections-card-polish.body":
-    "On your connections page, the “mutuals” line now renders properly instead of showing raw formatting, and the “Connected” date shows the day and time you connected, down to the minute.",
+    "On your connections page the mutuals line now renders properly, and the Connected date shows the day and time down to the minute.",
   "changelog.entries.lightbox-focus-a11y.title":
     "Cleaner focus handling in the photo viewer",
   "changelog.entries.lightbox-focus-a11y.body":
-    "Opening a photo full-screen, in the directory galleries and on gathering pages, no longer leaves keyboard focus stranded on the invisible tap-to-close layer behind the image. Focus now stays where you can see it, which keeps screen readers and keyboard navigation working smoothly while you flip through photos.",
+    "Opening a photo full screen no longer leaves keyboard focus stranded on the invisible close layer behind the image, so screen readers and keyboard navigation keep working while you flip through.",
   "changelog.entries.directory-detail-polish.title":
     "A redesigned, more accurate place page",
   "changelog.entries.directory-detail-polish.body":
-    "Directory listings were rebuilt around a clearer layout: the place introduces itself first (name, category, and its key details in one row) then a compact photo gallery (a main shot with the rest in a clickable column) instead of one oversized banner, with the main actions sitting right beside the name. New venues now read as “New” rather than a hollow zero-star rating. Alongside the redesign: “Open now” is worked out on the venue's own clock (not your device's timezone), the location line and search data no longer assume every place is in Lisbon, website links always open correctly and show a tidy domain, and star ratings read properly to screen readers. Signed-out visitors can now save a place, people who run a venue can claim its listing, and a mistyped or removed listing shows a real “not found” page instead of quietly bouncing you back to the directory.",
+    "Place pages have a clearer layout: key details in one row, a compact gallery, and the main actions beside the name. Open now uses the venue's own clock.",
   "changelog.entries.review-author-avatars.title": "See who left a review",
   "changelog.entries.review-author-avatars.body":
-    "Reviews on a space's directory page now show the reviewer's photo, and their name links straight to their profile, so a warm note from someone in the community is one tap away from finding out more about them. Reviews from non-members still read exactly as before, just without the link.",
+    "Reviews on a place's page now show the reviewer's photo, and their name links straight to their profile. Reviews from non-members read the same, without the link.",
   "changelog.entries.verification-in-context.title":
     "How verification works now lives where you're browsing",
   "changelog.entries.verification-in-context.body":
-    "“How verification works” is no longer a link buried in the top navigation. Instead there's a short explainer right on the local directory (nominated, reviewed, re-checked every year) and a quiet line inside each verified listing that points to the full story. The safe-spaces hub is still there for the complete criteria and delisting record; it's just reached in context now, when the badge is actually in front of you.",
+    "How verification works now sits on the local directory itself: a short explainer (nominated, reviewed, re-checked every year) plus a quiet line in each verified listing pointing to the full criteria.",
   "changelog.entries.directory-collapsible-filters.title":
     "Tidier filters on the spaces directory",
   "changelog.entries.directory-collapsible-filters.body":
-    "Search and the category chips stay front and centre, while the safe-spaces and vibe refinements now tuck behind a single “Refine” toggle so the bar no longer crowds the page. A count on the toggle still tells you when hidden filters are active, your choices stay applied, and the drawer glides open and closed instead of snapping, with your open/closed preference remembered next time.",
+    "The safe-spaces and vibe refinements now tuck behind a single Refine toggle with a count of active filters, and the drawer remembers whether you left it open.",
   "changelog.entries.safe-spaces-in-directory.title":
     "Verified safe spaces now live in the directory",
   "changelog.entries.safe-spaces-in-directory.body":
-    "The verified badge now shows right on the card in the local directory, a “Verified safe spaces” filter narrows the list to just the ones that earned it, and verified listings rank first. Open any listing to see the full trust block, what verification means for that space and when it was last reviewed. And /local/safe-spaces is now the verification hub: what the badge means, how the review process actually works, and an honest, public record of every space that's lost it.",
+    "The verified badge now shows on directory cards, a Verified safe spaces filter narrows the list, and verified places rank first. /local/safe-spaces explains what the badge means.",
 
   "changelog.entries.magazine-desk-polish-sweep.title":
     "Polish across the magazine desk",
   "changelog.entries.magazine-desk-polish-sweep.body":
-    "Consistent heading colours in dark mode, linked-deck editing from the desk, per-assignment byline control for writers, and assorted cleanups.",
+    "Heading colours are consistent in dark mode, you can edit a linked deck from the desk, and writers get byline control per assignment.",
 
   "changelog.entries.magazine-piece-messaging.title":
     "Editors and writers can now message each other on the piece",
   "changelog.entries.magazine-piece-messaging.body":
-    "Editors and writers now message each other on the piece itself, chases and questions live beside the work itself, and both sides always see the whole thread.",
+    "Editors and writers can message each other on the piece itself, so questions and chases sit beside the work and both sides see the whole thread.",
 
   "changelog.entries.live-press-kit-real-data.title":
     "The press kit now shows real coverage, contacts and figures",
   "changelog.entries.live-press-kit-real-data.body":
-    "The press kit's coverage and press-desk contacts now come from what the team actually publishes and keeps up to date, and the headline figures are drawn from the platform itself, no invented numbers. Each section simply stays hidden until there's something real to show.",
+    "Coverage and press-desk contacts now come from what the team actually publishes, and the headline figures are drawn from the platform. Each section stays hidden until there is something real to show.",
   "changelog.entries.communities-and-home-merged.title":
     "Communities, all in one place",
   "changelog.entries.communities-and-home-merged.body":
-    "Your community hub and the discovery directory now live on a single /communities page, with a My communities / Discover switch up top. It opens on your hub when you belong to a community, and on Discover when you don't.",
+    "Your hub and the discovery directory now share one /communities page with a My communities / Discover switch. It opens on your hub when you belong somewhere, and on Discover otherwise.",
 
   "changelog.entries.silent-session-recovery.title":
     "No more “session expired” flash when you come back",
   "changelog.entries.silent-session-recovery.body":
-    "Returning after a while away, you might have seen a “session expired” error pop up for a moment, and then get signed right back in anyway. That message was misfiring on a session the app was already quietly renewing. Now, when we can restore your session on our own, we do it silently: no error, nothing to read, you just pick up where you left off. You'll only ever be told your session ended when it actually has and you need to sign in again.",
+    "When your session can be restored, we now do it silently and you pick up where you left off. You are told only when you must sign in.",
 
   "changelog.entries.session-refresh-csrf-race.title":
     "Smoother session refresh after a token expires",
   "changelog.entries.session-refresh-csrf-race.body":
-    "When your session had quietly expired, refreshing the page could briefly flash a “session expired” state before signing you right back in. We fixed a race in how the app renews your session, so it renews cleanly on the first try, no flicker, no wasted request.",
+    "We fixed a race in how the app renews your session, so it renews cleanly on the first try, with no session expired flicker and no wasted request.",
 
   "changelog.entries.directory-category-unify.title":
     "Directory categories that match everywhere",
   "changelog.entries.directory-category-unify.body":
-    "A place you add now shows the right coloured pin on the map and the right category on its card and filter, the “list a business” wizard and the directory finally speak the same category language. Nightlife is now a category you can pick when listing, too.",
+    "A place you add now shows the right coloured pin on the map and the same category on its card and filter. Nightlife is a category you can pick when listing, too.",
 
   "changelog.entries.messages-badge-count.title":
     "A faster, accurate unread-messages badge",
   "changelog.entries.messages-badge-count.body":
-    "The unread count on your messages icon now stays right on every page without quietly loading your whole inbox in the background each time you navigate. It updates live as messages arrive and as you read them.",
+    "The unread count on your messages icon stays right on every page without loading your whole inbox in the background, and it updates live as messages arrive and as you read them.",
 
   "changelog.entries.notifications-coverage.title":
     "Notifications for the things that were quietly slipping by",
   "changelog.entries.notifications-coverage.body":
-    "Your bell now tells you when someone RSVPs to your gathering, replies to your post or thread, asks to join your community (and when a request is decided), applies to your job, reviews your business, when a business listing is approved, when someone you invited joins, when a report or appeal you filed is resolved, and when an idea you shared on the roadmap changes status. Each one links straight to what it's about.",
+    "Your bell now covers RSVPs, replies to your posts, requests to join your community, job applications, business reviews, invites accepted, and reports resolved.",
 
   "changelog.entries.members-collapsible-filters.title":
     "Collapsible filters on the members directory",
   "changelog.entries.members-collapsible-filters.body":
-    "The members directory filters are now tidy collapsible sections with a show/hide toggle, so you can clear space for results. Your selections stay applied while filters are hidden, and your view is remembered next time. Opening a section and hiding the whole sidebar now glide smoothly instead of snapping.",
+    "Member directory filters are now collapsible sections with a show and hide toggle. Your selections stay applied while they are hidden, and your view is remembered next time.",
   "changelog.entries.activism-volunteer-merge.title":
     "Activism and Volunteering are now one place",
   "changelog.entries.activism-volunteer-merge.body":
-    "We merged the Activism and Volunteer pages into a single home. Volunteering is now the front door, browse real opportunities in Lisbon, filter by cause or commitment, and start with a couple of free hours. If you want to go deeper, our guide to organising better is one tap away from there. The nav, footer, and sidebar now carry a single “Activism & Volunteering” link instead of two, and the old /activism address still works.",
+    "Activism and Volunteering are now one page, with volunteering as the front door: browse real opportunities in Lisbon and filter by cause or commitment. The old /activism address still works.",
   "changelog.entries.spaces-map-pins.title":
     "Map pins now show what kind of space each place is",
   "changelog.entries.spaces-map-pins.body":
-    "On the Local directory map, every pin is now a coloured teardrop with an icon for its category (a martini glass for nightlife, a fork and knife for food, a heart for health, and so on) so you can read the map at a glance instead of tapping each dot. The category filter chips carry the same colour and icon, so the filter bar doubles as a legend.",
+    "Each pin on the Local map is a coloured teardrop with its category icon, and the filter chips share the same colour and icon, doubling as a legend.",
   "changelog.entries.creatives-subprofile.title":
     "The Creatives showcase is now a creative subprofile",
   "changelog.entries.creatives-subprofile.body":
-    "The standalone Creatives directory has been retired. Showing your art, music, or other creative work now lives with subprofiles, the same place you build any linked persona, so a creative profile is part of who you are on QueerPulse rather than a separate list. The old /magazine/creatives link now takes you straight to your subprofiles, where you can add a creative one.",
+    "Showing your art, music or other creative work now lives with subprofiles, alongside any other persona you build. The old /magazine/creatives link takes you there.",
   "changelog.entries.moderation-takedowns.title":
     "Moderator hide and remove now actually take content down",
   "changelog.entries.moderation-takedowns.body":
-    'When a moderator hides or removes reported content, it now really disappears from public view. Hidden content is withheld from members while staff can still see it; removed content shows a clear "removed by a moderator" tombstone where a deleted post already would. Applied across forum posts and replies, community posts and replies, communities, events, and business listings, recorded in the same step as the moderator\'s decision so it can never be logged without taking effect.',
+    "Hidden content is now withheld from members while staff can still see it, and removed content shows a removed by a moderator tombstone.",
   "changelog.entries.gathering-create-fix.title":
     "Creating a gathering works again, and lands on your event",
   "changelog.entries.gathering-create-fix.body":
-    'Publishing a new gathering was quietly failing on the server, yet the wizard still showed the celebration screen as if it had worked, and its "See your event" button opened a stray sample page. Both are fixed: a gathering now actually publishes, the success screen only appears once it has, and "See your event" takes you straight to your real gathering. If a publish ever fails, you\'ll see a clear message and stay on the review step to try again. The wizard now also asks for a date and start time in the future before you can move on, so a gathering can\'t be created without one.',
+    "Publishing a gathering works again: the success screen appears only after it publishes, See your event opens the real gathering, and the wizard requires a future start time.",
   "changelog.entries.directory-photos-crisp.title":
     "Listing cover photos load crisp again",
   "changelog.entries.directory-photos-crisp.body":
-    "Cover photos on business listings, and the preview while you're adding one, were loading at a low resolution and looking blurry when shown large. They now load crisp at full size. We also nudged the listing header down so the breadcrumb and the owner's Edit button no longer tuck under the floating navigation.",
+    "Cover photos on business listings, and the preview while you add one, now load at full resolution. The listing header sits lower, clear of the floating navigation.",
   "changelog.entries.admin-role-management.title":
     "Admins can promote moderators and admins from the dashboard",
   "changelog.entries.admin-role-management.body":
-    "Making someone a moderator or admin used to mean editing the database by hand. Now an admin can grant or revoke those roles right from a member's detail in the admin dashboard, with the guardrails that matter built in: you can't change your own role, the house account is off-limits, and the platform will never let you remove its last admin. Every change is written to the audit log.",
+    "An admin can now grant or revoke moderator and admin roles from a member's detail. The last admin can't be removed, and every change is audited.",
   "changelog.entries.appeal-submission.title":
     "You can now appeal a moderation decision",
   "changelog.entries.appeal-submission.body":
-    "A suspended or banned account was able to read about appeals but had no way to file one. Now a member under any moderation decision (a warning, a removal, a suspension, a ban) can submit an appeal directly from their account screen, and it goes straight to a moderator who wasn't involved in the original call. One open appeal at a time; the original decision stands while it's reviewed.",
+    "A member under a warning, suspension or ban can now appeal from their account screen, and it goes to a moderator who did not make the original call.",
   "changelog.entries.honest-report-failures.title":
     "Safety reports tell you the truth when they don't send",
   "changelog.entries.honest-report-failures.body":
-    'When a report, flag, or safe-space concern can\'t reach us (a dropped connection, a server hiccup) you now see an honest error and your words stay in the form to try again, instead of a false "received". If we say a report landed, it landed. This also covers messaging a housing lister and listing a space.',
+    "If a report, flag or safe-space concern can't reach us, you now see an honest error and your words stay in the form to try again.",
   "changelog.entries.directory-filters-and-accurate-recognition.title":
     "Member filters that actually filter, and honest badges & perks",
   "changelog.entries.directory-filters-and-accurate-recognition.body":
-    "Picking a filter in the member directory now returns the people who match instead of emptying the page. Your Badges and Perks pages also show a proper loading, empty, or try-again state while your recognition loads, no more placeholder counts standing in for the real thing.",
+    "Picking a filter in the member directory now returns the people who match. Your Badges and Perks pages show a real loading, empty or try-again state.",
   "changelog.entries.navigation-resilience.title":
     "Back keeps your place, and the app rides out updates",
   "changelog.entries.navigation-resilience.body":
-    "Hitting back after opening something from a list now drops you exactly where you were scrolled to, instead of jumping to the top. If your session quietly expires we tell you so you can sign back in, and when a new version ships mid-visit the app quietly refreshes itself instead of showing an error.",
+    "Going back after opening something from a list now returns you to the same scroll position, and when a new version ships mid-visit the app quietly refreshes itself.",
   "changelog.entries.search-page-launcher.title": "Jump anywhere from search",
   "changelog.entries.search-page-launcher.body":
-    "Search (⌘K and the search page) now doubles as a launcher: start typing, or just open it, to jump straight to Members, Communities, Events, Messages, your profile, Settings, the Magazine and more, each with its own icon. A new Pages tab lists every destination in one place.",
+    "Search (Cmd+K and the search page) now doubles as a launcher: start typing to jump straight to Members, Communities, Events, Settings and more. A new Pages tab lists every destination.",
   "changelog.entries.donate-honest-live.title":
     "Donations are honest about being pre-launch",
   "changelog.entries.donate-honest-live.body":
-    "The donate flow no longer collects card details for a payment that couldn't actually be taken. Until secure payments are wired up, it says so plainly and points to exactly where community money goes.",
+    "The donate flow no longer asks for card details while secure payments are still being wired up. It says so plainly and shows exactly where community money goes.",
   "changelog.entries.gathering-manage-coming-soon.title":
     "Host dashboard is an honest preview",
   "changelog.entries.gathering-manage-coming-soon.body":
-    "The gathering host dashboard was a demo prototype, so in live mode it now shows a clear “coming soon” instead of acting on placeholder data. Browsing and RSVPs are fully live; explore the host tools in demo mode.",
+    "The gathering host dashboard now shows a clear coming soon in live mode. Browsing and RSVPs are fully live, and the host tools are open in demo mode.",
   "changelog.entries.search-member-avatars.title":
     "See who you're searching for",
   "changelog.entries.search-member-avatars.body":
-    "Member results in search (⌘K and the search page) now show each person's profile photo instead of a generic icon, so you can recognise the face you're looking for at a glance.",
+    "Member results in search now show each person's profile photo in place of a generic icon, so you can spot the face you're looking for at a glance.",
   "changelog.entries.search-real-topics.title": "Search now shows real results",
   "changelog.entries.search-real-topics.body":
-    "Search (⌘K and the search page) no longer falls back to sample topics with made-up post counts. It now pulls the real trending topics and live post counts, alongside real people, communities, events, forum threads, and businesses.",
+    "Trending topics and post counts in search now come from the platform itself, alongside real people, communities, events, forum threads and businesses.",
   "changelog.entries.global-search.title": "Search across QueerPulse",
   "changelog.entries.global-search.body":
-    "Search across people, communities, events, the forum, and local businesses, from anywhere with ⌘K or the search page.",
+    "Find people, communities, events, forum threads and local businesses from anywhere, with Cmd+K or the search page.",
   "changelog.entries.studio-coming-soon.title":
     "Studio is now an honest preview",
   "changelog.entries.studio-coming-soon.body":
-    "The co-op music Studio is still in the workshop, so it no longer shows placeholder payouts and figures as if they were real. Explore it fully in demo mode; live visitors now get a clear “coming soon” instead.",
+    "The co-op music Studio is still being built, so in live you now see a clear coming soon. Explore the whole thing in demo mode.",
   "changelog.entries.cinema-honest-live.title":
     "Cinema is honest about what's live",
   "changelog.entries.cinema-honest-live.body":
-    "The film catalogue and playback are real, so the parts still in production (collections, filmmaker profiles, open calls) now say “coming soon” in live instead of showing placeholder content. Explore it all in demo mode.",
+    "The film catalogue and playback are real. Collections, filmmaker profiles and open calls are still in production and say coming soon in live, and you can explore them in demo mode.",
   "changelog.entries.cinema-live-streaming.title":
     "Cinema now streams real films",
   "changelog.entries.cinema-live-streaming.body":
-    "Cinema is live: browse the real programme and press play to stream the film, and it resumes right where you left off next time you come back.",
+    "Browse the real programme and press play to stream a film. It resumes where you left off next time you come back.",
   "changelog.entries.employer-reviews-live.title": "Employer reviews, for real",
   "changelog.entries.employer-reviews-live.body":
-    "The employer reviews page now shows real queer-inclusive employers. Open any company for its full profile and reviews, and write your own anonymous review of a place you've worked.",
+    "The page now lists real queer-inclusive employers. Open a company for its full profile and reviews, or write your own anonymous review.",
   "changelog.entries.block-mute-from-profile.title":
     "Block or mute straight from a profile",
   "changelog.entries.block-mute-from-profile.body":
-    "A new safety menu in the profile header lets you mute someone (quietly hiding their posts) instantly, or block them after a quick confirm, with the option to also report them at the same time.",
+    "A safety menu in the profile header lets you mute someone instantly, quietly hiding their posts, or block them after a quick confirm, with the option to report at the same time.",
   "changelog.entries.event-push-reminders.title":
     "Set when your event reminders arrive",
   "changelog.entries.event-push-reminders.body":
-    "Event preferences now let you choose how far ahead you're reminded (an hour, a day, or a week before) and turn on a phone push so the reminder reaches you wherever you are.",
+    "Event preferences let you choose how far ahead you get a reminder, an hour, a day or a week, and turn on a phone push so it reaches you anywhere.",
   "changelog.entries.report-more-surfaces.title":
     "Report anything that doesn't feel right",
   "changelog.entries.report-more-surfaces.body":
-    "You can now report an event, a business, a company, a job posting, or a member's public persona, a discreet “Report” link opens the same confidential flow used everywhere else, and events are now actually filed to the safety team instead of just acknowledged.",
+    "A discreet Report link now sits on events, businesses, companies, job postings and public personas, opening the same confidential flow, and event reports reach the safety team.",
   "changelog.entries.profile-photo-pronouns.title": "Your face, your words",
   "changelog.entries.profile-photo-pronouns.body":
-    "Edit Profile now lets you upload a custom photo, with an instant preview, instead of only using your Google picture, and you can write in your own pronouns alongside the presets. We also cleared out the “coming soon” placeholders that couldn't do anything yet.",
+    "Edit Profile now takes a photo upload with an instant preview, and you can write your own pronouns alongside the presets.",
   "changelog.entries.mobile-form-keyboard.title":
     "Forms stay above the keyboard on phones",
   "changelog.entries.mobile-form-keyboard.body":
-    "On iOS, opening the keyboard inside an enquiry or sign-up dialog no longer hides the submit button behind it, the sheet lifts to stay in view. We also added long-press app shortcuts to the installed icon and tidied up tooltips for touch.",
+    "On iOS, enquiry and sign-up sheets lift above the keyboard so the submit button stays in view. The installed app icon also has long-press shortcuts.",
 
   "changelog.entries.magazine-real-content.title":
     "The magazine shows real issues, always",
   "changelog.entries.magazine-real-content.body":
-    "The magazine archive and writer pages now load real editions with a proper loading and error state, so you'll never see placeholder prototype content if something is slow or goes wrong.",
+    "The magazine archive and writer pages load real editions, with their own loading and error states while they arrive.",
 
   "changelog.entries.community-roadmap.title":
     "The roadmap is now yours to shape",
   "changelog.entries.community-roadmap.body":
-    "See what's shipped, what's building, and what's planned, then vote for what matters most to you, or submit an idea of your own. We read every suggestion; the team curates what moves onto the roadmap.",
+    "See what is shipped, building and planned, vote for what matters most to you, or submit an idea of your own. We read every suggestion.",
 
   "changelog.entries.listing-photos.title": "Photos on your business listing",
   "changelog.entries.listing-photos.body":
-    "The list-a-business form now takes photos, upload a file or paste an image URL, and see a live preview of how your listing will look before you publish.",
+    "The list-a-business form takes photos now. Upload a file or paste an image link, and preview your listing before you publish.",
 
   "changelog.entries.business-page-live.title": "Business pages come to life",
   "changelog.entries.business-page-live.body":
-    "Every business page now shows the venue's real photos in a gallery you can open full-screen, plus its real opening hours with a live “Open now / Closed” status, so you know what a place looks like and whether it's open before you go.",
+    "Each business page shows the venue's real photos in a gallery you can open full-screen, plus its opening hours with a live Open now or Closed status.",
 
   "changelog.entries.business-actions.title": "Save, share, and get directions",
   "changelog.entries.business-actions.body":
-    "Every business page now has an action bar. Get directions, call, share, or save a place to your list in one tap. Saved spots show how many members have saved them too, a quiet trust signal.",
+    "Every business page has an action bar: directions, call, share, or save a place to your list in one tap. Saved spots show how many members saved them too.",
 
   "changelog.entries.business-reviews-trust.title": "Reviews that go both ways",
   "changelog.entries.business-reviews-trust.body":
-    "Business owners can now reply to reviews, and every page shows a star-rating breakdown so you can see the full picture behind the average. If something's off, you can report a listing or suggest an edit. Both go straight to our moderators.",
+    "Owners can reply to reviews, and every page shows the star breakdown behind the average. You can also report a listing or suggest an edit, and moderators see both.",
 
   "changelog.entries.business-discovery.title":
     "Find your way around the directory",
   "changelog.entries.business-discovery.body":
-    "Business pages now show related places nearby, a clear path back to the directory, and the languages spoken on-site. Upcoming events link straight to their event page, where you can add them to your calendar.",
+    "Business pages now show related places nearby, the languages spoken on-site, and a clear path back to the directory. Upcoming events link to their event page.",
 
   "changelog.entries.directory-filters-upgrade.title":
     "The business directory got a lot easier to filter",
   "changelog.entries.directory-filters-upgrade.body":
-    "Finding a place is smoother now. Search looks inside descriptions and tags as well as names; each category shows a live count; you can sort A–Z or by neighbourhood; and your filters live in the link, so a filtered directory is shareable and survives a refresh. Picking a vibe no longer makes every business disappear, active filters show as removable chips with a Clear-all, empty results explain themselves, and the map is easier to use on a phone.",
+    "Search now looks inside descriptions and tags, and you can sort A to Z or by neighbourhood. Filters live in the link, so a filtered directory is shareable.",
   "changelog.entries.public-profile-badge.title":
     '"Go public" now lives on your profile',
   "changelog.entries.public-profile-badge.body":
-    "Your public-profile control moved into a quiet badge next to your name. Tap it to see how public profiles unlock, or to switch yours on once you're eligible. It only ever shows on your own profile.",
+    "Your public-profile control now sits in a quiet badge next to your name. Tap it to see how public profiles unlock, or to switch yours on. Only you ever see it.",
 
   "changelog.entries.here-for-hero.title": '"Here for" now leads your profile',
   "changelog.entries.here-for-hero.body":
-    "Your \"Here for\" intent, what you're looking for on QueerPulse, now sits right at the top of your profile, next to your name and bio, instead of further down the page. Easier to spot at a glance, and just as easy to keep private if that's how you like it.",
+    "What you are looking for on QueerPulse now sits at the top of your profile, beside your name and bio. It stays just as easy to keep private.",
 
   "changelog.entries.directory-view-switcher.title":
     "A clearer List / Map switch",
   "changelog.entries.directory-view-switcher.body":
-    'Switching between the list and the map on the business directory is easier to spot now. The two buttons became a single labelled toggle with icons, sitting beside the results count, so it clearly reads as "pick a view" rather than another filter, and it stays compact and tappable on a phone.',
+    "The list and map buttons on the business directory became one labelled toggle with icons, beside the results count, and it stays compact and tappable on a phone.",
 
   "changelog.entries.profile-links-fix.title": "Profile links that behave",
   "changelog.entries.profile-links-fix.body":
-    'Adding social links to your profile is smoother now. A plain username like your Instagram handle is accepted as-is, no more "that doesn\'t look like a valid link" warning when it clearly is, and the rows no longer break apart when a hint appears; the field stays put and the hint sits neatly below it.',
+    "A plain username like your Instagram handle is now accepted as a profile link, and the field stays put when a hint appears neatly below it.",
 
   "changelog.entries.subprofiles-showcase.title": 'A richer "Also working as"',
   "changelog.entries.subprofiles-showcase.body":
-    "Your other professional sides now show off more of who you are, featured work, links, availability, and follower and endorsement counts, right on the card. On mobile it's a one-tap view built for a smaller screen, and if you own the personas you get visibility badges and a quick way to edit right from the showcase.",
+    "Your other professional sides now show featured work, links, availability and follower and endorsement counts on the card, and you can edit your own personas from the showcase.",
 
   "changelog.entries.real-directory-map.title":
     "A real map on every directory listing",
   "changelog.entries.real-directory-map.body":
-    "Open a business or space in the directory and its location now shows on a real, interactive map, the same warm Lisbon map you already know from the map view and from listing a business, pinned to the exact spot the owner placed. The old decorative placeholder is gone.",
+    "Open a business or space in the directory and its location shows on the real interactive Lisbon map, pinned to the exact spot the owner placed.",
 
   "changelog.entries.reply-threads.title": "Reply to any comment in the forum",
   "changelog.entries.reply-threads.body":
-    "Replies can now have their own replies. Answer directly under any comment and yours nests right there, so long conversations branch out instead of piling into one flat list. Deep threads collapse into a single line. Tap to expand when you want the rest.",
+    "Answer directly under any comment and your reply nests right there, so long conversations branch out. Deep threads collapse into a single line you can tap to expand.",
 
   "changelog.entries.copy-subprofile.title": "Copy an existing persona",
   "changelog.entries.copy-subprofile.body":
-    "Starting a new subprofile? Copy one you already have (bring over everything, or just the content) and tweak from there.",
+    "Starting a new subprofile? Copy one you already have, everything or just the content, and tweak from there.",
 
   "changelog.entries.smoother-chat.title": "Smoother, more responsive chat",
   "changelog.entries.smoother-chat.body":
-    "Messages now feel faster and calmer on every device. Typing no longer stutters the conversation, swipe-to-reply glides under your finger, and new messages settle into place instead of the whole thread animating at once. On phones, holding a message opens the actions cleanly (no more fighting the text-selection popup), the chat fills the screen as one surface without the page bouncing behind it, and taps give instant feedback with a gentle buzz on long-press.",
+    "Chat feels faster and calmer: typing keeps the conversation steady, swipe-to-reply glides under your finger, and new messages settle into place on their own.",
 
   "changelog.entries.invite-state-page.title": "A clearer invite link page",
   "changelog.entries.invite-state-page.body":
-    "When an invite link can't be used, the page now shows the real invite, who vouched for you and when it lapsed, instead of a generic message. It also tells apart an invite that timed out, one that was already used, and one that was withdrawn, and points you to the right next step for each.",
+    "An invite link that cannot be used now shows the real invite, who vouched for you, and whether it timed out, was already used or was withdrawn, with the right next step.",
 
   "changelog.entries.chat-shortcuts.title": "Mention shortcuts in chat",
   "changelog.entries.chat-shortcuts.body":
-    "A new “?” button in the message composer shows every mention shortcut at a glance, @ for a member, c/ for a community, # for a topic, b/ for a business, e/ for an event, t/ for a thread. Tap one and it drops the sigil straight into your message so the suggestions open as you type. And to keep things tidy, only one composer popover is ever open at a time.",
+    "A new help button in the message composer lists every mention shortcut, from @ for a member to t/ for a forum thread. Tap one and it drops straight into your message.",
 
   "changelog.entries.events-hub.title": "One home for events",
   "changelog.entries.events-hub.body":
-    "Events, Gatherings, and Calendar are now a single Events Hub, Highlights, Browse, and a full calendar together, with real photos for what's coming up. Same events, easier to find.",
+    "Events, Gatherings and Calendar are one Events Hub now, with Highlights, Browse and a full calendar together, and real photos for what is coming up.",
 
   "changelog.entries.gifs-in-chat.title": "Send GIFs in chat",
   "changelog.entries.gifs-in-chat.body":
-    "Say it with a GIF. There's a new GIF button in the message composer, search or browse what's trending, tap one, and it sends straight into your chat (in DMs and group chats alike). Powered by KLIPY, with safe-content filtering on by default.",
+    "There is a GIF button in the message composer. Search or browse what is trending, tap one, and it sends into your chat or group. Powered by KLIPY, with safe-content filtering on.",
 
   "changelog.entries.privacy-and-speed.title":
     "Stronger privacy and a snappier app",
   "changelog.entries.privacy-and-speed.body":
-    "A round of privacy, speed and messaging polish. Personas and subprofiles you've set to private now stay fully private, and people you've blocked no longer turn up in the flatmate directory. Editing or deleting a message updates right away, with no reload flicker. And the app itself is lighter, so pages, and the images that greet you at the top, load a little quicker.",
+    "Personas and subprofiles you set to private stay private, people you blocked stay out of the flatmate directory, and message edits and deletes apply right away.",
 
   "changelog.entries.leaner-prerendering.title": "Leaner, faster site builds",
   "changelog.entries.leaner-prerendering.body":
-    "Behind the scenes: we now pre-build only the essential public page for search engines instead of the whole site, and we no longer bake a separate copy of every profile. Builds use less data and stay quick, and search engines still find every public page through the sitemap. Nothing to do on your end.",
+    "We now pre-build only the essential public page for search engines, so builds stay quick, and every public page is still found through the sitemap.",
 
   "changelog.entries.admin-governance-real-data.title":
     "Governance dashboards now run on real data",
   "changelog.entries.admin-governance-real-data.body":
-    "The admin governance area (its finance figures and quarter-by-quarter chart, the policy decision log, and the moderation audit trail) now reads live from the platform instead of placeholder numbers, so the team sees the community's real finances and moderation history.",
+    "The admin governance area now reads live from the platform: finance figures and the quarterly chart, the policy decision log, and the moderation audit trail.",
 
   "changelog.entries.sign-in-fix.title": "Signing in works again",
   "changelog.entries.sign-in-fix.body":
-    "A mismatch between the app and the server was stopping sign-in from completing. That's fixed, logging in, signing out, and staying signed in all work smoothly again.",
+    "A mismatch between the app and the server was stopping sign-in from completing. Logging in, signing out and staying signed in all work smoothly again.",
   "changelog.entries.accessibility-mobile-polish.title":
     "Easier to tap, easier to navigate",
   "changelog.entries.accessibility-mobile-polish.body":
-    "Small buttons now have bigger touch areas on phones, actions that used to appear only on hover can be reached with the keyboard, and checkout and application forms support autofill for your name and email.",
+    "Small buttons have bigger touch areas on phones, actions that only appeared on hover can be reached with the keyboard, and forms autofill your name and email.",
   "changelog.entries.platform-hardening.title": "Under-the-hood hardening",
   "changelog.entries.platform-hardening.body":
-    "Behind the scenes: the API is now versioned with published documentation, long lists are safely bounded so pages stay fast, and reporting has spam protection. Nothing to do on your end. Things just stay quick and stable.",
+    "Behind the scenes: the API is versioned with published documentation, long lists are safely bounded so pages stay fast, and reporting has spam protection.",
   "changelog.entries.composer-reaction-polish.title":
     "A roomier message box and tidier reactions",
   "changelog.entries.composer-reaction-polish.body":
-    "The message box now stretches to fill the width of the composer, and on phones it sits flush without a stray scrollbar when your message is short, growing only as you type. Reactions also behave properly now: tapping an emoji you've already reacted with removes it instead of stacking the same one over and over.",
+    "The message box fills the width of the composer and grows only as you type. Tapping an emoji you already reacted with now removes your reaction.",
   "changelog.entries.chat-mentions.title": "Mention people and places in chat",
   "changelog.entries.chat-mentions.body":
-    "Type @ for a member, or c/ b/ e/ t/ # for a community, business, gathering, thread or topic. Pick from the suggestions and it turns into a tappable link, in a direct message or a group. Works while you're writing and while you're editing a message. Your chats stay private: mentions only link, they never notify anyone.",
+    "Type @ for a member, or c/ b/ e/ t/ # for a community, business, gathering, thread or topic, then pick a suggestion to get a tappable link.",
   "changelog.entries.group-chats.title": "Group chats",
   "changelog.entries.group-chats.body":
-    "Start a group with the people you want in it, name it, and share who's who. Admins can add or remove members and tidy up the group info, you can see who's read a message, and a typing bubble shows when someone's writing.",
+    "Start a group, name it, and see who is who. Admins add or remove members, receipts show who has read, and a bubble shows who is typing.",
   "changelog.entries.message-search.title": "Search your messages",
   "changelog.entries.message-search.body":
-    "Looking for that address, that date, that thing someone said? Search across all your conversations and jump straight to it.",
+    "Search across all your conversations for that address, that date, that thing someone said, and jump straight to it.",
   "changelog.entries.link-previews.title": "Links open up",
   "changelog.entries.link-previews.body":
-    "Share a link and it unfurls into a preview card (title, image and all) so people can see where it goes before they tap.",
+    "Share a link and it unfurls into a preview card with the title and image, so people can see where it goes before they tap.",
   "changelog.entries.forward-pin-star.title": "Forward, pin and star",
   "changelog.entries.forward-pin-star.body":
-    "Pass a message along to another chat, pin the ones a group keeps coming back to, and star the ones you want to find again, starred messages stay just for you.",
+    "Pass a message along to another chat, pin the ones a group keeps coming back to, and star the ones you want to find again. Starred messages stay just for you.",
   "changelog.entries.safe-space-view-page.title":
     "Preview safe spaces before verifying",
   "changelog.entries.safe-space-view-page.body":
-    "The Safe spaces review tool now has a “View page” button on each listing, opening its public page in a new tab so moderators can see a space in full before marking it verified.",
+    "The Safe spaces review tool has a View page button on each listing, opening its public page in a new tab so moderators can see a space in full before verifying it.",
   "changelog.entries.swipe-members-highlight.title":
     "Swipe through featured members",
   "changelog.entries.swipe-members-highlight.body":
-    "On the homepage, the featured member card now follows your finger. Swipe left or right on your phone to move between members, and it snaps to the next one.",
+    "On the homepage, the featured member card follows your finger. Swipe left or right on your phone and it snaps to the next member.",
   "changelog.entries.mention-names.title": "Mentions show real names",
   "changelog.entries.mention-names.body":
-    "Mention a person, community or place in a chat, forum thread or community discussion and it now reads as their name, Tiago Costa, in place of the raw @tiago-costa handle. Tap it and you still land in the right place; hover to see the handle.",
+    "A mention now reads as the full name, Tiago Costa in place of @tiago-costa, in chat, the forum and communities. Hovering shows the handle.",
   "changelog.entries.forward-to-groups.title":
     "Forward messages to your groups",
   "changelog.entries.forward-to-groups.body":
-    "Forwarding now reaches your group chats as well as one-to-one messages. Long-press any message, pick Forward, and choose any group you're part of.",
+    "Forwarding reaches your group chats too. Long-press any message, pick Forward, and choose any group you are part of.",
   "changelog.entries.read-receipts.title": "Delivered and read receipts",
   "changelog.entries.read-receipts.body":
     "Ticks now tell the whole story: sent, delivered to their phone, and read, so you know where your message got to.",
   "changelog.entries.message-gestures.title": "Swipe to reply, tap to react",
   "changelog.entries.message-gestures.body":
-    "Swipe a message sideways to reply to it, and double-tap to react, the quick gestures your thumbs already know.",
+    "Swipe a message sideways to reply to it, and double-tap it to react.",
   "changelog.entries.message-drafts.title": "Your drafts wait for you",
   "changelog.entries.message-drafts.body":
-    "Half a message you didn't send yet? We keep it saved for that conversation, so it's still there when you come back.",
+    "An unsent message stays saved in that conversation, waiting for you when you come back.",
   "changelog.entries.offline-outbox.title": "Sends that don't get lost",
   "changelog.entries.offline-outbox.body":
-    "Tapped send with no signal? Your message waits in line and goes out the moment you're back online. Nothing vanishes on the way.",
+    "Send with no signal and your message waits in line, going out the moment you are back online.",
   "changelog.entries.typing-indicator.title":
     "Typing bubble and screen-reader polish",
   "changelog.entries.typing-indicator.body":
-    "A gentle bubble shows when the other person is writing, and a round of screen-reader work makes the whole chat easier to follow without looking.",
+    "A gentle bubble shows when the other person is writing, and a round of screen-reader work makes the chat easier to follow without looking.",
   "changelog.entries.moderation-actions.title":
     "Every report gets a real decision",
   "changelog.entries.moderation-actions.body":
-    "Opening a report in the moderation queue now always shows the full set of actions (hide, warn, restrict, remove and more, each with a reason the member reads) instead of quietly closing it. The queue's headline also reflects the real number of reports waiting.",
+    "Opening a report shows the full set of actions: hide, warn, restrict, remove and more, each with a reason the member reads. The queue headline counts the reports actually waiting.",
   "changelog.entries.listing-preview-and-ask.title":
     "Preview a listing, ask a question",
   "changelog.entries.listing-preview-and-ask.body":
-    "Moderators can now preview a submitted business exactly as it'll appear live, and ask the submitter a question that reaches them as a direct message.",
+    "Moderators can preview a submitted business exactly as it will appear live, and send the person who submitted it a question as a direct message.",
   "changelog.entries.business-map-pin.title": "Put your business on the map",
   "changelog.entries.business-map-pin.body":
-    "Listing a business? Paste a Google Maps link to drop a pin, and live listings now show up on the local map. New submissions pass through a moderation queue before they appear.",
+    "Paste a Google Maps link when you list a business to drop a pin. Live listings appear on the local map once moderation has looked at them.",
   "changelog.entries.profile-editing.title": "Edit your profile in place",
   "changelog.entries.profile-editing.body":
-    "Your board, skills and groups are now editable right on your profile, with unsaved-change protection so you never lose an edit by accident.",
+    "Edit your board, skills and groups straight on your profile, with a warning before you walk away from unsaved changes.",
   "changelog.entries.profile-communities-save.title":
     "Featured communities that stay put",
   "changelog.entries.profile-communities-save.body":
-    "The communities you pin to your profile now save for keeps, across sessions and devices, and show for everyone who visits, with your role on each.",
+    "The communities you pin to your profile now stay saved across sessions and devices, and everyone who visits sees them with your role on each.",
   "changelog.entries.mention-types.title": "More ways to mention",
   "changelog.entries.mention-types.body":
-    "Mentions now reach beyond people and communities to topics, businesses, events and threads, owners and stewards get notified when they're tagged.",
+    "Mentions now reach topics, businesses, events and threads as well as people and communities. Owners and the people who run them are notified when tagged.",
   "changelog.entries.clear-errors.title": "Clearer error messages",
   "changelog.entries.clear-errors.body":
-    "When something can't be saved, we now tell you exactly what went wrong instead of a generic “something went wrong.”",
+    "When something cannot be saved, we now tell you exactly what went wrong and what to fix.",
   "changelog.entries.messaging-reactions.title": "Smoother message reactions",
   "changelog.entries.messaging-reactions.body":
-    "Reactions update instantly for everyone in the chat, and your sent messages no longer shift position when you react to them.",
+    "Reactions appear instantly for everyone in the chat, and your own messages hold their position when you react to them.",
   "changelog.entries.event-photos.title": "Event photo galleries",
   "changelog.entries.event-photos.body":
-    "Organizers and attendees can share photos on a gathering, visible only to the people who were actually there.",
+    "Organisers and people who attended can share photos on a gathering, visible only to those who were there.",
   "changelog.entries.mentions.title": "Mention people and communities",
   "changelog.entries.mentions.body":
-    "Type @ to tag a member or c/ to link a community in forum and community replies, anyone you mention gets a notification.",
+    "Type @ to tag a member or c/ to link a community in forum and community replies. Anyone you mention gets a notification.",
   "changelog.entries.push-notifications.title":
     "Push notifications for messages",
   "changelog.entries.push-notifications.body":
-    "Opt in to get a phone notification when a new direct message arrives while you're away, private, direct-messages-only, and off by default.",
+    "Opt in to a phone notification when a direct message arrives while you are away. Direct messages only, and off by default.",
   "changelog.entries.delete-conversation.title": "Delete a conversation",
   "changelog.entries.delete-conversation.body":
-    "Clear a chat from your own inbox without affecting the other person's copy, WhatsApp-style.",
+    "Clear a chat from your own inbox while the other person keeps their copy.",
   "changelog.entries.profile-communities.title": "Showcase your communities",
   "changelog.entries.profile-communities.body":
     "Pin the communities you run or belong to on your profile, each with a role badge.",
   "changelog.entries.subprofiles-upgrade.title": "Richer subprofiles",
   "changelog.entries.subprofiles-upgrade.body":
-    "Subprofiles gained presence and media, shareable link previews, and QR-code and vCard export.",
+    "Subprofiles gained presence and media, link previews when you share them, and QR code and vCard export.",
   "changelog.entries.messaging-upgrades.title": "Messaging improvements",
   "changelog.entries.messaging-upgrades.body":
-    "Long-press message actions, editing and replying, and a cleaner conversation thread.",
+    "Long-press a message for actions, edit or reply to it, and read a cleaner conversation thread.",
   "changelog.entries.housing.title": "Housing & flatmate directories",
   "changelog.entries.housing.body":
-    "Member-only listings for housing, flatmates and friendly landlords, each with a compatibility match score.",
+    "Member-only listings for housing, flatmates and friendly landlords, each with a compatibility score.",
   "changelog.entries.routing-cleanup.title": "Routing & path cleanup",
   "changelog.entries.routing-cleanup.body":
-    "Resolved conflicting public paths and route edge cases across the app.",
+    "Conflicting public paths and route edge cases across the app are now sorted out.",
   "changelog.entries.maps.title": "Interactive maps",
   "changelog.entries.maps.body":
-    "The local directory and venues can now be explored on an interactive map.",
+    "Explore the local directory and venues on an interactive map.",
   "changelog.entries.genesis.title": "Founder bootstrap flow",
   "changelog.entries.genesis.body":
-    "A one-time Genesis flow to set up the very first administrator when the platform is stood up.",
+    "A one-time Genesis flow sets up the very first administrator when the platform is stood up.",
   "changelog.entries.pwa-mobile.title": "Install as an app",
   "changelog.entries.pwa-mobile.body":
-    "QueerPulse became a progressive web app with a native-feeling mobile interface, plus improved icons and search-engine metadata.",
+    "QueerPulse is installable as a progressive web app, with a native-feeling mobile interface, better icons and search-engine metadata.",
   "changelog.entries.deploy-stability.title": "Deploy & build stabilization",
   "changelog.entries.deploy-stability.body":
-    "A run of deployment, build, and prerendering fixes to get the app shipping reliably in production.",
+    "A run of deployment, build and prerendering fixes so the app ships reliably in production.",
   "changelog.entries.performance-staff.title": "Performance & staff badges",
   "changelog.entries.performance-staff.body":
-    "Faster page loads, expanded admin routes, and a QueerPulse staff badge on official accounts.",
+    "Faster page loads, more admin routes, and a QueerPulse staff badge on official accounts.",
   "changelog.entries.accessibility.title": "Accessibility & UI polish",
   "changelog.entries.accessibility.body":
     "Accessibility fixes and a round of interface refinements across the app.",
   "changelog.entries.i18n-complete.title": "Full Portuguese translation",
   "changelog.entries.i18n-complete.body":
-    "The entire interface became available in both English and Portuguese, switchable from the nav.",
+    "The whole interface is available in English and Portuguese, switchable from the nav.",
   "changelog.entries.subprofiles.title": "Subprofiles",
   "changelog.entries.subprofiles.body":
-    "Create multiple public presences under one account, for your art, your business, or a project.",
+    "Create several public presences under one account, for your art, your business or a project.",
   "changelog.entries.live-backend.title": "Live backend",
   "changelog.entries.live-backend.body":
-    "The app connected to its real backend, keeping the standalone demo mode alongside live data, with editable profiles.",
+    "The app now runs on its real backend with editable profiles, and the standalone demo mode stays available alongside it.",
   "changelog.entries.landing.title": "New landing page",
   "changelog.entries.landing.body":
-    "A redesigned landing page and a round of marketing-site refactors.",
+    "A redesigned landing page, along with a round of marketing-site refactors.",
   "changelog.entries.studio-cinema.title": "Cinema & Studio",
   "changelog.entries.studio-cinema.body":
-    "New Cinema rights pages and Studio production pages joined the platform.",
+    "Cinema rights pages and Studio production pages joined the platform.",
   "changelog.entries.tickets.title": "Ticketed events",
   "changelog.entries.tickets.body":
     "Pay for event tickets directly on the platform, backed by real event data.",
@@ -5530,7 +5576,7 @@ export const marketing: Catalog = {
     "A directory of local queer-friendly businesses, with a flow for owners to add their own.",
   "changelog.entries.invite-flow.title": "Invite flow",
   "changelog.entries.invite-flow.body":
-    "An invitation-based sign-up flow and a reworked onboarding experience.",
+    "Sign-up now runs on invitations, with a reworked onboarding to go with it.",
   "changelog.entries.moderation-trust.title": "Moderation & trust network",
   "changelog.entries.moderation-trust.body":
     "Moderation tools, event management, admin tooling, and a trust-network graph connecting members.",
@@ -5539,10 +5585,10 @@ export const marketing: Catalog = {
     "Member-run communities and a long-form discussion forum launched together.",
   "changelog.entries.onboarding.title": "Member onboarding",
   "changelog.entries.onboarding.body":
-    "A guided onboarding flow for new members, with a smoother sign-in experience.",
+    "A guided onboarding flow for new members, with a smoother sign-in.",
   "changelog.entries.launch.title": "QueerPulse launches",
   "changelog.entries.launch.body":
-    "The first release, the community mega-navigation and the core set of pages went live.",
+    "The first release: the community mega-navigation and the core set of pages went live.",
   "changelog.empty.title": "Nothing logged under that filter yet",
   "changelog.empty.description":
     "No changes of this kind have shipped so far. Clear the filter to see the full history.",
@@ -7591,19 +7637,19 @@ export const marketing: Catalog = {
   "changelog.entries.resource-listings-and-suggestions.title":
     "Real resource listings for Legal Aid & Sexual Health Testing",
   "changelog.entries.resource-listings-and-suggestions.body":
-    'Legal Aid and Sexual Health Testing now show a real, admin-vetted directory when one exists — and a "Suggest a resource" form feeding an admin review queue when it doesn\'t. No fabricated listings, ever.',
+    "Legal Aid and Sexual Health Testing now show a real, admin-vetted directory where one exists. Where it is still empty, a Suggest a resource form feeds an admin review queue.",
   "changelog.tag.legal": "See Legal Aid",
 
   "changelog.tag.guideRating": "See the Legal guides",
   "changelog.entries.resources-guide-rating.title":
     "Rate whether a resource guide helped",
   "changelog.entries.resources-guide-rating.body":
-    "Legal, Sexual Health, and Mental Health guides now end with a quick \"Was this helpful?\": thumbs up or down, no visible counts, just a thanks once you've answered. Editors can see which guides are and aren't landing from the new Guide Feedback admin page.",
+    "Legal, Sexual Health and Mental Health guides end with a quick Was this helpful, thumbs up or down. Editors see the results on the new Guide Feedback page.",
 
   "changelog.entries.homepage-housing-personas-showcase.title":
     "A closer look at housing and personas on the homepage",
   "changelog.entries.homepage-housing-personas-showcase.body":
-    'The homepage\'s Housing and Personas sections now show what the features actually feel like: two real listing cards with a room and a landlord tab (reviews, verdicts, an honest "no reviews yet" when a landlord is new), and an interactive persona deck you can switch between to see how a public page changes per persona.',
+    "The homepage Housing and Personas sections now show the real thing: two listing cards with a room tab and a landlord tab, and a switchable persona deck.",
 
   // Trust, safety and moderation (section 1 build).
   "changelog.tag.transparency": "Read the transparency report",
@@ -7626,305 +7672,305 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.title":
     "The nomination form becomes a form",
   "changelog.entries.the-nomination-form-becomes-a-form.body":
-    "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
+    "Nominating a Change Maker now labels both fields and counts to 500 characters on the why box. A moderator reads it, and the nominee is never told.",
 
   "changelog.entries.signing-a-device-out-now-signs-it-out.title":
     "Signing a device out now signs it out",
   "changelog.entries.signing-a-device-out-now-signs-it-out.body":
-    "Your account settings list the devices you are signed in on, and two things about that page were wrong. None of the devices was marked as the one in your hand, so there was no way to tell which row was the phone you were holding. Worse, Sign out all other devices signed you out of every device including the one you were using, which is the opposite of what it promises and a bad surprise for anyone reaching for it because they think an account has been taken. Both are fixed: the device you are on is labelled, and signing the others out leaves you exactly where you are. Signing a device out is also immediate now. Before, a device that had just been signed out kept working for up to fifteen minutes, so it could still read your messages and post in that window, and it could reconnect for live updates on top. That gap is closed on every part of the platform at once.",
+    "Your device list now labels the device in your hand, and signing out the others leaves you signed in. Signing a device out takes effect immediately.",
 
   "changelog.entries.names-that-speak-for-queerpulse-are-reserved.title":
     "Names that speak for QueerPulse are reserved",
   "changelog.entries.names-that-speak-for-queerpulse-are-reserved.body":
-    "Staff here are identified by a badge, and a username carries no such weight, which left a gap: names like support, moderator, official, security and safety were free for anyone to take. A member holding one could open a message that reads as though the platform itself had sent it. Around thirty such names are now kept for the platform, alongside the ones already reserved for matching a page address. This binds at every point a username is set, including the one at sign-up, where a name was previously taken straight from your Google account with no check at all. If your name happens to match one of the reserved words you get it with a number after it, and nobody already using one loses their name.",
+    "Around thirty names that could pass for the platform, like support, moderator and security, are now reserved for QueerPulse. If yours matches, you get a number after it.",
 
   "changelog.entries.badges-for-the-people-who-run-each-part.title":
     "Badges for the people who run each part",
   "changelog.entries.badges-for-the-people-who-run-each-part.body":
-    "Some parts of QueerPulse are run by members who have been trusted with one area of it: housing, the directory, the resource library, the magazine, communities. They make real decisions about other members work, and until now they carried no badge anywhere, so a person whose listing was declined or whose piece was spiked saw an ordinary account. Those six roles now appear on the staff page and wherever a member name is shown, each with a plain label saying what the person looks after. Two roles stay unbadged on purpose: a magazine writer, who only ever works on their own pieces, and partnerships, which decides nothing about a member.",
+    "The people trusted with housing, the directory, the library, the magazine and communities now carry a badge wherever their name appears, labelled with their area.",
 
   "changelog.entries.staying-signed-in-on-shared-wifi.title":
     "Staying signed in on shared wifi",
   "changelog.entries.staying-signed-in-on-shared-wifi.body":
-    "Sessions renew quietly in the background, and the limit on how often that could happen counted everyone sharing one internet connection as a single person. At a venue, a cafe or on a home connection where a provider puts many households behind one address, the eleventh renewal in a minute across everyone present was refused, and the people it hit had done nothing but be in the same room. The limit now counts each session on its own, so a busy room is just a busy room.",
+    "Session renewals are counted per session now, so everyone sharing one internet connection at a venue, a cafe or a home line stays signed in.",
 
   "changelog.entries.clearer-keyboard-focus-across-the-platform.title":
     "Clearer keyboard focus across the platform",
   "changelog.entries.clearer-keyboard-focus-across-the-platform.body":
-    "If you move around QueerPulse with the keyboard, the ring that marks where you are had a problem. On the cream and white parts of the site it was a single coral outline that barely separated from the page behind it. The ring is two-toned now, a dark line with a pale halo just inside it, so one of the two always stands clear whatever colour it lands on. Most of the site already worked this way, and around 170 individual controls quietly overrode it back to the old thin outline. They all share the one ring now, so it looks the same on a button, a card, a photo and a persona page, whatever background you have chosen. Three places had no ring at all and now do: the article writing canvas, the comment box under an article, and the search field on Find members. The faintest text in Studio, the one used for timestamps, day headers and row details, was also too pale against the dark background at the small sizes it appears in, and has been lifted until it reads.",
+    "The keyboard focus ring is two-toned now, a dark line with a pale halo, so it reads on any background. Around 170 controls that overrode it share it.",
 
   "changelog.entries.screen-readers-follow-along-in-more-places.title":
     "Screen readers follow along in more places",
   "changelog.entries.screen-readers-follow-along-in-more-places.body":
-    "Parts of the site were changing without saying so. Five panels, the resource sheets, the grant application, the mentor match, the print order and the Studio tip, opened without moving you into them, so the next thing you tabbed to was a control on the page behind. They now place you inside, keep you there while they are open, close on Escape, and hand you back to the button you came from. Reordering the pieces in a magazine issue, and moving a roadmap card up or down its column, now announce the title and the new position, and a roadmap card can be moved without a mouse at all. Stepping through the photos on a home listing says which photo you are on and what is in it. The message box, the forum reply box and the community reply box carry proper names now, in place of a placeholder that disappeared the moment you started typing. Lists of choices built out of buttons answer the arrow keys the way a list of choices should. The close button on a pop-up message is easier to hit on a phone, and the mute menu on your badge case closes with Escape.",
+    "Five side panels now move your keyboard focus inside, close on Escape and hand you back to the button you came from. Reordering magazine pieces announces the new position.",
 
   "changelog.entries.see-your-persona-the-way-a-visitor-does.title":
     "See your persona the way a visitor does",
   "changelog.entries.see-your-persona-the-way-a-visitor-does.body":
-    "Your own persona page shows you the controls of the person who runs it: Edit persona, the banner repositioner, the names of everyone following it. That made the one question worth asking before you share the link, which is what a stranger actually gets, hard to answer. There is now a View as visitor button beside Edit persona. It swaps your controls for the ones a visitor sees, hides everything that is yours alone, and keeps the page itself live, so you can open a photo, read a poem and follow a link exactly as someone arriving for the first time would. Message, follow, recommend and report are all shown in their proper places and none of them can be pressed, so nothing you do in there counts. A bar at the foot of the screen takes you back out. Drafts do not offer it: nobody else can open a draft yet, so there is no visitor view to show.",
+    "A View as visitor button beside Edit persona shows your page as a stranger sees it, and a bar at the foot brings you back.",
 
   "changelog.entries.filters-you-add-ease-in-and-out.title":
     "Filters you add ease in and out",
   "changelog.entries.filters-you-add-ease-in-and-out.body":
-    "In Find members, every filter you pick shows up as a pill above the results. It used to arrive fully formed the instant you ticked the box, and vanish the same way when you took it off. The pill now grows in as it appears and shrinks away as it leaves, and the pills beside it slide across to close the gap, so you can see which one you just added and which one you just dropped. With Reduce motion on, or if your device asks for it, the pills still appear and disappear with no movement at all.",
+    "In Find members, each filter pill grows in as it appears and shrinks away as it leaves. Reduce motion keeps them still.",
 
   "changelog.entries.every-neighbourhood-says-how-many-people-are-there.title":
     "Every neighbourhood says how many people are there",
   "changelog.entries.every-neighbourhood-says-how-many-people-are-there.body":
-    "Where they're based was the one filter in Find members with no numbers on it. It was a row of pills, so you picked a neighbourhood, waited, and only then found out whether anyone was in it. It now looks like the filters above and below it: a tick box per neighbourhood, each with a count of how many of your current results are there, greyed out and unpickable when nobody is. All of Lisbon carries the full number, so you can see what dropping the neighbourhood filter would give you back before you drop it.",
+    "Where they're based is now a tick box per neighbourhood, each with a count of your current results. Empty neighbourhoods grey out, and All of Lisbon carries the full number.",
 
   "changelog.entries.a-persona-leads-with-its-name.title":
     "A persona leads with its name",
   "changelog.entries.a-persona-leads-with-its-name.body":
-    "The card for whichever persona you were looking at opened with an uppercase craft badge and a handle. The name and the line describing the work only turned up underneath all of that, starting further left than everything above them, so the photo sat next to nothing in particular. The photo now sits beside the name it belongs to, with the description directly under it, and the whole block reads as one person. The craft has moved to the head of that description line, printed darker than the words around it so it still catches your eye, and the badge is gone.",
+    "The photo now sits beside the name it belongs to, with the description right under it. The craft opens that description line in darker type, and the uppercase badge is gone.",
 
   "changelog.entries.pages-open-the-moment-you-click-them.title":
     "Pages open the moment you click them",
   "changelog.entries.pages-open-the-moment-you-click-them.body":
-    "Clicking a link used to leave you watching a spinner where the page should be. Nothing about that page had reached your browser yet, so the click was the moment it started downloading, and only once it arrived did anything begin loading its content. The app now fetches a page quietly as soon as you hover over, tab to, or touch the link that leads there, and the tabs at the bottom of the screen are ready before you press them. The page frame now appears straight away, with its own placeholders where the content is still on its way, so you can see where you are while it fills in.",
+    "The app fetches a page as soon as you hover over or touch the link, and the frame appears straight away with placeholders while the content arrives.",
 
   "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.title":
     "People you might know swipes sideways on a phone",
   "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.body":
-    "On a phone, the suggestions above your feed stacked one card per row, so six people pushed the feed most of a screen further down and you scrolled past faces you had not asked for to reach what your communities had posted. That row now scrolls sideways. Cards are sized so the edge of the next one always shows, the strip keeps the same height whatever it holds, and everything inside a card is unchanged: the same face, the same line saying why that person is there, and the same two ways out, saying hello or dismissing them for good.",
+    "On a phone, the suggestions above your feed now scroll sideways in one strip, so your feed starts higher up. Each card keeps the same face and choices.",
 
   "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.title":
     "Member filters show how many people are behind each one",
   "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.body":
-    'Filtering the member directory meant guessing. You ticked "Mentoring", then "Graphic designer", then a language, and only found out you had narrowed it to nobody once the results went empty. Every option in the sidebar now carries the number of members behind it, counted live against everything else you have already chosen, so you can see a combination is a dead end before you spend a click on it. An option nobody matches greys out rather than disappearing, because zero is a real answer to "who is here?" and a vocabulary that keeps changing shape is harder to read than one that does not.',
+    "Every option in the member directory sidebar now carries the number of members behind it, counted against what you have already picked. Options nobody matches grey out.",
 
   "changelog.entries.an-empty-browse-stops-blaming-your-filters.title":
     "An empty Browse stops blaming your filters",
   "changelog.entries.an-empty-browse-stops-blaming-your-filters.body":
-    'Browse under Events told anyone who found it empty that "nothing matches that filter, try another" even when no filter was set and there was simply nothing on. It sent people hunting for a setting to loosen that did not exist. Now the two nothings say different things: with filters on, it points at the dates, the neighbourhood and the kind of gathering you could widen; with none on, it says the calendar is empty and offers to help you host the first thing on it.',
+    "Browse under Events now tells the two empty states apart: with filters on, it names the dates, the neighbourhood and the kind of gathering you could widen.",
 
   "changelog.entries.one-row-of-tabs-on-events.title":
     "One row of tabs on Events",
   "changelog.entries.one-row-of-tabs-on-events.body":
-    'Events had two stacked bars of tabs: "My events | Discover" up in the header, then a separate sticky bar underneath for Highlights, Browse and Calendar. Two levels, two bars, and a stripe of empty page between them. The three Discover views now sit in the header row itself, right after the switch that opens them and before "Host a gathering", so the whole set of choices reads in one line. Links into a specific view still work exactly as before.',
+    "Highlights, Browse and Calendar move up into the header row, so the second sticky bar is gone. Links into a specific view still work.",
 
   "changelog.entries.the-recap-card-leaves-ways-to-gather.title":
     "The recaps card leaves ways to gather",
   "changelog.entries.the-recap-card-leaves-ways-to-gather.body":
-    'The "ways to gather" strip under the Events Hub highlights offered four doors: browse everything, open the calendar, host your own, and "Relive the last one", which promised photos, notes and the headcount from gatherings that had already happened. That last one pointed at a recap page that does not exist yet. Anyone who followed it went somewhere empty. The card is gone from the strip, which now shows the three doors that actually lead somewhere, each one the same width and height with its link on the same line as its neighbours. When recaps are real, the card comes back.',
+    "Relive the last one pointed at a recap page that does not exist yet, so it has left the ways to gather strip. Three equal doors remain.",
 
   "changelog.entries.a-nomination-can-say-where-to-find-them.title":
     "A nomination can say where to find them",
   "changelog.entries.a-nomination-can-say-where-to-find-them.body":
-    'Nominating a change maker asked for a name and a sentence, and that was everything the moderator reading it ever got. Two people share a first name, a stage name is not the name on anything official, and "runs the Tuesday support group" is not something you can look up. So a nomination was really only actionable when the moderator already happened to know who was meant. The form now has two optional fields in the middle. If the person is already a member here, you can search for them and attach their profile, and the queue shows a link straight to it. If they are not, there is a line for wherever they already are in public: an Instagram, a website, an email. Both are optional and neither gates the button, so a name and a sentence is still a complete nomination. Nothing about who sees this changed: the nomination stays private, the person named is still never told, and the contact details are held to the same rule as the nominator\'s own name, which means only platform moderators and admins can read them.',
+    "A change maker nomination now takes two optional extras: the person's profile here, or a public link like an Instagram. A name and a sentence are still enough.",
 
   "changelog.entries.the-communities-toolbar-becomes-one-line.title":
     "The communities toolbar becomes one line",
   "changelog.entries.the-communities-toolbar-becomes-one-line.body":
-    "Everything above the community cards stood in four stacked bands: the My communities and Discover switch with two buttons floating off to the right, then a search field alone on its own row, then a line reading the result count and the sort. Together they pushed the first card most of a screen down, and they said the same number twice, since the active tab already carried its own count. They are now one row: the switch, the search field with Refine beside it, and Start a community. How communities work moved into the info button next to the page title, which was already the page explainer sitting a thumb away from it. The result count appears on the chip row the moment something is narrowing the list, next to the chips that explain it, and the sort joins those chips whenever it is off Newest, so a closed Refine panel never hides how the list is ordered. A search or a filter now survives switching between My communities and Discover, so looking somewhere else for the same thing is one click.",
+    "Four stacked bands above the community cards become one row: the My communities and Discover switch, search with Refine beside it, and Start a community.",
 
   "changelog.entries.three-icons-leave-the-events-header.title":
     "Three icons leave the events header",
   "changelog.entries.three-icons-leave-the-events-header.body":
-    "The events header carried a gear, a bell and a magnifier before the Host a gathering button. The gear opened a preferences panel, the bell opened a second, smaller notifications list, and the magnifier jumped you to the Discover tab with the search field focused. Between them they duplicated the notifications you already get in the main bell and the search you already reach from Discover, and the panel offered settings almost nobody opened it to find. All three are gone. The header is now the page name, the My events and Discover switch, and Host a gathering. Reminders still reach you in the app before an event starts.",
+    "The gear, bell and magnifier are gone from the events header. It is now the page name, the My events and Discover switch, and Host a gathering.",
 
   "changelog.entries.browse-events-gets-the-same-refine.title":
     "Browse events gets the same Refine",
   "changelog.entries.browse-events-gets-the-same-refine.body":
-    "Discover's browse board now opens the way your own events do: one row with a search field and a Refine control, and when, neighbourhood, kind of gathering and cost as bands inside it. Whatever you have picked shows as removable chips under the search field, each one dropping back to any rather than to nothing, and Clear all now sits beside those chips instead of off next to controls the panel may be hiding. The filters themselves are unchanged, still applied by the server, so a narrowed board still survives scrolling and still shares as a link.",
+    "Discover's browse board now opens like your own events: a search field and a Refine control holding when, neighbourhood, kind of gathering and cost, with removable chips.",
 
   "changelog.entries.your-events-filters-fold-away.title":
     "Your events filters fold away",
   "changelog.entries.your-events-filters-fold-away.body":
-    "Six bucket pills, five filter chips and a sort control all stood open above your events, so the first event sat a long way down the page for choices most people make once or never. They now live behind one Refine control, the same one the communities grid and the Lisbon directory use, and it carries a count so a closed panel still says something is on. What is currently narrowing the list shows as removable chips under the search field: the bucket you are in first, then the filters, then your search term, with a Clear all beside them. Comfortable and Select stay on the row, because neither changes which events you see.",
+    "The bucket pills, filter chips and sort above your events now live behind one Refine control, which shows a count while something is on.",
 
   "changelog.entries.the-communities-filters-fold-away.title":
     "The communities filters fold away",
   "changelog.entries.the-communities-filters-fold-away.body":
-    "Seven category chips, a tags tray, two toggles and a sort control all stood open above the communities grid, pushing the first card most of the way down the page for settings most people set once or never. They now live behind one Refine control, in the same panel the Lisbon directory uses. What is currently narrowing the list, your search term included, shows as removable chips under the search field, so a closed panel hides the controls without hiding what is on.",
+    "Category chips, the tags tray, both toggles and sort now sit behind one Refine, the same panel the Lisbon directory uses. Your search shows as a removable chip.",
 
   "changelog.entries.your-sort-and-your-location-both-count.title":
     "Your sort and your location both count",
   "changelog.entries.your-sort-and-your-location-both-count.body":
-    'Turning on your location used to throw away whatever sort you had picked. Now the two work together. By neighbourhood keeps its grouping, and your position orders the neighbourhoods and the places inside each one by how close they are. A to Z stays alphabetical, because that is a lookup order distance cannot improve, and your position still puts a walking time on every card. With no sort picked, the list goes nearest first and the control says "Nearest first", so it never claims an order the list does not have.',
+    "Your location no longer discards your sort. By neighbourhood orders by closeness, A to Z stays alphabetical with a walking time on each card.",
 
   "changelog.entries.one-line-of-controls-on-the-directory.title":
     "One line of controls on the directory",
   "changelog.entries.one-line-of-controls-on-the-directory.body":
-    "The business directory split its controls across two rows: search, location and Refine up top, sort and the List/Map switch down beside the result count. They now share one line. Sort has moved inside Refine, where the rest of the filtering lives, and the drawer itself is a proper panel with named sections for place type, sort, quick filters and access needs. Everything currently narrowing the list, your search term included, now shows as removable chips right under the search row, so a closed drawer never hides what is on.",
+    "The business directory's controls share one line now. Sort moved inside Refine, and everything narrowing the list shows as removable chips under the search row.",
 
   "changelog.entries.an-empty-partner-roster-says-so.title":
     "An empty partner roster says so",
   "changelog.entries.an-empty-partner-roster-says-so.body":
-    "With no approved partners yet, the Partners page showed a heading, a line promising the full roster, and then nothing. The page now says plainly that no partners are listed yet and offers the way in: a button straight to the partner application. The promise of a roster only appears when there is one.",
+    "With no approved partners yet, the Partners page now says so plainly and offers a button straight to the partner application. The promise of a roster appears once there is one.",
 
   "changelog.entries.the-tag-filter-opens-in-line.title":
     "The tag filter opens in line",
   "changelog.entries.the-tag-filter-opens-in-line.body":
-    "Opening Tags on the communities page dropped a floating panel on top of the page. It covered the week's digest and the first row of community cards, and because the panel had a fixed height it also sliced its own last row of tags in half against its bottom edge, so the whole thing read as broken rather than open. The tags now open in line: the tray sits under the Tags button, pushes the grid down while it is open, and shows all 53 tags at once. On phones, where the same tags run several screens long, the tray keeps its own scroll so the cards stay within reach.",
+    "Tags on the communities page now open in line under the button, showing all 53 at once. On phones the tray keeps its own scroll.",
 
   "changelog.entries.pages-that-get-to-the-point.title":
     "Pages that get to the point",
   "changelog.entries.pages-that-get-to-the-point.body":
-    "A run of pages opened on a full-height title instead of on the thing you came for. The events page had a header and then a second, much larger one saying the same thing, with a band of empty cream above both, so your agenda started well below the fold. The header is now the only one, and the settings and notification buttons that hung off the old title moved up into it: the page opens on your buckets and your next event. Ten more pages keep their titles, their opening lines and everything else they carried, including the four numbers on changemakers, the note and both buttons on volunteering, the route picker on visas, and the wordmark and cover story on the magazine. What came out around them is empty space, so the first place, the first face, the first role and the first headline are on screen when the page arrives. The business directory, topics, housing, the arrival guide and partners got the same treatment. Nothing was removed from any of them beyond the repetition.",
+    "Eleven pages lost the oversized second title and the empty band above it, so the first event, place, face or headline is on screen when the page arrives.",
 
   "changelog.entries.your-communities-start-at-the-cards.title":
     "Your communities start at the cards",
   "changelog.entries.your-communities-start-at-the-cards.body":
-    "The communities page opened with two headings stacked on top of each other: the page title and its lead, then a second greeting saying much the same thing underneath. Between them they filled most of a first screen, so on a laptop the communities you belong to sat below the fold and you had to scroll to reach your own. There is one header now. It carries the greeting, the line about what has been happening across your communities, and the My communities / Discover switch, and the search box, the filters and the cards follow straight after it. Discover starts higher up the page for the same reason.",
+    "The communities page has one header now, carrying the greeting and the My communities and Discover switch. Search, filters and cards follow straight after.",
 
   // ── 27 Aug 2026 ───────────────────────────────────────────────────────────
   "changelog.entries.unused-uploads-filter.title":
     "Finding uploads nothing points at",
   "changelog.entries.unused-uploads-filter.body":
-    "The admin console that lists every uploaded image can now filter to files nothing on the platform points at, and to files that are still in use. Each tile already said whether it was referenced, so finding the ones safe to clear away meant reading the grid card by card. The filter narrows what has been loaded and keeps loading further into the bucket while nothing matches, so it never answers “nothing unused here” from a half-loaded list. The standing caution still holds where some reference checks couldn't run: an empty reference set is unverified, so reload before treating a file as safe to delete.",
+    "The uploads console can now filter to files nothing on the platform points at, or to files still in use. Reload before deleting: an empty reference set is unverified.",
 
   // ── 26 Aug 2026 ───────────────────────────────────────────────────────────
   "changelog.entries.guides-appear-once-an-editor-has-checked-them.title":
     "Guides appear once an editor has checked them",
   "changelog.entries.guides-appear-once-an-editor-has-checked-them.body":
-    "A guide reaches you only after an editor has read it end to end and confirmed it is accurate. That covers the guide index, the library, search, and the guide pages themselves: opening one that has not been through review shows the crisis lines and an honest note about where it is. These are pages people open in a crisis, so the bar for showing one is that a named person has taken responsibility for the words. Every guide is in the review queue right now, so the shelves start bare and fill as each one is signed off. Two smaller things came with it. A guide whose review has merely fallen due stays up and says so in its footer. And a logged-out visitor now gets the same guide text and the same review dates a member does, because a questioning teenager should not have to sign up to read a health guide.",
+    "A guide reaches the index, the library and search only after an editor has read it end to end. An unreviewed page shows the crisis lines instead.",
   "changelog.entries.the-rules-open-without-leaving-the-queue.title":
     "The moderation rules open without leaving the queue",
   "changelog.entries.the-rules-open-without-leaving-the-queue.body":
-    "The note above every moderation queue points at the hard lines and at where the platform stands, and until now reading either one meant navigating away mid-decision with a report or a join request half-read behind you. Both references now open a dialog over the queue: a short digest written for the call being made, covering the one test that separates criticism of a state from a Code of Conduct matter, what self-identification means for someone reviewing an applicant, and what a confirmed breach leads to. A button in the dialog goes through to the full page for anyone who wants the whole text.",
+    "The hard lines and where the platform stands now open in a dialog over the moderation queue: a short digest, with a button through to the full page.",
   "changelog.entries.reporting-that-someone-outed-you.title":
     "Reporting that someone outed you",
   "changelog.entries.reporting-that-someone-outed-you.body":
-    "Two report forms did not offer outing or doxxing as a reason: the main report form, which anyone can reach without signing in, and the report box on a business listing's public questions. Those two reasons are the only ones that send a report straight to the emergency queue. Filed as harassment or as something else, the same report was read on a slower clock. If that was you, nothing about it was your fault. The form was missing the words for what happened. Both forms now carry both reasons, worded as what happened to you rather than in our vocabulary: “Someone shared that I'm LGBTQ+ without my consent”. Reporting a gathering gained harassment and discrimination, and reporting a persona gained discrimination. The reason list on eight report forms now comes from the server instead of a second copy kept here, so the options can't fall behind what the platform handles again. If the connection drops while you're filing, the form still opens with a full list and your report still goes through.",
+    "Outing and doxxing are now report reasons, on the main form and on a listing's public questions, and both go straight to the emergency queue.",
   "changelog.entries.a-quieter-option-before-you-go.title":
     "A quieter option before you delete your account",
   "changelog.entries.a-quieter-option-before-you-go.body":
-    "Beside deactivating and deleting sat an offer to pause all notifications for 30 days. It was a button attached to nothing: no such switch existed, and QueerPulse sends no email to pause. In front of someone weighing up leaving is the worst possible place for a promise we can't keep, so the strip now takes you to your notification settings, where you can choose which kinds reach you and set quiet hours so your phone stays still overnight. Both of those are real.",
+    "The strip beside deactivating and deleting now takes you to your notification settings, where you can pick which kinds reach you and set quiet hours.",
   "changelog.entries.a-refused-moderation-action-says-why.title":
     "Moderators are told why an action was refused",
   "changelog.entries.a-refused-moderation-action-says-why.body":
-    "Warning, restricting, suspending or banning lands on whoever wrote the reported thing, and sometimes there is no single person for it to land on: nobody is behind an unclaimed listing or an erased account, a report can cover a question and the answer under it written by two different people, and house and staff accounts are never targets for this queue. All of those used to fail with “Couldn't reach the safety service”, which was untrue in both halves. The service answered, and it refused for a specific reason the moderator never saw. Each case now says what happened and what to do instead, and offers no retry, because a retry gets the same answer. The question-and-answer case matters most: it used to resolve to whoever asked the question even when the answer was what was reported, so a sanction could have reached the wrong person. Hiding, removing, dismissing and escalating stay available on the report in every case. The drawer also stopped saying ban was unavailable while showing a Ban button.",
+    "When a sanction has no single person to land on, an unclaimed listing or an erased account, moderators now see which case it is and what to do next.",
   "changelog.entries.the-decision-sample-says-who-decided.title":
     "The decision sample says who made each call",
   "changelog.entries.the-decision-sample-says-who-decided.body":
-    "The sample of recent invite decisions labelled each one with an account reference, which told a reviewer nothing useful. It now names the reviewer who decided, and your own calls read as “You”. You can narrow the same sample to one person, which is how an inconsistent reading of the review guidelines becomes visible. Nothing here counts, ranks or scores anyone: the only question a name answers is whose reading of the guidelines you are looking at.",
+    "The sample of recent invite decisions now names the reviewer behind each call, your own read as You, and you can narrow it to one person.",
   "changelog.entries.communities-your-connections-already-joined.title":
     "Communities your people are already in",
   "changelog.entries.communities-your-connections-already-joined.body":
-    "The communities page now shows a short list of groups the people you're connected to have joined and you haven't, ordered by how many of them are in each. It's the question you'd have asked a friend anyway. When there's nothing worth suggesting, the section stays out of your way entirely rather than sitting there empty.",
+    "The communities page now shows a short list of groups your connections have joined without you, ordered by how many of them are in each.",
   "changelog.entries.follow-your-listing-claim.title":
     "Follow your listing claim from start to finish",
   "changelog.entries.follow-your-listing-claim.body":
-    "If you've claimed a business listing, there's now a page for it. It shows where each claim stands, how long it has been waiting, and the date we said we'd decide by. The claim form tells you that same turnaround before you submit, along with the evidence that makes a claim straightforward to approve. Nothing is emailed to you: you check back here.",
+    "There is now a page for your business listing claims: where each one stands, how long it has waited, and the date we said we would decide by.",
   "changelog.entries.the-accessibility-statement-is-published.title":
     "The accessibility statement is published",
   "changelog.entries.the-accessibility-statement-is-published.body":
-    "There's now a published accessibility statement, linked from the footer and the main navigation. It says what the platform does for people using a screen reader, a keyboard, or reduced motion, and it's straight about what hasn't been audited yet instead of claiming a badge nobody checked. It also sets out where Portuguese law actually stands: Decreto-Lei 82/2022 very likely does not reach a platform like this one, so we publish the statement by choice, and if our answer to you is not enough it tells you exactly where to go next.",
+    "The accessibility statement is published, linked from the footer and main navigation. It covers screen readers, keyboards and reduced motion, and says what has not been audited.",
   "changelog.entries.the-privacy-policy-says-what-it-keeps.title":
     "The privacy policy says what it keeps, and for how long",
   "changelog.entries.the-privacy-policy-says-what-it-keeps.body":
-    "The retention section used to be three sentences. It's now a full schedule: each kind of data, and the point at which it stops being kept. Ten service providers are named. A sub-processor that was listed but never actually used is gone. Every right the policy lists now points at a page where you can exercise it, rather than at an address.",
+    "Retention is now a full schedule: each kind of data and when it stops being kept. Ten service providers are named, and every right links to where you exercise it.",
   "changelog.entries.what-we-said-we-would-delete-gets-deleted.title":
     "What we said we'd delete now gets deleted",
   "changelog.entries.what-we-said-we-would-delete-gets-deleted.body":
-    "The access needs and dietary notes you hand a host are cleared 30 days after the gathering, along with the record that you checked in. Your RSVP stays, so a past gathering keeps its headcount. Once the check-ins are gone the host sees “no longer kept” where the number of arrivals used to be, so a cleared gathering can never be misread as one nobody came to, and the door screen stops recording new arrivals for a gathering that old. Data export links now expire after the seven days the policy promised, instead of quietly working for thirty.",
+    "Access needs, dietary notes and check-ins are cleared 30 days after a gathering. Your RSVP stays, so the headcount survives. Export links expire after seven days.",
   "changelog.entries.reporting-says-why-it-is-slowing-you-down.title":
     "Reporting says why it's slowing you down",
   "changelog.entries.reporting-says-why-it-is-slowing-you-down.body":
-    "Filing several reports in quick succession used to answer with a generic failure, which reads exactly like being turned away. It now says plainly that it's pausing you for a moment, and why, so a rate limit never looks like a rejected report. A related bug that showed a raw technical error string instead of a sentence is fixed.",
+    "Filing several reports quickly now says plainly that it is pausing you for a moment, and why. A raw technical error message is fixed too.",
   "changelog.entries.bulk-invite-decisions-ask-before-they-fire.title":
     "Bulk decisions on invite requests ask before they fire",
   "changelog.entries.bulk-invite-decisions-ask-before-they-fire.body":
-    "Approving or waitlisting a batch of invite requests happened on the first click, with nothing to confirm and no way back. It asks first now. When part of a batch fails, moderators see which applicant and why, and those requests stay selected so only they get retried. Select-all arrived with it, and the cap on how many can be selected is shown rather than silently applied.",
+    "Approving or waitlisting a batch of invite requests now asks first. When part of a batch fails, you see which applicant and why, and those stay selected for a retry.",
   "changelog.entries.decision-sampling-sits-with-the-queue.title":
     "Decision sampling sits with the queue it samples",
   "changelog.entries.decision-sampling-sits-with-the-queue.body":
-    "The sample of recent invite decisions, the check that reviewers are deciding consistently with one another, lived on an admin-only page. The moderators whose work it samples couldn't open it. It now sits on the invite-request queue itself, where the people doing the reviewing can read it.",
+    "The sample of recent invite decisions has moved from an admin-only page onto the invite request queue itself, where the people doing the reviewing can read it.",
   "changelog.entries.every-moderation-queue-reports-its-health.title":
     "Every moderation queue reports its own health",
   "changelog.entries.every-moderation-queue-reports-its-health.body":
-    "A new panel shows what's waiting across all of moderation at once: how deep each queue is, the longest anything has been sitting, how much is past a window we published, and how much nobody has picked up yet. When a queue crosses a threshold, staff get a notice in the app, and a second one when it clears. Nothing is pushed to anyone's phone.",
+    "A new panel shows how deep each moderation queue is, the longest wait, and what is past a published window. Staff get an in-app notice when a queue crosses a threshold.",
   "changelog.entries.housekeeping-the-mailer-and-two-dead-ends.title":
     "Housekeeping: the mailer, and two dead ends",
   "changelog.entries.housekeeping-the-mailer-and-two-dead-ends.body":
-    "The transactional mailer that briefly existed in the backend is gone, which puts the code back in line with the standing decision that QueerPulse sends no email. The retired standalone event prototype page went with it; its link now takes you to the gatherings board. An unused sign-out endpoint was removed too.",
+    "The transactional mailer that briefly existed in the backend is gone, in line with QueerPulse sending no email. The retired event prototype page went with it.",
 
   "changelog.entries.the-about-page-shows-its-work-in-place.title":
     "The About page shows its work in place",
   "changelog.entries.the-about-page-shows-its-work-in-place.body":
-    "Every reference link on the About page used to take you off it mid-argument, so checking what backed up a position meant losing your place in it. Those links now open a dialog over the page: a digest of the guidelines clause, healthcare guide, intersectionality section, or governance record they point at, written for the claim that raised it, with a button to the full page if you want the whole thing. The two “read the guidelines” links in the Where we stand section now open different summaries, because one is reached from the trans position and the other from Palestine, and the clause answers a different question in each place.",
+    "Reference links on the About page now open a dialog over it: a digest of the clause, guide or record they point at, with a button to the full page.",
   "changelog.entries.perks-that-grant-something-real.title":
     "Perks that grant something real",
   "changelog.entries.perks-that-grant-something-real.body":
-    "The recognition ladder used to hand out a number and change nothing. Perks you can reach are now claimable, and a claimed invite perk really does raise your monthly invite allowance. Perks the platform could not honour are gone from the page.",
+    "Perks you can reach are now claimable, and a claimed invite perk really does raise your monthly invite allowance. Perks the platform could not honour have left the page.",
   "changelog.entries.renew-your-card-before-it-runs-out.title":
     "Renew your card before it runs out",
   "changelog.entries.renew-your-card-before-it-runs-out.body":
-    "When your community allows it, you can renew a membership card yourself from your account instead of waiting for an organiser to re-issue the whole roster. You also get a notice in the app thirty days before a card's term ends.",
+    "When your community allows it, you can renew a membership card yourself from your account. You also get an in-app notice thirty days before a card's term ends.",
   "changelog.entries.volunteering-that-counts.title":
     "Volunteering that counts",
   "changelog.entries.volunteering-that-counts.body":
-    "Whoever posted the opportunity can now confirm you turned up and record the hours. Confirmed sessions earn recognition points, and your own total sits on the volunteering page. Hosting a gathering and publishing in the magazine count too.",
+    "Whoever posted the opportunity can now confirm you turned up and record the hours. Confirmed sessions earn recognition points, and your total sits on the volunteering page.",
   "changelog.entries.support-offers-a-community-receives.title":
     "Support offers a community receives",
   "changelog.entries.support-offers-a-community-receives.body":
-    "When the team offers a struggling community a hand, it now arrives. The moderators get a notification and see what was offered in their Mod tools, where they can answer yes please or not right now.",
+    "An offer of help from the team now reaches the community. The people who run it get a notification and can accept or decline in Mod tools.",
   "changelog.entries.see-how-often-your-cards-are-checked.title":
     "See how often your cards are checked",
   "changelog.entries.see-how-often-your-cards-are-checked.body":
-    "If your community issues membership cards, Mod tools now shows how many times they have been checked, and each card carries its own count. Nothing records who checked a card or where, and the log is kept for ninety days.",
+    "If your community issues membership cards, Mod tools now shows how many times each has been checked. Who checked and where is never recorded.",
   "changelog.entries.check-what-happened-to-your-invite-request.title":
     "You can check what happened to your invite request",
   "changelog.entries.check-what-happened-to-your-invite-request.body":
-    "Asking to join used to end in silence. Now, when you send a request, you get a reference code to keep. Enter it any time and the status page tells you plainly where things stand: still being read, approved, or turned down. If it is a yes, your invite link is waiting there for you, so an approval can no longer go astray on its way to you.",
+    "Sending an invite request now gives you a reference code. Enter it any time to see where things stand, with your invite link waiting there if it is a yes.",
   "changelog.entries.an-invite-you-can-address-to-a-person.title":
     "An invite you can address to one person",
   "changelog.entries.an-invite-you-can-address-to-a-person.body":
-    "When you make an invite you can now add the email address of the person it is for. It is optional. Fill it in and only someone signing in with that address can use the link, so a forwarded or screenshotted invite lets nobody else in. That matters because whoever redeems your invite arrives with you on record as their voucher. Leave it blank and the link keeps working for anyone holding it. Either way, nothing is sent to that address: you still pass the link on yourself.",
+    "An invite can now carry the email address of the person it is for, so only someone signing in with that address can use it. Left blank, it works for anyone.",
   "changelog.entries.your-invites-are-where-you-can-find-them.title":
     "Your invites are where you would look for them",
   "changelog.entries.your-invites-are-where-you-can-find-them.body":
-    'Inviting someone was hidden behind a single button on your connections page, so unspent invites quietly expired. There is now an "Invite someone" row in your account menu with a count of what you have left this month, and a small card on your own profile telling you when the allowance resets. Your sent invites also show who each one was for, with a copy button on every link that still works.',
+    "Your account menu now has an Invite someone row with what you have left this month, and your profile says when the allowance resets. Sent invites show who each was for.",
   "changelog.entries.account-security-has-a-real-home.title":
     "Account security has a real home",
   "changelog.entries.account-security-has-a-real-home.body":
-    'Clicking "security" in your settings used to open our vulnerability policy for security researchers, which is not what anyone was looking for. That policy has moved to the policies section, where it belongs. In its place is a page about your account: how you sign in, how many sessions are open, which devices get push, and where to download or delete your data. Where something does not exist yet, the page says so instead of pretending.',
+    "Security in your settings now opens a page about your account: how you sign in, which sessions and devices are active, and where to download or delete your data.",
   "changelog.entries.your-photos-come-with-your-export.title":
     "Your photos come with your data export",
   "changelog.entries.your-photos-come-with-your-export.body":
-    "The export described your pictures without including them, so the links stopped working the moment an account was gone. Every file you have uploaded now travels inside the archive, with an index saying what each one is. Your magazine writing and drafts, the communities you own and the posts you wrote in them, your volunteering, your governance votes and your reviews are all in there too. Choose the CSV or Both format to get the files themselves.",
+    "Every file you have uploaded now travels inside the archive, with an index saying what each one is. Choose the CSV or Both format to get the files themselves.",
   "changelog.entries.every-page-announces-itself.title":
     "Every page announces itself to a screen reader",
   "changelog.entries.every-page-announces-itself.body":
-    "Moving between pages used to be silent for anyone using a screen reader, which made the whole app hard to follow. Each page now says its name on arrival and puts you at the start of the content. The admin and sign-in layouts gained a skip link and a proper main landmark, and the governance editors can be reordered with buttons, so arranging a list no longer needs a mouse drag.",
+    "Each page now says its name on arrival and puts you at the start of the content. The admin and sign-in layouts gained a skip link.",
   "changelog.entries.the-contact-form-reaches-a-person.title":
     "The contact form reaches a person",
   "changelog.entries.the-contact-form-reaches-a-person.body":
-    "Messages sent through the contact and partnership forms were being stored where nobody could read them, and the same was true of eleven of the twelve application and suggestion forms across the site. Grant applications, edit suggestions, sober host offers, panel signups and the Culture submissions all now land in one console the team works through, with a record of who picked each one up and when.",
+    "Contact, partnership, grant, suggestion and Culture submissions now land in one console the team works through, with a record of who picked each one up and when.",
   "changelog.entries.an-approved-invite-can-be-found-again.title":
     "An approved invite can be found again",
   "changelog.entries.an-approved-invite-can-be-found-again.body":
-    "When a reviewer welcomed someone in, the invite link appeared once and vanished on the next refresh, which could strand the person waiting for it. Decided requests now have their own tab with the link kept alongside them, its expiry shown, and a way to reissue one that ran out. Any moderator can do it, where before only the person who made the original decision could.",
+    "Decided requests now have their own tab, with the invite link kept alongside, its expiry shown, and a way to reissue one that ran out.",
   "changelog.entries.no-stock-photo-on-a-real-application.title":
     "No stock photo on a real application",
   "changelog.entries.no-stock-photo-on-a-real-application.body":
-    "Admin screens were matching people by name against a set of sample photos used in our demo, which meant a real applicant could be shown to a reviewer wearing a stranger's face. Anywhere real people are listed now uses their own picture, or their initials when they have none.",
+    "Admin screens were matching people by name against sample photos from our demo. Anywhere real people are listed now uses their own picture, or their initials when they have none.",
 
   "changelog.entries.the-transparency-report-is-published.title":
     "The transparency report is published",
   "changelog.entries.the-transparency-report-is-published.body":
-    "Our constitution has always named a transparency report. Now there is one. Every quarter it publishes what was reported and why, how long decisions took, what actions were taken, and how many appeals were upheld. Numbers only, counted from the moderation record. Small counts are withheld so that no figure can be traced back to a person.",
+    "Every quarter the transparency report publishes what was reported and why, how long decisions took, and what actions followed. Small counts are withheld so no figure leads back to a person.",
   "changelog.entries.a-permanent-ban-needs-two-moderators.title":
     "A permanent ban now needs a second moderator",
   "changelog.entries.a-permanent-ban-needs-two-moderators.body":
-    "Article VIII said a removal has to be ratified by another moderator. Now the software holds it to that. When a moderator bans someone permanently, harmful content comes down straight away and the account decision waits for a second, different moderator to confirm it. If nobody confirms within 72 hours, the hold lapses on its own.",
+    "Harmful content comes down straight away, and the account decision waits for a second, different moderator to confirm it. If nobody confirms within 72 hours, the hold lapses on its own.",
   "changelog.entries.appeals-have-a-deadline.title":
     "Appeals have a deadline that is measured",
   "changelog.entries.appeals-have-a-deadline.body":
-    "The code of conduct gives you 14 days to appeal and promises a decision within 7. Both windows are now recorded on every appeal, and the review queue is sorted by what is due first, so an appeal cannot quietly sit there. You can also appeal a community ban and a restriction, which were unreachable before.",
+    "You have 14 days to appeal and a decision is due within 7. The queue is sorted by what is due first.",
   "changelog.entries.a-community-ban-can-end.title":
     "A community ban can have an end date",
   "changelog.entries.a-community-ban-can-end.body":
-    "Being asked to leave a community used to be permanent and silent. Moderators can now set an end date, and you are told what happened: the reason, the house rule it rests on, and the day it lifts. A bad week no longer has to mean losing a room for good.",
+    "Moderators can now set an end date, and you are told the reason, the house rule it rests on, and the day it lifts.",
   "changelog.entries.a-warning-now-reaches-you.title":
     "A warning now actually reaches you",
   "changelog.entries.a-warning-now-reaches-you.body":
-    "If a post, a reply, a message or a comment of yours was warned about, nobody told you. The report closed, the record said you had been warned, and you never heard a word. Warnings now reach the person who wrote the thing, with the reason attached.",
+    "Warnings used to close silently in the record. If a post, reply, message or comment of yours is warned about, you now hear about it, with the reason attached.",
   "changelog.entries.community-mods-can-read-what-was-reported.title":
     "Community moderators can read what was reported",
   "changelog.entries.community-mods-can-read-what-was-reported.body":
-    "A moderator opening a report used to see a reason and a timestamp, then had to decide whether to remove something they could not read. Reports now carry the post itself, who wrote it, how urgent it is and when it is due. Urgent reports about outing or personal details go to trained staff instead.",
+    "Reports now carry the post itself, who wrote it, how urgent it is and when it is due. Urgent reports about outing or personal details go to trained staff instead.",
 
   // ── SecurityPolicyPage.tsx — vulnerability disclosure ──────────────────────────
   // The acknowledgement credits (securityPolicy.data.ts SECURITY_HALL_OF_FAME) are
@@ -8227,55 +8273,55 @@ export const marketing: Catalog = {
   "changelog.entries.take-down-your-flatmate-profile.title":
     "You can take down your flatmate profile",
   "changelog.entries.take-down-your-flatmate-profile.body":
-    "A flatmate profile is a personal ad carrying your pronouns, your identity tags, your household details and your budget, and there was no way to remove it. If you found a room, it stayed up. The profile editor now has a take-down button that says plainly what goes with it and what does not: the profile, the likes and any match disappear, and the conversations you already started stay in Messages, because those are yours and the other person's.",
+    "The profile editor now has a take-down button. Your profile, the likes and any match disappear, and the conversations you already started stay in Messages.",
   "changelog.entries.message-a-business-without-leaving.title":
     "You can write to a business from its page",
   "changelog.entries.message-a-business-without-leaving.body":
-    "A business listing offered a website, an email address and a phone number, so a place that had filled none of those in could not be reached at all, and every conversation that did happen left the platform. You can now write to a business from its own page. Before you type, the page tells you whether the owner is reachable, whether your first message will need a connection before they can write back, whether you already have a conversation with them, and whether you have already written today.",
+    "You can now write to a business from its own page. Before you type, it tells you whether the owner is reachable and whether you already wrote today.",
   "changelog.entries.remove-a-photo-from-a-gathering-album.title":
     "You can remove a photo from a gathering album",
   "changelog.entries.remove-a-photo-from-a-gathering-album.body":
-    "A photo of people at a queer event could be uploaded and never taken down, by the person who posted it or by the organizer. Both can now remove one, from the album itself, by keyboard as well as by touch. Removing it also deletes the file from storage, which it did not before: the row went and the image stayed, still reachable by anyone holding the link.",
+    "The person who posted a photo and the organiser can now remove it from the album, by keyboard or by touch. Removing it deletes the file from storage as well.",
   "changelog.entries.your-own-jobs-and-a-way-to-correct-them.title":
     "The jobs you posted, and a way to correct them",
   "changelog.entries.your-own-jobs-and-a-way-to-correct-them.body":
-    "Posting a job left you with no index of what you had published and no way to edit it. If you got a salary band wrong, closing the post was the only remedy. There is now a page listing the jobs you posted, with the applications, the close button and an edit form on each one. Housing and volunteering already worked this way.",
+    "There is now a page listing the jobs you posted, with the applications, the close button and an edit form on each one. Housing and volunteering already worked this way.",
   "changelog.entries.your-own-swap-board.title":
     "Your own swap board, and word back on what you proposed",
   "changelog.entries.your-own-swap-board.body":
-    "The swap board had no take-down and no edit, so a completed swap stayed up forever and a typo could never be fixed, and if you proposed a swap you had nowhere to see it and were never told whether it was accepted. All of that now exists in one place: the swaps you posted, with edit and close, and the proposals you sent, each showing what was decided. If a poster materially changes a swap after you proposed, your proposal says so.",
+    "One page now holds the swaps you posted, with edit and close, and the proposals you sent with what was decided.",
   "changelog.entries.one-place-for-everything-you-have-sent.title":
     "One place for everything you have sent us",
   "changelog.entries.one-place-for-everything-you-have-sent.body":
-    "Applying to partner with us, proposing a swap and suggesting a resource were three separate intakes, and whether you ever heard back was decided one at a time. Two of them never told you anything. There is now a single page under your account listing everything you have submitted and what happened to it, and a decision on any of them reaches your notifications. Where a reviewer wrote a reason, you get to read it.",
+    "A single page under your account lists every partnership application, swap proposal and resource suggestion you sent, and what happened to it. Decisions reach your notifications.",
   "changelog.entries.employers-and-listers-can-answer-a-review.title":
     "Employers and housing listers can answer a review",
   "changelog.entries.employers-and-listers-can-answer-a-review.body":
-    "A cafe in the directory could answer a review of it, and an employer or a housing lister could not. Both can now reply once, publicly, clearly labelled as the subject of the review. Two rules protect the person who wrote it: the reply is kept if they later edit their review, so nobody can delete a reply by changing a character, and the page says when a review was edited after its reply, so a reply can never appear to agree with words it never saw.",
+    "Employers and housing listers can now reply once, publicly, labelled as the subject of the review. The page says when a review was edited after its reply.",
   "changelog.entries.register-interest-in-a-commission.title":
     "You can register interest in a commission",
   "changelog.entries.register-interest-in-a-commission.body":
-    "The commission board is still being built, and the page said so and offered nothing else, even though the form behind it worked and the queue on our side was staffed. You can now register what you would like commissioned and who you would like to work with. The page is honest about what happens next: it lands in a queue a person reads, and nothing is emailed to you, because this platform sends no email.",
+    "You can now register what you would like commissioned and who you would like to work with. It lands in a queue a person reads.",
   "changelog.entries.the-nav-says-what-is-still-being-built.title":
     "The menu says what is still being built",
   "changelog.entries.the-nav-says-what-is-still-being-built.body":
-    "Cinema and Studio sat in the Culture menu as highlighted links that landed on a not-yet-built page. Keeping them there was deliberate, so you can see what is coming, but nothing said so and they read as broken links. They now carry a quiet marker, and they are no longer highlighted, because emphasis belongs on the things that work today.",
+    "Cinema and Studio stay in the Culture menu with a quiet marker saying they are still being built. The highlight moved to what works today.",
   "changelog.entries.search-stops-offering-what-it-cannot-find.title":
     "Search stops offering what it cannot find",
   "changelog.entries.search-stops-offering-what-it-cannot-find.body":
-    "Search had a Jobs tab that could never contain anything, because the work area is not open yet, and its results linked to pages that bounced you to the roadmap. Search now asks which areas are actually open and shows only those tabs, so a category you can browse is a category with something in it.",
+    "Search now shows only the tabs for areas that are actually open, so the Jobs tab waits until the work area does.",
   "changelog.entries.a-hidden-review-stays-hidden.title":
     "A hidden review stays hidden from the person it is about",
   "changelog.entries.a-hidden-review-stays-hidden.body":
-    "When a moderator hid a review of a home, it disappeared from the public listing and from its rating, and the person it was written about could still read it in full in their own viewing history. That is the one place a takedown most needed to work. It is now withheld there too, and a lister can no longer reply into a review that has been hidden.",
+    "A review hidden by a moderator is now withheld from the person it was about too, in their own visit history, and a lister cannot reply to it.",
   "changelog.entries.erasing-your-account-keeps-what-others-rely-on.title":
     "Erasing your account keeps what other people rely on",
   "changelog.entries.erasing-your-account-keeps-what-others-rely-on.body":
-    "Erasing an account deleted every image you had ever uploaded, by filename, without checking whether anything still pointed at it. Photos you took at a gathering, a cover image on a community you had handed to a new owner, pictures in a listing gallery: all of it vanished and left broken tiles in other people's pages. Your name comes off those contributions, which is what erasure is for, and the images they belong to now stay. Anything nothing points at any more is still deleted.",
+    "Erasing your account now takes your name off your contributions and keeps the images they belong to, so other people's pages stay whole. Unused images are still deleted.",
   "changelog.entries.an-anonymous-owner-stays-anonymous.title":
     "An anonymous business owner stays anonymous",
   "changelog.entries.an-anonymous-owner-stays-anonymous.body":
-    "A business page can name nobody, and plenty of owners choose exactly that. When one of them answered a public question, the notification the asker received named them anyway, with their photo and a link to their profile, handing out the identity the page deliberately withholds. That notification now names a person only when the page already does. Notifications already sent have had the name stripped out of them.",
+    "When an owner answers a public question, the notification names them only if the page already does. Past notifications had the name and photo stripped.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // COORD-CHANGELOG-2 — COORD - the six decisions taken after the section 13 build, the member-facing half.
@@ -8287,311 +8333,311 @@ export const marketing: Catalog = {
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.title":
     "The app icon is now the pulse dot",
   "changelog.entries.the-app-icon-is-now-the-pulse-dot.body":
-    "QueerPulse had two logos. The name in the top bar, the press kit and the launch screen used the coral pulse dot; the icon on your home screen, the browser tab and eighteen launch images used a purple lightning bolt in colours the platform never wears. They now match: the icon, the favicon, the launch screens and the press kit all carry the dot, drawn once and shared everywhere, so the app you tap is the app you open. If the old icon lingers on your home screen, remove the installed app and add it again.",
+    "The app icon, favicon, launch screens and press kit now carry the coral pulse dot. If the old bolt lingers, remove the installed app and add it again.",
   "changelog.entries.the-install-tip-now-opens-the-steps-in-place.title":
     "The install tip now opens the steps in place",
   "changelog.entries.the-install-tip-now-opens-the-steps-in-place.body":
-    "The small card that offers to add QueerPulse to your home screen only had one small link to tap, and it carried you off to a separate page of instructions, away from whatever you were reading. On a phone the whole card is now one tap target, and tapping it opens the steps for your own device in a panel over the page. On Android, where the browser allows it, that panel also holds a real Install button that runs the phone's own install prompt. Close it and you are exactly where you were.",
+    "On a phone the install card is one tap target: tapping it opens your device's steps in a panel over the page. Android can also show an Install button.",
   "changelog.entries.a-community-page-now-fits-a-phone-screen.title":
     "A community page now fits a phone screen",
   "changelog.entries.a-community-page-now-fits-a-phone-screen.body":
-    "On a phone, a community's own page had two rough edges. The Share box squeezed the avatar, the text field, the attach button and Share onto a single line, which left the 'Post as an announcement' switch and its explanation crushed into a column a few characters wide, reading one syllable per line. The page's six tabs wrapped onto three stacked rows, pushing the feed far down the screen while the notification bell floated off beside the first row. The Share box now gives the text field the full width and drops the attach and Share buttons onto their own line beneath it, and the tabs sit on one strip you swipe sideways. Nothing changed on a laptop.",
+    "On a phone the Share box gives the text field full width, with attach and Share on their own line, and the six tabs swipe sideways on one strip.",
   "changelog.entries.the-installed-app-opens-in-one-motion.title":
     "The installed app opens in one motion",
   "changelog.entries.the-installed-app-opens-in-one-motion.body":
-    "When you open QueerPulse from your home screen, the phone shows the app icon on plum for a moment, and then our own launch screen used to appear as a separate picture: a small pulse, the wordmark and your greeting fading in from nothing. Now the launch screen opens on exactly the picture the phone just showed and the icon shrinks into the pulse while the wordmark and greeting arrive around it, so the whole opening reads as one continuous motion instead of two screens.",
+    "The launch screen now opens on exactly the picture your phone just showed, and the icon shrinks into the pulse while the wordmark and greeting arrive around it.",
   "changelog.entries.opening-the-installed-app-no-longer-flashes-the-homepage.title":
     "Opening the installed app no longer flashes the homepage",
   "changelog.entries.opening-the-installed-app-no-longer-flashes-the-homepage.body":
-    "Tapping the QueerPulse icon on your home screen showed the launch screen, then a split-second flash of the public landing page, then the greeting, then your feed. That middle frame was the page loading underneath before the app had taken over. The ground now stays plum from the moment the icon opens until you land in the app, so the launch reads as one screen. Nothing changed about where you end up.",
+    "The ground stays plum from the moment the icon opens until you land in the app, so the split-second flash of the public landing page is gone.",
   "changelog.entries.the-installed-app-now-opens-on-your-feed.title":
     "The installed app now opens on your feed",
   "changelog.entries.the-installed-app-now-opens-on-your-feed.body":
-    "If you had QueerPulse installed on your home screen and were already signed in, tapping the icon dropped you on the public landing page, the same one a stranger sees, and you had to find your own way into the app from there. Opening the installed app now takes a signed-in member straight to their feed. Nothing else about the homepage changed: you can still reach it from inside the app, and anyone who opens the installed app signed out still lands there.",
+    "Opening the installed app while signed in takes you straight to your feed. You can still reach the homepage from inside the app, and signed-out visitors land there.",
   "changelog.entries.text-that-vanished-in-dark-mode-is-back.title":
     "Text that vanished in dark mode is back",
   "changelog.entries.text-that-vanished-in-dark-mode-is-back.body":
-    "In dark mode, labels across the app were being drawn in a colour that never darkened with the rest of the page, so they sat near-black on a near-black background and effectively disappeared. It hit small type hardest: the tag on a persona card, the \u201cbrowse all members\u201d link under the people you might know, edited and removed markers on posts, card expiry notices, the badges on a listing. In a few places the opposite happened, and a pale label on a coloured chip turned dark and sank into it. Every one of those now follows the theme. Nothing changed in light mode.",
+    "Small labels that sat near-black on a near-black page now follow the theme: persona card tags, edited and removed markers, card expiry notices.",
   "changelog.entries.the-installed-app-now-opens-on-a-heartbeat.title":
     "The installed app now opens on a heartbeat",
   "changelog.entries.the-installed-app-now-opens-on-a-heartbeat.body":
-    "Opening QueerPulse from your home screen used to jump straight from the phone's own launch screen to whatever had painted first. It now has a proper opening: the coral mark beats twice a second on deep plum, the wordmark comes up under it, and a hairline tracks the wait. That hairline is deliberately honest. It never fills to the end unless the app is genuinely ready, and if the wait runs past about a second and a half it stops pretending to measure and simply tells you it is still connecting, or that you are offline and about to land on your saved feed. On the way out the beating mark flies up into the live dot beside the wordmark in the nav bar and stays there, so the thing you watched while waiting is the thing you end up looking at. Returning members are greeted by name instead of shown the slogan, and if you have reduced motion turned on the whole thing composes itself as a still.",
+    "Opening from your home screen now shows the coral mark beating on deep plum, with a hairline tracking the wait, and returning members are greeted by name.",
   "changelog.entries.opening-the-installed-app-no-longer-flashes-a-bare-icon.title":
     "Opening the installed app no longer flashes a bare icon",
   "changelog.entries.opening-the-installed-app-no-longer-flashes-a-bare-icon.body":
-    "With QueerPulse installed to your home screen, opening it began on a pale screen with the app icon dropped in the middle, then cut abruptly to the app. That first screen is drawn by the phone itself, before any of QueerPulse has started, and it was set to the wrong colour: every launch opened on a flash of cream and then changed under you. It now opens on the same deep plum the app starts on. The launch screens for the most recent iPhones and iPads were missing too, so those devices fell back to the plain centred icon; the full set is now there.",
+    "The screen your phone draws before QueerPulse starts now opens on the app's deep plum instead of cream, and the newest iPhones and iPads have launch images.",
   "changelog.entries.what-you-submit-now-reaches-a-person.title":
     "What you submit now reaches a person",
   "changelog.entries.what-you-submit-now-reaches-a-person.body":
-    "When you ask to join, request verification, suggest a listing or send in a pitch, it used to sit until someone happened to open the right queue. Now, the moment it arrives, a real person is told. It reaches them in the app: QueerPulse still sends no email.",
+    "A join request, verification request, listing suggestion or pitch now tells a real person the moment it arrives, inside the app, since QueerPulse sends no email.",
   "changelog.entries.every-filter-now-tells-you-how-many-it-would-leave.title":
     "Every filter now tells you how many it would leave",
   "changelog.entries.every-filter-now-tells-you-how-many-it-would-leave.body":
-    "The tag and profession chips across the directories carried a number and dimmed when nothing was left behind them, but the pill filters beside them did not. Open to collabs on the professional directory, and Open to all and Busy this week on the communities directory, all read as live options even when picking one could only empty the page. Each now carries the same count as the chips, taken under whatever else you have already narrowed by, and goes quiet at zero. A pill you have already picked stays clickable, so you can always undo it. Busy this week also stopped loading every remaining page of the directory into your browser before it could answer: the server does that cut now, so the filter comes back as fast as the others.",
+    "The pill filters in the directories now carry a count against your other filters, and go quiet at zero. A pill you already picked stays clickable.",
   "changelog.entries.browse-the-professional-directory-by-profession.title":
     "Browse the professional directory by profession",
   "changelog.entries.browse-the-professional-directory-by-profession.body":
-    "The professional directory filtered by page family: thirteen chips reading Stage, Studio, Page, Workshop, Table, Chair, Runway. Those are page themes, picked for you from the profession you chose, so finding a photographer meant knowing photographers live under Studio. You now filter by the profession itself, and you can pick several at once, so poets and illustrators come back together. The families stay only as the headings that keep ninety-four professions readable, and each profession carries the number of personas behind it. The controls moved into a Refine drawer beside the search field, the way the communities directory already works, so the page opens on personas instead of on four rows of filters. Whatever is narrowing the list shows as chips above the results, whether the drawer is open or shut.",
+    "You can now filter the professional directory by profession, several at once, each with a count of personas behind it. The controls sit in a Refine drawer beside search.",
   "changelog.entries.personas-named-after-a-craft-now-show-whose-they-are.title":
     "Personas named after a craft now show whose they are",
   "changelog.entries.personas-named-after-a-craft-now-show-whose-they-are.body":
-    "Create a persona without typing a name and it keeps the craft as its name, so the professional directory filled up with cards called Poet, Developer and Dancer with no sign of who was behind them. A persona still carrying its craft as a name is now titled with its owner first, as Tiago Costa | Poet, on its card, its page heading, its contact card and everywhere else it is presented to other people. Personas you gave a real name to are untouched. Where the craft already has a field of its own, such as the page title or the switcher list, only the owner name goes in the name slot, so nothing says the craft twice. An unlinked persona carries no owner name by design, so it stays anonymous and keeps showing the craft alone.",
+    "A persona still using its craft as a name is now titled owner first, as Tiago Costa | Poet, wherever other people see it. Unlinked personas stay anonymous.",
   "changelog.entries.empty-profile-tabs-say-so.title":
     "Empty profile tabs say so instead of showing a blank page",
   "changelog.entries.empty-profile-tabs-say-so.body":
-    "On a phone, a member profile groups its sections into About, Work, Community and Activity tabs. Work and Activity already hid themselves when there was nothing to show, but About and Community always stayed, so opening one on a profile that had not been filled in yet gave you a completely blank panel with no explanation. Those tabs now tell you there is nothing there yet, and if it is your own profile they offer you the way to Edit profile to change that.",
+    "On a phone the About and Community tabs on a profile now say when there is nothing there yet, and on your own profile they offer Edit profile.",
   "changelog.entries.the-professional-directory-is-in-the-main-menu.title":
     "The professional directory is in the main menu",
   "changelog.entries.the-professional-directory-is-in-the-main-menu.body":
-    "The professional directory, where members show the work they do and the services they offer, had been open at /subprofiles with no way to reach it from the navigation. You had to already know the address, or stumble on it from someone's profile. It now has a row in the Community menu, under People, sitting beside the members directory it complements: one browses who is here, the other browses what people do.",
+    "The professional directory, where members show the work they do, now has a row in the Community menu under People, beside the members directory.",
   "changelog.entries.tag-filters-show-how-many-communities-are-behind-them.title":
     "Tag filters show how many communities are behind them",
   "changelog.entries.tag-filters-show-how-many-communities-are-behind-them.body":
-    "The communities page lets you narrow by any of 53 tags, and none of them told you where they led: picking one could empty the grid, and the only way to find out was to try. Every tag now carries a count, read against whatever else you have already narrowed by, so the number answers what you would get if you added this tag as well. A tag with nothing behind it is dimmed and ignores the click, the same treatment the category chips already had. The tray itself now eases open, so you can watch the grid make room for it.",
+    "Each of the 53 tags now carries a count read against your other filters, and a tag with nothing behind it is dimmed and ignores the click.",
   "changelog.entries.housing-filters-fold-away-until-you-need-them.title":
     "Housing filters fold away until you need them",
   "changelog.entries.housing-filters-fold-away-until-you-need-them.body":
-    "The housing board opened with a panel of filters standing permanently open, pushing the first homes most of the way down the screen for choices most people make once or never. Those filters now sit behind a \u201CRefine\u201D button, the same one the gatherings board and the communities page use. Whatever you have applied still reads at a glance as a row of chips underneath, and each chip takes its own filter off, so a closed panel never hides what is narrowing your results. The List and Map switch moved up onto the same row, and saving a search now sits beside the chips it would save.",
+    "The housing filters now sit behind a Refine button, like gatherings and communities. What you applied reads as chips underneath, and each chip removes its own filter.",
   "changelog.entries.empty-category-filters-can-no-longer-be-picked.title":
     "Category filters with nothing behind them are now inactive",
   "changelog.entries.empty-category-filters-can-no-longer-be-picked.body":
-    "On the communities page, a category chip reading 0 could still be picked, and picking it emptied the grid, leaving you to work out that the filter was the problem rather than the platform. A category with nothing in it is now dimmed and ignores the click. Its count is still there to read, so you can see at a glance which categories are quiet, and \u201CAll communities\u201D always stays available to go back to.",
+    "A category chip reading 0 is now dimmed and ignores the click, its count still readable, and All communities always stays available.",
   "changelog.entries.the-app-follows-your-browsers-text-size.title":
     "The app follows your browser's text size",
   "changelog.entries.the-app-follows-your-browsers-text-size.body":
-    "If you had set a larger default text size in your browser, most of the app quietly ignored it. Type was pinned to fixed pixel sizes that never moved, so the setting did nothing on almost every page. Every size in the app is now measured against your browser's own setting: raise it and the whole interface grows, lower it and it shrinks. Nothing changes if you have never touched that setting. Boxes that used to be a frozen height, like avatar circles, count badges and card titles, now grow with the words inside them, so larger text is not cut off.",
+    "Every size in the app is now measured against your browser's text setting: raise it and the whole interface grows, avatars, count badges and card titles included.",
   "changelog.entries.faint-outlines-are-visible-again-in-dark-mode.title":
     "Faint outlines are visible again in dark mode",
   "changelog.entries.faint-outlines-are-visible-again-in-dark-mode.body":
-    "Sixty borders across the app were drawn in a colour that stays dark in both themes, so on a dark page those hairlines all but disappeared: the edge of a card, the outline of a panel, the box around a reviewer's note on something you submitted. They now use the colour that turns cream in dark mode, which is what every other border in the app already did. In light mode they look exactly as they did before.",
+    "Sixty borders that stayed dark in both themes made card edges and panel outlines all but disappear on a dark page. They now turn cream in dark mode.",
   "changelog.entries.deep-links-no-longer-flash-the-homepage.title":
     "Opening a link no longer flashes the homepage first",
   "changelog.entries.deep-links-no-longer-flash-the-homepage.body":
-    "Every page except the homepage was being handed the homepage's own saved copy while the app loaded, so opening a link to a policy, a guide or somebody's page painted the homepage for a moment before the real page appeared. That same saved copy is what a link preview or a search engine read whenever it did not run the app, so all of those pages described themselves as the homepage and carried its title and description. Pages are now handed an empty frame instead, and each one fills in its own title and description as it loads.",
+    "Every page now loads with an empty frame and fills in its own title and description, so link previews describe the page you shared.",
   "changelog.entries.report-one-photo-not-the-whole-gathering.title":
     "You can report one photo, not the whole gathering",
   "changelog.entries.report-one-photo-not-the-whole-gathering.body":
-    "There was no way to report a single photo in a gathering album. The nearest thing was reporting the whole gathering, and acting on that takes the gathering down over one image, so in practice a photograph of an identifiable person could only be removed by whoever posted it or by an organizer, who are sometimes the people being complained about. Each photo now has its own report control, with outing and doxxing at the top of the list because those are the two reasons that reach the one-hour queue. A moderator sees the photo itself, held only for as long as the report is open and reachable by nobody else.",
+    "Each photo in a gathering album now has its own report control, with outing and doxxing at the top because those reach the one-hour queue.",
   "changelog.entries.report-one-landlord-warning.title":
     "You can report one landlord warning, and a takedown can be undone",
   "changelog.entries.report-one-landlord-warning.body":
-    "Recommendations on a landlord entry are how tenants warn each other, and the only report control named the whole entry, so acting on a complaint about one of them took down every other tenant's warning too. Each recommendation now has its own report control. The moderator's side changed as well: taking one down used to delete it permanently, so a mistake could not be undone. It is now withheld rather than destroyed, and putting it back restores the exact words and the landlord's rating with it.",
+    "Each recommendation on a landlord entry now has its own report control, so acting on one complaint leaves the other tenants' warnings up.",
   "changelog.entries.your-landlord-warning-outlives-your-account.title":
     "A warning you wrote about a landlord outlives your account",
   "changelog.entries.your-landlord-warning-outlives-your-account.body":
-    "Deleting your account deleted every landlord recommendation you had written, and quietly moved that landlord's rating with them. Every other kind of thing you write here already worked the other way: the words stay and your name comes off. Landlord warnings now do the same, so somebody looking for a home still reads what you found out, credited to a member who has since left.",
+    "Deleting your account now keeps the landlord recommendations you wrote, with your name off them and the landlord's rating unchanged.",
   "changelog.entries.correct-a-review-until-it-goes-public.title":
     "You can correct a viewing review until it goes public",
   "changelog.entries.correct-a-review-until-it-goes-public.body":
-    "Reviews after a house viewing are written blind: neither side sees the other's until both have written or the window runs out. There was no way to fix a typo, ever. You can now edit your review right up until it goes public, and not after, so a correction can never become a reaction to what the other person wrote. The form tells you the deadline while you are writing it.",
+    "Viewing reviews are written blind, and you can now edit yours right up until it goes public. The form shows you the deadline while you write.",
 
   // ── Deep-scan section 2 (Magazine: the reader), built 2026-09-06 ─────────
   "changelog.entries.a-piece-can-no-longer-go-live-with-consent-unresolved.title":
     "A piece can no longer go live with consent unresolved",
   "changelog.entries.a-piece-can-no-longer-go-live-with-consent-unresolved.body":
-    "Every piece carries a care record: who is named in it, whether they agreed to be, and whether the sensitivity read is done. The card holding that record promised no one person could override it, and on the one button that actually published, nobody checked. An editor could put a story live while a named subject's consent was still pending. Publishing now stops and names the care items still open, on every route that publishes. Taking a piece back down is never blocked.",
+    "Publishing now stops if a named subject's consent or the sensitivity read is still open, and it lists what is missing. Taking a piece back down always works.",
   "changelog.entries.the-desk-can-see-what-is-published-and-take-it-down.title":
     "The desk can see what is published, and take it down",
   "changelog.entries.the-desk-can-see-what-is-published-and-take-it-down.body":
-    "The pipeline stopped at Ready. A piece that had been live for months still read Ready to the person who wrote it, with no link to it anywhere, and the desk could not tell the two apart without opening the editor. There is a Published stage now, publishing moves the piece into it, and the piece record links straight through to the live page. Taking something down is one click.",
+    "There is a Published stage now. Publishing moves the piece into it, the piece record links to the live page, and taking something down is one click.",
   "changelog.entries.writers-hear-when-they-are-commissioned-and-when-they-are-published.title":
     "Writers hear when they are commissioned, and when they are published",
   "changelog.entries.writers-hear-when-they-are-commissioned-and-when-they-are-published.body":
-    "Being given a piece, watching it move through the desk, and seeing it go live all happened in silence. The only way to find out was to open your workspace and look. Each of those rings your bell now, the published one links to the piece itself, and none of them fire for something you did yourself.",
+    "You now get a notification when a piece is commissioned to you, at each move through the desk, and when it goes live, with a link to it.",
   "changelog.entries.an-issue-dated-for-later-now-ships-on-that-morning.title":
     "An issue dated for later now ships on that morning",
   "changelog.entries.an-issue-dated-for-later-now-ships-on-that-morning.body":
-    "The magazine promises an issue's pieces go live together at 09:00 on its date. Shipping published everything the moment the button was pressed, so an editor who shipped on Friday for a Monday issue put every article live on Friday while the issue page itself stayed hidden until Monday. Shipping an issue dated ahead now schedules its pieces for 09:00 that day, and the button says which of the two it is about to do.",
+    "Shipping an issue dated ahead now schedules its pieces for 09:00 on that date, and the button tells you which of the two it is about to do.",
   "changelog.entries.shipping-an-issue-holds-back-what-is-not-ready-and-says-why.title":
     "Shipping an issue holds back what is not ready, and says why",
   "changelog.entries.shipping-an-issue-holds-back-what-is-not-ready-and-says-why.body":
-    "Shipping published any piece whose care record was complete, whatever state the writing was in. A piece still being drafted could go out with an empty standfirst, and an image with no alt text went with it. Shipping now takes only pieces that are ready and that pass the same checks the Publish button runs, and afterwards it lists what it held back and what each one is waiting on.",
+    "Shipping now takes only pieces that are ready and pass the same checks the Publish button runs, then lists what it held back and what each one is waiting on.",
   "changelog.entries.an-accepted-story-now-arrives-on-the-desk-as-a-real-piece.title":
     "An accepted story now arrives on the desk as a real piece",
   "changelog.entries.an-accepted-story-now-arrives-on-the-desk-as-a-real-piece.body":
-    "Accepting a story you sent in marked it accepted, told you so, and created nothing at all. There was no piece behind it, no editor and no payment, and because the decision was final it could never be commissioned afterwards either. Accepting now builds the desk record in the same move: your text becomes the draft, you get the credit for writing it, and the admin row links through to it. Stories accepted before this can be finished off from the same screen.",
+    "Accepting a submitted story now builds the desk record too: your text becomes the draft, you get the writing credit, and the admin row links straight to it.",
   "changelog.entries.your-submitted-stories-page-is-open-to-everyone-who-submitted-one.title":
     "Your submitted stories page is open to everyone who submitted one",
   "changelog.entries.your-submitted-stories-page-is-open-to-everyone-who-submitted-one.body":
-    "Your account menu offered a Pitches page to every member, and the page turned almost everyone away at the door, editors included. It reads your own submissions, and the server behind it never asked for more than a signed-in member, so the lock was simply wrong. It opens now for anyone who has sent something in. The numbers at the top are counted from your own submissions too, where before they were invented.",
+    "The page now opens for anyone who has sent a story in, where before it turned almost everyone away at the door. The counts at the top come from your own submissions.",
   "changelog.entries.you-can-withdraw-a-story-you-submitted.title":
     "You can withdraw a story you submitted",
   "changelog.entries.you-can-withdraw-a-story-you-submitted.body":
-    "Once a story was in, the only way out was to ask somebody. You can pull one back yourself now, for as long as the desk has not answered it, and it leaves their queue straight away. If a decision lands while you are deciding, the page tells you and shows you what they said.",
+    "You can pull a story back yourself while the desk is still deciding, and it leaves their queue at once.",
   "changelog.entries.two-editors-can-no-longer-overwrite-each-other-silently.title":
     "Two editors can no longer overwrite each other silently",
   "changelog.entries.two-editors-can-no-longer-overwrite-each-other-silently.body":
-    "The article editor saved the whole body every time, with no record of which version it had started from. Two people on one piece, or an editor saving while the writer filed a draft, meant one of them lost everything they had written, with no warning and nothing left to restore. Every save now says which version it is working from, and if the draft moved on underneath you the editor stops, keeps your text on screen, and offers to reload.",
+    "Every save now records which version it started from. If the draft moved on underneath you, the editor stops, keeps your text on screen, and offers to reload.",
   "changelog.entries.writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it.title":
     "Writers can read the edited draft, and refiling no longer doubles it",
   "changelog.entries.writers-can-read-the-edited-draft-and-refiling-no-longer-doubles-it.body":
-    "Filing a draft only ever pushed text at a piece you had no way to open, so the promise that you see your edits before they ship was not true. Filing a second time appended the whole thing again and the article came out twice over. You can read the draft as it stands on the desk now, start from it, and file again either adding to it or replacing it. Filing the same text twice does nothing at all.",
+    "You can read the draft as it stands on the desk, start from it, and file again either adding to it or replacing it. Filing the same text twice does nothing.",
   "changelog.entries.a-published-deck-can-no-longer-vanish-from-under-readers.title":
     "A published deck can no longer vanish from under readers",
   "changelog.entries.a-published-deck-can-no-longer-vanish-from-under-readers.body":
-    "Deleting a deck took it away on a single confirm even while it was live, and left the piece behind it pointing at nothing. A live deck has to be taken down first now, one a piece still uses cannot be deleted at all, and the confirmation says what will actually happen. Deck scheduling does what it says as well, and the deck editor saves as you go.",
+    "A live deck has to be taken down before it can be deleted, and one a piece still uses cannot be deleted at all.",
   "changelog.entries.issue-cover-art-can-be-uploaded-from-the-desk.title":
     "Issue cover art can be uploaded from the desk",
   "changelog.entries.issue-cover-art-can-be-uploaded-from-the-desk.body":
-    "The cover is the one image every issue needs, and it was the only art slot in the magazine with no upload behind it: you had to host the picture somewhere else and paste in a link. It takes an upload now like every other image, with the same cropping and preview the rest of the desk uses.",
+    "The issue cover takes an upload now, with the same cropping and preview as every other image in the desk. No more hosting the picture elsewhere and pasting a link.",
   "changelog.entries.the-writer-workspace-reads-in-plain-language.title":
     "The writer workspace reads in plain language",
   "changelog.entries.the-writer-workspace-reads-in-plain-language.body":
-    "Your own workspace showed a due date as 2026-09-12, a payment as approved_unpaid, and an issue as a long string of letters and numbers, while every editor screen showed those same things in words. Dates, payment states and issue numbers now read the way they do everywhere else in the magazine, and a filed draft finally shows its word count against what was asked for.",
+    "Dates, payment states and issue numbers now read in words, the way they do everywhere else in the magazine, and a filed draft shows its word count against what was asked for.",
   "changelog.entries.every-story-on-the-magazine-front-now-opens.title":
     "Every story on the magazine front now opens",
   "changelog.entries.every-story-on-the-magazine-front-now-opens.body":
-    "Every story card on the magazine front pointed at an old address, and the redirect that was meant to catch it threw away the part naming the story. So you tapped a headline and the magazine told you it did not exist. The cards go straight to the piece now, and the old addresses keep the story with them, so a link somebody sent you last year still works.",
+    "Story cards on the magazine front now go straight to the piece, and the old addresses carry the story with them, so a link somebody sent you last year still works.",
   "changelog.entries.articles-show-the-kicker-and-standfirst-the-desk-wrote.title":
     "Articles show what the desk actually wrote above the headline",
   "changelog.entries.articles-show-the-kicker-and-standfirst-the-desk-wrote.body":
-    'An article threw away its own kicker, section, dek and standfirst on the way to the page, so you saw "Issue 09" where an editor had written a line, and a tag where the section belonged. All four now reach you, on the article and on every card that links to it.',
+    "The kicker, section, dek and standfirst an editor wrote all reach you now, on the article and on every card that links to it.",
   "changelog.entries.issue-pages-show-the-cover-the-desk-chose.title":
     "Issue pages show the cover the desk chose",
   "changelog.entries.issue-pages-show-the-cover-the-desk-chose.body":
-    'Every issue wore the same stock photograph and every issue called itself "Current", so the archive was twelve identical tiles. Each issue now shows its own cover art, only the newsstand issue is badged as current, and "All issues" goes to the archive rather than back to the front page.',
+    "Each issue now shows its own cover art rather than the same stock photograph, only the newsstand issue is badged as current, and All issues goes to the archive.",
   "changelog.entries.interactive-decks-have-their-own-index.title":
     "Interactive decks have their own index",
   "changelog.entries.interactive-decks-have-their-own-index.body":
-    "The front page showed the newest interactive deck and nothing else, and no search or section browse carried decks at all, so the moment a second one published the first left the magazine for anyone who had not bookmarked it. There is now a decks index listing every one, newest first, reachable from the front page and the masthead. Decks can be shared too, and a shared link previews with the deck's own title.",
+    "There is now an index listing every interactive deck, newest first, reachable from the front page and the masthead. Decks can be shared, and a shared link previews with the deck's title.",
   "changelog.entries.magazine-lists-no-longer-stop-at-twenty.title":
     "Magazine lists no longer stop at twenty",
   "changelog.entries.magazine-lists-no-longer-stop-at-twenty.body":
-    'Search, tag browse and section browse each loaded twenty pieces and stopped, while the heading cheerfully said "43 pieces found". They all page through the whole archive now. A writer\'s "All 25 articles" opens their real back-catalogue too, instead of dropping you on the homepage.',
+    "Search, tag browse and section browse now page through the whole archive. A writer's All 25 articles opens their real back catalogue.",
   "changelog.entries.the-magazine-now-browses-in-your-language.title":
     "The magazine now browses in your language",
   "changelog.entries.the-magazine-now-browses-in-your-language.body":
-    "Only the article page knew which language you read in. The front page, search, tag browse, section browse, your feed and a member's writing section all listed English headlines and only switched after you clicked. They all ask for your language now, so a piece that exists in Portuguese reaches you in Portuguese from the first screen.",
+    "The front page, search, tag and section browse and your feed now ask for your language, so a piece that exists in Portuguese reaches you in Portuguese.",
   "changelog.entries.long-reads-have-contents-progress-and-a-resume-point.title":
     "Long reads have contents, progress and a place to pick up",
   "changelog.entries.long-reads-have-contents-progress-and-a-resume-point.body":
-    "A twenty-five minute piece gave you no way to see its shape, no sense of how far in you were, and no way back to where you stopped. Long articles now carry a contents list built from their own headings, a progress bar, and an offer to pick up where you left off. Sharing opens your phone's own share sheet instead of quietly copying a link.",
+    "Long articles now carry a contents list built from their own headings, a progress bar, and an offer to pick up where you left off. Sharing opens your phone's own share sheet.",
   "changelog.entries.published-pieces-now-reach-your-feed.title":
     "Published pieces now reach your feed",
   "changelog.entries.published-pieces-now-reach-your-feed.body":
-    "The magazine was missing from the one screen everybody lands on: a piece could publish and never appear in your feed at all. Published articles now sit alongside posts, threads and gatherings, in your language, and a piece by somebody you have blocked stays out.",
+    "Published articles now sit in your feed alongside posts, threads and gatherings, in your language. A piece by somebody you have blocked stays out.",
   "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.title":
     "Blocks and mutes now apply under magazine articles",
   "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.body":
-    "Article comments were the one place on the platform that ignored blocking and muting, so somebody you had blocked could still appear under a piece and reply directly to you there. They are now filtered the same way the forum and the feed filter them, in the comments and in the replies. A comment a moderator has taken down no longer lingers as an empty card with live reply and report buttons.",
+    "Article comments and replies are now filtered the same way the forum and the feed filter them, blocks, mutes and moderator takedowns included.",
   "changelog.entries.article-comments-page-and-keep-your-paragraphs.title":
     "Article comments page, and keep your paragraphs",
   "changelog.entries.article-comments-page-and-keep-your-paragraphs.body":
-    "On a busy piece the older conversations were simply unreachable: twenty loaded and there was no way to ask for more. There is a load-more control now, the heading counts what it actually counts, and a comment you wrote in paragraphs stays in paragraphs instead of collapsing into a wall.",
+    "There is a load-more control on article comments now, the heading counts what it actually counts, and a comment you wrote in paragraphs stays in paragraphs.",
   "changelog.entries.the-submit-form-names-the-issue-that-is-actually-open.title":
     "The submit-story form names the issue that is actually open",
   "changelog.entries.the-submit-form-names-the-issue-that-is-actually-open.body":
-    "The form advertised a fixed issue number and a submission deadline that had already passed, written into the page months ago and never updated. It now names the issue the desk is really taking pitches for, shows a deadline only when an editor has set one, and says so plainly when nothing is open.",
+    "The form now names the issue the desk is really taking pitches for, shows a deadline only when an editor has set one, and says plainly when nothing is open.",
   "changelog.entries.unshipped-headlines-no-longer-appear-on-issue-pages.title":
     "Unshipped headlines no longer appear on issue pages",
   "changelog.entries.unshipped-headlines-no-longer-appear-on-issue-pages.body":
-    "An issue page listed everything scheduled for that issue, including pieces dated for next week, so a headline the desk had not run yet was visible and tapping it led nowhere. The contents list now shows only what has actually published.",
+    "An issue's contents list now shows only pieces that have actually published, so a headline the desk has not run yet stays out of sight.",
   "changelog.entries.the-authors-directory-only-lists-writers-who-have-published.title":
     "The authors directory only lists writers who have published",
   "changelog.entries.the-authors-directory-only-lists-writers-who-have-published.body":
-    'Opening a draft created a byline, and the directory listed every byline, so it advertised writers with "0 pieces" whose pages said they had not published anything yet. It now lists the people whose work you can actually read.',
+    "The directory now lists the people whose work you can actually read, where before it counted every byline created the moment somebody opened a draft.",
 
   // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
   "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.title":
     "Reminder and cancellation links now open the gathering",
   "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.body":
-    'Every event reminder, every cancellation notice, and every entry in a subscribed calendar feed pointed at an address the app has no page for, so tapping one landed you on "not found". They all open the gathering now, from the phone and from Google or Apple Calendar.',
+    "Event reminders, cancellation notices and entries in a subscribed calendar feed all open the gathering now, from your phone and from Google or Apple Calendar.",
 
   "changelog.entries.online-gatherings-now-have-a-join-link.title":
     "Online gatherings now have a join link",
   "changelog.entries.online-gatherings-now-have-a-join-link.body":
-    'Hosting something on video? The wizard asks for the link, and it reaches the people who are going. It is shared on the same terms as a street address, so it is never on the public page. The old "Join link" button that only raised a toast now opens the room.',
+    "The wizard asks for the video link and it reaches the people who are going, shared on the same terms as a street address, so it never appears on the public page.",
 
   "changelog.entries.a-cancelled-gathering-now-says-so.title":
     "A cancelled gathering now says so",
   "changelog.entries.a-cancelled-gathering-now-says-so.body":
-    "A gathering the host called off stayed in your list looking exactly like one that was still on, with a working RSVP button behind it. It now says it was cancelled, wherever you meet it. People holding an invitation are told too, instead of being left with an invitation to nothing.",
+    "A gathering the host called off now says it was cancelled wherever you meet it, and its RSVP button is gone. People holding an invitation are told as well.",
 
   "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.title":
     "Maybe, add to calendar, and your details, on the gathering itself",
   "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.body":
-    "You can mark yourself a maybe without taking a seat, put the date straight in your calendar the moment you confirm, and tell the host about a plus-one or an access need right there. All three used to live somewhere else, or nowhere. A gathering that has already happened stops taking RSVPs and says why.",
+    "On the gathering page you can mark yourself a maybe, add the date to your calendar when you confirm, and tell the host about a plus-one or an access need.",
 
   "changelog.entries.choose-when-your-gathering-reminder-arrives.title":
     "Choose when your gathering reminder arrives",
   "changelog.entries.choose-when-your-gathering-reminder-arrives.body":
-    "An hour before, a day before, or a week before. Notification settings had only an on-off switch, so everyone got the same day-before nudge.",
+    "Pick an hour before, a day before, or a week before. Notification settings used to have only an on-off switch.",
 
   "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.title":
     "Hosts can run a gathering again, and take the door list offline",
   "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.body":
-    '"Run this again" opens the wizard filled in from a gathering you already ran, so a monthly one-off is a few taps rather than the whole form. The Export button on your attendee list now downloads a real file. The overview\'s "last edited" line finally reflects when you last edited it.',
+    "Run this again opens the wizard filled in from a gathering you already ran, and Export on your attendee list downloads a real file.",
 
   // Section 5 of the 2026-09-05 deep scan: forum, feed and saved items.
   "changelog.tag.saved": "Open your collections",
   "changelog.entries.you-can-take-down-a-whole-forum-post.title":
     "You can take down a whole forum post",
   "changelog.entries.you-can-take-down-a-whole-forum-post.body":
-    "Deleting used to blank the opening message and leave the post standing, with its title still on the forum and in everyone's feed. Now the whole thing goes: the title, the opening message and the link. Replies stay written but are no longer reachable from the forum, and the category counts update straight away.",
+    "Deleting a post now removes the title, the opening message and the link, and the category counts update at once. Replies stay written, reachable only outside the forum.",
   "changelog.entries.a-thread-always-shows-its-real-opening-post.title":
     "A thread always shows its real opening post",
   "changelog.entries.a-thread-always-shows-its-real-opening-post.body":
-    "If the opening post was written by someone you had muted, or a moderator had hidden it, the first reply was promoted into the opening card carrying that person's name and permissions, and their reply vanished from the conversation. The opening post is now identified properly, and when it genuinely is not available to you the card says so and every reply stays where it belongs.",
+    "The opening post is now identified properly, so a muted or hidden author leaves the first reply in place. When the opening is unavailable to you, the card says so.",
   "changelog.entries.sorting-replies-reorders-the-whole-conversation.title":
     "Sorting replies reorders the whole conversation",
   "changelog.entries.sorting-replies-reorders-the-whole-conversation.body":
-    "Newest and Most helpful only reordered the replies already on screen, so on a long thread Newest showed you the twenty oldest replies in reverse. The sort now runs across every reply in the thread, and each reply stays nested under the one it answers.",
+    "Newest and Most helpful now sort across every reply in the thread, and each reply stays nested under the one it answers.",
   "changelog.entries.the-forum-opens-on-active-and-top-means-this-month.title":
     "The forum opens on Active, and Top means this month",
   "changelog.entries.the-forum-opens-on-active-and-top-means-this-month.body":
-    "The forum opened on Top, ordered by upvotes with no time limit, so on a young forum almost every post had no votes and came back in a shuffled order that never changed as people posted. It now opens on Active, and Top ranks by upvotes from the last month before falling back to recent activity, so a new question is visible instead of buried.",
+    "The forum opens on Active now, and Top ranks by upvotes from the last month before falling back to recent activity, so a new question stays visible.",
   "changelog.entries.forum-search-looks-inside-replies.title":
     "Forum search looks inside replies",
   "changelog.entries.forum-search-looks-inside-replies.body":
-    "Searching the forum matched titles only, so a question that was answered three replies down came back with nothing. It now searches the replies as well, and the hint under the box says so instead of pointing you somewhere else.",
+    "Forum search now looks inside replies as well as titles, so a question answered three replies down comes back. The hint under the box says so.",
   "changelog.entries.you-can-move-a-post-to-the-right-category.title":
     "You can move a post to the right category",
   "changelog.entries.you-can-move-a-post-to-the-right-category.body":
-    "A category was fixed at the moment you posted, so a health question filed under General stayed invisible to the people browsing for it. You can now move your own post during its first 24 hours, from the category chip or the post menu, and moderators can refile one at any time.",
+    "You can move your own post to another category during its first 24 hours, from the category chip or the post menu. Moderators can refile one at any time.",
   "changelog.entries.see-how-many-replies-arrived-since-you-last-looked.title":
     "See how many replies arrived since you last looked",
   "changelog.entries.see-how-many-replies-arrived-since-you-last-looked.body":
-    "Following five conversations meant reopening each one to find what had moved. Forum rows now carry a count of the replies added since you last opened that post. Opening it marks it read without signing you up for notifications, which stays a separate choice.",
+    "Forum rows now show how many replies arrived since you last opened that post. Opening it marks it read, and notifications stay a separate choice.",
   "changelog.entries.the-composer-keeps-your-whole-draft.title":
     "The composer keeps your whole draft",
   "changelog.entries.the-composer-keeps-your-whole-draft.body":
-    "An unfinished post came back with only its body, losing the title, category, community, tags and photo. All of it is kept now, an unfinished post is visible on the forum itself with a way straight back into it, and a reply typed underneath another reply is saved too, so tapping the wrong Reply button no longer loses it.",
+    "An unfinished post now keeps its title, category, community, tags and photo along with the body, and shows on the forum with a way straight back into it.",
   "changelog.entries.links-in-threads-and-the-feed-open-up.title":
     "Links in threads and the feed open up",
   "changelog.entries.links-in-threads-and-the-feed-open-up.body":
-    "A link pasted into a post was plain text, so you had to leave the page to find out whether it was worth reading. Links now open into a card carrying the page's title, description and image, the way they already did in messages.",
+    "A link pasted into a post now opens into a card with the page's title, description and image, the way it already did in messages.",
   "changelog.entries.votes-on-the-forum-are-honest.title":
     "Votes on the forum are honest",
   "changelog.entries.votes-on-the-forum-are-honest.body":
-    "Voting checked nothing at all: you could upvote your own post to climb the ranking, keep voting on someone who had blocked you, and vote inside a private community you were not part of. All three are refused now, and votes people had cast on their own posts have been cleared from the counts.",
+    "Voting on your own post, on somebody who has blocked you, or inside a private community you are not part of is now refused. Self-votes already cast were cleared.",
   "changelog.entries.threads-show-a-preview-of-what-was-asked.title":
     "Posts show a preview of what was asked",
   "changelog.entries.threads-show-a-preview-of-what-was-asked.body":
-    "Forum rows and forum cards in the feed carried a title and nothing else, which made them the least inviting thing on the page. Both now show the opening lines, and the reply count no longer includes replies that were deleted.",
+    "Forum rows and forum cards in the feed now show the opening lines of the post, and the reply count leaves out replies that were deleted.",
   "changelog.entries.hidden-members-stay-hidden-in-the-feed.title":
     "Hidden members stay hidden in the feed",
   "changelog.entries.hidden-members-stay-hidden-in-the-feed.body":
-    "If you hid your profile for 24 hours, or hid it from one particular person, the feed still announced you to them as a new member, with your name, your tagline and a link to your profile. The feed now applies the same boundaries the member directory and your profile page already respected.",
+    "If you hide your profile, for 24 hours or from one particular person, the feed now respects that too and stops announcing you as a new member.",
   "changelog.entries.new-this-week-now-means-this-week.title":
     "New this week now means this week",
   "changelog.entries.new-this-week-now-means-this-week.body":
-    "The sidebar list had no date limit, so on a quiet week it filled with people who had joined months earlier under a heading saying otherwise. It now shows only people who joined in the last seven days, and says plainly when nobody did.",
+    "The sidebar list now shows only people who joined in the last seven days, and says plainly when nobody did.",
   "changelog.entries.saved-items-tell-you-when-something-is-gone.title":
     "Saved items tell you when something is gone",
   "changelog.entries.saved-items-tell-you-when-something-is-gone.body":
-    "A saved post, listing or place whose page had since come down still looked live and sent you to a page that was not there. Your saved list, a list you shared and your collections now mark those as no longer available, keeping the title so you can see what it was, and you can still remove them.",
+    "Your saved list, a list you shared and your collections now mark an item whose page has come down as no longer available, keeping the title.",
 
   // Section 5 follow-up: cross-device drafts, link previews, saved lists.
   "changelog.entries.a-post-you-start-on-one-device-reopens-on-another.title":
     "A post you start on one device reopens on another",
   "changelog.entries.a-post-you-start-on-one-device-reopens-on-another.body":
-    "An unfinished post kept its title and text on the server but its community, tags and photo only in the browser you started in, so picking it up on a laptop quietly lost those choices. The whole draft now travels with you. A post saved before you have written the body is also kept now, instead of being discarded the moment the text was empty.",
+    "The whole draft now travels with you, community, tags and photo included, and a post saved before you write the body is kept too.",
   "changelog.entries.link-previews-no-longer-run-out-on-shared-wifi.title":
     "Link previews no longer run out on shared wifi",
   "changelog.entries.link-previews-no-longer-run-out-on-shared-wifi.body":
-    "Preview cards were rationed by network address, so everyone in one cafe, venue or office shared a single small allowance and a busy feed could exhaust it in two scrolls. The allowance is now yours alone and large enough for a full page of links.",
+    "Your preview card allowance is now yours alone, large enough for a full page of links, where a whole cafe or office used to share one.",
   "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.title":
     "Saved lists flag a dead item before you file it",
   "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.body":
-    "The recent-saves row on your saved lists still offered items whose page had since come down, so you could file something away and only find out later. It now marks them the same way the rest of your saved items do.",
+    "The recent-saves row on your saved lists now marks items whose page has come down, the same way the rest of your saved items do.",
 };

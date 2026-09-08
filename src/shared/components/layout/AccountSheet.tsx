@@ -6,11 +6,12 @@ import {
   type ReactNode,
 } from "react";
 import { Link } from "react-router-dom";
-import { FiX, FiLogOut } from "react-icons/fi";
+import { FiX, FiLogOut, FiMoon, FiSun } from "react-icons/fi";
 import { m, useDragControls, type PanInfo } from "motion/react";
 import { Avatar, useScrimDismiss } from "../ui";
 import { useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
+import { useTheme } from "../../../app/providers/themeContext";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
@@ -29,7 +30,11 @@ import {
   INSTALL_APP_ACTION,
 } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
-import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
+import {
+  RoleLinks,
+  AccountMenuControls,
+  AccountLanguageRow,
+} from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
@@ -207,6 +212,12 @@ function AccountSheetBody({
   };
   const { isInstalled } = useDisplayMode();
   const [installOpen, setInstallOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const themeLabel = t(
+    theme === "dark"
+      ? "shared:accountMenu.items.lightMode"
+      : "shared:accountMenu.items.darkMode",
+  );
   return (
     <>
       <div className={menu.scroll}>
@@ -297,6 +308,25 @@ function AccountSheetBody({
             </Link>
           );
         })}
+        {/* The theme switch rides with Saved/Settings here for the same reason
+            it does in the desktop AccountMenu: signed in, the top bar hands the
+            setting to the account surface. Stays put — it toggles in place
+            rather than navigating, so it never closes the sheet. */}
+        <button
+          type="button"
+          className={`${menu.item} ${menu.itemButton} ${styles.row}`}
+          onClick={toggleTheme}
+        >
+          {theme === "dark" ? (
+            <FiSun aria-hidden className={menu.itemIcon} />
+          ) : (
+            <FiMoon aria-hidden className={menu.itemIcon} />
+          )}
+          <span className={menu.itemLabel}>{themeLabel}</span>
+        </button>
+        {/* Language rides directly with the theme switch: both are display
+            preferences the member sets in place, and neither closes the sheet. */}
+        <AccountLanguageRow />
 
         {role !== "member" && (
           <>

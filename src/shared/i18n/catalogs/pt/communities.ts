@@ -1094,6 +1094,10 @@ export const communities: Catalog = {
   "detail.modtools.history.value.off": "Desligado",
   "detail.modtools.history.value.empty": "Vazio",
   "detail.modtools.history.value.notSet": "Sem valor",
+  "detail.modtools.history.value.added": "Adicionado: {values}",
+  "detail.modtools.history.value.removed": "Removido: {values}",
+  "detail.modtools.history.value.reordered":
+    "Os mesmos valores, por outra ordem",
   "detail.modtools.history.field.name": "Nome",
   "detail.modtools.history.field.purpose": "Propósito",
   "detail.modtools.history.field.type": "Tipo",
@@ -1105,6 +1109,15 @@ export const communities: Catalog = {
   "detail.modtools.history.field.rules": "Regras",
   "detail.modtools.history.field.tags": "Etiquetas",
   "detail.modtools.history.field.coverImageUrl": "Imagem de capa",
+  "detail.modtools.history.field.avatarImageUrl": "Marca da comunidade",
+  "detail.modtools.history.field.welcomeMessage": "Nota de boas-vindas",
+  "detail.modtools.history.field.publiclyListed": "Listada publicamente",
+  "detail.modtools.history.field.languages": "Idiomas",
+  "detail.modtools.history.field.city": "Cidade",
+  "detail.modtools.history.field.area": "Zona",
+  "detail.modtools.history.field.isOnline": "Encontra-se online",
+  "detail.modtools.history.field.rulesVersion":
+    "Versão dos valores partilhados",
 
   "detail.dangerZone.yourRole.owner": "Esta comunidade é tua.",
   "detail.dangerZone.yourRole.coOwner":
@@ -1756,6 +1769,11 @@ export const communities: Catalog = {
     "Escolhe até {count}, aparecem no cartão da tua comunidade e são pesquisáveis no Descobrir.",
   "tagPicker.overlapHint":
     "Estas etiquetas costumam sobrepor-se, escolhe a que encaixa melhor.",
+  "tagPicker.choose": "Escolher etiquetas",
+  "tagPicker.addMore": "Adicionar mais etiquetas",
+  "tagPicker.collapse": "Mostrar menos",
+  "tagPicker.count": "{count} de {max} escolhidas",
+  "tagPicker.empty": "Ainda não escolheste etiquetas.",
   "edit.suggestTag.trigger":
     "Não encontras a etiqueta que precisas? Sugere uma",
   // PRD-140. The invitations shelf: everything a member has been invited to, in
@@ -1808,6 +1826,13 @@ export const communities: Catalog = {
   "edit.rules.add": "Adicionar",
   "edit.rules.addPlaceholder": "Adiciona um valor partilhado…",
   "edit.rules.remove": "Remover regra",
+  "edit.changes.title": "Ao guardar, vais alterar",
+  "edit.changes.added": "A adicionar: {values}",
+  "edit.changes.removed": "A remover: {values}",
+  "edit.changes.reordered": "Os mesmos valores, por outra ordem",
+  "edit.changes.otherField": "Outras definições",
+  "edit.changes.reconsent":
+    "Alterar os teus valores partilhados pede a todos os membros que concordem com eles outra vez antes de poderem publicar.",
   "edit.toast.saved": "Alterações guardadas",
   "edit.toast.error": "Não foi possível guardar as alterações. Tenta de novo.",
   "edit.preview.title": "O teu cartão",
@@ -1887,4 +1912,188 @@ export const communities: Catalog = {
   // PHOTO-ESCALATE — PHOTO-ESCALATE (TS-14) — the mod tools report row. Sits beside the existing detail.modtools.reports.staffOnlyNote, which stays as-is for the emergency band. This one is shown when the report is about something the platform will not show a community moderator (a gathering photo today), so Take it down and Dismiss are absent and escalation is the offered action.
   "detail.modtools.reports.unviewableSubjectNote":
     "Esta denúncia é sobre uma fotografia que não te podemos mostrar aqui. A equipa da plataforma consegue vê-la, por isso a decisão é dela. Envia para cima e acrescenta o que souberes sobre o encontro ou sobre quem lá esteve.",
+
+  // ── Biblioteca de valores partilhados ──────────────────────────────────────
+  // O catálogo por trás de "Ver valores" no capítulo Tom do assistente e no
+  // EditCommunityModal. Os ids e temas vivem em
+  // `startCommunity/sharedValueLibrary.data.ts`; os quatro valores com que uma
+  // comunidade nova começa mantêm as chaves `start.rulePreset.*` acima.
+  "values.picker.cta": "Ver {count} valores partilhados",
+  "values.picker.title": "Valores partilhados",
+  "values.picker.sub":
+    "Escolhe os que encaixam na tua comunidade. Podes na mesma escrever os teus.",
+  "values.picker.searchPlaceholder": "Procurar valores…",
+  "values.picker.searchAria": "Procurar valores partilhados",
+  "values.picker.empty":
+    "Não há nada aqui que corresponda. Fecha isto e escreve por tuas palavras.",
+  "values.picker.count": "{count} de {max} escolhidos",
+  "values.picker.cancelCta": "Cancelar",
+  "values.picker.confirmCta": "Usar estes valores",
+  "values.picker.longList":
+    "Cada membro novo lê isto tudo quando entra. Uma lista mais curta é uma lista de que as pessoas se lembram.",
+  "values.picker.full":
+    "São {max} valores, o máximo que uma comunidade pode ter. Desmarca um para abrir espaço.",
+
+  "values.theme.safety": "Segurança e respeito",
+  "values.theme.privacy": "Consentimento e privacidade",
+  "values.theme.access": "Acesso e acolhimento",
+  "values.theme.conflict": "Conflito e reparação",
+  "values.theme.money": "Dinheiro e reciprocidade",
+  "values.theme.substances": "Bebida e substâncias",
+  "values.theme.intimacy": "Namoro e intimidade",
+  "values.theme.showingUp": "Estar presente",
+  "values.theme.family": "Crianças e família",
+  "values.theme.organising": "Política e organização",
+
+  "values.lib.noPunchingDown":
+    "Humilhar não é brincadeira. Piadas à custa de alguém acabam aqui.",
+  "values.lib.transWelcome":
+    "Pessoas trans e não binárias são bem-vindas aqui, sem perguntas.",
+  "values.lib.identityNotDebate":
+    "A identidade de ninguém está aberta a debate.",
+  "values.lib.racismNamed":
+    "O racismo é nomeado e tratado, mesmo quando é subtil.",
+  "values.lib.bodyComments":
+    "Sem comentários ao corpo, ao peso ou ao aspeto de ninguém, a não ser que a pessoa os peça.",
+  "values.lib.listenFirst":
+    "Quando alguém diz que algo lhe doeu, ouvimos antes de explicar.",
+  "values.lib.tellAnOrganiser":
+    "Se te sentires em risco, fala com quem organiza. Vão levar a sério.",
+
+  "values.lib.photoYes": "Sem fotos de ninguém sem um sim, todas as vezes.",
+  "values.lib.pronounsUsed":
+    "Pergunta os pronomes, usa-os e corrige-te sem drama.",
+  "values.lib.chosenNames":
+    "Só nomes escolhidos. O nome antigo de ninguém viaja com a pessoa.",
+  "values.lib.noForwarding":
+    "Nada do que se escreve aqui é reencaminhado para fora.",
+  "values.lib.contactsTheirs":
+    "Os contactos são partilhados por quem é dono deles e por mais ninguém.",
+  "values.lib.gatheringsOffline":
+    "O que acontece num encontro fica fora da internet depois.",
+
+  "values.lib.accessDetails":
+    "Os detalhes de acessibilidade vão em cada publicação de encontro, antes de alguém ter de perguntar.",
+  "values.lib.plainLanguage":
+    "Linguagem simples. Explicamos o jargão ou deixamo-lo de fora.",
+  "values.lib.scentAware":
+    "Os encontros têm atenção a perfumes para que quem tem sensibilidades possa vir.",
+  "values.lib.quieterSpace":
+    "Há sempre um sítio mais calmo para onde ir quando for demais.",
+  "values.lib.noAssumedKnowledge":
+    "Ninguém tem de conhecer as referências todas para pertencer aqui.",
+  "values.lib.remoteOption":
+    "Sempre que der, há forma de participar sem estar no local.",
+  "values.lib.ownLanguage":
+    "Cada pessoa pode falar a língua em que se sente mais em casa.",
+
+  "values.lib.repairFirst": "Procuramos reparar antes de punir, e é a sério.",
+  "values.lib.directFirst":
+    "Fala diretamente com a pessoa sempre que for seguro fazê-lo.",
+  "values.lib.noPileOn":
+    "Uma pessoa trata do problema. Não nos juntamos todos em cima.",
+  "values.lib.apologyIsAction":
+    "Um pedido de desculpa é aquilo que mudas a seguir.",
+  "values.lib.sayWhenItLanded":
+    "Parte do princípio de que houve boa intenção e diz na mesma quando algo caiu mal.",
+  "values.lib.stepBackStepUp":
+    "Se já falaste muito, deixa espaço. Se falaste pouco, queremos ouvir-te.",
+  "values.lib.mediationOffered":
+    "Quem organiza senta-se com as duas pessoas quando isso ajudar.",
+  "values.lib.leaveTheThread":
+    "Podes sair de qualquer conversa. Ninguém deve uma discussão a ninguém.",
+
+  "values.lib.costNoBarrier":
+    "O dinheiro nunca é a razão para alguém não poder vir.",
+  "values.lib.slidingScale":
+    "Preço ajustado ao que podes pagar, e ninguém fica de fora por falta de dinheiro.",
+  "values.lib.costsInTheOpen":
+    "Dizemos quanto custam as coisas e para onde vai o dinheiro.",
+  "values.lib.noSelling":
+    "Isto é uma comunidade para se estar, por isso não vendemos uns aos outros.",
+  "values.lib.labourNamed":
+    "O trabalho de manter isto é nomeado em voz alta e repartido.",
+  "values.lib.payThePerformers": "Quem atua, ensina ou cozinha aqui é pago.",
+  "values.lib.askWhatHelps":
+    "Quando alguém precisa de ajuda, perguntamos o que ajudaria mesmo.",
+  "values.lib.noDebts":
+    "A ajuda dada aqui não é uma dívida que alguém tenha de pagar.",
+
+  "values.lib.softDrinksGood":
+    "Há sempre algo bom para beber que não seja álcool.",
+  "values.lib.neverAskedTwice": "Ninguém é convidado duas vezes para beber.",
+  "values.lib.soberGatherings":
+    "Parte do que fazemos é totalmente sem álcool, e dizemo-lo à partida.",
+  "values.lib.harmReduction":
+    "Redução de riscos em vez de julgamento. Partilhamos o que sabemos.",
+  "values.lib.stayWithThem":
+    "Se alguém não estiver bem, fica alguém com essa pessoa.",
+  "values.lib.substanceFree": "Os nossos encontros são livres de substâncias.",
+  "values.lib.recoveryRespected":
+    "A recuperação é respeitada aqui e nunca é assunto de comentário.",
+  "values.lib.getHomeSafe":
+    "Garantimos que toda a gente tem forma de chegar a casa.",
+
+  "values.lib.flirtingAndNo":
+    "Namoriscar é bem-vindo. Um não é uma frase completa.",
+  "values.lib.communityFirst":
+    "Isto é primeiro uma comunidade. Lê a situação antes de te aproximares.",
+  "values.lib.noUnsolicitedImages":
+    "Sem fotos não pedidas do corpo de ninguém, nunca.",
+  "values.lib.askBeforeMessages":
+    "Pergunta em público antes de ires para as mensagens privadas de alguém.",
+  "values.lib.takeANo": "Aceita um não com elegância e deixa que fique por aí.",
+  "values.lib.relationshipsRespected":
+    "Seja como for que cada pessoa vive as relações, isso é respeitado.",
+  "values.lib.enthusiasticYes":
+    "Vai confirmando pelo caminho. O entusiasmo é o único sim que conta.",
+  "values.lib.desiresPrivate":
+    "Aquilo de que alguém gosta é dessa pessoa, para partilhar ou guardar.",
+
+  "values.lib.sayIfYouCannot":
+    "Se disseste que vinhas, avisa quando não puderes.",
+  "values.lib.arriveOnTime":
+    "Chegar mais ou menos a horas é uma gentileza para quem montou tudo.",
+  "values.lib.helpPackDown":
+    "Toda a gente ajuda a deixar o sítio como o encontrámos.",
+  "values.lib.lurkingIsFine":
+    "Ler sem publicar é uma forma legítima de estar aqui.",
+  "values.lib.noObligation": "Ninguém tem de ir a tudo para pertencer.",
+  "values.lib.bringAFriend":
+    "Traz alguém que encaixe, e explica-lhe primeiro como isto funciona.",
+  "values.lib.answerNewcomers": "Quando alguém novo diz olá, alguém responde.",
+  "values.lib.rotateTheJobs":
+    "As tarefas rodam para não serem sempre as mesmas pessoas a carregar tudo.",
+
+  "values.lib.kidsWelcome":
+    "As crianças são bem-vindas em tudo o que estiver marcado como para famílias.",
+  "values.lib.chosenFamily": "A família escolhida conta como família aqui.",
+  "values.lib.carersSupported":
+    "Quem cuida recebe ajuda para participar em vez de se desenrascar sozinho.",
+  "values.lib.ageStated": "Cada encontro diz claramente para que idades é.",
+  "values.lib.adultsOnly":
+    "Parte do que fazemos é só para adultos, e isso é sempre dito claramente.",
+  "values.lib.partnersWelcome":
+    "Parceiros e parceiras são bem-vindos, a não ser que o encontro diga o contrário.",
+  "values.lib.somewhereForKids":
+    "Há um sítio para uma criança descansar ou comer.",
+  "values.lib.schedulingReal":
+    "Tentamos marcar as coisas à volta da escola e dos turnos.",
+
+  "values.lib.noPolice":
+    "Sem envolver a polícia sem o consentimento de quem foi afetado.",
+  "values.lib.smallAndAccessible":
+    "Preferimos ficar pequenos e acertar na acessibilidade.",
+  "values.lib.decisionsInTheOpen":
+    "As decisões que afetam toda a gente são tomadas onde toda a gente vê.",
+  "values.lib.solidarityNamed":
+    "Dizemos com quem estamos, mesmo quando isso nos custa.",
+  "values.lib.noBrandUse":
+    "Ninguém usa o nome desta comunidade para vender uma marca.",
+  "values.lib.dataMinimal":
+    "Guardamos o mínimo de informação uns sobre os outros.",
+  "values.lib.noSpokespeople":
+    "Ninguém fala em nome de toda a comunidade sem que lho peçam.",
+  "values.lib.disagreeOnTactics":
+    "Podes discordar nas táticas e continuar a pertencer aqui.",
 };

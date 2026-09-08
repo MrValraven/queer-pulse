@@ -5,6 +5,11 @@ import { initialsFromName } from "../../shared/lib/initials";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { personaOwnerAddress } from "./personaLinks.data";
+import {
+  personaAddressName,
+  personaNameBesideCraft,
+  personaTitleName,
+} from "./subprofile-kinds";
 import { skinFor } from "./subprofile-skins";
 import type { FollowedPersonaDTO } from "./api/subprofiles.api";
 import styles from "./FollowedPersonas.module.css";
@@ -18,6 +23,15 @@ import styles from "./FollowedPersonas.module.css";
  * persona it cannot address (`"none"`, and `"pending"`, which cannot happen
  * here because the server already answered) renders as plain text with an
  * honest note rather than a `/p/<slug>` that resolves nowhere.
+ *
+ * NAMED THE WAY THE DIRECTORY CARD NAMES IT. A persona still carrying its
+ * profession as a name ("Dancer") is titled "Owner Name | Dancer" through
+ * `personaTitleName`, so this list reads as people rather than a column of
+ * job titles — the row's own family pill says "Stage", never the craft, so
+ * nothing is said twice. An unlinked persona ships no `ownerName` (the server
+ * refuses to leak the tie) and keeps its bare name. The unfollow control and
+ * its toast take `personaAddressName` instead, which is the same rule shaped
+ * for a sentence: "You no longer follow Tiago", never "… follow Tiago | Dancer".
  *
  * UNFOLLOW WAITS FOR THE SERVER. `onUnfollow` resolves only once the request
  * has settled, and the row stays put and disabled until it does. Dropping the
@@ -38,6 +52,11 @@ export function FollowedPersonaRow({
   const fmt = useFormat();
   const address = personaOwnerAddress(persona, persona.ownerSlug ?? undefined);
   const family = skinFor(persona.kind);
+  const titleName = personaTitleName({
+    displayName: persona.displayName,
+    kind: persona.kind,
+    ownerName: persona.ownerName,
+  });
   const followedOn = fmt.date(new Date(persona.followedAt), {
     day: "numeric",
     month: "short",
@@ -47,14 +66,25 @@ export function FollowedPersonaRow({
   const identity = (
     <>
       <Avatar
-        initials={initialsFromName(persona.displayName, "?")}
+        // Initials come from `personaNameBesideCraft`, never the composed
+        // title: "Tiago Costa | Dancer" reads its first and last words as a
+        // personal name and marks the fallback "TD". The owner's name alone
+        // marks "TC", and a persona with a real name keeps its own initials.
+        initials={initialsFromName(
+          personaNameBesideCraft({
+            displayName: persona.displayName,
+            kind: persona.kind,
+            ownerName: persona.ownerName,
+          }),
+          "?",
+        )}
         src={persona.avatarUrl ?? undefined}
         tint="plum"
         size={48}
         className={styles.avatar}
       />
       <span className={styles.text}>
-        <span className={styles.name}>{persona.displayName}</span>
+        <span className={styles.name}>{titleName}</span>
         <span className={styles.family}>
           {t(`subprofiles:family.${family}.label`)}
         </span>
@@ -99,7 +129,11 @@ export function FollowedPersonaRow({
         onClick={onUnfollow}
         disabled={isUnfollowing}
         aria-label={t("subprofiles:following.unfollowLabel", {
-          name: persona.displayName,
+          name: personaAddressName({
+            displayName: persona.displayName,
+            kind: persona.kind,
+            ownerName: persona.ownerName ?? undefined,
+          }),
         })}
       >
         {isUnfollowing

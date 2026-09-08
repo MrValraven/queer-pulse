@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { FiVolume2 } from "react-icons/fi";
 import type { Member } from "./data/members";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useSpeakPronunciation } from "./useSpeakPronunciation";
 import styles from "./ProfileHeroMain.module.css";
 
 /**
@@ -16,20 +16,13 @@ import styles from "./ProfileHeroMain.module.css";
  */
 export function ProfileNamePronunciation({ profile }: { profile: Member }) {
   const { t } = useTranslation();
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const { speak, isSpeaking } = useSpeakPronunciation();
   if (!profile.pronunciation) return null;
-  const speak = () => {
-    if (!("speechSynthesis" in window) || isSpeaking) return; // silently no-op — the phonetic text is still visible, so nothing is lost
-    const utterance = new SpeechSynthesisUtterance(profile.pronunciation);
-    utterance.onend = utterance.onerror = () => setIsSpeaking(false);
-    setIsSpeaking(true);
-    window.speechSynthesis.speak(utterance);
-  };
   return (
     <button
       type="button"
       className={styles.say}
-      onClick={speak}
+      onClick={() => speak(profile.pronunciation ?? "")}
       disabled={isSpeaking}
       aria-busy={isSpeaking}
       aria-label={t("members:profile.hero.hearPronunciation", {

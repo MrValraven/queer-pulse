@@ -12,9 +12,16 @@ import styles from "./SubprofileShowcase.module.css";
 export function SubprofileSwitchHeader({
   count,
   isSelf,
+  canAddPersona = true,
 }: {
   count: number;
   isSelf: boolean;
+  /** Self view only: whether the "Add another persona" link belongs here at
+   *  all. `false` while the owner is editing their own profile — the editor
+   *  is a form about *this* profile with unsaved changes in it, so a link
+   *  off to the personas dashboard has no place in it (see
+   *  `ProfileBelowHeroGroup`). Defaults to `true` for every read view. */
+  canAddPersona?: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -24,7 +31,7 @@ export function SubprofileSwitchHeader({
           ? t("subprofiles:alsoAs.count", { count })
           : t("subprofiles:alsoAs.switchLabel")}
       </p>
-      {isSelf && (
+      {isSelf && canAddPersona && (
         <Button
           variant="ghost"
           size="md"

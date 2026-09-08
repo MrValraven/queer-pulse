@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FiFlag } from "react-icons/fi";
 import { useAuth } from "../../app/providers/authContext";
+import { IconButton, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CommunityReportModal } from "./CommunityReportModal";
-import styles from "./CommunityReportControl.module.css";
 
 /**
  * The "Report this community" entry point in the community detail hero.
@@ -15,10 +15,14 @@ import styles from "./CommunityReportControl.module.css";
  * NOT required, which is the point: somebody looking in from outside a public
  * community is often the person who can see what it is organised around.
  *
+ * Icon-only, with its name in a tooltip. Reporting is a rare, deliberate act,
+ * and spelling it out in the hero put a fifth line of text beside Join / Save
+ * / Share for something almost nobody clicks. The flag alone keeps it findable
+ * without competing; `IconButton` carries the 44px tap target and the
+ * mandatory accessible name, so nothing is lost to a screen reader.
+ *
  * It lives in `features/safety` rather than `features/communities` so the
- * whole report path (trigger, modal, taxonomy, API call) stays in one place,
- * and so its styles do not have to be threaded through the communities CSS
- * module.
+ * whole report path (trigger, modal, taxonomy, API call) stays in one place.
  */
 export function CommunityReportControl({
   slug,
@@ -36,17 +40,17 @@ export function CommunityReportControl({
 
   return (
     <>
-      <button
-        type="button"
-        className={styles.trigger}
-        onClick={() => setIsReporting(true)}
-        aria-label={t("safety:report.community.triggerAria", {
-          name: communityName,
-        })}
-      >
-        <FiFlag aria-hidden />
-        {t("safety:report.community.trigger")}
-      </button>
+      <Tooltip label={t("safety:report.community.trigger")}>
+        <IconButton
+          tone="dark"
+          onClick={() => setIsReporting(true)}
+          aria-label={t("safety:report.community.triggerAria", {
+            name: communityName,
+          })}
+        >
+          <FiFlag aria-hidden />
+        </IconButton>
+      </Tooltip>
 
       {isReporting && (
         <CommunityReportModal

@@ -1,17 +1,9 @@
 import { Link } from "react-router-dom";
 import type { IconType } from "react-icons";
-import {
-  FiInstagram,
-  FiYoutube,
-  FiAtSign,
-  FiMail,
-  FiSun,
-  FiMoon,
-} from "react-icons/fi";
+import { FiInstagram, FiYoutube, FiAtSign, FiMail } from "react-icons/fi";
 import { MdAccessible } from "react-icons/md";
 import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
-import { useTheme } from "../../../app/providers/themeContext";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { LanguageSwitcher } from "../../i18n/LanguageSwitcher";
@@ -55,25 +47,6 @@ function BaseLink({ link }: { link: FooterLink }) {
       {Icon && <Icon aria-hidden />}
       {t(link.labelKey)}
     </Link>
-  );
-}
-
-/** Theme toggle + EN/PT language switch, shared by both footer variants. */
-function FooterControls() {
-  const { theme, toggleTheme } = useTheme();
-  const { t } = useTranslation();
-  return (
-    <div className={styles.controls}>
-      <button
-        type="button"
-        className={styles.themeToggle}
-        onClick={toggleTheme}
-        aria-label={t("footer:toggleTheme")}
-      >
-        {theme === "dark" ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
-      </button>
-      <LanguageSwitcher />
-    </div>
   );
 }
 
@@ -133,7 +106,9 @@ export function Footer() {
               <BaseLink key={link.href} link={link} />
             ))}
           </nav>
-          <FooterControls />
+          <div className={styles.controls}>
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
     </footer>

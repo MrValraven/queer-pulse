@@ -1,5 +1,18 @@
+/* The sheet's own `.sheet` rule caps it at 560px (760px with `wide`). This
+   explainer lays its three steps in a row, which needs more room than either,
+   so the class is doubled to outrank that single-class cap regardless of
+   which module the bundle emits first. Mobile keeps the stock full-width
+   sheet. */
+@media (min-width: 720px) {
+  .sheet.sheet {
+    max-width: min(980px, 100vw - 48px);
+  }
+}
+
 .head {
-  margin-block-end: clamp(28px, 4vw, 40px);
+  /* Clear the close chip that sits in the sheet's top-right corner. */
+  padding-inline-end: 44px;
+  margin-block-end: clamp(22px, 3vw, 30px);
 }
 
 .title {
@@ -18,23 +31,114 @@
 }
 
 .lede {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   font-size: var(--text-15);
-  line-height: 1.6;
+  line-height: 1.55;
   color: var(--ink-60);
-  max-width: 52ch;
+  max-width: 68ch;
 }
 
-.sections {
+/* ── Steps: three cards in a row ───────────────────────────────────────── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--gap-sm);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 20px 22px 22px;
   display: flex;
   flex-direction: column;
-  gap: clamp(40px, 6vw, 56px);
+  gap: 10px;
 }
 
+.stepMark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-17);
+  line-height: 1;
+}
+
+.stepTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-start: 4px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-18);
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+}
+
+.stepIcon {
+  width: 17px;
+  height: 17px;
+  color: var(--accent);
+  flex: none;
+}
+
+.stepBody {
+  margin: 0;
+  font-size: var(--text-14-5);
+  color: var(--ink-60);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ── Trust strip ───────────────────────────────────────────────────────── */
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.trustItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.trustItem svg {
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
+  flex: none;
+}
+
+/* ── Outro: motivation on the left, CTA on the right ───────────────────── */
 .outro {
-  margin-block-start: clamp(40px, 6vw, 56px);
-  padding-block-start: clamp(24px, 4vw, 32px);
+  margin-block-start: clamp(20px, 3vw, 26px);
+  padding-block-start: clamp(18px, 3vw, 22px);
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+}
+
+.outroText {
+  flex: 1 1 22rem;
 }
 
 .outroTitle {
@@ -42,17 +146,18 @@
   font-weight: 500;
   font-size: var(--text-20);
   color: var(--text-strong);
-  margin: 0 0 6px;
+  margin: 0 0 4px;
 }
 
 .outroSub {
   font-size: var(--text-14-5);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--ink-60);
-  margin: 0 0 18px;
+  margin: 0;
   max-width: 46ch;
 }
 
+:global([data-theme="dark"]) .step,
 :global([data-theme="dark"]) .outro {
   border-color: rgba(var(--cream-rgb), 0.1);
 }

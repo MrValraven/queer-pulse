@@ -1,45 +1,6 @@
-/* The per-community notification level: a compact trigger in the tab row, and
-   the four-option radiogroup inside its dialog. */
-
-.trigger {
-  gap: 7px;
-  flex: none;
-  font-size: var(--text-12-5);
-  color: var(--ink-60);
-  padding: 6px 12px;
-  border-radius: var(--radius-10);
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  background: transparent;
-}
-.trigger svg {
-  width: 14px;
-  height: 14px;
-}
-@media (hover: hover) {
-  .trigger:hover:not(:disabled) {
-    border-color: var(--accent);
-    color: var(--accent-ink);
-  }
-}
-
-/* Hidden below the narrowest layouts so the tab row never wraps: the icon
-   still names the control through its aria-label. */
-.triggerLabel {
-  white-space: nowrap;
-}
-@media (--mobile) {
-  .triggerLabel {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
-  }
-}
+/* The per-community notification level: the four-option radiogroup inside the
+   dialog its hero bell opens. The trigger itself is a shared <IconButton>, so
+   it carries no styles of its own here. */
 
 .groupLabel {
   font-size: var(--text-11);
@@ -116,51 +77,4 @@
   font-size: var(--text-13);
   line-height: 1.5;
   color: var(--ink-60);
-}
-
-/* ── Placement in the community's tab row ─────────────────────────────────────
-   The control sits beside the tab bar rather than in mod tools: every member
-   needs it, and only staff can reach mod tools. The tab strip is also the one
-   row that stays on screen whichever tab is open. */
-.tabRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-.tabRowTabs {
-  flex: 1;
-  min-width: 0;
-}
-.tabRowControl {
-  flex: none;
-  padding-top: 2px;
-}
-
-/* Phone: the hub's six underline tabs used to wrap onto three stacked rows,
-   pushing the feed far down the page and leaving the bell floating beside the
-   first row with the underline rule stopping short of it. One horizontal
-   scroll strip instead, the same chip-scroller pattern the forum sidebar
-   uses. The tablist is addressed through this wrapper (and by role, not by
-   class) because the tab styling lives in the shared Tabs module. */
-@media (--mobile) {
-  .tabRowTabs > [role="tablist"] {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
-  }
-  .tabRowTabs > [role="tablist"]::-webkit-scrollbar {
-    display: none;
-  }
-  .tabRowTabs > [role="tablist"] > [role="tab"] {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    scroll-snap-align: start;
-    /* Tighter than the 24px desktop gutter so four tabs are legible at once
-       and the fifth is visibly clipped, which is what says "this scrolls". */
-    padding-inline: 14px;
-  }
 }

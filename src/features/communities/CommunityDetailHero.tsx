@@ -7,6 +7,7 @@ import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Person } from "./communityDetails";
 import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
 import { CommunityHeroActions } from "./CommunityHeroActions";
+import { CommunityNotificationControl } from "./CommunityNotificationControl";
 import { CommunityReportControl } from "../safety/CommunityReportControl";
 import { leadingInitials } from "../../shared/lib/initials";
 import styles from "./CommunityDetailPage.module.css";
@@ -174,6 +175,17 @@ export function CommunityDetailHero({
             memberNum={memberNum}
             hasCount={hasCount}
           />
+          {/* Two quiet icon affordances close the row: the member's own
+              notification level for this community, and reporting the space
+              itself. Both are named by a tooltip rather than a label, so
+              neither competes with Join / Save / Share. */}
+          {communitySlug && joined && (
+            <CommunityNotificationControl
+              key={communitySlug}
+              slug={communitySlug}
+              communityName={community.name}
+            />
+          )}
           {/* Reports the community ITSELF, which until now had no path at all:
               the only recourse was reporting one post at a time, and that
               never puts the space in front of a moderator. Signed-in members

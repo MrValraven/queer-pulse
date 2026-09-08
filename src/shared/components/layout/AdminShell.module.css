@@ -322,11 +322,128 @@
   display: block;
 }
 
+/* ── Rail search ─────────────────────────────────────────────────────────── */
+/* SearchInput is styled for a paper card; on the plum rail it takes the same
+   cream tints every other control here uses. The selectors are descendants
+   because the field's own class names are hashed inside its module — there is
+   exactly one input, one icon span and one clear button inside the wrap, so
+   nothing else can be caught by them. */
+.navSearch {
+  flex: none;
+  margin: 8px 0 2px;
+}
+.navSearch input {
+  color: rgba(var(--cream-rgb), 1);
+  background: rgba(var(--cream-rgb), 0.07);
+  border-color: rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-11);
+  padding: 10px 34px 10px 38px;
+}
+.navSearch input::placeholder {
+  color: rgba(var(--cream-rgb), 0.45);
+}
+.navSearch input:focus {
+  background: rgba(var(--cream-rgb), 0.12);
+  border-color: rgba(var(--cream-rgb), 0.42);
+  box-shadow: none;
+}
+/* SearchInput drops the outline and puts back a plum-tinted ring, which is
+   invisible against plum. Keyboard focus takes the global two-tone ring
+   instead, restated from its tokens as effects.css asks. */
+.navSearch input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.navSearch span {
+  left: 13px;
+  color: rgba(var(--cream-rgb), 0.5);
+}
+.navSearch button {
+  right: 9px;
+  background: rgba(var(--cream-rgb), 0.14);
+  color: rgba(var(--cream-rgb), 0.85);
+}
+@media (hover: hover) {
+  .navSearch button:hover {
+    background: rgba(var(--cream-rgb), 0.24);
+  }
+}
+
+/* Collapsed rail: the field becomes the icon it was prefixed with. Sized like
+   the other icon controls so the column stays one straight line. */
+.navSearchBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 6px 0 2px;
+  padding: 10px 0;
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-radius: var(--radius-11);
+  background: rgba(var(--cream-rgb), 0.05);
+  color: rgba(var(--cream-rgb), 0.72);
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+.navSearchBtn svg {
+  width: 18px;
+  height: 18px;
+}
+@media (hover: hover) {
+  .navSearchBtn:hover {
+    background: rgba(var(--cream-rgb), 0.11);
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+
+/* Results replace the sections while a query is running. */
+.navSearchResults {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.navSearchGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 7px;
+}
+/* Reads as the section heading it stands in for, minus the chevron: there is
+   nothing to open or shut here. */
+.navSearchHead {
+  margin: 0;
+  padding: 8px 12px 4px;
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.5);
+}
+.navSearchEmpty {
+  margin: 0;
+  padding: 14px 12px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navSearchBtn {
+    transition: none;
+  }
+}
+
 /* ── Nav ─────────────────────────────────────────────────────────────────── */
 .nav {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* Air under the search field, so Overview reads as the start of the nav
+     rather than a row attached to the field above it. */
+  margin-top: 8px;
   /* Absorb the free vertical space and scroll internally so a tall nav list
      never pushes the footer / user card off the fixed-height sidebar. */
   flex: 1 1 auto;
@@ -752,39 +869,6 @@
   font-weight: 400;
 }
 
-.search {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  flex: 1;
-  max-width: 460px;
-  margin: 0 auto 0 12px;
-  padding: 8px 14px;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-pill);
-  background: var(--paper);
-  color: var(--ink-40);
-  transition: border-color var(--dur, 0.18s) var(--ease, ease);
-}
-.search:focus-within {
-  border-color: rgba(var(--line-rgb), 0.3);
-}
-.search svg {
-  flex: none;
-}
-.search input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  font: inherit;
-  font-size: var(--text-13);
-  color: var(--ink);
-  outline: none;
-}
-.search input::placeholder {
-  color: var(--ink-40);
-}
-
 /* Off-canvas toggle. Hidden on desktop; revealed at the mobile breakpoint. */
 .menuBtn {
   display: none;
@@ -817,6 +901,9 @@
   align-items: center;
   gap: 8px;
   flex: none;
+  /* Holds the icons against the right edge now that nothing between them and
+     the breadcrumb absorbs the free space. */
+  margin-left: auto;
 }
 .iconBtn {
   position: relative;
@@ -917,12 +1004,6 @@
   .topRight {
     order: 2;
     margin-left: auto;
-  }
-  .search {
-    order: 3;
-    flex-basis: 100%;
-    max-width: none;
-    margin: 4px 0 0;
   }
   .content {
     padding: 20px 18px var(--section-y-48);

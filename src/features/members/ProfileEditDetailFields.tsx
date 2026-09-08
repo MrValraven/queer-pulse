@@ -1,10 +1,12 @@
 import { type RefObject } from "react";
+import { FiVolume2 } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/useProfile";
 import { InlineText, InlineTextarea, TagEditor } from "./profileEditControls";
 import { ProfileNowField } from "./ProfileNowField";
 import { SocialLinksEditor } from "./SocialLinksEditor";
 import { WorkFieldPicker } from "./WorkFieldPicker";
+import { useSpeakPronunciation } from "./useSpeakPronunciation";
 import styles from "./ProfileEdit.module.css";
 
 /**
@@ -21,6 +23,8 @@ export function ProfileEditDetailFields({
 }) {
   const { t } = useTranslation();
   const { draft, updateDraft } = useProfile();
+  const { speak, isSpeaking } = useSpeakPronunciation();
+  const pronunciation = draft.pronunciation?.trim() ?? "";
   return (
     <>
       <div className={styles.field}>
@@ -37,6 +41,19 @@ export function ProfileEditDetailFields({
           className={styles.hoodInput}
           onChange={(value) => updateDraft({ pronunciation: value })}
         />
+        {/* Same voice the profile hero uses, so you can check it before saving. */}
+        {pronunciation ? (
+          <button
+            type="button"
+            className={styles.hearIt}
+            onClick={() => speak(pronunciation)}
+            disabled={isSpeaking}
+            aria-busy={isSpeaking}
+          >
+            <FiVolume2 aria-hidden />{" "}
+            {t("members:profileEdit.pronunciation.hear")}
+          </button>
+        ) : null}
       </div>
 
       <div className={styles.field}>

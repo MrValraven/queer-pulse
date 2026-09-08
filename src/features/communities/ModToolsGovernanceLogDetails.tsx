@@ -1,6 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
+import { diffStringLists, isStringList } from "../../shared/lib/stringListDiff";
 import type { CommunityGovernanceLogDetailsDTO } from "./api/communityGovernanceLog.api";
 import {
   GOVERNANCE_FIELD_LABEL_KEYS,
@@ -63,6 +64,48 @@ function fromToValue(from: unknown, to: unknown, t: TFunction): string {
     from: formatDetailValue(from, t),
     to: formatDetailValue(to, t),
   });
+}
+
+/**
+ * A list field (`rules`, `tags`, `features`, `languages`) as what entered and
+ * what left, rather than as the whole list printed twice.
+ *
+ * A community holding a dozen shared values used to render an edit as both
+ * lists side by side, and the one fact a moderator opened the trail for, which
+ * value was added, was the hardest thing in the row to find. A reorder is
+ * called out by name: the server diffs arrays by index, so moving one value up
+ * writes a real entry with nothing added and nothing removed, and saying
+ * nothing there would leave that row unexplained.
+ */
+function listChangeValue(from: string[], to: string[], t: TFunction): string {
+  const { added, removed, isReordered } = diffStringLists(from, to);
+  const phrases: string[] = [];
+  if (added.length > 0) {
+    phrases.push(
+      t("communities:detail.modtools.history.value.added", {
+        values: added.join("; "),
+      }),
+    );
+  }
+  if (removed.length > 0) {
+    phrases.push(
+      t("communities:detail.modtools.history.value.removed", {
+        values: removed.join("; "),
+      }),
+    );
+  }
+  if (isReordered) {
+    phrases.push(t("communities:detail.modtools.history.value.reordered"));
+  }
+  return phrases.join(" ");
+}
+
+/** How one changed setting reads: list fields as a delta, everything else as
+ *  the before and after it has always been. */
+function settingChangeValue(from: unknown, to: unknown, t: TFunction): string {
+  return isStringList(from) && isStringList(to)
+    ? listChangeValue(from, to, t)
+    : fromToValue(from, to, t);
 }
 
 /**
@@ -129,7 +172,7 @@ function detailLines(
     lines.push({
       key: `change:${change.field}`,
       label: fieldLabel(change.field, t),
-      value: fromToValue(change.from, change.to, t),
+      value: settingChangeValue(change.from, change.to, t),
     });
   }
 

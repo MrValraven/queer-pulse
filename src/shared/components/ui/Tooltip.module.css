@@ -11,6 +11,12 @@
   border-radius: var(--radius-7);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
+  /* The bubble is plum, so on a plum ground (the community hero's action row)
+     it would otherwise dissolve into the page. A cream hairline plus the
+     floating elevation gives it an edge on any ground, dark or cream. */
+  box-shadow:
+    0 0 0 1px rgba(var(--cream-rgb), 0.14),
+    var(--shadow-e3);
   font-size: var(--text-11);
   font-weight: 600;
   line-height: 1.3;

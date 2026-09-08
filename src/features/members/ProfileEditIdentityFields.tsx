@@ -10,6 +10,7 @@ import {
   PronounPicker,
   VisibilityPicker,
 } from "./profileEditControls";
+import { ProfileNeighbourhoodField } from "./ProfileNeighbourhoodField";
 import { ProfileShortBioField } from "./ProfileShortBioField";
 import styles from "./ProfileEdit.module.css";
 
@@ -78,18 +79,7 @@ export function ProfileEditIdentityFields({
         />
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.fieldLabel}>
-          {t("members:profileEdit.field.neighbourhood")}
-        </label>
-        <InlineText
-          value={draft.hood}
-          ariaLabel={t("members:profileEdit.field.neighbourhood")}
-          placeholder={t("members:profileEdit.field.neighbourhoodPlaceholder")}
-          className={styles.hoodInput}
-          onChange={(value) => updateDraft({ hood: value })}
-        />
-      </div>
+      <ProfileNeighbourhoodField />
     </div>
   );
 }

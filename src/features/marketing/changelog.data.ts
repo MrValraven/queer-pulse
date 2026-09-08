@@ -90,6 +90,110 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "see-what-a-save-will-change-before-you-save-it",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("see-what-a-save-will-change-before-you-save-it"),
+      },
+      {
+        id: "the-tag-list-folds-away-once-you-have-picked",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("the-tag-list-folds-away-once-you-have-picked"),
+      },
+      {
+        id: "switch-language-from-your-account-menu",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("switch-language-from-your-account-menu"),
+      },
+      {
+        id: "one-place-to-switch-between-light-and-dark",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("one-place-to-switch-between-light-and-dark"),
+      },
+      {
+        id: "a-library-of-shared-values-to-choose-from",
+        category: "feature",
+        date: "8 Sep 2026",
+        ...entryKeys("a-library-of-shared-values-to-choose-from"),
+        tag: {
+          labelKey: "marketing:changelog.tag.startCommunity",
+          to: routes.startCommunity,
+        },
+      },
+      {
+        id: "find-any-admin-page-by-name",
+        category: "feature",
+        date: "8 Sep 2026",
+        ...entryKeys("find-any-admin-page-by-name"),
+      },
+      {
+        id: "the-theme-switch-moves-into-your-account-menu",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("the-theme-switch-moves-into-your-account-menu"),
+      },
+      {
+        id: "the-account-menu-drops-the-maintenance-controls",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("the-account-menu-drops-the-maintenance-controls"),
+      },
+      {
+        id: "the-homepage-personas-take-turns",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("the-homepage-personas-take-turns"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "how-communities-work-fits-on-one-screen",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("how-communities-work-fits-on-one-screen"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "pick-your-neighbourhood-from-a-list",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("pick-your-neighbourhood-from-a-list"),
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
+      },
+      {
+        id: "persona-cards-now-show-the-banner",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("persona-cards-now-show-the-banner"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "save-profile-stays-off-until-you-change-something",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("save-profile-stays-off-until-you-change-something"),
+      },
+      {
+        id: "hear-your-name-before-you-save-it",
+        category: "improvement",
+        date: "8 Sep 2026",
+        ...entryKeys("hear-your-name-before-you-save-it"),
+      },
+      {
         id: "every-cookie-we-set-now-has-its-real-name",
         category: "improvement",
         date: "8 Sep 2026",

@@ -4,6 +4,7 @@ import {
   ChipSelect,
   RefineGroup,
   RefinePanel,
+  RefineSplit,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
@@ -11,8 +12,8 @@ import type { SubprofileDirectoryFilters } from "./useSubprofileDirectoryFilters
 import styles from "./SubprofileDirectoryPage.module.css";
 
 /**
- * The directory's Refine drawer: profession chips grouped by page family,
- * the availability toggle, then the tag tray.
+ * The directory's Refine drawer: profession chips grouped by page family, then
+ * the availability toggle and the tag tray sharing one band below them.
  *
  * All three used to stand open above the first card, which put a thirteen-chip
  * row, a note, a search field and a tag row between the headline and the
@@ -50,84 +51,82 @@ export function SubprofileDirectoryRefinePanel({
     <RefinePanel {...panelProps}>
       <SubprofileProfessionFilter directory={directory} />
 
-      <RefineGroup
-        label={t("subprofiles:directory.refine.availabilityLabel")}
-        labelId={availabilityLabelId}
-        role="group"
-        aria-labelledby={availabilityLabelId}
-      >
-        <div className={styles.toggles}>
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-pressed={openToCollabs}
-            // The badge is aria-hidden, so the pill has to carry the whole
-            // phrase, exactly as the chip rows do.
-            aria-label={t("subprofiles:directory.refine.optionWithCount", {
-              label: t("subprofiles:directory.openToCollabsChip"),
-              count: openToCollabsCount,
-            })}
-            disabled={isOpenToCollabsUnavailable}
-            className={[styles.toggle, openToCollabs && styles.toggleOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={onToggleOpenToCollabs}
-          >
-            <span className={styles.toggleDot} aria-hidden />
-            {t("subprofiles:directory.openToCollabsChip")}
-            <span className={styles.toggleCount} aria-hidden>
-              {openToCollabsCount}
-            </span>
-          </Button>
-        </div>
-      </RefineGroup>
-
-      {availableTags.length > 0 && (
+      {/* Availability and tags share one band rather than taking one each: both
+          are a single short row, so a band apiece spent a hairline and a band's
+          worth of height to say very little. `RefineSplit` caps the first
+          column, so the lone pill cannot stretch across the drawer, and stacks
+          the two on narrow screens. */}
+      <RefineSplit>
         <RefineGroup
-          label={t("subprofiles:directory.refine.tagsLabel")}
-          labelId={tagsLabelId}
+          label={t("subprofiles:directory.refine.availabilityLabel")}
+          labelId={availabilityLabelId}
+          role="group"
+          aria-labelledby={availabilityLabelId}
         >
-          <ChipSelect
-            labelledBy={tagsLabelId}
-            options={availableTags.map((tag) => ({
-              value: tag,
-              label: tag,
-              count: tagCounts[tag] ?? 0,
-              // The badge is aria-hidden, so the chip has to carry the whole
-              // phrase: "React, 4 personas", never "React 4" (which reads as a
-              // quantity of Reacts).
-              ariaLabel: t("subprofiles:directory.refine.optionWithCount", {
+          <div className={styles.toggles}>
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-pressed={openToCollabs}
+              // The badge is aria-hidden, so the pill has to carry the whole
+              // phrase, exactly as the chip rows do.
+              aria-label={t("subprofiles:directory.refine.optionWithCount", {
+                label: t("subprofiles:directory.openToCollabsChip"),
+                count: openToCollabsCount,
+              })}
+              disabled={isOpenToCollabsUnavailable}
+              className={[styles.toggle, openToCollabs && styles.toggleOn]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={onToggleOpenToCollabs}
+            >
+              <span className={styles.toggleDot} aria-hidden />
+              {t("subprofiles:directory.openToCollabsChip")}
+              <span className={styles.toggleCount} aria-hidden>
+                {openToCollabsCount}
+              </span>
+            </Button>
+          </div>
+        </RefineGroup>
+
+        {availableTags.length > 0 && (
+          <RefineGroup
+            label={t("subprofiles:directory.refine.tagsLabel")}
+            labelId={tagsLabelId}
+          >
+            <ChipSelect
+              labelledBy={tagsLabelId}
+              options={availableTags.map((tag) => ({
+                value: tag,
                 label: tag,
                 count: tagCounts[tag] ?? 0,
-              }),
-            }))}
-            selected={new Set(activeTags)}
-            onToggle={onToggleTag}
-          />
-        </RefineGroup>
-      )}
+                // The badge is aria-hidden, so the chip has to carry the whole
+                // phrase: "React, 4 personas", never "React 4" (which reads as
+                // a quantity of Reacts).
+                ariaLabel: t("subprofiles:directory.refine.optionWithCount", {
+                  label: tag,
+                  count: tagCounts[tag] ?? 0,
+                }),
+              }))}
+              selected={new Set(activeTags)}
+              onToggle={onToggleTag}
+            />
+          </RefineGroup>
+        )}
+      </RefineSplit>
     </RefinePanel>
   );
 }
 
 /**
- * Above this many professions the family groups stack instead of standing side
- * by side. Four is where a row of columns stops being cheap: below it the
- * groups are one or two chips each and a column apiece wastes most of the
- * drawer's width, at it and above the columns get narrow enough that the chips
- * inside start wrapping, which reads worse than a plain stack.
- */
-const INLINE_PROFESSION_LIMIT = 4;
-
-/**
  * The Profession band: one chip row per page family, each headed by the family
  * name. Multi-select, OR within the facet.
  *
- * A young directory has two families of one profession each, which as a stack
- * is two nearly empty rows. So a small band lays its families out side by side,
- * divided by a hairline, and only falls back to a column once there are enough
- * professions for the columns to crowd (`INLINE_PROFESSION_LIMIT`). Narrow
- * screens always stack: the divider is a desktop-width affordance.
+ * The families lay out as an auto-fill grid (`.professionGroups`), so however
+ * many there are they fill the drawer's width in columns and fold to fewer as
+ * it narrows. A stack was one short chip row per family down the left edge,
+ * which left most of the drawer empty; there is no profession-count threshold
+ * here any more, because the grid answers the question at every width.
  *
  * Each chip's count is a LIVE facet, taken under the drawer's other filters but
  * not under the profession selection itself, so picking "Poet" leaves the other
@@ -149,23 +148,9 @@ function SubprofileProfessionFilter({
 
   if (professionGroups.length === 0) return null;
 
-  const professionCount = professionGroups.reduce(
-    (total, group) => total + group.kinds.length,
-    0,
-  );
-  const isInline =
-    professionGroups.length > 1 && professionCount <= INLINE_PROFESSION_LIMIT;
-
   return (
     <RefineGroup label={t("subprofiles:directory.refine.professionLabel")}>
-      <div
-        className={[
-          styles.professionGroups,
-          isInline && styles.professionGroupsInline,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
+      <div className={styles.professionGroups}>
         {professionGroups.map((group) => {
           const groupLabelId = `${uid}-${group.family}`;
           return (

@@ -14,10 +14,8 @@ import { RosterTab } from "./RosterTab";
 import { EventsTab } from "./EventsTab";
 import { AboutResourcesTab } from "./AboutResourcesTab";
 import { ModToolsTab } from "./ModToolsTab";
-import { CommunityNotificationControl } from "./CommunityNotificationControl";
 import { isCommunityStaff } from "./communityStaff";
 import styles from "./CommunityDetailPage.module.css";
-import notificationStyles from "./CommunityNotificationControl.module.css";
 
 type Tab = "pulse" | "discussion" | "members" | "events" | "about" | "modtools";
 
@@ -147,32 +145,20 @@ export function LivingHubTabs({
 
   return (
     <div>
-      {/* The member's own notification level rides in the tab row: it belongs
-          to every member (so never in mod tools) and this strip is the one
-          part of the hub that stays put whichever tab is open. */}
-      <div className={notificationStyles.tabRow}>
-        <div className={notificationStyles.tabRowTabs}>
-          <Tabs
-            className={styles.tabs}
-            variant="underline"
-            tabs={tabs.map((t) => ({
-              id: t.id,
-              label: t.label,
-              count: count[t.id],
-            }))}
-            active={active}
-            onChange={(id) => setTab(id as Tab)}
-          />
-        </div>
-        {isMember && (
-          <div className={notificationStyles.tabRowControl}>
-            <CommunityNotificationControl
-              key={slug}
-              slug={slug}
-              communityName={community.name}
-            />
-          </div>
-        )}
+      {/* Wrapper, not decoration: on a phone it turns the six underline tabs
+          into one horizontal scroll strip instead of three stacked rows. */}
+      <div className={styles.tabScroller}>
+        <Tabs
+          className={styles.tabs}
+          variant="underline"
+          tabs={tabs.map((t) => ({
+            id: t.id,
+            label: t.label,
+            count: count[t.id],
+          }))}
+          active={active}
+          onChange={(id) => setTab(id as Tab)}
+        />
       </div>
 
       <LivingHubTabContent

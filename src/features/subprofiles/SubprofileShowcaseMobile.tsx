@@ -35,6 +35,7 @@ export function SubprofileShowcaseMobile({
   ownerSlug,
   isSelf = false,
   previewing = false,
+  canAddPersona = true,
   ownerMetaBySlug,
 }: {
   personas: PublicSubprofileView[];
@@ -44,6 +45,10 @@ export function SubprofileShowcaseMobile({
    *  controls even when `viewerIsMember` is true (live mode). Mirrors the
    *  desktop `SubprofileShowcase` prop. */
   previewing?: boolean;
+  /** Self view only: whether "Add another persona" is offered. `false` while
+   *  the owner is editing their profile. Mirrors the desktop
+   *  `SubprofileShowcase` prop. */
+  canAddPersona?: boolean;
   ownerMetaBySlug?: Map<string, SubprofileOwnerMeta>;
 }) {
   const { t } = useTranslation();
@@ -54,16 +59,17 @@ export function SubprofileShowcaseMobile({
   // `.soloAddAnother` (`align-self: flex-start`) keeps this from stretching
   // to the accordion's full width — `.mobileAccordion` doesn't override
   // `align-items`, so a flex column defaults every child to stretch.
-  const addAnother = isSelf ? (
-    <Button
-      variant="ghost"
-      size="md"
-      to={routes.subprofilesDashboard}
-      className={styles.soloAddAnother}
-    >
-      {t("subprofiles:alsoAs.addAnother")}
-    </Button>
-  ) : null;
+  const addAnother =
+    isSelf && canAddPersona ? (
+      <Button
+        variant="ghost"
+        size="md"
+        to={routes.subprofilesDashboard}
+        className={styles.soloAddAnother}
+      >
+        {t("subprofiles:alsoAs.addAnother")}
+      </Button>
+    ) : null;
 
   if (personas.length <= 1) {
     const persona = personas[0];

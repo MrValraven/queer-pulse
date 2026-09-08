@@ -357,7 +357,19 @@ export const members: Catalog = {
   "profileEdit.field.lastPlaceholder": "Last",
   "profileEdit.field.pronouns": "Pronouns",
   "profileEdit.field.neighbourhood": "Neighbourhood",
-  "profileEdit.field.neighbourhoodPlaceholder": "e.g. Arroios",
+  "profileEdit.field.neighbourhoodPlaceholder": "Choose your area",
+  "profileEdit.field.neighbourhoodSearchPlaceholder": "Search areas",
+  // ── Neighbourhood select. The place names themselves are proper nouns and
+  //    are never translated (i18n sweep §6); only the group headings and the
+  //    escape hatch below are chrome. "Bairros" are the everyday names, the
+  //    freguesias are the official parishes — both are offered because people
+  //    say "Príncipe Real", not "Santo António".
+  "profileEdit.field.neighbourhoodGroup.bairro": "Neighbourhoods",
+  "profileEdit.field.neighbourhoodGroup.freguesia": "Parishes",
+  "profileEdit.field.neighbourhoodGroup.other": "Not on the list",
+  "profileEdit.field.neighbourhoodOther": "Somewhere else…",
+  "profileEdit.field.neighbourhoodOtherPlaceholder": "Where you're based",
+  "profileEdit.field.neighbourhoodBackToList": "Choose from the list",
   "profileEdit.field.bio": "Bio",
   "profileEdit.field.bioHelp":
     "The longer version, on your profile page. If you leave your short bio empty, your directory card borrows the opening of this.",
@@ -411,6 +423,7 @@ export const members: Catalog = {
   "profileEdit.pronunciation.help":
     "Spell it out phonetically so people get it right. Shown next to your name with a 'hear it' button.",
   "profileEdit.pronunciation.placeholder": "e.g. kuh-tuh-REE-nuh",
+  "profileEdit.pronunciation.hear": "Hear it",
   "profileEdit.bioPt.label": "Bio in Portuguese",
   "profileEdit.bioPt.help":
     "An optional Portuguese version of your bio. Add one and visitors can switch between languages.",
@@ -456,6 +469,7 @@ export const members: Catalog = {
   "profileEdit.bar.unsaved": "You're editing your profile, unsaved changes",
   "profileEdit.bar.unsavedIn": "Unsaved changes in {sections}",
   "profileEdit.bar.discard": "Discard",
+  "profileEdit.bar.goBack": "Go back",
   "profileEdit.bar.saving": "Saving…",
   "profileEdit.bar.tryAgain": "Try again",
   "profileEdit.bar.save": "Save profile",

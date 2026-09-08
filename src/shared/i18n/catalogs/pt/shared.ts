@@ -152,6 +152,8 @@ export const shared: Catalog = {
   "accountMenu.items.pitches": "Propostas",
   "accountMenu.items.saved": "Guardados",
   "accountMenu.items.settings": "Definições",
+  "accountMenu.items.darkMode": "Modo escuro",
+  "accountMenu.items.lightMode": "Modo claro",
   "accountMenu.items.gettingStarted": "Primeiros passos",
   "accountMenu.items.installApp": "Instalar a app",
   "accountMenu.items.reports": "As tuas denúncias",
@@ -207,9 +209,6 @@ export const shared: Catalog = {
   // AdminShell
   "adminShell.toggleTheme": "Alternar tema",
   "adminShell.alerts": "Alertas",
-  "adminShell.searchPlaceholder": "Pesquisar relatórios, pessoas, comunidades…",
-  "adminShell.toastSearchIllustrative":
-    "A pesquisa é apenas ilustrativa neste protótipo",
   "adminShell.toastNoAlerts": "Sem alertas novos",
 
   // AdminSidebar
@@ -219,6 +218,11 @@ export const shared: Catalog = {
   "adminSidebar.homeAria": "Início da administração QueerPulse",
   "adminSidebar.collapseRail": "Recolher menu",
   "adminSidebar.expandRail": "Expandir menu",
+  "adminSidebar.search.label": "Procurar páginas de administração",
+  "adminSidebar.search.placeholder": "Procurar páginas",
+  "adminSidebar.search.empty": "Nenhuma página de administração corresponde.",
+  "adminSidebar.search.results_one": "{count} página",
+  "adminSidebar.search.results_other": "{count} páginas",
 
   // AdminAccountMenu — o controlo de conta no fundo da barra lateral.
   "adminSidebar.account.accessHeading": "O teu acesso",

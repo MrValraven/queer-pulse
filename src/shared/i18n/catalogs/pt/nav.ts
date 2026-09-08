@@ -23,8 +23,9 @@ export const nav: Catalog = {
   updating: "A atualizar…",
   updateDismiss: "Dispensar atualização",
 
-  // Destinos principais ("Members" → "Pessoas": neutro, evita "membros")
-  members: "Pessoas",
+  // Destinos principais. O destino "Members" chama-se "Membros" (decisão do
+  // produto); noutros contextos preferimos "Pessoas" (ver docs/i18n/glossary-pt.md).
+  members: "Membros",
   forum: "Fórum",
   calendar: "Calendário",
   communities: "Comunidades e Coletivos",

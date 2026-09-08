@@ -43,6 +43,7 @@ export function SubprofileSwitchList({
   heroId,
   tabId,
   isSelf = false,
+  canAddPersona = true,
   ownerMetaBySlug,
 }: {
   personas: PublicSubprofileView[];
@@ -59,6 +60,9 @@ export function SubprofileSwitchList({
    *  "More personas" label, gains an "Add another persona" link, and each row
    *  shows its status/visibility. `false` on the public path (the default). */
   isSelf?: boolean;
+  /** Self view only: whether the header carries "Add another persona".
+   *  `false` while the owner is editing their profile. */
+  canAddPersona?: boolean;
   /** Per-persona owner-only metadata (status/visibility), keyed by slug —
    *  only ever passed in self view. */
   ownerMetaBySlug?: Map<string, SubprofileOwnerMeta>;
@@ -140,7 +144,11 @@ export function SubprofileSwitchList({
 
   return (
     <div className={styles.switcher}>
-      <SubprofileSwitchHeader count={personas.length} isSelf={isSelf} />
+      <SubprofileSwitchHeader
+        count={personas.length}
+        isSelf={isSelf}
+        canAddPersona={canAddPersona}
+      />
 
       {asIndex && kinds.length > 1 && (
         <SubprofileFilterChips

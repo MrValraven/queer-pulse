@@ -20,6 +20,15 @@ interface CommunityCardPreviewProps extends CommunityCardStats {
    *  the real Discover card would show; a live community has none. */
   slug?: string;
   draft: CommunityDraft;
+  /** The locally renderable URL of a cover picked THIS session, if any. A fresh
+   *  pick leaves `draft.coverImageUrl` holding a private storage key that no
+   *  `<img>` can fetch, so the card needs this `blob:`/resolved URL to show the
+   *  pick at all; without it the preview draws a broken image while the form
+   *  field beside it shows the photo. Null/absent means nothing was picked this
+   *  session and the draft's own (already-resolved) value is the cover. */
+  coverPreviewUrl?: string | null;
+  /** The same story for a mark picked this session. */
+  avatarPreviewUrl?: string | null;
 }
 
 /**
@@ -35,10 +44,22 @@ interface CommunityCardPreviewProps extends CommunityCardStats {
 export function CommunityCardPreview({
   slug,
   draft,
+  coverPreviewUrl,
+  avatarPreviewUrl,
   memberCount,
   activeThisWeek,
 }: CommunityCardPreviewProps) {
   const { t } = useTranslation();
+  // A pick made this session wins over the draft value it just replaced: the
+  // draft now holds that pick's storage key, which is not fetchable, while the
+  // preview URL renders immediately. Clearing the image empties BOTH, so the
+  // card loses its cover the moment the owner removes it.
+  const coverSrc = draft.coverImageUrl
+    ? coverPreviewUrl || draft.coverImageUrl
+    : "";
+  const avatarSrc = draft.avatarImageUrl
+    ? avatarPreviewUrl || draft.avatarImageUrl
+    : "";
   const tier = draft.accessTier || "public";
   const isPrivate = tier === "private";
   const roster = getLiving(slug)?.roster.slice(0, 4) ?? [];
@@ -70,18 +91,16 @@ export function CommunityCardPreview({
       }
       countLabel={countLabel}
       activeThisWeek={activeThisWeek}
-      coverImageUrl={draft.coverImageUrl || undefined}
-      /* The mark the owner is choosing right now. Renderable here for the same
-         reason the cover beside it is: the edit modal seeds its draft from the
-         detail DTO's already-resolved URLs and `ImageUploadField` hands back a
-         resolved one. (The founding wizard's own preview cannot do this — there
-         `draft.avatarImageUrl` is still a private storage key, which is why
-         `StartCommunityPreview` takes a separate `avatarPreviewUrl`.) */
-      avatarImageUrl={draft.avatarImageUrl || undefined}
+      coverImageUrl={coverSrc || undefined}
+      /* The mark the owner is choosing right now. The draft's own value is
+         already a resolved URL for the COMMITTED mark (the edit modal seeds it
+         from the detail DTO), but a mark picked this session is a private
+         storage key — hence the session preview URL taking precedence above. */
+      avatarImageUrl={avatarSrc || undefined}
       tags={draft.tags}
       roster={roster}
       className={isPrivate ? styles.privateCard : undefined}
-      badge={<AccessTierBadge tier={tier} onPhoto={!!draft.coverImageUrl} />}
+      badge={<AccessTierBadge tier={tier} onPhoto={!!coverSrc} />}
       footAction={
         isPrivate ? (
           <span className={[styles.joinBtn, styles.enterQuietly].join(" ")}>

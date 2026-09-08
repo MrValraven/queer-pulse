@@ -265,9 +265,32 @@
     color: var(--ink);
   }
 }
+/* The theme switch is the one header action that acts instead of navigating,
+   so it's a <button> wearing .headerIcon; strip the UA button chrome. */
+.headerIconButton {
+  border: 0;
+  padding: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
 .headerIcon:focus-visible {
   outline: 2px solid var(--line-strong);
   outline-offset: 2px;
+}
+
+/* A row that acts instead of navigating (the theme switch in the mobile
+   account sheet) wears .item as a <button>; strip the UA chrome. */
+.itemButton {
+  width: 100%;
+  border: 0;
+  padding: 9px 12px;
+  background: transparent;
+  font: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
 }
 
 /* Two-column icon grid; reflows to one column when the panel is too narrow
@@ -367,6 +390,36 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
+}
+
+/* The interface-language row (AccountLanguageRow): the .item geometry, with
+   the EN/PT segment pushed to the right edge the way .badgeSlot pushes a
+   count. Not an .item itself — it holds interactive children, so it must not
+   pick up the row hover/pointer affordance of something you click as a whole. */
+.languageRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  color: var(--ink);
+  font-size: var(--text-13-5);
+  font-weight: 500;
+}
+
+.languageSwitch {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+/* The role/nav pills stretch to fill their row (.roleBtn is flex: 1); the two
+   language pills instead hug the right edge at a readable minimum width. */
+.langBtn {
+  flex: none;
+  min-width: 38px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .populate {

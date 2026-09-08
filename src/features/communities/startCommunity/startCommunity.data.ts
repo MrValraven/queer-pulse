@@ -8,6 +8,7 @@ import { leadingInitials } from "../../../shared/lib/initials";
 import type { CommunityType } from "../../homepage/data/types";
 import type { AccessTier } from "../membership.types";
 import type { TFunction } from "../../../shared/i18n/types";
+import { isSharedValueKey, RULE_PRESET_KEYS } from "./sharedValueLibrary.data";
 
 export const TOTAL_STEPS = 9;
 
@@ -326,22 +327,20 @@ export const FEATURE_OPTIONS: FeatureOption[] = [
 
 /* ---------- Covenant rule presets ---------- */
 
-export const RULE_PRESET_KEYS: string[] = [
-  "communities:start.rulePreset.warmth",
-  "communities:start.rulePreset.confidentiality",
-  "communities:start.rulePreset.consent",
-  "communities:start.rulePreset.welcome",
-];
+/** Re-exported from the shared-value library, which owns the full catalogue
+ *  these four are the default-on slice of. Kept exported here so the wizard's
+ *  existing importers don't all have to move. */
+export { RULE_PRESET_KEYS };
 
-/** `draft.rules` holds raw preset i18n keys while the wizard is in progress
+/** `draft.rules` holds raw library i18n keys while the wizard is in progress
  *  (so `StepTone`'s toggle/highlight logic can match on a stable, language-
- *  independent id) — but the persisted community record stores plain text.
+ *  independent id, and so a mid-draft language switch re-renders the copy) —
+ *  but the persisted community record stores plain text.
  *  Call this once, right before the draft leaves the wizard (create/update
- *  payload), to swap any still-preset keys for their translated copy. */
+ *  payload), to swap any still-keyed value for its translated copy. Anything
+ *  the founder wrote themselves passes through untouched. */
 export function resolvePresetRules(rules: string[], t: TFunction): string[] {
-  return rules.map((rule) =>
-    RULE_PRESET_KEYS.includes(rule) ? t(rule) : rule,
-  );
+  return rules.map((rule) => (isSharedValueKey(rule) ? t(rule) : rule));
 }
 
 /** The enforcement ladder, shown as static context on the Tone chapter. */

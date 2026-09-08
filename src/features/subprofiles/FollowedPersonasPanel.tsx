@@ -10,6 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FollowedPersonaRow } from "./FollowedPersonaRow";
+import { personaAddressName } from "./subprofile-kinds";
 import {
   FOLLOWED_PERSONAS_PAGE_SIZE,
   useFollowedPersonas,
@@ -133,7 +134,18 @@ export function FollowedPersonasPanel({
             persona={persona}
             isUnfollowing={unfollowingId === persona.id}
             onUnfollow={() =>
-              void handleUnfollow(persona.id, persona.displayName)
+              void handleUnfollow(
+                persona.id,
+                // The toast addresses the persona in a sentence, so it takes
+                // the owner's first name for a persona still named after its
+                // profession ("You no longer follow Tiago") rather than the
+                // row's composed "Tiago | Dancer" title.
+                personaAddressName({
+                  displayName: persona.displayName,
+                  kind: persona.kind,
+                  ownerName: persona.ownerName ?? undefined,
+                }),
+              )
             }
           />
         ))}

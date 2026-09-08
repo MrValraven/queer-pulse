@@ -84,10 +84,20 @@
 /* The Profession band: one chip row per page family, each under its own
    heading, so ninety-four professions stay navigable. The heading is a label
    rather than a filter — the family itself is no longer pickable. */
+/* An auto-fill grid rather than a stack: a family is one short chip row, so a
+   row apiece left most of the drawer's width empty at any realistic family
+   count. The browser fits as many columns as the drawer can hold and folds to
+   fewer as it narrows, which needs no profession-count threshold in React to
+   decide between two layouts. The 190px floor is what keeps a two-chip family
+   ("Musician" + "Dancer") on one line at the widths a column actually gets. */
 .professionGroups {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  align-items: start;
+  gap: 16px 24px;
+}
+.professionGroup {
+  min-width: 0;
 }
 .professionGroupLabel {
   font-size: var(--text-10-5);
@@ -96,40 +106,6 @@
   text-transform: uppercase;
   color: var(--ink-40);
   margin: 0 0 6px;
-}
-
-/* Few enough professions that a column each is mostly empty drawer: the
-   families stand side by side instead, each divided from the last by a
-   hairline. `--line-rgb` because it has to stay visible in dark mode.
-   `INLINE_PROFESSION_LIMIT` in SubprofileDirectoryRefinePanel.tsx decides when
-   this class is applied; past it the stack is the readable layout. */
-.professionGroupsInline {
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 14px 0;
-}
-.professionGroupsInline .professionGroup {
-  min-width: 0;
-  padding-inline: 20px;
-  border-inline-start: 1px solid rgba(var(--line-rgb), 0.14);
-}
-.professionGroupsInline .professionGroup:first-child {
-  padding-inline-start: 0;
-  border-inline-start: none;
-}
-
-/* A narrow drawer has no width to divide, so the inline variant folds back
-   into the same stack the long list uses. */
-@media (--mobile) {
-  .professionGroupsInline {
-    flex-direction: column;
-    gap: 14px;
-  }
-  .professionGroupsInline .professionGroup {
-    padding-inline: 0;
-    border-inline-start: none;
-  }
 }
 
 /* The availability pill. Same treatment as `/communities`' open/busy toggles:

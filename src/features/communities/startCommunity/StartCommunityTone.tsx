@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { FiCheck, FiPlus } from "react-icons/fi";
+import { FiCheck, FiGrid, FiPlus } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { SharedValuesPickerModal } from "../SharedValuesPickerModal";
+import {
+  isSharedValueKey,
+  sharedValueByKey,
+  SHARED_VALUE_LIBRARY,
+} from "./sharedValueLibrary.data";
 import {
   ENFORCEMENT_LADDER,
   MAX_WELCOME_MESSAGE_LENGTH,
@@ -15,13 +21,24 @@ export function StepTone({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
   const { draft, set, toggleRule, addRule } = form;
   const [custom, setCustom] = useState("");
+  const [isPicking, setIsPicking] = useState(false);
 
-  // Preset keys first (in their canonical order — a stable, language-
-  // independent id), then any custom rules the member typed in their own
-  // words, which are content and rendered verbatim rather than through t().
-  const isPreset = (rule: string) => RULE_PRESET_KEYS.includes(rule);
-  const customRules = draft.rules.filter((r) => !isPreset(r));
-  const shown = [...RULE_PRESET_KEYS, ...customRules];
+  // The four default presets first (in their canonical order — a stable,
+  // language-independent id) whether or not they are currently ticked, so
+  // un-ticking one leaves a row to tick again. Then everything else the draft
+  // holds, in the order it was added: library values picked from the browser
+  // (stored as keys, so a mid-draft language switch re-renders them) and rules
+  // the member typed in their own words (content, rendered verbatim).
+  const isDefaultPreset = (rule: string) => RULE_PRESET_KEYS.includes(rule);
+  const extraRules = draft.rules.filter((r) => !isDefaultPreset(r));
+  const shown = [...RULE_PRESET_KEYS, ...extraRules];
+
+  // The picker deals in library ids and applies its result in the draft's own
+  // shape, which up here is the i18n key rather than the translated sentence.
+  const selectedIds = draft.rules
+    .map((rule) => sharedValueByKey(rule)?.id)
+    .filter((id): id is string => id !== undefined);
+  const customCount = draft.rules.length - selectedIds.length;
 
   const add = () => {
     const r = custom.trim();
@@ -53,7 +70,7 @@ export function StepTone({ form }: { form: CommunityForm }) {
                 <FiCheck size={12} aria-hidden />
               </span>
               <span className={styles.ruleTxt}>
-                {isPreset(rule) ? t(rule) : rule}
+                {isSharedValueKey(rule) ? t(rule) : rule}
               </span>
             </button>
           );
@@ -79,6 +96,27 @@ export function StepTone({ form }: { form: CommunityForm }) {
           <FiPlus size={15} aria-hidden /> {t("communities:start.tone.addCta")}
         </Button>
       </div>
+
+      <div className={styles.browseRow}>
+        <Button variant="ghost" onClick={() => setIsPicking(true)}>
+          <FiGrid size={15} aria-hidden />{" "}
+          {t("communities:values.picker.cta", {
+            count: SHARED_VALUE_LIBRARY.length,
+          })}
+        </Button>
+      </div>
+
+      {isPicking && (
+        <SharedValuesPickerModal
+          selectedIds={selectedIds}
+          customCount={customCount}
+          onClose={() => setIsPicking(false)}
+          onApply={({ added, removed }) => {
+            removed.forEach((entry) => toggleRule(entry.key));
+            added.forEach((entry) => addRule(entry.key));
+          }}
+        />
+      )}
 
       <div className={styles.groupH}>
         {t("communities:start.tone.welcomeHeading")}

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiSearch, FiMoon, FiSun, FiBell, FiMenu } from "react-icons/fi";
+import { FiMoon, FiSun, FiBell, FiMenu } from "react-icons/fi";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useToast } from "../feedback/useToast";
 import { useTranslation } from "../../i18n/useTranslation";
@@ -36,13 +36,11 @@ export function AdminShell({
   children,
   title,
   breadcrumb = [],
-  searchPlaceholder,
   isFullBleed = false,
 }: {
   children: ReactNode;
   title: ReactNode;
   breadcrumb?: Crumb[];
-  searchPlaceholder?: string;
   /** Drop the console's 1240px reading measure for this surface. Reserved for
    * screens that genuinely need the width (a side-by-side editor); everything
    * else keeps the measure. */
@@ -51,8 +49,6 @@ export function AdminShell({
   const { theme, toggleTheme } = useTheme();
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const resolvedSearchPlaceholder =
-    searchPlaceholder ?? t("shared:adminShell.searchPlaceholder");
 
   // Below the mobile breakpoint the sidebar is a slide-in off-canvas panel; on
   // desktop it stays a static rail (the panel wrapper is `display: contents`),
@@ -168,22 +164,6 @@ export function AdminShell({
             ))}
             <span className={styles.crumbTitle}>{title}</span>
           </div>
-
-          <label className={styles.search}>
-            <FiSearch aria-hidden />
-            <input
-              type="text"
-              aria-label={resolvedSearchPlaceholder}
-              placeholder={resolvedSearchPlaceholder}
-              onKeyDown={(e) => {
-                if (e.key === "Enter")
-                  showToast(
-                    t("shared:adminShell.toastSearchIllustrative"),
-                    "info",
-                  );
-              }}
-            />
-          </label>
 
           <div className={styles.topRight}>
             <button

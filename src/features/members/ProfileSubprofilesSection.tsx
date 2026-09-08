@@ -30,9 +30,18 @@ export function ProfileSubprofilesSection({
   ownerSlug,
   isSelf,
   previewing = false,
+  canAddPersona = true,
 }: {
   ownerSlug: string;
   isSelf: boolean;
+  /** Whether the owner is offered a path to create a persona from here (the
+   *  showcase's "Add another persona" link, and the empty-state prompt).
+   *  `false` while the owner is editing their own profile: creating a persona
+   *  navigates away to the personas dashboard, which is the wrong offer to
+   *  make inside a form holding unsaved changes. With no personas to show,
+   *  that leaves this section with nothing to say, so it renders nothing —
+   *  the persona list is back the moment editing ends. */
+  canAddPersona?: boolean;
   /** The owner is previewing their own profile as a visitor. `isSelf` is already
    *  `false` in that mode (so the public data path is used), but in live mode a
    *  persona's `viewerIsMember` flag stays `true` — the server never sees the
@@ -108,9 +117,11 @@ export function ProfileSubprofilesSection({
     : publicList;
   const hasPersonas = personas.length > 0;
 
-  // While loading, or on a public profile with nothing to show, render nothing.
+  // While loading, or with nothing to show, render nothing. The owner's
+  // empty state is the create prompt, so an owner with no personas and no
+  // create path (editing) has an empty section too.
   if (isLoading) return null;
-  if (!isSelf && !hasPersonas) return null;
+  if (!hasPersonas && (!isSelf || !canAddPersona)) return null;
 
   const subtitle = !hasPersonas
     ? t("subprofiles:alsoAs.subtitleEmpty")
@@ -136,11 +147,13 @@ export function ProfileSubprofilesSection({
             ownerSlug={ownerSlug}
             isSelf={isSelf}
             previewing={previewing}
+            canAddPersona={canAddPersona}
             ownerMetaBySlug={isSelf ? ownerMetaBySlug : undefined}
           />
         ) : (
-          // isSelf is guaranteed here: the early return above already sent a
-          // visitor viewing an empty profile to `null`.
+          // isSelf (and `canAddPersona`) are guaranteed here: the early return
+          // above already sent a visitor viewing an empty profile — and an
+          // owner with no create path — to `null`.
           <SidesPrompt />
         )}
       </Section>

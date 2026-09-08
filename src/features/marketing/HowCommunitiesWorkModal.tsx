@@ -5,28 +5,27 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import {
-  WhatSection,
-  HowSection,
-  WhySection,
-} from "./CommunitiesAboutSections";
+  COMMUNITY_STEPS,
+  COMMUNITY_TRUST_POINTS,
+} from "./communitiesAbout.data";
 import styles from "./HowCommunitiesWorkModal.module.css";
 
 /**
  * "How communities work" explainer, opened from CTAs on the homepage and the
- * communities hub instead of navigating to a standalone page. Reuses the same
- * What/How/Why sections the old page rendered (`CommunitiesAboutSections`), so
- * the content itself is unchanged — only the shell around it. Sits on the
- * default (non-`success`) `ModalSheet` cream surface, which matches the
- * `--paper` cards those sections already assume. Rendered only while open (owns
- * no state itself), so `ModalSheet` runs its scroll-lock/focus-trap once per open.
+ * communities hub instead of navigating to a standalone page. Built to fit one
+ * desktop screen without scrolling: a one-line lede, the three-step journey
+ * side by side, a strip of trust points, and the invite CTA. It goes wider than
+ * the default sheet (see `.sheet` in the module) so the steps can sit in a row
+ * instead of stacking. Rendered only while open (owns no state itself), so
+ * `ModalSheet` runs its scroll-lock/focus-trap once per open.
  */
 export function HowCommunitiesWorkModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   return (
     <ModalSheet
-      wide
       onClose={onClose}
       ariaLabel={t("marketing:communitiesAbout.meta.title")}
+      className={styles.sheet}
     >
       <div className={styles.head}>
         <Eyebrow>{t("marketing:communitiesAbout.hero.eyebrow")}</Eyebrow>
@@ -41,19 +40,39 @@ export function HowCommunitiesWorkModal({ onClose }: { onClose: () => void }) {
         </p>
       </div>
 
-      <div className={styles.sections}>
-        <WhatSection />
-        <HowSection />
-        <WhySection />
-      </div>
+      <ol className={styles.steps}>
+        {COMMUNITY_STEPS.map(({ icon: Icon, titleKey, bodyKey }, index) => (
+          <li key={titleKey} className={styles.step}>
+            <span className={styles.stepMark} aria-hidden>
+              {index + 1}
+            </span>
+            <h3 className={styles.stepTitle}>
+              <Icon className={styles.stepIcon} aria-hidden />
+              {t(titleKey)}
+            </h3>
+            <p className={styles.stepBody}>{t(bodyKey)}</p>
+          </li>
+        ))}
+      </ol>
+
+      <ul className={styles.trust}>
+        {COMMUNITY_TRUST_POINTS.map(({ icon: Icon, labelKey }) => (
+          <li key={labelKey} className={styles.trustItem}>
+            <Icon aria-hidden />
+            {t(labelKey)}
+          </li>
+        ))}
+      </ul>
 
       <div className={styles.outro}>
-        <p className={styles.outroTitle}>
-          {t("marketing:communitiesAbout.outro.title")}
-        </p>
-        <p className={styles.outroSub}>
-          {t("marketing:communitiesAbout.outro.sub")}
-        </p>
+        <div className={styles.outroText}>
+          <p className={styles.outroTitle}>
+            {t("marketing:communitiesAbout.outro.title")}
+          </p>
+          <p className={styles.outroSub}>
+            {t("marketing:communitiesAbout.outro.sub")}
+          </p>
+        </div>
         <Button size="lg" to={requestInvitePath("communities_about")}>
           {t("nav:requestInvite")} <FiArrowRight aria-hidden />
         </Button>

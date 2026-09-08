@@ -13,6 +13,13 @@
   margin-bottom: 16px;
 }
 
+/* The shared-values block closes the form, directly under the "What's inside"
+   checkbox column. The plain 16px block rhythm reads as if the field belongs to
+   that list, so this one block gets extra room above to separate the two. */
+.blockSpaced {
+  margin-top: var(--gap-grid);
+}
+
 .blockLabel {
   display: block;
   font-size: var(--text-11-5);
@@ -303,4 +310,91 @@
   font-size: var(--text-12-5);
   line-height: 1.5;
   color: var(--ink-40);
+}
+
+/* The library picker's entry point, sitting under the own-words field so the
+   free-text route stays the first thing an owner sees. */
+.ruleBrowse {
+  margin-top: 10px;
+}
+
+/* ── "Saving will change:" ──────────────────────────────────────────────────
+   Sits in the modal footer, ahead of the buttons, so it wraps onto its own
+   full-width line directly above Save. The footer is pinned while the body
+   scrolls, which is the point: what a save is about to write has to be
+   readable from wherever the owner happens to be in a long form, not only
+   from the bottom of it. Capped and scrollable so a large edit cannot push
+   the buttons off a short screen. */
+.changes {
+  flex: 1 0 100%;
+  max-height: 148px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--line-rgb), 0.06);
+}
+
+.changesTitle {
+  margin: 0 0 6px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.changesList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.changeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.changeField {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.changeDetail,
+.changeAdded,
+.changeRemoved {
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+
+/* Added and removed differ by more than colour: each line names itself in
+   words ("Added: …"), so the distinction survives a monochrome screen and a
+   reader who cannot tell the two hues apart. */
+.changeAdded {
+  color: var(--jade-ink);
+}
+
+.changeRemoved {
+  color: var(--accent-text);
+}
+
+.changesNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+
+.changesNotice svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
 }

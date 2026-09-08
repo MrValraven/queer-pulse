@@ -1120,6 +1120,9 @@ export const communities: Catalog = {
   "detail.modtools.history.value.off": "Off",
   "detail.modtools.history.value.empty": "Empty",
   "detail.modtools.history.value.notSet": "Not set",
+  "detail.modtools.history.value.added": "Added: {values}",
+  "detail.modtools.history.value.removed": "Removed: {values}",
+  "detail.modtools.history.value.reordered": "Same values, new order",
   "detail.modtools.history.field.name": "Name",
   "detail.modtools.history.field.purpose": "Purpose",
   "detail.modtools.history.field.type": "Type",
@@ -1131,6 +1134,14 @@ export const communities: Catalog = {
   "detail.modtools.history.field.rules": "Rules",
   "detail.modtools.history.field.tags": "Tags",
   "detail.modtools.history.field.coverImageUrl": "Cover image",
+  "detail.modtools.history.field.avatarImageUrl": "Community mark",
+  "detail.modtools.history.field.welcomeMessage": "Welcome note",
+  "detail.modtools.history.field.publiclyListed": "Listed publicly",
+  "detail.modtools.history.field.languages": "Languages",
+  "detail.modtools.history.field.city": "City",
+  "detail.modtools.history.field.area": "Area",
+  "detail.modtools.history.field.isOnline": "Meets online",
+  "detail.modtools.history.field.rulesVersion": "Shared-values version",
 
   // ── Danger zone · your standing + owner-absence escalation ────────────────
   "detail.dangerZone.yourRole.owner": "You own this community.",
@@ -1775,6 +1786,15 @@ export const communities: Catalog = {
     "Choose up to {count}, shown on your community's card and searchable on Discover.",
   "tagPicker.overlapHint":
     "These often go together, pick the one that fits best.",
+  // The picker collapses to just the chosen chips once there is something to
+  // collapse (53 chips is ten-odd wrapped rows to scroll past on every
+  // unrelated edit). "Add more" vs "Choose" so the trigger says what opening
+  // the list is for in both states.
+  "tagPicker.choose": "Choose tags",
+  "tagPicker.addMore": "Add more tags",
+  "tagPicker.collapse": "Show fewer",
+  "tagPicker.count": "{count} of {max} chosen",
+  "tagPicker.empty": "No tags chosen yet.",
   "edit.suggestTag.trigger": "Don't see the tag you need? Suggest one",
   // PRD-140. The invitations shelf: everything a member has been invited to, in
   // one place, because the notification alone used to lead to a page that
@@ -1824,6 +1844,13 @@ export const communities: Catalog = {
   "edit.rules.add": "Add",
   "edit.rules.addPlaceholder": "Add a shared value…",
   "edit.rules.remove": "Remove rule",
+  "edit.changes.title": "Saving will change",
+  "edit.changes.added": "Adding: {values}",
+  "edit.changes.removed": "Removing: {values}",
+  "edit.changes.reordered": "Same values, new order",
+  "edit.changes.otherField": "Other settings",
+  "edit.changes.reconsent":
+    "Changing your shared values asks every member to agree to them again before they can post.",
   "edit.toast.saved": "Changes saved",
   "edit.toast.error": "Couldn't save your changes. Please try again.",
   "edit.preview.title": "Your card",
@@ -1902,4 +1929,184 @@ export const communities: Catalog = {
   // PHOTO-ESCALATE — PHOTO-ESCALATE (TS-14) — the mod tools report row. Sits beside the existing detail.modtools.reports.staffOnlyNote, which stays as-is for the emergency band. This one is shown when the report is about something the platform will not show a community moderator (a gathering photo today), so Take it down and Dismiss are absent and escalation is the offered action.
   "detail.modtools.reports.unviewableSubjectNote":
     "This report is about a photo we cannot show you here. Platform staff can see it, so the decision is theirs. Send it up, and add anything you know about the gathering or the people in it.",
+
+  // ── Shared-value library ───────────────────────────────────────────────────
+  // The browsable catalogue behind "Browse values" on the wizard's Tone chapter
+  // and in EditCommunityModal. Ids and themes live in
+  // `startCommunity/sharedValueLibrary.data.ts`; the four values a new
+  // community starts with keep their original `start.rulePreset.*` keys above.
+  "values.picker.cta": "Browse {count} shared values",
+  "values.picker.title": "Shared values",
+  "values.picker.sub":
+    "Pick the ones that fit your community. You can still write your own.",
+  "values.picker.searchPlaceholder": "Search values…",
+  "values.picker.searchAria": "Search shared values",
+  "values.picker.empty":
+    "Nothing here matches that. Close this and write it in your own words.",
+  "values.picker.count": "{count} of {max} chosen",
+  "values.picker.cancelCta": "Cancel",
+  "values.picker.confirmCta": "Use these values",
+  "values.picker.longList":
+    "Every new member reads all of these when they join. A shorter list is one people remember.",
+  "values.picker.full":
+    "That is {max} values, which is as many as a community can hold. Untick one to make room.",
+
+  "values.theme.safety": "Safety and respect",
+  "values.theme.privacy": "Consent and privacy",
+  "values.theme.access": "Access and welcome",
+  "values.theme.conflict": "Conflict and repair",
+  "values.theme.money": "Money and reciprocity",
+  "values.theme.substances": "Drink and substances",
+  "values.theme.intimacy": "Flirting and intimacy",
+  "values.theme.showingUp": "Showing up",
+  "values.theme.family": "Kids and family",
+  "values.theme.organising": "Politics and organising",
+
+  "values.lib.noPunchingDown":
+    "Punching down is not banter. Jokes at someone's expense stop here.",
+  "values.lib.transWelcome":
+    "Trans and non-binary people are welcome here without question.",
+  "values.lib.identityNotDebate": "Nobody's identity is up for debate.",
+  "values.lib.racismNamed":
+    "Racism gets named and dealt with, including when it is subtle.",
+  "values.lib.bodyComments":
+    "No comments on anyone's body, weight, or looks unless they invited them.",
+  "values.lib.listenFirst":
+    "When someone says something hurt them, we listen before we explain.",
+  "values.lib.tellAnOrganiser":
+    "If you feel unsafe, tell an organiser. They will take it seriously.",
+
+  "values.lib.photoYes": "No photos of anyone without their yes, every time.",
+  "values.lib.pronounsUsed":
+    "Ask for pronouns, use them, and correct yourself without a fuss.",
+  "values.lib.chosenNames":
+    "Chosen names only. Nobody's old name travels with them.",
+  "values.lib.noForwarding":
+    "Nothing written here gets forwarded anywhere else.",
+  "values.lib.contactsTheirs":
+    "Contact details are shared by the person they belong to and nobody else.",
+  "values.lib.gatheringsOffline":
+    "What happens at a gathering stays off the internet afterwards.",
+
+  "values.lib.accessDetails":
+    "Access details go in every gathering post, before anyone has to ask.",
+  "values.lib.plainLanguage":
+    "Plain language. We explain the jargon or we drop it.",
+  "values.lib.scentAware":
+    "Gatherings are scent aware so people with sensitivities can come.",
+  "values.lib.quieterSpace":
+    "There is somewhere quieter to go when it gets to be too much.",
+  "values.lib.noAssumedKnowledge":
+    "Nobody has to already know the references to belong here.",
+  "values.lib.remoteOption":
+    "Where we can, there is a way to take part without being in the building.",
+  "values.lib.ownLanguage":
+    "People are welcome to speak the language they are most at home in.",
+
+  "values.lib.repairFirst":
+    "We aim for repair before punishment, and we mean it.",
+  "values.lib.directFirst":
+    "Take it to the person directly where it is safe to do so.",
+  "values.lib.noPileOn": "One person handles a problem. We do not pile on.",
+  "values.lib.apologyIsAction": "An apology is what you change afterwards.",
+  "values.lib.sayWhenItLanded":
+    "Assume good faith, and still say when something landed badly.",
+  "values.lib.stepBackStepUp":
+    "If you have said a lot, leave room. If you have said little, you are wanted.",
+  "values.lib.mediationOffered":
+    "Organisers will sit with both people when that would help.",
+  "values.lib.leaveTheThread":
+    "You can leave any conversation. Nobody owes anyone an argument.",
+
+  "values.lib.costNoBarrier": "Money is never the reason someone cannot come.",
+  "values.lib.slidingScale":
+    "Sliding scale, and nobody is turned away for lack of funds.",
+  "values.lib.costsInTheOpen":
+    "We say what things cost and where the money goes.",
+  "values.lib.noSelling":
+    "This is a community to be in, so we do not sell to each other.",
+  "values.lib.labourNamed":
+    "The work of running this gets named out loud and shared around.",
+  "values.lib.payThePerformers":
+    "People who perform, teach, or cook here get paid.",
+  "values.lib.askWhatHelps":
+    "When someone needs help, we ask what would actually help.",
+  "values.lib.noDebts": "Help given here is not a debt anyone has to repay.",
+
+  "values.lib.softDrinksGood":
+    "There is always something good to drink that is not alcohol.",
+  "values.lib.neverAskedTwice":
+    "Nobody is asked twice whether they want a drink.",
+  "values.lib.soberGatherings":
+    "Some of what we do is fully sober, and we say so up front.",
+  "values.lib.harmReduction":
+    "Harm reduction over judgement. We share what we know.",
+  "values.lib.stayWithThem":
+    "If someone is not okay, somebody stays with them.",
+  "values.lib.substanceFree": "Our gatherings are substance free.",
+  "values.lib.recoveryRespected":
+    "Recovery is respected here and never a topic of comment.",
+  "values.lib.getHomeSafe": "We make sure everyone has a way home.",
+
+  "values.lib.flirtingAndNo": "Flirting is welcome. A no is a full sentence.",
+  "values.lib.communityFirst":
+    "This is a community first. Read the situation before you approach.",
+  "values.lib.noUnsolicitedImages":
+    "No unsolicited photos of anyone's body, ever.",
+  "values.lib.askBeforeMessages":
+    "Ask in the open before moving into someone's private messages.",
+  "values.lib.takeANo": "Take a no gracefully and let that be the end of it.",
+  "values.lib.relationshipsRespected":
+    "However people do relationships here, it is respected.",
+  "values.lib.enthusiasticYes":
+    "Check in as you go. Enthusiasm is the only yes that counts.",
+  "values.lib.desiresPrivate":
+    "What someone is into is theirs to share or to keep.",
+
+  "values.lib.sayIfYouCannot":
+    "If you said you were coming, say when you cannot.",
+  "values.lib.arriveOnTime":
+    "Arriving roughly on time is a kindness to whoever set up.",
+  "values.lib.helpPackDown":
+    "Everyone helps put the place back the way we found it.",
+  "values.lib.lurkingIsFine":
+    "Reading without posting is a real way to be here.",
+  "values.lib.noObligation": "Nobody has to attend everything to belong.",
+  "values.lib.bringAFriend":
+    "Bring someone who would fit, and tell them how this works first.",
+  "values.lib.answerNewcomers":
+    "When somebody new says hello, somebody answers.",
+  "values.lib.rotateTheJobs":
+    "The jobs rotate so the same few people are not always carrying it.",
+
+  "values.lib.kidsWelcome":
+    "Children are welcome at anything marked family friendly.",
+  "values.lib.chosenFamily": "Chosen family counts as family here.",
+  "values.lib.carersSupported":
+    "Carers get help to take part rather than working it out alone.",
+  "values.lib.ageStated": "Every gathering says plainly who it is for by age.",
+  "values.lib.adultsOnly":
+    "Some of what we do is adults only, and it is always said clearly.",
+  "values.lib.partnersWelcome":
+    "Partners are welcome unless a gathering says otherwise.",
+  "values.lib.somewhereForKids":
+    "There is somewhere for a child to rest or be fed.",
+  "values.lib.schedulingReal":
+    "We try to schedule around school runs and shift work.",
+
+  "values.lib.noPolice":
+    "No police involvement without the consent of the person affected.",
+  "values.lib.smallAndAccessible":
+    "We would rather stay small and get access right.",
+  "values.lib.decisionsInTheOpen":
+    "Decisions that affect everyone are made where everyone can see.",
+  "values.lib.solidarityNamed":
+    "We say who we stand with, including when it costs us.",
+  "values.lib.noBrandUse": "Nobody uses this community's name to sell a brand.",
+  "values.lib.dataMinimal":
+    "We keep as little information about each other as we can.",
+  "values.lib.noSpokespeople":
+    "Nobody speaks for the whole community without being asked to.",
+  "values.lib.disagreeOnTactics":
+    "You can disagree about tactics and still belong here.",
 };

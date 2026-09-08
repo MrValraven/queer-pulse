@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useProfile } from "../../app/providers/useProfile";
@@ -56,7 +56,14 @@ export function ProfilePage() {
   // and DSAR out of reach for anyone on a phone.
   const sheets = useProfilePageSheets({ updateDraft, save });
 
+  // Where the page was scrolled when the editor was opened. Read at the click
+  // (rather than in an effect after the hero has already swapped) so it is the
+  // member's real reading position, before entering edit mode moves anything.
+  // `useProfileEditGuard` scrolls back to it when they save, discard or go back.
+  const scrollBeforeEdit = useRef<number | null>(null);
+
   function enterEdit(focus = false) {
+    scrollBeforeEdit.current = window.scrollY;
     setFocusLinks(focus);
     startEditing();
   }
@@ -92,7 +99,7 @@ export function ProfilePage() {
 
   const selfView = isSelf && !previewing;
 
-  useProfileEditGuard({ isEditing, isDirty, cancelEditing });
+  useProfileEditGuard({ isEditing, isDirty, cancelEditing, scrollBeforeEdit });
   // Hooks must run unconditionally on every render, so this is read here —
   // above the early-return guards below — even though it's only consumed
   // after them.

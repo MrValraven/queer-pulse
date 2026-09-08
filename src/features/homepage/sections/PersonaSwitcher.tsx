@@ -21,9 +21,12 @@ const tintClass: Record<string, string | undefined> = {
 export function PersonaSwitcher({
   selectedKey,
   onSelect,
+  onMenuOpen,
 }: {
   selectedKey: PersonaKey;
   onSelect: (key: PersonaKey) => void;
+  /** Called when the reader opens the menu, so the showcase can stop rotating. */
+  onMenuOpen?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +97,10 @@ export function PersonaSwitcher({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
-        onClick={() => setOpen((previous) => !previous)}
+        onClick={() => {
+          if (!open) onMenuOpen?.();
+          setOpen((previous) => !previous);
+        }}
       >
         <span className={`${styles.swAv} ${tintClass[selected.tint]}`}>
           {selected.initials}

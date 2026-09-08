@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -10,8 +11,10 @@ import { PersonaProof } from "./PersonaProof";
 import {
   getPersonas,
   DEFAULT_PERSONA_KEY,
+  SWITCHER_ORDER,
   type PersonaKey,
 } from "./personasShowcase.data";
+import { usePersonaRotation } from "./usePersonaRotation";
 import styles from "./PersonasShowcase.module.css";
 
 const avTintClass: Record<string, string | undefined> = {
@@ -23,13 +26,38 @@ const avTintClass: Record<string, string | undefined> = {
 
 export function PersonasShowcase() {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const [selectedKey, setSelectedKey] =
     useState<PersonaKey>(DEFAULT_PERSONA_KEY);
+  const [isRotationStopped, setIsRotationStopped] = useState(false);
   const personas = getPersonas(t);
   const main = personas.main;
 
+  const stopRotation = useCallback(() => {
+    setIsRotationStopped(true);
+  }, []);
+
+  /** Every persona control goes through here, so choosing one ends rotation. */
+  const selectPersona = useCallback((key: PersonaKey) => {
+    setSelectedKey(key);
+    setIsRotationStopped(true);
+  }, []);
+
+  const { sectionRef, pauseHandlers } = usePersonaRotation({
+    order: SWITCHER_ORDER,
+    selectedKey,
+    onRotate: setSelectedKey,
+    isStopped: isRotationStopped,
+    isEnabled: !reducedMotion,
+  });
+
   return (
-    <section className={styles.section} id="personas">
+    <section
+      className={styles.section}
+      id="personas"
+      ref={sectionRef}
+      {...pauseHandlers}
+    >
       <div className="wrap">
         {/* Illustrative showcase content (fabricated persona identities) —
             shown in both modes to demonstrate the feature; product call,
@@ -62,7 +90,8 @@ export function PersonasShowcase() {
           <Reveal className={styles.pv} delay={100}>
             <PersonaSwitcher
               selectedKey={selectedKey}
-              onSelect={setSelectedKey}
+              onSelect={selectPersona}
+              onMenuOpen={stopRotation}
             />
 
             <div className={styles.mainNode}>
@@ -76,13 +105,13 @@ export function PersonasShowcase() {
                 </div>
               </div>
             </div>
-            <PersonaDeck selectedKey={selectedKey} onSelect={setSelectedKey} />
+            <PersonaDeck selectedKey={selectedKey} onSelect={selectPersona} />
           </Reveal>
         </div>
 
         <Reveal className={styles.glimpseProofRow} delay={140}>
           <PersonaGlimpse persona={personas[selectedKey]} />
-          <PersonaProof selectedKey={selectedKey} onSelect={setSelectedKey} />
+          <PersonaProof selectedKey={selectedKey} onSelect={selectPersona} />
         </Reveal>
       </div>
     </section>

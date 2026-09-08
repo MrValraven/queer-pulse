@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
 import { FiChevronRight, FiLink2, FiUsers } from "react-icons/fi";
-import { Avatar, Tag, TagRow } from "../../shared/components/ui";
+import { Avatar, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { accentStyle, DEFAULT_ACCENT } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
@@ -15,6 +15,12 @@ import styles from "./SubprofileCard.module.css";
  *  top few (the filter row still exposes the full vocabulary). */
 const CARD_TAG_CAP = 4;
 
+/** Device pixels to request for the header banner from a resizable image host.
+ *  The band is one grid column wide (~360px at the widest breakpoint), so the
+ *  fluid default — viewport width × DPR — would over-ask by several times for
+ *  every card on the page. */
+const COVER_SRC_SIZE = 720;
+
 /**
  * Expressive "artist card" for a standalone persona. Reused by the persona
  * directory and the main profile's "Also as…" block, so it stays self-contained
@@ -25,7 +31,13 @@ const CARD_TAG_CAP = 4;
  * A persona is not a member, so it never carries a platform staff/mod badge —
  * that badge belongs to the owning member's profile, not to their personas.
  *
- * The persona's curated accent tints a soft header wash, the avatar ring, and
+ * The header band shows the persona's own banner (`coverUrl`) when it has one,
+ * framed by the owner's saved reframe crop as a FOCAL POINT — the band is far
+ * wider and shorter than the 3:1 box that crop was drawn in, so reproducing it
+ * exactly would distort it. A persona with no banner keeps the accent wash, so
+ * the grid never shows an empty frame.
+ *
+ * The persona's curated accent tints that wash, the avatar ring, and
  * the family pill, so each persona reads as its own identity. Personas
  * redesign Phase 4: the pill now names the persona's skin **family**
  * (`skinFor(card.kind)`) rather than its raw kind, and the footer grew a
@@ -61,7 +73,24 @@ export function SubprofileCard({
       to={to ?? personaCardPath(card)}
       style={accentStyle(accent)}
     >
-      <div className={styles.header} aria-hidden />
+      <div className={styles.header} aria-hidden>
+        {card.coverUrl && (
+          <ImageSlot
+            src={card.coverUrl}
+            alt=""
+            tint="plum"
+            focus={card.coverCrop ?? undefined}
+            srcSize={COVER_SRC_SIZE}
+            radius={0}
+            width="100%"
+            height="100%"
+            // A persona whose banner is still loading (or fails) shows the
+            // accent wash underneath rather than the literal "Image" caption.
+            placeholder=""
+            className={styles.cover}
+          />
+        )}
+      </div>
       <Avatar
         initials={initialsFromName(card.displayName, "?")}
         src={card.avatarUrl ?? undefined}

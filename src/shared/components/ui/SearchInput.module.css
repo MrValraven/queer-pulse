@@ -38,6 +38,13 @@
 .input::placeholder {
   color: var(--ink-40);
 }
+/* type="search" ships WebKit's own clear button, which would sit beside .clear
+   as a second X doing the same thing. */
+.input::-webkit-search-cancel-button,
+.input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
 .input:focus {
   border-color: var(--line-strong);
   box-shadow: var(--ring-plum-soft);

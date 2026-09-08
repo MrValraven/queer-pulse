@@ -3,19 +3,10 @@ import { NavLink } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Tooltip } from "../ui";
-import type {
-  AdminNavBadge,
-  AdminNavItem,
-  AdminNavSection,
-} from "./adminNav.data";
+import type { AdminNavItem, AdminNavSection } from "./adminNav.data";
+import { pendingCount } from "./adminNavMatching";
+import type { AdminNavBadgeCounts } from "./adminNavMatching";
 import styles from "./AdminShell.module.css";
-
-/** Live pending count per queue, resolved once in AdminSidebar and passed down. */
-export type AdminNavBadgeCounts = Record<AdminNavBadge, number>;
-
-function pendingCount(item: AdminNavItem, counts: AdminNavBadgeCounts): number {
-  return item.badge ? counts[item.badge] : 0;
-}
 
 /** In the collapsed rail the name is gone from the surface, so it is carried by
  * a tooltip instead — every icon-only control in the rail goes through here. */

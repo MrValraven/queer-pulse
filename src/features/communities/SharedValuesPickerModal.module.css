@@ -1,0 +1,125 @@
+/* The shared-values library picker. Rows mirror the wizard's own covenant
+   toggles (StartCommunityPage.module.css .rule) so a value looks the same
+   wherever a founder meets it. */
+
+.note {
+  margin: 14px 0 0;
+  padding: 10px 13px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--accent-rgb), 0.08);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.empty {
+  margin: 24px 0;
+  text-align: center;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.group {
+  margin-top: 22px;
+}
+
+.groupTitle {
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.row {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 13px 15px;
+  text-align: left;
+  cursor: pointer;
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover:not(:disabled) {
+    border-color: rgba(var(--line-rgb), 0.28);
+  }
+}
+
+.row:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.rowOn {
+  border-color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.05);
+}
+
+.box {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(var(--line-rgb), 0.22);
+  border-radius: var(--radius-7);
+  color: var(--paper);
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.box svg {
+  opacity: 0;
+}
+
+.rowOn .box {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+.rowOn .box svg {
+  opacity: 1;
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* Pushes the two footer buttons to the right edge, leaving the running count
+   on the left. `margin-right: auto` rather than a spacer so the footer's own
+   flex-wrap still drops the buttons cleanly on a narrow sheet. */
+.count {
+  margin-right: auto;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}

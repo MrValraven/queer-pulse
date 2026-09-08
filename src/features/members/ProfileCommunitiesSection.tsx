@@ -21,15 +21,27 @@ import styles from "./ProfileCommunitiesSection.module.css";
  * changes how that resolved list is *presented*: owner previewing gets the
  * public subtitle and, when empty, renders nothing (like a real visitor)
  * instead of the self "feature your communities" prompt.
+ *
+ * While the owner is editing their profile inline, a featured list is read-only
+ * dead weight — which communities are featured is picked on the separate
+ * `/account/edit-profile` page, not here — so the block steps aside
+ * (`isEditingProfile`). The empty state is the exception: with nothing featured
+ * yet, the prompt is the only route to picking a first one, so it stays.
  */
 export function ProfileCommunitiesSection({
   isSelf,
   previewing = false,
+  isEditingProfile = false,
   otherMember,
   firstName,
 }: {
   isSelf: boolean;
   previewing?: boolean;
+  /** The owner is editing their own profile inline. The featured list can't be
+   *  changed from here (the picker lives on `/account/edit-profile`), so a
+   *  populated section is hidden for the duration. An empty one keeps its
+   *  prompt — that's the owner's only way to feature a first community. */
+  isEditingProfile?: boolean;
   otherMember: Member | null;
   firstName: string;
 }) {
@@ -39,6 +51,8 @@ export function ProfileCommunitiesSection({
     isSelf,
     otherMember,
   });
+
+  if (featuredCommunities.length > 0 && isEditingProfile) return null;
 
   if (featuredCommunities.length === 0) {
     if (!isOwnerEditingView) return null;

@@ -140,6 +140,56 @@
   color: var(--ink-60);
   max-width: 280px;
 }
+/* The neighbourhood select holds the same measure as the free-text input it
+   replaced, so switching to "somewhere else" doesn't jump the column width. */
+.hoodSelect {
+  max-width: 280px;
+}
+/* "Hear it" preview under the pronunciation input — mirrors the profile hero's
+   own say button so the editor and the page read the same. */
+/* Shared with `.hoodBackToList` below: the editor's two small text buttons
+   that sit under a field rather than beside it. */
+.hearIt,
+.hoodBackToList {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: none;
+  background: none;
+  padding: 0;
+  margin-top: 8px;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: var(--text-13);
+  cursor: pointer;
+}
+.hearIt:hover,
+.hearIt:focus-visible,
+.hoodBackToList:hover,
+.hoodBackToList:focus-visible {
+  color: var(--ink);
+}
+.hearIt:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+/* "Choose from the list" — the way back out of the free-text escape hatch. It
+   follows a 280px input on the same line, so it has to be block-level (a plain
+   `display: block` here was overridden by the inline-flex above and left it
+   crowding the input's focus ring). Accent-coloured so it reads as the way
+   back; --accent-text rather than --accent because 13px type needs the 5.38:1
+   variant. Underline on hover keeps the contrast instead of dimming it. */
+.hoodBackToList {
+  display: flex;
+  width: fit-content;
+  margin-top: 10px;
+  color: var(--accent-text);
+}
+.hoodBackToList:hover,
+.hoodBackToList:focus-visible {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
 .bioInput {
   font-size: var(--text-17);
   color: var(--ink);

@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiLogOut, FiChevronDown } from "react-icons/fi";
+import { FiLogOut, FiChevronDown, FiMoon, FiSun } from "react-icons/fi";
 import { Avatar, Tooltip } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
+import { useTheme } from "../../../app/providers/themeContext";
 import {
   useNavMode,
   type NavMode,
@@ -20,7 +21,11 @@ import {
   type AccountLinkItem,
 } from "./accountMenu.data";
 import { useAccountIdentity } from "./useAccountIdentity";
-import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
+import {
+  RoleLinks,
+  AccountMenuControls,
+  AccountLanguageRow,
+} from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
@@ -217,6 +222,7 @@ function AccountMenuPanel({
   onSignOut: () => void;
 }) {
   const { t } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
   const personaBadge = usePersonaBadge();
   const gettingStartedBadge = useGettingStartedBadge();
   const inviteQuotaBadge = useInviteQuotaBadge();
@@ -228,6 +234,11 @@ function AccountMenuPanel({
     [routes.gettingStarted]: gettingStartedBadge,
     [routes.invite]: inviteQuotaBadge,
   };
+  const themeLabel = t(
+    theme === "dark"
+      ? "shared:accountMenu.items.lightMode"
+      : "shared:accountMenu.items.darkMode",
+  );
   return (
     <div
       className={[
@@ -253,6 +264,23 @@ function AccountMenuPanel({
           </div>
         </div>
         <div className={styles.headerActions}>
+          {/* Light/dark sits with Saved and Settings rather than in the top bar:
+              signed in, the account menu is where the member's own settings
+              live. The signed-out nav keeps its own toggle (see Navbar). */}
+          <Tooltip label={themeLabel}>
+            <button
+              type="button"
+              className={`${styles.headerIcon} ${styles.headerIconButton}`}
+              aria-label={themeLabel}
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? (
+                <FiSun aria-hidden />
+              ) : (
+                <FiMoon aria-hidden />
+              )}
+            </button>
+          </Tooltip>
           {HEADER_ACTIONS.map((action) => {
             const ActionIcon = action.icon;
             const actionLabel = t(action.labelKey);
@@ -317,6 +345,11 @@ function AccountMenuPanel({
             </div>
           </>
         )}
+        {/* Interface language sits with the other display preferences, as the
+            last member-facing control before the maintainer-only block and the
+            sign-out footer. The header's theme toggle is its pair. */}
+        <div className={styles.divider} />
+        <AccountLanguageRow />
         <AccountMenuControls
           demoMode={demoMode}
           available={available}

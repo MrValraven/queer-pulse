@@ -6,7 +6,7 @@ import { useJoinRequests } from "../../../features/admin/api/useJoinRequests";
 import { usePartnerApplications } from "../../../features/marketing/api/usePartnerApplications";
 import { useVerificationRequests } from "../../../features/admin/api/useAdminVerifications";
 import { useAdminJoinRequests } from "../../../features/admin/api/useAdminHousingCoops";
-import type { AdminNavBadgeCounts } from "./AdminNavGroup";
+import type { AdminNavBadgeCounts } from "./adminNavMatching";
 
 /**
  * Live pending counts behind the admin rail's pills. Each query key matches the

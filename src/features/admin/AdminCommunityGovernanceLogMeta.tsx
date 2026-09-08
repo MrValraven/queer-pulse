@@ -1,5 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
+import { diffStringLists, isStringList } from "../../shared/lib/stringListDiff";
 import {
   GOVERNANCE_FIELD_KEYS,
   GOVERNANCE_ROLE_KEYS,
@@ -69,6 +70,43 @@ function fromToValue(from: unknown, to: unknown, t: TFunction): string {
 }
 
 /**
+ * A list field (`rules`, `tags`, `features`, `languages`) as what entered and
+ * what left, rather than as the whole list printed twice. The community's own
+ * mod-tools pane renders the identical delta from the identical diff, so an
+ * admin and a moderator reading the same entry read the same sentence.
+ */
+function listChangeValue(from: string[], to: string[], t: TFunction): string {
+  const { added, removed, isReordered } = diffStringLists(from, to);
+  const phrases: string[] = [];
+  if (added.length > 0) {
+    phrases.push(
+      t("admin:communities.governanceLog.meta.added", {
+        values: added.join("; "),
+      }),
+    );
+  }
+  if (removed.length > 0) {
+    phrases.push(
+      t("admin:communities.governanceLog.meta.removed", {
+        values: removed.join("; "),
+      }),
+    );
+  }
+  if (isReordered) {
+    phrases.push(t("admin:communities.governanceLog.meta.reordered"));
+  }
+  return phrases.join(" ");
+}
+
+/** How one changed setting reads: list fields as a delta, everything else as
+ *  the before and after it has always been. */
+function settingChangeValue(from: unknown, to: unknown, t: TFunction): string {
+  return isStringList(from) && isStringList(to)
+    ? listChangeValue(from, to, t)
+    : fromToValue(from, to, t);
+}
+
+/**
  * Every metadata line for one entry, in reading order: the role move, the
  * recorded reason, the field-by-field settings diff, then anything the
  * frontend has no dedicated line for yet (a new server-written key), so a
@@ -114,7 +152,7 @@ function metadataLines(
       lines.push({
         key: `change:${change.field}`,
         label: fieldLabel(change.field, t),
-        value: fromToValue(change.from, change.to, t),
+        value: settingChangeValue(change.from, change.to, t),
       });
     }
   }
@@ -125,7 +163,7 @@ function metadataLines(
         key: `change:${field}`,
         label: fieldLabel(field, t),
         value: isRecord(change)
-          ? fromToValue(change.from, change.to, t)
+          ? settingChangeValue(change.from, change.to, t)
           : formatMetadataValue(change, t),
       });
     }

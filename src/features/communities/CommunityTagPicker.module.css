@@ -13,3 +13,31 @@
 .overlapHint svg {
   flex: 0 0 auto;
 }
+
+/* ── collapsed / open list ───────────────────────────────────────────────── */
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Only reachable by emptying the picker while it is open, then collapsing it.
+   Reads as a state rather than a gap, so the field never looks broken. */
+.empty {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-40);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.count {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}

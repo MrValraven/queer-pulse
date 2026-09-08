@@ -30,10 +30,14 @@
   }
 }
 
-/* Soft accent wash — a low-opacity tint plus one faint orb, so each persona
-   reads as its own colour without a solid block (house rule: decorative colour
-   is a wash, never a fill). */
+/* The banner band. A persona that uploaded a cover fills it with that image
+   (`.cover` below); one that didn't keeps the soft accent wash — a low-opacity
+   tint plus one faint orb, so each persona still reads as its own colour
+   without a solid block (house rule: decorative colour is a wash, never a
+   fill). The wash stays painted underneath the image, so it is also what shows
+   while a banner is still loading. */
 .header {
+  position: relative;
   height: 72px;
   flex: none;
   background:
@@ -44,6 +48,19 @@
     ),
     color-mix(in srgb, var(--accent-tint) 12%, var(--paper));
   border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
+}
+
+/* The uploaded banner, filling the band. Transparent and borderless so the
+   accent wash painted on `.header` is what shows through while the image
+   loads, and what remains if it 404s — ImageSlot's own tint + hairline would
+   otherwise replace the wash with a plain grey box. The card's own border and
+   the band's bottom hairline still frame the image on all four sides, which a
+   pale photo needs against the paper below. */
+.cover {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
 }
 
 /* Portrait cut-out: half in the wash, half on paper, ringed to lift it off

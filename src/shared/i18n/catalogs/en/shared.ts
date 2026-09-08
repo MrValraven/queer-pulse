@@ -164,6 +164,8 @@ export const shared: Catalog = {
   "accountMenu.items.pitches": "Pitches",
   "accountMenu.items.saved": "Saved",
   "accountMenu.items.settings": "Settings",
+  "accountMenu.items.darkMode": "Dark mode",
+  "accountMenu.items.lightMode": "Light mode",
   "accountMenu.items.gettingStarted": "Getting started",
   "accountMenu.items.installApp": "Install the app",
   "accountMenu.items.reports": "Your reports",
@@ -219,9 +221,6 @@ export const shared: Catalog = {
   // AdminShell
   "adminShell.toggleTheme": "Toggle theme",
   "adminShell.alerts": "Alerts",
-  "adminShell.searchPlaceholder": "Search reports, members, communities…",
-  "adminShell.toastSearchIllustrative":
-    "Search is illustrative in this prototype",
   "adminShell.toastNoAlerts": "No new alerts",
 
   // AdminSidebar
@@ -233,6 +232,11 @@ export const shared: Catalog = {
   "adminSidebar.homeAria": "QueerPulse admin home",
   "adminSidebar.collapseRail": "Collapse menu",
   "adminSidebar.expandRail": "Expand menu",
+  "adminSidebar.search.label": "Search admin pages",
+  "adminSidebar.search.placeholder": "Search pages",
+  "adminSidebar.search.empty": "No admin page matches that.",
+  "adminSidebar.search.results_one": "{count} page",
+  "adminSidebar.search.results_other": "{count} pages",
 
   // AdminAccountMenu — the staff account control at the foot of the rail.
   // "Your access" summarises the account tier plus any additive staff grants;

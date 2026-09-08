@@ -2164,6 +2164,9 @@ export const admin: Catalog = {
   "communities.governanceLog.meta.off": "Off",
   "communities.governanceLog.meta.empty": "Empty",
   "communities.governanceLog.meta.notSet": "Not set",
+  "communities.governanceLog.meta.added": "Added: {values}",
+  "communities.governanceLog.meta.removed": "Removed: {values}",
+  "communities.governanceLog.meta.reordered": "Same values, new order",
   "communities.governanceLog.meta.field.requiresSecondVouch":
     "Second vouch required to join",
   "communities.governanceLog.meta.field.autoFreezeOnReports":
@@ -2180,6 +2183,14 @@ export const admin: Catalog = {
   "communities.governanceLog.meta.field.rules": "Rules",
   "communities.governanceLog.meta.field.tags": "Tags",
   "communities.governanceLog.meta.field.coverImageUrl": "Cover image",
+  "communities.governanceLog.meta.field.avatarImageUrl": "Community mark",
+  "communities.governanceLog.meta.field.welcomeMessage": "Welcome note",
+  "communities.governanceLog.meta.field.publiclyListed": "Listed publicly",
+  "communities.governanceLog.meta.field.languages": "Languages",
+  "communities.governanceLog.meta.field.city": "City",
+  "communities.governanceLog.meta.field.area": "Area",
+  "communities.governanceLog.meta.field.isOnline": "Meets online",
+  "communities.governanceLog.meta.field.rulesVersion": "Shared-values version",
 
   "communities.health.modalTitle": "Why <em>{score}</em>?",
   "communities.health.howCalculatedCta": "How it's calculated",

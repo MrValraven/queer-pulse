@@ -99,4 +99,16 @@ export const GOVERNANCE_FIELD_LABEL_KEYS: Record<string, string> = {
   rules: "communities:detail.modtools.history.field.rules",
   tags: "communities:detail.modtools.history.field.tags",
   coverImageUrl: "communities:detail.modtools.history.field.coverImageUrl",
+  avatarImageUrl: "communities:detail.modtools.history.field.avatarImageUrl",
+  welcomeMessage: "communities:detail.modtools.history.field.welcomeMessage",
+  isPubliclyListed: "communities:detail.modtools.history.field.publiclyListed",
+  languages: "communities:detail.modtools.history.field.languages",
+  city: "communities:detail.modtools.history.field.city",
+  area: "communities:detail.modtools.history.field.area",
+  isOnline: "communities:detail.modtools.history.field.isOnline",
+  // Bumped by the server in the same write that moves `rules`, so it rides
+  // along in every shared-values diff. Labelled rather than left to
+  // `humanizeGovernanceKey`, which would print English at a reader in
+  // Portuguese.
+  rulesVersion: "communities:detail.modtools.history.field.rulesVersion",
 };

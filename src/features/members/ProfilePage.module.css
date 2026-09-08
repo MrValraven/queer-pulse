@@ -363,7 +363,14 @@ div.backBar {
   position: absolute;
   bottom: calc(100% + 9px);
   left: 50%;
-  transform: translateX(-50%) translateY(4px);
+  /* Centred on its face, except that a long name makes this bubble far wider
+     than the 52px avatar, and `.phero` clips sideways: on the faces at the
+     start of the stack the overhanging left half was being sliced off. So the
+     leftward shift is capped at `--vouch-tip-room`, the distance from this
+     face's centre to the start of the stack, which `HeroVouchRow` sets per
+     face. Unset (50%), the bubble stays centred as before. */
+  --vouch-tip-x: max(-50%, calc(-1 * var(--vouch-tip-room, 50%)));
+  transform: translateX(var(--vouch-tip-x)) translateY(4px);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   font-family: var(--sans);
@@ -384,19 +391,21 @@ div.backBar {
   content: "";
   position: absolute;
   top: 100%;
-  left: 50%;
+  /* Mirrors the clamp above so the arrow keeps pointing at the avatar centre
+     once the bubble has been nudged right to stay inside the clip. */
+  left: min(50%, var(--vouch-tip-room, 50%));
   transform: translateX(-50%);
   border: 5px solid transparent;
   border-top-color: var(--line-strong);
 }
 .vouchFace:focus-visible .vouchTip {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(var(--vouch-tip-x)) translateY(0);
 }
 @media (hover: hover) {
   .vouchFace:hover .vouchTip {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(var(--vouch-tip-x)) translateY(0);
   }
 }
 /* Touch has no hover: reveal the tip while the avatar is tapped/held or focused
@@ -405,7 +414,7 @@ div.backBar {
   .vouchFace:focus .vouchTip,
   .vouchFace:active .vouchTip {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(var(--vouch-tip-x)) translateY(0);
   }
 }
 .vouchText {

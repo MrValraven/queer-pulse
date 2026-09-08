@@ -41,6 +41,7 @@ export function SubprofileShowcase({
   ownerSlug,
   isSelf = false,
   previewing = false,
+  canAddPersona = true,
   ownerMetaBySlug,
 }: {
   personas: PublicSubprofileView[];
@@ -55,6 +56,13 @@ export function SubprofileShowcase({
    *  (which it stays in live mode, since the server can't see the client-only
    *  preview toggle). Without this, Edit survives the preview. */
   previewing?: boolean;
+  /** Self view only: whether the "Add another persona" affordance is offered
+   *  (the switch-list header's link, or the lone-persona button under the
+   *  hero). `false` while the owner is editing their own profile — creating a
+   *  persona means leaving the editor, so the profile editor hides the path
+   *  entirely rather than offering an exit with unsaved changes on screen.
+   *  Every other owner control (Edit, badges) is unaffected. */
+  canAddPersona?: boolean;
   /** Per-persona owner-only metadata (status/visibility/id), keyed by slug —
    *  only ever passed in self view. `PublicSubprofileView` has no room for
    *  these fields, so they travel alongside instead of being merged in (see
@@ -84,6 +92,7 @@ export function SubprofileShowcase({
         ownerSlug={ownerSlug}
         isSelf={isSelf}
         previewing={previewing}
+        canAddPersona={canAddPersona}
         ownerMetaBySlug={ownerMetaBySlug}
       />
     );
@@ -175,12 +184,14 @@ export function SubprofileShowcase({
           heroId={heroId}
           tabId={tabId}
           isSelf={isSelf}
+          canAddPersona={canAddPersona}
           ownerMetaBySlug={ownerMetaBySlug}
         />
       ) : (
         // A lone persona has no switch list to host "Add another persona" next
         // to — render it directly under the capped-width hero instead.
-        isSelf && (
+        isSelf &&
+        canAddPersona && (
           <Button
             variant="ghost"
             size="md"

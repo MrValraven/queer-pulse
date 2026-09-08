@@ -2151,6 +2151,10 @@ export const admin: Catalog = {
   "communities.governanceLog.meta.off": "Desligado",
   "communities.governanceLog.meta.empty": "Vazio",
   "communities.governanceLog.meta.notSet": "Sem valor",
+  "communities.governanceLog.meta.added": "Adicionado: {values}",
+  "communities.governanceLog.meta.removed": "Removido: {values}",
+  "communities.governanceLog.meta.reordered":
+    "Os mesmos valores, por outra ordem",
   "communities.governanceLog.meta.field.requiresSecondVouch":
     "Segundo voto de confiança obrigatório",
   "communities.governanceLog.meta.field.autoFreezeOnReports":
@@ -2167,6 +2171,15 @@ export const admin: Catalog = {
   "communities.governanceLog.meta.field.rules": "Regras",
   "communities.governanceLog.meta.field.tags": "Etiquetas",
   "communities.governanceLog.meta.field.coverImageUrl": "Imagem de capa",
+  "communities.governanceLog.meta.field.avatarImageUrl": "Marca da comunidade",
+  "communities.governanceLog.meta.field.welcomeMessage": "Nota de boas-vindas",
+  "communities.governanceLog.meta.field.publiclyListed": "Listada publicamente",
+  "communities.governanceLog.meta.field.languages": "Idiomas",
+  "communities.governanceLog.meta.field.city": "Cidade",
+  "communities.governanceLog.meta.field.area": "Zona",
+  "communities.governanceLog.meta.field.isOnline": "Encontra-se online",
+  "communities.governanceLog.meta.field.rulesVersion":
+    "Versão dos valores partilhados",
 
   "communities.health.modalTitle": "Porquê <em>{score}</em>?",
   "communities.health.howCalculatedCta": "Como é calculada",

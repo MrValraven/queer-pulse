@@ -136,6 +136,14 @@ interface PhotoPickerModalProps {
    *  the reframe crop just applied to this upload (undefined for a past-upload
    *  or Google pick, which carry no fresh crop). */
   onPick: (value: string, previewUrl: string, crop?: CropRect) => void;
+  /**
+   * Fired only when the picked key came from a FRESH device upload this
+   * session — never for a photo chosen out of the library grid, which already
+   * existed before this picker opened. An editor that wants to undo the upload
+   * when the member backs out (see `useDiscardableUploads`) needs to tell those
+   * two apart, and `onPick` alone cannot: both hand back a storage key.
+   */
+  onUploaded?: (key: string) => void;
   /** Only relevant when a `googlePhoto` is offered; omit for slots (persona
    * avatar/cover/item image) that have no Google source. */
   onPickGoogle?: (url: string) => void;
@@ -157,6 +165,7 @@ export function PhotoPickerModal({
   googlePhoto,
   currentValue,
   onPick,
+  onUploaded,
   onPickGoogle,
   onDeletedCurrent,
 }: PhotoPickerModalProps) {
@@ -191,6 +200,9 @@ export function PhotoPickerModal({
         crop,
       });
       onPick(key, previewUrl, appliedCrop);
+      // After onPick, so an editor that tracks the key for cleanup has already
+      // seen it applied — and only on this path, the device upload.
+      onUploaded?.(key);
       onClose();
     } catch (error) {
       setUploadError(

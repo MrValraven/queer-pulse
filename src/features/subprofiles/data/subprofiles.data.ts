@@ -2787,6 +2787,10 @@ export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
     kind: sp.kind,
     displayName: sp.displayName,
     avatarUrl: sp.avatarUrl,
+    // The card's header banner. Demo personas carry no reframe crop, so the
+    // card centres the image — the same path a live persona takes when its
+    // owner never opened the reframe editor.
+    coverUrl: sp.coverUrl,
     tagline: sp.tagline,
     accent: sp.accent,
     availability: sp.availability,

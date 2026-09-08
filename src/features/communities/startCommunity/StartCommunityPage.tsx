@@ -287,10 +287,11 @@ export function StartCommunityPage() {
     // final step → found the community
     setPhase("opening");
     scrollUp();
-    // `draft.rules` still holds raw preset i18n keys for any covenant rule the
-    // founder left untouched (StepTone matches on them to drive its toggle
-    // state) — resolve those to real copy now, since what leaves the wizard
-    // becomes the community's permanent, plain-text shared values.
+    // `draft.rules` still holds raw library i18n keys for every value the
+    // founder left ticked or picked from the browser (StepTone matches on them
+    // to drive its toggle state, and they follow a mid-draft language switch).
+    // Resolve those to real copy now, since what leaves the wizard becomes the
+    // community's permanent, plain-text shared values.
     const submitDraft = {
       ...draft,
       rules: resolvePresetRules(draft.rules, t),

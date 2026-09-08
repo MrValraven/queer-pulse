@@ -199,14 +199,19 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
         </div>
 
         <div className={styles.right}>
-          <button
-            type="button"
-            className={styles.themeToggle}
-            onClick={toggleTheme}
-            aria-label={t("nav:toggleTheme")}
-          >
-            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-          </button>
+          {/* Signed-out only. Once you're in, the theme switch moves into the
+              account menu (desktop) / account sheet (mobile) next to Saved, so
+              the top bar isn't carrying a setting the profile menu already owns. */}
+          {!loggedIn && (
+            <button
+              type="button"
+              className={styles.themeToggle}
+              onClick={toggleTheme}
+              aria-label={t("nav:toggleTheme")}
+            >
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            </button>
+          )}
 
           {/* Opens the global ⌘K command palette (see CommandPalette / OPEN_SEARCH_EVENT). Desktop only — mobile search lives in the More sheet. */}
           {!isMobile && (

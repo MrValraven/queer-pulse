@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -18,6 +19,13 @@ import { initialsOf, tintForSlug } from "./api/members.adapters";
 import { RELATIONSHIPS, type VouchRelationship } from "./vouchMember.data";
 import type { AuthUser } from "../auth/api/auth.api";
 import styles from "./ProfilePage.module.css";
+
+/** Diameter of one voucher face, in px. Also the `Avatar` `size` below. */
+const FACE_SIZE = 52;
+/** How far each face slides under the one before it, in px. */
+const FACE_OVERLAP = 12;
+/** Distance between two face centres in the stack, in px. */
+const FACE_STEP = FACE_SIZE - FACE_OVERLAP;
 
 /**
  * Labels for the read-only "texture" chips on this row — distinct from
@@ -87,9 +95,14 @@ function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
     <div className={styles.vouchFaces}>
       {faces.map((face, index) => {
         const stackStyle = {
-          marginLeft: index === 0 ? 0 : -12,
+          marginLeft: index === 0 ? 0 : -FACE_OVERLAP,
           zIndex: faces.length - index,
-        };
+          // How much room the name tooltip has to its left before it would
+          // run past the start of the stack, where `.phero`'s
+          // `overflow-x: clip` slices it off. The CSS centres the bubble on
+          // this face but never shifts it further left than this value.
+          "--vouch-tip-room": `${index * FACE_STEP + FACE_SIZE / 2}px`,
+        } as CSSProperties;
         // An anonymous voucher has no slug — render an un-linked face with
         // a generic name so the identity is never exposed or navigable.
         if (face.anonymous) {
@@ -112,7 +125,7 @@ function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
               <Avatar
                 initials={face.initials}
                 tint={face.tint}
-                size={52}
+                size={FACE_SIZE}
                 alt={anonymousName}
               />
             </span>
@@ -134,7 +147,7 @@ function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
             <Avatar
               initials={face.initials}
               tint={face.tint}
-              size={52}
+              size={FACE_SIZE}
               src={face.avatarUrl}
               alt={face.name}
             />

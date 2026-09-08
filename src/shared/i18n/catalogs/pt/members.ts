@@ -350,7 +350,17 @@ export const members: Catalog = {
   "profileEdit.field.lastPlaceholder": "Apelido",
   "profileEdit.field.pronouns": "Pronomes",
   "profileEdit.field.neighbourhood": "Bairro",
-  "profileEdit.field.neighbourhoodPlaceholder": "ex.: Arroios",
+  "profileEdit.field.neighbourhoodPlaceholder": "Escolhe a tua zona",
+  "profileEdit.field.neighbourhoodSearchPlaceholder": "Procurar zonas",
+  // ── Seletor de bairro. Os nomes dos lugares são nomes próprios e nunca são
+  //    traduzidos (i18n sweep §6); só os títulos dos grupos e a saída de
+  //    emergência abaixo é que são chrome.
+  "profileEdit.field.neighbourhoodGroup.bairro": "Bairros",
+  "profileEdit.field.neighbourhoodGroup.freguesia": "Freguesias",
+  "profileEdit.field.neighbourhoodGroup.other": "Fora da lista",
+  "profileEdit.field.neighbourhoodOther": "Noutro sítio…",
+  "profileEdit.field.neighbourhoodOtherPlaceholder": "Onde vives",
+  "profileEdit.field.neighbourhoodBackToList": "Escolher da lista",
   "profileEdit.field.bio": "Biografia",
   "profileEdit.field.bioHelp":
     "A versão mais longa, na tua página de perfil. Se deixares a biografia curta em branco, o teu cartão no diretório usa o início desta.",
@@ -406,6 +416,7 @@ export const members: Catalog = {
   "profileEdit.pronunciation.help":
     "Escreve-a foneticamente para que a digam bem. Aparece junto ao teu nome com um botão para ouvir.",
   "profileEdit.pronunciation.placeholder": "ex.: kuh-tuh-RI-nuh",
+  "profileEdit.pronunciation.hear": "Ouvir",
   "profileEdit.bioPt.label": "Biografia em português",
   "profileEdit.bioPt.help":
     "Uma versão opcional da tua biografia em português. Se adicionares uma, quem visita pode alternar entre idiomas.",
@@ -452,6 +463,7 @@ export const members: Catalog = {
     "Estás a editar o teu perfil, alterações por guardar",
   "profileEdit.bar.unsavedIn": "Alterações por guardar em {sections}",
   "profileEdit.bar.discard": "Descartar",
+  "profileEdit.bar.goBack": "Voltar",
   "profileEdit.bar.saving": "A guardar…",
   "profileEdit.bar.tryAgain": "Tentar novamente",
   "profileEdit.bar.save": "Guardar perfil",

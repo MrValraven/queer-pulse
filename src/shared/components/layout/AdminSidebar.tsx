@@ -1,5 +1,5 @@
-import { useMemo, useRef, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 import { useAuth } from "../../../app/providers/authContext";
@@ -11,6 +11,12 @@ import { Tooltip } from "../ui";
 import { AdminAccountMenu } from "./AdminAccountMenu";
 import { AdminRoleSwitcher } from "./AdminRoleSwitcher";
 import { AdminNavGroup, AdminNavLink } from "./AdminNavGroup";
+import { AdminNavSearch, AdminNavSearchResults } from "./AdminNavSearch";
+import {
+  firstAdminNavMatch,
+  normalizeSearchText,
+  searchAdminNav,
+} from "./adminNavMatching";
 import { useAdminNavBadges } from "./useAdminNavBadges";
 import { useAdminNavSections } from "./useAdminNavSections";
 import { rememberNavScroll, useAdminNavScroll } from "./useAdminNavScroll";
@@ -48,6 +54,45 @@ export function AdminSidebar({
     () => visibleAdminNavSections({ isFullConsole, isAdmin, staffRoles }),
     [isFullConsole, isAdmin, staffRoles],
   );
+
+  // Which page am I after? The rail is 57 destinations deep across nine
+  // sections, so finding one by name beats remembering where it was filed.
+  // Local state on purpose: a query is about this moment, never a preference to
+  // carry into the next visit.
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  // The collapsed rail has no field to type in, so it always shows its
+  // sections: narrowing a 68px icon column to matches nobody can read would
+  // strand the query somewhere the admin cannot see or clear it. Widening the
+  // rail again brings the results straight back.
+  const isSearching =
+    !isCollapsed && normalizeSearchText(searchQuery).length > 0;
+  const searchGroups = useMemo(
+    () =>
+      searchAdminNav({
+        sections,
+        // Matched against the same rail the viewer is offered: the Overview
+        // link only joins the results for someone who is shown it at all.
+        overview: isFullConsole ? ADMIN_NAV_OVERVIEW : undefined,
+        query: searchQuery,
+        translate: t,
+      }),
+    [sections, isFullConsole, searchQuery, t],
+  );
+
+  // Both ways out of a result: clicking one, and Enter on the field taking the
+  // first. Either way the query goes, so coming back to the rail shows sections
+  // rather than a stale narrowing.
+  const leaveSearch = () => {
+    setSearchQuery("");
+    onNavigate?.();
+  };
+  const openFirstMatch = () => {
+    const first = firstAdminNavMatch(searchGroups);
+    if (!first) return;
+    leaveSearch();
+    void navigate(first.to);
+  };
 
   const navRef = useRef<HTMLElement>(null);
   const badgeCounts = useAdminNavBadges();
@@ -113,35 +158,53 @@ export function AdminSidebar({
 
       <AdminRoleSwitcher isCollapsed={isCollapsed} />
 
+      <AdminNavSearch
+        value={searchQuery}
+        onChange={setSearchQuery}
+        onSubmit={openFirstMatch}
+        isCollapsed={isCollapsed}
+        onExpand={onToggleCollapse}
+      />
+
       <nav
         className={styles.nav}
         aria-label={t("shared:adminSidebar.navLabel")}
         ref={navRef}
         onScroll={(event) => rememberNavScroll(event.currentTarget.scrollTop)}
       >
-        {/* The overview is admin-only on the backend (`admin/overview`), so a
-            viewer who is here on a grant alone is not offered a link that
-            would bounce them straight back out. */}
-        {isFullConsole && (
-          <AdminNavLink
-            item={ADMIN_NAV_OVERVIEW}
-            count={0}
-            isCollapsed={isCollapsed}
-            onNavigate={onNavigate}
-          />
-        )}
-
-        {sections.map((section) => (
-          <AdminNavGroup
-            key={section.id}
-            section={section}
+        {isSearching ? (
+          <AdminNavSearchResults
+            groups={searchGroups}
             badgeCounts={badgeCounts}
-            isOpen={isSectionOpen(section.id, section.defaultOpen)}
-            isCollapsed={isCollapsed}
-            onToggle={() => toggleSection(section.id, section.defaultOpen)}
-            onNavigate={onNavigate}
+            onNavigate={leaveSearch}
           />
-        ))}
+        ) : (
+          <>
+            {/* The overview is admin-only on the backend (`admin/overview`), so
+                a viewer who is here on a grant alone is not offered a link that
+                would bounce them straight back out. */}
+            {isFullConsole && (
+              <AdminNavLink
+                item={ADMIN_NAV_OVERVIEW}
+                count={0}
+                isCollapsed={isCollapsed}
+                onNavigate={onNavigate}
+              />
+            )}
+
+            {sections.map((section) => (
+              <AdminNavGroup
+                key={section.id}
+                section={section}
+                badgeCounts={badgeCounts}
+                isOpen={isSectionOpen(section.id, section.defaultOpen)}
+                isCollapsed={isCollapsed}
+                onToggle={() => toggleSection(section.id, section.defaultOpen)}
+                onNavigate={onNavigate}
+              />
+            ))}
+          </>
+        )}
       </nav>
 
       <MaybeTooltip label={backLabel} isOn={isCollapsed}>

@@ -1,38 +1,26 @@
 import {
-  FiHome,
-  FiHeart,
-  FiShield,
   FiSearch,
   FiUsers,
   FiStar,
+  FiKey,
+  FiHeart,
+  FiSlash,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 
-export interface CommunityBlock {
+export interface CommunityStep {
   icon: IconType;
   titleKey: string;
   bodyKey: string;
 }
 
-export const COMMUNITY_PILLARS: CommunityBlock[] = [
-  {
-    icon: FiHome,
-    titleKey: "marketing:communitiesAbout.what.rooms.title",
-    bodyKey: "marketing:communitiesAbout.what.rooms.body",
-  },
-  {
-    icon: FiHeart,
-    titleKey: "marketing:communitiesAbout.what.kept.title",
-    bodyKey: "marketing:communitiesAbout.what.kept.body",
-  },
-  {
-    icon: FiShield,
-    titleKey: "marketing:communitiesAbout.what.safe.title",
-    bodyKey: "marketing:communitiesAbout.what.safe.body",
-  },
-];
+export interface CommunityTrustPoint {
+  icon: IconType;
+  labelKey: string;
+}
 
-export const COMMUNITY_STEPS: CommunityBlock[] = [
+/** The three-beat journey (Find → Welcome → Belong) the explainer is built on. */
+export const COMMUNITY_STEPS: CommunityStep[] = [
   {
     icon: FiSearch,
     titleKey: "marketing:communitiesAbout.how.find.title",
@@ -48,4 +36,11 @@ export const COMMUNITY_STEPS: CommunityBlock[] = [
     titleKey: "marketing:communitiesAbout.how.belong.title",
     bodyKey: "marketing:communitiesAbout.how.belong.body",
   },
+];
+
+/** One-line reassurances shown as a strip under the steps. */
+export const COMMUNITY_TRUST_POINTS: CommunityTrustPoint[] = [
+  { icon: FiKey, labelKey: "marketing:communitiesAbout.trust.invite" },
+  { icon: FiHeart, labelKey: "marketing:communitiesAbout.trust.keeper" },
+  { icon: FiSlash, labelKey: "marketing:communitiesAbout.trust.noAlgorithm" },
 ];

@@ -30,6 +30,13 @@ interface ImageUploadFieldProps {
    * a past-upload pick it's the resolved absolute URL.
    */
   onPreviewChange?: (previewUrl: string | null, crop?: CropRect) => void;
+  /**
+   * Optional: report a key that was FRESHLY UPLOADED from the device through
+   * this field (never one reused from the member's photo library). Wire this
+   * where the editor should be able to undo the upload if the member backs out
+   * without saving — see `useDiscardableUploads`.
+   */
+  onUploaded?: (key: string) => void;
   /** Which upload surface — sets size/dimension limits (avatar vs work image). */
   kind: UploadKind;
   circle?: boolean;
@@ -59,6 +66,7 @@ export function ImageUploadField({
   focus,
   onChange,
   onPreviewChange,
+  onUploaded,
   kind,
   circle = false,
   size = 150,
@@ -181,6 +189,7 @@ export function ImageUploadField({
           kind={kind}
           currentValue={value}
           onPick={handlePick}
+          onUploaded={onUploaded}
           onDeletedCurrent={clear}
           onClose={() => setPickerOpen(false)}
         />

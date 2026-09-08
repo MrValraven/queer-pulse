@@ -23,11 +23,14 @@ import {
 import { useUpdateCommunity } from "./api/useCommunityMutations";
 import { useCommunityForm } from "./startCommunity/useCommunityForm";
 import { EditCommunityRules } from "./EditCommunityRules";
+import { EditCommunityChangeSummary } from "./EditCommunityChangeSummary";
+import { diffCommunityUpdates } from "./editCommunityChanges";
 import {
   CommunityCardPreview,
   type CommunityCardStats,
 } from "./CommunityCardPreview";
 import { ImageUploadField } from "../subprofiles/ImageUploadField";
+import { useDiscardableUploads } from "../members/api/useDiscardableUploads";
 import styles from "./EditCommunityModal.module.css";
 
 const FORM_ID = "edit-community-form";
@@ -69,11 +72,33 @@ export function EditCommunityModal({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const initialDraft = useMemo(() => editableToDraft(editable), [editable]);
-  const { draft, set, toggleFeature, addRule, toggleRule } =
-    useCommunityForm(initialDraft);
+  const {
+    draft,
+    set,
+    toggleFeature,
+    addRule,
+    toggleRule,
+    coverPreviewUrl,
+    setCoverPreviewUrl,
+    avatarPreviewUrl,
+    setAvatarPreviewUrl,
+  } = useCommunityForm(initialDraft);
   const updateCommunity = useUpdateCommunity();
   const [error, setError] = useState(false);
   const [suggestingTag, setSuggestingTag] = useState(false);
+  // A pick uploads to storage immediately (presigned PUT), so a cover chosen
+  // here and then abandoned would sit in the member's photo library forever.
+  // Track what this modal uploaded and drop whatever it doesn't commit.
+  const { track: trackUpload, discard: discardUnsavedUploads } =
+    useDiscardableUploads();
+
+  /** Leaving without saving: nothing was committed, so every upload made while
+   *  this modal was open is an orphan. Best-effort and non-blocking — the modal
+   *  closes at once either way. */
+  const closeAndDiscardUploads = () => {
+    void discardUnsavedUploads();
+    onClose();
+  };
 
   const missingRequired =
     !draft.name.trim() ||
@@ -86,9 +111,29 @@ export function EditCommunityModal({
     // Start-a-Community wizard enforces, so editing can't strip it below that.
     draft.rules.length === 0;
 
+  // Nothing to save until something actually differs. Compared as the very DTO
+  // the submit would send rather than field by field, so the check can't drift
+  // from what is written, and so draft-only state the form never sends
+  // (stewards, invites, handle, tint) can't report a phantom change. Going
+  // through `draftToUpdateDto` also trims, which makes a typed-then-deleted
+  // space the no-op it looks like.
+  const initialDto = useMemo(
+    () => draftToUpdateDto(initialDraft),
+    [initialDraft],
+  );
+  // Named field by field rather than as one boolean, because the same
+  // comparison answers two questions: whether Save does anything, and what it
+  // is about to do. `changes` being empty IS `isUnchanged`, so the summary and
+  // the button can never disagree about whether this form has been touched.
+  const changes = useMemo(
+    () => diffCommunityUpdates(initialDto, draftToUpdateDto(draft)),
+    [initialDto, draft],
+  );
+  const isUnchanged = changes.length === 0;
+
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (missingRequired || updateCommunity.isPending) return;
+    if (missingRequired || isUnchanged || updateCommunity.isPending) return;
     setError(false);
     const dto = draftToUpdateDto(draft);
     // Only send the cover when it actually changed. Re-sending an UNCHANGED
@@ -111,6 +156,14 @@ export function EditCommunityModal({
       {
         onSuccess: () => {
           showToast(t("communities:edit.toast.saved"), "success");
+          // The cover and mark just saved are keepers; anything else uploaded
+          // here was superseded by a later pick and is now an orphan. The two
+          // keepers are referenced by the community as of the PATCH above, so
+          // even a raced attempt on them is refused server-side (409).
+          void discardUnsavedUploads([
+            draft.coverImageUrl,
+            draft.avatarImageUrl,
+          ]);
           onSaved?.();
           onClose();
         },
@@ -124,18 +177,28 @@ export function EditCommunityModal({
       <Modal
         title={t("communities:edit.title")}
         eyebrow={t("communities:edit.eyebrow")}
-        onClose={onClose}
+        onClose={closeAndDiscardUploads}
         className={styles.dialog}
         footer={
           <>
-            <Button variant="ghost" type="button" onClick={onClose}>
+            {/* Ahead of the buttons so the wrapping footer puts it on its own
+                full-width line directly above Save, where it is read before
+                the press rather than discovered after it. */}
+            <EditCommunityChangeSummary changes={changes} />
+            <Button
+              variant="ghost"
+              type="button"
+              onClick={closeAndDiscardUploads}
+            >
               {t("communities:edit.cancel")}
             </Button>
             <Button
               variant="primary"
               type="submit"
               form={FORM_ID}
-              disabled={missingRequired || updateCommunity.isPending}
+              disabled={
+                missingRequired || isUnchanged || updateCommunity.isPending
+              }
             >
               {updateCommunity.isPending
                 ? t("communities:edit.saving")
@@ -159,6 +222,8 @@ export function EditCommunityModal({
               <CommunityCardPreview
                 slug={slug}
                 draft={draft}
+                coverPreviewUrl={coverPreviewUrl}
+                avatarPreviewUrl={avatarPreviewUrl}
                 {...previewStats}
               />
             </div>
@@ -177,6 +242,9 @@ export function EditCommunityModal({
               error={error}
               onSuggestTag={() => setSuggestingTag(true)}
               canChangeAccess={canChangeAccess}
+              onCoverPreviewChange={setCoverPreviewUrl}
+              onAvatarPreviewChange={setAvatarPreviewUrl}
+              onUploaded={trackUpload}
             />
           </form>
         </div>
@@ -204,6 +272,15 @@ interface EditCommunityFieldsProps {
    *  `accessTier`/`rosterVisible`, so those controls render read-only rather
    *  than letting a mod submit into a guaranteed failure. */
   canChangeAccess: boolean;
+  /** Hand the locally renderable URL of a freshly picked cover/mark up to the
+   *  card preview. `onChange` alone only yields the storage key, which the
+   *  preview's `<img>` cannot fetch — so without these the owner picks a photo,
+   *  sees it in the field, and watches the card beside it stay broken. */
+  onCoverPreviewChange: (previewUrl: string | null) => void;
+  onAvatarPreviewChange: (previewUrl: string | null) => void;
+  /** Report a key freshly uploaded from the device, so the modal can delete it
+   *  again if the member closes without saving. */
+  onUploaded: (key: string) => void;
 }
 
 /** The form body, split out so the modal shell stays well under 200 lines. */
@@ -216,6 +293,9 @@ function EditCommunityFields({
   error,
   onSuggestTag,
   canChangeAccess,
+  onCoverPreviewChange,
+  onAvatarPreviewChange,
+  onUploaded,
 }: EditCommunityFieldsProps) {
   const { t } = useTranslation();
   return (
@@ -244,6 +324,8 @@ function EditCommunityFields({
           kind="community-cover"
           value={draft.coverImageUrl}
           onChange={(coverImageUrl) => set({ coverImageUrl })}
+          onPreviewChange={(previewUrl) => onCoverPreviewChange(previewUrl)}
+          onUploaded={onUploaded}
           size={150}
           placeholder={draft.name || t("communities:edit.field.cover")}
         />
@@ -258,6 +340,8 @@ function EditCommunityFields({
           circle
           value={draft.avatarImageUrl}
           onChange={(avatarImageUrl) => set({ avatarImageUrl })}
+          onPreviewChange={(previewUrl) => onAvatarPreviewChange(previewUrl)}
+          onUploaded={onUploaded}
           size={112}
           placeholder={draft.name || t("communities:edit.field.avatar")}
         />
@@ -375,7 +459,7 @@ function EditCommunityFields({
         </div>
       </fieldset>
 
-      <div className={styles.block}>
+      <div className={[styles.block, styles.blockSpaced].join(" ")}>
         <span className={styles.blockLabel}>
           {t("communities:edit.field.rules")}{" "}
           <span className={styles.req} aria-hidden>

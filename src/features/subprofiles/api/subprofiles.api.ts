@@ -616,6 +616,16 @@ export interface SubprofileCardDTO {
   kind: SubprofileKind;
   displayName: string;
   avatarUrl: string | null;
+  /** The persona's banner, shown in the card's header band. Cover/accent are
+   *  persona-owned presence fields (never identifying), so the backend sends
+   *  them for linked and unlinked personas alike — unlike `ownerSlug`/`ownerName`.
+   *  Null when the owner never uploaded one; the card falls back to its accent
+   *  wash rather than an empty frame. */
+  coverUrl: string | null;
+  /** Saved reframe crop for `coverUrl`. Honoured as a FOCAL POINT, not an exact
+   *  frame — the card's header band is much wider and shorter than the 3:1 box
+   *  the crop was drawn in, so reproducing it literally would distort it. */
+  coverCrop?: CropRect | null;
   tagline: string | null;
   accent: string | null;
   availability: string | null;
@@ -946,6 +956,11 @@ export interface FollowedPersonaDTO {
   handle: string | null;
   linkVisibility: LinkVisibility;
   ownerSlug: string | null;
+  /** The owner member's display name — LINKED personas only, else null, on the
+   *  same anonymity rule as `ownerSlug` and the same field the directory card
+   *  carries. Titles a persona still named after its profession as
+   *  "Owner Name | Dancer" (`personaTitleName`). */
+  ownerName: string | null;
   followerCount: number;
   /** ISO instant this member started following. Newest first in the list. */
   followedAt: string;

@@ -88,6 +88,16 @@ export const GOVERNANCE_FIELD_KEYS: Record<string, string> = {
   rules: "communities.governanceLog.meta.field.rules",
   tags: "communities.governanceLog.meta.field.tags",
   coverImageUrl: "communities.governanceLog.meta.field.coverImageUrl",
+  avatarImageUrl: "communities.governanceLog.meta.field.avatarImageUrl",
+  welcomeMessage: "communities.governanceLog.meta.field.welcomeMessage",
+  isPubliclyListed: "communities.governanceLog.meta.field.publiclyListed",
+  languages: "communities.governanceLog.meta.field.languages",
+  city: "communities.governanceLog.meta.field.city",
+  area: "communities.governanceLog.meta.field.area",
+  isOnline: "communities.governanceLog.meta.field.isOnline",
+  // Bumped by the server in the same write that moves `rules`, so it rides
+  // along in every shared-values diff.
+  rulesVersion: "communities.governanceLog.meta.field.rulesVersion",
 };
 
 /** `previousOwnerId` → `Previous owner id`. Last resort for a metadata key

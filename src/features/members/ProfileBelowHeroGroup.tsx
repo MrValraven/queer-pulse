@@ -28,6 +28,11 @@ export interface ProfileBelowHeroInput {
  * block with the personas section back on top, for the phone-width and desktop
  * edit layouts, which have no rail grid.
  *
+ * Editing drops the personas section: a persona is edited on its own page, so
+ * "Also working as" holds nothing this form can save, and every link in it
+ * leads out of the editor past unsaved changes. (`restBelowHero` drops "Places
+ * you run" in edit mode for the same reason.)
+ *
  * Split out of `ProfilePage` to hold that component near the repo's 200-line
  * rule. It holds no state and reads no context.
  */
@@ -63,15 +68,20 @@ export function profileBelowHeroNodes({
       isSelf={isSelf}
       selfView={selfView}
       previewing={previewing}
+      isEditingProfile={selfView && isEditing}
       otherMember={otherMember}
       ownerSlug={ownerSlug}
       edit={edit}
     />
   );
 
+  const isEditingSelf = selfView && isEditing;
+
   return {
     restBelowHero,
-    belowHero: (
+    belowHero: isEditingSelf ? (
+      restBelowHero
+    ) : (
       <>
         <ProfileSubprofilesSection
           ownerSlug={ownerSlug}

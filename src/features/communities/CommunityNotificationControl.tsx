@@ -1,7 +1,7 @@
 import { useId, useState } from "react";
 import { FiAtSign, FiBell, FiBellOff, FiVolume2 } from "react-icons/fi";
 import type { IconType } from "react-icons";
-import { Button, Modal } from "../../shared/components/ui";
+import { Button, IconButton, Modal, Tooltip } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CommunityNotificationLevel } from "./api/communityPreferences.api";
@@ -23,12 +23,13 @@ const LEVEL_ICON: Record<CommunityNotificationLevel, IconType> = {
  * A member's own notification level for ONE community: everything,
  * announcements only, mentions only, or muted.
  *
- * Sits in the community's tab row rather than in mod tools, because every
- * member needs it and only staff can reach mod tools. The tab bar is the one
- * strip that stays on screen whichever tab is open, and it is where the
- * community's own controls already live, so a member turning a busy room down
- * finds it in the same place they switch between Pulse and Members. It renders
- * only for members: there is nothing to turn down until you have joined.
+ * Sits in the hero's action row beside Report, not in mod tools: every member
+ * needs it and only staff can reach mod tools. Icon-only, with the current
+ * level in a tooltip, so it reads as hero chrome rather than a fifth call to
+ * action next to Join / Save / Share. The bell alone also says what it does
+ * at a glance, where "Announcements only" spelled out was a sentence a member
+ * had to parse before knowing it was a control at all. It renders only for
+ * members: there is nothing to turn down until you have joined.
  *
  * The chosen level is applied at once and held locally, so the picker never
  * snaps back to the server's answer mid-interaction. A refused write rolls the
@@ -79,28 +80,29 @@ export function CommunityNotificationControl({
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        className={styles.trigger}
-        aria-haspopup="dialog"
-        aria-expanded={isPickerOpen}
-        // Names the control for assistive tech without a visible second line.
-        // The visible level title is contained in this string, so the spoken
-        // name still starts from what a member can read (WCAG 2.5.3).
-        aria-label={t("communities:detail.notifications.triggerAria", {
-          name: communityName,
-          level: t(
-            `communities:detail.notifications.level.${currentLevel}.title`,
-          ),
-        })}
-        onClick={() => setIsPickerOpen(true)}
+      <Tooltip
+        label={t(
+          `communities:detail.notifications.level.${currentLevel}.title`,
+        )}
       >
-        <CurrentIcon aria-hidden />
-        <span className={styles.triggerLabel}>
-          {t(`communities:detail.notifications.level.${currentLevel}.title`)}
-        </span>
-      </Button>
+        <IconButton
+          tone="dark"
+          aria-haspopup="dialog"
+          aria-expanded={isPickerOpen}
+          // The only name this control has, now that the level is a tooltip.
+          // The level title is contained in this string, so the spoken name
+          // still starts from what a member can read (WCAG 2.5.3).
+          aria-label={t("communities:detail.notifications.triggerAria", {
+            name: communityName,
+            level: t(
+              `communities:detail.notifications.level.${currentLevel}.title`,
+            ),
+          })}
+          onClick={() => setIsPickerOpen(true)}
+        >
+          <CurrentIcon aria-hidden />
+        </IconButton>
+      </Tooltip>
 
       {isPickerOpen && (
         <Modal

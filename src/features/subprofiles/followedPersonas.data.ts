@@ -83,6 +83,9 @@ export const mockFollowedPersonas = (
       handle: isLinked ? null : persona.handle,
       linkVisibility: persona.linkVisibility,
       ownerSlug: isLinked ? persona.ownerSlug : null,
+      // Same linked-only rule as `ownerSlug`: only a linked persona lends its
+      // owner's name to the row's "Owner Name | Dancer" title.
+      ownerName: isLinked ? persona.ownerName : null,
       followerCount: persona.followerCount,
       followedAt: seededFollowedAt[persona.id] ?? "2025-12-01T12:00:00.000Z",
     };

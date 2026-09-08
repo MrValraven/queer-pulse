@@ -146,33 +146,11 @@
   }
 }
 
-/* ---- Theme + language controls ---- */
+/* ---- Language control ---- */
 .controls {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-.themeToggle {
-  display: grid;
-  place-items: center;
-  /* 34 / 16, in em so the disc scales with the icon it centres. */
-  width: 2.125em;
-  height: 2.125em;
-  border-radius: 50%;
-  font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 0.8);
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid rgba(var(--cream-rgb), 0.14);
-  cursor: pointer;
-  transition:
-    color var(--dur-base) var(--ease),
-    background var(--dur-base) var(--ease);
-}
-@media (hover: hover) {
-  .themeToggle:hover {
-    color: rgba(var(--cream-rgb), 1);
-    background: rgba(var(--cream-rgb), 0.12);
-  }
 }
 .langSwitch {
   display: inline-flex;
@@ -227,8 +205,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   @media (hover: hover) {
-    .social a:hover,
-    .themeToggle:hover {
+    .social a:hover {
       transform: translateY(-2px);
     }
   }

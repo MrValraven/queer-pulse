@@ -623,6 +623,12 @@
     color: var(--accent-ink);
   }
 }
+/* Entry point to the shared-values library, under the own-words field so
+   writing your own stays the first thing a founder is offered. */
+.browseRow {
+  margin-top: 10px;
+}
+
 .addRow {
   display: flex;
   gap: 9px;

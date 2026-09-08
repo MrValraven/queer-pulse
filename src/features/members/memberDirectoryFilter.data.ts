@@ -2,6 +2,7 @@ import { memberProfiles } from "./data/memberProfiles";
 import { compareActivityBands, type ActivityBand } from "./activityBand";
 import { demoBandForSlug } from "./activityBand.data";
 import { OPEN_TO_PRESETS, openToPresetIds, type OpenToId } from "./openTo.data";
+import { LISBON_NEIGHBOURHOOD_NAMES } from "../../shared/geo/lisbonNeighbourhoods";
 
 export interface ChipOption {
   label: string;
@@ -87,17 +88,21 @@ export const OPEN_TO_LABEL_KEY: Record<string, string> = Object.fromEntries(
  *  label; see `HOOD_LABEL_KEY`. */
 export const ALL_OF_LISBON = "All of Lisbon";
 
-/** Where members are based. Real Lisbon neighbourhood names are proper nouns
- *  and stay identical in every language — never translated (i18n sweep §6) —
- *  so most of these carry no labelKey at all; only `ALL_OF_LISBON` does. */
+/** Where members are based: the shared Lisbon vocabulary the profile editor's
+ *  neighbourhood select offers, plus the `ALL_OF_LISBON` chrome row.
+ *
+ *  Deriving it is the point. This list was seven hand-picked bairros while the
+ *  profile field was free text, so a member who wrote "Arroios" — a real
+ *  freguesia, just not one of the seven — could never be found by any filter
+ *  and showed no neighbourhood on their card. Both ends now read the same
+ *  module (mirrored server-side by `profiles/neighbourhoods.ts`), so a name a
+ *  member can pick is always a name someone can filter by.
+ *
+ *  Real Lisbon neighbourhood names are proper nouns and stay identical in
+ *  every language — never translated (i18n sweep §6) — so they carry no
+ *  labelKey at all; only `ALL_OF_LISBON` does. */
 export const NEIGHBOURHOODS: ChipOption[] = [
-  { label: "Anjos", active: true },
-  { label: "Mouraria", active: true },
-  { label: "Graça" },
-  { label: "Alfama" },
-  { label: "Bairro Alto" },
-  { label: "Marvila" },
-  { label: "Príncipe Real" },
+  ...LISBON_NEIGHBOURHOOD_NAMES.map((label) => ({ label })),
   { label: ALL_OF_LISBON },
 ];
 
