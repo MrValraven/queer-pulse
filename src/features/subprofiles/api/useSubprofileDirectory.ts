@@ -15,8 +15,9 @@ const DIRECTORY_PAGE_LIMIT = 100;
 export interface SubprofileDirectoryParams {
   /** Free-text term, already trimmed and debounced by the caller. Sent as
    *  `?query=`: a case-insensitive substring match over `display_name` and
-   *  `tagline`, both backed by GIN trigram indexes. An empty string is a
-   *  no-op server-side, so it is simply not sent. */
+   *  `tagline`, both backed by GIN trigram indexes, OR an accent-folded match
+   *  on the OWNER's name and profile handle for a linked persona. An empty
+   *  string is a no-op server-side, so it is simply not sent. */
   query?: string;
 }
 
@@ -63,10 +64,16 @@ interface SubprofileDirectoryPageVM {
  * `query` is the filter the endpoint can apply itself, over the whole table
  * before paging (`ListSubprofileDirectoryQuery.query` →
  * `sp.displayName ILIKE :term OR sp.tagline ILIKE :term`, both columns carrying
- * a GIN trigram index). It matches the exact two columns the browser-side
+ * a GIN trigram index, OR an accent-folded match on the owner's name and
+ * profile handle for a LINKED persona). It covers everything the browser-side
  * predicate used to read, so no search behaviour is lost, and that predicate is
  * DELETED rather than left sitting on top of the server's: two spellings of one
  * filter is how a correct result set quietly loses rows.
+ *
+ * THE OWNER BRANCH IS LINKED-ONLY, matching the rule that fills the card's
+ * `ownerName`/`ownerSlug`. A linked card is titled "Ana Silva | Poet", so the
+ * name on screen has to be findable; an unlinked persona's owner is unnamed on
+ * the card by design, and matching it here would hand that tie back out.
  *
  * `kind` and tags are deliberately NOT sent, and this is the one thing here
  * that still needs backend work. The endpoint's `kind` takes a single enum
@@ -102,8 +109,8 @@ export function useSubprofileDirectory(
       if (demoMode) {
         const { mockDirectory } = await import("../data/subprofiles.data");
         // The fixture applies the SAME display-name/tagline substring
-        // predicate the endpoint does, so the demo directory searches
-        // standalone. It has no pagination, so its single page IS the whole
+        // predicate the endpoint does, plus the same linked-only folded
+        // owner-name branch, so the demo directory searches standalone. It has no pagination, so its single page IS the whole
         // matching set and `getNextPageParam` below yields nothing further.
         const items = mockDirectory(
           searchTerm ? { query: searchTerm } : undefined,

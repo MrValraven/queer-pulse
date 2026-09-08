@@ -6,8 +6,9 @@ export const subprofiles: Catalog = {
   "directory.eyebrow": "Diretório · personas",
   "directory.subtitle":
     "Personas profissionais pseudónimas de toda a comunidade. Sem rankings, sem algoritmo. Só o trabalho.",
-  "directory.searchPlaceholder": "Pesquisar personas",
-  "directory.searchAria": "Pesquisar personas",
+  "directory.searchPlaceholder": "Pesquisar personas ou responsáveis",
+  "directory.searchAria":
+    "Pesquisar personas por nome, descrição ou nome do responsável",
   "directory.loading": "A carregar personas…",
   "directory.empty.title": "Ainda não há personas aqui",
   "directory.empty.description":

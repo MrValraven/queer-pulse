@@ -823,9 +823,11 @@ export interface SubprofileDirectoryPage {
 
 /** One page of the standalone-persona directory.
  *
- *  `query` is the endpoint's own free-text filter: an ILIKE over
- *  `displayName` and `tagline` (`subprofile-public-read.service.ts`), applied
- *  across the WHOLE table before paging. `useSubprofileDirectory` sends the
+ *  `query` is the endpoint's own free-text filter, applied across the WHOLE
+ *  table before paging (`subprofile-public-read.service.ts`): an ILIKE over
+ *  `displayName` and `tagline`, OR an accent-folded match on the owner's name
+ *  and profile handle for a LINKED persona (the same link-visibility rule that
+ *  decides whether `ownerName`/`ownerSlug` reach the card at all). `useSubprofileDirectory` sends the
  *  directory's search box through it, so a term reaches every persona rather
  *  than only the pages the browser happened to pull.
  *
