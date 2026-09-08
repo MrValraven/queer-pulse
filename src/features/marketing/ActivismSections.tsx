@@ -272,7 +272,7 @@ export function VolunteerSection() {
                 {role.org} · {role.description}
               </div>
               <span className={s.acLink}>
-                {t("marketing:activism.volunteer.expressInterestCta")}{" "}
+                {t("marketing:activism.volunteer.seeRoleCta")}{" "}
                 <FiArrowRight aria-hidden />
               </span>
             </Reveal>

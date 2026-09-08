@@ -3,7 +3,7 @@ import { Button, EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { VolunteerOpportunity } from "./volunteerOpportunities.types";
-import { FILTERS } from "./volunteerPage.data";
+import { CAUSE_FILTERS, COMMITMENT_FILTERS } from "./volunteerPage.data";
 import { VolunteerCardSkeleton, VolunteerRoleCard } from "./VolunteerRoleCard";
 import s from "./VolunteerPage.module.css";
 
@@ -46,17 +46,44 @@ export function VolunteerRoles({
   return (
     <section className={s.body}>
       <div className="wrap">
-        <div className={s.filters}>
-          {FILTERS.map((f) => (
+        {/* Two rows, each answering one question: how much time, then which
+            cause. One combined row buried the commitment chips once the
+            taxonomy grew to thirteen causes. */}
+        <div
+          className={[s.filters, s.filtersCommitment].join(" ")}
+          role="group"
+          aria-label={t("marketing:volunteer.filter.commitmentGroup")}
+        >
+          {COMMITMENT_FILTERS.map((chip) => (
             <button
               type="button"
-              key={f.f}
-              className={[s.chip, filter === f.f && s.chipOn]
+              key={chip.f}
+              className={[s.chip, filter === chip.f && s.chipOn]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => onFilterChange(f.f)}
+              aria-pressed={filter === chip.f}
+              onClick={() => onFilterChange(chip.f)}
             >
-              {t(f.labelKey)}
+              {t(chip.labelKey)}
+            </button>
+          ))}
+        </div>
+        <div
+          className={s.filters}
+          role="group"
+          aria-label={t("marketing:volunteer.filter.causeGroup")}
+        >
+          {CAUSE_FILTERS.map((chip) => (
+            <button
+              type="button"
+              key={chip.f}
+              className={[s.chip, filter === chip.f && s.chipOn]
+                .filter(Boolean)
+                .join(" ")}
+              aria-pressed={filter === chip.f}
+              onClick={() => onFilterChange(chip.f)}
+            >
+              {t(chip.labelKey)}
             </button>
           ))}
         </div>

@@ -82,20 +82,16 @@ export function findFirstInvalidControl(
 }
 
 /**
- * Move focus to the first invalid control inside `root` and scroll it into view.
- * Returns true if something was focused, so a caller can fall back (e.g. focus a
- * summary banner) when a submit failed for a reason no single field owns.
- *
- * NOTE ON TIMING: call this *after* the render that adds `aria-invalid`, not in
- * the same tick as the `setState` that causes it — otherwise the attributes
- * aren't in the DOM yet and this finds nothing. `focusFirstErrorAfterRender`
- * exists precisely so call sites don't have to think about that.
+ * Focus one specific control and scroll it into view, using the same
+ * "focus without the browser's scroll, then scroll deliberately" behaviour
+ * `focusFirstError` relies on. Exported for call sites that already know which
+ * field they want — e.g. a "still missing" checklist whose entries jump to the
+ * field they name. Returns false when there is nothing to focus.
  */
-export function focusFirstError(
-  root: ParentNode | null | undefined,
+export function focusControl(
+  target: HTMLElement | null | undefined,
   { scroll = true, reducedMotion }: FocusFirstErrorOptions = {},
 ): boolean {
-  const target = findFirstInvalidControl(root);
   if (!target) return false;
 
   // Focus without the browser's own scroll, then scroll deliberately: the
@@ -111,6 +107,23 @@ export function focusFirstError(
     });
   }
   return true;
+}
+
+/**
+ * Move focus to the first invalid control inside `root` and scroll it into view.
+ * Returns true if something was focused, so a caller can fall back (e.g. focus a
+ * summary banner) when a submit failed for a reason no single field owns.
+ *
+ * NOTE ON TIMING: call this *after* the render that adds `aria-invalid`, not in
+ * the same tick as the `setState` that causes it — otherwise the attributes
+ * aren't in the DOM yet and this finds nothing. `focusFirstErrorAfterRender`
+ * exists precisely so call sites don't have to think about that.
+ */
+export function focusFirstError(
+  root: ParentNode | null | undefined,
+  options: FocusFirstErrorOptions = {},
+): boolean {
+  return focusControl(findFirstInvalidControl(root), options);
 }
 
 /**

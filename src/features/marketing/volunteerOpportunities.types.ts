@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
+import type { Cause } from "./api/volunteering.api";
 
-export type VolunteerCause = "Rights" | "Health" | "Youth" | "Housing" | "Arts";
 export type VolunteerCommit = "low" | "medium";
 
 export interface TeamMember {
@@ -22,7 +22,11 @@ export interface VolunteerOpportunity {
   background: string;
   color: string;
   role: string;
-  cause: VolunteerCause;
+  /** One to three, in the order the poster picked them. `causes[0]` is the one
+   *  the card leads with and takes `background`/`color` from. Labels come from
+   *  `causes.data.ts` at render time, which is why these are wire values and
+   *  not display strings. */
+  causes: Cause[];
   commit: VolunteerCommit;
   time: string;
   location: string;

@@ -47,6 +47,7 @@ export function PostOpportunityRichFields({
           })}
         >
           <textarea
+            className={styles.textarea}
             rows={3}
             value={state.why}
             onChange={(e) => set("why", e.target.value)}
@@ -62,6 +63,7 @@ export function PostOpportunityRichFields({
           })}
         >
           <textarea
+            className={styles.textarea}
             rows={3}
             value={state.goodFor}
             onChange={(e) => set("goodFor", e.target.value)}

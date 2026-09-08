@@ -8,12 +8,10 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useOpportunities } from "./api/useOpportunities";
 import { useMyOpportunities } from "./api/useMyOpportunities";
-import { causeToLower } from "./api/volunteering.adapters";
-import type { VolunteerCause } from "./volunteerOpportunities.types";
 import type { Cause, Commit } from "./api/volunteering.api";
+import { isCause } from "./causes.data";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
-import { CAUSE_FILTERS } from "./volunteerPage.data";
 import { VolunteerRoles } from "./VolunteerRoles";
 import { VolunteerContributionCard } from "./VolunteerContributionCard";
 import s from "./VolunteerPage.module.css";
@@ -28,9 +26,7 @@ export function VolunteerPage() {
   // Demo mode ignores these (the client-side `visible` filter below still runs).
   const commit: Commit | undefined =
     filter === "low" || filter === "medium" ? filter : undefined;
-  const cause: Cause | undefined = CAUSE_FILTERS.has(filter)
-    ? causeToLower(filter as VolunteerCause)
-    : undefined;
+  const cause: Cause | undefined = isCause(filter) ? filter : undefined;
 
   // The hero CTA only appears once the viewer actually has applicants to
   // review: `/volunteering/mine` returns what they posted themselves plus
@@ -58,7 +54,10 @@ export function VolunteerPage() {
       opps.filter((o) => {
         if (filter === "all") return true;
         if (filter === "low" || filter === "medium") return o.commit === filter;
-        return o.cause === filter;
+        // `includes`, never an equality check: a chip has to find an
+        // opportunity that lists that cause second or third, matching how the
+        // API's overlap filter behaves in live mode.
+        return isCause(filter) && o.causes.includes(filter);
       }),
     [opps, filter],
   );

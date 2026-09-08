@@ -3,7 +3,6 @@ import { memberRefToPerson, type Person } from "../../../shared/api/refs";
 import { formatDate } from "../../../shared/lib/date";
 import { orgBadgeInitials } from "../../../shared/lib/initials";
 import type {
-  Cause,
   OpportunityCardDTO,
   OpportunityDetailDTO,
   SignupStatus,
@@ -11,10 +10,10 @@ import type {
 } from "./volunteering.api";
 import type { OrganizationOption } from "./useOrganizationOptions";
 import type {
-  VolunteerCause,
   VolunteerOpportunity,
   TeamMember,
 } from "../volunteerOpportunities.types";
+import { causeTint } from "../causes.data";
 import {
   defaultApplyRole,
   type PostOpportunityState,
@@ -27,40 +26,14 @@ import {
 // plain API strings (wrapped in `<b>` only where the layout needs the styling).
 // `.tsx` because the stat tiles need JSX to pick up the header's `.meta b` rule.
 
-// ── cause (lowercase API ⇄ Title-case view-model) ────────────────────────────
-
-const CAUSE_TITLE: Record<Cause, VolunteerCause> = {
-  rights: "Rights",
-  health: "Health",
-  youth: "Youth",
-  housing: "Housing",
-  arts: "Arts",
-};
-
-const CAUSE_LOWER: Record<VolunteerCause, Cause> = {
-  Rights: "rights",
-  Health: "health",
-  Youth: "youth",
-  Housing: "housing",
-  Arts: "arts",
-};
-
-/** Lowercase API cause → Title-case display cause. */
-export const causeToTitle = (c: Cause): VolunteerCause => CAUSE_TITLE[c];
-
-/** Title-case display/filter cause → lowercase API cause. */
-export const causeToLower = (c: VolunteerCause): Cause => CAUSE_LOWER[c];
-
 // ── derived display bits ─────────────────────────────────────────────────────
 
-/** Cause-keyed avatar tint, matching the mock palette (jade / coral / plum). */
-const CAUSE_TINT: Record<Cause, { bg: string; color: string }> = {
-  rights: { bg: "rgba(74,140,111,.14)", color: "var(--jade)" },
-  health: { bg: "rgba(232,119,90,.12)", color: "var(--accent-ink)" },
-  youth: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
-  housing: { bg: "rgba(232,119,90,.12)", color: "var(--accent-ink)" },
-  arts: { bg: "rgba(74,140,111,.12)", color: "var(--jade)" },
-};
+// The view-model now carries the API's own lowercase cause values rather than a
+// parallel Title-case union, so the two conversion maps this file used to hold
+// (`CAUSE_TITLE`/`CAUSE_LOWER`) are gone along with the tint map. All three
+// were hand-kept mirrors of a taxonomy that now lives once, in `causes.data.ts`:
+// labels come from i18n at the point of render, which is also what makes the
+// cause line on a card translate.
 
 const TEAM_TINTS = [
   { bg: "rgba(var(--accent-rgb),.14)", color: "var(--accent-ink)" },
@@ -130,8 +103,8 @@ function memberToTeam(
 export function cardToOpportunity(
   dto: OpportunityCardDTO,
 ): VolunteerOpportunity {
-  const tint = CAUSE_TINT[dto.cause];
-  const cause = causeToTitle(dto.cause);
+  // Tinted from the cause the poster led with; the rest ride along in order.
+  const tint = causeTint(dto.causes[0]);
   const closed = dto.status === "closed";
   return {
     slug: dto.slug,
@@ -140,14 +113,14 @@ export function cardToOpportunity(
     background: tint.bg,
     color: tint.color,
     role: dto.role,
-    cause,
+    causes: dto.causes,
     commit: dto.commit,
     time: dto.time,
     location: dto.location,
     skills: dto.skills ?? [],
     description: dto.desc,
     // ── detail header (defaulted; the card view doesn't read these) ──
-    eyebrow: `Volunteer · ${cause} · ${dto.org}`,
+    eyebrow: `Volunteer · ${dto.org}`,
     urgent: closed ? "Closed · not recruiting" : "Recruiting now",
     titleLead: `${dto.role} · `,
     titleEm: `${dto.org}.`,
@@ -185,11 +158,10 @@ export function detailToOpportunity(
   dto: OpportunityDetailDTO,
 ): VolunteerOpportunity {
   const base = cardToOpportunity(dto);
-  const cause = causeToTitle(dto.cause);
   const spotsOpen = Math.max(dto.spotsTotal - dto.spotsFilled, 0);
   return {
     ...base,
-    eyebrow: `Volunteer · ${cause} · ${dto.org}`,
+    eyebrow: `Volunteer · ${dto.org}`,
     sub: dto.desc,
     stats: [
       { value: <b>{dto.time}</b>, label: "Per week" },
@@ -239,7 +211,7 @@ export function opportunityToFormState(
   return {
     org: opp.org,
     role: opp.role,
-    cause: causeToLower(opp.cause),
+    causes: opp.causes,
     commit: opp.commit,
     time: opp.time,
     location: opp.location,
@@ -281,7 +253,6 @@ export function applyFormStateToOpportunity(
   state: PostOpportunityState,
   organizationOptions: OrganizationOption[],
 ): VolunteerOpportunity {
-  const cause = causeToTitle(state.cause);
   const skills = splitCommas(state.skills);
   const why = splitLines(state.why);
   const goodFor = splitLines(state.goodFor);
@@ -313,14 +284,14 @@ export function applyFormStateToOpportunity(
     org: state.org,
     avatar: orgBadgeInitials(state.org),
     role: state.role,
-    cause,
+    causes: state.causes,
     commit: state.commit,
     time: state.time,
     location: state.location,
     skills,
     description: state.description,
     sub: state.description,
-    eyebrow: `Volunteer · ${cause} · ${state.org}`,
+    eyebrow: `Volunteer · ${state.org}`,
     titleLead: `${state.role} · `,
     titleEm: `${state.org}.`,
     stats: [

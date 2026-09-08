@@ -26,6 +26,7 @@ import {
 import { VolunteerOpportunityMain } from "./VolunteerOpportunitySections";
 import { VolunteerOpportunitySidebar } from "./VolunteerOpportunitySidebar";
 import type { VolunteerOpportunity } from "./volunteerOpportunities";
+import { causeLabelKey } from "./causes.data";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 /** Map a failed signup to member-facing copy, distinguishing the two 409 cases. */
@@ -132,6 +133,19 @@ export function VolunteerOpportunityPage() {
         <header className={styles.head}>
           <div className={styles.eyebrow}>
             <span>{opp.eyebrow}</span>
+            {/* The causes used to be baked into `eyebrow` as an English string
+                built in the adapter, which meant they never translated. They
+                are their own span now, labelled from `causes.data.ts`. */}
+            {opp.causes.length > 0 && (
+              <>
+                <span className={styles.sep}>·</span>
+                <span>
+                  {opp.causes
+                    .map((cause) => t(causeLabelKey(cause)))
+                    .join(" · ")}
+                </span>
+              </>
+            )}
             <span className={styles.sep}>·</span>
             <span className={styles.urgent}>{opp.urgent}</span>
           </div>

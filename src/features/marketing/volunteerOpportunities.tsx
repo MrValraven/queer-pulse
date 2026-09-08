@@ -1,7 +1,6 @@
 import { VOLUNTEER_OPPORTUNITIES } from "./volunteerOpportunities.data";
 
 export type {
-  VolunteerCause,
   VolunteerCommit,
   TeamMember,
   VolunteerOpportunity,
