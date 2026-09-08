@@ -218,16 +218,16 @@ export const homepage: Catalog = {
 
   "painPoints.forum.label": "O fórum",
   "painPoints.forum.question":
-    "Tenho uma pergunta que não quero pôr no Instagram.",
+    "Quero perguntar quanto tempo demora mesmo a mudança de nome na conservatória, porque o site diz uma coisa e toda a gente que conheço diz outra.",
   "painPoints.forum.question2":
-    "E quando pergunto noutro sítio, as respostas vêm de desconhecidos com opiniões.",
+    "Quero perguntar como é que se fala à mãe de uma namorada aos 34, porque há dois anos que digo que a Joana é minha colega de casa.",
   "painPoints.forum.heading": "Por isso construímos <em>um fórum.</em>",
   "painPoints.forum.body":
     "Um sítio a que toda a gente aqui pertence: perguntas, recomendações, propostas e guias, organizados por categoria, respondidos por membros verificados e moderados por pessoas a quem podes recorrer.",
   "painPoints.forum.payoff":
-    "Perguntei por um médico às 23h. De manhã tinha três respostas, todas de quem já lá tinha ido.",
+    "Perguntei às 23h. De manhã tinha três respostas e o número real de semanas, de quem já tinha passado por isso.",
   "painPoints.forum.payoff2":
-    "Esta semana respondi à pergunta de outra pessoa. É assim que isto continua a servir.",
+    "Onze pessoas contaram-me como foi com elas, também as difíceis. A Joana veio almoçar em março.",
   "painPoints.forum.cta": "Abrir o fórum",
   "painPoints.forum.modal.title":
     "Um sítio onde <em>a cidade inteira responde.</em>",
@@ -238,7 +238,7 @@ export const homepage: Catalog = {
     "Publicas numa categoria e respondem-te membros verificados. Os tópicos ficam pesquisáveis, por isso a resposta continua lá para a próxima pessoa.",
   "painPoints.forum.modal.b.title": "O que ganhas com isto",
   "painPoints.forum.modal.b.body":
-    "A pergunta que não querias pôr no Instagram recebe uma resposta a sério de quem já passou por isso, normalmente na mesma noite.",
+    "A pergunta que andas a adiar desde março recebe uma resposta a sério de quem já passou por isso, normalmente na mesma noite.",
   "painPoints.forum.modal.c.title": "Como isto sustenta a QueerPulse",
   "painPoints.forum.modal.c.body":
     "Guias, convívios e comunidades inteiras começam como tópicos no fórum. A moderação publica o que fez em cada trimestre e podes recorrer de uma decisão.",

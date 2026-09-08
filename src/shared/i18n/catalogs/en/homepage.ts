@@ -208,16 +208,16 @@ export const homepage: Catalog = {
 
   "painPoints.forum.label": "The forum",
   "painPoints.forum.question":
-    "I have a question I do not want to put on Instagram.",
+    "I want to ask how long the name change really takes at the conservatória, because the website says one thing and everyone I know says another.",
   "painPoints.forum.question2":
-    "And when I ask it somewhere else, the answers come from strangers with opinions.",
+    "I want to ask how people tell their mother about a girlfriend at 34, because I have been calling Joana my flatmate for two years.",
   "painPoints.forum.heading": "So we built <em>a forum.</em>",
   "painPoints.forum.body":
     "One place everyone here belongs to: questions, recommendations, proposals and guides, sorted by category, answered by verified members, moderated by people you can appeal to.",
   "painPoints.forum.payoff":
-    "Asked about a doctor at 11pm. Three answers by morning, all from people who had been.",
+    "Asked at 11pm. Three answers by morning, and the real number of weeks from someone who had done it.",
   "painPoints.forum.payoff2":
-    "I answered someone else's question this week. That is how it stays useful.",
+    "Eleven people told me how theirs went, the hard ones too. Joana came to lunch in March.",
   "painPoints.forum.cta": "Open the forum",
   "painPoints.forum.modal.title":
     "One place where <em>the whole city answers.</em>",
@@ -228,7 +228,7 @@ export const homepage: Catalog = {
     "Post in a category and verified members answer. Threads stay searchable, so your answer is still there for the next person who asks it.",
   "painPoints.forum.modal.b.title": "What it gives you",
   "painPoints.forum.modal.b.body":
-    "The question you would not put on Instagram gets a real answer from someone who has been through it, usually the same night.",
+    "The question you have been carrying since March gets a real answer from someone who has done it, usually the same night.",
   "painPoints.forum.modal.c.title": "How it powers QueerPulse",
   "painPoints.forum.modal.c.body":
     "Guides, gatherings and whole communities start as forum threads. Moderation publishes what it did each quarter, and you can appeal a decision.",
