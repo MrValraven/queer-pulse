@@ -10,7 +10,6 @@ import {
   useSimulatedLoad,
 } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   EMPTY_FILTERS,
@@ -39,7 +38,6 @@ import styles from "./MemberDirectoryFilterPage.module.css";
 export function MemberDirectoryFilterPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { showToast } = useToast();
   const simLoading = useSimulatedLoad();
   const { demoMode } = useDemoMode();
   const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
@@ -138,10 +136,11 @@ export function MemberDirectoryFilterPage() {
     setFilters(reconcileProfessions(next));
   };
 
+  // No toast on clear: the sidebar, the chip row and the result count all
+  // update in place, so an announcement only repeats what the page just showed.
   const clearAllFilters = () => {
     applyFilters(EMPTY_FILTERS);
     search.onChange("");
-    showToast(t("members:directory.toast.filtersCleared"), "info");
   };
 
   const resetAll = () => {

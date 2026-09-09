@@ -765,7 +765,6 @@ export const members: Catalog = {
   "directory.findSuffix": "exatamente.",
   "directory.lead":
     "Filtra pelo que oferecem, onde vivem, ao que estão <b>disponíveis</b>. Os dados funcionam nos dois sentidos. As pessoas aparecem aqui porque optaram por ser encontráveis por estas razões.",
-  "directory.toast.filtersCleared": "Filtros limpos",
   "directory.showingPrefix": "A mostrar",
   "directory.showingOf": "de",
   "directory.memberCountLabel_one": "pessoa",

@@ -326,6 +326,11 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
       {
         labelKey: "shared:adminNav.items.resourceGuides",
         to: routes.adminResourceGuides,
+        // Exact match only. The glossary below sits at
+        // `/admin/resource-guides/glossary`, so prefix matching lit both rows
+        // at once while only one console was open. The guide console has no
+        // child routes of its own, so nothing else needs the loose match.
+        end: true,
         capabilities: ["resource_curator"],
         icon: FiBookOpen,
       },

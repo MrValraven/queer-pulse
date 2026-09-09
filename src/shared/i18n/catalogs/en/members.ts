@@ -769,7 +769,6 @@ export const members: Catalog = {
   "directory.findSuffix": "exactly.",
   "directory.lead":
     "Filter by what they offer, where they're based, what they're <b>open to</b>. The same data goes both ways. Members appear here because they opted in to be findable for these reasons.",
-  "directory.toast.filtersCleared": "Filters cleared",
   "directory.showingPrefix": "Showing",
   "directory.showingOf": "of",
   "directory.memberCountLabel_one": "member",

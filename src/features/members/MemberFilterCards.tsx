@@ -180,6 +180,14 @@ export function FiltersSidebar({
     [demoMode, members, filters, facets],
   );
   const languageChipCount = useChipCount(counts?.languages);
+  // Nothing selected means nothing to clear, so the row would offer a no-op
+  // beside a "0 applied" that reads as a count of something. The age range
+  // carries no chip of its own, so it is checked here rather than folded into
+  // `appliedCount`.
+  const hasSomethingToClear =
+    appliedCount > 0 ||
+    filters.yearsFrom !== EMPTY_FILTERS.yearsFrom ||
+    filters.yearsTo !== EMPTY_FILTERS.yearsTo;
   return (
     <aside className={inSheet ? styles.filtersSheet : styles.filters}>
       <FilterCheckboxSection
@@ -307,14 +315,16 @@ export function FiltersSidebar({
         />
       </FilterSection>
 
-      <div className={styles.clearRow}>
-        <button type="button" onClick={onClearAll}>
-          {t("members:directory.clearAllFiltersCta")}
-        </button>
-        <span>
-          {t("members:directory.appliedCount", { count: appliedCount })}
-        </span>
-      </div>
+      {hasSomethingToClear && (
+        <div className={styles.clearRow}>
+          <button type="button" onClick={onClearAll}>
+            {t("members:directory.clearAllFiltersCta")}
+          </button>
+          <span>
+            {t("members:directory.appliedCount", { count: appliedCount })}
+          </span>
+        </div>
+      )}
     </aside>
   );
 }

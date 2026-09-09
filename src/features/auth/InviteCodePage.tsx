@@ -81,7 +81,7 @@ export function InviteCodePage() {
             focusFirstErrorAfterRender(formRef.current);
             return;
           }
-          navigate(inviteLink(normalizedCode));
+          void navigate(inviteLink(normalizedCode));
         }}
       >
         <FormField
