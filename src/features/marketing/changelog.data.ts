@@ -19,8 +19,15 @@ export interface ChangelogEntry {
   date: string;
   /** Catalog key: `marketing:changelog.entries.<id>.title`. */
   titleKey: string;
-  /** Catalog key: `marketing:changelog.entries.<id>.body`. */
+  /** Catalog key: `marketing:changelog.entries.<id>.body`. One short line. */
   bodyKey: string;
+  /**
+   * Catalog key: `marketing:changelog.entries.<id>.details`. Only resolves when
+   * `hasDetails` is set; the page shows it behind a "More" toggle.
+   */
+  detailsKey: string;
+  /** Set when the entry carries a longer `details` paragraph in the catalogs. */
+  hasDetails?: boolean;
   /** Optional deep link chip. */
   tag?: ChangelogEntryTag;
 }
@@ -29,38 +36,6 @@ export interface ChangelogYear {
   year: string;
   entries: ChangelogEntry[];
 }
-
-/** A single day's worth of entries, for grouping the timeline by date. */
-export interface ChangelogDay {
-  date: string;
-  entries: ChangelogEntry[];
-}
-
-/**
- * Collapse an already date-ordered list into day groups, so the timeline shows
- * each date once with its entries stacked beneath it. Consecutive entries that
- * share a `date` are folded together, preserving order.
- */
-export function groupEntriesByDay(entries: ChangelogEntry[]): ChangelogDay[] {
-  const days: ChangelogDay[] = [];
-  for (const entry of entries) {
-    const currentDay = days[days.length - 1];
-    if (currentDay && currentDay.date === entry.date) {
-      currentDay.entries.push(entry);
-    } else {
-      days.push({ date: entry.date, entries: [entry] });
-    }
-  }
-  return days;
-}
-
-/** Badge label per category. */
-export const TYPE_BADGE_KEYS: Record<ChangelogCategory, string> = {
-  feature: "marketing:changelog.badge.feature",
-  improvement: "marketing:changelog.badge.improvement",
-  infrastructure: "marketing:changelog.badge.infrastructure",
-  fix: "marketing:changelog.badge.fix",
-};
 
 /** Filter chips shown above the timeline. */
 export const FILTERS: { id: ChangelogCategory | "all"; labelKey: string }[] = [
@@ -78,6 +53,7 @@ export const FILTERS: { id: ChangelogCategory | "all"; labelKey: string }[] = [
 const entryKeys = (id: string) => ({
   titleKey: `marketing:changelog.entries.${id}.title`,
   bodyKey: `marketing:changelog.entries.${id}.body`,
+  detailsKey: `marketing:changelog.entries.${id}.details`,
 });
 
 /**
@@ -90,16 +66,140 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "pick-a-wallpaper-for-each-chat",
+        category: "feature",
+        date: "10 Sep 2026",
+        ...entryKeys("pick-a-wallpaper-for-each-chat"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "messages-fills-the-screen",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("messages-fills-the-screen"),
+      },
+      {
+        id: "the-landing-page-has-its-own-nav",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("the-landing-page-has-its-own-nav"),
+      },
+      {
+        id: "a-long-bio-folds-until-you-open-it",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("a-long-bio-folds-until-you-open-it"),
+      },
+      {
+        id: "housing-explains-itself-before-the-door",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("housing-explains-itself-before-the-door"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "bio-mentions-read-as-names",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("bio-mentions-read-as-names"),
+      },
+      {
+        id: "pick-the-gathering-you-actually-want-to-host",
+        category: "feature",
+        date: "9 Sep 2026",
+        ...entryKeys("pick-the-gathering-you-actually-want-to-host"),
+        hasDetails: true,
+        tag: { labelKey: "marketing:changelog.tag.events", to: routes.events },
+      },
+      {
+        id: "a-gathering-can-run-past-midnight",
+        category: "feature",
+        date: "9 Sep 2026",
+        ...entryKeys("a-gathering-can-run-past-midnight"),
+        hasDetails: true,
+        tag: { labelKey: "marketing:changelog.tag.events", to: routes.events },
+      },
+      {
+        id: "the-changelog-reads-as-releases",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("the-changelog-reads-as-releases"),
+        tag: {
+          labelKey: "marketing:changelog.tag.changelog",
+          to: routes.changelog,
+        },
+      },
+      {
+        id: "run-your-gathering-from-its-own-page",
+        category: "feature",
+        date: "9 Sep 2026",
+        ...entryKeys("run-your-gathering-from-its-own-page"),
+        hasDetails: true,
+        tag: { labelKey: "marketing:changelog.tag.events", to: routes.events },
+      },
+      {
+        id: "delete-a-piece-from-the-desk",
+        category: "feature",
+        date: "9 Sep 2026",
+        ...entryKeys("delete-a-piece-from-the-desk"),
+        hasDetails: true,
+      },
+      {
+        id: "the-homepage-card-walks-itself",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("the-homepage-card-walks-itself"),
+        hasDetails: true,
+      },
+      {
+        id: "tap-what-is-missing-to-go-straight-to-it",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("tap-what-is-missing-to-go-straight-to-it"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.createGathering",
+          to: routes.createGathering,
+        },
+      },
+      {
+        id: "the-gathering-wizard-says-what-it-needs",
+        category: "improvement",
+        date: "9 Sep 2026",
+        ...entryKeys("the-gathering-wizard-says-what-it-needs"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.createGathering",
+          to: routes.createGathering,
+        },
+      },
+      {
+        id: "a-persona-page-is-one-colour-again",
+        category: "fix",
+        date: "9 Sep 2026",
+        ...entryKeys("a-persona-page-is-one-colour-again"),
+        hasDetails: true,
+      },
+      {
         id: "link-people-and-places-from-your-bio",
         category: "feature",
         date: "8 Sep 2026",
         ...entryKeys("link-people-and-places-from-your-bio"),
+        hasDetails: true,
       },
       {
         id: "see-what-a-save-will-change-before-you-save-it",
         category: "improvement",
         date: "8 Sep 2026",
         ...entryKeys("see-what-a-save-will-change-before-you-save-it"),
+        hasDetails: true,
       },
       {
         id: "the-tag-list-folds-away-once-you-have-picked",
@@ -124,6 +224,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "8 Sep 2026",
         ...entryKeys("a-library-of-shared-values-to-choose-from"),
+        hasDetails: true,
         tag: {
           labelKey: "marketing:changelog.tag.startCommunity",
           to: routes.startCommunity,
@@ -134,6 +235,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "8 Sep 2026",
         ...entryKeys("find-any-admin-page-by-name"),
+        hasDetails: true,
       },
       {
         id: "the-theme-switch-moves-into-your-account-menu",
@@ -2807,6 +2909,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "25 Aug 2026",
         ...entryKeys("studio-and-cinema-speak-portuguese-in-more-places"),
+        hasDetails: true,
       },
       {
         id: "your-devices-list-stops-collecting-old-sign-ins",
@@ -4556,6 +4659,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "18 Aug 2026",
         ...entryKeys("community-pulse-and-insights"),
+        hasDetails: true,
         tag: {
           labelKey: "marketing:changelog.tag.communities",
           to: routes.communities,
@@ -4834,6 +4938,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "13 Aug 2026",
         ...entryKeys("therapist-personas-directory"),
+        hasDetails: true,
       },
       {
         id: "housing-neighbourhoods-map",
@@ -6576,6 +6681,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "4 Aug 2026",
         ...entryKeys("magazine-deck-authoring"),
+        hasDetails: true,
       },
       {
         id: "moderation-outcome-notifications",
@@ -6636,6 +6742,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "4 Aug 2026",
         ...entryKeys("removed-content-stays-hidden"),
+        hasDetails: true,
       },
       {
         id: "help-demo-example-live-hidden",
@@ -6696,6 +6803,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "3 Aug 2026",
         ...entryKeys("platform-wide-search"),
+        hasDetails: true,
         tag: {
           labelKey: "marketing:changelog.tag.search",
           to: routes.search,
@@ -6830,6 +6938,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "feature",
         date: "3 Aug 2026",
         ...entryKeys("chef-mixologist-therapist-personas"),
+        hasDetails: true,
         tag: {
           labelKey: "marketing:changelog.tag.subprofiles",
           to: routes.subprofiles,

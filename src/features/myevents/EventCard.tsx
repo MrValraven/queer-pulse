@@ -4,7 +4,13 @@ import { useMyEvents } from "./MyEventsContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Icons } from "./MyEventsIcons";
-import { parseDate, isToday, soonLabel, COMMITTED } from "./myEvents.helpers";
+import {
+  parseDate,
+  isToday,
+  shouldShowDayOf,
+  soonLabel,
+  COMMITTED,
+} from "./myEvents.helpers";
 import { EventMeta, SoonBar, FriendsLine } from "./EventCardParts";
 import { StatusBadges, EventFoot } from "./EventCardBadges";
 import { EventSide, EventTools } from "./EventCardActions";
@@ -76,7 +82,7 @@ export function EventCard({ ev }: { ev: MyEvent }) {
             <ConflictNote ev={ev} />
             <EdgeNote ev={ev} />
             <SeriesLine ev={ev} />
-            {isToday(ev) && <DayOfPanel ev={ev} show={dayofShown} />}
+            {shouldShowDayOf(ev) && <DayOfPanel ev={ev} show={dayofShown} />}
           </>
         )}
         {ev.category === "going" && !ev.cancelled && <FriendsLine ev={ev} />}

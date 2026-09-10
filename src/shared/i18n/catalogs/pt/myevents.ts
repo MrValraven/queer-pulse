@@ -125,6 +125,9 @@ export const myevents: Catalog = {
   "card.joinLinkErrorToast":
     "Não foi possível obter o link para entrar. Tenta outra vez daqui a pouco.",
   "card.directionsToast": "A abrir indicações para {venue}",
+  // Ver a nota em EN: um convívio pode durar vários dias e a linha do cartão
+  // mostra as horas sem data ao lado.
+  "card.untilDate": "(até {date})",
 
   // ── Live-data labels (api/myEvents.adapters.ts) ───────────────────────────
   "card.online": "Online",
@@ -287,6 +290,8 @@ export const myevents: Catalog = {
   "calendar.legend.pending": "Guardado · lista de espera · convite",
   "calendar.gridAria": "Calendário de eventos",
   "calendar.nothingPlanned": "Nada planeado",
+  // Um dia seguinte de um convívio de vários dias, na grelha semanal.
+  "calendar.stillOn": "Ainda a decorrer",
   "calendar.cellEventCount_one": "{count} evento",
   "calendar.cellEventCount_other": "{count} eventos",
   "calendar.cellNoEvents": "sem eventos",

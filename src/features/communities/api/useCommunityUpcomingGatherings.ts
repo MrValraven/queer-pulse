@@ -83,6 +83,11 @@ export function useCommunityUpcomingGatherings(
           slug: gathering.slug,
           title: gathering.title,
           startAt: gathering.startAt,
+          // Carried because this lane now shows a gathering that is UNDERWAY:
+          // an overnight party at 23:00 and a festival on its second day both
+          // reach this list, and without the end the row would print their
+          // opening day as the whole schedule.
+          endAt: gathering.endAt,
           venue: gathering.venue,
           isOnline: gathering.isOnline,
           // The pulse lane's count is never null; this one is, and null means
@@ -92,6 +97,7 @@ export function useCommunityUpcomingGatherings(
           goingCount: gathering.goingCount ?? 0,
         },
         fmt,
+        t,
         gathering.goingCount && gathering.goingCount > 0
           ? t("gatherings:spots.going", { count: gathering.goingCount })
           : t("gatherings:spots.openToAll"),

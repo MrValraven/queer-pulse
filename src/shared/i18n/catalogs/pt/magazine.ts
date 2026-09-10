@@ -722,6 +722,21 @@ export const magazine: Catalog = {
   "desk.pieceRow.chase": "Insistir",
   "desk.pieceRow.handOff": "Passar",
   "desk.pieceRow.selectAria": "Selecionar {title}",
+  "desk.pieceRow.moreAria": "Mais ações para {title}",
+  "desk.pieceRow.delete": "Apagar peça",
+
+  // ── Confirmação de eliminação (DeskModals -> DeletePieceDialog) ──────────
+  // A descrição nomeia tudo o que o backend remove na mesma transação, mais a
+  // proposta que devolve à caixa de entrada: quem decide precisa de saber isso
+  // antes de confirmar.
+  "desk.deletePiece.title": "Apagar “{title}”?",
+  "desk.deletePiece.description":
+    "O rascunho, as versões guardadas e os comentários de quem lê vão com ela. Se a peça veio de uma proposta, essa proposta volta para a caixa de entrada. Isto não pode ser desfeito.",
+  "desk.deletePiece.confirm": "Apagar peça",
+  "desk.deletePiece.publishedError":
+    "Esta peça tem trabalho publicado. Despublica-o primeiro e só depois apagas a peça.",
+  "desk.deletePiece.failed":
+    "Não foi possível apagar esta peça. Tenta outra vez.",
 
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Vazia",

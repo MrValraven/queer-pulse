@@ -23,6 +23,17 @@ export const nav: Catalog = {
   updating: "Updating…",
   updateDismiss: "Dismiss update",
 
+  // Landing page bar (LandingNav). Short labels: they sit in one row inside the
+  // nav pill, so each has to survive next to five siblings.
+  "landing.label": "Landing page sections",
+  "landing.about": "The idea",
+  "landing.communities": "Communities",
+  "landing.gatherings": "Gatherings",
+  "landing.housing": "Housing",
+  "landing.personas": "Personas",
+  "landing.why": "Why we built this",
+  "landing.stories": "Stories",
+
   // Primary destinations
   members: "Members",
   forum: "Forum",

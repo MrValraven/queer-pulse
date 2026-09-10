@@ -119,7 +119,11 @@ export function eventCardToMyEvent(
   t: TFunction,
 ): MyEvent {
   const { date, time } = splitIso(dto.startAt);
-  const end = dto.endAt ? splitIso(dto.endAt).time : undefined;
+  // Both halves of the end, so a gathering that runs past midnight or across
+  // several days keeps its real closing day. Splitting off the clock time
+  // alone left every "My events" surface reading the end against the START's
+  // day, which put a 23:00 to 04:00 party's end before its own beginning.
+  const endParts = dto.endAt ? splitIso(dto.endAt) : null;
   return {
     id: dto.slug,
     category: FILTER_TO_CATEGORY[filter] ?? "going",
@@ -127,7 +131,8 @@ export function eventCardToMyEvent(
     title: dto.title,
     date,
     start: time,
-    end,
+    end: endParts?.time,
+    endDate: endParts?.date,
     // The raw instants ride along for the .ics exporter, which must not export
     // the browser-local rendering above as a floating time (FE-MSG-09).
     startAtIso: dto.startAt,
@@ -174,6 +179,11 @@ export function eventInviteToMyEvent(
 ): MyEvent {
   const ev = dto.event;
   const { date, time } = splitIso(ev?.startAt);
+  // The end, both halves, so an invite to a three-day festival fills every
+  // calendar cell it runs through and states when it finishes. The invite row
+  // already carried the raw instant for the .ics exporter; nothing was reading
+  // the display side of it.
+  const endParts = ev?.endAt ? splitIso(ev.endAt) : null;
   return {
     id: dto.id,
     category: "invite",
@@ -181,6 +191,8 @@ export function eventInviteToMyEvent(
     title: ev?.title ?? t("myevents:invite.defaultTitle"),
     date,
     start: time,
+    end: endParts?.time,
+    endDate: endParts?.date,
     startAtIso: ev?.startAt,
     endAtIso: ev?.endAt ?? undefined,
     venue: ev?.isOnline ? t("myevents:card.online") : (ev?.venue ?? ""),

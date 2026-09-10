@@ -13,7 +13,7 @@ import { AddToCalendarModal } from "./AddToCalendarModal";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { Icons } from "./MyEventsIcons";
-import { isToday } from "./myEvents.helpers";
+import { shouldShowDayOf } from "./myEvents.helpers";
 import type { MyEvent } from "./myEvents.types";
 
 const GATHERING = linkToPath("QueerPulse Gathering.html");
@@ -228,7 +228,7 @@ export function EventTools({
     </button>
   );
   const DayofBtn =
-    isToday(ev) && ev.dayof ? (
+    shouldShowDayOf(ev) && ev.dayof ? (
       <ToolBtn on={dayofShown} onClick={onToggleDayof}>
         {Icons.info}
         {t("myevents:tools.dayOfDetails")}

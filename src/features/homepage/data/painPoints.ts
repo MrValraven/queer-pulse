@@ -70,7 +70,10 @@ export const builtSteps: BuiltStep[] = [
     payoffKey: "homepage:painPoints.network.payoff",
     payoff2Key: "homepage:painPoints.network.payoff2",
     ctaLabelKey: "homepage:painPoints.network.cta",
-    href: "#discovery",
+    // Signed in, "meet the community" means the member directory itself. The
+    // homepage's own highlight strip a few sections down is a taste of it.
+    // Signed-out visitors never follow this href (they get the explainer).
+    href: routes.members,
     isLaunched: true,
     tone: "warm",
   },

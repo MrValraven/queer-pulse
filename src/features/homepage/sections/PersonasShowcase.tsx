@@ -14,7 +14,7 @@ import {
   SWITCHER_ORDER,
   type PersonaKey,
 } from "./personasShowcase.data";
-import { usePersonaRotation } from "./usePersonaRotation";
+import { useSectionRotation } from "./useSectionRotation";
 import styles from "./PersonasShowcase.module.css";
 
 const avTintClass: Record<string, string | undefined> = {
@@ -43,7 +43,7 @@ export function PersonasShowcase() {
     setIsRotationStopped(true);
   }, []);
 
-  const { sectionRef, pauseHandlers } = usePersonaRotation({
+  const { sectionRef, pauseHandlers } = useSectionRotation({
     order: SWITCHER_ORDER,
     selectedKey,
     onRotate: setSelectedKey,

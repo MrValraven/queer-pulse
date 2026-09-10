@@ -177,7 +177,12 @@
 
 .prow:hover .rowActs,
 .prow:focus-visible .rowActs,
-.prow[data-focus="true"] .rowActs {
+.prow[data-focus="true"] .rowActs,
+/* The ⋯ menu portals its popover to <body>, so moving the pointer from the
+   trigger onto the menu leaves the row un-hovered and would fade the whole
+   strip (trigger included) out from under an open menu. Hold it visible for
+   as long as the menu is open. */
+.prow:has([data-menu-open]) .rowActs {
   opacity: 1;
   pointer-events: auto;
 }

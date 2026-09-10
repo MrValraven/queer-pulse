@@ -1,7 +1,7 @@
 /**
  * Shared popover BODY for `DatePicker`'s non-range modes (Task 8): the
  * presets row (if any), the mode-specific content (`Calendar` for
- * date/datetime, `MonthGridPopover` for month, a bare `DateField` for time),
+ * date/datetime, `MonthGridPopover` for month, `TimeOptionsList` for time),
  * and a "Today" footer button. This is the one place that content is
  * rendered — `DatePickerPopover` (desktop, wrapped in a non-modal
  * `role="dialog"`) and `SingleDatePicker`'s mobile `ModalSheet` branch both
@@ -22,8 +22,9 @@
  */
 
 import { useTranslation } from "../../i18n/useTranslation";
-import { DateField, type FieldMode } from "./DateField";
+import { type FieldMode } from "./DateField";
 import { Calendar } from "./Calendar";
+import { TimeOptionsList } from "./TimeOptionsList";
 import { MonthGridPopover } from "./MonthGridPopover";
 import { DatePickerPresets, type DatePickerPreset } from "./DatePickerPresets";
 import { datePartOf } from "./datePickerValue";
@@ -43,6 +44,11 @@ export interface DatePickerPopoverContentProps {
    *  stays free of date-math imports. Suppresses the Today footer button
    *  when true (see the file header comment for why). */
   presetHasToday?: boolean;
+  /** Minutes between rows in the `mode="time"` list. */
+  timeStep?: number;
+  /** A start time the `mode="time"` rows are measured against, so each row
+   *  carries its span from it (see `TimeOptionsList`). */
+  relativeTo?: string | null;
   onSelectDay: (iso: string) => void;
   onSelectMonth: (iso: string) => void;
   onTimeChange: (iso: string | null) => void;
@@ -60,6 +66,8 @@ export function DatePickerPopoverContent({
   size,
   presets,
   presetHasToday = false,
+  timeStep,
+  relativeTo,
   onSelectDay,
   onSelectMonth,
   onTimeChange,
@@ -99,12 +107,15 @@ export function DatePickerPopoverContent({
         />
       )}
       {mode === "time" && (
-        <DateField
-          mode="time"
+        <TimeOptionsList
           value={value}
-          onChange={onTimeChange}
+          onSelect={onTimeChange}
           locale={locale}
-          size={size}
+          step={timeStep}
+          min={min}
+          max={max}
+          relativeTo={relativeTo}
+          label={t("shared:calendar.timeOptions")}
         />
       )}
       {showToday && (

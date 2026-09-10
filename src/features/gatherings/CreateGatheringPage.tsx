@@ -24,9 +24,18 @@ import {
   DatePlaceStep,
   RepeatsStep,
   ReviewStep,
+  StepRequirementChecklist,
   TypeStep,
 } from "./steps";
+import {
+  isStepSatisfied,
+  visibleStepRequirements,
+} from "./createGatheringSteps";
 import styles from "./CreateGatheringPage.module.css";
+
+/** Ties the Next button to the checklist naming what is blocking it. Only one
+ *  create-gathering wizard is ever on screen, so a constant is enough. */
+const GATE_ID = "create-gathering-requirements";
 
 export function CreateGatheringPage() {
   const navigate = useNavigate();
@@ -64,31 +73,13 @@ export function CreateGatheringPage() {
   });
   const createEvent = useCreateEvent();
 
-  // Per-step required-field gate (0-based indices): step 0 needs a format and a
-  // name so a nameless/typeless gathering can never advance or publish; step 1
-  // needs a real future start; the final step needs all three confirmations.
-  // Every other step is optional and always advanceable.
+  // Which fields a step demands, and why the button is dark, both come from
+  // `createGatheringSteps.ts`. They used to be written twice here: a gate that
+  // disabled the button and a separate ternary that wrote its tooltip. The two
+  // had drifted apart.
   const isStepComplete = useCallback(
-    (stepIndex: number) => {
-      if (stepIndex === 0)
-        return Boolean(form.type) && form.title.trim().length > 0;
-      // Step 1 also holds the online gathering's join link (PRD-182). A
-      // malformed one would 400 on publish four steps later with an error the
-      // host cannot map back to a field, so it is caught here instead. Empty
-      // is fine: the link is optional and can be added after publishing.
-      if (stepIndex === 1) return form.dateValid && form.onlineUrlValid;
-      if (stepIndex === 2) return form.recurrenceValid;
-      if (stepIndex === TOTAL_STEPS - 1) return form.allChecked;
-      return true;
-    },
-    [
-      form.type,
-      form.title,
-      form.dateValid,
-      form.onlineUrlValid,
-      form.recurrenceValid,
-      form.allChecked,
-    ],
+    (stepIndex: number) => isStepSatisfied(form, stepIndex),
+    [form],
   );
   const {
     currentStepIndex,
@@ -108,18 +99,7 @@ export function CreateGatheringPage() {
 
   const publishPending = isLastStep && createEvent.isPending;
   const nextDisabled = !canAdvanceFromStep(currentStepIndex) || publishPending;
-  const nextHint =
-    currentStepIndex === 0 && !canAdvanceFromStep(0)
-      ? t("gatherings:create.nav.detailsHint")
-      : currentStepIndex === 1 && !form.dateValid
-        ? t("gatherings:create.nav.dateHint")
-        : currentStepIndex === 1 && !form.onlineUrlValid
-          ? t("gatherings:create.step2.joinLinkInvalid")
-          : currentStepIndex === 2 && !form.recurrenceValid
-            ? t("gatherings:create.nav.repeatsHint")
-            : isLastStep && !form.allChecked
-              ? t("gatherings:create.nav.publishHint")
-              : undefined;
+  const requirements = visibleStepRequirements(form, currentStepIndex);
 
   const next = () => {
     if (!canAdvanceFromStep(currentStepIndex)) return;
@@ -202,6 +182,14 @@ export function CreateGatheringPage() {
               )}
 
               {!published && (
+                <StepRequirementChecklist
+                  id={GATE_ID}
+                  requirements={requirements}
+                  isLastStep={isLastStep}
+                />
+              )}
+
+              {!published && (
                 <div className={styles.nav}>
                   <button type="button" className={styles.back} onClick={back}>
                     {currentStepIndex === 0 ? (
@@ -213,12 +201,17 @@ export function CreateGatheringPage() {
                       </>
                     )}
                   </button>
+                  {/* `aria-disabled` rather than `disabled`: a disabled button
+                      cannot be focused, so a keyboard or screen-reader user had
+                      no way to reach the button OR the reason it was dark. The
+                      click handler already refuses to advance an unsatisfied
+                      step, so the behaviour is unchanged. */}
                   <button
                     type="button"
                     className={styles.next}
                     onClick={next}
-                    disabled={nextDisabled}
-                    title={nextHint}
+                    aria-disabled={nextDisabled}
+                    aria-describedby={GATE_ID}
                   >
                     {isLastStep ? (
                       <>

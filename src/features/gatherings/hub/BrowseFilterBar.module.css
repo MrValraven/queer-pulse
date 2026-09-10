@@ -64,6 +64,61 @@
   color: rgba(var(--cream-rgb), 1);
 }
 
+/* The always-open family row, above the search row's "Refine" drawer. The
+   chips are the same `.chip` the drawer's own rows use, so the two read as one
+   control set; only the label and the sideways scroll are new. */
+.familyRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 12px;
+  /* Both sides, so `overflow-x: auto` does not crop the focus ring off the
+     chip the keyboard is on. */
+  padding-top: 4px;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.familyRow::-webkit-scrollbar {
+  display: none;
+}
+
+.familyRowLabel {
+  flex: none;
+  /* Sits on the first chip line when the group wraps to two. */
+  line-height: 40px;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* `.group` wraps everywhere else, which the drawer's rows want. Ten family
+   chips on a phone would wrap into four stacked lines and push the first
+   poster off the fold, so inside this row they run on one line and the row
+   scrolls instead. Scoped to `.familyRow` so the drawer keeps its wrapping. */
+/* Nine chips wrap at desktop widths; narrow screens get one scrolling line,
+   the same rule the wizard's family row follows. */
+@media (max-width: 620px) {
+  .familyRow {
+    overflow-x: auto;
+  }
+  .familyRow .group {
+    flex-wrap: nowrap;
+  }
+}
+.familyRow .group {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.familyRow .chip {
+  flex: none;
+  white-space: nowrap;
+}
+
 /* The split's second column is a 1fr track, so a lone select in it would
    stretch the width of the panel. Cap it to read as a sibling of the
    neighbourhood one in the capped first column. */

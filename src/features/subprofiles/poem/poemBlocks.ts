@@ -72,23 +72,3 @@ export function poemFromDescription(description: string): PoemBlock[] {
   const lines: PoemLine[] = rawLines.map((line) => [{ text: line, marks: [] }]);
   return [newStanza(lines)];
 }
-
-/** First non-empty verse line as plain text — the row teaser. `raw` is
- *  normalized first (same rationale as `poemHasContent`): the row teaser is
- *  fed the item's raw `structured.poem` jsonb, which may still be legacy
- *  `{html}`-shaped or otherwise malformed since there is no migration. */
-export function poemPlainFirstLine(raw: unknown): string {
-  const blocks = normalizePoemBlocks(raw);
-  for (const block of blocks) {
-    if (block.kind === "break") continue;
-    for (const line of block.lines) {
-      if (poemLineIsEmpty(line)) continue;
-      const text = line
-        .map((span) => span.text)
-        .join("")
-        .trim();
-      if (text.length > 0) return text;
-    }
-  }
-  return "";
-}

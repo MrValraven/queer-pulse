@@ -17,9 +17,6 @@ export interface StudioLightboxProps {
   onClose: () => void;
   /** `-1` for previous, `1` for next — the caller owns/clamps the index. */
   onMove: (delta: number) => void;
-  /** The persona's public display name, used as the `WorkRightsFooter`
-   *  copyright holder for the item currently shown. */
-  authorName: string;
 }
 
 /**
@@ -44,7 +41,6 @@ export function StudioLightbox({
   index,
   onClose,
   onMove,
-  authorName,
 }: StudioLightboxProps) {
   const { t } = useTranslation();
   useScrollLock();
@@ -103,10 +99,7 @@ export function StudioLightbox({
           {meta && <span>{meta}</span>}
           {item.description && <p>{item.description}</p>}
           {item.section !== "poems" && (
-            <WorkRightsFooter
-              authorName={authorName}
-              createdAtISO={item.createdAt}
-            />
+            <WorkRightsFooter createdAtISO={item.createdAt} />
           )}
         </figcaption>
       </figure>

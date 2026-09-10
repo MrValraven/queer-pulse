@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { FadeIn } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { calendarLegend, type CalendarEvent } from "../data";
+import { calendarLegend, gatheringHasEnded, type CalendarEvent } from "../data";
 import { MonthGrid, AllUpcomingEvents } from "../CalendarGrid";
-import { sameDay } from "../calendarGrid.helpers";
+import { spansDay } from "../calendarGrid.helpers";
 import { CalendarSidebar } from "../CalendarSidebar";
 import styles from "./CalendarView.module.css";
 
@@ -68,8 +68,11 @@ export function CalendarView({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [needsMore]);
 
+  // Every day a gathering RUNS on, rather than only the day it starts. A
+  // three-day festival dots all three of its days, and clicking day two lists
+  // it instead of claiming the day is empty.
   function eventsForDate(date: Date) {
-    return events.filter((event) => sameDay(event.date, date));
+    return events.filter((event) => spansDay(event.date, event.endAt, date));
   }
 
   function changeMonth(delta: number) {
@@ -88,8 +91,12 @@ export function CalendarView({
     });
   }
 
+  // The cut is the END instant. The API deliberately sends gatherings that are
+  // currently running under `filter=upcoming`, and this list used to discard
+  // every one of them the moment its start passed. A gathering with no stated
+  // end reads exactly as it did before, since its start is its end.
   const upcoming = events
-    .filter((event) => event.date >= now)
+    .filter((event) => !gatheringHasEnded(event, now))
     .sort((a, b) => a.date.getTime() - b.date.getTime());
   const selectedEvents = selected ? eventsForDate(selected) : [];
 

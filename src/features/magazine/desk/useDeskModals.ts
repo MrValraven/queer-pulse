@@ -6,6 +6,7 @@
  */
 
 import { useState } from "react";
+import { ApiError } from "../../../shared/api/client";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece, Pitch } from "../data/desk.data";
@@ -14,6 +15,12 @@ import type { usePitchMutations } from "../api/usePitchMutations";
 import type { DeskModal } from "./DeskModals";
 import type { CommissionPayload } from "./CommissionModal";
 import type { PassPayload } from "./PassModal";
+
+/** The backend's one refusal to delete: the piece owns PUBLISHED content, and
+ *  live content is never removed as a side effect of a desk cleanup. */
+function isPublishedConflict(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 409;
+}
 
 export interface UseDeskModalsParams {
   /** Currently-viewing editor id, stamped as `editorId` on new commissions. */
@@ -81,6 +88,10 @@ export function useDeskModals({
     setModal({ kind: "handoff", piece: { title: piece.title } });
     setContextId(piece.id);
   }
+  function openDeletePiece(piece: Piece): void {
+    setModal({ kind: "deletePiece", piece: { title: piece.title } });
+    setContextId(piece.id);
+  }
   function openShortcuts(): void {
     setModal({ kind: "shortcuts" });
   }
@@ -146,6 +157,28 @@ export function useDeskModals({
     if (contextId) pieceMutations.assign.mutate({ id: contextId, editorId });
   }
 
+  /** Deleting is the one desk action that cannot be undone, so it reports its
+   *  own outcome instead of leaving the dialog to close on an unstated result.
+   *  The 409 is caught here rather than left to the global error toast: the
+   *  backend's refusal is an untranslated English sentence, and "unpublish it
+   *  first" is the one error an editor can actually act on. */
+  async function confirmDeletePiece(): Promise<void> {
+    if (!contextId) return;
+    try {
+      await pieceMutations.remove.mutateAsync(contextId);
+      close();
+      showToast(t("magazine:desk.pieceToast.deleted"), "success");
+    } catch (error) {
+      close();
+      showToast(
+        isPublishedConflict(error)
+          ? t("magazine:desk.deletePiece.publishedError")
+          : t("magazine:desk.deletePiece.failed"),
+        "error",
+      );
+    }
+  }
+
   return {
     modal,
     close,
@@ -155,9 +188,12 @@ export function useDeskModals({
     openPassFromPitch,
     openChase,
     openHandoff,
+    openDeletePiece,
     openShortcuts,
     submitCommission,
     submitPass,
     confirmHandoff,
+    confirmDeletePiece,
+    isDeletingPiece: pieceMutations.remove.isPending,
   };
 }

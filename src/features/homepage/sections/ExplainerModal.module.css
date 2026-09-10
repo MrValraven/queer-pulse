@@ -115,3 +115,17 @@
   color: rgba(var(--cream-rgb), 0.66);
   margin: -12px 0 24px;
 }
+
+/* An inline link inside .note. Only the housing explainer uses one so far: it
+   ends on the housing co-ops page, the one housing surface a signed-out visitor
+   can genuinely read (a PUBLIC_EXCEPTIONS entry in authGate.ts), so the note
+   has somewhere to send them rather than only a door. Inherits .note's size and
+   lifts the colour back to full cream so it reads as a link on the plum. */
+.noteLink {
+  color: rgba(var(--cream-rgb), 1);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.noteLink:hover {
+  color: var(--accent);
+}

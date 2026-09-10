@@ -2,12 +2,15 @@
    marketing Footer for this route (see AppShell.tsx), so `.app` is the page's
    ONLY scroll surface; nothing stacks below it that could give the page a
    second, competing scroll.
-   `--messages-top-offset` is the real height of whatever sits above `.app`:
-   by default (a browser tab, any width) that's the floating pill Navbar
-   (`--nav-top` + `--nav-height`) plus a small breathing gap; the override
-   below swaps it for the installed-PWA app-bar's own real height once that
-   bar (not the pill) is what's actually on screen. `--bottom-inset` is the
-   existing token standalone.css already publishes for exactly this purpose
+   `--messages-top-offset` is the real height of whatever sits above `.app`.
+   On desktop that is now nothing: `AppShell`'s `desktopChromeless` prop stops
+   AppChrome mounting the Navbar (and, in sidebar nav mode, the left rail it
+   returns instead) above 860px, because this route carries its own wordmark
+   and account footer inside the inbox panel. So the base value is 0 and the
+   panel sits flush against the viewport top. The mobile override below swaps
+   in the app-bar's own real height, since a phone keeps that bar.
+   `--bottom-inset` is the existing token standalone.css already publishes for
+   exactly this purpose
    (0px above the 860px mobile breakpoint; BottomTabBar's total occupied
    height, home-indicator inset included, on ANY mobile view — a browser tab
    or installed alike, since BottomTabBar/`.appBar` key off the breakpoint
@@ -21,13 +24,12 @@
    what's actually on screen at the bottom edge in either state. */
 .app {
   display: flex;
-  --messages-top-offset: calc(var(--nav-top) + var(--nav-height) + 12px);
+  --messages-top-offset: 0px;
   margin-top: var(--messages-top-offset);
   height: calc(
     100svh - var(--messages-top-offset) -
       max(var(--bottom-inset), var(--keyboard-inset, 0px))
   );
-  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 /* Any mobile view (≤860px — the same condition BottomTabBar/`.appBar` gate
    on, browser tab or installed alike): the floating pill is replaced by the
@@ -44,7 +46,113 @@
 @media (--mobile) {
   .app {
     --messages-top-offset: calc(var(--app-bar-h) + env(safe-area-inset-top));
+    /* The hairline separates the panel from the app bar above it. Mobile only:
+       on desktop there is no longer anything above to separate from, and a rule
+       hanging off the top edge of the viewport reads as an artefact. */
+    border-top: 1px solid rgba(var(--line-rgb), 0.09);
   }
+}
+
+/* ── Panel chrome (desktop only, MessagesRailChrome) ───────────────────────
+   This route drops the site nav above 860px (AppShell `desktopChromeless`), so
+   the inbox column carries the account chip at its foot, the way the admin
+   rail does (the wordmark now lives in the thread-list header above, on every
+   viewport). `flex: none` around the thread list's `flex: 1`, so the list
+   keeps every pixel the footer doesn't need. */
+
+.railFooter {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.railFooterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* The way out takes the row's slack; the bell stays a fixed square beside it,
+   so the two line up with the full-width account chip below. */
+.railBack {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-11);
+  color: rgba(var(--ink-rgb), 0.68);
+  text-decoration: none;
+  font-size: var(--text-13);
+  font-weight: 600;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.railBack svg {
+  flex: none;
+  font-size: var(--text-16);
+  transition: transform var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .railBack:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+    color: var(--text-strong);
+  }
+  .railBack:hover svg {
+    transform: translateX(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .railBack:hover svg {
+    transform: none;
+  }
+}
+.railBell {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-11);
+  background: rgba(var(--plum-rgb), 0.04);
+  color: rgba(var(--ink-rgb), 0.72);
+  font-size: var(--text-17);
+  text-decoration: none;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .railBell:hover {
+    background: rgba(var(--plum-rgb), 0.09);
+    color: var(--text-strong);
+  }
+}
+.railBack:focus-visible,
+.railBell:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.railBellBadge {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--text-strong);
+  font-size: var(--text-9);
+  font-weight: 700;
 }
 
 /* Thread list */
@@ -72,33 +180,57 @@
   align-items: center;
   gap: 4px;
 }
-.tpTitle {
+/* Wordmark row at the head of the thread panel, on every viewport — replaces
+   the old "Messages" title + help button. */
+.tpBrand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-strong);
+  text-decoration: none;
+}
+.tpBrandName {
   font-family: var(--serif);
   font-size: var(--text-22);
-  color: var(--text-strong);
+  font-weight: 500;
   letter-spacing: -0.01em;
+}
+.tpBrandName em {
+  color: var(--accent);
+  font-style: italic;
+}
+.tpBrand:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-9);
 }
 .composeBtn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(var(--plum-rgb), 0.07);
+  background: none;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-strong);
+  color: var(--ink-40);
   transition:
-    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
     transform var(--dur-fast) var(--ease);
+}
+.composeBtn svg {
+  width: 24px;
+  height: 24px;
 }
 @media (hover: hover) {
   .composeBtn:hover {
-    background: rgba(var(--plum-rgb), 0.13);
+    color: var(--text-strong);
   }
 }
 .composeBtn:active {
+  color: var(--text-strong);
   transform: scale(0.94);
 }
 .composeBtn:focus-visible {
@@ -342,13 +474,83 @@
   flex-direction: column;
   min-width: 0;
   position: relative;
+  /* The two wallpaper layers below sit at z-index 0 and every child is raised
+     to 1, so the panel needs its own stacking context or those z-indexes would
+     be compared against boxes outside it (the thread list, the app chrome). */
+  isolation: isolate;
 }
+/* ── Chat wallpaper ────────────────────────────────────────────────────────
+   Two layers, because one element cannot carry both a masked and an unmasked
+   background: `::before` is the flat ground tint, `::after` is the doodle tile
+   masked out of a flat ink fill. Tokens (including the tile itself) live in
+   chat-wallpaper.css; the pick that sets the data-attributes lives in
+   wallpaper.ts.
+
+   Both hang off the PANEL rather than `.area`, the scroller, so the pattern
+   stays put while messages scroll — the WhatsApp behaviour — and the browser
+   never repaints the tile on scroll. `.topbar` and `.composer` paint their own
+   opaque `--paper`, so they cover the wallpaper and read as the distinct bands
+   above and below the log that this look wants. */
+.convoPanel::before,
+.convoPanel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.convoPanel::before {
+  background-color: var(--chat-ground, transparent);
+}
+.convoPanel::after {
+  /* --line-rgb is one of the tokens that flips with the theme, which is the
+     whole reason the tile is a mask: plum ink on cream, cream ink on
+     near-black, one asset. */
+  background-color: rgba(var(--line-rgb), var(--chat-doodle-alpha));
+  -webkit-mask-image: var(--chat-doodle-mask);
+  mask-image: var(--chat-doodle-mask);
+  -webkit-mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  /* Off unless the pick asks for it. Hiding via opacity (rather than not
+     emitting the layer) keeps the mask decoded once and makes the toggle in
+     the picker flip instantly. */
+  opacity: 0;
+}
+.convoPanel[data-wallpaper-doodles="on"]::after {
+  opacity: 1;
+}
+/* Every child rides above both layers. `> *` rather than the three class names
+   because ConversationTopSection is a fragment: the header, the connection
+   banner and the pinned banner are all direct children here, and a future
+   fourth would otherwise render behind the wallpaper. `.composerDock` is
+   already `position: relative` (it anchors `.jumpPill`); adding it to `.area`
+   and the banners is inert, since nothing in the panel positions against
+   `.convoPanel` itself. */
+.convoPanel > * {
+  position: relative;
+  z-index: 1;
+}
+/* The topbar has to clear the log, not just the wallpaper. Raising every child
+   to the SAME z-index made them siblings in one stacking context, where DOM
+   order decides — and `.area` comes after `.topbar`, so it painted over the
+   header's open kebab popover and swallowed its clicks. The bar (and anything
+   it hangs, i.e. `ConversationMenu`'s menu) sits above the log. */
+.convoPanel > .topbar {
+  z-index: 2;
+}
+/* Compact conversation bar — 59px tall, the rhythm people know from
+   WhatsApp/Telegram, so the log starts as high up the screen as it can. Every
+   child is a 44px row (the icon buttons' a11y touch floor, and the 38px avatar
+   inside `.identityRow`'s 3px padding), so the bar is 7 + 44 + 7 + 1px border.
+   Change any of the three together or the bar stops being 59. */
 .topbar {
-  padding: 18px 22px;
+  padding: 7px 20px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex: none;
   background: var(--paper);
 }
@@ -391,7 +593,7 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 6px;
+  padding: 3px 6px;
   margin-inline-start: -6px;
   border-radius: var(--radius-card);
 }
@@ -416,16 +618,18 @@
   outline: 2px solid var(--plum);
   outline-offset: 2px;
 }
+/* Name over status as ONE block, tightly set — two lines that read together
+   rather than two rows floating in the bar. */
 .ctbInfo {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 1px;
 }
 .ctbName {
   font-family: var(--serif);
-  font-size: var(--text-18);
+  font-size: var(--text-16);
   line-height: 1.2;
   color: var(--text-strong);
   letter-spacing: -0.01em;
@@ -474,6 +678,16 @@
 .safetyMenuWrap {
   position: relative;
   display: inline-flex;
+}
+/* `.rowMenuPopover`'s own raw `z-index: 2` is tuned for the thread list, where
+   it only has to beat the very next row. Here it hangs off the conversation
+   HEADER and overhangs the entire scrolling message log below — each
+   virtualized row is its own stacking context (`MessageAreaRow`'s
+   `transform: translateY(...)`), so a "raised"-tier number doesn't reliably
+   clear it. Escape to the same `--z-popover` tier `.reactionPickerPopover`/
+   `.contextMenu` already use to float above this same log. */
+.safetyMenuWrap .rowMenuPopover {
+  z-index: var(--z-popover);
 }
 
 .area {
@@ -2474,18 +2688,18 @@
   color: var(--ink-40);
   border-radius: var(--radius-avatar);
   cursor: pointer;
-  transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+  transition: color var(--dur-fast) var(--ease);
+}
+.ctbIconBtn svg {
+  width: 24px;
+  height: 24px;
 }
 @media (hover: hover) {
   .ctbIconBtn:hover {
-    background: rgba(var(--plum-rgb), 0.07);
     color: var(--text-strong);
   }
 }
 .ctbIconBtn:active {
-  background: rgba(var(--plum-rgb), 0.12);
   color: var(--text-strong);
 }
 .ctbIconBtn:focus-visible {

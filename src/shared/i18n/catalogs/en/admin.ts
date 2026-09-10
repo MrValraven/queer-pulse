@@ -386,6 +386,7 @@ export const admin: Catalog = {
     "Homepage \u201cwhat we built\u201d explainer",
   "members.verify.source.members_explainer": "Members explainer",
   "members.verify.source.personas_explainer": "Personas explainer",
+  "members.verify.source.housing_explainer": "Housing explainer",
   "members.verify.source.sign_in": "Sign-in page",
   "members.verify.source.barter": "Barter board",
   "members.verify.source.employer_reviews": "Employer reviews",

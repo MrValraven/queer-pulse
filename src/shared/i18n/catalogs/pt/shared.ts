@@ -316,6 +316,10 @@ export const shared: Catalog = {
   // HubBackLink
   "hubBackLink.backTo": "Voltar a {label}",
 
+  // ExpandableText — o botão sob uma bio ou avaliação dobrada em poucas linhas.
+  "expandableText.readMore": "Ler mais",
+  "expandableText.showLess": "Mostrar menos",
+
   // Modal / ModalSheet
   "modal.close": "Fechar",
 
@@ -605,6 +609,18 @@ export const shared: Catalog = {
   "calendar.preset.today": "Hoje",
   "calendar.preset.tomorrow": "Amanhã",
   "calendar.preset.nextWeek": "Próxima semana",
+  // TimeOptionsList: a lista de horas clicável atrás do ícone de relógio.
+  "calendar.timeOptions": "Horas",
+  "calendar.durationHours": "{hours}h",
+  "calendar.durationMinutes": "{minutes}min",
+  "calendar.durationHoursMinutes": "{hours}h{minutes}",
+  "calendar.durationFromStart": "+{duration}",
+  // Uma duração que atravessa dias (`formatSpanDuration`), para um convívio que
+  // dura um fim de semana inteiro. `{remainder}` já vem formatado pelos três
+  // padrões acima.
+  "calendar.durationDays_one": "{count} dia",
+  "calendar.durationDays_other": "{count} dias",
+  "calendar.durationDaysRemainder": "{days} e {remainder}",
 
   // reframe.*: controlo de pan/zoom para recorte (ImageReframer.tsx,
   // PhotoReframeModal.tsx, useImageReframerState.ts), mostrado quando alguém

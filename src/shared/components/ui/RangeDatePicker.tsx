@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiCalendar, FiX } from "react-icons/fi";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useOutsideDismiss } from "../../hooks/useOutsideDismiss";
@@ -23,6 +24,7 @@ import { mediaMax } from "../../theme/breakpoints";
 import { DateField } from "./DateField";
 import { ModalSheet } from "./Modal";
 import { RangeCalendar } from "./RangeCalendar";
+import { useAnchoredPopover } from "./useAnchoredPopover";
 import type { DatePickerBaseProps, DateRange } from "./DatePicker";
 import styles from "./Calendar.module.css";
 
@@ -56,6 +58,14 @@ export function RangeDatePicker({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  // Right edge aligned to the trigger, nudged back on screen when that would
+  // hang the panel off the side, flipped above the trigger when there is no
+  // room below. The panel is portalled to `document.body` (see
+  // `useAnchoredPopover`), so its ref lives here: the outside-press dismiss
+  // below has to count a press inside it as inside the picker.
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const isDesktopOpen = open && !isMobile;
+  const placement = useAnchoredPopover(containerRef, popoverRef, isDesktopOpen);
   const baseId = useId();
   const popoverId = `${baseId}-popover`;
 
@@ -67,7 +77,19 @@ export function RangeDatePicker({
   // press inside it is never "inside" `containerRef` and would otherwise
   // fire an immediate outside-dismiss on top of `ModalSheet`'s own scrim
   // click/drag/Escape handling (mirrors `SingleDatePicker`).
-  useOutsideDismiss(open && !isMobile, containerRef, close);
+  useOutsideDismiss(isDesktopOpen, containerRef, close, {
+    additionalInsideRef: popoverRef,
+  });
+
+  // Portalling the panel to `document.body` moves it out of the trigger's tab
+  // order, so opening now hands focus to the dialog itself. `RangeCalendar`
+  // has no "focus a day on mount" seam the way `Calendar` does (see this
+  // file's header), and focusing the dialog still lands the keyboard inside
+  // the panel: Tab walks its header and grid, Escape returns to the trigger.
+  useEffect(() => {
+    if (!isDesktopOpen) return;
+    popoverRef.current?.focus();
+  }, [isDesktopOpen]);
 
   // Escape-to-close, matching `DatePickerPopover`'s non-modal dialog contract
   // (no focus trap, no `aria-modal`): closed via Escape, an outside press, or
@@ -80,7 +102,7 @@ export function RangeDatePicker({
     savedClose.current = close;
   });
   useEffect(() => {
-    if (!open || isMobile) return;
+    if (!isDesktopOpen) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -89,7 +111,7 @@ export function RangeDatePicker({
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, isMobile]);
+  }, [isDesktopOpen]);
 
   const triggerLabel = t("shared:calendar.chooseRange");
   const startLabel = t("shared:calendar.startDate");
@@ -185,24 +207,35 @@ export function RangeDatePicker({
           />
         </ModalSheet>
       )}
-      {open && !isMobile && (
-        <div
-          id={popoverId}
-          role="dialog"
-          aria-label={triggerLabel}
-          className={styles.popover}
-        >
-          <RangeCalendar
-            value={value}
-            onChange={handleRangeChange}
-            min={min}
-            max={max}
-            isDateUnavailable={isDateUnavailable}
-            locale={activeLocale}
-            size={size}
-          />
-        </div>
-      )}
+      {isDesktopOpen &&
+        createPortal(
+          <div
+            ref={popoverRef}
+            id={popoverId}
+            role="dialog"
+            aria-label={triggerLabel}
+            tabIndex={-1}
+            className={[
+              styles.popover,
+              placement === null && styles.popoverUnplaced,
+              placement?.isFlipped && styles.popoverFlipped,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            style={placement?.style}
+          >
+            <RangeCalendar
+              value={value}
+              onChange={handleRangeChange}
+              min={min}
+              max={max}
+              isDateUnavailable={isDateUnavailable}
+              locale={activeLocale}
+              size={size}
+            />
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

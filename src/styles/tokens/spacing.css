@@ -46,6 +46,16 @@
      standalone.css: the slimmer mobile app bar). Sticky page bars read this
      instead of `top: 0`, which parks them underneath the nav. */
   --sticky-top: var(--nav-band);
+  /* How much of that reserved band is actually VISIBLE above page content in
+     the current nav layout. `main[data-page-main]`'s reserved padding is
+     painted by nothing, so it shows the app's cream body ground. A page that
+     paints its own full-bleed ground therefore opens on a stripe that does not
+     match it. This is exactly how far such a page must extend its own ground
+     upward to close that seam. Defaults to the floating pill's whole band; the
+     sidebar rail cancels the padding outright (nav-mode.css) and the mobile app
+     bar is an opaque strip that covers what is left (standalone.css), so both
+     drop it to zero in place and the fill collapses with them. */
+  --nav-band-visible: var(--nav-band);
   /* Installed-PWA top app bar. Published here so Navbar.module.css and
      standalone.css read one value. */
   --app-bar-h: 48px;

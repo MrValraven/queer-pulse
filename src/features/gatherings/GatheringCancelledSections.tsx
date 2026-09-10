@@ -7,6 +7,8 @@ import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { initialsFromName, initialsFromParts } from "../../shared/lib/initials";
 import { spotsText, type GatheringDetail } from "./data";
+import { eventZoneFormat } from "./eventTimezone";
+import { gatheringWhen } from "./gatheringSchedule";
 import {
   ALTS,
   CANCELLED_HOURS_AGO,
@@ -57,24 +59,36 @@ export function LiveCancelledEventCard({
   const initials = hasHostParts
     ? initialsFromParts(gathering.hostFirst ?? "", gathering.hostLast ?? "")
     : initialsFromName(gathering.host, "QP");
+  // Read on the gathering's own clock, the way the detail page does, so the
+  // two surfaces agree about which days a cancelled overnight or multi-day
+  // gathering would have run on. Judged from the reader's clock instead, a
+  // member abroad would be shown a different night here than on the event.
+  const zone = eventZoneFormat(gathering.timezone, gathering.date);
+  const when = gatheringWhen(
+    gathering.date,
+    gathering.endAt,
+    fmt,
+    t,
+    { weekday: "short", ...zone.dateOptions },
+    zone.timeOptions,
+  );
   return (
     <div className={styles.eventCard}>
       <div className={styles.eventH}>
         <div className={styles.eventDate}>
           <div className="d">
-            {fmt.date(gathering.date, { day: "2-digit" })}
+            {fmt.date(gathering.date, { day: "2-digit", ...zone.dateOptions })}
           </div>
           <div className="m">
-            {fmt.date(gathering.date, { month: "short" })}
+            {fmt.date(gathering.date, { month: "short", ...zone.dateOptions })}
           </div>
         </div>
         <div className={styles.eventInfo}>
           <h2>{gathering.title}</h2>
           <div className={styles.eventMeta}>
             <span>
-              {fmt.date(gathering.date, { weekday: "short" })}{" "}
-              {fmt.time(gathering.date)}
-              {gathering.endAt ? ` – ${fmt.time(gathering.endAt)}` : ""}
+              {when.dateText} {when.timeText}
+              {when.nextDayNote ? ` ${when.nextDayNote}` : ""}
             </span>
             {gathering.hood && (
               <>

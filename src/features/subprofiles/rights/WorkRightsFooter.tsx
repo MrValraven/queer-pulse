@@ -3,8 +3,6 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./WorkRightsFooter.module.css";
 
 export interface WorkRightsFooterProps {
-  /** The persona's display name, used as the copyright holder. */
-  authorName: string;
   /** The item's ISO 8601 `createdAt` (first-published date). */
   createdAtISO: string;
   /** `"item"` (default) is the inline footer under a single work's body, used
@@ -14,8 +12,16 @@ export interface WorkRightsFooterProps {
 }
 
 /**
- * Copyright + provenance notice: a "© {year} {author}. All rights reserved."
- * line plus a "First published on QueerPulse · {date}" line. Tokens only.
+ * Copyright + provenance notice: a "© {year}. All rights reserved." line plus
+ * a "First published on QueerPulse · {date}" line. Tokens only.
+ *
+ * The notice names NO copyright holder. A persona created without a display
+ * name carries its craft as its name (`KIND_LABELS[kind]`, e.g. "Dancer"), so
+ * naming the holder printed "© 2026 Dancer. All rights reserved.", a claim by
+ * an activity rather than a person. The year and the QueerPulse provenance
+ * line are what the notice is actually for, and the page already says whose
+ * work it is (see `personaTitleName`), so the holder slot is gone rather than
+ * guessed at.
  *
  * The shield hangs to the left of both lines in the inline `item` variant. In
  * the centred `page` variant it sits inline with the © line, so it reads as
@@ -28,7 +34,6 @@ export interface WorkRightsFooterProps {
  * one work is on screen and the provenance is the point.
  */
 export function WorkRightsFooter({
-  authorName,
   createdAtISO,
   variant = "item",
 }: WorkRightsFooterProps) {
@@ -54,7 +59,7 @@ export function WorkRightsFooter({
       <div>
         <p className={styles.copyright}>
           {isPageVariant ? shieldIcon : null}
-          {t("subprofiles:rights.copyright", { year, author: authorName })}
+          {t("subprofiles:rights.copyright", { year })}
         </p>
         <p className={styles.provenance}>
           {t("subprofiles:rights.firstPublished", { date: formattedDate })}

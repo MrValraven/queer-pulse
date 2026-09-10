@@ -514,7 +514,29 @@ export const homepage: Catalog = {
   "housing.cta": "Ver alojamento",
   "housing.eyebrow": "Quartos e colegas de casa",
   "housing.secondaryCta": "Publica que estás à procura",
+  "housing.explainerCta": "Como funciona o alojamento aqui",
   "housing.ctaNote": "Aqui, toda a gente faz parte da mesma rede de confiança.",
+
+  // Explicação para quem está de fora, atrás do único botão de alojamento
+  // (HousingExplainerModal). Ver o comentário em housingExplainer.data.ts.
+  "housingExplainer.eyebrow": "Alojamento aqui",
+  "housingExplainer.title": "Um quadro de quartos, e <em>tudo o resto.</em>",
+  "housingExplainer.titlePlain": "Um quadro de quartos, e tudo o resto",
+  "housingExplainer.lede":
+    "Os anúncios são só uma parte disto. Eis o que está do outro lado da porta, e porque é que existe uma porta.",
+  "housingExplainer.pillars.groups.title": "Grupos que escolhem quem entra",
+  "housingExplainer.pillars.groups.body":
+    "Grupos de habitação pequenos, onde são os membros a decidir quem entra e cada grupo tem as suas próprias regras. Os quartos partilhados dentro de um grupo ficam lá dentro, e nenhum intermediário entra.",
+  "housingExplainer.pillars.viewings.title": "A morada exata espera por um sim",
+  "housingExplainer.pillars.viewings.body":
+    "Um anúncio mostra-te a zona até quem o publicou aceitar a tua visita, e só aí é que a morada exata aparece. Depois escrevem os dois uma avaliação, e nenhum de vocês lê a do outro antes de ambas estarem escritas.",
+  "housingExplainer.pillars.door.title": "Porque é que o quadro tem uma porta",
+  "housingExplainer.pillars.door.body":
+    "Um quadro aberto é copiado para sites de anúncios e vasculhado por quem faz burlas com depósitos, por isso os quartos e os perfis de colegas de casa pedem-te que sejas membro primeiro. O nosso guia claro para detetar uma burla e conhecer os teus direitos enquanto inquilino em Portugal está atrás da mesma porta.",
+  "housingExplainer.note":
+    "As cooperativas de habitação são a única parte que já podes ler: <coop>vê quem está a organizar casa em conjunto</coop>.",
+  "housingExplainer.requestInviteCta": "Pedir um convite",
+  "housingExplainer.signInCta": "Já faço parte",
   "housing.tabRoom": "O quarto",
   "housing.tabLandlord": "O senhorio",
   "housing.postedByMember": "Publicado por uma pessoa da comunidade",

@@ -1,8 +1,9 @@
 /**
  * The public single-value date/time picker: a `DateField` (the typeable half)
  * plus a trigger button that opens a mode-specific popover (the browse half —
- * `Calendar` for date/datetime, a month grid for month, a bare field for
- * time). Composes Tasks 3-5; see spec §6 for the full contract.
+ * `Calendar` for date/datetime, a month grid for month, a `TimeOptionsList`
+ * of selectable times for time). Composes Tasks 3-5; see spec §6 for the full
+ * contract.
  *
  * This file implements the non-range modes (`date`/`datetime`/`time`/
  * `month`). `mode="range"` dispatches to `RangeDatePicker` (Task 7): a
@@ -76,6 +77,19 @@ export interface DatePickerBaseProps {
   isDateUnavailable?: (iso: string) => boolean;
   presets?: Array<{ labelKey: string; value: string }>;
   /**
+   * `mode="time"` only: minutes between the rows the popover offers.
+   * Defaults to `DEFAULT_TIME_STEP_MINUTES` (15).
+   */
+  timeStep?: number;
+  /**
+   * `mode="time"` only: a start time (`"HH:mm"`) each row is measured
+   * against, so the list reads "9:00 PM +2h". Pass the START field's value on
+   * an END field; leave unset for a plain list. Spans wrap past midnight, so
+   * an end before the start reads as a real length rather than a negative
+   * one (see `durationMinutes`).
+   */
+  relativeTo?: string | null;
+  /**
    * Locale for month/weekday names and 12h/24h formatting. Not in the
    * original spec's prop list, but every composed primitive (`DateField`,
    * `Calendar`) takes one and defaults to the active app language — every
@@ -130,6 +144,8 @@ function SingleDatePicker({
   isDateUnavailable,
   locale,
   presets,
+  timeStep,
+  relativeTo,
   "aria-describedby": ariaDescribedBy,
   "aria-invalid": ariaInvalid,
   "aria-required": ariaRequired,
@@ -140,6 +156,10 @@ function SingleDatePicker({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  // Held here rather than inside `DatePickerPopover`: that panel is portalled
+  // to `document.body`, so the outside-press dismiss below needs its own
+  // handle on it to tell a press inside the calendar from a press on the page.
+  const popoverRef = useRef<HTMLDivElement>(null);
   const baseId = useId();
   const popoverId = `${baseId}-popover`;
 
@@ -154,7 +174,9 @@ function SingleDatePicker({
   // on mobile would fire "outside" on every press inside the sheet (a
   // `pointerdown` there is never inside `containerRef`) and close it
   // instantly.
-  useOutsideDismiss(open && !isMobile, containerRef, close);
+  useOutsideDismiss(open && !isMobile, containerRef, close, {
+    additionalInsideRef: popoverRef,
+  });
 
   const chooseKey =
     mode === "time"
@@ -194,6 +216,16 @@ function SingleDatePicker({
     } else if (mode === "date" || mode === "datetime") {
       handleSelectDay(formatIsoDate(todayPlain()));
     }
+  };
+
+  // Picking a row from the time list commits and closes, exactly as picking a
+  // day from the calendar grid does. The popover used to hold a second copy of
+  // the segmented field, which had no "picked" moment to close on; a list row
+  // does, and leaving it open after a click would strand the popover over the
+  // field the host is trying to read back.
+  const handleSelectTime = (isoTime: string | null) => {
+    onChange(isoTime);
+    close();
   };
 
   const handlePresetSelect = (presetValue: string) => {
@@ -283,9 +315,11 @@ function SingleDatePicker({
             size={size}
             presets={presets}
             presetHasToday={presetHasToday}
+            timeStep={timeStep}
+            relativeTo={relativeTo}
             onSelectDay={handleSelectDay}
             onSelectMonth={handleSelectMonth}
-            onTimeChange={onChange}
+            onTimeChange={handleSelectTime}
             onPresetSelect={handlePresetSelect}
             onToday={handleToday}
           />
@@ -294,6 +328,8 @@ function SingleDatePicker({
       {open && !isMobile && (
         <DatePickerPopover
           id={popoverId}
+          anchorRef={containerRef}
+          popoverRef={popoverRef}
           mode={mode}
           value={value}
           dialogLabel={triggerLabel}
@@ -304,9 +340,11 @@ function SingleDatePicker({
           size={size}
           presets={presets}
           presetHasToday={presetHasToday}
+          timeStep={timeStep}
+          relativeTo={relativeTo}
           onSelectDay={handleSelectDay}
           onSelectMonth={handleSelectMonth}
-          onTimeChange={onChange}
+          onTimeChange={handleSelectTime}
           onPresetSelect={handlePresetSelect}
           onToday={handleToday}
           onClose={close}

@@ -1,0 +1,92 @@
+/* Row-level "⋯" overflow menu for a piece in the desk pipeline.
+ *
+ * The popover is PORTALED to <body> and positioned `fixed` against the
+ * trigger's measured rect. It cannot be an absolutely-positioned child of the
+ * row: `.pieces` in PiecesPipeline.module.css sets `overflow: hidden` (it is a
+ * rounded card), which would clip the dropdown off the bottom rows entirely.
+ * Same reasoning as Tooltip's `right` placement — see its doc comment.
+ */
+
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.trigger:hover,
+.trigger[aria-expanded="true"] {
+  background: rgba(var(--plum-rgb), 0.08);
+}
+
+/* Portaled, so `position: fixed` against the viewport with the coordinates
+   the component measures. Above the desk's own sticky chrome. */
+.popover {
+  position: fixed;
+  min-width: 168px;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 32px));
+  padding: 6px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  box-shadow: var(--shadow-e3);
+  z-index: var(--z-popover);
+  animation: pieceRowMenuIn var(--dur-fast) var(--ease);
+}
+
+@keyframes pieceRowMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popover,
+  .trigger {
+    animation: none;
+    transition: none;
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--text-strong);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.itemDanger {
+  composes: item;
+  color: var(--danger);
+}
+
+.item:hover,
+.itemDanger:hover {
+  background: rgba(var(--plum-rgb), 0.06);
+}

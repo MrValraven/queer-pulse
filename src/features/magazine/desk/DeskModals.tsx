@@ -1,4 +1,4 @@
-import { Modal, Button } from "../../../shared/components/ui";
+import { Modal, Button, ConfirmDialog } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { CommissionModal, type CommissionPayload } from "./CommissionModal";
 import type { DeskTrack } from "./DeskTrackTabs";
@@ -20,6 +20,10 @@ export type DeskModal =
   // copy) because `ChaseModal` needs it to open the real `PieceThread`.
   | { kind: "chase"; piece: { id: string; title: string; byline: string } }
   | { kind: "handoff"; piece: { title: string } }
+  // Routed through the desk's single overlay slot rather than owned by the
+  // row: `useDeskKeyboard` is disabled while `modal !== null`, so j/k/o cannot
+  // move the desk underneath an open confirmation.
+  | { kind: "deletePiece"; piece: { title: string } }
   | { kind: "shortcuts" }
   | null;
 
@@ -37,6 +41,9 @@ export interface DeskModalsProps {
   onCommission: (payload: CommissionPayload) => void;
   onPass: (payload: PassPayload) => void;
   onHandoff: (editorId: string) => void;
+  onConfirmDeletePiece: () => void;
+  /** True while the delete request is in flight — disables both buttons. */
+  isDeletingPiece: boolean;
 }
 
 /** Keyboard-shortcut reference. Small enough to keep inline here. */
@@ -67,8 +74,40 @@ function ShortcutsModal({ onClose }: { onClose: () => void }) {
 }
 
 /**
- * Dispatches the desk's five overlays (commission / pass / chase / handoff /
- * shortcuts) by `modal.kind`. Renders nothing while `modal` is `null`. Every
+ * Delete confirmation for one desk piece. Spells out what leaves with the
+ * piece (the draft, its versions, its reader comments) and that the pitch it
+ * was commissioned from returns to the inbox, because the backend does both
+ * and an editor should know before confirming rather than after.
+ */
+function DeletePieceDialog({
+  title,
+  loading,
+  onClose,
+  onConfirm,
+}: {
+  title: string;
+  loading: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <ConfirmDialog
+      open
+      tone="destructive"
+      loading={loading}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      title={t("magazine:desk.deletePiece.title", { title })}
+      description={t("magazine:desk.deletePiece.description")}
+      confirmLabel={t("magazine:desk.deletePiece.confirm")}
+    />
+  );
+}
+
+/**
+ * Dispatches the desk's six overlays (commission / pass / chase / handoff /
+ * delete / shortcuts) by `modal.kind`. Renders nothing while `modal` is `null`. Every
  * modal closes on Escape and scrim click via the shared `Modal` primitive.
  */
 export function DeskModals({
@@ -82,6 +121,8 @@ export function DeskModals({
   onCommission,
   onPass,
   onHandoff,
+  onConfirmDeletePiece,
+  isDeletingPiece,
 }: DeskModalsProps) {
   if (!modal) return null;
 
@@ -112,6 +153,15 @@ export function DeskModals({
           editors={editors}
           onClose={onClose}
           onHandoff={onHandoff}
+        />
+      );
+    case "deletePiece":
+      return (
+        <DeletePieceDialog
+          title={modal.piece.title}
+          loading={isDeletingPiece}
+          onClose={onClose}
+          onConfirm={onConfirmDeletePiece}
         />
       );
     case "shortcuts":

@@ -12,6 +12,7 @@ import { routes } from "../../app/routeMap";
 import { type CalendarEvent } from "./data";
 import { CALENDAR_TODAY, WEEKDAY_REFERENCE } from "./calendar.data";
 import { sameDay } from "./calendarGrid.helpers";
+import { gatheringWhen } from "./gatheringSchedule";
 import styles from "./CalendarGrid.module.css";
 
 // On narrow (phone) day cells only this many event dots are shown; any beyond
@@ -39,6 +40,10 @@ export function EventCardSkeleton() {
 export function EventCard({ event }: { event: CalendarEvent }) {
   const navigate = useNavigate();
   const fmt = useFormat();
+  const { t } = useTranslation();
+  // The whole span, through the one shared formatter. A gathering with no
+  // stated end still reads as a single start time, exactly as before.
+  const when = gatheringWhen(event.date, event.endAt, fmt, t);
   return (
     // eslint-disable-next-line jsx-a11y/control-has-associated-label -- labelled by its visible text children (date, org, title, and venue/time) rendered from event data.
     <div
@@ -65,7 +70,8 @@ export function EventCard({ event }: { event: CalendarEvent }) {
         </div>
         <div className={styles.ecTitle}>{event.title}</div>
         <div className={styles.ecMeta}>
-          {event.hood} · {fmt.time(event.date)}
+          {event.hood} · {when.timeText}
+          {when.nextDayNote ? ` ${when.nextDayNote}` : ""}
         </div>
       </div>
     </div>

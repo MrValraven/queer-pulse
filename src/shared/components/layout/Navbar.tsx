@@ -13,8 +13,9 @@ import { routes } from "../../../app/routeMap";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
 import { useUnreadMessages } from "../../../features/messages/api/useConversations";
 import { useTranslation } from "../../i18n/useTranslation";
-import { Translation } from "../../i18n/Translation";
 import { MegaNav } from "./MegaNav";
+import { LandingNav } from "./LandingNav";
+import { NavBrand } from "./NavBrand";
 import { Sidebar } from "./Sidebar";
 import { AccountMenu } from "./AccountMenu";
 import { MobileNavDrawer } from "./MobileNavDrawer";
@@ -40,29 +41,6 @@ function BackChevronIcon() {
         strokeLinejoin="round"
       />
     </svg>
-  );
-}
-
-function Brand({ to }: { to: string }) {
-  return (
-    <Link to={to} className={styles.brand}>
-      {/* The two `data-launch-target` hooks are the destination of the
-          installed-app boot sequence's exit: its pulse flies into this dot and
-          its wordmark shrinks into this text (features/system/AppLaunch).
-          Stable attributes rather than these hashed CSS-module class names, so
-          that component can find them without importing this stylesheet. */}
-      <span
-        className={styles.pulseDot}
-        data-launch-target="brand-dot"
-        aria-hidden
-      />
-      <span data-launch-target="brand-wordmark">
-        <Translation
-          i18nKey="shared:brand.wordmark"
-          components={{ em: <span className={styles.brandItalic} /> }}
-        />
-      </span>
-    </Link>
   );
 }
 
@@ -154,6 +132,17 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   const showBackButton =
     isAppBar && !atTabRoot && canGoBack(currentHistoryIdx());
 
+  // The landing page gets its own bar for signed-out visitors: anchors into the
+  // page's own sections instead of the mega panels, so the pitch keeps the
+  // visitor's attention rather than sending them off to browse. A signed-in
+  // member on `/` falls through to the ordinary nav, bell and account menu
+  // included. The focused bar is a visitor affordance, not a property of the
+  // route. It sits above the sidebar branch because the landing page is public and
+  // the sidebar is a signed-in-only mode, so the two can never both apply.
+  if (!loggedIn && pathname === routes.homepage) {
+    return <LandingNav />;
+  }
+
   // Desktop sidebar mode: swap the whole top bar for the left rail. Mobile always
   // keeps the top bar + drawer below, regardless of nav mode.
   if (navMode === "sidebar" && !isMobile) {
@@ -190,7 +179,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
               (tab roots, and deep-linked detail pages with no history), so the
               top-left is never empty. Desktop always shows it. */}
           {!showBackButton && (
-            <Brand to={loggedIn ? routes.feed : routes.homepage} />
+            <NavBrand to={loggedIn ? routes.feed : routes.homepage} />
           )}
         </div>
 

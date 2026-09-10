@@ -66,6 +66,14 @@ export function ProfilePage() {
     scrollBeforeEdit.current = window.scrollY;
     setFocusLinks(focus);
     startEditing();
+    // Opening the editor starts at the top of the page: the hero swaps for a
+    // form whose first fields are above whatever the member happened to be
+    // reading, so staying put left them editing off-screen. `behavior:
+    // "instant"`, not "auto" (which defers to the global
+    // `html { scroll-behavior: smooth }` in base.css): the landing has to snap,
+    // never animate the page past them. Skipped for the "edit links" entry,
+    // which lands on the links field instead (see useEnterEditFocus).
+    if (!focus) window.scrollTo({ top: 0, behavior: "instant" });
   }
 
   // In live mode, an unauthenticated visitor has no slug — never fall back to
@@ -163,7 +171,12 @@ export function ProfilePage() {
 
   return (
     <PageShell>
-      <ProfileBackBar />
+      {/* The way back out belongs to the editor while the editor is open: the
+          sticky bar at the foot of the screen already offers Go back / Discard
+          next to Save. A second exit above the form pointed at wherever the
+          member came from ("Back to the feed"), which reads as an escape from a
+          page they are in the middle of filling in. */}
+      {!isEditing && <ProfileBackBar />}
       <ProfileMovedNote />
 
       <ProfileLayoutSwitch

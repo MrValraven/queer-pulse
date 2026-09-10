@@ -4,6 +4,7 @@ export { Card } from "./Card";
 export { Tag, TagRow, KindChip, type ChipKind } from "./Tag";
 export { Avatar, AvatarStack, type AvatarTint } from "./Avatar";
 export { Eyebrow } from "./Eyebrow";
+export { ExpandableText } from "./ExpandableText";
 export { SectionHead } from "./SectionHead";
 export { VisibilityBadge, type VisibilityMode } from "./VisibilityBadge";
 export { SkeletonLine, SkeletonAvatar, SkeletonCard } from "./Skeleton";
@@ -118,6 +119,19 @@ export {
   type PullToRefreshBind,
 } from "./usePullToRefresh";
 export { DatePicker, type DatePickerProps, type DateRange } from "./DatePicker";
+export {
+  TimeOptionsList,
+  type TimeOptionsListProps,
+  DEFAULT_TIME_STEP_MINUTES,
+} from "./TimeOptionsList";
+export {
+  durationMinutes,
+  formatDuration,
+  formatSpanDuration,
+  formatTimeLabel,
+  isOvernightSpan,
+  parseTimeValue,
+} from "./timeOptions";
 export { Calendar, type CalendarProps } from "./Calendar";
 export { RangeCalendar, type RangeCalendarProps } from "./RangeCalendar";
 export { default as PhotoReframeModal } from "./PhotoReframeModal";

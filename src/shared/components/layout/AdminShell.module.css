@@ -68,7 +68,7 @@
 .brandRow {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding-bottom: 14px;
 }
 .sidebarCollapsed .brandRow {
@@ -79,10 +79,12 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   flex: 1;
   min-width: 0;
-  padding: 6px 8px;
+  /* Trimmed on the right only: the dot keeps the left inset it shares with the
+     rest of the rail, and the room comes off the collapse control's side. */
+  padding: 6px 6px 6px 8px;
   border-radius: var(--radius-11);
   text-decoration: none;
   color: rgba(var(--cream-rgb), 1);
@@ -134,7 +136,7 @@
 }
 .brandName {
   font-family: var(--serif);
-  font-size: var(--text-19);
+  font-size: var(--text-18);
   font-weight: 500;
   letter-spacing: -0.01em;
   /* The collapse control shares this row now: the wordmark holds one line and
@@ -146,14 +148,15 @@
   font-style: italic;
 }
 .brandBadge {
-  margin-left: auto;
+  /* Sits with the wordmark it qualifies, so the slack in the row falls between
+     the badge and the collapse control rather than pinning the two together. */
   flex: none;
   white-space: nowrap;
-  padding: 3px 8px;
+  padding: 3px 7px;
   border-radius: var(--radius-pill);
-  font-size: var(--text-10);
+  font-size: var(--text-9);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
   background: rgba(var(--cream-rgb), 0.12);
   color: rgba(var(--cream-rgb), 0.82);

@@ -30,6 +30,13 @@ export interface MyEvent {
   date: string; // YYYY-MM-DD
   start: string;
   end?: string;
+  /** The calendar day (YYYY-MM-DD) the gathering ENDS on, when that is later
+   *  than `date`. A gathering may run past midnight (23:00 to 04:00) or across
+   *  several days (a three-day festival), and `end` carries only a clock time,
+   *  so without this every surface read the end against the start's day.
+   *  Absent means it ends on the day it starts, which is what every event
+   *  authored before spans existed meant. Read it through `endDateOf`. */
+  endDate?: string;
   /** The raw ISO 8601 instants the API sent, kept alongside the display-ready
    *  `date`/`start`/`end` strings (which are the browser's local rendering of
    *  them). The .ics exporter needs a real instant rather than a floating

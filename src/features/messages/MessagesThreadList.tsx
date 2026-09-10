@@ -4,6 +4,7 @@ import { paneScrollRegistry } from "../../app/paneScrollRegistry";
 import { PullToRefresh } from "../../shared/components/ui";
 import { useMessageRequestsCount } from "./api/useMessageRequestsCount";
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
+import { MessagesRailFooter } from "./MessagesRailChrome";
 import { MessagesThreadListBody } from "./MessagesThreadListBody";
 import { MessagesThreadListHeader } from "./MessagesThreadListHeader";
 import { filterThreadsByTab, type InboxTab } from "./threadFilters";
@@ -43,6 +44,7 @@ export function MessagesThreadList({
   deletePending,
   onMarkThreadRead,
   onMarkThreadUnread,
+  showRailChrome,
 }: {
   loading: boolean;
   threads: Conversation[];
@@ -65,6 +67,10 @@ export function MessagesThreadList({
   onMarkThreadRead: (conversationId: string) => void;
   /** Row menu "Mark as unread" (PRD-225). */
   onMarkThreadUnread: (conversationId: string) => void;
+  /** Desktop, where AppShell's `desktopChromeless` leaves this route with no
+   *  site nav: the panel carries the wordmark and the account footer itself.
+   *  False on mobile, which still has the app bar and the bottom tab bar. */
+  showRailChrome: boolean;
 }) {
   const queryClient = useQueryClient();
   const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(null);
@@ -155,6 +161,7 @@ export function MessagesThreadList({
           />
         </PullToRefresh>
       </div>
+      {showRailChrome && <MessagesRailFooter />}
       {confirmDelete && (
         <DeleteConversationDialog
           name={confirmDelete.name}

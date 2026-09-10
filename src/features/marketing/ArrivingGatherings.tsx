@@ -11,33 +11,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useEvents } from "../gatherings/api/useEvents";
 import { eventZoneFormat } from "../gatherings/eventTimezone";
 import type { CalendarEvent } from "../gatherings/data";
+import { pickNextGatherings } from "./pickNextGatherings";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { MarketingSection } from "./MarketingSection";
 import styles from "./ArrivingPage.module.css";
-
-const SHOWN_COUNT = 2;
-
-/**
- * The next two gatherings, soonest first.
- *
- * `isDemoRegistry` covers one honest exception: the demo registry is a frozen
- * fixture whose gatherings are dated to a fixed prototype season, so once real
- * time passes it every date is behind us. Demo mode then shows the two
- * earliest rows so the prototype still paints. Live mode never falls back: an
- * empty upcoming list renders the empty state and says so.
- */
-function pickNextGatherings(
-  events: CalendarEvent[],
-  isDemoRegistry: boolean,
-): CalendarEvent[] {
-  const sorted = [...events].sort(
-    (first, second) => first.date.getTime() - second.date.getTime(),
-  );
-  const now = Date.now();
-  const stillToCome = sorted.filter((event) => event.date.getTime() >= now);
-  if (stillToCome.length > 0) return stillToCome.slice(0, SHOWN_COUNT);
-  return isDemoRegistry ? sorted.slice(0, SHOWN_COUNT) : [];
-}
 
 function GatheringRow({
   gathering,

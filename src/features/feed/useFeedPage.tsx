@@ -19,6 +19,7 @@ import {
 } from "./feed.data";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import { useEvents } from "../gatherings/api/useEvents";
+import { pickSidebarGatherings } from "./sidebarGatherings";
 import { initials } from "./api/feed.adapters";
 import { tintForSlug } from "../../shared/api/refs";
 import {
@@ -214,22 +215,14 @@ export function useFeedPage() {
         });
 
   // Sidebar "Upcoming" rows: demo keeps its curated rows inside the sidebar;
-  // live mode surfaces the viewer's own "going" gatherings, dropping any already
-  // past, soonest first, capped to a short list. Each `CalendarEvent` already
-  // carries a ready `to` link and a `Date` the widget formats into a date pill.
+  // live mode surfaces the viewer's own "going" gatherings through
+  // `pickSidebarGatherings`, which keeps every gathering whose END is still
+  // ahead. Each `CalendarEvent` carries a ready `to` link and a `Date` the
+  // widget formats into a date pill.
   const nowInstant = new Date();
   const sidebarGatherings: SidebarGathering[] = demoMode
     ? []
-    : upcomingFeed.items
-        .filter((event) => event.date >= nowInstant)
-        .sort((first, second) => first.date.getTime() - second.date.getTime())
-        .slice(0, 3)
-        .map((event) => ({
-          to: event.to,
-          date: event.date,
-          name: event.title,
-          venue: event.hood,
-        }));
+    : pickSidebarGatherings(upcomingFeed.items, nowInstant);
 
   // A short avatar sample plus the true total. `total` is the server count in
   // live mode and the exact local count in demo, so the number under the

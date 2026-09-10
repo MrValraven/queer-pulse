@@ -99,7 +99,7 @@ export function AdminBanEvasionEscalationsPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={80}>
+      <FadeIn delay={80} className={styles.queue}>
         {isLoading ? (
           <div className={styles.cards}>
             {[0, 1, 2].map((skeletonIndex) => (

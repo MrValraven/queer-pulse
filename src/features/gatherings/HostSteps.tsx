@@ -4,6 +4,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { TYPE_CARDS } from "./hostPage.data";
+import { findFormat } from "./gatheringCatalog";
 import styles from "./HostPage.module.css";
 
 export function HostSteps() {
@@ -21,15 +22,20 @@ export function HostSteps() {
           </h2>
           <p>{t("gatherings:host.step1.body")}</p>
           <div className={styles.typesGrid}>
-            {TYPE_CARDS.map((card) => (
-              <div key={card.titleKey} className={styles.typeCard}>
-                <div className={styles.tcIcon}>
-                  <card.icon />
+            {TYPE_CARDS.map((card) => {
+              const format = findFormat(card.formatKey);
+              if (!format) return null;
+              const FormatIcon = format.icon;
+              return (
+                <div key={card.formatKey} className={styles.typeCard}>
+                  <div className={styles.tcIcon}>
+                    <FormatIcon />
+                  </div>
+                  <h4>{t(format.nameKey)}</h4>
+                  <p>{t(card.bodyKey)}</p>
                 </div>
-                <h4>{t(card.titleKey)}</h4>
-                <p>{t(card.bodyKey)}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className={styles.tip}>
             <div className={styles.tipHead}>

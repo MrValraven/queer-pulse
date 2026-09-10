@@ -1,4 +1,9 @@
 import type { EventBrowseFilters } from "../api/events.api";
+import {
+  findFamily,
+  findFormat,
+  type GatheringFamily,
+} from "../gatheringCatalog";
 
 /**
  * Browse filters (LOC-17).
@@ -6,7 +11,7 @@ import type { EventBrowseFilters } from "../api/events.api";
  * "What is on this Friday near Arroios" is four clauses, and until now not one
  * of them was expressible: the search box and the chips filtered client-side
  * over whatever pages had already loaded, so every answer under-reported until
- * the member had scrolled the whole feed. These four axes go to the server,
+ * the member had scrolled the whole feed. These five axes go to the server,
  * which applies them in SQL, so a filtered browse survives pagination.
  *
  * Every one of them round-trips through the URL, so a filtered board can be
@@ -20,6 +25,7 @@ export const BROWSE_PARAMS = {
   query: "q",
   when: "when",
   hood: "hood",
+  family: "family",
   type: "type",
   cost: "cost",
 } as const;
@@ -53,11 +59,14 @@ export const COST_LABEL_KEYS: Record<CostFilter, string> = {
   paid: "gatherings:hub.browse.cost.paid",
 };
 
-/** What the browse controls hold, before it becomes a query string. */
+/** What the browse controls hold, before it becomes a query string: five axes,
+ *  the free-text term plus when, where in Lisbon, which family of gathering,
+ *  which format inside it, and what it costs. */
 export interface BrowseFilterState {
   query: string;
   when: WhenPreset;
   hood: string;
+  family: GatheringFamily | "";
   type: string;
   cost: CostFilter;
 }
@@ -66,6 +75,7 @@ export const EMPTY_BROWSE_FILTERS: BrowseFilterState = {
   query: "",
   when: "any",
   hood: "",
+  family: "",
   type: "",
   cost: "any",
 };
@@ -78,16 +88,32 @@ function isCostFilter(value: string): value is CostFilter {
   return (COST_FILTERS as readonly string[]).includes(value);
 }
 
+function isGatheringFamily(value: string): value is GatheringFamily {
+  return findFamily(value) !== undefined;
+}
+
 /** Read the filter state back out of the URL. Anything unrecognised falls back
  *  to the neutral value rather than narrowing the board to nothing. */
 export function readBrowseFilters(params: URLSearchParams): BrowseFilterState {
   const when = params.get(BROWSE_PARAMS.when) ?? "";
   const cost = params.get(BROWSE_PARAMS.cost) ?? "";
+  const rawFamily = params.get(BROWSE_PARAMS.family) ?? "";
+  const family = isGatheringFamily(rawFamily) ? rawFamily : "";
+  const type = params.get(BROWSE_PARAMS.type) ?? "";
+  // A hand-edited or stale link can name a family and a format from a
+  // different one. The select has no such option to show, so it would read
+  // "Any format" while the query still carried one: the board would look wider
+  // than it was. The chip row does the same thing on a family change; this is
+  // the same rule applied to a link nobody clicked through the UI to build.
+  const format = findFormat(type);
+  const isOrphanedFormat =
+    family !== "" && format !== undefined && format.family !== family;
   return {
     query: params.get(BROWSE_PARAMS.query) ?? "",
     when: isWhenPreset(when) ? when : "any",
     hood: params.get(BROWSE_PARAMS.hood) ?? "",
-    type: params.get(BROWSE_PARAMS.type) ?? "",
+    family,
+    type: isOrphanedFormat ? "" : type,
     cost: isCostFilter(cost) ? cost : "any",
   };
 }
@@ -106,6 +132,7 @@ export function writeBrowseFilters(
   set(BROWSE_PARAMS.query, next.query.trim(), "");
   set(BROWSE_PARAMS.when, next.when, "any");
   set(BROWSE_PARAMS.hood, next.hood, "");
+  set(BROWSE_PARAMS.family, next.family, "");
   set(BROWSE_PARAMS.type, next.type, "");
   set(BROWSE_PARAMS.cost, next.cost, "any");
   return params;
@@ -117,6 +144,7 @@ export function hasActiveBrowseFilters(state: BrowseFilterState): boolean {
     state.query.trim() !== "" ||
     state.when !== "any" ||
     state.hood !== "" ||
+    state.family !== "" ||
     state.type !== "" ||
     state.cost !== "any"
   );
@@ -193,6 +221,7 @@ export function toEventBrowseFilters(
   return {
     ...range,
     ...(state.hood ? { hood: state.hood } : {}),
+    ...(state.family ? { family: state.family } : {}),
     ...(state.type ? { type: state.type } : {}),
     ...(state.query.trim() ? { q: state.query.trim() } : {}),
     ...(state.cost !== "any" ? { cost: state.cost } : {}),

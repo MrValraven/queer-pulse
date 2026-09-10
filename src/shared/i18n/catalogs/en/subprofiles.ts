@@ -1360,7 +1360,7 @@ export const subprofiles: Catalog = {
   "poem.versions.readerAria": "Choose a translation",
 
   // Public copyright + provenance footer (WorkRightsFooter, protect-your-work Task 3)
-  "rights.copyright": "© {year} {author}. All rights reserved.",
+  "rights.copyright": "© {year}. All rights reserved.",
   "rights.firstPublished": "First published on QueerPulse · {date}",
 
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)

@@ -23,6 +23,17 @@ export const nav: Catalog = {
   updating: "A atualizar…",
   updateDismiss: "Dispensar atualização",
 
+  // Barra da página inicial (LandingNav). Etiquetas curtas: ficam todas numa
+  // linha dentro da barra, ao lado de mais cinco.
+  "landing.label": "Secções da página inicial",
+  "landing.about": "A ideia",
+  "landing.communities": "Comunidades",
+  "landing.gatherings": "Encontros",
+  "landing.housing": "Habitação",
+  "landing.personas": "Personas",
+  "landing.why": "Porque construímos isto",
+  "landing.stories": "Histórias",
+
   // Destinos principais. O destino "Members" chama-se "Membros" (decisão do
   // produto); noutros contextos preferimos "Pessoas" (ver docs/i18n/glossary-pt.md).
   members: "Membros",

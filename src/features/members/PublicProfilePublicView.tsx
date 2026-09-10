@@ -1,11 +1,12 @@
 import {
   Avatar,
   Button,
+  ExpandableText,
   FadeIn,
   FeatureHelp,
 } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { MentionText } from "../../shared/mentions/MentionText";
+import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { leadingInitials } from "../../shared/lib/initials";
@@ -76,13 +77,18 @@ export function PublicProfilePublicView({
           <div className={styles.secH}>
             <h2>{t("members:publicBySlug.aboutHeading")}</h2>
           </div>
-          <p className={styles.bio}>
+          <ExpandableText
+            className={styles.bio}
+            lines={6}
+            linesMobile={8}
+            resetKey={profile.bio}
+          >
             {/* This page is reachable signed out, and almost everything a bio
                 can mention (`/members/*`, `/communities/*`) sits behind the
                 auth gate — so for a visitor the mentions stay styled but
                 inert rather than pointing at a wall. */}
-            <MentionText text={profile.bio} linkify={loggedIn} />
-          </p>
+            <ResolvedMentionText text={profile.bio} linkify={loggedIn} />
+          </ExpandableText>
         </FadeIn>
       )}
 

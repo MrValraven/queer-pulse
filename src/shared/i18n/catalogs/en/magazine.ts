@@ -721,6 +721,20 @@ export const magazine: Catalog = {
   "desk.pieceRow.chase": "Chase",
   "desk.pieceRow.handOff": "Hand off",
   "desk.pieceRow.selectAria": "Select {title}",
+  "desk.pieceRow.moreAria": "More actions for {title}",
+  "desk.pieceRow.delete": "Delete piece",
+
+  // ── Delete confirmation (DeskModals -> DeletePieceDialog) ────────────────
+  // The description names everything the backend removes in the same
+  // transaction, plus the pitch it hands back to the inbox, because an editor
+  // deciding whether to confirm needs that before the click and not after.
+  "desk.deletePiece.title": "Delete “{title}”?",
+  "desk.deletePiece.description":
+    "The draft, its saved versions and its reader comments go with it. If the piece came from a pitch, that pitch returns to the inbox. This cannot be undone.",
+  "desk.deletePiece.confirm": "Delete piece",
+  "desk.deletePiece.publishedError":
+    "This piece has published work. Unpublish it first, then delete the piece.",
+  "desk.deletePiece.failed": "Could not delete this piece. Try again.",
 
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Empty",

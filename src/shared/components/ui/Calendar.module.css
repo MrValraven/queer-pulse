@@ -177,11 +177,21 @@
 
 /* ── DatePicker (Task 6) ──────────────────────────────────────────────────
    Container wraps the DateField + trigger + optional clear button; the
-   popover is a plain absolutely-positioned dialog, reusing the same
-   --shadow-panel / qpMenuIn entrance and z-index lane as Select's floating
-   panel (`Select.module.css` `.panel`). */
+   popover is a dialog portalled to `document.body` and placed in viewport
+   coordinates by `useAnchoredPopover`, reusing the same --shadow-panel /
+   qpMenuIn entrance and z-index lane as Select's floating panel
+   (`Select.module.css` `.panel`). */
 .container {
   position: relative;
+  /* Shrink to the fields + trigger rather than filling the parent. `.popover`
+     below anchors to this box's right edge, and `DateField` is `inline-flex`
+     (it never stretches), so a block-width container in a wide parent — a
+     `1fr` grid cell, say — leaves a gap of empty space between the trigger and
+     that edge, and the popover opens stranded out in it instead of under the
+     clock/calendar button the host just pressed. `fit-content` still caps at
+     the available width, so a narrow parent shrinks the fields as before. */
+  width: fit-content;
+  max-width: 100%;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -259,18 +269,39 @@
   }
 }
 
+/* `position` / `top` / `right` are supplied inline by `useAnchoredPopover`,
+   which places the panel in viewport coordinates against the trigger's
+   measured rect. Nothing here may reintroduce `position: absolute`: the panel
+   is portalled to `document.body` precisely so no ancestor stacking context
+   (a `FadeIn`, a transformed card) can bury it under later page content. */
 .popover {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
   z-index: var(--z-popover);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-14);
   box-shadow: var(--shadow-panel);
   padding: 12px;
+  /* Deliberately no `overflow` here, however tempting a `max-height` looks on
+     a fixed panel: `CalendarHeader`'s month/year `Select`s open absolutely
+     positioned panels inside this box, and a scroll container would clip
+     them. A panel too tall for the viewport is shifted up against the top
+     margin by `useAnchoredPopover` instead. */
   transform-origin: top right;
   animation: qpMenuIn var(--dur-fast) var(--ease);
+}
+/* Opened upward because there was no room below: grow from the edge nearest
+   the trigger, so the entrance still reads as coming out of the button. */
+.popoverFlipped {
+  transform-origin: bottom right;
+}
+/* Carried for the single commit before the first measurement lands. Also
+   `fixed`, so an unplaced panel never takes flow space at the end of
+   `<body>` and lengthens the page. */
+.popoverUnplaced {
+  position: fixed;
+  top: 0;
+  right: 0;
+  visibility: hidden;
 }
 @media (prefers-reduced-motion: reduce) {
   .popover {

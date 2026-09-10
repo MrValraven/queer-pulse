@@ -1,14 +1,16 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { TINT_STYLE } from "./myEvents.data";
 import {
-  timeStr,
   isOnline,
   isToday,
   soonLabel,
+  timeStr,
   COMMITTED,
 } from "./myEvents.helpers";
+import { joinWhenParts, myEventSpanNote } from "./myEvents.when";
 import { JoinLinkButton } from "./JoinLinkButton";
 import type { AvatarSpec, MyEvent } from "./myEvents.types";
 
@@ -32,8 +34,16 @@ export function AvStack({ who }: { who?: AvatarSpec[] }) {
 /** Time · venue · (directions / join) line. */
 export function EventMeta({ ev, links }: { ev: MyEvent; links: boolean }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { toast } = useMyEvents();
-  const timeLabel = timeStr(ev) + (ev.timezone ? ` ${ev.timezone}` : "");
+  // No date sits on this line (the tile at the card's edge carries it), so the
+  // span has to be spelled out beside the clock: a bare "23:00 – 04:00" reads
+  // as an evening that ended before it started.
+  const timeLabel = joinWhenParts(
+    timeStr(ev),
+    ev.timezone,
+    myEventSpanNote(ev, fmt, t),
+  );
   return (
     <div className={sx("ev-meta")}>
       <span>{timeLabel}</span>

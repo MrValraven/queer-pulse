@@ -1380,7 +1380,7 @@ export const subprofiles: Catalog = {
   "poem.versions.readerAria": "Escolher uma tradução",
 
   // Rodapé público de direitos de autor + proveniência (WorkRightsFooter, protect-your-work Tarefa 3)
-  "rights.copyright": "© {year} {author}. Todos os direitos reservados.",
+  "rights.copyright": "© {year}. Todos os direitos reservados.",
   "rights.firstPublished": "Publicado pela primeira vez na QueerPulse · {date}",
 
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)

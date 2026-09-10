@@ -93,6 +93,17 @@ export interface CommunityEvent {
   /** Slug of the real gathering this row mirrors, when there is one — the RSVP
    *  button links to `gatheringPath(slug)` rather than the generic landing. */
   slug?: string;
+  /**
+   * When the gathering closes, for a row built from live API data.
+   *
+   * A gathering can run past midnight (23:00 to 04:00) or across several days
+   * (a three-day festival), and the `dd`/`mm` pill states its OPENING day
+   * only. `meta` therefore carries the whole run, read by `gatheringWhen` in
+   * the adapter, and this is the instant that reading came from: a renderer
+   * can tell a span apart from a single day without parsing the label back
+   * out. Absent on the demo registry's rows, which state no end.
+   */
+  endAt?: Date | null;
 }
 
 /** A community member with their role + light directory metadata. */

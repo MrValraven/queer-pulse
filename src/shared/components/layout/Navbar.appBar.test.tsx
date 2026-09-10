@@ -6,6 +6,7 @@ import { DisplayModeContext } from "../../../app/providers/displayModeContext";
 import { NavDrawerProvider } from "../../../app/providers/NavDrawerProvider";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
 import { TestProviders } from "../../../test/TestProviders";
+import { routes } from "../../../app/routeMap";
 import { Navbar } from "./Navbar";
 
 /**
@@ -32,10 +33,15 @@ function stubMobileMediaQuery() {
 // TestProviders already renders a MemoryRouter internally; nesting a second
 // Router (or forgetting this and reaching for one) makes React Router v7 throw
 // "You cannot render a <Router> inside another <Router>".
+//
+// Pinned OFF the landing route on purpose. TestProviders defaults to "/", where
+// Navbar hands a signed-out visitor the focused `LandingNav` instead of the
+// app bar (see Navbar's landing branch), so the logged-out case below would
+// have quietly asserted against a different component than the one it names.
 function renderNavbar(displayMode: "standalone" | "browser") {
   stubMobileMediaQuery();
   return render(
-    <TestProviders>
+    <TestProviders initialEntries={[routes.about]}>
       <DisplayModeContext.Provider
         value={{
           displayMode,

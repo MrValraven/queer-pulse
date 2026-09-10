@@ -1,6 +1,8 @@
 import { useShellFrame } from "../../../app/providers/shellFrame";
 import { useRealtimeConnection } from "../../api/realtime";
 import { InstallNudge } from "../../../features/system/InstallNudge";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { mediaMax } from "../../theme/breakpoints";
 import { Navbar } from "./Navbar";
 import { BottomTabBar } from "./BottomTabBar";
 
@@ -37,11 +39,18 @@ export function AppChrome() {
   // "must be used within DeletedConversationsProvider", and that provider is in
   // DataProviders. Rendered above it, every page load throws on render.
   useRealtimeConnection();
-  const { active } = useShellFrame();
+  const { active, desktopChromeless } = useShellFrame();
+  const isMobile = useMediaQuery(mediaMax("mobile"));
+  // A desktop-chromeless route (Messages) draws its own brand row and account
+  // footer, so the site nav would only duplicate them. One branch covers BOTH
+  // nav modes, because Navbar is also what returns the left rail in sidebar
+  // mode — gating the rail separately is how the two would drift. Mobile keeps
+  // the app bar and the bottom tab bar: a phone has no other way around.
+  const hideSiteNav = desktopChromeless && !isMobile;
   if (!active) return null;
   return (
     <>
-      <Navbar />
+      {!hideSiteNav && <Navbar />}
       <BottomTabBar />
       {/* ID-17. Mounted here so the install nudge inherits the same gating as
           the rest of the fixed chrome: standard-frame pages only, never on the

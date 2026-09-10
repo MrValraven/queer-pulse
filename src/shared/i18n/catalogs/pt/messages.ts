@@ -353,4 +353,34 @@ export const messages: Catalog = {
   "report.memberTitle": "Denunciar {name}?",
   "conversation.contactSafetyNotice":
     "Mantém a conversa aqui até confiares em alguém. Nunca envies dinheiro, nem partilhes dados bancários. Anúncios verdadeiros não pedem isso.",
+
+  // ── Chrome do painel (MessagesRailChrome) ──
+  // Só no computador. Esta página esconde a navegação do site (AppShell
+  // `desktopChromeless`), por isso a caixa de entrada leva a sua própria saída.
+  "rail.backToPlatform": "Voltar ao QueerPulse",
+  // ── Papel de parede da conversa (ConversationMenu → WallpaperModal) ──
+  // Os nomes dos fundos são os nomes dos QUADRADOS de cor, ou seja, o que um
+  // leitor de ecrã anuncia num botão sem texto. Cores simples de propósito:
+  // quem escolhe de ouvido precisa de saber o que está a levar.
+  "conversation.menuAriaLabel": "Mais opções para esta conversa",
+  "wallpaper.menuAction": "Papel de parede",
+  "wallpaper.title": "Papel de parede",
+  "wallpaper.sub": "Escolhe o fundo para {name}.",
+  "wallpaper.groundLegend": "Cor de fundo",
+  "wallpaper.ground.default": "Liso",
+  "wallpaper.ground.lilac": "Lilás",
+  "wallpaper.ground.jade": "Jade",
+  "wallpaper.ground.coral": "Coral",
+  "wallpaper.ground.amber": "Âmbar",
+  "wallpaper.ground.rose": "Rosa",
+  "wallpaper.doodlesTitle": "Rabiscos",
+  "wallpaper.doodlesSub": "Um padrão suave por cima da cor.",
+  "wallpaper.everyChatTitle": "Usar em todas as conversas",
+  "wallpaper.everyChatSub":
+    "Aplica-se às conversas que não têm papel de parede próprio.",
+  "wallpaper.previewReceived": "Adoro este.",
+  "wallpaper.previewSent": "Também eu. Fica assim.",
+  "wallpaper.reset": "Repor",
+  "wallpaper.cancel": "Cancelar",
+  "wallpaper.save": "Guardar",
 };

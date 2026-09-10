@@ -4,7 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import { useMyEvents } from "./MyEventsContext";
-import { parseDate, ymd, dotClass } from "./myEvents.helpers";
+import { eventDays, isInMonth, ymd, dotClass } from "./myEvents.helpers";
 import { TODAY } from "./myEvents.data";
 import type { MyEvent } from "./myEvents.types";
 
@@ -56,10 +56,9 @@ function CalendarYearView({
   return (
     <div className={sx("cal-grid cal-year")} ref={gridRef}>
       {Array.from({ length: 12 }, (_, m) => {
-        const evs = events.filter((e) => {
-          const dt = parseDate(e.date);
-          return dt.getFullYear() === viewY && dt.getMonth() === m;
-        });
+        // Every month the gathering touches, so one that runs across a month
+        // boundary marks both rather than only the one it opened in.
+        const evs = events.filter((event) => isInMonth(event, viewY, m));
         const now = viewY === TODAY.getFullYear() && m === TODAY.getMonth();
         const name = fmt.date(new Date(viewY, m, 1), { month: "short" });
         return (
@@ -123,7 +122,11 @@ function CalendarWeekView({
                 evs.map((e) => (
                   <div key={e.id} className={sx("cw-ev")}>
                     <span className={sx(`cal-dot ${dotClass(e.category)}`)} />
-                    {e.start} · {e.title}
+                    {/* The clock belongs to the day the gathering opened, so a
+                        later day of a festival says it is still running
+                        instead of repeating a time that already passed. */}
+                    {e.date === ds ? e.start : t("myevents:calendar.stillOn")} ·{" "}
+                    {e.title}
                   </div>
                 ))
               ) : (
@@ -302,12 +305,17 @@ export function CalendarGrid({
     jumpMonth,
   } = useMyEvents();
 
+  // Keyed by every day a gathering RUNS, so a three-day festival fills all
+  // three cells. Keying it by its start day alone left the week row for day two
+  // reading "Nothing planned" while the member was still at it.
   const byDate = useMemo(() => {
-    const m: Record<string, MyEvent[]> = {};
-    events.forEach((e) => {
-      (m[e.date] = m[e.date] || []).push(e);
+    const byDay: Record<string, MyEvent[]> = {};
+    events.forEach((event) => {
+      for (const day of eventDays(event)) {
+        (byDay[day] = byDay[day] || []).push(event);
+      }
     });
-    return m;
+    return byDay;
   }, [events]);
 
   if (calView === "year") {

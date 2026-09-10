@@ -274,7 +274,6 @@ export function SubprofilePage() {
       {poemItem && (
         <PoemReaderModal
           item={poemItem}
-          authorName={data.displayName}
           shareUrl={
             poemShareUrl
               ? `${poemShareUrl}?poem=${slugify(poemItem.title)}`
@@ -290,7 +289,6 @@ export function SubprofilePage() {
           index={lightbox.index}
           onClose={lightbox.close}
           onMove={lightbox.move}
-          authorName={data.displayName}
         />
       )}
 

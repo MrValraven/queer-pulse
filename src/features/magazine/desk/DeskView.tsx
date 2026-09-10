@@ -81,6 +81,8 @@ export interface DeskViewProps {
   onEditPiece: (piece: Piece) => void;
   onChasePiece: (piece: Piece) => void;
   onHandoffPiece: (piece: Piece) => void;
+  /** Opens the delete confirmation for one piece, from its row ⋯ menu. */
+  onDeletePiece: (piece: Piece) => void;
   /** Opens the issue picker for one piece. */
   onAssignPieceIssue: (piece: Piece) => void;
   /** Bulk selection over the pipeline rows, for assign-to-issue. */
@@ -198,6 +200,7 @@ export function DeskView(props: DeskViewProps) {
                   onChase={props.onChasePiece}
                   onHandoff={props.onHandoffPiece}
                   onAssignIssue={props.onAssignPieceIssue}
+                  onDelete={props.onDeletePiece}
                 />
               )}
               {props.layout === "board" && (

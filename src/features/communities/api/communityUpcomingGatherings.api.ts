@@ -25,7 +25,8 @@ export interface CommunityUpcomingGatheringDTO {
   /** Free-text venue name. Never the street address (that needs a "going" RSVP). */
   venue: string | null;
   neighbourhood: string | null;
-  /** "Supper club", "Workshop / talk", … or null. */
+  /** A catalog format key such as `supper-club`, or the host's own text, or
+   *  null. */
   eventType: string | null;
   /** Display-only free text ("pay what you can at the door"), or null. */
   cost: string | null;

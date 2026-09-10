@@ -18,11 +18,5 @@ export function PersonaRightsFooter({
 }) {
   const createdAtISO = firstPublishedISO(persona);
   if (!createdAtISO) return null;
-  return (
-    <WorkRightsFooter
-      authorName={persona.displayName}
-      createdAtISO={createdAtISO}
-      variant="page"
-    />
-  );
+  return <WorkRightsFooter createdAtISO={createdAtISO} variant="page" />;
 }

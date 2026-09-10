@@ -26,7 +26,7 @@ export function SubprofileItemRow({
   interactive,
   accent,
   onOpen,
-  teaser,
+  hideBody,
 }: {
   item: SubprofileItemView;
   skin: SkinFamily;
@@ -37,8 +37,9 @@ export function SubprofileItemRow({
   /** When set, the whole row becomes a button that opens a reader (poems).
    *  Mutually exclusive with the stage-skin ticket `<a>` in practice. */
   onOpen?: (item: SubprofileItemView) => void;
-  /** Overrides the inline `<p>` body with a one-line teaser (poems). */
-  teaser?: string;
+  /** Drops the inline `<p>` body (poems): a poem row shows its title and, when
+   *  it has one, its subtitle. It never shows an excerpt of the poem. */
+  hideBody?: boolean;
 }) {
   const { t, language } = useTranslation();
   const isOff = item.gigState === "cancelled";
@@ -71,11 +72,7 @@ export function SubprofileItemRow({
           <FiArrowRight aria-hidden />
         </span>
       )}
-      {teaser ? (
-        <p className="pp-row-teaser">{teaser}</p>
-      ) : (
-        item.description && <p>{item.description}</p>
-      )}
+      {!hideBody && item.description && <p>{item.description}</p>}
       <SubprofileSocialRow
         links={item.structured?.links ?? []}
         accent={accent ?? DEFAULT_ACCENT}

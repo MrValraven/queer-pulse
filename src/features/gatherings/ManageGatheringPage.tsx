@@ -25,6 +25,7 @@ import {
   applyVenueSelection,
   buildEditPatch,
   demoInitialState,
+  editDraftFormatFields,
   liveInitialState,
   manageGatheringCounts,
   type GatheringState,
@@ -144,7 +145,7 @@ function ManageGatheringMain({
   const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
     demoMode || !gathering
       ? demoInitialState()
-      : liveInitialState(gathering, fmt),
+      : liveInitialState(gathering, fmt, t),
   );
 
   const { daysToGo, attendeeCount, overviewCounts } = manageGatheringCounts(
@@ -194,7 +195,7 @@ function ManageGatheringMain({
   // `SeriesEditScopeModal`. `buildEditPatch` reads the PRE-edit snapshot from
   // this closure's `gatheringState` — see its doc for why that matters.
   const saveEditDraft = (draft: GatheringDetailsDraft) => {
-    setGatheringState((current) => applyEditDraft(current, draft, fmt));
+    setGatheringState((current) => applyEditDraft(current, draft, fmt, t));
     const patch = buildEditPatch(gatheringState, draft);
     if (gathering?.series) {
       setPendingEditPatch(patch);
@@ -272,10 +273,20 @@ function ManageGatheringMain({
             ? {
                 title: gatheringState.title,
                 startAt: dateToDatetimeValue(gatheringState.startAt),
+                // "" when the gathering states no end, which the modal reads
+                // as an empty (and still clearable) end field.
+                endAt: gatheringState.endAt
+                  ? dateToDatetimeValue(gatheringState.endAt)
+                  : "",
                 location: gatheringState.location,
                 description: gatheringState.description,
                 visibility: gatheringState.visibility,
                 communitySlug: gatheringState.communitySlug,
+                // Family, format, the host's own words and the details bag,
+                // read off the persisted state in one place (see its doc for
+                // how a stored value that is not a catalog key opens the
+                // modal).
+                ...editDraftFormatFields(gatheringState),
               }
             : null
         }

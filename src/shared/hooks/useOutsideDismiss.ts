@@ -17,6 +17,12 @@ import { useEffect, useRef, type RefObject } from "react";
  * @param options  `onEscape` also closes on the Escape key and hands the caller
  *                 the chance to restore focus to the trigger. Menus that were
  *                 hand-rolling both listeners together can now use one hook.
+ *                 `additionalInsideRef` counts a second subtree as "inside",
+ *                 for surfaces whose panel is portalled out of `ref` (the
+ *                 date pickers portal theirs to `document.body` to escape
+ *                 ancestor stacking contexts). Without it every press inside
+ *                 such a panel reads as an outside press and closes it on the
+ *                 way to picking a value.
  *
  * Escape stays opt-in on purpose, and every surface still owes its keyboard
  * users a way out: pass `onEscape` here, or handle Escape locally the way
@@ -33,7 +39,10 @@ export function useOutsideDismiss(
   active: boolean,
   ref: RefObject<HTMLElement | null>,
   onDismiss: () => void,
-  options?: { onEscape?: () => void },
+  options?: {
+    onEscape?: () => void;
+    additionalInsideRef?: RefObject<HTMLElement | null>;
+  },
 ): void {
   const savedOnDismiss = useRef(onDismiss);
   const savedOnEscape = useRef(options?.onEscape);
@@ -44,16 +53,19 @@ export function useOutsideDismiss(
 
   const hasEscapeHandler = Boolean(options?.onEscape);
 
+  const additionalInsideRef = options?.additionalInsideRef;
+
   useEffect(() => {
     if (!active) return;
     const onPointerDown = (event: PointerEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        savedOnDismiss.current();
-      }
+      const target = event.target as Node;
+      if (!ref.current || ref.current.contains(target)) return;
+      if (additionalInsideRef?.current?.contains(target)) return;
+      savedOnDismiss.current();
     };
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [active, ref]);
+  }, [active, ref, additionalInsideRef]);
 
   useEffect(() => {
     if (!active || !hasEscapeHandler) return;

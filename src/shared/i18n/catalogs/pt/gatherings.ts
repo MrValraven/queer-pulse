@@ -395,7 +395,7 @@ export const gatherings: Catalog = {
 
   // createGathering.data.ts — sidebar tips (per step)
   "create.tip.type":
-    "Escolhe o formato que te é mais natural. Os melhores convívios são os que quem organiza gosta mesmo de fazer acontecer.",
+    "Escolhe primeiro o tipo, depois o formato. O formato define um tamanho sensato para o convívio e faz-te uma ou duas perguntas que só ele levanta.",
   "create.tip.datePlace":
     "O bairro aparece no anúncio. A morada completa só é partilhada com quem confirmou presença.",
   "create.tip.repeats":
@@ -405,23 +405,217 @@ export const gatherings: Catalog = {
   "create.tip.review":
     "Depois de publicares, ainda podes editar o anúncio. Não podes reduzir a capacidade abaixo do número de confirmações já existentes.",
 
-  // createGathering.data.ts — gathering types
-  "create.type.supperClub.name": "Jantar comunitário",
-  "create.type.supperClub.sub": "Refeição partilhada, organizada",
-  "create.type.workshopTalk.name": "Oficina / conversa",
-  "create.type.workshopTalk.sub": "Ensina ou partilha algo",
-  "create.type.screening.name": "Sessão de cinema",
-  "create.type.screening.sub": "Cinema, música, performance",
-  "create.type.studioVisit.name": "Visita ao atelier",
-  "create.type.studioVisit.sub": "Abre o teu espaço",
-  "create.type.walkOutdoor.name": "Caminhada ou ar livre",
-  "create.type.walkOutdoor.sub": "Movimento, ar livre",
-  "create.type.discussion.name": "Grupo de discussão",
-  "create.type.discussion.sub": "Grupo de leitura, debate",
-  "create.type.skillsExchange.name": "Troca de saberes",
-  "create.type.skillsExchange.sub": "Aprendizagem mútua",
-  "create.type.other.name": "Outro",
-  "create.type.other.sub": "Outra coisa qualquer",
+  // ── gatheringCatalog.ts: famílias, formatos e as perguntas do formato ───
+  // O único vocabulário com que um convívio se descreve. As chaves são
+  // VALORES GUARDADOS (`events.event_type`, `events.gathering_family`), por
+  // isso nunca mudam quando o texto muda.
+  "catalog.family.meet.name": "Conhecer e jogar",
+  "catalog.family.eat.name": "Comer e beber",
+  "catalog.family.party.name": "Festa e noite",
+  "catalog.family.make.name": "Fazer e criar",
+  "catalog.family.learn.name": "Aprender e conversar",
+  "catalog.family.watch.name": "Ver e ouvir",
+  "catalog.family.move.name": "Mexer e ar livre",
+  "catalog.family.care.name": "Cuidar e apoiar",
+  "catalog.family.organise.name": "Organizar e agir",
+
+  "catalog.format.mixer.name": "Mixer",
+  "catalog.format.mixer.sub": "Conhecer gente nova, sem pressão",
+  "catalog.format.meetup.name": "Encontro",
+  "catalog.format.meetup.sub": "Um encontro regular",
+  "catalog.format.coffee-morning.name": "Manhã de café",
+  "catalog.format.coffee-morning.sub": "De dia, sem pressas",
+  "catalog.format.newcomers-night.name": "Noite de quem chegou agora",
+  "catalog.format.newcomers-night.sub": "Para quem chegou há pouco à cidade",
+  "catalog.format.elders-tea.name": "Chá entre gerações",
+  "catalog.format.elders-tea.sub": "Entre gerações, com lugares sentados",
+  "catalog.format.games-night.name": "Noite de jogos",
+  "catalog.format.games-night.sub": "Jogos de tabuleiro, cartas",
+  "catalog.format.quiz.name": "Quiz",
+  "catalog.format.quiz.sub": "Equipas, perguntas, prémios",
+
+  "catalog.format.supper-club.name": "Jantar comunitário",
+  "catalog.format.supper-club.sub": "Refeição partilhada, organizada",
+  "catalog.format.potluck.name": "Mesa partilhada",
+  "catalog.format.potluck.sub": "Cada pessoa traz um prato",
+  "catalog.format.picnic.name": "Piquenique",
+  "catalog.format.picnic.sub": "Ao ar livre, traz uma manta",
+  "catalog.format.brunch.name": "Brunch",
+  "catalog.format.brunch.sub": "Fim de manhã, mesa comprida",
+  "catalog.format.cooking-together.name": "Cozinhar em conjunto",
+  "catalog.format.cooking-together.sub": "Primeiro cozinhar, depois comer",
+  "catalog.format.drinks.name": "Copos",
+  "catalog.format.drinks.sub": "Um bar, uma mesa, umas horas",
+
+  "catalog.format.house-party.name": "Festa em casa",
+  "catalog.format.house-party.sub": "Em casa de alguém, traz quem quiseres",
+  "catalog.format.club-night.name": "Noite de discoteca",
+  "catalog.format.club-night.sub": "Até tarde, alto, a dançar",
+  "catalog.format.listening-party.name": "Sessão de escuta",
+  "catalog.format.listening-party.sub": "Um disco, do início ao fim",
+  "catalog.format.karaoke.name": "Karaoke",
+  "catalog.format.karaoke.sub": "Cantar mal, em conjunto",
+  "catalog.format.drag-night.name": "Noite de drag",
+  "catalog.format.drag-night.sub": "Performances, gorjetas, aplausos",
+  "catalog.format.dance.name": "Dança",
+  "catalog.format.dance.sub": "Dança social, qualquer nível",
+
+  "catalog.format.collage-night.name": "Noite de colagem",
+  "catalog.format.collage-night.sub": "Tesouras, cola, revistas velhas",
+  "catalog.format.craft-circle.name": "Roda de artesanato",
+  "catalog.format.craft-circle.sub":
+    "Traz o teu projeto e trabalha ao lado de outras pessoas",
+  "catalog.format.zine-making.name": "Fazer fanzines",
+  "catalog.format.zine-making.sub": "Dobrar, agrafar, fotocopiar",
+  "catalog.format.life-drawing.name": "Desenho de modelo vivo",
+  "catalog.format.life-drawing.sub": "Alguém a posar, papel, zero julgamentos",
+  "catalog.format.writing-circle.name": "Roda de escrita",
+  "catalog.format.writing-circle.sub":
+    "Escrever em conjunto, partilhar se te apetecer",
+  "catalog.format.jam-session.name": "Jam session",
+  "catalog.format.jam-session.sub": "Traz um instrumento",
+  "catalog.format.studio-visit.name": "Visita ao atelier",
+  "catalog.format.studio-visit.sub": "Abre o teu espaço",
+
+  "catalog.format.workshop.name": "Oficina",
+  "catalog.format.workshop.sub": "Mãos na massa, sais a saber fazer",
+  "catalog.format.talk-or-panel.name": "Conversa ou painel",
+  "catalog.format.talk-or-panel.sub": "Alguém fala, depois há perguntas",
+  "catalog.format.skills-exchange.name": "Troca de saberes",
+  "catalog.format.skills-exchange.sub": "Aprendizagem mútua",
+  "catalog.format.book-club.name": "Clube de leitura",
+  "catalog.format.book-club.sub": "Um livro, uma noite",
+  "catalog.format.language-exchange.name": "Troca de línguas",
+  "catalog.format.language-exchange.sub":
+    "Praticas português, ofereces a tua língua",
+  "catalog.format.discussion.name": "Grupo de discussão",
+  "catalog.format.discussion.sub": "Leitura em grupo, debate",
+  "catalog.format.info-night.name": "Noite de esclarecimento",
+  "catalog.format.info-night.sub": "Respostas práticas sobre um tema",
+
+  "catalog.format.screening.name": "Sessão de cinema",
+  "catalog.format.screening.sub": "Um filme, numa parede ou num ecrã",
+  "catalog.format.live-performance.name": "Espetáculo ao vivo",
+  "catalog.format.live-performance.sub": "Música, teatro, dança",
+  "catalog.format.open-mic.name": "Microfone aberto",
+  "catalog.format.open-mic.sub": "Inscreves-te, cinco minutos por pessoa",
+  "catalog.format.poetry-reading.name": "Leitura de poesia",
+  "catalog.format.poetry-reading.sub": "Palavras ditas em voz alta",
+  "catalog.format.open-rehearsal.name": "Ensaio aberto",
+  "catalog.format.open-rehearsal.sub": "Vês o trabalho a acontecer",
+
+  "catalog.format.walk-or-hike.name": "Caminhada",
+  "catalog.format.walk-or-hike.sub": "Um percurso, um ritmo, companhia",
+  "catalog.format.run-club.name": "Clube de corrida",
+  "catalog.format.run-club.sub": "Corridas regulares, todos os ritmos",
+  "catalog.format.swim.name": "Nadar",
+  "catalog.format.swim.sub": "Piscina, rio ou mar",
+  "catalog.format.beach-day.name": "Dia de praia",
+  "catalog.format.beach-day.sub": "Sol, mar, uma tarde longa",
+  "catalog.format.bike-ride.name": "Passeio de bicicleta",
+  "catalog.format.bike-ride.sub": "Uma volta, mudanças leves",
+  "catalog.format.yoga-or-movement.name": "Yoga ou movimento",
+  "catalog.format.yoga-or-movement.sub": "Alonga, respira, mexe-te",
+  "catalog.format.pickup-sport.name": "Desporto informal",
+  "catalog.format.pickup-sport.sub": "Futebol, voleibol, o que houver",
+
+  "catalog.format.support-circle.name": "Círculo de apoio",
+  "catalog.format.support-circle.sub": "Com facilitação, confidencial",
+  "catalog.format.peer-group.name": "Grupo de pares",
+  "catalog.format.peer-group.sub": "Pessoas com uma experiência em comum",
+  "catalog.format.clinic.name": "Balcão de apoio",
+  "catalog.format.clinic.sub": "Apoio jurídico, de saúde ou burocrático",
+  "catalog.format.mutual-aid.name": "Apoio mútuo",
+  "catalog.format.mutual-aid.sub": "Dá o que puderes, leva o que precisares",
+  "catalog.format.office-hours.name": "Horas de atendimento",
+  "catalog.format.office-hours.sub": "Aparece com uma dúvida",
+
+  "catalog.format.meeting.name": "Reunião",
+  "catalog.format.meeting.sub": "Uma agenda e decisões",
+  "catalog.format.assembly.name": "Assembleia",
+  "catalog.format.assembly.sub": "Aberta a toda a gente, grandes questões",
+  "catalog.format.volunteer-shift.name": "Turno de voluntariado",
+  "catalog.format.volunteer-shift.sub": "Aparece e dá uma mão",
+  "catalog.format.fundraiser.name": "Angariação de fundos",
+  "catalog.format.fundraiser.sub": "Juntar dinheiro para uma causa",
+  "catalog.format.market.name": "Feira",
+  "catalog.format.market.sub": "Bancas, quem faz, quem vende",
+  "catalog.format.launch.name": "Lançamento",
+  "catalog.format.launch.sub": "Algo novo é apresentado",
+
+  "catalog.format.other.name": "Outra coisa",
+  "catalog.format.other.sub": "Dá-lhe tu o nome",
+  "catalog.format.unset": "Convívio",
+
+  "catalog.details.bring.label": "O que trazer",
+  "catalog.details.bring.hint":
+    "Uma linha. Quem vai ao convívio vê isto na página.",
+  "catalog.details.isAdultsOnly.label": "Só maiores de 18",
+  "catalog.details.isAdultsOnly.hint":
+    "Diz já se há verificação de idade à porta.",
+  "catalog.details.isSoberFriendly.label": "Bom para quem não bebe",
+  "catalog.details.isSoberFriendly.hint":
+    "Há boas bebidas sem álcool e ninguém é pressionado.",
+  "catalog.details.terrain.label": "Terreno",
+  "catalog.details.terrain.hint": "Como é o piso debaixo dos pés.",
+  "catalog.details.terrain.flat": "Plano",
+  "catalog.details.terrain.mixed": "Misto",
+  "catalog.details.terrain.steep": "Íngreme",
+  "catalog.details.isBeginnerFriendly.label": "Bom para quem começa",
+  "catalog.details.isBeginnerFriendly.hint":
+    "Ninguém precisa de já ter feito isto antes.",
+  "catalog.details.runtimeMinutes.label": "Duração, em minutos",
+  "catalog.details.runtimeMinutes.hint":
+    "Quanto tempo dura o filme, o set ou o espetáculo.",
+
+  "catalog.goodToKnow.title": "Bom saber",
+  "catalog.goodToKnow.bring": "Traz: {value}",
+  "catalog.goodToKnow.adultsOnly": "Só maiores de 18",
+  "catalog.goodToKnow.soberFriendly": "Bom para quem não bebe",
+  "catalog.goodToKnow.terrain": "Terreno: {value}",
+  "catalog.goodToKnow.beginnerFriendly": "Bom para quem começa",
+  "catalog.goodToKnow.runtime": "Dura cerca de {minutes} min",
+
+  // TypeStep.tsx / FormatPicker.tsx: escolher família e formato
+  "create.step1.searchLabel": "Procurar em todos os formatos",
+  "create.step1.searchPlaceholder": "Piquenique, karaoke, clube de leitura",
+  "create.step1.searchResultsLabel": "Formatos correspondentes",
+  "create.step1.searchEmpty":
+    "Ainda não há nada que corresponda. Tenta outra palavra, ou escolhe um tipo abaixo.",
+  "create.step1.familyLabel": "Tipo de convívio",
+  "create.step1.formatLabel": "Formato",
+  "create.step1.otherLabel": "Dá um nome ao teu formato",
+  "create.step1.otherPlaceholder": "Em poucas palavras, o que é?",
+  "create.step1.otherRequired":
+    "Escreve o que é o teu convívio, em poucas palavras.",
+
+  // CapacityStep.tsx: as perguntas da família e os dois valores que definiu
+  "create.step3.formatDetailsLabel": "Detalhes do formato",
+  "create.step3.formatDetailsHint":
+    "Uma ou duas perguntas que este formato levanta. Podes saltar qualquer uma.",
+  "create.step3.capDefaultHint":
+    "{count} é o tamanho habitual para este formato. Muda à vontade.",
+  "create.step3.attendeeCountLabel": "Mostrar quantas pessoas vão",
+  "create.step3.attendeeCountHint":
+    "A maioria dos convívios mostra a contagem. Os de cuidar e apoiar começam com ela escondida.",
+
+  // ReviewStep.tsx
+  "create.step5.typeValue": "{family}, {format}",
+  "create.step5.row.formatDetails": "Bom saber",
+
+  // createGatheringSteps.ts: a linha do requisito para um formato próprio
+  "create.gate.format": "Dar um nome ao teu formato",
+
+  // BrowseFilterBar.tsx: a fila de chips de família
+  "hub.browse.familyLabel": "Tipo de convívio",
+  "hub.browse.familyAny": "Qualquer tipo",
+
+  // EditDetailsModal.tsx: família e formato, editáveis depois de publicar
+  "manage.editModal.fieldFamily": "Tipo de convívio",
+  "manage.editModal.fieldFormat": "Formato",
+  "manage.editModal.fieldFormatOther": "Dá um nome ao teu formato",
+  "manage.editModal.familyNone": "Por definir",
+  "manage.editModal.formatNone": "Por definir",
 
   // createGathering.data.ts — neighbourhoods not already in gatherings:hood.*
   "create.hood.intendente": "Intendente",
@@ -460,16 +654,40 @@ export const gatherings: Catalog = {
   "create.success.eventCta": "Ver a página do teu convívio",
   "create.nav.cancel": "Cancelar",
   "create.nav.back": "Voltar",
-  "create.nav.publishHint": "Confirma as três caixas acima para publicar",
-  "create.nav.dateHint": "Escolhe uma data e hora no futuro para continuar",
-  "create.nav.repeatsHint":
-    "Indica um número de datas válido, ou uma data de fim depois do início do teu convívio, para continuar",
-  "create.nav.detailsHint":
-    "Escolhe um formato e dá um nome ao teu convívio para continuar",
   "create.nav.leaveConfirm":
     "Tens um convívio por publicar aqui. Queres sair sem o guardar?",
   "create.nav.publish": "Publicar convívio",
   "create.nav.continue": "Continuar",
+
+  // StepRequirement.tsx — a linha de obrigatório/opcional debaixo do título de
+  // cada etapa, e a lista do que ainda falta por cima do botão Continuar.
+  "create.stepBadge.required":
+    "Etapa obrigatória. Tens de preencher isto antes de continuares.",
+  "create.stepBadge.optional":
+    "Etapa opcional. Podes continuar sem alterares nada aqui.",
+  "create.gate.blockedTitle": "Para continuares, ainda tens de:",
+  "create.gate.blockedTitlePublish": "Antes de publicares, ainda tens de:",
+  "create.gate.readyOptional":
+    "Nada é obrigatório nesta etapa. Continua quando quiseres.",
+  "create.gate.ready":
+    "Já está tudo o que é obrigatório nesta etapa. Continua quando quiseres.",
+  "create.gate.readyPublish":
+    "Já está tudo o que é obrigatório. Podes publicar agora.",
+  "create.gate.itemDone": "Feito:",
+  "create.gate.itemTodo": "Ainda falta:",
+  "create.gate.jumpHint": "Ir para este campo.",
+  "create.gate.type": "Escolhe um tipo e um formato",
+  "create.gate.title": "Dar um nome ao teu convívio",
+  "create.gate.date": "Escolher uma data e hora de início no futuro",
+  "create.gate.joinLink":
+    "Corrigir o link de acesso. Tem de começar por http:// ou https://",
+  "create.gate.recurrence":
+    "Terminar a repetição com um número de datas, ou uma data de fim depois do início",
+  "create.gate.confirm.codeOfCare":
+    "Confirmar que este convívio segue o Código de Cuidado",
+  "create.gate.confirm.accessibility":
+    "Confirmar que a tua informação de acessibilidade está correta",
+
   "create.sidebar.tipLabel": "Dica para esta etapa",
   "create.sidebar.afterTitle": "O que acontece depois de publicares",
   "create.sidebar.afterBody":
@@ -478,8 +696,10 @@ export const gatherings: Catalog = {
   // CreateGatheringSteps.tsx — step 1: type
   "create.step1.title": "Que tipo de <em>convívio?</em>",
   "create.step1.sub":
-    "Escolhe o formato. Isto determina alguns dos campos seguintes.",
+    "Escolhe o tipo e depois o formato. Isso define alguns valores sensatos que podes na mesma mudar.",
   "create.step1.typeRequired": "Escolhe um formato para começar.",
+  "create.step1.familyRequired":
+    "Escolhe um tipo de convívio para veres os formatos.",
   "create.step1.titleLabel": "Título do convívio",
   "create.step1.titlePlaceholder":
     "Um título claro e específico que diz exatamente o que é",
@@ -492,12 +712,13 @@ export const gatherings: Catalog = {
   // CreateGatheringSteps.tsx — step 2: date & place
   "create.step2.title": "Quando e <em>onde?</em>",
   "create.step2.sub":
-    "A localização só é partilhada com quem confirmou presença e fica fora do anúncio público.",
-  "create.step2.dateLabel": "Data",
+    "A localização só é partilhada com quem confirmou presença e fica fora do anúncio público. A hora de fim é opcional.",
+  "create.step2.dateLabel": "Começa",
   "create.step2.dateRequired":
     "Escolhe uma data e hora de início no futuro para as pessoas se poderem organizar.",
-  "create.step2.timeLabel": "Hora",
-  "create.step2.endTimeLabel": "Hora de fim (opcional)",
+  "create.step2.endTimeLabel": "Acaba",
+  "create.step2.duration": "Dura {duration}",
+  "create.step2.endsNextDay": "acaba no dia seguinte",
   "create.step2.hoodLabel": "Bairro",
   "create.step2.hoodPlaceholder": "Seleciona…",
   "create.step2.venueLabel": "Nome do espaço",
@@ -583,35 +804,22 @@ export const gatherings: Catalog = {
   "create.step5.repeatsOff": "Não, só desta vez",
   "create.step5.repeatsUntilCount": "{occurrences} datas",
   "create.step5.repeatsUntilDate": "até {date}",
-  "create.step5.confirmHeading": "Antes de publicares: confirma as três",
+  "create.step5.confirmHeading": "Antes de publicares",
   "create.step5.confirmIntro":
-    "Marca cada caixa para confirmar. O botão <strong>Publicar convívio</strong> fica desativado até as três estarem marcadas.",
+    "Marca cada caixa para confirmar. O botão <strong>Publicar convívio</strong> fica desativado até todas estarem marcadas.",
   "create.step5.allSet": "Tudo pronto. Já podes publicar.",
   "create.step5.progress_one":
-    "<num>{checkedCount}</num> de 3 confirmadas. Marca a última caixa para publicar.",
+    "<num>{checkedCount}</num> de {total} confirmadas. Marca a última caixa para publicar.",
   "create.step5.progress_other":
-    "<num>{checkedCount}</num> de 3 confirmadas. Marca as <remaining>{count}</remaining> caixas restantes para publicar.",
-
-  // hostPage.data.ts — hero type chips
-  "host.hero.type.supperClub": "Jantar comunitário",
-  "host.hero.type.studioVisit": "Visita ao atelier",
-  "host.hero.type.skillsWorkshop": "Oficina de competências",
-  "host.hero.type.filmScreening": "Sessão de cinema",
-  "host.hero.type.morningWalk": "Caminhada matinal",
-  "host.hero.type.bookClub": "Clube de leitura",
-  "host.hero.type.openStudio": "Atelier aberto",
+    "<num>{checkedCount}</num> de {total} confirmadas. Marca as <remaining>{count}</remaining> caixas restantes para publicar.",
 
   // hostPage.data.ts — type cards (step 1)
-  "host.typeCard.supperClub.title": "Jantar comunitário",
   "host.typeCard.supperClub.body":
     "Íntimo, feito em tua casa ou numa cozinha emprestada. 8–14 pessoas. O modelo que o Tomás usa, e funciona porque é pessoal.",
-  "host.typeCard.studioVisit.title": "Visita ao atelier",
   "host.typeCard.studioVisit.body":
     "Abre o teu espaço de trabalho a quem realmente gostaria de o ver. Pouca logística, grande valor. Funciona particularmente bem para quem cria com as mãos.",
-  "host.typeCard.skillsSession.title": "Sessão de partilha de saberes",
   "host.typeCard.skillsSession.body":
     "Ensina algo que sabes. Uma hora de conhecimento prático partilhado vale mais do que a maioria das oficinas pagas.",
-  "host.typeCard.screeningTalk.title": "Sessão de cinema ou conversa",
   "host.typeCard.screeningTalk.body":
     "Um filme, um documentário, uma conversa com alguém interessante. Um projetor e uma sala de estar chegam.",
 
@@ -887,6 +1095,12 @@ export const gatherings: Catalog = {
     "As alterações ficam logo visíveis na página pública. As pessoas são avisadas de mudanças de data ou local.",
   "manage.editModal.fieldTitle": "Título",
   "manage.editModal.fieldDateTime": "Data e hora",
+  "manage.editModal.fieldEndAt": "Fim (opcional)",
+  "manage.editModal.endSummary": "Decorre {date} · {time}",
+  "manage.editModal.endBeforeStartError":
+    "O fim tem de vir depois do início. Recua o início, adia o fim ou limpa-o.",
+  "manage.editModal.endSpanError":
+    "Um convívio pode durar até {days} dias. Aproxima o fim do início.",
   "manage.editModal.fieldLocation": "Local",
   "manage.editModal.fieldDescription": "Descrição",
   "manage.editModal.saveCta": "Guardar alterações",
@@ -1061,6 +1275,7 @@ export const gatherings: Catalog = {
   "hub.tabs.calendar": "Calendário",
   "hub.hero.rsvp": "Dá uma vista de olhos",
   "hub.featured.eyebrow": "A seguir",
+  "hub.bucket.now": "A acontecer agora",
   "hub.bucket.tonight": "Hoje à noite",
   "hub.bucket.weekend": "Este fim de semana",
   "hub.bucket.week": "Esta semana",
@@ -1293,8 +1508,8 @@ export const gatherings: Catalog = {
   "hub.browse.when.month": "Próximos 30 dias",
   "hub.browse.hoodLabel": "Bairro",
   "hub.browse.hoodAny": "Em qualquer parte de Lisboa",
-  "hub.browse.typeLabel": "Tipo de convívio",
-  "hub.browse.typeAny": "Qualquer tipo",
+  "hub.browse.typeLabel": "Formato",
+  "hub.browse.typeAny": "Qualquer formato",
   "hub.browse.cost.groupLabel": "Custo",
   "hub.browse.cost.any": "Qualquer custo",
   "hub.browse.cost.free": "Gratuito",
@@ -1417,4 +1632,58 @@ export const gatherings: Catalog = {
     "Na demonstração não há uma lista real para exportar.",
   "manage.attendees.exportFailedToast":
     "A exportação falhou. Tenta outra vez daqui a pouco.",
+
+  // ── Barra de anfitriã na página pública do encontro (GatheringHostBar) ─────
+  // Quem organiza ficava na página do próprio encontro sem nada para o gerir.
+  // Cancelar mantém o encontro no quadro e avisa toda a gente; eliminar
+  // remove-o e não avisa ninguém, por isso o texto tem de deixar isso claro.
+  "hostBar.label": "O teu encontro",
+  "hostBar.editCta": "Editar detalhes",
+  "hostBar.manageCta": "Gerir",
+  "hostBar.cancelCta": "Cancelar encontro",
+  "hostBar.deleteCta": "Eliminar encontro",
+  "hostBar.cancelTitle": "Cancelar {title}?",
+  "hostBar.cancelBody_one":
+    "Fica no quadro marcado como cancelado, e {count} pessoa com lugar é avisada.",
+  "hostBar.cancelBody_other":
+    "Fica no quadro marcado como cancelado, e {count} pessoas com lugar são avisadas.",
+  "hostBar.cancelConfirmCta": "Cancelar o encontro",
+  "hostBar.cancelKeepCta": "Manter de pé",
+  "hostBar.deleteTitle": "Eliminar {title}?",
+  "hostBar.deleteBody":
+    "Isto remove o encontro e as inscrições, as fotografias e os avisos dele, para sempre. Ninguém é notificado e não há como voltar atrás. Para avisares quem se inscreveu, cancela-o.",
+  "hostBar.deleteConfirmCta": "Eliminar para sempre",
+  "hostBar.deleteKeepCta": "Manter",
+  "hostBar.deletedToast": "{title} foi eliminado.",
+  "hostBar.deleteBlockedToast":
+    "Já há pessoas inscritas neste encontro. Cancela-o primeiro para que sejam avisadas, e só depois o elimines.",
+  "hostBar.deleteHostOnlyToast":
+    "Só a pessoa anfitriã pode eliminar um encontro. Como pessoa coanfitriã podes cancelá-lo.",
+  "hostBar.deleteGoneToast": "Esse encontro já não existe.",
+  "hostBar.deleteFailedToast":
+    "Não foi possível eliminar o encontro. Tenta outra vez daqui a pouco.",
+
+  // ── Apresentação do horário (gatheringSchedule.ts) ─────────────────────────
+  // Um encontro pode passar da meia-noite ou durar vários dias, por isso um
+  // único formatador constrói as datas e as horas para todos os ecrãs.
+  "common.dateRange": "{start} a {end}",
+  "common.timeRange": "{start} – {end}",
+  "common.nextDayNote": "(no dia seguinte)",
+
+  // ── Os quatro campos de horário do assistente (DatePlaceStep, ReviewStep) ──
+  // "Começa" e "Acaba" dão nome a um PAR de campos, por isso cada um dos quatro
+  // controlos tem a sua própria etiqueta escondida. O "(opcional)" que estava na
+  // etiqueta visível passou para a hora de fim, porque a data de fim já vem
+  // preenchida.
+  "create.step2.startDateLabel": "Data de início",
+  "create.step2.startTimeLabel": "Hora de início",
+  "create.step2.endDateLabel": "Data de fim",
+  "create.step2.endTimeFieldLabel": "Hora de fim",
+  // Duas mensagens, porque pedem duas correções diferentes.
+  "create.step2.endsBeforeStart":
+    "Isto acaba antes de começar. Passa a data ou a hora de fim para depois.",
+  "create.step2.spanTooLong":
+    "Um convívio pode durar até {days} dias. Aproxima o fim do início.",
+  // A linha de revisão, quando o horário passa para a manhã seguinte.
+  "create.step5.dateTimeNote": "{when} {note}",
 };

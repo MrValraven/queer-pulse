@@ -1,6 +1,7 @@
 import { HOODS } from "./createGathering.data";
 import type { GatheringDetail } from "./data";
 import type { GatheringFormSeed } from "./useGatheringForm";
+import { familyForLegacyLabel, findFormat } from "./gatheringCatalog";
 import { normalizeAccessibilityAnswers } from "../marketing/listBusiness/listingAccessibility.data";
 
 /**
@@ -32,7 +33,18 @@ export function gatheringToFormSeed(
 ): GatheringFormSeed {
   const isOnline = gathering.isOnline === true;
   return {
-    type: gathering.type,
+    // The live detail carries both halves. When it does not (a demo record, or
+    // a row written before families existed) fall back to reading the stored
+    // format string: the catalog first, then the eight-label legacy map.
+    family:
+      gathering.gatheringFamily ??
+      findFormat(gathering.type)?.family ??
+      familyForLegacyLabel(gathering.type) ??
+      null,
+    format: findFormat(gathering.type)?.key ?? null,
+    otherText: findFormat(gathering.type) ? "" : (gathering.type ?? ""),
+    formatDetails: gathering.formatDetails ?? null,
+    showAttendeeCount: gathering.showAttendeeCount,
     // Not the title verbatim: two gatherings with the identical name are
     // indistinguishable in every list, in search, and in the host's own
     // dashboard. The host is dropped into the wizard's first step with the

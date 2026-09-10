@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Button, Reveal } from "../../../shared/components/ui";
+import { Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useAuth } from "../../../app/providers/authContext";
 import { routes } from "../../../app/routeMap";
+import { HousingExplainerCta } from "./HousingExplainerCta";
 import { HousingListingStage } from "./HousingListingStage";
 import styles from "./HousingShowcase.module.css";
 
 export function HousingShowcase() {
   const { t } = useTranslation();
+  const { loggedIn } = useAuth();
 
   return (
     <section className={styles.housing} id="housing">
@@ -27,14 +30,17 @@ export function HousingShowcase() {
             <Reveal as="p" className={styles.secBody} delay={80}>
               {t("homepage:housing.subtitle")}
             </Reveal>
+            {/* Signed out this is one button that opens the explainer: the
+                flatmate board is gated too, so offering it as a second link
+                only bounced the visitor to sign-in a second way. */}
             <Reveal className={styles.ctaRow} delay={120}>
-              <Button variant="primary" size="lg" to={routes.housing}>
-                {t("homepage:housing.cta")}
-              </Button>
-              <Link to={routes.flatmates} className={styles.ctaAlt}>
-                {t("homepage:housing.secondaryCta")}{" "}
-                <FiArrowRight aria-hidden />
-              </Link>
+              <HousingExplainerCta />
+              {loggedIn && (
+                <Link to={routes.flatmates} className={styles.ctaAlt}>
+                  {t("homepage:housing.secondaryCta")}{" "}
+                  <FiArrowRight aria-hidden />
+                </Link>
+              )}
             </Reveal>
             <Reveal as="p" className={styles.ctaNote} delay={160}>
               {t("homepage:housing.ctaNote")}

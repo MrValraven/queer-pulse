@@ -2,7 +2,6 @@ import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isUpcoming, sectionShape } from "./personaSkinRender";
 import type { PersonaViewMode } from "./personaSkinRender";
-import { poemPlainFirstLine } from "./poem/poemBlocks";
 import { SubprofileItemRow } from "./SubprofileItemRow";
 import { SubprofileItemTile } from "./SubprofileItemTile";
 import type {
@@ -162,12 +161,7 @@ function SectionBody({
             interactive={interactive}
             accent={accent}
             onOpen={poemOpen}
-            teaser={
-              poemOpen
-                ? poemPlainFirstLine(item.structured?.poem ?? null) ||
-                  item.description
-                : undefined
-            }
+            hideBody={item.section === "poems"}
           />
         );
       })}

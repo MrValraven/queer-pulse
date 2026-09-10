@@ -15,8 +15,6 @@ const NO_MOVE = () => {};
 
 export interface PoemReaderModalProps {
   item: SubprofileItemView;
-  /** The persona's display name, shown in the copyright footer. */
-  authorName: string;
   /** Absolute, deep-linkable URL for this exact poem (persona share URL +
    *  `?poem=<slug>`), copied by the "Copy link" affordance below. `null` when
    *  the persona has no public address yet, which drops the affordance rather
@@ -33,7 +31,6 @@ export interface PoemReaderModalProps {
  */
 export function PoemReaderModal({
   item,
-  authorName,
   shareUrl,
   onClose,
 }: PoemReaderModalProps) {
@@ -159,10 +156,7 @@ export function PoemReaderModal({
             blocks={activeVersion.blocks}
             description={activeIndex === 0 ? item.description : undefined}
           />
-          <WorkRightsFooter
-            authorName={authorName}
-            createdAtISO={item.createdAt}
-          />
+          <WorkRightsFooter createdAtISO={item.createdAt} />
         </div>
       </div>
     </div>,

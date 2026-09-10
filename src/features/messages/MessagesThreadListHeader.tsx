@@ -1,14 +1,19 @@
-import { FeatureHelp, SearchInput } from "../../shared/components/ui";
+import { FiUsers } from "react-icons/fi";
+import { LuMessageSquarePlus } from "react-icons/lu";
+import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
+import { BrandMark, SearchInput } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InboxTabs } from "./InboxTabs";
 import type { InboxTab } from "./threadFilters";
 import styles from "./MessagesPage.module.css";
 
 /**
- * The inbox's fixed top strip: title + compose actions, the search box, and
- * (below it) the filter tabs — split out of `MessagesThreadList` to keep both
- * components under the 200-line cap. Purely presentational; all state lives
- * in the parent.
+ * The inbox's fixed top strip: wordmark + compose actions, the search box,
+ * and (below it) the filter tabs — split out of `MessagesThreadList` to keep
+ * both components under the 200-line cap. Purely presentational; all state
+ * lives in the parent.
  */
 export function MessagesThreadListHeader({
   query,
@@ -35,10 +40,16 @@ export function MessagesThreadListHeader({
   return (
     <div className={styles.tpTop}>
       <div className={styles.tpHeadRow}>
-        <div className={styles.tpTitle}>
-          {t("messages:thread.title")}
-          <FeatureHelp id="messages.inbox" />
-        </div>
+        <Link to={routes.feed} className={styles.tpBrand}>
+          {/* Decorative: the wordmark beside it already names the link. */}
+          <BrandMark state="compact" size={20} />
+          <span className={styles.tpBrandName}>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
+          </span>
+        </Link>
         <div className={styles.tpHeadActions}>
           <button
             type="button"
@@ -47,40 +58,7 @@ export function MessagesThreadListHeader({
             aria-label={t("messages:group.newTooltip")}
             onClick={onComposeGroup}
           >
-            <svg
-              width={17}
-              height={17}
-              viewBox="0 0 20 20"
-              fill="none"
-              aria-hidden
-            >
-              <circle
-                cx="7"
-                cy="7.5"
-                r="2.6"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              />
-              <path
-                d="M2.5 15.5c0-2.2 2-3.6 4.5-3.6s4.5 1.4 4.5 3.6"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                strokeLinecap="round"
-              />
-              <circle
-                cx="14"
-                cy="6.5"
-                r="2"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              />
-              <path
-                d="M13 11.2c2.2 0 4 1.2 4 3.3"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                strokeLinecap="round"
-              />
-            </svg>
+            <FiUsers aria-hidden />
           </button>
           <button
             type="button"
@@ -89,26 +67,7 @@ export function MessagesThreadListHeader({
             aria-label={t("messages:thread.composeTooltip")}
             onClick={onCompose}
           >
-            <svg
-              width={15}
-              height={15}
-              viewBox="0 0 15 15"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M10.5 2L13 4.5l-7 7H3.5V9l7-7Z"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                strokeLinejoin="round"
-              />
-              <path
-                d="M2 13h11"
-                stroke="currentColor"
-                strokeWidth={1.5}
-                strokeLinecap="round"
-              />
-            </svg>
+            <LuMessageSquarePlus aria-hidden />
           </button>
         </div>
       </div>

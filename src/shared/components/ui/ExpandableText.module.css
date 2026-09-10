@@ -1,0 +1,138 @@
+/* ExpandableText — the clamp and the Read more / Show less toggle only. Every
+   caller keeps its own typography on the same element (the member bio, the
+   persona `.pp-bio`, …), so nothing here sets a colour, size or measure. */
+
+.body {
+  /* Long bios carry URLs and handles members paste in unbroken; without this
+     one can push the whole hero column sideways on a phone. */
+  overflow-wrap: anywhere;
+}
+
+/* Collapsed state, set while the words are folded away. It is applied whenever
+   the block is collapsed — including when the text is short enough to fit —
+   because that is what lets the component measure `scrollHeight` against
+   `clientHeight` to decide whether the toggle is needed at this width at all. */
+.body[data-clamped][data-clamp-mode="lines"] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--expandable-text-lines, 6);
+  line-clamp: var(--expandable-text-lines, 6);
+  overflow: hidden;
+}
+
+/* The `display`-preserving clamp. `1lh` is one line box of THIS element's own
+   line-height, so both modes fold to the same number of lines whatever the
+   caller's type is — but this one leaves multi-column text and `::first-letter`
+   drop caps intact (several persona skins style the bio with them). The cut
+   lands exactly on a line boundary, so there is no sliver of a half-line. */
+.body[data-clamped][data-clamp-mode="height"] {
+  max-height: calc(var(--expandable-text-lines, 6) * 1lh);
+  overflow: hidden;
+}
+
+@media (max-width: 680px) {
+  .body[data-clamped][data-clamp-mode="lines"] {
+    -webkit-line-clamp: var(
+      --expandable-text-lines-mobile,
+      var(--expandable-text-lines, 6)
+    );
+    line-clamp: var(
+      --expandable-text-lines-mobile,
+      var(--expandable-text-lines, 6)
+    );
+  }
+  .body[data-clamped][data-clamp-mode="height"] {
+    max-height: calc(
+      var(--expandable-text-lines-mobile, var(--expandable-text-lines, 6)) * 1lh
+    );
+  }
+}
+
+/* The fold. This is the one place in the app that transitions a layout
+   property: revealing prose means the box really has to change height, and the
+   cheap substitutes all fail on text (`scale()` stretches the glyphs, and a
+   `transform` cannot make the words below it move out of the way). The
+   component keeps the cost contained by only ever setting this while a fold is
+   actually running: at rest the attribute is gone and there is no transition to
+   recalculate.
+
+   Opening decelerates: the words arrive quickly and settle. Closing eases at
+   BOTH ends instead of accelerating away, because the block is not leaving the
+   screen — it has to come to rest at the clamped height with the toggle still
+   under the reader's cursor, and a curve that is still speeding up when it hits
+   that height stops dead and reads as a snap rather than a fold.
+
+   The duration comes from the component, scaled to how far this particular
+   fold travels (see `foldDurationMs`); `--dur-slow` is only the fallback for a
+   fold that never got measured.
+
+   `prefers-reduced-motion` is answered twice over: the component skips the
+   animation outright and swaps state instantly, and the global net in
+   tokens/effects.css near-zeroes the duration with `!important` if it ever ran
+   anyway. Either way the reader lands on the correct, fully readable end
+   state. */
+.body[data-folding] {
+  transition: max-height var(--expandable-text-fold-dur, var(--dur-slow))
+    var(--ease-out);
+}
+.body[data-folding="closed"] {
+  transition-timing-function: var(--ease-in-out);
+}
+
+/* A caller's own bottom margin is there to separate the prose from whatever
+   comes after it (`PublicProfilePage`'s `.bio` carries 18px). The toggle IS
+   what comes after it now, so close that gap and let the toggle's own 6px set
+   the spacing; the caller's margin still applies when no toggle is needed. */
+.body:has(+ .toggle) {
+  margin-block-end: 0;
+}
+
+/* A quiet text affordance rather than a pill: it sits inside someone's own
+   words and should read as part of them, not compete with the CTAs below. */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-block-start: 6px;
+  /* Several callers sit the bio in a flex/grid column, where a stretched
+     inline-flex button would span the whole measure and turn the entire row
+     into a hit target. In a block context this changes nothing. */
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  /* Coral by default. A surface whose ground this component cannot know —
+     every persona skin paints its own — sets this to `inherit` instead, so the
+     toggle takes that skin's already-legible text colour and stays
+     distinguishable by weight, chevron and underline rather than hue. */
+  color: var(--expandable-text-toggle-ink, var(--accent));
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .toggle:hover {
+    text-decoration: underline;
+  }
+}
+
+.toggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-tag);
+}
+
+/* One chevron that turns over, rather than two icons swapping: the rotation is
+   a compositor-only transform, and it carries the same "this opens / this
+   closes" information as the swap did. Driven off `aria-expanded` so the
+   markup, the styling and the accessible state read from one source. */
+.toggle svg {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--dur-base) var(--ease-std);
+}
+.toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}

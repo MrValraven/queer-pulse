@@ -25,7 +25,10 @@ export interface Gathering {
   id: string;
   day: string;
   month: string;
-  type: string;
+  /** A catalog format key (`gatheringCatalog.ts`), resolved to a label at
+   *  render through `formatLabel`. Never a display string: this card ships in
+   *  both languages. */
+  format: string;
   title: string;
   hood: string;
   detail: string;

@@ -35,6 +35,10 @@ import styles from "./AccountMenu.module.css";
  * `.menuClosing` animation in AccountMenu.module.css. */
 const MENU_EXIT_MS = 90;
 
+/** Where the chip sits, which decides both its ink and which way the menu
+ * opens. Everything that is not "default" opens upward. */
+export type AccountMenuPlacement = "default" | "rail" | "rail-light";
+
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
 export function AccountMenu({
   name: nameProp,
@@ -49,8 +53,11 @@ export function AccountMenu({
    * "default" opens the menu down-left from a top-right navbar chip. "rail"
    * flips it to open upward and left-aligned, for the bottom of the left
    * sidebar where a downward/right-anchored menu would run off-screen.
+   * "rail-light" is that same upward chip re-inked for a LIGHT ground (the
+   * Messages inbox panel's footer): the rail's cream-on-plum values assume the
+   * plum sidebar behind them and leave the name unreadable on `--paper`.
    */
-  placement?: "default" | "rail";
+  placement?: AccountMenuPlacement;
 }) {
   const { signOut } = useAuth();
   const { demoMode, available, toggle } = useDemoMode();
@@ -100,10 +107,40 @@ export function AccountMenu({
 
   return (
     <div className={styles.wrap} ref={ref}>
-      {placement === "rail" ? (
+      {placement === "default" ? (
+        <button
+          ref={triggerRef}
+          type="button"
+          className={styles.trigger}
+          onClick={toggleMenu}
+          aria-expanded={open}
+        >
+          <Avatar
+            initials={initials}
+            src={photo ?? undefined}
+            alt={name}
+            tint="coral"
+            size={28}
+          />
+          <span className={styles.name}>{name.split(" ")[0]}</span>
+          <FiChevronDown
+            aria-hidden
+            className={[styles.chevron, open && styles.chevronOpen]
+              .filter(Boolean)
+              .join(" ")}
+          />
+        </button>
+      ) : (
         // Identity opens the menu on the left; a single round chevron control
         // sits on the right and also opens the menu.
-        <div className={styles.railTrigger}>
+        <div
+          className={[
+            styles.railTrigger,
+            placement === "rail-light" && styles.railLight,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
           <button
             ref={triggerRef}
             type="button"
@@ -137,29 +174,6 @@ export function AccountMenu({
             </button>
           </div>
         </div>
-      ) : (
-        <button
-          ref={triggerRef}
-          type="button"
-          className={styles.trigger}
-          onClick={toggleMenu}
-          aria-expanded={open}
-        >
-          <Avatar
-            initials={initials}
-            src={photo ?? undefined}
-            alt={name}
-            tint="coral"
-            size={28}
-          />
-          <span className={styles.name}>{name.split(" ")[0]}</span>
-          <FiChevronDown
-            aria-hidden
-            className={[styles.chevron, open && styles.chevronOpen]
-              .filter(Boolean)
-              .join(" ")}
-          />
-        </button>
       )}
 
       {isMounted && (
@@ -209,7 +223,7 @@ function AccountMenuPanel({
   name: string;
   photo?: string;
   initials: string;
-  placement: "default" | "rail";
+  placement: AccountMenuPlacement;
   role: TeamRole;
   setRole: (role: TeamRole) => void;
   canSwitch: boolean;
@@ -243,26 +257,35 @@ function AccountMenuPanel({
     <div
       className={[
         styles.menu,
-        placement === "rail" && styles.menuRail,
+        placement !== "default" && styles.menuRail,
         isExiting && styles.menuClosing,
       ]
         .filter(Boolean)
         .join(" ")}
     >
       <div className={styles.header}>
-        <Avatar
-          initials={initials}
-          src={photo ?? undefined}
-          alt={name}
-          tint="coral"
-          size={36}
-        />
-        <div className={styles.headerText}>
-          <div className={styles.headerName}>{name}</div>
-          <div className={styles.headerMeta}>
-            {t("shared:accountMenu.header.subtitle")}
+        {/* The whole identity block is the profile link, so the avatar, the
+            name and the subtitle all lead where they read as leading. The
+            header icon actions stay outside it. */}
+        <Link
+          to={routes.accountProfile}
+          className={styles.headerIdentity}
+          onClick={onClose}
+        >
+          <Avatar
+            initials={initials}
+            src={photo ?? undefined}
+            alt={name}
+            tint="coral"
+            size={36}
+          />
+          <div className={styles.headerText}>
+            <div className={styles.headerName}>{name}</div>
+            <div className={styles.headerMeta}>
+              {t("shared:accountMenu.header.subtitle")}
+            </div>
           </div>
-        </div>
+        </Link>
         <div className={styles.headerActions}>
           {/* Light/dark sits with Saved and Settings rather than in the top bar:
               signed in, the account menu is where the member's own settings

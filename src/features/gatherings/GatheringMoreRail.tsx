@@ -3,6 +3,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { gatheringPath, spotsText, type GatheringDetail } from "./data";
+import { formatLabel } from "./gatheringCatalog";
 import styles from "./GatheringPage.module.css";
 
 /** The "more gatherings" rail beneath a gathering — demo-only (no live list
@@ -35,7 +36,9 @@ export function GatheringMoreRail({ others }: { others: GatheringDetail[] }) {
               </div>
             </div>
             <div>
-              <div className={styles.cardType}>{other.type}</div>
+              <div className={styles.cardType}>
+                {formatLabel(t, other.type)}
+              </div>
               <h3 className={styles.cardTitle}>{other.title}</h3>
               <div className={styles.cardHood}>
                 {other.hood} · {spotsText(other.spots, t, fmt)}

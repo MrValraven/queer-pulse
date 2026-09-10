@@ -497,7 +497,32 @@ export const homepage: Catalog = {
   "housing.cta": "Browse housing",
   "housing.eyebrow": "Rooms & flatmates",
   "housing.secondaryCta": "Post that you're looking",
+  "housing.explainerCta": "How housing works here",
   "housing.ctaNote": "Everyone here is part of the same trusted network.",
+
+  // Signed-out explainer behind the single housing CTA (HousingExplainerModal).
+  // Every row is something the section above does NOT already say, and every
+  // row is grounded in code — see the header comment in housingExplainer.data.ts
+  // for which surface backs which line.
+  "housingExplainer.eyebrow": "Housing here",
+  "housingExplainer.title": "A board of rooms, and <em>the rest of it.</em>",
+  "housingExplainer.titlePlain": "A board of rooms, and the rest of it",
+  "housingExplainer.lede":
+    "The listings are one part of it. Here is what else sits behind the door, and why there is a door at all.",
+  "housingExplainer.pillars.groups.title": "Groups that screen themselves",
+  "housingExplainer.pillars.groups.body":
+    "Small housing groups where the members decide who gets in and each group keeps its own house rules. Rooms shared inside a group stay inside it, and no broker gets a look in.",
+  "housingExplainer.pillars.viewings.title":
+    "The street address waits for a yes",
+  "housingExplainer.pillars.viewings.body":
+    "A listing shows you its area until the person letting it accepts your viewing, and only then does the exact address open up. Afterwards you both write a review, and neither of you reads the other's until both are in.",
+  "housingExplainer.pillars.door.title": "Why the board has a door",
+  "housingExplainer.pillars.door.body":
+    "An open board gets copied onto listing sites and mined by people running deposit scams, so the rooms and the flatmate profiles ask you to be a member first. Our plain guide to spotting a scam and knowing your rights as a tenant in Portugal sits behind the same door.",
+  "housingExplainer.note":
+    "Housing co-ops are the one part you can read right now: <coop>see who is organising a home together</coop>.",
+  "housingExplainer.requestInviteCta": "Request an invite",
+  "housingExplainer.signInCta": "I'm already a member",
   "housing.tabRoom": "The room",
   "housing.tabLandlord": "The landlord",
   "housing.postedByMember": "Posted by a member",

@@ -10,6 +10,7 @@ import { useMessageActionMenu } from "./useMessageActionMenu";
 import { useMessageLogState } from "./useMessageLogState";
 import { useMessageReceipts } from "./useMessageReceipts";
 import { useConversationPinStar } from "./useConversationPinStar";
+import { useWallpaper } from "./wallpaper";
 import {
   type ChatMessage,
   type Conversation,
@@ -219,8 +220,18 @@ export function ConversationPanel({
   // Stable identity — passed to `MessageArea`, which isn't itself memoized.
   const onOpenSeenBy = useCallback(() => setSeenBySheetOpen(true), []);
 
+  // This chat's wallpaper, or the base one if it has no pick of its own.
+  const wallpaper = useWallpaper(active.id);
+
   return (
-    <div className={styles.convoPanel}>
+    // The two data attributes drive `.convoPanel::before` / `::after` (the
+    // ground tint and the doodle layer). They sit on the PANEL rather than on
+    // `.area` so the wallpaper stays put while the log scrolls.
+    <div
+      className={styles.convoPanel}
+      data-wallpaper-ground={wallpaper.ground}
+      data-wallpaper-doodles={wallpaper.hasDoodles ? "on" : "off"}
+    >
       <ConversationTopSection
         active={active}
         isCounterpartOnline={isCounterpartOnline}

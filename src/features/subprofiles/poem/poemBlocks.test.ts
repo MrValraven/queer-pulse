@@ -4,7 +4,6 @@ import {
   newStanza,
   poemFromDescription,
   poemHasContent,
-  poemPlainFirstLine,
 } from "./poemBlocks";
 
 describe("poemBlocks", () => {
@@ -33,23 +32,5 @@ describe("poemBlocks", () => {
       kind: "stanza",
       lines: [[{ text: "one", marks: [] }], [{ text: "two", marks: [] }]],
     });
-  });
-
-  it("poemPlainFirstLine returns first non-empty line text", () => {
-    expect(
-      poemPlainFirstLine([newStanza([[], [{ text: "hi", marks: [] }]])]),
-    ).toBe("hi");
-  });
-
-  it("poemPlainFirstLine normalizes a legacy {html} block without throwing", () => {
-    expect(
-      poemPlainFirstLine([{ kind: "stanza", id: "x", html: "a<br>b" }]),
-    ).toBe("a");
-  });
-
-  it("poemPlainFirstLine tolerates malformed jsonb (no crash)", () => {
-    expect(poemPlainFirstLine([null])).toBe("");
-    expect(poemPlainFirstLine([{ kind: "stanza" }])).toBe("");
-    expect(poemPlainFirstLine("nope")).toBe("");
   });
 });

@@ -4,7 +4,7 @@ import type { ToastAction } from "../../shared/components/feedback/toastContext"
 import type { TFunction } from "../../shared/i18n/types";
 import type { Formatters } from "../../shared/i18n/format";
 import type { MyEvent } from "./myEvents.types";
-import { parseDate, timeStr } from "./myEvents.helpers";
+import { joinWhenParts, myEventWhen } from "./myEvents.when";
 import { useMyEventsRsvpMutations } from "./useMyEventsRsvpMutations";
 import { useMyEventsSoftRemove } from "./useMyEventsSoftRemove";
 
@@ -169,11 +169,15 @@ export function useMyEventsRsvp({
         { id, action: "accept" },
         {
           onSuccess: () => {
-            const dt = parseDate(ev.date);
+            const when = myEventWhen(ev, fmt, t, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            });
             setConfirm({
               open: true,
               title: ev.title,
-              meta: `${fmt.date(dt, { weekday: "long", day: "numeric", month: "long" })} · ${timeStr(ev)} · ${ev.venue}`,
+              meta: `${when.dateText} · ${joinWhenParts(when.timeText, when.nextDayNote)} · ${ev.venue}`,
             });
             patch(id, (e) => ({
               ...e,

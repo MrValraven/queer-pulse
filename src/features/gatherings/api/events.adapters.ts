@@ -6,6 +6,7 @@ import {
   type SpotsLabel,
 } from "../data";
 import type { GatheringForm } from "../useGatheringForm";
+import { OTHER_FORMAT_KEY } from "../gatheringCatalog";
 import { initialsFromParts } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -120,6 +121,11 @@ export function cardToCalendarEvent(
   const org = dto.org ?? "Community";
   return {
     date: new Date(dto.startAt),
+    // The end instant, whenever the host set one. Without it every consumer
+    // has to guess "is this still on?" from the start alone, which throws away
+    // exactly the running gatherings `filter=upcoming` goes out of its way to
+    // send. Absent leaves the old reading intact: the start IS the end.
+    ...(dto.endAt ? { endAt: new Date(dto.endAt) } : {}),
     // Only carried when the API actually knows the host's zone — absent leaves
     // every card formatting in the reader's own zone, exactly as before.
     ...(dto.timezone ? { timezone: dto.timezone } : {}),
@@ -134,8 +140,13 @@ export function cardToCalendarEvent(
     // the state (PRD-181). Carrying it is what stops a called-off gathering
     // from sitting in My Events looking exactly like a live one.
     ...(dto.status === "cancelled" ? { cancelled: true } : {}),
-    // The wizard's own gathering type, when the host picked one (LOC-04).
+    // The gathering's format and family, when the host picked them. The card
+    // renders the format through `formatLabel`, so what rides here is the
+    // stored key rather than a label built at fetch time: a card cached in EN
+    // has to be readable after the reader switches to PT.
     ...(dto.eventType ? { eventType: dto.eventType } : {}),
+    ...(dto.gatheringFamily ? { gatheringFamily: dto.gatheringFamily } : {}),
+    ...(dto.formatDetails ? { formatDetails: dto.formatDetails } : {}),
     // LOC-18 — the host's own words about what it costs, plus the server's
     // own "does this read as free" verdict. DISPLAY ONLY: there is no payment
     // anywhere behind this, so no card may offer to take one.
@@ -163,10 +174,14 @@ export function detailToGathering(
   const hideCount = dto.isOrganizer !== true && dto.showAttendeeCount === false;
   return {
     slug: dto.slug,
-    // The wizard's own gathering type is the real answer here (LOC-04). The
-    // backend never sent a `type`, so this row read the literal word
-    // "Gathering" on every live event, whatever the host had chosen.
-    type: dto.eventType ?? dto.type ?? "Gathering",
+    // The stored format, verbatim. NOT a label: the detail page runs it
+    // through `formatLabel`, which resolves a catalog key to the reader's own
+    // language and leaves a host's own words alone. The old `?? "Gathering"`
+    // fallback lived here and baked an English word into the view-model; the
+    // catalog's `catalog.format.unset` key does that job now, translated.
+    type: dto.eventType ?? dto.type ?? "",
+    gatheringFamily: dto.gatheringFamily ?? null,
+    formatDetails: dto.formatDetails ?? null,
     date: new Date(dto.startAt),
     // The zone the host scheduled in, when the API carries one. See
     // `eventZoneFormat` — absent falls back to the reader's own zone.
@@ -380,6 +395,43 @@ function combineDateTime(date: string, time: string): string {
 }
 
 /**
+ * The gathering's end instant.
+ *
+ * `endAt` used to be built from the START's date unconditionally, so a
+ * gathering from 22:00 to 01:00 (an ordinary night out, and the wizard's
+ * whole reason for offering an end time) was sent with an end timestamp
+ * BEFORE its start. A roll-forward was added here to guess that wrap from the
+ * two clock times.
+ *
+ * The wizard now asks for the end DATE outright (`endDate` in
+ * `useGatheringForm`), so the host's own answer is what reaches the wire and a
+ * three-day festival is expressible rather than inferred. The roll-forward
+ * survives as the fallback for a form that has supplied no end date at all (a
+ * seeded duplicate, or a host who cleared the field), so such a payload stays
+ * well-formed instead of earning a 400. In that fallback an end equal to the
+ * start is treated the same way `durationMinutes` treats it: a full day, never
+ * a zero-length gathering.
+ *
+ * THAT FALLBACK IS DUPLICATED, AND THE TWO MUST STAY IDENTICAL. Its twin is
+ * `evaluateSchedule` in ../useGatheringForm.ts, which decides whether the
+ * wizard lets the host submit at all. If this one rolls forward where that one
+ * does not, the gate refuses a schedule this function would have built
+ * correctly, and the host is stranded on step 2 with nothing to act on.
+ */
+function combineEndDateTime(
+  date: string,
+  startTime: string,
+  endDate: string,
+  endTime: string,
+): string {
+  if (endDate) return combineDateTime(endDate, endTime);
+  const endAt = new Date(combineDateTime(date, endTime));
+  const startAt = new Date(combineDateTime(date, startTime));
+  if (endAt.getTime() <= startAt.getTime()) endAt.setDate(endAt.getDate() + 1);
+  return endAt.toISOString();
+}
+
+/**
  * Map the create-gathering wizard form state onto the CreateEventDto.
  *
  * Everything the wizard asks for is sent (LOC-04/LOC-18). It used to send the
@@ -392,11 +444,17 @@ function combineDateTime(date: string, time: string): string {
 export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
   const isOnline = form.hood === "Online";
   const capacity = Number.parseInt(form.cap, 10);
+  // "Something else" stores the host's sentence in the same column a curated
+  // key would occupy, so the two cases resolve to one string here.
+  const submittedFormat =
+    form.format === OTHER_FORMAT_KEY ? form.otherText.trim() : form.format;
   return {
     title: form.title.trim(),
     description: form.description.trim(),
     startAt: combineDateTime(form.date, form.time),
-    endAt: form.endTime ? combineDateTime(form.date, form.endTime) : undefined,
+    endAt: form.endTime
+      ? combineEndDateTime(form.date, form.time, form.endDate, form.endTime)
+      : undefined,
     timezone:
       typeof Intl !== "undefined"
         ? Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -426,7 +484,19 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
       : {}),
     ...(!isOnline && form.hood ? { neighbourhood: form.hood } : {}),
     ...(form.lang ? { language: form.lang } : {}),
-    ...(form.type ? { eventType: form.type } : {}),
+    // The format the host picked: a curated catalog key, or their own words
+    // trimmed when they chose "Something else". Sending the literal key
+    // "other" would put the word on every card, which is exactly the failure
+    // the old free-string "Other" was.
+    ...(submittedFormat ? { eventType: submittedFormat } : {}),
+    // The family, which is what actually drives anything downstream.
+    ...(form.family ? { gatheringFamily: form.family } : {}),
+    // Already stripped to the family's own questions by the form, and null
+    // when the host answered none, so an untouched wizard sends no key at all
+    // rather than an empty object the server would have to interpret.
+    ...(form.submittedFormatDetails
+      ? { formatDetails: form.submittedFormatDetails }
+      : {}),
     // The six three-valued answers plus the host's note. Sent on every create,
     // including one where the host answered nothing: a complete map of
     // `unknown` is the honest starting state, and it is what the accuracy
@@ -438,6 +508,10 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
     // LOC-18 — free text, display only. Nothing here takes a payment.
     ...(form.cost.trim() ? { cost: form.cost.trim() } : {}),
     capacity: Number.isFinite(capacity) ? capacity : undefined,
+    // The family's own default, or the host's override. Sent on every create
+    // so a care gathering is never published counting its room out loud
+    // merely because the field's create-time default is `true` server-side.
+    showAttendeeCount: form.showAttendeeCount,
     // The host's audience-scope pick from the wizard (default "members" —
     // Public). See docs/superpowers/specs/2026-08-13-gathering-audience-scope-design.md.
     visibility: form.audienceScope,

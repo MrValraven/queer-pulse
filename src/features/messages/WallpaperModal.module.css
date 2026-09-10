@@ -1,0 +1,198 @@
+/* Chat-wallpaper picker. Both the preview and the swatches paint themselves
+   with the SAME tokens the conversation panel uses (chat-wallpaper.css), so a
+   swatch is a real miniature of the wallpaper rather than an approximation of
+   it that can drift.
+
+   Both shrink `--chat-doodle-tile` locally: the real tile is 400px, which at
+   swatch size would land nothing but empty space between marks. */
+
+/* ── Preview ──────────────────────────────────────────────────────────────── */
+.preview {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--radius-14);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background-color: var(--cream);
+  /* The ground tint is a translucent colour, so it goes on as a flat gradient
+     layer over --cream rather than as background-color, which the cream
+     already occupies. */
+  background-image: linear-gradient(
+    var(--chat-ground, transparent),
+    var(--chat-ground, transparent)
+  );
+  --chat-doodle-tile: 190px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 132px;
+}
+.preview::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-color: rgba(var(--line-rgb), var(--chat-doodle-alpha));
+  -webkit-mask-image: var(--chat-doodle-mask);
+  mask-image: var(--chat-doodle-mask);
+  -webkit-mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+.preview[data-wallpaper-doodles="on"]::after {
+  opacity: 1;
+}
+.previewBubbleReceived,
+.previewBubbleSent {
+  position: relative;
+  z-index: 1;
+  max-width: 74%;
+  padding: 8px 12px;
+  border-radius: var(--radius-14);
+  font-size: var(--text-13);
+  line-height: 1.35;
+}
+.previewBubbleReceived {
+  align-self: flex-start;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  color: var(--ink);
+}
+.previewBubbleSent {
+  align-self: flex-end;
+  background: var(--plum);
+  /* Matches the real `.sent` bubble: --cream itself flips in dark mode, and
+     this fill is locked plum in both, so the type has to come from the
+     channels that stay light. */
+  color: rgba(var(--cream-rgb), 0.97);
+}
+
+/* ── Ground swatches ──────────────────────────────────────────────────────── */
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.swatch,
+.swatchSelected {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* 44px is the touch floor the rest of this route holds to (see `.ctbIconBtn`
+     and the topbar's 44px rows). */
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  background-color: var(--cream);
+  background-image: linear-gradient(
+    var(--chat-ground, transparent),
+    var(--chat-ground, transparent)
+  );
+  --chat-doodle-tile: 62px;
+  /* Deliberately far above the log's own 8%: at 44px an 8% wash of any
+     hue is indistinguishable from plain cream, so the six swatches would
+     all read as the same empty square. The swatch identifies the colour;
+     the preview above it shows the real strength. */
+  --chat-ground-tint: 30%;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.swatch::after,
+.swatchSelected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-color: rgba(var(--line-rgb), var(--chat-doodle-alpha));
+  -webkit-mask-image: var(--chat-doodle-mask);
+  mask-image: var(--chat-doodle-mask);
+  -webkit-mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+.swatch[data-wallpaper-doodles="on"]::after,
+.swatchSelected[data-wallpaper-doodles="on"]::after {
+  /* Lifted well above the log's own alpha: at 62px a swatch shows only three
+     or four marks, and at 5% they would read as a smudge rather than as the
+     pattern being chosen. */
+  opacity: 1;
+  background-color: rgba(var(--line-rgb), 0.3);
+}
+.swatch {
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+}
+.swatchSelected {
+  /* The selected state is a ring rather than a checkmark: a mark drawn over a
+     44px swatch hides the very pattern it is confirming. */
+  border: 2px solid var(--accent-ink);
+  box-shadow: var(--ring-accent-strong);
+}
+.swatch:hover,
+.swatchSelected:hover {
+  transform: translateY(-1px);
+}
+.swatch:focus-visible,
+.swatchSelected:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+@media (prefers-reduced-motion: reduce) {
+  .swatch,
+  .swatchSelected {
+    transition: none;
+  }
+  .swatch:hover,
+  .swatchSelected:hover {
+    transform: none;
+  }
+}
+
+/* ── Doodles switch ───────────────────────────────────────────────────────── */
+.doodleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px 0 14px;
+}
+.doodleText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.doodleTitle {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+.doodleSub {
+  font-size: var(--text-13);
+  color: rgba(var(--ink-rgb), 0.66);
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+/* Keeps Cancel/Save hugging the end even when Reset is absent (the common
+   case — a chat following the base wallpaper has nothing to reset). */
+.footerEnd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-inline-start: auto;
+}

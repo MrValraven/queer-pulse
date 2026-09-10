@@ -1,11 +1,12 @@
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiSearch, FiStar } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { hapticTap } from "../../shared/lib/haptics";
-import { Avatar, FeatureHelp } from "../../shared/components/ui";
+import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { ConversationSafetyMenu } from "./ConversationSafetyMenu";
+import { ConversationMenu } from "./ConversationMenu";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -26,9 +27,8 @@ export interface ConversationHeaderProps {
 /** Conversation top bar. The avatar + name + presence/pronouns meta form a
  *  single tap target — opening the profile (DMs) or the group-info view
  *  (groups), the pattern people know from WhatsApp/Telegram. Official accounts
- *  have no profile, so theirs stays inert. The right side is a matched pair of
- *  quiet icon buttons: starred-messages and the "about this screen" info (which
- *  lives here, out of the name row, so it can never wrap under the avatar). */
+ *  have no profile, so theirs stays inert. The right side holds quiet icon
+ *  buttons for in-chat search and starred messages. */
 export function ConversationHeader({
   active,
   isCounterpartOnline,
@@ -46,6 +46,45 @@ export function ConversationHeader({
   const opensProfile = !isGroup && !active.official;
   const opensGroupInfo = isGroup && !!onOpenGroupInfo;
   const identityTappable = opensProfile || opensGroupInfo;
+
+  // The status line under the name. WhatsApp/Telegram always say SOMETHING
+  // here; the old inline expression fell through to the empty string for a DM
+  // carrying neither pronouns nor a connected-since date, leaving a dead gap
+  // under the name. The chain below ends in the profile affordance itself
+  // (WhatsApp's own "click here for contact info" fallback), and yields null
+  // only for a thread with nothing to say AND nowhere to go, where the meta
+  // element is dropped entirely rather than rendered empty.
+  const pronounsLine = active.pronouns
+    ? `${active.pronouns}${
+        active.connectedSince
+          ? t("messages:conversation.connectedSinceSuffix", {
+              date: active.connectedSince,
+            })
+          : ""
+      }`
+    : active.connectedSince
+      ? t("messages:conversation.connectedSinceSuffix", {
+          date: active.connectedSince,
+        }).replace(/^\s*·\s*/, "")
+      : "";
+
+  let meta: ReactNode = null;
+  if (isGroup) {
+    meta = t("messages:group.memberCount", { count: active.memberCount ?? 0 });
+  } else if (active.official) {
+    meta = t("messages:conversation.officialMeta");
+  } else if (isCounterpartOnline) {
+    meta = (
+      <>
+        <span className={styles.activeNowDot} aria-hidden />
+        {t("messages:conversation.activeNow")}
+      </>
+    );
+  } else if (pronounsLine) {
+    meta = pronounsLine;
+  } else if (opensProfile) {
+    meta = t("messages:conversation.viewProfile");
+  }
 
   const openIdentity = () => {
     // A subtle tick confirming the tap landed, native-app style; no-op on
@@ -71,26 +110,7 @@ export function ConversationHeader({
             {!isGroup && <MemberStaffBadge slug={active.slug} />}
           </span>
         </div>
-        <div className={styles.ctbMeta}>
-          {isGroup ? (
-            t("messages:group.memberCount", { count: active.memberCount ?? 0 })
-          ) : active.official ? (
-            t("messages:conversation.officialMeta")
-          ) : isCounterpartOnline ? (
-            <>
-              <span className={styles.activeNowDot} aria-hidden />
-              {t("messages:conversation.activeNow")}
-            </>
-          ) : (
-            `${active.pronouns}${
-              active.connectedSince
-                ? t("messages:conversation.connectedSinceSuffix", {
-                    date: active.connectedSince,
-                  })
-                : ""
-            }`
-          )}
-        </div>
+        {meta !== null && <div className={styles.ctbMeta}>{meta}</div>}
       </div>
     </>
   );
@@ -140,15 +160,29 @@ export function ConversationHeader({
       )}
 
       <div className={styles.ctbActions}>
-        {/* Block/Report — DM only. Groups have no single counterpart to act
-            against; official threads have no member behind them at all. */}
-        {!isGroup && !active.official && active.slug && (
-          <ConversationSafetyMenu
-            slug={active.slug}
-            reportSubjectId={active.otherParticipantId}
-            name={active.name.split(" ")[0] ?? active.name}
-          />
-        )}
+        {/* Renders for EVERY thread: wallpaper has to be reachable from a group
+            and an official thread too. The Block/Report items inside keep the
+            DM-only gating that used to sit on the menu as a whole — groups have
+            no single counterpart to act against, official threads have no
+            member behind them at all. */}
+        <ConversationMenu
+          conversationId={active.id}
+          /* A DM's menu copy wants the counterpart's FIRST name ("Block
+             Anika"); a group has no counterpart and its safety items are
+             absent, so it keeps its whole name for the wallpaper subtitle —
+             splitting it left "Pride Brunch Crew" reading as "Pride". */
+          name={
+            isGroup ? active.name : (active.name.split(" ")[0] ?? active.name)
+          }
+          safety={
+            !isGroup && !active.official && active.slug
+              ? {
+                  slug: active.slug,
+                  reportSubjectId: active.otherParticipantId,
+                }
+              : undefined
+          }
+        />
         <button
           type="button"
           className={styles.ctbIconBtn}
@@ -167,7 +201,6 @@ export function ConversationHeader({
         >
           <FiStar aria-hidden />
         </button>
-        <FeatureHelp id="messages.conversation" variant="icon" />
       </div>
     </div>
   );

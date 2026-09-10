@@ -102,8 +102,12 @@ export function useEvents(
  *
  * `hood` matches the mock's own neighbourhood string; `cost` reads the mock's
  * `ticketed` flag, which is the closest thing the registry has to a door
- * price. Demo `type` is not modelled, so a type filter simply passes
- * everything through rather than silently emptying the board.
+ * price. `family` and `type` match `gatheringFamily` and `eventType`, which
+ * all 22 `calendarEvents` rows carry: each was backfilled from the
+ * `gatheringDetails` entry with the same slug, so a demo row and its detail
+ * page agree, and every stored key is a real `GATHERING_FORMATS` key whose
+ * family matches its row. A demo row that ever loses them drops out of a
+ * family- or format-filtered board rather than leaking into it.
  */
 function filterDemoEvents(
   events: CalendarEvent[],
@@ -118,6 +122,13 @@ function filterDemoEvents(
     if (from !== null && startedAt < from) return false;
     if (to !== null && startedAt > to) return false;
     if (browse.hood && event.hood.toLowerCase() !== browse.hood.toLowerCase()) {
+      return false;
+    }
+    if (browse.family && event.gatheringFamily !== browse.family) return false;
+    if (
+      browse.type &&
+      (event.eventType ?? "").toLowerCase() !== browse.type.toLowerCase()
+    ) {
       return false;
     }
     if (browse.cost === "free" && event.ticketed) return false;

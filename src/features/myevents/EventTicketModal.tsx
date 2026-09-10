@@ -6,7 +6,8 @@ import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { AvStack, PriceChip } from "./EventCardParts";
 import { downloadICS } from "./myEvents.ics";
-import { parseDate, timeStr, isOnline } from "./myEvents.helpers";
+import { isOnline } from "./myEvents.helpers";
+import { joinWhenParts, myEventWhen } from "./myEvents.when";
 
 /**
  * The real ticket for a confirmed RSVP: event details straight off the
@@ -20,6 +21,14 @@ export function EventTicketModal() {
   const ev = ticket.eventId ? byId(ticket.eventId) : undefined;
   if (!ev) return null;
 
+  // `dateText` already reads as a range across a festival, so only the
+  // overnight case still needs the note spelled out beside the clock.
+  const when = myEventWhen(ev, fmt, t, {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+
   const statusText =
     ev.category === "waitlisted"
       ? t("myevents:badges.waitlistedPosition", { position: ev.position })
@@ -32,11 +41,7 @@ export function EventTicketModal() {
       onClose={closeTicket}
       eyebrow={t("myevents:ticketModal.eyebrow")}
       title={ev.title}
-      sub={`${fmt.date(parseDate(ev.date), {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-      })} · ${timeStr(ev)}`}
+      sub={`${when.dateText} · ${joinWhenParts(when.timeText, when.nextDayNote)}`}
       footer={
         <Button
           variant="jade"

@@ -20,6 +20,9 @@
      bar has nothing to clear and pins flush to the viewport top. */
   html[data-nav-mode="sidebar"] {
     --sticky-top: 0px;
+    /* The band-cancelling `margin-top` below leaves none of the reserved band
+       on screen, so a page that fills it has nothing to fill. */
+    --nav-band-visible: 0px;
   }
   html[data-nav-mode="sidebar"] main[data-page-main],
   html[data-nav-mode="sidebar"] .site-footer {
@@ -45,7 +48,16 @@
      band-cancelling `margin-top` clipped 80px off the top of the page now that
      the band itself is gone (base.css, `data-shell="rail"`). Both offsets exist
      only to reconcile against chrome this shell doesn't have. */
-  html[data-nav-mode="sidebar"] main[data-page-main][data-shell="rail"] {
+  html[data-nav-mode="sidebar"] main[data-page-main][data-shell="rail"],
+  /* A desktop-chromeless shell (Messages, AppShell `desktopChromeless`) is the
+     other case where the rail is not on screen: AppChrome mounts no Navbar
+     above the mobile breakpoint, and the Navbar is what returns the rail in
+     this mode. Both offsets exist purely to reconcile against that rail, so
+     both are wrong once it is gone — the padding indented the inbox by a rail
+     width of nothing, and the band-cancelling margin fought the route's own
+     `--messages-top-offset`, leaving `.app` short of the viewport by the band
+     height. This route sizes its own top offset and fills the width itself. */
+  html[data-nav-mode="sidebar"] main[data-page-main][data-chromeless="desktop"] {
     padding-left: 0;
     margin-top: 0;
   }

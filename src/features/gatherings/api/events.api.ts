@@ -7,11 +7,18 @@ import {
   apiDelete,
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
+import type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS events domain returns. Only the fields the prototype pages
 // actually render are typed richly; everything else is optional and defaulted
 // gracefully in the adapters.
+
+// The catalog owns both vocabularies (see `gatheringCatalog.ts`), and the wire
+// carries the same keys the backend's `GatheringFamily` enum and
+// `FormatDetails` interface do. Re-exported here so an API-layer caller has
+// one import site for "what the events endpoints speak".
+export type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
 
 // Must mirror the backend `EventVisibility` enum exactly — the create/update
 // endpoints validate `@IsEnum(EventVisibility)` with `forbidNonWhitelisted`, so
@@ -104,13 +111,22 @@ export interface EventCardDTO {
   coverImageUrl?: string | null;
   /** Org / category label shown on the card ("QueerPulse", "Community", …). */
   org?: string;
-  /** Event type label ("Supper Club", "Mixer", …). Live mode fills this from
-   *  the wizard's own gathering type (`EventSummary.eventType`, backend). */
+  /** Legacy display label, only ever set by the demo registry. Live mode
+   *  leaves it absent and resolves `eventType` through the catalog instead. */
   type?: string;
-  /** The wizard's gathering type verbatim (LOC-04) — "Supper club",
-   *  "Workshop / talk", … `null` for a gathering created before the column
-   *  existed. `type` above is derived from it. */
+  /** The gathering's FORMAT: a curated catalog key ("supper-club"), or the
+   *  host's own words when they picked "something else", or `null` when
+   *  nothing was ever set. Never a display string: run it through
+   *  `formatLabel` (gatheringCatalog.ts) before showing it. */
   eventType?: string | null;
+  /** The gathering's FAMILY, or `null` when nobody has classified it. The
+   *  browse board's primary facet, and what the detail page's conditional
+   *  modules gate on. Backend `EventSummary.gatheringFamily`. */
+  gatheringFamily?: GatheringFamily | null;
+  /** The answers to this family's one or two questions, already stripped
+   *  server-side to the keys the family allows. `null` when the host answered
+   *  none. Backend `EventSummary.formatDetails`. */
+  formatDetails?: FormatDetails | null;
   /** The host's free-text door price (LOC-18): "5 to 15 EUR sliding scale",
    *  "pay what you can at the door". DISPLAY ONLY. This platform takes no
    *  payment, so nothing that renders it may promise a charge or a ticket. */
@@ -386,8 +402,16 @@ export interface CreateEventDto {
   neighbourhood?: string | null;
   /** "PT / EN bilingual", "Portuguese only", … */
   language?: string | null;
-  /** The wizard's gathering type: "Supper club", "Workshop / talk", … */
+  /** The gathering's format: a curated catalog key ("supper-club"), or the
+   *  host's own words (1 to 80 characters) when they picked "something else". */
   eventType?: string | null;
+  /** The gathering's family. `null` on PATCH un-classifies it; absent leaves
+   *  it alone. */
+  gatheringFamily?: GatheringFamily | null;
+  /** The answers to this family's one or two questions. Omitted when the host
+   *  answered none, so an untouched wizard sends no key at all. The server
+   *  strips whatever the effective family does not allow. */
+  formatDetails?: FormatDetails | null;
   /** The six accessibility answers plus the host's note. */
   accessibility?: EventAccessibilityInput;
   /** Free-text door price (LOC-18). DISPLAY ONLY: there is no payment
@@ -405,10 +429,17 @@ export interface CreateEventDto {
  *  community / unlink its venue from a listing — create-time has no such
  *  concept; omitting the field there just means "none". */
 export type UpdateEventDto = Partial<
-  Omit<CreateEventDto, "communitySlug" | "listingId" | "recurrence">
+  Omit<CreateEventDto, "communitySlug" | "listingId" | "recurrence" | "endAt">
 > & {
   communitySlug?: string | null;
   listingId?: string | null;
+  /** `null` explicitly CLEARS a gathering's stated end, the way the edit
+   *  modal's end field does when a host empties it (`buildEditPatch`). The
+   *  backend reads `dto.endAt !== undefined` as "change it" and stores `null`
+   *  for a falsy value; `@IsOptional()` on its own DTO lets the null through
+   *  untouched. Create-time has no such concept, so `CreateEventDto.endAt` is
+   *  string-or-omitted. */
+  endAt?: string | null;
 };
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
@@ -430,7 +461,10 @@ export interface EventBrowseFilters {
   to?: string;
   /** A Lisbon neighbourhood, matched case-insensitively. */
   hood?: string;
-  /** A gathering type ("Supper club", "Workshop / talk", …). */
+  /** A gathering family: the board's primary facet. Exact match, since this
+   *  is a closed vocabulary the client sends verbatim. */
+  family?: GatheringFamily;
+  /** A gathering format key ("supper-club"), matched case-insensitively. */
   type?: string;
   /** Free text over title, venue, neighbourhood and description. */
   q?: string;
@@ -459,6 +493,7 @@ export async function getEvents(
   if (params.from) q.set("from", params.from);
   if (params.to) q.set("to", params.to);
   if (params.hood) q.set("hood", params.hood);
+  if (params.family) q.set("family", params.family);
   if (params.type) q.set("type", params.type);
   if (params.q) q.set("q", params.q);
   if (params.cost) q.set("cost", params.cost);
@@ -495,6 +530,23 @@ export const cancelEvent = (slug: string, scope?: SeriesScope) =>
   apiPost<{ ok: true }>(
     `/events/${slug}/cancel${scope ? `?scope=${scope}` : ""}`,
   );
+
+/**
+ * A HARD delete: the event row goes, and with it every RSVP, photo and
+ * announcement hanging off it, and nobody is told.
+ *
+ * `cancelEvent` above is the other trade and the one to reach for first. It
+ * keeps the gathering on the board marked cancelled and notifies everyone
+ * holding a seat or an invite, so the evening leaves people's plans with an
+ * explanation attached. The server enforces that ordering: 409 while a still
+ * published event has live RSVPs or pending invites, and the fix is to cancel
+ * and then delete. It answers 403 to a co-host, who may cancel a gathering and
+ * may not delete one, and 404 to an unknown slug.
+ *
+ * No `SeriesScope`: a delete only ever takes this one occurrence.
+ */
+export const deleteEvent = (slug: string) =>
+  apiDelete<{ ok: true }>(`/events/${slug}`);
 
 export const getAttendees = (
   slug: string,

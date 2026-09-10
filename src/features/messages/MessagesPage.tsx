@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { AppShell } from "../../shared/components/layout";
+import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
 import { ConversationPanel } from "./ConversationPanel";
 import { MessagesEmptyPanel } from "./MessagesEmptyPanel";
@@ -10,6 +12,11 @@ import { StarredMessagesModal } from "./StarredMessagesModal";
 import { useMessagesController } from "./useMessagesController";
 import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
+// Chat-wallpaper tokens (grounds + the doodle tile). Imported HERE rather than
+// from styles/index.css, mirroring persona-skins.css: this route is the only
+// consumer, so Vite folds the ~8KB tile into the Messages chunk instead of
+// shipping it on every other route.
+import "./chat-wallpaper.css";
 
 export function MessagesPage() {
   const {
@@ -59,6 +66,16 @@ export function MessagesPage() {
     markThreadUnread,
   } = useMessagesController();
 
+  // Is the site chrome actually off screen right now? `desktopChromeless` below
+  // only takes effect above the mobile breakpoint (AppChrome gates it on the
+  // same named query), so the panel's replacement chrome has to answer to THAT
+  // width, not to the controller's `isMobile`. The two are deliberately
+  // different cutoffs: the controller splits one pane from two at 768, while
+  // the app bar and the bottom tab bar swap in at 860. Gating the brand row and
+  // the account footer on the controller's value would render them alongside
+  // the mobile app bar for the 92px between the two.
+  const isDesktopChrome = !useMediaQuery(mediaMax("mobile"));
+
   // The message being forwarded (its recipient is picked in NewMessageModal's
   // forward mode), whether the "Starred messages" view is open, and whether the
   // create-group picker is open. Page-level so their modals sit beside NewMessageModal.
@@ -82,7 +99,7 @@ export function MessagesPage() {
   }, [isMobile, view]);
 
   return (
-    <AppShell fullHeight>
+    <AppShell fullHeight desktopChromeless>
       <MentionNamesProvider>
         <div className={styles.app}>
           {showList && (
@@ -101,6 +118,7 @@ export function MessagesPage() {
               deletePending={deletePending}
               onMarkThreadRead={markThreadRead}
               onMarkThreadUnread={markThreadUnread}
+              showRailChrome={isDesktopChrome}
             />
           )}
 

@@ -182,11 +182,22 @@ export function usePieceMutations() {
     onSuccess: () => invalidateDesk(),
   });
 
-  /** DELETE /magazine/admin/pieces/:id — remove a piece from the desk. */
+  /** DELETE /magazine/admin/pieces/:id — remove a piece from the desk.
+   *
+   *  `silentError` because the caller (`useDeskModals.confirmDeletePiece`)
+   *  awaits this and reports both outcomes itself — it can tell the backend's
+   *  409 ("unpublish it first") apart from a generic failure, which the global
+   *  handler can only relay as the backend's untranslated English.
+   *
+   *  Demo splices `DEMO_PIECES` the way `assignIssue` patches it: toasting
+   *  "Deleted" while leaving the row on screen made the fixture desk lie about
+   *  what had just happened. */
   const remove = useMutation<void, Error, string>({
+    meta: { silentError: true },
     mutationFn: async (id) => {
       if (demoMode) {
-        showToast(t("magazine:desk.pieceToast.deleted"), "success");
+        const index = DEMO_PIECES.findIndex((piece) => piece.id === id);
+        if (index !== -1) DEMO_PIECES.splice(index, 1);
         return;
       }
       await deletePiece(id);

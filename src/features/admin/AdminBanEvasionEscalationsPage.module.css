@@ -24,6 +24,14 @@
   vertical-align: -2px;
 }
 
+/* The queue body, whatever state it is in: skeletons, an error line, the empty
+   line or the cards. The tab strip above it owns no bottom margin (it is shared
+   across every console), so the space under the tabs is set here, once, and
+   every state gets the same gap. */
+.queue {
+  margin-top: 20px;
+}
+
 .cards {
   display: grid;
   gap: 14px;

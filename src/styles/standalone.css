@@ -38,6 +38,11 @@
        sticky in-page bar clears the strip's real height (plus the notch inset)
        rather than the desktop band, which would leave a dead gap. */
     --sticky-top: calc(var(--app-bar-h) + env(safe-area-inset-top));
+
+    /* That strip is opaque and full-width, unlike the floating pill: whatever
+       of the reserved band survives the `main` margin-top below sits under it
+       and is never seen, so there is nothing for a page to fill. */
+    --nav-band-visible: 0px;
   }
 
   /* Inside a conversation on a phone the bottom tab bar is hidden (see

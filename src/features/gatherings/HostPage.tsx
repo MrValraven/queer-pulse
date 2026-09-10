@@ -6,7 +6,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { HostSteps } from "./HostSteps";
 import { HostSidebar } from "./HostSidebar";
-import { HERO_TYPES } from "./hostPage.data";
+import { HERO_TYPE_KEYS } from "./hostPage.data";
+import { findFormat } from "./gatheringCatalog";
 import styles from "./HostPage.module.css";
 
 export function HostPage() {
@@ -24,11 +25,15 @@ export function HostPage() {
           </h1>
           <p className={styles.lede}>{t("gatherings:host.hero.lead")}</p>
           <div className={styles.heroTypes}>
-            {HERO_TYPES.map((typeKey) => (
-              <span key={typeKey} className={styles.htype}>
-                {t(typeKey)}
-              </span>
-            ))}
+            {HERO_TYPE_KEYS.map((formatKey) => {
+              const format = findFormat(formatKey);
+              if (!format) return null;
+              return (
+                <span key={formatKey} className={styles.htype}>
+                  {t(format.nameKey)}
+                </span>
+              );
+            })}
           </div>
         </div>
       </header>

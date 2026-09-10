@@ -112,7 +112,7 @@ describe("PersonaRightsFooter", () => {
     );
 
     expect(
-      await screen.findByText("© 2024 Sofia Neves. All rights reserved."),
+      await screen.findByText("© 2024. All rights reserved."),
     ).toBeInTheDocument();
     expect(screen.getAllByText(/All rights reserved/i)).toHaveLength(1);
   });

@@ -2,6 +2,7 @@ import { memberRefToPerson, type MemberRefDTO } from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
 import { activeLocale } from "../../../shared/i18n/locale";
 import type { TFunction } from "../../../shared/i18n/types";
+import { gatheringWhen } from "../../gatherings/gatheringSchedule";
 import type { Community } from "../../homepage/data/types";
 import type {
   CommunityDetail,
@@ -650,24 +651,39 @@ export interface CommunityPulseOpportunity {
  *  here — this is live data, unlike the demo mock's own English-only registry,
  *  see `nextGathering.ts`); `goingLabel` is the already-translated spots string
  *  (reuses the gatherings feature's own `spots.going`/`spots.openToAll` copy —
- *  see `useCommunityPulse`). */
+ *  see `useCommunityPulse`).
+ *
+ *  `endAt` is optional because the two lanes that feed this differ: the
+ *  prospective-member list (`GET /communities/:slug/upcoming-gatherings`)
+ *  carries it, the pulse lane does not. Both lanes now show a gathering that
+ *  is UNDERWAY, so a three-day festival reaches this row on its second day and
+ *  the `dd`/`mm` pill alone would state its opening day as the whole story. */
 export function pulseEventToCommunityEvent(
-  dto: CommunityPulseEventDTO,
+  dto: CommunityPulseEventDTO & { endAt?: string | null },
   fmt: Formatters,
+  t: TFunction,
   goingLabel: string,
   onlineLabel: string,
 ): CommunityEvent {
   const start = new Date(dto.startAt);
+  const end = dto.endAt ? new Date(dto.endAt) : null;
   const venue = dto.venue ?? (dto.isOnline ? onlineLabel : null);
-  const weekday = fmt.date(start, { weekday: "long" });
+  // `gatheringWhen` is the one place that decides how a schedule reads, so this
+  // row agrees with the gathering's own page. Asked for a weekday alone it
+  // answers "Friday", exactly what this line said before spans existed; across
+  // two or more days it falls back to a dated range ("29 Sep to 2 Oct"),
+  // because "Tuesday to Friday" would not say which week. No timezone is
+  // available on either lane's DTO, so the days read on the reader's clock.
+  const when = gatheringWhen(start, end, fmt, t, { weekday: "long" });
   return {
     id: dto.slug,
     dd: fmt.date(start, { day: "numeric" }),
     mm: fmt.date(start, { month: "short" }),
     title: dto.title,
-    meta: venue ? `${weekday} · ${venue}` : weekday,
+    meta: venue ? `${when.dateText} · ${venue}` : when.dateText,
     spots: goingLabel,
     slug: dto.slug,
+    endAt: end,
   };
 }
 

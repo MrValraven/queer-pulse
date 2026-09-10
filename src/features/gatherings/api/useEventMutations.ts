@@ -5,6 +5,7 @@ import {
   cancelEvent,
   createCohostInvite,
   createEvent,
+  deleteEvent,
   inviteToEvent,
   promoteAttendee,
   removeAttendee,
@@ -99,6 +100,41 @@ export function useCancelEvent(slug: string) {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+    },
+  });
+}
+
+/**
+ * DELETE /events/:slug, the hard delete behind `GatheringHostBar`.
+ *
+ * The counterpart to `useCancelEvent` above and deliberately the harder of the
+ * two to reach: cancel keeps the gathering on the board and tells everyone
+ * holding a seat, while this removes it and its RSVPs, photos and
+ * announcements outright and tells nobody. The server refuses a delete with a
+ * 409 while a published gathering still has live RSVPs or pending invites, so
+ * the host cancels first and the people who signed up hear about it.
+ *
+ * `silentError` because the host bar renders these failures itself: the 409
+ * needs to say "cancel it first" rather than the generic retry line the global
+ * handler would raise.
+ */
+export function useDeleteEvent(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, void>({
+    meta: { silentError: true },
+    mutationFn: async () => {
+      if (demoMode) return;
+      await deleteEvent(slug);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+      void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
+      // My Events keeps its own merged query outside the events key factory
+      // (`["my-events", demoMode, language]`, see `useMyEventsData`), and the
+      // host's "Hosting" tab is exactly where a deleted gathering must stop
+      // appearing. `useMyEventsRsvpMutations` invalidates the same root.
+      void queryClient.invalidateQueries({ queryKey: ["my-events"] });
     },
   });
 }

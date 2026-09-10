@@ -395,7 +395,7 @@ export const gatherings: Catalog = {
 
   // createGathering.data.ts — sidebar tips (per step)
   "create.tip.type":
-    "Choose the format that comes most naturally to you. The best gatherings are the ones hosts actually enjoy running.",
+    "Pick the kind first, then the format. The format sets a sensible size for the gathering and asks you the one or two questions it actually raises.",
   "create.tip.datePlace":
     "The neighbourhood is shown on the listing. The full address is only shared with confirmed attendees.",
   "create.tip.repeats":
@@ -405,23 +405,215 @@ export const gatherings: Catalog = {
   "create.tip.review":
     "Once you publish, you can still edit the listing. You cannot reduce capacity below the number of existing RSVPs.",
 
-  // createGathering.data.ts — gathering types
-  "create.type.supperClub.name": "Supper club",
-  "create.type.supperClub.sub": "Shared meal, hosted",
-  "create.type.workshopTalk.name": "Workshop / talk",
-  "create.type.workshopTalk.sub": "Teach or share something",
-  "create.type.screening.name": "Screening",
-  "create.type.screening.sub": "Film, music, performance",
-  "create.type.studioVisit.name": "Studio visit",
-  "create.type.studioVisit.sub": "Open your space",
-  "create.type.walkOutdoor.name": "Walk or outdoor",
-  "create.type.walkOutdoor.sub": "Movement, outdoor",
-  "create.type.discussion.name": "Discussion",
-  "create.type.discussion.sub": "Reading group, debate",
-  "create.type.skillsExchange.name": "Skills exchange",
-  "create.type.skillsExchange.sub": "Mutual learning",
-  "create.type.other.name": "Other",
-  "create.type.other.sub": "Something else entirely",
+  // ── gatheringCatalog.ts: families, formats and the details bag ──────────
+  // The one vocabulary a gathering is described in. Keys are STORED VALUES
+  // (`events.event_type`, `events.gathering_family`), so they never change
+  // with the copy. See docs/superpowers/specs/2026-09-09-gathering-families-and-formats-design.md.
+  "catalog.family.meet.name": "Meet and play",
+  "catalog.family.eat.name": "Eat and drink",
+  "catalog.family.party.name": "Party and nightlife",
+  "catalog.family.make.name": "Make and create",
+  "catalog.family.learn.name": "Learn and talk",
+  "catalog.family.watch.name": "Watch and listen",
+  "catalog.family.move.name": "Move and outdoors",
+  "catalog.family.care.name": "Care and support",
+  "catalog.family.organise.name": "Organise and act",
+
+  "catalog.format.mixer.name": "Mixer",
+  "catalog.format.mixer.sub": "Meet new people, low pressure",
+  "catalog.format.meetup.name": "Meetup",
+  "catalog.format.meetup.sub": "A regular get-together",
+  "catalog.format.coffee-morning.name": "Coffee morning",
+  "catalog.format.coffee-morning.sub": "Daytime, unhurried",
+  "catalog.format.newcomers-night.name": "Newcomers night",
+  "catalog.format.newcomers-night.sub": "For people new to the city",
+  "catalog.format.elders-tea.name": "Elders tea",
+  "catalog.format.elders-tea.sub": "Across generations, seated",
+  "catalog.format.games-night.name": "Games night",
+  "catalog.format.games-night.sub": "Board games, cards",
+  "catalog.format.quiz.name": "Quiz",
+  "catalog.format.quiz.sub": "Teams, questions, prizes",
+
+  "catalog.format.supper-club.name": "Supper club",
+  "catalog.format.supper-club.sub": "Shared meal, hosted",
+  "catalog.format.potluck.name": "Potluck",
+  "catalog.format.potluck.sub": "Everyone brings a dish",
+  "catalog.format.picnic.name": "Picnic",
+  "catalog.format.picnic.sub": "Outdoors, bring a blanket",
+  "catalog.format.brunch.name": "Brunch",
+  "catalog.format.brunch.sub": "Late morning, long table",
+  "catalog.format.cooking-together.name": "Cooking together",
+  "catalog.format.cooking-together.sub": "Cook first, then eat",
+  "catalog.format.drinks.name": "Drinks",
+  "catalog.format.drinks.sub": "A bar, a table, a few hours",
+
+  "catalog.format.house-party.name": "House party",
+  "catalog.format.house-party.sub": "Someone's place, bring friends",
+  "catalog.format.club-night.name": "Club night",
+  "catalog.format.club-night.sub": "Late, loud, dancing",
+  "catalog.format.listening-party.name": "Listening party",
+  "catalog.format.listening-party.sub": "One record, start to finish",
+  "catalog.format.karaoke.name": "Karaoke",
+  "catalog.format.karaoke.sub": "Sing badly, together",
+  "catalog.format.drag-night.name": "Drag night",
+  "catalog.format.drag-night.sub": "Performers, tips, applause",
+  "catalog.format.dance.name": "Dance",
+  "catalog.format.dance.sub": "Social dancing, any level",
+
+  "catalog.format.collage-night.name": "Collage night",
+  "catalog.format.collage-night.sub": "Scissors, glue, old magazines",
+  "catalog.format.craft-circle.name": "Craft circle",
+  "catalog.format.craft-circle.sub": "Bring your project, work alongside",
+  "catalog.format.zine-making.name": "Zine making",
+  "catalog.format.zine-making.sub": "Fold, staple, photocopy",
+  "catalog.format.life-drawing.name": "Life drawing",
+  "catalog.format.life-drawing.sub": "A model, paper, no judgement",
+  "catalog.format.writing-circle.name": "Writing circle",
+  "catalog.format.writing-circle.sub": "Write together, share if you want",
+  "catalog.format.jam-session.name": "Jam session",
+  "catalog.format.jam-session.sub": "Bring an instrument",
+  "catalog.format.studio-visit.name": "Studio visit",
+  "catalog.format.studio-visit.sub": "Open your space",
+
+  "catalog.format.workshop.name": "Workshop",
+  "catalog.format.workshop.sub": "Hands-on, you leave able to do it",
+  "catalog.format.talk-or-panel.name": "Talk or panel",
+  "catalog.format.talk-or-panel.sub": "Someone speaks, then questions",
+  "catalog.format.skills-exchange.name": "Skills exchange",
+  "catalog.format.skills-exchange.sub": "Mutual learning",
+  "catalog.format.book-club.name": "Book club",
+  "catalog.format.book-club.sub": "One book, one evening",
+  "catalog.format.language-exchange.name": "Language exchange",
+  "catalog.format.language-exchange.sub": "Practise Portuguese, offer yours",
+  "catalog.format.discussion.name": "Discussion",
+  "catalog.format.discussion.sub": "Reading group, debate",
+  "catalog.format.info-night.name": "Info night",
+  "catalog.format.info-night.sub": "Practical answers on one topic",
+
+  "catalog.format.screening.name": "Screening",
+  "catalog.format.screening.sub": "Film, on a wall or a screen",
+  "catalog.format.live-performance.name": "Live performance",
+  "catalog.format.live-performance.sub": "Music, theatre, dance",
+  "catalog.format.open-mic.name": "Open mic",
+  "catalog.format.open-mic.sub": "Sign up, five minutes each",
+  "catalog.format.poetry-reading.name": "Poetry reading",
+  "catalog.format.poetry-reading.sub": "Words read aloud",
+  "catalog.format.open-rehearsal.name": "Open rehearsal",
+  "catalog.format.open-rehearsal.sub": "Watch the work in progress",
+
+  "catalog.format.walk-or-hike.name": "Walk or hike",
+  "catalog.format.walk-or-hike.sub": "A route, a pace, company",
+  "catalog.format.run-club.name": "Run club",
+  "catalog.format.run-club.sub": "Regular runs, all paces",
+  "catalog.format.swim.name": "Swim",
+  "catalog.format.swim.sub": "Pool, river or sea",
+  "catalog.format.beach-day.name": "Beach day",
+  "catalog.format.beach-day.sub": "Sun, sea, a long afternoon",
+  "catalog.format.bike-ride.name": "Bike ride",
+  "catalog.format.bike-ride.sub": "A loop, easy gears",
+  "catalog.format.yoga-or-movement.name": "Yoga or movement",
+  "catalog.format.yoga-or-movement.sub": "Stretch, breathe, move",
+  "catalog.format.pickup-sport.name": "Pickup sport",
+  "catalog.format.pickup-sport.sub": "Football, volleyball, whatever",
+
+  "catalog.format.support-circle.name": "Support circle",
+  "catalog.format.support-circle.sub": "Facilitated, confidential",
+  "catalog.format.peer-group.name": "Peer group",
+  "catalog.format.peer-group.sub": "People with a shared experience",
+  "catalog.format.clinic.name": "Clinic",
+  "catalog.format.clinic.sub": "Legal, health or admin help",
+  "catalog.format.mutual-aid.name": "Mutual aid",
+  "catalog.format.mutual-aid.sub": "Give what you can, take what you need",
+  "catalog.format.office-hours.name": "Office hours",
+  "catalog.format.office-hours.sub": "Drop in with a question",
+
+  "catalog.format.meeting.name": "Meeting",
+  "catalog.format.meeting.sub": "An agenda and decisions",
+  "catalog.format.assembly.name": "Assembly",
+  "catalog.format.assembly.sub": "Open to all, big questions",
+  "catalog.format.volunteer-shift.name": "Volunteer shift",
+  "catalog.format.volunteer-shift.sub": "Show up, help out",
+  "catalog.format.fundraiser.name": "Fundraiser",
+  "catalog.format.fundraiser.sub": "Raise money for a cause",
+  "catalog.format.market.name": "Market",
+  "catalog.format.market.sub": "Stalls, makers, sellers",
+  "catalog.format.launch.name": "Launch",
+  "catalog.format.launch.sub": "Something new goes out",
+
+  "catalog.format.other.name": "Something else",
+  "catalog.format.other.sub": "Name it yourself",
+  // What a gathering with no format at all reads as, on a card or a detail
+  // page. Never blank: an empty line reads as a broken card.
+  "catalog.format.unset": "Gathering",
+
+  "catalog.details.bring.label": "What to bring",
+  "catalog.details.bring.hint":
+    "One line. Everyone coming sees it on the gathering page.",
+  "catalog.details.isAdultsOnly.label": "Adults only, 18 and over",
+  "catalog.details.isAdultsOnly.hint":
+    "Say so up front if the door checks age.",
+  "catalog.details.isSoberFriendly.label": "Sober friendly",
+  "catalog.details.isSoberFriendly.hint":
+    "There is something good to drink without alcohol, and nobody is pushed.",
+  "catalog.details.terrain.label": "Terrain",
+  "catalog.details.terrain.hint": "How steep and even the ground is.",
+  "catalog.details.terrain.flat": "Flat",
+  "catalog.details.terrain.mixed": "Mixed",
+  "catalog.details.terrain.steep": "Steep",
+  "catalog.details.isBeginnerFriendly.label": "Good for beginners",
+  "catalog.details.isBeginnerFriendly.hint":
+    "Nobody needs to have done this before.",
+  "catalog.details.runtimeMinutes.label": "Runtime, in minutes",
+  "catalog.details.runtimeMinutes.hint":
+    "How long the film, the set or the performance runs.",
+
+  "catalog.goodToKnow.title": "Good to know",
+  "catalog.goodToKnow.bring": "Bring: {value}",
+  "catalog.goodToKnow.adultsOnly": "Adults only, 18 and over",
+  "catalog.goodToKnow.soberFriendly": "Sober friendly",
+  "catalog.goodToKnow.terrain": "Terrain: {value}",
+  "catalog.goodToKnow.beginnerFriendly": "Good for beginners",
+  "catalog.goodToKnow.runtime": "Runs about {minutes} min",
+
+  // TypeStep.tsx / FormatPicker.tsx: picking a family and a format
+  "create.step1.searchLabel": "Search every format",
+  "create.step1.searchPlaceholder": "Picnic, karaoke, book club",
+  "create.step1.searchResultsLabel": "Matching formats",
+  "create.step1.searchEmpty":
+    "Nothing matches that yet. Try another word, or pick a kind below.",
+  "create.step1.familyLabel": "Kind of gathering",
+  "create.step1.formatLabel": "Format",
+  "create.step1.otherLabel": "Name your format",
+  "create.step1.otherPlaceholder": "In a few words, what is it?",
+  "create.step1.otherRequired": "Write what your gathering is, in a few words.",
+
+  // CapacityStep.tsx: the family's own questions, and the two defaults it set
+  "create.step3.formatDetailsLabel": "Format details",
+  "create.step3.formatDetailsHint":
+    "One or two questions this format raises. Skip any of them.",
+  "create.step3.capDefaultHint":
+    "{count} is the usual size for this format. Change it freely.",
+  "create.step3.attendeeCountLabel": "Show how many people are going",
+  "create.step3.attendeeCountHint":
+    "Most gatherings show the count. Care and support gatherings start with it hidden.",
+
+  // ReviewStep.tsx
+  "create.step5.typeValue": "{family}, {format}",
+  "create.step5.row.formatDetails": "Good to know",
+
+  // createGatheringSteps.ts: the step 1 gate row for an unnamed own format
+  "create.gate.format": "Name your own format",
+
+  // BrowseFilterBar.tsx: the family chip row above the refine drawer
+  "hub.browse.familyLabel": "Kind of gathering",
+  "hub.browse.familyAny": "Any kind",
+
+  // EditDetailsModal.tsx: family and format, editable after publishing
+  "manage.editModal.fieldFamily": "Kind of gathering",
+  "manage.editModal.fieldFormat": "Format",
+  "manage.editModal.fieldFormatOther": "Name your format",
+  "manage.editModal.familyNone": "Not set",
+  "manage.editModal.formatNone": "Not set",
 
   // createGathering.data.ts — neighbourhoods not already in gatherings:hood.*
   "create.hood.intendente": "Intendente",
@@ -458,15 +650,41 @@ export const gatherings: Catalog = {
   "create.success.eventCta": "See your gathering page",
   "create.nav.cancel": "Cancel",
   "create.nav.back": "Back",
-  "create.nav.publishHint": "Confirm all three boxes above to publish",
-  "create.nav.dateHint": "Pick a date and time in the future to continue",
-  "create.nav.repeatsHint":
-    "Enter a valid number of dates, or an end date after your gathering's start, to continue",
-  "create.nav.detailsHint": "Pick a format and name your gathering to continue",
   "create.nav.leaveConfirm":
     "You have an unpublished gathering here. Leave without saving it?",
   "create.nav.publish": "Publish gathering",
   "create.nav.continue": "Continue",
+
+  // StepRequirement.tsx — the required/optional line under each step title,
+  // and the "what is still missing" checklist above the Continue button.
+  "create.stepBadge.required":
+    "Required step. You need to fill this in before you can continue.",
+  "create.stepBadge.optional":
+    "Optional step. You can continue without changing anything here.",
+  "create.gate.blockedTitle": "To continue, you still need to:",
+  "create.gate.blockedTitlePublish":
+    "Before you can publish, you still need to:",
+  "create.gate.readyOptional":
+    "Nothing is required on this step. Continue whenever you're ready.",
+  "create.gate.ready":
+    "Everything required on this step is filled in. Continue when you're ready.",
+  "create.gate.readyPublish":
+    "Everything required is filled in. You can publish now.",
+  "create.gate.itemDone": "Done:",
+  "create.gate.itemTodo": "Still to do:",
+  "create.gate.jumpHint": "Go to this field.",
+  "create.gate.type": "Pick a kind and a format",
+  "create.gate.title": "Give your gathering a name",
+  "create.gate.date": "Pick a date and start time in the future",
+  "create.gate.joinLink":
+    "Fix the join link. It has to start with http:// or https://",
+  "create.gate.recurrence":
+    "Finish the repeat schedule with a number of dates, or an end date after your start",
+  "create.gate.confirm.codeOfCare":
+    "Confirm this gathering follows the Code of Care",
+  "create.gate.confirm.accessibility":
+    "Confirm your accessibility information is accurate",
+
   "create.sidebar.tipLabel": "Tip for this step",
   "create.sidebar.afterTitle": "What happens after you publish",
   "create.sidebar.afterBody":
@@ -475,8 +693,9 @@ export const gatherings: Catalog = {
   // CreateGatheringSteps.tsx — step 1: type
   "create.step1.title": "What kind of <em>gathering?</em>",
   "create.step1.sub":
-    "Choose the format. This determines some of the fields that follow.",
+    "Pick the kind, then the format. It sets a few sensible defaults you can still change.",
   "create.step1.typeRequired": "Pick a format to get started.",
+  "create.step1.familyRequired": "Pick a kind of gathering to see its formats.",
   "create.step1.titleLabel": "Gathering title",
   "create.step1.titlePlaceholder":
     "A clear, specific title that says exactly what it is",
@@ -489,12 +708,15 @@ export const gatherings: Catalog = {
   // CreateGatheringSteps.tsx — step 2: date & place
   "create.step2.title": "When and <em>where?</em>",
   "create.step2.sub":
-    "The location is only shared with confirmed attendees and stays off the public listing.",
-  "create.step2.dateLabel": "Date",
+    "The location is only shared with confirmed attendees and stays off the public listing. An end time is optional.",
+  "create.step2.dateLabel": "Starts",
   "create.step2.dateRequired":
     "Pick a date and start time in the future so people can plan to come.",
-  "create.step2.timeLabel": "Time",
-  "create.step2.endTimeLabel": "End time (optional)",
+  "create.step2.endTimeLabel": "Ends",
+  // Sits under the two time fields and describes the end one, so a screen
+  // reader hears the length and the midnight roll-over as part of the field.
+  "create.step2.duration": "Runs {duration}",
+  "create.step2.endsNextDay": "ends the next day",
   "create.step2.hoodLabel": "Neighbourhood",
   "create.step2.hoodPlaceholder": "Select…",
   "create.step2.venueLabel": "Venue name",
@@ -578,35 +800,22 @@ export const gatherings: Catalog = {
   "create.step5.repeatsOff": "No, just this once",
   "create.step5.repeatsUntilCount": "{occurrences} dates",
   "create.step5.repeatsUntilDate": "until {date}",
-  "create.step5.confirmHeading": "Before you publish: confirm all three",
+  "create.step5.confirmHeading": "Before you publish",
   "create.step5.confirmIntro":
-    "Tick each box to confirm. The <strong>Publish gathering</strong> button stays disabled until all three are checked.",
+    "Tick each box to confirm. The <strong>Publish gathering</strong> button stays disabled until every box is checked.",
   "create.step5.allSet": "All set. You can publish now.",
   "create.step5.progress_one":
-    "<num>{checkedCount}</num> of 3 confirmed. Tick the last box to publish.",
+    "<num>{checkedCount}</num> of {total} confirmed. Tick the last box to publish.",
   "create.step5.progress_other":
-    "<num>{checkedCount}</num> of 3 confirmed. Tick the remaining <remaining>{count}</remaining> boxes to publish.",
-
-  // hostPage.data.ts — hero type chips
-  "host.hero.type.supperClub": "Supper club",
-  "host.hero.type.studioVisit": "Studio visit",
-  "host.hero.type.skillsWorkshop": "Skills workshop",
-  "host.hero.type.filmScreening": "Film screening",
-  "host.hero.type.morningWalk": "Morning walk",
-  "host.hero.type.bookClub": "Book club",
-  "host.hero.type.openStudio": "Open studio",
+    "<num>{checkedCount}</num> of {total} confirmed. Tick the remaining <remaining>{count}</remaining> boxes to publish.",
 
   // hostPage.data.ts — type cards (step 1)
-  "host.typeCard.supperClub.title": "Supper club",
   "host.typeCard.supperClub.body":
     "Intimate, hosted in your home or borrowed kitchen. 8–14 people. The model Tomás uses, and it works because it's personal.",
-  "host.typeCard.studioVisit.title": "Studio visit",
   "host.typeCard.studioVisit.body":
     "Open your workspace to people who'd genuinely want to see it. Low logistics, high value. Works especially well for makers.",
-  "host.typeCard.skillsSession.title": "Skills session",
   "host.typeCard.skillsSession.body":
     "Teach something you know. An hour of practical knowledge shared is worth more than most workshops that cost money.",
-  "host.typeCard.screeningTalk.title": "Screening or talk",
   "host.typeCard.screeningTalk.body":
     "A film, a documentary, a conversation with someone interesting. A projector and a living room is enough.",
 
@@ -865,6 +1074,12 @@ export const gatherings: Catalog = {
     "Changes go live on the public listing. Attendees are notified of date or venue changes.",
   "manage.editModal.fieldTitle": "Title",
   "manage.editModal.fieldDateTime": "Date & time",
+  "manage.editModal.fieldEndAt": "Ends (optional)",
+  "manage.editModal.endSummary": "Runs {date} · {time}",
+  "manage.editModal.endBeforeStartError":
+    "The end needs to come after the start. Move the start earlier, the end later, or clear the end.",
+  "manage.editModal.endSpanError":
+    "A gathering can run for up to {days} days. Bring the end closer to the start.",
   "manage.editModal.fieldLocation": "Location",
   "manage.editModal.fieldDescription": "Description",
   "manage.editModal.saveCta": "Save changes",
@@ -1037,6 +1252,7 @@ export const gatherings: Catalog = {
   "hub.tabs.calendar": "Calendar",
   "hub.hero.rsvp": "Take a look",
   "hub.featured.eyebrow": "Next up",
+  "hub.bucket.now": "Happening now",
   "hub.bucket.tonight": "Tonight",
   "hub.bucket.weekend": "This weekend",
   "hub.bucket.week": "This week",
@@ -1270,8 +1486,8 @@ export const gatherings: Catalog = {
   "hub.browse.when.month": "Next 30 days",
   "hub.browse.hoodLabel": "Neighbourhood",
   "hub.browse.hoodAny": "Anywhere in Lisbon",
-  "hub.browse.typeLabel": "Kind of gathering",
-  "hub.browse.typeAny": "Any kind",
+  "hub.browse.typeLabel": "Format",
+  "hub.browse.typeAny": "Any format",
   "hub.browse.cost.groupLabel": "Cost",
   "hub.browse.cost.any": "Any cost",
   "hub.browse.cost.free": "Free",
@@ -1411,4 +1627,58 @@ export const gatherings: Catalog = {
     "There's no real guest list to export in the demo.",
   "manage.attendees.exportFailedToast":
     "The export didn't come through. Try again in a moment.",
+
+  // ── Host action bar on the public gathering page (GatheringHostBar) ────────
+  // A host used to stand on their own gathering with nothing to manage it by.
+  // Cancel keeps the evening on the board and tells everyone; delete removes
+  // it and tells nobody, so its copy has to make that finality plain.
+  "hostBar.label": "Your gathering",
+  "hostBar.editCta": "Edit details",
+  "hostBar.manageCta": "Manage",
+  "hostBar.cancelCta": "Cancel gathering",
+  "hostBar.deleteCta": "Delete gathering",
+  "hostBar.cancelTitle": "Cancel {title}?",
+  "hostBar.cancelBody_one":
+    "It stays on the board marked cancelled, and {count} person holding a seat is told.",
+  "hostBar.cancelBody_other":
+    "It stays on the board marked cancelled, and {count} people holding a seat are told.",
+  "hostBar.cancelConfirmCta": "Cancel it",
+  "hostBar.cancelKeepCta": "Keep it on",
+  "hostBar.deleteTitle": "Delete {title}?",
+  "hostBar.deleteBody":
+    "This removes the gathering along with its RSVPs, photos and announcements, for good. Nobody is notified and there is no undo. To tell the people who signed up, cancel it instead.",
+  "hostBar.deleteConfirmCta": "Delete for good",
+  "hostBar.deleteKeepCta": "Keep it",
+  "hostBar.deletedToast": "{title} is deleted.",
+  "hostBar.deleteBlockedToast":
+    "People have already signed up for this one. Cancel it first so they are told, then delete it.",
+  "hostBar.deleteHostOnlyToast":
+    "Only the host can delete a gathering. As a co-host you can cancel it.",
+  "hostBar.deleteGoneToast": "That gathering is already gone.",
+  "hostBar.deleteFailedToast":
+    "The gathering couldn't be deleted. Try again in a moment.",
+
+  // ── Schedule display (gatheringSchedule.ts) ────────────────────────────────
+  // A gathering can run past midnight or across several days, so one shared
+  // formatter builds its dates and times for every surface that shows them.
+  "common.dateRange": "{start} to {end}",
+  "common.timeRange": "{start} – {end}",
+  "common.nextDayNote": "(next day)",
+
+  // ── The wizard's four schedule fields (DatePlaceStep.tsx, ReviewStep.tsx) ──
+  // "Starts" and "Ends" name a PAIR of fields each, so every one of the four
+  // controls carries its own hidden label underneath them. The optionality
+  // that used to sit on the visible "Ends" label lives on the end time's
+  // hidden label, because the end DATE is filled in for the host already.
+  "create.step2.startDateLabel": "Start date",
+  "create.step2.startTimeLabel": "Start time",
+  "create.step2.endDateLabel": "End date",
+  "create.step2.endTimeFieldLabel": "End time",
+  // Two messages, because they need two different fixes.
+  "create.step2.endsBeforeStart":
+    "This ends before it starts. Move the end date or time later.",
+  "create.step2.spanTooLong":
+    "A gathering can run for up to {days} days. Bring the end closer to the start.",
+  // The review row, when the schedule rolls into the next morning.
+  "create.step5.dateTimeNote": "{when} {note}",
 };

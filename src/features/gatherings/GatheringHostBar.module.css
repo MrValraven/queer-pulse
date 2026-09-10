@@ -1,0 +1,53 @@
+/* The host's own strip on the public gathering page.
+
+   Deliberately a different register from `GatheringPage.module.css`'s `.cta`
+   row above it: that row is the member's decision about the evening, in
+   full-size buttons. These are the host's tools for the same evening, so they
+   sit in a quiet hairlined band with small buttons and a label that says whose
+   controls they are, instead of a second bank of CTAs competing with the RSVP
+   for the same attention. */
+.bar {
+  margin-top: var(--gap-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+  background: var(--wash);
+  max-width: 62ch;
+}
+
+/* Names the strip, so a host reads the buttons under it as their own tools and
+   a screen reader meets the same framing before reaching them. */
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.labelIcon {
+  display: inline-flex;
+  font-size: var(--text-14);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Below the narrow breakpoint the label and the buttons each take a full line,
+   so the four controls wrap as one block rather than orphaning the last one. */
+@media (max-width: 640px) {
+  .actions {
+    margin-left: 0;
+    width: 100%;
+  }
+}

@@ -10,7 +10,13 @@ import {
 } from "../../../shared/components/ui";
 import { useRefineDrawer } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { HOODS, TYPES } from "../createGathering.data";
+import { HOODS } from "../createGathering.data";
+import {
+  formatsForFamily,
+  GATHERING_FAMILIES,
+  GATHERING_FORMATS,
+  type GatheringFamily,
+} from "../gatheringCatalog";
 import {
   COST_FILTERS,
   COST_LABEL_KEYS,
@@ -56,17 +62,22 @@ function ChipRow<Value extends string>({
 
 /**
  * The browse board's whole control block: a search field and one "Refine"
- * toggle on a single row, the four filter axes (when, where in Lisbon, what
- * kind, what it costs) as bands in the drawer below, and the chip row saying
- * which are currently on.
+ * toggle on a single row, the family chips always open beneath it, the four
+ * remaining filter axes (when, where in Lisbon, which format, what it costs)
+ * as bands in the drawer below, and the chip row saying which are currently
+ * on.
  *
- * The axes live behind the toggle for the reason the communities grid's and
- * My events' do: five when-chips, three cost-chips and two selects standing
- * open pushed the first poster row most of the way down the fold, for choices
- * most visitors make once or never. What stays on screen is what is applied,
- * so a shut drawer hides the controls without hiding their state.
+ * Family sits above the drawer because it is the coarse question a member
+ * answers first, and answering it narrows the format select from the whole
+ * fifty-six-entry catalog to the six or seven formats inside that family.
  *
- * All four axes are real columns the server narrows on. They used to be three
+ * The other axes live behind the toggle for the reason the communities grid's
+ * and My events' do: five when-chips, three cost-chips and two selects
+ * standing open pushed the first poster row most of the way down the fold, for
+ * choices most visitors make once or never. What stays on screen is what is
+ * applied, so a shut drawer hides the controls without hiding their state.
+ *
+ * All five axes are real columns the server narrows on. They used to be three
  * chips keyed off `orgColor`, a colour the demo registry assigns, which meant
  * a live board's chips filtered on a value the API never sends.
  */
@@ -85,6 +96,7 @@ export function BrowseFilterBar({
   const { t } = useTranslation();
   const refine = useRefineDrawer("qp.events.browse.refineOpen");
   const whenLabelId = useId();
+  const familyLabelId = useId();
   const hoodLabelId = useId();
   const typeLabelId = useId();
   const costLabelId = useId();
@@ -103,6 +115,45 @@ export function BrowseFilterBar({
         <RefineToggle
           {...refine.toggleProps}
           activeCount={countHiddenBrowseFilters(filters)}
+        />
+      </div>
+
+      {/* The family row stays open. It is the one facet worth a member's first
+          glance: nine words that say what kind of evening each gathering is,
+          where the four axes behind "Refine" are things most visitors set once
+          or never. */}
+      <div
+        className={styles.familyRow}
+        role="group"
+        aria-labelledby={familyLabelId}
+      >
+        <span className={styles.familyRowLabel} id={familyLabelId}>
+          {t("gatherings:hub.browse.familyLabel")}
+        </span>
+        <ChipRow<GatheringFamily | "">
+          active={filters.family}
+          options={[
+            { value: "", label: t("gatherings:hub.browse.familyAny") },
+            ...GATHERING_FAMILIES.map((family) => ({
+              value: family.key,
+              label: t(family.nameKey),
+            })),
+          ]}
+          onChange={(family) => {
+            // A format only means something inside its own family, so a family
+            // change that orphans the chosen format clears it rather than
+            // leaving a board narrowed to nothing.
+            const shouldKeepFormat =
+              !family ||
+              formatsForFamily(family).some(
+                (format) => format.key === filters.type,
+              );
+            onChange({
+              ...filters,
+              family,
+              type: shouldKeepFormat ? filters.type : "",
+            });
+          }}
         />
       </div>
 
@@ -153,9 +204,16 @@ export function BrowseFilterBar({
                 labelledBy={typeLabelId}
                 options={[
                   { value: "", label: t("gatherings:hub.browse.typeAny") },
-                  ...TYPES.map((type) => ({
-                    value: type.value,
-                    label: t(type.nameKey),
+                  // Narrowed to the chosen family, so the list is six or seven
+                  // rows rather than fifty-six. With no family chosen it is the
+                  // whole catalog, which is still the right answer for a member
+                  // who knows the word but not the kind.
+                  ...(filters.family
+                    ? formatsForFamily(filters.family)
+                    : GATHERING_FORMATS
+                  ).map((format) => ({
+                    value: format.key,
+                    label: t(format.nameKey),
                   })),
                 ]}
                 value={filters.type || ""}

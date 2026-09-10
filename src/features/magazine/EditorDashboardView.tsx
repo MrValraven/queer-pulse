@@ -147,6 +147,7 @@ export function EditorDashboardView({
         onEditPiece={pieceActions.editPiece}
         onChasePiece={modals.openChase}
         onHandoffPiece={modals.openHandoff}
+        onDeletePiece={modals.openDeletePiece}
         onAssignPieceIssue={assignment.openForPiece}
         selectedPieceIds={pieceSelection.selectedPieceIds}
         areAllPiecesSelected={pieceSelection.areAllSelected}
@@ -181,6 +182,8 @@ export function EditorDashboardView({
         onCommission={modals.submitCommission}
         onPass={modals.submitPass}
         onHandoff={modals.confirmHandoff}
+        onConfirmDeletePiece={() => void modals.confirmDeletePiece()}
+        isDeletingPiece={modals.isDeletingPiece}
       />
 
       <DeskIssueModals

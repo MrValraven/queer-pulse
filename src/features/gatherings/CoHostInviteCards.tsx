@@ -5,6 +5,7 @@ import type {
   CohostInviteInviterDTO,
 } from "./api/events.api";
 import { eventZoneFormat } from "./eventTimezone";
+import { gatheringWhen } from "./gatheringSchedule";
 import styles from "./CoHostInvitePage.module.css";
 
 /** Who sent the invite: their avatar, how much hosting they've done, how many
@@ -84,6 +85,16 @@ export function CoHostInviteEventCard({
   const startAt = new Date(event.startAt);
   const endAt = event.endAt ? new Date(event.endAt) : null;
   const zone = eventZoneFormat(event.timezone, startAt);
+  // One shared formatter owns the schedule line, so an invite to an overnight
+  // or multi-day gathering reads the same as the gathering's own page.
+  const when = gatheringWhen(
+    startAt,
+    endAt,
+    fmt,
+    t,
+    { weekday: "short", ...zone.dateOptions },
+    zone.timeOptions,
+  );
   return (
     <div className={styles.eventCard}>
       <div className={styles.eventH}>
@@ -99,9 +110,8 @@ export function CoHostInviteEventCard({
           <h2>{event.title}</h2>
           <div className={styles.eventMeta}>
             <b>
-              {fmt.date(startAt, { weekday: "short", ...zone.dateOptions })}{" "}
-              {fmt.time(startAt, zone.timeOptions)}
-              {endAt ? ` – ${fmt.time(endAt, zone.timeOptions)}` : ""}
+              {when.dateText} {when.timeText}
+              {when.nextDayNote ? ` ${when.nextDayNote}` : ""}
             </b>
             {event.venue && (
               <>

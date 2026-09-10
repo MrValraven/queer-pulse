@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
-import { Avatar, FeatureHelp } from "../../shared/components/ui";
+import {
+  Avatar,
+  ExpandableText,
+  FeatureHelp,
+} from "../../shared/components/ui";
 import { ProfilePhotoViewer } from "../members/ProfilePhotoViewer";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { MentionText } from "../../shared/mentions/MentionText";
+import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import { KIND_LABEL_KEYS, personaTitleName } from "./subprofile-kinds";
@@ -106,11 +110,11 @@ export function SubprofileHero({
             <h1 className="pp-name">{titleName}</h1>
             <FeatureHelp id="subprofiles.detail" />
           </div>
-          {/* The craft chip reads as a qualifier on the tagline, so the two
-              share one line under the name (`.pp-taglineRow`) instead of the
-              chip sitting alone above the headline. The row is `display:
-              contents` on the skins that place the chip themselves (gallery's
-              grid) or hide it (page), so their layouts are untouched. */}
+          {/* The craft chip labels the tagline, so `.pp-taglineRow` stacks the
+              two under the name — eyebrow, then the sentence it introduces,
+              both on the name's left edge. The row is `display: contents` on
+              the skins that place the chip themselves (gallery's grid) or hide
+              it (page), so their layouts are untouched. */}
           <div className="pp-taglineRow">
             <span className="pp-kind">{t(KIND_LABEL_KEYS[view.kind])}</span>
             {view.tagline && <p className="pp-tagline">{view.tagline}</p>}
@@ -209,9 +213,18 @@ export function SubprofileHero({
           signed-out visitor gets the mention styled and inert rather than a
           link into a wall. */}
       {view.bio && (
-        <p className="pp-bio">
-          <MentionText text={view.bio} linkify={loggedIn} />
-        </p>
+        /* `clampMode="height"` because skins style `.pp-bio` with two-column
+           text (studio, gallery) and `::first-letter` drop caps (page,
+           gallery), all of which the `-webkit-box` line clamp would flatten. */
+        <ExpandableText
+          className="pp-bio"
+          lines={6}
+          linesMobile={8}
+          clampMode="height"
+          resetKey={view.bio}
+        >
+          <ResolvedMentionText text={view.bio} linkify={loggedIn} />
+        </ExpandableText>
       )}
 
       {photoOpen && view.avatarUrl && (

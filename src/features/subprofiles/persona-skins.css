@@ -185,7 +185,10 @@
      • the mobile app bar (standalone.css) is an OPAQUE full-width strip, not a
        floating pill, so image tucked under it is simply hidden. Nothing to
        gain, so it stays put there too.
-   Both therefore reduce to zero and only the pill layout actually rises.
+   Both therefore reduce to zero and only the pill layout actually rises. That
+   is exactly what the global `--nav-band-visible` (spacing.css) already means,
+   and those two files zero it in place, so this reads it rather than redoing
+   the per-mode math, and any page filling the same band stays in step.
 
    Applied through `--pp-cover-rise-on` (consumed by `.pp-cover` above) so it
    only ever reaches a banner that (a) the page host opted in
@@ -196,17 +199,15 @@
    collide with the pill, and `practice`/`chair`/`collective` render a thin
    tinted rule with the image hidden entirely — there is no banner to raise. */
 .pp {
-  --pp-cover-rise: var(--nav-band);
-}
-@media (min-width: 861px) {
-  html[data-nav-mode="sidebar"] .pp {
-    --pp-cover-rise: 0px;
-  }
-}
-@media (--mobile) {
-  .pp {
-    --pp-cover-rise: 0px;
-  }
+  --pp-cover-rise: var(--nav-band-visible);
+  /* The bio's Read more / Show less toggle (shared `ExpandableText`) would
+     otherwise be coral, which every skin's ground is free to make illegible —
+     `stage`, `chair` and `classroom` already paint dark grounds with cream
+     text, and a new skin can too. Each skin sets a readable `color` on `.pp`,
+     so the toggle takes that and stays distinguishable by weight, chevron and
+     hover underline instead of hue. Enumerating the dark skins here would
+     silently rot the next time one is added. */
+  --expandable-text-toggle-ink: inherit;
 }
 .pp[data-cover-rise="true"]:is(
     [data-skin="stage"],
@@ -217,6 +218,48 @@
   )
   .pp-cover[data-has-cover] {
   --pp-cover-rise-on: var(--pp-cover-rise);
+}
+
+/* ── The reserved nav band takes the skin's ground ────────────────────────
+   The band `main[data-page-main]` reserves above the page (base.css,
+   `padding-top: var(--nav-band)`) is painted by nothing, so it shows the
+   app's cream body ground — while `.pp` directly below it paints its own
+   family ground, and not one of the thirteen is cream. That seam is the
+   cream stripe across the top of a persona page. The rise above only closes
+   it for the five full-bleed-banner skins, and only once an image has been
+   uploaded; every other persona shows it.
+
+   Paint it from `.pp` itself, as a strip pinned directly above its own box,
+   taking `background-color: inherit` so it follows whichever family — and
+   whichever theme — is active with no per-skin wiring, and so a skin added
+   later is right without touching this rule. `.pp` has layout containment
+   (not paint), so this renders outside its box exactly as the risen banner
+   already does. Where the banner does rise it paints over this strip, being
+   the later positioned box.
+
+   Height is `--pp-cover-rise`, which is already exactly "how much of the
+   reserved band is visible in the current nav layout": the sidebar rail
+   cancels the padding outright and the mobile app bar covers what is left,
+   so both reduce it to zero (see the note above) and this collapses with
+   them. Gated on `data-cover-rise` for the reason the rise itself is: only
+   the real page-mounted persona sits flush under the floating pill. The
+   editor's docked preview and the mobile preview render this same tree
+   inside a card, where a strip above it would spill onto whatever sits
+   there, as it would onto the owner's draft banner.
+
+   base.css does this job from the other side for a plum `PageHero`
+   (`main[data-page-main]:has(header[data-plum])`). That can't be reused
+   here: the ground lives on `.pp` and custom properties do not cascade
+   upward, so `main` cannot read it. */
+.pp[data-cover-rise="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: var(--pp-cover-rise);
+  background-color: inherit;
+  pointer-events: none;
 }
 
 .pp-hero {
@@ -302,12 +345,14 @@
   line-height: 1.45;
   max-width: 48ch;
 }
-/* The craft chip and the tagline share ONE line under the display name — the
-   chip reads as a qualifier on the sentence beside it rather than a lone label
-   floating above the headline. `baseline` alignment sits the chip's own text on
-   the tagline's first baseline (right for the pill skins and the flat
-   letterspaced ones alike), and the row wraps so a long tagline drops under the
-   chip instead of squeezing it.
+/* The craft chip LABELS the tagline sitting under it: a small uppercase eyebrow
+   on its own line, then the sentence it introduces on the next, both flush with
+   the display name above. Sharing one line only ever looked tidy while the
+   tagline was short — anything longer wrapped around the chip and left the
+   header ragged, its second line starting at a different edge than its first.
+   Stacked, every line in the identity column starts at the same edge. The 6px
+   gap sits INSIDE `.pp-text`'s 9px rhythm so the chip and the tagline still read
+   as one labelled unit rather than two stacked strays.
 
    Two skins opt out with `display:contents`, which dissolves the wrapper and
    leaves both children as direct `.pp-text` children exactly as before:
@@ -316,38 +361,40 @@
    • page hides the chip entirely, so there is no second thing to pair. */
 .pp-taglineRow {
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 4px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 .pp[data-skin="gallery"] .pp-taglineRow,
 .pp[data-skin="page"] .pp-taglineRow {
   display: contents;
 }
 /* `.pp-kind`'s base `align-self:flex-start` existed to stop the pill stretching
-   across the `.pp-text` COLUMN; inside the row it would pin the chip to the top
-   edge instead, so hand it back to the row's baseline. `:where()` keeps this at
-   the same specificity as the mobile `align-self:center` rule further down,
-   which sits later in the file and so still wins on narrow widths. Skipped on
-   the two `display:contents` skins, where the chip is still a `.pp-text` child
-   and its alignment belongs to that layout. */
+   across the `.pp-text` COLUMN. The tagline row is a column of its own now and
+   already holds its children to `flex-start`, so that base value is redundant
+   here — and worse, it would pin the chip LEFT on the centred layouts (mobile,
+   and the table/chart/chair skins) whose only lever is the row's `align-items`.
+   `auto` hands the decision back to the row. Skipped on the two
+   `display:contents` skins, where the chip is still a `.pp-text` child and its
+   alignment belongs to that layout. */
 .pp:where(:not([data-skin="gallery"]):not([data-skin="page"]))
   .pp-taglineRow
   > .pp-kind {
-  align-self: baseline;
+  align-self: auto;
 }
 .pp:where(:not([data-skin="gallery"]):not([data-skin="page"]))
   .pp-taglineRow
   > .pp-tagline {
   min-width: 0;
 }
-/* The skins that centre the identity column centre the paired row as a group
+/* The skins that centre the identity column centre the stacked pair as a group
    (`text-align` alone only centres the tagline's own lines, not the two boxes
-   inside the flex row). */
+   inside the flex column — the chip is a shrink-to-fit pill and would sit left
+   of a centred headline). */
 .pp[data-skin="table"] .pp-taglineRow,
 .pp[data-skin="chart"] .pp-taglineRow,
 .pp[data-skin="chair"] .pp-taglineRow {
-  justify-content: center;
+  align-items: center;
 }
 .pp-acts {
   display: flex;
@@ -419,6 +466,13 @@
   color: var(--ink);
   font-size: var(--text-16);
   padding-top: 20px;
+  /* An owner writes the bio in a textarea and the endpoint stores it verbatim,
+     so the blank lines and indents they typed are part of what they wrote —
+     without this the browser collapses every one of them into a single wall of
+     text, and the editor preview stops matching the field beside it. Matches
+     the member profile bio (`ProfileHeroMain`/`PublicProfilePage`/
+     `MobileProfile`), which already renders `pre-wrap`. */
+  white-space: pre-wrap;
 }
 /* NOTE: the social row renders as `.pp-social-row` (SubprofileSocialRow.tsx)
    with module-scoped `.iconLink` anchors — there is no `.pp-social` element or
@@ -454,14 +508,13 @@
     height: 2.824em;
     margin-top: -1.412em; /* -48 / 34 */
   }
-  /* Centre the chip + tagline PAIR (they share a line now, `.pp-taglineRow`);
-     the chip's own horizontal centring came from `.pp-text{align-items:center}`
-     below and is now the row's job. Its cross-axis alignment stays the base
-     baseline, so a tagline that wraps to two lines keeps the chip on the first
-     line rather than floating to the vertical middle. */
+  /* Centre the stacked chip + tagline PAIR (`.pp-taglineRow` is its own flex
+     column); the chip's horizontal centring came from `.pp-text{align-items:
+     center}` below and is the row's job now that the row is what that rule
+     centres. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"]))
     .pp-taglineRow {
-    justify-content: center;
+    align-items: center;
   }
   /* Stretch the text column full-width (so the action row can fill it) while
      centering its own children. Tighten the base rhythm to 10px so the identity
@@ -645,8 +698,7 @@
   margin-top: 2px;
 }
 /* Poem rows render as a `<button>` (see `SubprofileItemRow`'s `onOpen`
-   branch) — reset button chrome so it matches the `<div>`/`<a>` rows exactly,
-   then clamp the first-line teaser to two lines. */
+   branch) — reset button chrome so it matches the `<div>`/`<a>` rows exactly. */
 button.pp-row {
   background: none;
   border: 0;
@@ -655,12 +707,6 @@ button.pp-row {
   color: inherit;
   text-align: left;
   width: 100%;
-}
-.pp-row-teaser {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 .pp-link .href {
   margin-left: auto;
@@ -3087,8 +3133,19 @@ button.pp-row {
   border-top: 0.5px solid rgba(var(--skin-page-ink-rgb), 0.25);
   padding-top: 22px;
 }
+/* The date sits in its own left column, lifted out of the title's inline flow.
+   That column has to hold the widest value `formatMonthYear` can produce in
+   EITHER language: PT's "novembro de 2023" runs wider than any English month.
+   Since `.pp-row .when` is `white-space: nowrap`, an 84px column let the date
+   overrun its width and run UNDER the title. Two changes keep them apart. The
+   column is sized in rem, the same reader-scaled unit --text-13 is built from,
+   so it grows with the reader's font instead of pinning a px width against type
+   that moves. And wrapping is allowed inside it, so an unusually long localized
+   date takes a second line and still leaves the title its space. Measured in
+   Fraunces at 13px: "September 2025" is 95px and "novembro de 2023" is 108px,
+   so the 116px column clears both with a 20px gutter left over. */
 .pp[data-skin="page"] .pp-row {
-  padding: 12px 0 12px 96px;
+  padding: 12px 0 12px 8.5rem;
   text-indent: 0;
   position: relative;
 }
@@ -3096,10 +3153,24 @@ button.pp-row {
   position: absolute;
   left: 0;
   top: 15px;
-  width: 84px;
+  width: 7.25rem;
   float: none;
   font-size: var(--text-13);
   line-height: 1.4;
+  white-space: normal;
+}
+/* On a narrow card the date column costs more than it earns: stack the date
+   over the title and give the whole width back to the poem. */
+@container (max-width:480px) {
+  .pp[data-skin="page"] .pp-row {
+    padding-left: 0;
+  }
+  .pp[data-skin="page"] .pp-row .when {
+    position: static;
+    display: block;
+    width: auto;
+    margin-bottom: 2px;
+  }
 }
 .pp[data-skin="page"] .pp-row b::after {
   content: ", ";

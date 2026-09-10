@@ -23,6 +23,7 @@ export interface PiecesPipelineProps {
   onChase: (piece: Piece) => void;
   onHandoff: (piece: Piece) => void;
   onAssignIssue: (piece: Piece) => void;
+  onDelete: (piece: Piece) => void;
 }
 
 /**
@@ -45,6 +46,7 @@ export function PiecesPipeline({
   onChase,
   onHandoff,
   onAssignIssue,
+  onDelete,
 }: PiecesPipelineProps) {
   const { t } = useTranslation();
 
@@ -96,6 +98,7 @@ export function PiecesPipeline({
           onChase={onChase}
           onHandoff={onHandoff}
           onAssignIssue={onAssignIssue}
+          onDelete={onDelete}
         />
       ))}
     </div>

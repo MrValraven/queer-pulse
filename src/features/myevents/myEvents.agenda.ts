@@ -1,6 +1,13 @@
 import type { MyEvent, Pill, SortBy, FilterKey } from "./myEvents.types";
 import type { TFunction } from "../../shared/i18n/types";
-import { parseDate, dayDiff, inPill, isOnline } from "./myEvents.helpers";
+import {
+  parseDate,
+  dayDiff,
+  inPill,
+  isInMonth,
+  isOnDay,
+  isOnline,
+} from "./myEvents.helpers";
 
 export interface AgendaGroup {
   label: string | null;
@@ -44,10 +51,11 @@ function applySecondary(list: MyEvent[], st: AgendaState): MyEvent[] {
     if (f.free) pr.push(!ev.paid);
     if (f.paid) pr.push(!!ev.paid);
     if (pr.length && !pr.includes(true)) return false;
-    if (f.month) {
-      const dt = parseDate(ev.date);
-      if (dt.getMonth() !== viewM || dt.getFullYear() !== viewY) return false;
-    }
+    // Any day the gathering RUNS puts it in the viewed month. Matching on its
+    // opening day alone filtered a festival that ran 29 September to 2 October
+    // out of the agenda for a member looking at October, so their own running
+    // gathering vanished from their own list.
+    if (f.month && !isInMonth(ev, viewY, viewM)) return false;
     return true;
   });
 }
@@ -63,8 +71,11 @@ export function buildAgenda(
   st: AgendaState,
   t: TFunction,
 ): AgendaResult {
-  const base = st.selectedDate
-    ? events.filter((e) => e.date === st.selectedDate)
+  const selectedDate = st.selectedDate;
+  // A day the member picked shows everything RUNNING that day, so day two of a
+  // festival lists it rather than looking like an empty afternoon.
+  const base = selectedDate
+    ? events.filter((e) => isOnDay(e, selectedDate))
     : events.filter((e) => inPill(e, st.pill));
   const list = applySecondary(base, st);
 
@@ -147,9 +158,12 @@ export function buildAgenda(
     const week: MyEvent[] = [];
     const later: MyEvent[] = [];
     sorted.forEach((e) => {
-      const diff = dayDiff(parseDate(e.date));
-      if (diff <= 0) today.push(e);
-      else if (diff < 7) week.push(e);
+      // Off the day it OPENED. A gathering already under way is something the
+      // member is at now, so a festival that began on Friday stays under Today
+      // through Sunday. `inPill` is what drops it once it has closed.
+      const startDiff = dayDiff(parseDate(e.date));
+      if (startDiff <= 0) today.push(e);
+      else if (startDiff < 7) week.push(e);
       else later.push(e);
     });
     groups = [

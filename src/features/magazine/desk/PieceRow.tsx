@@ -2,6 +2,7 @@ import type { KeyboardEvent, MouseEvent } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { FormatBadge } from "./FormatBadge";
+import { PieceRowMenu } from "./PieceRowMenu";
 import { StagePill } from "./StagePill";
 import { cx } from "../../../shared/lib/cx";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -27,6 +28,8 @@ interface PieceRowProps {
   onHandoff: (piece: Piece) => void;
   /** Opens the issue picker for this one piece. */
   onAssignIssue: (piece: Piece) => void;
+  /** Opens the delete confirmation for this piece, from the row's ⋯ menu. */
+  onDelete: (piece: Piece) => void;
 }
 
 /**
@@ -47,6 +50,7 @@ export function PieceRow({
   onChase,
   onHandoff,
   onAssignIssue,
+  onDelete,
 }: PieceRowProps) {
   const { t } = useTranslation();
 
@@ -146,6 +150,10 @@ export function PieceRow({
               : t("magazine:desk.reassign.addToIssue")}
           </Button>
         )}
+        <PieceRowMenu
+          pieceTitle={piece.title}
+          onDelete={() => onDelete(piece)}
+        />
       </div>
     </div>
   );

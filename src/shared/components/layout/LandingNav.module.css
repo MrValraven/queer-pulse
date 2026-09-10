@@ -1,0 +1,134 @@
+/* LandingNav wears Navbar.module.css's pill, brand and sign-in link (see the
+   component's header comment), so this file holds only what is new: the
+   section-anchor row that replaces the MegaNav triggers, and a theme toggle
+   that survives the mobile breakpoint. */
+
+/* ── Section anchors ────────────────────────────────────────────────────── */
+
+.sections {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* The brand and the action cluster are both `flex: none`; this row is the
+     one that gives, so a long label set narrows here instead of squeezing the
+     wordmark into letter-columns (the failure Navbar's `.brand` documents). */
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sectionLink {
+  position: relative;
+  display: block;
+  padding: 6px 0;
+  font-size: var(--text-14-5);
+  font-weight: 500;
+  /* --ink-60 / --ink both flip in dark mode (tokens/colors.css), so the row
+     needs no [data-theme="dark"] override, same as MegaNav's triggers. */
+  color: var(--ink-60);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-base) var(--ease);
+}
+
+/* Underline drawn with a transform rather than an animated `width`, so the
+   active marker can sit on the same rule as the hover state without the two
+   fighting over one property. */
+.sectionLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+@media (hover: hover) {
+  .sectionLink:hover {
+    color: var(--ink);
+  }
+  .sectionLink:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Set by the scroll spy (useActiveLandingSection) for the section in view. */
+.sectionLinkActive {
+  color: var(--ink);
+}
+.sectionLinkActive::after {
+  transform: scaleX(1);
+}
+
+/* ── Action cluster ─────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+/* A copy of Navbar's `.themeToggle` rather than a reuse: that one is hidden
+   below the mobile breakpoint, because on the ordinary bar the switch lives in
+   the account sheet instead. The landing page has no account sheet, so the
+   toggle has to stay on the bar at every width. */
+.themeToggle {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: transparent;
+  color: var(--text-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+
+/* Extend the tap target to 44px without growing the 38px visual circle. */
+.themeToggle::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+}
+
+@media (hover: hover) {
+  .themeToggle:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    border-color: rgba(var(--line-rgb), 0.32);
+  }
+}
+
+:global([data-theme="dark"]) .themeToggle {
+  color: rgba(var(--cream-rgb), 1);
+}
+
+/* ── Mobile app bar ─────────────────────────────────────────────────────── */
+
+/* On mobile the bar becomes Navbar's slim full-width `.appBar` strip, which is
+   both shorter and tighter than the desktop pill: the cluster closes up and the
+   toggle loses its outline to read as one quiet glyph beside the real actions.
+   Below 560px the invite button drops out of the row entirely, in the component
+   rather than here (LandingNav's `isNarrowPhone`), so the decision sits next to
+   the reason it exists instead of hiding in a media query. */
+@media (--mobile) {
+  .actions {
+    gap: 4px;
+  }
+  .themeToggle {
+    width: 34px;
+    height: 34px;
+    border-color: transparent;
+  }
+}

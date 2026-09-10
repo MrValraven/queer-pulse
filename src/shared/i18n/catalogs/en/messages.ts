@@ -358,4 +358,35 @@ export const messages: Catalog = {
   "report.memberTitle": "Report {name}?",
   "conversation.contactSafetyNotice":
     "Keep the conversation here until you trust someone. Never send money, and never share bank details. Real listings don't ask for that.",
+
+  // ── Panel chrome (MessagesRailChrome) ──
+  // Desktop only. This route hides the site nav (AppShell `desktopChromeless`),
+  // so the inbox panel carries its own way back out.
+  "rail.backToPlatform": "Back to QueerPulse",
+  // ── Chat wallpaper (ConversationMenu → WallpaperModal) ──
+  // The ground names are the SWATCH names, so they are what a screen reader
+  // announces for an otherwise wordless colour button. Keep them plain colours
+  // rather than poetic ones: someone picking by ear needs to know what they
+  // are getting.
+  "conversation.menuAriaLabel": "More options for this chat",
+  "wallpaper.menuAction": "Wallpaper",
+  "wallpaper.title": "Wallpaper",
+  "wallpaper.sub": "Choose the background for {name}.",
+  "wallpaper.groundLegend": "Background colour",
+  "wallpaper.ground.default": "Plain",
+  "wallpaper.ground.lilac": "Lilac",
+  "wallpaper.ground.jade": "Jade",
+  "wallpaper.ground.coral": "Coral",
+  "wallpaper.ground.amber": "Amber",
+  "wallpaper.ground.rose": "Rose",
+  "wallpaper.doodlesTitle": "Doodles",
+  "wallpaper.doodlesSub": "A soft pattern over the colour.",
+  "wallpaper.everyChatTitle": "Use for every chat",
+  "wallpaper.everyChatSub":
+    "Applies to chats that don't have a wallpaper of their own.",
+  "wallpaper.previewReceived": "Love this one.",
+  "wallpaper.previewSent": "Same. Keeping it.",
+  "wallpaper.reset": "Reset",
+  "wallpaper.cancel": "Cancel",
+  "wallpaper.save": "Save",
 };

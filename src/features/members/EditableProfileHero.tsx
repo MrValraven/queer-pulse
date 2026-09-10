@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { Reveal } from "../../shared/components/ui";
-import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/useProfile";
 import type { ImageSlotTint } from "../../shared/components/ui";
@@ -29,9 +28,7 @@ export function EditableProfileHero({
   const { profile, draft, updateDraft } = useProfile();
   const heroRef = useRef<HTMLElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
-  const reduced = usePrefersReducedMotion();
-
-  useEnterEditFocus(focusLinks, heroRef, linksRef, reduced);
+  useEnterEditFocus(focusLinks, heroRef, linksRef);
 
   return (
     <header className={base.phero} ref={heroRef}>

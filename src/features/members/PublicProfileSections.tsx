@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar, Button, ExpandableText } from "../../shared/components/ui";
 import { useCountUp } from "../../shared/hooks";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { MentionText } from "../../shared/mentions/MentionText";
+import { ResolvedMentionText } from "../../shared/mentions/ResolvedMentionText";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -173,9 +173,14 @@ export function PublicProfileHead({
             {t("members:profile.hero.curatorLink")} <FiArrowRight aria-hidden />
           </Link>
         )}
-        <p className={styles.bio}>
-          <MentionText text={profile.bio} />
-        </p>
+        <ExpandableText
+          className={styles.bio}
+          lines={6}
+          linesMobile={8}
+          resetKey={profile.bio}
+        >
+          <ResolvedMentionText text={profile.bio} />
+        </ExpandableText>
         <SocialLinksRow links={profile.socials} />
 
         <div className={styles.meta}>

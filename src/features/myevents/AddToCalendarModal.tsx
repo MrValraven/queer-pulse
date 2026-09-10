@@ -1,8 +1,10 @@
 import { AddToCalendarSheet } from "../../shared/components/calendar/AddToCalendarSheet";
 import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CalendarEventInput } from "../../shared/lib/calendarExport";
 import { useMyEvents } from "./MyEventsContext";
-import { atTime, parseDate, timeStr } from "./myEvents.helpers";
+import { atTime } from "./myEvents.helpers";
+import { joinWhenParts, myEventWhen } from "./myEvents.when";
 import type { MyEvent } from "./myEvents.types";
 
 const HOUR_MS = 60 * 60 * 1000;
@@ -30,21 +32,22 @@ export function AddToCalendarModal({
   onClose: () => void;
 }) {
   const fmt = useFormat();
+  const { t } = useTranslation();
   const { toast } = useMyEvents();
   // Through the app's own locale (`useFormat`), like every sibling surface —
   // `toLocaleDateString(undefined, …)` followed the BROWSER's locale, so a
   // member reading the app in PT on an EN device saw this one date in English.
-  const dateLabel = fmt.date(parseDate(ev.date), {
+  const when = myEventWhen(ev, fmt, t, {
     weekday: "short",
     month: "short",
     day: "numeric",
   });
-  const timeLabel = timeStr(ev) + (ev.timezone ? ` ${ev.timezone}` : "");
+  const timeLabel = joinWhenParts(when.timeText, ev.timezone, when.nextDayNote);
 
   return (
     <AddToCalendarSheet
       input={toCalendarInput(ev)}
-      subtitle={`${dateLabel} · ${timeLabel} · ${ev.venue}`}
+      subtitle={`${when.dateText} · ${timeLabel} · ${ev.venue}`}
       filename={`${ev.title.replace(/\s+/g, "-")}.ics`}
       onToast={(message) => toast(message, "success")}
       onClose={onClose}

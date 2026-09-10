@@ -343,6 +343,12 @@ export const shared: Catalog = {
   // HubBackLink
   "hubBackLink.backTo": "Back to {label}",
 
+  // ExpandableText — the toggle under a long bio or review folded down to a
+  // few lines. Deliberately the conventional wording: readers already know
+  // what it does from every other site they use.
+  "expandableText.readMore": "Read more",
+  "expandableText.showLess": "Show less",
+
   // Modal / ModalSheet
   "modal.close": "Close",
 
@@ -652,6 +658,22 @@ export const shared: Catalog = {
   "calendar.preset.today": "Today",
   "calendar.preset.tomorrow": "Tomorrow",
   "calendar.preset.nextWeek": "Next week",
+  // TimeOptionsList: the clickable list of times behind the clock trigger.
+  // The duration strings are three separate patterns, each naming the units
+  // it carries, so a translator can order those units for their own language.
+  "calendar.timeOptions": "Times",
+  "calendar.durationHours": "{hours}h",
+  "calendar.durationMinutes": "{minutes}m",
+  "calendar.durationHoursMinutes": "{hours}h {minutes}m",
+  "calendar.durationFromStart": "+{duration}",
+  // A span that crosses calendar days (`formatSpanDuration`), for a gathering
+  // that runs a whole weekend. Same one-pattern-per-combination approach: the
+  // day count carries its own plural, and `{remainder}` arrives already
+  // formatted by the three patterns above, so a translator orders the days
+  // against the rest without respelling the hours.
+  "calendar.durationDays_one": "{count} day",
+  "calendar.durationDays_other": "{count} days",
+  "calendar.durationDaysRemainder": "{days} {remainder}",
 
   // reframe.*: pan/zoom crop control (ImageReframer.tsx, PhotoReframeModal.tsx,
   // useImageReframerState.ts) shown when a member reframes a photo on upload.

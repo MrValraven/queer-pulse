@@ -79,6 +79,7 @@ export function useCommunityPulse(
       pulseEventToCommunityEvent(
         event,
         fmt,
+        t,
         event.goingCount > 0
           ? t("gatherings:spots.going", { count: event.goingCount })
           : t("gatherings:spots.openToAll"),

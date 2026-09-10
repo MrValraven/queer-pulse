@@ -1,0 +1,85 @@
+/* The clickable time list in DatePicker's mode="time" popover. Mirrors
+   SelectPanel's option rows (same hover/active/selected language) so the two
+   listboxes in the app read as one pattern. Tokens only. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  /* Tall enough to show the hours either side of the centred selection, short
+     enough to stay inside a popover on a laptop. A max, never a fixed height:
+     a bounded range (min/max) renders a shorter list that shrinks to fit. */
+  max-block-size: 260px;
+  min-inline-size: 156px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-inline: 2px;
+  outline: none;
+  scrollbar-width: thin;
+}
+.list:focus-visible {
+  border-radius: var(--radius-8);
+  box-shadow: var(--ring-plum);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  inline-size: 100%;
+  /* Block padding rather than a fixed height, so a row grows with the reader's
+     font size instead of clipping. Coarse pointers get the 44px tap floor. */
+  padding-block: 8px;
+  padding-inline: 10px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+@media (pointer: coarse) {
+  .option {
+    min-block-size: var(--tap-min);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    background: var(--wash);
+  }
+}
+/* Keyboard position, driven by aria-activedescendant rather than DOM focus
+   (the listbox itself holds focus), so it needs its own visible marker. */
+.option[data-active="true"] {
+  background: var(--wash);
+}
+
+.optionSelected {
+  background: rgba(var(--plum-rgb), 0.08);
+  font-weight: 600;
+}
+.optionSelected[data-active="true"] {
+  background: rgba(var(--plum-rgb), 0.14);
+}
+
+.optionLabel {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The span from the start time ("+2h 30m"), on the end-time list only. Second
+   tier: dimmer and smaller, so the time itself stays the thing being read. */
+.optionDuration {
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.optionSelected .optionDuration {
+  color: var(--ink);
+}

@@ -4,6 +4,7 @@ import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { gatherings } from "../data/gatherings";
+import { formatLabel } from "../../gatherings/gatheringCatalog";
 import styles from "./Gatherings.module.css";
 
 export function Gatherings() {
@@ -38,7 +39,9 @@ export function Gatherings() {
                     <span className={styles.month}>{event.month}</span>
                   </div>
                   <div>
-                    <div className={styles.type}>{event.type}</div>
+                    <div className={styles.type}>
+                      {formatLabel(t, event.format)}
+                    </div>
                     <h3 className={styles.title}>{event.title}</h3>
                     <div className={styles.meta}>
                       <span>{event.hood}</span>

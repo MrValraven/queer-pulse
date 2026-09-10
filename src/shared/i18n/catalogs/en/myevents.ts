@@ -130,6 +130,11 @@ export const myevents: Catalog = {
   "card.joinLinkErrorToast":
     "Couldn't fetch the join link. Try again in a moment.",
   "card.directionsToast": "Opening directions to {venue}",
+  // A gathering can run across several days. The card's meta line prints the
+  // clock with no date beside it, so a three-day festival says how far it
+  // runs. The overnight case says "(next day)" instead, from
+  // `gatherings:common.nextDayNote`.
+  "card.untilDate": "(until {date})",
 
   // ── Live-data labels (api/myEvents.adapters.ts) ───────────────────────────
   // Platform chrome the live adapter fills in where the API sends a flag
@@ -294,6 +299,10 @@ export const myevents: Catalog = {
   "calendar.legend.pending": "Saved · waitlist · invite",
   "calendar.gridAria": "Event calendar",
   "calendar.nothingPlanned": "Nothing planned",
+  // A later day of a multi-day gathering in the week grid. The start time
+  // belongs to the day it opened, so repeating it here would print an hour
+  // that has already passed.
+  "calendar.stillOn": "Still on",
   "calendar.cellEventCount_one": "{count} event",
   "calendar.cellEventCount_other": "{count} events",
   "calendar.cellNoEvents": "no events",

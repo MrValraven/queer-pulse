@@ -2,6 +2,10 @@ import { apiDelete, apiGet } from "../../../shared/api/client";
 import { API_BASE_URL } from "../../../shared/api/config";
 import type { MediaReference } from "../../../shared/media/mediaReferences";
 
+/** Mirrors the backend's `UploadKind`
+ *  (`queerpulse-backend/src/storage/upload-kinds.ts`) exactly — `/me/media`
+ *  lists an object for EVERY kind, so a kind missing here has no
+ *  `settings:uploads.kind.*` label and renders as a raw translation key. */
 export type MyMediaKind =
   | "avatar"
   | "work-image"
@@ -9,7 +13,11 @@ export type MyMediaKind =
   | "persona-cover"
   | "gathering-photo"
   | "group-avatar"
-  | "listing-photo";
+  | "listing-photo"
+  | "community-cover"
+  | "community-avatar"
+  | "message-image"
+  | "message-document";
 
 export interface MyMediaItem {
   key: string;

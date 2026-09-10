@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   cardDtoToCommunity,
   draftToCreateDto,
@@ -7,7 +7,11 @@ import {
   editableToDraft,
   postDtoToPost,
   postToThread,
+  pulseEventToCommunityEvent,
 } from "./communities.adapters";
+import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
+import { createFormatters } from "../../../shared/i18n/format";
+import type { Catalog, TFunction } from "../../../shared/i18n/types";
 import type { Post } from "../community.model";
 import type { CommunityDetailDTO, CommunityPostDTO } from "./communities.api";
 
@@ -225,5 +229,99 @@ describe("the welcome greeting and the avatar survive the owner's round trip", (
     // has to carry them: omitting them founded every community with an empty
     // tag list, and the founder's picks were silently dropped on save.
     expect(created.tags).toEqual(["sports-fitness"]);
+  });
+});
+
+/**
+ * The Events-tab row a community shows, on both lanes that build it.
+ *
+ * Both lanes now keep a gathering that is UNDERWAY, so an overnight party at
+ * 23:00 and a festival on its second day reach this row. The `dd`/`mm` pill
+ * states the OPENING day, which is honest but incomplete on its own, so the
+ * meta line reads the whole run through `gatheringWhen`.
+ */
+describe("pulseEventToCommunityEvent", () => {
+  // The real `gatherings` catalog, so a key that goes missing fails here too.
+  let gatheringsCatalog: Catalog = catalogs.en.gatherings;
+  beforeAll(async () => {
+    gatheringsCatalog = await loadNamespace("en", "gatherings");
+  });
+  const t: TFunction = (key, options) => {
+    const [, path] = key.split(":");
+    const value = gatheringsCatalog[path ?? ""] ?? key;
+    return Object.entries(options ?? {}).reduce(
+      (accumulated, [token, replacement]) =>
+        accumulated.replace(`{${token}}`, String(replacement)),
+      value,
+    );
+  };
+  const fmt = createFormatters("en-GB");
+
+  // Neither lane's DTO carries a timezone, so the row reads on the reader's
+  // clock and the suite runs on whatever zone the machine is set to. The
+  // assertions below therefore pin the SHAPE of each line (a weekday, or a
+  // dated range) rather than one machine's rendering of it.
+  const START_AT = "2026-09-29T16:00:00.000Z";
+
+  /** A gathering as either lane hands it to the adapter. */
+  type GatheringInput = Parameters<typeof pulseEventToCommunityEvent>[0];
+  const gathering = (
+    overrides: Partial<GatheringInput> = {},
+  ): GatheringInput => ({
+    slug: "autumn-social",
+    title: "Autumn social",
+    startAt: START_AT,
+    venue: "Casa do Pontal",
+    isOnline: false,
+    goingCount: 4,
+    ...overrides,
+  });
+
+  const rowFor = (overrides: Partial<GatheringInput> = {}) =>
+    pulseEventToCommunityEvent(
+      gathering(overrides),
+      fmt,
+      t,
+      "4 going",
+      "Online",
+    );
+
+  it("prints the weekday and the venue for a gathering inside one day", () => {
+    const weekday = fmt.date(new Date(START_AT), { weekday: "long" });
+    expect(rowFor({ endAt: "2026-09-29T20:00:00.000Z" }).meta).toBe(
+      `${weekday} · Casa do Pontal`,
+    );
+  });
+
+  it("prints the whole run for a gathering that spans several days", () => {
+    // A weekday range would not say which week, so a span falls back to dates.
+    expect(rowFor({ endAt: "2026-10-02T14:00:00.000Z" }).meta).toMatch(
+      /^\d{1,2} \w+ to \d{1,2} \w+ · Casa do Pontal$/,
+    );
+  });
+
+  it("keeps the date pill on the gathering's opening day", () => {
+    const row = rowFor({ endAt: "2026-10-02T14:00:00.000Z" });
+    expect(row.dd).toBe(fmt.date(new Date(START_AT), { day: "numeric" }));
+    expect(row.mm).toBe(fmt.date(new Date(START_AT), { month: "short" }));
+  });
+
+  it("carries the end instant onto the row", () => {
+    const row = rowFor({ endAt: "2026-10-02T14:00:00.000Z" });
+    expect(row.endAt?.toISOString()).toBe("2026-10-02T14:00:00.000Z");
+  });
+
+  it("reads exactly as it always did when the lane sends no end", () => {
+    const weekday = fmt.date(new Date(START_AT), { weekday: "long" });
+    const row = rowFor();
+    expect(row.meta).toBe(`${weekday} · Casa do Pontal`);
+    expect(row.endAt).toBeNull();
+  });
+
+  it("names an online gathering with no venue by the online label", () => {
+    const weekday = fmt.date(new Date(START_AT), { weekday: "long" });
+    expect(rowFor({ venue: null, isOnline: true }).meta).toBe(
+      `${weekday} · Online`,
+    );
   });
 });

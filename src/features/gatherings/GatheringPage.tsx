@@ -18,10 +18,13 @@ import { JoinVouchCallout } from "./JoinVouchCallout";
 import { MeetTheTable } from "./table/MeetTheTable";
 import { GatheringSidebar } from "./GatheringSidebar";
 import { GatheringHeroActions } from "./GatheringHeroActions";
+import { GatheringHostBar } from "./GatheringHostBar";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineupSection } from "./GatheringLineupSection";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
 import { GatheringDetailPanels } from "./GatheringDetailPanels";
+import { GatheringGoodToKnow } from "./GatheringGoodToKnow";
+import { formatLabel } from "./gatheringCatalog";
 import {
   gatheringDetails,
   gatheringKind,
@@ -30,6 +33,7 @@ import {
 } from "./data";
 import { useGatheringRsvp } from "./useGatheringRsvp";
 import { eventZoneFormat } from "./eventTimezone";
+import { gatheringWhen } from "./gatheringSchedule";
 import { useEvent } from "./api/useEvent";
 
 import styles from "./GatheringPage.module.css";
@@ -123,6 +127,21 @@ function GatheringDetailBody({
   // Date + start time read in the gathering's own zone, with the short zone
   // name appended when that zone differs from the reader's.
   const zone = eventZoneFormat(gathering.timezone, gathering.date);
+  // One shared formatter owns the whole schedule, so an overnight or multi-day
+  // gathering says so here in the same words as every other surface.
+  const when = gatheringWhen(
+    gathering.date,
+    gathering.endAt,
+    fmt,
+    t,
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      ...zone.dateOptions,
+    },
+    zone.timeOptions,
+  );
 
   // The "more gatherings" rail is mock-only; live has no list endpoint here, so
   // it stays empty rather than leaking demo gatherings into production.
@@ -146,7 +165,13 @@ function GatheringDetailBody({
           <div className={styles.grid}>
             <div>
               <div className={styles.typeRow}>
-                <span className={styles.type}>{gathering.type}</span>
+                {/* The stored value is a catalog key or the host's own words,
+                    never a label. `formatLabel` resolves the first, leaves the
+                    second alone, and gives an unset gathering the generic word
+                    in the reader's own language. */}
+                <span className={styles.type}>
+                  {formatLabel(t, gathering.type)}
+                </span>
                 <Tag
                   className={
                     kind === "event" ? styles.badgeEvent : styles.badgeGathering
@@ -165,16 +190,16 @@ function GatheringDetailBody({
               <div className={styles.meta}>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
-                  {fmt.date(gathering.date, {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    ...zone.dateOptions,
-                  })}
+                  {when.dateText}
                 </span>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
-                  {fmt.time(gathering.date, zone.timeOptions)}
+                  {/* The next-day note rides inside the time chip as one
+                      text node. It explains the clock range beside it, and
+                      `metaItem` gaps its flex children apart. */}
+                  {when.nextDayNote
+                    ? `${when.timeText} ${when.nextDayNote}`
+                    : when.timeText}
                 </span>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
@@ -192,6 +217,19 @@ function GatheringDetailBody({
                 rsvp={rsvp}
               />
 
+              {/* The host's own strip. It sits under the member actions in a
+                  quieter register, so the RSVP keeps the page's first call on
+                  a reader's attention. `viewerIsOrganizer` comes from the
+                  server's `isOrganizer` and the demo registry never sets it,
+                  so this is live-only by construction: no demo gathering can
+                  put a demo persona in front of edit / cancel / delete. */}
+              {gathering.viewerIsOrganizer && (
+                <GatheringHostBar
+                  gathering={gathering}
+                  routeParam={routeParam}
+                />
+              )}
+
               <GoingAttendeesPreview gathering={gathering} />
 
               {/* LOC-04/06/08 — announcements, where it actually is, the six
@@ -202,10 +240,17 @@ function GatheringDetailBody({
                 demoMode={demoMode}
               />
 
+              {/* The format's own answers, live only: the demo registry has no
+                  details bag, and the component renders nothing without one. */}
+              <GatheringGoodToKnow gathering={gathering} />
+
               {/* "Meet the table" is demo-only: the backend exposes no seat /
                   attendee data yet, so live mode omits it rather than leak the
-                  mock seats into production. */}
-              {demoMode && gathering.type === "Supper Club" && (
+                  mock seats into production. It keys off the FAMILY now. The
+                  old check compared against the demo registry's spelling
+                  ("Supper Club"), which was not a value the wizard could ever
+                  store, so the module could never fire on a real gathering. */}
+              {demoMode && gathering.gatheringFamily === "eat" && (
                 <MeetTheTable
                   title={gathering.title}
                   neighbourhood={gathering.hood}

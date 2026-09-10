@@ -482,3 +482,31 @@
     transform: none;
   }
 }
+
+/* The gathering's format, one small line above the title. The host may have
+   written their own words rather than picked a catalog format, so the line
+   truncates on one line instead of wrapping over the title. No bottom margin:
+   the parents' own `gap` spaces it, which keeps the kicker closest to the
+   title it belongs to. */
+.formatLine,
+.formatLineScrim {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.formatLine {
+  color: var(--ink-60);
+}
+
+/* The poster's overlay sits on artwork, so it takes the cream register the
+   rest of that overlay already uses. */
+.formatLineScrim {
+  color: rgba(var(--cream-rgb), 0.85);
+}

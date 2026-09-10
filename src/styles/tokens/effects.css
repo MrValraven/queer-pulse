@@ -23,6 +23,7 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* decelerate in */
   --ease-in: cubic-bezier(0.4, 0, 1, 1); /* accelerate out */
   --ease-std: cubic-bezier(0.25, 0.1, 0.25, 1); /* standard */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* ease both ends */
 
   /* ── Durations ── */
   --dur-fast: 150ms;
@@ -307,6 +308,10 @@
   --ring-accent: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
   --ring-accent-strong: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
   --ring-accent-soft: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+  /* The same ring at zero alpha: the END of a flash, so a "look here" ring can
+     fade out instead of being switched off between two frames. Only ever the
+     100% stop of a keyframe whose earlier stop is --ring-accent-strong. */
+  --ring-accent-clear: 0 0 0 3px rgba(var(--accent-rgb), 0);
   --ring-jade: 0 0 0 3px rgba(var(--jade-rgb), 0.2);
   --ring-danger: 0 0 0 3px rgba(var(--danger-rgb), 0.2);
   --ring-plum: 0 0 0 3px rgba(var(--plum-rgb), 0.16);

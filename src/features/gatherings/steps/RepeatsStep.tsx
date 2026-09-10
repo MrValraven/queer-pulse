@@ -5,10 +5,12 @@ import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   CADENCE_OPTIONS,
+  GATE_ANCHOR,
   MAX_RECURRENCE_OCCURRENCES,
   MIN_RECURRENCE_OCCURRENCES,
 } from "../createGathering.data";
 import type { GatheringForm } from "../useGatheringForm";
+import { StepRequirementBadge } from "./StepRequirement";
 import styles from "../CreateGatheringPage.module.css";
 
 /**
@@ -31,6 +33,7 @@ export function RepeatsStep({ form }: { form: GatheringForm }) {
         />
       </div>
       <p className={styles.stepSub}>{t("gatherings:create.step2b.sub")}</p>
+      <StepRequirementBadge required={false} />
 
       <div
         className={styles.checkRow}
@@ -100,52 +103,58 @@ export function RepeatsStep({ form }: { form: GatheringForm }) {
             </div>
           </div>
 
-          {form.endType === "count" ? (
-            <>
-              <label className={styles.label} htmlFor={`${fieldId}-endCount`}>
-                {t("gatherings:create.step2b.endCountLabel")}
-              </label>
-              <input
-                id={`${fieldId}-endCount`}
-                className={styles.input}
-                type="number"
-                min={MIN_RECURRENCE_OCCURRENCES}
-                max={MAX_RECURRENCE_OCCURRENCES}
-                value={form.endCount}
-                onChange={(event) => form.setEndCount(event.target.value)}
-              />
-              <p className={styles.hint}>
-                {t("gatherings:create.step2b.endCountHint", {
-                  max: MAX_RECURRENCE_OCCURRENCES,
-                })}
-              </p>
-            </>
-          ) : (
-            <>
-              <label
-                id={`${fieldId}-endUntil-label`}
-                className={styles.label}
-                htmlFor={`${fieldId}-endUntil`}
-              >
-                {t("gatherings:create.step2b.endUntilLabel")}
-              </label>
-              <DatePicker
-                mode="date"
-                id={`${fieldId}-endUntil`}
-                labelledBy={`${fieldId}-endUntil-label`}
-                min={form.date || new Date().toISOString().slice(0, 10)}
-                invalid={!form.recurrenceValid}
-                value={form.endUntil || null}
-                onChange={(value) => form.setEndUntil(value ?? "")}
-              />
-            </>
-          )}
+          {/* The end condition and its error share a wrapper the checklist's
+              "finish the repeat schedule" row can jump to — either control can
+              be the one that is wrong, and which of the two is on screen
+              depends on the end-type select above. */}
+          <div id={GATE_ANCHOR.recurrence}>
+            {form.endType === "count" ? (
+              <>
+                <label className={styles.label} htmlFor={`${fieldId}-endCount`}>
+                  {t("gatherings:create.step2b.endCountLabel")}
+                </label>
+                <input
+                  id={`${fieldId}-endCount`}
+                  className={styles.input}
+                  type="number"
+                  min={MIN_RECURRENCE_OCCURRENCES}
+                  max={MAX_RECURRENCE_OCCURRENCES}
+                  value={form.endCount}
+                  onChange={(event) => form.setEndCount(event.target.value)}
+                />
+                <p className={styles.hint}>
+                  {t("gatherings:create.step2b.endCountHint", {
+                    max: MAX_RECURRENCE_OCCURRENCES,
+                  })}
+                </p>
+              </>
+            ) : (
+              <>
+                <label
+                  id={`${fieldId}-endUntil-label`}
+                  className={styles.label}
+                  htmlFor={`${fieldId}-endUntil`}
+                >
+                  {t("gatherings:create.step2b.endUntilLabel")}
+                </label>
+                <DatePicker
+                  mode="date"
+                  id={`${fieldId}-endUntil`}
+                  labelledBy={`${fieldId}-endUntil-label`}
+                  min={form.date || new Date().toISOString().slice(0, 10)}
+                  invalid={!form.recurrenceValid}
+                  value={form.endUntil || null}
+                  onChange={(value) => form.setEndUntil(value ?? "")}
+                />
+              </>
+            )}
 
-          {!form.recurrenceValid && (
-            <p className={styles.hint}>
-              {t("gatherings:create.step2b.invalidHint")}
-            </p>
-          )}
+            {!form.recurrenceValid && (
+              <p className={styles.hint}>
+                {t("gatherings:create.step2b.invalidHint")}
+              </p>
+            )}
+          </div>
         </>
       )}
     </div>

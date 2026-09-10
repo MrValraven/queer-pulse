@@ -91,7 +91,10 @@ export const INITIAL_EVENTS: MyEvent[] = [
     title: "Queer Karaoke Night",
     date: "2026-07-03",
     start: "21:00",
-    end: "23:59",
+    // Runs past midnight into the Saturday. The shape could only say "23:59"
+    // before spans existed, which quietly cut the night short.
+    end: "02:30",
+    endDate: "2026-07-04",
     venue: "Purex, Bairro Alto",
     going: 28,
     reminder: false,
@@ -349,7 +352,8 @@ export const INITIAL_EVENTS: MyEvent[] = [
     title: "Summer Vogue Ball",
     date: "2026-07-25",
     start: "22:00",
-    end: "23:59",
+    end: "04:00",
+    endDate: "2026-07-26",
     venue: "Musicbox, Cais do Sodré",
     going: 200,
     paid: "€12",

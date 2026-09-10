@@ -389,6 +389,7 @@ export const admin: Catalog = {
   "members.verify.source.members_explainer": "Explicação dos membros",
   "members.verify.source.personas_explainer":
     "Explicação dos perfis alternativos",
+  "members.verify.source.housing_explainer": "Explicação da habitação",
   "members.verify.source.sign_in": "Página de entrada",
   "members.verify.source.barter": "Mural de trocas",
   "members.verify.source.employer_reviews": "Avaliações de empregadores",

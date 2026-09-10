@@ -41,7 +41,9 @@
   border-radius: var(--radius-4);
   font-size: var(--text-14);
   color: var(--ink);
-  cursor: default;
+  /* A segment IS typeable (digits, arrows, backspace), so it takes the text
+     caret. `default` read as inert and left the field looking like a label. */
+  cursor: text;
   outline: none;
   transition:
     background 0.16s var(--ease),
