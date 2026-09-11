@@ -3206,12 +3206,18 @@ button.pp-row {
 .sheetmarks {
   display: none;
 }
+/* Never a scroll anchor. The overlay comes before the hero in the DOM and its
+   bottom marks ride the sheet's bottom edge, so whenever that edge is on screen
+   (a persona with few sections) Chrome picks a corner mark as the anchor. The
+   bio's Read more then grows the sheet, and Chrome scrolls down to hold the mark
+   still: the text appears to open upwards and the reader lands at its end. */
 .pp[data-skin="workshop"] .sheetmarks {
   display: block;
   position: absolute;
   inset: 14px;
   pointer-events: none;
   z-index: 3;
+  overflow-anchor: none;
 }
 .pp[data-skin="workshop"] .sm {
   position: absolute;

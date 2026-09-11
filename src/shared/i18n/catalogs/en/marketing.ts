@@ -2451,6 +2451,18 @@ export const marketing: Catalog = {
     "Vouching happens on a member's profile",
   "changelog.entries.vouching-happens-on-each-profile.body":
     "The separate vouch page and its account menu link are gone. Open someone's profile to vouch for them.",
+  "changelog.entries.turn-a-blocked-location-back-on.title":
+    "Turn a blocked location back on from the directory",
+  "changelog.entries.turn-a-blocked-location-back-on.body":
+    "Steps for your own browser and device, and in Chrome a button that asks for location again.",
+  "changelog.entries.accepting-a-connection-request-works-again.title":
+    "Accepting a connection request works again",
+  "changelog.entries.accepting-a-connection-request-works-again.body":
+    "Accepting had failed since 31 Aug and left the request waiting; those requests can be accepted now.",
+  "changelog.entries.read-more-on-a-workshop-persona-keeps-your-place.title":
+    "Read more on a Workshop persona keeps your place",
+  "changelog.entries.read-more-on-a-workshop-persona-keeps-your-place.body":
+    "A long bio now opens below the line you were reading, also on personas with few sections or none.",
   "changelog.entries.listing-photos-flag-problems-before-you-submit.title":
     "Business listing photos flag problems before you submit",
   "changelog.entries.listing-photos-flag-problems-before-you-submit.body":
@@ -7580,6 +7592,67 @@ export const marketing: Catalog = {
   "local.nearMe.timeout": "That took too long. Try again whenever you like.",
   "local.nearMe.unavailable":
     "Your device could not work out where you are right now.",
+  // Blocked site: the browser's own button where it exists, and a way to the
+  // setting everywhere (LocationHelpModal).
+  "local.nearMe.deniedRecoverable":
+    "Location is off for this site. Press the button to allow it again.",
+  "local.nearMe.help.open": "Show me how",
+  "local.nearMe.help.stillOff": "Still not working?",
+  "local.nearMe.help.title": "Turn your location back on",
+  "local.nearMe.help.sub":
+    "Your browser is blocking location for this site, and only you can change that. Here is where the setting lives.",
+  "local.nearMe.help.chromium.title": "In Chrome, Edge or Brave",
+  "local.nearMe.help.chromium.step1":
+    "Click the icon at the left end of the address bar to see the <b>site information</b>.",
+  "local.nearMe.help.chromium.step2":
+    "Switch <b>Location</b> on, or set it to <b>Allow</b>.",
+  "local.nearMe.help.chromium.step3":
+    "Come back here and press <b>Try again</b>.",
+  "local.nearMe.help.safari.title": "In Safari",
+  "local.nearMe.help.safari.step1":
+    "In the menu bar, choose <b>Safari</b>, then <b>Settings</b>.",
+  "local.nearMe.help.safari.step2":
+    "Open the <b>Websites</b> tab and pick <b>Location</b> in the list on the left.",
+  "local.nearMe.help.safari.step3":
+    "Set this site to <b>Ask</b> or <b>Allow</b>, then press <b>Try again</b>.",
+  "local.nearMe.help.firefox.title": "In Firefox",
+  "local.nearMe.help.firefox.step1":
+    "Click the <b>permissions</b> icon at the left end of the address bar.",
+  "local.nearMe.help.firefox.step2":
+    "Clear the block next to <b>Access your location</b>.",
+  "local.nearMe.help.firefox.step3":
+    "Reload the page, then press <b>Use my location</b>.",
+  "local.nearMe.help.ios.title": "On iPhone or iPad",
+  "local.nearMe.help.ios.step1":
+    "In Safari, open the <b>page menu</b> next to the address and choose <b>Website Settings</b>.",
+  "local.nearMe.help.ios.step2":
+    "Set <b>Location</b> to <b>Ask</b> or <b>Allow</b>.",
+  "local.nearMe.help.ios.step3":
+    "Using another browser? Open <b>Settings</b>, then <b>Apps</b>, pick that browser and allow <b>Location</b>.",
+  "local.nearMe.help.android.title": "On Android",
+  "local.nearMe.help.android.step1":
+    "Tap the icon at the left end of the address bar to see the <b>site information</b>.",
+  "local.nearMe.help.android.step2":
+    "Tap <b>Permissions</b>, then switch <b>Location</b> on.",
+  "local.nearMe.help.android.step3": "Come back here and tap <b>Try again</b>.",
+  "local.nearMe.help.other.title": "In your browser",
+  "local.nearMe.help.other.step1":
+    "Open the <b>site settings</b> for this page, usually from the icon at the left end of the address bar.",
+  "local.nearMe.help.other.step2":
+    "Set <b>Location</b> to <b>Allow</b> or <b>Ask</b>.",
+  "local.nearMe.help.other.step3": "Come back here and press <b>Try again</b>.",
+  "local.nearMe.help.systemTitle": "Still off?",
+  "local.nearMe.help.system.mac":
+    "Your Mac can switch location off for a whole browser. Open <b>System Settings</b>, then <b>Privacy & Security</b>, then <b>Location Services</b>, and switch your browser on.",
+  "local.nearMe.help.system.windows":
+    "Windows can switch location off for every app. Open <b>Settings</b>, then <b>Privacy & security</b>, then <b>Location</b>, and switch location services on.",
+  "local.nearMe.help.system.ios":
+    "Your device can switch location off for Safari as a whole. Open <b>Settings</b>, then <b>Privacy & Security</b>, then <b>Location Services</b>, and set <b>Safari Websites</b> to <b>While Using the App</b>.",
+  "local.nearMe.help.system.android":
+    "Your phone can switch location off entirely. Swipe down from the top of the screen and make sure <b>Location</b> is on.",
+  "local.nearMe.help.system.other":
+    "Your device can also switch location off for every app. Check its privacy or location settings, then press <b>Try again</b>.",
+  "local.nearMe.help.tryAgain": "Try again",
   "local.nearMe.walkChip": "{minutes} min walk",
   "local.nearMe.walkAria": "About {minutes} minutes on foot from you",
   "local.filter.showResults_one": "Show {count} place",

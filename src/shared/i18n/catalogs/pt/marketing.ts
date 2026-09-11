@@ -2511,6 +2511,18 @@ export const marketing: Catalog = {
     "Os votos de confiança dão-se no perfil de cada pessoa",
   "changelog.entries.vouching-happens-on-each-profile.body":
     "A página própria dos votos de confiança e o atalho no menu saíram. Abre o perfil de alguém para lhe dares o teu voto.",
+  "changelog.entries.turn-a-blocked-location-back-on.title":
+    "Volta a ligar uma localização bloqueada a partir do diretório",
+  "changelog.entries.turn-a-blocked-location-back-on.body":
+    "Passos para o teu navegador e dispositivo e, no Chrome, um botão que volta a pedir a localização.",
+  "changelog.entries.accepting-a-connection-request-works-again.title":
+    "Aceitar um pedido de ligação volta a funcionar",
+  "changelog.entries.accepting-a-connection-request-works-again.body":
+    "Desde 31 de agosto, aceitar dava erro e o pedido ficava à espera; já podes aceitar esses pedidos.",
+  "changelog.entries.read-more-on-a-workshop-persona-keeps-your-place.title":
+    "Ler mais numa persona Oficina mantém-te onde estavas",
+  "changelog.entries.read-more-on-a-workshop-persona-keeps-your-place.body":
+    "Uma bio longa abre-se agora abaixo da linha que estavas a ler, também em personas com poucas secções ou nenhuma.",
   "changelog.entries.listing-photos-flag-problems-before-you-submit.title":
     "As fotos do negócio assinalam problemas antes de enviares",
   "changelog.entries.listing-photos-flag-problems-before-you-submit.body":
@@ -7694,6 +7706,67 @@ export const marketing: Catalog = {
     "Isto demorou demasiado. Tenta de novo quando quiseres.",
   "local.nearMe.unavailable":
     "O teu dispositivo não conseguiu perceber onde estás neste momento.",
+  "local.nearMe.deniedRecoverable":
+    "A localização está desligada para este site. Carrega no botão para a voltares a permitir.",
+  "local.nearMe.help.open": "Mostra-me como",
+  "local.nearMe.help.stillOff": "Continua sem funcionar?",
+  "local.nearMe.help.title": "Volta a ligar a tua localização",
+  "local.nearMe.help.sub":
+    "O teu navegador está a bloquear a localização para este site, e só tu podes mudar isso. É aqui que fica a definição.",
+  "local.nearMe.help.chromium.title": "No Chrome, Edge ou Brave",
+  "local.nearMe.help.chromium.step1":
+    "Clica no ícone no início da barra de endereço para ver as <b>informações do site</b>.",
+  "local.nearMe.help.chromium.step2":
+    "Liga a <b>Localização</b> ou muda-a para <b>Permitir</b>.",
+  "local.nearMe.help.chromium.step3":
+    "Volta aqui e carrega em <b>Tentar de novo</b>.",
+  "local.nearMe.help.safari.title": "No Safari",
+  "local.nearMe.help.safari.step1":
+    "Na barra de menus, escolhe <b>Safari</b> e depois <b>Definições</b>.",
+  "local.nearMe.help.safari.step2":
+    "Abre o separador <b>Sites</b> e escolhe <b>Localização</b> na lista à esquerda.",
+  "local.nearMe.help.safari.step3":
+    "Muda este site para <b>Perguntar</b> ou <b>Permitir</b> e carrega em <b>Tentar de novo</b>.",
+  "local.nearMe.help.firefox.title": "No Firefox",
+  "local.nearMe.help.firefox.step1":
+    "Clica no ícone de <b>permissões</b> no início da barra de endereço.",
+  "local.nearMe.help.firefox.step2":
+    "Remove o bloqueio ao lado de <b>Aceder à tua localização</b>.",
+  "local.nearMe.help.firefox.step3":
+    "Recarrega a página e clica em <b>Usar a minha localização</b>.",
+  "local.nearMe.help.ios.title": "No iPhone ou iPad",
+  "local.nearMe.help.ios.step1":
+    "No Safari, abre o <b>menu da página</b> ao lado do endereço e escolhe <b>Definições do site</b>.",
+  "local.nearMe.help.ios.step2":
+    "Muda a <b>Localização</b> para <b>Perguntar</b> ou <b>Permitir</b>.",
+  "local.nearMe.help.ios.step3":
+    "Usas outro navegador? Abre <b>Definições</b>, depois <b>Apps</b>, escolhe esse navegador e permite a <b>Localização</b>.",
+  "local.nearMe.help.android.title": "No Android",
+  "local.nearMe.help.android.step1":
+    "Toca no ícone no início da barra de endereço para ver as <b>informações do site</b>.",
+  "local.nearMe.help.android.step2":
+    "Toca em <b>Autorizações</b> e liga a <b>Localização</b>.",
+  "local.nearMe.help.android.step3":
+    "Volta aqui e toca em <b>Tentar de novo</b>.",
+  "local.nearMe.help.other.title": "No teu navegador",
+  "local.nearMe.help.other.step1":
+    "Abre as <b>definições do site</b> desta página, normalmente a partir do ícone no início da barra de endereço.",
+  "local.nearMe.help.other.step2":
+    "Muda a <b>Localização</b> para <b>Permitir</b> ou <b>Perguntar</b>.",
+  "local.nearMe.help.other.step3":
+    "Volta aqui e carrega em <b>Tentar de novo</b>.",
+  "local.nearMe.help.systemTitle": "Continua desligada?",
+  "local.nearMe.help.system.mac":
+    "O teu Mac pode desligar a localização para um navegador inteiro. Abre <b>Definições do Sistema</b>, depois <b>Privacidade e segurança</b>, depois <b>Serviços de localização</b>, e liga o teu navegador.",
+  "local.nearMe.help.system.windows":
+    "O Windows pode desligar a localização para todas as apps. Abre <b>Definições</b>, depois <b>Privacidade e segurança</b>, depois <b>Localização</b>, e liga os serviços de localização.",
+  "local.nearMe.help.system.ios":
+    "O teu dispositivo pode desligar a localização para o Safari inteiro. Abre <b>Definições</b>, depois <b>Privacidade e segurança</b>, depois <b>Serviços de localização</b>, e muda <b>Sites no Safari</b> para <b>Durante a utilização da app</b>.",
+  "local.nearMe.help.system.android":
+    "O teu telemóvel pode desligar a localização por completo. Desliza a partir do topo do ecrã e confirma que a <b>Localização</b> está ligada.",
+  "local.nearMe.help.system.other":
+    "O teu dispositivo também pode desligar a localização para todas as apps. Vê as definições de privacidade ou de localização e carrega em <b>Tentar de novo</b>.",
+  "local.nearMe.help.tryAgain": "Tentar de novo",
   "local.nearMe.walkChip": "{minutes} min a pé",
   "local.nearMe.walkAria": "Cerca de {minutes} minutos a pé de ti",
   "local.filter.showResults_one": "Ver {count} lugar",

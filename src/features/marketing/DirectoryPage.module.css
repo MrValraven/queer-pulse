@@ -550,3 +550,46 @@
   block-size: 12px;
   flex: none;
 }
+/* "Show me how" rides inside the note's sentence, so it takes the note's type
+   and reads as a control through weight and underline alone. */
+.nearMeHelpLink {
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+/* Holds the browser's `<geolocation>` element without a box of its own, so the
+   element is the grid or flex item the "Use my location" button was. */
+.nearMePermissionHost {
+  display: contents;
+}
+/* The browser's own button (LocationPermissionElement). Chrome draws its text
+   and icon, and DEACTIVATES it when the styling could mislead: colour and
+   background both fully opaque with 3:1 contrast, a font no smaller than
+   `small` (13px), equal padding on opposite sides, and a content box no taller
+   than 3em. With an explicit height Chrome drops the block padding and centres
+   the label itself, so 38px of content-box plus the two border pixels makes
+   the 40px of the controls beside it whatever font loads (measured in Chromium
+   149). Dark mode needs a colour with no alpha, since --text-strong is
+   translucent there and a translucent colour switches the element off. */
+.nearMePermission {
+  box-sizing: content-box;
+  height: 38px;
+  padding: 0 15px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  background-color: var(--paper);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+:global([data-theme="dark"]) .nearMePermission {
+  color: rgba(var(--cream-rgb), 1);
+}

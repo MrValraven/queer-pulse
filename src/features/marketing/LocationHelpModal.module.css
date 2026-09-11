@@ -1,0 +1,82 @@
+/* The browser's steps sit on a cream card, the same how-to shape as
+   InstallAppModal, so both "go change a setting" dialogs read alike. */
+.howto {
+  padding: 16px 18px;
+  background: var(--cream);
+  border-radius: var(--radius-12);
+}
+
+.sectionTitle {
+  margin: 0 0 10px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.stepNumber {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-16);
+  color: var(--accent-ink);
+  line-height: 1;
+  padding-top: 1px;
+}
+
+.step b,
+.systemBody b {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+/* The device-wide switch, indented to the card's text so the two sections
+   line up. */
+.system {
+  margin-top: 18px;
+  padding: 0 18px;
+}
+
+.systemBody {
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.privacy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 18px 0 0;
+  padding: 0 18px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.privacy svg {
+  inline-size: 12px;
+  block-size: 12px;
+  flex: none;
+}
+
+.tryAgain {
+  width: 100%;
+  justify-content: center;
+}

@@ -66,6 +66,32 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "accepting-a-connection-request-works-again",
+        category: "fix",
+        date: "11 Sep 2026",
+        ...entryKeys("accepting-a-connection-request-works-again"),
+      },
+      {
+        id: "read-more-on-a-workshop-persona-keeps-your-place",
+        category: "fix",
+        date: "11 Sep 2026",
+        ...entryKeys("read-more-on-a-workshop-persona-keeps-your-place"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "turn-a-blocked-location-back-on",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("turn-a-blocked-location-back-on"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "listing-photos-flag-problems-before-you-submit",
         category: "improvement",
         date: "11 Sep 2026",
