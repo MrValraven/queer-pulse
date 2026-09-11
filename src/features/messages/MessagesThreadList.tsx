@@ -67,9 +67,10 @@ export function MessagesThreadList({
   onMarkThreadRead: (conversationId: string) => void;
   /** Row menu "Mark as unread" (PRD-225). */
   onMarkThreadUnread: (conversationId: string) => void;
-  /** Desktop, where AppShell's `desktopChromeless` leaves this route with no
-   *  site nav: the panel carries the wordmark and the account footer itself.
-   *  False on mobile, which still has the app bar and the bottom tab bar. */
+  /** Desktop, where AppShell's `chromeless` leaves this route with no site
+   *  nav: the panel carries the account footer itself. False on mobile, which
+   *  keeps the bottom tab bar and gets a back chevron in the header instead,
+   *  since the app bar that held one is hidden here too. */
   showRailChrome: boolean;
 }) {
   const queryClient = useQueryClient();
@@ -123,6 +124,7 @@ export function MessagesThreadList({
         activeTab={activeTab}
         onTabChange={setActiveTab}
         requestsCount={requestsCount}
+        showBackButton={!showRailChrome}
       />
 
       <div className={styles.threadList} ref={threadListRef}>

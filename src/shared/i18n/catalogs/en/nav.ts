@@ -39,6 +39,9 @@ export const nav: Catalog = {
   forum: "Forum",
   calendar: "Calendar",
   communities: "Communities & Collectives",
+  // Mobile bottom tab label (bottomTabs.ts). The full name above cannot fit a
+  // fifth of a phone's width without wrapping, so the tab gets the short form.
+  "tab.communities": "Communities",
   arriving: "New to Lisbon?",
   skills: "Skills",
   feed: "Home",

@@ -59,11 +59,16 @@ export const MEMBER_TABS: BottomTab[] = [
     matchPrefixes: [routes.events, routes.calendar, routes.gatherings],
   },
   {
-    key: "members",
-    labelKey: "nav:members",
-    href: routes.members,
+    // The members directory stays one tap away under More (Community menu).
+    // A community's own page lives at `/community/:slug`, a separate root, and
+    // stays off this tab's prefixes on purpose: navDirection compares tab
+    // roots, so a second root here would turn a hub-to-community tap into a
+    // tab switch and drop the push transition.
+    key: "communities",
+    labelKey: "nav:tab.communities",
+    href: routes.communities,
     icon: FiUsers,
-    matchPrefixes: [routes.members],
+    matchPrefixes: [routes.communities],
   },
 ];
 

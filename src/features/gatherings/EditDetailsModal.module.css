@@ -1,0 +1,58 @@
+/* The edit-details modal's grouping: a heading per section, so the long form
+   reads in parts on a phone, and the label and hint of the fields with no
+   single native control (chips, switches, the cover, the cost segment).
+   The labels match the modal's other uppercase labels (AudienceScopeField,
+   the format details). */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+/* The hairline sits evenly between two sections: the last field drops its own
+   bottom margin, so the list gap plus the top margin above the line matches
+   the padding below it. */
+.section > :last-child {
+  margin-bottom: 0;
+}
+.section + .section {
+  margin-top: 4px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.sectionTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+.group {
+  min-width: 0;
+  margin-bottom: 16px;
+}
+.groupLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.groupHint {
+  margin: 0 0 10px;
+  font-size: var(--text-13);
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+
+/* The cost segment wraps onto a second line on a narrow sheet. */
+.group .costSegment {
+  flex-wrap: wrap;
+  max-width: 100%;
+}

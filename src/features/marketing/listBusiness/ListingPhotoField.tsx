@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import {
   ImageSlot,
@@ -7,8 +7,14 @@ import {
 } from "../../../shared/components/ui";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { ImageProcessingError } from "../../members/api/uploadProcessing";
-import { isPastableImageUrl } from "./listBusiness.data";
+import {
+  ImageProcessingError,
+  validateTypeAndSize,
+} from "../../members/api/uploadProcessing";
+import {
+  PASTED_IMAGE_URL_PROBLEM_KEYS,
+  pastedImageUrlProblem,
+} from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
 
 interface ListingPhotoFieldProps {
@@ -25,6 +31,10 @@ interface ListingPhotoFieldProps {
     file: File,
     options?: { crop?: CropRect },
   ) => Promise<{ key: string; previewUrl: string }>;
+  /** True when the last submit or save came back refusing THIS slot's photo.
+   *  The form clears it once the slot's photo changes, so the message never
+   *  outlives the photo it was about. */
+  isRejectedByServer: boolean;
   onResolved: (persist: string, preview: string) => void;
   onRemove: () => void;
 }
@@ -35,6 +45,11 @@ interface ListingPhotoFieldProps {
  * shared `useUploadImage` pipeline (owned at wizard level, passed in as
  * `uploadPhoto`); a pasted URL is applied live. Both call `onResolved(persist,
  * preview)` — `persist` lands in `draft.photos`, `preview` in `photoPreviews`.
+ *
+ * Every way a photo can be refused is said on the slot itself: a file in a
+ * format or size the upload pipeline refuses, a pasted link the backend's
+ * `@IsImageReference` would refuse, a pasted link that does not load an image,
+ * and a save the server rejected because of this slot.
  */
 export function ListingPhotoField({
   tint,
@@ -44,15 +59,23 @@ export function ListingPhotoField({
   note,
   displayValue,
   uploadPhoto,
+  isRejectedByServer,
   onResolved,
   onRemove,
 }: ListingPhotoFieldProps) {
   const { t } = useTranslation();
+  const errorId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [urlText, setUrlText] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
+
+  function describeUploadFailure(uploadFailure: unknown): string {
+    return uploadFailure instanceof ImageProcessingError
+      ? t(uploadFailure.i18nKey, uploadFailure.values)
+      : t("marketing:listBusiness.step4.photo.uploadError");
+  }
 
   /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
   async function uploadAndApply(file: File, crop?: CropRect) {
@@ -63,17 +86,23 @@ export function ListingPhotoField({
       setUrlText("");
       onResolved(key, previewUrl);
     } catch (uploadFailure) {
-      setError(
-        uploadFailure instanceof ImageProcessingError
-          ? t(uploadFailure.i18nKey, uploadFailure.values)
-          : t("marketing:listBusiness.step4.photo.uploadError"),
-      );
+      setError(describeUploadFailure(uploadFailure));
     } finally {
       setUploading(false);
     }
   }
 
   function pickFile(file: File) {
+    // Check the format and size first, so an unsupported file (a HEIC, an SVG,
+    // a PDF) is named on this slot straight away instead of opening the
+    // reframer on an image it cannot show. The upload pipeline checks again.
+    try {
+      validateTypeAndSize(file, "listing-photo");
+    } catch (validationFailure) {
+      setError(describeUploadFailure(validationFailure));
+      return;
+    }
+    setError(null);
     // GIFs bypass the reframer entirely (animation would be destroyed by the
     // crop/re-encode path) and upload directly, as before.
     if (file.type === "image/gif") {
@@ -98,12 +127,24 @@ export function ListingPhotoField({
       onRemove();
       return;
     }
-    if (!isPastableImageUrl(trimmed)) {
-      setError(t("marketing:listBusiness.step4.photo.urlInvalid"));
+    const problem = pastedImageUrlProblem(trimmed);
+    if (problem) {
+      setError(t(PASTED_IMAGE_URL_PROBLEM_KEYS[problem]));
       return;
     }
     setError(null);
     onResolved(trimmed, trimmed);
+  }
+
+  /** A pasted link that passed the checks but did not load an image (a web
+   *  page, a 404) is dropped so it cannot be saved as a broken photo. A photo
+   *  that was already on the listing is left alone: one failed load may just
+   *  be the network. */
+  function handleLoadError() {
+    const pastedUrl = urlText.trim();
+    if (!pastedUrl || pastedUrl !== displayValue) return;
+    setError(t("marketing:listBusiness.step4.photo.urlDidNotLoad"));
+    onRemove();
   }
 
   function clear() {
@@ -111,6 +152,12 @@ export function ListingPhotoField({
     setError(null);
     onRemove();
   }
+
+  const visibleError =
+    error ??
+    (isRejectedByServer
+      ? t("marketing:listBusiness.step4.photo.serverRejected")
+      : null);
 
   return (
     <div
@@ -126,6 +173,7 @@ export function ListingPhotoField({
         srcSize={wide ? 1280 : 640}
         src={displayValue || undefined}
         placeholder={placeholder}
+        onLoadError={handleLoadError}
       />
       <div className={styles.photoActions}>
         <button
@@ -156,14 +204,16 @@ export function ListingPhotoField({
         type="url"
         className={styles.photoUrlInput}
         aria-label={t("marketing:listBusiness.step4.photo.urlPlaceholder")}
+        aria-invalid={visibleError ? true : undefined}
+        aria-describedby={visibleError ? errorId : undefined}
         placeholder={t("marketing:listBusiness.step4.photo.urlPlaceholder")}
         value={urlText}
         onChange={(event) => applyUrl(event.target.value)}
         disabled={uploading}
       />
-      {error && (
-        <p className={styles.photoError} role="alert">
-          {error}
+      {visibleError && (
+        <p id={errorId} className={styles.photoError} role="alert">
+          {visibleError}
         </p>
       )}
       <input

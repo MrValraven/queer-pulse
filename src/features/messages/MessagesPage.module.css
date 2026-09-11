@@ -3,12 +3,12 @@
    ONLY scroll surface; nothing stacks below it that could give the page a
    second, competing scroll.
    `--messages-top-offset` is the real height of whatever sits above `.app`.
-   On desktop that is now nothing: `AppShell`'s `desktopChromeless` prop stops
-   AppChrome mounting the Navbar (and, in sidebar nav mode, the left rail it
-   returns instead) above 860px, because this route carries its own wordmark
-   and account footer inside the inbox panel. So the base value is 0 and the
-   panel sits flush against the viewport top. The mobile override below swaps
-   in the app-bar's own real height, since a phone keeps that bar.
+   That is now nothing on any viewport: `AppShell`'s `chromeless` prop stops
+   AppChrome showing the top bar (and, in sidebar nav mode on desktop, the left
+   rail the Navbar returns instead), because this route carries its own
+   wordmark, back chevron and account footer inside the inbox panel. So the
+   value is 0 and the panel sits flush against the viewport top. The mobile
+   rule below only clears the notch.
    `--bottom-inset` is the existing token standalone.css already publishes for
    exactly this purpose
    (0px above the 860px mobile breakpoint; BottomTabBar's total occupied
@@ -31,30 +31,24 @@
       max(var(--bottom-inset), var(--keyboard-inset, 0px))
   );
 }
-/* Any mobile view (≤860px — the same condition BottomTabBar/`.appBar` gate
-   on, browser tab or installed alike): the floating pill is replaced by the
-   slim app-bar strip, so clear THAT bar's real height instead of the pill's.
-   Unqualified — Navbar.tsx's `isAppBar` is `isMobile`, not gated on install,
-   so a mobile browser tab now shows the same slim strip and needs the same
-   swap; leaving this standalone-only kept the larger pill-navbar offset in a
-   browser tab while the actual bar on screen was the slim strip, opening a
-   mismatched gap under it. (`main[data-page-main][data-shell="full-height"]`
-   in standalone.css zeroes the generic hero-band margin for this route — also
-   unqualified now, for the same reason — so this remains the ONLY top-offset
-   math in play here; nothing stacks on top of it, which is what previously
-   doubled the gap on some devices and let it undershoot on others.) */
+/* Any mobile view (≤860px, browser tab or installed alike). No app bar sits
+   above the panel here either, so an installed app (black-translucent status
+   bar, see index.html) draws `.app` under the notch. The app bar used to bleed
+   its ground under it; `.app` takes that job now, painting the strip in the
+   panels' own `--paper` and padding its contents down by the inset, which is
+   0 in a browser tab. The global border-box sizing keeps that padding inside
+   the height math above. (`main[data-page-main][data-shell="full-height"]` in
+   standalone.css zeroes the generic app-bar margin for this route, so nothing
+   else offsets it.) */
 @media (--mobile) {
   .app {
-    --messages-top-offset: calc(var(--app-bar-h) + env(safe-area-inset-top));
-    /* The hairline separates the panel from the app bar above it. Mobile only:
-       on desktop there is no longer anything above to separate from, and a rule
-       hanging off the top edge of the viewport reads as an artefact. */
-    border-top: 1px solid rgba(var(--line-rgb), 0.09);
+    padding-top: env(safe-area-inset-top);
+    background: var(--paper);
   }
 }
 
 /* ── Panel chrome (desktop only, MessagesRailChrome) ───────────────────────
-   This route drops the site nav above 860px (AppShell `desktopChromeless`), so
+   This route drops the site nav above 860px (AppShell `chromeless`), so
    the inbox column carries the account chip at its foot, the way the admin
    rail does (the wordmark now lives in the thread-list header above, on every
    viewport). `flex: none` around the thread list's `flex: 1`, so the list
@@ -123,6 +117,10 @@
   color: rgba(var(--ink-rgb), 0.72);
   font-size: var(--text-17);
   text-decoration: none;
+  /* A <button> now (it opens the notifications popover), so drop the UA
+     padding and restore the pointer the old link had. */
+  padding: 0;
+  cursor: pointer;
   transition:
     background var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease);
@@ -236,6 +234,20 @@
 .composeBtn:focus-visible {
   outline: 2px solid var(--plum);
   outline-offset: 2px;
+}
+/* Back chevron + wordmark, mobile only (MessagesBackButton). The chevron is a
+   `.composeBtn` circle for the 44px tap target, pulled left by the space
+   between its 24px glyph and its edge, so the glyph lines up with the search
+   box below. Declared after `.composeBtn` so its ink wins at equal
+   specificity. */
+.tpHeadLead {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.tpBack {
+  margin-left: -10px;
+  color: var(--text-strong);
 }
 .tpTabs {
   margin-top: 12px;

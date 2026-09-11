@@ -8,7 +8,7 @@ import {
   type UpdateArticleDraftDto,
 } from "../../api/pieces.api";
 import { snapshotsEqual, type DraftSnapshot } from "./articleDraftSnapshot";
-import { htmlToPlainText } from "./plainText";
+import { htmlToPlainText } from "../../../../shared/components/richText/plainText";
 import { useArticleBlockOps } from "./useArticleBlockOps";
 
 /** Rejection reason `saveNow` throws once the draft has conflicted. Never

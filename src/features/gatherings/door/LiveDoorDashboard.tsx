@@ -236,6 +236,7 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
             }}
             onCheckIn={checkInByName}
             onUndo={undoByName}
+            customRsvpQuestion={gathering.customRsvpQuestion}
           />
         )}
       </div>

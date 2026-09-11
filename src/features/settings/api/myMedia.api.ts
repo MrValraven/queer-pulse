@@ -1,5 +1,6 @@
 import { apiDelete, apiGet } from "../../../shared/api/client";
 import { API_BASE_URL } from "../../../shared/api/config";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import type { MediaReference } from "../../../shared/media/mediaReferences";
 
 /** Mirrors the backend's `UploadKind`
@@ -16,6 +17,7 @@ export type MyMediaKind =
   | "listing-photo"
   | "community-cover"
   | "community-avatar"
+  | "event-cover"
   | "message-image"
   | "message-document";
 
@@ -28,6 +30,9 @@ export interface MyMediaItem {
   /** Every place this upload is still referenced, from the backend's
    *  `MediaReferenceResolver`. Empty = not referenced = safe to delete. */
   references: MediaReference[];
+  /** The saved reframe crop, shared by every place this upload is used. Null
+   *  when it was never reframed; absent on demo items seeded without one. */
+  crop?: CropRect | null;
 }
 
 interface MyMediaListResponse {

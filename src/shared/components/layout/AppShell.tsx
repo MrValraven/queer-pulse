@@ -13,23 +13,23 @@ import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
  * stamps `data-shell="full-height"` so that route's CSS sizes off the nav/tab
  * tokens directly.
  *
- * `desktopChromeless` (also only Messages) tells AppChrome to mount no top bar
- * and no left rail above the mobile breakpoint, for a route that carries its own
- * brand row and account footer instead. It stamps `data-chromeless="desktop"` so
+ * `chromeless` (also only Messages) tells AppChrome to show no top bar on any
+ * viewport and no left rail on desktop, for a route that carries its own brand
+ * row, back button and account footer instead. It stamps `data-chromeless` so
  * nav-mode.css can drop the left-rail offsets that reconcile against a rail
- * which is no longer on screen. Mobile is untouched: the app bar and bottom tab
- * bar both still mount, so this never strands a phone without navigation.
+ * which is no longer on screen. The bottom tab bar still mounts on mobile, so
+ * this never strands a phone without navigation.
  */
 export function AppShell({
   children,
   fullHeight,
-  desktopChromeless,
+  chromeless,
 }: {
   children: ReactNode;
   fullHeight?: boolean;
-  desktopChromeless?: boolean;
+  chromeless?: boolean;
 }) {
-  useRegisterShellFrame({ fullHeight, desktopChromeless });
+  useRegisterShellFrame({ fullHeight, chromeless });
   return (
     <>
       <SkipToContentLink />
@@ -39,7 +39,7 @@ export function AppShell({
         tabIndex={-1}
         data-page-main
         data-shell={fullHeight ? "full-height" : undefined}
-        data-chromeless={desktopChromeless ? "desktop" : undefined}
+        data-chromeless={chromeless ? "true" : undefined}
       >
         {children}
       </main>

@@ -55,12 +55,13 @@ export function SubprofileHero({
     Boolean(view.ownerSlug);
   const standaloneAddress = personaPublicPathOrNull(view);
   const interactive = mode !== "preview";
-  // The studio and page skins `display:none` the avatar entirely (see
+  // The studio skin `display:none`s the avatar entirely (see
   // `persona-skins.css`) — wrapping a hidden avatar in a real `<button>` would
   // leave a keyboard tab-stop that focuses nothing, so the enlarge affordance
-  // only exists on skins that actually render the avatar.
+  // only exists on skins that actually render the avatar. The page skin shows
+  // it only when it holds a photo, which `canViewPhoto` already requires.
   const skin = skinFor(view.kind);
-  const avatarRendered = skin !== "studio" && skin !== "page";
+  const avatarRendered = skin !== "studio";
   // Only a real uploaded photo is worth enlarging — an initials fallback has
   // nothing more to show. Preview mode stays non-interactive like the meta row.
   const canViewPhoto = interactive && avatarRendered && Boolean(view.avatarUrl);

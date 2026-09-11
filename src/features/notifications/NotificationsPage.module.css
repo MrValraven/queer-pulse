@@ -259,3 +259,12 @@
     background: rgba(var(--plum-rgb), 0.07);
   }
 }
+
+/* The same row inside the nav bell's popover (NotificationsPopoverPanel):
+   tighter padding and gap keep a readable text measure in a 400px panel. The
+   left padding still clears the unread dot. Must follow `.item`, which it
+   overrides at equal specificity. */
+.itemCompact {
+  gap: 12px;
+  padding: 12px 8px 12px 16px;
+}

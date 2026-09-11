@@ -66,6 +66,148 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "listing-photos-flag-problems-before-you-submit",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("listing-photos-flag-problems-before-you-submit"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "show-a-photo-of-your-certificate-on-a-persona",
+        category: "feature",
+        date: "11 Sep 2026",
+        ...entryKeys("show-a-photo-of-your-certificate-on-a-persona"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "the-directory-stops-pitching-invites-to-members",
+        category: "fix",
+        date: "11 Sep 2026",
+        ...entryKeys("the-directory-stops-pitching-invites-to-members"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "list-your-business-from-the-directory-hero",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("list-your-business-from-the-directory-hero"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "reposition-a-photo-you-already-uploaded",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("reposition-a-photo-you-already-uploaded"),
+      },
+      {
+        id: "edit-a-gatherings-care-and-rsvps-after-publishing",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("edit-a-gatherings-care-and-rsvps-after-publishing"),
+        tag: {
+          labelKey: "marketing:changelog.tag.createGathering",
+          to: routes.createGathering,
+        },
+      },
+      {
+        id: "calendars-open-in-front-of-dialogs",
+        category: "fix",
+        date: "11 Sep 2026",
+        ...entryKeys("calendars-open-in-front-of-dialogs"),
+      },
+      {
+        id: "the-personas-section-shows-who-sees-each-side",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("the-personas-section-shows-who-sees-each-side"),
+      },
+      {
+        id: "guide-editor-workspace",
+        category: "feature",
+        date: "11 Sep 2026",
+        ...entryKeys("guide-editor-workspace"),
+      },
+      {
+        id: "create-a-gathering-in-five-short-chapters",
+        category: "feature",
+        date: "11 Sep 2026",
+        ...entryKeys("create-a-gathering-in-five-short-chapters"),
+        tag: {
+          labelKey: "marketing:changelog.tag.createGathering",
+          to: routes.createGathering,
+        },
+      },
+      {
+        id: "the-landing-page-drops-the-bottom-bar-for-visitors",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("the-landing-page-drops-the-bottom-bar-for-visitors"),
+      },
+      {
+        id: "the-phone-top-bar-slides-away-as-you-scroll",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("the-phone-top-bar-slides-away-as-you-scroll"),
+      },
+      {
+        id: "vouching-happens-on-each-profile",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("vouching-happens-on-each-profile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.vouch",
+          to: routes.members,
+        },
+      },
+      {
+        id: "communities-takes-the-members-tab",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("communities-takes-the-members-tab"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "the-bell-opens-your-recent-notifications",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("the-bell-opens-your-recent-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.notifications",
+          to: routes.notifications,
+        },
+      },
+      {
+        id: "messages-on-a-phone-gets-its-own-header",
+        category: "improvement",
+        date: "11 Sep 2026",
+        ...entryKeys("messages-on-a-phone-gets-its-own-header"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "writer-and-poet-personas-show-their-photo",
+        category: "fix",
+        date: "11 Sep 2026",
+        ...entryKeys("writer-and-poet-personas-show-their-photo"),
+      },
+      {
         id: "pick-a-wallpaper-for-each-chat",
         category: "feature",
         date: "10 Sep 2026",
@@ -654,7 +796,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         ...entryKeys("someone-you-blocked-can-no-longer-vouch-for-you"),
         tag: {
           labelKey: "marketing:changelog.tag.vouch",
-          to: routes.vouch,
+          to: routes.members,
         },
       },
       {
@@ -1793,7 +1935,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "31 Aug 2026",
         ...entryKeys("vouching-has-a-front-door"),
-        tag: { labelKey: "marketing:changelog.tag.vouch", to: routes.vouch },
+        tag: { labelKey: "marketing:changelog.tag.vouch", to: routes.members },
       },
       {
         id: "recognition-counts-people-not-volume",
@@ -4218,7 +4360,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "fix",
         date: "20 Aug 2026",
         ...entryKeys("recognition-vouch-perk-copy"),
-        tag: { labelKey: "marketing:changelog.tag.vouch", to: routes.vouch },
+        tag: { labelKey: "marketing:changelog.tag.vouch", to: routes.members },
       },
       {
         id: "recognition-visible-on-profiles",
@@ -4232,7 +4374,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "20 Aug 2026",
         ...entryKeys("vouch-daily-cap"),
-        tag: { labelKey: "marketing:changelog.tag.vouch", to: routes.vouch },
+        tag: { labelKey: "marketing:changelog.tag.vouch", to: routes.members },
       },
       {
         id: "magazine-article-publish-schedule",

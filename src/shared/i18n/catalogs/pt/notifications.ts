@@ -702,6 +702,11 @@ export const notifications: Catalog = {
   "page.loadMoreCta": "Carregar mais notificações",
   "page.loadingMore": "A carregar…",
 
+  // O popover de notificações recentes do sino
+  "popover.seeAll": "Ver todas as notificações",
+  "popover.emptyDescription":
+    "A nova atividade das tuas pessoas e comunidades aparece aqui.",
+
   // Separadores de filtro (notificationTabs em data.tsx + o separador Menções)
   // ── Linhas agrupadas (SOC-10) ─────────────────────────────────────────────
   // Acrescentado ao texto da própria linha, para que "Ana respondeu" passe a

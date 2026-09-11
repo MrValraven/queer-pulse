@@ -1,0 +1,196 @@
+/* The guide workspace's left rail: paper panels on the cream console. */
+
+.panel {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+}
+
+.panelTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.panelText,
+.panelWarning,
+.panelNotice {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.panelWarning {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.panelNotice {
+  padding: 8px 12px;
+  border: 1px solid rgba(var(--jade-rgb), 0.35);
+  border-radius: var(--radius-10);
+  color: var(--text-strong);
+}
+
+.panelActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.statusPublished,
+.statusUnpublished {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.statusPublished {
+  color: var(--jade-ink);
+}
+
+.statusUnpublished {
+  color: var(--ink-60);
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 8px 11px;
+  border: 1px solid rgba(var(--line-rgb), 0.2);
+  border-radius: var(--radius-10);
+  background: var(--paper);
+  font: inherit;
+  color: inherit;
+}
+
+.input[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.textarea {
+  min-height: 84px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.fieldHint {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+.fieldError {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--danger-ink);
+}
+
+.chipResult {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--text-strong);
+}
+
+.cardLabel {
+  margin: 4px 0 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* A preview of a public card: never navigates (`inert`), and keeps the
+   card's own width instead of stretching to the rail. */
+.cardFrame {
+  max-width: 320px;
+}
+
+.outline {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.outlineRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border-radius: var(--radius-10);
+}
+
+.outlineRow[data-active="true"] {
+  background: var(--wash);
+}
+
+.outlineRow[data-drag="true"] {
+  opacity: 0.5;
+}
+
+.dragHandle {
+  flex: none;
+  color: var(--ink-40);
+  cursor: grab;
+}
+
+.outlineJump {
+  flex: 1;
+  min-width: 0;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+
+.outlineName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.outlineWords {
+  flex: none;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+
+.outlineFlag {
+  flex: none;
+  padding: 1px 7px;
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
+  color: var(--accent-ink);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

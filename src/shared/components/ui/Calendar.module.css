@@ -273,9 +273,12 @@
    which places the panel in viewport coordinates against the trigger's
    measured rect. Nothing here may reintroduce `position: absolute`: the panel
    is portalled to `document.body` precisely so no ancestor stacking context
-   (a `FadeIn`, a transformed card) can bury it under later page content. */
+   (a `FadeIn`, a transformed card) can bury it under later page content.
+   The portal also puts it beside any open modal's scrim, hence the portal
+   tier above `--z-modal`: at `--z-popover` a picker inside a drawer opened
+   behind the drawer. */
 .popover {
-  z-index: var(--z-popover);
+  z-index: var(--z-popover-portal);
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-14);

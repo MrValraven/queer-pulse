@@ -30,6 +30,7 @@ export function DoorGuestRow({
   canCheckIn,
   onCheckIn,
   onUndo,
+  customRsvpQuestion,
 }: {
   attendee: AttendeeRow;
   isPending: boolean;
@@ -37,6 +38,8 @@ export function DoorGuestRow({
   canCheckIn: boolean;
   onCheckIn: (memberSlug: string) => void;
   onUndo: (memberSlug: string) => void;
+  /** The host's own RSVP question, which labels this guest's answer. */
+  customRsvpQuestion?: string | null;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -55,7 +58,10 @@ export function DoorGuestRow({
         {attendee.pronouns && (
           <div className={styles.attMeta}>{attendee.pronouns}</div>
         )}
-        <AttendeeNeeds attendee={attendee} />
+        <AttendeeNeeds
+          attendee={attendee}
+          customQuestion={customRsvpQuestion}
+        />
       </div>
       <div>
         {arrivedAt ? (

@@ -1569,18 +1569,6 @@ export const magazine: Catalog = {
   "write.image.focalAria": "Focal point: {x}% horizontal, {y}% vertical",
   "write.image.captionPlaceholder": "Caption",
 
-  // ── SelectionToolbar ──────────────────────────────────────────────────────
-  "write.selection.toolbarAria": "Text formatting",
-  "write.selection.emphasis": "Emphasis",
-  "write.selection.strong": "Strong",
-  "write.selection.link": "Link",
-  "write.selection.linkFieldLabel": "Link address",
-  "write.selection.linkPlaceholder": "https://example.com",
-  "write.selection.linkApply": "Add link",
-  "write.selection.linkCancel": "Cancel link",
-  "write.selection.linkInvalid":
-    "Use a full web address like https://example.com, or an email address like mailto:hello@example.com.",
-
   // ── PublishRail ────────────────────────────────────────────────────────────
   "write.publish.title": "Publish",
   "write.publish.whenLabel": "When it ships",
@@ -2123,8 +2111,7 @@ export const magazine: Catalog = {
   "live.readMinutes": "{minutes} min",
   "live.web": "Web",
 
-  // ── Article editor: slash menu + block removal undo ──────────────────────
-  "write.slash.menuAria": "Insert a block",
+  // ── Article editor: block removal undo ───────────────────────────────────
   "write.block.removedToast": "Block removed.",
   "write.block.undoRemove": "Undo",
 

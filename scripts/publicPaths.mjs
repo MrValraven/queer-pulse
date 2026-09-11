@@ -65,7 +65,6 @@ export const GATED_PATTERNS = [
   "/changemaker/*",
   "/parents",
   "/caregivers",
-  "/vouch",
   "/magazine/submit-story",
   "/magazine/apply-to-write",
   // Organiser-side volunteer surfaces. The listing (/about/volunteer) and each

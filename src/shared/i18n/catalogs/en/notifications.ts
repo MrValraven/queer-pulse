@@ -742,6 +742,11 @@ export const notifications: Catalog = {
   "page.loadMoreCta": "Load more notifications",
   "page.loadingMore": "Loading…",
 
+  // The nav bell's popover of recent notifications
+  "popover.seeAll": "See all notifications",
+  "popover.emptyDescription":
+    "New activity from your people and communities shows up here.",
+
   // Filter tabs (data.tsx's notificationTabs + the link-style Mentions tab)
   // ── Bundled rows (SOC-10) ─────────────────────────────────────────────────
   // Appended after the row's own text, so "Ana replied" becomes

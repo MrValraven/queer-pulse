@@ -109,12 +109,13 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
     } catch (error) {
       if (!isMountedRef.current) return;
       setIsSaving(false);
-      // A typed 422 names the offending field: surface the server's own
-      // message and flash that field, which on one screen is all the routing
-      // this needs. Anything else is a plain save failure.
+      // A validation error (400 or 422) names the offending field: surface the
+      // server's own message and flash that field, which on one screen is all
+      // the routing this needs. Anything else is a plain save failure.
       const target = resolveListing422(error);
       if (target) {
         setServerError(target.message);
+        form.setRejectedPhotoSlots(target.photoSlots);
         window.setTimeout(
           () => flashField(target.anchor, pageStyles.fieldFlash),
           80,

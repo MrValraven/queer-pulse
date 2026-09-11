@@ -2063,6 +2063,18 @@ button.cal-cell.has {
   font-weight: 500;
   margin-top: 1px;
 }
+/* Locked after the RSVP cutoff: still focusable so its hint is read. */
+.guest-row[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+.guest-row[aria-disabled="true"] .guest-txt {
+  color: var(--ink-40);
+}
+/* The held-off checkbox dims with its text: a fainter border on a faint fill. */
+.guest-row[aria-disabled="true"] .guest-cb {
+  background: rgba(var(--line-rgb), 0.05);
+  border-color: rgba(var(--line-rgb), 0.12);
+}
 .collapse {
   display: none;
 }

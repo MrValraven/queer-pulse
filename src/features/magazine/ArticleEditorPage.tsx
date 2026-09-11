@@ -13,9 +13,15 @@ import { ArticleReaderPreview } from "./desk/editor/ArticleReaderPreview";
 import { ArticleEditorHeader } from "./desk/editor/ArticleEditorHeader";
 import { ArticleEditorRails } from "./desk/editor/ArticleEditorRails";
 import { ArticleEditorStatus } from "./desk/editor/ArticleEditorStatus";
-import { SelectionToolbar } from "./desk/editor/SelectionToolbar";
-import { SlashMenu, type SlashMenuPoint } from "./desk/editor/SlashMenu";
-import type { ArticleBlockKind } from "./desk/editor/blockKinds";
+import { SelectionToolbar } from "../../shared/components/richText/SelectionToolbar";
+import {
+  SlashMenu,
+  type SlashMenuPoint,
+} from "../../shared/components/richText/SlashMenu";
+import {
+  blockKindSlashOptions,
+  type ArticleBlockKind,
+} from "./desk/editor/blockKinds";
 import type { EditorMode } from "./desk/editor/editorMode";
 import { useArticleEditorDraftState } from "./desk/editor/useArticleEditorDraftState";
 import { useBlockRemovalUndo } from "./desk/editor/useBlockRemovalUndo";
@@ -36,6 +42,12 @@ import styles from "./ArticleEditorPage.module.css";
 interface SlashState {
   afterIndex: number;
   at: SlashMenuPoint;
+}
+
+/** Where the slash menu opens: just under the block that asked for it. */
+function slashMenuPointFor(element: HTMLElement): SlashMenuPoint {
+  const rect = element.getBoundingClientRect();
+  return { x: rect.left, y: rect.bottom + 8 };
 }
 
 /**
@@ -159,13 +171,12 @@ export function ArticleEditorPage() {
   };
 
   function handleSlashOpen(element: HTMLElement, index: number) {
-    const rect = element.getBoundingClientRect();
-    const menuPoint = { x: rect.left, y: rect.bottom + 8 };
-    setSlashState({ afterIndex: index, at: menuPoint });
+    setSlashState({ afterIndex: index, at: slashMenuPointFor(element) });
   }
 
-  function handleSlashPick(kind: ArticleBlockKind) {
+  function handleSlashPick(optionId: string) {
     if (!slashState) return;
+    const kind = optionId as ArticleBlockKind;
     setSelectedId(draft.blockOps.insertBlockAfter(slashState.afterIndex, kind));
     setSlashState(null);
   }
@@ -283,6 +294,7 @@ export function ArticleEditorPage() {
       {slashState && (
         <SlashMenu
           at={slashState.at}
+          options={blockKindSlashOptions(t)}
           onPick={handleSlashPick}
           onClose={() => setSlashState(null)}
         />

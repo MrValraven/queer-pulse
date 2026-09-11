@@ -19,9 +19,38 @@ import type { TFunction } from "../../shared/i18n/types";
  *
  * A 400 is a state fact about the gathering itself (it is closed, it is full
  * with no waitlist) and is safe to pass through as the server phrased it.
+ * The one the page can predict, the host's RSVP cutoff having passed, is
+ * matched and said in the reader's own language.
  * Anything else falls back to the generic retry line.
  */
+
+/** The backend's sentence for an RSVP after the cutoff: `RSVPS_CLOSED_MESSAGE`
+ *  in `queerpulse-backend/src/events/gathering-extras.ts`. */
+const RSVPS_CLOSED_MESSAGE = "RSVPs for this gathering have closed";
+
+/** Did the server refuse because the host's RSVP cutoff has passed? Also the
+ *  answer to a member raising their guest count after the cutoff. */
+export function isRsvpsClosedError(error: unknown): boolean {
+  return (
+    error instanceof ApiError &&
+    error.status === 400 &&
+    error.message.includes(RSVPS_CLOSED_MESSAGE)
+  );
+}
+
+/** A failed "Anything we should know?" save on the gathering page: the closed
+ *  cutoff in the reader's language, and the form's own retry line otherwise. */
+export function rsvpDetailsSaveErrorMessage(
+  error: unknown,
+  t: TFunction,
+): string {
+  return isRsvpsClosedError(error)
+    ? t("gatherings:rsvpControl.closedToast")
+    : t("gatherings:rsvpDetails.saveErrorToast");
+}
+
 export function rsvpErrorMessage(error: unknown, t: TFunction): string {
+  if (isRsvpsClosedError(error)) return t("gatherings:rsvpControl.closedToast");
   if (error instanceof ApiError) {
     if (error.status === 403) return t("gatherings:rsvpControl.refusedToast");
     if (error.status === 400 && error.message) return error.message;

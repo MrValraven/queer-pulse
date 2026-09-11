@@ -17,6 +17,7 @@ import {
   currentUser,
   currentUserSlug,
 } from "../../features/members/data/demoCurrentUser";
+import { clearStoredGatheringDrafts } from "../../features/gatherings/createGatheringDraftStorage";
 import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
 import {
   useLiveSessionBootstrap,
@@ -161,6 +162,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(() => {
     setPreparing(false);
+    // Forget every unpublished gathering draft in this browser before the
+    // cache goes, in demo and live alike, so the next person on a shared
+    // device starts clean. Only this explicit sign-out clears them: a session
+    // that expires keeps its draft for the member's return (ruling F4).
+    clearStoredGatheringDrafts();
     if (demoMode) {
       setLoggedIn(false);
       return;

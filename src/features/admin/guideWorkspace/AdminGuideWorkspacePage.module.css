@@ -1,0 +1,60 @@
+/* Guide workspace columns: rail, document, preview. */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.layout[data-view="split"] {
+  grid-template-columns: minmax(260px, 300px) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.rail {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.editorColumn,
+.previewColumn {
+  min-width: 0;
+}
+
+.previewColumn {
+  position: sticky;
+  top: calc(var(--sticky-top) + 110px);
+}
+
+.state {
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+  margin: 32px 0;
+}
+
+.stateTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-26);
+  color: var(--text-strong);
+}
+
+.stateText {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+@media (max-width: 900px) {
+  .layout,
+  .layout[data-view="split"] {
+    grid-template-columns: 1fr;
+  }
+
+  .previewColumn {
+    position: static;
+  }
+}

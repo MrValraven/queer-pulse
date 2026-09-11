@@ -2,7 +2,59 @@ import { HOODS } from "./createGathering.data";
 import type { GatheringDetail } from "./data";
 import type { GatheringFormSeed } from "./useGatheringForm";
 import { familyForLegacyLabel, findFormat } from "./gatheringCatalog";
+import {
+  DEFAULT_RSVP_QUESTIONS,
+  sanitizeContentNotes,
+  sanitizeThemes,
+  type CostKind,
+} from "./gatheringExtras";
 import { normalizeAccessibilityAnswers } from "../marketing/listBusiness/listingAccessibility.data";
+
+/**
+ * The `"HH:MM"` wall clock an instant shows in the gathering's own zone.
+ *
+ * "Same time as last time" means the clock the host scheduled on, whichever
+ * zone the browser doing the copying sits in. A gathering with no zone, or one
+ * `Intl` cannot use, reads in the viewer's own zone instead. `hourCycle: "h23"`
+ * so midnight reads `"00"`.
+ */
+function wallClockTime(
+  at: Date | undefined,
+  timezone: string | undefined,
+): string | undefined {
+  if (!at || Number.isNaN(at.getTime())) return undefined;
+  const partsIn = (timeZone: string | undefined) =>
+    new Intl.DateTimeFormat("en-GB", {
+      ...(timeZone ? { timeZone } : {}),
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(at);
+  let parts: Intl.DateTimeFormatPart[];
+  try {
+    parts = partsIn(timezone);
+  } catch {
+    parts = partsIn(undefined);
+  }
+  const hour = parts.find((part) => part.type === "hour")?.value;
+  const minute = parts.find((part) => part.type === "minute")?.value;
+  return hour && minute ? `${hour}:${minute}` : undefined;
+}
+
+/**
+ * The cost kind a gathering carries, or the closest reading of an older one.
+ *
+ * A gathering written before the field existed has only its free-text `cost`.
+ * Reading that as "free" would make the payload builder drop the text on the
+ * copy (a free gathering sends no cost), so a cost the server does not read as
+ * free comes across as `fixed`, with the host's own words still beside it.
+ */
+function seedCostKind(gathering: GatheringDetail): CostKind {
+  if (gathering.costKind) return gathering.costKind;
+  return gathering.cost?.trim() && gathering.isFree === false
+    ? "fixed"
+    : "free";
+}
 
 /**
  * The "Online" neighbourhood's canonical stored value.
@@ -25,22 +77,26 @@ const ONLINE_HOOD =
  * simply come through empty. In practice the only surface offering this is the
  * manage dashboard, where the viewer is by definition an organiser.
  *
- * WHAT IS NOT COPIED: the date, the time, and the two publish confirmations —
- * see `GatheringFormSeed`.
+ * WHAT IS NOT COPIED: the date and the two publish confirmations, see
+ * `GatheringFormSeed`. The start and end clock ride along as `startTime` and
+ * `endTime` for "same as last time"; the duplicate flow leaves them unread.
  */
 export function gatheringToFormSeed(
   gathering: GatheringDetail,
 ): GatheringFormSeed {
   const isOnline = gathering.isOnline === true;
+  // The live detail carries both halves. When it does not (a demo record, or
+  // a row written before families existed) fall back to reading the stored
+  // format string: the catalog first, then the eight-label legacy map.
+  const family =
+    gathering.gatheringFamily ??
+    findFormat(gathering.type)?.family ??
+    familyForLegacyLabel(gathering.type) ??
+    null;
+  const startTime = wallClockTime(gathering.date, gathering.timezone);
+  const endTime = wallClockTime(gathering.endAt, gathering.timezone);
   return {
-    // The live detail carries both halves. When it does not (a demo record, or
-    // a row written before families existed) fall back to reading the stored
-    // format string: the catalog first, then the eight-label legacy map.
-    family:
-      gathering.gatheringFamily ??
-      findFormat(gathering.type)?.family ??
-      familyForLegacyLabel(gathering.type) ??
-      null,
+    family,
     format: findFormat(gathering.type)?.key ?? null,
     otherText: findFormat(gathering.type) ? "" : (gathering.type ?? ""),
     formatDetails: gathering.formatDetails ?? null,
@@ -72,5 +128,22 @@ export function gatheringToFormSeed(
     accessNotes: gathering.accessibilityNote ?? "",
     audienceScope: gathering.visibility ?? "members",
     communitySlug: gathering.communitySlug ?? "",
+    // ── Care and access (Create Gathering v2) ─────────────────────────────
+    // Themes are narrowed against the family the copy starts on, so a theme
+    // that family already asks about as a detail (ruling R6) is dropped here,
+    // before it could sit hidden on a chip the host cannot see to remove.
+    themes: sanitizeThemes(gathering.themes, family),
+    contentNotes: sanitizeContentNotes(gathering.contentNotes),
+    houseRules: gathering.houseRules ?? "",
+    costKind: seedCostKind(gathering),
+    // Passed through as it stands. `undefined` (a demo record without the
+    // field) leaves the family default to the wizard; `null` (a live gathering
+    // whose RSVPs stay open until it ends) is copied as that answer.
+    rsvpCutoff: gathering.rsvpCutoff,
+    rsvpQuestions: gathering.rsvpQuestions ?? DEFAULT_RSVP_QUESTIONS,
+    customRsvpQuestion: gathering.customRsvpQuestion ?? "",
+    allowWaitlist: gathering.allowWaitlist ?? true,
+    ...(startTime ? { startTime } : {}),
+    ...(endTime ? { endTime } : {}),
   };
 }

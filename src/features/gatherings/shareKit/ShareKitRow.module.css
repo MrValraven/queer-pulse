@@ -1,0 +1,12 @@
+/* Share row on the published screen (design `.share`), on the plum panel. */
+.share {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.share svg {
+  flex: none;
+}

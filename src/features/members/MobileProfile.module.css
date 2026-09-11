@@ -153,14 +153,12 @@
 
 .tabList {
   position: sticky;
-  /* Clears the real mobile top chrome. At the ≤860px breakpoint this
-     component renders at, the floating pill Navbar swaps to the slim
-     `.appBar` strip (Navbar.module.css, `isAppBar = isMobile`) — occupied
-     height `--app-bar-h` + the top safe-area inset, NOT the desktop
-     `--nav-top` + `--nav-height` band (standalone.css pulls `main` up by
-     exactly that difference for the same reason). If this bar is ever reused
-     above ~860px, this offset needs revisiting for the taller floating pill. */
-  top: calc(var(--app-bar-h) + env(safe-area-inset-top));
+  /* Clears the real mobile top chrome through `--sticky-top`: the slim
+     `.appBar` strip's height plus the notch inset at this breakpoint
+     (standalone.css), and only the notch while the bar has scrolled away.
+     `top` eases over the bar's own slide so the tabs rise with it. */
+  top: var(--sticky-top);
+  transition: top var(--dur-base) var(--ease);
   z-index: var(--z-sticky);
   display: flex;
   background: rgba(var(--cream-rgb), 0.92);

@@ -1,63 +1,247 @@
-import { useCallback, useMemo, useState } from "react";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useMemo, useState, type ComponentType } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useAuth } from "../../app/providers/authContext";
+import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
-import { FadeIn, Stepper } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { useUnsavedChangesGuard, useWizardForm } from "../../shared/hooks";
+import { Button, Eyebrow } from "../../shared/components/ui";
+import { useMediaQuery, useUnsavedChangesGuard } from "../../shared/hooks";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
-import { PILL_LABEL_KEYS, TIP_KEYS, TOTAL_STEPS } from "./createGathering.data";
-import { useGatheringForm } from "./useGatheringForm";
-import { useCreateEvent } from "./api/useEventMutations";
-import { formToCreateEventDto } from "./api/events.adapters";
+import { useEvent } from "./api/useEvent";
+import { CreateGatheringChapter } from "./CreateGatheringChapter";
+import { CreateGatheringMobileBar } from "./CreateGatheringMobileBar";
+import { CreateGatheringReadyPanel } from "./CreateGatheringReadyPanel";
+import { CreateGatheringSuccess } from "./CreateGatheringSuccess";
+import {
+  COMPACT_LAYOUT_QUERY,
+  CREATE_GATHERING_CHAPTERS,
+  PLEDGE_TEXT_KEYS,
+  READY_PANEL_ANCHOR,
+  chapterHeadId,
+  chapterSectionId,
+  confirmAnchor,
+  type CreateGatheringChapterId,
+} from "./createGathering.data";
+import {
+  afterRender,
+  chapterNeeds,
+  chapterSummary,
+  focusOpenChapterHead,
+  isChapterComplete,
+  jumpToAnchor,
+  readinessItems,
+  revealSection,
+  revealSectionIfAbove,
+} from "./createGatheringChapters";
 import {
   CREATE_GATHERING_COMMUNITY_PARAM,
   DUPLICATE_GATHERING_PARAM,
 } from "./data";
+import { DraftResumeStrip, SavedIndicator } from "./DraftResumeStrip";
 import { gatheringToFormSeed } from "./gatheringSeed";
-import { useEvent } from "./api/useEvent";
-import { CreateGatheringSuccess } from "./CreateGatheringSuccess";
+import { GatheringPreviewPanel } from "./preview/GatheringPreviewPanel";
+import { AccessChapter } from "./steps/AccessChapter";
+import { CareChapter } from "./steps/CareChapter";
+import { WhatChapter } from "./steps/WhatChapter";
+import { WhenWhereChapter } from "./steps/WhenWhereChapter";
+import { WhoChapter } from "./steps/WhoChapter";
 import {
-  CapacityStep,
-  DatePlaceStep,
-  RepeatsStep,
-  ReviewStep,
-  StepRequirementChecklist,
-  TypeStep,
-} from "./steps";
-import {
-  isStepSatisfied,
-  visibleStepRequirements,
-} from "./createGatheringSteps";
-import styles from "./CreateGatheringPage.module.css";
+  createGatheringDraftKey,
+  removeStoredDraft,
+  useCreateGatheringDraft,
+  type DraftSaveStatus,
+} from "./useCreateGatheringDraft";
+import { useGatheringForm, type GatheringForm } from "./useGatheringForm";
+import { usePublishGathering } from "./usePublishGathering";
+import styles from "./CreateGatheringShell.module.css";
 
-/** Ties the Next button to the checklist naming what is blocking it. Only one
- *  create-gathering wizard is ever on screen, so a constant is enough. */
-const GATE_ID = "create-gathering-requirements";
+/** Each chapter's body. Every body receives `{ form }` and nothing else. */
+const CHAPTER_BODIES: Record<
+  CreateGatheringChapterId,
+  ComponentType<{ form: GatheringForm }>
+> = {
+  what: WhatChapter,
+  whenWhere: WhenWhereChapter,
+  who: WhoChapter,
+  access: AccessChapter,
+  care: CareChapter,
+};
+
+function noChapterFlags(): boolean[] {
+  return CREATE_GATHERING_CHAPTERS.map(() => false);
+}
+
+function withChapterFlag(flags: boolean[], chapterIndex: number): boolean[] {
+  return flags.map((flag, index) => (index === chapterIndex ? true : flag));
+}
+
+/**
+ * Which chapter is open, and what the host has done in each.
+ *
+ * One chapter is open at a time, and pressing an open head closes it.
+ * Continue checks the chapter's gate (`createGatheringChapters.ts`): unmet, it
+ * lists what is missing and reports back so the button shakes; met, it opens
+ * the next chapter with focus on its head, or after the last chapter closes
+ * them all and brings the ready panel into view.
+ */
+function useChapterFlow(form: GatheringForm) {
+  const [openChapterIndex, setOpenChapterIndex] = useState<number | null>(0);
+  const [continuedChapters, setContinuedChapters] = useState(noChapterFlags);
+  const [attemptedChapters, setAttemptedChapters] = useState(noChapterFlags);
+  const [isOpeningAfterResume, setIsOpeningAfterResume] = useState(false);
+  // A resume restores the form in the same batch that sets this flag, so this
+  // render already reads the restored values: open the first chapter still
+  // asking for something, or none when nothing is missing.
+  if (isOpeningAfterResume) {
+    setIsOpeningAfterResume(false);
+    const firstIncompleteIndex = CREATE_GATHERING_CHAPTERS.findIndex(
+      (_chapter, chapterIndex) => !isChapterComplete(form, chapterIndex),
+    );
+    setOpenChapterIndex(
+      firstIncompleteIndex === -1 ? null : firstIncompleteIndex,
+    );
+  }
+
+  /** Open a chapter from its head, or close it when it is already open. A
+   *  long chapter closing above can leave the one just opened starting above
+   *  the viewport, so its top is brought back into view. */
+  const toggleChapter = (chapterIndex: number) => {
+    const isOpening = openChapterIndex !== chapterIndex;
+    setOpenChapterIndex(isOpening ? chapterIndex : null);
+    if (isOpening) {
+      afterRender(() =>
+        revealSectionIfAbove(
+          chapterSectionId(chapterIndex),
+          chapterHeadId(chapterIndex),
+        ),
+      );
+    }
+  };
+
+  const continueFromChapter = (chapterIndex: number): boolean => {
+    if (!isChapterComplete(form, chapterIndex)) {
+      setAttemptedChapters((previous) =>
+        withChapterFlag(previous, chapterIndex),
+      );
+      return false;
+    }
+    setContinuedChapters((previous) => withChapterFlag(previous, chapterIndex));
+    const nextIndex = chapterIndex + 1;
+    if (nextIndex < CREATE_GATHERING_CHAPTERS.length) {
+      setOpenChapterIndex(nextIndex);
+      afterRender(() =>
+        revealSection(chapterSectionId(nextIndex), chapterHeadId(nextIndex)),
+      );
+    } else {
+      setOpenChapterIndex(null);
+      afterRender(() => revealSection(READY_PANEL_ANCHOR, READY_PANEL_ANCHOR));
+    }
+    return true;
+  };
+
+  /** Open a chapter and send the host to one of its fields, flashing it. */
+  const openChapterAtField = (chapterIndex: number, anchor: string) => {
+    setOpenChapterIndex(chapterIndex);
+    afterRender(() => jumpToAnchor(anchor, styles.gateFlash));
+  };
+
+  return {
+    openChapterIndex,
+    continuedChapters,
+    attemptedChapters,
+    toggleChapter,
+    continueFromChapter,
+    openChapterAtField,
+    openAfterResume: () => setIsOpeningAfterResume(true),
+  };
+}
+
+type ChapterFlow = ReturnType<typeof useChapterFlow>;
+
+/** Eyebrow, serif title, lead, the draft's saved line, and Cancel. */
+function CreateGatheringHead({ saveStatus }: { saveStatus: DraftSaveStatus }) {
+  const { t } = useTranslation();
+  return (
+    <header className={styles.head}>
+      <div>
+        <Eyebrow className={styles.eyebrow}>
+          {t("gatherings:create.eyebrow")}
+        </Eyebrow>
+        <h1 className={styles.title}>
+          <Translation
+            i18nKey="gatherings:create.title"
+            components={{ em: <em /> }}
+          />
+        </h1>
+        <p className={styles.lead}>{t("gatherings:create.v2.lead")}</p>
+        <SavedIndicator status={saveStatus} />
+      </div>
+      <div className={styles.headActions}>
+        <Button variant="ghost" to={routes.host}>
+          {t("gatherings:create.nav.cancel")}
+        </Button>
+      </div>
+    </header>
+  );
+}
+
+/** The five chapters, each wrapped around its own body. */
+function ChapterList({
+  form,
+  chapterFlow,
+}: {
+  form: GatheringForm;
+  chapterFlow: ChapterFlow;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  return (
+    <>
+      {CREATE_GATHERING_CHAPTERS.map((chapter, chapterIndex) => {
+        const ChapterBody = CHAPTER_BODIES[chapter.id];
+        const hasBeenContinued =
+          chapterFlow.continuedChapters[chapterIndex] === true;
+        return (
+          <CreateGatheringChapter
+            key={chapter.id}
+            chapterIndex={chapterIndex}
+            titleKey={chapter.titleKey}
+            introKey={chapter.introKey}
+            isOptional={chapter.isOptional}
+            isLast={chapterIndex === CREATE_GATHERING_CHAPTERS.length - 1}
+            isOpen={chapterFlow.openChapterIndex === chapterIndex}
+            isDone={hasBeenContinued && isChapterComplete(form, chapterIndex)}
+            hasBeenContinued={hasBeenContinued}
+            summary={chapterSummary(form, chapterIndex, { t, fmt })}
+            visibleNeeds={
+              chapterFlow.attemptedChapters[chapterIndex] === true
+                ? chapterNeeds(form, chapterIndex)
+                : []
+            }
+            onToggle={() => chapterFlow.toggleChapter(chapterIndex)}
+            onContinue={() => chapterFlow.continueFromChapter(chapterIndex)}
+          >
+            <ChapterBody form={form} />
+          </CreateGatheringChapter>
+        );
+      })}
+    </>
+  );
+}
 
 export function CreateGatheringPage() {
-  const navigate = useNavigate();
-  const { showToast } = useToast();
   const { t } = useTranslation();
-  // The slug the backend assigns on a successful create — used to send the
-  // organiser to their real gathering page (null in demo, where nothing is
-  // persisted, so the CTA falls back to the events board).
-  const [createdSlug, setCreatedSlug] = useState<string | null>(null);
-  // The success screen lives outside the wizard's step machine: publishing runs
-  // the real createEvent mutation, so we only flip to success from its onSuccess
-  // (never from the simulated submit lifecycle).
-  const [published, setPublished] = useState(false);
+  const { user } = useAuth();
   // A community's Events tab links here as `?community=<slug>` so the host
   // lands with that community already picked (see `createGatheringPath`). Read
-  // once, on mount, by the form hook: changing the URL afterwards does not
-  // overwrite a pick the host has since made.
+  // once, on mount, by the form hook.
   const [searchParams] = useSearchParams();
+  const communitySlugParam =
+    searchParams.get(CREATE_GATHERING_COMMUNITY_PARAM) ?? "";
   // "Run this again" (PRD-190): `?duplicate=<slug>` fetches that gathering and
-  // seeds the wizard from it. The fetch is asynchronous, so the seed is applied
-  // by `useGatheringForm` whenever it lands rather than only on mount —
-  // `useMemo` keeps its identity stable so it is applied exactly once.
+  // seeds the wizard from it whenever the fetch lands. `useMemo` keeps the
+  // seed's identity stable so it is applied exactly once.
   const duplicateSlug = searchParams.get(DUPLICATE_GATHERING_PARAM);
   const { data: duplicateSource } = useEvent(duplicateSlug ?? undefined);
   const seed = useMemo(
@@ -68,186 +252,144 @@ export function CreateGatheringPage() {
     [duplicateSlug, duplicateSource],
   );
   const form = useGatheringForm({
-    communitySlug: searchParams.get(CREATE_GATHERING_COMMUNITY_PARAM) ?? "",
+    communitySlug: communitySlugParam,
     ...(seed ? { seed } : {}),
   });
-  const createEvent = useCreateEvent();
+  const chapterFlow = useChapterFlow(form);
+  const draftKey = createGatheringDraftKey(user?.id);
+  const publishing = usePublishGathering({
+    form,
+    onPublished: () => removeStoredDraft(draftKey),
+  });
+  const draft = useCreateGatheringDraft({
+    form,
+    storageKey: draftKey,
+    // A duplicate's seed lands after any resume and would overwrite it.
+    shouldOfferResume: !duplicateSlug,
+    communitySlugParam,
+    isSavingEnabled: !publishing.isPublished && !publishing.isPending,
+  });
+  const isCompact = useMediaQuery(COMPACT_LAYOUT_QUERY);
 
-  // Which fields a step demands, and why the button is dark, both come from
-  // `createGatheringSteps.ts`. They used to be written twice here: a gate that
-  // disabled the button and a separate ternary that wrote its tooltip. The two
-  // had drifted apart.
-  const isStepComplete = useCallback(
-    (stepIndex: number) => isStepSatisfied(form, stepIndex),
-    [form],
-  );
-  const {
-    currentStepIndex,
-    canAdvanceFromStep,
-    goToNextStep,
-    goToPreviousStep,
-  } = useWizardForm({ stepCount: TOTAL_STEPS, isStepComplete });
-  const isLastStep = currentStepIndex === TOTAL_STEPS - 1;
-
-  // Warn before an in-progress gathering is abandoned. Inactive once the
-  // gathering is published so the success CTAs — and, in live mode, the automatic
-  // redirect to the new event page — navigate freely without a false prompt.
+  // Warn before an in-progress gathering is abandoned. Off once it is
+  // published, so the success CTAs navigate without a false prompt.
   useUnsavedChangesGuard({
-    active: form.dirty && !published && !createEvent.isPending,
+    active: form.dirty && !publishing.isPublished && !publishing.isPending,
     confirmMessage: t("gatherings:create.nav.leaveConfirm"),
   });
 
-  const publishPending = isLastStep && createEvent.isPending;
-  const nextDisabled = !canAdvanceFromStep(currentStepIndex) || publishPending;
-  const requirements = visibleStepRequirements(form, currentStepIndex);
+  const readiness = readinessItems(form);
+  const requiredItems = readiness.filter((item) => !item.isOptional);
+  const metRequiredCount = requiredItems.filter((item) => item.isMet).length;
+  const isReady = metRequiredCount === requiredItems.length && form.allChecked;
 
-  const next = () => {
-    if (!canAdvanceFromStep(currentStepIndex)) return;
-    if (isLastStep) {
-      if (createEvent.isPending) return;
-      // Only celebrate on a real success. The old code advanced to the success
-      // step and toasted "published" synchronously, before the request settled,
-      // so a rejected create (e.g. a 400) still showed the success panel and its
-      // CTA. Now the success screen and toast fire from onSuccess; a failure keeps
-      // the organiser on the review step with an error toast so they can retry.
-      createEvent.mutate(formToCreateEventDto(form), {
-        onSuccess: ({ slug }) => {
-          if (slug) setCreatedSlug(slug);
-          setPublished(true);
-          showToast(t("gatherings:create.toast.published"), "success");
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        },
-        onError: () =>
-          showToast(t("gatherings:create.toast.publishError"), "error"),
-      });
+  // Publish stays pressable while not ready (`aria-disabled`), and a press
+  // then sends the host to the first thing missing: a required field, else
+  // the first unticked pledge.
+  const handlePublish = () => {
+    if (publishing.isPending) return;
+    if (isReady) {
+      publishing.publish();
       return;
     }
-    goToNextStep();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const back = () => {
-    if (currentStepIndex === 0) void navigate(routes.host);
-    else goToPreviousStep();
+    const firstUnmetItem = requiredItems.find((item) => !item.isMet);
+    if (firstUnmetItem) {
+      chapterFlow.openChapterAtField(
+        firstUnmetItem.chapterIndex,
+        firstUnmetItem.anchor,
+      );
+      return;
+    }
+    const firstUncheckedIndex = form.checks.findIndex(
+      (isChecked) => !isChecked,
+    );
+    if (firstUncheckedIndex !== -1) {
+      jumpToAnchor(confirmAnchor(firstUncheckedIndex), styles.gateFlash);
+    }
   };
 
-  // Sidebar tip tracks the on-screen step; the success screen keeps the review
-  // tip (matching the previous 1-indexed `min(step, TOTAL_STEPS)` behaviour).
-  const tipIndex = published ? TOTAL_STEPS - 1 : currentStepIndex;
+  // Both strip answers remove the strip with focus on it, so focus moves to
+  // the chapter head the host continues from.
+  const handleResume = () => {
+    draft.resume();
+    chapterFlow.openAfterResume();
+    afterRender(focusOpenChapterHead);
+  };
+
+  const handleStartFresh = () => {
+    draft.startFresh();
+    afterRender(focusOpenChapterHead);
+  };
+
+  if (publishing.isPublished) {
+    return (
+      <PageShell>
+        <section className={styles.page}>
+          <div className="wrap">
+            <CreateGatheringSuccess
+              form={form}
+              createdSlug={publishing.createdSlug}
+              occurrenceSlugs={publishing.occurrenceSlugs}
+            />
+          </div>
+        </section>
+      </PageShell>
+    );
+  }
+
+  const readyPanel = (
+    <CreateGatheringReadyPanel
+      form={form}
+      items={readiness}
+      isReady={isReady}
+      isPublishing={publishing.isPending}
+      onJumpToItem={(item) =>
+        chapterFlow.openChapterAtField(item.chapterIndex, item.anchor)
+      }
+      onPublish={handlePublish}
+    />
+  );
 
   return (
     <PageShell>
-      <section className={styles.section}>
+      <section className={styles.page}>
         <div className="wrap">
-          <div className={styles.head}>
-            <div className={styles.eye}>{t("gatherings:create.eyebrow")}</div>
-            <h2 className={styles.title}>
-              <Translation
-                i18nKey="gatherings:create.title"
-                components={{ em: <em /> }}
-              />
-            </h2>
-            <p className={styles.sub}>{t("gatherings:create.lead")}</p>
-          </div>
-
-          {!published && (
-            <div className={styles.progressWrap}>
-              <Stepper
-                steps={PILL_LABEL_KEYS.map((labelKey) => ({
-                  key: labelKey,
-                  label: t(labelKey),
-                }))}
-                current={currentStepIndex}
-                ariaLabel={t("gatherings:create.eyebrow")}
-              />
-            </div>
+          <CreateGatheringHead saveStatus={draft.saveStatus} />
+          {draft.resumeOffer && (
+            <DraftResumeStrip
+              offer={draft.resumeOffer}
+              onResume={handleResume}
+              onStartFresh={handleStartFresh}
+            />
           )}
-
-          <div className={styles.layout}>
-            <div>
-              {!published && (
-                <FadeIn key={currentStepIndex}>
-                  {currentStepIndex === 0 && <TypeStep form={form} />}
-                  {currentStepIndex === 1 && <DatePlaceStep form={form} />}
-                  {currentStepIndex === 2 && <RepeatsStep form={form} />}
-                  {currentStepIndex === 3 && <CapacityStep form={form} />}
-                  {currentStepIndex === 4 && <ReviewStep form={form} />}
-                </FadeIn>
-              )}
-
-              {published && (
-                <CreateGatheringSuccess
-                  accessibilityAnswers={form.accessibilityAnswers}
-                  createdSlug={createdSlug}
-                />
-              )}
-
-              {!published && (
-                <StepRequirementChecklist
-                  id={GATE_ID}
-                  requirements={requirements}
-                  isLastStep={isLastStep}
-                />
-              )}
-
-              {!published && (
-                <div className={styles.nav}>
-                  <button type="button" className={styles.back} onClick={back}>
-                    {currentStepIndex === 0 ? (
-                      t("gatherings:create.nav.cancel")
-                    ) : (
-                      <>
-                        <FiArrowLeft aria-hidden />{" "}
-                        {t("gatherings:create.nav.back")}
-                      </>
-                    )}
-                  </button>
-                  {/* `aria-disabled` rather than `disabled`: a disabled button
-                      cannot be focused, so a keyboard or screen-reader user had
-                      no way to reach the button OR the reason it was dark. The
-                      click handler already refuses to advance an unsatisfied
-                      step, so the behaviour is unchanged. */}
-                  <button
-                    type="button"
-                    className={styles.next}
-                    onClick={next}
-                    aria-disabled={nextDisabled}
-                    aria-describedby={GATE_ID}
-                  >
-                    {isLastStep ? (
-                      <>
-                        {t("gatherings:create.nav.publish")}{" "}
-                        <FiArrowRight aria-hidden />
-                      </>
-                    ) : (
-                      <>
-                        {t("gatherings:create.nav.continue")}{" "}
-                        <FiArrowRight aria-hidden />
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
+          <div className={styles.grid}>
+            <div className={styles.formColumn}>
+              <ChapterList form={form} chapterFlow={chapterFlow} />
+              {/* At 900px and under the rail stacks above the form, so the
+                  ready panel moves under the chapters it reports on. */}
+              {isCompact && readyPanel}
             </div>
-
-            <aside className={styles.sidebar}>
-              <div className={styles.tipCard}>
-                <div className={styles.tipTitle}>
-                  {t("gatherings:create.sidebar.tipLabel")}
-                </div>
-                <div className={styles.tipBody}>{t(TIP_KEYS[tipIndex]!)}</div>
-              </div>
-              <div className={styles.tipCard}>
-                <div className={styles.tipTitle}>
-                  {t("gatherings:create.sidebar.afterTitle")}
-                </div>
-                <div className={styles.tipBody}>
-                  {t("gatherings:create.sidebar.afterBody")}
-                </div>
-              </div>
+            <aside
+              className={styles.rail}
+              aria-label={t("gatherings:create.v2.rail.label")}
+            >
+              <GatheringPreviewPanel form={form} variant="rail" />
+              {!isCompact && readyPanel}
             </aside>
           </div>
         </div>
       </section>
+      {isCompact && (
+        <CreateGatheringMobileBar
+          metRequiredCount={metRequiredCount}
+          requiredCount={requiredItems.length}
+          checkedCount={form.checkedCount}
+          pledgeCount={PLEDGE_TEXT_KEYS.length}
+          isReady={isReady}
+          isPublishing={publishing.isPending}
+          onPublish={handlePublish}
+        />
+      )}
     </PageShell>
   );
 }

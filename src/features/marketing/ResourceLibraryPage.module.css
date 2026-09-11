@@ -151,6 +151,13 @@
   height: 13px;
   flex: none;
 }
+/* The guide's card chip ("Guide · 12 min · PT / EN"), set in the guide
+   workspace. `.chip` above is the filter chip, a different element. */
+.guideChip {
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-60);
+}
 .name {
   font-family: var(--serif);
   font-weight: 500;

@@ -21,6 +21,14 @@ export const ITEM_LINKS_SECTIONS = new Set<SubprofileSection>([
 /** Friendly per-item link cap surfaced on the Add affordance. */
 export const MAX_ITEM_LINKS = 6;
 
+/** Sections whose `imageUrl` is a photo of a certificate or diploma. The item
+ *  drawer adds a privacy note to the upload field, and the public row shows
+ *  the photo as a thumbnail that opens full size (`CredentialProofThumb`). */
+export const CREDENTIAL_PHOTO_SECTIONS = new Set<SubprofileSection>([
+  "credentials",
+  "trainings",
+]);
+
 // ── Meta-form options + copy ─────────────────────────────────────────────────
 // i18n label-key indirection throughout this section: `value`/the Record key
 // is the PERSISTED canonical id (visibility / linkVisibility are stored

@@ -334,7 +334,7 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   credentials: {
     labelKey: "subprofiles:section.credentials",
     icon: FiAward,
-    fields: ["title", "subtitle", "date"],
+    fields: ["title", "subtitle", "date", "imageUrl"],
   },
   // astrologer
   charts: {
@@ -561,7 +561,7 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
   trainings: {
     labelKey: "subprofiles:section.trainings",
     icon: FiAward,
-    fields: ["title", "subtitle", "date"],
+    fields: ["title", "subtitle", "date", "imageUrl"],
   },
   support: {
     labelKey: "subprofiles:section.support",

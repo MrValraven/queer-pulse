@@ -234,3 +234,59 @@
   line-height: 1.5;
   color: var(--ink-60);
 }
+
+/* A short single-line answer (pronouns), in the textarea's own frame. */
+.detailsInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  line-height: 1.5;
+}
+
+.detailsInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The host's own question used as a label: their sentence, in sentence case. */
+.detailsLabelQuestion {
+  font-size: var(--text-15);
+  font-weight: 600;
+  letter-spacing: normal;
+  line-height: 1.45;
+  text-transform: none;
+  color: var(--ink);
+}
+
+/* ── Taking care (GatheringTakingCare) ───────────────────────────────────── */
+.careRules {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.careTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+
+.careTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.careTag svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}

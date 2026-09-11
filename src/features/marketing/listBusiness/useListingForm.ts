@@ -37,6 +37,11 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     setPhotoPreviews((previews) => ({ ...previews, [key]: value }));
   }, []);
 
+  // Photo slots the server refused on the last submit or save (a
+  // `photos.<slot>` validation error), so the gallery can say so on the slot
+  // itself. Replacing or removing that slot's photo clears it.
+  const [rejectedPhotoSlots, setRejectedPhotoSlots] = useState<PhotoKey[]>([]);
+
   // Dated overrides of the weekly grid live in their own hook: they are a
   // self-contained sub-editor, and keeping them here would bury the rest.
   const hoursExceptionSetters = useHoursExceptionSetters(setDraft);
@@ -56,6 +61,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     (next?: ListingDraft) => {
       setDraft(next ?? blankDraft(seed));
       setPhotoPreviews({ wide: "", d1: "", d2: "", vibe: "" });
+      setRejectedPhotoSlots([]);
     },
     [seed],
   );
@@ -136,6 +142,9 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   );
   const setPhoto = useCallback((key: PhotoKey, v: string) => {
     setDraft((d) => ({ ...d, photos: { ...d.photos, [key]: v } }));
+    setRejectedPhotoSlots((slots) =>
+      slots.includes(key) ? slots.filter((slot) => slot !== key) : slots,
+    );
   }, []);
   const setAlt = useCallback((key: PhotoKey, v: string) => {
     setDraft((d) => ({ ...d, alt: { ...d.alt, [key]: v } }));
@@ -148,6 +157,8 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     draft,
     photoPreviews,
     setPhotoPreview,
+    rejectedPhotoSlots,
+    setRejectedPhotoSlots,
     set,
     reset,
     pickPath,

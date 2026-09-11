@@ -1,7 +1,5 @@
-import {
-  EditDetailsModal,
-  type GatheringDetailsDraft,
-} from "./EditDetailsModal";
+import { EditDetailsModal } from "./EditDetailsModal";
+import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { MessageAttendeesModal } from "./MessageAttendeesModal";
 import { SeriesEditScopeModal } from "./SeriesEditScopeModal";
 import type { SeriesScope } from "./api/events.api";

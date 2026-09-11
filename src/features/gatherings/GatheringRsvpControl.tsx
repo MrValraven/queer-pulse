@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Button } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GatheringDetail } from "./data";
 import { useAttendees } from "./api/useAttendees";
 import type { GatheringRsvpState } from "./useGatheringRsvp";
 import { GatheringRsvpDetailsModal } from "./GatheringRsvpDetailsModal";
-import { RsvpClosedPanel, RsvpConfirmedPanel } from "./GatheringRsvpPanels";
+import {
+  RsvpClosedPanel,
+  RsvpClosesNote,
+  RsvpConfirmedPanel,
+} from "./GatheringRsvpPanels";
+import { rsvpClosedText, rsvpClosesText } from "./rsvpCutoff";
 import styles from "./GatheringPage.module.css";
 
 /** The contact affordance returned by `useMemberContact` (connect vs. message). */
@@ -48,6 +54,7 @@ export function GatheringRsvpControl({
   rsvp: GatheringRsvpState;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [isDetailsOpen, setDetailsOpen] = useState(false);
 
   // The host's "Show attendee count" toggle (ENG-140). With it off, the server
@@ -72,7 +79,7 @@ export function GatheringRsvpControl({
   if (!rsvp.canRsvp) {
     return (
       <RsvpClosedPanel
-        isCancelled={rsvp.isCancelled}
+        reason={rsvp.isCancelled ? "cancelled" : "ended"}
         wasAttending={rsvp.isConfirmed || rsvp.isMaybe}
         messageLabel={messageLabel}
         onMessageHost={messageHost}
@@ -89,15 +96,22 @@ export function GatheringRsvpControl({
           goingCount={goingCount}
           isCountVisible={isCountVisible}
           isPending={rsvp.isPending}
+          canSwitchToGoing={!rsvp.isRsvpClosed}
           messageLabel={messageLabel}
           onGoing={rsvp.goOrWaitlist}
           onCancel={rsvp.cancelRsvp}
           onOpenDetails={() => setDetailsOpen(true)}
           onMessageHost={messageHost}
         />
+        {/* The modal asks what THIS gathering asks (ruling R8), so it takes
+            the questions off the detail the page already holds. */}
         {isDetailsOpen && (
           <GatheringRsvpDetailsModal
             slug={gathering.slug}
+            rsvpQuestions={gathering.rsvpQuestions}
+            customRsvpQuestion={gathering.customRsvpQuestion}
+            rsvpClosesAt={gathering.rsvpClosesAt ?? null}
+            isOrganizer={gathering.viewerIsOrganizer === true}
             onClose={() => setDetailsOpen(false)}
           />
         )}
@@ -105,8 +119,31 @@ export function GatheringRsvpControl({
     );
   }
 
+  // Past the host's cutoff, with no standing to keep: the same closed panel a
+  // cancelled or finished gathering shows, saying when RSVPs closed.
+  if (rsvp.isRsvpClosed) {
+    return (
+      <RsvpClosedPanel
+        reason="rsvpClosed"
+        wasAttending={false}
+        rsvpClosedNote={
+          rsvp.rsvpClosesAt
+            ? rsvpClosedText(rsvp.rsvpClosesAt, fmt, t, gathering.timezone)
+            : undefined
+        }
+        messageLabel={messageLabel}
+        onMessageHost={messageHost}
+      />
+    );
+  }
+
   return (
     <div className={styles.rsvpPanel}>
+      {rsvp.rsvpClosesAt && (
+        <RsvpClosesNote
+          text={rsvpClosesText(rsvp.rsvpClosesAt, fmt, t, gathering.timezone)}
+        />
+      )}
       <Button
         className={styles.fullBtn}
         disabled={rsvp.isPending}

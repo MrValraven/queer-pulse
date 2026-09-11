@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   createGlossaryTerm,
+  createResourceGuide,
   deleteGlossaryTerm,
   reviewGlossaryTerm,
   reviewResourceGuide,
@@ -19,6 +20,27 @@ import {
   ADMIN_RESOURCE_GUIDES_KEY,
 } from "./useAdminResourceGuides";
 import { useDemoAwareMutation } from "./demoAwareMutation";
+
+/** Creates a guide from the workspace's first save. */
+export function useCreateResourceGuide() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    AdminResourceGuideDTO | undefined,
+    Error,
+    ResourceGuideWriteBody & { slug: string }
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    demoResult: () => undefined,
+    live: (body) => createResourceGuide(body),
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_RESOURCE_GUIDES_KEY],
+      });
+    },
+  });
+}
 
 export interface UpdateResourceGuideVars {
   id: string;

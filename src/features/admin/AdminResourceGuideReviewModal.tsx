@@ -31,9 +31,13 @@ function defaultNextReview(): string {
 export function AdminResourceGuideReviewModal({
   guide,
   onClose,
+  onReviewed,
 }: {
   guide: AdminResourceGuideDTO;
   onClose: () => void;
+  /** Receives the reviewed guide (live mode), so the workspace can take its
+   *  new `updatedAt` without refetching. */
+  onReviewed?: (guide: AdminResourceGuideDTO) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -47,7 +51,15 @@ export function AdminResourceGuideReviewModal({
     reviewGuide.mutate(
       { id: guide.id, body: { reviewedBy, lastReviewedOn, reviewDueOn } },
       {
-        onSuccess: () => {
+        onSuccess: (reviewed) => {
+          // Demo mode resolves with nothing: say so instead of claiming the
+          // review was stamped.
+          if (!reviewed) {
+            showToast(t("admin:guideWorkspace.toast.demoNotSaved"), "info");
+            onClose();
+            return;
+          }
+          onReviewed?.(reviewed);
           showToast(
             t("admin:adminResourceGuides.toast.reviewed", {
               title: guide.title,

@@ -104,7 +104,12 @@ export function ListingWizard(props: ListingWizardProps) {
     savingLater,
     routeSubmitError,
     saveAndFinishLater,
-  } = useListingSubmit({ setStep, saveAndExit, flashClass: styles.fieldFlash });
+  } = useListingSubmit({
+    setStep,
+    saveAndExit,
+    flashClass: styles.fieldFlash,
+    onPhotosRejected: form.setRejectedPhotoSlots,
+  });
   // Guard against setState after unmount mid-send. Reset on setup so
   // StrictMode's mount→cleanup→remount doesn't leave the ref stuck at false.
   const mountedRef = useRef(true);

@@ -21,7 +21,7 @@ export type SuggestionReasonKind =
 
 export interface SuggestionReasonDTO {
   kind: SuggestionReasonKind;
-  /** Member or community data (a room's name, an interest tag, a custom
+  /** Member or community data (a community's name, an interest tag, a custom
    *  availability phrase). Stays in the language it was written in. */
   label: string | null;
   /** Set instead of `label` when the fact is a shared-vocabulary id the client

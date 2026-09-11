@@ -2,7 +2,9 @@ import { FiArrowRight } from "react-icons/fi";
 import { safeHref } from "../../shared/lib/safeHref";
 import { formatMonthYear } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { CredentialProofThumb } from "./CredentialProofThumb";
 import { ItemStateChip } from "./ItemStateChip";
+import { CREDENTIAL_PHOTO_SECTIONS } from "./subprofileEditor.data";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
@@ -66,6 +68,13 @@ export function SubprofileItemRow({
       )}
       {item.date && (
         <span className="when">{formatMonthYear(item.date, language)}</span>
+      )}
+      {CREDENTIAL_PHOTO_SECTIONS.has(item.section) && (
+        <CredentialProofThumb
+          item={item}
+          // A row that is itself a link or a button can't hold a button.
+          interactive={interactive && !isTicket && !onOpen}
+        />
       )}
       {skin === "stage" && ticketHref && (
         <span className="ticketgo">

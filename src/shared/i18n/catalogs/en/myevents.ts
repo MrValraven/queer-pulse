@@ -395,6 +395,7 @@ export const myevents: Catalog = {
   "rsvpModal.whosComing": "Who's coming",
   "rsvpModal.bringingGuest": "Bringing a +1",
   "rsvpModal.guestHint": "Add a name so the host can welcome them too",
+  "rsvpModal.guestClosedHint": "RSVPs have closed, so a +1 can't be added now.",
   "rsvpModal.guestNamePlaceholder": "Your guest's name (optional)",
   "rsvpModal.contributionLabel": "Your contribution",
   "rsvpModal.slidingHint":
@@ -409,6 +410,10 @@ export const myevents: Catalog = {
   "rsvpModal.dietaryNeeds": "Dietary needs",
   "rsvpModal.dietaryPlaceholder":
     "Allergies, vegan, halal, kosher, for events where food is shared…",
+  "rsvpModal.pronouns": "Pronouns",
+  "rsvpModal.pronounsPlaceholder": "she/her, they/them…",
+  "rsvpModal.customQuestionHint": "The host asked this one.",
+  "rsvpModal.customAnswerPlaceholder": "Your answer",
   "rsvpModal.whoSees": "Who can see you're going?",
   "rsvpModal.visibility.everyone": "Everyone",
   "rsvpModal.visibility.connections": "Connections",
@@ -422,6 +427,7 @@ export const myevents: Catalog = {
   "rsvpModal.saveCta": "Save",
   "rsvpModal.savedToast": "Saved. Only the host can see this",
   "rsvpModal.saveErrorToast": "That didn't save. Try again.",
+  "rsvpModal.closedToast": "RSVPs for this gathering have closed.",
 
   // ── Ticket modal (EventTicketModal) ───────────────────────────────────────
   "ticketModal.eyebrow": "Your ticket",

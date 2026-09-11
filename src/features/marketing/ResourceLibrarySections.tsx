@@ -126,6 +126,7 @@ export function GuideCard({ guide, index }: { guide: Guide; index: number }) {
             </>
           )}
         </div>
+        {guide.meta && <div className={s.guideChip}>{guide.meta}</div>}
         <div className={s.cardFoot}>
           {t("resources:library.readGuideCta")} <FiArrowRight aria-hidden />
         </div>

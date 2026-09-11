@@ -3,9 +3,9 @@ import { createContext, useContext, useEffect, useId } from "react";
 export interface Frame {
   id: string;
   fullHeight: boolean;
-  /** Desktop-only: the page draws its own chrome, so AppChrome mounts no top
-   * bar and no left rail above the mobile breakpoint. Mobile keeps both. */
-  desktopChromeless: boolean;
+  /** The page draws its own chrome, so AppChrome shows no top bar on any
+   * viewport and no left rail on desktop. The bottom tab bar stays on mobile. */
+  chromeless: boolean;
 }
 export interface ShellFrameApi {
   frames: Frame[];
@@ -25,29 +25,29 @@ function useShellFrameApi(): ShellFrameApi {
 /** Register the calling shell for its mounted lifetime. */
 export function useRegisterShellFrame(opts?: {
   fullHeight?: boolean;
-  desktopChromeless?: boolean;
+  chromeless?: boolean;
 }): void {
   const id = useId();
   const fullHeight = opts?.fullHeight ?? false;
-  const desktopChromeless = opts?.desktopChromeless ?? false;
+  const chromeless = opts?.chromeless ?? false;
   const { push, remove } = useShellFrameApi();
   useEffect(() => {
-    push({ id, fullHeight, desktopChromeless });
+    push({ id, fullHeight, chromeless });
     return () => remove(id);
-  }, [id, fullHeight, desktopChromeless, push, remove]);
+  }, [id, fullHeight, chromeless, push, remove]);
 }
 
 /** Read whether any standard frame is active, plus the top frame's flags. */
 export function useShellFrame(): {
   active: boolean;
   fullHeight: boolean;
-  desktopChromeless: boolean;
+  chromeless: boolean;
 } {
   const { frames } = useShellFrameApi();
   const top = frames[frames.length - 1];
   return {
     active: frames.length > 0,
     fullHeight: top?.fullHeight ?? false,
-    desktopChromeless: top?.desktopChromeless ?? false,
+    chromeless: top?.chromeless ?? false,
   };
 }

@@ -8,34 +8,6 @@
  * own vocabulary moved to `gatheringCatalog.ts`.
  */
 
-// Pricing/ticketing (formerly step 4) was removed from the active wizard flow:
-// the backend has no price columns and no payment integration anywhere (see
-// `PricingStep`'s deletion + `events.adapters.ts`'s `formToCreateEventDto`
-// doc), so the step implied a capture-and-honor promise the platform never
-// kept. Matches this platform's pattern of removing a fake-functional step
-// rather than leaving a "coming soon" stub that still looks interactive.
-//
-// `RepeatsStep` (MSG-10) took the freed slot right after date/place — a
-// gathering's cadence is a scheduling decision, so it reads naturally next
-// to when/where it happens.
-export const TOTAL_STEPS = 5;
-
-export const PILL_LABEL_KEYS = [
-  "gatherings:create.pill.type",
-  "gatherings:create.pill.datePlace",
-  "gatherings:create.pill.repeats",
-  "gatherings:create.pill.capacity",
-  "gatherings:create.pill.review",
-];
-
-export const TIP_KEYS = [
-  "gatherings:create.tip.type",
-  "gatherings:create.tip.datePlace",
-  "gatherings:create.tip.repeats",
-  "gatherings:create.tip.capacity",
-  "gatherings:create.tip.review",
-];
-
 // ── Repeats (MSG-10) ─────────────────────────────────────────────────────
 // `value` matches the backend's `RecurrenceCadence`/`RecurrenceEndType`
 // literal unions exactly (see events.api.ts) — never translated, only the
@@ -117,25 +89,6 @@ export function langLabelKey(value: string): string | undefined {
  * pledge about answers that are actually stored.
  */
 
-// "slidingScale" (ticket-pricing honesty) dropped along with the pricing
-// step above — there is no pricing to confirm honest anymore.
-export const CONFIRM_CHECK_KEYS = [
-  "gatherings:create.confirm.codeOfCare",
-  "gatherings:create.confirm.accessibility",
-];
-
-/**
- * The same two pledges, phrased as the action still outstanding, for the
- * "what is still missing" checklist above the publish button. Index-aligned
- * with `CONFIRM_CHECK_KEYS`: the checklist reads `form.checks[i]`. The pledge
- * text itself is a full sentence the host is signing, which reads wrong in a
- * to-do line, so the two are worded separately rather than reused.
- */
-export const CONFIRM_GATE_LABEL_KEYS = [
-  "gatherings:create.gate.confirm.codeOfCare",
-  "gatherings:create.gate.confirm.accessibility",
-];
-
 /**
  * Where each requirement in the "what is still missing" checklist actually
  * lives on the page.
@@ -146,10 +99,11 @@ export const CONFIRM_GATE_LABEL_KEYS = [
  * it jumps to, put on the field GROUP (label, control and hint together) so
  * the flash marks the thing the row names rather than a bare input.
  *
- * Only one wizard step is mounted at a time, so a constant id per field is
- * unique on the page. Ids are attached in the step components and read in
- * `StepRequirementChecklist`; `stepRequirements()` is what pairs them with a
- * row.
+ * Create Gathering v2 keeps all five chapter bodies mounted (a closed chapter
+ * is `hidden`), and each field is rendered exactly once, so a constant id per
+ * field is still unique on the page. Ids are attached by the chapter bodies
+ * and read by `jumpToAnchor` (createGatheringChapters.ts), which the ready
+ * panel and the chapter footers call.
  */
 export const GATE_ANCHOR = {
   type: "cg-gate-type",
@@ -161,10 +115,124 @@ export const GATE_ANCHOR = {
   date: "cg-gate-date",
   joinLink: "cg-gate-join-link",
   recurrence: "cg-gate-recurrence",
+  /** Chapter 1's cover image field (a soft readiness row). */
+  cover: "cg-gate-cover",
+  /** Chapter 2's neighbourhood field (a soft readiness row). */
+  hood: "cg-gate-hood",
+  /** Chapter 4's six accessibility questions (a soft readiness row). */
+  accessibility: "cg-gate-accessibility",
 } as const;
 
-/** The anchor of one publish pledge, index-aligned with
- *  `CONFIRM_CHECK_KEYS` / `CONFIRM_GATE_LABEL_KEYS`. */
+/** The anchor of one publish pledge, index-aligned with `PLEDGE_TEXT_KEYS`. */
 export function confirmAnchor(index: number): string {
   return `cg-gate-confirm-${index}`;
 }
+
+// ── Create Gathering v2: chapters, ready panel, drafts ────────────────────
+
+export type CreateGatheringChapterId =
+  "what" | "whenWhere" | "who" | "access" | "care";
+
+export interface CreateGatheringChapterDefinition {
+  id: CreateGatheringChapterId;
+  /** The serif title, with its coral `<em>` run. */
+  titleKey: string;
+  /** The muted paragraph at the top of the open chapter. */
+  introKey: string;
+  /** Shows the "optional" tag in the collapsed head. */
+  isOptional: boolean;
+}
+
+/** The five chapters, in page order. Index-aligned with the gates and
+ *  summaries in `createGatheringChapters.ts`. */
+export const CREATE_GATHERING_CHAPTERS: readonly CreateGatheringChapterDefinition[] =
+  [
+    {
+      id: "what",
+      titleKey: "gatherings:create.v2.chapter.what.title",
+      introKey: "gatherings:create.v2.chapter.what.intro",
+      isOptional: false,
+    },
+    {
+      id: "whenWhere",
+      titleKey: "gatherings:create.v2.chapter.whenWhere.title",
+      introKey: "gatherings:create.v2.chapter.whenWhere.intro",
+      isOptional: false,
+    },
+    {
+      id: "who",
+      titleKey: "gatherings:create.v2.chapter.who.title",
+      introKey: "gatherings:create.v2.chapter.who.intro",
+      isOptional: false,
+    },
+    {
+      id: "access",
+      titleKey: "gatherings:create.v2.chapter.access.title",
+      introKey: "gatherings:create.v2.chapter.access.intro",
+      isOptional: false,
+    },
+    {
+      id: "care",
+      titleKey: "gatherings:create.v2.chapter.care.title",
+      introKey: "gatherings:create.v2.chapter.care.intro",
+      isOptional: true,
+    },
+  ];
+
+/** The `<section>` of one chapter (0-based). Continue scrolls to it. */
+export function chapterSectionId(chapterIndex: number): string {
+  return `cg-chapter-${chapterIndex}`;
+}
+
+/** The head button of one chapter. Continue moves focus to it. */
+export function chapterHeadId(chapterIndex: number): string {
+  return `cg-chapter-${chapterIndex}-head`;
+}
+
+/** The body region of one chapter, named by the head's `aria-controls`. */
+export function chapterBodyId(chapterIndex: number): string {
+  return `cg-chapter-${chapterIndex}-body`;
+}
+
+/** The ready panel. "Looks good" on the last chapter scrolls to it. */
+export const READY_PANEL_ANCHOR = "cg-ready";
+
+/** The two publish pledges shown in the ready panel, index-aligned with
+ *  `form.checks` and `confirmAnchor(index)`. */
+export const PLEDGE_TEXT_KEYS = [
+  "gatherings:create.v2.confirm.codeOfCare",
+  "gatherings:create.v2.confirm.accessibility",
+];
+
+/** Index-aligned with `PLEDGE_TEXT_KEYS`: the label of the Code of Care link
+ *  shown under a pledge, or null for a pledge without one. The link sits
+ *  beside the checkbox, outside it, so it stays reachable. */
+export const PLEDGE_LINK_LABEL_KEYS: readonly (string | null)[] = [
+  "gatherings:create.v2.confirm.codeOfCareLink",
+  null,
+];
+
+/** At or under this width the rail stacks above the form, the ready panel
+ *  moves under the chapters and the mobile publish bar appears. Matches the
+ *  `--wide` breakpoint token. */
+export const COMPACT_LAYOUT_QUERY = "(max-width: 900px)";
+
+/** A draft is stored under `${prefix}:${memberId or "anon"}`. */
+export const CREATE_GATHERING_DRAFT_KEY_PREFIX = "qp-create-gathering-draft-v1";
+
+/** How long the form has to stay still before the draft is written. */
+export const DRAFT_SAVE_DELAY_MS = 700;
+
+/** How often "Saved · N min" re-reads the clock. */
+export const DRAFT_CLOCK_TICK_MS = 30_000;
+
+/**
+ * The role and commitment a co-host picked in the wizard is invited with
+ * (ruling R12). The wizard asks only who; `POST /events/:slug/cohost-invites`
+ * also needs these two, and the lightest pair describes what the wizard
+ * promises ("they appear on the card and receive RSVPs too"). The invitee
+ * reads both on their invite page, and the host can send a fuller invite from
+ * the manage page.
+ */
+export const COHOST_INVITE_DEFAULT_ROLE = "greeter";
+export const COHOST_INVITE_DEFAULT_COMMITMENT = "light";

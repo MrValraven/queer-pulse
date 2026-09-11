@@ -1697,6 +1697,14 @@ export const marketing: Catalog = {
   "listBusiness.step4.photo.remove": "Remove photo",
   "listBusiness.step4.photo.urlPlaceholder": "or paste an image URL",
   "listBusiness.step4.photo.urlInvalid": "That doesn't look like an image URL",
+  "listBusiness.step4.photo.urlNotHttps":
+    "Paste a link that starts with https://",
+  "listBusiness.step4.photo.urlHostNotAllowed":
+    "Linked photos have to come from Google or Unsplash. For anything else, upload the photo.",
+  "listBusiness.step4.photo.urlDidNotLoad":
+    "That link didn't open an image. Use a link that goes straight to the photo.",
+  "listBusiness.step4.photo.serverRejected":
+    "We couldn't save this photo. Upload it again or pick a different one.",
   "listBusiness.step4.photo.uploadError":
     "Couldn't upload that image. Try again",
   "listBusiness.step4.aboutYouHeading": "A little about you",
@@ -2265,6 +2273,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-11.headline":
+    "Hosts create gatherings in five short chapters, and guides get a full editor.",
   "changelog.releases.2026-09-10.headline":
     "Every chat can carry its own wallpaper, in a colour you choose.",
   "changelog.releases.2026-09-09.headline":
@@ -2437,6 +2447,74 @@ export const marketing: Catalog = {
     "Bio mentions read as names",
   "changelog.entries.bio-mentions-read-as-names.body":
     "Someone you tag in your bio now shows up by name, wherever they sit in the directory.",
+  "changelog.entries.vouching-happens-on-each-profile.title":
+    "Vouching happens on a member's profile",
+  "changelog.entries.vouching-happens-on-each-profile.body":
+    "The separate vouch page and its account menu link are gone. Open someone's profile to vouch for them.",
+  "changelog.entries.listing-photos-flag-problems-before-you-submit.title":
+    "Business listing photos flag problems before you submit",
+  "changelog.entries.listing-photos-flag-problems-before-you-submit.body":
+    "Unsupported file types, links from other sites and links that don't open an image get flagged on the slot.",
+  "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.title":
+    "Add a photo of your certificate to a persona",
+  "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.body":
+    "Credentials and trainings take a diploma photo that opens full size, with a reminder to cover ID numbers.",
+  "changelog.entries.the-directory-stops-pitching-invites-to-members.title":
+    "The directory stops asking members to request an invite",
+  "changelog.entries.the-directory-stops-pitching-invites-to-members.body":
+    "Only signed-in members can open the directory, so the join pitch at the bottom is gone.",
+  "changelog.entries.list-your-business-from-the-directory-hero.title":
+    "List your business from the top of the directory",
+  "changelog.entries.list-your-business-from-the-directory-hero.body":
+    "The button sits beside the community-verified note, so you no longer scroll past every result to find it.",
+  "changelog.entries.reposition-a-photo-you-already-uploaded.title":
+    "Reposition a photo you already uploaded",
+  "changelog.entries.reposition-a-photo-you-already-uploaded.body":
+    "Every photo in Your photos gets a crop button to zoom and move it without uploading it again.",
+  "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.title":
+    "Edit a gathering's care and RSVP settings after publishing",
+  "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.body":
+    "RSVPs can now close when a gathering starts, and repeating gatherings keep their time when the clocks change.",
+  "changelog.entries.calendars-open-in-front-of-dialogs.title":
+    "Calendars open in front of dialogs",
+  "changelog.entries.calendars-open-in-front-of-dialogs.body":
+    "The calendar now opens on top when you pick a date inside an editor, like a persona's training item.",
+  "changelog.entries.the-personas-section-shows-who-sees-each-side.title":
+    "The personas section shows who sees each side",
+  "changelog.entries.the-personas-section-shows-who-sees-each-side.body":
+    "Pick a persona to see its page next to who can find it and whether it links back to your name.",
+  "changelog.entries.guide-editor-workspace.title":
+    "Edit resource guides in a full workspace",
+  "changelog.entries.guide-editor-workspace.body":
+    "Formatting, live preview, card previews, links to where each guide appears, and drafts kept in your browser.",
+  "changelog.entries.create-a-gathering-in-five-short-chapters.title":
+    "Create a gathering in five short chapters with a live preview",
+  "changelog.entries.create-a-gathering-in-five-short-chapters.body":
+    "Hosts can now add house rules, content notes, themes, RSVP questions and a time when RSVPs close.",
+  "changelog.entries.the-landing-page-drops-the-bottom-bar-for-visitors.title":
+    "The landing page on a phone drops the bottom bar for visitors",
+  "changelog.entries.the-landing-page-drops-the-bottom-bar-for-visitors.body":
+    "Signed-out visitors read the pitch full screen, with the footer's links back at the end of the page.",
+  "changelog.entries.the-phone-top-bar-slides-away-as-you-scroll.title":
+    "The top bar on a phone slides away as you scroll",
+  "changelog.entries.the-phone-top-bar-slides-away-as-you-scroll.body":
+    "Scroll down to read with the whole screen, and the bar glides back the moment you scroll up.",
+  "changelog.entries.communities-takes-the-members-tab.title":
+    "Communities takes the Members tab on a phone",
+  "changelog.entries.communities-takes-the-members-tab.body":
+    "The bottom bar now opens Communities & Collectives, and the members directory sits under More.",
+  "changelog.entries.the-bell-opens-your-recent-notifications.title":
+    "The bell opens your recent notifications in place",
+  "changelog.entries.the-bell-opens-your-recent-notifications.body":
+    "Scroll the newest ones from any page, then open the full list from the button at the bottom.",
+  "changelog.entries.messages-on-a-phone-gets-its-own-header.title":
+    "Messages on a phone gets its own header",
+  "changelog.entries.messages-on-a-phone-gets-its-own-header.body":
+    "The top bar steps aside there, and a back arrow beside the QueerPulse wordmark takes you where you were.",
+  "changelog.entries.writer-and-poet-personas-show-their-photo.title":
+    "Writer and poet personas show their photo",
+  "changelog.entries.writer-and-poet-personas-show-their-photo.body":
+    "Journalists, editors, translators and academics too: an uploaded photo now sits as a portrait above the name.",
   "changelog.entries.pick-a-wallpaper-for-each-chat.title":
     "Pick a wallpaper for each chat",
   "changelog.entries.pick-a-wallpaper-for-each-chat.body":
@@ -6406,6 +6484,7 @@ export const marketing: Catalog = {
   // claim, confirm and dispute flows do back.
   "directory.hero.note":
     "Community-verified · kept up by members and the businesses themselves",
+  "directory.hero.cta": "List your business",
   "directory.search.placeholder": "Search by name, neighbourhood, or type…",
   "directory.cat.all": "All",
   "directory.cat.food": "Food & drink",
@@ -6530,11 +6609,6 @@ export const marketing: Catalog = {
   "directory.verify.pillar.recheck.title": "Re-checked every year",
   "directory.verify.pillar.recheck.body":
     "No badge is permanent. Any member can flag a space, and it can be pulled.",
-  "directory.outro.title":
-    "New to Lisbon? <em>You're not starting from zero.</em>",
-  "directory.outro.sub":
-    "Join the network and get access to the full directory, member recommendations, and a community that knows the city.",
-  "directory.outro.cta": "Request an invite",
   "directory.detail.breadcrumbAria": "Breadcrumb",
   "directory.detail.breadcrumbHome": "Directory",
   "directory.detail.relatedTitle": "More {category} nearby",

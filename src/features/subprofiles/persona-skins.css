@@ -1379,7 +1379,20 @@ button.pp-row {
   margin: 0 auto;
   padding-top: var(--section-y-56);
 }
+/* The author portrait: a small round photo centred over the title. The base
+   hero's thick cream frame, drop shadow and negative top margin exist to lift
+   the avatar off a cover, and this skin has no cover, so all three go (the
+   margin also beats the mobile hero's lower-specificity pull-up). Only a real
+   photo shows: an initials circle has no place on a page of a book, and before
+   this the skin hid the avatar outright, so uploaded photos never appeared. */
 .pp[data-skin="page"] .pp-av {
+  width: 2.588em; /* 88 / 34 */
+  height: 2.588em;
+  margin-top: 0;
+  border: none;
+  box-shadow: none;
+}
+.pp[data-skin="page"] .pp-av:not(:has(img)) {
   display: none;
 }
 .pp[data-skin="page"] .pp-text {

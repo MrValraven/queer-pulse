@@ -3,11 +3,12 @@ import {
   applyEditDraft,
   buildEditPatch,
   canSaveEditDraft,
+  editDraftCareFields,
   editDraftFormatFields,
   editScheduleProblem,
   type GatheringState,
 } from "./manageGatheringState";
-import type { GatheringDetailsDraft } from "./EditDetailsModal";
+import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { createFormatters } from "../../shared/i18n/format";
 import { catalogs, loadNamespace } from "../../shared/i18n/catalogs";
 import type { Catalog, TFunction } from "../../shared/i18n/types";
@@ -62,6 +63,15 @@ function draftOf(
     format: "",
     otherText: "",
     formatDetails: {},
+    coverImageUrl: "",
+    themes: [],
+    contentNotes: [],
+    houseRules: "",
+    costKind: "free",
+    cost: "",
+    rsvpCutoff: null,
+    rsvpQuestions: { dietary: false, pronouns: false, access: true },
+    customRsvpQuestion: "",
     ...overrides,
   };
 }
@@ -93,6 +103,15 @@ function stateOf(overrides: Partial<GatheringState> = {}): GatheringState {
     gatheringFamily: null,
     eventType: null,
     formatDetails: null,
+    coverImageUrl: "",
+    themes: [],
+    contentNotes: [],
+    houseRules: "",
+    costKind: "free",
+    cost: "",
+    rsvpCutoff: null,
+    rsvpQuestions: { dietary: false, pronouns: false, access: true },
+    customRsvpQuestion: "",
     ...overrides,
   };
 }
@@ -299,5 +318,208 @@ describe("editScheduleProblem", () => {
     ).toBe(true);
     // A gathering that names no format at all is still saveable.
     expect(canSaveEditDraft(draftOf())).toBe(true);
+  });
+});
+
+const SAVED_COVER_URL = "https://api.example.test/files/covers/supper.jpg";
+
+describe("buildEditPatch: cover, care and RSVPs", () => {
+  it("leaves an untouched cover off the patch", () => {
+    // The detail holds a resolved read URL and the PATCH names a storage key,
+    // so an untouched cover has nothing to tell the server.
+    const patch = buildEditPatch(
+      stateOf({ coverImageUrl: SAVED_COVER_URL }),
+      draftOf({ coverImageUrl: SAVED_COVER_URL }),
+    );
+    expect("coverImageUrl" in patch).toBe(false);
+  });
+
+  it("sends a newly picked cover's storage key", () => {
+    const patch = buildEditPatch(
+      stateOf({ coverImageUrl: SAVED_COVER_URL }),
+      draftOf({ coverImageUrl: "event-cover/new.jpg" }),
+    );
+    expect(patch.coverImageUrl).toBe("event-cover/new.jpg");
+  });
+
+  it("clears a removed cover with an empty string", () => {
+    // The server's image-reference check reads "" as no image.
+    const patch = buildEditPatch(
+      stateOf({ coverImageUrl: SAVED_COVER_URL }),
+      draftOf({ coverImageUrl: "" }),
+    );
+    expect(patch.coverImageUrl).toBe("");
+  });
+
+  it("sends a null cost when the gathering turns free", () => {
+    // Ruling F11: a free gathering holds no cost, on the server and here.
+    const patch = buildEditPatch(
+      stateOf({ costKind: "fixed", cost: "8 EUR at the door" }),
+      draftOf({ costKind: "free", cost: "8 EUR at the door" }),
+    );
+    expect(patch.costKind).toBe("free");
+    expect(patch.cost).toBeNull();
+    expect("cost" in patch).toBe(true);
+  });
+
+  it("sends the host's cost words, trimmed, for a paid kind", () => {
+    const patch = buildEditPatch(
+      stateOf(),
+      draftOf({ costKind: "pay-what-you-can", cost: "  5 to 15 EUR  " }),
+    );
+    expect(patch.costKind).toBe("pay-what-you-can");
+    expect(patch.cost).toBe("5 to 15 EUR");
+  });
+
+  it("leaves an unchanged cost off the patch", () => {
+    // An older gathering's kind is a reading of its cost words, and the
+    // reading stays off the wire until the host changes something.
+    const patch = buildEditPatch(
+      stateOf({ costKind: "fixed", cost: "8 EUR" }),
+      draftOf({ costKind: "fixed", cost: "8 EUR" }),
+    );
+    expect("costKind" in patch).toBe(false);
+    expect("cost" in patch).toBe(false);
+  });
+
+  it("narrows the themes against the family chosen in the same edit", () => {
+    // A party asks "adults only?" and "sober friendly?" in its own details,
+    // so those two themes go (ruling R6).
+    const patch = buildEditPatch(
+      stateOf(),
+      draftOf({
+        gatheringFamily: "party",
+        themes: ["sober", "trans-led", "adults-only"],
+      }),
+    );
+    expect(patch.themes).toEqual(["trans-led"]);
+  });
+
+  it("keeps access needs asked whatever the draft holds", () => {
+    // Ruling R8, the same `access: true` the create payload sends.
+    const patch = buildEditPatch(
+      stateOf(),
+      draftOf({
+        rsvpQuestions: { dietary: true, pronouns: false, access: false },
+      }),
+    );
+    expect(patch.rsvpQuestions).toEqual({
+      dietary: true,
+      pronouns: false,
+      access: true,
+    });
+  });
+
+  it("sends When it ends as an explicit null cutoff", () => {
+    const patch = buildEditPatch(
+      stateOf({ rsvpCutoff: "day-before" }),
+      draftOf({ rsvpCutoff: null }),
+    );
+    expect(patch.rsvpCutoff).toBeNull();
+    expect("rsvpCutoff" in patch).toBe(true);
+  });
+
+  it("clears blank house rules and a blank custom question with null", () => {
+    const patch = buildEditPatch(
+      stateOf({
+        houseRules: "Ask before hugging.",
+        customRsvpQuestion: "Bringing anything?",
+      }),
+      draftOf({ houseRules: "   ", customRsvpQuestion: "" }),
+    );
+    expect(patch.houseRules).toBeNull();
+    expect(patch.customRsvpQuestion).toBeNull();
+  });
+
+  it("sends content notes and trimmed care text as the host left them", () => {
+    const patch = buildEditPatch(
+      stateOf(),
+      draftOf({
+        contentNotes: ["loud-sound", "alcohol-present"],
+        houseRules: "  No phones at the table.  ",
+        customRsvpQuestion: " What will you cook? ",
+      }),
+    );
+    expect(patch.contentNotes).toEqual(["loud-sound", "alcohol-present"]);
+    expect(patch.houseRules).toBe("No phones at the table.");
+    expect(patch.customRsvpQuestion).toBe("What will you cook?");
+  });
+});
+
+describe("editDraftCareFields", () => {
+  it("opens the modal on the saved cover, care and RSVP settings", () => {
+    const fields = editDraftCareFields(
+      stateOf({
+        coverImageUrl: SAVED_COVER_URL,
+        gatheringFamily: "eat",
+        themes: ["sober", "family-friendly"],
+        contentNotes: ["alcohol-present"],
+        houseRules: "Ask before hugging.",
+        costKind: "pay-what-you-can",
+        cost: "5 to 15 EUR",
+        rsvpCutoff: "day-before",
+        rsvpQuestions: { dietary: true, pronouns: true, access: true },
+        customRsvpQuestion: "What will you bring?",
+      }),
+    );
+    expect(fields).toEqual({
+      coverImageUrl: SAVED_COVER_URL,
+      themes: ["sober", "family-friendly"],
+      contentNotes: ["alcohol-present"],
+      houseRules: "Ask before hugging.",
+      costKind: "pay-what-you-can",
+      cost: "5 to 15 EUR",
+      rsvpCutoff: "day-before",
+      rsvpQuestions: { dietary: true, pronouns: true, access: true },
+      customRsvpQuestion: "What will you bring?",
+    });
+  });
+
+  it("opens with access needs on and without themes the family already asks", () => {
+    const fields = editDraftCareFields(
+      stateOf({
+        gatheringFamily: "party",
+        themes: ["adults-only", "sapphic"],
+        rsvpQuestions: { dietary: false, pronouns: false, access: false },
+      }),
+    );
+    expect(fields.themes).toEqual(["sapphic"]);
+    expect(fields.rsvpQuestions.access).toBe(true);
+  });
+});
+
+describe("applyEditDraft: cover, care and RSVPs", () => {
+  it("folds the saved care into the dashboard's own state", () => {
+    const next = applyEditDraft(
+      stateOf({ costKind: "fixed", cost: "8 EUR" }),
+      draftOf({
+        coverImageUrl: "event-cover/new.jpg",
+        themes: ["sapphic"],
+        houseRules: " Ask first. ",
+        costKind: "free",
+        cost: "8 EUR",
+        rsvpCutoff: "three-days-before",
+      }),
+      fmt,
+      t,
+    );
+    expect(next.coverImageUrl).toBe("event-cover/new.jpg");
+    expect(next.themes).toEqual(["sapphic"]);
+    expect(next.houseRules).toBe("Ask first.");
+    // A free gathering holds no cost, so a second edit opens on none.
+    expect(next.costKind).toBe("free");
+    expect(next.cost).toBe("");
+    expect(next.rsvpCutoff).toBe("three-days-before");
+  });
+
+  it("keeps a cover saved in this visit off the next patch until it changes", () => {
+    const saved = applyEditDraft(
+      stateOf(),
+      draftOf({ coverImageUrl: "event-cover/new.jpg" }),
+      fmt,
+      t,
+    );
+    const reopened = { ...draftOf(), ...editDraftCareFields(saved) };
+    expect("coverImageUrl" in buildEditPatch(saved, reopened)).toBe(false);
   });
 });

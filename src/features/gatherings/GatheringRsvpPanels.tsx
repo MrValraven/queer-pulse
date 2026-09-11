@@ -1,43 +1,66 @@
-import { FiCheckCircle, FiSlash } from "react-icons/fi";
+import { FiCheckCircle, FiClock, FiSlash } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RsvpStatus } from "./useGatheringRsvp";
 import styles from "./GatheringPage.module.css";
 
+/** Why nobody new can join: called off, already over, or past the host's
+ *  RSVP cutoff. */
+export type RsvpClosedReason = "cancelled" | "ended" | "rsvpClosed";
+
+function closedTitleKey(reason: RsvpClosedReason): string {
+  if (reason === "cancelled") return "gatherings:rsvpControl.cancelledTitle";
+  if (reason === "ended") return "gatherings:rsvpControl.endedTitle";
+  return "gatherings:rsvpControl.rsvpClosedTitle";
+}
+
+function closedNoteKey(reason: RsvpClosedReason, wasAttending: boolean) {
+  if (reason === "cancelled") {
+    return wasAttending
+      ? "gatherings:rsvpControl.cancelledAttendingNote"
+      : "gatherings:rsvpControl.cancelledNote";
+  }
+  if (reason === "ended") {
+    return wasAttending
+      ? "gatherings:rsvpControl.endedAttendingNote"
+      : "gatherings:rsvpControl.endedNote";
+  }
+  return "gatherings:gathering.rsvpClosedBanner";
+}
+
 /**
- * The sidebar panel for a gathering nobody can still join: called off, or
- * already over (PRD-181, PRD-183).
+ * The sidebar panel for a gathering nobody new can join: called off, already
+ * over (PRD-181, PRD-183), or past the host's RSVP cutoff (Create Gathering
+ * v2).
  *
- * Both used to render the ordinary RSVP control — a live-looking button that
- * the server answered with a 400 the member could not read. This says which of
- * the two it is, and tells someone who WAS coming that their plan has changed,
+ * The first two used to render the ordinary RSVP control: a live-looking
+ * button the server answered with a 400 the member could not read. This says which of
+ * them it is, and tells someone who WAS coming that their plan has changed,
  * which is the fact they actually need. Contacting the host stays available:
- * "what happened?" is a reasonable next question in both cases.
+ * "what happened?" is a reasonable next question in every case.
  */
 export function RsvpClosedPanel({
-  isCancelled,
+  reason,
   wasAttending,
+  rsvpClosedNote,
   messageLabel,
   onMessageHost,
 }: {
-  isCancelled: boolean;
+  reason: RsvpClosedReason;
   /** The viewer held a seat, a waitlist place or a "maybe". */
   wasAttending: boolean;
+  /** For `rsvpClosed`: when RSVPs closed, already in words. */
+  rsvpClosedNote?: string;
   messageLabel: string;
   onMessageHost: () => void;
 }) {
   const { t } = useTranslation();
-  const titleKey = isCancelled
-    ? "gatherings:rsvpControl.cancelledTitle"
-    : "gatherings:rsvpControl.endedTitle";
-  const noteKey = isCancelled
-    ? wasAttending
-      ? "gatherings:rsvpControl.cancelledAttendingNote"
-      : "gatherings:rsvpControl.cancelledNote"
-    : wasAttending
-      ? "gatherings:rsvpControl.endedAttendingNote"
-      : "gatherings:rsvpControl.endedNote";
+  const titleKey = closedTitleKey(reason);
+  const note =
+    reason === "rsvpClosed" && rsvpClosedNote
+      ? rsvpClosedNote
+      : t(closedNoteKey(reason, wasAttending));
 
   return (
     <div className={styles.rsvpPanel}>
@@ -48,7 +71,7 @@ export function RsvpClosedPanel({
           </span>
           <Translation i18nKey={titleKey} components={{ em: <em /> }} />
         </div>
-        <p className={styles.rsvpConfirmNote}>{t(noteKey)}</p>
+        <p className={styles.rsvpConfirmNote}>{note}</p>
         <div className={styles.rsvpActions}>
           <Button
             variant="ghost-dark"
@@ -60,6 +83,16 @@ export function RsvpClosedPanel({
         </div>
       </div>
     </div>
+  );
+}
+
+/** "RSVPs close in 3 hours", above the RSVP buttons while they still work. */
+export function RsvpClosesNote({ text }: { text: string }) {
+  return (
+    <p className={styles.rsvpCutoffNote}>
+      <FiClock aria-hidden />
+      <span>{text}</span>
+    </p>
   );
 }
 
@@ -77,6 +110,7 @@ export function RsvpConfirmedPanel({
   goingCount,
   isCountVisible,
   isPending,
+  canSwitchToGoing,
   messageLabel,
   onGoing,
   onCancel,
@@ -88,6 +122,9 @@ export function RsvpConfirmedPanel({
   goingCount: number;
   isCountVisible: boolean;
   isPending: boolean;
+  /** False once the host's RSVP cutoff has passed: the server refuses a
+   *  maybe becoming a seat from then on. */
+  canSwitchToGoing: boolean;
   messageLabel: string;
   /** Upgrade a "maybe" to a real seat. */
   onGoing: () => void;
@@ -112,7 +149,11 @@ export function RsvpConfirmedPanel({
         })
       : t("gatherings:rsvpControl.waitlistNote")
     : isMaybe
-      ? t("gatherings:rsvpControl.maybeNote")
+      ? t(
+          canSwitchToGoing
+            ? "gatherings:rsvpControl.maybeNote"
+            : "gatherings:rsvpControl.maybeClosedNote",
+        )
       : isCountVisible
         ? t("gatherings:rsvpControl.goingCount", { count: goingCount })
         : t("gatherings:rsvpControl.goingCountHidden");
@@ -128,7 +169,7 @@ export function RsvpConfirmedPanel({
         </div>
         <p className={styles.rsvpConfirmNote}>{note}</p>
         <div className={styles.rsvpActions}>
-          {isMaybe && (
+          {isMaybe && canSwitchToGoing && (
             <Button
               variant="ghost-dark"
               className={styles.fullBtn}

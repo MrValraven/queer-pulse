@@ -23,8 +23,8 @@ import styles from "./PublicProfilePage.module.css";
  *
  * This is the prototype's storyboard of what a public profile could grow into,
  * so it renders fields (neighbourhood, tenure, vouch count, socials) that the
- * real `GET /public/profiles/:slug` does not serve, and links to `/vouch`,
- * which only has content in demo. None of that may run in live mode: an owner
+ * real `GET /public/profiles/:slug` does not serve. None of that may run in
+ * live mode: an owner
  * deciding whether to publish must see what strangers really get, which is
  * `PublicProfilePublicView`. Keeping the two bodies in separate files is what
  * keeps that split honest.

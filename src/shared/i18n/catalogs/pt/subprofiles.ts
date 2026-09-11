@@ -866,6 +866,15 @@ export const subprofiles: Catalog = {
   "imageUpload.removeConfirm.confirm": "Remover",
   "imageUpload.removeConfirm.cancel": "Manter",
 
+  // Foto do certificado num item de credenciais/formações: placeholder e nota
+  // de privacidade no editor (SubprofileItemDrawerFields), e a miniatura na
+  // linha pública com o visualizador em tamanho real (CredentialProofThumb).
+  "credentialPhoto.placeholder": "Foto do teu certificado",
+  "credentialPhoto.privacyNote":
+    "Quem visitar esta página pode ver esta foto. Antes de a carregares, tapa os números de identificação e qualquer nome que não queiras mostrar.",
+  "credentialPhoto.alt": "Certificado de {title}",
+  "credentialPhoto.openAria": "Abrir o certificado de {title} em ecrã inteiro",
+
   // Cabeçalho da persona (SubprofileHero)
   "hero.message": "Mensagem",
   "hero.edit": "Editar persona",

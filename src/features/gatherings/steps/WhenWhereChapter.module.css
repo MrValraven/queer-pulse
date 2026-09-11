@@ -1,0 +1,92 @@
+/* Create Gathering v2, chapter 2 (When and where). The span readout, the
+   address label note, the repeat rule panel and the series preview.
+   Design source: qp-create-gathering.css (.runs, .rep, .rep-preview) and
+   qp-create-gathering-v2.css (.series, .srow), raw values mapped to tokens.
+   Fields themselves come from CreateGatheringFields.module.css. */
+
+/* "Runs 3h" under the end pair. */
+.runs {
+  margin: 7px 0 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--jade-ink);
+}
+
+/* The muted words after a label ("shared only with confirmed attendees"). */
+.labelNote {
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+/* ── Repeat rule ── */
+/* The first field sits flush under the switch panel's own padding. */
+.repeatRule > :first-child {
+  margin-top: 0;
+}
+.countInput {
+  max-width: 160px;
+}
+.untilPicker {
+  max-width: 220px;
+}
+
+/* ── Series preview ── */
+.seriesSummary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  font-size: var(--text-13-5);
+  color: var(--text-strong);
+  background: rgba(var(--jade-rgb), 0.1);
+  border-radius: var(--radius-10);
+}
+.seriesSummary strong {
+  font-weight: 600;
+}
+.seriesSummaryIcon {
+  flex: none;
+  font-size: var(--text-15);
+  color: var(--jade-ink);
+}
+.seriesArrow {
+  font-size: var(--text-13);
+  vertical-align: -0.125em;
+}
+.seriesList {
+  max-height: 232px;
+  margin: 14px 0 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-12);
+}
+.seriesRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  font-size: var(--text-13-5);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.seriesRow:first-child {
+  border-top: 0;
+}
+.seriesIndex {
+  width: 22px;
+  font-family: var(--serif);
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+.seriesDate {
+  font-weight: 500;
+}
+.seriesHoliday {
+  margin-left: 4px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--jade-ink);
+}

@@ -18,12 +18,17 @@ export function icsTimestamp(date: Date): string {
   return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 }
 
-function icsEscape(text: string): string {
+/**
+ * RFC 5545 TEXT escaping, the one copy every calendar file in the app uses.
+ * The backslash goes first, so the escapes added after it stay single. Then
+ * semicolon, comma, and every line break (CRLF, CR or LF) as a literal `\n`.
+ */
+export function escapeIcsText(text: string): string {
   return text
     .replace(/\\/g, "\\\\")
-    .replace(/,/g, "\\,")
     .replace(/;/g, "\\;")
-    .replace(/\n/g, "\\n");
+    .replace(/,/g, "\\,")
+    .replace(/\r\n|\r|\n/g, "\\n");
 }
 
 /** Generate an event UID, falling back when crypto.randomUUID is unavailable. */
@@ -44,9 +49,9 @@ export function buildIcs(input: CalendarEventInput): string {
     `DTSTAMP:${icsTimestamp(new Date())}`,
     `DTSTART:${icsTimestamp(input.start)}`,
     `DTEND:${icsTimestamp(input.end)}`,
-    `SUMMARY:${icsEscape(input.title)}`,
-    input.location ? `LOCATION:${icsEscape(input.location)}` : "",
-    input.description ? `DESCRIPTION:${icsEscape(input.description)}` : "",
+    `SUMMARY:${escapeIcsText(input.title)}`,
+    input.location ? `LOCATION:${escapeIcsText(input.location)}` : "",
+    input.description ? `DESCRIPTION:${escapeIcsText(input.description)}` : "",
     "END:VEVENT",
     "END:VCALENDAR",
   ]

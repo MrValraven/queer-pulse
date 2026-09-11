@@ -1,0 +1,367 @@
+/* Create Gathering v2: the shared field primitives (CreateGatheringFields.tsx).
+   Design source: qp-create-gathering.css (.f .lbl .opt .hint .count .in .row2
+   .row3 .swrow .sw) and qp-create-gathering-v2.css (.chips .chip .note .qrows
+   .qrow), raw values mapped to tokens. */
+
+/* ── Field ── */
+.field {
+  margin-top: 20px;
+  min-width: 0;
+}
+.label {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+.optional {
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+.count {
+  font-size: var(--text-13);
+  font-weight: 400;
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+.hint {
+  margin: 7px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--accent-ink);
+}
+.error svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* ── Text input ── */
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: var(--text-15);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  appearance: none;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+.input::placeholder {
+  color: var(--ink-40);
+}
+.input:hover {
+  border-color: rgba(var(--line-rgb), 0.3);
+}
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+}
+.input[aria-invalid="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.04);
+}
+.textarea {
+  min-height: 96px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.inputWrap {
+  position: relative;
+}
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-16);
+  color: var(--ink-40);
+  pointer-events: none;
+}
+.inputWrap .input {
+  padding-left: 40px;
+}
+
+/* ── Rows ── */
+.row2,
+.row3 {
+  display: grid;
+  gap: 16px;
+}
+.row2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.row3 {
+  grid-template-columns: 1.3fr 1fr 1fr;
+}
+
+/* ── Switch rows ── */
+.switchGroup {
+  margin-top: 22px;
+}
+.switchGroupCompact {
+  margin-top: 12px;
+}
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 18px;
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  background: transparent;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+.switchRow:hover {
+  border-color: rgba(var(--line-rgb), 0.3);
+}
+.switchRow[aria-checked="true"] {
+  border-color: rgba(var(--line-rgb), 0.24);
+  background: var(--wash);
+}
+.switchText {
+  min-width: 0;
+}
+.switchTitle {
+  display: block;
+  font-size: var(--text-14-5);
+  font-weight: 600;
+}
+.switchDescription {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.switchTrack {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 26px;
+  margin-left: auto;
+  background: rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  transition: background var(--dur-base) var(--ease);
+}
+.switchTrack::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: rgba(var(--cream-rgb), 1);
+  border-radius: var(--radius-avatar);
+  box-shadow: var(--shadow-e1);
+  transition: transform var(--dur-base) var(--ease);
+}
+.switchRow[aria-checked="true"] .switchTrack {
+  background: var(--jade);
+}
+.switchRow[aria-checked="true"] .switchTrack::after {
+  transform: translateX(18px);
+}
+
+.switchRowLocked {
+  cursor: default;
+}
+/* Locked rows are always on, so their hairline holds the checked value on
+   hover. */
+.switchRowLocked:hover {
+  border-color: rgba(var(--line-rgb), 0.24);
+}
+
+.switchRowCompact {
+  padding: 12px 16px;
+}
+.switchRowCompact .switchTitle {
+  font-size: var(--text-14);
+}
+.switchRowCompact .switchDescription {
+  font-size: var(--text-12-5);
+}
+
+.switchList {
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-14);
+}
+.switchRowListItem {
+  padding: 12px 16px;
+  border: 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  border-radius: 0;
+}
+.switchList > .switchListItem:first-child .switchRowListItem {
+  border-top: 0;
+}
+.switchRowListItem .switchTitle {
+  font-size: var(--text-14);
+}
+.switchRowListItem .switchDescription {
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.switchRowListItem .switchTrack {
+  transform: scale(0.85);
+}
+
+.switchRowAttached {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.switchPanel {
+  padding: 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-14) var(--radius-14);
+  animation: fieldPanelIn 0.3s var(--ease-out) both;
+}
+
+/* ── Chips ── */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.chip:hover {
+  border-color: rgba(var(--line-rgb), 0.36);
+}
+.chip[aria-pressed="true"] {
+  /* Cream type on a plum fill: plum stays plum in both themes, so the cream
+     label stays readable on it. */
+  background: var(--plum);
+  border-color: var(--line-strong);
+  color: rgba(var(--cream-rgb), 1);
+}
+:global([data-theme="dark"]) .chip[aria-pressed="true"] {
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+}
+.chip[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.chip svg {
+  flex: none;
+  font-size: var(--text-12);
+}
+
+/* ── Inline notes ── */
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+.notes:empty {
+  display: none;
+}
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink);
+  background: var(--wash);
+  border-radius: var(--radius-12);
+}
+.noteIcon {
+  flex: none;
+  margin-top: 1px;
+  font-size: var(--text-15);
+  color: var(--ink-60);
+}
+.note b,
+.note strong {
+  font-weight: 600;
+}
+.noteWarning {
+  background: rgba(var(--accent-rgb), 0.09);
+}
+.noteWarning .noteIcon {
+  color: var(--accent-ink);
+}
+.noteFestive {
+  background: rgba(var(--jade-rgb), 0.1);
+}
+.noteFestive .noteIcon {
+  color: var(--jade-ink);
+}
+
+@keyframes fieldPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (--wide) {
+  .row3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (--sm) {
+  .row2,
+  .row3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Touch screens: 16px text in fields, so iOS Safari keeps the viewport still
+   when a field takes focus. This class sets its own font-size, which beats the
+   16px floor base.css gives unstyled controls, so the floor is restated here. */
+@media (pointer: coarse) {
+  .input {
+    font-size: var(--text-16);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .switchPanel {
+    animation: none;
+  }
+}

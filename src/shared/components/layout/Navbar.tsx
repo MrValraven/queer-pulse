@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui";
-import { canGoBack } from "./canGoBack";
+import { canGoBack, currentHistoryIdx } from "./canGoBack";
 import { tabOf } from "./tabRoots";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
@@ -11,6 +11,7 @@ import { useAuth } from "../../../app/providers/authContext";
 import { useNavMode } from "../../../app/providers/navModeContext";
 import { routes } from "../../../app/routeMap";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
+import { NotificationsBellMenu } from "../../../features/notifications/NotificationsBellMenu";
 import { useUnreadMessages } from "../../../features/messages/api/useConversations";
 import { useTranslation } from "../../i18n/useTranslation";
 import { MegaNav } from "./MegaNav";
@@ -21,14 +22,9 @@ import { AccountMenu } from "./AccountMenu";
 import { MobileNavDrawer } from "./MobileNavDrawer";
 import { AccountSheet } from "./AccountSheet";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
+import { useAppBarScrollAway } from "./useAppBarScrollAway";
+import { useIsLandingVisitor } from "./useIsLandingVisitor";
 import styles from "./Navbar.module.css";
-
-/** React-router stamps a per-entry index on history.state; -1 when absent so
-    `canGoBack` reads false (mirrors SwipeBackShell's own private guard). */
-function currentHistoryIdx(): number {
-  const state = window.history.state as { idx?: number } | null;
-  return typeof state?.idx === "number" ? state.idx : -1;
-}
 
 function BackChevronIcon() {
   return (
@@ -44,7 +40,13 @@ function BackChevronIcon() {
   );
 }
 
-function NotificationsBell({ unreadCount }: { unreadCount?: number }) {
+function NotificationsBell({
+  unreadCount,
+  opensPopover = false,
+}: {
+  unreadCount?: number;
+  opensPopover?: boolean;
+}) {
   // The bell lives site-wide, so it sources the badge itself from the shared
   // notifications query cache (demo → mock count, live → fetched feed) rather
   // than depending on each page to thread a count down. An explicit prop still
@@ -52,21 +54,37 @@ function NotificationsBell({ unreadCount }: { unreadCount?: number }) {
   const liveCount = useUnreadCount();
   const { t } = useTranslation();
   const count = unreadCount ?? liveCount;
+  const bellIcon = (
+    <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
+      <path
+        d="M10 2a6 6 0 0 1 6 6v3l1.5 2.5H2.5L4 11V8a6 6 0 0 1 6-6ZM8 16.5a2 2 0 0 0 4 0"
+        stroke="currentColor"
+        strokeWidth={1.6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+  // Desktop opens the recent-notifications popover in place. The mobile app
+  // bar keeps the link, because on a phone the full page is the roomier home
+  // for the list.
+  if (opensPopover) {
+    return (
+      <NotificationsBellMenu
+        unreadCount={count}
+        icon={bellIcon}
+        triggerClassName={styles.bell}
+        badgeClassName={styles.bellBadge}
+      />
+    );
+  }
   return (
     <Link
       to={routes.notifications}
       className={styles.bell}
       aria-label={t("nav:notifications")}
     >
-      <svg width={20} height={20} viewBox="0 0 20 20" fill="none" aria-hidden>
-        <path
-          d="M10 2a6 6 0 0 1 6 6v3l1.5 2.5H2.5L4 11V8a6 6 0 0 1 6-6ZM8 16.5a2 2 0 0 0 4 0"
-          stroke="currentColor"
-          strokeWidth={1.6}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      {bellIcon}
       {count > 0 && <span className={styles.bellBadge}>{count}</span>}
     </Link>
   );
@@ -90,12 +108,33 @@ function MessagesLink() {
   );
 }
 
+/** The mobile sheets the bottom tab bar opens: "More" opens the drawer, "You"
+    opens the account sheet. Nothing else mounts them, so they render even on a
+    route that hides the app bar. */
+function MobileSheets() {
+  return (
+    <>
+      <MobileNavDrawer />
+      <AccountSheet />
+    </>
+  );
+}
+
 /**
  * The single site-wide nav. Reflects the global auth state: signed-in members
  * see the notifications bell + profile menu; signed-out visitors see the
  * marketing sign-in / request-an-invite calls to action.
  */
-export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
+export function Navbar({
+  unreadCount,
+  isAppBarHidden = false,
+}: {
+  unreadCount?: number;
+  /** The route draws its own header (Messages, AppShell `chromeless`), so a
+   *  phone gets no app bar there. Only honoured on mobile: AppChrome does not
+   *  mount the Navbar at all for such a route above the breakpoint. */
+  isAppBarHidden?: boolean;
+} = {}) {
   const scrolled = useScrolled(8);
   const isMobile = useMediaQuery(mediaMax("mobile"));
   const { theme, toggleTheme } = useTheme();
@@ -139,7 +178,17 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
   // included. The focused bar is a visitor affordance, not a property of the
   // route. It sits above the sidebar branch because the landing page is public and
   // the sidebar is a signed-in-only mode, so the two can never both apply.
-  if (!loggedIn && pathname === routes.homepage) {
+  const isLandingNav = useIsLandingVisitor();
+
+  // The app bar steps out of the way while the member reads down a page and
+  // returns as soon as they scroll back up. Only the app bar: the desktop pill
+  // floats clear of content, and the landing bar and a route drawing its own
+  // header leave nothing here to hide.
+  const { isAppBarScrolledAway, revealAppBar } = useAppBarScrollAway(
+    isAppBar && !isAppBarHidden && !isLandingNav,
+  );
+
+  if (isLandingNav) {
     return <LandingNav />;
   }
 
@@ -149,6 +198,13 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
     return <Sidebar unreadCount={unreadCount} />;
   }
 
+  // A route with its own header (Messages) carries its own back chevron, and
+  // the bell and messages icons would only point at where the member already
+  // is or could reach from the tab bar. Drop the bar, keep the sheets.
+  if (isAppBarHidden && isMobile) {
+    return <MobileSheets />;
+  }
+
   return (
     <>
       <nav
@@ -156,9 +212,13 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
           styles.nav,
           scrolled && styles.scrolled,
           isAppBar && styles.appBar,
+          isAppBarScrolledAway && styles.appBarScrolledAway,
         ]
           .filter(Boolean)
           .join(" ")}
+        // A keyboard Tab into a bar that scrolled away brings it back, so focus
+        // never lands on a control sitting above the viewport.
+        onFocus={revealAppBar}
       >
         <div className={styles.navLeft}>
           {showBackButton && (
@@ -234,7 +294,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
             (loggedIn ? (
               <>
                 <MessagesLink />
-                <NotificationsBell unreadCount={unreadCount} />
+                <NotificationsBell unreadCount={unreadCount} opensPopover />
                 <AccountMenu />
               </>
             ) : (
@@ -250,12 +310,7 @@ export function Navbar({ unreadCount }: { unreadCount?: number } = {}) {
         </div>
       </nav>
 
-      {isMobile && (
-        <>
-          <MobileNavDrawer />
-          <AccountSheet />
-        </>
-      )}
+      {isMobile && <MobileSheets />}
     </>
   );
 }

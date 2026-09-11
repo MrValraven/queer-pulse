@@ -40,6 +40,9 @@ export const nav: Catalog = {
   forum: "Fórum",
   calendar: "Calendário",
   communities: "Comunidades e Coletivos",
+  // Etiqueta do separador na barra de baixo do telemóvel (bottomTabs.ts). O
+  // nome completo acima não cabe num quinto da largura sem partir a linha.
+  "tab.communities": "Comunidades",
   arriving: "Acabaste de chegar a Lisboa?",
   skills: "Competências",
   feed: "Início",

@@ -4,6 +4,7 @@ import {
   FiClock,
   FiEyeOff,
 } from "react-icons/fi";
+import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { formatDate } from "../../shared/lib/date";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,7 +13,6 @@ import styles from "./AdminResourceGuidesPage.module.css";
 
 export interface AdminResourceGuideRowsProps {
   guides: AdminResourceGuideDTO[];
-  onEdit: (guide: AdminResourceGuideDTO) => void;
   onReview: (guide: AdminResourceGuideDTO) => void;
 }
 
@@ -28,7 +28,6 @@ const TODAY = () => new Date().toISOString().slice(0, 10);
  */
 export function AdminResourceGuideRows({
   guides,
-  onEdit,
   onReview,
 }: AdminResourceGuideRowsProps) {
   const { t } = useTranslation();
@@ -95,7 +94,11 @@ export function AdminResourceGuideRows({
               <Button variant="ghost" size="sm" onClick={() => onReview(guide)}>
                 {t("admin:adminResourceGuides.row.reviewCta")}
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => onEdit(guide)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                to={`${routes.adminResourceGuideEdit}/${guide.id}`}
+              >
                 {t("admin:adminResourceGuides.row.editCta")}
               </Button>
             </div>

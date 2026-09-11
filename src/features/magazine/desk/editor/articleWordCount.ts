@@ -1,5 +1,5 @@
 import type { ArticleBlock } from "../../api/pieces.api";
-import { htmlToPlainText } from "./plainText";
+import { htmlToPlainText } from "../../../../shared/components/richText/plainText";
 
 /** Mirrors the backend's `readMinutes` derivation
  * (`ceil(words/220)`, minimum 1 — see the Phase 3 plan's Task 3). Computed

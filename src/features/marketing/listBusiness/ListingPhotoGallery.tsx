@@ -67,7 +67,14 @@ export function ListingPhotoGallery({
 }) {
   const { t } = useTranslation();
   const fieldId = useId();
-  const { draft, photoPreviews, setPhoto, setPhotoPreview, setAlt } = form;
+  const {
+    draft,
+    photoPreviews,
+    rejectedPhotoSlots,
+    setPhoto,
+    setPhotoPreview,
+    setAlt,
+  } = form;
 
   return (
     <>
@@ -82,6 +89,7 @@ export function ListingPhotoGallery({
             note={slot.noteKey ? t(slot.noteKey) : undefined}
             displayValue={photoPreviews[slot.key] || draft.photos[slot.key]}
             uploadPhoto={uploadPhoto}
+            isRejectedByServer={rejectedPhotoSlots.includes(slot.key)}
             onResolved={(persist, preview) => {
               setPhoto(slot.key, persist);
               setPhotoPreview(slot.key, preview);

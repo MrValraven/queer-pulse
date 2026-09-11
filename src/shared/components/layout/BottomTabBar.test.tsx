@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { axe } from "vitest-axe";
+import { AUTH_STORAGE_KEY } from "../../../features/marketing/cookies.data";
+import { routes } from "../../../app/routeMap";
 import { NavDrawerProvider } from "../../../app/providers/NavDrawerProvider";
 import { BottomTabBar } from "./BottomTabBar";
 import { MobileNavDrawer } from "./MobileNavDrawer";
@@ -71,7 +73,7 @@ describe("BottomTabBar visibility", () => {
     renderBar();
     const bar = screen.getByRole("navigation");
     // TestProviders mounts a logged-in demo session, so the bar renders the three
-    // MEMBER_TABS (feed / events / members) plus the More button and the You
+    // MEMBER_TABS (feed / events / communities) plus the More button and the You
     // (avatar) button.
     // There is never a sign-in tab — the installed-mode app bar owns sign-in.
     expect(bar.querySelectorAll("a")).toHaveLength(3);
@@ -82,6 +84,29 @@ describe("BottomTabBar visibility", () => {
     expect(
       screen.queryByRole("link", { name: /sign in/i }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("BottomTabBar on the landing page", () => {
+  afterEach(() => {
+    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  });
+
+  it("renders nothing for a signed-out visitor", () => {
+    window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
+    renderBar(routes.homepage);
+    expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
+  });
+
+  it("still renders for a signed-out visitor on any other public page", () => {
+    window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
+    renderBar(routes.about);
+    expect(screen.getByRole("navigation")).toBeInTheDocument();
+  });
+
+  it("still renders for a signed-in member on the landing page", () => {
+    renderBar(routes.homepage);
+    expect(screen.getByRole("navigation")).toBeInTheDocument();
   });
 });
 

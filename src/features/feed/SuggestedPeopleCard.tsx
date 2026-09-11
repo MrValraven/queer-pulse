@@ -10,8 +10,8 @@ import styles from "./SuggestedPeople.module.css";
 /**
  * The one line that says WHY this person is here.
  *
- * Every suggestion carries a fact the member can go and check: a room they
- * both joined, connections they share, a chip or a word they both wrote. There
+ * Every suggestion carries a fact the member can go and check: a community
+ * they both joined, connections they share, a chip or a word they both wrote. There
  * is no "recommended for you" branch, because the server never sends a
  * suggestion without a reason.
  */
@@ -105,6 +105,7 @@ export function SuggestedPeopleCard({
       <Button
         variant="ghost"
         size="sm"
+        className={styles.action}
         onClick={() => contact({ slug: person.slug, name: person.name })}
       >
         {connected

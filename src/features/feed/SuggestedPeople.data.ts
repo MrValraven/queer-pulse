@@ -9,7 +9,7 @@ import type {
  * Demo fallback for the people-you-might-know strip (SOC-05).
  *
  * Four fixed members with four different reasons, so the prototype shows every
- * shape the card can render: a shared room, mutual connections, a shared
+ * shape the card can render: a shared community, mutual connections, a shared
  * availability chip and a shared interest tag. NEVER read from a live path:
  * `useSuggestedPeople` branches on `demoMode` before it touches this file.
  *

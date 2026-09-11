@@ -11,6 +11,7 @@ import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { CalendarEvent } from "../data";
 import { formatLabel } from "../gatheringCatalog";
+import { MAX_GATHERING_THEMES, THEME_LABEL_KEYS } from "../gatheringExtras";
 import { eventZoneFormat } from "../eventTimezone";
 import { gatheringWhen } from "../gatheringSchedule";
 import { timeBucketOf, timeBucketLabelKey } from "./pickHighlights";
@@ -243,6 +244,34 @@ function FormatLine({
   return <span className={className}>{formatLabel(t, event.eventType)}</span>;
 }
 
+/** Up to three theme tags the host pinned to the gathering (Create Gathering
+ *  v2). Labels only: the whole card is one link named by its title, so these
+ *  are a glance at what kind of evening it is. `onScrim` takes the cream
+ *  register the poster overlay uses. */
+function ThemeTags({
+  event,
+  onScrim,
+}: {
+  event: CalendarEvent;
+  onScrim?: boolean;
+}) {
+  const { t } = useTranslation();
+  const themes = (event.themes ?? []).slice(0, MAX_GATHERING_THEMES);
+  if (themes.length === 0) return null;
+  return (
+    <span className={styles.themeRow}>
+      {themes.map((theme) => (
+        <Tag
+          key={theme}
+          className={onScrim ? styles.themeTagScrim : styles.themeTag}
+        >
+          {t(THEME_LABEL_KEYS[theme])}
+        </Tag>
+      ))}
+    </span>
+  );
+}
+
 /**
  * The shared poster-forward event card — Studio `.heroArt` pattern (aspect-ratio
  * frame + overflow-hidden + absolutely-positioned image fill) with a plum scrim
@@ -298,6 +327,7 @@ export function EventPosterCard({
           <MetaRow event={event}>
             <EventTime event={event} fmt={fmt} />
           </MetaRow>
+          <ThemeTags event={event} />
           <PricePill event={event} fmt={fmt} />
         </span>
         <CtaPill className={`${styles.listCta}`} />
@@ -349,6 +379,7 @@ export function EventPosterCard({
           <MetaRow event={event}>
             <EventSpan event={event} fmt={fmt} t={t} />
           </MetaRow>
+          <ThemeTags event={event} onScrim />
           <PricePill event={event} fmt={fmt} onScrim />
         </span>
       </span>

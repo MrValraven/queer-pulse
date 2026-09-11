@@ -9,7 +9,7 @@ import type {
 import { Avatar } from "../../../../shared/components/ui";
 import { initialsFromName } from "../../../../shared/lib/initials";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { RichText } from "./RichText";
+import { RichText } from "../../../../shared/components/richText/RichText";
 import { ImageBlockControls } from "./ImageBlockControls";
 import styles from "./ArticleBlockEditor.module.css";
 

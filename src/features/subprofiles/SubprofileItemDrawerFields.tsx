@@ -2,8 +2,13 @@ import { DatePicker, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemDTO } from "./api/subprofiles.api";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
-import { FIELD_META, ITEM_LINKS_SECTIONS } from "./subprofileEditor.data";
+import {
+  CREDENTIAL_PHOTO_SECTIONS,
+  FIELD_META,
+  ITEM_LINKS_SECTIONS,
+} from "./subprofileEditor.data";
 import { ImageUploadField } from "./ImageUploadField";
+import styles from "./SubprofileEditor.module.css";
 import { CollaboratorSelect } from "./CollaboratorSelect";
 import { SubprofileItemLinksField } from "./SubprofileItemLinksField";
 import {
@@ -133,6 +138,9 @@ export function SubprofileItemDrawerFields({
       !(isPoems && field === "description"),
   );
   const richFields = RICH_FIELDS_FOR_SECTION[draft.section] ?? [];
+  // A certificate or diploma photo is public on the persona page and often
+  // shows a legal name or an ID number, so its field says so up front.
+  const isCredentialPhoto = CREDENTIAL_PHOTO_SECTIONS.has(draft.section);
 
   return (
     <>
@@ -142,7 +150,17 @@ export function SubprofileItemDrawerFields({
             value={draft.imageUrl}
             kind="work-image"
             onChange={(imageUrl) => onPatch({ imageUrl })}
+            placeholder={
+              isCredentialPhoto
+                ? t("subprofiles:credentialPhoto.placeholder")
+                : undefined
+            }
           />
+          {isCredentialPhoto && (
+            <p className={styles.linkHelp}>
+              {t("subprofiles:credentialPhoto.privacyNote")}
+            </p>
+          )}
         </div>
       )}
 

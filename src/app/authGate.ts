@@ -93,7 +93,6 @@ const GATED_PATTERNS: string[] = [
   "/parents",
   "/caregivers",
   // Member-only actions
-  "/vouch",
   "/magazine/submit-story",
   "/magazine/apply-to-write",
   // Posting, editing and triaging volunteer opportunities. The volunteer

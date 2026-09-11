@@ -299,6 +299,21 @@
   border-radius: 0;
   border-left: 0;
   border-right: 0;
+  /* The hide-on-scroll slide rides `transform` so it runs on the compositor.
+     Sticky strips under the bar ease their `top` over the same duration and
+     curve (standalone.css), so the two travel together. */
+  transition:
+    transform var(--dur-base) var(--ease),
+    box-shadow var(--dur-slow) var(--ease),
+    background var(--dur-slow) var(--ease);
+}
+
+/* Scrolled away (useAppBarScrollAway): the whole strip, notch fill included,
+   lifts out of view. The drop shadow goes with it, or its lower edge would
+   linger as a faint band along the top of the page. */
+.appBarScrolledAway {
+  transform: translateY(-100%);
+  box-shadow: none;
 }
 
 :global([data-theme="dark"]) .nav {

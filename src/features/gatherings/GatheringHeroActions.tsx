@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { FiAlertCircle, FiArrowRight, FiCalendar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -60,6 +60,16 @@ export function GatheringHeroActions({
   const fmt = useFormat();
   const { showToast } = useToast();
   const [isCalendarOpen, setCalendarOpen] = useState(false);
+  const stateBannerId = useId();
+  // Past the host's RSVP cutoff, a member already holding a seat can still
+  // cancel it. Everyone else meets a disabled button, with the banner above
+  // it as the reason (Create Gathering v2).
+  const isJoinClosed = rsvp.isRsvpClosed && !rsvp.isConfirmed;
+  const stateBannerKey = rsvp.isCancelled
+    ? "gatherings:gathering.cancelledBanner"
+    : rsvp.hasEnded
+      ? "gatherings:gathering.endedBanner"
+      : "gatherings:gathering.rsvpClosedBanner";
 
   const zone = eventZoneFormat(gathering.timezone, gathering.date);
   const calendarSubtitle = [
@@ -77,25 +87,20 @@ export function GatheringHeroActions({
 
   return (
     <>
-      {!rsvp.canRsvp && (
-        <div className={styles.stateBanner} role="status">
+      {(!rsvp.canRsvp || isJoinClosed) && (
+        <div id={stateBannerId} className={styles.stateBanner} role="status">
           <span className={styles.stateBannerIcon} aria-hidden>
             <FiAlertCircle />
           </span>
-          <span>
-            {t(
-              rsvp.isCancelled
-                ? "gatherings:gathering.cancelledBanner"
-                : "gatherings:gathering.endedBanner",
-            )}
-          </span>
+          <span>{t(stateBannerKey)}</span>
         </div>
       )}
       <div className={styles.cta}>
         {rsvp.canRsvp && (
           <Button
             size="lg"
-            disabled={rsvp.isPending}
+            disabled={rsvp.isPending || isJoinClosed}
+            aria-describedby={isJoinClosed ? stateBannerId : undefined}
             onClick={rsvp.isConfirmed ? rsvp.cancelRsvp : rsvp.goOrWaitlist}
           >
             {rsvp.isConfirmed

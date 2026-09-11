@@ -1,10 +1,10 @@
 import { lazy, Suspense, useEffect } from "react";
+import { FiPlus } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   ActiveFilters,
   Button,
   FeatureHelp,
-  Outro,
   Reveal,
 } from "../../shared/components/ui";
 import {
@@ -18,7 +18,6 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta } from "../../shared/seo/PageMeta";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { useLocalPlaces } from "./api/useLocalPlaces";
 import {
   useDirectoryFilterParams,
@@ -143,8 +142,16 @@ export function DirectoryPage() {
         titleAction={<FeatureHelp id="local.directory" />}
         sub={t("marketing:directory.hero.sub")}
       >
-        <div className={s.heroNote}>
-          <span className={s.live} /> {t("marketing:directory.hero.note")}
+        {/* The listing wizard was only reachable from the strip under every
+            result. Ghost-dark keeps it quieter than the search it sits above,
+            since most visitors come here to find a place. */}
+        <div className={s.heroFoot}>
+          <Button variant="ghost-dark" to={routes.listBusiness}>
+            <FiPlus aria-hidden /> {t("marketing:directory.hero.cta")}
+          </Button>
+          <div className={s.heroNote}>
+            <span className={s.live} /> {t("marketing:directory.hero.note")}
+          </div>
         </div>
       </PageHero>
 
@@ -240,20 +247,8 @@ export function DirectoryPage() {
           </Reveal>
         </div>
       </section>
-
-      <Outro
-        title={
-          <Translation
-            i18nKey="marketing:directory.outro.title"
-            components={{ em: <em /> }}
-          />
-        }
-        sub={t("marketing:directory.outro.sub")}
-      >
-        <Button size="lg" to={requestInvitePath("directory")}>
-          {t("marketing:directory.outro.cta")}
-        </Button>
-      </Outro>
+      {/* No "Request an invite" outro: `/local/directory` is behind the auth
+          gate, so everyone who reaches this page is already a member. */}
     </PageShell>
   );
 }

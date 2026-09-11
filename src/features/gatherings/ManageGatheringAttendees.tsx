@@ -16,9 +16,12 @@ import styles from "./ManageGatheringPage.module.css";
 export function AttendeeRow({
   attendee,
   action,
+  customRsvpQuestion,
 }: {
   attendee: AttendeeRowData;
   action: ReactNode;
+  /** The host's own RSVP question, which labels this attendee's answer. */
+  customRsvpQuestion?: string | null;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -33,7 +36,10 @@ export function AttendeeRow({
       <div className={styles.attInfo}>
         <div className={styles.attName}>{attendee.name}</div>
         <div className={styles.attMeta}>{attendeeMeta(attendee, t, fmt)}</div>
-        <AttendeeNeeds attendee={attendee} />
+        <AttendeeNeeds
+          attendee={attendee}
+          customQuestion={customRsvpQuestion}
+        />
       </div>
       <div className={styles.attActions}>{action}</div>
     </div>
@@ -51,6 +57,7 @@ export function AttendeeSection({
   loadingMore,
   onLoadMore,
   renderAction,
+  customRsvpQuestion,
 }: {
   heading: string;
   /** Extra style on the section label (the waitlist heading spaces itself down). */
@@ -60,6 +67,8 @@ export function AttendeeSection({
   loadingMore: boolean;
   onLoadMore: () => void;
   renderAction: (attendee: AttendeeRowData) => ReactNode;
+  /** The host's own RSVP question, passed down to label each answer. */
+  customRsvpQuestion?: string | null;
 }) {
   const { t } = useTranslation();
   return (
@@ -73,6 +82,7 @@ export function AttendeeSection({
             key={attendee.id}
             attendee={attendee}
             action={renderAction(attendee)}
+            customRsvpQuestion={customRsvpQuestion}
           />
         ))}
         {hasMore && (

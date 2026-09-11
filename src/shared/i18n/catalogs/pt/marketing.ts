@@ -1742,6 +1742,14 @@ export const marketing: Catalog = {
   "listBusiness.step4.photo.remove": "Remover foto",
   "listBusiness.step4.photo.urlPlaceholder": "ou cola o link de uma imagem",
   "listBusiness.step4.photo.urlInvalid": "Isto não parece o link de uma imagem",
+  "listBusiness.step4.photo.urlNotHttps":
+    "Cola um link que comece por https://",
+  "listBusiness.step4.photo.urlHostNotAllowed":
+    "As fotos por link têm de vir do Google ou do Unsplash. Para outras, carrega a foto.",
+  "listBusiness.step4.photo.urlDidNotLoad":
+    "Esse link não abriu uma imagem. Usa um link que leve diretamente à foto.",
+  "listBusiness.step4.photo.serverRejected":
+    "Não conseguimos guardar esta foto. Carrega-a de novo ou escolhe outra.",
   "listBusiness.step4.photo.uploadError":
     "Não foi possível carregar essa imagem. Tenta novamente",
   "listBusiness.step4.aboutYouHeading": "Um pouco sobre ti",
@@ -2325,6 +2333,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-11.headline":
+    "Quem organiza cria convívios em cinco capítulos curtos, e os guias ganham um editor completo.",
   "changelog.releases.2026-09-10.headline":
     "Cada conversa pode ter o seu papel de parede, na cor que escolheres.",
   "changelog.releases.2026-09-09.headline":
@@ -2497,6 +2507,74 @@ export const marketing: Catalog = {
     "As menções na bio leem-se como nomes",
   "changelog.entries.bio-mentions-read-as-names.body":
     "Quem mencionas na tua bio passa a aparecer pelo nome, esteja onde estiver no diretório.",
+  "changelog.entries.vouching-happens-on-each-profile.title":
+    "Os votos de confiança dão-se no perfil de cada pessoa",
+  "changelog.entries.vouching-happens-on-each-profile.body":
+    "A página própria dos votos de confiança e o atalho no menu saíram. Abre o perfil de alguém para lhe dares o teu voto.",
+  "changelog.entries.listing-photos-flag-problems-before-you-submit.title":
+    "As fotos do negócio assinalam problemas antes de enviares",
+  "changelog.entries.listing-photos-flag-problems-before-you-submit.body":
+    "Tipos de ficheiro não suportados, links de outros sites e links que não abrem uma imagem ficam assinalados na foto.",
+  "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.title":
+    "Junta a foto do teu certificado a uma persona",
+  "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.body":
+    "Credenciais e formações aceitam a foto do diploma, em tamanho real, com um lembrete para tapares números de identificação.",
+  "changelog.entries.the-directory-stops-pitching-invites-to-members.title":
+    "O diretório deixa de sugerir um convite a quem já é membro",
+  "changelog.entries.the-directory-stops-pitching-invites-to-members.body":
+    "Só membros com sessão iniciada abrem o diretório, por isso o apelo para aderir no fundo da página saiu.",
+  "changelog.entries.list-your-business-from-the-directory-hero.title":
+    "Regista o teu negócio a partir do topo do diretório",
+  "changelog.entries.list-your-business-from-the-directory-hero.body":
+    "O botão fica ao lado da nota de verificação, sem teres de percorrer todos os resultados para o encontrar.",
+  "changelog.entries.reposition-a-photo-you-already-uploaded.title":
+    "Reposiciona uma foto que já carregaste",
+  "changelog.entries.reposition-a-photo-you-already-uploaded.body":
+    "Cada foto em As tuas fotos ganha um botão para a aproximar e mover sem a voltares a carregar.",
+  "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.title":
+    "Edita os cuidados e as confirmações de um convívio já publicado",
+  "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.body":
+    "As confirmações podem fechar quando o convívio começa, e os convívios que se repetem mantêm a hora quando os relógios mudam.",
+  "changelog.entries.calendars-open-in-front-of-dialogs.title":
+    "Os calendários abrem à frente das janelas",
+  "changelog.entries.calendars-open-in-front-of-dialogs.body":
+    "O calendário abre agora por cima quando escolhes uma data num editor, como a formação de um perfil alternativo.",
+  "changelog.entries.the-personas-section-shows-who-sees-each-side.title":
+    "A secção de perfis alternativos mostra quem vê cada lado",
+  "changelog.entries.the-personas-section-shows-who-sees-each-side.body":
+    "Escolhe um perfil alternativo para veres a página dele ao lado de quem o encontra e se está ligado ao teu nome.",
+  "changelog.entries.guide-editor-workspace.title":
+    "Edita guias de recursos num espaço de trabalho completo",
+  "changelog.entries.guide-editor-workspace.body":
+    "Formatação, pré-visualização ao vivo, cartões, ligações para onde cada guia aparece e rascunhos guardados no navegador.",
+  "changelog.entries.create-a-gathering-in-five-short-chapters.title":
+    "Cria um convívio em cinco capítulos curtos, com pré-visualização ao vivo",
+  "changelog.entries.create-a-gathering-in-five-short-chapters.body":
+    "Agora podes juntar regras da casa, avisos de conteúdo, temas, perguntas ao confirmar presença e um prazo para confirmar.",
+  "changelog.entries.the-landing-page-drops-the-bottom-bar-for-visitors.title":
+    "A página inicial no telemóvel deixa de mostrar a barra de baixo a visitantes",
+  "changelog.entries.the-landing-page-drops-the-bottom-bar-for-visitors.body":
+    "Sem sessão iniciada, lês a apresentação em ecrã inteiro, com os links do rodapé de volta no fim da página.",
+  "changelog.entries.the-phone-top-bar-slides-away-as-you-scroll.title":
+    "A barra de cima no telemóvel esconde-se ao deslizares a página",
+  "changelog.entries.the-phone-top-bar-slides-away-as-you-scroll.body":
+    "Ao descer lês com o ecrã inteiro, e a barra volta suavemente mal deslizas para cima.",
+  "changelog.entries.communities-takes-the-members-tab.title":
+    "As Comunidades ficam com o separador dos Membros no telemóvel",
+  "changelog.entries.communities-takes-the-members-tab.body":
+    "A barra de baixo abre agora Comunidades e Coletivos, e o diretório de membros fica em Mais.",
+  "changelog.entries.the-bell-opens-your-recent-notifications.title":
+    "O sino abre as tuas notificações recentes ali mesmo",
+  "changelog.entries.the-bell-opens-your-recent-notifications.body":
+    "Percorre as mais recentes em qualquer página e abre a lista completa no botão ao fundo.",
+  "changelog.entries.messages-on-a-phone-gets-its-own-header.title":
+    "As mensagens no telemóvel têm o seu próprio cabeçalho",
+  "changelog.entries.messages-on-a-phone-gets-its-own-header.body":
+    "A barra superior sai do caminho, e uma seta ao lado do logótipo QueerPulse leva-te de volta para onde estavas.",
+  "changelog.entries.writer-and-poet-personas-show-their-photo.title":
+    "As personas de escrita e poesia mostram a sua foto",
+  "changelog.entries.writer-and-poet-personas-show-their-photo.body":
+    "Jornalistas, editores, tradutores e académicos também: a foto que carregas aparece agora como retrato por cima do nome.",
   "changelog.entries.pick-a-wallpaper-for-each-chat.title":
     "Escolhe um papel de parede para cada conversa",
   "changelog.entries.pick-a-wallpaper-for-each-chat.body":
@@ -6514,6 +6592,7 @@ export const marketing: Catalog = {
   // sustentam mesmo.
   "directory.hero.note":
     "Verificado pela comunidade · mantido por membros e pelos próprios negócios",
+  "directory.hero.cta": "Regista o teu negócio",
   "directory.search.placeholder": "Pesquisa por nome, bairro, ou tipo…",
   "directory.cat.all": "Tudo",
   "directory.cat.food": "Comida e bebida",
@@ -6621,11 +6700,6 @@ export const marketing: Catalog = {
   "directory.verify.pillar.recheck.title": "Reavaliado todos os anos",
   "directory.verify.pillar.recheck.body":
     "Nenhum selo é permanente. Qualquer membro pode sinalizar um espaço, e o selo pode ser retirado.",
-  "directory.outro.title":
-    "Acabaste de chegar a Lisboa? <em>Não estás a começar do zero.</em>",
-  "directory.outro.sub":
-    "Junta-te à rede e tem acesso ao diretório completo, recomendações da comunidade, e a uma comunidade que conhece a cidade.",
-  "directory.outro.cta": "Pedir um convite",
   "directory.detail.breadcrumbAria": "Trilho de navegação",
   "directory.detail.breadcrumbHome": "Diretório",
   "directory.detail.relatedTitle": "Mais {category} por perto",

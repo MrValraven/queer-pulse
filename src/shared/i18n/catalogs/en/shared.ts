@@ -151,7 +151,6 @@ export const shared: Catalog = {
   // ACQ-08 — the member-minted invite flow's home in the account menu, with a
   // live count of unspent invites attached by `useInviteQuotaBadge`.
   "accountMenu.items.invite": "Invite someone",
-  "accountMenu.items.vouch": "Vouch for someone",
   "accountMenu.items.messages": "Messages",
   "accountMenu.items.work": "Work",
   // Personas discovery Phase 5, Moment 3 — the "Your personas" row (badge via
@@ -719,4 +718,17 @@ export const shared: Catalog = {
   "addToCalendar.toastYahoo": "Opened in Yahoo Calendar",
   "addToCalendar.toastApple": "Downloaded. Open it to add to Apple Calendar",
   "addToCalendar.toastIcs": "Downloaded. Open it in your calendar app",
+
+  // ── Rich text editing primitives (src/shared/components/richText) ──
+  "richText.toolbarAria": "Text formatting",
+  "richText.emphasis": "Emphasis",
+  "richText.strong": "Strong",
+  "richText.link": "Link",
+  "richText.linkFieldLabel": "Link address",
+  "richText.linkPlaceholder": "https://example.com",
+  "richText.linkApply": "Add link",
+  "richText.linkCancel": "Cancel link",
+  "richText.linkInvalid":
+    "Use a full web address like https://example.com, or an email address like mailto:hello@example.com.",
+  "richText.slashMenuAria": "Insert a block",
 };

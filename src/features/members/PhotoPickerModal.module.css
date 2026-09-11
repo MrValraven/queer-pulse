@@ -69,7 +69,7 @@
 }
 
 .thumbBtn:disabled,
-.deleteBtn:disabled {
+.tileBtn:disabled {
   opacity: 0.5;
   cursor: default;
 }
@@ -88,10 +88,16 @@
   pointer-events: none;
 }
 
-.deleteBtn {
+/* Reposition + delete, side by side in the tile's top-right corner. */
+.tileActions {
   position: absolute;
   top: 6px;
   right: 6px;
+  display: flex;
+  gap: 6px;
+}
+
+.tileBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -104,8 +110,14 @@
   cursor: pointer;
 }
 
-.deleteBtn:hover {
+.tileBtn:hover {
   background: rgba(var(--cream-rgb), 1);
+}
+
+.tileBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
 .emptyState {

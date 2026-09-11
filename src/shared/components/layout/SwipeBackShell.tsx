@@ -8,7 +8,7 @@ import { m, useDragControls, type PanInfo } from "motion/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
-import { canGoBack } from "./canGoBack";
+import { canGoBack, currentHistoryIdx } from "./canGoBack";
 import styles from "./SwipeBackShell.module.css";
 
 /** How close to the left edge a touch must start to arm the gesture. Narrow,
@@ -23,20 +23,6 @@ const COMMIT_FRACTION = 0.35;
  * stale — the runtime computes distance/seconds); 500px/s is a brisk flick,
  * secondary to the COMMIT_FRACTION distance check above. */
 const FLICK_VELOCITY = 500;
-
-/**
- * react-router stamps `idx` on the History API state for every entry it
- * manages (incrementing on push, restored on pop). Read directly rather than
- * threaded through props — the same History-API-as-source-of-truth idiom
- * NavDrawerProvider already uses next door. Missing/non-numeric state (a
- * history entry the router didn't manage, or an environment without one)
- * reports -1, so `canGoBack` reads false and the gesture no-ops instead of
- * risking a dead end.
- */
-function currentHistoryIdx(): number {
-  const state = window.history.state as { idx?: number } | null;
-  return typeof state?.idx === "number" ? state.idx : -1;
-}
 
 /**
  * iOS-style edge-swipe-to-go-back for the routed content plane. Desktop has

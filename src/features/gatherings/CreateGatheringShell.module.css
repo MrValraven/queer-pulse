@@ -1,0 +1,611 @@
+/* Create Gathering v2: the wizard shell. Page head, action strips, the
+   chapter frame, the rail, the ready panel and the mobile publish bar.
+   Design source: qp-create-gathering.css + qp-create-gathering-v2.css, raw
+   values mapped to tokens. Chapter bodies style their fields through
+   CreateGatheringFields.module.css. */
+
+/* The nav band above is reserved by the shell (base.css). The page sits on
+   the app's own cream ground, so nothing here paints a full-bleed surface. */
+.page {
+  padding: 40px 0 var(--section-y-112);
+}
+
+/* ── Head ── */
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-bottom: 34px;
+}
+.head .eyebrow {
+  margin-bottom: 12px;
+  color: var(--accent-ink);
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-display);
+  font-weight: 400;
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  color: var(--text-strong);
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lead {
+  max-width: 46ch;
+  margin: 14px 0 0;
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+.headActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.savedDot {
+  width: 7px;
+  height: 7px;
+  background: var(--jade);
+  border-radius: var(--radius-avatar);
+  transition: background var(--dur-slow) var(--ease);
+}
+.savedSaving .savedDot {
+  background: var(--accent);
+}
+
+/* ── Action strips (draft resume, "same as last time") ── */
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 14px 18px;
+  font-size: var(--text-14);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-16);
+  animation: shellSlideIn 0.3s var(--ease-out) both;
+}
+.stripJade {
+  margin: 18px 0 0;
+  background: rgba(var(--jade-rgb), 0.07);
+  border-color: rgba(var(--jade-rgb), 0.3);
+}
+.stripIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: var(--text-16);
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+  border-radius: var(--radius-avatar);
+}
+.stripJade .stripIcon {
+  /* Cream glyph on a jade fill: both stay put across themes. */
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--jade);
+}
+.stripText {
+  min-width: 0;
+}
+.stripTitle {
+  display: block;
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+.stripSub {
+  display: block;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.stripActions {
+  display: flex;
+  flex: none;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 372px;
+  align-items: start;
+  gap: 34px;
+}
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+/* Sticky, and at most as tall as the viewport below the nav: once the preview
+   card and the ready panel together outgrow a short laptop screen, the rail
+   scrolls on its own, so Publish stays reachable. */
+.rail {
+  position: sticky;
+  top: calc(var(--sticky-top) + 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  max-height: calc(100vh - var(--sticky-top) - 32px);
+  max-height: calc(100dvh - var(--sticky-top) - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* ── Chapter frame ── */
+.chapter {
+  scroll-margin-top: calc(var(--sticky-top) + 16px);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+  transition:
+    box-shadow 0.35s var(--ease),
+    border-color 0.35s var(--ease);
+}
+.chapterOpen {
+  border-color: rgba(var(--line-rgb), 0.14);
+  box-shadow: var(--shadow-lift);
+}
+.chapterHeading {
+  margin: 0;
+  font: inherit;
+}
+.chapterHead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: 20px 24px;
+  font-family: var(--sans);
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-card);
+  cursor: pointer;
+}
+.chapterNumber {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 500;
+  color: var(--ink-40);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-avatar);
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+.chapterOpen .chapterNumber {
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+}
+.chapterDone .chapterNumber {
+  /* Cream glyph on a jade fill: both stay put across themes. */
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.chapterTitle {
+  font-family: var(--serif);
+  font-size: var(--text-23);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: var(--ls-heading);
+  color: var(--text-strong);
+}
+.chapterTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.chapterSummary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  max-width: 44%;
+  margin-left: auto;
+  font-size: var(--text-13-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+  text-align: right;
+}
+.chapterPill {
+  padding: 5px 11px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+}
+.chapterOptional {
+  padding: 4px 8px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-40);
+  white-space: nowrap;
+  background: var(--wash);
+  border-radius: var(--radius-tag);
+}
+.chapterBody {
+  padding: 2px 26px 26px 78px;
+  animation: shellSlideIn 0.3s var(--ease-out) both;
+}
+.chapterIntro {
+  max-width: 58ch;
+  margin: 0 0 6px;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+.chapterFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+.chapterNeed {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--accent-ink);
+}
+.chapterNeed svg {
+  flex: none;
+  font-size: var(--text-15);
+}
+.continueButton {
+  margin-left: auto;
+}
+.shake {
+  animation: shellShake 0.4s ease;
+}
+
+/* The ring a readiness row or Continue puts around the field it names, so the
+   eye lands on label, control and hint together. */
+.gateFlash {
+  border-radius: var(--radius-12);
+  animation: shellGateFlash 1.4s var(--ease);
+}
+
+/* ── Ready panel ── */
+.ready {
+  scroll-margin-top: calc(var(--sticky-top) + 16px);
+  padding: 20px 22px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+.readyTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  letter-spacing: var(--ls-heading);
+  color: var(--text-strong);
+}
+.readyTitle em {
+  font-style: italic;
+  color: var(--accent);
+}
+.readyCount {
+  margin-left: auto;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+.readyList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.readyRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: calc(100% + 16px);
+  margin: 0 -8px;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-9);
+}
+button.readyRow {
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+button.readyRow:hover {
+  background: var(--wash);
+}
+.readyRowMet {
+  color: var(--ink-60);
+}
+.readyDot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: var(--text-10);
+  color: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.25);
+  border-radius: var(--radius-avatar);
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+.readyRowMet .readyDot {
+  /* Cream tick on a jade fill: both stay put across themes. */
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.readyOptional {
+  color: var(--ink-40);
+}
+.readyGo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+button.readyRow:hover .readyGo,
+button.readyRow:focus-visible .readyGo {
+  opacity: 1;
+}
+.confirms {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.confirmsLabel {
+  margin-bottom: 2px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+/* The row: the checkbox, then (for the Code of Care pledge) its link. */
+.pledge {
+  display: flex;
+  flex-direction: column;
+  margin: 0 -10px;
+}
+.pledgeControl {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 9px 10px;
+  font-size: var(--text-13-5);
+  line-height: 1.45;
+  color: var(--ink);
+  border-radius: var(--radius-10);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+.pledgeControl:hover {
+  background: var(--wash);
+}
+.pledgeBox {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  font-size: var(--text-12);
+  color: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.28);
+  border-radius: var(--radius-6);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+.pledgeControl[aria-checked="true"] .pledgeBox {
+  /* The box follows the type colour, so it reads plum on light paper and
+     cream on dark paper; the tick takes the paper colour back. */
+  color: var(--paper);
+  background: var(--text-strong);
+  border-color: var(--line-strong);
+}
+/* Lined up under the pledge sentence: row padding + box + gap. */
+.pledgeLink {
+  align-self: flex-start;
+  margin: -4px 0 4px 41px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.3);
+  text-underline-offset: 3px;
+}
+.publishButton {
+  justify-content: center;
+  width: 100%;
+  margin-top: 16px;
+}
+.publishHint {
+  margin: 10px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+  text-align: center;
+}
+
+/* ── Mobile publish bar ── */
+.mobileBar {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + var(--bottom-inset));
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 8px 8px 20px;
+  /* Cream type on the plum bar: plum stays plum in both themes. */
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--plum);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-e4);
+}
+.mobileBarText {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 500;
+}
+.mobileBarText strong {
+  font-weight: 700;
+}
+.mobileBarButton {
+  margin-left: auto;
+}
+
+@keyframes shellSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes shellShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+@keyframes shellGateFlash {
+  0%,
+  40% {
+    box-shadow: var(--ring-accent-strong);
+  }
+  100% {
+    box-shadow: var(--ring-accent-clear);
+  }
+}
+
+@media (max-width: 1040px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 24px;
+  }
+}
+@media (--wide) {
+  .page {
+    padding-bottom: var(--section-y-128);
+  }
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rail {
+    position: static;
+    order: -1;
+    max-height: none;
+    overflow-y: visible;
+  }
+  .chapterBody {
+    padding-left: 24px;
+  }
+  .chapterSummary {
+    max-width: 100%;
+  }
+}
+@media (--sm) {
+  .strip {
+    flex-wrap: wrap;
+  }
+  .stripActions {
+    justify-content: flex-end;
+    width: 100%;
+    margin-left: 0;
+  }
+  .chapterHead {
+    padding: 16px 18px;
+  }
+  .chapterBody {
+    padding: 0 18px 20px;
+  }
+  .chapterTitle {
+    font-size: var(--text-20);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .strip,
+  .chapterBody,
+  .shake {
+    animation: none;
+  }
+  .gateFlash {
+    animation: none;
+    box-shadow: var(--ring-accent-strong);
+  }
+}

@@ -5,11 +5,18 @@ import type { SeriesScope } from "./api/events.api";
 import styles from "./GatheringModals.module.css";
 
 /**
- * MSG-10 — asks a host whether an edit/cancel on a recurring gathering
+ * MSG-10: asks a host whether an edit or cancel on a recurring gathering
  * applies to just this occurrence or to it and every future one in the
- * series. Shown by `ManageGatheringPage` right after a save (edit) or in
- * place of the plain confirm (cancel) for a gathering with a real
- * `GatheringDetail.series`.
+ * series. Shown by `ManageGatheringPage` and `GatheringHostBar` right after a
+ * save (edit) or in place of the plain confirm (cancel) for a gathering with a
+ * real `GatheringDetail.series`.
+ *
+ * An edit's stashed patch (`buildEditPatch`) always carries the title,
+ * description, place, audience, format, care and RSVP settings, and carries
+ * the cover, cost and community only when the host changed them. The server
+ * copies what the patch carries, except the start and end, onto every future
+ * date. The edit sub copy says so, since "future" replaces care a host set on
+ * those dates one by one.
  */
 export function SeriesEditScopeModal({
   mode,

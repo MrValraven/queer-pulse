@@ -1,14 +1,19 @@
 import { ApiError } from "../../../shared/api/client";
-import { ANCHOR } from "./listBusiness.data";
+import { ANCHOR, PHOTO_KEYS, type PhotoKey } from "./listBusiness.data";
 
 /* ===========================================================================
-   Server-side validation (422) → wizard step + field routing (item #4).
+   Server-side validation (400 / 422) → wizard step + field routing (item #4).
 
-   When a submit/save is rejected with a typed 422 validation error, we jump to
-   the wizard step that OWNS the first offending field and surface the server's
+   When a submit/save is rejected with a validation error, we jump to the
+   wizard step that OWNS the first offending field and surface the server's
    message inline there, instead of dumping the member on a hardcoded review
    step with a generic toast. The map below is the single source of truth for
    "which step owns which field", keyed by the top-level `ListingDraft` field.
+
+   Both statuses count. NestJS's default `ValidationPipe` answers a failed DTO
+   check with a 400 carrying `{ message: string[] }`, and a typed 422 carries
+   the same shapes. A refused photo also names its slot (`photos.wide`), which
+   is collected separately so the gallery can mark that one tile.
    =========================================================================== */
 
 /** Where a given `ListingDraft` field lives: its wizard step + the DOM anchor
@@ -50,15 +55,23 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   consentGuide: { step: 5, anchor: ANCHOR.consent },
 };
 
-/** The resolved target of a 422: the step to show, the field to scroll to, and
- *  the server message to surface inline. */
+/** HTTP statuses whose body carries per-field validation errors. */
+const VALIDATION_STATUSES = new Set([400, 422]);
+
+/** The resolved target of a validation error: the step to show, the field to
+ *  scroll to, the server message to surface inline, and every photo slot the
+ *  server refused (empty when no photo was named). */
 export interface Listing422Target {
   step: number;
   anchor: string;
   message: string;
+  photoSlots: PhotoKey[];
 }
 
 interface RawFieldError {
+  /** The property path as the server wrote it, e.g. `"photos.wide"`. */
+  path: string;
+  /** Its first segment (`"photos"`), the key `FIELD_TO_STEP` routes by. */
   field: string;
   message: string;
 }
@@ -68,6 +81,13 @@ function firstPathSegment(name: string): string {
   return name.split(/[.[]/)[0]?.trim() ?? name;
 }
 
+/** `"photos.wide"` / `"photos[wide]"` → `"wide"`; any other path → `null`. */
+function photoSlotFromPath(path: string): PhotoKey | null {
+  const [field, slot] = path.split(/[.[\]]/).filter(Boolean);
+  if (field?.trim() !== "photos") return null;
+  return PHOTO_KEYS.find((photoKey) => photoKey === slot) ?? null;
+}
+
 /** The value as a trimmed string, or `""` for anything non-string — so a
  *  malformed body never stringifies an object to `"[object Object]"`. */
 function asString(value: unknown): string {
@@ -75,15 +95,19 @@ function asString(value: unknown): string {
 }
 
 /** class-validator messages begin with the offending property path, e.g.
- *  `"name should not be empty"`, `"social.website must be a URL"`. Read that
+ *  `"name should not be empty"`, `"photos.wide must be ..."`. Read that
  *  leading token so an array-of-strings body still routes to a field. */
-function fieldFromMessage(message: string): string {
+function pathFromMessage(message: string): string {
   const match = message.trim().match(/^([A-Za-z0-9_.[\]]+)/);
-  return match?.[1] ? firstPathSegment(match[1]) : "";
+  return match?.[1] ?? "";
+}
+
+function toFieldError(path: string, message: string): RawFieldError {
+  return { path, field: firstPathSegment(path), message };
 }
 
 /**
- * Pull `{ field, message }` pairs out of an error body, tolerating the shapes a
+ * Pull `{ path, field, message }` out of an error body, tolerating the shapes a
  * NestJS backend realistically emits:
  *  - `{ message: string[] }` — class-validator default (field read from each
  *    line's leading property path);
@@ -98,13 +122,10 @@ function extractFieldErrors(data: unknown): RawFieldError[] {
   if (Array.isArray(body.message)) {
     for (const entry of body.message) {
       if (typeof entry === "string")
-        found.push({ field: fieldFromMessage(entry), message: entry });
+        found.push(toFieldError(pathFromMessage(entry), entry));
     }
   } else if (typeof body.message === "string" && body.message.trim()) {
-    found.push({
-      field: fieldFromMessage(body.message),
-      message: body.message,
-    });
+    found.push(toFieldError(pathFromMessage(body.message), body.message));
   }
 
   const keyed = body.errors ?? body.violations ?? body.fields;
@@ -113,22 +134,22 @@ function extractFieldErrors(data: unknown): RawFieldError[] {
       for (const item of keyed) {
         if (item && typeof item === "object") {
           const record = item as Record<string, unknown>;
-          const field =
+          const path =
             asString(record.field) ||
             asString(record.property) ||
             asString(record.path);
           const message = asString(record.message) || asString(record.error);
-          if (field) found.push({ field: firstPathSegment(field), message });
+          if (path) found.push(toFieldError(path, message));
         }
       }
     } else {
-      for (const [field, value] of Object.entries(
+      for (const [path, value] of Object.entries(
         keyed as Record<string, unknown>,
       )) {
         const message = Array.isArray(value)
           ? asString(value[0])
           : asString(value);
-        found.push({ field: firstPathSegment(field), message });
+        found.push(toFieldError(path, message));
       }
     }
   }
@@ -138,20 +159,31 @@ function extractFieldErrors(data: unknown): RawFieldError[] {
 
 /**
  * Resolve a caught error into the step/field/message to route to, or `null`
- * when it isn't a field-mapped 422 (the caller then falls back to its generic
- * toast + review step). Only a real `ApiError(422)` is inspected — a demo
- * fabricated record, a network throw, or any non-422 returns `null`, so the
- * demo path is entirely unaffected.
+ * when it isn't a field-mapped validation error (the caller then falls back to
+ * its generic toast + review step). Only a real `ApiError` with a 400 or 422 is
+ * inspected; a demo fabricated record, a network throw, or any other status
+ * returns `null`, so the demo path is entirely unaffected.
  */
 export function resolveListing422(error: unknown): Listing422Target | null {
-  if (!(error instanceof ApiError) || error.status !== 422) return null;
-  for (const { field, message } of extractFieldErrors(error.data)) {
+  if (!(error instanceof ApiError) || !VALIDATION_STATUSES.has(error.status))
+    return null;
+  const fieldErrors = extractFieldErrors(error.data);
+  const photoSlots = [
+    ...new Set(
+      fieldErrors.flatMap(({ path }) => {
+        const slot = photoSlotFromPath(path);
+        return slot ? [slot] : [];
+      }),
+    ),
+  ];
+  for (const { field, message } of fieldErrors) {
     const location = FIELD_TO_STEP[field];
     if (location) {
       return {
         step: location.step,
         anchor: location.anchor,
         message: message.trim() || error.message,
+        photoSlots,
       };
     }
   }

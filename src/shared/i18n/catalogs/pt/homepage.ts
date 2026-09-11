@@ -649,12 +649,6 @@ export const homepage: Catalog = {
 
   // ── Subprofiles ────────────────────────────────────────────────────────────
   "subprofiles.title": "Diferentes lados de ti. <em>Tudo num só lugar.</em>",
-  "subprofiles.subtitle":
-    "Talvez sejas designer de dia e DJ à noite. Talvez faças arte, tenhas um projeto, ou um lado inteiro de ti que preferes manter à parte. Cria perfis alternativos para o que quiseres partilhar, e decide exatamente quão visível cada um é.",
-  "subprofiles.subtitleIdentity":
-    "Cada perfil pode ter a sua própria identidade, com a informação, interesses e conteúdo que fazem sentido naquele contexto. Podes mostrar um lado mais profissional num perfil e algo completamente diferente noutro, sem perder a ligação entre eles.",
-  "subprofiles.subtitleControl":
-    "Tu decides o que cada pessoa vê e quanto queres partilhar. Alguns perfis podem estar totalmente ligados ao teu nome, enquanto outros podem existir de forma mais discreta. Nem todas as partes de nós precisam de aparecer no mesmo lugar.",
   "subprofiles.cta": "Explorar perfis alternativos",
   "subprofiles.ctaNote":
     "Três perfis alternativos estão incluídos em cada conta.",
@@ -681,17 +675,30 @@ export const homepage: Catalog = {
     "As recomendações e quem te segue ficam num único perfil alternativo, por isso o que um lado de ti constrói fica com esse lado.",
   "personasExplainer.requestInviteCta": "Pedir um convite",
   "personasExplainer.signInCta": "Já faço parte",
-  "subprofiles.proofHeading":
-    "Mais do que um lado teu. Um perfil não consegue mostrar tudo.",
   "subprofiles.proofEverywhereNote":
     "Um único perfil tende a tornar-se na versão de ti mais fácil de explicar. O resto fica de fora.",
   "subprofiles.everywhereElse": "Em qualquer outro lado",
-  "subprofiles.onQueerPulse": "No QueerPulse",
-  "subprofiles.proofVs": "vs",
   "subprofiles.proofCrampRoles":
     "artista de drag · ceramista · crítica musical",
-  "subprofiles.mainNodeSub": "Perfil principal · design de produto",
-  "subprofiles.postingAs": "A publicar como",
+  "subprofiles.pickerLabel": "Escolhe um lado para pré-visualizar",
+  "subprofiles.oneAccount": "Uma conta",
+  "subprofiles.stage.lede":
+    "Designer de dia, DJ à noite, ou um lado de ti que preferes manter à parte. Cada lado pode ter o seu perfil alternativo, com página, público e visibilidade próprios.",
+  "subprofiles.stage.audienceHeading": "Quem vê isto",
+  "subprofiles.visibility.open": "Aberto a todas as pessoas",
+  "subprofiles.visibility.openHelp":
+    "Qualquer pessoa da comunidade o pode encontrar.",
+  "subprofiles.visibility.network": "A tua rede",
+  "subprofiles.visibility.networkHelp":
+    "Só as pessoas com quem tens ligação o podem ver.",
+  "subprofiles.link.main": "Perfil principal",
+  "subprofiles.link.mainHelp": "O perfil por que as pessoas já te conhecem.",
+  "subprofiles.link.linked": "Ligado ao teu nome",
+  "subprofiles.link.linkedHelp":
+    "Aparece no teu perfil principal, por isso as pessoas sabem que és tu.",
+  "subprofiles.link.standalone": "Autónomo",
+  "subprofiles.link.standaloneHelp":
+    "Existe por si só, à parte do teu perfil principal.",
 
   // Ver nota equivalente em en/homepage.ts: os quatro perfis de exemplo são
   // a mesma exceção intencional. Os nomes próprios mantêm-se em
@@ -711,8 +718,6 @@ export const homepage: Catalog = {
     "O teu perfil principal. Aquele por que as pessoas já te conhecem.",
   "subprofiles.personas.main.note":
     "A falar como tu própria: a carreira em design de produto, a que todas as redes já conhecem.",
-  "subprofiles.personas.main.switcherSub":
-    "Perfil principal · design de produto",
   "subprofiles.personas.main.laneLabel": "design de produto",
 
   "subprofiles.personas.mara.role": "Artista de drag",
@@ -730,14 +735,7 @@ export const homepage: Catalog = {
     "Tudo o que precisam de saber sobre o trabalho da Sofia como artista, sem o resto do perfil dela pelo meio.",
   "subprofiles.personas.mara.note":
     "A falar como Mara: quem contrata vê os espetáculos, as fotos e o cachet. O currículo de design de produto fica fora desta página.",
-  "subprofiles.personas.mara.switcherSub": "Drag · promotores e espaços",
   "subprofiles.personas.mara.laneLabel": "drag",
-  "subprofiles.personas.mara.deck.skinLabel": "Aspeto de cartaz",
-  "subprofiles.personas.mara.deck.tag":
-    "Drag, há oito anos. Dois espetáculos por mês nos Anjos, uma tabela de preços que não pede desculpa.",
-  "subprofiles.personas.mara.deck.visLabel": "Promotores e espaços",
-  "subprofiles.personas.mara.deck.showsLine":
-    "Espetáculos · fotos · tabela de preços",
 
   "subprofiles.personas.atelier.role": "Estúdio de cerâmica, duas pessoas",
   "subprofiles.personas.atelier.sub": "Graça · encomendas e venda por grosso",
@@ -754,15 +752,7 @@ export const homepage: Catalog = {
     "Creditado ao ateliê: uma página inicial partilhada que duas pessoas podem gerir.",
   "subprofiles.personas.atelier.note":
     "A falar como o estúdio: compradores e galerias veem o trabalho e os preços, creditados ao ateliê em vez de a ti.",
-  "subprofiles.personas.atelier.switcherSub":
-    "Cerâmica · compradores e galerias",
   "subprofiles.personas.atelier.laneLabel": "cerâmica",
-  "subprofiles.personas.atelier.deck.skinLabel": "Aspeto de estúdio",
-  "subprofiles.personas.atelier.deck.tag":
-    "Um estúdio de cerâmica de duas pessoas na Graça. Encomendas, venda por grosso e workshops aos sábados.",
-  "subprofiles.personas.atelier.deck.visLabel": "Compradores e galerias",
-  "subprofiles.personas.atelier.deck.showsLine":
-    "Trabalho · preços · dias de estúdio",
 
   "subprofiles.personas.byline.role": "Crítica musical",
   "subprofiles.personas.byline.sub": "Assinaturas em três revistas desde 2021",
@@ -779,14 +769,7 @@ export const homepage: Catalog = {
     "Um pseudónimo com portefólio. Os artigos falam por si, sem o trabalho do dia a dia associado.",
   "subprofiles.personas.byline.note":
     "A falar como o pseudónimo: quem edita vê os artigos e a área que cobres, com o teu trabalho do dia a dia fora disso.",
-  "subprofiles.personas.byline.switcherSub": "Crítica musical · editores",
   "subprofiles.personas.byline.laneLabel": "crítica musical",
-  "subprofiles.personas.byline.deck.skinLabel": "Aspeto de assinatura",
-  "subprofiles.personas.byline.deck.tag":
-    "O nome com que assina crítica musical. Assinaturas em três revistas desde 2021.",
-  "subprofiles.personas.byline.deck.visLabel": "Editores que encomendam",
-  "subprofiles.personas.byline.deck.showsLine":
-    "Artigos · áreas · nota de proposta",
 
   // ── Outro (chamada final) ──────────────────────────────────────────────────
   "outro.title": "Entra onde <em>já pertences.</em>",

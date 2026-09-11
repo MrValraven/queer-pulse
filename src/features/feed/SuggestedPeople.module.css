@@ -132,6 +132,14 @@
   overflow-wrap: anywhere;
 }
 
+/* Cards in a row share one height, but a tagline or a two-line reason makes
+   the content above the button taller on some cards than others. Taking the
+   spare space above the button keeps every "Say hello" on the same baseline
+   along the bottom edge. */
+.action {
+  margin-top: auto;
+}
+
 .browse {
   display: inline-flex;
   align-items: center;

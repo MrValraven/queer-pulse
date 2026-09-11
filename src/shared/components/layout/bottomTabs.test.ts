@@ -37,7 +37,7 @@ describe("activeTabKey", () => {
   });
 
   it("matches a nested path under a tab's prefix", () => {
-    expect(activeTabKey("/members/123", MEMBER_TABS)).toBe("members");
+    expect(activeTabKey("/communities/start", MEMBER_TABS)).toBe("communities");
   });
 
   it("returns null when nothing matches", () => {
@@ -45,8 +45,8 @@ describe("activeTabKey", () => {
   });
 
   it("does not treat a shared string prefix as a match", () => {
-    // "/members-only" must NOT light the "/members" tab.
-    expect(activeTabKey("/members-only", MEMBER_TABS)).toBeNull();
+    // "/communities-only" must NOT light the "/communities" tab.
+    expect(activeTabKey("/communities-only", MEMBER_TABS)).toBeNull();
   });
 
   it("prefers the longest matching prefix", () => {

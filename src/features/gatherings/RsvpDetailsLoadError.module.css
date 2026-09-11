@@ -1,0 +1,38 @@
+/* The compact load-error panel's shape, inside a details modal, with a retry
+   whose busy state the shared panel cannot show. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 20px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-card);
+}
+
+.icon {
+  display: inline-flex;
+  font-size: var(--text-24);
+  color: var(--jade);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  color: var(--ink);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.body {
+  max-width: 42ch;
+  margin: 0;
+  line-height: 1.55;
+  color: var(--ink-60);
+}

@@ -45,6 +45,15 @@
     --nav-band-visible: 0px;
   }
 
+  /* The app bar slides out of view while the member scrolls down
+     (useAppBarScrollAway stamps this attribute), leaving only the notch for a
+     sticky strip to clear. Mobile sticky strips read `--sticky-top` and ease
+     `top` over the bar's own slide, so they rise with it instead of pinning
+     under a bar-sized gap. More specific than the `:root` rule above. */
+  html[data-app-bar-hidden="true"] {
+    --sticky-top: env(safe-area-inset-top);
+  }
+
   /* Inside a conversation on a phone the bottom tab bar is hidden (see
      MessagesPage's `data-messages-thread` signal + BottomTabBar.module.css), so
      bottom-anchored chrome must NOT reserve the bar's height — only the iOS home
@@ -53,6 +62,23 @@
      than the `:root` rule above, so it wins. */
   html[data-messages-thread="true"] {
     --bottom-inset: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* A signed-out visitor on the landing page gets no bottom tab bar
+     (BottomTabBar returns nothing there; AppChrome stamps this attribute), so
+     nothing may reserve its height: floating UI clears only the home indicator
+     and the page ends where its last section does. The footer comes back too.
+     It was hidden because its links live in the bar's More drawer, and without
+     the bar it is the chrome's only route to the legal pages. Each selector
+     is more specific than the rule it overrides, so source order is moot. */
+  html[data-landing-visitor="true"] {
+    --bottom-inset: env(safe-area-inset-bottom, 0px);
+  }
+  html[data-landing-visitor="true"] main[data-page-main] {
+    padding-bottom: 0;
+  }
+  html[data-landing-visitor="true"] .site-footer {
+    display: block;
   }
 
   /* Reserve the bar's height (plus the iOS home indicator) at the end of the

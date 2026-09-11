@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useShellFrame } from "../../../app/providers/shellFrame";
 import { useRealtimeConnection } from "../../api/realtime";
 import { InstallNudge } from "../../../features/system/InstallNudge";
@@ -5,6 +6,7 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
 import { Navbar } from "./Navbar";
 import { BottomTabBar } from "./BottomTabBar";
+import { useIsLandingVisitor } from "./useIsLandingVisitor";
 
 /**
  * The persistent, position:fixed site chrome, mounted once at app level so the
@@ -39,18 +41,32 @@ export function AppChrome() {
   // "must be used within DeletedConversationsProvider", and that provider is in
   // DataProviders. Rendered above it, every page load throws on render.
   useRealtimeConnection();
-  const { active, desktopChromeless } = useShellFrame();
+  const { active, chromeless } = useShellFrame();
   const isMobile = useMediaQuery(mediaMax("mobile"));
-  // A desktop-chromeless route (Messages) draws its own brand row and account
-  // footer, so the site nav would only duplicate them. One branch covers BOTH
-  // nav modes, because Navbar is also what returns the left rail in sidebar
-  // mode — gating the rail separately is how the two would drift. Mobile keeps
-  // the app bar and the bottom tab bar: a phone has no other way around.
-  const hideSiteNav = desktopChromeless && !isMobile;
+  // A chromeless route (Messages) draws its own brand row, back button and
+  // account footer, so the site nav would only duplicate them. Above the
+  // breakpoint the Navbar is skipped whole: one branch covers BOTH nav modes,
+  // because Navbar is also what returns the left rail in sidebar mode, and
+  // gating the rail separately is how the two would drift. On a phone the
+  // Navbar still mounts with its app bar hidden, because it owns the drawer and
+  // account sheet that the bottom tab bar's More and You tabs open.
+  const isSiteNavMounted = !chromeless || isMobile;
+  // BottomTabBar renders nothing for a signed-out visitor on the landing page.
+  // The html signal tells standalone.css to stop reserving the bar's height
+  // and to bring back the footer, whose legal links are otherwise only
+  // reachable through the bar's More drawer. Same technique as MessagesPage's
+  // `data-messages-thread`.
+  const isLandingVisitor = useIsLandingVisitor();
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isLandingVisitor) root.setAttribute("data-landing-visitor", "true");
+    else root.removeAttribute("data-landing-visitor");
+    return () => root.removeAttribute("data-landing-visitor");
+  }, [isLandingVisitor]);
   if (!active) return null;
   return (
     <>
-      {!hideSiteNav && <Navbar />}
+      {isSiteNavMounted && <Navbar isAppBarHidden={chromeless} />}
       <BottomTabBar />
       {/* ID-17. Mounted here so the install nudge inherits the same gating as
           the rest of the fixed chrome: standard-frame pages only, never on the

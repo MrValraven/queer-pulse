@@ -1,0 +1,104 @@
+/* The nav bell's popover (NotificationsBellMenu). Portalled to <body> and
+   placed with fixed viewport coordinates from anchoredPanelPosition.ts, so no
+   rail, scrolling column or FadeIn ancestor can clip or re-anchor it. The
+   inline style sets top/bottom/left/right, max-height and transform-origin. */
+.panel {
+  position: fixed;
+  z-index: var(--z-popover);
+  width: min(400px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-e3);
+  overflow: hidden; /* clip the pinned header and footer to the corners */
+  animation: panelIn var(--dur-fast) var(--ease-out);
+}
+/* A container that takes focus on open so keyboard users land inside it; its
+   controls carry their own focus rings. */
+.panel:focus {
+  outline: none;
+}
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
+.header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 12px 10px 18px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+}
+
+/* The only part that scrolls; the header and the "See all" footer stay put. */
+.scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 36px 20px;
+  text-align: center;
+  color: var(--ink-40);
+}
+.stateIcon {
+  font-size: var(--text-24);
+}
+.stateTitle {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-20);
+  color: var(--text-strong);
+}
+.stateText {
+  margin: 0;
+  font-size: var(--text-13);
+}
+
+.footer {
+  flex: none;
+  padding: 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.seeAll {
+  width: 100%;
+  justify-content: center;
+}

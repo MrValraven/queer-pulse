@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import { FiCalendar, FiMapPin, FiUser } from "react-icons/fi";
 import { memberName } from "../members/data/members";
+import { escapeIcsText } from "../../shared/lib/calendarExport";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
 
 /**
@@ -70,15 +71,6 @@ export function googleCalendarUrl() {
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-/** Escape commas, semicolons, and newlines per the iCalendar (RFC 5545) spec. */
-function icsEscape(value: string) {
-  return value
-    .replace(/\\/g, "\\\\")
-    .replace(/;/g, "\\;")
-    .replace(/,/g, "\\,")
-    .replace(/\n/g, "\\n");
-}
-
 /** Build a VCALENDAR document, wrap it in a Blob, and trigger a download. */
 export function downloadIcs() {
   const stamp = new Date()
@@ -96,9 +88,9 @@ export function downloadIcs() {
     `DTSTAMP:${stamp}`,
     `DTSTART:${GATHERING_START}`,
     `DTEND:${GATHERING_END}`,
-    `SUMMARY:${icsEscape(GATHERING_TITLE)}`,
-    `DESCRIPTION:${icsEscape(GATHERING_DETAILS_TEXT)}`,
-    `LOCATION:${icsEscape(GATHERING_LOCATION)}`,
+    `SUMMARY:${escapeIcsText(GATHERING_TITLE)}`,
+    `DESCRIPTION:${escapeIcsText(GATHERING_DETAILS_TEXT)}`,
+    `LOCATION:${escapeIcsText(GATHERING_LOCATION)}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ];

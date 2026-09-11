@@ -385,26 +385,6 @@ export const gatherings: Catalog = {
   "photos.prevPhotoAriaLabel": "Previous photo",
   "photos.nextPhotoAriaLabel": "Next photo",
 
-  // ── Create-gathering wizard + host guide ──────────────────────────────────
-  // createGathering.data.ts — step pills
-  "create.pill.type": "Type",
-  "create.pill.datePlace": "Date & place",
-  "create.pill.repeats": "Repeats",
-  "create.pill.capacity": "Capacity",
-  "create.pill.review": "Review",
-
-  // createGathering.data.ts — sidebar tips (per step)
-  "create.tip.type":
-    "Pick the kind first, then the format. The format sets a sensible size for the gathering and asks you the one or two questions it actually raises.",
-  "create.tip.datePlace":
-    "The neighbourhood is shown on the listing. The full address is only shared with confirmed attendees.",
-  "create.tip.repeats":
-    "A standing weekly or monthly meetup builds a real following. Each date is still its own gathering: attendees RSVP, and you can edit or cancel one date without touching the rest.",
-  "create.tip.capacity":
-    "Be honest about accessibility. Attendees plan around it. Only tick what you can genuinely confirm.",
-  "create.tip.review":
-    "Once you publish, you can still edit the listing. You cannot reduce capacity below the number of existing RSVPs.",
-
   // ── gatheringCatalog.ts: families, formats and the details bag ──────────
   // The one vocabulary a gathering is described in. Keys are STORED VALUES
   // (`events.event_type`, `events.gathering_family`), so they never change
@@ -568,14 +548,38 @@ export const gatherings: Catalog = {
     "How long the film, the set or the performance runs.",
 
   "catalog.goodToKnow.title": "Good to know",
-  "catalog.goodToKnow.bring": "Bring: {value}",
   "catalog.goodToKnow.adultsOnly": "Adults only, 18 and over",
   "catalog.goodToKnow.soberFriendly": "Sober friendly",
-  "catalog.goodToKnow.terrain": "Terrain: {value}",
   "catalog.goodToKnow.beginnerFriendly": "Good for beginners",
   "catalog.goodToKnow.runtime": "Runs about {minutes} min",
 
-  // TypeStep.tsx / FormatPicker.tsx: picking a family and a format
+  // gatheringExtras.ts: labels for the themes, content notes, RSVP cutoff and
+  // cost kind a host picks. The stored values are kebab-case; these are copy.
+  "extras.theme.transLed": "Trans-led",
+  "extras.theme.sober": "Sober",
+  "extras.theme.adultsOnly": "18+",
+  "extras.theme.beginnersWelcome": "Beginners welcome",
+  "extras.theme.portuguesePractice": "Portuguese practice",
+  "extras.theme.newcomersToLisbon": "Newcomers to Lisbon",
+  "extras.theme.familyFriendly": "Family friendly",
+  "extras.theme.sapphic": "Sapphic",
+  "extras.contentNote.sexualContent": "Sexual content",
+  "extras.contentNote.violence": "Violence",
+  "extras.contentNote.transphobiaDiscussion": "Discussion of transphobia",
+  "extras.contentNote.flashingLights": "Flashing lights",
+  "extras.contentNote.loudSound": "Loud sound",
+  "extras.contentNote.alcoholPresent": "Alcohol present",
+  "extras.rsvpCutoff.atStart": "When it starts",
+  "extras.rsvpCutoff.untilEnd": "When it ends",
+  "extras.rsvpCutoff.oneHourBefore": "1 hour before",
+  "extras.rsvpCutoff.dayBefore": "A day before",
+  "extras.rsvpCutoff.threeDaysBefore": "3 days before",
+  "extras.costKind.free": "Free",
+  "extras.costKind.payWhatYouCan": "Pay what you can",
+  "extras.costKind.fixed": "Fixed price",
+
+  // ── Create-gathering wizard + host guide ──────────────────────────────────
+  // steps/FormatPicker.tsx: picking a family and a format
   "create.step1.searchLabel": "Search every format",
   "create.step1.searchPlaceholder": "Picnic, karaoke, book club",
   "create.step1.searchResultsLabel": "Matching formats",
@@ -587,22 +591,14 @@ export const gatherings: Catalog = {
   "create.step1.otherPlaceholder": "In a few words, what is it?",
   "create.step1.otherRequired": "Write what your gathering is, in a few words.",
 
-  // CapacityStep.tsx: the family's own questions, and the two defaults it set
+  // steps/WhatChapter.tsx, CapacityStepperField.tsx, WhoChapter.tsx: the
+  // family's own questions, and the two defaults it set
   "create.step3.formatDetailsLabel": "Format details",
-  "create.step3.formatDetailsHint":
-    "One or two questions this format raises. Skip any of them.",
   "create.step3.capDefaultHint":
     "{count} is the usual size for this format. Change it freely.",
   "create.step3.attendeeCountLabel": "Show how many people are going",
   "create.step3.attendeeCountHint":
     "Most gatherings show the count. Care and support gatherings start with it hidden.",
-
-  // ReviewStep.tsx
-  "create.step5.typeValue": "{family}, {format}",
-  "create.step5.row.formatDetails": "Good to know",
-
-  // createGatheringSteps.ts: the step 1 gate row for an unnamed own format
-  "create.gate.format": "Name your own format",
 
   // BrowseFilterBar.tsx: the family chip row above the refine drawer
   "hub.browse.familyLabel": "Kind of gathering",
@@ -627,88 +623,346 @@ export const gatherings: Catalog = {
   "create.lang.enOnly": "English only",
   "create.lang.other": "Other",
 
-  // createGathering.data.ts — accessibility options
-
-  // createGathering.data.ts — publish confirmation checklist
-  "create.confirm.codeOfCare":
-    "This gathering follows the QueerPulse Code of Care.",
-  "create.confirm.accessibility":
-    "The accessibility information I've provided is accurate to the best of my knowledge.",
-
-  // CreateGatheringPage.tsx
+  // CreateGatheringPage.tsx / CreateGatheringSuccess.tsx
   "create.eyebrow": "List your gathering",
   "create.title": "Create your <em>gathering.</em>",
-  "create.lead":
-    "Fill in the details below and your gathering will be live on the QueerPulse gatherings board immediately.",
   "create.toast.publishError": "Couldn't publish your gathering. Try again.",
   "create.toast.published": "Your gathering is live",
   "create.success.title": "Your gathering <em>is live.</em>",
-  "create.success.body":
-    "It's now visible on the QueerPulse gatherings board. Members can see it and RSVP. Each new attendee shows up in your gathering's guest list.",
   "create.success.accessLabel": "Accessibility shown to attendees",
   "create.success.viewCta": "View on board",
   "create.success.eventCta": "See your gathering page",
   "create.nav.cancel": "Cancel",
-  "create.nav.back": "Back",
   "create.nav.leaveConfirm":
     "You have an unpublished gathering here. Leave without saving it?",
   "create.nav.publish": "Publish gathering",
   "create.nav.continue": "Continue",
 
-  // StepRequirement.tsx — the required/optional line under each step title,
-  // and the "what is still missing" checklist above the Continue button.
-  "create.stepBadge.required":
-    "Required step. You need to fill this in before you can continue.",
-  "create.stepBadge.optional":
-    "Optional step. You can continue without changing anything here.",
-  "create.gate.blockedTitle": "To continue, you still need to:",
-  "create.gate.blockedTitlePublish":
-    "Before you can publish, you still need to:",
-  "create.gate.readyOptional":
-    "Nothing is required on this step. Continue whenever you're ready.",
-  "create.gate.ready":
-    "Everything required on this step is filled in. Continue when you're ready.",
-  "create.gate.readyPublish":
-    "Everything required is filled in. You can publish now.",
-  "create.gate.itemDone": "Done:",
-  "create.gate.itemTodo": "Still to do:",
-  "create.gate.jumpHint": "Go to this field.",
-  "create.gate.type": "Pick a kind and a format",
-  "create.gate.title": "Give your gathering a name",
-  "create.gate.date": "Pick a date and start time in the future",
-  "create.gate.joinLink":
-    "Fix the join link. It has to start with http:// or https://",
-  "create.gate.recurrence":
-    "Finish the repeat schedule with a number of dates, or an end date after your start",
-  "create.gate.confirm.codeOfCare":
-    "Confirm this gathering follows the Code of Care",
-  "create.gate.confirm.accessibility":
-    "Confirm your accessibility information is accurate",
+  // ── Create-gathering v2: five chapters, live preview, publish rail ────────
+  // CreateGatheringPage.tsx / CreateGatheringFields.tsx: the page lead, the rail, field chrome
+  "create.v2.lead":
+    "Five short chapters. The card on the right fills in as you go, so you can see exactly what the board will show.",
+  "create.v2.rail.label": "Preview and publish",
+  "create.v2.field.optional": "optional",
 
-  "create.sidebar.tipLabel": "Tip for this step",
-  "create.sidebar.afterTitle": "What happens after you publish",
-  "create.sidebar.afterBody":
-    "Your gathering appears on the board immediately. RSVPs come to your QueerPulse inbox. Full addresses are shared only with confirmed attendees. You can edit or cancel at any time up to 48 hours before.",
+  // DraftResumeStrip.tsx / useCreateGatheringDraft.ts: saving and resuming a draft
+  "create.v2.saved.saving": "Saving…",
+  "create.v2.saved.label": "Saved · {age}",
+  "create.v2.draft.age.justNow": "just now",
+  "create.v2.draft.age.minutes_one": "{count} min",
+  "create.v2.draft.age.minutes_other": "{count} min",
+  "create.v2.draft.age.hours_one": "{count} h",
+  "create.v2.draft.age.hours_other": "{count} h",
+  "create.v2.draft.age.days_one": "{count} day",
+  "create.v2.draft.age.days_other": "{count} days",
+  "create.v2.draft.resumeTitle": "Resume your draft?",
+  "create.v2.draft.resumeSub": "{label} · {age}",
+  "create.v2.draft.untitled": "Untitled draft",
+  "create.v2.draft.resume": "Resume",
+  "create.v2.draft.startFresh": "Start fresh",
+  "create.v2.toast.draftResumed": "Draft resumed",
 
-  // CreateGatheringSteps.tsx — step 1: type
-  "create.step1.title": "What kind of <em>gathering?</em>",
-  "create.step1.sub":
-    "Pick the kind, then the format. It sets a few sensible defaults you can still change.",
+  // usePublishGathering.ts: a co-host invite that did not go out after publishing
+  "create.v2.toast.cohostInviteFailed_one":
+    "Your gathering is live, but 1 co-host invite didn't go through. You can invite them again from the manage page.",
+  "create.v2.toast.cohostInviteFailed_other":
+    "Your gathering is live, but {count} co-host invites didn't go through. You can invite them again from the manage page.",
+
+  // CreateGatheringChapter.tsx / createGathering.data.ts: the five chapter heads
+  "create.v2.chapter.what.title": "What are you <em>hosting?</em>",
+  "create.v2.chapter.what.intro":
+    "Pick the format that comes most naturally to you. The best gatherings are the ones hosts actually enjoy running.",
+  "create.v2.chapter.whenWhere.title": "When and <em>where?</em>",
+  "create.v2.chapter.whenWhere.intro":
+    "The neighbourhood is shown on the listing. The full address is only shared with confirmed attendees.",
+  "create.v2.chapter.who.title": "Who is it <em>for?</em>",
+  "create.v2.chapter.who.intro":
+    "Set a realistic cap. It's easier to open more spots than to turn people away at the door.",
+  "create.v2.chapter.access.title": "Can everyone <em>get in?</em>",
+  "create.v2.chapter.access.intro":
+    "Only tick what you can genuinely confirm. A “no” is as useful as a “yes”: attendees plan around both. “Not sure yet” stays visible on your gathering, so people can see it is still open.",
+  "create.v2.chapter.care.title": "Taking <em>care.</em>",
+  "create.v2.chapter.care.intro":
+    "Two lines that set the tone. They show on your gathering page, so people know what to expect before they RSVP.",
+  "create.v2.chapter.open": "Open",
+  "create.v2.chapter.edit": "Edit",
+  "create.v2.chapter.optional": "optional",
+  "create.v2.chapter.done": "Done.",
+  "create.v2.chapter.stillNeeded": "Still needed: {items}",
+  "create.v2.chapter.looksGood": "Looks good",
+
+  // createGatheringChapters.ts: what Continue still needs, joined into chapter.stillNeeded
+  "create.v2.need.format": "a format",
+  "create.v2.need.title": "a name",
+  "create.v2.need.date": "a date and start time in the future",
+  "create.v2.need.joinLink": "a join link starting with http:// or https://",
+  "create.v2.need.recurrence": "a complete repeat schedule",
+
+  // createGatheringChapters.ts: the one-line summary of a closed chapter
+  "create.v2.summary.what.empty": "Format and name",
+  "create.v2.summary.whenWhere.empty": "Date, time and place",
+  "create.v2.summary.who.spots_one": "{count} spot",
+  "create.v2.summary.who.spots_other": "{count} spots",
+  "create.v2.summary.who.noCap": "No cap on spots",
+  "create.v2.summary.who.cohosts_one": "+{count} co-host",
+  "create.v2.summary.who.cohosts_other": "+{count} co-hosts",
+  "create.v2.summary.access.answered":
+    "{confirmed} confirmed · {answered} of {total} answered",
+  "create.v2.summary.access.empty": "Nothing answered yet",
+  "create.v2.summary.care.houseRules": "House rules",
+  "create.v2.summary.care.contentNotes_one": "{count} content note",
+  "create.v2.summary.care.contentNotes_other": "{count} content notes",
+  "create.v2.summary.care.questions_one": "{count} RSVP question",
+  "create.v2.summary.care.questions_other": "{count} RSVP questions",
+  "create.v2.summary.care.empty": "Optional: rules, notes, RSVP questions",
+
+  // CreateGatheringReadyPanel.tsx: the readiness checklist and the two pledges
+  "create.v2.ready.title": "Ready to <em>publish?</em>",
+  "create.v2.ready.count": "{met} of {total}",
+  "create.v2.ready.item.format": "Pick a format",
+  "create.v2.ready.item.title": "Name your gathering",
+  "create.v2.ready.item.date": "Date and start time in the future",
+  "create.v2.ready.item.joinLink": "Join link starts with http:// or https://",
+  "create.v2.ready.item.recurrence": "Repeat schedule is complete",
+  "create.v2.ready.item.hood": "Neighbourhood chosen",
+  "create.v2.ready.item.accessibility": "Accessibility answered",
+  "create.v2.ready.item.cover": "Cover image added",
+  "create.v2.ready.optional": "(optional)",
+  "create.v2.ready.itemDone": "Done:",
+  "create.v2.ready.itemTodo": "Still to do:",
+  "create.v2.ready.go": "Go",
+  "create.v2.ready.jumpHint": "Go to this field.",
+  "create.v2.ready.pledgesLabel": "Before you publish",
+  "create.v2.ready.hintReady":
+    "Goes live on the board immediately. You can edit or cancel it from your gathering page.",
+  "create.v2.ready.hintDetails_one": "{count} detail still needed",
+  "create.v2.ready.hintDetails_other": "{count} details still needed",
+  "create.v2.ready.hintConfirms_one": "{count} confirmation to tick",
+  "create.v2.ready.hintConfirms_other": "{count} confirmations to tick",
+  "create.v2.ready.publishing": "Publishing…",
+  // CreateGatheringReadback.tsx: the host's own answers, read back before publishing
+  "create.v2.ready.readbackTitle": "Check your answers",
+  "create.v2.ready.accessLabel": "Accessibility",
+  "create.v2.ready.accessAnswer": "{question}: {answer}",
+  "create.v2.ready.accessNoteLabel": "Your note",
+  "create.v2.ready.accessUnanswered_one": "{count} question not answered yet",
+  "create.v2.ready.accessUnanswered_other":
+    "{count} questions not answered yet",
+  "create.v2.confirm.codeOfCare":
+    "This gathering follows the QueerPulse Code of Care.",
+  "create.v2.confirm.codeOfCareLink": "Read the Code of Care",
+  "create.v2.confirm.accessibility":
+    "The accessibility answers I gave are accurate to the best of my knowledge.",
+
+  // CreateGatheringMobileBar.tsx: the sticky publish bar on small screens
+  "create.v2.mobileBar.label": "Publish progress",
+  "create.v2.mobileBar.ready": "<strong>Ready to publish</strong>",
+  "create.v2.mobileBar.progress":
+    "<strong>{met}/{total}</strong> details · <strong>{checked}/{pledges}</strong> confirmed",
+  "create.v2.mobileBar.publish": "Publish",
+
+  // preview/*: the live card, as the board and as confirmed attendees see it
+  "create.v2.preview.eyebrow": "How it looks on the board",
+  "create.v2.preview.titlePlaceholder": "Your title, said plainly",
+  "create.v2.preview.modeLabel": "Preview as",
+  "create.v2.preview.modeBoard": "On the board",
+  "create.v2.preview.modeAttendees": "Attendees see",
+  "create.v2.preview.cardLabel": "Preview of your gathering card",
+  "create.v2.preview.coverFamily": "{family} · cover shows here",
+  "create.v2.preview.coverEmpty": "Cover image shows here",
+  "create.v2.preview.formatPlaceholder": "Format",
+  "create.v2.preview.datePlaceholder": "Date",
+  "create.v2.preview.weekdayMonth": "{weekday}, {month}",
+  "create.v2.preview.timeWithNote": "{time} {note}",
+  "create.v2.preview.dateAndTime": "{date} · {time}",
+  "create.v2.preview.venueInHood": "{venue}, {hood}",
+  "create.v2.preview.hoodPlaceholder": "Neighbourhood",
+  "create.v2.preview.spots_one": "{count} spot",
+  "create.v2.preview.spots_other": "{count} spots",
+  "create.v2.preview.spotsNoWaitlist_one": "{count} spot · no waitlist",
+  "create.v2.preview.spotsNoWaitlist_other": "{count} spots · no waitlist",
+  "create.v2.preview.languageBilingual": "PT / EN",
+  "create.v2.preview.repeatTag_one": "{cadence} · {count} date",
+  "create.v2.preview.repeatTag_other": "{cadence} · {count} dates",
+  "create.v2.preview.contentNotes": "Content notes: {notes}",
+  "create.v2.preview.hostedBy": "Hosted by <b>{names}</b>",
+  "create.v2.preview.hostYou": "You",
+  "create.v2.preview.payWhatYouCanAmount": "Pay what you can · {amount}",
+  "create.v2.preview.attendeesLabel": "Confirmed attendees also see",
+  "create.v2.preview.joinLinkPlaceholder": "Join link (add before it starts)",
+  "create.v2.preview.addressPlaceholder": "Full address",
+  "create.v2.preview.rsvpsCloseAt": "RSVPs close {date}, {time}",
+  "create.v2.preview.rsvpsCloseBefore": "RSVPs close: {cutoff}",
+  "create.v2.preview.rsvpsOpenUntilEnd": "RSVPs stay open until it ends",
+  "create.v2.preview.withWaitlist": "{line} · waitlist on",
+  "create.v2.preview.askedOnRsvp": "Asked on RSVP:",
+  "create.v2.preview.askedDietary": "Dietary needs",
+  "create.v2.preview.askedPronouns": "Pronouns",
+  "create.v2.preview.lockNote":
+    "<b>The board shows the neighbourhood.</b> The full address goes to people who confirm.",
+
+  // steps/WhatChapter.tsx, TitleField.tsx, CoverImageField.tsx, titleSuggestions.ts: chapter 1
+  "create.v2.what.titleHint":
+    "Say plainly what it is: “Thursday supper club, 8 seats” beats “An evening of connection”.",
+  "create.v2.what.suggestionsLabel": "Try:",
+  "create.v2.what.suggestion.atVenue": "{format} at {venue}",
+  "create.v2.what.suggestion.weekday_one":
+    "{weekday} {formatLower}, {count} seat",
+  "create.v2.what.suggestion.weekday_other":
+    "{weekday} {formatLower}, {count} seats",
+  "create.v2.what.suggestion.inHood": "{format} in {hood}",
+  "create.v2.what.suggestion.firstEdition": "{format}: first edition",
+  "create.v2.what.coverLabel": "Cover image",
+  "create.v2.what.coverPlaceholder": "Add a cover photo",
+  "create.v2.what.coverHint":
+    "Cards with a photo get noticed on the board. Without one, your card is tinted in your format's colour.",
+  "create.v2.what.themesLabel": "Themes",
+  "create.v2.what.themesHint": "Shown on your card. Pick up to three.",
+  "create.v2.what.descriptionOverBudget":
+    "Board cards show about the first {budget} characters. The rest is still on the gathering's own page.",
+
+  // steps/SameAsLastTimeStrip.tsx: chapter 2, reusing the last gathering's details
+  "create.v2.when.lastTime.title": "Same as last time?",
+  "create.v2.when.lastTime.use": "Use these",
+  "create.v2.when.lastTime.notNow": "Not now",
+  "create.v2.when.lastTime.spots_one": "{count} spot",
+  "create.v2.when.lastTime.spots_other": "{count} spots",
+  "create.v2.when.lastTime.toast": "Filled from your last gathering",
+
+  // steps/PlaceFields.tsx: chapter 2, the address only confirmed attendees get
+  "create.v2.when.addressLabel": "Full address",
+  "create.v2.when.addressNote": "shared only with confirmed attendees",
+  "create.v2.when.directionsLabel": "Getting there",
+
+  // steps/DateNotes.tsx: chapter 2, notes on the chosen date
+  "create.v2.when.note.holiday":
+    "<strong>{name}.</strong> A public holiday: shops close early and some venues shut. Good for a long lunch, harder for a late one.",
+  "create.v2.when.note.clash":
+    "<strong>{title}</strong> starts at {time} in {hood} that day. Same crowd, same neighbourhood: consider another time or co-hosting.",
+  "create.v2.when.note.lateSunday":
+    "Late Sunday: the last metro is around 01:00, and evening gatherings draw fewer people on Sundays.",
+
+  // steps/dateNotes.data.ts: fixed-date Portuguese public holidays, plus Santo António
+  "create.v2.when.holiday.newYear": "New Year's Day",
+  "create.v2.when.holiday.freedomDay": "Freedom Day (25 de Abril)",
+  "create.v2.when.holiday.labourDay": "Labour Day",
+  "create.v2.when.holiday.portugalDay": "Portugal Day",
+  "create.v2.when.holiday.santoAntonio": "Santo António, Lisbon's festas",
+  "create.v2.when.holiday.assumption": "Assumption Day",
+  "create.v2.when.holiday.republicDay": "Republic Day",
+  "create.v2.when.holiday.allSaints": "All Saints' Day",
+  "create.v2.when.holiday.restoration": "Restoration of Independence",
+  "create.v2.when.holiday.immaculateConception": "Immaculate Conception",
+  "create.v2.when.holiday.christmas": "Christmas Day",
+
+  // steps/RepeatsFields.tsx / SeriesPreview.tsx: chapter 2, a repeating gathering
+  "create.v2.when.repeatsDescription":
+    "A standing weekly or monthly meetup. Each date publishes as its own gathering, with its own RSVPs.",
+  "create.v2.when.series.empty":
+    "Set the date above and the series will show here.",
+  "create.v2.when.series.summary":
+    "<strong>{dates}</strong> · {first}<arrow>to</arrow>{last}. Each publishes as its own gathering.",
+  "create.v2.when.series.listLabel": "Every date in the series",
+  "create.v2.when.series.dates_one": "{count} date",
+  "create.v2.when.series.dates_other": "{count} dates",
+  "create.v2.when.series.weekday.sunday_one": "{count} Sunday",
+  "create.v2.when.series.weekday.sunday_other": "{count} Sundays",
+  "create.v2.when.series.weekday.monday_one": "{count} Monday",
+  "create.v2.when.series.weekday.monday_other": "{count} Mondays",
+  "create.v2.when.series.weekday.tuesday_one": "{count} Tuesday",
+  "create.v2.when.series.weekday.tuesday_other": "{count} Tuesdays",
+  "create.v2.when.series.weekday.wednesday_one": "{count} Wednesday",
+  "create.v2.when.series.weekday.wednesday_other": "{count} Wednesdays",
+  "create.v2.when.series.weekday.thursday_one": "{count} Thursday",
+  "create.v2.when.series.weekday.thursday_other": "{count} Thursdays",
+  "create.v2.when.series.weekday.friday_one": "{count} Friday",
+  "create.v2.when.series.weekday.friday_other": "{count} Fridays",
+  "create.v2.when.series.weekday.saturday_one": "{count} Saturday",
+  "create.v2.when.series.weekday.saturday_other": "{count} Saturdays",
+
+  // steps/WhoChapter.tsx, CapacityStepperField.tsx, CostKindField.tsx, CohostPickerField.tsx: chapter 3
+  "create.v2.who.capacityDecrease": "Fewer spots",
+  "create.v2.who.capacityIncrease": "More spots",
+  "create.v2.who.costDetailLabel": "What people should expect to pay",
+  "create.v2.who.costPlaceholderPayWhatYouCan":
+    "e.g. 5 to 15 EUR sliding scale",
+  "create.v2.who.costPlaceholderFixed": "e.g. 8 EUR at the door",
+  "create.v2.who.costHint":
+    "Your own words. Nobody pays through QueerPulse; this is what people should expect at the door.",
+  "create.v2.who.cohostsLabel": "Co-hosts",
+  "create.v2.who.cohostsPlaceholder": "Search your network",
+  "create.v2.who.cohostsHint":
+    "They get an invite to co-host once you publish.",
+  "create.v2.who.cohostsResultsLabel": "People in your network",
+  "create.v2.who.cohostsNoMatch": "No one by that name in your network.",
+  "create.v2.who.cohostsNoConnections":
+    "Your connections show up here once you have some.",
+  "create.v2.who.cohostsLoading": "Loading your network…",
+  "create.v2.who.cohostsLoadError": "Your network didn't load.",
+  "create.v2.who.cohostsPickedLabel": "Co-hosts you picked",
+  "create.v2.who.cohostRemove": "Remove {name}",
+  "create.v2.who.waitlistTitle": "Waitlist when full",
+  "create.v2.who.waitlistDescription":
+    "People queue for a spot and get told the moment one opens.",
+  "create.v2.who.rsvpCutoffLabel": "RSVPs close",
+  "create.v2.who.communityLabel": "Post to a community",
+
+  // steps/AccessChapter.tsx: chapter 4
+  "create.v2.access.questionsLabel": "Six questions",
+  "create.v2.access.answeredCount": "{answered} of {total} answered",
+  "create.v2.access.notesLabel": "Accessibility notes",
+
+  // steps/CareChapter.tsx / careChapter.data.ts: chapter 5
+  "create.v2.care.houseRulesLabel": "House rules",
+  "create.v2.care.houseRulesPlaceholder":
+    "e.g. No phones at the table. Ask before hugging.",
+  "create.v2.care.contentNotesLabel": "Content notes",
+  "create.v2.care.askOnRsvpLabel": "Ask on RSVP",
+  "create.v2.care.question.dietary.title": "Dietary needs",
+  "create.v2.care.question.dietary.description": "Allergies, vegan, halal…",
+  "create.v2.care.question.pronouns.title": "Pronouns",
+  "create.v2.care.question.pronouns.description":
+    "So name tags and introductions land right.",
+  "create.v2.care.question.access.title": "Access needs",
+  "create.v2.care.question.access.alwaysAsked":
+    "Always asked, so nobody has to explain their needs twice.",
+  "create.v2.care.customQuestionLabel": "Your own question",
+  "create.v2.care.customQuestionPlaceholder":
+    "e.g. What would you like to cook or bring?",
+
+  // CreateGatheringSuccess.tsx / shareKit/*: the published screen and the share kit
+  "create.v2.success.lead":
+    "It is on the board now. RSVPs show up in your notifications, and the full address goes only to confirmed attendees.",
+  "create.v2.success.leadSeries":
+    "{dateCount} dates are on the board. RSVPs show up in your notifications, and the full address goes only to confirmed attendees.",
+  "create.v2.success.shareLabel": "Share your gathering",
+  "create.v2.success.copyLink": "Copy link",
+  "create.v2.success.linkCopied": "Link copied",
+  "create.v2.success.copyFallback": "Copy this link to share it: {url}",
+  "create.v2.success.whatsApp": "Share on WhatsApp",
+  "create.v2.success.opensInNewTab": "(opens in a new tab)",
+  "create.v2.success.storyImage": "Story image",
+  "create.v2.success.storyImageBusy": "Making the image",
+  "create.v2.success.storyDownloaded": "Story image downloaded",
+  "create.v2.success.storyFailed":
+    "The story image could not be made. Try again.",
+  "create.v2.success.addToCalendar": "Add to calendar",
+  "create.v2.success.calendarDownloaded": "Calendar file downloaded",
+  "create.v2.success.storySpots_one": "{count} spot",
+  "create.v2.success.storySpots_other": "{count} spots",
+  "create.v2.success.storyPlaceFallback": "Lisbon",
+
+  // steps/FormatPicker.tsx, TitleField.tsx, WhatChapter.tsx: chapter 1
   "create.step1.typeRequired": "Pick a format to get started.",
   "create.step1.familyRequired": "Pick a kind of gathering to see its formats.",
   "create.step1.titleLabel": "Gathering title",
   "create.step1.titlePlaceholder":
     "A clear, specific title that says exactly what it is",
-  "create.step1.titleRequired":
-    "Give your gathering a name so people know what they're coming to.",
   "create.step1.descLabel": "Short description",
   "create.step1.descPlaceholder":
     "What will people do? What should they expect? What makes this gathering worth attending?",
 
-  // CreateGatheringSteps.tsx — step 2: date & place
-  "create.step2.title": "When and <em>where?</em>",
-  "create.step2.sub":
-    "The location is only shared with confirmed attendees and stays off the public listing. An end time is optional.",
+  // steps/ScheduleFields.tsx, PlaceFields.tsx: chapter 2, date and place
   "create.step2.dateLabel": "Starts",
   "create.step2.dateRequired":
     "Pick a date and start time in the future so people can plan to come.",
@@ -720,17 +974,11 @@ export const gatherings: Catalog = {
   "create.step2.hoodLabel": "Neighbourhood",
   "create.step2.hoodPlaceholder": "Select…",
   "create.step2.venueLabel": "Venue name",
-  "create.step2.addressLabel":
-    "Full address (shared only with confirmed attendees)",
   "create.step2.addressPlaceholder": "Street address",
-  "create.step2.directionsLabel": "Getting there (optional)",
   "create.step2.directionsPlaceholder":
     "e.g. Ring the bell on the left, 5 min walk from Intendente metro",
 
-  // RepeatsStep.tsx — step 2b: repeats (MSG-10)
-  "create.step2b.title": "Does this <em>repeat?</em>",
-  "create.step2b.sub":
-    "A standing meetup that comes back every week or every month. Each date publishes as its own gathering, RSVPable and editable on its own.",
+  // steps/RepeatsFields.tsx: chapter 2, repeats (MSG-10)
   "create.step2b.toggle": "This gathering repeats",
   "create.step2b.cadenceLabel": "How often",
   "create.step2b.endTypeLabel": "Ends",
@@ -745,23 +993,17 @@ export const gatherings: Catalog = {
   "create.repeats.cadence.biweekly": "Every 2 weeks",
   "create.repeats.cadence.monthly": "Monthly",
 
-  // CreateGatheringSteps.tsx — step 3: capacity
-  "create.step3.title": "Who and <em>how many?</em>",
-  "create.step3.sub":
-    "Set a realistic cap. It's easier to open more spots than to turn people away at the door.",
+  // steps/CapacityStepperField.tsx, WhoChapter.tsx, AccessChapter.tsx and
+  // EditDetailsModal.tsx: chapters 3 and 4
   "create.step3.capLabel": "Capacity",
   "create.step3.capPlaceholder": "Max attendees",
   "create.step3.langLabel": "Language",
-  "create.step3.accessLabel": "Accessibility: what can you confirm?",
-  "create.step3.accessHint":
-    "Only tick what you can genuinely confirm. Attendees will rely on this information.",
-  "create.step3.notesLabel": "Accessibility notes (optional)",
   "create.step3.notesPlaceholder":
     "Anything else attendees should know: steps, parking, sound level…",
   "create.step3.communityLabel": "Post to a community (optional)",
   "create.step3.communityNone": "None (public gathering)",
 
-  // AudienceScopeField.tsx — shared by the create wizard (step 3) and the
+  // AudienceScopeField.tsx: shared by the create wizard (chapter 3) and the
   // manage-gathering edit modal.
   "audienceScope.label": "Who can see this gathering?",
   "audienceScope.hint":
@@ -779,35 +1021,6 @@ export const gatherings: Catalog = {
     "Only members of the community you're posting to.",
   "audienceScope.inviteOnly.label": "Invite only",
   "audienceScope.inviteOnly.helper": "Only the people you invite.",
-
-  // CreateGatheringSteps.tsx — step 4: pricing
-
-  // CreateGatheringSteps.tsx — step 5: review
-  "create.step5.title": "Review and <em>publish.</em>",
-  "create.step5.sub": "Check the details before your gathering goes live.",
-  "create.step5.accessEmpty": "None specified yet. Add what you can confirm",
-  "create.step5.dateTimeValue": "{date} at {time}",
-  "create.step5.locationValue": "{venue}, {hood}",
-  "create.step5.capacityValue": "{cap} people · {lang}",
-  "create.step5.row.type": "Type",
-  "create.step5.row.title": "Title",
-  "create.step5.row.dateTime": "Date & time",
-  "create.step5.row.location": "Location",
-  "create.step5.row.capacity": "Capacity",
-  "create.step5.row.audience": "Who can see this",
-  "create.step5.row.accessibility": "Accessibility",
-  "create.step5.row.repeats": "Repeats",
-  "create.step5.repeatsOff": "No, just this once",
-  "create.step5.repeatsUntilCount": "{occurrences} dates",
-  "create.step5.repeatsUntilDate": "until {date}",
-  "create.step5.confirmHeading": "Before you publish",
-  "create.step5.confirmIntro":
-    "Tick each box to confirm. The <strong>Publish gathering</strong> button stays disabled until every box is checked.",
-  "create.step5.allSet": "All set. You can publish now.",
-  "create.step5.progress_one":
-    "<num>{checkedCount}</num> of {total} confirmed. Tick the last box to publish.",
-  "create.step5.progress_other":
-    "<num>{checkedCount}</num> of {total} confirmed. Tick the remaining <remaining>{count}</remaining> boxes to publish.",
 
   // hostPage.data.ts — type cards (step 1)
   "host.typeCard.supperClub.body":
@@ -1072,6 +1285,11 @@ export const gatherings: Catalog = {
   "manage.editModal.title": "Update your gathering",
   "manage.editModal.sub":
     "Changes go live on the public listing. Attendees are notified of date or venue changes.",
+  "manage.editModal.section.gathering": "The gathering",
+  "manage.editModal.section.whenWhere": "When and where",
+  "manage.editModal.section.audience": "Who it's for",
+  "manage.editModal.section.care": "Taking care",
+  "manage.editModal.section.rsvp": "RSVPs",
   "manage.editModal.fieldTitle": "Title",
   "manage.editModal.fieldDateTime": "Date & time",
   "manage.editModal.fieldEndAt": "Ends (optional)",
@@ -1095,7 +1313,7 @@ export const gatherings: Catalog = {
   "manage.seriesScope.eyebrow": "Recurring gathering",
   "manage.seriesScope.edit.title": "Apply this <em>change</em> to…",
   "manage.seriesScope.edit.sub":
-    "This gathering repeats. Choose whether your edit covers just this date or every date still to come.",
+    "This gathering repeats. Choose whether your edit covers just this date or every date still to come. Every future date takes this date's title, description, place, audience, format, care and RSVP settings, replacing what it had. Its cover, cost and community change only when you changed them here.",
   "manage.seriesScope.edit.thisCta": "Just this date",
   "manage.seriesScope.edit.futureCta": "This and every future date",
   "manage.seriesScope.cancel.title": "Cancel <em>which dates?</em>",
@@ -1152,7 +1370,7 @@ export const gatherings: Catalog = {
   "manage.inlineEdit.saveCta": "Save",
 
   // ── Venue picker (VenuePicker) — used by the manage venue modal and the
-  //    create-gathering wizard's DatePlaceStep ──────────────────────────────
+  //    create-gathering wizard's place fields (steps/PlaceFields.tsx) ──────
   "venuePicker.searchPlaceholder": "Search the local directory",
   "venuePicker.noResults": "No matches. Try a different search.",
   "venuePicker.enterManually": "Can't find it? Type it in instead",
@@ -1301,16 +1519,6 @@ export const gatherings: Catalog = {
   "performerNudge.dismissCta": "Not now",
   // ── LOC-18: what a gathering costs (display only, no payment anywhere) ────
   "create.step3.costLabel": "What it costs",
-  "create.step3.costHint":
-    "Say it in your own words. Nobody pays through QueerPulse, so whatever you write here is what people should expect at the door.",
-  "create.step3.costPlaceholder":
-    "Free, pay what you can, 5 to 15 EUR sliding scale…",
-  "create.step5.row.cost": "Cost",
-  "create.step5.costFree": "Free",
-  "create.step5.accessAnswer": "{question}: {answer}",
-  "create.step5.accessUnanswered_one": "1 question you haven't answered yet",
-  "create.step5.accessUnanswered_other":
-    "{count} questions you haven't answered yet",
   "events.freeTag": "Free",
 
   // ── LOC-03: the door ──────────────────────────────────────────────────────
@@ -1421,6 +1629,7 @@ export const gatherings: Catalog = {
   "manage.attendees.needs.guests_other": "Bringing {count} guests",
   "manage.attendees.needs.accessLabel": "Access:",
   "manage.attendees.needs.dietaryLabel": "Food:",
+  "manage.attendees.needs.customAnswerLabel": "Answer to your question:",
   "manage.attendees.needs.withheld": "They chose to keep their answers private",
 
   // ── LOC-08: the host's own door ───────────────────────────────────────────
@@ -1545,6 +1754,10 @@ export const gatherings: Catalog = {
     "This gathering was cancelled. Nothing is happening on this date.",
   "gathering.endedBanner":
     "This gathering has already happened. RSVPs are closed.",
+  // The host's RSVP cutoff has passed (GatheringRsvpPanels.tsx,
+  // GatheringHeroActions.tsx).
+  "gathering.rsvpClosedBanner":
+    "RSVPs for this gathering have closed. You can still message the host.",
   "gathering.reportCta": "Report this gathering",
   "gathering.reportAriaLabel": "Report the gathering {title}",
 
@@ -1578,6 +1791,20 @@ export const gatherings: Catalog = {
   "rsvpControl.endedNote": "It already happened.",
   "rsvpControl.endedAttendingNote": "Hope it was good.",
 
+  // RSVP cutoff (rsvpCutoff.ts, rsvpErrors.ts, GatheringRsvpPanels.tsx).
+  // {relative} is Intl.RelativeTimeFormat output, used inside the last 24
+  // hours. {date} is day + short month and {time} the clock time, both on the
+  // gathering's own zone.
+  "rsvpControl.closesIn": "RSVPs close {relative}",
+  "rsvpControl.closesOn": "RSVPs close on {date} at {time}",
+  "rsvpControl.closedForOthersOn":
+    "RSVPs closed for everyone else on {date} at {time}",
+  "rsvpControl.rsvpClosedTitle": "RSVPs have <em>closed</em>",
+  "rsvpControl.rsvpClosedNote":
+    "The host stopped taking RSVPs on {date} at {time}.",
+  "rsvpControl.maybeClosedNote": "RSVPs have closed, so this stays a maybe.",
+  "rsvpControl.closedToast": "RSVPs for this gathering have closed.",
+
   // PRD-187 — "Anything we should know?" on the gathering detail
   // (GatheringRsvpDetailsModal). Capacity counts declared guests, so an
   // undeclared plus-one is a place the host never laid.
@@ -1589,11 +1816,20 @@ export const gatherings: Catalog = {
   "rsvpDetails.guestOption_other": "Me and {count} others",
   "rsvpDetails.guestsHint":
     "Seats are counted per person, so this is how many places the host lays.",
+  "rsvpDetails.guestsClosedHint":
+    "RSVPs have closed. You can still bring fewer people than you told the host.",
+  "rsvpDetails.guestsClosedNoneHint":
+    "RSVPs have closed, so guests can't be added now.",
   "rsvpDetails.accessLabel": "Access needs",
   "rsvpDetails.accessPlaceholder":
     "Step-free entry, a seat near the door, a quiet corner…",
   "rsvpDetails.dietaryLabel": "Food and drink",
   "rsvpDetails.dietaryPlaceholder": "Vegan, no alcohol, an allergy…",
+  // The questions a host switched on (GatheringRsvpDetailsQuestions.tsx).
+  "rsvpDetails.pronounsLabel": "Pronouns",
+  "rsvpDetails.pronounsPlaceholder": "she/her, they/them…",
+  "rsvpDetails.customQuestionHint": "The host asked this one.",
+  "rsvpDetails.customAnswerPlaceholder": "Your answer",
   "rsvpDetails.whoSeesLabel": "Who can see this",
   "rsvpDetails.visibility.everyone": "Everyone going",
   "rsvpDetails.visibility.connections": "My connections",
@@ -1612,7 +1848,7 @@ export const gatherings: Catalog = {
   "create.step2.joinLinkHint":
     "Shared with the people who are going, never on the public page. You can add it later.",
   "create.step2.joinLinkInvalid":
-    "That doesn't look like a link. It needs to start with https://",
+    "That doesn't look like a link. It needs to start with http:// or https://",
 
   // PRD-184 — the upcoming list used to stop at the soonest 20 with no way to
   // ask for the rest, so a busy season simply ended.
@@ -1658,6 +1894,13 @@ export const gatherings: Catalog = {
   "hostBar.deleteFailedToast":
     "The gathering couldn't be deleted. Try again in a moment.",
 
+  // ── Taking care panel (GatheringTakingCare.tsx) ───────────────────────────
+  // House rules, content notes and themes, as a host set them in chapter 5.
+  "detail.care.title": "Taking care",
+  "detail.care.houseRulesLabel": "House rules",
+  "detail.care.contentNotesLabel": "Content notes",
+  "detail.care.themesLabel": "Themes",
+
   // ── Schedule display (gatheringSchedule.ts) ────────────────────────────────
   // A gathering can run past midnight or across several days, so one shared
   // formatter builds its dates and times for every surface that shows them.
@@ -1665,7 +1908,7 @@ export const gatherings: Catalog = {
   "common.timeRange": "{start} – {end}",
   "common.nextDayNote": "(next day)",
 
-  // ── The wizard's four schedule fields (DatePlaceStep.tsx, ReviewStep.tsx) ──
+  // ── The wizard's four schedule fields (steps/ScheduleFields.tsx) ─────────
   // "Starts" and "Ends" name a PAIR of fields each, so every one of the four
   // controls carries its own hidden label underneath them. The optionality
   // that used to sit on the visible "Ends" label lives on the end time's
@@ -1679,6 +1922,4 @@ export const gatherings: Catalog = {
     "This ends before it starts. Move the end date or time later.",
   "create.step2.spanTooLong":
     "A gathering can run for up to {days} days. Bring the end closer to the start.",
-  // The review row, when the schedule rolls into the next morning.
-  "create.step5.dateTimeNote": "{when} {note}",
 };

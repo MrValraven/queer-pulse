@@ -1,8 +1,17 @@
+/* The listing CTA and the verification note share one row, so the compact
+   hero gains no height; on narrow screens the note wraps under the button. */
+.heroFoot {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  margin-top: 20px;
+}
 .heroNote {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  margin-top: 20px;
   font-size: var(--text-13);
   color: rgba(var(--cream-rgb), 0.55);
 }

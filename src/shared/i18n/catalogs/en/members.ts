@@ -72,6 +72,11 @@ export const members: Catalog = {
   "avatar.picker.deleted": "Photo deleted.",
   "avatar.picker.deleteError":
     "We couldn't delete that photo. Please try again.",
+  "avatar.picker.edit": "Reposition photo",
+  "avatar.picker.editInUse":
+    "This photo is used as your {usedAs}. The new framing shows there too.",
+  "avatar.picker.editError":
+    "We couldn't save the new framing. Please try again.",
 
   // ── WorkItemEditor ─────────────────────────────────────────────────────────
   "workItem.error.generic": "We couldn't add that image. Please try again.",
@@ -980,33 +985,6 @@ export const members: Catalog = {
   "commandPalette.noMatches": "No matches. Try another word.",
   "commandPalette.seeAllResults": "See all results for “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Open full search",
-
-  // ── Vouch page: pick a member and vouch for them (VouchPage) ─────────
-  "vouch.page.eyebrow": "Vouch",
-  "vouch.page.title": "Tell us you <em>know them.</em>",
-  "vouch.page.lede":
-    "Find the member you want to vouch for. A vouch is public and carries your name, and you can withdraw it whenever you want.",
-  "vouch.picker.searchPlaceholder": "Search members by name",
-  "vouch.picker.searchAria": "Search members to vouch for",
-  "vouch.picker.noResults":
-    "Nobody here matches “{query}”. Try another spelling.",
-  "vouch.picker.alreadyVouched": "Vouched",
-  "vouch.picker.vouchCta": "Vouch for {name}",
-  "vouch.picker.error.title": "The member list didn't load",
-  "vouch.picker.error.description":
-    "Something went wrong on the way to the directory. Give it another go.",
-  "vouch.picker.error.retry": "Try again",
-
-  // ── Why-vouch explainer (vouch.data.ts MEANS) ───────────────────────────────
-  "vouch.means.know.title": "You know them, really",
-  "vouch.means.know.body":
-    "A vouch says you've met this person and you trust them in community spaces. It carries weight here.",
-  "vouch.means.safe.title": "It keeps the space safe",
-  "vouch.means.safe.body":
-    "QueerPulse is invite-and-vouch for a reason. Members vouching for members is how we stay small and trusted.",
-  "vouch.means.council.title": "It's seen by the council",
-  "vouch.means.council.body":
-    "Your note goes to the membership council alongside their application. Not posted publicly.",
 
   // ── Vouch-for-a-member relationship options (vouchMember.data.ts) ──────────
   "vouch.relationship.collaborated": "We've collaborated",

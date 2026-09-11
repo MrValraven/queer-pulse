@@ -1,7 +1,7 @@
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { ArticleBlock } from "../../api/pieces.api";
 import type { ArticleBlockKind } from "./blockKinds";
-import { htmlToPlainText } from "./plainText";
+import { htmlToPlainText } from "../../../../shared/components/richText/plainText";
 
 /** A fresh id for a newly-inserted block. Prefers `crypto.randomUUID` (every
  * evergreen browser this app targets has it); the timestamp+random fallback

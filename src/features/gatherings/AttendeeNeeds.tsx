@@ -1,4 +1,10 @@
-import { FiCoffee, FiEyeOff, FiHeart, FiUsers } from "react-icons/fi";
+import {
+  FiCoffee,
+  FiEyeOff,
+  FiHeart,
+  FiMessageCircle,
+  FiUsers,
+} from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AttendeeRow } from "./api/events.adapters";
 import styles from "./AttendeeNeeds.module.css";
@@ -18,7 +24,16 @@ import styles from "./AttendeeNeeds.module.css";
  * to give away. An attendee who chose "just me" has their free text withheld
  * server-side, and that choice is named here rather than rendered as silence.
  */
-export function AttendeeNeeds({ attendee }: { attendee: AttendeeRow }) {
+export function AttendeeNeeds({
+  attendee,
+  customQuestion,
+}: {
+  attendee: AttendeeRow;
+  /** The host's own RSVP question, which labels the attendee's answer to it.
+   *  A caller without the gathering at hand leaves it out, and a generic
+   *  label stands in. */
+  customQuestion?: string | null;
+}) {
   const { t } = useTranslation();
   // `undefined` means the viewer is not an organiser and was never sent these
   // fields at all, which is a different thing from an attendee who answered
@@ -28,8 +43,15 @@ export function AttendeeNeeds({ attendee }: { attendee: AttendeeRow }) {
   const guestCount = attendee.guestCount;
   const accessNeeds = attendee.accessNeeds?.trim();
   const dietaryNeeds = attendee.dietaryNeeds?.trim();
+  // Pronouns have no row here: both organiser lists already print them in
+  // the attendee's meta line (`attendeeMeta`, `DoorGuestRow`).
+  const customAnswer = attendee.customAnswer?.trim();
   const isWithheld = attendee.detailsVisibility === "justMe";
-  if (!guestCount && !accessNeeds && !dietaryNeeds && !isWithheld) return null;
+  const hasAnswers = Boolean(accessNeeds || dietaryNeeds || customAnswer);
+  if (!guestCount && !hasAnswers && !isWithheld) return null;
+  const customAnswerLabel =
+    customQuestion?.trim() ||
+    t("gatherings:manage.attendees.needs.customAnswerLabel");
 
   return (
     <div className={styles.needs}>
@@ -69,7 +91,16 @@ export function AttendeeNeeds({ attendee }: { attendee: AttendeeRow }) {
             </span>
           </li>
         )}
-        {isWithheld && !accessNeeds && !dietaryNeeds && (
+        {customAnswer && (
+          <li className={styles.item}>
+            <FiMessageCircle aria-hidden />
+            <span>
+              <span className={styles.itemLabel}>{customAnswerLabel}</span>{" "}
+              {customAnswer}
+            </span>
+          </li>
+        )}
+        {isWithheld && !hasAnswers && (
           <li className={`${styles.item} ${styles.itemMuted}`}>
             <FiEyeOff aria-hidden />
             <span>{t("gatherings:manage.attendees.needs.withheld")}</span>

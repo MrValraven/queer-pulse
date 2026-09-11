@@ -1,3 +1,4 @@
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import type { MyMediaItem } from "./myMedia.api";
 
 /**
@@ -69,4 +70,11 @@ export function getDemoMyMedia(): MyMediaItem[] {
 /** Removes one item from the demo store by key — demo-mode delete's effect. */
 export function removeDemoMedia(key: string): void {
   demoMyMedia = demoMyMedia.filter((item) => item.key !== key);
+}
+
+/** Saves a reframe crop on one demo item, demo mode's POST /uploads/crop. */
+export function setDemoMediaCrop(key: string, crop: CropRect | null): void {
+  demoMyMedia = demoMyMedia.map((item) =>
+    item.key === key ? { ...item, crop } : item,
+  );
 }

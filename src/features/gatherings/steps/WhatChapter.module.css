@@ -1,0 +1,56 @@
+/* Create Gathering v2, chapter 1 (What). Title suggestion chips and the
+   description counter's over-budget tone.
+   Design source: qp-create-gathering-v2.css (.sugg), raw values mapped to
+   tokens. Fields themselves come from CreateGatheringFields.module.css. */
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.suggestionsLabel {
+  margin-right: 2px;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+.suggestionChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--text-strong);
+  text-align: left;
+  background: var(--paper);
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+.suggestionChip:hover {
+  border-style: solid;
+  border-color: rgba(var(--line-rgb), 0.36);
+  background: var(--wash);
+}
+.suggestionChip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* The description counter once the text runs past the board-card budget
+   (ruling F2). It sits inside the field's own muted counter. */
+.countOverBudget {
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suggestionChip {
+    transition: none;
+  }
+}

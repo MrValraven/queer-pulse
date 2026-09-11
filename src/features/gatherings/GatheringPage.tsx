@@ -24,6 +24,7 @@ import { GatheringLineupSection } from "./GatheringLineupSection";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
 import { GatheringDetailPanels } from "./GatheringDetailPanels";
 import { GatheringGoodToKnow } from "./GatheringGoodToKnow";
+import { GatheringTakingCare } from "./GatheringTakingCare";
 import { formatLabel } from "./gatheringCatalog";
 import {
   gatheringDetails,
@@ -243,6 +244,10 @@ function GatheringDetailBody({
               {/* The format's own answers, live only: the demo registry has no
                   details bag, and the component renders nothing without one. */}
               <GatheringGoodToKnow gathering={gathering} />
+
+              {/* House rules, content notes and themes. Renders nothing
+                  without them, which covers every demo gathering. */}
+              <GatheringTakingCare gathering={gathering} />
 
               {/* "Meet the table" is demo-only: the backend exposes no seat /
                   attendee data yet, so live mode omits it rather than leak the

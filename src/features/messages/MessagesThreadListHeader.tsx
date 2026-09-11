@@ -6,6 +6,7 @@ import { BrandMark, SearchInput } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InboxTabs } from "./InboxTabs";
+import { MessagesBackButton } from "./MessagesRailChrome";
 import type { InboxTab } from "./threadFilters";
 import styles from "./MessagesPage.module.css";
 
@@ -24,6 +25,7 @@ export function MessagesThreadListHeader({
   activeTab,
   onTabChange,
   requestsCount,
+  showBackButton,
 }: {
   query: string;
   onQueryChange: (value: string) => void;
@@ -35,21 +37,27 @@ export function MessagesThreadListHeader({
   onTabChange: (tab: InboxTab) => void;
   /** Incoming message-request count for the Requests tab badge (MSG-1). */
   requestsCount?: number;
+  /** Mobile, where this route hides the app bar: a back chevron before the
+   *  wordmark. */
+  showBackButton: boolean;
 }) {
   const { t } = useTranslation();
   return (
     <div className={styles.tpTop}>
       <div className={styles.tpHeadRow}>
-        <Link to={routes.feed} className={styles.tpBrand}>
-          {/* Decorative: the wordmark beside it already names the link. */}
-          <BrandMark state="compact" size={20} />
-          <span className={styles.tpBrandName}>
-            <Translation
-              i18nKey="shared:brand.wordmark"
-              components={{ em: <em /> }}
-            />
-          </span>
-        </Link>
+        <div className={styles.tpHeadLead}>
+          {showBackButton && <MessagesBackButton />}
+          <Link to={routes.feed} className={styles.tpBrand}>
+            {/* Decorative: the wordmark beside it already names the link. */}
+            <BrandMark state="compact" size={20} />
+            <span className={styles.tpBrandName}>
+              <Translation
+                i18nKey="shared:brand.wordmark"
+                components={{ em: <em /> }}
+              />
+            </span>
+          </Link>
+        </div>
         <div className={styles.tpHeadActions}>
           <button
             type="button"

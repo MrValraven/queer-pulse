@@ -389,6 +389,8 @@ export const myevents: Catalog = {
   "rsvpModal.bringingGuest": "Vou levar +1",
   "rsvpModal.guestHint":
     "Adiciona um nome para quem organiza poder dar as boas-vindas também",
+  "rsvpModal.guestClosedHint":
+    "As confirmações já fecharam, por isso já não dá para acrescentar +1.",
   "rsvpModal.guestNamePlaceholder": "Nome de quem levas (opcional)",
   "rsvpModal.contributionLabel": "A tua contribuição",
   "rsvpModal.slidingHint":
@@ -403,6 +405,10 @@ export const myevents: Catalog = {
   "rsvpModal.dietaryNeeds": "Necessidades alimentares",
   "rsvpModal.dietaryPlaceholder":
     "Alergias, vegan, halal, kosher, para eventos onde a comida é partilhada…",
+  "rsvpModal.pronouns": "Pronomes",
+  "rsvpModal.pronounsPlaceholder": "ela/dela, elu/delu…",
+  "rsvpModal.customQuestionHint": "Esta pergunta é de quem organiza.",
+  "rsvpModal.customAnswerPlaceholder": "A tua resposta",
   "rsvpModal.whoSees": "Quem pode ver que vais?",
   "rsvpModal.visibility.everyone": "Todas as pessoas",
   "rsvpModal.visibility.connections": "Ligações",
@@ -416,6 +422,7 @@ export const myevents: Catalog = {
   "rsvpModal.saveCta": "Guardar",
   "rsvpModal.savedToast": "Guardado. Só quem organiza vê isto",
   "rsvpModal.saveErrorToast": "Isso não foi guardado. Tenta outra vez.",
+  "rsvpModal.closedToast": "As confirmações para este convívio já fecharam.",
 
   // ── Ticket modal (EventTicketModal) ───────────────────────────────────────
   "ticketModal.eyebrow": "O teu bilhete",

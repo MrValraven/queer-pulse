@@ -35,6 +35,12 @@
   --z-modal: 220;
   /* A dialog opened FROM a modal (a confirm on top of an editor sheet). */
   --z-modal-nested: 240;
+  /* An anchored popover portalled to <body> (the DatePicker calendar). Once
+     portalled it escapes the modal's stacking context and competes with the
+     scrim itself, so it has to clear both modal tiers or a picker opened from
+     a drawer paints behind it. Transient and dismissed on outside press, so
+     sitting over a nested dialog is safe. */
+  --z-popover-portal: 260;
   /* Full-screen media and app-wide banners: the lightbox, the photo viewer,
      the offline banner, tooltips. */
   --z-lightbox: 300;

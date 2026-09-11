@@ -2,7 +2,7 @@
  * live mode by product decision. These are fabricated identities used to
  * explain how personas work, not real members. Unlike most homepage showcase
  * data (e.g. `changemakers.ts`), this content is fully translated (via
- * `getPersonas(t)` / `getDeckCards(t)`) rather than left English-only — see
+ * `getPersonas(t)`) rather than left English-only — see
  * the note in en/homepage.ts's "Subprofiles" block for why this is an
  * intentional exception to the file's i18n scope rule. Proper names stay as
  * plain literals here since names aren't localized. */
@@ -12,7 +12,13 @@ export type PersonaKey = "main" | "mara" | "atelier" | "byline";
 
 export type PersonaTint = "plum" | "acc" | "jade" | "mute";
 
-export type VisibilityVariant = "open" | "net" | "priv";
+/** Who can see a persona. The editor also offers "private" (just you), which
+ * is a drafting state and has no place in a public showcase. */
+export type PersonaVisibility = "open" | "network";
+
+/** How a persona relates to the main profile. `main` marks the main profile
+ * itself, which is the thing the other personas link to or stand apart from. */
+export type PersonaLink = "main" | "linked" | "standalone";
 
 export interface PersonaTile {
   label: string;
@@ -26,10 +32,12 @@ export interface PersonaProfile {
   /** Mara's name renders in small caps letterspacing, matching a drag stage name. */
   nameCaps?: boolean;
   tint: PersonaTint;
+  visibility: PersonaVisibility;
+  link: PersonaLink;
   role: string;
   sub: string;
   cta: string;
-  /** One-line bio shown alongside the name in the PersonaProof comparison lane. */
+  /** One-line bio shown on the persona's glimpse card. */
   bio: string;
   meta: string[];
   /** Reused from ../../subprofiles/data/subprofiles.data.ts — the closest
@@ -37,21 +45,10 @@ export interface PersonaProfile {
    *  than new stock photos. */
   tiles: PersonaTile[];
   foot: string;
-  /** The "speaking as…" quote shown in the proof block. */
+  /** The "speaking as…" quote shown at the foot of the stage's audience panel. */
   note: string;
-  /** Subtitle line inside the "Posting as" switcher menu. */
-  switcherSub: string;
-  /** Short descriptor used on the comparison lane in PersonaProof. */
+  /** Short descriptor shown under the name in the stage's persona rail. */
   laneLabel: string;
-}
-
-export interface DeckCard {
-  key: Exclude<PersonaKey, "main">;
-  skinLabel: string;
-  tag: string;
-  visLabel: string;
-  visVariant: VisibilityVariant;
-  showsLine: string;
 }
 
 export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
@@ -61,6 +58,8 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       initials: "SM",
       name: "Sofia Marques",
       tint: "plum",
+      visibility: "open",
+      link: "main",
       role: t("homepage:subprofiles.personas.main.role"),
       sub: t("homepage:subprofiles.personas.main.sub"),
       cta: t("homepage:subprofiles.personas.main.cta"),
@@ -92,7 +91,6 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       ],
       foot: t("homepage:subprofiles.personas.main.foot"),
       note: t("homepage:subprofiles.personas.main.note"),
-      switcherSub: t("homepage:subprofiles.personas.main.switcherSub"),
       laneLabel: t("homepage:subprofiles.personas.main.laneLabel"),
     },
     mara: {
@@ -101,6 +99,8 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       name: "Mara Vulgar",
       nameCaps: true,
       tint: "acc",
+      visibility: "open",
+      link: "linked",
       role: t("homepage:subprofiles.personas.mara.role"),
       sub: t("homepage:subprofiles.personas.mara.sub"),
       cta: t("homepage:subprofiles.personas.mara.cta"),
@@ -132,7 +132,6 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       ],
       foot: t("homepage:subprofiles.personas.mara.foot"),
       note: t("homepage:subprofiles.personas.mara.note"),
-      switcherSub: t("homepage:subprofiles.personas.mara.switcherSub"),
       laneLabel: t("homepage:subprofiles.personas.mara.laneLabel"),
     },
     atelier: {
@@ -140,6 +139,8 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       initials: "AV",
       name: "Atelier Vinte",
       tint: "jade",
+      visibility: "open",
+      link: "standalone",
       role: t("homepage:subprofiles.personas.atelier.role"),
       sub: t("homepage:subprofiles.personas.atelier.sub"),
       cta: t("homepage:subprofiles.personas.atelier.cta"),
@@ -171,7 +172,6 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       ],
       foot: t("homepage:subprofiles.personas.atelier.foot"),
       note: t("homepage:subprofiles.personas.atelier.note"),
-      switcherSub: t("homepage:subprofiles.personas.atelier.switcherSub"),
       laneLabel: t("homepage:subprofiles.personas.atelier.laneLabel"),
     },
     byline: {
@@ -179,6 +179,8 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       initials: "RD",
       name: "R. Duarte",
       tint: "mute",
+      visibility: "network",
+      link: "standalone",
       role: t("homepage:subprofiles.personas.byline.role"),
       sub: t("homepage:subprofiles.personas.byline.sub"),
       cta: t("homepage:subprofiles.personas.byline.cta"),
@@ -210,44 +212,14 @@ export function getPersonas(t: TFunction): Record<PersonaKey, PersonaProfile> {
       ],
       foot: t("homepage:subprofiles.personas.byline.foot"),
       note: t("homepage:subprofiles.personas.byline.note"),
-      switcherSub: t("homepage:subprofiles.personas.byline.switcherSub"),
       laneLabel: t("homepage:subprofiles.personas.byline.laneLabel"),
     },
   };
 }
 
-/** Fan order for the deck, left to right (rotation -5deg / 0 / +5deg). */
-export function getDeckCards(t: TFunction): DeckCard[] {
-  return [
-    {
-      key: "mara",
-      skinLabel: t("homepage:subprofiles.personas.mara.deck.skinLabel"),
-      tag: t("homepage:subprofiles.personas.mara.deck.tag"),
-      visLabel: t("homepage:subprofiles.personas.mara.deck.visLabel"),
-      visVariant: "open",
-      showsLine: t("homepage:subprofiles.personas.mara.deck.showsLine"),
-    },
-    {
-      key: "atelier",
-      skinLabel: t("homepage:subprofiles.personas.atelier.deck.skinLabel"),
-      tag: t("homepage:subprofiles.personas.atelier.deck.tag"),
-      visLabel: t("homepage:subprofiles.personas.atelier.deck.visLabel"),
-      visVariant: "net",
-      showsLine: t("homepage:subprofiles.personas.atelier.deck.showsLine"),
-    },
-    {
-      key: "byline",
-      skinLabel: t("homepage:subprofiles.personas.byline.deck.skinLabel"),
-      tag: t("homepage:subprofiles.personas.byline.deck.tag"),
-      visLabel: t("homepage:subprofiles.personas.byline.deck.visLabel"),
-      visVariant: "priv",
-      showsLine: t("homepage:subprofiles.personas.byline.deck.showsLine"),
-    },
-  ];
-}
-
-/** Order shown in the "Posting as" switcher menu (main profile first, then personas). */
-export const SWITCHER_ORDER: PersonaKey[] = [
+/** Main profile first, then the personas. Drives the stage's persona rail and
+ * the showcase's auto-rotation. */
+export const PERSONA_ORDER: PersonaKey[] = [
   "main",
   "mara",
   "atelier",
@@ -255,3 +227,46 @@ export const SWITCHER_ORDER: PersonaKey[] = [
 ];
 
 export const DEFAULT_PERSONA_KEY: PersonaKey = "mara";
+
+/** Props the stage layout takes. The showcase owns the selection and the
+ * rotation, so the layout only renders them and reports clicks. */
+export interface PersonasLayoutProps {
+  selectedKey: PersonaKey;
+  onSelect: (key: PersonaKey) => void;
+}
+
+interface AudienceCopyKeys {
+  label: string;
+  help: string;
+}
+
+/** Catalog keys for the "who sees this" labels. They restate the persona
+ * editor's own choices (subprofiles:visibility.*, subprofiles:link.*) in the
+ * homepage namespace, so the homepage never depends on the subprofiles
+ * catalog. */
+export const VISIBILITY_COPY_KEYS: Record<PersonaVisibility, AudienceCopyKeys> =
+  {
+    open: {
+      label: "homepage:subprofiles.visibility.open",
+      help: "homepage:subprofiles.visibility.openHelp",
+    },
+    network: {
+      label: "homepage:subprofiles.visibility.network",
+      help: "homepage:subprofiles.visibility.networkHelp",
+    },
+  };
+
+export const LINK_COPY_KEYS: Record<PersonaLink, AudienceCopyKeys> = {
+  main: {
+    label: "homepage:subprofiles.link.main",
+    help: "homepage:subprofiles.link.mainHelp",
+  },
+  linked: {
+    label: "homepage:subprofiles.link.linked",
+    help: "homepage:subprofiles.link.linkedHelp",
+  },
+  standalone: {
+    label: "homepage:subprofiles.link.standalone",
+    help: "homepage:subprofiles.link.standaloneHelp",
+  },
+};

@@ -1,15 +1,29 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { MAX_GATHERING_SPAN_DAYS } from "./createGathering.data";
-import { useGatheringForm } from "./useGatheringForm";
+import { emptyAccessibilityAnswers } from "../marketing/listBusiness/listingAccessibility.data";
+import { LANGS, MAX_GATHERING_SPAN_DAYS } from "./createGathering.data";
+import type { RsvpCutoff } from "./gatheringExtras";
+import {
+  useGatheringForm,
+  type CohostPick,
+  type GatheringFormSeed,
+} from "./useGatheringForm";
+
+/** A co-host pick as the picker builds it. */
+const ARI_PICK: CohostPick = {
+  slug: "ari",
+  name: "Ari Sousa",
+  initials: "AS",
+  avatarUrl: null,
+};
 
 /**
  * The wizard's schedule state, now that a gathering may span more than one day.
  *
  * Two things are being pinned here. The first is the auto-adjust contract: the
  * end date fills itself in, follows the start date when that moves, and rolls
- * past midnight when the clock says the night wraps, while never shrinking on
- * its own. A host who typed "Friday to Sunday" and then nudged the start time
+ * past midnight when the clock says the night wraps, and only the host makes
+ * it shorter. A host who typed "Friday to Sunday" and then nudged the start time
  * by fifteen minutes must still have a three-day festival afterwards.
  *
  * The second is `scheduleValid`, which mirrors the backend's
@@ -111,7 +125,7 @@ describe("useGatheringForm end date", () => {
     expect(result.current.scheduleValid).toBe(true);
   });
 
-  it("never shrinks the end date on its own", () => {
+  it("keeps a longer end date where the host put it when the end time moves", () => {
     const { result } = renderHook(() => useGatheringForm());
 
     act(() => result.current.setDate(futureDate(10)));
@@ -154,7 +168,7 @@ describe("useGatheringForm scheduleValid", () => {
     // The boundary is a minute wide, so it is pinned on fixed dates in June
     // rather than on `futureDate`: no zone changes its offset in June, and a
     // daylight-saving change inside the span would move the last valid minute
-    // by an hour. `scheduleValid` never consults the clock (that is
+    // by an hour. `scheduleValid` reads only the four fields (the clock is
     // `dateValid`'s job), so a date in the past is a perfectly good input here.
     const startDate = "2026-06-12";
     const endDate = shiftDate(startDate, MAX_GATHERING_SPAN_DAYS);
@@ -206,8 +220,9 @@ describe("useGatheringForm scheduleValid", () => {
  * promise only holds if the defaults know when to stop. A host who typed a
  * capacity, or who turned the headcount off, has said something, and no
  * later format change may quietly overrule them. The other half is that an
- * answer never outlives the question: a "what to bring" from a potluck must
- * not travel to a screening, where nothing on screen would ever show it again.
+ * answer lives only as long as its question: a "what to bring" from a potluck
+ * stays behind when the host moves to a screening, where nothing on screen
+ * would show it again.
  */
 describe("useGatheringForm family and format", () => {
   it("applies the family's capacity default while the field is untouched", () => {
@@ -221,7 +236,7 @@ describe("useGatheringForm family and format", () => {
     expect(result.current.cap).toBe("40");
   });
 
-  it("never moves a capacity the host has typed into", () => {
+  it("keeps the capacity the host typed through a format change", () => {
     const { result } = renderHook(() => useGatheringForm());
 
     act(() => result.current.setCapTouched("6"));
@@ -295,5 +310,424 @@ describe("useGatheringForm family and format", () => {
     expect(result.current.family).toBe("learn");
     expect(result.current.format).toBe("");
     expect(result.current.isFormatChosen).toBe(false);
+  });
+});
+
+/**
+ * The care and access fields Create Gathering v2 adds.
+ *
+ * Two coupling rules are pinned here, both borrowed from the capacity field.
+ * The RSVP cutoff follows the family only until the host picks one. And a
+ * theme the family's own details already ask about (ruling R6) is hidden and
+ * dropped the moment that family is picked, so the host is asked once.
+ */
+describe("useGatheringForm care and access", () => {
+  it("adds and removes themes, and ignores a fourth", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.toggleTheme("sapphic"));
+    act(() => result.current.toggleTheme("trans-led"));
+    act(() => result.current.toggleTheme("portuguese-practice"));
+    act(() => result.current.toggleTheme("family-friendly"));
+    expect(result.current.themes).toEqual([
+      "sapphic",
+      "trans-led",
+      "portuguese-practice",
+    ]);
+
+    act(() => result.current.toggleTheme("trans-led"));
+    expect(result.current.themes).toEqual(["sapphic", "portuguese-practice"]);
+  });
+
+  it("hides and drops the themes a family's details already ask (R6)", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.toggleTheme("sober"));
+    act(() => result.current.toggleTheme("adults-only"));
+    act(() => result.current.toggleTheme("sapphic"));
+    expect(result.current.hiddenThemeKeys).toEqual([]);
+
+    act(() => result.current.selectFormat("party", "club-night"));
+    expect(result.current.hiddenThemeKeys).toEqual(["adults-only", "sober"]);
+    expect(result.current.themes).toEqual(["sapphic"]);
+
+    act(() => result.current.selectFormat("move", "swim"));
+    expect(result.current.hiddenThemeKeys).toEqual(["beginners-welcome"]);
+  });
+
+  it("follows the family's RSVP cutoff while the host has not picked one", () => {
+    const { result } = renderHook(() => useGatheringForm());
+    expect(result.current.rsvpCutoff).toBe("one-hour-before");
+
+    act(() => result.current.selectFormat("eat", "potluck"));
+    expect(result.current.rsvpCutoff).toBe("day-before");
+
+    act(() => result.current.selectFormat("party", "club-night"));
+    expect(result.current.rsvpCutoff).toBe("one-hour-before");
+  });
+
+  it("keeps the RSVP cutoff the host picked", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.setRsvpCutoff("three-days-before"));
+    act(() => result.current.selectFormat("eat", "potluck"));
+
+    expect(result.current.rsvpCutoff).toBe("three-days-before");
+  });
+
+  it("keeps When it ends through a family change, and counts it as dirty", () => {
+    const { result } = renderHook(() => useGatheringForm());
+    expect(result.current.dirty).toBe(false);
+
+    act(() => result.current.setRsvpCutoff(null));
+    // Dirty from the cutoff alone, before any format pick could make it so.
+    expect(result.current.dirty).toBe(true);
+
+    act(() => result.current.selectFormat("eat", "potluck"));
+
+    expect(result.current.rsvpCutoff).toBeNull();
+    expect(result.current.isRsvpCutoffTouched).toBe(true);
+    expect(result.current.dirty).toBe(true);
+  });
+
+  it("caps house rules and the custom RSVP question at their column widths", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.setHouseRules("a".repeat(200)));
+    act(() => result.current.setCustomRsvpQuestion("b".repeat(200)));
+
+    expect(result.current.houseRules).toHaveLength(160);
+    expect(result.current.customRsvpQuestion).toHaveLength(120);
+  });
+
+  it("starts free, with the waitlist on and every RSVP question off", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    expect(result.current.costKind).toBe("free");
+    expect(result.current.allowWaitlist).toBe(true);
+    expect(result.current.rsvpQuestions).toEqual({
+      dietary: false,
+      pronouns: false,
+      access: false,
+    });
+    expect(result.current.coverImageUrl).toBe("");
+    expect(result.current.coverPreviewUrl).toBe("");
+    expect(result.current.cohosts).toEqual([]);
+    expect(result.current.cohostSlugs).toEqual([]);
+    expect(result.current.dirty).toBe(false);
+  });
+
+  it("toggles RSVP questions, content notes and co-hosts, and counts them as dirty", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.toggleRsvpQuestion("pronouns"));
+    expect(result.current.rsvpQuestions.pronouns).toBe(true);
+    expect(result.current.dirty).toBe(true);
+
+    act(() => result.current.toggleRsvpQuestion("pronouns"));
+    act(() => result.current.toggleContentNote("loud-sound"));
+    expect(result.current.contentNotes).toEqual(["loud-sound"]);
+
+    act(() => result.current.toggleContentNote("loud-sound"));
+    act(() => result.current.toggleCohost(ARI_PICK));
+    expect(result.current.cohosts).toEqual([ARI_PICK]);
+    expect(result.current.cohostSlugs).toEqual(["ari"]);
+    expect(result.current.dirty).toBe(true);
+
+    // Matched on the slug, so a copy with other display data removes it.
+    act(() => result.current.toggleCohost({ ...ARI_PICK, name: "Ari" }));
+    expect(result.current.cohosts).toEqual([]);
+    expect(result.current.cohostSlugs).toEqual([]);
+    expect(result.current.dirty).toBe(false);
+  });
+
+  it("hands back the same co-host slug array while the picks are unchanged", () => {
+    const { result, rerender } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.toggleCohost(ARI_PICK));
+    const slugsBeforeRerender = result.current.cohostSlugs;
+    rerender();
+
+    expect(result.current.cohostSlugs).toBe(slugsBeforeRerender);
+  });
+});
+
+/** A complete seed as `gatheringToFormSeed` would build it. */
+function lastGatheringSeed(): GatheringFormSeed {
+  return {
+    family: "eat",
+    format: "supper-club",
+    otherText: "",
+    formatDetails: null,
+    showAttendeeCount: true,
+    title: "Last month's supper",
+    description: "A long table.",
+    hood: "Mouraria",
+    venue: "Casa Independente",
+    venueListingId: null,
+    venueListing: null,
+    address: "Largo do Intendente 45",
+    directions: "Ring twice",
+    onlineUrl: "",
+    capacity: "18",
+    language: "Portuguese only",
+    cost: "10 EUR",
+    accessibilityAnswers: emptyAccessibilityAnswers(),
+    accessNotes: "One step at the door",
+    audienceScope: "members",
+    communitySlug: "",
+    themes: ["sapphic"],
+    contentNotes: ["loud-sound"],
+    houseRules: "No photos without asking",
+    costKind: "fixed",
+    rsvpCutoff: "three-days-before",
+    rsvpQuestions: { dietary: true, pronouns: true, access: false },
+    customRsvpQuestion: "Anything you cannot eat?",
+    allowWaitlist: false,
+    startTime: "20:30",
+    endTime: "23:45",
+  };
+}
+
+describe("useGatheringForm applyLastGatheringSeed", () => {
+  it("copies the logistics and leaves title, date, format and pledges alone", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.setDate(futureDate(10)));
+    act(() => result.current.applyLastGatheringSeed(lastGatheringSeed()));
+
+    expect(result.current.venue).toBe("Casa Independente");
+    expect(result.current.hood).toBe("Mouraria");
+    expect(result.current.address).toBe("Largo do Intendente 45");
+    expect(result.current.directions).toBe("Ring twice");
+    expect(result.current.time).toBe("20:30");
+    expect(result.current.endTime).toBe("23:45");
+    expect(result.current.endDate).toBe(futureDate(10));
+    expect(result.current.cap).toBe("18");
+    expect(result.current.isCapTouched).toBe(true);
+    expect(result.current.lang).toBe("Portuguese only");
+    expect(result.current.cost).toBe("10 EUR");
+    expect(result.current.costKind).toBe("fixed");
+    expect(result.current.houseRules).toBe("No photos without asking");
+    expect(result.current.rsvpQuestions).toEqual({
+      dietary: true,
+      pronouns: true,
+      access: false,
+    });
+    expect(result.current.customRsvpQuestion).toBe("Anything you cannot eat?");
+    expect(result.current.accessNotes).toBe("One step at the door");
+
+    expect(result.current.title).toBe("");
+    expect(result.current.date).toBe(futureDate(10));
+    expect(result.current.family).toBe("");
+    expect(result.current.format).toBe("");
+    expect(result.current.checks).toEqual([false, false]);
+    // Not in the "same as last time" set: these describe the gathering
+    // itself, which the host is choosing afresh.
+    expect(result.current.themes).toEqual([]);
+    expect(result.current.contentNotes).toEqual([]);
+    expect(result.current.rsvpCutoff).toBe("one-hour-before");
+    expect(result.current.allowWaitlist).toBe(true);
+  });
+
+  it("keeps the capacity it copied through a later format pick", () => {
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() => result.current.applyLastGatheringSeed(lastGatheringSeed()));
+    act(() => result.current.selectFormat("party", "club-night"));
+
+    expect(result.current.cap).toBe("18");
+  });
+});
+
+describe("useGatheringForm duplicate seed RSVP cutoff", () => {
+  it("copies a null cutoff as When it ends, and keeps it through a family change", () => {
+    const seed: GatheringFormSeed = {
+      ...lastGatheringSeed(),
+      rsvpCutoff: null,
+    };
+    const { result } = renderHook(() => useGatheringForm({ seed }));
+
+    expect(result.current.rsvpCutoff).toBeNull();
+    expect(result.current.isRsvpCutoffTouched).toBe(true);
+
+    act(() => result.current.selectFormat("party", "club-night"));
+    expect(result.current.rsvpCutoff).toBeNull();
+  });
+
+  it("leaves the family default in charge when the seed carries no cutoff", () => {
+    const seed: GatheringFormSeed = {
+      ...lastGatheringSeed(),
+      rsvpCutoff: undefined,
+    };
+    const { result } = renderHook(() => useGatheringForm({ seed }));
+
+    // The seed's family is `eat`, whose default closes a day ahead.
+    expect(result.current.rsvpCutoff).toBe("day-before");
+    expect(result.current.isRsvpCutoffTouched).toBe(false);
+
+    act(() => result.current.selectFormat("party", "club-night"));
+    expect(result.current.rsvpCutoff).toBe("one-hour-before");
+  });
+});
+
+describe("useGatheringForm draft snapshot", () => {
+  it("round-trips through JSON and restores every field it carries", () => {
+    const source = renderHook(() => useGatheringForm());
+
+    act(() => source.result.current.setTitle("Sunday picnic"));
+    act(() => source.result.current.selectFormat("eat", "potluck"));
+    act(() => source.result.current.setFormatDetail("bring", "fruit"));
+    act(() => source.result.current.setDate(futureDate(12)));
+    act(() => source.result.current.setTime("13:00"));
+    act(() => source.result.current.setHood("Graça"));
+    act(() => source.result.current.toggleTheme("family-friendly"));
+    act(() => source.result.current.toggleContentNote("alcohol-present"));
+    act(() => source.result.current.setHouseRules("Bring a blanket"));
+    act(() => source.result.current.setCostKind("pay-what-you-can"));
+    act(() => source.result.current.toggleRsvpQuestion("dietary"));
+    act(() => source.result.current.setAllowWaitlist(false));
+    act(() => source.result.current.toggleCheck(0));
+    act(() => source.result.current.setCoverImageUrl("event-covers/a.webp"));
+    act(() => source.result.current.toggleCohost(ARI_PICK));
+
+    const snapshot = source.result.current.draftSnapshot;
+    const stored = JSON.parse(JSON.stringify(snapshot)) as typeof snapshot;
+    expect(stored).toEqual(snapshot);
+    expect("checks" in snapshot).toBe(false);
+    expect("coverImageUrl" in snapshot).toBe(false);
+    expect("cohosts" in snapshot).toBe(false);
+    expect("cohostSlugs" in snapshot).toBe(false);
+
+    const restored = renderHook(() => useGatheringForm());
+    act(() => restored.result.current.restoreDraft(stored));
+
+    expect(restored.result.current.draftSnapshot).toEqual(snapshot);
+    expect(restored.result.current.checks).toEqual([false, false]);
+    expect(restored.result.current.coverImageUrl).toBe("");
+    expect(restored.result.current.cohosts).toEqual([]);
+    expect(restored.result.current.cohostSlugs).toEqual([]);
+    expect(restored.result.current.dirty).toBe(true);
+  });
+
+  it("round-trips When it ends as null through storage", () => {
+    const source = renderHook(() => useGatheringForm());
+
+    act(() => source.result.current.selectFormat("eat", "potluck"));
+    act(() => source.result.current.setRsvpCutoff(null));
+
+    const snapshot = source.result.current.draftSnapshot;
+    expect(snapshot.rsvpCutoff).toBeNull();
+    const stored = JSON.parse(JSON.stringify(snapshot)) as typeof snapshot;
+
+    const restored = renderHook(() => useGatheringForm());
+    act(() => restored.result.current.restoreDraft(stored));
+
+    expect(restored.result.current.rsvpCutoff).toBeNull();
+    expect(restored.result.current.isRsvpCutoffTouched).toBe(true);
+
+    act(() => restored.result.current.selectFormat("party", "club-night"));
+    expect(restored.result.current.rsvpCutoff).toBeNull();
+  });
+
+  it("restores a cutoff this release does not know as the family default", () => {
+    const blank = renderHook(() => useGatheringForm());
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() =>
+      result.current.restoreDraft({
+        ...blank.result.current.draftSnapshot,
+        family: "eat",
+        format: "potluck",
+        rsvpCutoff: "two-weeks-before" as unknown as RsvpCutoff,
+      }),
+    );
+
+    expect(result.current.rsvpCutoff).toBe("day-before");
+  });
+
+  it("keeps a restored value over the family default", () => {
+    const blank = renderHook(() => useGatheringForm());
+    const { isRsvpCutoffTouched, isCapTouched, ...withoutFlags } =
+      blank.result.current.draftSnapshot;
+    expect(isRsvpCutoffTouched).toBe(false);
+    expect(isCapTouched).toBe(false);
+
+    const { result } = renderHook(() => useGatheringForm());
+    act(() =>
+      result.current.restoreDraft({
+        ...withoutFlags,
+        family: "eat",
+        format: "potluck",
+        cap: "7",
+        rsvpCutoff: "one-hour-before",
+      }),
+    );
+    act(() => result.current.selectFormat("eat", "supper-club"));
+
+    expect(result.current.rsvpCutoff).toBe("one-hour-before");
+    expect(result.current.cap).toBe("7");
+  });
+
+  it("drops a restored theme the restored family already asks about", () => {
+    const blank = renderHook(() => useGatheringForm());
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() =>
+      result.current.restoreDraft({
+        ...blank.result.current.draftSnapshot,
+        family: "party",
+        format: "club-night",
+        themes: ["sober", "sapphic"],
+      }),
+    );
+
+    expect(result.current.themes).toEqual(["sapphic"]);
+  });
+
+  it("clears a restored format from another family and an unknown language", () => {
+    const blank = renderHook(() => useGatheringForm());
+    const { result } = renderHook(() => useGatheringForm());
+
+    act(() =>
+      result.current.restoreDraft({
+        ...blank.result.current.draftSnapshot,
+        family: "eat",
+        format: "club-night",
+        lang: "A language this release does not offer",
+      }),
+    );
+
+    expect(result.current.family).toBe("eat");
+    expect(result.current.format).toBe("");
+    expect(result.current.lang).toBe(LANGS[0]?.value);
+  });
+
+  it("keeps a restored format inside its family, and something else", () => {
+    const blank = renderHook(() => useGatheringForm());
+    const curated = renderHook(() => useGatheringForm());
+    const somethingElse = renderHook(() => useGatheringForm());
+
+    act(() =>
+      curated.result.current.restoreDraft({
+        ...blank.result.current.draftSnapshot,
+        family: "eat",
+        format: "potluck",
+        lang: "English only",
+      }),
+    );
+    act(() =>
+      somethingElse.result.current.restoreDraft({
+        ...blank.result.current.draftSnapshot,
+        family: "eat",
+        format: "other",
+        otherText: "Soup swap",
+      }),
+    );
+
+    expect(curated.result.current.format).toBe("potluck");
+    expect(curated.result.current.lang).toBe("English only");
+    expect(somethingElse.result.current.format).toBe("other");
+    expect(somethingElse.result.current.otherText).toBe("Soup swap");
   });
 });

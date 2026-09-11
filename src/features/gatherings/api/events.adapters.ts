@@ -7,6 +7,15 @@ import {
 } from "../data";
 import type { GatheringForm } from "../useGatheringForm";
 import { OTHER_FORMAT_KEY } from "../gatheringCatalog";
+import {
+  EXISTING_GATHERING_RSVP_QUESTIONS,
+  isCostKind,
+  isRsvpCutoff,
+  normalizeRsvpQuestions,
+  rsvpClosesAt as computeRsvpClosesAt,
+  sanitizeContentNotes,
+  sanitizeThemes,
+} from "../gatheringExtras";
 import { initialsFromParts } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -119,7 +128,14 @@ export function cardToCalendarEvent(
   // read a missing host as "QueerPulse" and byline the platform for a member's
   // gathering once that member erased their account.
   const org = dto.org ?? "Community";
+  // Narrowed to the vocabulary alone: ruling R6 keeps a new gathering from
+  // asking twice, and a theme already stored still shows.
+  const themes = sanitizeThemes(dto.themes, null);
   return {
+    // Create Gathering v2: the themes the host pinned and how it is paid for.
+    // Absent unless present on the wire, so a demo-shaped card is unchanged.
+    ...(themes.length > 0 ? { themes } : {}),
+    ...(isCostKind(dto.costKind) ? { costKind: dto.costKind } : {}),
     date: new Date(dto.startAt),
     // The end instant, whenever the host set one. Without it every consumer
     // has to guess "is this still on?" from the start alone, which throws away
@@ -135,6 +151,10 @@ export function cardToCalendarEvent(
     hood: onlineAwareHood(dto, t),
     to: gatheringPath(dto.slug),
     kind: dto.host ? "gathering" : "event",
+    // The host's profile slug, so a surface can pick out the signed-in
+    // member's own gatherings (the create wizard's clash notes). Cards carry
+    // no co-host list, so this names the host alone.
+    ...(dto.host?.slug ? { hostSlug: dto.host.slug } : {}),
     // Discovery lists never carry a cancelled row, but the member's own
     // "going"/"saved"/"hosting" lists do, and the card knows how to render
     // the state (PRD-181). Carrying it is what stops a called-off gathering
@@ -255,7 +275,46 @@ export function detailToGathering(
     isOnline: dto.isOnline ?? false,
     onlineUrl: dto.onlineUrl ?? null,
     ...(dto.updatedAt ? { updatedAt: new Date(dto.updatedAt) } : {}),
+    // ── Care and access (Create Gathering v2) ────────────────────────────
+    // Every vocabulary value is narrowed here, so a key this build has no
+    // label for (a newer backend, a hand-edited row) is dropped before any
+    // screen could show it as a raw translation key.
+    themes: sanitizeThemes(dto.themes, null),
+    contentNotes: sanitizeContentNotes(dto.contentNotes),
+    houseRules: dto.houseRules?.trim() ? dto.houseRules : null,
+    costKind: isCostKind(dto.costKind) ? dto.costKind : null,
+    rsvpCutoff: isRsvpCutoff(dto.rsvpCutoff) ? dto.rsvpCutoff : null,
+    rsvpClosesAt: closingInstant(dto),
+    // A detail without the field predates it, and ruling R8 says such a
+    // gathering keeps asking what the RSVP form always asked.
+    rsvpQuestions: normalizeRsvpQuestions(
+      dto.rsvpQuestions,
+      EXISTING_GATHERING_RSVP_QUESTIONS,
+    ),
+    customRsvpQuestion: dto.customRsvpQuestion?.trim()
+      ? dto.customRsvpQuestion
+      : null,
   };
+}
+
+/**
+ * When RSVPs close, as an instant.
+ *
+ * The server's own `rsvpClosesAt` wins whenever the detail carries the field,
+ * `null` included, because the server is what enforces the cutoff. Only a
+ * detail with no such field at all (an API from before it existed) has it
+ * worked out here from the cutoff, by the same elapsed-hours rule.
+ *
+ * Exported for `useRsvpDetailsQuestions`, which reads the same detail fetch.
+ */
+export function closingInstant(dto: EventDetailDTO): Date | null {
+  if (dto.rsvpClosesAt !== undefined) {
+    if (dto.rsvpClosesAt === null) return null;
+    const serverInstant = new Date(dto.rsvpClosesAt);
+    return Number.isNaN(serverInstant.getTime()) ? null : serverInstant;
+  }
+  if (!isRsvpCutoff(dto.rsvpCutoff)) return null;
+  return computeRsvpClosesAt(new Date(dto.startAt), dto.rsvpCutoff);
 }
 
 /**
@@ -319,6 +378,9 @@ export interface AttendeeRow {
   guestCount?: number;
   accessNeeds?: string | null;
   dietaryNeeds?: string | null;
+  /** Their answer to the host's own RSVP question, organisers only, withheld
+   *  under the same rule as the needs above. */
+  customAnswer?: string | null;
   /** Their own "who can see this" choice, so the host's list can say why a
    *  needs line is absent rather than implying nobody has any. */
   detailsVisibility?: string | null;
@@ -366,7 +428,10 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     background: tint.background,
     color: tint.color,
     name: `${dto.firstName} ${dto.lastName}`.trim(),
-    pronouns: dto.pronouns,
+    // The pronouns the attendee gave on their RSVP (Create Gathering v2).
+    // Organisers only, and `null` when withheld, which reads here as "none to
+    // show" so the meta line prints only the slots it has.
+    pronouns: dto.pronouns ?? undefined,
     ...(dto.rsvpAt ? { rsvpAt: new Date(dto.rsvpAt) } : {}),
     ...(typeof dto.waitlistPosition === "number"
       ? { waitlistPosition: dto.waitlistPosition }
@@ -378,6 +443,7 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     guestCount: dto.guestCount,
     accessNeeds: dto.accessNeeds,
     dietaryNeeds: dto.dietaryNeeds,
+    customAnswer: dto.customAnswer,
     detailsVisibility: dto.detailsVisibility ?? null,
   };
 }
@@ -409,14 +475,15 @@ function combineDateTime(date: string, time: string): string {
  * survives as the fallback for a form that has supplied no end date at all (a
  * seeded duplicate, or a host who cleared the field), so such a payload stays
  * well-formed instead of earning a 400. In that fallback an end equal to the
- * start is treated the same way `durationMinutes` treats it: a full day, never
- * a zero-length gathering.
+ * start is treated the same way `durationMinutes` treats it: a full day, so
+ * the gathering always has a length.
  *
  * THAT FALLBACK IS DUPLICATED, AND THE TWO MUST STAY IDENTICAL. Its twin is
- * `evaluateSchedule` in ../useGatheringForm.ts, which decides whether the
- * wizard lets the host submit at all. If this one rolls forward where that one
- * does not, the gate refuses a schedule this function would have built
- * correctly, and the host is stranded on step 2 with nothing to act on.
+ * `scheduleInstants` in ../steps/schedulePair.ts, which the wizard's gate
+ * (`evaluateSchedule`), the preview card and the "Runs" line all read. If
+ * this one rolls forward where that one does not, the gate refuses a schedule
+ * this function would have built correctly, and the host is stranded on step
+ * 2 with nothing to act on.
  */
 function combineEndDateTime(
   date: string,
@@ -448,6 +515,10 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
   // key would occupy, so the two cases resolve to one string here.
   const submittedFormat =
     form.format === OTHER_FORMAT_KEY ? form.otherText.trim() : form.format;
+  // Narrowed against the family once more on the way out (ruling R6). The form
+  // already drops a hidden theme when the family is picked, and this keeps a
+  // restored or seeded one from riding along on a chip the host cannot see.
+  const submittedThemes = sanitizeThemes(form.themes, form.family || null);
   return {
     title: form.title.trim(),
     description: form.description.trim(),
@@ -505,8 +576,37 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
       answers: form.accessibilityAnswers,
       ...(form.accessNotes.trim() ? { note: form.accessNotes.trim() } : {}),
     },
-    // LOC-18 — free text, display only. Nothing here takes a payment.
-    ...(form.cost.trim() ? { cost: form.cost.trim() } : {}),
+    // LOC-18, free text, display only. Nothing here takes a payment. A free
+    // gathering sends no price at all, so a line typed before the host set
+    // the cost kind back to free stays off the card.
+    ...(form.costKind !== "free" && form.cost.trim()
+      ? { cost: form.cost.trim() }
+      : {}),
+    costKind: form.costKind,
+    // ── Care and access (Create Gathering v2) ──────────────────────────────
+    // The lists and the free text only when the host filled them in. The
+    // cutoff, the questions and the waitlist go on every create, because each
+    // has a real answer the server should store as the host gave it. A cutoff
+    // of null ("When it ends") goes out as an explicit null, which the
+    // server stores as RSVPs staying open until the gathering ends.
+    ...(submittedThemes.length > 0 ? { themes: submittedThemes } : {}),
+    ...(form.contentNotes.length > 0
+      ? { contentNotes: [...form.contentNotes] }
+      : {}),
+    ...(form.houseRules.trim() ? { houseRules: form.houseRules.trim() } : {}),
+    rsvpCutoff: form.rsvpCutoff,
+    // Access needs are asked on every RSVP (ruling R8) and the wizard shows
+    // that row locked on, so the stored map says so too.
+    rsvpQuestions: { ...form.rsvpQuestions, access: true },
+    ...(form.customRsvpQuestion.trim()
+      ? { customRsvpQuestion: form.customRsvpQuestion.trim() }
+      : {}),
+    allowWaitlist: form.allowWaitlist,
+    // The storage key from the `event-cover` upload. `coverPreviewUrl` is a
+    // local preview and stays in the browser.
+    ...(form.coverImageUrl.trim()
+      ? { coverImageUrl: form.coverImageUrl.trim() }
+      : {}),
     capacity: Number.isFinite(capacity) ? capacity : undefined,
     // The family's own default, or the host's override. Sent on every create
     // so a care gathering is never published counting its room out loud

@@ -1,0 +1,5 @@
+/* A narrow phone cannot fit every "Me and N others" segment on one row, and
+   each label holds to one line, so the tray wraps onto a second row. */
+.guestSegments {
+  flex-wrap: wrap;
+}

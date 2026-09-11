@@ -1,32 +1,51 @@
-/* Six questions, each with its own three-way answer. One row per question so a
-   host works down the list the way somebody arrives: the door, the room, the
+/* Six questions, each with its own three-way answer, as the Create Gathering
+   v2 design draws them (qp-create-gathering.css `.acc`, `.acc-row`, `.acc-q`
+   and `.seg`): one bordered list, a row per question, and a segmented
+   Yes / No / Not sure yet tray on the right. One row per question so a host
+   works down the list the way somebody arrives: the door, the room, the
    toilets, then the quieter needs. */
 .questions {
-  display: grid;
-  gap: 10px;
-  margin-block: 6px 4px;
+  margin-top: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-16);
 }
 
 .question {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 10px 16px;
-  padding: 13px 15px;
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  background: var(--paper);
+  padding: 12px 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+  transition: background var(--dur-fast) var(--ease);
+}
+/* The first and last rows carry the list's inner corners (its 16px radius
+   less the 1px edge), so a row's hover wash stays inside the rounded border
+   and nothing in a row is clipped. */
+.question:first-child {
+  border-top: 0;
+  border-top-left-radius: var(--radius-15);
+  border-top-right-radius: var(--radius-15);
+}
+.question:last-child {
+  border-bottom-left-radius: var(--radius-15);
+  border-bottom-right-radius: var(--radius-15);
+}
+@media (hover: hover) {
+  .question:hover {
+    background: rgba(var(--plum-rgb), 0.02);
+  }
 }
 
 .text {
+  flex: 1 1 230px;
   min-width: 0;
-  flex: 1 1 16rem;
 }
 
 .label {
   display: block;
   font-size: var(--text-14);
+  font-weight: 600;
   line-height: 1.45;
   color: var(--ink);
 }
@@ -34,49 +53,63 @@
 .help {
   display: block;
   font-size: var(--text-12-5);
-  line-height: 1.5;
-  color: var(--ink-60);
-  margin-top: 3px;
-  max-width: 52ch;
+  line-height: 1.4;
+  color: var(--ink-40);
 }
 
 .options {
-  display: flex;
-  gap: 6px;
-  flex: 0 0 auto;
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  margin-left: auto;
+  padding: 4px;
+  background: rgba(var(--line-rgb), 0.07);
+  border-radius: var(--radius-pill);
 }
 
 /* Every answer carries an icon AND its own word, so none of this depends on
-   colour. Targets stay at the 44px touch floor on a phone. */
+   colour. The pill stays compact; on touch screens each answer gets a 44px
+   tall hit strip. */
 .option {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 44px;
-  padding: 0 12px;
-  border-radius: var(--radius-badge);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: transparent;
-  color: var(--ink-60);
+  padding: 7px 11px;
   font: inherit;
   font-size: var(--text-13);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--ink-60);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    background var(--dur-fast, 150ms) var(--ease),
-    color var(--dur-fast, 150ms) var(--ease),
-    border-color var(--dur-fast, 150ms) var(--ease);
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+@media (pointer: coarse) {
+  .option::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
 }
 
 .option svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   flex: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .option:hover {
-    border-color: rgba(var(--line-rgb), 0.28);
     color: var(--ink);
   }
 }
@@ -87,25 +120,50 @@
   box-shadow: var(--ring-cream);
 }
 
-/* A confirmed provision. */
-.optionOn[data-answer="yes"] {
-  background: rgba(var(--jade-rgb), 0.12);
-  border-color: rgba(var(--jade-rgb), 0.4);
-  color: var(--jade);
+.optionOn {
+  font-weight: 600;
+  background: var(--paper);
+  box-shadow: var(--shadow-e2);
 }
 
-/* An equally definite answer, and an honest one. Same solid treatment as a
+/* A confirmed provision. */
+.optionOn[data-answer="yes"] {
+  color: var(--jade-ink);
+}
+
+/* An equally definite answer, and an honest one. Same raised treatment as a
    yes: no alarm colour, no apology. */
 .optionOn[data-answer="no"] {
-  background: rgba(var(--plum-rgb), 0.09);
-  border-color: rgba(var(--line-rgb), 0.28);
   color: var(--text-strong);
 }
 
-/* A third thing entirely, and never a quiet no. */
+/* A third thing entirely, and still an answer on the page. */
 .optionOn[data-answer="unknown"] {
-  background: transparent;
-  border-style: dashed;
-  border-color: rgba(var(--line-rgb), 0.28);
   color: var(--ink-60);
+}
+
+/* On a phone the tray takes the whole row and its three answers share it.
+   Each answer can shrink and wrap its words, so "Ainda não sei" fits at
+   320px. */
+@media (--sm) {
+  .options {
+    display: flex;
+    width: 100%;
+    margin-left: 0;
+  }
+  .option {
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+    padding-inline: 6px;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question,
+  .option {
+    transition: none;
+  }
 }

@@ -25,13 +25,21 @@ import {
   connectionDtoToView,
 } from "./connections.adapters";
 
-/** The search term and ordering the page is asking for. */
+/** The search term and ordering the page is asking for, and whether it wants
+ *  the list loaded yet. */
 export interface ConnectionsListFilters {
-  searchTerm: string;
-  sort: ConnectionSort;
+  /** Defaults to no term. */
+  searchTerm?: string;
+  /** Defaults to `"recent"`. */
+  sort?: ConnectionSort;
+  /** Whether the live request may run. Defaults to true. False keeps it idle
+   *  (a picker that has not opened yet), and an idle list reports
+   *  `loading: false`. */
+  isEnabled?: boolean;
 }
 
-const NO_FILTERS: ConnectionsListFilters = { searchTerm: "", sort: "recent" };
+const DEFAULT_SEARCH_TERM = "";
+const DEFAULT_SORT: ConnectionSort = "recent";
 
 export interface ConnectionsListResult {
   /** The cards to render for this tab (all pages fetched so far in live mode). */
@@ -85,10 +93,14 @@ interface ConnPageVM {
  */
 export function useConnectionsList(
   tab: TabId,
-  filters: ConnectionsListFilters = NO_FILTERS,
+  filters: ConnectionsListFilters = {},
 ): ConnectionsListResult {
   const { demoMode } = useDemoMode();
-  const { searchTerm, sort } = filters;
+  const {
+    searchTerm = DEFAULT_SEARCH_TERM,
+    sort = DEFAULT_SORT,
+    isEnabled = true,
+  } = filters;
   const { t, language } = useTranslation();
   const fmt = useFormat();
   const { connected, incoming, sent } = useConnections();
@@ -125,7 +137,7 @@ export function useConnectionsList(
   // the already-warm cache instead of firing a second request.
   const blocksQuery = useQuery({
     queryKey: ["blocks", demoMode],
-    enabled: isLiveBlocked,
+    enabled: isEnabled && isLiveBlocked,
     queryFn: () => getBlocks(),
   });
 
@@ -140,7 +152,8 @@ export function useConnectionsList(
     queryKey: ["connections", tab, demoMode, language, searchTerm.trim(), sort],
     // Blocked has no /connections endpoint; demo mode never fetches. In both
     // cases we short out to the resolved views below and keep the query idle.
-    enabled: !demoMode && apiTab !== undefined,
+    // A caller that has not asked for the list yet keeps it idle too.
+    enabled: isEnabled && !demoMode && apiTab !== undefined,
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const res: ConnectionsPageDTO = await getConnections(
@@ -180,7 +193,8 @@ export function useConnectionsList(
         searchTerm,
         sort,
       ),
-      loading: blocksQuery.isPending,
+      // An idle query is pending in React Query's terms; nothing is loading.
+      loading: isEnabled && blocksQuery.isPending,
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
@@ -208,7 +222,7 @@ export function useConnectionsList(
   const views = (query.data?.pages ?? []).flatMap((p) => p.views);
   return {
     views,
-    loading: query.isPending,
+    loading: isEnabled && query.isPending,
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,

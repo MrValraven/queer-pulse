@@ -537,6 +537,7 @@ export const settings: Catalog = {
   "uploads.kind.listing-photo": "Listing photo",
   "uploads.kind.community-cover": "Community banner",
   "uploads.kind.community-avatar": "Community logo",
+  "uploads.kind.event-cover": "Gathering cover",
   "uploads.kind.message-image": "Chat photo",
   "uploads.kind.message-document": "Chat file",
   "uploads.delete.button": "Delete",

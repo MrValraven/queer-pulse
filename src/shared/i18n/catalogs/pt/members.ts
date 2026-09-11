@@ -71,6 +71,11 @@ export const members: Catalog = {
   "avatar.picker.deleted": "Foto eliminada.",
   "avatar.picker.deleteError":
     "Não foi possível eliminar essa foto. Tenta novamente.",
+  "avatar.picker.edit": "Reposicionar foto",
+  "avatar.picker.editInUse":
+    "Esta foto está a ser usada como a tua {usedAs}. O novo enquadramento também aparece aí.",
+  "avatar.picker.editError":
+    "Não foi possível guardar o novo enquadramento. Tenta novamente.",
 
   // ── WorkItemEditor ─────────────────────────────────────────────────────────
   "workItem.error.generic":
@@ -975,33 +980,6 @@ export const members: Catalog = {
   "commandPalette.seeAllResults":
     "Ver todos os resultados para “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Abrir pesquisa completa",
-
-  // ── Página de voto de confiança: escolher alguém (VouchPage) ─────────
-  "vouch.page.eyebrow": "Voto de confiança",
-  "vouch.page.title": "Diz-nos que <em>as conheces.</em>",
-  "vouch.page.lede":
-    "Encontra a pessoa a quem queres dar um voto de confiança. O voto é público e leva o teu nome, e podes retirá-lo quando quiseres.",
-  "vouch.picker.searchPlaceholder": "Procurar pessoas pelo nome",
-  "vouch.picker.searchAria": "Procurar pessoas para dar um voto de confiança",
-  "vouch.picker.noResults":
-    "Ninguém aqui corresponde a “{query}”. Tenta outra grafia.",
-  "vouch.picker.alreadyVouched": "Com o teu voto",
-  "vouch.picker.vouchCta": "Dar voto de confiança a {name}",
-  "vouch.picker.error.title": "A lista de pessoas não carregou",
-  "vouch.picker.error.description":
-    "Algo correu mal a caminho do diretório. Tenta outra vez.",
-  "vouch.picker.error.retry": "Tentar outra vez",
-
-  // ── Explicação de porquê dar um voto de confiança (vouch.data.ts MEANS) ─────
-  "vouch.means.know.title": "Conheces esta pessoa, a sério",
-  "vouch.means.know.body":
-    "Um voto de confiança diz que já conheceste esta pessoa e confias nela em espaços da comunidade. Isso tem peso aqui.",
-  "vouch.means.safe.title": "Mantém o espaço seguro",
-  "vouch.means.safe.body":
-    "A QueerPulse funciona por convite e voto de confiança por uma razão. Pessoas a darem votos de confiança a pessoas é como nos mantemos numa comunidade pequena e de confiança.",
-  "vouch.means.council.title": "É visto pelo conselho",
-  "vouch.means.council.body":
-    "A tua nota vai para o conselho da comunidade junto com o pedido desta pessoa. Não é publicada.",
 
   // ── Opções de relação para dar um voto de confiança (vouchMember.data.ts) ──
   "vouch.relationship.collaborated": "Já colaborámos",

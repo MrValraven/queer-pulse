@@ -78,14 +78,9 @@ export const GETTING_STARTED_STEPS: GettingStartedStep[] = [
     descKey: "auth:gettingStarted.steps.vouch.desc",
     doneKey: "auth:gettingStarted.steps.vouch.done",
     ctaKey: "auth:gettingStarted.steps.vouch.cta",
-    // PRD-08 — this pointed at the member directory, which was right while
-    // `/vouch` was still a demo prototype with one hardcoded candidate and a
-    // submit that called nothing. `/vouch` is now a real picker over the real
-    // directory, handing the chosen member to the same `VouchMemberModal` the
-    // profile page uses (see `VouchMemberPicker`). It answers this step's
-    // exact question, "who?", so the step lands there instead of on a
-    // directory that never mentions vouching.
-    to: routes.vouch,
+    // Vouching happens on a member's profile, so the step lands on the member
+    // directory, the way into every profile. Matches `sideQuestCta`.
+    to: routes.members,
     icon: FiHeart,
   },
   {

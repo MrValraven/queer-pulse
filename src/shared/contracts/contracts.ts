@@ -712,13 +712,20 @@ export interface TopicPostResponse {
 
 // --- Resources ---
 
-/** One block of an editor-authored guide body. Plain text: the renderer
- *  prints it, so there is no markup for an editor to get wrong. */
+/** One block of an editor-authored guide body. Paragraph, listItem and note
+ *  blocks may carry sanitized inline HTML in `html` (em, strong, a, br),
+ *  sanitized by the backend on write and by the frontend on read. Subheadings
+ *  are always plain text. */
 export type GuideBlockKind = "paragraph" | "subheading" | "listItem" | "note";
 
 export interface GuideBlock {
   kind: GuideBlockKind;
+  /** Plain text. Always present; the backend derives it from `html`. */
   text: string;
+  /** Sanitized inline HTML (em, strong, a, br) on paragraph, listItem and
+   *  note blocks written by the guide workspace. Absent on older blocks,
+   *  which render from `text`. */
+  html?: string;
 }
 
 /** One H2 section of a guide body, plus its ordered blocks. */

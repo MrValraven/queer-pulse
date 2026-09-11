@@ -814,18 +814,63 @@ export function emailValid(v: string): boolean {
   return RE.email.test(v.trim());
 }
 
-/** True when `value` can be rendered directly as an `<img src>` — an http(s),
- *  data, or blob URL. Guards the paste-a-URL field from non-image schemes. */
+/**
+ * Hosts a pasted image link may point at. Mirrors `ALLOWED_IMAGE_HOSTS` in the
+ * backend's `@IsImageReference` (queerpulse-backend
+ * `common/validators/is-image-reference.decorator.ts`): Google account and
+ * Places photos, Unsplash, and Mux poster frames, each with its subdomains.
+ * Keep the two lists in step, or a link that passes here 400s the whole save.
+ */
+const PASTABLE_IMAGE_HOSTS = [
+  "googleusercontent.com",
+  "unsplash.com",
+  "image.mux.com",
+];
+
+/** Why a pasted image link would be refused, in the order the backend checks. */
+export type PastedImageUrlProblem = "notUrl" | "notHttps" | "hostNotAllowed";
+
+/** The inline copy for each refusal, shown on the photo slot. */
+export const PASTED_IMAGE_URL_PROBLEM_KEYS: Record<
+  PastedImageUrlProblem,
+  string
+> = {
+  notUrl: "marketing:listBusiness.step4.photo.urlInvalid",
+  notHttps: "marketing:listBusiness.step4.photo.urlNotHttps",
+  hostNotAllowed: "marketing:listBusiness.step4.photo.urlHostNotAllowed",
+};
+
+/**
+ * The reason the backend would refuse `value` as a pasted image link, or
+ * `null` when it would accept it. This is the value that gets PERSISTED into
+ * `photos`, so it runs the same checks as `@IsImageReference`. Uploaded photos
+ * persist a storage key via `useUploadImage` and never reach this guard.
+ */
+export function pastedImageUrlProblem(
+  value: string,
+): PastedImageUrlProblem | null {
+  let parsed: URL;
+  try {
+    parsed = new URL(value.trim());
+  } catch {
+    return "notUrl";
+  }
+  // `http:` is a mixed-content downgrade; `data:`, `blob:` and `javascript:`
+  // are stored-XSS vectors.
+  if (parsed.protocol !== "https:") return "notHttps";
+  // Parsed, never substring-matched: `https://evil.example/?x=unsplash.com` and
+  // `https://unsplash.com@evil.example/pixel` both contain a trusted host and
+  // neither is served by one.
+  const host = parsed.hostname.toLowerCase();
+  const isAllowedHost = PASTABLE_IMAGE_HOSTS.some(
+    (allowedHost) => host === allowedHost || host.endsWith(`.${allowedHost}`),
+  );
+  return isAllowedHost ? null : "hostNotAllowed";
+}
+
+/** True when `value` is a pasted image link the backend will persist. */
 export function isPastableImageUrl(value: string): boolean {
-  const trimmed = value.trim();
-  if (!trimmed) return false;
-  // Only `https://` — this is the value that gets PERSISTED into `photos`, so it
-  // must satisfy the backend's `@IsImageReference` (queerpulse-backend
-  // `common/validators/is-image-reference.decorator.ts`), which accepts only a
-  // storage key or an `https://` URL and refuses `http:`/`data:`/`blob:`
-  // (mixed-content downgrade + stored-XSS defence). Uploaded photos persist a
-  // storage key via `useUploadImage` and never reach this guard.
-  return /^https:\/\//i.test(trimmed);
+  return value.trim() !== "" && pastedImageUrlProblem(value) === null;
 }
 
 /** Build a reference like QPL-2026-0007 from a numeric seed. */

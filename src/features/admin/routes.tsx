@@ -175,6 +175,10 @@ const AdminResourceGuidesPage = lazyNamed(
   () => import("./AdminResourceGuidesPage"),
   "AdminResourceGuidesPage",
 );
+const AdminGuideWorkspacePage = lazyNamed(
+  () => import("./guideWorkspace/AdminGuideWorkspacePage"),
+  "AdminGuideWorkspacePage",
+);
 const AdminGlossaryPage = lazyNamed(
   () => import("./AdminGlossaryPage"),
   "AdminGlossaryPage",
@@ -305,6 +309,16 @@ export function adminRoutes() {
       <Route
         path={routes.adminResourceGuides}
         element={<AdminResourceGuidesPage />}
+      />
+      {/* The guide workspace. Under the guide console's path, so authGate's
+          `${adminResourceGuides}/*` capability pattern covers both. */}
+      <Route
+        path={routes.adminResourceGuideNew}
+        element={<AdminGuideWorkspacePage />}
+      />
+      <Route
+        path={`${routes.adminResourceGuideEdit}/:id`}
+        element={<AdminGuideWorkspacePage />}
       />
       {/* PRD-264. Nested under the guide console's path so `authGate`'s
           `${adminResourceGuides}/*` capability pattern already covers it. */}

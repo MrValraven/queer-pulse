@@ -4,7 +4,7 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleBlock } from "../../api/pieces.api";
 import { ArticleBlockEditor } from "./ArticleBlockEditor";
 import { BLOCK_KINDS, type ArticleBlockKind } from "./blockKinds";
-import { RichText } from "./RichText";
+import { RichText } from "../../../../shared/components/richText/RichText";
 import styles from "./ArticleDocument.module.css";
 
 export interface ArticleDocumentProps {

@@ -870,6 +870,15 @@ export const subprofiles: Catalog = {
   "imageUpload.removeConfirm.confirm": "Remove",
   "imageUpload.removeConfirm.cancel": "Keep it",
 
+  // Certificate photo on a credentials/trainings item: the editor field's
+  // placeholder and privacy note (SubprofileItemDrawerFields), and the public
+  // row thumbnail with its full-size viewer (CredentialProofThumb).
+  "credentialPhoto.placeholder": "Photo of your certificate",
+  "credentialPhoto.privacyNote":
+    "Anyone who visits this page can see this photo. Before you upload it, cover any ID numbers and any name you don't want shown.",
+  "credentialPhoto.alt": "Certificate for {title}",
+  "credentialPhoto.openAria": "Open the certificate for {title} full-screen",
+
   // Banner reposition (PersonaCoverReposition) — the owner's in-page control
   // for where the cover image sits vertically inside the band.
   "cover.reposition.cta": "Reposition",

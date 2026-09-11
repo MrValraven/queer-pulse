@@ -26,6 +26,7 @@ export function DoorGuestList({
   onLoadMore,
   onCheckIn,
   onUndo,
+  customRsvpQuestion,
 }: {
   attendees: AttendeeRow[];
   /** How many have arrived, or `null` when the platform no longer keeps this
@@ -42,6 +43,8 @@ export function DoorGuestList({
   onLoadMore: () => void;
   onCheckIn: (memberSlug: string) => void;
   onUndo: (memberSlug: string) => void;
+  /** The host's own RSVP question, which labels each guest's answer. */
+  customRsvpQuestion?: string | null;
 }) {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<DoorFilter>("all");
@@ -162,6 +165,7 @@ export function DoorGuestList({
               canCheckIn={canCheckIn}
               onCheckIn={onCheckIn}
               onUndo={onUndo}
+              customRsvpQuestion={customRsvpQuestion}
             />
           ))}
           {hasMore && (

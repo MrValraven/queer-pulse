@@ -2,10 +2,20 @@ import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import type { EventVisibility, UpdateEventDto } from "./api/events.api";
 import type { AttendeesResult } from "./api/useAttendees";
-import type { GatheringDetailsDraft } from "./EditDetailsModal";
+import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import type { VenueSelection } from "./VenuePicker";
 import type { GatheringDetail } from "./data";
 import { MAX_GATHERING_SPAN_DAYS } from "./createGathering.data";
+import {
+  EXISTING_GATHERING_RSVP_QUESTIONS,
+  sanitizeContentNotes,
+  sanitizeThemes,
+  type ContentNoteKey,
+  type CostKind,
+  type GatheringThemeKey,
+  type RsvpCutoff,
+  type RsvpQuestions,
+} from "./gatheringExtras";
 import {
   findFormat,
   OTHER_FORMAT_KEY,
@@ -72,6 +82,29 @@ export interface GatheringState {
   eventType: string | null;
   /** The persisted details bag. */
   formatDetails: FormatDetails | null;
+
+  // ── Cover, care and RSVPs (Create Gathering v2) ──────────────────────────
+  // The persisted values, edited in the edit modal and read back into its
+  // draft by `editDraftCareFields`.
+  /** The cover the server holds: the resolved read URL the detail arrived
+   *  with, or the storage key an edit in this visit saved. `""` for none.
+   *  `buildEditPatch` compares against it and sends a cover only on a
+   *  change. */
+  coverImageUrl: string;
+  themes: GatheringThemeKey[];
+  contentNotes: ContentNoteKey[];
+  /** The host's house rules, or `""` for none. */
+  houseRules: string;
+  /** How it is paid for. A gathering written before the field existed reads
+   *  the way a duplicate reads it (see `persistedCostKind`). */
+  costKind: CostKind;
+  /** The host's own words about what it costs, or `""`. */
+  cost: string;
+  /** When RSVPs close, or `null` when they stay open until it ends. */
+  rsvpCutoff: RsvpCutoff | null;
+  rsvpQuestions: RsvpQuestions;
+  /** The host's own RSVP question, or `""` for none. */
+  customRsvpQuestion: string;
 }
 
 /** The day options the "date" details row and the header read a schedule in. */
@@ -127,7 +160,33 @@ export function demoInitialState(): GatheringState {
     gatheringFamily: null,
     eventType: null,
     formatDetails: null,
+    // Nor does it carry a cover or any of the care a v2 gathering sets. Its
+    // RSVP form asks what the form asked before the questions existed (R8).
+    coverImageUrl: "",
+    themes: [],
+    contentNotes: [],
+    houseRules: "",
+    costKind: "free",
+    cost: "",
+    rsvpCutoff: null,
+    rsvpQuestions: EXISTING_GATHERING_RSVP_QUESTIONS,
+    customRsvpQuestion: "",
   };
+}
+
+/**
+ * The cost kind a saved gathering carries, or the closest reading of an older
+ * one, the same reading `gatheringSeed`'s `seedCostKind` gives a duplicate.
+ *
+ * A gathering written before the field existed has only its free-text `cost`.
+ * One the server does not read as free opens as `fixed` with the host's words
+ * beside it, so the modal does not show a priced evening as free.
+ */
+function persistedCostKind(gathering: GatheringDetail): CostKind {
+  if (gathering.costKind) return gathering.costKind;
+  return gathering.cost?.trim() && gathering.isFree === false
+    ? "fixed"
+    : "free";
 }
 
 /** The live dashboard's starting state, seeded from the fetched event. Only the
@@ -166,6 +225,17 @@ export function liveInitialState(
     gatheringFamily: gathering.gatheringFamily ?? null,
     eventType: gathering.type || null,
     formatDetails: gathering.formatDetails ?? null,
+    coverImageUrl: gathering.coverImageUrl ?? "",
+    themes: gathering.themes ?? [],
+    contentNotes: gathering.contentNotes ?? [],
+    houseRules: gathering.houseRules ?? "",
+    costKind: persistedCostKind(gathering),
+    cost: gathering.cost ?? "",
+    rsvpCutoff: gathering.rsvpCutoff ?? null,
+    // A live detail always carries the map. Without it, the gathering keeps
+    // asking what the RSVP form asked before the questions existed (R8).
+    rsvpQuestions: gathering.rsvpQuestions ?? EXISTING_GATHERING_RSVP_QUESTIONS,
+    customRsvpQuestion: gathering.customRsvpQuestion ?? "",
   };
 }
 
@@ -196,6 +266,42 @@ export function editDraftFormatFields(
         : "",
     otherText: curatedFormat ? "" : (state.eventType ?? ""),
     formatDetails: state.formatDetails ?? {},
+  };
+}
+
+/**
+ * The cover, care and RSVP half of an edit draft, read off the persisted
+ * state. Shared by both surfaces that open the edit modal, beside
+ * `editDraftFormatFields`, so the two read a saved gathering the same way.
+ *
+ * Themes are narrowed against the saved family, and access needs open on
+ * (ruling R8) whatever an older row stored, since the modal shows that switch
+ * locked on.
+ */
+export function editDraftCareFields(
+  state: GatheringState,
+): Pick<
+  GatheringDetailsDraft,
+  | "coverImageUrl"
+  | "themes"
+  | "contentNotes"
+  | "houseRules"
+  | "costKind"
+  | "cost"
+  | "rsvpCutoff"
+  | "rsvpQuestions"
+  | "customRsvpQuestion"
+> {
+  return {
+    coverImageUrl: state.coverImageUrl,
+    themes: sanitizeThemes(state.themes, state.gatheringFamily),
+    contentNotes: [...state.contentNotes],
+    houseRules: state.houseRules,
+    costKind: state.costKind,
+    cost: state.cost,
+    rsvpCutoff: state.rsvpCutoff,
+    rsvpQuestions: { ...state.rsvpQuestions, access: true },
+    customRsvpQuestion: state.customRsvpQuestion,
   };
 }
 
@@ -385,6 +491,44 @@ function hasLocationChanged(
   return draft.location !== current.location;
 }
 
+/** The draft's themes as the server keeps them for the draft's family, which
+ *  may have changed in this same edit (ruling R6). */
+function draftThemes(draft: GatheringDetailsDraft): GatheringThemeKey[] {
+  return sanitizeThemes(draft.themes, draft.gatheringFamily || null);
+}
+
+/** What the cost column holds after a save: nothing for a free gathering
+ *  (ruling F11, the server's own rule), otherwise the host's words, trimmed,
+ *  or `null` when they left the line blank. */
+function draftCost(draft: GatheringDetailsDraft): string | null {
+  if (draft.costKind === "free") return null;
+  return draft.cost.trim() || null;
+}
+
+/**
+ * Whether the host changed what it costs. A gathering written before the
+ * field existed opens on a READING of its cost words (`persistedCostKind`),
+ * so the pair goes on the wire only when the host changes the kind, or the
+ * words of a paid kind. An untouched reading stays off the wire.
+ */
+function hasCostChanged(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): boolean {
+  if (draft.costKind !== current.costKind) return true;
+  return draft.costKind !== "free" && draft.cost.trim() !== current.cost.trim();
+}
+
+/** Whether the host picked or removed a cover. The detail arrives with the
+ *  resolved read URL and a pick is a storage key, so any difference is a real
+ *  change. */
+function hasCoverChanged(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): boolean {
+  return draft.coverImageUrl !== current.coverImageUrl;
+}
+
 /** The saved edit, folded into the dashboard's own state. */
 export function applyEditDraft(
   current: GatheringState,
@@ -411,6 +555,19 @@ export function applyEditDraft(
     gatheringFamily: draft.gatheringFamily || null,
     eventType: draftEventType(draft),
     formatDetails: draftFormatDetails(draft),
+    // The cover and care, folded in as they go on the wire for the same
+    // reason. The cost pair folds only when it was sent, so the next edit
+    // compares against what the server holds.
+    coverImageUrl: draft.coverImageUrl,
+    themes: draftThemes(draft),
+    contentNotes: sanitizeContentNotes(draft.contentNotes),
+    houseRules: draft.houseRules.trim(),
+    rsvpCutoff: draft.rsvpCutoff,
+    rsvpQuestions: { ...draft.rsvpQuestions, access: true },
+    customRsvpQuestion: draft.customRsvpQuestion.trim(),
+    ...(hasCostChanged(current, draft)
+      ? { costKind: draft.costKind, cost: draftCost(draft) ?? "" }
+      : {}),
     ...(hasLocationChanged(current, draft)
       ? { venueListingId: null, venueListing: null }
       : {}),
@@ -472,6 +629,32 @@ export function buildEditPatch(
     gatheringFamily: draft.gatheringFamily || null,
     eventType: draftEventType(draft),
     formatDetails: draftFormatDetails(draft),
+    // The cover, only when the host picked or removed one. Resending the
+    // resolved URL the detail arrived with would put a URL where the server
+    // expects a storage key. `""` clears it: the server's image-reference
+    // check reads an empty string as no image.
+    ...(hasCoverChanged(current, draft)
+      ? { coverImageUrl: draft.coverImageUrl }
+      : {}),
+    // Care and RSVPs, sent on every save like the title. None of them is in
+    // `update()`'s "event updated" fan-out, so resending an unchanged value
+    // notifies nobody. Both arrays replace wholesale on the server, so an
+    // empty list clears. Under `scope: "future"` all of them land on every
+    // later date, which the series prompt says out loud.
+    themes: draftThemes(draft),
+    contentNotes: sanitizeContentNotes(draft.contentNotes),
+    houseRules: draft.houseRules.trim() || null,
+    // `null` is "When it ends".
+    rsvpCutoff: draft.rsvpCutoff,
+    // Ruling R8: access needs are asked on every RSVP, the same
+    // `access: true` the create payload sends.
+    rsvpQuestions: { ...draft.rsvpQuestions, access: true },
+    customRsvpQuestion: draft.customRsvpQuestion.trim() || null,
+    // The cost pair, only when the host changed it (see `hasCostChanged`). A
+    // free gathering sends `cost: null` (ruling F11).
+    ...(hasCostChanged(current, draft)
+      ? { costKind: draft.costKind, cost: draftCost(draft) }
+      : {}),
     // Only include `communitySlug` when it actually changed from the PERSISTED
     // value (`current.communitySlug`, the pre-edit snapshot — never compare
     // against `draft` itself). The backend re-runs community-membership

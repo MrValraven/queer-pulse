@@ -9,7 +9,11 @@ import {
   FiSmile,
 } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { hasAnyDetail, TERRAIN_LABEL_KEYS } from "./gatheringCatalog";
+import {
+  hasAnyDetail,
+  TERRAIN_LABEL_KEYS,
+  type FormatDetails,
+} from "./gatheringCatalog";
 import type { GatheringDetail } from "./data";
 import styles from "./GatheringDetailPanels.module.css";
 
@@ -53,9 +57,9 @@ function GoodToKnowRow({
  * door checks age, there is something good to drink without alcohol, the
  * ground is steep, the film runs ninety minutes.
  *
- * The three booleans and the runtime share the wizard review step's own
- * readings (`FormatDetailTags`), so a host reads back on the page the same
- * sentences they confirmed before publishing. Bring and terrain read
+ * The create wizard's ready panel reads these same rows back
+ * (`GatheringGoodToKnowRows`), so a host finds on the page the same sentences
+ * they checked before publishing. Bring and terrain read
  * differently here: each renders as its catalog label over the value, since a
  * dish to bring and a translated terrain word need naming on a page a reader
  * arrives at cold.
@@ -77,46 +81,64 @@ export function GatheringGoodToKnow({
       <h2 className={styles.heading}>
         {t("gatherings:catalog.goodToKnow.title")}
       </h2>
-      <div className={styles.rows}>
-        {details.bring && (
-          <GoodToKnowRow
-            icon={FiPackage}
-            label={t("gatherings:catalog.details.bring.label")}
-          >
-            {details.bring}
-          </GoodToKnowRow>
-        )}
-        {details.isAdultsOnly && (
-          <GoodToKnowRow icon={FiShield}>
-            {t("gatherings:catalog.goodToKnow.adultsOnly")}
-          </GoodToKnowRow>
-        )}
-        {details.isSoberFriendly && (
-          <GoodToKnowRow icon={FiSmile}>
-            {t("gatherings:catalog.goodToKnow.soberFriendly")}
-          </GoodToKnowRow>
-        )}
-        {details.terrain && (
-          <GoodToKnowRow
-            icon={FiNavigation}
-            label={t("gatherings:catalog.details.terrain.label")}
-          >
-            {t(TERRAIN_LABEL_KEYS[details.terrain])}
-          </GoodToKnowRow>
-        )}
-        {details.isBeginnerFriendly && (
-          <GoodToKnowRow icon={FiCheckCircle}>
-            {t("gatherings:catalog.goodToKnow.beginnerFriendly")}
-          </GoodToKnowRow>
-        )}
-        {typeof details.runtimeMinutes === "number" && (
-          <GoodToKnowRow icon={FiClock}>
-            {t("gatherings:catalog.goodToKnow.runtime", {
-              minutes: details.runtimeMinutes,
-            })}
-          </GoodToKnowRow>
-        )}
-      </div>
+      <GatheringGoodToKnowRows details={details} />
     </section>
+  );
+}
+
+/**
+ * The answered format details as rows, one per fact, with no heading. The
+ * gathering page shows them under "Good to know", and the create wizard's
+ * ready panel reads the same rows back to the host before publishing
+ * (`CreateGatheringReadback`), so the host checks the sentences a reader
+ * will see.
+ */
+export function GatheringGoodToKnowRows({
+  details,
+}: {
+  details: FormatDetails;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.rows}>
+      {details.bring && (
+        <GoodToKnowRow
+          icon={FiPackage}
+          label={t("gatherings:catalog.details.bring.label")}
+        >
+          {details.bring}
+        </GoodToKnowRow>
+      )}
+      {details.isAdultsOnly && (
+        <GoodToKnowRow icon={FiShield}>
+          {t("gatherings:catalog.goodToKnow.adultsOnly")}
+        </GoodToKnowRow>
+      )}
+      {details.isSoberFriendly && (
+        <GoodToKnowRow icon={FiSmile}>
+          {t("gatherings:catalog.goodToKnow.soberFriendly")}
+        </GoodToKnowRow>
+      )}
+      {details.terrain && (
+        <GoodToKnowRow
+          icon={FiNavigation}
+          label={t("gatherings:catalog.details.terrain.label")}
+        >
+          {t(TERRAIN_LABEL_KEYS[details.terrain])}
+        </GoodToKnowRow>
+      )}
+      {details.isBeginnerFriendly && (
+        <GoodToKnowRow icon={FiCheckCircle}>
+          {t("gatherings:catalog.goodToKnow.beginnerFriendly")}
+        </GoodToKnowRow>
+      )}
+      {typeof details.runtimeMinutes === "number" && (
+        <GoodToKnowRow icon={FiClock}>
+          {t("gatherings:catalog.goodToKnow.runtime", {
+            minutes: details.runtimeMinutes,
+          })}
+        </GoodToKnowRow>
+      )}
+    </div>
   );
 }

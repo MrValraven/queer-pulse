@@ -10,15 +10,14 @@ import type { TFunction } from "../../shared/i18n/types";
 import { ApiError } from "../../shared/api/client";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import {
-  EditDetailsModal,
-  type GatheringDetailsDraft,
-} from "./EditDetailsModal";
+import { EditDetailsModal } from "./EditDetailsModal";
+import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { SeriesEditScopeModal } from "./SeriesEditScopeModal";
 import type { SeriesScopeModalMode } from "./ManageGatheringModals";
 import {
   applyEditDraft,
   buildEditPatch,
+  editDraftCareFields,
   editDraftFormatFields,
   liveInitialState,
   type GatheringState,
@@ -284,6 +283,8 @@ export function GatheringHostBar({
             // off the persisted state in one place (see its doc for how a
             // stored value that is not a catalog key opens the modal).
             ...editDraftFormatFields(gatheringState),
+            // The cover, care and RSVP settings, read the same way.
+            ...editDraftCareFields(gatheringState),
           }}
           onClose={() => {
             setEditOpen(false);

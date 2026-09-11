@@ -1,0 +1,353 @@
+/* The Stage layout for the personas section. It sits on the plum section
+   from PersonasShowcase.module.css, a locked-dark ground in both app themes,
+   so every colour here is cream, accent or jade at an alpha. */
+
+/* The section's decorative orbs are positioned pseudo-elements and would
+   otherwise paint over this in-flow content. */
+.layout {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header: title beside one lede and its action ── */
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 24px;
+}
+.headerBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  min-width: 0;
+}
+.lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.78);
+  text-wrap: pretty;
+}
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ctaNote {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: rgba(var(--cream-rgb), 0.56);
+}
+
+/* ── Stage: one panel holding picker, page and audience ── */
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "rail"
+    "card"
+    "audience";
+  gap: 24px;
+  margin-block-start: clamp(40px, 5vw, 64px);
+  padding: clamp(14px, 2.2vw, 24px);
+  border-radius: var(--radius-card);
+  background: rgba(var(--cream-rgb), 0.05);
+  border: 1px solid rgba(var(--cream-rgb), 0.13);
+}
+.stage > * {
+  min-width: 0;
+}
+.card {
+  grid-area: card;
+  display: flex;
+  flex-direction: column;
+}
+.card > * {
+  flex: 1;
+}
+.eyebrow {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.56);
+}
+
+/* ── Rail: a scrolling chip row first, a vertical list on wide viewports ── */
+.rail {
+  grid-area: rail;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* The padding and matching negative margin give the focus halo room, which
+   the scroll container would otherwise clip. */
+.railList {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  padding: 8px;
+  margin: -8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.railList::-webkit-scrollbar {
+  display: none;
+}
+.railRow {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-block-size: 44px;
+  padding-block: 8px;
+  padding-inline: 8px 16px;
+  border: 0;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--cream-rgb), 0.05);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+.railRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  .railRow[aria-pressed="false"]:hover {
+    background: rgba(var(--cream-rgb), 0.09);
+  }
+}
+/* The selected surface, shared by every row through a motion layoutId. */
+.railHighlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--cream-rgb), 0.12);
+  box-shadow: var(--ring-cream-hairline);
+}
+.railHighlight::before {
+  content: "";
+  position: absolute;
+  inset-inline: 16px;
+  inset-block-end: 0;
+  block-size: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+.railAvatar {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 2.783em; /* 32 / 11.5 */
+  block-size: 2.783em;
+  border-radius: var(--radius-avatar);
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+}
+.railText {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  white-space: nowrap;
+}
+.railName {
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.88);
+}
+.railRow[aria-pressed="true"] .railName {
+  color: rgba(var(--cream-rgb), 1);
+}
+.railLane {
+  font-family: var(--sans);
+  font-size: var(--text-label);
+  color: rgba(var(--cream-rgb), 0.58);
+}
+.railDivider {
+  flex: none;
+  align-self: stretch;
+  inline-size: 1px;
+  margin-block: 8px;
+  background: rgba(var(--cream-rgb), 0.14);
+}
+
+/* ── Audience: who sees the selected persona ── */
+.audience {
+  grid-area: audience;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.audienceBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.audienceList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.audienceRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+}
+.audienceIcon {
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--radius-tag);
+  background: rgba(var(--cream-rgb), 0.07);
+  color: var(--accent-soft);
+  font-size: var(--text-16);
+}
+.audienceText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-block-start: 2px;
+}
+.audienceLabel {
+  font-family: var(--sans);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.95);
+}
+.audienceHelp {
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.6);
+}
+/* Follows the rows directly: pushing it to the column's foot left a void
+   between the audience and the voice once the page card set the row height. */
+.audienceNote {
+  margin: 0;
+  padding-block-start: 16px;
+  border-block-start: 1px solid rgba(var(--cream-rgb), 0.12);
+  font-family: var(--serif);
+  font-size: var(--text-body-lg);
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.8);
+  text-wrap: pretty;
+}
+
+/* ── Everywhere else: the single-profile contrast, as one quiet line ── */
+.elsewhere {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin: 0;
+  margin-block-start: 20px;
+  padding-inline: clamp(14px, 2.2vw, 24px);
+  font-family: var(--sans);
+  line-height: 1.5;
+}
+.elsewhereLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.56);
+}
+.elsewhereCramp {
+  font-size: var(--text-body-sm);
+  color: rgba(var(--cream-rgb), 0.72);
+}
+.elsewhereCramp s {
+  text-decoration-color: rgba(var(--accent-rgb), 0.8);
+  color: rgba(var(--cream-rgb), 0.45);
+}
+.elsewhereNote {
+  font-size: var(--text-caption);
+  color: rgba(var(--cream-rgb), 0.52);
+}
+
+/* Two columns once the title and lede each keep a comfortable measure. */
+@media (--wide-up) {
+  .header {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: start;
+    column-gap: clamp(48px, 6vw, 88px);
+  }
+}
+
+/* The page card and audience sit side by side once the card clears its
+   own identity row; the chip row spans above them. */
+@media (--lg-up) {
+  .stage {
+    grid-template-columns: minmax(0, 1.5fr) minmax(14rem, 1fr);
+    grid-template-areas:
+      "rail rail"
+      "card audience";
+  }
+}
+
+/* Three columns need room for a 12rem rail beside a card that still holds
+   its identity row on one line. */
+@media (min-width: 1080px) {
+  .stage {
+    grid-template-columns:
+      minmax(12rem, 0.8fr) minmax(0, 1.5fr) minmax(14rem, 1fr);
+    grid-template-areas: "rail card audience";
+    column-gap: clamp(20px, 2.4vw, 32px);
+  }
+  .rail {
+    gap: 16px;
+  }
+  .railList {
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+  .railRow {
+    inline-size: 100%;
+    padding-inline: 16px 12px;
+    background: transparent;
+  }
+  .railHighlight::before {
+    inset-inline: 0 auto;
+    inset-block: 10px;
+    inline-size: 3px;
+    block-size: auto;
+  }
+  .railDivider {
+    inline-size: auto;
+    block-size: 1px;
+    margin-block: 8px;
+    margin-inline: 12px;
+  }
+}

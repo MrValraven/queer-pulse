@@ -13,7 +13,7 @@ import {
   ManageGatheringSidebar,
 } from "./ManageGatheringTabs";
 import { ManageGatheringHeader } from "./ManageGatheringHeader";
-import type { GatheringDetailsDraft } from "./EditDetailsModal";
+import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import {
   ManageGatheringModals,
   type SeriesScopeModalMode,
@@ -25,6 +25,7 @@ import {
   applyVenueSelection,
   buildEditPatch,
   demoInitialState,
+  editDraftCareFields,
   editDraftFormatFields,
   liveInitialState,
   manageGatheringCounts,
@@ -108,6 +109,27 @@ function ManageUnavailable({ loading }: { loading: boolean }) {
   );
 }
 
+/**
+ * The edit modal's starting draft, read off the dashboard's state. The format
+ * fields and the cover, care and RSVP fields each come from their own reader
+ * in `manageGatheringState`, which `GatheringHostBar` spreads the same way.
+ */
+function editDraftFor(state: GatheringState): GatheringDetailsDraft {
+  return {
+    title: state.title,
+    startAt: dateToDatetimeValue(state.startAt),
+    // "" when the gathering states no end, which the modal reads as an empty
+    // (and still clearable) end field.
+    endAt: state.endAt ? dateToDatetimeValue(state.endAt) : "",
+    location: state.location,
+    description: state.description,
+    visibility: state.visibility,
+    communitySlug: state.communitySlug,
+    ...editDraftFormatFields(state),
+    ...editDraftCareFields(state),
+  };
+}
+
 function ManageGatheringMain({
   demoMode,
   gathering,
@@ -147,6 +169,23 @@ function ManageGatheringMain({
       ? demoInitialState()
       : liveInitialState(gathering, fmt, t),
   );
+
+  // A saved cover folds into state as the storage key the upload returned,
+  // which the edit modal's cover slot cannot paint. Once the refetched detail
+  // brings its read URL, only the cover is re-seeded from it, during render
+  // like `GatheringHostBar` re-seeds its state. The URL is the same on every
+  // refetch of an unchanged cover, and `buildEditPatch` sends a cover only
+  // when the host picks or removes one, so the read URL stays off the wire.
+  const detailCoverImageUrl = gathering?.coverImageUrl;
+  const [previousCoverImageUrl, setPreviousCoverImageUrl] =
+    useState(detailCoverImageUrl);
+  if (previousCoverImageUrl !== detailCoverImageUrl) {
+    setPreviousCoverImageUrl(detailCoverImageUrl);
+    setGatheringState((current) => ({
+      ...current,
+      coverImageUrl: detailCoverImageUrl ?? "",
+    }));
+  }
 
   const { daysToGo, attendeeCount, overviewCounts } = manageGatheringCounts(
     demoMode,
@@ -229,6 +268,7 @@ function ManageGatheringMain({
               cohosts={gathering?.cohosts}
               allowWaitlist={gathering?.allowWaitlist}
               showAttendeeCount={gathering?.showAttendeeCount}
+              customRsvpQuestion={gathering?.customRsvpQuestion}
               onUpdateSettings={(patch) => {
                 if (!demoMode) updateEvent.mutate(patch);
               }}
@@ -268,28 +308,7 @@ function ManageGatheringMain({
 
       <ManageGatheringModals
         slug={slug}
-        editInitial={
-          editOpen
-            ? {
-                title: gatheringState.title,
-                startAt: dateToDatetimeValue(gatheringState.startAt),
-                // "" when the gathering states no end, which the modal reads
-                // as an empty (and still clearable) end field.
-                endAt: gatheringState.endAt
-                  ? dateToDatetimeValue(gatheringState.endAt)
-                  : "",
-                location: gatheringState.location,
-                description: gatheringState.description,
-                visibility: gatheringState.visibility,
-                communitySlug: gatheringState.communitySlug,
-                // Family, format, the host's own words and the details bag,
-                // read off the persisted state in one place (see its doc for
-                // how a stored value that is not a catalog key opens the
-                // modal).
-                ...editDraftFormatFields(gatheringState),
-              }
-            : null
-        }
+        editInitial={editOpen ? editDraftFor(gatheringState) : null}
         onCloseEdit={() => {
           setEditOpen(false);
           // MSG-10 — a save on a repeating gathering stashes its patch

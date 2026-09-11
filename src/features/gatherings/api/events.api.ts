@@ -8,6 +8,13 @@ import {
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
+import type {
+  ContentNoteKey,
+  CostKind,
+  GatheringThemeKey,
+  RsvpCutoff,
+  RsvpQuestions,
+} from "../gatheringExtras";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS events domain returns. Only the fields the prototype pages
@@ -19,6 +26,16 @@ import type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
 // `FormatDetails` interface do. Re-exported here so an API-layer caller has
 // one import site for "what the events endpoints speak".
 export type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
+// The care vocabularies (themes, content notes, cutoff, cost kind, RSVP
+// questions) live in `gatheringExtras.ts`, mirrored from the backend's
+// `gathering-extras.ts`. Re-exported for the same one-import-site reason.
+export type {
+  ContentNoteKey,
+  CostKind,
+  GatheringThemeKey,
+  RsvpCutoff,
+  RsvpQuestions,
+} from "../gatheringExtras";
 
 // Must mirror the backend `EventVisibility` enum exactly — the create/update
 // endpoints validate `@IsEnum(EventVisibility)` with `forbidNonWhitelisted`, so
@@ -135,6 +152,14 @@ export interface EventCardDTO {
    *  the same rule the `cost=free` browse filter uses, so a "Free" chip can
    *  never disagree with the filter that produced the card. */
   isFree?: boolean;
+  /** Up to three theme keys the host pinned to the card. Typed as plain
+   *  strings because the adapter narrows them against the vocabulary on the
+   *  way in. Empty when the host picked none. */
+  themes?: string[];
+  /** How the gathering is paid for: `free`, `pay-what-you-can` or `fixed`, or
+   *  `null` for a gathering written before the field existed. DISPLAY ONLY,
+   *  exactly like `cost`. Narrowed by the adapter. */
+  costKind?: string | null;
   /** Seats the going RSVPs actually occupy: one per going member plus every
    *  declared extra guest (LOC-07). This, never `goingCount`, is the number
    *  capacity is measured against. */
@@ -282,6 +307,22 @@ export interface EventDetailDTO extends EventCardDTO {
    *  dashboard's "last edited N days ago" line, which used to read a mock
    *  constant on every real gathering (PRD-191). */
   updatedAt?: string;
+  // ── Care and access (Create Gathering v2) ──────────────────────────────
+  // Loose wire types on purpose: `detailToGathering` narrows every one of
+  // these against `gatheringExtras.ts`, so an unknown key from a newer
+  // backend is dropped before it can reach a render.
+  /** Heads-up notes about what the gathering contains. */
+  contentNotes?: string[];
+  /** The host's house rules, or `null` when they wrote none. */
+  houseRules?: string | null;
+  /** When RSVPs close relative to the start, or `null` for no cutoff. */
+  rsvpCutoff?: string | null;
+  /** ISO 8601: the instant RSVPs close, or `null` with no cutoff. */
+  rsvpClosesAt?: string | null;
+  /** Which optional questions the RSVP details form asks. */
+  rsvpQuestions?: Partial<RsvpQuestions> | null;
+  /** The host's own extra RSVP question, or `null`. */
+  customRsvpQuestion?: string | null;
 }
 
 /** Who can see an attendee's own RSVP details — the same three ids
@@ -294,16 +335,32 @@ export interface RsvpDetailsDTO {
   accessNeeds: string | null;
   dietaryNeeds: string | null;
   visibility: RsvpDetailsVisibility | null;
+  /** The pronouns the attendee gave for this gathering, or `null`. Asked only
+   *  when the host switched the pronouns question on. Optional so a response
+   *  from before the field existed still types. */
+  pronouns?: string | null;
+  /** The attendee's answer to the host's own RSVP question, or `null`. */
+  customAnswer?: string | null;
 }
 
-/** PATCH /events/:slug/rsvp/details — every field optional (partial edit). */
-export type UpdateRsvpDetailsDto = Partial<RsvpDetailsDTO>;
+/** PATCH /events/:slug/rsvp/details: every field optional (partial edit).
+ *  The two free-text answers go in as plain strings, mirroring the backend's
+ *  `UpdateRsvpDetailsDto` (`pronouns` up to 60 characters, `customAnswer` up
+ *  to 500). */
+export type UpdateRsvpDetailsDto = Partial<
+  Omit<RsvpDetailsDTO, "pronouns" | "customAnswer">
+> & {
+  pronouns?: string;
+  customAnswer?: string;
+};
 
 export interface AttendeeDTO {
   slug: string;
   firstName: string;
   lastName: string;
-  pronouns?: string;
+  /** The pronouns the attendee gave on their RSVP. ORGANISERS ONLY, and
+   *  withheld (`null`) under the same `justMe` rule as `accessNeeds` below. */
+  pronouns?: string | null;
   avatarUrl?: string | null;
   status: RsvpStatus;
   /** ISO 8601 timestamp the RSVP / waitlist join happened. */
@@ -324,6 +381,9 @@ export interface AttendeeDTO {
   guestCount?: number;
   accessNeeds?: string | null;
   dietaryNeeds?: string | null;
+  /** The attendee's answer to the host's own RSVP question. Organisers only,
+   *  withheld (`null`) under the same `justMe` rule as the needs above. */
+  customAnswer?: string | null;
   /** The attendee's own "who can see this" choice, echoed so the host's UI can
    *  say why a needs line is absent rather than implying nobody has any. */
   detailsVisibility?: string | null;
@@ -417,6 +477,23 @@ export interface CreateEventDto {
   /** Free-text door price (LOC-18). DISPLAY ONLY: there is no payment
    *  integration, so nothing about this field may promise a charge. */
   cost?: string | null;
+  // ── Care and access (Create Gathering v2) ──────────────────────────────
+  // Validated server-side against `gathering-extras.ts`. On create every one
+  // of these is written onto every occurrence of a series; on PATCH the two
+  // arrays replace wholesale and `rsvpQuestions` merges key by key.
+  /** Up to three unique theme keys. */
+  themes?: GatheringThemeKey[];
+  /** Unique content-note keys. */
+  contentNotes?: ContentNoteKey[];
+  /** Up to 160 characters. Blank is stored as `null`. */
+  houseRules?: string | null;
+  /** `"free"` makes the server store `cost` as `null`. */
+  costKind?: CostKind | null;
+  rsvpCutoff?: RsvpCutoff | null;
+  /** Any subset; a missing key is `false` on create and unchanged on PATCH. */
+  rsvpQuestions?: Partial<RsvpQuestions>;
+  /** Up to 120 characters. Blank is stored as `null`. */
+  customRsvpQuestion?: string | null;
   /** Optional repeat rule (MSG-10) — see `RecurrenceInput`'s doc. CREATE-only:
    *  `UpdateEventDto` never carries this (converting an existing standalone
    *  gathering into a series after the fact is out of scope). */
@@ -507,8 +584,12 @@ export async function getEvents(
 export const getEvent = (slug: string) =>
   apiGet<EventDetailDTO>(`/events/${slug}`);
 
+/** The create answers with the first occurrence's detail plus
+ *  `occurrenceSlugs`: every saved occurrence's slug in series order, and
+ *  `[slug]` for a single gathering. Optional, so a response from an older
+ *  backend still reads. */
 export const createEvent = (dto: CreateEventDto) =>
-  apiPost<EventDetailDTO>("/events", dto);
+  apiPost<EventDetailDTO & { occurrenceSlugs?: string[] }>("/events", dto);
 
 /** `scope` (MSG-10) — `"future"` also applies to every later occurrence in
  *  this event's series (never its own `startAt`/`endAt`); omitted (or

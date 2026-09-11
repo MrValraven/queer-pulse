@@ -2,13 +2,17 @@ import { describe, it, expect } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { MAX_GATHERING_SPAN_DAYS } from "../createGathering.data";
 import { useGatheringForm } from "../useGatheringForm";
-import { schedulePairErrorKey, type SchedulePairState } from "./schedulePair";
+import {
+  scheduleInstants,
+  schedulePairErrorKey,
+  type SchedulePairState,
+} from "./schedulePair";
 
 const ENDS_BEFORE_START = "gatherings:create.step2.endsBeforeStart";
 const SPAN_TOO_LONG = "gatherings:create.step2.spanTooLong";
 
-/** A far-future start, so `dateValid`'s "still in the future" check never
- *  decides the outcome of a test about the END pair. */
+/** A far-future start, so `dateValid`'s "still in the future" check passes
+ *  and the END pair alone decides each test below. */
 const START_DATE = "2030-05-10";
 
 function scheduleState(
@@ -79,11 +83,11 @@ describe("schedulePairErrorKey", () => {
     ).toBe(SPAN_TOO_LONG);
   });
 
-  it("picks the message from the ORDERING, never from a cap of its own", () => {
+  it("picks the message from the ORDERING and leaves the cap to the form", () => {
     // The 14-day cap lives in `useGatheringForm`, which measures elapsed
     // milliseconds exactly the way the backend does. This function is handed
     // that verdict as `scheduleValid` and only decides which sentence answers
-    // it, so a change to the cap can never leave the two disagreeing.
+    // it, so the two stay in agreement whatever the cap becomes.
     expect(MAX_GATHERING_SPAN_DAYS).toBe(14);
     const invalidPair = { endDate: "2030-05-25", scheduleValid: false };
     expect(schedulePairErrorKey(scheduleState(invalidPair))).toBe(
@@ -101,5 +105,23 @@ describe("schedulePairErrorKey", () => {
         }),
       ),
     ).toBe(ENDS_BEFORE_START);
+  });
+});
+
+describe("scheduleInstants", () => {
+  it("moves an end with no end date to the next day when it is at or before the start", () => {
+    const { startInstant, endInstant } = scheduleInstants(
+      scheduleState({ time: "23:00", endDate: "", endTime: "02:00" }),
+    );
+    expect(startInstant).not.toBeNull();
+    expect(endInstant?.getDate()).toBe(11);
+    expect(endInstant?.getHours()).toBe(2);
+  });
+
+  it("keeps an end the host dated themselves exactly where they put it", () => {
+    const { endInstant } = scheduleInstants(
+      scheduleState({ time: "23:00", endDate: START_DATE, endTime: "02:00" }),
+    );
+    expect(endInstant?.getDate()).toBe(10);
   });
 });

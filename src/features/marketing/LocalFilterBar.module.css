@@ -201,6 +201,9 @@
 .mobileBar {
   position: sticky;
   top: var(--sticky-top);
+  /* Rises with the app bar when it scrolls away (standalone.css), easing
+     `top` over the bar's own slide. */
+  transition: top var(--dur-base) var(--ease);
   z-index: var(--z-sticky);
   padding: 10px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);

@@ -1,5 +1,5 @@
 import { asTypedBlock, type Article } from "./data/articles";
-import { htmlToPlainText } from "./desk/editor/plainText";
+import { htmlToPlainText } from "../../shared/components/richText/plainText";
 import { nodeToText } from "./nodeText";
 
 /**

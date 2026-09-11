@@ -11,6 +11,7 @@ import { useTranslation } from "../../i18n/useTranslation";
 import { Avatar } from "../ui";
 import { MEMBER_TABS, PUBLIC_TABS, activeTabKey } from "./bottomTabs";
 import { useAccountIdentity } from "./useAccountIdentity";
+import { useIsLandingVisitor } from "./useIsLandingVisitor";
 import { NAV_DRAWER_TRIGGER_ATTRIBUTE } from "./useNavDrawerFocus";
 import styles from "./BottomTabBar.module.css";
 
@@ -32,8 +33,13 @@ export function BottomTabBar() {
   const { activeSheet, openSheet, closeSheet } = useNavDrawer();
   const isLinkVisible = useIsLinkVisible();
   const { initials, photo } = useAccountIdentity();
+  const isLandingVisitor = useIsLandingVisitor();
 
-  if (!isMobile) return null;
+  // A signed-out visitor on the landing page gets the page itself as the
+  // navigation: LandingNav carries sign-in, and the hero carries the invite.
+  // AppChrome stamps `data-landing-visitor` so standalone.css stops reserving
+  // the bar's height there.
+  if (!isMobile || isLandingVisitor) return null;
 
   // Belt and braces: the sets are curated per auth state, and then filtered
   // through the shared gate so a member-only destination can never leak into

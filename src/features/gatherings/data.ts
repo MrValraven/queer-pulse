@@ -12,6 +12,13 @@ import type {
   RsvpDetailsDTO,
 } from "./api/events.api";
 import type { FormatDetails, GatheringFamily } from "./gatheringCatalog";
+import type {
+  ContentNoteKey,
+  CostKind,
+  GatheringThemeKey,
+  RsvpCutoff,
+  RsvpQuestions,
+} from "./gatheringExtras";
 
 /**
  * The "spots" line on an event card — "8 seats left", "32 going", "Open to all".
@@ -230,6 +237,35 @@ export interface GatheringDetail {
   /** Live mode only: when the host last edited this gathering. Read by the
    *  manage dashboard's "last edited N days ago" line (PRD-191). */
   updatedAt?: Date;
+
+  // ── Care and access (Create Gathering v2) ───────────────────────────────
+  // Every field below is optional so the demo registry compiles untouched. A
+  // live detail always carries them, already narrowed to the vocabularies in
+  // `gatheringExtras.ts`, so every key that reaches a render has a label in
+  // the frontend.
+  /** Up to three theme keys, in the order the host picked them. */
+  themes?: GatheringThemeKey[];
+  /** Heads-up notes about what the gathering contains. */
+  contentNotes?: ContentNoteKey[];
+  /** The host's house rules, or null when they wrote none. Content, shown in
+   *  the host's own words. */
+  houseRules?: string | null;
+  /** How it is paid for, or null for a gathering written before the field
+   *  existed. DISPLAY ONLY, like `cost`: nothing rendering it may take a
+   *  payment. */
+  costKind?: CostKind | null;
+  /** When RSVPs close relative to the start, or null when they stay open. */
+  rsvpCutoff?: RsvpCutoff | null;
+  /** The instant RSVPs close, computed server-side from `rsvpCutoff`, or null
+   *  with no cutoff. A reader compares it with the clock to show the closed
+   *  state; the server enforces it either way. */
+  rsvpClosesAt?: Date | null;
+  /** Which optional questions the RSVP details form asks. Always a complete
+   *  map on a live detail. Access needs are asked whatever `access` says
+   *  (ruling R8, the platform's accessibility baseline). */
+  rsvpQuestions?: RsvpQuestions;
+  /** The host's own extra question for the RSVP details form, or null. */
+  customRsvpQuestion?: string | null;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {
@@ -1003,6 +1039,9 @@ export interface CalendarEvent {
   to: string;
   /** Official QueerPulse event vs member/community-created gathering. */
   kind: "event" | "gathering";
+  /** The host's profile slug, when the card names a host. Live only. Cards
+   *  carry no co-host list, so this identifies the host alone. */
+  hostSlug?: string;
   /** The gathering's FORMAT as stored: a curated catalog key, or the host's
    *  own words. Cards render it through `formatLabel`, so this is never a
    *  display string. */
@@ -1036,6 +1075,12 @@ export interface CalendarEvent {
    *  "hosting" and "past" deliberately do, so the member is told rather than
    *  left with a row that quietly vanished. */
   cancelled?: boolean;
+  /** Up to three theme keys the host pinned to the card, already narrowed to
+   *  the vocabulary by the adapter. Live only: the demo registry carries none. */
+  themes?: GatheringThemeKey[];
+  /** How the gathering is paid for. DISPLAY ONLY, exactly like `cost`. Absent
+   *  for a gathering written before the field existed. */
+  costKind?: CostKind;
 }
 
 const ACCENT = "var(--accent)";

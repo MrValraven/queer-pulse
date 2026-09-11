@@ -3,9 +3,9 @@
  * up to, and which fix to name when they add up to something the wizard will
  * not take.
  *
- * Its own module rather than a pair of exports out of `DatePlaceStep.tsx`, so
- * the choice can be exercised from a plain object (no wizard, no providers, no
- * DOM) and so the step file keeps exporting only components.
+ * Its own module so the choice can be exercised from a plain object (no
+ * wizard, no providers, no DOM) and so the step files keep exporting only
+ * components.
  */
 
 /** True when a `Date` was actually built from a complete, well-formed value. */
@@ -30,13 +30,15 @@ export interface SchedulePairState {
  * The two instants the four schedule fields describe, or null on a side the
  * fields do not yet spell out.
  *
- * The `time || "19:00"` and `endDate || date` fallbacks are `useGatheringForm`'s
- * own, so what the host reads under the fields is the schedule the wizard would
- * actually submit. The span itself is measured from these instants rather than
- * from clock times, because minutes-since-midnight wrap at 24 hours and a
- * three-day festival has nowhere to land in that arithmetic.
+ * The `time || "19:00"` and `endDate || date` fallbacks are
+ * `useGatheringForm`'s own, so what the host reads under the fields is the
+ * schedule the wizard would actually submit. The span itself is measured from
+ * these instants, because minutes-since-midnight wrap at 24 hours and a
+ * three-day festival has nowhere to land in clock arithmetic.
  */
-export function scheduleInstants(form: SchedulePairState): {
+export function scheduleInstants(
+  form: Pick<SchedulePairState, "date" | "time" | "endDate" | "endTime">,
+): {
   startInstant: Date | null;
   endInstant: Date | null;
 } {
@@ -47,6 +49,19 @@ export function scheduleInstants(form: SchedulePairState): {
     form.date && form.endTime
       ? new Date(`${form.endDate || form.date}T${form.endTime}`)
       : null;
+  // An end with no end date of its own that lands at or before the start runs
+  // past midnight, so it moves to the next day. THIS IS THE WIZARD'S ONE COPY
+  // of that roll-forward (the gate, the preview card and the "Runs" line all
+  // read these instants), and it must match `combineEndDateTime` in
+  // api/events.adapters.ts, which builds the payload the same way.
+  if (
+    !form.endDate &&
+    isReadableInstant(start) &&
+    isReadableInstant(end) &&
+    end.getTime() <= start.getTime()
+  ) {
+    end.setDate(end.getDate() + 1);
+  }
   return {
     startInstant: isReadableInstant(start) ? start : null,
     endInstant: isReadableInstant(end) ? end : null,

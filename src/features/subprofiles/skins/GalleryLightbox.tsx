@@ -18,6 +18,11 @@ export interface GalleryLightboxProps {
   onClose: () => void;
   /** `-1` for previous, `1` for next — the caller owns/wraps the index. */
   onMove: (delta: number) => void;
+  /** Replaces the numbered gallery alt text, for a caller showing one photo
+   *  that has its own caption (a certificate, via `CredentialProofThumb`). */
+  altText?: string;
+  /** Replaces the "{name}'s photos" dialog label, same caller. */
+  dialogLabel?: string;
 }
 
 /**
@@ -36,6 +41,8 @@ export function GalleryLightbox({
   name,
   onClose,
   onMove,
+  altText,
+  dialogLabel,
 }: GalleryLightboxProps) {
   const { t } = useTranslation();
   useScrollLock();
@@ -46,10 +53,12 @@ export function GalleryLightbox({
 
   if (!item || !item.imageUrl) return null;
 
-  const alt = t("subprofiles:galleryPhotoAlt", {
-    name,
-    number: String(index + 1),
-  });
+  const alt =
+    altText ??
+    t("subprofiles:galleryPhotoAlt", {
+      name,
+      number: String(index + 1),
+    });
 
   return createPortal(
     <div
@@ -58,7 +67,9 @@ export function GalleryLightbox({
       className={styles.overlay}
       role="dialog"
       aria-modal="true"
-      aria-label={t("subprofiles:galleryLightboxLabel", { name })}
+      aria-label={
+        dialogLabel ?? t("subprofiles:galleryLightboxLabel", { name })
+      }
     >
       {/* A real backdrop button (not an onClick on the dialog) so tapping
           outside the photo closes it while staying keyboard/AT-safe. */}

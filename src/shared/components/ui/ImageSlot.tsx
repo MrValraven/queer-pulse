@@ -59,6 +59,10 @@ interface ImageSlotProps {
    *  `` `50% var(--pp-cover-y, 40%)` `` has to reach the image. Leave it unset
    *  everywhere else; `crop`/`focus` are the declarative way in. */
   imgStyle?: CSSProperties;
+  /** Called when a real `src` fails to load (a 404, a web page that is not an
+   *  image). The slot swaps to its placeholder on its own either way; this
+   *  only lets a form tell the member why their photo went away. */
+  onLoadError?: () => void;
 }
 
 /**
@@ -113,6 +117,7 @@ export function ImageSlot({
   crop,
   focus,
   imgStyle,
+  onLoadError,
 }: ImageSlotProps) {
   const { t } = useTranslation();
   // Tracks the most recent `src` that failed to load (a 404/broken hotlink),
@@ -162,7 +167,10 @@ export function ImageSlot({
           decoding="async"
           referrerPolicy="no-referrer"
           style={cropImgStyle}
-          onError={() => setFailedSrc(src)}
+          onError={() => {
+            setFailedSrc(src);
+            onLoadError?.();
+          }}
         />
       ) : initials ? (
         <span className={styles.initials} style={{ fontSize: 22 }}>

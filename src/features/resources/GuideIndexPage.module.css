@@ -8,6 +8,7 @@
 
 .group {
   margin-bottom: 52px;
+  scroll-margin-top: calc(var(--nav-band) + var(--gap-lg));
 }
 
 .groupTitle {

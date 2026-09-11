@@ -309,6 +309,21 @@
   flex-direction: column;
   gap: 10px;
 }
+/* "RSVPs close in 3 hours" above the RSVP buttons (rsvpCutoff.ts). */
+.rsvpCutoffNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.rsvpCutoffNote svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
 
 .other {
   margin-top: 80px;

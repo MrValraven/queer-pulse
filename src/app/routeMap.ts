@@ -120,6 +120,12 @@ export const routes = {
    *  purpose — `authGate`'s `${adminResourceGuides}/*` pattern already grants
    *  it to a `resource_curator`, and the two are one editorial job. */
   adminGlossary: "/admin/resource-guides/glossary",
+  /** The guide workspace: a new guide, and one guide by id
+   *  (`${adminResourceGuideEdit}/:id`). `/edit/` keeps the dynamic id clear
+   *  of the static `glossary` segment above, and both inherit `authGate`'s
+   *  `${adminResourceGuides}/*` grant. */
+  adminResourceGuideNew: "/admin/resource-guides/new",
+  adminResourceGuideEdit: "/admin/resource-guides/edit",
   adminResourceSuggestions: "/admin/resource-suggestions",
   adminCommunityTagRequests: "/admin/community-tag-requests",
   adminPartnerApplications: "/admin/partner-applications",
@@ -410,7 +416,6 @@ export const routes = {
   postVolunteer: "/about/volunteer/post",
   editVolunteer: "/about/volunteer/opportunity/:slug/edit",
   manageVolunteerApplicants: "/about/volunteer/manage",
-  vouch: "/vouch",
   welcome: "/auth/welcome",
   wellbeing: "/resources/wellbeing",
   work: "/account/work",

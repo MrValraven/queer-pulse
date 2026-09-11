@@ -39,13 +39,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.requestInvite,
       },
       {
-        id: "vouch-for-someone",
-        title: "Vouch for someone",
-        description:
-          "See how an existing member nominates and vouches for a friend to bring them into the network.",
-        to: routes.vouch,
-      },
-      {
         id: "invite-expired",
         title: "Invite expired",
         description:

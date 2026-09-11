@@ -1,19 +1,14 @@
 import { routes } from "../../app/routeMap";
 import type { TFunction } from "../../shared/i18n/types";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
-import { icsTimestamp } from "../../shared/lib/calendarExport";
+import { escapeIcsText, icsTimestamp } from "../../shared/lib/calendarExport";
 import { gatheringPath } from "../gatherings/data";
 import { atTime } from "./myEvents.helpers";
 import type { MyEvent } from "./myEvents.types";
 
-/** RFC5545 text escaping: backslash, comma, semicolon, and newlines. */
-export function escapeText(s: string): string {
-  return s
-    .replace(/\\/g, "\\\\")
-    .replace(/;/g, "\\;")
-    .replace(/,/g, "\\,")
-    .replace(/\r\n|\r|\n/g, "\\n");
-}
+/** The shared RFC 5545 escaper, under the name the directory's
+ *  `marketing/upcomingCalendar.ts` imports it by. */
+export { escapeIcsText as escapeText };
 
 /**
  * The real instant a card's start (or end) stands for, or null when the event
@@ -80,10 +75,10 @@ export function toICS(events: MyEvent[], t: TFunction): string {
     lines.push(`DTSTAMP:${stamp}`);
     lines.push(`DTSTART:${icsTimestamp(start)}`);
     if (end) lines.push(`DTEND:${icsTimestamp(end)}`);
-    lines.push(`SUMMARY:${escapeText(ev.title)}`);
-    lines.push(`LOCATION:${escapeText(ev.venue)}`);
+    lines.push(`SUMMARY:${escapeIcsText(ev.title)}`);
+    lines.push(`LOCATION:${escapeIcsText(ev.venue)}`);
     const description = t("myevents:ics.description", { url });
-    lines.push(`DESCRIPTION:${escapeText(description)}`);
+    lines.push(`DESCRIPTION:${escapeIcsText(description)}`);
     // A URI value, so it is NOT TEXT-escaped (escaping would corrupt the link).
     lines.push(`URL:${url}`);
     lines.push("END:VEVENT");

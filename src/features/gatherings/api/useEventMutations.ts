@@ -45,13 +45,24 @@ interface RsvpContext {
 export function useCreateEvent() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<{ slug?: string }, Error, CreateEventDto>({
+  return useMutation<
+    { slug?: string; occurrenceSlugs?: string[] },
+    Error,
+    CreateEventDto
+  >({
     // CreateGatheringPage toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async (dto) => {
       if (demoMode) return {};
       const res = await createEvent(dto);
-      return { slug: res.slug };
+      // Every saved occurrence's slug in series order, when the server sends
+      // them. `slug` stays the first occurrence's own.
+      return {
+        slug: res.slug,
+        ...(res.occurrenceSlugs
+          ? { occurrenceSlugs: res.occurrenceSlugs }
+          : {}),
+      };
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });

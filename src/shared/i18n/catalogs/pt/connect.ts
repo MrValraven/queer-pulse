@@ -22,7 +22,6 @@ export const connect: Catalog = {
   "page.lead":
     "O teu perfil principal não faz seguidores. Ligas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
-  "page.vouchCta": "Avalizar alguém",
   "page.note":
     "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te ligares primeiro? É para isso que servem as personas. As ligações são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
   "page.loadMoreLoading": "A carregar…",
@@ -233,7 +232,7 @@ export const connect: Catalog = {
   // na língua em que foram escritos.
   "suggested.heading": "Pessoas que talvez conheças",
   "suggested.blurb":
-    "Cada uma partilha contigo um grupo, uma ligação ou um interesse.",
+    "Cada uma partilha contigo uma comunidade, uma ligação ou um interesse.",
   "suggested.reasonCommunity": "Também está em {name}",
   "suggested.reasonMutuals_one": "{count} ligação em comum",
   "suggested.reasonMutuals_other": "{count} ligações em comum",

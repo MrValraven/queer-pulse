@@ -1,0 +1,302 @@
+/* The guide workspace's editable body. Blocks sit on a paper section card
+   and are styled close to how GuideBody renders them publicly. */
+
+.document {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.copyStructure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--jade-rgb), 0.35);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+}
+
+.copyStructureText {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--text-strong);
+}
+
+.sections {
+  display: grid;
+  gap: 18px;
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.section {
+  display: grid;
+  gap: 10px;
+  padding: 20px 22px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionHeading {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 0;
+  border: 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
+  background: transparent;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  color: var(--text-strong);
+}
+
+.sectionHeading::placeholder {
+  color: var(--ink-40);
+}
+
+.sectionHeading[aria-invalid="true"] {
+  border-bottom-color: var(--danger);
+}
+
+/* The toggle and its panel join `.sectionHead`'s flex row directly, so the
+   panel can wrap onto a full-width line of its own. */
+.sectionMenu {
+  display: contents;
+}
+
+.sectionMenuPanel {
+  flex-basis: 100%;
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: var(--wash);
+}
+
+.menuLabel {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.anchorInput {
+  width: 100%;
+  max-width: 360px;
+  padding: 7px 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.2);
+  border-radius: var(--radius-10);
+  background: var(--paper);
+  font: inherit;
+  color: inherit;
+}
+
+.anchorInput[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.menuHint {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.menuActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.issues {
+  display: grid;
+  gap: 2px;
+}
+
+.issueText {
+  margin: 4px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--danger-ink);
+}
+
+.translationRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.reference {
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: var(--wash);
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.referenceEyebrow {
+  margin: 0 0 6px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.referenceHeading {
+  margin: 0 0 6px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.referenceText {
+  margin: 0 0 6px;
+  line-height: 1.5;
+}
+
+.referenceEmpty {
+  margin: 0;
+  font-style: italic;
+}
+
+.blocks {
+  display: grid;
+  gap: 4px;
+}
+
+.block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: start;
+  padding: 4px 6px;
+  border-radius: var(--radius-10);
+}
+
+.block:focus-within {
+  background: var(--wash);
+}
+
+.block[data-invalid="true"] {
+  box-shadow: var(--ring-danger);
+}
+
+.textWrap {
+  position: relative;
+  min-width: 0;
+}
+
+.blockText {
+  font-size: var(--text-16);
+  line-height: 1.6;
+  color: var(--text-strong);
+}
+
+.blockText a {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+
+/* RichText's pre-wrap makes Shift+Enter write a newline text node, which the
+   public page collapses. Normal white-space makes the browser insert a <br>
+   instead. The extra class outranks RichText's own rule in any stylesheet
+   order. */
+.textWrap .blockText {
+  white-space: normal;
+}
+
+.kindParagraph {
+  /* The default block look; declared so every kind has a class. */
+  display: block;
+}
+
+.kindSubheading .blockText {
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  line-height: 1.3;
+}
+
+.kindListItem {
+  padding-left: 22px;
+}
+
+.kindListItem::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+.kindNote {
+  padding: 10px 14px;
+  border-left: 3px solid var(--jade);
+  border-radius: var(--radius-8);
+  background: rgba(var(--jade-rgb), 0.06);
+}
+
+.gutter {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.block:hover .gutter,
+.block:focus-within .gutter {
+  opacity: 1;
+}
+
+.kindTag {
+  margin-right: 4px;
+  font-size: var(--text-11);
+  color: var(--ink-40);
+  white-space: nowrap;
+}
+
+.addBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.addBarHint {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+@media (hover: none) {
+  .gutter {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gutter {
+    transition: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .translationRow,
+  .block {
+    grid-template-columns: 1fr;
+  }
+}

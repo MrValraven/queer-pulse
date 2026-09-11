@@ -75,6 +75,21 @@ export const messages: Catalog = {
   "attachments.fallbackText": "Foto",
   "attachments.previewUnavailable": "Pré-visualização indisponível",
 
+  // Anexos de documento (DocumentComposerButton, MessageDocumentAttachment,
+  // MessageBubbleBody, documentUploadProcessing)
+  "attachments.openDocument": "Enviar um ficheiro",
+  "attachments.documentFallbackText": "Ficheiro",
+  "attachments.documentPreviewUnavailable":
+    "Pré-visualização do ficheiro indisponível",
+  "attachments.documentMeta": "{format} · {size}",
+  "attachments.download": "Descarregar {fileName}",
+  "attachments.documentError.unsupportedType":
+    "Esse tipo de ficheiro não é suportado. Usa um ficheiro PDF, TXT, CSV ou XLSX.",
+  "attachments.documentError.tooLarge":
+    "Esse ficheiro é demasiado grande. Mantém-no abaixo de {maxLabel}.",
+  "attachments.documentError.retry":
+    "Não conseguimos enviar esse ficheiro. Tenta de novo.",
+
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
   "connection.offline":
@@ -356,7 +371,7 @@ export const messages: Catalog = {
 
   // ── Chrome do painel (MessagesRailChrome) ──
   // Só no computador. Esta página esconde a navegação do site (AppShell
-  // `desktopChromeless`), por isso a caixa de entrada leva a sua própria saída.
+  // `chromeless`), por isso a caixa de entrada leva a sua própria saída.
   "rail.backToPlatform": "Voltar ao QueerPulse",
   // ── Papel de parede da conversa (ConversationMenu → WallpaperModal) ──
   // Os nomes dos fundos são os nomes dos QUADRADOS de cor, ou seja, o que um

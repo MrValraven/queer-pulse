@@ -43,7 +43,10 @@
     align-items: center;
     gap: 8px;
     position: sticky;
-    top: calc(var(--app-bar-h) + env(safe-area-inset-top));
+    /* Rises with the app bar when it scrolls away (standalone.css), easing
+       `top` over the bar's own slide. */
+    top: var(--sticky-top);
+    transition: top var(--dur-base) var(--ease);
     z-index: var(--z-sticky);
     overflow-x: auto;
     overscroll-behavior-x: contain;

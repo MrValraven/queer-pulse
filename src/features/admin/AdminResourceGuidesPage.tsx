@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiPlus } from "react-icons/fi";
 import {
   Button,
   FadeIn,
@@ -14,7 +15,6 @@ import { routes } from "../../app/routeMap";
 import { AdminPageHeader } from "./ui";
 import { useAdminResourceGuides } from "./api/useAdminResourceGuides";
 import { AdminResourceGuideRows } from "./AdminResourceGuideRows";
-import { AdminResourceGuideEditor } from "./AdminResourceGuideEditor";
 import { AdminResourceGuideReviewModal } from "./AdminResourceGuideReviewModal";
 import type {
   AdminResourceGuideDTO,
@@ -26,6 +26,8 @@ const SORTS: AdminResourceSort[] = ["reviewDue", "title", "updated"];
 
 /**
  * The resource guide console (`/admin/resource-guides`) — CON-08 and CON-09.
+ * Edit and New guide open the full-page workspace at
+ * `/admin/resource-guides/edit/:id` and `/admin/resource-guides/new`.
  *
  * Every guide on the platform, sorted stalest first by default so the page
  * opens on the question it was built to answer: which of these has nobody
@@ -42,7 +44,6 @@ export function AdminResourceGuidesPage() {
   const { t } = useTranslation();
   const [sort, setSort] = useState<AdminResourceSort>("reviewDue");
   const { data, isLoading, isError, error } = useAdminResourceGuides({ sort });
-  const [editing, setEditing] = useState<AdminResourceGuideDTO | null>(null);
   const [reviewing, setReviewing] = useState<AdminResourceGuideDTO | null>(
     null,
   );
@@ -92,17 +93,26 @@ export function AdminResourceGuidesPage() {
           }
           sub={t("admin:adminResourceGuides.header.sub")}
           actions={
-            <Select
-              aria-label={t("admin:adminResourceGuides.sortLabel")}
-              value={sort}
-              options={SORTS.map((value) => ({
-                value,
-                label: t(`admin:adminResourceGuides.sort.${value}`),
-              }))}
-              onChange={(value) =>
-                setSort((value ?? "reviewDue") as AdminResourceSort)
-              }
-            />
+            <div className={styles.headerActions}>
+              <Button
+                to={routes.adminResourceGuideNew}
+                variant="primary"
+                size="sm"
+              >
+                <FiPlus aria-hidden /> {t("admin:guideWorkspace.newGuideCta")}
+              </Button>
+              <Select
+                aria-label={t("admin:adminResourceGuides.sortLabel")}
+                value={sort}
+                options={SORTS.map((value) => ({
+                  value,
+                  label: t(`admin:adminResourceGuides.sort.${value}`),
+                }))}
+                onChange={(value) =>
+                  setSort((value ?? "reviewDue") as AdminResourceSort)
+                }
+              />
+            </div>
           }
         />
       </FadeIn>
@@ -149,18 +159,7 @@ export function AdminResourceGuidesPage() {
           </Button>
         </div>
       ) : (
-        <AdminResourceGuideRows
-          guides={guides}
-          onEdit={setEditing}
-          onReview={setReviewing}
-        />
-      )}
-
-      {editing && (
-        <AdminResourceGuideEditor
-          guide={editing}
-          onClose={() => setEditing(null)}
-        />
+        <AdminResourceGuideRows guides={guides} onReview={setReviewing} />
       )}
 
       {reviewing && (

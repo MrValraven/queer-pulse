@@ -1,0 +1,331 @@
+/* Create Gathering v2, chapter 3 "Who is it for?" (WhoChapter,
+   CapacityStepperField, CostKindField, CohostPickerField).
+   Design source: qp-create-gathering.css (.seg .stepper .vis) and
+   qp-create-gathering-v2.css (.cost-detail .people .plist .face .hosts .hpill),
+   raw values mapped to tokens. */
+
+/* ── Segmented controls (language, cost kind) ── */
+.segment {
+  flex-wrap: wrap;
+  max-width: 100%;
+  padding: 4px;
+}
+.segment button {
+  padding: 8px 14px;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+}
+.segment button[aria-pressed="true"] {
+  font-weight: 600;
+}
+
+/* ── Capacity stepper ── */
+.stepper {
+  display: flex;
+  align-items: stretch;
+  max-width: 220px;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+/* The same accent edge and soft ring the shared `.input` shows on focus, drawn
+   on the tray because the number input inside it has no border of its own. */
+.stepper:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent-soft);
+}
+.stepperButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  padding: 0;
+  font-size: var(--text-18);
+  color: var(--text-strong);
+  background: var(--wash);
+  border: 0;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .stepperButton:hover {
+    background: rgba(var(--line-rgb), 0.09);
+  }
+}
+.stepperButton[aria-disabled="true"] {
+  color: var(--ink-40);
+  cursor: not-allowed;
+}
+.stepperButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -3px;
+}
+.stepper .stepperInput {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  text-align: center;
+  border: 0;
+  border-radius: 0;
+  appearance: textfield;
+}
+.stepper .stepperInput::placeholder {
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 400;
+}
+.stepper .stepperInput::-webkit-inner-spin-button,
+.stepper .stepperInput::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+.stepper .stepperInput:focus {
+  box-shadow: none;
+}
+
+/* ── Cost line ── */
+.costDetail {
+  margin-top: 10px;
+}
+
+/* ── Co-host search ── */
+.people {
+  position: relative;
+}
+.peopleList {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: var(--z-popover);
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e3);
+  animation: peopleListIn var(--dur-fast) var(--ease-out) both;
+}
+.peopleOptions {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+.personOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.personOption:hover,
+.personOption:focus-visible {
+  background: var(--wash);
+}
+.personOption:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -3px;
+}
+.personText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.personName {
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+.personMeta {
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.peopleEmpty {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.peopleError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 8px 8px 8px 14px;
+}
+.peopleErrorText {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* ── Picked co-hosts ── */
+.hostPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.hostPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  font-size: var(--text-13);
+  font-weight: 500;
+  color: var(--ink);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-pill);
+}
+.hostRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: var(--text-14);
+  color: var(--ink-40);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-avatar);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .hostRemove:hover {
+    color: var(--accent-ink);
+  }
+}
+.hostRemove:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ── Visibility cards ──
+   AudienceScopeField takes these named classes through its styling props and
+   draws the hint under the cards (`hintPlacement="below"`). `.visibility` is
+   the field's own root; scoping a rule under it lifts that rule above the
+   field's single-class defaults (`.label`, `.hint`, `.stack`, `.option`,
+   `.icon`) whichever stylesheet loads first. `.visibility .scopeIcon` ties
+   with the field's two-class `.optionOn .icon`, so the chosen card's icon
+   has its own three-class rule below, which wins on colour and ground. */
+.visibility {
+  margin-top: 20px;
+}
+.visibility .scopeLabel {
+  margin-bottom: 8px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink);
+}
+.visibility .scopeHint {
+  margin: 7px 0 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+.visibility .scopeGroup {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.visibility .scopeOption {
+  gap: 12px;
+  height: 100%;
+  padding: 13px 14px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .visibility .scopeOption:hover {
+    border-color: rgba(var(--line-rgb), 0.34);
+  }
+}
+/* A 2px edge on the chosen card, with the padding trimmed by the extra pixel
+   so the text does not move. The chosen card carries both classes, which
+   keeps this edge on it through the hover rule above. */
+.visibility .scopeOption.scopeOptionChecked {
+  padding: 12px 13px;
+  background: rgba(var(--plum-rgb), 0.03);
+  border: 2px solid var(--line-strong);
+}
+:global([data-theme="dark"]) .visibility .scopeOption.scopeOptionChecked {
+  background: rgba(var(--accent-rgb), 0.12);
+  border-color: var(--accent);
+}
+.visibility .scopeIcon {
+  width: 30px;
+  height: 30px;
+  font-size: var(--text-14);
+  color: var(--text-strong);
+  background: rgba(var(--line-rgb), 0.06);
+}
+/* Cream icon on the plum dot: plum stays plum in both themes. */
+.visibility .scopeOptionChecked .scopeIcon {
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--plum);
+}
+/* Each card's title and its helper line, the two text elements the field
+   renders beside the icon. */
+.visibility .scopeOption b {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+.visibility .scopeOption b + span {
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+@keyframes peopleListIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (--sm) {
+  .visibility .scopeGroup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .peopleList {
+    animation: none;
+  }
+  .stepper,
+  .stepperButton,
+  .hostRemove,
+  .visibility .scopeOption {
+    transition: none;
+  }
+}

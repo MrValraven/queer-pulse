@@ -3,7 +3,7 @@ import type { ArticleBlock, ArticleImageTint } from "./api/pieces.api";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
 import type { ImageSlotTint } from "../../shared/components/ui/ImageSlot";
 import { initialsFromName } from "../../shared/lib/initials";
-import { sanitizeArticleHtml } from "./desk/editor/sanitizeArticleHtml";
+import { sanitizeArticleHtml } from "../../shared/components/richText/sanitizeArticleHtml";
 import { articleHeadingAnchorId } from "./articleOutline";
 import styles from "./ArticleBlockView.module.css";
 

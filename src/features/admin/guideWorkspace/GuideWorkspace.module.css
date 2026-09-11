@@ -1,0 +1,138 @@
+/* Guide workspace chrome: header, where-it-appears links, banners and the
+   live preview pane. Layout columns live in AdminGuideWorkspacePage.module.css. */
+
+.header {
+  position: sticky;
+  top: var(--sticky-top);
+  z-index: var(--z-sticky);
+  display: grid;
+  gap: 8px;
+  padding: 10px 0 12px;
+  background: var(--cream);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.headerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+
+.headerControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerControlLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.headerSave {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.saveStatus {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.linksLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.linksNote {
+  margin: 0;
+  flex-basis: 100%;
+  font-size: var(--text-12);
+  color: var(--accent-ink);
+}
+
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 12px;
+  padding: 12px 16px;
+  border: 1px solid rgba(var(--jade-rgb), 0.35);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+}
+
+.bannerConflict {
+  border-color: rgba(var(--accent-rgb), 0.45);
+}
+
+.bannerIcon {
+  flex: none;
+  color: var(--ink-60);
+}
+
+.bannerText {
+  flex: 1;
+  min-width: 220px;
+}
+
+.bannerTitle,
+.bannerDetail {
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--text-strong);
+}
+
+.bannerDetail {
+  margin-top: 2px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.bannerActions {
+  display: flex;
+  gap: 8px;
+}
+
+/* The preview scrolls inside its own pane; `position: relative` makes the
+   pane the offsetParent that scroll sync measures against. */
+.preview {
+  position: relative;
+  max-height: calc(100svh - var(--sticky-top) - 140px);
+  overflow: auto;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  background: var(--cream);
+}
+
+.previewNotice {
+  margin: 0;
+  padding: 10px 16px;
+  font-size: var(--text-13);
+  color: var(--text-strong);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.previewEmpty {
+  margin: 0;
+  padding: 24px;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.previewAction {
+  margin: 0 0 12px;
+}

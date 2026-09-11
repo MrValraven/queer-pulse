@@ -510,3 +510,30 @@
 .formatLineScrim {
   color: rgba(var(--cream-rgb), 0.85);
 }
+
+/* Theme tags (Create Gathering v2): up to three, in the kind badge's fills so
+   the card keeps one tag language. Sentence case, since a theme is a phrase. */
+.themeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.themeTag,
+.themeTagScrim {
+  font-size: var(--text-11);
+  font-weight: 600;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+.themeTag {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
+}
+
+.themeTagScrim {
+  background: rgba(var(--cream-rgb), 0.2);
+  border: 1px solid rgba(var(--cream-rgb), 0.4);
+  color: rgb(var(--cream-rgb));
+}

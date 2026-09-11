@@ -302,13 +302,12 @@ export function LockedSection({
  * The "join us" footer on a public profile.
  *
  * It used to carry a second button, "Ask {firstName} to vouch", pointing at
- * `/vouch`. That button is gone (SOC-15). It promised something the software
- * cannot do: this footer is read by a LOGGED-OUT visitor, only a member can
- * vouch, there is no ask-for-a-vouch request anywhere in the product, and
- * QueerPulse sends no email, so there was no way for the ask to reach the
- * member at all. `/vouch` itself is now a real member picker for members who
- * want to vouch for someone. Requesting an invite is the one thing a visitor
- * here can genuinely do, so it is the one CTA.
+ * the since-removed `/vouch` page. That button is gone (SOC-15). It promised
+ * something the software cannot do: this footer is read by a LOGGED-OUT
+ * visitor, only a member can vouch, there is no ask-for-a-vouch request
+ * anywhere in the product, and QueerPulse sends no email, so there was no way
+ * for the ask to reach the member at all. Requesting an invite is the one
+ * thing a visitor here can genuinely do, so it is the one CTA.
  */
 export function BottomCta({ firstName }: { firstName: string }) {
   const { t } = useTranslation();

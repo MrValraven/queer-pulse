@@ -21,7 +21,8 @@ interface ImageUrlFieldProps {
  * Reusable "paste an image URL" field: an `ImageSlot` live preview above a
  * labelled `type="url"` input, with inline validation against
  * `isPastableImageUrl` (the same guard the listing wizard's photo field
- * persists — `https://` only, matching the backend's `@IsImageReference`).
+ * persists: an `https://` link on a host the backend's `@IsImageReference`
+ * trusts).
  */
 export function ImageUrlField({
   label,

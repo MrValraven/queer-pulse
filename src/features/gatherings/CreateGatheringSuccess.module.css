@@ -1,0 +1,163 @@
+/* The published screen (design `.cg-done`) on the plum-panel success pattern
+   (docs/STYLE-RULES.md, ruling R9). The keyframe lives here: a CSS module
+   localises animation names, so only a keyframe declared in this file runs. */
+
+@keyframes successRise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.success {
+  position: relative;
+  overflow: hidden;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: var(--section-y-48) 44px;
+  border-radius: var(--radius-card);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  text-align: center;
+  animation: successRise var(--dur-slow) var(--ease-out) both;
+}
+
+/* Coral and jade orbs behind the content. */
+.success::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(var(--accent-rgb), 0.18),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(var(--jade-rgb), 0.16),
+      transparent 45%
+    );
+}
+
+/* Positioned after the orb layer in paint order, so content sits above it. */
+.success > * {
+  position: relative;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.235em; /* 76 / 34 */
+  height: 2.235em;
+  margin-bottom: 18px;
+  border-radius: var(--radius-avatar);
+  font-size: var(--text-34);
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.16);
+}
+
+.title {
+  margin: 0 0 14px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-title);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+/* Focus lands here on arrival for screen readers; no ring for that. */
+.title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.lead {
+  max-width: 44ch;
+  margin: 0 auto 28px;
+  font-size: var(--text-15-5);
+  line-height: 1.7;
+  color: rgba(var(--cream-rgb), 0.8);
+  text-wrap: pretty;
+}
+
+.previewSlot {
+  max-width: 25rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.access {
+  max-width: 46ch;
+  margin: 28px auto 0;
+}
+
+.accessLabel {
+  display: block;
+  margin: 0 0 10px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.5);
+}
+
+.accessTags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.accessTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid rgba(var(--jade-rgb), 0.4);
+  border-radius: var(--radius-tag);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 1);
+  background: rgba(var(--jade-rgb), 0.28);
+}
+
+.accessTag svg {
+  flex: none;
+  color: var(--jade-light);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+@media (--mobile) {
+  .success {
+    padding: var(--section-y-48) 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success {
+    animation: none;
+  }
+}

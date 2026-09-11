@@ -99,6 +99,16 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // A gathering's cover (`Event.coverImageUrl`). The same 2:1 banner a
+  // community cover is, on the board card and the detail hero, so it takes
+  // exactly the community cover's constraints. Mirrors the backend's
+  // `event-cover` upload kind.
+  "event-cover": {
+    maxBytes: 10 * MB,
+    maxLabel: "10 MB",
+    minWidth: 1200,
+    minHeight: 600,
+  },
   // A community's square identity mark, shown beside its name next to the wide
   // `community-cover` banner. Same constraints as a member/group avatar (min
   // 200 × 200px, under 5 MB), which is also the backend's own cap for the
@@ -169,6 +179,8 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   "story-cover": 2560,
   "listing-photo": 2560,
   "community-cover": 2560,
+  // The same full-bleed 2:1 banner as a community cover.
+  "event-cover": 2560,
   // A square identity mark, never a hero: the same 1600px cap the other
   // avatars get rather than the wide-banner one above it.
   "community-avatar": 1600,
@@ -633,6 +645,8 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // the centre of the crop rather than the centre of the file.
   "persona-cover": { aspect: 3, aspectLabel: "3:1", allowFreeform: false },
   "community-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  // A gathering cover renders as the same 2:1 banner as a community cover.
+  "event-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
   // The community's square mark renders in a circle/rounded square slot, so it
   // locks to 1:1 exactly like a member or group avatar.
   "community-avatar": { aspect: 1, aspectLabel: "1:1", allowFreeform: false },

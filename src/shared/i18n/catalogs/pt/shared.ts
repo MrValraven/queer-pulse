@@ -139,7 +139,6 @@ export const shared: Catalog = {
   // ACQ-08 — o convite feito por quem já é membro, com a contagem de convites
   // por usar colada pelo `useInviteQuotaBadge`.
   "accountMenu.items.invite": "Convidar alguém",
-  "accountMenu.items.vouch": "Avalizar alguém",
   "accountMenu.items.messages": "Mensagens",
   "accountMenu.items.work": "Trabalho",
   // Descoberta de personas, Fase 5, Momento 3 — a linha "As tuas personas"
@@ -668,4 +667,16 @@ export const shared: Catalog = {
     "Descarregado. Abre-o para adicionar ao Calendário da Apple",
   "addToCalendar.toastIcs":
     "Descarregado. Abre-o na tua aplicação de calendário",
+
+  "richText.toolbarAria": "Formatação de texto",
+  "richText.emphasis": "Ênfase",
+  "richText.strong": "Negrito",
+  "richText.link": "Hiperligação",
+  "richText.linkFieldLabel": "Endereço da hiperligação",
+  "richText.linkPlaceholder": "https://exemplo.com",
+  "richText.linkApply": "Adicionar hiperligação",
+  "richText.linkCancel": "Cancelar hiperligação",
+  "richText.linkInvalid":
+    "Usa um endereço completo, como https://exemplo.com, ou um email, como mailto:ola@exemplo.com.",
+  "richText.slashMenuAria": "Inserir um bloco",
 };

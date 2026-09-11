@@ -27,6 +27,7 @@ export type UploadKind =
   | "listing-photo"
   | "community-cover"
   | "community-avatar"
+  | "event-cover"
   | "message-image"
   | "message-document";
 

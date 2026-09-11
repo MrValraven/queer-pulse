@@ -637,12 +637,6 @@ export const homepage: Catalog = {
 
   // ── Subprofiles ────────────────────────────────────────────────────────────
   "subprofiles.title": "Different sides of you. <em>All in one place.</em>",
-  "subprofiles.subtitle":
-    "Maybe you're a designer by day and a DJ at night. Maybe you make art, run a project, or have a whole side of yourself you'd rather keep separate. Create personas for whatever you want to share, and decide exactly how visible each one is.",
-  "subprofiles.subtitleIdentity":
-    "Each persona can have its own identity, with the information, interests, and content that make sense for that context. Show a more professional side in one persona and something completely different in another, without losing the connection between them.",
-  "subprofiles.subtitleControl":
-    "You decide what each person sees and how much you want to share. Some personas can be fully linked to your name, while others can exist more discreetly. Not every part of us needs to show up in the same place.",
   "subprofiles.cta": "Explore personas",
   "subprofiles.ctaNote": "Three personas are included with every account.",
   "personasExplainer.eyebrow": "Members-only",
@@ -666,16 +660,28 @@ export const homepage: Catalog = {
     "Recommendations and followers land on a single persona, so what one side of you builds up stays with that side.",
   "personasExplainer.requestInviteCta": "Request an invite",
   "personasExplainer.signInCta": "I'm already a member",
-  "subprofiles.proofHeading":
-    "More than one side of you. One profile can't show all of it.",
   "subprofiles.proofEverywhereNote":
     "One profile tends to become the version of you that's easiest to explain. The rest gets left out.",
   "subprofiles.everywhereElse": "Everywhere else",
-  "subprofiles.onQueerPulse": "On QueerPulse",
-  "subprofiles.proofVs": "vs",
   "subprofiles.proofCrampRoles": "drag performer · ceramicist · music critic",
-  "subprofiles.mainNodeSub": "Main profile · product designer",
-  "subprofiles.postingAs": "Posting as",
+  "subprofiles.pickerLabel": "Choose a side to preview",
+  "subprofiles.oneAccount": "One account",
+  "subprofiles.stage.lede":
+    "Designer by day, DJ at night, or a side of yourself you'd rather keep separate. Give each one a persona with its own page, its own audience and its own visibility.",
+  "subprofiles.stage.audienceHeading": "Who sees this",
+  "subprofiles.visibility.open": "Open to everyone",
+  "subprofiles.visibility.openHelp": "Anyone in the community can find it.",
+  "subprofiles.visibility.network": "Your network",
+  "subprofiles.visibility.networkHelp":
+    "Only people you're connected with can see it.",
+  "subprofiles.link.main": "Main profile",
+  "subprofiles.link.mainHelp": "The profile people already know you by.",
+  "subprofiles.link.linked": "Linked to your name",
+  "subprofiles.link.linkedHelp":
+    "Shown on your main profile, so people can tell it's you.",
+  "subprofiles.link.standalone": "Standalone",
+  "subprofiles.link.standaloneHelp":
+    "It stands on its own, apart from your main profile.",
 
   // Persona showcase content below (four example personas) is an
   // intentional exception to the file-level i18n scope rule above: same
@@ -696,7 +702,6 @@ export const homepage: Catalog = {
     "Your main profile. The one people already know you by.",
   "subprofiles.personas.main.note":
     "Speaking as yourself: the product design career, the one every network already knows about.",
-  "subprofiles.personas.main.switcherSub": "Main profile · product design",
   "subprofiles.personas.main.laneLabel": "product design",
 
   "subprofiles.personas.mara.role": "Drag performer",
@@ -714,13 +719,7 @@ export const homepage: Catalog = {
     "Everything they need to know about Sofia's work as a performer, without the rest of her profile getting in the way.",
   "subprofiles.personas.mara.note":
     "Speaking as Mara: bookers get the shows, the photos and the fee. The product design CV stays off this page.",
-  "subprofiles.personas.mara.switcherSub": "Drag · bookers and venues",
   "subprofiles.personas.mara.laneLabel": "drag",
-  "subprofiles.personas.mara.deck.skinLabel": "Poster skin",
-  "subprofiles.personas.mara.deck.tag":
-    "Drag, eight years of it. Two shows a month at Anjos, a rate card that doesn't apologise.",
-  "subprofiles.personas.mara.deck.visLabel": "Bookers & venues",
-  "subprofiles.personas.mara.deck.showsLine": "Gigs · photos · rate card",
 
   "subprofiles.personas.atelier.role": "Ceramics studio, two people",
   "subprofiles.personas.atelier.sub": "Graça · commissions and wholesale",
@@ -737,13 +736,7 @@ export const homepage: Catalog = {
     "Credited to the atelier: a shared front page two people can run.",
   "subprofiles.personas.atelier.note":
     "Speaking as the studio: buyers and galleries see the work and the pricing, credited to the atelier instead of to you.",
-  "subprofiles.personas.atelier.switcherSub": "Ceramics · buyers and galleries",
   "subprofiles.personas.atelier.laneLabel": "ceramics",
-  "subprofiles.personas.atelier.deck.skinLabel": "Studio skin",
-  "subprofiles.personas.atelier.deck.tag":
-    "A two-person ceramics studio in Graça. Commissions, wholesale, and Saturday workshops.",
-  "subprofiles.personas.atelier.deck.visLabel": "Buyers & galleries",
-  "subprofiles.personas.atelier.deck.showsLine": "Work · pricing · studio days",
 
   "subprofiles.personas.byline.role": "Music criticism",
   "subprofiles.personas.byline.sub": "Bylines in three magazines since 2021",
@@ -760,13 +753,7 @@ export const homepage: Catalog = {
     "A pen name with a portfolio. The clips speak for themselves, no day job attached.",
   "subprofiles.personas.byline.note":
     "Speaking as the byline: editors see the clips and the beat you cover, with your day job kept out of the way.",
-  "subprofiles.personas.byline.switcherSub": "Music writing · editors",
   "subprofiles.personas.byline.laneLabel": "music writing",
-  "subprofiles.personas.byline.deck.skinLabel": "Byline skin",
-  "subprofiles.personas.byline.deck.tag":
-    "The name she writes music criticism under. Bylines in three magazines since 2021.",
-  "subprofiles.personas.byline.deck.visLabel": "Editors who commission",
-  "subprofiles.personas.byline.deck.showsLine": "Clips · beats · pitch note",
 
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
   "outro.title": "Walk in where you <em>already belong.</em>",

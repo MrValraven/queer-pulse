@@ -644,3 +644,14 @@
 :global([data-theme="dark"]) .rightCard {
   border-color: rgba(var(--cream-rgb), 0.1);
 }
+
+/* Inline formatting inside editor-authored guide blocks (GuideBody). */
+.richInline a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.richInline strong {
+  font-weight: 600;
+}

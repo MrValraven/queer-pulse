@@ -1,0 +1,492 @@
+/* Create Gathering v2: the live preview panel on the rail (design `.rail-panel`
+   and `.pv`). The panel is plum in both themes; the card on it is a light
+   surface in both themes too, so the card re-points the flipping ink, line
+   and accent tokens at their light values under the dark theme (see the
+   bottom of this file). */
+
+/* ── Panel ── */
+.panel {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 22px 24px;
+  color: rgba(var(--cream-rgb), 1);
+  background: var(--plum);
+  border-radius: var(--radius-card);
+}
+.panel::before,
+.panel::after {
+  content: "";
+  position: absolute;
+  border-radius: var(--radius-avatar);
+  pointer-events: none;
+}
+.panel::before {
+  top: -120px;
+  right: -90px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(
+    circle,
+    rgba(var(--accent-rgb), 0.32),
+    transparent 62%
+  );
+}
+.panel::after {
+  bottom: -140px;
+  left: -100px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(
+    circle,
+    rgba(var(--jade-rgb), 0.28),
+    transparent 62%
+  );
+}
+.panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  margin-bottom: 14px;
+  color: rgba(var(--cream-rgb), 0.6);
+}
+/* The live dot is coral on the plum rail. */
+.eyebrow > span[aria-hidden] {
+  background: var(--accent);
+  box-shadow: var(--ring-accent-strong);
+}
+
+/* ── On the board / Attendees see ──
+   The shared SegmentedControl, restyled for the plum rail. The `[role="group"]`
+   and `> button` steps lift these rules above the control's own `.segFull`,
+   `.segOn` and dark-theme `.seg` rules whatever order the modules load in. */
+.panel .modeToggle[role="group"] {
+  display: flex;
+  gap: 0;
+  margin-bottom: 14px;
+  padding: 3px;
+  background: rgba(var(--cream-rgb), 0.1);
+  border: 0;
+  border-radius: var(--radius-pill);
+}
+.modeToggle[role="group"] > button {
+  gap: 6px;
+  padding: 7px 10px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.7);
+  background: none;
+  border-radius: var(--radius-pill);
+  box-shadow: none;
+}
+.modeToggle[role="group"] svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+.modeToggle[role="group"] > button:hover {
+  color: rgba(var(--cream-rgb), 1);
+}
+.modeToggle[role="group"] > button[aria-pressed="true"],
+.modeToggle[role="group"] > button[aria-pressed="true"]:hover {
+  background: rgba(var(--cream-rgb), 1);
+  /* css-scale-allow: non-flipping-text. Plum type on the pressed cream pill,
+     which is cream in both themes. */
+  color: var(--plum);
+}
+.modeToggle[role="group"] > button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Card ── */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 18px 16px;
+  color: var(--ink);
+  background: var(--paper);
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-e4);
+}
+.bump {
+  animation: previewBump 0.5s var(--ease);
+}
+@keyframes previewBump {
+  30% {
+    transform: translateY(-3px) scale(1.01);
+  }
+}
+
+.cover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 110px;
+  margin: -18px -18px 0;
+  overflow: hidden;
+  background: rgba(var(--accent-rgb), 0.12);
+  border-radius: var(--radius-18) var(--radius-18) 0 0;
+}
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.coverPlaceholder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  font-size: var(--text-12);
+  font-style: italic;
+  color: var(--accent-ink);
+}
+.coverPlaceholder svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: var(--accent);
+  opacity: 0.8;
+}
+.coverJade {
+  background: rgba(var(--jade-rgb), 0.14);
+}
+.coverJade .coverPlaceholder,
+.coverJade .coverPlaceholder svg {
+  color: var(--jade-ink);
+}
+.coverPlum {
+  background: rgba(var(--plum-rgb), 0.09);
+}
+.coverPlum .coverPlaceholder,
+.coverPlum .coverPlaceholder svg {
+  color: var(--text-strong);
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 5px 9px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-tag);
+}
+.kind svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+.kindEmpty {
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-40);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+/* The audience badge is the shared VisibilityBadge, whose tones read the
+   same tokens the dark-mode `.card` rule redefines, so it stays light on the
+   light card. It keeps its width while a long format name takes the rest of
+   the row. */
+.scopeBadge {
+  flex: none;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.day {
+  min-width: 52px;
+  font-family: var(--serif);
+  font-size: var(--text-46);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+}
+.dayEmpty {
+  font-size: var(--text-20);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-40);
+}
+.dateLines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.dateLines b {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+.titleEmpty {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-40);
+}
+.description {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.meta svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  color: var(--ink-40);
+}
+.placeholder {
+  font-style: italic;
+  color: var(--ink-40);
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.theme,
+.tag,
+.price {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  font-size: var(--text-11-5);
+  border-radius: var(--radius-tag);
+}
+.theme {
+  font-weight: 500;
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+.tag {
+  font-weight: 600;
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.1);
+}
+.tag svg {
+  width: 11px;
+  height: 11px;
+  flex: none;
+}
+.repeatTag {
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.06);
+}
+
+.contentNotes,
+.houseRules {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+.contentNotes svg,
+.houseRules svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+.houseRules {
+  overflow-wrap: anywhere;
+}
+.houseRules svg {
+  color: var(--jade-ink);
+}
+
+/* ── Host row ── */
+.hostRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 12px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.hostRow b {
+  font-weight: 600;
+  color: var(--ink);
+}
+.hostNames {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.avatarStack {
+  display: flex;
+  flex: none;
+}
+.stackedAvatar {
+  border-radius: var(--radius-avatar);
+  box-shadow: var(--ring-paper);
+}
+.stackedAvatar + .stackedAvatar {
+  margin-left: -8px;
+}
+.price {
+  flex: none;
+  margin-left: auto;
+  font-size: var(--text-12);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.06);
+}
+.priceFree {
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.1);
+}
+
+/* ── What confirmed attendees also see ── */
+.attendees {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(var(--line-rgb), 0.18);
+}
+.attendeesLabel {
+  margin: 0;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.attendeesRow {
+  display: flex;
+  gap: 9px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.attendeesRow svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--text-strong);
+}
+.attendeesRowBody {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.questionChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.questionChip {
+  padding: 3px 8px;
+  font-size: var(--text-11-5);
+  font-weight: 500;
+  background: rgba(var(--plum-rgb), 0.06);
+  border-radius: var(--radius-6);
+}
+
+/* ── Lock note ── */
+.lockNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: var(--text-12);
+  color: rgba(var(--cream-rgb), 0.7);
+}
+.lockNote svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+.lockNote b {
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.92);
+}
+
+/* The card is a light surface in both themes (design: the card reads the same
+   on the dark page). Re-point the tokens that flip at values that hold on a
+   cream ground, so every nested piece, avatars included, keeps its light
+   colours. */
+:global([data-theme="dark"]) .card {
+  --paper: rgba(var(--cream-rgb), 1);
+  --ink: var(--ink-surface);
+  --ink-60: color-mix(in srgb, var(--ink-surface) 62%, transparent);
+  --ink-40: color-mix(in srgb, var(--ink-surface) 61%, transparent);
+  --line-rgb: var(--plum-rgb);
+  --text-strong: var(--plum);
+  --accent-ink: var(--accent-deep);
+  --jade-ink: var(--jade-fill);
+  /* `--ring-paper` is composed on :root from the dark `--paper`, so it is
+     declared again here to read the cream `--paper` above. */
+  --ring-paper: 0 0 0 2px var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bump {
+    animation: none;
+  }
+}

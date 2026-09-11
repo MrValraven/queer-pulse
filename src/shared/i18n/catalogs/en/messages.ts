@@ -87,6 +87,19 @@ export const messages: Catalog = {
   "attachments.fallbackText": "Photo",
   "attachments.previewUnavailable": "Photo preview unavailable",
 
+  // Document attachments (DocumentComposerButton, MessageDocumentAttachment,
+  // MessageBubbleBody, documentUploadProcessing)
+  "attachments.openDocument": "Send a file",
+  "attachments.documentFallbackText": "File",
+  "attachments.documentPreviewUnavailable": "File preview unavailable",
+  "attachments.documentMeta": "{format} · {size}",
+  "attachments.download": "Download {fileName}",
+  "attachments.documentError.unsupportedType":
+    "That file type isn't supported. Use a PDF, TXT, CSV or XLSX file.",
+  "attachments.documentError.tooLarge":
+    "That file is too large. Keep it under {maxLabel}.",
+  "attachments.documentError.retry": "We couldn't send that file. Try again.",
+
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
   "connection.offline":
@@ -360,7 +373,7 @@ export const messages: Catalog = {
     "Keep the conversation here until you trust someone. Never send money, and never share bank details. Real listings don't ask for that.",
 
   // ── Panel chrome (MessagesRailChrome) ──
-  // Desktop only. This route hides the site nav (AppShell `desktopChromeless`),
+  // Desktop only. This route hides the site nav (AppShell `chromeless`),
   // so the inbox panel carries its own way back out.
   "rail.backToPlatform": "Back to QueerPulse",
   // ── Chat wallpaper (ConversationMenu → WallpaperModal) ──

@@ -59,7 +59,6 @@ Disallow: /changemaker
 Disallow: /changemakers
 Disallow: /parents
 Disallow: /caregivers
-Disallow: /vouch
 Disallow: /qr-scanner
 Disallow: /magazine/submit-story
 Disallow: /magazine/apply-to-write
@@ -190,7 +189,6 @@ Disallow: /changemaker
 Disallow: /changemakers
 Disallow: /parents
 Disallow: /caregivers
-Disallow: /vouch
 Disallow: /qr-scanner
 # Organiser-side volunteer surfaces (the listing and each opportunity's detail
 # page stay public).

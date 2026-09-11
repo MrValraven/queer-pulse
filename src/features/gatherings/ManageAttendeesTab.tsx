@@ -23,7 +23,14 @@ interface BarTarget {
   name: string;
 }
 
-export function AttendeesTab({ slug }: { slug: string }) {
+export function AttendeesTab({
+  slug,
+  customRsvpQuestion,
+}: {
+  slug: string;
+  /** The host's own RSVP question, which labels each attendee's answer. */
+  customRsvpQuestion?: string | null;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
@@ -146,6 +153,7 @@ export function AttendeesTab({ slug }: { slug: string }) {
           count: goingCount,
         })}
         attendees={going}
+        customRsvpQuestion={customRsvpQuestion}
         hasMore={hasMoreGoing}
         loadingMore={loadingMoreGoing}
         onLoadMore={() => void onLoadMoreGoing()}
@@ -164,6 +172,7 @@ export function AttendeesTab({ slug }: { slug: string }) {
         })}
         headingStyle={{ marginTop: 20 }}
         attendees={waitlist}
+        customRsvpQuestion={customRsvpQuestion}
         hasMore={hasMoreWaitlist}
         loadingMore={loadingMoreWaitlist}
         onLoadMore={() => void onLoadMoreWaitlist()}

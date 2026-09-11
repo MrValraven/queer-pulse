@@ -1572,18 +1572,6 @@ export const magazine: Catalog = {
   "write.image.focalAria": "Ponto focal: {x}% horizontal, {y}% vertical",
   "write.image.captionPlaceholder": "Legenda",
 
-  // ── SelectionToolbar ──────────────────────────────────────────────────────
-  "write.selection.toolbarAria": "Formatação de texto",
-  "write.selection.emphasis": "Ênfase",
-  "write.selection.strong": "Negrito",
-  "write.selection.link": "Hiperligação",
-  "write.selection.linkFieldLabel": "Endereço da hiperligação",
-  "write.selection.linkPlaceholder": "https://exemplo.com",
-  "write.selection.linkApply": "Adicionar hiperligação",
-  "write.selection.linkCancel": "Cancelar hiperligação",
-  "write.selection.linkInvalid":
-    "Usa um endereço completo, como https://exemplo.com, ou um email, como mailto:ola@exemplo.com.",
-
   // ── PublishRail ────────────────────────────────────────────────────────────
   "write.publish.title": "Publicar",
   "write.publish.whenLabel": "Quando é publicado",
@@ -2133,8 +2121,7 @@ export const magazine: Catalog = {
   "live.readMinutes": "{minutes} min",
   "live.web": "Web",
 
-  // ── Editor de artigos: menu de barra e anulação da remoção de bloco ──────
-  "write.slash.menuAria": "Inserir um bloco",
+  // ── Editor de artigos: anulação da remoção de bloco ──────────────────────
   "write.block.removedToast": "Bloco removido.",
   "write.block.undoRemove": "Anular",
 

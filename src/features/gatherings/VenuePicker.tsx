@@ -34,7 +34,7 @@ function matchesQuery(place: DirectoryPlace, query: string): boolean {
  * hatch), a search combobox over `useDirectoryPlaces()`, and a plain
  * free-text field — toggled via "Can't find it? Type it in instead" /
  * "Search the directory instead". Used by both the manage dashboard's Edit
- * venue modal and the create-gathering wizard's DatePlaceStep.
+ * venue modal and the create-gathering wizard's `steps/PlaceFields.tsx`.
  */
 export function VenuePicker({
   value,

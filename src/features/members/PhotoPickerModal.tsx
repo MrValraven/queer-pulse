@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
-import { FiCamera, FiTrash2 } from "react-icons/fi";
+import { FiCamera, FiCrop, FiTrash2 } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import {
   Modal,
-  ConfirmDialog,
   ImageSlot,
   PhotoReframeModal,
   SkeletonLine,
@@ -13,39 +12,55 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ImageProcessingError } from "./api/uploadProcessing";
 import { useUploadImage, type UploadKind } from "./api/useUploadImage";
-import { useMyMedia, useDeleteMyMedia } from "../settings/api/useMyMedia";
+import {
+  useMyMedia,
+  useDeleteMyMedia,
+  useSaveMyMediaCrop,
+} from "../settings/api/useMyMedia";
 import {
   resolveMyMediaUrl,
   type MyMediaItem,
 } from "../settings/api/myMedia.api";
-import { mediaReferenceLabelKey } from "../../shared/media/mediaReferences";
+import {
+  PastUploadDeleteDialog,
+  PastUploadReframeModal,
+} from "./PhotoPickerDialogs";
 import styles from "./PhotoPickerModal.module.css";
 
 const LOADING_SKELETON_CELLS = 6;
+
+/** The upload path never reframes a GIF (see `handleFile`), so the grid never
+ *  offers to reposition one either. */
+function canReframe(item: MyMediaItem): boolean {
+  return !item.key.toLowerCase().endsWith(".gif");
+}
 
 interface PastUploadsSectionProps {
   items: MyMediaItem[];
   isLoading: boolean;
   isError: boolean;
-  /** Disabled while a device upload is in flight. */
-  uploading: boolean;
+  /** Disabled while a device upload or a crop save is in flight. */
+  isBusy: boolean;
   onRetry: () => void;
   onSelect: (item: MyMediaItem) => void;
+  onRequestEdit: (item: MyMediaItem) => void;
   onRequestDelete: (item: MyMediaItem) => void;
 }
 
 /**
  * The "Your photos" grid of the member's own past uploads, with its own loading
  * (skeletons), error (retry), and empty states. Selecting a thumbnail picks it;
- * the trash affordance requests a delete (the parent owns the confirm dialog).
+ * the crop affordance requests a reposition and the trash one a delete (the
+ * parent owns both dialogs).
  */
 function PastUploadsSection({
   items,
   isLoading,
   isError,
-  uploading,
+  isBusy,
   onRetry,
   onSelect,
+  onRequestEdit,
   onRequestDelete,
 }: PastUploadsSectionProps) {
   const { t } = useTranslation();
@@ -88,7 +103,7 @@ function PastUploadsSection({
                 className={styles.thumbBtn}
                 aria-label={t("members:avatar.picker.useThis")}
                 onClick={() => onSelect(item)}
-                disabled={uploading}
+                disabled={isBusy}
               >
                 <ImageSlot
                   tint="coral"
@@ -105,15 +120,28 @@ function PastUploadsSection({
                   {t("members:avatar.picker.inUse")}
                 </span>
               )}
-              <button
-                type="button"
-                className={styles.deleteBtn}
-                aria-label={t("members:avatar.picker.delete")}
-                onClick={() => onRequestDelete(item)}
-                disabled={uploading}
-              >
-                <FiTrash2 size={14} />
-              </button>
+              <div className={styles.tileActions}>
+                {canReframe(item) && (
+                  <button
+                    type="button"
+                    className={styles.tileBtn}
+                    aria-label={t("members:avatar.picker.edit")}
+                    onClick={() => onRequestEdit(item)}
+                    disabled={isBusy}
+                  >
+                    <FiCrop size={14} aria-hidden />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={styles.tileBtn}
+                  aria-label={t("members:avatar.picker.delete")}
+                  onClick={() => onRequestDelete(item)}
+                  disabled={isBusy}
+                >
+                  <FiTrash2 size={14} aria-hidden />
+                </button>
+              </div>
             </li>
           ))}
         </ul>
@@ -133,8 +161,9 @@ interface PhotoPickerModalProps {
    * the one currently showing, so the hero can be cleared with it. */
   currentValue?: string;
   /** value = key to persist, previewUrl = absolute/blob URL to show now, crop =
-   *  the reframe crop just applied to this upload (undefined for a past-upload
-   *  or Google pick, which carry no fresh crop). */
+   *  the reframe crop for this photo: the one just applied to a fresh upload or
+   *  a repositioned past upload, or a past upload's saved crop (undefined when
+   *  it has none, and for a Google pick). */
   onPick: (value: string, previewUrl: string, crop?: CropRect) => void;
   /**
    * Fired only when the picked key came from a FRESH device upload this
@@ -180,7 +209,9 @@ export function PhotoPickerModal({
   const [progress, setProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<MyMediaItem | null>(null);
+  const [pendingEdit, setPendingEdit] = useState<MyMediaItem | null>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
+  const saveMediaCrop = useSaveMyMediaCrop();
 
   /** Shared tail of both upload paths (direct GIF path + post-reframe path):
    * runs the upload, hands the result to the caller's `onPick`, and closes
@@ -230,6 +261,26 @@ export function PhotoPickerModal({
     const fileToUpload = pendingFile;
     setPendingFile(null);
     await uploadAndFinish(fileToUpload, crop);
+  }
+
+  /** Saves the new framing on the past upload (every place it is used), then
+   *  uses it in this slot, the same as tapping its tile. */
+  function confirmEdit(crop: CropRect) {
+    if (!pendingEdit) return;
+    const editedItem = pendingEdit;
+    setPendingEdit(null);
+    saveMediaCrop.mutate(
+      { key: editedItem.key, crop },
+      {
+        onSuccess: () => {
+          onPick(editedItem.key, resolveMyMediaUrl(editedItem.fileUrl), crop);
+          onClose();
+        },
+        onError: () => {
+          showToast(t("members:avatar.picker.editError"), "error");
+        },
+      },
+    );
   }
 
   function confirmDelete() {
@@ -289,12 +340,17 @@ export function PhotoPickerModal({
         items={items}
         isLoading={isLoading}
         isError={isError}
-        uploading={uploading}
+        isBusy={uploading || saveMediaCrop.isPending}
         onRetry={() => void refetch()}
         onSelect={(item) => {
-          onPick(item.key, resolveMyMediaUrl(item.fileUrl));
+          onPick(
+            item.key,
+            resolveMyMediaUrl(item.fileUrl),
+            item.crop ?? undefined,
+          );
           onClose();
         }}
+        onRequestEdit={setPendingEdit}
         onRequestDelete={setPendingDelete}
       />
 
@@ -320,26 +376,21 @@ export function PhotoPickerModal({
         />
       )}
 
+      {pendingEdit && (
+        <PastUploadReframeModal
+          item={pendingEdit}
+          kind={kind}
+          onCancel={() => setPendingEdit(null)}
+          onConfirm={confirmEdit}
+        />
+      )}
+
       {pendingDelete && (
-        <ConfirmDialog
-          open
+        <PastUploadDeleteDialog
+          item={pendingDelete}
+          isDeleting={deleteMedia.isPending}
           onClose={() => setPendingDelete(null)}
           onConfirm={confirmDelete}
-          title={t("members:avatar.picker.deleteConfirmTitle")}
-          description={
-            pendingDelete.references.length > 0
-              ? t("members:avatar.picker.deleteConfirmBodyInUse", {
-                  usedAs: pendingDelete.references
-                    .map((reference) =>
-                      t(mediaReferenceLabelKey(reference.type)),
-                    )
-                    .join(", "),
-                })
-              : t("members:avatar.picker.deleteConfirmBody")
-          }
-          confirmLabel={t("members:avatar.picker.deleteConfirmCta")}
-          tone="destructive"
-          loading={deleteMedia.isPending}
         />
       )}
     </Modal>

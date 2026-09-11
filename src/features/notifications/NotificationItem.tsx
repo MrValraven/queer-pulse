@@ -21,6 +21,7 @@ export function NotificationItem({
   onMarkRead,
   onResolve,
   onDismiss,
+  isCompact = false,
 }: {
   notification: Notification;
   index: number;
@@ -29,6 +30,8 @@ export function NotificationItem({
   onResolve: (id: NotificationId, toast: string) => void;
   /** PRD-224. Clear this row for good, here and on the member's other devices. */
   onDismiss: (id: NotificationId) => void;
+  /** Tighter row for the nav bell's popover, where the panel is 400px wide. */
+  isCompact?: boolean;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -98,7 +101,11 @@ export function NotificationItem({
     <FadeIn
       key={notification.id}
       delay={Math.min(index, 8) * 60}
-      className={[styles.item, isUnread && styles.unread]
+      className={[
+        styles.item,
+        isCompact && styles.itemCompact,
+        isUnread && styles.unread,
+      ]
         .filter(Boolean)
         .join(" ")}
       // The container is plain, non-interactive markup: it holds real links
@@ -125,7 +132,7 @@ export function NotificationItem({
               initials={notification.avatar.initials}
               tint={notification.avatar.tint}
               src={notification.avatar.src}
-              size={40}
+              size={isCompact ? 36 : 40}
             />
           </Link>
         ) : (

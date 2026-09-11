@@ -1,0 +1,142 @@
+/* The ready panel's readback: the host's answers, above the pledges. It sits
+   on the panel's paper ground, which flips with the theme, so every colour
+   here reads a flipping token. */
+.readback {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+/* Matches the pledges label below it. */
+.title {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupLabel {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answer {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* Every answer carries its icon and its word, so none of this depends on
+   colour. The tones follow the directory's accessibility answers. */
+.mark {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-avatar);
+}
+.mark svg {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2.6;
+}
+.answer[data-answer="yes"] .mark {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+/* An honest no reads as definite as a yes: a solid mark, no alarm colour. */
+.answer[data-answer="no"] .mark {
+  color: var(--text-strong);
+  background: rgba(var(--line-rgb), 0.08);
+}
+.answer[data-answer="unknown"] {
+  color: var(--ink-60);
+}
+.answer[data-answer="unknown"] .mark {
+  color: var(--ink-60);
+  border: 1px dashed rgba(var(--line-rgb), 0.28);
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.note svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin: 3px 3px 0;
+  color: var(--ink-60);
+}
+.noteLabel {
+  display: block;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* A text-weight way back to the Access chapter, sized as a touch target. */
+.unanswered {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  min-height: 44px;
+  margin: -6px -8px;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--accent-text);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-9);
+  cursor: pointer;
+}
+.unanswered svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.unanswered:hover {
+  background: var(--wash);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .unanswered {
+    transition: background var(--dur-fast) var(--ease);
+  }
+}

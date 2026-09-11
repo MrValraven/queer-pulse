@@ -28,10 +28,9 @@ const SavedListSharedPage = lazyNamed(
 const BadgesPage = lazyNamed(() => import("./BadgesPage"), "BadgesPage");
 const PerksPage = lazyNamed(() => import("./PerksPage"), "PerksPage");
 const DraftsPage = lazyNamed(() => import("./DraftsPage"), "DraftsPage");
-const VouchPage = lazyNamed(() => import("./VouchPage"), "VouchPage");
 
 /** Member directory, profiles, and the personal member surfaces (badges, perks,
- *  collections, drafts, vouch). */
+ *  collections, drafts). */
 export function memberRoutes() {
   return (
     <>
@@ -62,7 +61,6 @@ export function memberRoutes() {
         element={<SavedListSharedPage />}
       />
       <Route path={routes.drafts} element={<DraftsPage />} />
-      <Route path={routes.vouch} element={<VouchPage />} />
     </>
   );
 }

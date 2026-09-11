@@ -14,6 +14,7 @@ import { Button } from "../ui";
 import { useAuth } from "../../../app/providers/authContext";
 import { useTheme } from "../../../app/providers/themeContext";
 import { useUnreadMessages } from "../../../features/messages/api/useConversations";
+import { NotificationsBellMenu } from "../../../features/notifications/NotificationsBellMenu";
 import { useTranslation } from "../../i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import styles from "./Sidebar.module.css";
@@ -72,16 +73,12 @@ export function SidebarFooter({
           </Link>
         )}
         {loggedIn && (
-          <Link
-            to={routes.notifications}
-            className={styles.utilBtn}
-            aria-label={t("nav:notifications")}
-          >
-            <FiBell aria-hidden />
-            {unreadCount > 0 && (
-              <span className={styles.bellBadge}>{unreadCount}</span>
-            )}
-          </Link>
+          <NotificationsBellMenu
+            unreadCount={unreadCount}
+            icon={<FiBell aria-hidden />}
+            triggerClassName={styles.utilBtn}
+            badgeClassName={styles.bellBadge}
+          />
         )}
       </div>
 

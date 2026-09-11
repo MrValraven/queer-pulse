@@ -7,7 +7,7 @@ import {
 import { IconButton } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleBlock } from "../../api/pieces.api";
-import { RichText } from "./RichText";
+import { RichText } from "../../../../shared/components/richText/RichText";
 import {
   ImageBlockFields,
   QaBlockFields,

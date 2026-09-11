@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { FiArrowRight, FiCheckCircle, FiClock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
@@ -24,6 +24,15 @@ import styles from "./GuideIndexPage.module.css";
 interface CategoryGroup {
   category: string;
   entries: ResourceIndexEntryDTO[];
+}
+
+/** Decodes a URL fragment, falling back to the raw value when it is malformed. */
+function decodeHashValue(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
 }
 
 /**
@@ -71,6 +80,18 @@ export function GuideIndexPage() {
       ),
     }));
   }, [entries]);
+
+  // Arriving with #<category> (the guide workspace's "Guide index" link):
+  // the groups render only once the index has loaded, after ScrollManager has
+  // already looked for the target and found nothing, so scroll here instead.
+  const { hash } = useLocation();
+  const hasGroups = !isLoading && groups.length > 0;
+  useEffect(() => {
+    if (!hasGroups || !hash) return;
+    document
+      .getElementById(decodeHashValue(hash.slice(1)))
+      ?.scrollIntoView({ block: "start", behavior: "instant" });
+  }, [hasGroups, hash]);
 
   return (
     <PageShell>
@@ -131,7 +152,11 @@ export function GuideIndexPage() {
 
           {!isLoading &&
             groups.map((group) => (
-              <div key={group.category} className={styles.group}>
+              <div
+                key={group.category}
+                id={group.category}
+                className={styles.group}
+              >
                 <Reveal as="h2" className={styles.groupTitle}>
                   {isKnownGuideCategory(group.category)
                     ? t(`resources:library.category.${group.category}`)
@@ -154,7 +179,7 @@ export function GuideIndexPage() {
   );
 }
 
-function GuideIndexCard({
+export function GuideIndexCard({
   entry,
   index,
 }: {

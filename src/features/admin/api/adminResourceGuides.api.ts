@@ -56,6 +56,9 @@ export interface ResourceGuideWriteBody {
   lastReviewedOn?: string;
   reviewedBy?: string;
   reviewDueOn?: string;
+  /** The `updatedAt` the editor loaded. The backend answers 409 when the
+   *  guide has been saved since. Update only. */
+  expectedUpdatedAt?: string;
 }
 
 export interface ReviewGuideBody {
@@ -76,6 +79,10 @@ export const getAdminResourceGuides = (params: {
     `/admin/resources${queryString ? `?${queryString}` : ""}`,
   );
 };
+
+/** One guide, prose included, for the workspace. */
+export const getAdminResourceGuide = (id: string) =>
+  apiGet<AdminResourceGuideDTO>(`/admin/resources/${id}`);
 
 export const createResourceGuide = (
   body: ResourceGuideWriteBody & { slug: string },

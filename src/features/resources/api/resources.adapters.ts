@@ -50,7 +50,7 @@ export function resourceToGuide(dto: ResourceResponseDTO): Guide {
     description: dto.description,
     category: dto.category,
     categoryLabel: CATEGORY_LABELS[dto.category] ?? dto.category,
-    meta: dto.meta ?? "Guide",
+    meta: dto.meta ?? "",
     to: guideRouteFor(dto),
     lastVerifiedAt: dto.lastVerifiedAt,
   };

@@ -39,6 +39,9 @@ interface ManageGatheringTabsProps {
    *  starting state). */
   allowWaitlist?: boolean;
   showAttendeeCount?: boolean;
+  /** The host's own RSVP question, which labels each attendee's answer in the
+   *  Attendees tab. Absent in demo, where a generic label stands in. */
+  customRsvpQuestion?: string | null;
   onUpdateSettings?: (patch: {
     allowWaitlist?: boolean;
     showAttendeeCount?: boolean;
@@ -70,6 +73,7 @@ export function ManageGatheringTabs({
   cohosts,
   allowWaitlist,
   showAttendeeCount,
+  customRsvpQuestion,
   onUpdateSettings,
 }: ManageGatheringTabsProps) {
   const { t } = useTranslation();
@@ -100,7 +104,9 @@ export function ManageGatheringTabs({
           onUpdateDescription={onUpdateDescription}
         />
       )}
-      {tab === "attendees" && <AttendeesTab slug={slug} />}
+      {tab === "attendees" && (
+        <AttendeesTab slug={slug} customRsvpQuestion={customRsvpQuestion} />
+      )}
       {tab === "messages" && <MessagesTab slug={slug} />}
       {tab === "settings" && (
         <SettingsTab

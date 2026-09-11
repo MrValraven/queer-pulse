@@ -7,7 +7,7 @@ import type {
 import { FormField, Select } from "../../../../shared/components/ui";
 import { ImageUploadField } from "../../../subprofiles/ImageUploadField";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { RichText } from "./RichText";
+import { RichText } from "../../../../shared/components/richText/RichText";
 import styles from "./ImageBlockControls.module.css";
 
 export interface ImageBlockControlsProps {

@@ -83,7 +83,7 @@ export const gatherings: Catalog = {
   "cta.joinWaitlist": "Entrar na lista de espera",
 
   // ── In-event RSVP control (GatheringRsvpControl) ──────────────────────────
-  // RSVP é uma ação dentro do detalhe do encontro: a ação principal, o estado
+  // RSVP é uma ação dentro do detalhe do convívio: a ação principal, o estado
   // confirmado "vais estar lá" / lista de espera, e o cancelamento.
   "rsvpControl.waitlistCta": "Entrar na lista de espera",
   "rsvpControl.pendingCta": "Um momento…",
@@ -385,26 +385,6 @@ export const gatherings: Catalog = {
   "photos.prevPhotoAriaLabel": "Foto anterior",
   "photos.nextPhotoAriaLabel": "Foto seguinte",
 
-  // ── Create-gathering wizard + host guide ──────────────────────────────────
-  // createGathering.data.ts — step pills
-  "create.pill.type": "Tipo",
-  "create.pill.datePlace": "Data e local",
-  "create.pill.repeats": "Repetições",
-  "create.pill.capacity": "Capacidade",
-  "create.pill.review": "Revisão",
-
-  // createGathering.data.ts — sidebar tips (per step)
-  "create.tip.type":
-    "Escolhe primeiro o tipo, depois o formato. O formato define um tamanho sensato para o convívio e faz-te uma ou duas perguntas que só ele levanta.",
-  "create.tip.datePlace":
-    "O bairro aparece no anúncio. A morada completa só é partilhada com quem confirmou presença.",
-  "create.tip.repeats":
-    "Um convívio semanal ou mensal fixo cria uma verdadeira comunidade fiel. Cada data continua a ser o seu próprio convívio: quem participa confirma presença, e podes editar ou cancelar uma data sem mexer nas restantes.",
-  "create.tip.capacity":
-    "Sê honesto/a sobre acessibilidade. As pessoas participantes planeiam-se com base nisso. Marca só o que consegues confirmar genuinamente.",
-  "create.tip.review":
-    "Depois de publicares, ainda podes editar o anúncio. Não podes reduzir a capacidade abaixo do número de confirmações já existentes.",
-
   // ── gatheringCatalog.ts: famílias, formatos e as perguntas do formato ───
   // O único vocabulário com que um convívio se descreve. As chaves são
   // VALORES GUARDADOS (`events.event_type`, `events.gathering_family`), por
@@ -569,14 +549,38 @@ export const gatherings: Catalog = {
     "Quanto tempo dura o filme, o set ou o espetáculo.",
 
   "catalog.goodToKnow.title": "Bom saber",
-  "catalog.goodToKnow.bring": "Traz: {value}",
   "catalog.goodToKnow.adultsOnly": "Só maiores de 18",
   "catalog.goodToKnow.soberFriendly": "Bom para quem não bebe",
-  "catalog.goodToKnow.terrain": "Terreno: {value}",
   "catalog.goodToKnow.beginnerFriendly": "Bom para quem começa",
   "catalog.goodToKnow.runtime": "Dura cerca de {minutes} min",
 
-  // TypeStep.tsx / FormatPicker.tsx: escolher família e formato
+  // gatheringExtras.ts: etiquetas dos temas, avisos de conteúdo, fecho das
+  // confirmações e tipo de custo. Os valores guardados ficam em kebab-case.
+  "extras.theme.transLed": "Liderado por pessoas trans",
+  "extras.theme.sober": "Sem álcool",
+  "extras.theme.adultsOnly": "18+",
+  "extras.theme.beginnersWelcome": "Para quem está a começar",
+  "extras.theme.portuguesePractice": "Praticar português",
+  "extras.theme.newcomersToLisbon": "Para quem chegou a Lisboa",
+  "extras.theme.familyFriendly": "Para famílias",
+  "extras.theme.sapphic": "Sáfico",
+  "extras.contentNote.sexualContent": "Conteúdo sexual",
+  "extras.contentNote.violence": "Violência",
+  "extras.contentNote.transphobiaDiscussion": "Conversa sobre transfobia",
+  "extras.contentNote.flashingLights": "Luzes intermitentes",
+  "extras.contentNote.loudSound": "Som alto",
+  "extras.contentNote.alcoholPresent": "Há álcool",
+  "extras.rsvpCutoff.atStart": "Quando começar",
+  "extras.rsvpCutoff.untilEnd": "Quando acabar",
+  "extras.rsvpCutoff.oneHourBefore": "1 hora antes",
+  "extras.rsvpCutoff.dayBefore": "Um dia antes",
+  "extras.rsvpCutoff.threeDaysBefore": "3 dias antes",
+  "extras.costKind.free": "Gratuito",
+  "extras.costKind.payWhatYouCan": "Paga o que puderes",
+  "extras.costKind.fixed": "Preço fixo",
+
+  // ── Create-gathering wizard + host guide ──────────────────────────────────
+  // steps/FormatPicker.tsx: escolher família e formato
   "create.step1.searchLabel": "Procurar em todos os formatos",
   "create.step1.searchPlaceholder": "Piquenique, karaoke, clube de leitura",
   "create.step1.searchResultsLabel": "Formatos correspondentes",
@@ -589,22 +593,14 @@ export const gatherings: Catalog = {
   "create.step1.otherRequired":
     "Escreve o que é o teu convívio, em poucas palavras.",
 
-  // CapacityStep.tsx: as perguntas da família e os dois valores que definiu
+  // steps/WhatChapter.tsx, CapacityStepperField.tsx, WhoChapter.tsx: as
+  // perguntas da família e os dois valores que definiu
   "create.step3.formatDetailsLabel": "Detalhes do formato",
-  "create.step3.formatDetailsHint":
-    "Uma ou duas perguntas que este formato levanta. Podes saltar qualquer uma.",
   "create.step3.capDefaultHint":
     "{count} é o tamanho habitual para este formato. Muda à vontade.",
   "create.step3.attendeeCountLabel": "Mostrar quantas pessoas vão",
   "create.step3.attendeeCountHint":
     "A maioria dos convívios mostra a contagem. Os de cuidar e apoiar começam com ela escondida.",
-
-  // ReviewStep.tsx
-  "create.step5.typeValue": "{family}, {format}",
-  "create.step5.row.formatDetails": "Bom saber",
-
-  // createGatheringSteps.ts: a linha do requisito para um formato próprio
-  "create.gate.format": "Dar um nome ao teu formato",
 
   // BrowseFilterBar.tsx: a fila de chips de família
   "hub.browse.familyLabel": "Tipo de convívio",
@@ -629,90 +625,355 @@ export const gatherings: Catalog = {
   "create.lang.enOnly": "Só inglês",
   "create.lang.other": "Outro",
 
-  // createGathering.data.ts — accessibility options
-
-  // createGathering.data.ts — publish confirmation checklist
-  "create.confirm.codeOfCare":
-    "Este convívio segue o Código de Cuidado da QueerPulse.",
-  "create.confirm.accessibility":
-    "As informações de acessibilidade que forneci são exatas, tanto quanto sei.",
-
-  // CreateGatheringPage.tsx
+  // CreateGatheringPage.tsx / CreateGatheringSuccess.tsx
   "create.eyebrow": "Publica o teu convívio",
   "create.title": "Cria o teu <em>convívio.</em>",
-  "create.lead":
-    "Preenche os detalhes abaixo e o teu convívio fica visível de imediato no quadro de convívios da QueerPulse.",
   "create.toast.publishError":
     "Não foi possível publicar o teu convívio. Tenta novamente.",
   "create.toast.published": "O teu convívio está no ar",
   "create.success.title": "O teu convívio <em>está no ar.</em>",
-  "create.success.body":
-    "Já está visível no quadro de convívios da QueerPulse. As pessoas podem vê-lo e confirmar presença. Cada nova pessoa inscrita aparece na lista de convidados do teu convívio.",
   "create.success.accessLabel":
     "Acessibilidade mostrada às pessoas participantes",
   "create.success.viewCta": "Ver no quadro",
   "create.success.eventCta": "Ver a página do teu convívio",
   "create.nav.cancel": "Cancelar",
-  "create.nav.back": "Voltar",
   "create.nav.leaveConfirm":
     "Tens um convívio por publicar aqui. Queres sair sem o guardar?",
   "create.nav.publish": "Publicar convívio",
   "create.nav.continue": "Continuar",
 
-  // StepRequirement.tsx — a linha de obrigatório/opcional debaixo do título de
-  // cada etapa, e a lista do que ainda falta por cima do botão Continuar.
-  "create.stepBadge.required":
-    "Etapa obrigatória. Tens de preencher isto antes de continuares.",
-  "create.stepBadge.optional":
-    "Etapa opcional. Podes continuar sem alterares nada aqui.",
-  "create.gate.blockedTitle": "Para continuares, ainda tens de:",
-  "create.gate.blockedTitlePublish": "Antes de publicares, ainda tens de:",
-  "create.gate.readyOptional":
-    "Nada é obrigatório nesta etapa. Continua quando quiseres.",
-  "create.gate.ready":
-    "Já está tudo o que é obrigatório nesta etapa. Continua quando quiseres.",
-  "create.gate.readyPublish":
-    "Já está tudo o que é obrigatório. Podes publicar agora.",
-  "create.gate.itemDone": "Feito:",
-  "create.gate.itemTodo": "Ainda falta:",
-  "create.gate.jumpHint": "Ir para este campo.",
-  "create.gate.type": "Escolhe um tipo e um formato",
-  "create.gate.title": "Dar um nome ao teu convívio",
-  "create.gate.date": "Escolher uma data e hora de início no futuro",
-  "create.gate.joinLink":
-    "Corrigir o link de acesso. Tem de começar por http:// ou https://",
-  "create.gate.recurrence":
-    "Terminar a repetição com um número de datas, ou uma data de fim depois do início",
-  "create.gate.confirm.codeOfCare":
-    "Confirmar que este convívio segue o Código de Cuidado",
-  "create.gate.confirm.accessibility":
-    "Confirmar que a tua informação de acessibilidade está correta",
+  // ── Create-gathering v2: five chapters, live preview, publish rail ────────
+  // CreateGatheringPage.tsx / CreateGatheringFields.tsx: the page lead, the rail, field chrome
+  "create.v2.lead":
+    "Cinco capítulos curtos. O cartão à direita preenche-se à medida que avanças, para veres exatamente o que aparece no quadro.",
+  "create.v2.rail.label": "Pré-visualização e publicação",
+  "create.v2.field.optional": "opcional",
 
-  "create.sidebar.tipLabel": "Dica para esta etapa",
-  "create.sidebar.afterTitle": "O que acontece depois de publicares",
-  "create.sidebar.afterBody":
-    "O teu convívio aparece no quadro de imediato. As confirmações de presença chegam à tua caixa de entrada da QueerPulse. As moradas completas só são partilhadas com quem confirmou presença. Podes editar ou cancelar a qualquer momento até 48 horas antes.",
+  // DraftResumeStrip.tsx / useCreateGatheringDraft.ts: saving and resuming a draft
+  "create.v2.saved.saving": "A guardar…",
+  "create.v2.saved.label": "Guardado · {age}",
+  "create.v2.draft.age.justNow": "agora mesmo",
+  "create.v2.draft.age.minutes_one": "{count} min",
+  "create.v2.draft.age.minutes_other": "{count} min",
+  "create.v2.draft.age.hours_one": "{count} h",
+  "create.v2.draft.age.hours_other": "{count} h",
+  "create.v2.draft.age.days_one": "{count} dia",
+  "create.v2.draft.age.days_other": "{count} dias",
+  "create.v2.draft.resumeTitle": "Retomar o rascunho?",
+  "create.v2.draft.resumeSub": "{label} · {age}",
+  "create.v2.draft.untitled": "Rascunho sem título",
+  "create.v2.draft.resume": "Retomar",
+  "create.v2.draft.startFresh": "Começar de novo",
+  "create.v2.toast.draftResumed": "Rascunho retomado",
 
-  // CreateGatheringSteps.tsx — step 1: type
-  "create.step1.title": "Que tipo de <em>convívio?</em>",
-  "create.step1.sub":
-    "Escolhe o tipo e depois o formato. Isso define alguns valores sensatos que podes na mesma mudar.",
+  // usePublishGathering.ts: a co-host invite that did not go out after publishing
+  "create.v2.toast.cohostInviteFailed_one":
+    "O teu convívio está no ar, mas 1 convite de coanfitrião não foi enviado. Podes voltar a convidar na página de gestão.",
+  "create.v2.toast.cohostInviteFailed_other":
+    "O teu convívio está no ar, mas {count} convites de coanfitrião não foram enviados. Podes voltar a convidar na página de gestão.",
+
+  // CreateGatheringChapter.tsx / createGathering.data.ts: the five chapter heads
+  "create.v2.chapter.what.title": "O que vais <em>organizar?</em>",
+  "create.v2.chapter.what.intro":
+    "Escolhe o formato que te sai naturalmente. Os melhores convívios são os que quem organiza gosta mesmo de fazer.",
+  "create.v2.chapter.whenWhere.title": "Quando e <em>onde?</em>",
+  "create.v2.chapter.whenWhere.intro":
+    "O bairro aparece no anúncio. A morada completa só é partilhada com quem confirmar.",
+  "create.v2.chapter.who.title": "Para quem <em>é?</em>",
+  "create.v2.chapter.who.intro":
+    "Define um limite realista. É mais fácil abrir mais lugares do que mandar pessoas embora à porta.",
+  "create.v2.chapter.access.title": "Toda a gente <em>consegue entrar?</em>",
+  "create.v2.chapter.access.intro":
+    "Marca só o que consegues confirmar. Um “não” é tão útil como um “sim”: as pessoas planeiam com ambos. “Ainda não sei” fica visível no teu convívio, para as pessoas saberem que ainda está em aberto.",
+  "create.v2.chapter.care.title": "Cuidar de quem <em>vem.</em>",
+  "create.v2.chapter.care.intro":
+    "Duas linhas que dão o tom. Aparecem na página do teu convívio, para as pessoas saberem o que esperar antes de confirmarem presença.",
+  "create.v2.chapter.open": "Abrir",
+  "create.v2.chapter.edit": "Editar",
+  "create.v2.chapter.optional": "opcional",
+  "create.v2.chapter.done": "Concluído.",
+  "create.v2.chapter.stillNeeded": "Falta: {items}",
+  "create.v2.chapter.looksGood": "Está bom",
+
+  // createGatheringChapters.ts: what Continue still needs, joined into chapter.stillNeeded
+  "create.v2.need.format": "um formato",
+  "create.v2.need.title": "um nome",
+  "create.v2.need.date": "uma data e hora de início no futuro",
+  "create.v2.need.joinLink":
+    "um link de entrada começado por http:// ou https://",
+  "create.v2.need.recurrence": "uma repetição completa",
+
+  // createGatheringChapters.ts: the one-line summary of a closed chapter
+  "create.v2.summary.what.empty": "Formato e nome",
+  "create.v2.summary.whenWhere.empty": "Data, hora e local",
+  "create.v2.summary.who.spots_one": "{count} lugar",
+  "create.v2.summary.who.spots_other": "{count} lugares",
+  "create.v2.summary.who.noCap": "Sem limite de lugares",
+  "create.v2.summary.who.cohosts_one": "+{count} coanfitrião",
+  "create.v2.summary.who.cohosts_other": "+{count} coanfitriões",
+  "create.v2.summary.access.answered":
+    "{confirmed} confirmadas · {answered} de {total} respondidas",
+  "create.v2.summary.access.empty": "Nada respondido ainda",
+  "create.v2.summary.care.houseRules": "Regras da casa",
+  "create.v2.summary.care.contentNotes_one": "{count} aviso de conteúdo",
+  "create.v2.summary.care.contentNotes_other": "{count} avisos de conteúdo",
+  "create.v2.summary.care.questions_one": "{count} pergunta ao confirmar",
+  "create.v2.summary.care.questions_other": "{count} perguntas ao confirmar",
+  "create.v2.summary.care.empty": "Opcional: regras, avisos, perguntas",
+
+  // CreateGatheringReadyPanel.tsx: the readiness checklist and the two pledges
+  "create.v2.ready.title": "Tudo pronto para <em>publicar?</em>",
+  "create.v2.ready.count": "{met} de {total}",
+  "create.v2.ready.item.format": "Escolhe um formato",
+  "create.v2.ready.item.title": "Dá nome ao convívio",
+  "create.v2.ready.item.date": "Data e hora de início no futuro",
+  "create.v2.ready.item.joinLink":
+    "O link de entrada começa por http:// ou https://",
+  "create.v2.ready.item.recurrence": "Repetição completa",
+  "create.v2.ready.item.hood": "Bairro escolhido",
+  "create.v2.ready.item.accessibility": "Acessibilidade respondida",
+  "create.v2.ready.item.cover": "Imagem de capa adicionada",
+  "create.v2.ready.optional": "(opcional)",
+  "create.v2.ready.itemDone": "Feito:",
+  "create.v2.ready.itemTodo": "Por fazer:",
+  "create.v2.ready.go": "Ir",
+  "create.v2.ready.jumpHint": "Ir para este campo.",
+  "create.v2.ready.pledgesLabel": "Antes de publicares",
+  "create.v2.ready.hintReady":
+    "Fica no quadro de imediato. Podes editar ou cancelar na página do teu convívio.",
+  "create.v2.ready.hintDetails_one": "Falta {count} detalhe",
+  "create.v2.ready.hintDetails_other": "Faltam {count} detalhes",
+  "create.v2.ready.hintConfirms_one": "{count} confirmação por marcar",
+  "create.v2.ready.hintConfirms_other": "{count} confirmações por marcar",
+  "create.v2.ready.publishing": "A publicar…",
+  // CreateGatheringReadback.tsx: the host's own answers, read back before publishing
+  "create.v2.ready.readbackTitle": "Revê as tuas respostas",
+  "create.v2.ready.accessLabel": "Acessibilidade",
+  "create.v2.ready.accessAnswer": "{question}: {answer}",
+  "create.v2.ready.accessNoteLabel": "A tua nota",
+  "create.v2.ready.accessUnanswered_one":
+    "{count} pergunta ainda por responder",
+  "create.v2.ready.accessUnanswered_other":
+    "{count} perguntas ainda por responder",
+  "create.v2.confirm.codeOfCare":
+    "Este convívio segue o Código de Cuidado da QueerPulse.",
+  "create.v2.confirm.codeOfCareLink": "Lê o Código de Cuidado",
+  "create.v2.confirm.accessibility":
+    "As respostas de acessibilidade que dei são exatas, tanto quanto sei.",
+
+  // CreateGatheringMobileBar.tsx: the sticky publish bar on small screens
+  "create.v2.mobileBar.label": "Progresso da publicação",
+  "create.v2.mobileBar.ready": "<strong>Tudo pronto para publicar</strong>",
+  "create.v2.mobileBar.progress":
+    "<strong>{met}/{total}</strong> detalhes · <strong>{checked}/{pledges}</strong> confirmadas",
+  "create.v2.mobileBar.publish": "Publicar",
+
+  // preview/*: the live card, as the board and as confirmed attendees see it
+  "create.v2.preview.eyebrow": "Como fica no quadro",
+  "create.v2.preview.titlePlaceholder": "O teu título, dito com clareza",
+  "create.v2.preview.modeLabel": "Pré-visualizar como",
+  "create.v2.preview.modeBoard": "No quadro",
+  "create.v2.preview.modeAttendees": "Quem confirma vê",
+  "create.v2.preview.cardLabel": "Pré-visualização do cartão do teu convívio",
+  "create.v2.preview.coverFamily": "{family} · a capa aparece aqui",
+  "create.v2.preview.coverEmpty": "A imagem de capa aparece aqui",
+  "create.v2.preview.formatPlaceholder": "Formato",
+  "create.v2.preview.datePlaceholder": "Data",
+  "create.v2.preview.weekdayMonth": "{weekday}, {month}",
+  "create.v2.preview.timeWithNote": "{time} {note}",
+  "create.v2.preview.dateAndTime": "{date} · {time}",
+  "create.v2.preview.venueInHood": "{venue}, {hood}",
+  "create.v2.preview.hoodPlaceholder": "Bairro",
+  "create.v2.preview.spots_one": "{count} lugar",
+  "create.v2.preview.spots_other": "{count} lugares",
+  "create.v2.preview.spotsNoWaitlist_one":
+    "{count} lugar · sem lista de espera",
+  "create.v2.preview.spotsNoWaitlist_other":
+    "{count} lugares · sem lista de espera",
+  "create.v2.preview.languageBilingual": "PT / EN",
+  "create.v2.preview.repeatTag_one": "{cadence} · {count} data",
+  "create.v2.preview.repeatTag_other": "{cadence} · {count} datas",
+  "create.v2.preview.contentNotes": "Avisos de conteúdo: {notes}",
+  "create.v2.preview.hostedBy": "Organização de <b>{names}</b>",
+  "create.v2.preview.hostYou": "Tu",
+  "create.v2.preview.payWhatYouCanAmount": "Paga o que puderes · {amount}",
+  "create.v2.preview.attendeesLabel": "Quem confirma também vê",
+  "create.v2.preview.joinLinkPlaceholder":
+    "Link de entrada (adiciona antes de começar)",
+  "create.v2.preview.addressPlaceholder": "Morada completa",
+  "create.v2.preview.rsvpsCloseAt": "As confirmações fecham {date}, às {time}",
+  "create.v2.preview.rsvpsCloseBefore": "As confirmações fecham: {cutoff}",
+  "create.v2.preview.rsvpsOpenUntilEnd":
+    "As confirmações ficam abertas até o convívio acabar",
+  "create.v2.preview.withWaitlist": "{line} · lista de espera ativa",
+  "create.v2.preview.askedOnRsvp": "Perguntado ao confirmar presença:",
+  "create.v2.preview.askedDietary": "Restrições alimentares",
+  "create.v2.preview.askedPronouns": "Pronomes",
+  "create.v2.preview.lockNote":
+    "<b>O quadro mostra o bairro.</b> A morada completa vai para quem confirmar presença.",
+
+  // steps/WhatChapter.tsx, TitleField.tsx, CoverImageField.tsx, titleSuggestions.ts: chapter 1
+  "create.v2.what.titleHint":
+    "Diz claramente o que é: “Jantar de quinta, 8 lugares” vale mais do que “Uma noite de ligação”.",
+  "create.v2.what.suggestionsLabel": "Experimenta:",
+  "create.v2.what.suggestion.atVenue": "{format} em {venue}",
+  "create.v2.what.suggestion.weekday_one":
+    "{format} de {weekday}, {count} lugar",
+  "create.v2.what.suggestion.weekday_other":
+    "{format} de {weekday}, {count} lugares",
+  "create.v2.what.suggestion.inHood": "{format} em {hood}",
+  "create.v2.what.suggestion.firstEdition": "{format}: primeira edição",
+  "create.v2.what.coverLabel": "Imagem de capa",
+  "create.v2.what.coverPlaceholder": "Adiciona uma foto de capa",
+  "create.v2.what.coverHint":
+    "Os cartões com foto destacam-se no quadro. Sem foto, o teu cartão fica na cor do teu formato.",
+  "create.v2.what.themesLabel": "Temas",
+  "create.v2.what.themesHint": "Aparecem no teu cartão. Escolhe até três.",
+  "create.v2.what.descriptionOverBudget":
+    "Os cartões no quadro mostram cerca dos primeiros {budget} caracteres. O resto continua na página do convívio.",
+
+  // steps/SameAsLastTimeStrip.tsx: chapter 2, reusing the last gathering's details
+  "create.v2.when.lastTime.title": "Igual à última vez?",
+  "create.v2.when.lastTime.use": "Usar estes",
+  "create.v2.when.lastTime.notNow": "Agora não",
+  "create.v2.when.lastTime.spots_one": "{count} lugar",
+  "create.v2.when.lastTime.spots_other": "{count} lugares",
+  "create.v2.when.lastTime.toast": "Preenchido a partir do teu último convívio",
+
+  // steps/PlaceFields.tsx: chapter 2, the address only confirmed attendees get
+  "create.v2.when.addressLabel": "Morada completa",
+  "create.v2.when.addressNote": "só partilhada com quem confirmar",
+  "create.v2.when.directionsLabel": "Como chegar",
+
+  // steps/DateNotes.tsx: chapter 2, notes on the chosen date
+  "create.v2.when.note.holiday":
+    "<strong>{name}.</strong> Feriado: as lojas fecham cedo e alguns espaços encerram. Bom para um almoço longo, mais difícil para uma noite longa.",
+  "create.v2.when.note.clash":
+    "<strong>{title}</strong> começa às {time} em {hood} nesse dia. Mesmo público, mesmo bairro: considera outra hora ou coorganizar.",
+  "create.v2.when.note.lateSunday":
+    "Domingo à noite: o último metro é por volta da 01:00, e os convívios noturnos juntam menos gente aos domingos.",
+
+  // steps/dateNotes.data.ts: fixed-date Portuguese public holidays, plus Santo António
+  "create.v2.when.holiday.newYear": "Dia de Ano Novo",
+  "create.v2.when.holiday.freedomDay": "Dia da Liberdade (25 de Abril)",
+  "create.v2.when.holiday.labourDay": "Dia do Trabalhador",
+  "create.v2.when.holiday.portugalDay": "Dia de Portugal",
+  "create.v2.when.holiday.santoAntonio": "Santo António, as festas de Lisboa",
+  "create.v2.when.holiday.assumption": "Assunção de Nossa Senhora",
+  "create.v2.when.holiday.republicDay": "Implantação da República",
+  "create.v2.when.holiday.allSaints": "Dia de Todos os Santos",
+  "create.v2.when.holiday.restoration": "Restauração da Independência",
+  "create.v2.when.holiday.immaculateConception": "Imaculada Conceição",
+  "create.v2.when.holiday.christmas": "Dia de Natal",
+
+  // steps/RepeatsFields.tsx / SeriesPreview.tsx: chapter 2, a repeating gathering
+  "create.v2.when.repeatsDescription":
+    "Um convívio fixo, semanal ou mensal. Cada data é publicada como um convívio próprio, com as suas próprias confirmações.",
+  "create.v2.when.series.empty": "Define a data acima e a série aparece aqui.",
+  "create.v2.when.series.summary":
+    "<strong>{dates}</strong> · {first}<arrow>a</arrow>{last}. Cada uma é publicada como um convívio próprio.",
+  "create.v2.when.series.listLabel": "Todas as datas da série",
+  "create.v2.when.series.dates_one": "{count} data",
+  "create.v2.when.series.dates_other": "{count} datas",
+  "create.v2.when.series.weekday.sunday_one": "{count} domingo",
+  "create.v2.when.series.weekday.sunday_other": "{count} domingos",
+  "create.v2.when.series.weekday.monday_one": "{count} segunda-feira",
+  "create.v2.when.series.weekday.monday_other": "{count} segundas-feiras",
+  "create.v2.when.series.weekday.tuesday_one": "{count} terça-feira",
+  "create.v2.when.series.weekday.tuesday_other": "{count} terças-feiras",
+  "create.v2.when.series.weekday.wednesday_one": "{count} quarta-feira",
+  "create.v2.when.series.weekday.wednesday_other": "{count} quartas-feiras",
+  "create.v2.when.series.weekday.thursday_one": "{count} quinta-feira",
+  "create.v2.when.series.weekday.thursday_other": "{count} quintas-feiras",
+  "create.v2.when.series.weekday.friday_one": "{count} sexta-feira",
+  "create.v2.when.series.weekday.friday_other": "{count} sextas-feiras",
+  "create.v2.when.series.weekday.saturday_one": "{count} sábado",
+  "create.v2.when.series.weekday.saturday_other": "{count} sábados",
+
+  // steps/WhoChapter.tsx, CapacityStepperField.tsx, CostKindField.tsx, CohostPickerField.tsx: chapter 3
+  "create.v2.who.capacityDecrease": "Menos lugares",
+  "create.v2.who.capacityIncrease": "Mais lugares",
+  "create.v2.who.costDetailLabel": "O que as pessoas devem esperar pagar",
+  "create.v2.who.costPlaceholderPayWhatYouCan":
+    "ex. 5 a 15 EUR, escala variável",
+  "create.v2.who.costPlaceholderFixed": "ex. 8 EUR à porta",
+  "create.v2.who.costHint":
+    "Nas tuas palavras. Ninguém paga pela QueerPulse; é o que as pessoas devem esperar à porta.",
+  "create.v2.who.cohostsLabel": "Coanfitriões",
+  "create.v2.who.cohostsPlaceholder": "Procura na tua rede",
+  "create.v2.who.cohostsHint":
+    "Recebem um convite para coorganizar assim que publicares.",
+  "create.v2.who.cohostsResultsLabel": "Pessoas da tua rede",
+  "create.v2.who.cohostsNoMatch": "Ninguém com esse nome na tua rede.",
+  "create.v2.who.cohostsNoConnections":
+    "As tuas ligações aparecem aqui assim que tiveres algumas.",
+  "create.v2.who.cohostsLoading": "A carregar a tua rede…",
+  "create.v2.who.cohostsLoadError": "A tua rede não carregou.",
+  "create.v2.who.cohostsPickedLabel": "Coanfitriões que escolheste",
+  "create.v2.who.cohostRemove": "Remover {name}",
+  "create.v2.who.waitlistTitle": "Lista de espera quando esgotar",
+  "create.v2.who.waitlistDescription":
+    "As pessoas ficam em fila e são avisadas assim que abre um lugar.",
+  "create.v2.who.rsvpCutoffLabel": "As confirmações fecham",
+  "create.v2.who.communityLabel": "Publicar numa comunidade",
+
+  // steps/AccessChapter.tsx: chapter 4
+  "create.v2.access.questionsLabel": "Seis perguntas",
+  "create.v2.access.answeredCount": "{answered} de {total} respondidas",
+  "create.v2.access.notesLabel": "Notas de acessibilidade",
+
+  // steps/CareChapter.tsx / careChapter.data.ts: chapter 5
+  "create.v2.care.houseRulesLabel": "Regras da casa",
+  "create.v2.care.houseRulesPlaceholder":
+    "ex. Sem telemóveis à mesa. Pergunta antes de abraçar.",
+  "create.v2.care.contentNotesLabel": "Avisos de conteúdo",
+  "create.v2.care.askOnRsvpLabel": "Perguntar ao confirmar presença",
+  "create.v2.care.question.dietary.title": "Restrições alimentares",
+  "create.v2.care.question.dietary.description": "Alergias, vegano, halal…",
+  "create.v2.care.question.pronouns.title": "Pronomes",
+  "create.v2.care.question.pronouns.description":
+    "Para que etiquetas e apresentações saiam bem.",
+  "create.v2.care.question.access.title": "Necessidades de acesso",
+  "create.v2.care.question.access.alwaysAsked":
+    "Perguntamos sempre, para ninguém ter de explicar o que precisa duas vezes.",
+  "create.v2.care.customQuestionLabel": "A tua pergunta",
+  "create.v2.care.customQuestionPlaceholder":
+    "ex. O que gostavas de cozinhar ou trazer?",
+
+  // CreateGatheringSuccess.tsx / shareKit/*: the published screen and the share kit
+  "create.v2.success.lead":
+    "Já está no quadro. As confirmações aparecem nas tuas notificações e a morada completa só vai para quem confirmar presença.",
+  "create.v2.success.leadSeries":
+    "{dateCount} datas estão no quadro. As confirmações aparecem nas tuas notificações e a morada completa só vai para quem confirmar presença.",
+  "create.v2.success.shareLabel": "Partilha o teu convívio",
+  "create.v2.success.copyLink": "Copiar link",
+  "create.v2.success.linkCopied": "Link copiado",
+  "create.v2.success.copyFallback": "Copia este link para o partilhares: {url}",
+  "create.v2.success.whatsApp": "Partilhar no WhatsApp",
+  "create.v2.success.opensInNewTab": "(abre num novo separador)",
+  "create.v2.success.storyImage": "Imagem para story",
+  "create.v2.success.storyImageBusy": "A criar a imagem",
+  "create.v2.success.storyDownloaded": "Imagem para story descarregada",
+  "create.v2.success.storyFailed":
+    "Não foi possível criar a imagem para story. Tenta outra vez.",
+  "create.v2.success.addToCalendar": "Adicionar ao calendário",
+  "create.v2.success.calendarDownloaded": "Ficheiro de calendário descarregado",
+  "create.v2.success.storySpots_one": "{count} lugar",
+  "create.v2.success.storySpots_other": "{count} lugares",
+  "create.v2.success.storyPlaceFallback": "Lisboa",
+
+  // steps/FormatPicker.tsx, TitleField.tsx, WhatChapter.tsx: capítulo 1
   "create.step1.typeRequired": "Escolhe um formato para começar.",
   "create.step1.familyRequired":
     "Escolhe um tipo de convívio para veres os formatos.",
   "create.step1.titleLabel": "Título do convívio",
   "create.step1.titlePlaceholder":
     "Um título claro e específico que diz exatamente o que é",
-  "create.step1.titleRequired":
-    "Dá um nome ao teu convívio para as pessoas saberem ao que vêm.",
   "create.step1.descLabel": "Descrição breve",
   "create.step1.descPlaceholder":
     "O que é que as pessoas vão fazer? O que devem esperar? O que torna este convívio digno de participar?",
 
-  // CreateGatheringSteps.tsx — step 2: date & place
-  "create.step2.title": "Quando e <em>onde?</em>",
-  "create.step2.sub":
-    "A localização só é partilhada com quem confirmou presença e fica fora do anúncio público. A hora de fim é opcional.",
+  // steps/ScheduleFields.tsx, PlaceFields.tsx: capítulo 2, data e local
   "create.step2.dateLabel": "Começa",
   "create.step2.dateRequired":
     "Escolhe uma data e hora de início no futuro para as pessoas se poderem organizar.",
@@ -722,17 +983,11 @@ export const gatherings: Catalog = {
   "create.step2.hoodLabel": "Bairro",
   "create.step2.hoodPlaceholder": "Seleciona…",
   "create.step2.venueLabel": "Nome do espaço",
-  "create.step2.addressLabel":
-    "Morada completa (partilhada só com quem confirmou presença)",
   "create.step2.addressPlaceholder": "Morada",
-  "create.step2.directionsLabel": "Como chegar (opcional)",
   "create.step2.directionsPlaceholder":
     "ex.: Toca a campainha da esquerda, 5 min a pé do metro do Intendente",
 
-  // RepeatsStep.tsx — step 2b: repetições (MSG-10)
-  "create.step2b.title": "Isto <em>repete-se?</em>",
-  "create.step2b.sub":
-    "Um convívio fixo que se repete todas as semanas ou todos os meses. Cada data é publicada como o seu próprio convívio, com confirmação de presença e edição independentes.",
+  // steps/RepeatsFields.tsx: capítulo 2, repetições (MSG-10)
   "create.step2b.toggle": "Este convívio repete-se",
   "create.step2b.cadenceLabel": "Com que frequência",
   "create.step2b.endTypeLabel": "Termina",
@@ -747,23 +1002,17 @@ export const gatherings: Catalog = {
   "create.repeats.cadence.biweekly": "A cada 2 semanas",
   "create.repeats.cadence.monthly": "Mensal",
 
-  // CreateGatheringSteps.tsx — step 3: capacity
-  "create.step3.title": "Quem e <em>quantas pessoas?</em>",
-  "create.step3.sub":
-    "Define um limite realista. É mais fácil abrir mais vagas do que recusar pessoas à porta.",
+  // steps/CapacityStepperField.tsx, WhoChapter.tsx, AccessChapter.tsx e
+  // EditDetailsModal.tsx: capítulos 3 e 4
   "create.step3.capLabel": "Capacidade",
   "create.step3.capPlaceholder": "Máximo de participantes",
   "create.step3.langLabel": "Idioma",
-  "create.step3.accessLabel": "Acessibilidade: o que podes confirmar?",
-  "create.step3.accessHint":
-    "Marca só o que consegues confirmar genuinamente. As pessoas participantes vão contar com esta informação.",
-  "create.step3.notesLabel": "Notas de acessibilidade (opcional)",
   "create.step3.notesPlaceholder":
     "Mais alguma coisa que as pessoas devam saber: degraus, estacionamento, nível de som…",
   "create.step3.communityLabel": "Publicar numa comunidade (opcional)",
-  "create.step3.communityNone": "Nenhuma (encontro público)",
+  "create.step3.communityNone": "Nenhuma (convívio público)",
 
-  // AudienceScopeField.tsx — partilhado pelo assistente de criação (passo 3)
+  // AudienceScopeField.tsx: partilhado pelo assistente de criação (capítulo 3)
   // e pelo modal de edição do convívio.
   "audienceScope.label": "Quem pode ver este convívio?",
   "audienceScope.hint":
@@ -781,37 +1030,6 @@ export const gatherings: Catalog = {
     "Só membros da comunidade onde estás a publicar.",
   "audienceScope.inviteOnly.label": "Só por convite",
   "audienceScope.inviteOnly.helper": "Só as pessoas que convidares.",
-
-  // CreateGatheringSteps.tsx — step 4: pricing
-
-  // CreateGatheringSteps.tsx — step 5: review
-  "create.step5.title": "Revê e <em>publica.</em>",
-  "create.step5.sub":
-    "Confirma os detalhes antes de o teu convívio ficar visível.",
-  "create.step5.accessEmpty":
-    "Ainda sem informação. Adiciona o que consegues confirmar",
-  "create.step5.dateTimeValue": "{date} às {time}",
-  "create.step5.locationValue": "{venue}, {hood}",
-  "create.step5.capacityValue": "{cap} pessoas · {lang}",
-  "create.step5.row.type": "Tipo",
-  "create.step5.row.title": "Título",
-  "create.step5.row.dateTime": "Data e hora",
-  "create.step5.row.location": "Localização",
-  "create.step5.row.capacity": "Capacidade",
-  "create.step5.row.audience": "Quem pode ver",
-  "create.step5.row.accessibility": "Acessibilidade",
-  "create.step5.row.repeats": "Repetições",
-  "create.step5.repeatsOff": "Não, só desta vez",
-  "create.step5.repeatsUntilCount": "{occurrences} datas",
-  "create.step5.repeatsUntilDate": "até {date}",
-  "create.step5.confirmHeading": "Antes de publicares",
-  "create.step5.confirmIntro":
-    "Marca cada caixa para confirmar. O botão <strong>Publicar convívio</strong> fica desativado até todas estarem marcadas.",
-  "create.step5.allSet": "Tudo pronto. Já podes publicar.",
-  "create.step5.progress_one":
-    "<num>{checkedCount}</num> de {total} confirmadas. Marca a última caixa para publicar.",
-  "create.step5.progress_other":
-    "<num>{checkedCount}</num> de {total} confirmadas. Marca as <remaining>{count}</remaining> caixas restantes para publicar.",
 
   // hostPage.data.ts — type cards (step 1)
   "host.typeCard.supperClub.body":
@@ -997,8 +1215,8 @@ export const gatherings: Catalog = {
   "manage.linkCopyFailedToast":
     "Não conseguimos aceder à área de transferência. Copia o link a partir do cartão de partilha.",
 
-  // ── Páginas protótipo: coming-soon em modo live (só demo, sem encontro real) ──
-  "prototypeComingSoon.browseCta": "Explorar encontros",
+  // ── Páginas protótipo: coming-soon em modo live (só demo, sem convívio real) ──
+  "prototypeComingSoon.browseCta": "Explorar convívios",
 
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Vão",
@@ -1093,6 +1311,11 @@ export const gatherings: Catalog = {
   "manage.editModal.title": "Atualiza o teu convívio",
   "manage.editModal.sub":
     "As alterações ficam logo visíveis na página pública. As pessoas são avisadas de mudanças de data ou local.",
+  "manage.editModal.section.gathering": "O convívio",
+  "manage.editModal.section.whenWhere": "Quando e onde",
+  "manage.editModal.section.audience": "Para quem é",
+  "manage.editModal.section.care": "Cuidar de quem vem",
+  "manage.editModal.section.rsvp": "Confirmações",
   "manage.editModal.fieldTitle": "Título",
   "manage.editModal.fieldDateTime": "Data e hora",
   "manage.editModal.fieldEndAt": "Fim (opcional)",
@@ -1116,7 +1339,7 @@ export const gatherings: Catalog = {
   "manage.seriesScope.eyebrow": "Convívio recorrente",
   "manage.seriesScope.edit.title": "Aplicar esta <em>alteração</em> a…",
   "manage.seriesScope.edit.sub":
-    "Este convívio repete-se. Escolhe se a tua alteração se aplica só a esta data ou a todas as datas seguintes.",
+    "Este convívio repete-se. Escolhe se a tua alteração se aplica só a esta data ou a todas as datas seguintes. Cada data futura recebe o título, a descrição, o local, o público, o formato, os cuidados e as definições de confirmações desta data, no lugar do que tinha. A capa, o custo e a comunidade só mudam se os mudaste aqui.",
   "manage.seriesScope.edit.thisCta": "Só a esta data",
   "manage.seriesScope.edit.futureCta": "A esta e a todas as datas futuras",
   "manage.seriesScope.cancel.title": "Cancelar <em>que datas?</em>",
@@ -1174,7 +1397,7 @@ export const gatherings: Catalog = {
   "manage.inlineEdit.saveCta": "Guardar",
 
   // ── Venue picker (VenuePicker) — used by the manage venue modal and the
-  //    create-gathering wizard's DatePlaceStep ──────────────────────────────
+  //    create-gathering wizard's place fields (steps/PlaceFields.tsx) ──────
   "venuePicker.searchPlaceholder": "Pesquisar no diretório local",
   "venuePicker.noResults": "Sem correspondências. Tenta outra pesquisa.",
   "venuePicker.enterManually": "Não encontras? Escreve tu",
@@ -1292,7 +1515,7 @@ export const gatherings: Catalog = {
   "hub.host.title": "Estás a <em>organizar</em> algo?",
   "hub.host.body":
     "Um jantar, uma leitura, um protesto, uma festa: seja o que for que organizes, ajudamos a que te encontrem.",
-  "hub.host.cta": "Organiza um encontro",
+  "hub.host.cta": "Organiza um convívio",
   "hub.ways.heading": "Formas de te juntares",
   "hub.empty.title": "Ainda nada no calendário.",
   "hub.empty.body":
@@ -1324,16 +1547,6 @@ export const gatherings: Catalog = {
   "performerNudge.dismissCta": "Agora não",
   // ── LOC-18: quanto custa um convívio (só apresentação, sem pagamentos) ────
   "create.step3.costLabel": "Quanto custa",
-  "create.step3.costHint":
-    "Diz por palavras tuas. Ninguém paga através da QueerPulse, por isso o que escreveres aqui é o que as pessoas devem esperar à porta.",
-  "create.step3.costPlaceholder":
-    "Gratuito, paga o que puderes, escala de 5 a 15 EUR…",
-  "create.step5.row.cost": "Custo",
-  "create.step5.costFree": "Gratuito",
-  "create.step5.accessAnswer": "{question}: {answer}",
-  "create.step5.accessUnanswered_one": "1 pergunta ainda por responder",
-  "create.step5.accessUnanswered_other":
-    "{count} perguntas ainda por responder",
   "events.freeTag": "Gratuito",
 
   // ── LOC-03: a porta ───────────────────────────────────────────────────────
@@ -1442,6 +1655,7 @@ export const gatherings: Catalog = {
   "manage.attendees.needs.guests_other": "Traz {count} acompanhantes",
   "manage.attendees.needs.accessLabel": "Acessibilidade:",
   "manage.attendees.needs.dietaryLabel": "Comida:",
+  "manage.attendees.needs.customAnswerLabel": "Resposta à tua pergunta:",
   "manage.attendees.needs.withheld":
     "Esta pessoa preferiu manter as respostas privadas",
 
@@ -1557,11 +1771,15 @@ export const gatherings: Catalog = {
 
   // PRD-181 / PRD-183
   "gathering.cancelledBanner":
-    "Este encontro foi cancelado. Não acontece nada nesta data.",
+    "Este convívio foi cancelado. Não acontece nada nesta data.",
   "gathering.endedBanner":
-    "Este encontro já aconteceu. As confirmações estão fechadas.",
-  "gathering.reportCta": "Denunciar este encontro",
-  "gathering.reportAriaLabel": "Denunciar o encontro {title}",
+    "Este convívio já aconteceu. As confirmações estão fechadas.",
+  // O fecho das confirmações escolhido por quem organiza já passou
+  // (GatheringRsvpPanels.tsx, GatheringHeroActions.tsx).
+  "gathering.rsvpClosedBanner":
+    "As confirmações para este convívio já fecharam. Podes na mesma falar com quem organiza.",
+  "gathering.reportCta": "Denunciar este convívio",
+  "gathering.reportAriaLabel": "Denunciar o convívio {title}",
 
   // PRD-188
   "rsvpControl.maybeCta": "Talvez",
@@ -1579,13 +1797,27 @@ export const gatherings: Catalog = {
   "rsvpControl.yourDetailsCta": "Os teus detalhes",
 
   // PRD-181 / PRD-183
-  "rsvpControl.cancelledTitle": "Este encontro foi <em>cancelado</em>",
+  "rsvpControl.cancelledTitle": "Este convívio foi <em>cancelado</em>",
   "rsvpControl.cancelledNote": "Quem organiza cancelou-o.",
   "rsvpControl.cancelledAttendingNote":
     "Quem organiza cancelou-o, por isso o teu lugar deixou de existir. Não há mais nada a fazer.",
-  "rsvpControl.endedTitle": "Este encontro <em>terminou</em>",
+  "rsvpControl.endedTitle": "Este convívio <em>terminou</em>",
   "rsvpControl.endedNote": "Já aconteceu.",
   "rsvpControl.endedAttendingNote": "Esperamos que tenha corrido bem.",
+
+  // Fecho das confirmações (rsvpCutoff.ts, rsvpErrors.ts, GatheringRsvpPanels.tsx).
+  // {relative} vem do Intl.RelativeTimeFormat, só nas últimas 24 horas. {date}
+  // é dia + mês abreviado e {time} a hora, ambos no fuso do convívio.
+  "rsvpControl.closesIn": "As confirmações fecham {relative}",
+  "rsvpControl.closesOn": "As confirmações fecham a {date}, às {time}",
+  "rsvpControl.closedForOthersOn":
+    "As confirmações fecharam para as outras pessoas a {date}, às {time}",
+  "rsvpControl.rsvpClosedTitle": "As confirmações <em>fecharam</em>",
+  "rsvpControl.rsvpClosedNote":
+    "Quem organiza deixou de aceitar confirmações a {date}, às {time}.",
+  "rsvpControl.maybeClosedNote":
+    "As confirmações fecharam, por isso ficas em talvez.",
+  "rsvpControl.closedToast": "As confirmações para este convívio já fecharam.",
 
   // PRD-187
   "rsvpDetails.eyebrow": "A tua presença",
@@ -1596,11 +1828,20 @@ export const gatherings: Catalog = {
   "rsvpDetails.guestOption_other": "Eu e mais {count}",
   "rsvpDetails.guestsHint":
     "Os lugares contam por pessoa, por isso isto é quantos lugares quem organiza põe à mesa.",
+  "rsvpDetails.guestsClosedHint":
+    "As confirmações já fecharam. Ainda podes levar menos pessoas do que disseste a quem organiza.",
+  "rsvpDetails.guestsClosedNoneHint":
+    "As confirmações já fecharam, por isso já não dá para acrescentar pessoas.",
   "rsvpDetails.accessLabel": "Necessidades de acesso",
   "rsvpDetails.accessPlaceholder":
     "Entrada sem degraus, um lugar perto da porta, um canto sossegado…",
   "rsvpDetails.dietaryLabel": "Comida e bebida",
   "rsvpDetails.dietaryPlaceholder": "Vegan, sem álcool, uma alergia…",
+  // As perguntas que quem organiza ligou (GatheringRsvpDetailsQuestions.tsx).
+  "rsvpDetails.pronounsLabel": "Pronomes",
+  "rsvpDetails.pronounsPlaceholder": "ela/dela, elu/delu…",
+  "rsvpDetails.customQuestionHint": "Esta pergunta é de quem organiza.",
+  "rsvpDetails.customAnswerPlaceholder": "A tua resposta",
   "rsvpDetails.whoSeesLabel": "Quem pode ver isto",
   "rsvpDetails.visibility.everyone": "Toda a gente que vai",
   "rsvpDetails.visibility.connections": "As minhas ligações",
@@ -1619,58 +1860,65 @@ export const gatherings: Catalog = {
   "create.step2.joinLinkHint":
     "Partilhado com quem vai, nunca na página pública. Podes adicioná-lo mais tarde.",
   "create.step2.joinLinkInvalid":
-    "Isto não parece um link. Tem de começar por https://",
+    "Isto não parece um link. Tem de começar por http:// ou https://",
 
   // PRD-184
   "calendar.loadMore": "Ver mais",
   "calendar.loadingMore": "A carregar…",
 
   // PRD-190
-  "manage.overview.duplicateCta": "Repetir este encontro",
+  "manage.overview.duplicateCta": "Repetir este convívio",
   "manage.attendees.exportingCta": "A exportar…",
   "manage.attendees.exportDemoToast":
     "Na demonstração não há uma lista real para exportar.",
   "manage.attendees.exportFailedToast":
     "A exportação falhou. Tenta outra vez daqui a pouco.",
 
-  // ── Barra de anfitriã na página pública do encontro (GatheringHostBar) ─────
-  // Quem organiza ficava na página do próprio encontro sem nada para o gerir.
-  // Cancelar mantém o encontro no quadro e avisa toda a gente; eliminar
+  // ── Barra de anfitriã na página pública do convívio (GatheringHostBar) ─────
+  // Quem organiza ficava na página do próprio convívio sem nada para o gerir.
+  // Cancelar mantém o convívio no quadro e avisa toda a gente; eliminar
   // remove-o e não avisa ninguém, por isso o texto tem de deixar isso claro.
-  "hostBar.label": "O teu encontro",
+  "hostBar.label": "O teu convívio",
   "hostBar.editCta": "Editar detalhes",
   "hostBar.manageCta": "Gerir",
-  "hostBar.cancelCta": "Cancelar encontro",
-  "hostBar.deleteCta": "Eliminar encontro",
+  "hostBar.cancelCta": "Cancelar convívio",
+  "hostBar.deleteCta": "Eliminar convívio",
   "hostBar.cancelTitle": "Cancelar {title}?",
   "hostBar.cancelBody_one":
     "Fica no quadro marcado como cancelado, e {count} pessoa com lugar é avisada.",
   "hostBar.cancelBody_other":
     "Fica no quadro marcado como cancelado, e {count} pessoas com lugar são avisadas.",
-  "hostBar.cancelConfirmCta": "Cancelar o encontro",
+  "hostBar.cancelConfirmCta": "Cancelar o convívio",
   "hostBar.cancelKeepCta": "Manter de pé",
   "hostBar.deleteTitle": "Eliminar {title}?",
   "hostBar.deleteBody":
-    "Isto remove o encontro e as inscrições, as fotografias e os avisos dele, para sempre. Ninguém é notificado e não há como voltar atrás. Para avisares quem se inscreveu, cancela-o.",
+    "Isto remove o convívio e as inscrições, as fotografias e os avisos dele, para sempre. Ninguém é notificado e não há como voltar atrás. Para avisares quem se inscreveu, cancela-o.",
   "hostBar.deleteConfirmCta": "Eliminar para sempre",
   "hostBar.deleteKeepCta": "Manter",
   "hostBar.deletedToast": "{title} foi eliminado.",
   "hostBar.deleteBlockedToast":
-    "Já há pessoas inscritas neste encontro. Cancela-o primeiro para que sejam avisadas, e só depois o elimines.",
+    "Já há pessoas inscritas neste convívio. Cancela-o primeiro para que sejam avisadas, e só depois o elimines.",
   "hostBar.deleteHostOnlyToast":
-    "Só a pessoa anfitriã pode eliminar um encontro. Como pessoa coanfitriã podes cancelá-lo.",
-  "hostBar.deleteGoneToast": "Esse encontro já não existe.",
+    "Só a pessoa anfitriã pode eliminar um convívio. Como pessoa coanfitriã podes cancelá-lo.",
+  "hostBar.deleteGoneToast": "Esse convívio já não existe.",
   "hostBar.deleteFailedToast":
-    "Não foi possível eliminar o encontro. Tenta outra vez daqui a pouco.",
+    "Não foi possível eliminar o convívio. Tenta outra vez daqui a pouco.",
+
+  // ── Painel "Cuidar de quem vem" (GatheringTakingCare.tsx) ─────────────────
+  // Regras da casa, avisos de conteúdo e temas, como quem organiza os definiu.
+  "detail.care.title": "Cuidar de quem vem",
+  "detail.care.houseRulesLabel": "Regras da casa",
+  "detail.care.contentNotesLabel": "Avisos de conteúdo",
+  "detail.care.themesLabel": "Temas",
 
   // ── Apresentação do horário (gatheringSchedule.ts) ─────────────────────────
-  // Um encontro pode passar da meia-noite ou durar vários dias, por isso um
+  // Um convívio pode passar da meia-noite ou durar vários dias, por isso um
   // único formatador constrói as datas e as horas para todos os ecrãs.
   "common.dateRange": "{start} a {end}",
   "common.timeRange": "{start} – {end}",
   "common.nextDayNote": "(no dia seguinte)",
 
-  // ── Os quatro campos de horário do assistente (DatePlaceStep, ReviewStep) ──
+  // ── Os quatro campos de horário do assistente (steps/ScheduleFields.tsx) ──
   // "Começa" e "Acaba" dão nome a um PAR de campos, por isso cada um dos quatro
   // controlos tem a sua própria etiqueta escondida. O "(opcional)" que estava na
   // etiqueta visível passou para a hora de fim, porque a data de fim já vem
@@ -1684,6 +1932,4 @@ export const gatherings: Catalog = {
     "Isto acaba antes de começar. Passa a data ou a hora de fim para depois.",
   "create.step2.spanTooLong":
     "Um convívio pode durar até {days} dias. Aproxima o fim do início.",
-  // A linha de revisão, quando o horário passa para a manhã seguinte.
-  "create.step5.dateTimeNote": "{when} {note}",
 };

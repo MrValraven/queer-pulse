@@ -66,14 +66,14 @@ export function MessagesPage() {
     markThreadUnread,
   } = useMessagesController();
 
-  // Is the site chrome actually off screen right now? `desktopChromeless` below
-  // only takes effect above the mobile breakpoint (AppChrome gates it on the
-  // same named query), so the panel's replacement chrome has to answer to THAT
-  // width, not to the controller's `isMobile`. The two are deliberately
-  // different cutoffs: the controller splits one pane from two at 768, while
-  // the app bar and the bottom tab bar swap in at 860. Gating the brand row and
-  // the account footer on the controller's value would render them alongside
-  // the mobile app bar for the 92px between the two.
+  // Which way back does the panel carry right now? `chromeless` below hides the
+  // top bar everywhere, but the bottom tab bar only gives way above the mobile
+  // breakpoint (AppChrome gates the Navbar on the same named query). So the
+  // panel's replacement chrome answers to THAT width, and the controller's
+  // `isMobile` is the wrong signal: the controller splits one pane from two at
+  // 768, while the bottom tab bar swaps in at 860. Gated on the controller's
+  // value, the 92px between the two would get the account footer stacked above
+  // the tab bar and no back chevron.
   const isDesktopChrome = !useMediaQuery(mediaMax("mobile"));
 
   // The message being forwarded (its recipient is picked in NewMessageModal's
@@ -99,7 +99,7 @@ export function MessagesPage() {
   }, [isMobile, view]);
 
   return (
-    <AppShell fullHeight desktopChromeless>
+    <AppShell fullHeight chromeless>
       <MentionNamesProvider>
         <div className={styles.app}>
           {showList && (

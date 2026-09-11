@@ -21,7 +21,6 @@ export const connect: Catalog = {
   "page.lead":
     "Your main profile doesn't do followers. You connect with people once you've met them: at a gathering, through someone, or because they vouched for you. Quality over count.",
   "page.inviteCta": "Invite a friend",
-  "page.vouchCta": "Vouch for someone",
   "page.note":
     "<b>No follower counts here, on purpose.</b> Looking to follow a persona's updates without connecting first? That's what personas are for. Connections are a two-way thing: they unlock messaging and tagged updates.",
   "page.loadMoreLoading": "Loading…",
@@ -234,7 +233,7 @@ export const connect: Catalog = {
   // written in.
   "suggested.heading": "People you might know",
   "suggested.blurb":
-    "Each one shares a room, a connection or an interest with you.",
+    "Each one shares a community, a connection or an interest with you.",
   "suggested.reasonCommunity": "You are both in {name}",
   "suggested.reasonMutuals_one": "{count} mutual connection",
   "suggested.reasonMutuals_other": "{count} mutual connections",
