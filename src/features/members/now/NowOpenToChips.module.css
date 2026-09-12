@@ -1,0 +1,117 @@
+/* The "Open to" row on the Now card's dark ground.
+ *
+ * Colours come from the `--now-*` steps defined on `.card` in
+ * NowCard.module.css. This file also carries the count pill inside a chip,
+ * the dashed outline for a door nobody has used, and the swap nudge under
+ * it, all owner-only. */
+.openRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+/* One chip plus, when it applies, the nudge line under it. Its own column so
+   the nudge wraps under its own chip rather than the whole row. */
+.chipGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 100%;
+}
+.openLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--now-ink-muted);
+  margin-right: 2px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: 1;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  background: var(--now-fill);
+  color: var(--now-ink);
+}
+/* A member's own words, set apart from the shared vocabulary the presets use. */
+.chipCustom {
+  font-style: italic;
+}
+.chipAction {
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 500;
+  cursor: pointer;
+  border-color: var(--now-edge);
+  transition:
+    border-color 160ms var(--ease),
+    background 160ms var(--ease);
+}
+.chipCustom.chipAction {
+  font-style: italic;
+}
+@media (hover: hover) {
+  .chipAction:hover {
+    /* A dedicated step, not --now-edge: the resting border now sits at
+       --now-edge too (the 1.4.11 fix), so reusing it here would make hover a
+       no-op. Must stay above --now-edge's 0.38 so hovering still reads as a
+       stronger edge. If the card's --now-* contract grows a --now-edge-strong
+       step, prefer that over this local value. */
+    border-color: rgba(var(--cream-rgb), 0.55);
+    background: var(--now-fill-strong);
+  }
+}
+.chipAction:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* A door with no hellos in the current window: an owner-only signal, so this
+   only ever lands on the inert `<span>` chip, never the visitor's button. A
+   dashed cream edge over no fill reads as "unused" without implying an error. */
+.chipUnused {
+  border-style: dashed;
+  border-color: var(--now-edge);
+  background: transparent;
+}
+
+/* The count pill: a slightly stronger cream fill than the chip itself so the
+   number reads as a distinct sub-part, not just more chip text. */
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--now-fill-strong);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* The swap nudge under a chip with no hellos in the window. Never bold or
+   coral: it's a gentle suggestion, not an alert. */
+.nudge {
+  margin: 0;
+  max-width: 22em;
+  font-size: var(--text-12);
+  line-height: 1.4;
+  color: var(--now-ink-muted);
+}
+
+/* Comfortable hit height on touch pointers, matching the 44px floor the
+   profile page already holds its chips to. */
+@media (pointer: coarse) {
+  .chip {
+    min-height: 44px;
+  }
+}

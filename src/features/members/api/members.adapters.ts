@@ -206,6 +206,7 @@ export function profileToMember(dto: ProfileDTO): Member {
     verified: dto.verified ?? false,
     since: joinYear(dto.joinedAt),
     now: dto.now ?? "",
+    respondsWithin: dto.respondsWithin ?? null,
     notHereFor: dto.notHereFor,
     openTo: toOpenToEntries(dto.openTo),
     identities: dto.identities ?? [],

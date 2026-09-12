@@ -11,10 +11,6 @@ import {
   ImageProcessingError,
   validateTypeAndSize,
 } from "../../members/api/uploadProcessing";
-import {
-  PASTED_IMAGE_URL_PROBLEM_KEYS,
-  pastedImageUrlProblem,
-} from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
 
 interface ListingPhotoFieldProps {
@@ -40,16 +36,21 @@ interface ListingPhotoFieldProps {
 }
 
 /**
- * One wizard photo slot: an `ImageSlot` preview with an Upload/Change button, a
- * Remove button, and an "or paste an image URL" input. Upload goes through the
- * shared `useUploadImage` pipeline (owned at wizard level, passed in as
- * `uploadPhoto`); a pasted URL is applied live. Both call `onResolved(persist,
- * preview)` — `persist` lands in `draft.photos`, `preview` in `photoPreviews`.
+ * One wizard photo slot: an `ImageSlot` preview with an Upload/Change button
+ * and a Remove button. Uploading a file is the only way to fill a slot: the
+ * file goes through the shared `useUploadImage` pipeline (owned at wizard
+ * level, passed in as `uploadPhoto`), which stores it and hands back a storage
+ * key. It then calls `onResolved(persist, preview)` — `persist` lands in
+ * `draft.photos`, `preview` in `photoPreviews`.
+ *
+ * There is deliberately no "paste an image URL" input. A listing photo is
+ * always a file the owner uploaded, so it cannot break later when someone
+ * else's site moves or deletes the image, and it goes through the same
+ * format/size/reframe pipeline as every other upload.
  *
  * Every way a photo can be refused is said on the slot itself: a file in a
- * format or size the upload pipeline refuses, a pasted link the backend's
- * `@IsImageReference` would refuse, a pasted link that does not load an image,
- * and a save the server rejected because of this slot.
+ * format or size the upload pipeline refuses, an upload that failed, and a save
+ * the server rejected because of this slot.
  */
 export function ListingPhotoField({
   tint,
@@ -66,7 +67,6 @@ export function ListingPhotoField({
   const { t } = useTranslation();
   const errorId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [urlText, setUrlText] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
@@ -83,7 +83,6 @@ export function ListingPhotoField({
     setUploading(true);
     try {
       const { key, previewUrl } = await uploadPhoto(file, { crop });
-      setUrlText("");
       onResolved(key, previewUrl);
     } catch (uploadFailure) {
       setError(describeUploadFailure(uploadFailure));
@@ -119,36 +118,7 @@ export function ListingPhotoField({
     await uploadAndApply(fileToUpload, crop);
   }
 
-  function applyUrl(nextUrl: string) {
-    setUrlText(nextUrl);
-    const trimmed = nextUrl.trim();
-    if (!trimmed) {
-      setError(null);
-      onRemove();
-      return;
-    }
-    const problem = pastedImageUrlProblem(trimmed);
-    if (problem) {
-      setError(t(PASTED_IMAGE_URL_PROBLEM_KEYS[problem]));
-      return;
-    }
-    setError(null);
-    onResolved(trimmed, trimmed);
-  }
-
-  /** A pasted link that passed the checks but did not load an image (a web
-   *  page, a 404) is dropped so it cannot be saved as a broken photo. A photo
-   *  that was already on the listing is left alone: one failed load may just
-   *  be the network. */
-  function handleLoadError() {
-    const pastedUrl = urlText.trim();
-    if (!pastedUrl || pastedUrl !== displayValue) return;
-    setError(t("marketing:listBusiness.step4.photo.urlDidNotLoad"));
-    onRemove();
-  }
-
   function clear() {
-    setUrlText("");
     setError(null);
     onRemove();
   }
@@ -173,12 +143,12 @@ export function ListingPhotoField({
         srcSize={wide ? 1280 : 640}
         src={displayValue || undefined}
         placeholder={placeholder}
-        onLoadError={handleLoadError}
       />
       <div className={styles.photoActions}>
         <button
           type="button"
           className={styles.photoBtn}
+          aria-describedby={visibleError ? errorId : undefined}
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
         >
@@ -200,17 +170,6 @@ export function ListingPhotoField({
           </button>
         )}
       </div>
-      <input
-        type="url"
-        className={styles.photoUrlInput}
-        aria-label={t("marketing:listBusiness.step4.photo.urlPlaceholder")}
-        aria-invalid={visibleError ? true : undefined}
-        aria-describedby={visibleError ? errorId : undefined}
-        placeholder={t("marketing:listBusiness.step4.photo.urlPlaceholder")}
-        value={urlText}
-        onChange={(event) => applyUrl(event.target.value)}
-        disabled={uploading}
-      />
       {visibleError && (
         <p id={errorId} className={styles.photoError} role="alert">
           {visibleError}

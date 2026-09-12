@@ -52,6 +52,7 @@ export const currentUser: Member = {
     "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
   bio: "test bio description for logged in user (tiago)",
   now: "Building things for the web, writing poetry, and organising events for the queer and non-monogamy communities in Lisbon.",
+  respondsWithin: "fewDays",
   openTo: [
     { kind: "preset", id: "collaborating" },
     { kind: "custom", label: "Community events" },

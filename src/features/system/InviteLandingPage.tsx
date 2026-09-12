@@ -125,7 +125,7 @@ export function InviteLandingPage() {
     // backend a signup it will bounce.
     if (!is18) return;
     if (!demoMode) {
-      signIn("/onboarding", invite!.code, true);
+      signIn("/onboarding", { invite: invite!.code, ageAttested: true });
       return;
     }
     // Demo has no real Google and no network. This used to call the invite

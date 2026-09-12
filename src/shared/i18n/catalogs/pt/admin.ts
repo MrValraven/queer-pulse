@@ -772,6 +772,22 @@ export const admin: Catalog = {
   "members.banEvasion.note":
     "Isto é um sinal para verificar. Lê primeiro a conta removida e depois avalia este membro pelo que fez de facto aqui.",
 
+  // ── Endereço de acesso (gaveta de membro) ────────────────────────────────
+  "members.signInEmail.title": "Endereço de acesso",
+  "members.signInEmail.hint":
+    "O endereço com que este membro entra na conta, mostrado em parte. Revelá-lo por inteiro fica registado na auditoria com o teu nome.",
+  "members.signInEmail.noneHeld":
+    "A QueerPulse não guarda nenhum endereço de acesso para este membro.",
+  "members.signInEmail.revealCta": "Revelar",
+  "members.signInEmail.revealing": "A revelar…",
+  "members.signInEmail.retryCta": "Tentar outra vez",
+  "members.signInEmail.recordedNote": "Registado na auditoria com o teu nome.",
+  "members.signInEmail.copyCta": "Copiar",
+  "members.signInEmail.copied": "Endereço copiado.",
+  "members.signInEmail.copyFailed": "Não foi possível copiar o endereço.",
+  "members.signInEmail.errorBody":
+    "O endereço não carregou, por isso nada foi revelado. Isto não quer dizer que não exista endereço guardado. Tenta outra vez.",
+
   "members.sealed.sectionTitle": "Identidade e privacidade",
   "members.sealed.title": "Nenhum nome anterior é guardado",
   "members.sealed.body":
@@ -2526,6 +2542,52 @@ export const admin: Catalog = {
   "governance.audit.actionType.staff_role_granted": "Papel de equipa concedido",
   "governance.audit.actionType.staff_role_revoked": "Papel de equipa revogado",
   "governance.audit.actionType.evidence_cited": "Prova citada",
+  "governance.audit.actionType.member_sign_in_email_viewed":
+    "Endereço de acesso revelado",
+
+  // ── Ações de auditoria escritas fora da fila de denúncias ─────────────────
+  "governance.audit.actionType.sign_in_identity_relinked":
+    "Identidade de acesso reassociada",
+  "governance.audit.actionType.sign_in_identity_candidate_dismissed":
+    "Identidade de acesso recusada",
+  "governance.audit.actionType.account_reactivated_by_admin": "Conta reativada",
+  "governance.audit.actionType.email_suppression_lifted":
+    "Bloqueio de endereço levantado",
+  "governance.audit.actionType.member_verified": "Membro verificado",
+  "governance.audit.actionType.invite_quota_changed":
+    "Quota de convites alterada",
+  "governance.audit.actionType.invite_revoked": "Convite revogado",
+  "governance.audit.actionType.content_restored": "Conteúdo restaurado",
+  "governance.audit.actionType.restriction_lifted": "Restrição levantada",
+  "governance.audit.actionType.ban_pending_ratification":
+    "Banimento retido para ratificação",
+  "governance.audit.actionType.ban_declined": "Banimento recusado",
+  "governance.audit.actionType.ban_hold_expired":
+    "Retenção do banimento expirou",
+  "governance.audit.actionType.housing_listing_approved":
+    "Anúncio de habitação aprovado",
+  "governance.audit.actionType.housing_listing_changes_requested":
+    "Alterações pedidas ao anúncio de habitação",
+  "governance.audit.actionType.housing_listing_rejected":
+    "Anúncio de habitação rejeitado",
+  "governance.audit.actionType.housing_listing_taken_down":
+    "Anúncio de habitação retirado",
+  "governance.audit.actionType.community_ban_applied":
+    "Banimento da comunidade aplicado",
+  "governance.audit.actionType.community_ban_lifted":
+    "Banimento da comunidade levantado",
+  "governance.audit.actionType.community_member_removed":
+    "Membro removido da comunidade",
+  "governance.audit.actionType.thread_locked":
+    "Tópico fechado a novas respostas",
+  "governance.audit.actionType.thread_unlocked": "Tópico reaberto",
+  "governance.audit.actionType.thread_pinned": "Tópico fixado",
+  "governance.audit.actionType.thread_unpinned": "Tópico desafixado",
+  "governance.audit.actionType.thread_official_set":
+    "Tópico marcado como oficial",
+  "governance.audit.actionType.thread_official_cleared":
+    "Tópico já não é oficial",
+  "governance.audit.actionType.thread_deleted": "Tópico eliminado",
   "governance.audit.range.today": "Hoje",
   "governance.audit.range.week": "Esta semana",
   "governance.audit.range.quarter": "Este trimestre",

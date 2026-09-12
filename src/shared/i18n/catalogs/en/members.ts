@@ -307,6 +307,48 @@ export const members: Catalog = {
   "content.now.title": "Now",
   "content.now.subtitle": "What {first} is in the middle of",
   "content.now.openLabel": "Open to",
+  "content.now.eyebrow": "Right now",
+  "content.now.updated": "Updated {relative}",
+  "content.now.update": "Update",
+  // The Update button's accessible name. Deliberately NOT reusing
+  // `content.now.edit.title` (the modal heading): the name must CONTAIN the
+  // visible label to satisfy WCAG 2.5.3 Label in Name, and PT's heading
+  // ("Atualiza o teu Agora") does not contain PT's label ("Atualizar"), so a
+  // voice-control user saying the word on screen could not activate it. Every
+  // translation of this key must OPEN with this namespace's own
+  // `content.now.update` value, verbatim.
+  "content.now.updateAction": "Update your Now",
+  "content.now.stats.hellos_one": "hello",
+  "content.now.stats.hellos_other": "hellos",
+  "content.now.stats.replies_one": "reply",
+  "content.now.stats.replies_other": "replies",
+  "content.now.stats.window": "{days} days",
+  "content.now.visibility.open": "Everyone",
+  "content.now.visibility.network": "Your network",
+  "content.now.visibility.private": "Only you",
+  "content.now.history.label": "Before this",
+  "content.now.history.count_one": "{count} status",
+  "content.now.history.count_other": "{count} statuses",
+  "content.now.history.ran": "{started} to {ended}",
+  "content.now.chip.helloCount_one": "{count} hello",
+  "content.now.chip.helloCount_other": "{count} hellos",
+  "content.now.chip.staleMonths": "No hellos in {months} months, swap it?",
+  "content.now.chip.staleNever": "No hellos yet, swap it?",
+  "content.now.explainer":
+    "These are the doors people can tap to reach you, with the reason already filled in.",
+  "content.now.respondsWithin.day": "Usually replies within a day",
+  "content.now.respondsWithin.fewDays": "Usually replies within a few days",
+  "content.now.respondsWithin.week": "Usually replies within a week or so",
+  "content.now.edit.title": "Update your Now",
+  "content.now.edit.statusLabel": "What you are in the middle of",
+  "content.now.edit.statusPlaceholder":
+    "A sentence or two about what has your attention",
+  "content.now.edit.notHereForLabel": "Not here for",
+  "content.now.edit.notHereForPlaceholder":
+    "Anything you would rather not be asked",
+  "content.now.edit.openToLabel": "Open to",
+  "content.now.edit.save": "Save",
+  "content.now.edit.cancel": "Cancel",
   "content.work.title": "Selected work",
   "content.work.subtitle": "A few things, handpicked",
   "content.work.viewLink": "View",

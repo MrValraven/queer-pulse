@@ -8,6 +8,12 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "12 Sep 2026": {
+      highlights: [
+        "your-now-card-shows-what-your-openness-does",
+        "listing-photos-come-from-your-uploads",
+      ],
+    },
     "11 Sep 2026": {
       highlights: [
         "create-a-gathering-in-five-short-chapters",

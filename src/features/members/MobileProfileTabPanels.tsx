@@ -6,12 +6,12 @@ import {
   ActivitySection,
   BoardSection,
   GroupsSection,
-  NowSection,
   RelatedSection,
   SelectedWorkSection,
   ShapingsSection,
   SkillsSection,
 } from "./ProfileContentSections";
+import { NowSection } from "./now/NowSection";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { PlacesSection } from "./PlacesSection";
 import { MobileProfileTabEmptyState } from "./MobileProfileTabEmptyState";

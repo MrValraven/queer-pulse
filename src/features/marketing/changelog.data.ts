@@ -66,6 +66,45 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "your-now-card-shows-what-your-openness-does",
+        category: "feature",
+        date: "12 Sep 2026",
+        ...entryKeys("your-now-card-shows-what-your-openness-does"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
+      },
+      {
+        id: "the-app-opens-on-your-feed-not-a-blank-screen",
+        category: "fix",
+        date: "12 Sep 2026",
+        ...entryKeys("the-app-opens-on-your-feed-not-a-blank-screen"),
+      },
+      {
+        id: "admins-see-which-address-you-sign-in-with",
+        category: "improvement",
+        date: "12 Sep 2026",
+        ...entryKeys("admins-see-which-address-you-sign-in-with"),
+      },
+      {
+        id: "sign-in-with-a-different-google-account",
+        category: "fix",
+        date: "12 Sep 2026",
+        ...entryKeys("sign-in-with-a-different-google-account"),
+      },
+      {
+        id: "listing-photos-come-from-your-uploads",
+        category: "improvement",
+        date: "12 Sep 2026",
+        ...entryKeys("listing-photos-come-from-your-uploads"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "accepting-a-connection-request-works-again",
         category: "fix",
         date: "11 Sep 2026",

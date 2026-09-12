@@ -610,7 +610,7 @@
    pre-token-system convention still used by ProfilePage.module.css's own
    card borders), which never flips. On the dark --paper card surface it's
    dark-hairline-on-dark-card and disappears. Same fix, same value as
-   ProfilePage.module.css's `.nowCard`/`.ask`/etc. dark override. */
+   ProfilePage.module.css's `.ask`/`.skillCard`/etc. dark override. */
 :global([data-theme="dark"]) .statRow,
 :global([data-theme="dark"]) .statColumn + .statColumn {
   border-color: rgba(var(--cream-rgb), 0.1);

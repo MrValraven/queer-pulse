@@ -61,6 +61,13 @@ export type AuditTone = AdminTone;
  * Coarse action category used by the audit-log action filter — a stable
  * canonical id, never displayed or translated directly. Resolve its label via
  * `t(`admin:governance.audit.actionType.${type}`)`.
+ *
+ * DELIBERATELY NOT the full set of `mod_audit_logs.action` values. Roughly two
+ * dozen more exist (housing decisions, community sanctions, thread actions, the
+ * identity levers), all of them labeled in the catalogs and all of them
+ * renderable by the feed; this union is only what the filter DROPDOWN offers,
+ * which is why it stays short enough to scan. `mapLiveRow` looks the label up
+ * by raw action string and falls back to a plum tone for anything outside here.
  */
 export type AuditType =
   | "dismiss"
@@ -78,7 +85,12 @@ export type AuditType =
   | "role_changed"
   | "staff_role_granted"
   | "staff_role_revoked"
-  | "evidence_cited";
+  | "evidence_cited"
+  // A read, unlike every other member of this union. It earns a place in the
+  // audit feed because the thing read was a real person's sign-in address; it
+  // is deliberately absent from the member's own moderation timeline, which is
+  // the case for and against THEM.
+  | "member_sign_in_email_viewed";
 
 /**
  * Time-bucket used by the audit-log range filter — a stable canonical id,
@@ -106,6 +118,9 @@ export const ACTION_TONE: Record<AuditType, AdminTone> = {
   staff_role_granted: "violet",
   staff_role_revoked: "amber",
   evidence_cited: "violet",
+  // Ghost-quiet on purpose: a recorded look is not an enforcement action, and
+  // toning it like one would have it read as something done to the member.
+  member_sign_in_email_viewed: "ghost",
 };
 
 export interface AuditEntry {
@@ -145,6 +160,7 @@ export const AUDIT_ACTION_IDS: AuditType[] = [
   "staff_role_granted",
   "staff_role_revoked",
   "evidence_cited",
+  "member_sign_in_email_viewed",
 ];
 
 export const AUDIT_RANGE_IDS: AuditRange[] = ["today", "week", "quarter"];

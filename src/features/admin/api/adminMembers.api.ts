@@ -113,6 +113,11 @@ export interface AdminMemberDetailDTO {
    *  see `staffRoles.registry.ts`. Raw strings here; the adapter narrows to
    *  known `StaffRoleId`s. */
   staffRoles: string[];
+  /** The masked form of the address this member signs in with, e.g.
+   *  `a\u2022\u2022\u2022a@gmail.com`. `null` when the backend could not read
+   *  the auth row at all. The whole value never travels on this read: see
+   *  `getAdminMemberSignInEmail`. */
+  signInEmailMasked: string | null;
 }
 
 /** Paginated member grid for the admin panel, optionally filtered. Admin-only — 403s otherwise. */
@@ -138,6 +143,26 @@ export const getAdminFlagged = () =>
 /** One member's detail view, including their moderation timeline and vouch graph. */
 export const getAdminMember = (memberId: string) =>
   apiGet<AdminMemberDetailDTO>(`/admin/members/${memberId}`);
+
+/** One member's sign-in address in full. Mirrors the backend
+ *  `MemberSignInEmailDTO`. */
+export interface MemberSignInEmailDTO {
+  memberId: string;
+  slug: string;
+  email: string;
+}
+
+/**
+ * Reveal one member's full sign-in address. Admin-only.
+ *
+ * A SEPARATE READ FROM THE DRAWER'S DETAIL, on purpose. The backend writes a
+ * `mod_audit_logs` row naming the admin who asked, so this must never be
+ * prefetched, folded into the detail query, or fired on drawer open: every call
+ * is a recorded look at a real person's third-party identity, and a call nobody
+ * asked for would put an admin's name against a read they never made.
+ */
+export const getAdminMemberSignInEmail = (memberId: string) =>
+  apiGet<MemberSignInEmailDTO>(`/admin/members/${memberId}/sign-in-email`);
 
 /** The shape returned after a role change, so the roster/drawer can patch in
  *  place. Mirrors the backend `AdminMemberRoleDTO`. */

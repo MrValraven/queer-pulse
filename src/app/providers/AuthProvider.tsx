@@ -12,6 +12,7 @@ import {
   postLogout,
   redirectToGoogle,
   type AuthUser,
+  type GoogleRedirectOptions,
 } from "../../features/auth/api/auth.api";
 import {
   currentUser,
@@ -148,14 +149,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const signIn = useCallback(
-    (redirectTo?: string, invite?: string, ageAttested?: boolean) => {
+    (redirectTo?: string, options?: GoogleRedirectOptions) => {
       if (demoMode) {
         setLoggedIn(true);
         setPreparing(true);
         return;
       }
       markSignInPending();
-      redirectToGoogle(redirectTo, invite, ageAttested);
+      redirectToGoogle(redirectTo, options);
     },
     [demoMode],
   );

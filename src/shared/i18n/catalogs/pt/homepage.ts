@@ -678,6 +678,7 @@ export const homepage: Catalog = {
   "subprofiles.proofEverywhereNote":
     "Um único perfil tende a tornar-se na versão de ti mais fácil de explicar. O resto fica de fora.",
   "subprofiles.everywhereElse": "Em qualquer outro lado",
+  "subprofiles.onQueerPulse": "Na QueerPulse",
   "subprofiles.proofCrampRoles":
     "artista de drag · ceramista · crítica musical",
   "subprofiles.pickerLabel": "Escolhe um lado para pré-visualizar",

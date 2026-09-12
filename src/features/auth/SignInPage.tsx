@@ -213,7 +213,16 @@ export function SignInPage() {
       setProbeError(probe);
       return;
     }
-    signIn(dest); // redirects the page away
+    // `switchAccount` on a retry: we only land back here with an `?error=` after
+    // an attempt that Google itself completed, and with a single signed-in
+    // Google session it skips the chooser and re-sends that same identity — so
+    // without this the second click reproduces the first failure exactly and
+    // the member is stuck (no QueerPulse-side sign-out clears Google's choice).
+    // Asking for the chooser gives them "Use another account", which is the way
+    // out of every account-shaped rejection above (wrong account for an
+    // addressed invite, address already on another account, no/unverified email
+    // on this one), and costs a returning member one extra tap.
+    signIn(dest, { switchAccount: authError !== null }); // redirects the page away
   }
 
   // A fresh probe failure describes what just happened, so it wins over the

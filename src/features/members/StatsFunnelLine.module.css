@@ -1,0 +1,49 @@
+/* The hellos/replies funnel line.
+ *
+ * This sits on the CREAM page (the Now section renders it above the plum
+ * card; the board section, its other caller, does the same), never on a
+ * plum ground, so it does NOT read the `--now-*` steps defined in
+ * NowCard.module.css: use --ink-60 / rgba(var(--ink-rgb), …) here. */
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0 0 var(--gap-sm);
+  font-family: var(--sans);
+  font-size: var(--text-caption);
+}
+
+/* Each figure (count + label) is its own inline-flex group so a wrap never
+   splits a number from its label onto separate lines. */
+.figure {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.count {
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.label {
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+/* Decorative: word order already carries the funnel direction, so the icon
+   adds nothing a screen reader needs and stays out of the accessibility tree. */
+.arrow {
+  flex: none;
+  color: var(--ink-40);
+}
+
+.dot {
+  color: var(--ink-40);
+}
+
+.window {
+  color: var(--ink-60);
+}

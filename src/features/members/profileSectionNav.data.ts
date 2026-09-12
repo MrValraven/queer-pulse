@@ -33,9 +33,13 @@ export const PROFILE_SECTION_NAV_ITEMS: readonly ProfileSectionNavItem[] = [
   {
     id: "now",
     labelKey: "members:profile.nav.openTo",
-    // Mirrors NowSection's own empty-gate (ProfileContentSections.tsx).
+    // Mirrors NowSection's own empty-gate (now/NowSection.tsx), including the
+    // boundary note: that card is the only place `notHereFor` renders now, so
+    // a member with just a note has a real section for the rail to jump to.
     isVisible: (profile) =>
-      Boolean(profile.now?.trim()) || profile.openTo.length > 0,
+      Boolean(profile.now?.trim()) ||
+      profile.openTo.length > 0 ||
+      Boolean(profile.notHereFor?.trim()),
   },
   {
     id: "selected-work",

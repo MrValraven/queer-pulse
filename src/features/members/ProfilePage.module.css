@@ -450,74 +450,26 @@ div.backBar {
   font-size: var(--text-14);
   color: var(--ink-60);
 }
-
-.nowCard {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  padding: 30px 32px;
+/* Trailing content in a section head (today: the Now section's visibility
+   badge), pushed to the far end of the row. `margin-left: auto` rather than
+   `justify-content: space-between` on `.sectionHead` deliberately: the head has
+   two children already (title, subtitle), and spacing them apart would fling
+   the subtitle to the right edge of EVERY other section. This spaces the row
+   out only when an aside is actually passed. */
+.sectionAside {
+  margin-left: auto;
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-.nowDot {
-  margin-top: 12px;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex: none;
-}
-.nowBody p {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-24);
-  line-height: 1.42;
-  color: var(--text-strong);
-  letter-spacing: -0.01em;
-}
-.nowOpen {
-  margin-top: 18px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
   align-items: center;
+  /* The head is baseline-aligned for its title and subtitle. A pill baselined
+     against a 32px serif heading hangs low, so align it to the row's centre. */
+  align-self: center;
 }
-.nowOpen .lbl {
-  font-size: var(--text-11-5);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  font-weight: 600;
-}
-.openChip {
-  font-size: var(--text-13);
-  font-weight: 500;
-  color: var(--accent-ink);
-  background: rgba(var(--accent-rgb), 0.1);
-  border-radius: var(--radius-8);
-  padding: 5px 11px;
-}
-.openChipAction {
-  font: inherit;
-  cursor: pointer;
-  border: 1px solid rgba(var(--line-rgb), 0.5);
-  background: rgba(var(--accent-rgb), 0.1);
-  color: inherit;
-  transition:
-    border-color 160ms var(--ease),
-    background 160ms var(--ease);
-}
-@media (hover: hover) {
-  .openChipAction:hover {
-    border-color: var(--accent);
-    background: rgba(var(--accent-rgb), 0.18);
+@media (--md) {
+  /* On a phone the head wraps, and an aside pinned right on its own line reads
+     as detached from the title it qualifies. Let it sit at the start. */
+  .sectionAside {
+    margin-left: 0;
   }
-}
-.openChipAction:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
 }
 
 .lookingForHelper {
@@ -859,7 +811,6 @@ button.socialChip {
   }
 }
 
-:global([data-theme="dark"]) .nowCard,
 :global([data-theme="dark"]) .ask,
 :global([data-theme="dark"]) .shapingCard,
 :global([data-theme="dark"]) .relCard,
@@ -1049,7 +1000,6 @@ button.socialChip {
    min-height take effect on the otherwise-inline chips. */
 @media (pointer: coarse) {
   .heroRecogChip,
-  .openChipAction,
   .socialChip {
     display: inline-flex;
     align-items: center;

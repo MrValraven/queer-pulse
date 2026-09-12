@@ -14,6 +14,7 @@ import { AdminMemberDrawerHeader } from "./AdminMemberDrawerHeader";
 import { AdminMemberDrawerActions } from "./AdminMemberDrawerActions";
 import { AdminMemberDrawerSkeleton } from "./AdminMemberDrawerSkeleton";
 import { AdminMemberBanEvasionCheck } from "./AdminMemberBanEvasionCheck";
+import { AdminMemberSignInEmail } from "./AdminMemberSignInEmail";
 import { AdminMemberSuspensionControl } from "./AdminMemberSuspensionControl";
 import { AdminMemberAccountRecovery } from "./AdminMemberAccountRecovery";
 import { MessageModal, RestrictModal } from "./AdminMemberModals";
@@ -68,6 +69,13 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           <AdminMemberDrawerSkeleton />
         ) : (
           <>
+            {/* "Which account is this" reads before "what can they do", so the
+                sign-in address opens the drawer. The full value is fetched only
+                when asked for: see AdminMemberSignInEmail. */}
+            <AdminMemberSignInEmail
+              member={member}
+              maskedEmail={detail.signInEmailMasked}
+            />
             <RolesAndAccessSection member={member} detail={detail} />
             <AdminMemberSuspensionControl member={member} detail={detail} />
             {/* Renders nothing unless this member has a locked-out sign-in

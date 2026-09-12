@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { DisplayModeContext } from "./displayModeContext";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { safeStorage } from "../../shared/storage/safeStorage";
@@ -77,7 +83,14 @@ export function DisplayModeProvider({ children }: { children: ReactNode }) {
   const isInstalled =
     matchesStandaloneQuery || iosStandalone || stickyInstalled;
 
-  useEffect(() => {
+  // `useLayoutEffect`, not `useEffect`: index.html's installed-app boot cover
+  // hides #root for as long as this attribute is missing, and an ordinary
+  // effect lets the browser paint a frame first — so the installed app gets at
+  // least one painted frame with the whole app hidden. On a phone that frame is
+  // enough to leave the first screenful with no paint record (correct layout,
+  // nothing drawn, fixed only by scrolling). Stamping during the commit means
+  // no painted frame ever has the cover up.
+  useLayoutEffect(() => {
     document.documentElement.dataset.displayMode = isInstalled
       ? "standalone"
       : "browser";

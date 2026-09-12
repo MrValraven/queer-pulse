@@ -9,6 +9,7 @@ import { validateProfile } from "../../../shared/api/validation";
 import type { VouchRelationship } from "../vouchMember.data";
 import type { DirectoryFacetCounts } from "../memberDirectoryFilter.data";
 import type { CommunityType } from "../../homepage/data/types";
+import type { RespondsWithin } from "./nowInsights.api";
 export type Visibility = "open" | "network" | "private";
 
 /** One "open to" entry on the wire: a shared preset id, or the member's words. */
@@ -225,6 +226,8 @@ export interface ProfileDTO extends MemberCardDTO {
   /** What the member is explicitly not here for, shown alongside `now`.
    *  Ungated, same as `now`. */
   notHereFor?: string;
+  /** How fast this member answers hellos, or absent when too few to say. */
+  respondsWithin?: RespondsWithin | null;
   /** Barter-board posts by this member ("On the board"). */
   board?: BoardItemDTO[];
   /** Skills/services offered on the barter board ("Skills & offerings"). */

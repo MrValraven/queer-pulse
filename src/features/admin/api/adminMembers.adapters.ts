@@ -532,5 +532,6 @@ export function detailDtoToMember(
       nodes: detailDto.graph.nodes.map(graphNodeDtoToNode),
     },
     staffRoles: detailDto.staffRoles.filter(isStaffRoleId),
+    signInEmailMasked: detailDto.signInEmailMasked,
   };
 }

@@ -1,0 +1,35 @@
+/* The owner's "Update your Now" sheet.
+ *
+ * A full-screen modal must portal to the body, so this surface is NOT inside
+ * `.card` and cannot read the `--now-*` steps from NowCard.module.css: it
+ * styles as a normal light sheet, relying on FormField's own control styling. */
+
+.textarea {
+  min-height: 96px;
+}
+
+/* A failed save's message, matching the save-error copy `ProfileEditBar`
+   shows (`.saveError` there): same colour/weight, no field of its own to
+   attach to since a save can fail before it PATCHes anything. */
+.error {
+  margin: 0 0 14px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--accent-text);
+}
+
+/* Plain section label above `OpenToEditor` (not a FormField): the editor's own
+   preset group and add-input already carry their own accessible labelling,
+   and FormField's `.field input/textarea/select` descendant selectors would
+   otherwise reach into the editor's compact chip-row input and blow it up to
+   full width (see FormField.module.css's GOTCHA comment). Mirrors the plain
+   label `ProfileNowField` already uses above the same editor. */
+.openToLabel {
+  margin: 0 0 7px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}

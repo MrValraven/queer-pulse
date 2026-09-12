@@ -17,7 +17,6 @@ import { levelNameKeyFor } from "./levelLadder.data";
 import { curatorSlugForName } from "../cinema/cinemaCurator.data";
 import { HeroVouchRow } from "./HeroVouchRow";
 import { ProfileBioLanguageToggle } from "./ProfileBioLanguageToggle";
-import { ProfileBoundaryNote } from "./ProfileBoundaryNote";
 import { ProfileHeroActions } from "./ProfileHeroActions";
 import { ProfileNamePronunciation } from "./ProfileNamePronunciation";
 import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
@@ -56,9 +55,11 @@ interface ProfileHeroMainProps {
  * The profile hero's main column: eyebrow/visibility, name (+ pronunciation),
  * role/pronouns/staff badge, curator link, the recognition strip (a fuller
  * self view, or a visitor's narrower view of the profile being viewed),
- * bio (with the EN/PT toggle), "here for" chips, the "works in" row, tags, the boundary note,
+ * bio (with the EN/PT toggle), "here for" chips, the "works in" row, tags,
  * social links, the CTA row (say hello / vouch / safety menu) and the vouch
- * row. Decomposed from the former monolithic `ProfileHero` in
+ * row. The "not here for" boundary note moved into the Now card
+ * (`NowBoundaryNote`), the only place it renders now. Decomposed from the
+ * former monolithic `ProfileHero` in
  * `ProfileSections.tsx`, which is now a thin composer of this component,
  * `ProfileRail` (the left column — portrait, location, trust signals, rail
  * controls, section nav) and — for a visitor viewing someone else's profile —
@@ -166,7 +167,6 @@ export function ProfileHeroMain({
           </TagRow>
         </div>
       )}
-      <ProfileBoundaryNote profile={profile} self={isSelf} />
       <SocialLinksRow
         links={profile.socials}
         self={isSelf}

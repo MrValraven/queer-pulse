@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiExternalLink } from "react-icons/fi";
-import { useMemberContact } from "../connect/useMemberContact";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -12,67 +11,8 @@ import type { RelatedMember, WorkItem } from "./data/members";
 import { SHAPING_META } from "./profileSections.data";
 import { Section } from "./ProfileSections";
 import { BoardRow } from "./BoardRow";
-import { openToLabel, reasonValue } from "./openTo.data";
 import { workLinkTarget, type WorkLink } from "./workLink.data";
 import styles from "./ProfilePage.module.css";
-
-export function NowSection({
-  profile,
-  isSelf = false,
-}: {
-  profile: MemberProfile;
-  /** Your own chips are inert — there's no one to reach out to. */
-  isSelf?: boolean;
-}) {
-  const { t } = useTranslation();
-  const { contact } = useMemberContact(profile.slug);
-  // Nothing to say and no chips to offer — an empty card reads as a bug.
-  if (!profile.now?.trim() && profile.openTo.length === 0) return null;
-  return (
-    <Section
-      id="now"
-      title={t("members:content.now.title")}
-      subtitle={t("members:content.now.subtitle", { first: profile.first })}
-    >
-      <div className={styles.nowCard}>
-        <span className={styles.nowDot} aria-hidden />
-        <div className={styles.nowBody}>
-          {profile.now?.trim() && <p>{profile.now}</p>}
-          {profile.openTo.length > 0 && (
-            <div className={styles.nowOpen}>
-              <span className="lbl">{t("members:content.now.openLabel")}</span>
-              {profile.openTo.map((entry) => {
-                const label = openToLabel(entry, t);
-                return isSelf ? (
-                  <span key={reasonValue(entry)} className={styles.openChip}>
-                    {label}
-                  </span>
-                ) : (
-                  <button
-                    key={reasonValue(entry)}
-                    type="button"
-                    className={`${styles.openChip} ${styles.openChipAction}`}
-                    onClick={() =>
-                      contact(
-                        {
-                          slug: profile.slug,
-                          name: `${profile.first} ${profile.last}`,
-                        },
-                        reasonValue(entry),
-                      )
-                    }
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-    </Section>
-  );
-}
 
 /** One work-item link rendered as a small affordance, distinctly labeled by
  *  target kind (internal ref vs. off-platform URL) — up to two of these sit

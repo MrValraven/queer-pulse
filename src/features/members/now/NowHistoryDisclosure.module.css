@@ -1,0 +1,104 @@
+/* The "Before this" disclosure inside the Now card.
+ *
+ * It sits ON the card, so its colours come from the `--now-*` steps defined on
+ * `.card` in NowCard.module.css (--now-ink, --now-ink-muted, --now-ink-faint,
+ * --now-edge, --now-fill) rather than from fresh rgba(var(--cream-rgb), …)
+ * literals. */
+
+.disclosure {
+  margin-top: 16px;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--now-ink-muted);
+  background: none;
+  border: none;
+  padding: 4px 2px;
+  cursor: pointer;
+  border-radius: var(--radius-7);
+}
+@media (hover: hover) {
+  .trigger:hover {
+    color: var(--now-ink);
+  }
+}
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chevron {
+  flex: none;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.chevronOpen {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--now-fill-strong);
+  color: var(--now-ink);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.panel {
+  margin-top: 4px;
+  /* The chevron renders inside .trigger, at var(--text-13) (react-icons sizes
+     itself to 1em of its containing font), then the trigger's own 7px gap
+     before the label: indent the panel by the icon's real size, not the
+     card's inherited 16px, so it lines up under the label. */
+  padding-left: calc(var(--text-13) + 7px);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.entryText {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--now-ink-muted);
+}
+
+.entryRange {
+  margin: 0;
+  font-size: var(--text-11-5);
+  color: var(--now-ink-faint);
+}

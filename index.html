@@ -66,8 +66,17 @@
         html:not([data-display-mode]) body {
           background: #2d1b3d;
         }
+        /* `opacity: 0`, NOT `visibility: hidden`. Both hide the flash equally,
+           but `visibility: hidden` tells the engine "this subtree has geometry
+           and nothing to paint", which on a phone leaves the first screenful
+           with no paint record at all — every offset correct, nothing drawn,
+           until a scroll forces a re-raster. The feed's cards make that worse:
+           they carry `content-visibility: auto` (FeedPage/FeedCard.module.css),
+           whose relevance check treats a hidden ancestor as "not relevant to
+           the user" and keeps the subtree skipped. An opacity of 0 keeps the
+           paint record while hiding exactly as much. */
         html:not([data-display-mode]) #root {
-          visibility: hidden;
+          opacity: 0;
         }
       }
     </style>

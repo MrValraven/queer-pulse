@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import type {
   AuthUser,
+  GoogleRedirectOptions,
   MemberRole,
   MemberStatus,
 } from "../../features/auth/api/auth.api";
@@ -54,11 +55,13 @@ export interface AuthContextValue {
    * `redirectTo` to land there after login (the in-app `navigate` that follows
    * a `signIn()` call only takes effect in demo mode, since live mode leaves the
    * SPA entirely). Pass `invite` when registering off an invite link so the
-   * backend redeems it during signup, and `ageAttested` when the member has
-   * ticked the 18+ box — the backend rejects a NEW account without it. Demo mode
-   * just flips local state and ignores all three arguments.
+   * backend redeems it during signup, `ageAttested` when the member has ticked
+   * the 18+ box (the backend rejects a NEW account without it), and
+   * `switchAccount` on a retry after a failed attempt so Google shows its
+   * account chooser instead of silently reusing the account that just bounced.
+   * Demo mode just flips local state and ignores every argument.
    */
-  signIn: (redirectTo?: string, invite?: string, ageAttested?: boolean) => void;
+  signIn: (redirectTo?: string, options?: GoogleRedirectOptions) => void;
   signOut: () => void;
   /** Called by the loader once its sequence completes, to dismiss it. */
   endPreparing: () => void;

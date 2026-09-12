@@ -16,6 +16,7 @@ import type { ActivityBand } from "../activityBand";
 import type { OpenToEntry } from "../openTo.data";
 import type { WorkLink } from "../workLink.data";
 import type { FeaturedCommunityRef } from "../profileCommunities.types";
+import type { RespondsWithin } from "../api/nowInsights.api";
 import { REAL_ENTRIES } from "./realMembers";
 
 export interface ShapingItem {
@@ -134,6 +135,9 @@ export interface Member {
    *  doesn't render and the profile shows `bio` only. */
   bioPt?: string;
   now: string;
+  /** How fast this member answers hellos, shown on the Now card. Null when
+   *  the server has too few answered requests to say. */
+  respondsWithin?: RespondsWithin | null;
   /** What the member is explicitly not here for, shown alongside `now` as a
    *  boundary note. Free text, member-authored. */
   notHereFor?: string;
@@ -254,6 +258,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2024",
     bio: "Film critic and archivist in Marvila. I write on Portuguese and Iberian cinema for Expresso, Público and DocLisboa, and I programme the cover film each week for QueerPulse Cinema. My thesis, roughly: the room where queer people lived always precedes the film about it.",
     now: "Programming the autumn season for QueerPulse Cinema and finishing an essay on the queer silences in 1960s Portuguese cinema.",
+    respondsWithin: "fewDays",
     openTo: [
       { kind: "custom", label: "Screening proposals" },
       { kind: "custom", label: "Collection ideas" },
@@ -396,6 +401,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2024",
     bio: "I design identities and editorial systems for cultural institutions, small presses and the occasional brave restaurant. Most of my work starts with a long conversation and a worse-for-wear notebook. I run a studio off the garden in Príncipe Real. The door's usually open.",
     now: "Wrapping a visual identity for a queer-run bookshop opening in Anjos this autumn, and slowly setting type for a riso zine about Lisbon's disappearing tascas.",
+    respondsWithin: "day",
     openTo: [
       { kind: "preset", id: "collaborating" },
       { kind: "preset", id: "mentoring" },
@@ -522,6 +528,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
     since: "2024",
     bio: "I build infrastructure for things that should last. Mostly backend, mostly Rust. I care a lot about systems that don't burn people out, technical or otherwise. Based in a warehouse in Marvila with too many plants.",
     now: "Building a low-cost infrastructure toolkit for queer-run nonprofits. Looking for a collaborator who knows their way around DevOps.",
+    respondsWithin: "week",
     openTo: [
       { kind: "preset", id: "mentoring" },
       { kind: "preset", id: "clientWork" },

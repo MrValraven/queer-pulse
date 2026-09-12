@@ -170,19 +170,6 @@
   color: rgba(var(--cream-rgb), 1);
 }
 
-.bounds {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  color: var(--ink-60);
-  font-size: var(--text-body-sm);
-  margin-top: 14px;
-}
-
-.boundsLabel {
-  font-weight: 600;
-}
-
 .tagsGroup {
   display: flex;
   flex-direction: column;

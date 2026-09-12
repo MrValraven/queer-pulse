@@ -1,0 +1,79 @@
+/**
+ * The sign-in address section of the admin member drawer.
+ *
+ * Mirrors `AdminMemberBanEvasionCheck.module.css`, its sibling on-demand
+ * section: quiet status lines under the section's own hint, and an error
+ * treatment loud enough that a failed lookup can never be mistaken for an
+ * absent address.
+ */
+
+.address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 10px 0 0;
+}
+
+/* Deliberately NOT monospace: STYLE-RULES bans it outside raw-text editing
+   surfaces, and `--mono`'s own comment says to reach for tabular figures on the
+   normal face instead. The weight bump is what separates the address from the
+   hint above it. `break-all` because an address is one unbreakable word to the
+   line breaker, and a long one would otherwise push the drawer sideways. */
+.addressValue {
+  font-size: var(--text-14);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+.recorded {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.status {
+  margin: 10px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+
+/*
+ * A failed reveal must never read like "no address on file". Coral rule and
+ * coral icon, the same treatment the ban-evasion check gives a failed run.
+ */
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-left: 3px solid var(--accent-ink);
+  border-radius: var(--radius-10);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.errorIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+
+.errorText {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink);
+  line-height: 1.55;
+}

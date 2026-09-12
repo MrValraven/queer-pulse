@@ -1,0 +1,184 @@
+/* The Now card.
+ *
+ * A locked-dark surface: the ground is `--plum` in BOTH themes, deliberately,
+ * because the card is the page's one dark object and flipping it would make it
+ * disappear into a dark page. `--plum` never flips, which is exactly what this
+ * wants. `--text` / `--surface` are studio-local tokens and are NOT used here.
+ *
+ * The `--now-*` custom properties below are the card's contract with its
+ * children: NowBoundaryNote, NowOpenToChips, NowHistoryDisclosure and
+ * UpdateNowModal each own a stylesheet and read these rather than writing
+ * their own rgba(var(--cream-rgb), …) steps. Change a step here and every row
+ * moves together. (`StatsFunnelLine` sits above the card on the cream page and
+ * deliberately does not read these; see its own module CSS.)
+ *
+ * Contrast, measured against --plum (#2d1b3d). Every step that carries TEXT
+ * clears 4.5:1 (WCAG 1.4.3) and every step that draws a CONTROL's only
+ * boundary clears 3:1 (WCAG 1.4.11). Do not lower one without re-measuring:
+ * --now-ink-faint was 0.44 (3.87:1, failing) and --now-edge was 0.18
+ * (1.71:1, an invisible button outline) in the first cut of this card.
+ */
+.card {
+  --now-ink: rgba(var(--cream-rgb), 0.92); /* 12.1:1 */
+  --now-ink-muted: rgba(var(--cream-rgb), 0.62); /* 6.28:1 */
+  --now-ink-faint: rgba(var(--cream-rgb), 0.52); /* 4.84:1, the AA floor */
+  --now-edge: rgba(var(--cream-rgb), 0.38); /* 3.24:1, the 1.4.11 floor */
+  --now-edge-soft: rgba(var(--cream-rgb), 0.12); /* decorative hairline only */
+  --now-fill: rgba(var(--cream-rgb), 0.08);
+  --now-fill-strong: rgba(var(--cream-rgb), 0.14);
+
+  position: relative;
+  background: var(--plum);
+  border-radius: var(--radius-card);
+  padding: 32px 40px 26px;
+  color: var(--now-ink);
+  /* Keeps the rounded corner honest against a full-bleed child. Note it also
+     CLIPS descendant paint: anything that has to escape the card (a popover, a
+     tooltip, a menu opened from a chip) must portal to the body rather than
+     rely on z-index from in here. */
+  overflow: hidden;
+}
+
+/* ── Eyebrow row: live dot, RIGHT NOW, the updated stamp, the Update button ──
+   A three-column grid, not a flex row. The stamp has to be centred on the CARD,
+   and three competing `auto` margins in a flex row split the free space between
+   them instead: the stamp landed ~68px left of centre and moved again with the
+   length of the age string and with the PT catalog. A `1fr auto 1fr` grid pins
+   the middle column to the card's centre whatever the side items measure. */
+.eyebrowRow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+/* Every item is placed EXPLICITLY. Auto-placement would drop the button into
+   column 2 whenever the stamp is absent (the owner who has never updated their
+   Now), parking it against the eyebrow instead of at the card's right edge. */
+.eyebrowGroup {
+  grid-column: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  /* --jade-light, not --jade: the pale step exists precisely for a mark on a
+     dark plum ground, and it gives the "live" dot the brightness it needs. */
+  background: var(--jade-light);
+  flex: none;
+}
+.eyebrow {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  /* Muted, matching the "Open to" label below it: the two are the same size,
+     weight, tracking and role, and putting one at full ink made the pair read
+     as a hierarchy that is not there. */
+  color: var(--now-ink-muted);
+}
+.updated {
+  grid-column: 2;
+  justify-self: center;
+  font-size: var(--text-12-5);
+  color: var(--now-ink-muted);
+}
+/* Placement only. The control itself is <Button variant="ghost-dark" size="sm">,
+   which already owns the outline contrast, the tap-target floor, the hover
+   lift and the disabled handling. */
+.updateButton {
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* ── The status itself ──────────────────────────────────────────────────────
+   The loudest thing on the card, so it has to out-set the section <h2> above
+   it (--text-32) rather than sit under it. No max-width: the card's own column
+   measures ~764px, which is already a comfortable measure at this size. */
+.status {
+  margin: 28px 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: var(--text-36);
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+  color: var(--now-ink);
+}
+
+/* ── The hairline between the status block and the doors ──────────────────── */
+.rule {
+  margin: 32px 0 22px;
+  border: 0;
+  border-top: 1px solid var(--now-edge-soft);
+}
+
+/* ── Footer: the explainer, and how fast this member replies ──────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+.explainer {
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--now-ink-faint);
+  max-width: 46ch;
+}
+.responds {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  font-size: var(--text-12-5);
+  color: var(--now-ink-muted);
+  white-space: nowrap;
+}
+.respondsDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--jade-light);
+  flex: none;
+}
+
+/* ── Phone ────────────────────────────────────────────────────────────────
+   Same breakpoint the profile page already cuts over on. The card tightens,
+   the eyebrow row drops to two columns with the stamp on its own second line
+   (a centred stamp between a label and a button has no room at 335px), and the
+   footer stacks. */
+@media (--md) {
+  .card {
+    padding: 24px 20px;
+  }
+  .eyebrowRow {
+    grid-template-columns: 1fr auto;
+    row-gap: 8px;
+  }
+  .updated {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .updateButton {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .status {
+    font-size: var(--text-26);
+    margin-top: 22px;
+  }
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .responds {
+    margin-left: 0;
+    white-space: normal;
+  }
+}

@@ -830,21 +830,14 @@ const PASTABLE_IMAGE_HOSTS = [
 /** Why a pasted image link would be refused, in the order the backend checks. */
 export type PastedImageUrlProblem = "notUrl" | "notHttps" | "hostNotAllowed";
 
-/** The inline copy for each refusal, shown on the photo slot. */
-export const PASTED_IMAGE_URL_PROBLEM_KEYS: Record<
-  PastedImageUrlProblem,
-  string
-> = {
-  notUrl: "marketing:listBusiness.step4.photo.urlInvalid",
-  notHttps: "marketing:listBusiness.step4.photo.urlNotHttps",
-  hostNotAllowed: "marketing:listBusiness.step4.photo.urlHostNotAllowed",
-};
-
 /**
  * The reason the backend would refuse `value` as a pasted image link, or
- * `null` when it would accept it. This is the value that gets PERSISTED into
- * `photos`, so it runs the same checks as `@IsImageReference`. Uploaded photos
- * persist a storage key via `useUploadImage` and never reach this guard.
+ * `null` when it would accept it. A pasted link gets PERSISTED verbatim, so
+ * this runs the same checks as `@IsImageReference`.
+ *
+ * Listing photos no longer use this: a business listing takes photos through
+ * the uploader only (see `ListingPhotoField`), which persists a storage key.
+ * The remaining caller is the magazine deck editor's `ImageUrlField`.
  */
 export function pastedImageUrlProblem(
   value: string,

@@ -7,12 +7,12 @@ import {
   ActivitySection,
   BoardSection,
   GroupsSection,
-  NowSection,
   RelatedSection,
   SelectedWorkSection,
   ShapingsSection,
   SkillsSection,
 } from "./ProfileContentSections";
+import { NowSection } from "./now/NowSection";
 import { LookingForEditor } from "./LookingForEditor";
 import { WorkEditor } from "./WorkEditor";
 import { BoardEditor } from "./BoardEditor";
@@ -25,6 +25,7 @@ export function Section({
   title,
   subtitle,
   id,
+  aside,
   children,
 }: {
   title: string;
@@ -32,6 +33,10 @@ export function Section({
   /** Anchor id for the desktop rail's section-jump nav (`ProfileSectionNav`,
    *  `profileSectionNav.data.ts`) — must match that data file's `id` exactly. */
   id?: string;
+  /** Optional trailing content for the head row, pushed to its far end: the Now
+   *  section's visibility badge is the only caller. Omitted everywhere else,
+   *  and the head lays out exactly as before when it is. */
+  aside?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -39,6 +44,7 @@ export function Section({
       <div className={styles.sectionHead}>
         <h2>{title}</h2>
         {subtitle && <span className={styles.sectionSub}>{subtitle}</span>}
+        {aside && <div className={styles.sectionAside}>{aside}</div>}
       </div>
       {children}
     </Reveal>

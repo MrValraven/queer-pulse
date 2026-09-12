@@ -663,6 +663,7 @@ export const homepage: Catalog = {
   "subprofiles.proofEverywhereNote":
     "One profile tends to become the version of you that's easiest to explain. The rest gets left out.",
   "subprofiles.everywhereElse": "Everywhere else",
+  "subprofiles.onQueerPulse": "On QueerPulse",
   "subprofiles.proofCrampRoles": "drag performer · ceramicist · music critic",
   "subprofiles.pickerLabel": "Choose a side to preview",
   "subprofiles.oneAccount": "One account",

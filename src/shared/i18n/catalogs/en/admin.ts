@@ -769,6 +769,27 @@ export const admin: Catalog = {
   "members.banEvasion.note":
     "This is a signal to check. Read the removed account first, then judge this member on what they have actually done here.",
 
+  // ── Sign-in address on one member (admin member drawer) ──────────────────
+  // The masked form rides along on the member detail, because the common
+  // question is recognition. The whole address is revealed only when asked
+  // for, and the backend records who asked. A failed reveal must never read as
+  // "no address on file".
+  "members.signInEmail.title": "Sign-in address",
+  "members.signInEmail.hint":
+    "The address this member signs in with, shown part-hidden. Revealing it in full is recorded in the audit log under your name.",
+  "members.signInEmail.noneHeld":
+    "QueerPulse holds no sign-in address for this member.",
+  "members.signInEmail.revealCta": "Reveal",
+  "members.signInEmail.revealing": "Revealing…",
+  "members.signInEmail.retryCta": "Try again",
+  "members.signInEmail.recordedNote":
+    "Recorded in the audit log under your name.",
+  "members.signInEmail.copyCta": "Copy",
+  "members.signInEmail.copied": "Address copied.",
+  "members.signInEmail.copyFailed": "Couldn't copy the address.",
+  "members.signInEmail.errorBody":
+    "The address didn't load, so nothing was revealed. This does not mean there is no address on file. Try again.",
+
   "members.sealed.sectionTitle": "Identity & privacy",
   "members.sealed.title": "No prior name is stored",
   "members.sealed.body":
@@ -2534,6 +2555,65 @@ export const admin: Catalog = {
   "governance.audit.actionType.staff_role_granted": "Staff role granted",
   "governance.audit.actionType.staff_role_revoked": "Staff role revoked",
   "governance.audit.actionType.evidence_cited": "Evidence cited",
+  // A recorded read rather than an enforcement action. The label says what
+  // happened and names no address: the row deliberately carries none.
+  "governance.audit.actionType.member_sign_in_email_viewed":
+    "Sign-in address revealed",
+
+  // ── Audit actions written outside the report queue ────────────────────────
+  // Every string below is a real `mod_audit_logs.action` some service writes,
+  // and the feed resolves its label as
+  // `admin:governance.audit.actionType.<action>`. A missing key here renders
+  // the RAW KEY on screen, so this block has to cover every writer, not just
+  // the ones in `AuditType`. That union is a different and deliberately
+  // narrower thing: the curated set offered in the action FILTER dropdown.
+  // Tone falls back to plum for anything outside it, which is decorative.
+  //
+  // Sign-in identity levers (`AdminIdentityService`).
+  "governance.audit.actionType.sign_in_identity_relinked":
+    "Sign-in identity re-linked",
+  "governance.audit.actionType.sign_in_identity_candidate_dismissed":
+    "Sign-in identity refused",
+  "governance.audit.actionType.account_reactivated_by_admin":
+    "Account reactivated",
+  "governance.audit.actionType.email_suppression_lifted":
+    "Email suppression lifted",
+  // Member and invite administration (`AdminMembersService`,
+  // `AdminInvitesService`, `AdminMemberModerationService`).
+  "governance.audit.actionType.member_verified": "Member verified",
+  "governance.audit.actionType.invite_quota_changed": "Invite quota changed",
+  "governance.audit.actionType.invite_revoked": "Invite revoked",
+  // Reversals and the ban-ratification window (`ModerationService`,
+  // `AccountEnforcementService`, `BanRatificationService`).
+  "governance.audit.actionType.content_restored": "Content restored",
+  "governance.audit.actionType.restriction_lifted": "Restriction lifted",
+  "governance.audit.actionType.ban_pending_ratification":
+    "Ban held for ratification",
+  "governance.audit.actionType.ban_declined": "Ban declined",
+  "governance.audit.actionType.ban_hold_expired": "Ban hold expired",
+  // Housing listing decisions (`HousingListingModerationService`).
+  "governance.audit.actionType.housing_listing_approved":
+    "Housing listing approved",
+  "governance.audit.actionType.housing_listing_changes_requested":
+    "Housing listing changes requested",
+  "governance.audit.actionType.housing_listing_rejected":
+    "Housing listing rejected",
+  "governance.audit.actionType.housing_listing_taken_down":
+    "Housing listing taken down",
+  // Community sanctions (`CommunityGovernanceLogService` callers).
+  "governance.audit.actionType.community_ban_applied": "Community ban applied",
+  "governance.audit.actionType.community_ban_lifted": "Community ban lifted",
+  "governance.audit.actionType.community_member_removed":
+    "Community member removed",
+  // Staff actions on a forum thread (`ForumThreadsService`).
+  "governance.audit.actionType.thread_locked": "Thread closed to replies",
+  "governance.audit.actionType.thread_unlocked": "Thread reopened",
+  "governance.audit.actionType.thread_pinned": "Thread pinned",
+  "governance.audit.actionType.thread_unpinned": "Thread unpinned",
+  "governance.audit.actionType.thread_official_set": "Thread marked official",
+  "governance.audit.actionType.thread_official_cleared":
+    "Thread no longer official",
+  "governance.audit.actionType.thread_deleted": "Thread deleted",
   "governance.audit.range.today": "Today",
   "governance.audit.range.week": "This week",
   "governance.audit.range.quarter": "This quarter",

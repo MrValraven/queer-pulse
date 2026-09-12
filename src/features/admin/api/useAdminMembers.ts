@@ -13,6 +13,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ACTIVE_MEMBER_COUNT,
   cardForFlagged,
+  demoSignInIdentity,
   detailFor,
   FLAGGED,
   MEMBERS,
@@ -31,6 +32,7 @@ import {
   citeMember,
   getAdminFlagged,
   getAdminMember,
+  getAdminMemberSignInEmail,
   getAdminMembers,
   getMemberRestriction,
   grantStaffRole,
@@ -169,6 +171,46 @@ export function useAdminMember(member: AdminMember | null) {
       }
       if (member === null) return undefined;
       return detailDtoToMember(await getAdminMember(member.id), t, fmt);
+    },
+  });
+}
+
+/**
+ * One member's full sign-in address, fetched only once an admin asks for it.
+ *
+ * `isRequested` is the whole design. The backend writes a `mod_audit_logs` row
+ * naming the admin on every call, so this query must stay disabled until the
+ * Reveal button is pressed: firing it on drawer open would put an admin's name
+ * against a read they never chose to make, and would turn browsing the roster
+ * into a trail of PII lookups. For the same reason there is no prefetch, and
+ * `staleTime: Infinity` keeps a revealed address from silently re-fetching (and
+ * re-logging) while the drawer sits open.
+ *
+ * The masked form the drawer shows by default is NOT this query — it rides
+ * along on the member detail (`MemberDetail.signInEmailMasked`) and costs
+ * nothing.
+ *
+ * The app-wide one-retry-on-transient-failure policy is left in place. A lost
+ * response can therefore leave two audit rows behind one press, which is the
+ * truthful record (the server did serve the address twice) and a better trade
+ * than making the admin press Retry for every dropped connection.
+ */
+export function useMemberSignInEmail(
+  member: AdminMember | null,
+  isRequested: boolean,
+) {
+  const { demoMode } = useDemoMode();
+  return useQuery<string>({
+    queryKey: ["admin-members", "sign-in-email", member?.id ?? null, demoMode],
+    enabled: isRequested && member !== null,
+    staleTime: Infinity,
+    queryFn: async () => {
+      if (member === null) throw new Error("No member selected");
+      // Demo mode reveals the same fake address the masked value was derived
+      // from, and writes no audit row because there is no backend to write one.
+      if (demoMode) return demoSignInIdentity(member).email;
+      const revealed = await getAdminMemberSignInEmail(member.id);
+      return revealed.email;
     },
   });
 }

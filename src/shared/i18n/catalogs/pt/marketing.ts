@@ -1740,14 +1740,6 @@ export const marketing: Catalog = {
   "listBusiness.step4.photo.change": "Trocar",
   "listBusiness.step4.photo.uploading": "A carregar…",
   "listBusiness.step4.photo.remove": "Remover foto",
-  "listBusiness.step4.photo.urlPlaceholder": "ou cola o link de uma imagem",
-  "listBusiness.step4.photo.urlInvalid": "Isto não parece o link de uma imagem",
-  "listBusiness.step4.photo.urlNotHttps":
-    "Cola um link que comece por https://",
-  "listBusiness.step4.photo.urlHostNotAllowed":
-    "As fotos por link têm de vir do Google ou do Unsplash. Para outras, carrega a foto.",
-  "listBusiness.step4.photo.urlDidNotLoad":
-    "Esse link não abriu uma imagem. Usa um link que leve diretamente à foto.",
   "listBusiness.step4.photo.serverRejected":
     "Não conseguimos guardar esta foto. Carrega-a de novo ou escolhe outra.",
   "listBusiness.step4.photo.uploadError":
@@ -2333,6 +2325,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-12.headline":
+    "O teu cartão Agora mostra o que a tua disponibilidade faz, e as fotos da ficha vêm dos teus ficheiros.",
   "changelog.releases.2026-09-11.headline":
     "Quem organiza cria convívios em cinco capítulos curtos, e os guias ganham um editor completo.",
   "changelog.releases.2026-09-10.headline":
@@ -2515,6 +2509,28 @@ export const marketing: Catalog = {
     "Volta a ligar uma localização bloqueada a partir do diretório",
   "changelog.entries.turn-a-blocked-location-back-on.body":
     "Passos para o teu navegador e dispositivo e, no Chrome, um botão que volta a pedir a localização.",
+  "changelog.entries.your-now-card-shows-what-your-openness-does.title":
+    "O teu cartão Agora mostra o que a tua disponibilidade faz",
+  "changelog.entries.your-now-card-shows-what-your-openness-does.body":
+    "A tua nota de limites vive aqui também, com olás por etiqueta e um empurrão para trocares as mais paradas.",
+  "changelog.entries.your-now-card-shows-what-your-openness-does.details":
+    "O cartão passa a reunir o teu estado, a tua nota de limites e a tua disponibilidade num só sítio, atualizados juntos a partir de um único botão. Como dono do perfil, vês também quantos olás cada etiqueta recebeu nos últimos 90 dias e a quantos respondeste, um empurrão para trocares uma que ninguém bateu, e os estados que já deixaste para trás. Não há contagem de visualizações. Quem visita vê o mesmo cartão sem esses números, e continua a poder tocar numa etiqueta para te contactar com o motivo já preenchido. Cada número vem de pedidos de ligação que já existiam. Nada de novo sobre como usas a aplicação passa a ser registado.",
+  "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.title":
+    "A app instalada abre no teu mural, não num ecrã vazio",
+  "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.body":
+    "Abrir a app no telemóvel já não deixa um ecrã de espaço vazio acima do teu mural até fazeres scroll.",
+  "changelog.entries.admins-see-which-address-you-sign-in-with.title":
+    "A administração vê com que endereço um membro entra na conta",
+  "changelog.entries.admins-see-which-address-you-sign-in-with.body":
+    "A gaveta do membro mostra-o em parte, e revelá-lo por inteiro fica registado na auditoria com o nome de quem o fez.",
+  "changelog.entries.sign-in-with-a-different-google-account.title":
+    "Inicia sessão com outra conta Google",
+  "changelog.entries.sign-in-with-a-different-google-account.body":
+    "Depois de uma sessão recusada, o botão abre o seletor de contas da Google em vez de repetir a mesma conta.",
+  "changelog.entries.listing-photos-come-from-your-uploads.title":
+    "As fotos da ficha vêm dos teus ficheiros",
+  "changelog.entries.listing-photos-come-from-your-uploads.body":
+    "Adiciona fotos à tua ficha de negócio carregando-as, para que cada imagem continue a funcionar e passe pelo mesmo recorte e verificação de tamanho.",
   "changelog.entries.accepting-a-connection-request-works-again.title":
     "Aceitar um pedido de ligação volta a funcionar",
   "changelog.entries.accepting-a-connection-request-works-again.body":
@@ -2526,7 +2542,7 @@ export const marketing: Catalog = {
   "changelog.entries.listing-photos-flag-problems-before-you-submit.title":
     "As fotos do negócio assinalam problemas antes de enviares",
   "changelog.entries.listing-photos-flag-problems-before-you-submit.body":
-    "Tipos de ficheiro não suportados, links de outros sites e links que não abrem uma imagem ficam assinalados na foto.",
+    "Tipos de ficheiro não suportados e ficheiros demasiado grandes ficam assinalados na foto.",
   "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.title":
     "Junta a foto do teu certificado a uma persona",
   "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.body":
@@ -5713,7 +5729,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.listing-photos.title": "Fotos na tua ficha de negócio",
   "changelog.entries.listing-photos.body":
-    "Carrega um ficheiro ou cola o link de uma imagem, e pré-visualiza a tua ficha antes de publicar.",
+    "Carrega as tuas fotos e pré-visualiza a tua ficha antes de publicar.",
 
   "changelog.entries.business-page-live.title":
     "As páginas de negócios ganham vida",

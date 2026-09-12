@@ -136,6 +136,11 @@ export interface MemberDetail {
   /** Additive functional grants on top of `role` (e.g. `magazine_editor`) —
    *  drives the drawer's "Roles & access" toggle list. */
   staffRoles: StaffRoleId[];
+  /** The masked sign-in address, e.g. `a\u2022\u2022\u2022a@gmail.com`, which
+   *  is what the drawer shows until somebody presses Reveal. `null` means the
+   *  platform holds no address for this member, which the drawer says in words
+   *  rather than leaving the field blank. */
+  signInEmailMasked: string | null;
 }
 
 /** Vanity total shown in the admin members header in demo mode. Also doubles
@@ -326,7 +331,17 @@ export function cardForFlagged(flaggedMember: FlaggedMember): AdminMember {
 
 /* ── Drawer detail (keyed by member id) ──────────────────── */
 
-export const MEMBER_DETAIL: Record<string, MemberDetail> = {
+/**
+ * `signInEmailMasked` is deliberately absent from these fixtures.
+ * {@link detailFor} derives it from the member's own name via
+ * {@link demoSignInIdentity}, so the masked value on the drawer and the address
+ * the demo reveal hands back can never disagree, and nobody has to keep a fake
+ * address in step with a fixture's name by hand.
+ */
+export const MEMBER_DETAIL: Record<
+  string,
+  Omit<MemberDetail, "signInEmailMasked">
+> = {
   ines: {
     id: "ines",
     role: "admin",
@@ -402,12 +417,41 @@ export const MEMBER_DETAIL: Record<string, MemberDetail> = {
   },
 };
 
+/**
+ * A demo member's fake sign-in address, masked and in full, from one source.
+ *
+ * DEMO ONLY. In live mode the server masks the real address and the reveal
+ * endpoint returns the real value; this exists so the demo drawer can show the
+ * same two-step flow with nobody's actual address in it. The domain is
+ * `example.com` (the reserved documentation domain) so a demo screenshot can
+ * never be mistaken for a leaked address.
+ *
+ * Both values come out of the same string on purpose: a hand-written masked
+ * fixture beside a hand-written full one drifts the moment somebody renames a
+ * demo member, and the drift would look exactly like a masking bug.
+ */
+export function demoSignInIdentity(member: AdminMember): {
+  masked: string;
+  email: string;
+} {
+  const [first = "", last = ""] = member.name.toLowerCase().split(" ");
+  const localPart = last ? `${first}.${last}` : first;
+  const email = `${localPart}@example.com`;
+  const masked =
+    localPart.length < 2
+      ? "\u2022\u2022\u2022@example.com"
+      : `${localPart[0]}\u2022\u2022\u2022${localPart[localPart.length - 1]}@example.com`;
+  return { masked, email };
+}
+
 /** Fallback detail so any member opens a populated drawer. */
 export function detailFor(member: AdminMember): MemberDetail {
   const found = MEMBER_DETAIL[member.id];
-  if (found) return found;
+  const { masked } = demoSignInIdentity(member);
+  if (found) return { ...found, signInEmailMasked: masked };
   const first = member.name.split(" ")[0];
   return {
+    signInEmailMasked: masked,
     id: member.id,
     role: member.role,
     isSystem: false,

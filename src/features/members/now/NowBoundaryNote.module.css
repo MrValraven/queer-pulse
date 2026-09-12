@@ -1,0 +1,38 @@
+/* "Not here for" row on the Now card's dark ground.
+ *
+ * Colours come from the `--now-*` steps defined on `.card` in
+ * NowCard.module.css, so this row never re-derives cream-on-plum for itself.
+ *
+ * Plain inline flow, NOT a wrapping flex row. As a flex container the member's
+ * text became its own flex item with an auto min-width, so one long unbroken
+ * token (a URL, a run-on word) refused to shrink and pushed out of the card.
+ * Inline flow wraps it mid-word like any other paragraph. */
+.bounds {
+  margin: 16px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+}
+/* 16px is the gap from the STATUS, which is the note's neighbour on a normal
+   card. On a card whose only field is the note there is no status, the note
+   follows the eyebrow row instead, and 16px reads tight against the 28px the
+   card gives that row elsewhere. Child 2 is exactly that case and only that
+   case: the status paragraph is the single optional element between the
+   eyebrow row (always child 1) and this note. */
+.bounds:nth-child(2) {
+  margin-top: 28px;
+}
+/* Optically centred on the first line's x-height; `vertical-align` keeps the
+   icon inline so the text after it wraps as one continuous run. */
+.icon {
+  vertical-align: -2px;
+  margin-inline-end: 7px;
+  color: var(--now-ink-faint);
+}
+.label {
+  font-weight: 700;
+  color: var(--now-ink);
+  margin-inline-end: 6px;
+}
+.text {
+  color: var(--now-ink-muted);
+}

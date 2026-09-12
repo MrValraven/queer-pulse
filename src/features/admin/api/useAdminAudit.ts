@@ -163,6 +163,13 @@ function mapLiveRow(
     moderatorInitials: initialsFromName(row.actorName),
     moderatorTone: toneFromId(row.actorId),
     actionCode: row.action,
+    // Open-ended on purpose: `mod_audit_logs.action` is a plain varchar and a
+    // dozen services write their own strings, so the label comes straight from
+    // the catalog rather than from the `AuditType` union (which is the narrower
+    // curated set offered in the filter dropdown). `t()` returns the key itself
+    // on a miss, so an unlabeled action shows as a raw key on screen: every new
+    // backend action needs an `admin:governance.audit.actionType.<action>` key
+    // in both catalogs.
     actionLabel: t(`admin:governance.audit.actionType.${row.action}`),
     actionTone: ACTION_TONE[row.action as AuditType] ?? "plum",
     subject: row.subject,

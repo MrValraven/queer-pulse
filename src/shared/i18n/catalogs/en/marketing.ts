@@ -1695,14 +1695,6 @@ export const marketing: Catalog = {
   "listBusiness.step4.photo.change": "Change",
   "listBusiness.step4.photo.uploading": "Uploading…",
   "listBusiness.step4.photo.remove": "Remove photo",
-  "listBusiness.step4.photo.urlPlaceholder": "or paste an image URL",
-  "listBusiness.step4.photo.urlInvalid": "That doesn't look like an image URL",
-  "listBusiness.step4.photo.urlNotHttps":
-    "Paste a link that starts with https://",
-  "listBusiness.step4.photo.urlHostNotAllowed":
-    "Linked photos have to come from Google or Unsplash. For anything else, upload the photo.",
-  "listBusiness.step4.photo.urlDidNotLoad":
-    "That link didn't open an image. Use a link that goes straight to the photo.",
   "listBusiness.step4.photo.serverRejected":
     "We couldn't save this photo. Upload it again or pick a different one.",
   "listBusiness.step4.photo.uploadError":
@@ -2273,6 +2265,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-12.headline":
+    "Your Now card shows what your openness does, and listing photos come from your uploads.",
   "changelog.releases.2026-09-11.headline":
     "Hosts create gatherings in five short chapters, and guides get a full editor.",
   "changelog.releases.2026-09-10.headline":
@@ -2455,6 +2449,28 @@ export const marketing: Catalog = {
     "Turn a blocked location back on from the directory",
   "changelog.entries.turn-a-blocked-location-back-on.body":
     "Steps for your own browser and device, and in Chrome a button that asks for location again.",
+  "changelog.entries.your-now-card-shows-what-your-openness-does.title":
+    "Your Now card shows what your openness does",
+  "changelog.entries.your-now-card-shows-what-your-openness-does.body":
+    "Your boundary note lives here too, plus hello counts per chip and a nudge to swap the quiet ones.",
+  "changelog.entries.your-now-card-shows-what-your-openness-does.details":
+    "The card now carries your status, your boundary note and what you're open to in one place, updated together from a single button. As the owner, you also see how many hellos each chip drew in the last 90 days and how many you answered, a nudge to swap one nobody has knocked on, and the statuses you've since moved on from. There's no view count. Everyone else sees the same card without those figures, and can still tap a chip to reach you with the reason already filled in. Every number comes from connection requests you already had. Nothing new about how you use the app is recorded to make this possible.",
+  "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.title":
+    "The installed app opens on your feed, not a blank screen",
+  "changelog.entries.the-app-opens-on-your-feed-not-a-blank-screen.body":
+    "Opening the app on a phone no longer leaves a screenful of empty space above your feed until you scroll.",
+  "changelog.entries.admins-see-which-address-you-sign-in-with.title":
+    "Admins can see which address a member signs in with",
+  "changelog.entries.admins-see-which-address-you-sign-in-with.body":
+    "The member drawer shows it part-hidden, and revealing it in full is recorded in the audit log under the admin's name.",
+  "changelog.entries.sign-in-with-a-different-google-account.title":
+    "Sign in with a different Google account",
+  "changelog.entries.sign-in-with-a-different-google-account.body":
+    "After a refused sign-in, the button opens Google's account picker instead of reusing the same account.",
+  "changelog.entries.listing-photos-come-from-your-uploads.title":
+    "Listing photos come from your uploads",
+  "changelog.entries.listing-photos-come-from-your-uploads.body":
+    "Add photos to your business listing by uploading them, so every picture keeps working and gets the same crop and size care.",
   "changelog.entries.accepting-a-connection-request-works-again.title":
     "Accepting a connection request works again",
   "changelog.entries.accepting-a-connection-request-works-again.body":
@@ -2466,7 +2482,7 @@ export const marketing: Catalog = {
   "changelog.entries.listing-photos-flag-problems-before-you-submit.title":
     "Business listing photos flag problems before you submit",
   "changelog.entries.listing-photos-flag-problems-before-you-submit.body":
-    "Unsupported file types, links from other sites and links that don't open an image get flagged on the slot.",
+    "Unsupported file types and files that are too large get flagged on the slot.",
   "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.title":
     "Add a photo of your certificate to a persona",
   "changelog.entries.show-a-photo-of-your-certificate-on-a-persona.body":
@@ -5636,7 +5652,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.listing-photos.title": "Photos on your business listing",
   "changelog.entries.listing-photos.body":
-    "Upload a file or paste an image link, and preview your listing before you publish.",
+    "Upload your photos and preview your listing before you publish.",
 
   "changelog.entries.business-page-live.title": "Business pages come to life",
   "changelog.entries.business-page-live.body":

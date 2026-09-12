@@ -67,6 +67,7 @@ function makeDetail(
     id,
     role: "member",
     isSystem: false,
+    signInEmailMasked: null,
     glance: [],
     graphNote: "",
     communities: [],

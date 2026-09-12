@@ -144,6 +144,13 @@ export const postUnderAgeDisclosure = () =>
 
 export const bootstrapCsrf = ensureCsrf;
 
+/** Optional knobs for the Google consent hop — see `redirectToGoogle`. */
+export type GoogleRedirectOptions = {
+  invite?: string;
+  ageAttested?: boolean;
+  switchAccount?: boolean;
+};
+
 /**
  * Full-page navigation to the Google consent screen (not a fetch). Pass
  * `redirectTo` to tell the backend where to send the browser back after a
@@ -155,12 +162,18 @@ export const bootstrapCsrf = ensureCsrf;
  * page. The backend REQUIRES it to create a new account (Terms §eligibility) and
  * stamps `users.age_attested_at` from it — a returning member doesn't need it,
  * so sign-in omits it. It rides the OAuth `state` param across the consent hop.
+ *
+ * `switchAccount` asks the backend for Google's account chooser
+ * (`prompt=select_account`) instead of letting Google reuse the one session it
+ * already has. Set it on a RETRY after a failed sign-in: without it the second
+ * click re-sends the same identity that just bounced, so a member signed into
+ * the wrong Google account can never offer a different one.
  */
 export function redirectToGoogle(
   redirectTo?: string,
-  invite?: string,
-  ageAttested?: boolean,
+  options: GoogleRedirectOptions = {},
 ): void {
+  const { invite, ageAttested, switchAccount } = options;
   const params = new URLSearchParams();
   if (invite) params.set("invite", invite);
   if (redirectTo) params.set("redirect", redirectTo);
@@ -168,6 +181,7 @@ export function redirectToGoogle(
     params.set("ageAttested", "1");
     params.set("termsVersion", TERMS_VERSION);
   }
+  if (switchAccount) params.set("switchAccount", "1");
   const qs = params.toString();
   window.location.href = `${API_BASE_URL}/auth/google${qs ? `?${qs}` : ""}`;
 }

@@ -210,6 +210,7 @@ describe("flaggedDtoToMember", () => {
 
 const baseDetailDto: AdminMemberDetailDTO = {
   id: "ines",
+  signInEmailMasked: "i\u2022\u2022\u2022s@example.com",
   slug: "ines-martins",
   name: "Inês Martins",
   initials: "IM",

@@ -15,6 +15,12 @@
   grid-template-columns: minmax(0, 1fr);
   row-gap: 24px;
 }
+.headerLead {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
 .headerBody {
   display: flex;
   flex-direction: column;
@@ -43,6 +49,12 @@
 }
 
 /* ── Stage: one panel holding picker, page and audience ── */
+.stageBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-block-start: clamp(40px, 5vw, 64px);
+}
 .stage {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -51,7 +63,6 @@
     "card"
     "audience";
   gap: 24px;
-  margin-block-start: clamp(40px, 5vw, 64px);
   padding: clamp(14px, 2.2vw, 24px);
   border-radius: var(--radius-card);
   background: rgba(var(--cream-rgb), 0.05);
@@ -261,19 +272,21 @@
   text-wrap: pretty;
 }
 
-/* ── Everywhere else: the single-profile contrast, as one quiet line ── */
+/* ── Everywhere else: the single-profile contrast, under the title ── */
 .elsewhere {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px 16px;
   margin: 0;
-  margin-block-start: 20px;
-  padding-inline: clamp(14px, 2.2vw, 24px);
   font-family: var(--sans);
   line-height: 1.5;
 }
-.elsewhereLabel {
+/* The pair of labels that name the two halves of the contrast. */
+.elsewhereLabel,
+.stageLabel {
+  margin: 0;
+  font-family: var(--sans);
   font-size: var(--text-11-5);
   font-weight: 600;
   letter-spacing: var(--ls-label);
