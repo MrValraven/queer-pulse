@@ -254,6 +254,13 @@ export const members: Catalog = {
   "profile.rail.hideMe24h": "Ficar oculto 24h",
   "profile.rail.yourData": "Os teus dados",
   "profile.rail.showQr": "Mostrar código QR",
+  "profile.rail.hideToast.hidden":
+    "O teu perfil fica oculto durante as próximas 24 horas.",
+  "profile.rail.hideToast.visible": "O teu perfil volta a ficar visível.",
+  "profile.rail.hideToast.failedHide":
+    "Não conseguimos guardar. O teu perfil continua visível para os outros membros. Tenta outra vez daqui a pouco.",
+  "profile.rail.hideToast.failedUnhide":
+    "Não conseguimos guardar. O teu perfil continua escondido dos outros membros. Tenta outra vez daqui a pouco.",
 
   // ── Modal do código QR do perfil (ProfileQrModal) ────────────────────────────
   "profile.qr.title": "O código QR do teu perfil",

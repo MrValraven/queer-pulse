@@ -261,6 +261,12 @@ export const members: Catalog = {
   "profile.rail.hideMe24h": "Hide me for 24h",
   "profile.rail.yourData": "Your data",
   "profile.rail.showQr": "Show QR code",
+  "profile.rail.hideToast.hidden": "Your profile is hidden for the next 24h.",
+  "profile.rail.hideToast.visible": "Your profile is visible again.",
+  "profile.rail.hideToast.failedHide":
+    "We couldn't save that. Your profile is still visible to other members. Try again in a moment.",
+  "profile.rail.hideToast.failedUnhide":
+    "We couldn't save that. Your profile is still hidden from other members. Try again in a moment.",
 
   // ── Profile QR modal (ProfileQrModal) ───────────────────────────────────────
   "profile.qr.title": "Your profile QR code",

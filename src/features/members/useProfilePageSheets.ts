@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDeferredDraftSave } from "../../app/providers/useDeferredDraftSave";
 
 export interface ProfilePageSheets {
@@ -26,21 +28,56 @@ export interface ProfilePageSheets {
  * it did. See that hook for why waiting on `save`'s identity (which this hook
  * used to do) fires too early and silently persists nothing.
  *
- * A failed hide never reaches the member as a message: the toggle simply flips
- * back, since `ProfileSettingsMenu` renders straight off the committed
- * `hiddenUntil`. Wiring an error toast in would need its own copy in both
- * languages, so it is left to whoever writes that string.
+ * A failed hide (or a patch the provider dropped before any save started, see
+ * `onPatchLost` on the shared hook) is surfaced with the same toast pattern
+ * `useInstantVisibilitySave` uses for "Who sees what": the control itself
+ * lives inside `ProfileSettingsMenu`, which closes the moment an item is
+ * clicked, so nothing on screen stays around to carry an inline error. A
+ * toast is the only surface that survives the menu closing. The message names
+ * which way the toggle actually landed (still visible, or still hidden)
+ * rather than a generic failure, because a member who asked to hide and got
+ * silence needs to know they are still visible, not just that "something"
+ * did not save.
  */
 export function useProfilePageSheets(): ProfilePageSheets {
   const [isWhoSeesWhatOpen, setIsWhoSeesWhatOpen] = useState(false);
   const [isAccountDataOpen, setIsAccountDataOpen] = useState(false);
-  const saveDraftPatch = useDeferredDraftSave();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
+  // What the toggle just asked for, so the async onSaved/onFailed/onPatchLost
+  // handlers below (which fire on a later render, after `toggleHidden` has
+  // returned) know which message applies. Set synchronously in `toggleHidden`
+  // before `saveDraftPatch` is called, so it can never lag behind the save it
+  // describes.
+  const lastAction = useRef<"hide" | "unhide">("hide");
+
+  const showFailureToast = () => {
+    const key =
+      lastAction.current === "hide"
+        ? "members:profile.rail.hideToast.failedHide"
+        : "members:profile.rail.hideToast.failedUnhide";
+    showToast(t(key), "error");
+  };
+
+  const saveDraftPatch = useDeferredDraftSave({
+    onSaved: () => {
+      const key =
+        lastAction.current === "hide"
+          ? "members:profile.rail.hideToast.hidden"
+          : "members:profile.rail.hideToast.visible";
+      showToast(t(key), "success");
+    },
+    onFailed: showFailureToast,
+    onPatchLost: showFailureToast,
+  });
 
   const toggleHidden = (currentHiddenUntil: string | null | undefined) => {
-    const nextValue =
-      currentHiddenUntil && new Date(currentHiddenUntil) > new Date()
-        ? null
-        : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    const isCurrentlyHidden =
+      !!currentHiddenUntil && new Date(currentHiddenUntil) > new Date();
+    lastAction.current = isCurrentlyHidden ? "unhide" : "hide";
+    const nextValue = isCurrentlyHidden
+      ? null
+      : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     saveDraftPatch({ hiddenUntil: nextValue });
   };
 
