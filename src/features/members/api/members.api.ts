@@ -238,7 +238,7 @@ export interface ProfileDTO extends MemberCardDTO {
   shapings?: ShapingItemDTO[];
   /** Recent public activity across the platform ("Recent activity"). */
   activity?: ActivityItemDTO[];
-  /** Related members ("Also in the room") — nearby in craft or neighbourhood. */
+  /** Related members ("People close by") — nearby in craft or neighbourhood. */
   related?: MemberCardDTO[];
   /** Communities the member has chosen to feature on their profile, resolved
    *  for display ("Communities"). */

@@ -36,7 +36,6 @@ export function ProfilePage() {
     cancelEditing,
     draft,
     updateDraft,
-    save,
     isDirty,
     isProfileLoading,
     isProfileError,
@@ -51,10 +50,10 @@ export function ProfilePage() {
   const [focusLinks, setFocusLinks] = useState(false);
   // Owner-only sheets ("Who sees what", "Your data") and the 24h hide toggle.
   // Reachable from `ProfileSettingsMenu`, which both the desktop hero and the
-  // mobile header render for the owner — these used to be desktop-only, which
+  // mobile header render for the owner. These used to be desktop-only, which
   // put every visibility toggle, per-person hiding, report receipt, data export
   // and DSAR out of reach for anyone on a phone.
-  const sheets = useProfilePageSheets({ updateDraft, save });
+  const sheets = useProfilePageSheets();
 
   // Where the page was scrolled when the editor was opened. Read at the click
   // (rather than in an effect after the hero has already swapped) so it is the
@@ -76,7 +75,7 @@ export function ProfilePage() {
     if (!focus) window.scrollTo({ top: 0, behavior: "instant" });
   }
 
-  // In live mode, an unauthenticated visitor has no slug — never fall back to
+  // In live mode, an unauthenticated visitor has no slug, so never fall back to
   // the demo persona (`currentUserSlug` === "tiago"), or a logged-out visitor
   // to /members/tiago would be mis-detected as viewing their own profile.
   const selfSlug =
@@ -93,7 +92,7 @@ export function ProfilePage() {
     error: otherMemberError,
     refetch: refetchOtherMember,
   } = useMemberProfile(isSelf ? undefined : slug);
-  // PRD-204 — a username its owner renamed away from still forwards to them for
+  // PRD-204: a username its owner renamed away from still forwards to them for
   // the reclaim cooldown. Called on every render so the guard below can hold the
   // page back while the forwarding navigation runs from its effect.
   const isRedirectingToMovedSlug = useMovedHandleRedirect(
@@ -108,8 +107,8 @@ export function ProfilePage() {
   const selfView = isSelf && !previewing;
 
   useProfileEditGuard({ isEditing, isDirty, cancelEditing, scrollBeforeEdit });
-  // Hooks must run unconditionally on every render, so this is read here —
-  // above the early-return guards below — even though it's only consumed
+  // Hooks must run unconditionally on every render, so this is read here,
+  // above the early-return guards below, even though it's only consumed
   // after them.
   const isMobile = useMediaQuery(mediaMax("md"));
 
@@ -142,7 +141,7 @@ export function ProfilePage() {
   // `ProfileLimitedNote` says whose choice that was (PRD-203).
   const resolvedProfile = profile!;
 
-  // Mobile Instagram-style layout applies to both the view and edit states —
+  // Mobile Instagram-style layout applies to both the view and edit states:
   // phone-width editing renders the centered mobile editor instead of the
   // desktop inline editor.
   const useMobileLayout = isMobile;
@@ -202,7 +201,7 @@ export function ProfilePage() {
         onToggleHidden={toggleHidden}
       />
 
-      {/* PRD-203 — a limited card is a hero and then nothing, which reads as
+      {/* PRD-203: a limited card is a hero and then nothing, which reads as
           an abandoned account until something says whose choice it was. Sits
           right under the hero because everything after it is empty here, and
           never appears in demo, where `limited` is always false. */}
@@ -214,7 +213,7 @@ export function ProfilePage() {
         />
       )}
 
-      {/* ACQ-08 — owner-only, and last on the page so it pushes nothing down.
+      {/* ACQ-08: owner-only, and last on the page so it pushes nothing down.
           Hidden while editing (the sticky save bar owns the foot of the screen
           then) and silent unless there are invites actually left to give. */}
       {selfView && !isEditing && <ProfileInviteCard />}

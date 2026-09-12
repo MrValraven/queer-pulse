@@ -49,7 +49,7 @@ const ORIGINS: Array<{
   deepLabelKey?: string;
 }> = [
   // A deeper /members path is another profile or one of its personas, which
-  // "Back to the room" would misname — the generic label covers it.
+  // "Back to Members" would misname — the generic label covers it.
   { prefix: routes.members, labelKey: "profile.backToRoom" },
   {
     prefix: routes.communities,

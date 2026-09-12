@@ -3120,7 +3120,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.s1.h":
     "Quem somos, e para quem é esta casa",
   "coopTemplate.doc.founding-values.s1.b0":
-    "Diz explicitamente quem pertence aqui e em que termos. O silêncio sobre este ponto tende a favorecer quem já tem poder na sala, por isso, põe-no por escrito.",
+    "Diz explicitamente quem pertence aqui e em que termos. O silêncio sobre este ponto tende a favorecer quem já tem poder no grupo, por isso, põe-no por escrito.",
   "coopTemplate.doc.founding-values.s1.b1.0":
     "Esta é uma casa que afirma as pessoas queer e trans. Usamos os nomes e pronomes que as pessoas nos pedem para usar, sem discussão, desde o primeiro dia.",
   "coopTemplate.doc.founding-values.s1.b1.1":

@@ -271,7 +271,7 @@ export function profileToMember(dto: ProfileDTO): Member {
       // links existed, both arrive as null/undefined here.
       to: activityRow.to ?? null,
     })),
-    // "Also in the room": the backend already returns full related-member
+    // "People close by": the backend already returns full related-member
     // cards, so we resolve them here into `relatedCards` (name, hood, avatar,
     // derived initials/tint) rather than throwing away everything but the slug.
     // `related` (slugs) is left empty in live mode — the demo path uses it to

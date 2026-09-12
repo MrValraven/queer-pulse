@@ -1,14 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import type { ProfileDraft } from "../../app/providers/useProfile";
-
-interface UseProfilePageSheetsArgs {
-  /** `ProfileProvider`'s draft patcher — how the 24h hide is staged. */
-  updateDraft: (patch: Partial<ProfileDraft>) => void;
-  /** `ProfileProvider`'s save. Its identity changes once a patch is committed,
-   *  which is what the effect below keys on. Its resolved value is ignored here
-   *  (the provider reports failures itself), so the return type stays open. */
-  save: () => unknown;
-}
+import { useState } from "react";
+import { useDeferredDraftSave } from "../../app/providers/useDeferredDraftSave";
 
 export interface ProfilePageSheets {
   isWhoSeesWhatOpen: boolean;
@@ -28,37 +19,29 @@ export interface ProfilePageSheets {
  * of `ProfilePage` so the page component stays inside the repo's 200-line rule.
  *
  * The hide toggle persists immediately (its own copy says "takes effect right
- * away", so it must not sit staged behind the normal Save button). `save()` is
- * a `useCallback` closed over the CURRENT `draft` (see `ProfileProvider.tsx`),
- * so calling it in the same tick as `updateDraft()` would ship the PRE-toggle
- * draft: React hasn't re-rendered between the two calls, so the `save`
- * reference is still stale. This is the same trap `useInstantVisibilitySave`
- * (in `WhoSeesWhatFieldToggles.tsx`) works around for the sheet's own instant
- * toggles. Queue the intent, then let an effect keyed on the fresh `save`
- * identity — which only changes once the provider has committed the patch —
- * fire the actual persist on the next render.
+ * away", so it must not sit staged behind the normal Save button). That whole
+ * lifecycle lives in `useDeferredDraftSave`: patch the shared draft, persist
+ * once the draft actually carries the patch, and put the previous value back
+ * if the save fails, so a toggle that did not store never keeps reading as if
+ * it did. See that hook for why waiting on `save`'s identity (which this hook
+ * used to do) fires too early and silently persists nothing.
+ *
+ * A failed hide never reaches the member as a message: the toggle simply flips
+ * back, since `ProfileSettingsMenu` renders straight off the committed
+ * `hiddenUntil`. Wiring an error toast in would need its own copy in both
+ * languages, so it is left to whoever writes that string.
  */
-export function useProfilePageSheets({
-  updateDraft,
-  save,
-}: UseProfilePageSheetsArgs): ProfilePageSheets {
+export function useProfilePageSheets(): ProfilePageSheets {
   const [isWhoSeesWhatOpen, setIsWhoSeesWhatOpen] = useState(false);
   const [isAccountDataOpen, setIsAccountDataOpen] = useState(false);
-
-  const hasPendingHiddenToggle = useRef(false);
-  useEffect(() => {
-    if (!hasPendingHiddenToggle.current) return;
-    hasPendingHiddenToggle.current = false;
-    void save();
-  }, [save]);
+  const saveDraftPatch = useDeferredDraftSave();
 
   const toggleHidden = (currentHiddenUntil: string | null | undefined) => {
     const nextValue =
       currentHiddenUntil && new Date(currentHiddenUntil) > new Date()
         ? null
         : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    hasPendingHiddenToggle.current = true;
-    updateDraft({ hiddenUntil: nextValue });
+    saveDraftPatch({ hiddenUntil: nextValue });
   };
 
   return {

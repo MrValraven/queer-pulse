@@ -1434,7 +1434,7 @@ export const magazine: Catalog = {
   "story.outro.studio.sub":
     "The stories are about the people in the room. Join us.",
   "story.outro.tomas.title":
-    "Want to join Tomás's table? <em>Join the room first.</em>",
+    "Want to join Tomás's table? <em>Join the network first.</em>",
   "story.outro.tomas.sub":
     "The supper club, the network, the gatherings: it all starts with an invitation from someone who knows you.",
   "story.outro.safety.title": "Read it and think it sounds <em>right?</em>",

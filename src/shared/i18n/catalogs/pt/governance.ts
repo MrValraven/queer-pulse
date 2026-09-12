@@ -494,7 +494,7 @@ export const governance: Catalog = {
 
   "transparency.notCounted.title": "O que este relatório não conta",
   "transparency.notCounted.communityModeration":
-    "A moderação que as comunidades fazem por si próprias. Quando quem gere uma comunidade remove ou barra alguém, isso entra no registo de governação dessa comunidade e não no da plataforma. Contar a arrumação de uma sala como aplicação de regras da plataforma inflacionaria estes números.",
+    "A moderação que as comunidades fazem por si próprias. Quando quem gere uma comunidade remove ou barra alguém, isso entra no registo de governação dessa comunidade e não no da plataforma. Contar a arrumação de uma comunidade como aplicação de regras da plataforma inflacionaria estes números.",
   "transparency.notCounted.appealTiming":
     "Quanto tempo demorou um recurso. Um recurso regista quando foi apresentado e o que foi decidido, e nada regista quando a decisão foi tomada, por isso o número fica de fora em vez de ser estimado.",
   "transparency.notCounted.outsidePlatform":

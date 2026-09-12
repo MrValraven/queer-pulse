@@ -236,7 +236,7 @@ export const settings: Catalog = {
     "Quando alguém responde numa conversa em que participaste",
   "notifications.volume.posts.title": "Novas publicações nas tuas comunidades",
   "notifications.volume.posts.desc":
-    "Publicações comuns e recursos partilhados. Define o nível por comunidade abaixo para manter umas salas altas e outras baixas",
+    "Publicações comuns e recursos partilhados. Define o nível por comunidade abaixo para manter umas comunidades altas e outras baixas",
   "notifications.volume.announcements.title": "Anúncios das comunidades",
   "notifications.volume.announcements.desc":
     "Apenas o que quem gere ou modera marcou como anúncio",
@@ -267,7 +267,7 @@ export const settings: Catalog = {
     "Decisões de segurança e moderação, alertas de conta e de acesso, mudanças numa comunidade a que pertences e decisões sobre coisas que pediste são sempre entregues. Não podem ser desligadas.",
   "notifications.perCommunity.label": "Volume, comunidade a comunidade",
   "notifications.perCommunity.intro":
-    "Baixa o volume de uma sala movimentada sem sair dela. É a mesma definição que a página da própria comunidade oferece.",
+    "Baixa o volume de uma comunidade movimentada sem sair dela. É a mesma definição que a página da própria comunidade oferece.",
   "notifications.perCommunity.rowDesc": "Quanto queres ouvir desta comunidade",
   "notifications.perCommunity.level.all": "Tudo",
   "notifications.perCommunity.level.announcements": "Só anúncios",

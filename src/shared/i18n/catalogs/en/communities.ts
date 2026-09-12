@@ -1240,7 +1240,7 @@ export const communities: Catalog = {
   "detail.events.error.retryCta": "Try again",
   "detail.pulse.empty.title": "Nothing here yet",
   "detail.pulse.empty.description":
-    "Post the first hello. A line about your week is plenty to get a room talking.",
+    "Post the first hello. A line about your week is plenty to get people talking.",
   "detail.pulse.empty.visitorDescription":
     "This community has not posted yet. Join to be part of what comes next.",
 
@@ -1460,7 +1460,7 @@ export const communities: Catalog = {
     "A colour and a line that capture the heart of the place. Small touches, but they're what make it feel like somewhere.",
   "start.panel.people.thread": "People",
   "start.panel.people.eyebrow": "Chapter seven · the first few",
-  "start.panel.people.title": "Don't open to ⟪an empty room.⟫",
+  "start.panel.people.title": "Don't open to ⟪an empty space.⟫",
   "start.panel.people.lead":
     "A space feels alive when someone's already there. Invite a few people you'd love to see in the doorway on day one.",
   "start.panel.confirm.thread": "Confirm",
@@ -1710,7 +1710,7 @@ export const communities: Catalog = {
   "start.success.inviteWheneverReady":
     "Invite people whenever you're ready. There's no rush.",
   "start.success.postFirstHello":
-    "Post a first hello so no one walks into an empty room.",
+    "Post a first hello so no one walks into an empty space.",
   "start.success.backToHub": "Back to your hub",
   "start.success.startAnother": "Start another",
   "start.success.body":

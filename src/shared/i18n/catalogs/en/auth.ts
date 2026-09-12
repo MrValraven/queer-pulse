@@ -190,7 +190,7 @@ export const auth: Catalog = {
     "Couldn't send that one again just now. Give it another try in a moment.",
 
   // ── Invite unfurl preview card (mirrors the static Open Graph tags) ──
-  "sharePreview.heroTitle.line1": "Walk into a room",
+  "sharePreview.heroTitle.line1": "Step into QueerPulse",
   "sharePreview.heroTitle.line2": "<em>where you already belong</em>",
   "sharePreview.heroExplainer": "A queer network. Rooted in Lisbon.",
   "sharePreview.heroSub_one": "Invite-only · {count} member",
@@ -207,7 +207,7 @@ export const auth: Catalog = {
   "adultsOnly.body1":
     "QueerPulse is open to anyone 18 or older who's invited or vouched into the community.",
   "adultsOnly.body2":
-    "We keep it adults-only for a reason. So much of what happens here is frank talk about sex and sexual health, dating and nightlife, and the kind of unguarded conversation that only feels safe among adults. It isn't a fit for minors, and mixing the two would put everyone's safety at risk. Under-18s deserve queer community too; this just isn't the room for it yet.",
+    "We keep it adults-only for a reason. So much of what happens here is frank talk about sex and sexual health, dating and nightlife, and the kind of unguarded conversation that only feels safe among adults. It isn't a fit for minors, and mixing the two would put everyone's safety at risk. Under-18s deserve queer community too; this just isn't the space for it yet.",
   "adultsOnly.reassure": "No ID needed. We trust you.",
   "adultsOnly.done": "Got it",
 

@@ -116,7 +116,7 @@ export const members: Catalog = {
   "profile.loadError.description":
     "Something went wrong fetching your profile. Check your connection and try again.",
   "profile.loadError.retryAction": "Try again",
-  "profile.backToRoom": "Back to the room",
+  "profile.backToRoom": "Back to Members",
   // Back-link labels for every other page a profile can be opened from (see
   // profileBackTarget.ts); "generic" covers anything unmapped.
   "profile.backTo.generic": "Back",
@@ -236,7 +236,7 @@ export const members: Catalog = {
   "profile.nav.skills": "Skills & offerings",
   "profile.nav.groups": "Groups & circles",
   "profile.nav.shapings": "What shaped me",
-  "profile.nav.related": "Also in the room",
+  "profile.nav.related": "People close by",
 
   // ── Trust signals row + explainer (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
   "profile.trust.verified": "Verified",
@@ -380,8 +380,8 @@ export const members: Catalog = {
     "Not interests. Formative texts, films, moments.",
   "content.activity.title": "Recent activity",
   "content.activity.subtitle": "Public moments from around the platform",
-  "content.related.title": "Also in the room",
-  "content.related.subtitle": "People nearby in craft or neighbourhood",
+  "content.related.title": "People close by",
+  "content.related.subtitle": "Sharing a craft or a neighbourhood.",
 
   // ── Shaping-meta labels + visibility labels (profileSections.data) ─────────
   "shaping.film": "A film",
@@ -1416,7 +1416,7 @@ export const members: Catalog = {
   "badges.ladderV2.passed": "Passed",
   "badges.ladderV2.ahead": "Ahead",
   "badges.ladderV2.beyondTitle": "After {name}",
-  "badges.ladderV2.beyondBody": "The ladder stops. The room doesn't.",
+  "badges.ladderV2.beyondBody": "The ladder stops. The community keeps going.",
 
   // ── Badges v2: XP ledger / receipts ──────────────────────────────────────
   "badges.ledger.eyebrow": "Receipts",

@@ -219,7 +219,7 @@ export const resources: Catalog = {
 
   "safety.vouching.title": "O modelo de <em>voto de confiança</em>",
   "safety.vouching.body1":
-    "A maior parte das pessoas chega com o voto de confiança de alguém que já está na rede; algumas são aprovadas diretamente pela nossa equipa. De qualquer forma, ninguém chega aqui sozinhe. Isto é o mecanismo que faz a sala parecer digna de confiança. Quando alguém te dá um voto de confiança, está a dizer: <b>conheço esta pessoa e acho que pertence aqui.</b>",
+    "A maior parte das pessoas chega com o voto de confiança de alguém que já está na rede; algumas são aprovadas diretamente pela nossa equipa. De qualquer forma, ninguém chega aqui sozinhe. Isto é o mecanismo que faz a comunidade parecer digna de confiança. Quando alguém te dá um voto de confiança, está a dizer: <b>conheço esta pessoa e acho que pertence aqui.</b>",
   "safety.vouching.body2":
     "Quem dá um voto de confiança presta contas de forma real, mesmo que a responsabilidade por cada comportamento seja sempre de cada pessoa. Se uma pessoa com voto de confiança tiver um comportamento prejudicial, quem lhe deu esse voto faz parte da conversa sobre o que acontece a seguir.",
 

@@ -803,7 +803,7 @@ button.socialChip {
      small breathing gap, for a tight Instagram-like top. */
   /* On phones the slim app bar already carries a back chevron (when there's
      history) and the bottom tab bar owns Home/Members — so this separate
-     "Back to the room" row is redundant. Drop it for a single, tighter top;
+     "Back to Members" row is redundant. Drop it for a single, tighter top;
      the app-bar clearance it used to provide moves onto `.mheader` (the first
      mobile element, see MobileProfile.module.css). */
   div.backBar {

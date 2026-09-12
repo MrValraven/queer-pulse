@@ -18,7 +18,7 @@ export const community: Catalog = {
     "For parents · partners · siblings · friends · anyone showing up",
   "caregivers.hero.title": "Showing up <em>well</em>, when it matters.",
   "caregivers.hero.lead":
-    "A focused space for the people who love someone queer and want to do this well. <em>You don't need to know everything before you start.</em> You need a few short answers, a couple of conversations, and the room behind you.",
+    "A focused space for the people who love someone queer and want to do this well. <em>You don't need to know everything before you start.</em> You need a few short answers, a couple of conversations, and the community behind you.",
   "caregivers.hero.whoAriaLabel": "Who are you?",
   "caregivers.persona.parent": "I'm a parent",
   "caregivers.persona.partner": "I'm a partner",
@@ -26,7 +26,7 @@ export const community: Catalog = {
   "caregivers.persona.youthWorker": "I work with young people",
   "caregivers.outro.title": "You don't have to <em>get it all right.</em>",
   "caregivers.outro.sub":
-    "You have to keep showing up. The room is here for you too.",
+    "You have to keep showing up. This space is here for you too.",
   "caregivers.outro.cta": "Find a support room",
 
   // Caregivers — Start Here (five short reads)
@@ -67,7 +67,7 @@ export const community: Catalog = {
   "caregivers.faq.childCameOut.q":
     "My child just came out and I don't know what to say. <em>Help.</em>",
   "caregivers.faq.childCameOut.a":
-    "<strong>Take a breath. Say \"thank you for telling me.\" Then ask \"is there anything you'd like from me right now?\"</strong> That's it. You don't need to know the language. You don't need to have a plan. <em>This is a long conversation, one that continues.</em> Come back later with questions. They will be ready, and the room is here too.",
+    "<strong>Take a breath. Say \"thank you for telling me.\" Then ask \"is there anything you'd like from me right now?\"</strong> That's it. You don't need to know the language. You don't need to have a plan. <em>This is a long conversation, one that continues.</em> Come back later with questions. They will be ready, and this space is here too.",
   "caregivers.faq.partnerTransitioning.q":
     "My partner is transitioning and I'm scared we'll grow apart.",
   "caregivers.faq.partnerTransitioning.a":

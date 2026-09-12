@@ -3768,7 +3768,7 @@ export const admin: Catalog = {
   "roadmap.publicPreview.somedaySub": "We want these. No date would be a lie.",
   "roadmap.publicPreview.shippedHeading": "Shipped",
   "roadmap.publicPreview.shippedSub":
-    "The changelog. Every one of these was asked for by someone in the room.",
+    "The changelog. Every one of these was asked for by someone in the community.",
   "roadmap.publicPreview.notBuildingHeading": "Not building this, and why",
   "roadmap.publicPreview.notBuildingSub":
     "The list most platforms hide. If we say no, you get a reason.",

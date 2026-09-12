@@ -117,7 +117,7 @@ export const members: Catalog = {
   "profile.loadError.description":
     "Algo correu mal ao obter o teu perfil. Verifica a tua ligação e tenta novamente.",
   "profile.loadError.retryAction": "Tentar novamente",
-  "profile.backToRoom": "Voltar à sala",
+  "profile.backToRoom": "Voltar a Pessoas",
   // Rótulos do link de regresso para as outras páginas de onde um perfil pode
   // ser aberto (ver profileBackTarget.ts); "generic" cobre o que não tem mapa.
   "profile.backTo.generic": "Voltar",
@@ -229,7 +229,7 @@ export const members: Catalog = {
   "profile.nav.skills": "Competências e ofertas",
   "profile.nav.groups": "Grupos e círculos",
   "profile.nav.shapings": "O que me formou",
-  "profile.nav.related": "Também nesta sala",
+  "profile.nav.related": "Pessoas por perto",
 
   // ── Sinais de confiança + explicação (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
   "profile.trust.verified": "Verificado",
@@ -369,8 +369,8 @@ export const members: Catalog = {
     "Não são interesses. São textos, filmes e momentos marcantes.",
   "content.activity.title": "Atividade recente",
   "content.activity.subtitle": "Momentos públicos por toda a plataforma",
-  "content.related.title": "Também nesta sala",
-  "content.related.subtitle": "Pessoas próximas em ofício ou bairro",
+  "content.related.title": "Pessoas por perto",
+  "content.related.subtitle": "A partilhar ofício ou bairro.",
 
   // ── Etiquetas de "o que me formou" + visibilidade (profileSections.data) ──
   "shaping.film": "Um filme",

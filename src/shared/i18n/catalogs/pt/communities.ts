@@ -1220,7 +1220,7 @@ export const communities: Catalog = {
   "detail.events.error.retryCta": "Tentar novamente",
   "detail.pulse.empty.title": "Ainda não há nada por aqui",
   "detail.pulse.empty.description":
-    "Publica o primeiro olá. Uma linha sobre a tua semana chega para pôr a sala a conversar.",
+    "Publica o primeiro olá. Uma linha sobre a tua semana chega para pôr as pessoas a conversar.",
   "detail.pulse.empty.visitorDescription":
     "Esta comunidade ainda não publicou nada. Junta-te para fazer parte do que vem a seguir.",
 
@@ -1442,7 +1442,7 @@ export const communities: Catalog = {
     "Uma cor e uma frase que captam o coração do lugar. São pequenos toques, mas são o que faz parecer um lugar de verdade.",
   "start.panel.people.thread": "Pessoas",
   "start.panel.people.eyebrow": "Capítulo sete · os primeiros",
-  "start.panel.people.title": "Não abras para ⟪uma sala vazia.⟫",
+  "start.panel.people.title": "Não abras para ⟪um espaço vazio.⟫",
   "start.panel.people.lead":
     "Um espaço sente-se vivo quando já há alguém lá. Convida algumas pessoas que adorarias ver à porta no primeiro dia.",
   "start.panel.confirm.thread": "Confirmar",
@@ -1694,7 +1694,7 @@ export const communities: Catalog = {
   "start.success.inviteWheneverReady":
     "Convida pessoas quando estiveres pronte. Sem pressa.",
   "start.success.postFirstHello":
-    "Publica um primeiro olá para que ninguém entre numa sala vazia.",
+    "Publica um primeiro olá para que ninguém entre num espaço vazio.",
   "start.success.backToHub": "Voltar ao teu hub",
   "start.success.startAnother": "Começar outra",
   "start.success.body":

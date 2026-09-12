@@ -3136,7 +3136,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.s1.h":
     "Who we are, and who this home is for",
   "coopTemplate.doc.founding-values.s1.b0":
-    "Name explicitly who belongs here and on what terms. Silence on this point tends to default to whoever already holds power in the room, so write it down.",
+    "Name explicitly who belongs here and on what terms. Silence on this point tends to default to whoever already holds power in the group, so write it down.",
   "coopTemplate.doc.founding-values.s1.b1.0":
     "This is a queer- and trans-affirming home. We use the names and pronouns people ask us to use, without debate, from day one.",
   "coopTemplate.doc.founding-values.s1.b1.1":
@@ -3619,9 +3619,9 @@ export const economy: Catalog = {
   "offerBoard.seeProfileCta": "See their profile",
   "offerBoard.postedBy": "Posted by",
   "offerBoard.sidebarNote":
-    "{name} is a member in good standing. Every member is vouched for by someone already in the room.",
+    "{name} is a member in good standing. Every member is vouched for by someone already in the community.",
   "offerBoard.sidebarNoteVerified":
-    "{name} is a member in good standing and has been verified by the team. Every member is vouched for by someone already in the room.",
+    "{name} is a member in good standing and has been verified by the team. Every member is vouched for by someone already in the community.",
   "offerBoard.sayHelloCta": "Say hello to {name}",
   "offerBoard.moreFromBoard": "More from <em>the board</em>",
   "offerBoard.comingSoon.title": "Asks & Offers is on its way",

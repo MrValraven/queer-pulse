@@ -213,7 +213,7 @@ export const resources: Catalog = {
 
   "safety.vouching.title": "The <em>vouching</em> model",
   "safety.vouching.body1":
-    "Most people arrive vouched for by someone already in the network; a few are approved directly by our team. Either way, no one walks in as a stranger. It's the mechanism that makes the room feel trustworthy. When someone vouches for you, they're saying: <b>I know this person, and I think they belong here.</b>",
+    "Most people arrive vouched for by someone already in the network; a few are approved directly by our team. Either way, no one walks in as a stranger. It's the mechanism that makes the community feel trustworthy. When someone vouches for you, they're saying: <b>I know this person, and I think they belong here.</b>",
   "safety.vouching.body2":
     "Vouchers aren't responsible for the people they vouch for, but they are accountable in a real way. If a vouched member behaves harmfully, their voucher is part of the conversation about what happens next.",
 
@@ -618,7 +618,7 @@ export const resources: Catalog = {
     "Wellbeing resources built by and for the community: a vetted therapist directory, peer support, crisis contacts, and harm reduction, all in one place.",
 
   "wellbeing.hero.eyebrow": "Wellbeing",
-  "wellbeing.hero.title": "A room that <em>looks after you.</em>",
+  "wellbeing.hero.title": "A space that <em>looks after you.</em>",
   "wellbeing.hero.lead":
     "Resources built by and for the community: therapists, peer support, crisis help, and harm reduction. This is what a professional network looks like when it takes care seriously.",
   "wellbeing.hero.anchor.therapists": "Therapist directory",

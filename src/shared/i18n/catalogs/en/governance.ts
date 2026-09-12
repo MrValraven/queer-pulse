@@ -488,7 +488,7 @@ export const governance: Catalog = {
 
   "transparency.notCounted.title": "What this report does not count",
   "transparency.notCounted.communityModeration":
-    "Moderation that communities do for themselves. When a community's own owners remove or bar someone, it goes into that community's governance log rather than the platform's. Counting a room's housekeeping as platform enforcement would inflate these figures.",
+    "Moderation that communities do for themselves. When a community's own owners remove or bar someone, it goes into that community's governance log rather than the platform's. Counting a community's own housekeeping as platform enforcement would inflate these figures.",
   "transparency.notCounted.appealTiming":
     "How long an appeal took. An appeal records when it was filed and what was decided, and nothing records when the decision was made, so the figure is left out rather than estimated.",
   "transparency.notCounted.outsidePlatform":

@@ -207,7 +207,7 @@ export const cinema: Catalog = {
   // ── Film page (FilmPage.tsx, FilmHero*.tsx, FilmBody.tsx) — chrome only;
   // film title/synopsis/crew bios/curator quote/event date are this film's own
   // content and stay English ─────────────────────────────────────────────────
-  "film.crumb.backCta": "Back to slate",
+  "film.crumb.backCta": "Back to Cinema",
   "film.split.eyebrow": "The split",
   "film.split.title":
     "Eighty percent of every rent goes to <em>the filmmaker.</em>",

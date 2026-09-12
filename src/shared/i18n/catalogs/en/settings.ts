@@ -238,7 +238,7 @@ export const settings: Catalog = {
     "When someone responds in a discussion you have taken part in",
   "notifications.volume.posts.title": "New posts in your communities",
   "notifications.volume.posts.desc":
-    "Ordinary posts and shared resources. Set the level per community below to keep some rooms loud and others quiet",
+    "Ordinary posts and shared resources. Set the level per community below to keep some communities loud and others quiet",
   "notifications.volume.announcements.title": "Community announcements",
   "notifications.volume.announcements.desc":
     "Only what an owner or moderator marked as an announcement",
@@ -271,7 +271,7 @@ export const settings: Catalog = {
     "Safety and moderation outcomes, account and security alerts, changes to a community you belong to, and decisions on things you asked for are always delivered. They cannot be turned off.",
   "notifications.perCommunity.label": "Volume, community by community",
   "notifications.perCommunity.intro":
-    "Turn a busy room down without leaving it. This is the same setting the community's own page offers.",
+    "Turn a busy community down without leaving it. This is the same setting the community's own page offers.",
   "notifications.perCommunity.rowDesc": "How much you hear from this community",
   "notifications.perCommunity.level.all": "Everything",
   "notifications.perCommunity.level.announcements": "Announcements only",

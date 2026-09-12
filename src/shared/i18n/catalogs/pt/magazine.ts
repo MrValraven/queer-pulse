@@ -1438,7 +1438,7 @@ export const magazine: Catalog = {
   "story.outro.studio.sub":
     "As histórias são sobre as pessoas na sala. Junta-te a nós.",
   "story.outro.tomas.title":
-    "Queres juntar-te à mesa do Tomás? <em>Junta-te à sala primeiro.</em>",
+    "Queres juntar-te à mesa do Tomás? <em>Junta-te à rede primeiro.</em>",
   "story.outro.tomas.sub":
     "O jantar, a rede, os encontros: tudo começa com um convite de alguém que te conhece.",
   "story.outro.safety.title": "Leste e parece-te <em>certo?</em>",

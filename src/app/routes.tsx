@@ -15,6 +15,7 @@ import {
 } from "./authGate";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
+import { useRouteTransitionScope } from "../shared/components/layout/routeTransitionScope";
 
 // Per-feature route groups. Each feature owns its own <Route> registrations in
 // `src/features/<feature>/routes.tsx`; this file is the thin composition root
@@ -69,7 +70,19 @@ export function AppRoutes() {
   // sign-in (with a ?next= back-link). Public/marketing pages fall through.
   const { checking } = useAuth();
   const gateRedirect = useAuthGateRedirect();
-  const { pathname } = useLocation();
+  const liveLocation = useLocation();
+  // Inside RouteTransition every plane is pinned to the route it was rendered
+  // for, so the outgoing page keeps rendering ITSELF while it fades instead of
+  // becoming a second copy of the page the member is arriving on (see
+  // routeTransitionScope.ts). Outside one (tests, the prerender pass) the
+  // router's own location is the only one there is.
+  const transitionScope = useRouteTransitionScope();
+  const location = transitionScope?.location ?? liveLocation;
+  const { pathname } = location;
+  // The fading ghost of the page just left must never steer the live app: a
+  // redirect rendered there would fire a second navigation on top of the one
+  // in flight. Its content still renders, so the fade shows the page leaving.
+  const isExitingPlane = transitionScope ? !transitionScope.isPresent : false;
   const { demoMode } = useDemoMode();
   // The Work & Economy surface isn't launched yet — bounce its routes to the
   // roadmap, where a "Coming soon" card lists what's landing. Decided before the
@@ -77,7 +90,7 @@ export function AppRoutes() {
   // and inert in local dev (isComingSoonPath is false there) so the area stays
   // reachable while it's being built.
   if (isComingSoonPath(pathname)) {
-    return <Navigate to={routes.roadmap} replace />;
+    return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;
   }
   // While the live session is still being determined, hold gated routes on the
   // branded loader — showing the page (or bouncing to sign-in) prematurely would
@@ -87,14 +100,16 @@ export function AppRoutes() {
   if (checking && (isGatedPath(pathname) || isGuestOnlyPath(pathname))) {
     return <AuthLoader />;
   }
-  if (gateRedirect) return <Navigate to={gateRedirect} replace />;
+  if (gateRedirect) {
+    return isExitingPlane ? null : <Navigate to={gateRedirect} replace />;
+  }
 
   return (
     // Route-level boundary: a single broken page shows the branded fallback
     // without losing the app frame, and navigating away auto-resets it.
     <ErrorBoundary level="route" resetKey={pathname}>
       <Suspense fallback={<RouteFallback />}>
-        <Routes>
+        <Routes location={location}>
           <Route path={routes.homepage} element={<HomePage />} />
 
           {feedRoutes()}

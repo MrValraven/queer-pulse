@@ -73,7 +73,7 @@ export interface GroupItem {
   name: string;
   role: string;
 }
-/** A resolved "Also in the room" related member, carrying enough to render a
+/** A resolved "People close by" related member, carrying enough to render a
  *  card without a registry lookup. In live mode the backend returns these
  *  (from the profile's `related` cards); in demo mode the mock registry is
  *  resolved at render time from the `related` slug list instead. */
@@ -193,7 +193,7 @@ export interface Member {
    *  render time. Live mode leaves this empty and populates `relatedCards`. */
   related: string[];
   /** Live mode: pre-resolved related-member cards from the backend. When present
-   *  and non-empty, "Also in the room" renders from these instead of resolving
+   *  and non-empty, "People close by" renders from these instead of resolving
    *  `related` slugs through the mock registry (which is empty for real members). */
   relatedCards?: RelatedMember[];
   shapings: Partial<Record<"film" | "book" | "song" | "moment", ShapingItem>>;

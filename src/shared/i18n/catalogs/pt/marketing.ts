@@ -53,7 +53,7 @@ export const marketing: Catalog = {
   "about.beliefs.title": "Os valores por trás de <em>cada decisão.</em>",
   "about.values.smallByDesign.title": "Pequeno por design",
   "about.values.smallByDesign.body":
-    "Preferimos continuar a ser uma sala que funciona a tornarmo-nos uma plataforma que não funciona. O crescimento nunca é o objetivo por si só.",
+    "Preferimos continuar a ser uma comunidade que funciona a tornarmo-nos uma plataforma que não funciona. O crescimento nunca é o objetivo por si só.",
   "about.values.infrastructure.title": "Construímos infraestrutura",
   "about.values.infrastructure.body":
     "Estamos a construir a canalização de que a comunidade queer precisa: apresentações, espaços seguros, entreajuda.",
@@ -363,7 +363,8 @@ export const marketing: Catalog = {
   "activism.nav.orgs": "Organizações parceiras",
   "activism.nav.volunteer": "Voluntariado",
   "activism.conviction.local.word": "Local.",
-  "activism.conviction.local.rest": "A mudança começa na sala em que já estás.",
+  "activism.conviction.local.rest":
+    "A mudança começa na comunidade em que já estás.",
   "activism.conviction.real.word": "Real.",
   "activism.conviction.real.rest":
     "Não é uma partilha. É algo que te custa alguma coisa.",
@@ -475,7 +476,7 @@ export const marketing: Catalog = {
   "coc.pact.item02.title": "Perguntamos antes de presumir",
   "coc.pact.item02.body":
     "Pronomes, limites, níveis de conforto: confirma, não adivinhes.",
-  "coc.pact.item03.title": "Mantemos esta sala privada",
+  "coc.pact.item03.title": "Mantemos este espaço privado",
   "coc.pact.item03.body":
     "O que acontece aqui fica aqui, a menos que a pessoa envolvida diga o contrário.",
   "coc.pact.item04.title": "Ocupamos o espaço na medida certa",
@@ -744,14 +745,14 @@ export const marketing: Catalog = {
   "guidelines.clause03.titlePre": "Ocupa o ",
   "guidelines.clause03.titleEm": "espaço certo",
   "guidelines.clause03.p1":
-    "Repara no tamanho da sala em que estás e no tamanho do espaço que estás a ocupar nela.",
+    "Repara no tamanho da conversa em que estás e no tamanho do espaço que estás a ocupar nela.",
   "guidelines.clause03.p2":
     "Sobretudo quem chega agora à comunidade: está tudo bem em observar antes de publicar. Não há quota a cumprir.",
   "guidelines.clause03.p3Lead": "A regra não escrita:",
   "guidelines.clause03.p3Rest":
     "se já falaste cinco vezes antes de outra pessoa falar uma, abre espaço.",
-  "guidelines.clause04.titlePre": "Mantém a sala ",
-  "guidelines.clause04.titleEm": "privada",
+  "guidelines.clause04.titlePre": "Mantém o espaço ",
+  "guidelines.clause04.titleEm": "privado",
   "guidelines.clause04.p1":
     "O que se partilha num convívio, num espaço de apoio, ou numa comunidade privada, fica lá, a menos que a pessoa diga o contrário.",
   "guidelines.clause04.p2":
@@ -1276,7 +1277,7 @@ export const marketing: Catalog = {
   "terms.eligibility.p1":
     "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que seja convidada ou avalizada pela comunidade.",
   "terms.eligibility.why":
-    "É só para adultos por uma razão: muito do que acontece aqui (conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos) não é adequado a menores, e misturar as duas coisas poria em risco a segurança de todos. Quem tem menos de 18 anos também merece comunidade queer; só que esta ainda não é a sala certa para isso.",
+    "É só para adultos por uma razão: muito do que acontece aqui (conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos) não é adequado a menores, e misturar as duas coisas poria em risco a segurança de todos. Quem tem menos de 18 anos também merece comunidade queer; só que este ainda não é o espaço certo para isso.",
   "terms.eligibility.p2":
     "Ao entrares, confirmas que <strong>a informação no teu perfil é exata</strong>, tanto quanto sabes.",
   "terms.eligibility.p3":
@@ -6513,7 +6514,7 @@ export const marketing: Catalog = {
   "contact.outro.title": "Construído em Lisboa, <em>com cuidado.</em>",
   "contact.outro.sub":
     "A QueerPulse é uma rede pequena, sustentada pelas pessoas que a usam. O teu feedback ajuda a mantê-la boa.",
-  "contact.outro.backCta": "Voltar à sala",
+  "contact.outro.backCta": "Voltar ao início",
 
   // ── Para Organizações — chrome da página de parcerias. Os quatro registos
   //    de PARTNERS (nome/tempo de parceria/descrição) e o testemunho de
@@ -7385,7 +7386,7 @@ export const marketing: Catalog = {
   "arriving.orgs.items.opusDiversus.body":
     "Saúde mental e apoio entre pares para pessoas LGBTQ+, e formação para profissionais de saúde aliades. Um bom sítio para começar se a mudança ou a nova visibilidade estiverem a pesar.",
   "arriving.orgs.items.redeExAequo.body":
-    "Associação LGBTQ+ focada em juventude, com grupos ativos em Lisboa. Apoio entre pares, ativismo, e uma sala tranquila para quem é mais jovem ou ainda está a descobrir-se.",
+    "Associação LGBTQ+ focada em juventude, com grupos ativos em Lisboa. Apoio entre pares, ativismo, e um espaço tranquilo para quem é mais jovem ou ainda está a descobrir-se.",
 
   // ── Primeiro passo. Encontros reais que aí vêm, ao vivo nos dois modos.
   //    Esta secção anunciava um cartão fixo datado de 14 de junho de 2026.
@@ -7411,7 +7412,7 @@ export const marketing: Catalog = {
   "arriving.commQuick.eyebrow": "Por onde começar",
   "arriving.commQuick.title": "Comunidades para <em>quem chega agora.</em>",
   "arriving.commQuick.intro":
-    "Salas fáceis de entrar que se encontram presencialmente, aqui na cidade. Escolhe uma e aparece duas vezes.",
+    "Comunidades fáceis de entrar que se encontram presencialmente, aqui na cidade. Escolhe uma e aparece duas vezes.",
   "arriving.commQuick.browseCta": "Ver todas as comunidades",
   "arriving.commQuick.loading": "A carregar comunidades",
   "arriving.commQuick.empty":

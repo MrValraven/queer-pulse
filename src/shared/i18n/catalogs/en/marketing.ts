@@ -47,7 +47,7 @@ export const marketing: Catalog = {
   "about.beliefs.title": "The values behind <em>every decision.</em>",
   "about.values.smallByDesign.title": "Small by design",
   "about.values.smallByDesign.body":
-    "We'd rather stay a room that works than become a platform that doesn't. Growth is never the goal on its own.",
+    "We'd rather stay a community that works than become a platform that doesn't. Growth is never the goal on its own.",
   "about.values.infrastructure.title": "We build infrastructure",
   "about.values.infrastructure.body":
     "We're building the plumbing queer community needs: introductions, safe spaces, mutual aid.",
@@ -349,7 +349,7 @@ export const marketing: Catalog = {
   "activism.nav.volunteer": "Volunteer",
   "activism.conviction.local.word": "Local.",
   "activism.conviction.local.rest":
-    "Change starts in the room you're already in.",
+    "Change starts in the community you're already in.",
   "activism.conviction.real.word": "Real.",
   "activism.conviction.real.rest":
     "Not a repost. Something that costs you something.",
@@ -461,7 +461,7 @@ export const marketing: Catalog = {
   "coc.pact.item02.title": "We ask before we assume",
   "coc.pact.item02.body":
     "Pronouns, boundaries, comfort levels: check, don't guess.",
-  "coc.pact.item03.title": "We keep this room private",
+  "coc.pact.item03.title": "We keep this space private",
   "coc.pact.item03.body":
     "What happens here stays here, unless the person involved says otherwise.",
   "coc.pact.item04.title": "We take up appropriate space",
@@ -724,13 +724,13 @@ export const marketing: Catalog = {
   "guidelines.clause03.titlePre": "Take up ",
   "guidelines.clause03.titleEm": "appropriate space",
   "guidelines.clause03.p1":
-    "Notice the size of the room you're in and the size of the space you're taking up in it.",
+    "Notice the size of the conversation you're in and the size of the space you're taking up in it.",
   "guidelines.clause03.p2":
     "Newer members especially: it's okay to lurk before you post. There's no quota to meet.",
   "guidelines.clause03.p3Lead": "The unwritten rule:",
   "guidelines.clause03.p3Rest":
     "if you've spoken five times before someone else has spoken once, make room.",
-  "guidelines.clause04.titlePre": "Keep the room ",
+  "guidelines.clause04.titlePre": "Keep the space ",
   "guidelines.clause04.titleEm": "private",
   "guidelines.clause04.p1":
     "What's shared in a gathering, a support space, or a private community stays there unless the person says otherwise.",
@@ -1245,7 +1245,7 @@ export const marketing: Catalog = {
   "terms.eligibility.p1":
     "QueerPulse is open to anyone 18 or older who is invited or vouched into the community.",
   "terms.eligibility.why":
-    "We keep it adults-only for a reason: so much of what happens here (frank talk about sex and sexual health, dating and nightlife, and the kind of unguarded conversation that only feels safe among adults) isn't a fit for minors, and mixing the two would put everyone's safety at risk. Under-18s deserve queer community too; this just isn't the room for it yet.",
+    "We keep it adults-only for a reason: so much of what happens here (frank talk about sex and sexual health, dating and nightlife, and the kind of unguarded conversation that only feels safe among adults) isn't a fit for minors, and mixing the two would put everyone's safety at risk. Under-18s deserve queer community too; this just isn't the space for it yet.",
   "terms.eligibility.p2":
     "By joining, you confirm that <strong>the information on your profile is accurate</strong> to the best of your knowledge.",
   "terms.eligibility.p3":
@@ -6411,7 +6411,7 @@ export const marketing: Catalog = {
   "contact.outro.title": "Built in Lisbon, <em>with care.</em>",
   "contact.outro.sub":
     "QueerPulse is a small, member-supported network. Your feedback helps keep it good.",
-  "contact.outro.backCta": "Back to the room",
+  "contact.outro.backCta": "Back to home",
 
   // ── For Organisations — partnerships landing page chrome. The four
   //    PARTNERS records (name/tenure/description) and the Filipa Mendes
@@ -7277,7 +7277,7 @@ export const marketing: Catalog = {
   "arriving.orgs.items.opusDiversus.body":
     "Mental health and peer support for LGBTQ+ people, plus training for allied health professionals. A good place to start if the move or the new visibility is weighing on you.",
   "arriving.orgs.items.redeExAequo.body":
-    "A youth-focused LGBTQ+ association with active groups in Lisbon. Peer support, advocacy, and a gentle room for people who are younger or still working things out.",
+    "A youth-focused LGBTQ+ association with active groups in Lisbon. Peer support, advocacy, and a gentle space for people who are younger or still working things out.",
 
   // ── First step. Real upcoming gatherings, live in both modes. This section
   //    used to advertise one hardcoded card dated 14 June 2026.
@@ -7303,7 +7303,7 @@ export const marketing: Catalog = {
   "arriving.commQuick.eyebrow": "Where to start",
   "arriving.commQuick.title": "Communities for <em>new arrivals.</em>",
   "arriving.commQuick.intro":
-    "Beginner-friendly rooms that meet in person, here in the city. Pick one and turn up twice.",
+    "Beginner-friendly communities that meet in person, here in the city. Pick one and turn up twice.",
   "arriving.commQuick.browseCta": "Browse all communities",
   "arriving.commQuick.loading": "Loading communities",
   "arriving.commQuick.empty":

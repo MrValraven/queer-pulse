@@ -189,7 +189,7 @@ export const auth: Catalog = {
     "Não foi possível voltar a enviar agora. Tenta outra vez daqui a pouco.",
 
   // ── Cartão de pré-visualização do convite (espelha as tags Open Graph) ──
-  "sharePreview.heroTitle.line1": "Entra numa sala",
+  "sharePreview.heroTitle.line1": "Entra na QueerPulse",
   "sharePreview.heroTitle.line2": "<em>onde já pertences</em>",
   "sharePreview.heroExplainer": "Uma rede queer. Enraizada em Lisboa.",
   "sharePreview.heroSub_one": "Só por convite · {count} pessoa",

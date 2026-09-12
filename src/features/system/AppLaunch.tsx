@@ -145,36 +145,6 @@ function AppLaunchOverlay({ preview }: { preview: LaunchPreview | null }) {
     );
   }, [progress]);
 
-  // The overlay is an OPAQUE, viewport-sized `position: fixed` layer, and the
-  // installed app redirects a signed-in member from the launch URL to their
-  // feed (authGate) while it is still up — so that page's first screenful is
-  // laid out and composited entirely behind an occluder and, on a phone, is
-  // never rastered. Mobile compositors cull fully-occluded content, and
-  // removing the occluder is not by itself a paint invalidation of what was
-  // behind it: the member is left with one viewport of blank ground, every
-  // offset correct, until a scroll re-tiles it.
-  //
-  // So invalidate it ourselves on the frame the overlay goes away. Flipping
-  // #root's opacity off 1 for a single frame forces the subtree to be
-  // re-rastered and is imperceptible — the same effect as the scroll members
-  // are doing by hand, without touching the scroll position (which
-  // ScrollManager owns). The signed-out landing page never needed this: nothing
-  // redirects, so the page behind the overlay was already painted.
-  useEffect(() => {
-    if (phase !== "done") return;
-    const root = document.getElementById("root");
-    if (!root) return;
-    const previous = root.style.opacity;
-    root.style.opacity = "0.999";
-    const frame = requestAnimationFrame(() => {
-      root.style.opacity = previous;
-    });
-    return () => {
-      cancelAnimationFrame(frame);
-      root.style.opacity = previous;
-    };
-  }, [phase]);
-
   if (phase === "done" || typeof document === "undefined") return null;
 
   // Only ever a status: the splash claims progress it has, and nothing more.

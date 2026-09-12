@@ -213,7 +213,7 @@ export const cinema: Catalog = {
   // ── Página do filme (FilmPage.tsx, FilmHero*.tsx, FilmBody.tsx) — só chrome;
   // título/sinopse/biografias da equipa/citação da curadoria/data do evento
   // são conteúdo deste filme e ficam em inglês ───────────────────────────────
-  "film.crumb.backCta": "Voltar à sala",
+  "film.crumb.backCta": "Voltar ao Cinema",
   "film.split.eyebrow": "A divisão",
   "film.split.title":
     "Oitenta por cento de cada aluguer vai para <em>quem fez o filme.</em>",

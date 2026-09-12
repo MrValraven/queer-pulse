@@ -124,7 +124,7 @@ export const connect: Catalog = {
     "Requests you send sit here until they're accepted. Browse members and reach out to someone you've crossed paths with.",
   "panels.blockedEmptyTitle": "You haven't blocked anyone",
   "panels.blockedEmptyDescription":
-    "If someone makes the room feel unsafe, blocking them stops their messages and hides your updates. They'll show up here if you ever need to undo it.",
+    "If someone makes the space feel unsafe, blocking them stops their messages and hides your updates. They'll show up here if you ever need to undo it.",
 
   // Private per-connection note (ConnectionNoteEditor). Only its author ever
   // sees it: the server reads a note back solely under the author's own id.

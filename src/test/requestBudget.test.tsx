@@ -512,6 +512,23 @@ describe("request budget (live mode)", () => {
       http.get(`${API_V1}/profiles/${SLUG}/subprofiles`, () =>
         HttpResponse.json([]),
       ),
+      // NowSection (isSelf) → useNowInsights() → GET /profiles/me/now-insights.
+      // Owner-only: the hook's own `enabled: isSelf` gate never turns on for a
+      // visitor, so this fires on no other route and never on someone else's
+      // profile. The figures it answers (the hellos/replies funnel above the
+      // Now card, its per-chip counts, the "Before this" disclosure) render
+      // immediately on load, not behind a visibility check, so it earns its
+      // place eager rather than deferred.
+      http.get(`${API_V1}/profiles/me/now-insights`, () =>
+        HttpResponse.json({
+          windowDays: 30,
+          hellos: 0,
+          replies: 0,
+          perChip: [],
+          nowUpdatedAt: null,
+          history: [],
+        }),
+      ),
       http.get(`${API_V1}/me/recognition`, () =>
         HttpResponse.json({
           level: {
@@ -584,6 +601,10 @@ describe("request budget (live mode)", () => {
     //     conflate the three)
     //   - ProfileHero → MemberStaffBadge → useStaffRole()/useStaffMap() →
     //     GET /platform/staff (self-view staff badge, confirmed intended)
+    //   - ProfileContent → NowSection (isSelf) → useNowInsights() →
+    //     GET /profiles/me/now-insights. Owner-only (`enabled: isSelf`):
+    //     powers the figures line above the Now card, rendered on load, not
+    //     deferred behind a viewport check.
     //   - PlacesSection → useDirectoryListings() → GET /listings/mine
     //   - PlacesSection → CoManagerInvitesInbox → useCoManagerInvites() →
     //     GET /listings/co-manager-invites (self view only: the invitations
@@ -622,6 +643,10 @@ describe("request budget (live mode)", () => {
         "/v1/me/vouches/given",
         `/v1/members/${SLUG}/vouchers`,
         "/v1/platform/staff",
+        // NowSection (isSelf) → useNowInsights() → GET
+        // /profiles/me/now-insights. Owner-only and eager: the figures it
+        // answers render on load, above the fold, not deferred.
+        "/v1/profiles/me/now-insights",
         `/v1/profiles/${SLUG}/subprofiles`,
         "/v1/subprofiles/mine",
         "/v1/subprofiles/sp-tiago-draft/endorsements",

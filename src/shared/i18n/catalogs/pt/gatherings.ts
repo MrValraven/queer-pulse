@@ -14,7 +14,7 @@ import type { Catalog } from "../../types";
  */
 export const gatherings: Catalog = {
   // ── Página de entrada (GatheringsPage) ────────────────────────────────────
-  "landing.hero.title": "A comunidade, <em>na mesma sala.</em>",
+  "landing.hero.title": "A comunidade, <em>cara a cara.</em>",
 
   "landing.ways.title": "Descobre por onde <em>entrar.</em>",
   "landing.ways.browse.title": "Vê o que há",
@@ -137,7 +137,7 @@ export const gatherings: Catalog = {
   // JoinVouchCallout
   "vouchCallout.title": "Chegaste agora? <em>Pede um voto de confiança.</em>",
   "vouchCallout.body":
-    "Os convívios da QueerPulse são só para pessoas da comunidade. Para entrares, alguém da rede dá-te um voto de confiança, ou pedes um convite e alguém trata do resto. Isto mantém todas as salas seguras.",
+    "Os convívios da QueerPulse são só para pessoas da comunidade. Para entrares, alguém da rede dá-te um voto de confiança, ou pedes um convite e alguém trata do resto. Isto mantém todos os convívios seguros.",
   "vouchCallout.requestInviteCta": "Pedir um convite",
   "vouchCallout.safetyCta": "Como mantemos isto seguro",
 

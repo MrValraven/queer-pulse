@@ -12,7 +12,7 @@ import type { Catalog } from "../../types";
  */
 export const gatherings: Catalog = {
   // ── Landing page (GatheringsPage) ─────────────────────────────────────────
-  "landing.hero.title": "The community, <em>in the same room.</em>",
+  "landing.hero.title": "The community, <em>face to face.</em>",
 
   "landing.ways.title": "Find your way <em>in.</em>",
   "landing.ways.browse.title": "Browse what's on",
@@ -136,7 +136,7 @@ export const gatherings: Catalog = {
   // JoinVouchCallout
   "vouchCallout.title": "New here? <em>Get vouched in.</em>",
   "vouchCallout.body":
-    "QueerPulse gatherings are members-only. To join, someone in the network vouches for you, or you request an invite and a member follows up. It keeps every room safe.",
+    "QueerPulse gatherings are members-only. To join, someone in the network vouches for you, or you request an invite and a member follows up. It keeps every gathering safe.",
   "vouchCallout.requestInviteCta": "Request an invite",
   "vouchCallout.safetyCta": "How we keep it safe",
 
