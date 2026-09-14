@@ -40,32 +40,26 @@ export function ProfileMutualsCard({ slug }: { slug: string }) {
     >
       <span className={styles.title}>{t("members:profile.mutuals.title")}</span>
       <div className={styles.faces}>
-        {first && (
+        {data.members.map((member) => (
           <Link
-            to={`/members/${first.slug}`}
+            key={member.slug}
+            to={`/members/${member.slug}`}
             className={styles.face}
-            aria-label={`${first.firstName} ${first.lastName}`}
+            aria-label={`${member.firstName} ${member.lastName}`}
           >
             <Avatar
-              initials={initialsFromParts(first.firstName, first.lastName)}
-              tint={tintForSlug(first.slug)}
+              initials={initialsFromParts(member.firstName, member.lastName)}
+              tint={tintForSlug(member.slug)}
               size={32}
+              // The mutual's real face, when they have one the viewer may see
+              // (the endpoint applies the `photoVisible` gate and sends null
+              // otherwise); `Avatar` falls back to the initials below it.
+              // No `name`/`alt`: the Link above already announces who this is,
+              // so the image stays decorative instead of double-reading.
+              src={member.avatarUrl ?? undefined}
             />
           </Link>
-        )}
-        {second && (
-          <Link
-            to={`/members/${second.slug}`}
-            className={styles.face}
-            aria-label={`${second.firstName} ${second.lastName}`}
-          >
-            <Avatar
-              initials={initialsFromParts(second.firstName, second.lastName)}
-              tint={tintForSlug(second.slug)}
-              size={32}
-            />
-          </Link>
-        )}
+        ))}
       </div>
       <span className={styles.text}>
         <Translation

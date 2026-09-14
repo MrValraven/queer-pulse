@@ -145,10 +145,10 @@
 .hoodSelect {
   max-width: 280px;
 }
-/* "Hear it" preview under the pronunciation input — mirrors the profile hero's
+/* "Hear it" preview beside the pronunciation input — mirrors the profile hero's
    own say button so the editor and the page read the same. */
-/* Shared with `.hoodBackToList` below: the editor's two small text buttons
-   that sit under a field rather than beside it. */
+/* Shared with `.hoodBackToList` below: the editor's two small text buttons that
+   follow a field rather than sitting in the form flow of their own. */
 .hearIt,
 .hoodBackToList {
   display: inline-flex;
@@ -162,6 +162,21 @@
   font: inherit;
   font-size: var(--text-13);
   cursor: pointer;
+}
+/* The pronunciation input and its "Hear it" preview sit on one line while the
+   column is wide enough and the button drops under the input when it isn't, so
+   the gap never becomes a stray indent. 10px clears the input's 4px focus ring
+   on the shared line. */
+.pronunciationRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+/* The shared 8px above is for a button stacked under its field; beside the
+   input it would just drop the label off the input's centre line. */
+.pronunciationRow .hearIt {
+  margin-top: 0;
 }
 .hearIt:hover,
 .hearIt:focus-visible,

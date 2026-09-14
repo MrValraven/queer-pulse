@@ -102,6 +102,7 @@ export function ThreadOpCard({
               photo: thread.author.photo,
               initials: thread.author.initials,
               name: thread.author.name,
+              official: thread.author.official,
             }}
           />
         </ProfileLink>

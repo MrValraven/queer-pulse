@@ -91,10 +91,24 @@ export const forum: Catalog = {
 
   // ── ComposeThreadModal · tags field ─────────────────────────────────────
   "compose.tagsFieldLabel": "Tags",
-  "compose.tagsPlaceholder": "Add a tag and press Enter",
+  "compose.tagsPlaceholder": "Search tags",
+  "compose.tagsSearchLabel": "Search tags",
   "compose.tagsHint":
-    "Up to {max} tags. Keep them simple, like #housing or #health.",
+    "Up to {max} tags, chosen from the list so people can find this later.",
   "compose.removeTagAria": "Remove tag {tag}",
+  "compose.addTagAria": "Add tag {tag}",
+  "compose.tagsNoMatch": "No tag matches “{query}”.",
+  "compose.popularTagsLabel": "Popular",
+  "compose.browseTags": "Browse all tags",
+  "compose.hideTagList": "Hide the tag list",
+
+  // ── Tag vocabulary categories (forumTags.data.ts) ───────────────────────
+  "tagCategory.life": "Life & money",
+  "tagCategory.health": "Health & care",
+  "tagCategory.community": "Community",
+  "tagCategory.culture": "Culture",
+  "tagCategory.activism": "Activism & funding",
+  "tagCategory.platform": "QueerPulse",
 
   // ── Forum search ────────────────────────────────────────────────────────
   "search.placeholder": "Search the forum…",
@@ -357,7 +371,7 @@ export const forum: Catalog = {
   // ── Tag editing (SOC-13) ──────────────────────────────────────────────────
   "tagsEdit.title": "Edit tags",
   "tagsEdit.body":
-    "Tags are how people find this thread later. Up to five, lowercase.",
+    "Tags are how people find this thread later. Pick up to five from the list.",
   "tagsEdit.editCta": "Edit tags",
   "tagsEdit.addCta": "Add tags",
   "tagsEdit.save": "Save tags",

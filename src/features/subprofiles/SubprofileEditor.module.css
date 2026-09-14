@@ -30,8 +30,12 @@
   margin-top: 28px;
 }
 
-.backLink {
-  display: inline-flex;
+/* "‹ Your personas", mobile only. On desktop the editor rail carries this link
+   as its own head (`.rail-back`, persona-editor.css); the rail is hidden at the
+   same 760px cut, which would otherwise leave the editor with no way back to
+   the dashboard but the browser's own. */
+.mobileBack {
+  display: none;
   align-items: center;
   gap: 8px;
   font-size: var(--text-14);
@@ -39,16 +43,24 @@
   text-decoration: none;
   width: fit-content;
 }
+@media (max-width: 760px) {
+  .mobileBack {
+    display: inline-flex;
+  }
+}
 @media (hover: hover) {
-  .backLink:hover {
+  .mobileBack:hover {
     color: var(--ink);
   }
 }
-.backLink:focus-visible {
+.mobileBack:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
   border-radius: var(--radius-6);
+}
+.mobileBack svg {
+  flex: none;
 }
 
 /* ── Page header ─────────────────────────────────────────────────────────── */
@@ -82,6 +94,25 @@
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
+}
+/* Phones: the page header, the sticky pane switcher and the pane's own h2 all
+   stack above the first field. The header is the one with the least to say —
+   the persona is already named in the title — so it gives up its breathing
+   room and the title drops a step down the scale. */
+@media (max-width: 760px) {
+  .page {
+    padding-top: 16px;
+  }
+  .container {
+    gap: 14px;
+    padding-inline-start: 0;
+  }
+  .headTitle {
+    font-size: var(--text-26);
+  }
+  .shellWrap {
+    margin-top: 16px;
+  }
 }
 
 /* ── Card surface ────────────────────────────────────────────────────────── */

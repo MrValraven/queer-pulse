@@ -66,6 +66,104 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "older-messages-keep-their-time",
+        category: "improvement",
+        date: "14 Sep 2026",
+        ...entryKeys("older-messages-keep-their-time"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "a-clearer-inbox-filter-row",
+        category: "improvement",
+        date: "14 Sep 2026",
+        ...entryKeys("a-clearer-inbox-filter-row"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "forum-tags-come-from-a-list",
+        category: "improvement",
+        date: "14 Sep 2026",
+        ...entryKeys("forum-tags-come-from-a-list"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "a-tighter-community-history-log",
+        category: "improvement",
+        date: "14 Sep 2026",
+        ...entryKeys("a-tighter-community-history-log"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "tidier-chat-message-bar",
+        category: "improvement",
+        date: "14 Sep 2026",
+        ...entryKeys("tidier-chat-message-bar"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-photo-viewer",
+        category: "feature",
+        date: "14 Sep 2026",
+        ...entryKeys("chat-photo-viewer"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "arrange-the-personas-on-your-profile",
+        category: "feature",
+        date: "14 Sep 2026",
+        ...entryKeys("arrange-the-personas-on-your-profile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofilesDashboard,
+        },
+      },
+      {
+        id: "mutual-connections-show-real-faces",
+        category: "fix",
+        date: "14 Sep 2026",
+        ...entryKeys("mutual-connections-show-real-faces"),
+      },
+      {
+        id: "edit-a-persona-on-a-phone",
+        category: "improvement",
+        date: "14 Sep 2026",
+        ...entryKeys("edit-a-persona-on-a-phone"),
+      },
+      {
+        id: "publish-a-persona-knowing-what-is-left",
+        category: "improvement",
+        date: "14 Sep 2026",
+        ...entryKeys("publish-a-persona-knowing-what-is-left"),
+      },
+      {
+        id: "closed-communities-stay-closed",
+        category: "feature",
+        date: "14 Sep 2026",
+        ...entryKeys("closed-communities-stay-closed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.aboutCommunities",
+          to: routes.communities,
+        },
+      },
+      {
         id: "board-posts-that-breathe",
         category: "feature",
         date: "14 Sep 2026",

@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { FiHelpCircle } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MENTION_SHORTCUTS } from "./mentionShortcuts.data";
+import composer from "./MessagesPage.module.css";
 import styles from "./MentionHintButton.module.css";
 
 interface MentionHintButtonProps {
@@ -17,8 +18,13 @@ interface MentionHintButtonProps {
 
 /** The composer's shortcut cheat-sheet: a "?" button that toggles a small
  *  popover listing the six mention sigils. Tapping a row inserts that sigil.
- *  Controlled so it can't co-exist with the GIF picker — the Composer owns
- *  open state and outside-click/Esc dismissal for both. */
+ *  Controlled so it can't co-exist with the attach menu or the GIF picker —
+ *  the Composer owns open state and outside-click/Esc dismissal for all three.
+ *
+ *  Sits INSIDE the input pill at its trailing edge (see `ComposerInputRow`),
+ *  so it borrows `.composerIconBtn` from the composer's own stylesheet rather
+ *  than carrying an outlined circle of its own, and its panel opens
+ *  right-aligned so it can't run off a narrow screen. */
 export function MentionHintButton({
   open,
   onToggle,
@@ -32,7 +38,7 @@ export function MentionHintButton({
       <button
         ref={buttonRef}
         type="button"
-        className={styles.btn}
+        className={composer.composerIconBtn}
         aria-label={t("messages:shortcuts.open")}
         aria-haspopup="dialog"
         aria-expanded={open}

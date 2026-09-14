@@ -81,11 +81,35 @@ export const messages: Catalog = {
   "gif.comingSoonHint":
     "We're wiring up GIF search. Check back soon to add a little motion to your messages.",
 
+  // Attach menu (ComposerAttachButton) — the paperclip inside the composer
+  // pill and the Photo / File / GIF menu it opens. The rows themselves reuse
+  // attachments.open, attachments.openDocument and gif.open below as their
+  // VISIBLE labels, so a row can never say one thing and announce another.
+  "attachments.menuOpen": "Attach",
+  "attachments.menuLabel": "Attach to this message",
+
   // Image attachments (Composer's ImageComposerButton, MessageBubbleBody)
   "attachments.open": "Send a photo",
   "attachments.imageAlt": "Photo message",
   "attachments.fallbackText": "Photo",
   "attachments.previewUnavailable": "Photo preview unavailable",
+
+  // Full-screen photo viewer (ChatImageViewer + its chrome), opened by tapping
+  // a photo or GIF bubble. Reply/Forward/Star reuse the actions.* keys above,
+  // so the viewer and the long-press overlay can never drift apart in wording.
+  "viewer.open": "Open photo from {sender}",
+  "viewer.dialogLabel": "Photo from {sender}, {time}",
+  "viewer.close": "Close photo",
+  "viewer.counter": "{index} / {total}",
+  "viewer.counterAnnouncement": "Photo {index} of {total}, from {sender}",
+  "viewer.you": "You",
+  "viewer.save": "Save",
+  "viewer.saved": "Photo saved",
+  "viewer.saveFallback":
+    "We couldn't save that photo, so it opened in a new tab.",
+  "viewer.saveFailed": "We couldn't save that photo. Try again.",
+  "viewer.prev": "Previous photo",
+  "viewer.next": "Next photo",
 
   // Document attachments (DocumentComposerButton, MessageDocumentAttachment,
   // MessageBubbleBody, documentUploadProcessing)

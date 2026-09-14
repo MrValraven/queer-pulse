@@ -136,6 +136,9 @@ export const routes = {
    *  volunteer hours did QueerPulse contribute". Aggregates only. */
   adminVolunteerHours: "/admin/volunteer-hours",
   adminStatusIncidents: "/admin/status-incidents",
+  /** Reach and depth per product feature, classified into the four states
+   *  (busy/browsed-but-empty/quiet/not-launched) a moderator needs to see. */
+  adminFeatureUsage: "/admin/feature-usage",
   about: "/about",
   account: "/account",
   accountProfile: "/account/profile",

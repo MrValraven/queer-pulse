@@ -8,32 +8,57 @@ import {
   PublishUnmetError,
   useSubprofileMutations,
 } from "./api/useSubprofileMutations";
-import { estimateEditorReadiness } from "./subprofileDraftReadiness";
+import { evaluatePublishRequirements } from "./subprofileDraftReadiness";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
-import { SideReadinessRing } from "./SideReadinessRing";
+import { useEditorFieldJump } from "./useEditorFieldJump";
+import { requirementsFor } from "./publishChecklist.data";
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
+import type { PublishAttempt } from "./PublishChecklist";
 import { PersonaDangerZone } from "./PersonaDangerZone";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofilePublishPanel.module.css";
 
-interface ChecklistState {
-  unmet: string[];
-  unknown: boolean;
+/** Ties the Publish button to the line explaining why it's disabled. A fixed
+ *  id is safe: one publish pane is mounted per editor. */
+const PUBLISH_HINT_ID = "persona-publish-hint";
+
+/** A past attempt, plus the screened text it actually judged. */
+interface StoredAttempt extends PublishAttempt {
+  screenedText: string;
+}
+
+/** The three fields the server's blocked-term screen reads, joined with a
+ *  separator no field can contain, so "did the screened text change?" is one
+ *  string comparison. Mirrors `containsBlockedTerm` on the backend. */
+function screenedFieldsOf(meta: {
+  displayName: string;
+  bio: string;
+  handle: string;
+}): string {
+  return [meta.displayName, meta.bio, meta.handle].join("\u0000");
 }
 
 /**
- * The publish surface: a quick client-only readiness ring (honest estimate,
- * `estimateDraftReadiness` — no blocked-language check, no network) above the
- * Publish action; on a rejected completeness check, the real server-verified
- * `PublishChecklist`; on success, the plum success panel. Published personas
- * get an Unpublish action to return to draft. Live mode may not surface the
- * 422 `{unmet}` body, so a non-`PublishUnmetError` rejection renders the
- * checklist in its "still to check" state. Below all of that, the
- * `PersonaDangerZone` band: this pane's Publish/Unpublish mutations and the
- * delete/leave actions are siblings on the same persona, so pairing "make it
- * live" with "get rid of it entirely" here (rather than only on the dashboard)
- * keeps every persona-lifecycle action in one place.
+ * The publish surface: the live `PublishChecklist` (every requirement, judged
+ * against the working editor state as it's typed) above the Publish action,
+ * which stays DISABLED until the client-checkable requirements are met — so the
+ * button is only offered when pressing it can work, and what's left is on
+ * screen and clickable rather than discovered by being rejected. On success,
+ * the plum success panel; published personas get an Unpublish action to return
+ * to draft.
+ *
+ * A publish attempt still refines the list: "no blocked language" is
+ * server-side only and a taken handle needs the availability round trip, so a
+ * 422 fills in what the browser couldn't judge. Live mode may not surface the
+ * `{unmet}` body, so a non-`PublishUnmetError` rejection leaves those rows in
+ * their "still to check" state.
+ *
+ * Below all of that, the `PersonaDangerZone` band: this pane's
+ * Publish/Unpublish mutations and the delete/leave actions are siblings on the
+ * same persona, so pairing "make it live" with "get rid of it entirely" here
+ * (rather than only on the dashboard) keeps every persona-lifecycle action in
+ * one place.
  */
 export function SubprofilePublishPanel({
   subprofile,
@@ -44,18 +69,35 @@ export function SubprofilePublishPanel({
   const { showToast } = useToast();
   const { t } = useTranslation();
   const editor = useSubprofileEditorContext();
-  const [checklist, setChecklist] = useState<ChecklistState | null>(null);
+  const jumpToField = useEditorFieldJump();
+  const [storedAttempt, setStoredAttempt] = useState<StoredAttempt | null>(
+    null,
+  );
   const [justPublished, setJustPublished] = useState(false);
 
   const isPublished = subprofile.status === "published";
   const isLinked = subprofile.linkVisibility === "linked";
-  // Ring reads the LIVE editor snapshot (meta fields + working rows), not the
-  // saved persona, so it tracks unsaved edits as they're made.
-  const readiness = estimateEditorReadiness(editor);
+  // Read off the LIVE editor snapshot (meta fields + working rows), not the
+  // saved persona, so the list tracks unsaved edits as they're made.
+  const clientCodes = evaluatePublishRequirements(editor);
+  const unmetCount = Object.values(clientCodes).filter(Boolean).length;
+  const hasRequirements = requirementsFor(subprofile.linkVisibility).length > 0;
   // Publish verifies the SAVED server row. With unsaved edits in the editor,
   // the check would run against a stale (often empty) row and reject — so gate
   // Publish behind a Save first rather than firing it against stale state.
   const { dirty } = editor;
+
+  // An attempt answers for the text it was SENT with. Once any screened field
+  // changes, its verdict on the one thing only the server can judge (blocked
+  // language, and a taken handle) no longer describes what's on screen, so it
+  // is dropped and those rows return to "still to check". Derived rather than
+  // cleared in an effect: the attempt and the fields it judged are read in the
+  // same render, so the list can never paint one frame of a stale verdict.
+  const screenedText = screenedFieldsOf(editor.meta);
+  const attempt: PublishAttempt | null =
+    storedAttempt && storedAttempt.screenedText === screenedText
+      ? storedAttempt
+      : null;
 
   // Where the now-live persona can be viewed: a linked persona nests under the
   // CREATOR's main profile (the only slug that route resolves by), an unlinked
@@ -74,16 +116,16 @@ export function SubprofilePublishPanel({
       : null;
 
   async function onPublish() {
-    setChecklist(null);
+    setStoredAttempt(null);
     try {
       await publish.mutateAsync(subprofile.id);
       setJustPublished(true);
       showToast(t("subprofiles:publishPanel.toastLive"), "success");
     } catch (err) {
       if (err instanceof PublishUnmetError) {
-        setChecklist({ unmet: err.unmet, unknown: false });
+        setStoredAttempt({ unmet: err.unmet, unknown: false, screenedText });
       } else {
-        setChecklist({ unmet: [], unknown: true });
+        setStoredAttempt({ unmet: [], unknown: true, screenedText });
         showToast(t("subprofiles:publishPanel.toastPublishError"), "error");
       }
     }
@@ -93,7 +135,7 @@ export function SubprofilePublishPanel({
     try {
       await unpublish.mutateAsync(subprofile.id);
       setJustPublished(false);
-      setChecklist(null);
+      setStoredAttempt(null);
       showToast(t("subprofiles:publishPanel.toastUnpublished"), "info");
     } catch {
       showToast(t("subprofiles:publishPanel.toastError"), "error");
@@ -122,22 +164,30 @@ export function SubprofilePublishPanel({
     );
   }
 
+  // What keeps Publish disabled, if anything. Unmet requirements come first:
+  // with a requirement outstanding, "save your changes" would be the wrong
+  // thing to go and do.
+  const blockedHintKey =
+    unmetCount > 0
+      ? "subprofiles:publishPanel.blockedHint"
+      : dirty
+        ? "subprofiles:publishPanel.saveFirstHint"
+        : null;
+
   return (
     <div className="ed-grid">
-      <div className={styles.readinessRow}>
-        <SideReadinessRing
-          readyCount={readiness.readyCount}
-          totalCount={readiness.totalCount}
-        />
-        <div className={styles.readinessText}>
-          <p className={styles.readinessTitle}>
-            {t("subprofiles:publishPanel.estimateTitle")}
-          </p>
-          <p className={styles.readinessNote}>
-            {t("subprofiles:publishPanel.estimateNote")}
-          </p>
+      {/* Nothing for a linked persona: it publishes on its display name alone,
+          so the checklist renders null and the wrapper goes with it. */}
+      {hasRequirements && (
+        <div className={sharedStyles.checklistWrap}>
+          <PublishChecklist
+            clientCodes={clientCodes}
+            attempt={attempt}
+            linkVisibility={subprofile.linkVisibility}
+            onJump={jumpToField}
+          />
         </div>
-      </div>
+      )}
 
       <div className={sharedStyles.publishBar}>
         <p className={sharedStyles.publishCopy}>
@@ -162,7 +212,10 @@ export function SubprofilePublishPanel({
           <Button
             variant="primary"
             onClick={() => void onPublish()}
-            disabled={publish.isPending || dirty}
+            disabled={publish.isPending || dirty || unmetCount > 0}
+            // A disabled button explains nothing on its own; point at the line
+            // below that says which of the two reasons it is.
+            aria-describedby={blockedHintKey ? PUBLISH_HINT_ID : undefined}
           >
             {publish.isPending
               ? t("subprofiles:publishPanel.publishing")
@@ -171,21 +224,16 @@ export function SubprofilePublishPanel({
                 : t("subprofiles:publishPanel.publish")}
           </Button>
         </div>
-        {dirty && (
-          <p className={styles.saveFirstHint} role="status">
-            {t("subprofiles:publishPanel.saveFirstHint")}
+        {blockedHintKey && (
+          <p
+            id={PUBLISH_HINT_ID}
+            className={styles.saveFirstHint}
+            role="status"
+          >
+            {t(blockedHintKey, { count: unmetCount })}
           </p>
         )}
       </div>
-
-      {checklist && (
-        <div className={sharedStyles.checklistWrap}>
-          <PublishChecklist
-            unmet={checklist.unmet}
-            unknown={checklist.unknown}
-          />
-        </div>
-      )}
 
       <SubprofilePolishList subprofile={subprofile} />
 

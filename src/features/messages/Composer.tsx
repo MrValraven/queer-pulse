@@ -31,17 +31,17 @@ interface ComposerProps {
   replyDraft?: ChatMessage | null;
   /** Clears the reply draft (the preview banner's close button). */
   onCancelReply?: () => void;
-  /** Sends a picked GIF as its own message. When absent, the GIF button is
-   *  hidden (e.g. surfaces that don't wire the picker). */
+  /** Sends a picked GIF as its own message. When absent, the attach menu's
+   *  GIF row is hidden (e.g. surfaces that don't wire the picker). */
   onSendGif?: (attachment: GifAttachment) => void;
-  /** Sends an uploaded image as its own message. When absent, the photo
-   *  attach button is hidden (e.g. surfaces that don't wire uploads). */
+  /** Sends an uploaded image as its own message. When absent, the attach
+   *  menu's Photo row is hidden (e.g. surfaces that don't wire uploads). */
   onSendImage?: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
   ) => void;
   /** Sends an uploaded document as its own message (PRD-226). When absent,
-   *  the document attach button is hidden. */
+   *  the attach menu's File row is hidden. */
   onSendDocument?: (
     attachment: DocumentAttachment,
     localAttachment?: DocumentAttachment,
@@ -60,7 +60,7 @@ interface ComposerProps {
  * message-edit inline editor, which owns its own local text entirely.
  *
  * The throttled typing frames (`useComposerTyping`), the mutually-exclusive
- * GIF/shortcut popovers (`useComposerPopovers`), and the reply-quote banner
+ * attach/GIF/shortcut popovers (`useComposerPopovers`), and the reply-quote banner
  * (`ComposerReplyPreview`) are split into colocated files, same as the draft
  * sync above, so this component stays under the line cap.
  */
@@ -96,10 +96,15 @@ export function Composer({
   // is always rendered rather than conditionally on `replyDraft`.
   const { previewMessage, open: replyPreviewOpen } =
     useReplyPreviewTransition(replyDraft);
-  // Exactly one composer popover (GIF picker or the shortcut hint) is open at a
-  // time — see `useComposerPopovers`.
-  const { openPopover, popoverGroupRef, togglePopover, closePopover } =
-    useComposerPopovers();
+  // Exactly one composer popover (the attach menu, the GIF picker it hands off
+  // to, or the shortcut hint) is open at a time — see `useComposerPopovers`.
+  const {
+    openPopover,
+    popoverGroupRef,
+    togglePopover,
+    showPopover,
+    closePopover,
+  } = useComposerPopovers();
   useComposerAutoGrow(textareaRef, draft);
   const insertShortcut = useInsertMentionShortcut(
     conversationId,
@@ -195,6 +200,7 @@ export function Composer({
         popoverGroupRef={popoverGroupRef}
         openPopover={openPopover}
         onTogglePopover={togglePopover}
+        onOpenPopover={showPopover}
         onClosePopover={closePopover}
         onSendGif={onSendGif}
         onSendImage={onSendImage}

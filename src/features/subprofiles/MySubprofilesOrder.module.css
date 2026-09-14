@@ -1,0 +1,159 @@
+/* Reorder chrome for the personas dashboard's two card groups.
+
+   The card grid vocabulary itself (`.sides`, `.side`, `.side-acts`,
+   `.new-side`) stays global in persona-dashboard.css — it is shared with the
+   loading and empty states and with the design prototype. This module only
+   covers the genuinely new local pieces: the per-card reorder toolbar, the
+   picked-up state, the group headings, and the not-shown group's card foot. */
+
+/* One titled group of cards ("On your profile" / "Not shown on your profile").
+   The dashboard used to be a single unlabelled grid, so the first group needs
+   the same top breathing room the second one gets between them. */
+.group {
+  margin-top: var(--gap-lg);
+}
+
+.groupHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: var(--gap-sm);
+}
+
+.groupTitle {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.groupHint {
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  max-width: 62ch;
+}
+
+/* Nothing is listed on the profile yet, while the member still owns drafts or
+   standalone personas — so this is a note about an empty GROUP, never the
+   dashboard's first-run state (`EmptySides` owns that). */
+.emptyGroup {
+  font-size: var(--text-14);
+  color: var(--ink-40);
+}
+
+/* The "new persona" tile lives in its own grid after the reorderable one,
+   because the drag hook reads the container's children positionally and the
+   tile is not a card. Reusing `.sides` alongside this class gives it the same
+   track sizing, so it still lands on the card grid's rhythm. */
+.newTileRow {
+  margin-top: var(--gap-grid);
+}
+
+/* One grid cell: the reorder toolbar on its own row above the card, with the
+   card taking the rest of the cell so neighbouring cards still line up bottom
+   to bottom however tall the toolbar renders. */
+.cardShell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--gap-xs);
+  border-radius: var(--radius-card);
+}
+
+/* The card currently held under the pointer. Lifts it over its neighbours
+   while the grid reshuffles underneath, so the member can see which one they
+   picked up. No `transform`: `.side`'s own hover lift owns that property, and
+   a second transform here would fight it mid-drag. */
+.dragging {
+  position: relative;
+  z-index: var(--z-raised);
+  box-shadow: var(--shadow-e2);
+  cursor: grabbing;
+}
+
+.reorderBar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+}
+
+/* Pointer drag handle (`useGridDragReorder`), `aria-hidden` in the markup:
+   the Move earlier / Move later buttons beside it are the keyboard and
+   assistive-tech path. `touch-action: none` stops the browser claiming the
+   gesture for scroll or zoom, so a touch drag reorders instead of panning. */
+.grip {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-40);
+  cursor: grab;
+  touch-action: none;
+  flex: none;
+}
+.grip:active {
+  cursor: grabbing;
+}
+
+.position {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  margin-right: auto;
+  padding-left: 4px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* No global <button> reset in this repo — zero the native chrome, else every
+   move button shows a grey box (same note as `.iact` in persona-editor.css). */
+.moveBtn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-8);
+  display: grid;
+  place-items: center;
+  color: var(--ink-40);
+  cursor: pointer;
+  flex: none;
+  transition:
+    color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+@media (hover: hover) {
+  .moveBtn:hover:not(:disabled) {
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+}
+.moveBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.moveBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The not-shown card's foot, in the slot the owner action row occupies on the
+   grid above: why this persona is off the profile, and the one link that
+   changes it. Stacks, where `.side-acts` is a row of equal-width buttons, so
+   both children opt out of that `flex: 1`. */
+.notShownFoot {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--gap-xs);
+}
+.notShownFoot > * {
+  flex: none;
+}
+
+.notShownReason {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}

@@ -12,11 +12,11 @@
   flex-direction: column;
   gap: var(--gap-grid);
 }
-/* Narrower gutter once the full --wrap-px pair would eat too much of a
-   phone's width — matches the ground-truth `.wrap` mobile treatment. */
+/* --wrap-px is itself narrower below --md now (spacing.css), so the gutter
+   follows the ground-truth `.wrap` treatment without a second copy of it here.
+   Only the gap still needs tightening on a phone. */
 @media (--sm) {
   .container {
-    width: min(1080px, 100% - 40px);
     gap: var(--gap-sm);
   }
 }

@@ -136,3 +136,115 @@
 :global([data-theme="dark"]) .tabs:not(.underline) .tab:not(.tabOn) .tabCount {
   background: rgba(var(--cream-rgb), 0.12);
 }
+
+/* ── icon-only tabs (pill variant) ────────────────────────────────────────────
+   A square pill carrying only a glyph: its `label` becomes the button's
+   aria-label and the text of the tooltip below. Lets a filter row with more
+   entries than horizontal room (the messages inbox) stay on one line. */
+.tabIcon {
+  width: 34px;
+  padding: 8px;
+  justify-content: center;
+}
+.tabIcon svg {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  display: block;
+}
+/* Declared after `.tabOn .tabCount` so an icon tab keeps its corner badge in
+   both states — there is no room for the inline count pill beside a glyph. */
+.tabIcon .tabCount,
+.tabOn.tabIcon .tabCount {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  line-height: 16px;
+  font-size: var(--text-9);
+  background: var(--accent);
+  color: var(--text-strong);
+}
+
+/* The tooltip. Mirrors the shared `Tooltip` bubble, but drawn INSIDE the tab
+   rather than by wrapping it: a `role="tablist"` may only own `role="tab"`
+   children, so a wrapper span around the button would be invalid ARIA. */
+.tabTip {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  z-index: var(--z-lightbox);
+  padding: 5px 9px;
+  border-radius: var(--radius-7);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  box-shadow: var(--ring-cream-hairline), var(--shadow-e3);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.3;
+  width: max-content;
+  pointer-events: none;
+  opacity: 0;
+  /* `--tab-tip-x` is the bubble's own horizontal correction: -50% pulls a
+     left:50% bubble back over the pill's centre. A tab at the row's trailing
+     edge re-anchors it (see `.iconsEnd`) by setting this to 0, so the
+     hover/focus rules below don't each need an override. */
+  transform: translate(var(--tab-tip-x, -50%), 2px);
+  transition:
+    opacity var(--dur-fast, 0.12s) var(--ease-out, ease),
+    transform var(--dur-fast, 0.12s) var(--ease-out, ease);
+}
+/* Hover is pointer-fine only; touch reaches the label through the aria-label
+   and, for the one tab that carries a count, the badge. */
+@media (hover: hover) and (pointer: fine) {
+  .tabIcon:hover .tabTip {
+    opacity: 1;
+    transform: translate(var(--tab-tip-x, -50%), 0);
+  }
+}
+.tabIcon:focus-visible .tabTip {
+  opacity: 1;
+  transform: translate(var(--tab-tip-x, -50%), 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tabTip {
+    transition: none;
+  }
+}
+
+/* ── density: compact (pill variant) ──────────────────────────────────────────
+   Tighter pills and gap, so a filter row with six entries fits one line in a
+   column too narrow for the default padding. Declared after `.tabIcon` so the
+   icon pill's own size wins back at equal specificity. */
+.compact {
+  gap: 5px;
+}
+.compact .tab {
+  padding: 8px 10px;
+}
+.compact .tabIcon {
+  width: 32px;
+  padding: 8px 6px;
+}
+
+/* ── iconsEnd (pill variant) ──────────────────────────────────────────────────
+   Pushes a trailing run of icon-only pills to the row's far edge, so a filter
+   row reads as "filters left, utilities right" (the messages inbox). The row
+   has to span its column for there to be any slack to take, hence the `flex`
+   +`width` pair overriding `.tabs`' shrink-to-content `inline-flex`. */
+.iconsEnd {
+  display: flex;
+  width: 100%;
+}
+.iconsEnd .tab:not(.tabIcon) + .tabIcon {
+  margin-inline-start: auto;
+}
+/* The last pill now sits against its container's edge, where a centred tooltip
+   would hang past it — anchor that one's bubble to the edge instead. */
+.iconsEnd .tabIcon:last-child .tabTip {
+  left: auto;
+  right: 0;
+  --tab-tip-x: 0;
+}

@@ -48,6 +48,39 @@ export interface CommunityCardDTO {
    *  rather than as a type error. */
   avatarImageUrl?: string | null;
 }
+/**
+ * `GET /communities/:slug/gate`: everything a signed-in non-member may see of
+ * a community whose tier is not `public`.
+ *
+ * NOT a `CommunityCardDTO`. It carries neither `ref` nor any activity stat nor
+ * the viewer's `myRole`, and it adds the place/language/purpose fields a gate
+ * card needs. Mirrors the backend's `PublicCommunityResponse`, whose field
+ * list is closed on purpose: no roster, no owner, no post, no rules. Do not
+ * widen this interface without widening that one, and read its comment first.
+ */
+export interface CommunityGateCardDTO {
+  slug: string;
+  name: string;
+  tagline: string;
+  purpose: string;
+  type: CommunityType;
+  accessTier: AccessTier;
+  tags: string[];
+  city: string | null;
+  area: string | null;
+  isOnline: boolean;
+  languages: string[];
+  memberCount: number;
+  avatarImageUrl: string | null;
+  coverImageUrl: string | null;
+  nextGathering: {
+    slug: string;
+    title: string;
+    startAt: string;
+    endAt: string | null;
+    isOnline: boolean;
+  } | null;
+}
 export interface CommunityDetailDTO extends CommunityCardDTO {
   purpose: string;
   whoFor: string;
@@ -286,6 +319,9 @@ export async function getCommunities(
 
 export const getCommunity = (slug: string) =>
   apiGet<CommunityDetailDTO>(`/communities/${slug}`);
+
+export const getCommunityGateCard = (slug: string) =>
+  apiGet<CommunityGateCardDTO>(`/communities/${slug}/gate`);
 
 /** GET /communities/featured — the admin-chosen platform-wide featured
  *  community, or null when none is set. See `CommunitiesService.getFeatured`. */

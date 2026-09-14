@@ -14,16 +14,16 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .entry {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: var(--radius-card);
-  padding: 14px 16px;
+  padding: 11px 14px;
   background: var(--paper);
 }
 
@@ -43,7 +43,7 @@
 .summary {
   margin: 0;
   font-size: var(--text-body);
-  line-height: 1.5;
+  line-height: 1.4;
   color: var(--ink);
   overflow-wrap: anywhere;
 }
@@ -59,22 +59,23 @@
 }
 
 .byline {
-  margin: 0;
+  margin: 0 0 0 auto;
   font-size: var(--text-caption);
   color: var(--ink-40);
   overflow-wrap: anywhere;
+  text-align: right;
 }
 
 .details {
-  margin: 2px 0 0;
+  margin: 0;
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .detailRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 10px;
+  gap: 2px 8px;
 }
 
 .detailLabel {
@@ -84,13 +85,13 @@
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--ink-40);
-  min-width: 120px;
+  min-width: 96px;
 }
 
 .detailValue {
   margin: 0;
   font-size: var(--text-body-sm);
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--ink-60);
   overflow-wrap: anywhere;
   flex: 1 1 200px;

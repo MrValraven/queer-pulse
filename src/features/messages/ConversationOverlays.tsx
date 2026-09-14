@@ -1,12 +1,14 @@
 // src/features/messages/ConversationOverlays.tsx
 import type { Dispatch, SetStateAction } from "react";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
+import { ChatImageViewer } from "./ChatImageViewer";
 import { DeleteMessageDialog } from "./DeleteMessageDialog";
 import { MessageActionOverlay } from "./MessageActionOverlay";
 import { MessageContextMenu } from "./MessageContextMenu";
 import { MessageReportModal } from "./MessageReportModal";
 import { findReactionMine } from "./reactionKeys";
 import type { ChatMessage } from "./data";
+import type { ViewerPhoto } from "./useThreadImageGallery";
 
 type ActionTarget = {
   message: ChatMessage;
@@ -60,6 +62,14 @@ export interface ConversationOverlaysProps {
   deletePending: boolean;
   /** True while the "delete for me" request is in flight. */
   deleteForMePending: boolean;
+  /** The open thread's photo sequence, for the full screen viewer. */
+  photos: ViewerPhoto[];
+  /** Index into `photos` the viewer is open on, or null when it is closed. */
+  photoIndex: number | null;
+  /** Closes the full screen viewer. */
+  onClosePhoto: () => void;
+  /** Opens the forward picker for the photo being viewed. */
+  onForwardPhoto: (message: ChatMessage) => void;
 }
 
 /** Presentational: the three modal/overlay surfaces a conversation can have
@@ -86,9 +96,23 @@ export function ConversationOverlays({
   onConfirmDeleteForMe,
   deletePending,
   deleteForMePending,
+  photos,
+  photoIndex,
+  onClosePhoto,
+  onForwardPhoto,
 }: ConversationOverlaysProps) {
   return (
     <>
+      {photoIndex !== null && (
+        <ChatImageViewer
+          photos={photos}
+          startIndex={photoIndex}
+          onClose={onClosePhoto}
+          onReply={onSetReply}
+          onForward={onForwardPhoto}
+          onToggleStar={onToggleStar}
+        />
+      )}
       {deleteTarget && (
         <DeleteMessageDialog
           onConfirm={onConfirmDelete}

@@ -479,6 +479,17 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiBarChart2,
       },
       {
+        // `isAdminOnly` because `AdminFeatureUsageController` is
+        // `@Roles(Admin)` alone, and `routes.adminFeatureUsage` is not in
+        // `MOD_ACCESSIBLE_ADMIN_PATTERNS` (`authGate.ts`) either, so it falls
+        // under the same blanket admin-only match; without the flag a
+        // moderator saw this link and bounced off the route it points to.
+        labelKey: "shared:adminNav.items.featureUsage",
+        to: routes.adminFeatureUsage,
+        icon: FiBarChart2,
+        isAdminOnly: true,
+      },
+      {
         // SUS-05: confirmed volunteer sessions and hours. Filed beside Reports
         // because it is the same job: figures the team can put in front of a
         // partner or a funder.

@@ -6006,4 +6006,95 @@ export const admin: Catalog = {
   "adminQueues.error.title": "We could not read the queue counts",
   "adminQueues.error.body":
     "Try again. If it keeps failing, open the queues themselves: the counts are the only thing missing here.",
+
+  // Feature usage panel. Feature display names cover every key in the
+  // backend's launchedFeatures, so no row can render a raw key.
+  "featureUsage.eyebrow": "Where effort goes",
+  "featureUsage.title": "Feature <em>usage</em>",
+  "featureUsage.header.title": "Feature <em>usage</em>",
+  "featureUsage.sub":
+    "How much each part of the platform gets browsed against how much gets used to create something. These are aggregate counts. Nothing here tracks an individual member's behaviour.",
+  "featureUsage.rangeLabel": "Range",
+  "featureUsage.range.d7": "Last 7 days",
+  "featureUsage.range.d30": "Last 30 days",
+  "featureUsage.range.d90": "Last 90 days",
+  "featureUsage.reachOnlyNote":
+    "Some features have nothing for a member to create. Their Created and Total columns explain why instead of showing a count, so an empty cell is never mistaken for a zero.",
+  "featureUsage.table.caption":
+    "Reach and creation per feature, ordered by what needs a decision first.",
+  "featureUsage.column.feature": "Feature",
+  "featureUsage.column.state": "State",
+  "featureUsage.column.reach": "Reach",
+  "featureUsage.column.created": "Created",
+  "featureUsage.column.total": "Total",
+  "featureUsage.column.details": "Details",
+  "featureUsage.state.busy.label": "Busy",
+  "featureUsage.state.busy.explainer":
+    "Healthy reach and healthy creation. Leave it alone.",
+  "featureUsage.state.browsedButEmpty.label": "Browsed but empty",
+  "featureUsage.state.browsedButEmpty.explainer":
+    "People arrive and nothing gets created. The path is stopping them.",
+  "featureUsage.state.quiet.label": "Quiet",
+  "featureUsage.state.quiet.explainer":
+    "Low reach and low creation. Either nobody finds it or nobody wants it.",
+  "featureUsage.state.notLaunched.label": "Not launched",
+  "featureUsage.state.notLaunched.explainer":
+    "Flagged off on purpose, so it is excluded from the ranking above.",
+  "featureUsage.stat.busy.trend": "Steady",
+  "featureUsage.stat.browsedButEmpty.trend": "Top priority",
+  "featureUsage.stat.quiet.trend": "Low signal",
+  "featureUsage.stat.notLaunched.trend": "Off by design",
+  "featureUsage.reachTrend.none": "No reach recorded",
+  "featureUsage.reachTrend.new": "New activity this range",
+  "featureUsage.reachTrend.change": "{percent} vs the previous range",
+  "featureUsage.drillDown.expandLabel": "Show details for {feature}",
+  "featureUsage.drillDown.collapseLabel": "Hide details for {feature}",
+  "featureUsage.drillDown.housingListings.listings": "Listings created",
+  "featureUsage.drillDown.housingListings.savedSearches": "Saved searches",
+  "featureUsage.drillDown.housingListings.viewings": "Viewings",
+  "featureUsage.drillDown.forum.threads": "Threads",
+  "featureUsage.drillDown.forum.replies": "Replies",
+  "featureUsage.drillDown.communities.created": "Communities created",
+  "featureUsage.drillDown.communities.stillPostingThisWeek":
+    "Still posting this week",
+  "featureUsage.drillDown.communities.stillPostingNote":
+    "A rolling 7-day count, independent of the range selected above.",
+  "featureUsage.feature.housingListings": "Housing listings",
+  "featureUsage.feature.landlords": "Landlords",
+  "featureUsage.feature.magazine": "Magazine",
+  "featureUsage.feature.content": "Topics",
+  "featureUsage.feature.feed": "Feed",
+  "featureUsage.feature.communities": "Communities",
+  "featureUsage.feature.forum": "Forum",
+  "featureUsage.feature.events": "Events",
+  "featureUsage.feature.cinema": "Cinema",
+  "featureUsage.feature.companies": "Companies",
+  "featureUsage.feature.jobs": "Jobs",
+  "featureUsage.feature.barter": "Barter",
+  "featureUsage.feature.community": "Community programmes",
+  "featureUsage.feature.partners": "Partners",
+  "featureUsage.feature.volunteering": "Volunteering",
+  "featureUsage.feature.connections": "Connections",
+  "featureUsage.feature.messaging": "Messages",
+  "featureUsage.feature.listings": "Business listings",
+  "featureUsage.feature.housing": "Housing co-ops",
+  "featureUsage.feature.flatmateProfiles": "Flatmate profiles",
+  "featureUsage.feature.resources": "Resources",
+  "featureUsage.feature.culture": "Culture",
+  "featureUsage.feature.governance": "Governance",
+  "featureUsage.feature.roadmap": "Roadmap",
+  "featureUsage.noReachSignal.notice":
+    "No reach was recorded for the selected range. Every feature therefore reads as Quiet until reach is recorded, so the states below are not yet meaningful.",
+  "featureUsage.notApplicable": "Not applicable:",
+  "featureUsage.reachOnlyReason.feed":
+    "The feed is a read surface and creates nothing.",
+  "featureUsage.reachOnlyReason.content":
+    "Topics are a curated taxonomy with no member create route, and topic posts are derived from forum threads that are already counted as forum depth.",
+  "featureUsage.reachOnlyReason.cinema":
+    "Titles are published by editorial staff only; no member route creates a title, and watch history is excluded on the same privacy grounds as messaging.",
+  "featureUsage.reachOnlyReason.generic":
+    "This feature has nothing for a member to create.",
+  "featureUsage.loadError":
+    "We could not load feature usage. Try again in a moment.",
+  "featureUsage.empty": "No features to show for this range yet.",
 };

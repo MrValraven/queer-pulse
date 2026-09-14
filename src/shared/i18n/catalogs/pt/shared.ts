@@ -243,6 +243,7 @@ export const shared: Catalog = {
   "adminNav.pendingSuffix": "pendentes",
 
   "adminNav.items.overview": "Visão geral",
+  "adminNav.items.featureUsage": "Utilização de funcionalidades",
   "adminNav.items.landing": "Página inicial",
   "adminNav.items.pressKit": "Kit de imprensa",
   "adminNav.items.queues": "Todas as filas",

@@ -55,15 +55,26 @@ interface PressState {
 }
 
 export interface UseMessageGesturesOptions {
-  /** Gestures are live only for a message with a server id that isn't deleted. */
+  /** Gestures are live for a message with a server id that isn't deleted, OR
+   *  for a bubble with some other tap action to reach (a viewable photo, which
+   *  opens on tap with no id required). See `onActivate`. */
   enabled: boolean;
-  /** Opens the long-press/right-click action overlay (unchanged path). */
-  onOpenActions: (origin: LongPressOrigin) => void;
+  /** Opens the long-press/right-click action overlay (unchanged path).
+   *  Undefined leaves the overlay genuinely inert (no timer fires it, no
+   *  crash) for a bubble that can't open it yet, e.g. a message with no server
+   *  id, even while `enabled` is true for some other gesture on that bubble. */
+  onOpenActions?: (origin: LongPressOrigin) => void;
   /** Arms a reply to this message. Undefined → swipe-to-reply disabled (e.g. an
    *  optimistic message with no server id yet). */
   onReply?: () => void;
   /** Toggles the default reaction. Undefined → double-tap disabled. */
   onQuickReact?: () => void;
+  /** Opens this bubble's own tap surface (a photo bubble opening the full
+   *  screen viewer). When set, the FIRST qualifying tap fires it and the
+   *  double-tap reaction is skipped for this bubble, so the open is instant
+   *  instead of waiting out the double-tap window. Undefined leaves the tap
+   *  path exactly as it was. */
+  onActivate?: () => void;
   /** Which way a drag must travel to arm the reply — "right" for received
    *  (left-aligned) bubbles, "left" for sent (own, right-aligned) bubbles. The
    *  opposite horizontal drag is ignored (left as native scroll/no-op). */
@@ -143,6 +154,7 @@ export function useMessageGestures({
   onOpenActions,
   onReply,
   onQuickReact,
+  onActivate,
   replyDirection,
   bubbleRef,
   hintRef,
@@ -153,7 +165,10 @@ export function useMessageGestures({
   // the swipe's own engage threshold — a dead band where a real drag did
   // nothing at all. Aligning them means the same movement that cancels the
   // hold is exactly what arms the swipe.
-  const longPress = useLongPress(onOpenActions, {
+  // `useLongPress` itself always wants a real function; wrapping here (rather
+  // than widening ITS contract) is what keeps a long-press/right-click genuinely
+  // inert, instead of throwing, on a bubble whose `onOpenActions` is absent.
+  const longPress = useLongPress((origin) => onOpenActions?.(origin), {
     enabled,
     moveTolerancePx: SWIPE_ENGAGE_PX,
   });
@@ -245,8 +260,10 @@ export function useMessageGestures({
         if (Math.abs(press.offset) >= SWIPE_TRIGGER_PX) onReply?.();
         return; // an engaged swipe consumes the gesture — never also a tap
       }
-      // Tap / double-tap path (touch double-tap AND mouse double-click).
-      if (!press || !onQuickReact || event.button !== 0) return;
+      // Tap path (touch tap AND mouse click). A bubble with its own tap action
+      // takes the first qualifying tap; only a bubble without one waits for a
+      // second tap to toggle the reaction.
+      if (!press || event.button !== 0) return;
       if (Date.now() - press.startTime > LONG_PRESS_GUARD_MS) return; // long-press
       if (
         Math.abs(event.clientX - press.startX) > TAP_SLOP_PX ||
@@ -254,6 +271,12 @@ export function useMessageGestures({
       ) {
         return; // moved too far to be a tap
       }
+      if (onActivate) {
+        lastTapRef.current = null;
+        onActivate();
+        return;
+      }
+      if (!onQuickReact) return;
       const now = Date.now();
       const last = lastTapRef.current;
       if (
@@ -268,7 +291,7 @@ export function useMessageGestures({
         lastTapRef.current = { time: now, x: event.clientX, y: event.clientY };
       }
     },
-    [onQuickReact, onReply, bubbleRef, hintRef, reducedMotion],
+    [onActivate, onQuickReact, onReply, bubbleRef, hintRef, reducedMotion],
   );
 
   const onPointerUp = useCallback(

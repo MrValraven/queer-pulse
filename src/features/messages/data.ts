@@ -454,7 +454,7 @@ export const conversations: Conversation[] = [
           {
             from: "them",
             text: "See you at the book club on Saturday",
-            time: "Yesterday 3:14 PM",
+            time: "3:14 PM",
           },
         ],
       },
@@ -478,7 +478,7 @@ export const conversations: Conversation[] = [
           {
             from: "them",
             text: "The venue confirmed. We're all set for the Pride Brunch. They've given us the whole terrace from 11am.",
-            time: "Mon 2:30 PM",
+            time: "2:30 PM",
           },
         ],
       },
@@ -506,7 +506,7 @@ export const conversations: Conversation[] = [
           {
             from: "them",
             text: "Of course, happy to chat. Are you free Thursday?",
-            time: "Sun 11:22 AM",
+            time: "11:22 AM",
           },
         ],
       },
@@ -534,7 +534,7 @@ export const conversations: Conversation[] = [
           {
             from: "them",
             text: "That's exactly the angle I was looking for, thank you",
-            time: "Fri 6:48 PM",
+            time: "6:48 PM",
           },
         ],
       },
@@ -558,7 +558,7 @@ export const conversations: Conversation[] = [
           {
             from: "them",
             text: "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming gatherings, and the member directory. We're glad you're here.",
-            time: "1 Jun 9:00 AM",
+            time: "9:00 AM",
           },
         ],
       },
@@ -582,7 +582,7 @@ export const conversations: Conversation[] = [
           {
             from: "them",
             text: "Let me know if you want me to introduce you to Nadia. She does exactly the kind of work you're describing.",
-            time: "28 May 4:12 PM",
+            time: "4:12 PM",
           },
         ],
       },

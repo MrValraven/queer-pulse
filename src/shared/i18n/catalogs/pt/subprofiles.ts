@@ -422,6 +422,7 @@ export const subprofiles: Catalog = {
     "Ainda não conseguimos publicar isto. Percorre estes pontos e tenta outra vez.",
   "checklist.ledeDefault":
     "Ainda faltam alguns pormenores para esta persona poder existir por si só.",
+  "checklist.jumpAction": "Levar-me lá",
   "checklist.statePass": "Feito",
   "checklist.stateFail": "Precisa de atenção",
   "checklist.stateUnknown": "Por verificar",
@@ -444,10 +445,6 @@ export const subprofiles: Catalog = {
     "Suficiente para alguém perceber quem és, num relance.",
   "checklist.reqBioFail":
     "Conta um pouco mais. A tua biografia precisa de pelo menos 80 carateres.",
-  "checklist.reqItemsTitle": "Pelo menos três coisas para mostrar",
-  "checklist.reqItemsMet": "Trabalho suficiente para a página parecer viva.",
-  "checklist.reqItemsFail":
-    "Acrescenta mais algumas peças. Precisas de pelo menos três em todas as tuas secções.",
   "checklist.reqLanguageTitle": "Linguagem que acolhe toda a gente",
   "checklist.reqLanguageMet": "Nada foi assinalado.",
   "checklist.reqLanguageFail":
@@ -455,6 +452,7 @@ export const subprofiles: Catalog = {
 
   // Sugestões de polimento, não bloqueantes (PublishChecklist.tsx)
   "checklist.polishTitle": "Uns retoques finais",
+  "checklist.polishItems": "Algumas coisas para mostrar",
   "checklist.polishCover": "Uma imagem de capa",
   "checklist.polishSocials": "Um link social",
   "checklist.polishAvailability": "A tua disponibilidade",
@@ -493,6 +491,33 @@ export const subprofiles: Catalog = {
   "mine.endorsementCount_other": "{count} recomendações",
   "mine.followerCount_one": "{count} seguidor",
   "mine.followerCount_other": "{count} seguidores",
+
+  // Ordem das personas (MySubprofilesBoard + ReorderableSideCard). A pega tem
+  // `aria-hidden`, por isso os dois botões levam o nome da persona: caso
+  // contrário, um leitor de ecrã ouve o mesmo "Mover para trás" em todos os
+  // cartões, sem nada que os distinga.
+  "mine.order.groupTitle": "No teu perfil",
+  "mine.order.groupHint":
+    "Arrasta um cartão, ou usa as setas, para definir a ordem em que aparecem no teu perfil.",
+  "mine.order.dragToReorder": "Arrasta para reordenar",
+  "mine.order.position": "{position} de {total}",
+  "mine.order.moveEarlier": "Mover {name} para trás",
+  "mine.order.moveLater": "Mover {name} para a frente",
+  "mine.order.emptyGroup":
+    "Ainda não tens nada no teu perfil. Publica uma persona e liga-a ao teu perfil para aparecer aqui.",
+  "mine.order.saveError":
+    "Não conseguimos guardar essa ordem. Tenta outra vez.",
+
+  // Personas que o perfil não lista (NotShownPersonas). Uma razão e um link
+  // para cada, com ligação directa ao painel do editor onde se resolve.
+  "mine.notShown.title": "Não aparecem no teu perfil",
+  "mine.notShown.sub":
+    "Estas também são tuas. O teu perfil é que não as lista, por isso não entram na ordem acima.",
+  "mine.notShown.draftReason": "Ainda é um rascunho, por isso só tu a vês.",
+  "mine.notShown.draftAction": "Põe-na no ar",
+  "mine.notShown.standaloneReason":
+    "É independente, por isso vive na própria página.",
+  "mine.notShown.standaloneAction": "Muda onde vive",
 
   // Estados de carregamento / vazio / erro do painel (SubprofileDashboardStates,
   // Fase 2 Tarefa 2) — construídos isoladamente, ligados à página mais tarde.
@@ -1513,6 +1538,12 @@ export const subprofiles: Catalog = {
   "editorRail.publishGroup": "Publicar",
   "editorRail.getItLive": "Pôr no ar",
 
+  // Mobile pane switcher (EditorPaneSwitcher, EditorPaneSheet) — a barra fixa
+  // que substitui o menu lateral no telemóvel, e a folha com todas as secções.
+  "editorSwitch.title": "Saltar para uma secção",
+  "editorSwitch.previous": "Secção anterior",
+  "editorSwitch.next": "Secção seguinte",
+
   // Cabeçalhos dos painéis do editor (EditorPaneRouter, editorPaneHeaders.data.ts)
   // — o h2 + subtítulo mostrados acima de cada painel, exceto os painéis de
   // Conteúdo por secção, que usam o próprio rótulo `section.*` da secção.
@@ -1680,13 +1711,10 @@ export const subprofiles: Catalog = {
   "addressWarning.cancel": "Manter o endereço atual",
   "addressWarning.confirm": "Mudar endereço",
 
-  // Painel de publicação — extras (SubprofilePublishPanel) — uma estimativa
-  // rápida, feita no cliente, mostrada antes de tentares publicar (separada
-  // da lista de verificação oficial `checklist.*` abaixo), e a linha de
-  // eliminar na zona de perigo.
-  "publishPanel.estimateTitle": "Estimativa rápida",
-  "publishPanel.estimateNote":
-    "Uma ideia rápida de como estás. A lista de verificação abaixo é que decide mesmo se podes publicar.",
+  // Painel de publicação — extras (SubprofilePublishPanel) — a linha de
+  // eliminar na zona de perigo. A estimativa que aqui estava desapareceu: o
+  // painel mostra agora a própria lista `checklist.*`, ao vivo, que é também
+  // o que decide se o botão fica ativo.
   "publishPanel.deleteCopy":
     "Eliminar esta persona remove-a, e tudo o que está nela, para sempre.",
   "publishPanel.deleteCta": "Eliminar esta persona",
@@ -1722,6 +1750,12 @@ export const subprofiles: Catalog = {
     "{name} tem {count} seguidores, mas seguir é anónimo. Mostramos o número e mantemos todos os nomes privados.",
   "publishPanel.saveFirstHint":
     "Guarda as alterações primeiro. A publicação verifica o perfil guardado.",
+  // Porque é que Publicar está desativado enquanto falta algo acima. Aponta
+  // para a lista em vez de a repetir: cada linha lá em cima é clicável.
+  "publishPanel.blockedHint_one":
+    "Falta uma coisa aí em cima. Escolhe-a para ires diretamente lá.",
+  "publishPanel.blockedHint_other":
+    "Faltam {count} coisas aí em cima. Escolhe uma para ires diretamente lá.",
   "editor.errorTitle": "Não foi possível carregar esta persona",
   "editor.errorDescription":
     "Algo correu mal ao contactar o servidor. Nada se perdeu. Verifica a ligação e tenta novamente.",

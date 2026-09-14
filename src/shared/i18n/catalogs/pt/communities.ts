@@ -179,6 +179,23 @@ export const communities: Catalog = {
   "detail.join.public": "Junta-te à comunidade",
   "detail.join.request": "Pedir para entrar",
   "detail.joined": "Já és membro",
+
+  // ── Cartão de porta: uma comunidade fechada, vista de fora ────────────────
+  "gate.eyebrow": "Só para membros",
+  "gate.about": "Para que serve",
+  "gate.languages": "Fala-se aqui",
+  "gate.nextGathering": "Próximo encontro público",
+  "gate.request.line":
+    "Esta comunidade avalia quem entra. Pede, e um moderador lê o teu pedido.",
+  "gate.request.action": "Pedir para entrar",
+  "gate.invited.line": "Foste convidada ou convidado para esta.",
+  "gate.invited.action": "Aceitar convite",
+  "gate.online": "Online",
+  "gate.close": "Voltar às comunidades",
+  "gate.error.title": "Não foi possível carregar",
+  "gate.error.description":
+    "Não conseguimos chegar a esta comunidade agora. Tenta outra vez daqui a um momento.",
+
   // PRD-148. The `Requested` chip was a disabled label with no way out. The body
   // names the wait on purpose: withdrawing costs nothing, while waiting for a
   // decline can write a 30 or 180 day reapply lock.

@@ -266,6 +266,7 @@ export const shared: Catalog = {
   "adminNav.pendingSuffix": "pending",
 
   "adminNav.items.overview": "Overview",
+  "adminNav.items.featureUsage": "Feature usage",
   "adminNav.items.landing": "Landing page",
   "adminNav.items.pressKit": "Press kit",
   "adminNav.items.queues": "All queues",

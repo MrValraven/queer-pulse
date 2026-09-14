@@ -9,9 +9,11 @@
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
     "14 Sep 2026": {
-      // One entry this day, so the page shows it in full and needs no
-      // curated highlights (see the rule in the file header).
-      highlights: [],
+      highlights: [
+        "chat-photo-viewer",
+        "closed-communities-stay-closed",
+        "board-posts-that-breathe",
+      ],
     },
     "12 Sep 2026": {
       highlights: [

@@ -69,11 +69,35 @@ export const messages: Catalog = {
   "gif.comingSoonHint":
     "Estamos a preparar a pesquisa de GIFs. Volta em breve para dar movimento às tuas mensagens.",
 
+  // Menu de anexos (ComposerAttachButton) — o clipe dentro da barra de
+  // escrita e o menu Foto / Ficheiro / GIF que abre. As linhas reutilizam
+  // attachments.open, attachments.openDocument e gif.open como rótulos
+  // VISÍVEIS, para nunca dizerem uma coisa e anunciarem outra.
+  "attachments.menuOpen": "Anexar",
+  "attachments.menuLabel": "Anexar a esta mensagem",
+
   // Anexos de imagem (ImageComposerButton do Composer, MessageBubbleBody)
   "attachments.open": "Enviar uma foto",
   "attachments.imageAlt": "Mensagem com foto",
   "attachments.fallbackText": "Foto",
   "attachments.previewUnavailable": "Pré-visualização indisponível",
+
+  // Visualizador de fotos em ecrã inteiro (ChatImageViewer e a sua barra),
+  // aberto ao tocar numa bolha de foto ou GIF. Responder/Reencaminhar/Guardar
+  // reutilizam as chaves actions.* acima.
+  "viewer.open": "Abrir a foto de {sender}",
+  "viewer.dialogLabel": "Foto de {sender}, {time}",
+  "viewer.close": "Fechar a foto",
+  "viewer.counter": "{index} / {total}",
+  "viewer.counterAnnouncement": "Foto {index} de {total}, de {sender}",
+  "viewer.you": "Tu",
+  "viewer.save": "Descarregar",
+  "viewer.saved": "Foto descarregada",
+  "viewer.saveFallback":
+    "Não foi possível descarregar a foto, por isso abrimos numa nova aba.",
+  "viewer.saveFailed": "Não foi possível descarregar a foto. Tenta de novo.",
+  "viewer.prev": "Foto anterior",
+  "viewer.next": "Foto seguinte",
 
   // Anexos de documento (DocumentComposerButton, MessageDocumentAttachment,
   // MessageBubbleBody, documentUploadProcessing)

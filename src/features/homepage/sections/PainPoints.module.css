@@ -3,11 +3,9 @@
   padding: clamp(36px, 7vw, 52px) 0 clamp(60px, 11vw, 108px);
   background: var(--cream);
 }
-.wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
+/* The section uses the shared global `.wrap` (base.css) rather than a local
+   copy, so it reads --wrap-px and the horizontal safe-area insets like every
+   other homepage section. */
 
 /* ── The card ──────────────────────────────────────────────────────── */
 .card {
@@ -434,13 +432,74 @@
     display: none;
   }
 }
+/* On a phone this card nests four paddings deep before a word of the thread is
+   drawn — page gutter, card, detail pane, bubble — plus a 38px avatar and its
+   gap. At the app's 28px gutter that left a ~149px text column, three or four
+   words a line, while every other homepage section sat between 228 and 334px.
+   Each layer gives back what it can so the thread reads at the same measure as
+   the rest of the page. */
 @media (max-width: 640px) {
+  .card {
+    /* Published so .detail can cancel exactly this much and go full-bleed. */
+    --pain-card-px: 16px;
+    padding: 20px var(--pain-card-px) 22px;
+  }
+  .cardHead {
+    margin-bottom: 24px;
+  }
+  /* The thread stops being a box inside a box and becomes a band across the
+     card: it gives its own side padding back to the bubbles and drops the
+     second set of rounded corners a phone has no room for. */
+  .detail {
+    margin-inline: calc(-1 * var(--pain-card-px));
+    padding: 16px 14px;
+    gap: 10px;
+    border-inline: 0;
+    border-radius: 0;
+  }
+  /* Eleven steps never fit a phone, so the strip has always scrolled. Bleeding
+     it to the card edge is what makes that legible: the cut chip sits at the
+     edge and reads as "more to the right" instead of as a clipped layout. */
+  .rail {
+    margin-inline: calc(-1 * var(--pain-card-px));
+    padding-inline: var(--pain-card-px);
+    scroll-padding-inline: var(--pain-card-px);
+    scroll-snap-type: x proximity;
+  }
+  .railBtn {
+    scroll-snap-align: start;
+  }
   .msg {
     max-width: 100%;
-    gap: 9px;
+    gap: 8px;
   }
   .bubble {
+    padding: 11px 14px;
     font-size: var(--text-15);
+  }
+  .answer {
+    padding: 16px 14px;
+  }
+}
+
+/* A 320-360px phone still pays a 38px avatar and two more paddings before the
+   bubble's first word. Avatar size is a CSS variable (Avatar.tsx publishes
+   --avatar-size), so the whole row can step down together. */
+@media (max-width: 380px) {
+  .msgAvatar {
+    --avatar-size: 30px;
+    margin-top: 17px;
+  }
+  .usAvatar {
+    width: 30px;
+    height: 30px;
+    margin-top: 17px;
+  }
+  .detail {
+    padding: 14px 10px;
+  }
+  .bubble {
+    padding: 10px 12px;
   }
 }
 

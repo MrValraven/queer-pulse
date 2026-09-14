@@ -3,43 +3,14 @@
   flex: none;
 }
 
-/* Matches the 43px square of `.gifBtn`/`.sendBtn` (MessagesPage.module.css)
-   so the composer controls read as a matched row. */
-.btn {
-  /* 43 / 20, in em so the square grows with the "@" it centres. */
-  width: 2.15em;
-  height: 2.15em;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-avatar);
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  background: var(--cream);
-  color: var(--text-strong);
-  font-size: var(--text-20);
-  cursor: pointer;
-  touch-action: manipulation;
-  transition:
-    background var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
-}
-@media (hover: hover) {
-  .btn:hover {
-    background: var(--paper);
-    border-color: var(--line-strong);
-  }
-}
-.btn:focus-visible {
-  outline: none;
-  border-color: var(--line-strong);
-}
-
 /* Popover — same surface treatment as the GIF picker panel, opening above. */
 .panel {
   position: absolute;
-  bottom: calc(100% + 8px);
-  left: 0;
+  /* The trigger moved inside the input pill at its trailing edge, so the panel
+     anchors right — `left: 0` there would push a 260px panel off the screen on
+     a narrow phone. `+10px` clears the pill's own border. */
+  bottom: calc(100% + 10px);
+  right: 0;
   z-index: var(--z-popover);
   width: min(260px, calc(100vw - 32px));
   /* Never taller than the space above the composer, so opening upward can't
@@ -143,4 +114,18 @@
   .panel {
     animation: none;
   }
+}
+
+/* Dark mode inverts the chip. `--plum` deliberately does not flip (see
+   tokens/colors.css), so on dark `--paper` #1A1030 a plum disc lands at
+   1.15:1 and reads as no disc at all. Flipping it to a light surface with a
+   plum glyph mirrors what `--line-rgb` and `--ink-rgb` already do on dark, and
+   measures 12.79:1 against the panel with the glyph at 11.12:1 on the chip.
+   `[data-theme]` rather than `prefers-color-scheme`: ThemeProvider stamps the
+   attribute on <html> and the app deliberately ignores the system preference. */
+[data-theme="dark"] .sigil {
+  background: rgba(var(--cream-rgb), 0.92);
+  /* css-scale-allow: non-flipping-text. The ground under this glyph is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
+  color: var(--plum);
 }

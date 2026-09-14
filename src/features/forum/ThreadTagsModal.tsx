@@ -12,8 +12,10 @@ import { ComposeTagsField } from "./ComposeTagsField";
  * moderators: filing a thread under the right topic is what makes the archive
  * findable, and it is janitorial rather than editorial, unlike the title.
  *
- * Reuses `ComposeTagsField` verbatim, so the chip entry, the normalisation and
- * the five-tag cap are the same here as in the composer.
+ * Reuses `ComposeTagsField` verbatim, so the curated vocabulary, the search and
+ * the five-tag cap are the same here as in the composer. A thread can only be
+ * re-filed under words that already exist in the list, which is what keeps the
+ * archive's filter links pointing at one word per topic.
  */
 export function ThreadTagsModal({
   initialTags,

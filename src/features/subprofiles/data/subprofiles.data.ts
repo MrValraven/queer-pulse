@@ -3042,10 +3042,6 @@ export function resolvePublicAccessDemo(
   return { kind: "ok", dto: toPublicDto(sp, false) };
 }
 
-/** Count of content items (section ≠ links) — mirrors the ≥3 publish threshold. */
-export const contentItemCount = (dto: SubprofileDTO): number =>
-  dto.items.filter((i) => isContentSection(i.section)).length;
-
 // ── Co-ownership mocks (contract C6) ─────────────────────────────────────────
 // Demo-only member/invite views for `GET/POST /subprofiles/:id/members|invites`
 // and `GET /subprofiles/invites/mine`. These back the demo branch of Task 8's
@@ -3139,6 +3135,9 @@ export function mockMyPersonaInvites(): MyInviteDTO[] {
 // publishable while live mode refused it. One import keeps the demo gate
 // honest about what the server will actually do.
 export const MIN_BIO = 80;
+/** Advisory only, matching the backend: content is an optional polish nudge
+ *  (`POLISH_NUDGES`), never a publish gate, so a persona may go live empty and
+ *  fill up afterwards. `validatePublishDemo` deliberately does not read it. */
 export const MIN_CONTENT_ITEMS = 3;
 /** Placeholder blocklist; a real moderation-module hook is a documented follow-up. */
 export const BLOCKED_TERMS = ["slur-placeholder", "banned-term-placeholder"];
@@ -3154,7 +3153,7 @@ export function validatePublishDemo(dto: SubprofileDTO): string[] {
   if (handleFormatProblem === "reserved") unmet.push("handle_reserved");
   if (!dto.avatarUrl) unmet.push("avatar_missing");
   if ((dto.bio ?? "").length < MIN_BIO) unmet.push("bio_too_short");
-  if (contentItemCount(dto) < MIN_CONTENT_ITEMS) unmet.push("not_enough_items");
+  // No content-count check: an empty persona publishes (see MIN_CONTENT_ITEMS).
   const haystack =
     `${dto.displayName} ${dto.bio ?? ""} ${handle}`.toLowerCase();
   if (BLOCKED_TERMS.some((t) => haystack.includes(t)))

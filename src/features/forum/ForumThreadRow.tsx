@@ -184,6 +184,7 @@ export function ForumThreadRow({
                     photo: thread.author.photo,
                     initials: thread.author.initials,
                     name: thread.author.name,
+                    official: thread.author.official,
                   }}
                 />
                 <span className={styles.tmAuthor}>{thread.author.name}</span>

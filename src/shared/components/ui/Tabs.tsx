@@ -1,11 +1,21 @@
-import { useId, useRef, type KeyboardEvent } from "react";
+import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
 import styles from "./Tabs.module.css";
 import { tabIds } from "./tabIds";
 
 export interface Tab {
   id: string;
   label: string;
+  /** Badge beside the label (corner badge on an icon-only tab). A count of 0
+   *  draws nothing: a filter reading "0" is noise, and every caller that
+   *  already writes `count || undefined` was working around this. */
   count?: number;
+  /** Optional leading icon. */
+  icon?: ReactNode;
+  /** With `icon`, renders the tab as an icon-only square pill: `label` stops
+   *  being drawn and becomes the tab's accessible name plus the text of a
+   *  tooltip revealed on hover/focus. For filter rows that must fit one line
+   *  (the messages inbox) — never for a tab whose icon isn't self-evident. */
+  hideLabel?: boolean;
 }
 
 /**
@@ -20,6 +30,8 @@ export function Tabs({
   onChange,
   variant = "pill",
   tint = "light",
+  density = "default",
+  shouldAlignIconTabsEnd = false,
   className,
   idPrefix,
   label,
@@ -29,6 +41,15 @@ export function Tabs({
   onChange: (id: string) => void;
   variant?: "pill" | "underline";
   tint?: "light" | "dark";
+  /** `"compact"` tightens the pills and the gap between them, for a row that
+   *  has to fit more filters than its column has room for (the messages
+   *  inbox). Pill variant only. */
+  density?: "default" | "compact";
+  /** Pushes a trailing run of icon-only tabs to the row's far edge, so the row
+   *  reads as "filters left, utilities right" (the messages inbox). The row
+   *  then spans its container instead of shrinking to its tabs. Pill variant
+   *  only. */
+  shouldAlignIconTabsEnd?: boolean;
   className?: string;
   /** Share this with `tabPanelProps` so each tab points at its own panel.
    *  Omit it and the tabs still get ids, they just control nothing. */
@@ -82,6 +103,8 @@ export function Tabs({
         styles.tabs,
         variant === "underline" && styles.underline,
         tint === "dark" && styles.dark,
+        density === "compact" && styles.compact,
+        shouldAlignIconTabsEnd && styles.iconsEnd,
         className,
       ]
         .filter(Boolean)
@@ -91,6 +114,7 @@ export function Tabs({
     >
       {tabs.map((tab, index) => {
         const isActive = active === tab.id;
+        const isIconOnly = tab.hideLabel === true && tab.icon != null;
         const ids = tabIds(prefix, tab.id);
         return (
           <button
@@ -109,15 +133,28 @@ export function Tabs({
             aria-controls={idPrefix ? ids.panel : undefined}
             aria-selected={isActive}
             tabIndex={isActive ? 0 : -1}
-            className={[styles.tab, isActive && styles.tabOn]
+            className={[
+              styles.tab,
+              isActive && styles.tabOn,
+              isIconOnly && styles.tabIcon,
+            ]
               .filter(Boolean)
               .join(" ")}
+            // Icon-only: the glyph carries no text, so the label becomes the
+            // accessible name (the tooltip below it is decorative).
+            aria-label={isIconOnly ? tab.label : undefined}
             onClick={() => onChange(tab.id)}
             onKeyDown={(event) => handleKeyDown(event, index)}
           >
-            {tab.label}
-            {tab.count != null && (
+            {tab.icon}
+            {!isIconOnly && tab.label}
+            {tab.count ? (
               <span className={styles.tabCount}>{tab.count}</span>
+            ) : null}
+            {isIconOnly && (
+              <span role="tooltip" aria-hidden className={styles.tabTip}>
+                {tab.label}
+              </span>
             )}
           </button>
         );

@@ -14,6 +14,14 @@ import {
 import { ModToolsGovernanceLogDetails } from "./ModToolsGovernanceLogDetails";
 import styles from "./ModToolsGovernanceLog.module.css";
 
+/** The byline date. A short month keeps the attribution on the chip row at
+ *  reading widths; `Intl` still owns the order and the separators per locale. */
+const BYLINE_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+};
+
 /** A member ref's display name, or the placeholder for an account that has
  *  since been erased. The FKs behind this trail are `ON DELETE SET NULL`
  *  precisely so an entry outlives the people in it. */
@@ -63,8 +71,12 @@ function summaryLine(
 }
 
 /**
- * One governance action: what happened, to whom, with the detail the server
- * recorded, then who did it and when.
+ * One governance action: what happened and who did it on the chip row, then to
+ * whom, with the detail the server recorded.
+ *
+ * The attribution rides the chip row rather than sitting under the details,
+ * because a trail is read by scanning down it and every line spent on chrome
+ * is an entry pushed off the screen.
  *
  * A platform action is labelled as one. The server sends it with no actor and
  * no details on purpose, and this community's staff are entitled to know the
@@ -105,6 +117,24 @@ export function ModToolsGovernanceLogRow({
             {t("communities:detail.modtools.history.platform.label")}
           </Badge>
         )}
+
+        <p className={styles.byline}>
+          <span>
+            {entry.isPlatformAction
+              ? t("communities:detail.modtools.history.byPlatform")
+              : actorName
+                ? t("communities:detail.modtools.history.byLine", {
+                    name: actorName,
+                  })
+                : t("communities:detail.modtools.history.unattributed")}
+          </span>{" "}
+          <time dateTime={entry.createdAt}>
+            {t("communities:detail.modtools.history.onDate", {
+              date: fmt.date(createdAt, BYLINE_DATE_OPTIONS),
+              time: fmt.time(createdAt),
+            })}
+          </time>
+        </p>
       </div>
 
       <p className={styles.summary}>{summaryLine(entry, targetName, t)}</p>
@@ -116,24 +146,6 @@ export function ModToolsGovernanceLogRow({
       )}
 
       <ModToolsGovernanceLogDetails details={entry.details} />
-
-      <p className={styles.byline}>
-        <span>
-          {entry.isPlatformAction
-            ? t("communities:detail.modtools.history.byPlatform")
-            : actorName
-              ? t("communities:detail.modtools.history.byLine", {
-                  name: actorName,
-                })
-              : t("communities:detail.modtools.history.unattributed")}
-        </span>{" "}
-        <time dateTime={entry.createdAt}>
-          {t("communities:detail.modtools.history.onDate", {
-            date: fmt.date(createdAt),
-            time: fmt.time(createdAt),
-          })}
-        </time>
-      </p>
     </FadeIn>
   );
 }

@@ -18,13 +18,19 @@ export function AdminSeg({
   options,
   value,
   onChange,
+  ariaLabelledby,
 }: {
   options: AdminSegOption[];
   value: string;
   onChange: (value: string) => void;
+  /** Associates the `role="group"` wrapper with a visible label elsewhere on
+   *  the page, so the group itself is not an anonymous landmark to a screen
+   *  reader even though each button already names itself. Optional: a call
+   *  site with no adjacent visible label can omit it. */
+  ariaLabelledby?: string;
 }) {
   return (
-    <div className={styles.seg} role="group">
+    <div className={styles.seg} role="group" aria-labelledby={ariaLabelledby}>
       {options.map((o) => (
         <button
           key={o.value}

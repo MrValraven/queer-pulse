@@ -437,6 +437,7 @@ export const subprofiles: Catalog = {
     "We couldn't publish this just yet. Run through these and try again.",
   "checklist.ledeDefault":
     "A few things to finish before this persona can stand on its own.",
+  "checklist.jumpAction": "Take me there",
   "checklist.statePass": "Done",
   "checklist.stateFail": "Needs attention",
   "checklist.stateUnknown": "Still to check",
@@ -457,10 +458,6 @@ export const subprofiles: Catalog = {
   "checklist.reqBioMet": "Enough for someone to get who you are at a glance.",
   "checklist.reqBioFail":
     "Tell people a little more. Your bio needs at least 80 characters.",
-  "checklist.reqItemsTitle": "At least three things to show",
-  "checklist.reqItemsMet": "Enough work for the page to feel alive.",
-  "checklist.reqItemsFail":
-    "Add a few more pieces. You need at least three across your sections.",
   "checklist.reqLanguageTitle": "Language that keeps everyone welcome",
   "checklist.reqLanguageMet": "Nothing flagged.",
   "checklist.reqLanguageFail":
@@ -468,6 +465,7 @@ export const subprofiles: Catalog = {
 
   // Publish-checklist polish nudges (non-blocking, PublishChecklist.tsx)
   "checklist.polishTitle": "A little more polish",
+  "checklist.polishItems": "A few things to show",
   "checklist.polishCover": "A cover image",
   "checklist.polishSocials": "A social link",
   "checklist.polishAvailability": "Your availability",
@@ -505,6 +503,31 @@ export const subprofiles: Catalog = {
   "mine.endorsementCount_other": "{count} endorsements",
   "mine.followerCount_one": "{count} follower",
   "mine.followerCount_other": "{count} followers",
+
+  // Persona order (MySubprofilesBoard + ReorderableSideCard). The grip is
+  // `aria-hidden`, so the two move buttons carry the persona's own name: a
+  // screen reader moving through the grid otherwise hears the same
+  // "Move earlier" on every card with nothing to tell them apart.
+  "mine.order.groupTitle": "On your profile",
+  "mine.order.groupHint":
+    "Drag a card, or use the arrows, to set the order these appear on your profile.",
+  "mine.order.dragToReorder": "Drag to reorder",
+  "mine.order.position": "{position} of {total}",
+  "mine.order.moveEarlier": "Move {name} earlier",
+  "mine.order.moveLater": "Move {name} later",
+  "mine.order.emptyGroup":
+    "Nothing is on your profile yet. Publish a persona and tie it to your profile to list it here.",
+  "mine.order.saveError": "We couldn't save that order. Try again.",
+
+  // Personas the profile doesn't list (NotShownPersonas). One reason and one
+  // link each, deep-linked to the editor pane where that work happens.
+  "mine.notShown.title": "Not shown on your profile",
+  "mine.notShown.sub":
+    "These are yours too. Your profile just doesn't list them, so they have no place in the order above.",
+  "mine.notShown.draftReason": "Still a draft, so only you can see it.",
+  "mine.notShown.draftAction": "Get it live",
+  "mine.notShown.standaloneReason": "Standalone, so it lives on its own page.",
+  "mine.notShown.standaloneAction": "Change where it lives",
 
   // Dashboard loading / empty / error states (SubprofileDashboardStates,
   // Phase 2 Task 2) — built standalone, wired into MySubprofilesPage later.
@@ -1492,6 +1515,12 @@ export const subprofiles: Catalog = {
   "editorRail.publishGroup": "Publish",
   "editorRail.getItLive": "Get it live",
 
+  // Mobile pane switcher (EditorPaneSwitcher, EditorPaneSheet) — the sticky bar
+  // that replaces the rail on phones, and the sheet listing every pane.
+  "editorSwitch.title": "Jump to a section",
+  "editorSwitch.previous": "Previous section",
+  "editorSwitch.next": "Next section",
+
   // Editor pane headers (EditorPaneRouter, editorPaneHeaders.data.ts) — the
   // h2 + lede shown above each rail pane, except the per-section Content
   // panes, which title themselves off the section's own `section.*` label.
@@ -1652,12 +1681,9 @@ export const subprofiles: Catalog = {
   "addressWarning.cancel": "Keep the current address",
   "addressWarning.confirm": "Change address",
 
-  // Publish panel additions (SubprofilePublishPanel) — a quick client-side
-  // readiness estimate shown before a publish attempt (separate from the
-  // authoritative `checklist.*` below), plus the danger-zone delete row.
-  "publishPanel.estimateTitle": "Quick estimate",
-  "publishPanel.estimateNote":
-    "A rough read on where you stand. The checklist below is what actually decides if you can publish.",
+  // Publish panel additions (SubprofilePublishPanel) — the danger-zone delete
+  // row. The readiness estimate that used to sit here is gone: the pane now
+  // shows the live `checklist.*` itself, which is also what gates the button.
   "publishPanel.deleteCopy":
     "Deleting this persona removes it, and everything on it, for good.",
   "publishPanel.deleteCta": "Delete this persona",
@@ -1694,6 +1720,12 @@ export const subprofiles: Catalog = {
     "{name} has {count} followers, but following is anonymous. We show the count and keep every name private.",
   "publishPanel.saveFirstHint":
     "Save your changes first. Publish checks your saved profile.",
+  // Why Publish is disabled when something above is still outstanding. Points
+  // at the list rather than restating it: every row up there is clickable.
+  "publishPanel.blockedHint_one":
+    "One thing left above. Pick it to go straight to it.",
+  "publishPanel.blockedHint_other":
+    "{count} things left above. Pick one to go straight to it.",
   "editor.errorTitle": "Couldn't load this persona",
   "editor.errorDescription":
     "Something went wrong reaching the server. Nothing's lost. Check your connection and try again.",

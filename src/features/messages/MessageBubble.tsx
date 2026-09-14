@@ -13,6 +13,8 @@ import { MessageBubbleBody, MessageMarks } from "./MessageBubbleBody";
 import type { MetaStatus } from "./MessageSendStatus";
 import type { LongPressOrigin } from "./useLongPress";
 import { useMessageGestures } from "./useMessageGestures";
+import { isViewablePhoto } from "./useThreadImageGallery";
+import { useChatImageViewer } from "./ChatImageViewerContext";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -86,6 +88,11 @@ function MessageBubbleImpl({
 }: MessageBubbleProps) {
   const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
+  const { openImage } = useChatImageViewer();
+  // A photo/GIF bubble opens the viewer on a single tap, and gives up its
+  // double-tap reaction so the open is instant (reactions stay one long-press,
+  // right-click, hover-bar or Enter away, exactly as on any other bubble).
+  const canOpenPhoto = isViewablePhoto(message);
   const isLast = index === lastIndex;
   // First http(s) link in the body → a compact unfurl card below the bubble.
   const previewUrl = firstLinkUrl(message.text);
@@ -106,6 +113,14 @@ function MessageBubbleImpl({
   // guaranteed keyboard entry point (Enter), mirroring long-press / right-click.
   const canOpenOverlay = !!message.id;
   const canInteract = canOpenOverlay && !message.deletedAt;
+  // Gestures themselves must be live even before a message has a server id, as
+  // long as its bubble has some tap action to reach: a viewable photo opens on
+  // tap in demo mode, and in live mode for the whole window between an
+  // optimistic send and its ack, or after an outbox restore. `canOpenPhoto`
+  // already excludes deleted messages (see `isViewablePhoto`), so this can't
+  // re-enable a tombstoned bubble. The action overlay itself stays gated on
+  // `canInteract` alone, at the `onOpenActions` call below.
+  const canGesture = canInteract || canOpenPhoto;
   const reactions = message.reactions ?? [];
   function openOverlayFromBubble() {
     const node = wrapRef.current;
@@ -140,12 +155,20 @@ function MessageBubbleImpl({
   }
 
   const gestures = useMessageGestures({
-    enabled: canInteract,
-    onOpenActions: (origin) => onOpenActions?.(message, origin, isSent),
+    enabled: canGesture,
+    // Only a message with a server id can open the action overlay (Reply,
+    // Forward, Star, Edit, Delete, Report all need one). Undefined here keeps
+    // long-press/right-click genuinely inert for an id-less bubble even though
+    // `canGesture` now lets it through for tap-to-open-photo.
+    onOpenActions: canInteract
+      ? (origin) => onOpenActions?.(message, origin, isSent)
+      : undefined,
     // Reuse the overlay's reply handler; only a message with a server id can be
     // replied to (optimistic ones can't), so swipe is inert until then.
     onReply: canInteract && onReply ? () => onReply(message) : undefined,
-    onQuickReact: canInteract && onReactionToggle ? quickReact : undefined,
+    onActivate: canOpenPhoto ? () => openImage(message) : undefined,
+    onQuickReact:
+      canInteract && onReactionToggle && !canOpenPhoto ? quickReact : undefined,
     // Received (left-aligned) bubbles swipe right to reply; sent (own,
     // right-aligned) bubbles swipe left — always away from where they sit.
     replyDirection: isSent ? "left" : "right",

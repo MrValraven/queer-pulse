@@ -101,13 +101,8 @@ export function SubprofileShowcase({
   if (!active) return null;
 
   const activeMeta = ownerMetaBySlug?.get(active.slug);
-  // Owner controls are Edit-only for now: reorder (Move up/down) needs a
-  // position-swap mutation, and none of the existing dashboard code
-  // (MySubprofilesPage/SideCard) sorts or writes `position` today —
-  // there's no established, dual-mode-safe convention to wire against yet.
-  // Shipping a Move up/down control against an unproven contract risked a
-  // broken control, which the plan explicitly says not to do; Edit is safe
-  // and self-contained, so it ships alone.
+  // Owner controls here are Edit only: the order these personas appear in is
+  // set on the personas dashboard (`/account/subprofiles`).
   //
   // A co-owner sees the same Edit control on THIS persona even when viewing
   // it nested under a co-owner's profile (`isSelf` is false there) — the

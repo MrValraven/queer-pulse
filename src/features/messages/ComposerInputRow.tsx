@@ -1,9 +1,7 @@
 // src/features/messages/ComposerInputRow.tsx
 import type { RefObject } from "react";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
-import { DocumentComposerButton } from "./DocumentComposerButton";
-import { GifComposerButton } from "./GifComposerButton";
-import { ImageComposerButton } from "./ImageComposerButton";
+import { ComposerAttachButton } from "./ComposerAttachButton";
 import { MentionHintButton } from "./MentionHintButton";
 import type { ComposerPopover } from "./useComposerPopovers";
 import type { GifAttachment } from "../../shared/api/gifs";
@@ -15,6 +13,7 @@ interface ComposerInputRowProps {
   popoverGroupRef: RefObject<HTMLDivElement | null>;
   openPopover: ComposerPopover;
   onTogglePopover: (which: NonNullable<ComposerPopover>) => void;
+  onOpenPopover: (which: NonNullable<ComposerPopover>) => void;
   onClosePopover: () => void;
   onSendGif?: (attachment: GifAttachment) => void;
   onSendImage?: (
@@ -40,16 +39,29 @@ interface ComposerInputRowProps {
 }
 
 /**
- * The composer's attach/GIF/shortcut controls, the auto-growing textarea, and
- * the send button — split out of `Composer` to keep it under the line cap.
- * Purely presentational: every behaviour (typing frames, popovers, autogrow,
- * draft persistence) is owned by `Composer` and its own colocated hooks.
+ * The composer's input pill and its send button — split out of `Composer` to
+ * keep it under the line cap. Purely presentational: every behaviour (typing
+ * frames, popovers, autogrow, draft persistence) is owned by `Composer` and
+ * its own colocated hooks.
+ *
+ * The attach and shortcut controls sit INSIDE the pill (`.composerField`),
+ * the way WhatsApp/Telegram place them, rather than as outlined circles
+ * flanking the input: one bordered box reads as one field, and the send
+ * button is then the only thing outside it competing for the eye. The pill
+ * owns the border, radius, background and focus ring that used to live on the
+ * textarea — see `.composerField` / `.composerTa` for why the field keeps its
+ * own 44px min-height and 16px font size through that move.
+ *
+ * `popoverGroupRef` lands on the pill, which is also the outside-click
+ * boundary — so tapping the textarea no longer counts as "outside". The
+ * textarea's own `onFocus` closes instead.
  */
 export function ComposerInputRow({
   textareaRef,
   popoverGroupRef,
   openPopover,
   onTogglePopover,
+  onOpenPopover,
   onClosePopover,
   onSendGif,
   onSendImage,
@@ -66,39 +78,38 @@ export function ComposerInputRow({
 }: ComposerInputRowProps) {
   return (
     <div className={styles.composerRow}>
-      <div className={styles.composerControls} ref={popoverGroupRef}>
-        {onSendImage && <ImageComposerButton onSendImage={onSendImage} />}
-        {onSendDocument && (
-          <DocumentComposerButton onSendDocument={onSendDocument} />
-        )}
-        {onSendGif && (
-          <GifComposerButton
-            onSendGif={onSendGif}
-            open={openPopover === "gif"}
-            onToggle={() => onTogglePopover("gif")}
-            onClose={onClosePopover}
-          />
-        )}
+      <div className={styles.composerField} ref={popoverGroupRef}>
+        <ComposerAttachButton
+          onSendGif={onSendGif}
+          onSendImage={onSendImage}
+          onSendDocument={onSendDocument}
+          menuOpen={openPopover === "attach"}
+          gifOpen={openPopover === "gif"}
+          onToggleMenu={() => onTogglePopover("attach")}
+          onOpenGif={() => onOpenPopover("gif")}
+          onClose={onClosePopover}
+        />
+        <MentionTextarea
+          id="messages-composer"
+          wrapClassName={styles.composerTaWrap}
+          className={styles.composerTa}
+          placeholder={placeholder}
+          aria-label={messageFieldLabel}
+          value={draft}
+          rows={1}
+          textareaRef={textareaRef}
+          placement="above"
+          onChange={onChange}
+          onBlur={onBlur}
+          onFocus={onClosePopover}
+          onKeyDown={onKeyDown}
+        />
         <MentionHintButton
           open={openPopover === "shortcuts"}
           onToggle={() => onTogglePopover("shortcuts")}
           onInsert={onInsertShortcut}
         />
       </div>
-      <MentionTextarea
-        id="messages-composer"
-        wrapClassName={styles.composerTaWrap}
-        className={styles.composerTa}
-        placeholder={placeholder}
-        aria-label={messageFieldLabel}
-        value={draft}
-        rows={1}
-        textareaRef={textareaRef}
-        placement="above"
-        onChange={onChange}
-        onBlur={onBlur}
-        onKeyDown={onKeyDown}
-      />
       <button
         type="button"
         className={[styles.sendBtn, draft.trim() && styles.sendBtnActive]

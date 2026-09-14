@@ -3,13 +3,15 @@ import type {
   PublicSubprofileView,
   SubprofileView,
 } from "./api/subprofiles.adapters";
+import { handleFormatError } from "../../shared/handles";
 import { isContentSection } from "./subprofile-kinds";
+// Contract-C5 thresholds, taken from the dual-mode-safe editor data module
+// rather than the demo-only `subprofiles.data.ts` (which must never be imported
+// into a path that also runs live — see the `queerpulse-demo-persona-leak`
+// pattern).
+import { MIN_BIO, MIN_CONTENT_ITEMS } from "./subprofileEditor.data";
 
-// Mirrors `subprofiles.data.ts`'s `MIN_BIO`/`MIN_CONTENT_ITEMS` (contract C5)
-// as local literals rather than importing that demo-only module into a path
-// that also runs live (see the `queerpulse-demo-persona-leak` pattern).
-const MIN_BIO_LENGTH = 80;
-const MIN_CONTENT_ITEMS = 3;
+const MIN_BIO_LENGTH = MIN_BIO;
 
 /** The primitive facts every readiness read is built from. Extracting them
  *  keeps the saved-view estimate (`estimateDraftReadiness`) and the live-editor
@@ -170,4 +172,54 @@ export function estimateEditorReadiness(editor: {
     hasAvailability: Boolean(meta.availability),
     socialLinkCount: socialRows.filter((row) => row.urlOrHandle.trim()).length,
   });
+}
+
+/**
+ * Per-requirement verdicts for the live publish checklist and the Publish
+ * button's enabled state, read off the SAME live editor snapshot as
+ * {@link estimateEditorReadiness} so the two can never disagree.
+ *
+ * Keyed by `PUBLISH_REQUIREMENTS[].key`; the value is the contract-C5 code that
+ * currently fails, or `null` once the requirement is met. A key that is ABSENT
+ * is deliberately unknowable in the browser and so never gates the button:
+ * `language`, whose blocked-terms list is server-side only, stays "still to
+ * check" until a publish attempt answers it.
+ *
+ * `handle_taken` is the one verdict here that can be WRONG-BY-OMISSION: a free
+ * handle needs the availability round trip, so an untouched handle reads as met
+ * and a taken one still comes back as a 422. It is reported when the
+ * availability check has already run and said unavailable.
+ *
+ * A LINKED persona has NO publish requirements at all — it nests under the
+ * owner's profile and the server's `validatePublish` returns an empty list for
+ * it outright — so this returns an empty map for one, and the Publish button is
+ * never gated on a check the API would not run. Content items are not a
+ * requirement for anyone (see `PUBLISH_REQUIREMENTS`).
+ */
+export function evaluatePublishRequirements(editor: {
+  meta: {
+    link: LinkVisibility;
+    handle: string;
+    handleStatus: { status: string };
+    avatarUrl: string;
+    bio: string;
+  };
+}): Record<string, string | null> {
+  const { meta } = editor;
+  if (meta.link === "linked") return {};
+
+  function handleCode(): string | null {
+    if (!meta.handle.trim()) return "handle_invalid";
+    const formatProblem = handleFormatError(meta.handle);
+    if (formatProblem === "invalid") return "handle_invalid";
+    if (formatProblem === "reserved") return "handle_reserved";
+    if (meta.handleStatus.status === "unavailable") return "handle_taken";
+    return null;
+  }
+
+  return {
+    handle: handleCode(),
+    avatar: meta.avatarUrl ? null : "avatar_missing",
+    bio: meta.bio.trim().length >= MIN_BIO_LENGTH ? null : "bio_too_short",
+  };
 }

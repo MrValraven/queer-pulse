@@ -8,6 +8,10 @@ import type {
 
 /** Minimum bio length before an unlinked persona can go live. */
 export const MIN_BIO = 80;
+/** How many content items (section ≠ links) count as a rounded-out persona.
+ *  ADVISORY: an empty persona publishes fine, so this only drives the optional
+ *  "add a few pieces" polish nudge and the readiness estimate, never the gate. */
+export const MIN_CONTENT_ITEMS = 3;
 /** Server-side cap, surfaced here as a friendly limit on the Add affordance. */
 export const MAX_ITEMS_PER_SECTION = 100;
 

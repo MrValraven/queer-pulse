@@ -51,6 +51,17 @@ export interface CommunityResult {
   editable: EditableCommunityFields | null;
   /** True when the community doesn't exist or is private + hidden (→ 404 path). */
   notFound: boolean;
+  /**
+   * True when this community exists, is not `public`, and the viewer is not on
+   * its roster. The detail is withheld whole (the server answers 403 with
+   * `code: 'COMMUNITY_MEMBERS_ONLY'`), so every other field here stays empty
+   * and the page redirects to the gate card instead of rendering a hub.
+   *
+   * Distinct from `notFound` on purpose: a gated community is one the viewer
+   * may be told about and may sometimes ask to join, where a not-found one is
+   * either absent or a private community whose existence is the secret.
+   */
+  gated: boolean;
   isLoading: boolean;
   /** True when the (live) fetch failed for a non-404 reason — the page shows a
    *  retryable error state instead of an eternal skeleton (P1-14). Never true in
@@ -71,6 +82,7 @@ const EMPTY: CommunityResult = {
   invitedAt: null,
   editable: null,
   notFound: false,
+  gated: false,
   isLoading: false,
   isError: false,
   refetch: NOOP,
@@ -175,6 +187,9 @@ export function useCommunity(slug: string | undefined): CommunityResult {
       invitedAt: null,
       editable,
       notFound: false,
+      // Demo mode has no server to refuse anything, so it never gates. A later
+      // task computes the demo gate elsewhere.
+      gated: false,
       isLoading: false,
       isError: false,
       refetch: NOOP,
@@ -196,11 +211,24 @@ export function useCommunity(slug: string | undefined): CommunityResult {
           invitedAt: dto.invitedAt ?? null,
           editable: dtoToEditable(dto),
           notFound: false,
+          gated: false,
           isLoading: false,
           isError: false,
           refetch: NOOP,
         };
       } catch (e) {
+        // Resolved into data rather than rethrown, so `query.isError` stays
+        // reserved for real failures and the page keeps its retryable error
+        // state for those. The code, not the status: a bare 403 on this route
+        // is a genuine permission failure and must still surface as one.
+        if (
+          e instanceof ApiError &&
+          e.status === 403 &&
+          (e.data as { code?: string } | undefined)?.code ===
+            "COMMUNITY_MEMBERS_ONLY"
+        ) {
+          return { ...EMPTY, gated: true };
+        }
         if (e instanceof ApiError && e.status === 404) {
           return { ...EMPTY, notFound: true };
         }

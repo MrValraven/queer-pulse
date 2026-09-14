@@ -130,3 +130,71 @@
   font-size: var(--text-13);
   color: var(--ink-40);
 }
+
+/* ── Unmet rows are buttons: "take me to the field that fixes this" ──────────
+   The global `.ready-item` supplies the row's flex layout, so the button has
+   to restate it (it becomes the row's single child) rather than nest a second
+   flex box inside one. No border/background of its own: the row reads as text
+   until hovered, since a checklist of five filled buttons would shout over the
+   Publish action itself. */
+.rowActionable {
+  padding: 0;
+}
+.rowButton {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 6px 8px;
+  margin: -6px -8px;
+  border: none;
+  border-radius: var(--radius-10);
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .rowButton:hover {
+    background: var(--wash);
+  }
+  .rowButton:hover .jumpHint {
+    opacity: 1;
+  }
+}
+.rowButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.rowButton:focus-visible .jumpHint {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rowButton {
+    transition: none;
+  }
+}
+
+/* The affordance itself. Always present (never hover-only content), just
+   quieter until the row is hovered or focused — a keyboard or touch user has
+   to be able to see that the row goes somewhere. */
+.jumpHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  margin-left: auto;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--accent-text);
+  opacity: 0.75;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .jumpHint {
+    transition: none;
+  }
+}

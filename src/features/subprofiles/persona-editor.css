@@ -86,37 +86,220 @@
     display: none;
   }
 }
-/* Phone / narrow tablet: single column. The rail becomes a horizontal
-   top strip (same specificity guard as above); the pane runs full width
-   beneath it. Padding/gap here move onto the spacing scale (was a bare
-   10px/16px) for a bit more breathing room in the scroller. */
-@container (max-width: 760px) {
+/* Phone / narrow tablet: single column, and the rail is gone — the sticky
+   `.ed-switch` bar below navigates instead (`EditorPaneSwitcher`).
+
+   The rail used to flatten into a horizontal scroller here, which put the back
+   link, all four group headings and every pane button into one sideways strip:
+   it showed no sense of place, it was `position: static` so it scrolled away
+   for good, and the active pill was usually off-screen.
+
+   `@media`, NOT `@container` like the steps above: `SubprofileEditorShell`
+   mounts the switcher behind a `useMediaQuery` viewport check, and the two cuts
+   have to agree. A container query resolves against `.ed-shell`'s inline size,
+   which is narrower than the viewport by the page gutters — so between roughly
+   760px and 800px of viewport the container rule would hide the rail while the
+   JS check still read "desktop" and withheld the switcher, leaving that band of
+   widths with no pane navigation at all.
+
+   Same specificity guard as above: the selector list repeats
+   `[data-preview="off"]` so it can't lose the cascade to the desktop rule. */
+@media (max-width: 760px) {
   .ed,
   .ed[data-preview="off"] {
     grid-template-columns: 1fr;
   }
   .ed .ed-rail {
-    position: static;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--gap-xs);
-    overflow-x: auto;
-    overflow-y: visible;
-    max-height: none;
-    -webkit-overflow-scrolling: touch;
-    padding: var(--gap-sm) var(--wrap-px);
-    border-right: none;
-    border-bottom: 1px solid var(--line);
-    align-self: auto;
+    display: none;
   }
-  .ed .ed-rail button {
-    padding: var(--gap-xs) var(--gap-sm);
-    flex: none;
+}
+
+/* ── mobile pane switcher (EditorPaneSwitcher) ───────────────────────────── */
+/* Zero-height marker in flow directly above the sticky bar. Scrolling this
+   into view on a pane change returns the bar to its resting position; the bar
+   itself can't be the target, because once it is stuck its box already sits
+   where `scrollIntoView` would put it. */
+.ed-switch-anchor {
+  scroll-margin-top: var(--sticky-top);
+}
+.ed-switch {
+  position: sticky;
+  /* The real top chrome at this width, via the shared token: the mobile app
+     bar plus the notch inset, and only the notch once the bar has scrolled
+     away. `top` eases over the bar's own slide so this rises with it — the
+     same idiom as the profile's sticky tab bar. */
+  top: var(--sticky-top);
+  transition: top var(--dur-base) var(--ease);
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: stretch;
+  gap: var(--gap-xs);
+  /* Full-bleed: `.ed-shell` sits inside `.wrap`'s gutters, so a bar confined to
+     that measure leaves a `--wrap-px` strip of bare page down each side, and
+     content scrolls past it uncovered while the bar is stuck. Cancel the gutter
+     with a negative margin and pay it back as padding, so the glass reaches
+     both screen edges and the arrows land where a thumb actually is. The bleed
+     exactly fills to the viewport edges, so it adds no horizontal overflow. */
+  margin-inline: calc(-1 * var(--wrap-px));
+  padding: 6px var(--gap-xs);
+  background: rgba(var(--cream-rgb), 0.92);
+  backdrop-filter: var(--blur-nav);
+  -webkit-backdrop-filter: var(--blur-nav);
+  border-bottom: 1px solid var(--line);
+}
+/* --cream-rgb is pinned to the LIGHT cream channels in both themes (see
+   tokens/colors.css), so this translucent ground doesn't flip on its own. Same
+   literal values as the app bar's dark override, so the switcher reads as the
+   same glass surface as the chrome it sits under. */
+[data-theme="dark"] .ed-switch {
+  background: rgba(14, 8, 32, 0.92);
+}
+/* The prev/next arrows and the centre button are plain <button>s: this repo has
+   no global button reset (the convention is the <Button> component), so they
+   zero the native UA chrome themselves. */
+.ed-switch button {
+  border: none;
+  background: none;
+  font-family: var(--sans);
+  color: var(--ink);
+  cursor: pointer;
+  border-radius: var(--radius-10);
+  transition: background var(--dur-fast) var(--ease);
+}
+.ed-switch-step {
+  flex: none;
+  /* 44px: the minimum comfortable touch target, and these two sit right at the
+     screen edges where a thumb is least precise. */
+  width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-60);
+}
+.ed-switch-step:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+@media (hover: hover) {
+  .ed-switch-step:not(:disabled):hover {
+    background: var(--wash);
+    color: var(--ink);
   }
-  .ed .ed-rail .rail-head {
-    white-space: nowrap;
-    flex: none;
+}
+.ed-switch-current {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 5px var(--gap-xs);
+  text-align: center;
+}
+@media (hover: hover) {
+  .ed-switch-current:hover {
+    background: var(--wash);
   }
+}
+.ed-switch-group {
+  font-size: var(--text-11);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  font-weight: 700;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The pane name and its chevron read as one unit, so the chevron sits inside
+   the name line rather than floating at the bar's edge. */
+.ed-switch-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  min-width: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ed-switch-name svg {
+  flex: none;
+  color: var(--ink-40);
+}
+
+/* ── pane picker sheet (EditorPaneSheet) ─────────────────────────────────── */
+.ed-panes-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-22);
+  color: var(--text-strong);
+  /* Clears <ModalSheet>'s own chrome. The close button sits top-right, hence
+     the padding. The drag grabber is `position: sticky; top: 0`, so it paints
+     at the top of the sheet's scrollport while its negative top margin pulls
+     the first child up into the sheet's padding — which lands the two on the
+     same line. The first child is the one that has to pay that margin back. */
+  padding-right: 40px;
+  margin-top: 30px;
+  margin-bottom: var(--gap-xs);
+}
+.ed-panes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ed-panes-head {
+  font-size: var(--text-11);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  font-weight: 700;
+  padding: var(--gap-sm) 12px 6px;
+}
+.ed-panes button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* Roomier than the rail's 9px rows: this is a thumb target, not a cursor
+     target, and the sheet has the height to spend. */
+  padding: 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--radius-10);
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  font-weight: 500;
+  color: var(--ink-60);
+  text-align: left;
+  transition: all var(--dur-fast) var(--ease);
+}
+.ed-panes button > svg {
+  flex: none;
+}
+@media (hover: hover) {
+  .ed-panes button:hover {
+    background: var(--wash);
+    color: var(--ink);
+  }
+}
+.ed-panes button[aria-current="page"] {
+  background: var(--plum);
+  color: rgb(var(--cream-rgb));
+  font-weight: 600;
+}
+.ed-panes-label {
+  flex: 1;
+  min-width: 0;
+}
+.ed-panes-n {
+  font-size: var(--text-13);
+  opacity: 0.6;
 }
 
 .ed-rail {
@@ -911,4 +1094,36 @@
 }
 .handlestate.idle {
   color: var(--ink-40);
+}
+
+/* ── Jump-to-field flash (useEditorFieldJump) ───────────────────────────────
+   A publish-checklist row sends the owner to the field it is about; after the
+   pane switch and the scroll, this ring says "here". Global rather than a CSS
+   module class because the hook applies it to a `FormField` wrapper by DOM id,
+   the same way messaging's jump flashes a bubble.
+
+   `--ring-accent-strong` → `--ring-accent-clear` is the documented ring-flash
+   pair (effects.css): the ring fades out instead of being switched off between
+   two frames. `border-radius` keeps the ring hugging the field rather than
+   boxing the whole column. */
+.ed-field-flash {
+  border-radius: var(--radius-10);
+  animation: qpFieldFlash 1.5s var(--ease-out);
+}
+@keyframes qpFieldFlash {
+  0%,
+  40% {
+    box-shadow: var(--ring-accent-strong);
+  }
+  100% {
+    box-shadow: var(--ring-accent-clear);
+  }
+}
+/* Reduced motion: keep the "here it is" signal, drop the fade — the ring is
+   simply present for as long as the hook leaves the class on. */
+@media (prefers-reduced-motion: reduce) {
+  .ed-field-flash {
+    animation: none;
+    box-shadow: var(--ring-accent-strong);
+  }
 }

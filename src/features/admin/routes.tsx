@@ -10,6 +10,10 @@ const AdminDashboardPage = lazyNamed(
   () => import("./AdminDashboardPage"),
   "AdminDashboardPage",
 );
+const AdminFeatureUsagePage = lazyNamed(
+  () => import("./AdminFeatureUsagePage"),
+  "AdminFeatureUsagePage",
+);
 const AdminModerationPage = lazyNamed(
   () => import("./AdminModerationPage"),
   "AdminModerationPage",
@@ -205,6 +209,10 @@ export function adminRoutes() {
   return (
     <>
       <Route path={routes.admin} element={<AdminDashboardPage />} />
+      <Route
+        path={routes.adminFeatureUsage}
+        element={<AdminFeatureUsagePage />}
+      />
       <Route path={routes.adminModeration} element={<AdminModerationPage />} />
       <Route
         path={routes.adminModResponseTemplates}

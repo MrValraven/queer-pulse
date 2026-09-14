@@ -1,15 +1,18 @@
 // src/features/messages/MessageBubbleBody.tsx
+import { useRef, type ReactNode } from "react";
 import { FiFile, FiImage } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { isEmojiOnly } from "./messageRuns";
 import { renderWithLinks } from "./linkify";
 import { MessageMeta, type MetaStatus } from "./MessageSendStatus";
+import { useBubbleMetaAlign } from "./useBubbleMetaAlign";
 import {
   AttachmentPreviewUnavailable,
   MessageDocumentAttachment,
 } from "./MessageDocumentAttachment";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
+import { useChatImageViewer } from "./ChatImageViewerContext";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -138,14 +141,14 @@ export function MessageBubbleBody({
       <>
         {forwardedNode}
         {replyQuoteNode}
-        <img
-          className={styles.gifBubble}
-          src={url}
-          width={width || undefined}
-          height={height || undefined}
-          style={{ aspectRatio: String(aspectRatio) }}
-          loading="lazy"
-          alt={imageAlt}
+        <PhotoBubbleImage
+          message={message}
+          senderName={senderName}
+          url={url}
+          width={width}
+          height={height}
+          aspectRatio={aspectRatio}
+          imageAlt={imageAlt}
         />
         {isLast && (
           <MessageMeta
@@ -215,6 +218,61 @@ export function MessageBubbleBody({
     );
   }
   return (
+    <TextBubble
+      message={message}
+      index={index}
+      lastIndex={lastIndex}
+      isSent={isSent}
+      isLast={isLast}
+      senderName={senderName}
+      metaStatus={metaStatus}
+      playEntrance={playEntrance}
+      forwardedNode={forwardedNode}
+      replyQuoteNode={replyQuoteNode}
+    />
+  );
+}
+
+/** The ordinary text bubble: the coloured surface, the body text, and — on a
+ *  run's last bubble — the meta floated into its bottom-right.
+ *
+ *  Its own component (not inlined in `MessageBubbleBody`) because it is the one
+ *  body that MEASURES itself: `useBubbleMetaAlign` reads the laid-out line
+ *  count to decide whether the time sits centred on a single text line or
+ *  tucked flush into a multi-line bubble's corner, and the hook belongs with
+ *  the branch that actually mounts the two nodes it reads. */
+function TextBubble({
+  message,
+  index,
+  lastIndex,
+  isSent,
+  isLast,
+  senderName,
+  metaStatus,
+  playEntrance,
+  forwardedNode,
+  replyQuoteNode,
+}: {
+  message: ChatMessage;
+  index: number;
+  lastIndex: number;
+  isSent: boolean;
+  isLast: boolean;
+  senderName: string;
+  metaStatus: MetaStatus;
+  playEntrance: boolean;
+  forwardedNode: ReactNode;
+  replyQuoteNode: ReactNode;
+}) {
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const metaAlign = useBubbleMetaAlign({
+    bubbleRef,
+    textRef,
+    enabled: isLast,
+    signal: message.text,
+  });
+  return (
     <div
       className={[
         styles.bubble,
@@ -229,19 +287,87 @@ export function MessageBubbleBody({
         .join(" ")}
       title={message.time}
       aria-label={`${senderName}: ${message.text}`}
+      ref={bubbleRef}
     >
       {forwardedNode}
       {replyQuoteNode}
-      <MentionText text={message.text} renderText={renderWithLinks} />
+      {/* Inline wrapper (no styles of its own) so the body's line boxes are
+          measurable on their own — `getClientRects()` on it is the line count
+          the floating meta's vertical position depends on. */}
+      <span ref={textRef}>
+        <MentionText text={message.text} renderText={renderWithLinks} />
+      </span>
       {isLast && (
         <MessageMeta
           time={message.time}
           isSent={isSent}
           metaStatus={metaStatus}
           floating
+          align={metaAlign}
         />
       )}
     </div>
+  );
+}
+
+/** The tappable image inside a photo/GIF bubble: a keyboard-reachable
+ *  `<span role="button">` wrapping the `<img>`. Deliberately a span, not a
+ *  `<button>`: a real button is treated as an interactive target by
+ *  `isInteractiveTarget` in `useMessageGestures`, which would suppress
+ *  long-press, right-click and swipe-to-reply on every photo bubble.
+ *
+ *  No `onClick` here on purpose. Pointer/touch/mouse activation already flows
+ *  through the bubble wrap's `onActivate` (see `MessageBubble`), which is the
+ *  path that correctly arbitrates against swipe-to-reply and long-press; a
+ *  click handler on this span would fire a SECOND time for the same physical
+ *  tap, since nothing on the pointer path calls `preventDefault()` to stop
+ *  the synthesized click. Keyboard activation is `onKeyDown` alone, which
+ *  never goes through the pointer path, so it stays exactly one call.
+ *
+ *  Split out of `MessageBubbleBody` purely to keep that function under the
+ *  line cap; it owns no state beyond the viewer context it reads. */
+function PhotoBubbleImage({
+  message,
+  senderName,
+  url,
+  width,
+  height,
+  aspectRatio,
+  imageAlt,
+}: {
+  message: ChatMessage;
+  senderName: string;
+  url: string;
+  width: number;
+  height: number;
+  aspectRatio: number;
+  imageAlt: string;
+}) {
+  const { t } = useTranslation();
+  const { openImage } = useChatImageViewer();
+  return (
+    <span
+      className={styles.photoOpener}
+      role="button"
+      tabIndex={0}
+      aria-label={t("messages:viewer.open", { sender: senderName })}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        openImage(message);
+      }}
+    >
+      <img
+        className={styles.gifBubble}
+        src={url}
+        width={width || undefined}
+        height={height || undefined}
+        style={{ aspectRatio: String(aspectRatio) }}
+        loading="lazy"
+        alt={imageAlt}
+      />
+    </span>
   );
 }
 

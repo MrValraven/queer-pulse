@@ -14,21 +14,36 @@ function splitName(name: string): { first: string; last: string } {
   return { first: parts[0] ?? "", last: parts.length > 1 ? parts.at(-1)! : "" };
 }
 
-/** "9:14 PM" / weekday / date label the thread rows + bubbles show. Exported
- *  for `patchConversationPreview` (`shared/api/messageCache.ts`), which needs
- *  the same formatting to patch a socket/send frame into the inbox row's
- *  `time` field without a `["conversations"]` refetch. */
+/** Wall-clock label ("9:14 PM" in EN, "21:14" in PT) for a timestamp, with no
+ *  relative day part, EVER. This is what a chat BUBBLE shows: the day a message
+ *  belongs to is already carried by the day separator above its group (see
+ *  `buildMessageRows`), so repeating it in the bubble is noise at best — and
+ *  under the old shared `timeLabel` a week-old bubble showed ONLY "13 Aug" and
+ *  lost its time of day altogether (FE-MSG-41). Same formatting as
+ *  `timeLabel`'s own same-day branch, so a bubble's label doesn't change shape
+ *  as the conversation ages. */
+export function clockLabel(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleTimeString(activeLocale(), {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+/** "9:14 PM" / weekday / date label the INBOX thread rows show — the label
+ *  collapses to a coarser unit as the row ages, because a list row has one
+ *  line to say "how long ago" in. Chat bubbles use `clockLabel` instead.
+ *  Exported for `patchConversationPreview` (`shared/api/messageCache.ts`),
+ *  which needs the same formatting to patch a socket/send frame into the inbox
+ *  row's `time` field without a `["conversations"]` refetch. */
 export function timeLabel(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   const now = new Date();
   const sameDay = d.toDateString() === now.toDateString();
   const locale = activeLocale();
-  if (sameDay)
-    return d.toLocaleTimeString(locale, {
-      hour: "numeric",
-      minute: "2-digit",
-    });
+  if (sameDay) return clockLabel(iso);
   const days = Math.round((now.getTime() - d.getTime()) / 86_400_000);
   if (days < 7) return d.toLocaleDateString(locale, { weekday: "short" });
   return d.toLocaleDateString(locale, { day: "numeric", month: "short" });
@@ -214,7 +229,8 @@ export function messageToChat(
     id: dto.id,
     from: isMe ? "me" : "them",
     text: dto.body,
-    time: timeLabel(dto.createdAt),
+    // Bubbles ALWAYS show a wall-clock time; the day comes from the separator.
+    time: clockLabel(dto.createdAt),
     at: dto.createdAt,
     reactions: dto.reactions,
     deletedAt: dto.deletedAt ?? undefined,

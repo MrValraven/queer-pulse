@@ -21,6 +21,16 @@ export function CommunityDetailPage() {
   if (state.status === "notFound") {
     return <Navigate to={routes.communities} replace />;
   }
+  // A community that is not `public` and has not let this viewer in. The hub
+  // never mounts: they go to the discover grid with the gate card over it,
+  // which is a place they can act from rather than a page where every
+  // control is inert. The redirect also drops `?tab=` and `?mod=`, so a deep link into
+  // a closed community's mod tools cannot be followed.
+  if (state.status === "gated") {
+    return (
+      <Navigate to={`${routes.communities}?gate=${state.slug ?? ""}`} replace />
+    );
+  }
   if (state.status === "error") {
     return (
       <PageShell>

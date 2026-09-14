@@ -148,14 +148,18 @@
   place-items: center;
   border-radius: var(--radius-pill);
   background: var(--accent);
-  color: var(--text-strong);
+  color: rgb(var(--cream-rgb));
   font-size: var(--text-9);
   font-weight: 700;
 }
 
 /* Thread list */
 .threadPanel {
-  width: clamp(300px, 26vw, 360px);
+  /* Wider than a chat app's usual rail (was clamp(300px, 26vw, 360px)) so the
+     six inbox filters fit on ONE line beside the search box. The conversation
+     beside it loses nothing it needs: message bubbles are capped well below
+     the pane width anyway. */
+  width: clamp(432px, 31vw, 456px);
   flex: none;
   border-right: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
@@ -166,6 +170,12 @@
 .tpTop {
   padding: 16px 16px 12px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+  /* The icon filters' tooltips hang below this strip, over the thread list —
+     whose rows carry their own `z-index: 1` (they sit above the swipe
+     affordance layers). Without a stacking context here they'd paint over the
+     bubble. */
+  position: relative;
+  z-index: 2;
 }
 .tpHeadRow {
   display: flex;
@@ -944,6 +954,11 @@
 .bubble {
   --bubble-radius: 20px;
   --bubble-radius-tight: 7px;
+  /* One line of body text, as a factor. Read by `line-height` here AND by the
+     in-bubble meta's three vertical positions (see `.bubbleMeta`), which are
+     exact arithmetic on it — keep them reading the same custom property so a
+     change to the bubble's leading can never desync the time's offset. */
+  --bubble-line: 1.42;
   /* flow-root contains the right-floated in-bubble meta (time + status tick) so
      the bubble's height always includes it and long text wraps around it. */
   display: flow-root;
@@ -951,7 +966,7 @@
   max-width: 100%;
   padding: 8px 14px;
   font-size: var(--text-body);
-  line-height: 1.42;
+  line-height: var(--bubble-line);
   border-radius: var(--bubble-radius);
   overflow-wrap: break-word;
   transition: box-shadow var(--dur-fast) var(--ease);
@@ -1439,12 +1454,40 @@
    bottom-right (`.bubbleMeta`) and the message text wraps around it; below an
    emoji-only message (no surface to tuck into) it sits as its own small line
    (`.bubbleMetaBelow`). Colour adapts: on a plum sent bubble the meta is cream,
-   on a paper received bubble / on the page (emoji) it is muted ink. */
+   on a paper received bubble / on the page (emoji) it is muted ink.
+
+   The float's VERTICAL position is the one thing CSS can't decide on its own:
+   a one-line bubble wants the time centred on the text it sits beside, a
+   multi-line one wants it tucked flush into the corner, and those differ by
+   the line's half-leading. `useBubbleMetaAlign` measures the laid-out line
+   count and picks one of the three offsets below. */
 .bubbleMeta {
+  --meta-height: 12px;
+  /* One line of the bubble's body text, as a length: the float lands at the TOP
+     of the line box it shares, so every offset below is measured from there. */
+  --meta-line: calc(var(--bubble-line, 1.42) * var(--text-body));
   float: inline-end;
   margin-inline-start: 8px;
-  /* nudge to sit on the bubble's bottom baseline beside the last text line */
-  translate: 0 4px;
+  /* Pinned so the offsets are exact arithmetic instead of font-metric-dependent
+     (the tick's 12px svg, or a received bubble's 10px time alone, would
+     otherwise each give the float a different height). */
+  block-size: var(--meta-height);
+  /* Default — and the resting position for a ONE-LINE bubble: centred on the
+     single text line it shares. `useBubbleMetaAlign` swaps in one of the two
+     classes below once it has measured the laid-out bubble. */
+  translate: 0 calc((var(--meta-line) - var(--meta-height)) / 2);
+}
+/* A bubble whose text runs to two or more lines: the time drops the remaining
+   half-leading so its bottom sits flush with the bubble's bottom padding —
+   tucked into the corner (WhatsApp) rather than floating on the last line. */
+.bubbleMetaBottom {
+  translate: 0 calc(var(--meta-line) - var(--meta-height));
+}
+/* The float found no room beside the last text line and took a strip of its own
+   at the bubble's foot, where it is already flush: no offset at all, or it
+   would hang into the bottom padding. */
+.bubbleMetaFlush {
+  translate: 0;
 }
 .bubbleMeta,
 .bubbleMetaBelow {
@@ -1558,6 +1601,49 @@
   gap: 8px;
 }
 
+/* The input pill. Everything except the send button lives inside it — the
+   attach paperclip, the textarea, the shortcut "?" — the way WhatsApp and
+   Telegram build a composer, rather than a row of outlined circles flanking
+   a separate field. It owns the border, radius, fill and focus treatment that
+   used to sit on `.composerTa`, so the whole thing reads as ONE control.
+
+   `align-items: flex-end` keeps both icons pinned to the last line as the
+   draft grows instead of floating at the box's middle. NO `overflow: hidden`,
+   however tempting the rounded corners make it: the mention typeahead, the
+   attach menu and the GIF picker are all absolutely positioned descendants
+   that open ABOVE this box and would be clipped away to nothing.
+
+   It is also the popover group boundary `useComposerPopovers` watches — which
+   is why the textarea's own `onFocus` has to close the open panel now that
+   tapping the field no longer counts as an outside click. */
+.composerField {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  padding-inline: 4px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  /* 22px against the 47px single-line box is all but a full pill, and still
+     a sane corner once the field has grown to its 120px max — a literal
+     `--radius-pill` would turn a multi-line draft into a stadium. */
+  border-radius: var(--radius-card);
+  background: var(--cream);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+/* Focus lives on the pill, not the textarea: the lit-up state has to trace the
+   box a sighted person reads as the field. Same treatment `.composerTa` used to
+   carry on its own — hairline to full `--line-strong`, cream to paper, and no
+   outline ring — deliberately kept rather than upgraded to the token ring:
+   opening a thread autofocuses the composer, so a 3px accent halo would be
+   burning on screen the entire time anyone has a conversation open.
+   `:focus-within`, so it also lights while an icon button inside has focus. */
+.composerField:focus-within {
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+
 /* ComposerSafetyNotice (P0.7 contact/payment-off-platform hint) — advisory,
    never blocks the send button below it. */
 .composerSafetyNotice {
@@ -1592,6 +1678,21 @@
      already played). `object-fit` covers the fallback case, where the real
      image's ratio won't exactly match the assumed 1:1 box. */
   object-fit: cover;
+}
+/* The tap/keyboard surface wrapped around a photo or GIF bubble so it can open
+   the full screen viewer. Deliberately a span (see MessageBubbleBody): a real
+   button would suppress the bubble's long-press and swipe gestures. It adds no
+   box of its own, so the bubble's reserved aspect-ratio still governs layout. */
+.photoOpener {
+  display: block;
+  width: fit-content;
+  cursor: zoom-in;
+  border-radius: var(--bubble-radius);
+}
+
+.photoOpener:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 /* A restored outbox entry whose local `blob:` preview was stripped before
    persisting (see `outbox.ts`'s `stripDeadBlobPreview`) — a neutral stand-in
@@ -1672,56 +1773,58 @@
   font-size: var(--text-12);
   color: var(--ink-60);
 }
-/* Holds the composer's popover controls (GIF + shortcut hint) as a matched
-   pair to the left of the input; also the shared outside-click boundary that
-   Composer uses to dismiss whichever popover is open. */
-.composerControls {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  flex: none;
-}
-.gifControl {
-  position: relative;
-  flex: none;
-}
-.gifBtn {
-  /* Same 44px square as `.sendBtn` so the two controls read as a matched
-     pair flanking the input, rather than a wide pill next to a circle — 44px
-     (was 43) is also the touch-target comfort floor.
-     `min-width` rather than `width`: the height stays locked to `.sendBtn`
-     and the composer's single-line box, while the "GIF" wordmark is free to
-     widen the button instead of spilling out of it at a raised root size. */
-  min-width: 44px;
+/* The composer's in-pill icon buttons: the attach paperclip at the leading
+   edge and the shortcut "?" at the trailing one. Flush 44px squares with no
+   border or fill of their own — `.composerField` already draws the one box
+   that reads as "the input", and a second outlined circle inside it would
+   read as a field inside a field. 44px is the touch-target comfort floor,
+   and matching `.composerField`'s own min-height is what keeps them vertically
+   centred on a single-line draft while the row's `align-items: flex-end`
+   pins them to the last line once it grows. */
+.composerIconBtn {
+  width: 44px;
   height: 44px;
+  flex: none;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
   border-radius: var(--radius-avatar);
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  background: var(--cream);
-  color: var(--text-strong);
-  font-family: var(--sans);
-  font-weight: 700;
-  font-size: var(--text-11-5);
-  letter-spacing: 0.02em;
+  background: transparent;
+  /* Quieter than the draft text beside them — an icon at full ink weight
+     competes with what the person is actually writing. */
+  color: var(--ink-60);
+  font-size: var(--text-20);
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    background var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
-  .gifBtn:hover {
-    background: var(--paper);
-    border-color: var(--line-strong);
+  .composerIconBtn:hover {
+    color: var(--ink);
+    background: rgba(var(--line-rgb), 0.08);
   }
 }
-.gifBtn:focus-visible {
-  outline: none;
-  border-color: var(--line-strong);
+/* Restates `border-radius`/`box-shadow` for the same reason `.composerTa` has
+   to clear them: base.css's global `:focus-visible` would otherwise square
+   these circles off to `--radius-4` and hang a cream halo outside the pill. */
+.composerIconBtn:focus-visible {
+  outline: var(--focus-ring);
+  /* Inset, so a 44px button flush against the pill's edge rings INSIDE the
+     field rather than spilling a ring over its border. */
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  border-radius: var(--radius-avatar);
+  box-shadow: none;
+  color: var(--ink);
 }
+.composerIconBtn:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
 .composerTaWrap {
   flex: 1;
   min-width: 0;
@@ -1738,25 +1841,27 @@
   /* A bare <textarea> is inline-block by default, which leaves baseline
      descender whitespace BELOW it inside `.wrap` — that made the wrapper a few
      px taller than the field, so the row's `align-items: flex-end` floated the
-     input above the GIF/send buttons. `display: block` removes the descender
+     input above the buttons beside it. `display: block` removes the descender
      gap so the field's box is exactly its height and lines up with them. */
   display: block;
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-badge);
-  padding: 8px 14px;
+  /* Bare on purpose. The border, radius, fill and focus ring moved out to
+     `.composerField`, which is the box a person actually reads as the input;
+     drawing a second one here would nest a field inside a field. */
+  border: none;
+  background: transparent;
+  padding: 10px 8px;
   font-family: var(--sans);
   /* >=16px so iOS Safari never zooms the viewport when the composer focuses. */
   font-size: var(--text-16);
   color: var(--ink);
-  background: var(--cream);
   resize: none;
-  /* One line at line-height:1.5 (24px) + 8px×2 padding + 1.5px×2 border =
-     43px; bumped to the 44px touch-target floor (matching `.sendBtn`/
-     `.gifBtn`, which the row's `align-items: flex-end` centres against this
-     field's height) — must be >= the natural 43px so a single line never
-     overflows the box before the auto-grow effect (below) runs, which is what
-     causes a spurious scrollbar on a short/empty message, especially on first
-     paint. */
+  /* One line at line-height:1.5 (24px) + 10px×2 padding = 44px — the same
+     single-line height the field had when it carried its own 8px padding and
+     1.5px borders, so the composer's overall height is unchanged by the move
+     to a pill, and still the touch-target comfort floor that `.composerIconBtn`
+     matches. Must be >= the natural 44px so a single line never overflows the
+     box before the auto-grow effect (below) runs, which is what causes a
+     spurious scrollbar on a short/empty message, especially on first paint. */
   min-height: 44px;
   max-height: 120px;
   /* Hidden by default; Composer.tsx's auto-grow effect flips this to `auto`
@@ -1766,21 +1871,30 @@
      whether it truly overflows). */
   overflow-y: hidden;
   line-height: 1.5;
-  transition: border-color var(--dur-fast) var(--ease);
 }
+/* No ring of its own — the pill draws it instead, around the box that actually
+   reads as this field. `box-shadow` has to be cleared explicitly and not just
+   the outline: base.css's global `:focus-visible` hangs a 3px cream halo
+   (`--ring-cream`) on anything it matches, and inside a now-transparent
+   textarea that halo painted a hard-edged rectangle across the middle of the
+   pill. `border-radius` likewise, or that same rule rounds the phantom box to
+   `--radius-4`. */
 .composerTa:focus-visible {
   outline: none;
-  border-color: var(--line-strong);
-  background: var(--paper);
+  box-shadow: none;
+  border-radius: 0;
 }
 .sendBtn {
-  /* Matches `.composerTa`'s single-line min-height (44px — the touch-target
-     floor). With the row's `align-items: flex-end`, an equal height is what
-     makes the button's centre line up with a single-line input's centre,
-     while still bottom-aligning to the last line once the textarea grows. A
-     shorter button would sit low against the taller input. */
-  width: 44px;
-  height: 44px;
+  /* The one control OUTSIDE the pill — a filled plum circle against the
+     field's quiet outline, so "send" is the only thing in the row with
+     weight. 47px matches `.composerField`'s single-line height (44px of
+     textarea + its 1.5px borders); with the row's `align-items: flex-end`,
+     an equal height is what makes the button's centre line up with a
+     single-line input's centre, while still bottom-aligning to the last line
+     once the textarea grows. A shorter button would sit low against the
+     taller input. */
+  width: 47px;
+  height: 47px;
   border-radius: var(--radius-avatar);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 0.9);

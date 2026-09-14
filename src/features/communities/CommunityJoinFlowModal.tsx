@@ -1,10 +1,28 @@
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
-import type { Community } from "../homepage/data/types";
 import { getLiving } from "./livingCommunities.data";
 import { JoinModal } from "./JoinModal";
+import type { AccessTier } from "./api/communities.api";
 import type { JoinCommunityPayload } from "./api/communityJoin.api";
 import { useJoinCommunityWithRules } from "./api/useCommunityJoin";
+
+/**
+ * The only fields the join wizard reads off a community. Narrower than
+ * `Community` on purpose: the gate card is not a card DTO (it carries no
+ * `ref`, no activity stats and no viewer role), and every existing caller
+ * passes a `Community`, which satisfies this structurally.
+ */
+export interface JoinFlowCommunity {
+  /** Optional because `Community.slug` (`shared/types/domain.ts`) is optional
+   *  too. Every existing caller passes a `Community` as-is. */
+  slug?: string;
+  name: string;
+  typeLabel: string;
+  count: string;
+  description: string;
+  accessTier?: AccessTier;
+  privateBadge?: boolean;
+}
 
 /**
  * The join wizard as mounted from a community CARD (the discover grid and the
@@ -21,7 +39,7 @@ export function CommunityJoinFlowModal({
   community,
   onClose,
 }: {
-  community: Community;
+  community: JoinFlowCommunity;
   onClose: () => void;
 }) {
   const { demoMode } = useDemoMode();

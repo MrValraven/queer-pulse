@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { FiPaperclip } from "react-icons/fi";
+import { FiFileText } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadDocument } from "./useUploadDocument";
 import { DocumentProcessingError } from "./documentUploadProcessing";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
-import styles from "./MessagesPage.module.css";
+import menu from "./ComposerAttachButton.module.css";
 
 interface DocumentComposerButtonProps {
   /** Sends the uploaded document as its own message. `attachment` is the SEND
@@ -16,6 +16,9 @@ interface DocumentComposerButtonProps {
     attachment: DocumentAttachment,
     localAttachment?: DocumentAttachment,
   ) => void;
+  /** Closes the attach menu this row lives in — see `ImageComposerButton`'s
+   *  own `onPicked` for why it fires at dialog-open, not at upload-resolve. */
+  onPicked: () => void;
 }
 
 /**
@@ -39,6 +42,7 @@ interface DocumentComposerButtonProps {
  */
 export function DocumentComposerButton({
   onSendDocument,
+  onPicked,
 }: DocumentComposerButtonProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -93,13 +97,18 @@ export function DocumentComposerButton({
       />
       <button
         type="button"
-        className={styles.gifBtn}
-        aria-label={t("messages:attachments.openDocument")}
+        className={menu.row}
         aria-busy={uploading}
         disabled={uploading}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => {
+          inputRef.current?.click();
+          onPicked();
+        }}
       >
-        <FiPaperclip aria-hidden />
+        <span className={menu.rowIcon} aria-hidden>
+          <FiFileText />
+        </span>
+        <span>{t("messages:attachments.openDocument")}</span>
       </button>
     </>
   );

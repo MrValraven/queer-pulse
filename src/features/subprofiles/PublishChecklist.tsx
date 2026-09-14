@@ -1,20 +1,41 @@
 import type { IconType } from "react-icons";
-import { FiAlertCircle, FiCheck, FiClock, FiStar } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiArrowRight,
+  FiCheck,
+  FiClock,
+  FiStar,
+} from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { POLISH_NUDGES, PUBLISH_REQUIREMENTS } from "./publishChecklist.data";
+import { POLISH_NUDGES, requirementsFor } from "./publishChecklist.data";
+import type { PublishRequirement } from "./publishChecklist.data";
+import type { LinkVisibility } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
+import type { EditorFieldTarget } from "./useEditorFieldJump";
 import styles from "./PublishChecklist.module.css";
 
-interface PublishChecklistProps {
-  /** The exact contract-C5 unmet codes from the publish gate. */
+/** The outcome of the last publish attempt, if one has been made since the
+ *  persona was last edited. `unknown` covers a live-mode rejection that carried
+ *  only an error message, never the 422 `{unmet}` body. */
+export interface PublishAttempt {
   unmet: string[];
+  unknown: boolean;
+}
+
+interface PublishChecklistProps {
   /**
-   * True when the failure couldn't be read (e.g. live mode surfaced only an
-   * error message, not the 422 `{unmet}` body). Every requirement then renders
-   * as "still to check" instead of a definite pass/fail.
+   * Live per-requirement verdicts off the editor's working state
+   * (`evaluatePublishRequirements`): the failing contract-C5 code, or `null`
+   * once met. A requirement missing from this map is not client-checkable.
    */
-  unknown?: boolean;
+  clientCodes: Record<string, string | null>;
+  /** Last publish attempt, or `null` when none has been made yet. */
+  attempt: PublishAttempt | null;
+  /** Decides which requirements apply: a linked persona claims no handle. */
+  linkVisibility: LinkVisibility;
+  /** Opens the pane an unmet requirement lives on and flashes its field. */
+  onJump: (target: EditorFieldTarget) => void;
 }
 
 type RowState = "pass" | "fail" | "unknown";
@@ -33,32 +54,81 @@ const STATE_ICON: Record<RowState, IconType> = {
   unknown: FiClock,
 };
 
+interface ChecklistRow extends PublishRequirement {
+  state: RowState;
+  detailKey: string | undefined;
+}
+
+/**
+ * Resolves ONE requirement against the two sources that know anything about it.
+ *
+ * A real publish attempt is authoritative and wins: it ran the same rules
+ * server-side, and it is the only thing that can speak for `language` or a
+ * taken handle. Below that sits the live client verdict, which is what lets the
+ * list be honest BEFORE any attempt (and what gates the Publish button). A
+ * requirement neither source can answer is "still to check" rather than a
+ * guessed pass, so the list never claims a persona is clear of something it has
+ * not actually looked at.
+ *
+ * Attempts are dropped the moment the editor goes dirty (see
+ * `SubprofilePublishPanel`), so a server code here always refers to the state
+ * now on screen.
+ */
+function resolveRow(
+  requirement: PublishRequirement,
+  clientCodes: Record<string, string | null>,
+  attempt: PublishAttempt | null,
+): ChecklistRow {
+  const serverCode =
+    attempt && !attempt.unknown
+      ? (requirement.codes.find((code) => attempt.unmet.includes(code)) ?? null)
+      : null;
+  const isClientChecked = requirement.key in clientCodes;
+  const failedCode = serverCode ?? clientCodes[requirement.key] ?? null;
+
+  if (failedCode) {
+    return {
+      ...requirement,
+      state: "fail",
+      detailKey: requirement.failKey[failedCode],
+    };
+  }
+
+  // Nothing failed it. That is only a PASS if someone actually checked: either
+  // this attempt came back clean, or the browser can judge it on its own.
+  const isAnswered = (attempt !== null && !attempt.unknown) || isClientChecked;
+  return {
+    ...requirement,
+    state: isAnswered ? "pass" : "unknown",
+    detailKey: isAnswered ? requirement.metKey : undefined,
+  };
+}
+
 /**
  * The completeness requirements an unlinked persona must meet to publish, each
- * with a pass / fail (or unknown) state and warm, actionable copy. Shown when a
- * publish attempt is rejected; the editor page renders the plum success panel
- * instead once every requirement is met.
+ * with a pass / fail (or unknown) state and warm, actionable copy. Rendered
+ * permanently in the editor's Publish pane, live against the working state, so
+ * an owner sees what is left BEFORE reaching for a disabled Publish button
+ * rather than only after a rejection. Every unmet row is a button that opens
+ * the pane its field lives on and flashes the field itself.
  *
- * Visual: the global `.ready`/`.ready-item` icon-circle rows (Task 1's editor
- * CSS port) plus a `.meter` progress bar for passed/total — this is still the
- * SAME server-authoritative data (real `unmet` codes from a publish attempt),
- * only restyled. It's deliberately a different widget from the Publish pane's
- * `SideReadinessRing` above it (client-only estimate, no blocked-language
- * check) — see that component's usage in `SubprofilePublishPanel`.
+ * Visual: the global `.ready`/`.ready-item` icon-circle rows plus a `.meter`
+ * progress bar for passed/total.
  */
 export function PublishChecklist({
-  unmet,
-  unknown = false,
+  clientCodes,
+  attempt,
+  linkVisibility,
+  onJump,
 }: PublishChecklistProps) {
   const { t } = useTranslation();
-  const rows = PUBLISH_REQUIREMENTS.map((req) => {
-    const failedCode = unknown
-      ? null
-      : (req.codes.find((code) => unmet.includes(code)) ?? null);
-    const state: RowState = unknown ? "unknown" : failedCode ? "fail" : "pass";
-    const detailKey = failedCode ? req.failKey[failedCode] : req.metKey;
-    return { ...req, state, detailKey };
-  });
+  const rows = requirementsFor(linkVisibility).map((requirement) =>
+    resolveRow(requirement, clientCodes, attempt),
+  );
+  // A linked persona has no requirements at all, so there is no list to draw
+  // and nothing for the meter to be a fraction OF (0/0 would render NaN%).
+  if (rows.length === 0) return null;
+
   const passedCount = rows.filter((row) => row.state === "pass").length;
   const meterPct = Math.round((passedCount / rows.length) * 100);
 
@@ -71,7 +141,7 @@ export function PublishChecklist({
         />
       </h3>
       <p className={styles.lede}>
-        {unknown
+        {attempt?.unknown
           ? t("subprofiles:checklist.ledeUnknown")
           : t("subprofiles:checklist.ledeDefault")}
       </p>
@@ -99,32 +169,65 @@ export function PublishChecklist({
       </div>
 
       <ul className={`ready ${styles.list}`}>
-        {rows.map((row) => {
-          const Icon = STATE_ICON[row.state];
-          return (
-            <li
-              key={row.key}
-              className={
-                row.state === "pass" ? "ready-item done" : "ready-item"
-              }
-            >
-              <i aria-hidden>
-                <Icon size={11} />
-              </i>
-              <span className={styles.text}>
-                <span className={styles.rowTitle}>{t(row.titleKey)}</span>
-                <span className={styles.rowHelp}>
-                  {row.detailKey && t(row.detailKey)}
-                </span>
-              </span>
-              <span className={styles.srOnly}>
-                {t(STATE_LABEL_KEY[row.state])}
-              </span>
-            </li>
-          );
-        })}
+        {rows.map((row) => (
+          <ChecklistRowItem key={row.key} row={row} onJump={onJump} />
+        ))}
       </ul>
     </div>
+  );
+}
+
+/**
+ * One requirement row. An unmet row is a button (the whole row, so the target
+ * is generous) that takes the owner to the field; a met or unchecked row is
+ * plain text, since there is nothing to go and do.
+ */
+function ChecklistRowItem({
+  row,
+  onJump,
+}: {
+  row: ChecklistRow;
+  onJump: (target: EditorFieldTarget) => void;
+}) {
+  const { t } = useTranslation();
+  const Icon = STATE_ICON[row.state];
+  const body = (
+    <>
+      <i aria-hidden>
+        <Icon size={11} />
+      </i>
+      <span className={styles.text}>
+        <span className={styles.rowTitle}>{t(row.titleKey)}</span>
+        <span className={styles.rowHelp}>
+          {row.detailKey && t(row.detailKey)}
+        </span>
+      </span>
+      <span className={styles.srOnly}>{t(STATE_LABEL_KEY[row.state])}</span>
+    </>
+  );
+
+  if (row.state !== "fail") {
+    return (
+      <li className={row.state === "pass" ? "ready-item done" : "ready-item"}>
+        {body}
+      </li>
+    );
+  }
+
+  return (
+    <li className={`ready-item ${styles.rowActionable}`}>
+      <button
+        type="button"
+        className={styles.rowButton}
+        onClick={() => onJump(row.jump)}
+      >
+        {body}
+        <span className={styles.jumpHint}>
+          {t("subprofiles:checklist.jumpAction")}
+          <FiArrowRight size={12} aria-hidden />
+        </span>
+      </button>
+    </li>
   );
 }
 

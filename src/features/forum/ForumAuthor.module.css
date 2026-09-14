@@ -29,3 +29,12 @@
   letter-spacing: 0.02em;
   flex: none;
 }
+
+/* The institutional QueerPulse account's avatar: the brand mark on plum,
+   matching the voice the landing page gives us in "why we built this"
+   (`PainPoints.module.css`'s `.usAvatar`). The ground stays plum in both
+   themes, so the mark takes the non-flipping cream channel. */
+.brandAvatar {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+}

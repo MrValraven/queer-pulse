@@ -3,6 +3,7 @@ import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ImageUploadField } from "./ImageUploadField";
+import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import { MIN_BIO } from "./subprofileEditor.data";
 
 interface SubprofileIdentityFieldsProps {
@@ -56,7 +57,10 @@ export function SubprofileIdentityFields({
 
   return (
     <>
-      <FormField label={t("subprofiles:metaForm.avatarLabel")}>
+      <FormField
+        id={FIELD_ANCHOR_ID.avatar}
+        label={t("subprofiles:metaForm.avatarLabel")}
+      >
         <ImageUploadField
           value={avatarUrl}
           crop={avatarCrop}
@@ -70,6 +74,7 @@ export function SubprofileIdentityFields({
       </FormField>
 
       <FormField
+        id={FIELD_ANCHOR_ID.displayName}
         label={t("subprofiles:metaForm.displayNameLabel")}
         required
         error={
@@ -103,6 +108,7 @@ export function SubprofileIdentityFields({
           No `autoGrow`: FormField gives its textareas a fixed `min-height`
           with `resize: none`, and this box scrolled before. */}
       <FormField
+        id={FIELD_ANCHOR_ID.bio}
         label={t("subprofiles:metaForm.bioLabel")}
         labelAside={bioAside}
         helper={t("subprofiles:metaForm.bioHelper")}

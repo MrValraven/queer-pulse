@@ -14,7 +14,8 @@ import {
   MAX_SUBPROFILES,
   toPublicView,
 } from "./mySubprofiles.data";
-import { OwnerSideCard, type PersonaShareTarget } from "./OwnerSideCard";
+import type { PersonaShareTarget } from "./OwnerSideCard";
+import { MySubprofilesBoard } from "./MySubprofilesBoard";
 import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
 import { NewSideModal } from "./NewSideModal";
 import { PersonaInvitesBanner } from "./PersonaInvitesBanner";
@@ -35,11 +36,15 @@ import styles from "./MySubprofilesPage.module.css";
 const SubprofileShareCard = lazy(() => import("./SubprofileShareCard"));
 
 /**
- * Owner dashboard: every persona this member runs, as a `.sides` card grid
- * (`SideCard`, readiness ring on drafts / status pill on published), a
- * trailing dashed "new persona" tile, the compact co-owner invite banner, a
- * create flow, and per-card share / edit / delete. Wrapped in `AppShell`
- * (logged-in).
+ * Owner dashboard: every persona this member runs, as `.sides` card grids
+ * (`SideCard`, readiness ring on drafts / status pill on published), the
+ * compact co-owner invite banner, a create flow, and per-card share / edit /
+ * delete. Wrapped in `AppShell` (logged-in).
+ *
+ * The cards themselves live in `MySubprofilesBoard`, which splits them into
+ * the drag-reorderable group shown on the member's profile and the read-only
+ * group that is not, and owns the trailing dashed "new persona" tile. This
+ * component keeps the page frame, the header, and the three modals.
  */
 export function MySubprofilesPage() {
   const { t } = useTranslation();
@@ -121,26 +126,13 @@ export function MySubprofilesPage() {
             onBrowse={() => void navigate(routes.subprofiles)}
           />
         ) : (
-          <div className="sides">
-            {list.map((subprofile) => (
-              <OwnerSideCard
-                key={subprofile.id}
-                view={subprofile}
-                onShare={setShareTarget}
-                onDelete={() => setDeleteTarget(subprofile)}
-              />
-            ))}
-            {!atCap && (
-              <button
-                type="button"
-                className="new-side"
-                onClick={() => openCreate()}
-              >
-                <FiPlus size={22} aria-hidden />
-                <b>{t("subprofiles:mine.newSideTile")}</b>
-              </button>
-            )}
-          </div>
+          <MySubprofilesBoard
+            subprofiles={list}
+            canCreate={!atCap}
+            onNew={() => openCreate()}
+            onShare={setShareTarget}
+            onDelete={setDeleteTarget}
+          />
         )}
       </div>
 

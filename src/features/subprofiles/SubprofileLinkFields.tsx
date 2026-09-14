@@ -9,6 +9,7 @@ import {
   VISIBILITY_OPTIONS,
 } from "./subprofileEditor.data";
 import { UsernameField } from "../settings/UsernameField";
+import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { AddressChangeWarningModal } from "./AddressChangeWarningModal";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
@@ -185,7 +186,7 @@ export function SubprofileLinkFields({
           />
         </FormField>
       ) : (
-        <div onBlur={handleHandleBlur}>
+        <div id={FIELD_ANCHOR_ID.handle} onBlur={handleHandleBlur}>
           <UsernameField
             value={editor.handle}
             onChange={editor.setHandle}

@@ -1,0 +1,197 @@
+/* Full screen chat photo viewer. The ground is a deep plum wash rather than
+   pure black so the surface still belongs to the platform, and it is built
+   from --plum-rgb (which does not flip in dark mode) so the viewer reads the
+   same in both themes. Chrome sits on that wash in cream. */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overscroll-behavior: contain;
+}
+
+/* The plum ground, as its own layer inside the scrim rather than a background
+   on it. A downward drag fades this while the photo follows the finger, so the
+   conversation reads through and the dismiss feels like putting the photo
+   back. Fading the scrim itself would fade the photo and the chrome with it,
+   since they are its children. Inert to pointers so a backdrop click still
+   reaches the scrim, and absolutely positioned so it takes no part in the
+   scrim's flex centring. The gesture hook writes its opacity frame by frame. */
+.scrimWash {
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--plum-rgb), 0.94);
+  pointer-events: none;
+  /* Full-viewport and re-painted on every pointer frame of a dismiss drag, so
+     it is worth promoting rather than compositing from scratch each time. */
+  will-change: opacity;
+}
+
+.dialog {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The stage owns every pointer gesture (pinch, pan, swipe), so the browser
+     must not also scroll or zoom the page under it. */
+  touch-action: none;
+  user-select: none;
+  /* A one-finger drag at scale 1 writes its live translate/scale straight to
+     this element rather than to the image inside it (see useDragFeedback.ts).
+     Moving the drag transform and its own clip onto the same element keeps
+     them locked together: the clip boundary shrinks and slides with the
+     photo instead of staying still while the photo moves inside it, which is
+     what used to cut the bottom of a nearly full-height photo off against
+     this element's static edge, past the dismiss threshold. */
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transform-origin: center center;
+  will-change: transform;
+  -webkit-user-drag: none;
+}
+
+.imageZoomed {
+  cursor: grab;
+}
+
+.topBar,
+.bottomBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: rgba(var(--cream-rgb), 1);
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--plum-rgb), 0.55),
+    rgba(var(--plum-rgb), 0)
+  );
+  transition: opacity 160ms var(--ease);
+}
+
+.bottomBar {
+  justify-content: space-around;
+  background: linear-gradient(
+    to top,
+    rgba(var(--plum-rgb), 0.55),
+    rgba(var(--plum-rgb), 0)
+  );
+}
+
+.barHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sender {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.senderName {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.senderTime,
+.counter {
+  font-size: var(--text-caption);
+  opacity: 0.78;
+}
+
+.iconButton,
+.actionButton,
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  padding: 8px;
+  font: inherit;
+}
+
+.actionButton {
+  flex-direction: column;
+  font-size: var(--text-12);
+  padding: 6px 12px;
+}
+
+.actionButtonActive {
+  color: var(--accent);
+}
+
+.iconButton:hover,
+.actionButton:hover,
+.navButton:hover {
+  background: rgba(var(--cream-rgb), 0.14);
+}
+
+.iconButton:focus-visible,
+.actionButton:focus-visible,
+.navButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(var(--plum-rgb), 0.5);
+  padding: 12px;
+  /* Matches .topBar/.bottomBar's own fade, so the arrows cross-fade out and
+     back in with the rest of the chrome instead of snapping to full opacity
+     the instant a gesture ends and riding the stage's settle transform back
+     into place. */
+  transition: opacity 160ms var(--ease);
+}
+
+.navPrev {
+  left: 16px;
+}
+
+.navNext {
+  right: 16px;
+}
+
+/* Touch devices get the swipe gesture instead of the arrow buttons. */
+@media (hover: none) {
+  .navButton {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topBar,
+  .bottomBar,
+  .navButton {
+    transition: none;
+  }
+}

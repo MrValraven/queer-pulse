@@ -11,7 +11,11 @@ import styles from "./PersonasStage.module.css";
 
 /** The personas section as one composition: the pitch names the single-profile
  * cramp it answers, then a single stage panel lets a visitor pick a side of
- * Sofia and see that side's page and its audience together. */
+ * Sofia and see that side's page and its audience together.
+ *
+ * The everywhere-else line comes last in the markup so one column reads
+ * title, pitch, then the elsewhere/on-QueerPulse contrast as a pair; the
+ * wide layout places it back under the title. */
 export function PersonasStageLayout({
   selectedKey,
   onSelect,
@@ -24,26 +28,15 @@ export function PersonasStageLayout({
   return (
     <div className={`wrap ${styles.layout}`}>
       <div className={styles.header}>
-        <div className={styles.headerLead}>
-          <Reveal as="h2" className={sharedStyles.title}>
-            <Translation
-              i18nKey="homepage:subprofiles.title"
-              components={{ em: <em /> }}
-            />
-          </Reveal>
-          <Reveal as="p" className={styles.elsewhere} delay={60}>
-            <span className={styles.elsewhereLabel}>
-              {t("homepage:subprofiles.everywhereElse")}
-            </span>
-            <span className={styles.elsewhereCramp}>
-              {mainProfile.name}: {mainProfile.role}{" "}
-              <s>· {t("homepage:subprofiles.proofCrampRoles")}</s>
-            </span>
-            <span className={styles.elsewhereNote}>
-              {t("homepage:subprofiles.proofEverywhereNote")}
-            </span>
-          </Reveal>
-        </div>
+        <Reveal
+          as="h2"
+          className={`${sharedStyles.title} ${styles.headerTitle}`}
+        >
+          <Translation
+            i18nKey="homepage:subprofiles.title"
+            components={{ em: <em /> }}
+          />
+        </Reveal>
         <div className={styles.headerBody}>
           <Reveal as="p" className={styles.lede} delay={60}>
             {t("homepage:subprofiles.stage.lede")}
@@ -57,6 +50,18 @@ export function PersonasStageLayout({
             </Reveal>
           </div>
         </div>
+        <Reveal as="p" className={styles.elsewhere} delay={60}>
+          <span className={styles.elsewhereLabel}>
+            {t("homepage:subprofiles.everywhereElse")}
+          </span>
+          <span className={styles.elsewhereCramp}>
+            {mainProfile.name}: {mainProfile.role}{" "}
+            <s>· {t("homepage:subprofiles.proofCrampRoles")}</s>
+          </span>
+          <span className={styles.elsewhereNote}>
+            {t("homepage:subprofiles.proofEverywhereNote")}
+          </span>
+        </Reveal>
       </div>
 
       {/* Illustrative showcase content (fabricated persona identities),

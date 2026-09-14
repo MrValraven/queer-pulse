@@ -1,14 +1,16 @@
-import { useCallback, useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
-import { useIsOnline } from "../../shared/api/realtime";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ChatImageViewerProvider } from "./ChatImageViewerContext";
 import { ConversationComposerDock } from "./ConversationComposerDock";
 import { ConversationPanelOverlays } from "./ConversationPanelOverlays";
 import { ConversationTopSection } from "./ConversationTopSection";
 import type { GroupMemberPick } from "./NewGroupModal";
 import { MessageArea } from "./MessageArea";
+import { useChatImageViewerState } from "./useChatImageViewerState";
+import { useConversationSheets } from "./useConversationSheets";
+import { useCounterpartStatus } from "./useCounterpartStatus";
 import { useMessageActionMenu } from "./useMessageActionMenu";
 import { useMessageLogState } from "./useMessageLogState";
-import { useMessageReceipts } from "./useMessageReceipts";
 import { useConversationPinStar } from "./useConversationPinStar";
 import { useWallpaper } from "./wallpaper";
 import {
@@ -138,10 +140,11 @@ export function ConversationPanel({
   onMarkThreadRead,
 }: ConversationPanelProps) {
   const { user } = useAuth();
-  /** Whether the group-info / management view is open (groups only). */
-  const [groupInfoOpen, setGroupInfoOpen] = useState(false);
-  /** Whether the "Seen by" sheet is open (groups only). */
-  const [seenBySheetOpen, setSeenBySheetOpen] = useState(false);
+  const { t } = useTranslation();
+
+  // Group-info / management view + "Seen by" sheet open state (groups only):
+  // its own hook, see useConversationSheets.
+  const { groupInfo, seenBy } = useConversationSheets();
 
   // Pin (shared) + star (private) wiring — its own hook, see useConversationPinStar.
   const { pinnedMessages, onTogglePin, onToggleStar } =
@@ -171,19 +174,17 @@ export function ConversationPanel({
     deleteForMePending,
   } = useMessageActionMenu(active.id);
 
-  // Presence for JUST this counterpart — re-renders only on THEIR status flip,
-  // not every presence frame for every other member (see `useIsOnline`).
-  const counterpartOnline = useIsOnline(active.otherParticipantId);
-  const isCounterpartOnline =
-    (!!active.otherParticipantId && counterpartOnline) ||
-    (!active.otherParticipantId && !!active.online);
-
-  // Live "Seen"/delivered watermarks — computed HERE (not the controller) so a
-  // receipt frame re-renders only this panel, never the thread list beside it.
-  const { counterpartLastReadAt, counterpartDeliveredAt } = useMessageReceipts(
-    myUserId ?? null,
-    active,
+  // The thread's photo sequence and which one the full screen viewer is on.
+  const youLabel = t("messages:viewer.you");
+  const { photos, openIndex, openImage, closeViewer } = useChatImageViewerState(
+    messageGroups,
+    { counterpartName: active.name, youLabel },
   );
+
+  // The counterpart's live presence + read/delivered watermarks: its own
+  // hook, see useCounterpartStatus.
+  const { isCounterpartOnline, counterpartLastReadAt, counterpartDeliveredAt } =
+    useCounterpartStatus(active, myUserId);
 
   // Every value the scrolling message log is derived from — one cohesive
   // hook, see useMessageLogState's own file comment for why.
@@ -217,9 +218,6 @@ export function ConversationPanel({
     onMarkThreadRead,
   );
 
-  // Stable identity — passed to `MessageArea`, which isn't itself memoized.
-  const onOpenSeenBy = useCallback(() => setSeenBySheetOpen(true), []);
-
   // This chat's wallpaper, or the base one if it has no pick of its own.
   const wallpaper = useWallpaper(active.id);
 
@@ -237,39 +235,41 @@ export function ConversationPanel({
         isCounterpartOnline={isCounterpartOnline}
         onBack={onBack}
         onOpenStarred={onOpenStarred}
-        onOpenGroupInfo={() => setGroupInfoOpen(true)}
+        onOpenGroupInfo={groupInfo.open}
         pinnedMessages={pinnedMessages}
         onJumpToMessage={jumpToMessageVirtualized}
       />
 
-      <MessageArea
-        areaRef={areaRef}
-        contentRef={contentRef}
-        messageGroups={messageGroups}
-        rows={rows}
-        rowVirtualizer={rowVirtualizer}
-        loadingOlder={loadingOlder}
-        onScroll={handleAreaScroll}
-        counterpart={counterpart}
-        counterpartName={active.name}
-        isGroup={active.isGroup}
-        conversationId={active.id}
-        groupMembers={active.members}
-        groupSeenBy={groupSeenBy}
-        onOpenSeenBy={onOpenSeenBy}
-        onRetry={onRetry}
-        seenActive={seenActive}
-        deliveredActive={deliveredActive}
-        lastOutbound={lastOutbound}
-        onReactionToggle={handleReactionToggle}
-        onReply={onSetReply}
-        onOpenActions={openActions}
-        editingMessageId={editingMessageId}
-        onBeginEdit={beginEdit}
-        onSubmitEdit={submitEdit}
-        onCancelEdit={cancelEdit}
-        onJumpToMessage={jumpToMessageVirtualized}
-      />
+      <ChatImageViewerProvider openImage={openImage}>
+        <MessageArea
+          areaRef={areaRef}
+          contentRef={contentRef}
+          messageGroups={messageGroups}
+          rows={rows}
+          rowVirtualizer={rowVirtualizer}
+          loadingOlder={loadingOlder}
+          onScroll={handleAreaScroll}
+          counterpart={counterpart}
+          counterpartName={active.name}
+          isGroup={active.isGroup}
+          conversationId={active.id}
+          groupMembers={active.members}
+          groupSeenBy={groupSeenBy}
+          onOpenSeenBy={seenBy.open}
+          onRetry={onRetry}
+          seenActive={seenActive}
+          deliveredActive={deliveredActive}
+          lastOutbound={lastOutbound}
+          onReactionToggle={handleReactionToggle}
+          onReply={onSetReply}
+          onOpenActions={openActions}
+          editingMessageId={editingMessageId}
+          onBeginEdit={beginEdit}
+          onSubmitEdit={submitEdit}
+          onCancelEdit={cancelEdit}
+          onJumpToMessage={jumpToMessageVirtualized}
+        />
+      </ChatImageViewerProvider>
 
       <ConversationComposerDock
         active={active}
@@ -305,13 +305,17 @@ export function ConversationPanel({
           onConfirmDeleteForMe: confirmDeleteForMe,
           deletePending,
           deleteForMePending,
+          photos,
+          photoIndex: openIndex,
+          onClosePhoto: closeViewer,
+          onForwardPhoto: onForwardMessage,
         }}
         groupModals={{
           active,
-          groupInfoOpen,
-          seenBySheetOpen,
-          onCloseGroupInfo: () => setGroupInfoOpen(false),
-          onCloseSeenBy: () => setSeenBySheetOpen(false),
+          groupInfoOpen: groupInfo.isOpen,
+          seenBySheetOpen: seenBy.isOpen,
+          onCloseGroupInfo: groupInfo.close,
+          onCloseSeenBy: seenBy.close,
           myUserId,
           groupSeenBy,
           onLeaveGroup,

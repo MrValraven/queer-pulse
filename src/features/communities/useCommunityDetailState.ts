@@ -21,8 +21,9 @@ import { useCommunityDetailActions } from "./useCommunityDetailActions";
  * This is a plain hook (returns no JSX), so the limit doesn't apply to it.
  *
  * Returns a discriminated status so the page renders the right frame:
- * `notFound` (redirect), `error` (retryable), `loading` (skeleton), or `ready`
- * with the fully-resolved, non-optional community view-model + handlers.
+ * `notFound` (redirect), `gated` (redirect to the discover grid, live or
+ * demo), `error` (retryable), `loading` (skeleton), or `ready` with the
+ * fully-resolved, non-optional community view-model + handlers.
  */
 export function useCommunityDetailState() {
   const { t } = useTranslation();
@@ -41,6 +42,7 @@ export function useCommunityDetailState() {
     invitedAt,
     editable,
     notFound,
+    gated,
     isLoading,
     isError,
     refetch,
@@ -96,6 +98,12 @@ export function useCommunityDetailState() {
   });
 
   if (notFound) return { status: "notFound" as const };
+  // A community this viewer isn't allowed into (the server answered the
+  // coded 403). Checked before `isError`/`isLoading` so a gated viewer never
+  // renders a skeleton of a community they cannot open; the page reads this
+  // status and redirects to the discover grid instead. Demo mode's own gate
+  // is computed further down, once `tier` is known.
+  if (gated) return { status: "gated" as const, slug };
   // A non-404 failure must render a retryable error state, not an eternal
   // skeleton (P1-14). Demo mode never errors (no live query runs).
   if (isError) return { status: "error" as const, refetch };
@@ -182,6 +190,15 @@ export function useCommunityDetailState() {
     living?.accessTier ??
     community.accessTier ??
     (community.privateBadge ? "private" : "public");
+  // Demo mode has no server to refuse anything, so its gate is computed here
+  // instead, from the `tier` just derived above plus the same `joined` /
+  // `requested` reads the join CTA already uses below. A viewer who has
+  // already requested to join a `request`-tier demo community keeps the hub,
+  // which matches how the "Requested" state behaves everywhere else in the
+  // demo.
+  const isDemoGated =
+    demoMode && Boolean(slug) && tier !== "public" && !joined && !requested;
+  if (isDemoGated) return { status: "gated" as const, slug };
   const joinLabel =
     tier === "invite"
       ? t("communities:detail.join.invite")

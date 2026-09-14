@@ -5,7 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUploadImage } from "../members/api/useUploadImage";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
 import type { GifAttachment } from "../../shared/api/gifs";
-import styles from "./MessagesPage.module.css";
+import menu from "./ComposerAttachButton.module.css";
 
 interface ImageComposerButtonProps {
   /** Sends the uploaded image as its own message. `attachment` is the SEND
@@ -15,6 +15,10 @@ interface ImageComposerButtonProps {
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
   ) => void;
+  /** Closes the attach menu this row lives in. Fired as soon as the file
+   *  dialog opens — the upload itself resolves long after, and leaving the
+   *  menu hanging over the thread until then reads as a stuck panel. */
+  onPicked: () => void;
 }
 
 /** Reads a decoded image's intrinsic pixel size, so the bubble can reserve its
@@ -38,8 +42,16 @@ function readImageDimensions(
  * every other image surface in the app already uses — client-side EXIF/GPS
  * strip, presigned direct-to-storage PUT with progress + one retry, demo mode
  * a local blob with no network — never a bespoke messaging-only upload path.
+ *
+ * Renders as a row of `ComposerAttachButton`'s menu rather than a standalone
+ * circle beside the input: the composer's controls moved INSIDE the pill, and
+ * one paperclip opening a menu is what keeps that pill uncrowded. The upload
+ * pipeline below is untouched by that move.
  */
-export function ImageComposerButton({ onSendImage }: ImageComposerButtonProps) {
+export function ImageComposerButton({
+  onSendImage,
+  onPicked,
+}: ImageComposerButtonProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const uploadImage = useUploadImage("message-image");
@@ -94,13 +106,18 @@ export function ImageComposerButton({ onSendImage }: ImageComposerButtonProps) {
       />
       <button
         type="button"
-        className={styles.gifBtn}
-        aria-label={t("messages:attachments.open")}
+        className={menu.row}
         aria-busy={uploading}
         disabled={uploading}
-        onClick={() => inputRef.current?.click()}
+        onClick={() => {
+          inputRef.current?.click();
+          onPicked();
+        }}
       >
-        <FiImage aria-hidden />
+        <span className={menu.rowIcon} aria-hidden>
+          <FiImage />
+        </span>
+        <span>{t("messages:attachments.open")}</span>
       </button>
     </>
   );

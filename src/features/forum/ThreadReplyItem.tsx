@@ -124,6 +124,7 @@ export function ThreadReplyItem({
             photo: reply.photo,
             initials: reply.avatar,
             name: reply.name,
+            official: reply.official,
           }}
         />
       </ProfileLink>

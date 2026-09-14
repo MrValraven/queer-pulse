@@ -1654,7 +1654,7 @@ const YOUTH_RULES = [
 ];
 
 /* ----------------------------------------------------------------------------
- * queer-poc — public, intersectional, monthly
+ * queer-poc: request to join, intersectional, monthly
  * ------------------------------------------------------------------------- */
 
 const POC_ROSTER: RosterMember[] = [
@@ -2157,7 +2157,18 @@ export const LIVING: Record<string, LivingCommunity> = {
   },
   "queer-poc": {
     slug: "queer-poc",
-    accessTier: "public",
+    // `request`, matching this community's entry in the homepage registry
+    // (`src/features/homepage/data/communities.ts`), which has always said
+    // `request`. This registry's tier WINS over that one (see the derivation
+    // in `useCommunityDetailState`), so a `public` here quietly contradicted
+    // it and made the community instant-join in the prototype.
+    //
+    // It is also the demo's one reachable `request`-tier community, so it is
+    // what makes the gate card's "Ask to join" state visible without a
+    // backend: a demo visitor is on no roster here, so opening
+    // `/community/queer-poc` redirects to the gate card over the discover
+    // grid, exactly as live does.
+    accessTier: "request",
     rules: POC_RULES,
     resources: POC_RESOURCES,
     events: POC_EVENTS,

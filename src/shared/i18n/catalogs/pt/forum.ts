@@ -96,10 +96,24 @@ export const forum: Catalog = {
 
   // ── ComposeThreadModal · campo de etiquetas ─────────────────────────────
   "compose.tagsFieldLabel": "Etiquetas",
-  "compose.tagsPlaceholder": "Adiciona uma etiqueta e pressiona Enter",
+  "compose.tagsPlaceholder": "Pesquisar etiquetas",
+  "compose.tagsSearchLabel": "Pesquisar etiquetas",
   "compose.tagsHint":
-    "Até {max} etiquetas. Mantém-nas simples, como #habitação ou #saúde.",
+    "Até {max} etiquetas, escolhidas da lista para que as pessoas encontrem isto mais tarde.",
   "compose.removeTagAria": "Remover etiqueta {tag}",
+  "compose.addTagAria": "Adicionar etiqueta {tag}",
+  "compose.tagsNoMatch": "Nenhuma etiqueta corresponde a “{query}”.",
+  "compose.popularTagsLabel": "Populares",
+  "compose.browseTags": "Ver todas as etiquetas",
+  "compose.hideTagList": "Esconder a lista de etiquetas",
+
+  // ── Categorias do vocabulário de etiquetas (forumTags.data.ts) ──────────
+  "tagCategory.life": "Vida & dinheiro",
+  "tagCategory.health": "Saúde & cuidados",
+  "tagCategory.community": "Comunidade",
+  "tagCategory.culture": "Cultura",
+  "tagCategory.activism": "Ativismo & financiamento",
+  "tagCategory.platform": "QueerPulse",
 
   // ── Pesquisa do fórum ───────────────────────────────────────────────────
   "search.placeholder": "Pesquisar no fórum…",
@@ -354,7 +368,7 @@ export const forum: Catalog = {
   // ── Tag editing (SOC-13) ──────────────────────────────────────────────────
   "tagsEdit.title": "Editar etiquetas",
   "tagsEdit.body":
-    "As etiquetas são como as pessoas encontram este tópico mais tarde. Até cinco, em minúsculas.",
+    "As etiquetas são como as pessoas encontram este tópico mais tarde. Escolhe até cinco da lista.",
   "tagsEdit.editCta": "Editar etiquetas",
   "tagsEdit.addCta": "Adicionar etiquetas",
   "tagsEdit.save": "Guardar etiquetas",

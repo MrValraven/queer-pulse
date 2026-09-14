@@ -1,0 +1,113 @@
+/* The composer's attach affordance: a paperclip INSIDE the input pill, plus
+   the small menu it opens above itself (Photo / File / GIF) and the GIF
+   picker it hands off to. Anchored, not portalled — the pill is the popover
+   group boundary `useComposerPopovers` watches for outside clicks, so both
+   panels have to stay inside it. */
+.control {
+  position: relative;
+  flex: none;
+}
+
+/* Menu panel — same surface treatment as the GIF picker and the shortcut
+   hint (`MentionHintButton.module.css`), opening upward so it never covers
+   the conversation header. `left: 0` keeps it flush with the paperclip at
+   the pill's leading edge. */
+.menu {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  z-index: var(--z-popover);
+  width: max-content;
+  min-width: 200px;
+  max-width: calc(100vw - 32px);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e3);
+  animation: attachMenuIn var(--dur-fast) var(--ease);
+}
+
+@keyframes attachMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    animation: none;
+  }
+}
+
+/* One menu entry. Exported to `ImageComposerButton`/`DocumentComposerButton`,
+   which render their own triggers (each owns a hidden <input type="file">)
+   but have to look identical to the GIF row rendered here. */
+.row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 8px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-badge);
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-14-5);
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .row:hover {
+    background: var(--cream);
+  }
+}
+.row:focus-visible {
+  outline: none;
+  background: var(--cream);
+}
+.row:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+/* The leading glyph badge — plum chip, matching the shortcut popover's
+   `.sigil`, so the two composer menus read as one family. */
+.rowIcon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-badge);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 0.95);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: var(--text-11-5);
+  letter-spacing: 0.02em;
+}
+
+/* Dark mode inverts the chip. `--plum` deliberately does not flip (see
+   tokens/colors.css), so on dark `--paper` #1A1030 a plum disc lands at
+   1.15:1 and reads as no disc at all. Flipping it to a light surface with a
+   plum glyph mirrors what `--line-rgb` and `--ink-rgb` already do on dark, and
+   measures 12.79:1 against the panel with the glyph at 11.12:1 on the chip.
+   `[data-theme]` rather than `prefers-color-scheme`: ThemeProvider stamps the
+   attribute on <html> and the app deliberately ignores the system preference. */
+[data-theme="dark"] .rowIcon {
+  background: rgba(var(--cream-rgb), 0.92);
+  /* css-scale-allow: non-flipping-text. The ground under this glyph is a
+     locked-light fill, so it must stay dark. --text-strong would flip. */
+  color: var(--plum);
+}

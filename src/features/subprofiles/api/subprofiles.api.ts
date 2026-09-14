@@ -811,6 +811,16 @@ export const unpublishSubprofile = (id: string) =>
 export const deleteSubprofile = (id: string) =>
   apiDelete<{ ok: true }>(`/subprofiles/${id}`);
 
+/** Persist the order this member's personas appear in.
+ *
+ *  `ids` is the member's COMPLETE persona id list in its new order, drafts and
+ *  standalone personas included — the server answers 400 on anything that is
+ *  not a complete permutation of what they own, so a caller that sends only
+ *  the on-profile group gets rejected rather than silently dropping the rest.
+ *  Success carries an empty body. */
+export const reorderSubprofiles = (ids: string[]) =>
+  apiPut<void>("/subprofiles/order", { ids });
+
 /** Public fetch of a standalone (unlinked) persona by its global handle. */
 export const getSubprofileByHandle = (handle: string, signal?: AbortSignal) =>
   apiGet<SubprofilePublicDTO>(

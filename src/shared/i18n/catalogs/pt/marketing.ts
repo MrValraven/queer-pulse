@@ -1102,9 +1102,11 @@ export const marketing: Catalog = {
     "<strong>Confirmações e presenças em eventos</strong>, para os convívios poderem planear-se conforme o número de pessoas.",
   "privacy.whatWeCollect.activity.item4":
     "<strong>Uma localização geral</strong> que escolheres adicionar, uma cidade ou zona, e a área do mapa que exploras no diretório. Nunca lemos a localização precisa do teu dispositivo.",
+  "privacy.whatWeCollect.activity.item5":
+    "<strong>Totais diários de quantas vezes cada parte da plataforma é usada</strong>, para sabermos onde investir esforço. São contagens sem o nome de ninguém associado, e nada nelas aponta de volta para ti.",
   "privacy.whatWeCollect.notCollectedHeading": "O que não recolhemos",
   "privacy.whatWeCollect.notCollectedBody":
-    "Não fazemos análise de produto nem rastreio de comportamento, não te seguimos noutros sites, não vendemos dados a anunciantes, nem construímos um perfil publicitário sobre ti. Não há aqui rede publicitária para alimentar.",
+    "Não te seguimos noutros sites, não vendemos dados a anunciantes, nem construímos um perfil publicitário sobre ti. Não há aqui rede publicitária para alimentar.",
   "privacy.sensitive.title": "A tua identidade, nos teus termos",
   "privacy.sensitive.p1":
     "Parte do que partilhas aqui é sensível por natureza: os teus pronomes, identidade de género, orientação sexual, se és uma pessoa assumida no trabalho, o apoio que procuras. Tratamo-lo com o cuidado que merece.",
@@ -1217,7 +1219,7 @@ export const marketing: Catalog = {
   "privacy.cookiesSection.p1":
     "Usamos um pequeno número de cookies para te manter com sessão iniciada e lembrar as tuas preferências: tema, idioma e escolhas de notificações.",
   "privacy.cookiesSection.p2":
-    "Não usamos cookies de publicidade nem de rastreio entre sites, e não fazemos análise de produto. Não há aqui rede publicitária para alimentar.",
+    "Não usamos cookies de publicidade nem de rastreio entre sites. Não há aqui rede publicitária para alimentar.",
   "privacy.cookiesSection.p3":
     "Consulta a <strong>Política de Cookies</strong> completa para a lista integral, e <em>gere as tuas preferências</em> quando quiseres.",
   "privacy.thirdParties.title": "Terceiros",
@@ -2327,7 +2329,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-14.headline":
-    "As publicações do quadro mostram quanto tempo lhes resta, e quem se ofereceu para ajudar.",
+    "As fotos do chat abrem em ecrã inteiro com zoom e deslize, e as comunidades fechadas ficam fechadas.",
   "changelog.releases.2026-09-12.headline":
     "O teu cartão Agora mostra o que a tua disponibilidade faz, e as fotos da ficha vêm dos teus ficheiros.",
   "changelog.releases.2026-09-11.headline":
@@ -2512,6 +2514,50 @@ export const marketing: Catalog = {
     "Volta a ligar uma localização bloqueada a partir do diretório",
   "changelog.entries.turn-a-blocked-location-back-on.body":
     "Passos para o teu navegador e dispositivo e, no Chrome, um botão que volta a pedir a localização.",
+  "changelog.entries.a-clearer-inbox-filter-row.title":
+    "Uma barra de filtros da caixa mais clara",
+  "changelog.entries.a-clearer-inbox-filter-row.body":
+    "Arquivadas e Pedidos ficam à direita, Pedidos tem um ícone próprio e uma contagem vazia deixa de mostrar zero.",
+  "changelog.entries.older-messages-keep-their-time.title":
+    "As mensagens antigas mantêm a hora",
+  "changelog.entries.older-messages-keep-their-time.body":
+    "Cada balão mostra agora a hora a que foi enviado, por mais antigo que seja, com a data no separador acima.",
+  "changelog.entries.forum-tags-come-from-a-list.title":
+    "Escolhe as etiquetas do fórum de uma lista",
+  "changelog.entries.forum-tags-come-from-a-list.body":
+    "Pesquisa o vocabulário, adiciona uma popular num toque ou percorre todas as etiquetas por categoria.",
+  "changelog.entries.a-tighter-community-history-log.title":
+    "Um registo de histórico mais compacto",
+  "changelog.entries.a-tighter-community-history-log.body":
+    "Cada entrada junta a ação e quem a fez na mesma linha, por isso cabe mais um terço do histórico no ecrã.",
+  "changelog.entries.tidier-chat-message-bar.title":
+    "Uma barra de mensagem mais arrumada",
+  "changelog.entries.tidier-chat-message-bar.body":
+    "Os botões de anexo e de atalhos passaram para dentro da caixa de mensagem, e um clipe abre agora fotos, ficheiros e GIFs.",
+  "changelog.entries.chat-photo-viewer.title":
+    "Abre fotos em ecrã inteiro no chat",
+  "changelog.entries.chat-photo-viewer.body":
+    "Belisca ou toca duas vezes para ampliar, desliza pelas outras e descarrega, responde, reencaminha ou destaca a que vês.",
+  "changelog.entries.mutual-connections-show-real-faces.title":
+    "As ligações em comum mostram caras reais",
+  "changelog.entries.mutual-connections-show-real-faces.body":
+    "O cartão no perfil de um membro mostra agora a foto de cada ligação partilhada em vez das iniciais.",
+  "changelog.entries.arrange-the-personas-on-your-profile.title":
+    "Arruma as personas no teu perfil",
+  "changelog.entries.arrange-the-personas-on-your-profile.body":
+    "Arrasta-as para a ordem que quiseres, no painel de personas. Cada pessoa arruma o seu próprio perfil.",
+  "changelog.entries.edit-a-persona-on-a-phone.title":
+    "Edita uma persona no telemóvel",
+  "changelog.entries.edit-a-persona-on-a-phone.body":
+    "Uma barra fixa diz-te em que secção estás e avança para as seguintes, uma folha salta direto para qualquer uma, e o gesto de voltar recua uma secção em vez de sair do editor.",
+  "changelog.entries.publish-a-persona-knowing-what-is-left.title":
+    "Publica uma persona sabendo o que falta",
+  "changelog.entries.publish-a-persona-knowing-what-is-left.body":
+    "A lista de verificação está viva enquanto escreves, cada coisa por terminar leva-te direto ao campo, e uma persona pode ficar no ar antes de ter trabalho nenhum.",
+  "changelog.entries.closed-communities-stay-closed.title":
+    "As comunidades fechadas ficam fechadas",
+  "changelog.entries.closed-communities-stay-closed.body":
+    "Quem está fora de uma comunidade que avalia ou convida os membros passa a ver um cartão curto com o essencial.",
   "changelog.entries.board-posts-that-breathe.title":
     "Renova uma publicação do quadro, ou responde à de outra pessoa",
   "changelog.entries.board-posts-that-breathe.body":

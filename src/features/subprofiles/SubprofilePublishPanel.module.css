@@ -1,42 +1,12 @@
 /* SubprofilePublishPanel — the pane no longer wraps itself in a `.card` (Task
    4's pane router already supplies the `.ed-main` header); these are the
-   pane's own local bits: the quick readiness-ring row and the delete
+   pane's own local bits: the blocked-publish hint line and the delete
    "danger zone". Everything else reuses `SubprofileEditor.module.css`'s
    `.publishBar`/`.publishActions`/`.checklistWrap` or the global `.ed-grid`. */
 
-.readinessRow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px;
-  background: var(--wash);
-  border-radius: var(--radius-16);
-}
-
-.readinessText {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.readinessTitle {
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0;
-}
-
-.readinessNote {
-  font-size: var(--text-12-5);
-  color: var(--ink-60);
-  line-height: 1.5;
-  margin: 0;
-}
-
 /* Sits on the `.publishBar` flex row but forced to its own full-width line
-   below the Publish action — the reason the (disabled) Publish button won't
-   fire while there are unsaved edits. */
+   below the Publish action — the reason the disabled Publish button won't
+   fire: an outstanding requirement, or unsaved edits. */
 .saveFirstHint {
   flex: 1 1 100%;
   font-size: var(--text-13);
@@ -62,12 +32,4 @@
   line-height: 1.5;
   max-width: 42ch;
   margin: 0;
-}
-
-@media (--xs) {
-  .readinessRow {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-  }
 }

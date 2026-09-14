@@ -1071,9 +1071,11 @@ export const marketing: Catalog = {
     "<strong>Event RSVPs and attendance</strong>, so gatherings can plan around headcount.",
   "privacy.whatWeCollect.activity.item4":
     "<strong>A general location</strong> you choose to add, a city or area, and the map area you browse in the directory. We never read your device's precise location.",
+  "privacy.whatWeCollect.activity.item5":
+    "<strong>Daily totals of how often each part of the platform is used</strong>, so we know where to put our effort. These are counts with nobody's name attached, and nothing in them points back to you.",
   "privacy.whatWeCollect.notCollectedHeading": "What we don't collect",
   "privacy.whatWeCollect.notCollectedBody":
-    "We don't run product analytics or behavioural tracking, we don't follow you across other websites, we don't sell data to advertisers, and we don't build an advertising profile of you. There's no ad network on this platform to feed.",
+    "We don't follow you across other websites, we don't sell data to advertisers, and we don't build an advertising profile of you. There's no ad network on this platform to feed.",
   "privacy.sensitive.title": "Your identity, on your terms",
   "privacy.sensitive.p1":
     "Some of what you share here is sensitive by nature. Your pronouns, gender identity, sexual orientation, whether you're out at work, the support you're looking for. We treat it with the care it deserves.",
@@ -1185,7 +1187,7 @@ export const marketing: Catalog = {
   "privacy.cookiesSection.p1":
     "We use a small number of cookies to keep you signed in and remember your preferences: your theme, language, and notification choices.",
   "privacy.cookiesSection.p2":
-    "We don't use advertising or cross-site tracking cookies, and we don't run product analytics. There's no ad network here to feed.",
+    "We don't use advertising or cross-site tracking cookies. There's no ad network here to feed.",
   "privacy.cookiesSection.p3":
     "See the full <strong>Cookie Policy</strong> for the complete list, and <em>manage your preferences</em> any time.",
   "privacy.thirdParties.title": "Third parties",
@@ -2266,7 +2268,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-14.headline":
-    "Board posts show how long they have left, and who offered to help.",
+    "Chat photos open full screen with zoom and swipe, and closed communities stay closed.",
   "changelog.releases.2026-09-12.headline":
     "Your Now card shows what your openness does, and listing photos come from your uploads.",
   "changelog.releases.2026-09-11.headline":
@@ -2451,6 +2453,49 @@ export const marketing: Catalog = {
     "Turn a blocked location back on from the directory",
   "changelog.entries.turn-a-blocked-location-back-on.body":
     "Steps for your own browser and device, and in Chrome a button that asks for location again.",
+  "changelog.entries.a-clearer-inbox-filter-row.title":
+    "A clearer inbox filter row",
+  "changelog.entries.a-clearer-inbox-filter-row.body":
+    "Archived and Requests sit at the right edge, Requests has its own icon, and an empty count shows nothing.",
+  "changelog.entries.older-messages-keep-their-time.title":
+    "Older messages keep their time",
+  "changelog.entries.older-messages-keep-their-time.body":
+    "Every bubble now shows the hour it was sent, however old, with the date on the separator above it.",
+  "changelog.entries.forum-tags-come-from-a-list.title":
+    "Pick forum tags from a list",
+  "changelog.entries.forum-tags-come-from-a-list.body":
+    "Search the vocabulary, quick-add a popular one, or browse every tag by category.",
+  "changelog.entries.a-tighter-community-history-log.title":
+    "A tighter community history log",
+  "changelog.entries.a-tighter-community-history-log.body":
+    "Each entry puts the action and who took it on one line, so a third more of the trail fits on screen.",
+  "changelog.entries.tidier-chat-message-bar.title": "A tidier message bar",
+  "changelog.entries.tidier-chat-message-bar.body":
+    "Attach and shortcut buttons moved inside the message box, and one paperclip now opens photos, files and GIFs.",
+  "changelog.entries.chat-photo-viewer.title":
+    "Open photos full screen in chat",
+  "changelog.entries.chat-photo-viewer.body":
+    "Pinch or double-tap to zoom, swipe through the rest, and save, reply, forward or star what you're viewing.",
+  "changelog.entries.mutual-connections-show-real-faces.title":
+    "Mutual connections show real faces",
+  "changelog.entries.mutual-connections-show-real-faces.body":
+    "The card on a member's profile carries each shared connection's own photo instead of their initials.",
+  "changelog.entries.arrange-the-personas-on-your-profile.title":
+    "Arrange the personas on your profile",
+  "changelog.entries.arrange-the-personas-on-your-profile.body":
+    "Drag them into the order you want, from your personas dashboard. Everyone arranges their own profile.",
+  "changelog.entries.edit-a-persona-on-a-phone.title":
+    "Edit a persona on a phone",
+  "changelog.entries.edit-a-persona-on-a-phone.body":
+    "A sticky bar names the section you are in and steps through the rest, a sheet jumps straight to any of them, and the back gesture walks back a section instead of leaving the editor.",
+  "changelog.entries.publish-a-persona-knowing-what-is-left.title":
+    "Publish a persona knowing what is left",
+  "changelog.entries.publish-a-persona-knowing-what-is-left.body":
+    "The publish checklist is live as you type, each unfinished thing takes you straight to its field, and a persona can go live before it has any work on it.",
+  "changelog.entries.closed-communities-stay-closed.title":
+    "Closed communities stay closed",
+  "changelog.entries.closed-communities-stay-closed.body":
+    "Anyone outside a community that reviews or invites its members now sees a short card with the essentials.",
   "changelog.entries.board-posts-that-breathe.title":
     "Renew a board post, or respond to someone else's",
   "changelog.entries.board-posts-that-breathe.body":

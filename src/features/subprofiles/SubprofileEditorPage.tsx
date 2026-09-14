@@ -1,5 +1,5 @@
-import { FiAlertTriangle } from "react-icons/fi";
-import { useParams } from "react-router-dom";
+import { FiAlertTriangle, FiChevronLeft } from "react-icons/fi";
+import { Link, useParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { Badge, EmptyState, Spinner } from "../../shared/components/ui";
@@ -100,6 +100,13 @@ export function SubprofileEditorPage() {
       <div className={styles.page}>
         <div className="wrap">
           <div className={styles.container}>
+            {/* Mobile only (CSS). The rail's own "‹ Your personas" head goes
+                with the rail at 760px, so the way back to the dashboard moves
+                up here rather than disappearing. */}
+            <Link to={DASHBOARD} className={styles.mobileBack}>
+              <FiChevronLeft size={16} aria-hidden />
+              {t("subprofiles:editorRail.backLink")}
+            </Link>
             <div className={styles.header}>
               <h1 className={styles.headTitle}>
                 {subprofile.displayName || t("subprofiles:mine.untitled")}

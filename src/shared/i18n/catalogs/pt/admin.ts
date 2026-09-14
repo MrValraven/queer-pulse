@@ -6012,4 +6012,95 @@ export const admin: Catalog = {
   "adminQueues.error.title": "Não conseguimos ler as contagens",
   "adminQueues.error.body":
     "Tenta outra vez. Se continuar a falhar, abre as filas diretamente: o que falta aqui são só as contagens.",
+
+  // Feature usage panel. Feature display names cover every key in the
+  // backend's launchedFeatures, so no row can render a raw key.
+  "featureUsage.eyebrow": "Onde vai o esforço",
+  "featureUsage.title": "Utilização de <em>funcionalidades</em>",
+  "featureUsage.header.title": "Utilização de <em>funcionalidades</em>",
+  "featureUsage.sub":
+    "Quanto cada parte da plataforma é vista, comparado com quanto é usada para criar algo. São contagens agregadas. Nada aqui acompanha o comportamento de um membro em concreto.",
+  "featureUsage.rangeLabel": "Período",
+  "featureUsage.range.d7": "Últimos 7 dias",
+  "featureUsage.range.d30": "Últimos 30 dias",
+  "featureUsage.range.d90": "Últimos 90 dias",
+  "featureUsage.reachOnlyNote":
+    "Há funcionalidades que não têm nada que um membro possa criar. As colunas Criados e Total explicam porquê em vez de mostrar um número, para uma célula vazia nunca ser confundida com um zero.",
+  "featureUsage.table.caption":
+    "Alcance e criação por funcionalidade, ordenados pelo que precisa de decisão primeiro.",
+  "featureUsage.column.feature": "Funcionalidade",
+  "featureUsage.column.state": "Estado",
+  "featureUsage.column.reach": "Alcance",
+  "featureUsage.column.created": "Criados",
+  "featureUsage.column.total": "Total",
+  "featureUsage.column.details": "Detalhes",
+  "featureUsage.state.busy.label": "Ativa",
+  "featureUsage.state.busy.explainer": "Bom alcance e boa criação. Não mexas.",
+  "featureUsage.state.browsedButEmpty.label": "Vista mas vazia",
+  "featureUsage.state.browsedButEmpty.explainer":
+    "As pessoas chegam e não se cria nada. É o percurso que as está a travar.",
+  "featureUsage.state.quiet.label": "Silenciosa",
+  "featureUsage.state.quiet.explainer":
+    "Pouco alcance e pouca criação. Ou ninguém encontra, ou ninguém quer.",
+  "featureUsage.state.notLaunched.label": "Não lançada",
+  "featureUsage.state.notLaunched.explainer":
+    "Desligada de propósito, por isso fica fora da ordenação acima.",
+  "featureUsage.stat.busy.trend": "Estável",
+  "featureUsage.stat.browsedButEmpty.trend": "Prioridade máxima",
+  "featureUsage.stat.quiet.trend": "Sinal fraco",
+  "featureUsage.stat.notLaunched.trend": "Desligada de propósito",
+  "featureUsage.reachTrend.none": "Sem alcance registado",
+  "featureUsage.reachTrend.new": "Nova atividade neste período",
+  "featureUsage.reachTrend.change": "{percent} face ao período anterior",
+  "featureUsage.drillDown.expandLabel": "Mostrar detalhes de {feature}",
+  "featureUsage.drillDown.collapseLabel": "Esconder detalhes de {feature}",
+  "featureUsage.drillDown.housingListings.listings": "Anúncios criados",
+  "featureUsage.drillDown.housingListings.savedSearches": "Pesquisas guardadas",
+  "featureUsage.drillDown.housingListings.viewings": "Visitas marcadas",
+  "featureUsage.drillDown.forum.threads": "Tópicos",
+  "featureUsage.drillDown.forum.replies": "Respostas",
+  "featureUsage.drillDown.communities.created": "Comunidades criadas",
+  "featureUsage.drillDown.communities.stillPostingThisWeek":
+    "Ainda a publicar esta semana",
+  "featureUsage.drillDown.communities.stillPostingNote":
+    "Uma contagem contínua dos últimos 7 dias, independente do período escolhido acima.",
+  "featureUsage.feature.housingListings": "Anúncios de habitação",
+  "featureUsage.feature.landlords": "Senhorios",
+  "featureUsage.feature.magazine": "Revista",
+  "featureUsage.feature.content": "Tópicos",
+  "featureUsage.feature.feed": "Feed",
+  "featureUsage.feature.communities": "Comunidades",
+  "featureUsage.feature.forum": "Fórum",
+  "featureUsage.feature.events": "Eventos",
+  "featureUsage.feature.cinema": "Cinema",
+  "featureUsage.feature.companies": "Empresas",
+  "featureUsage.feature.jobs": "Trabalhos",
+  "featureUsage.feature.barter": "Trocas",
+  "featureUsage.feature.community": "Programas comunitários",
+  "featureUsage.feature.partners": "Parceiros",
+  "featureUsage.feature.volunteering": "Voluntariado",
+  "featureUsage.feature.connections": "Ligações",
+  "featureUsage.feature.messaging": "Mensagens",
+  "featureUsage.feature.listings": "Anúncios de negócios",
+  "featureUsage.feature.housing": "Cooperativas de habitação",
+  "featureUsage.feature.flatmateProfiles": "Perfis de colegas de casa",
+  "featureUsage.feature.resources": "Recursos",
+  "featureUsage.feature.culture": "Cultura",
+  "featureUsage.feature.governance": "Governação",
+  "featureUsage.feature.roadmap": "Roteiro",
+  "featureUsage.noReachSignal.notice":
+    "Não foi registado alcance para o período selecionado. Por isso, todas as funcionalidades aparecem como Silenciosa até haver alcance registado, e os estados abaixo ainda não têm significado.",
+  "featureUsage.notApplicable": "Não aplicável:",
+  "featureUsage.reachOnlyReason.feed":
+    "O feed é uma superfície de leitura e não cria nada.",
+  "featureUsage.reachOnlyReason.content":
+    "Os tópicos são uma taxonomia curada sem rota de criação para membros, e as publicações de tópicos derivam de tópicos do fórum já contados na profundidade do fórum.",
+  "featureUsage.reachOnlyReason.cinema":
+    "Os títulos só são publicados pela equipa editorial; não há rota de criação para membros, e o histórico de visualização fica excluído pelos mesmos motivos de privacidade das mensagens.",
+  "featureUsage.reachOnlyReason.generic":
+    "Esta funcionalidade não tem nada que um membro possa criar.",
+  "featureUsage.loadError":
+    "Não foi possível carregar a utilização de funcionalidades. Tenta novamente daqui a pouco.",
+  "featureUsage.empty":
+    "Ainda não há funcionalidades para mostrar neste período.",
 };

@@ -23,6 +23,10 @@ interface MentionTextareaProps {
   placement?: "below" | "above";
   onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onBlur?: () => void;
+  /** Focus of the field itself. The chat composer uses it to dismiss whichever
+   *  attach/shortcut panel is open once someone starts typing — those panels
+   *  now live INSIDE the input pill, so an outside-click never fires for them. */
+  onFocus?: () => void;
   /** Grow the box to fit its content instead of scrolling inside `rows`. The
    *  profile and persona bio fields turn this on, since the plain textareas
    *  they replaced grew this way; the chat and forum composers leave it off
@@ -161,6 +165,7 @@ export function MentionTextarea(props: MentionTextareaProps) {
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onFocus={() => props.onFocus?.()}
         onBlur={() => {
           props.onBlur?.();
           requestAnimationFrame(() => setTrigger(null));

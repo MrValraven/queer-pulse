@@ -442,7 +442,7 @@
   place-items: center;
   border-radius: var(--radius-pill);
   background: var(--accent);
-  color: var(--text-strong);
+  color: rgb(var(--cream-rgb));
   font-size: var(--text-9);
   font-weight: 700;
 }

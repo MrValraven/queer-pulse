@@ -34,26 +34,28 @@ export function ProfileEditDetailFields({
         <p className={styles.fieldHelp}>
           {t("members:profileEdit.pronunciation.help")}
         </p>
-        <InlineText
-          value={draft.pronunciation ?? ""}
-          ariaLabel={t("members:profileEdit.pronunciation.label")}
-          placeholder={t("members:profileEdit.pronunciation.placeholder")}
-          className={styles.hoodInput}
-          onChange={(value) => updateDraft({ pronunciation: value })}
-        />
-        {/* Same voice the profile hero uses, so you can check it before saving. */}
-        {pronunciation ? (
-          <button
-            type="button"
-            className={styles.hearIt}
-            onClick={() => speak(pronunciation)}
-            disabled={isSpeaking}
-            aria-busy={isSpeaking}
-          >
-            <FiVolume2 aria-hidden />{" "}
-            {t("members:profileEdit.pronunciation.hear")}
-          </button>
-        ) : null}
+        <div className={styles.pronunciationRow}>
+          <InlineText
+            value={draft.pronunciation ?? ""}
+            ariaLabel={t("members:profileEdit.pronunciation.label")}
+            placeholder={t("members:profileEdit.pronunciation.placeholder")}
+            className={styles.hoodInput}
+            onChange={(value) => updateDraft({ pronunciation: value })}
+          />
+          {/* Same voice the profile hero uses, so you can check it before saving. */}
+          {pronunciation ? (
+            <button
+              type="button"
+              className={styles.hearIt}
+              onClick={() => speak(pronunciation)}
+              disabled={isSpeaking}
+              aria-busy={isSpeaking}
+            >
+              <FiVolume2 aria-hidden />{" "}
+              {t("members:profileEdit.pronunciation.hear")}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className={styles.field}>

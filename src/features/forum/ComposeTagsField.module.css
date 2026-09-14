@@ -75,3 +75,213 @@
   color: var(--ink-60);
   margin-top: 6px;
 }
+
+/* The chips box and its type-ahead popover share one positioning context, so
+   the suggestions hang off the field rather than off the modal body. */
+.tagsInputWrap {
+  position: relative;
+}
+
+/* ---- Type-ahead suggestions ---------------------------------------------- */
+.tagSuggest {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: var(--z-popover);
+  min-width: 200px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
+}
+.tagSuggestItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-8);
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.15s var(--ease);
+}
+@media (hover: hover) {
+  .tagSuggestItem:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+.tagSuggestItemHl {
+  background: rgba(var(--plum-rgb), 0.06);
+}
+.tagSuggestItem:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-accent-soft);
+}
+.tagSuggestEmpty {
+  margin: 0;
+  padding: 8px 10px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ---- Popular quick-adds + the browse toggle ------------------------------ */
+.tagPopular {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.tagPopularLabel {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-right: 2px;
+}
+.tagAdd {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1.5px dashed rgba(var(--line-rgb), 0.28);
+  border-radius: var(--radius-pill);
+  padding: 6px 13px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .tagAdd:hover {
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+}
+.tagAdd:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-accent-soft);
+}
+/* The browse toggle sits in the same chip row as the popular quick-adds but
+   reads as a control rather than a value: solid edge, accent ink. */
+.tagBrowseAll {
+  border-style: solid;
+  border-color: rgba(var(--line-rgb), 0.22);
+  color: var(--accent);
+}
+@media (hover: hover) {
+  .tagBrowseAll:hover {
+    color: var(--accent);
+    border-color: rgba(var(--accent-rgb), 0.45);
+    background: rgba(var(--accent-rgb), 0.07);
+  }
+}
+
+/* ---- The full grouped list ----------------------------------------------- */
+.browseList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin-top: 12px;
+  padding: 14px;
+  background: rgba(var(--plum-rgb), 0.03);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+}
+.browseCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.browseCategoryTitle {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.browseChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+/* Unselected chips echo the dashed "add" affordance above so the two rows read
+   as one control; selected chips take the solid accent fill that marks a tag
+   already on the thread. */
+.browseChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1.5px dashed rgba(var(--line-rgb), 0.28);
+  border-radius: var(--radius-pill);
+  padding: 6px 13px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
+}
+.browseChipOn {
+  color: var(--accent);
+  border-style: solid;
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.browseChip:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+@media (hover: hover) {
+  .browseChip:not(:disabled):hover {
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+  .browseChipOn:hover {
+    color: var(--accent);
+    border-color: rgba(var(--accent-rgb), 0.6);
+    background: rgba(var(--accent-rgb), 0.14);
+  }
+}
+.browseChip:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tagSuggestItem,
+  .tagAdd,
+  .browseChip {
+    transition: none;
+  }
+}

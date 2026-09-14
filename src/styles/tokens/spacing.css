@@ -71,6 +71,22 @@
   --bottom-inset: 0px;
 }
 
+/* ── Mobile gutter ──
+   28px is a desktop figure. On a 360px phone the pair eats 56px, 16% of the
+   screen, before a word of content is drawn, and it compounds wherever a card
+   nests inside `.wrap` and adds its own padding. 18px below 640px gives every
+   page ~20px of content width back while still reading as a margin.
+
+   This is the ONE place the gutter is set, so the two full-bleed cancels in
+   the tree (persona-skins.css, persona-editor.css, both
+   `calc(-1 * var(--wrap-px))`) follow it automatically. A rule that hardcodes
+   28px as a gutter does NOT follow it, and should be moved onto the token. */
+@media (--md) {
+  :root {
+    --wrap-px: 18px;
+  }
+}
+
 /* Shorthand alias for components that still reference the old name */
 :root {
   --card-radius: var(--radius-card);

@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useMediaQuery } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import type { EditorPaneKey } from "./editorRail.data";
+import { buildEditorRailGroups, type EditorPaneKey } from "./editorRail.data";
 import { SubprofileEditorProvider } from "./SubprofileEditorProvider";
 import { EditorRail } from "./EditorRail";
+import { EditorPaneSwitcher } from "./EditorPaneSwitcher";
 import { EditorPaneRouter } from "./EditorPaneRouter";
 import { EditorSavebar } from "./EditorSavebar";
 import { EditorPreview } from "./EditorPreview";
+import { SubprofileEditorNavContext } from "./subprofileEditorNav";
+import { useEditorPane } from "./useEditorPane";
 // The global `.ed*` editor-shell styles. Imported here (a lazy editor-only
 // surface) rather than globally so they ride the editor route chunk, not the
 // app-wide bundle. The editor's docked preview renders `.pp*` too, but that
 // skin CSS comes in via EditorPreview → SubprofilePageBody's own import.
 import "./persona-editor.css";
+
+/**
+ * Below this the rail is gone and `EditorPaneSwitcher` navigates instead. It
+ * must be the same 760px cut the CSS hides the rail at, which is why that one
+ * CSS block is a `@media` rule while the editor's other breakpoints are
+ * `@container` queries against `.ed-shell` — see the note in
+ * `persona-editor.css`.
+ */
+const RAIL_HIDDEN_QUERY = mediaMax("lg");
 
 /**
  * The `.ed` grid interior — rail, routed pane + savebar, and docked preview —
@@ -22,7 +36,22 @@ import "./persona-editor.css";
  * affiliation working-list) behind a single global save. The routed panes and
  * the savebar write it; the docked preview reads it — so in-progress edits show
  * live before any save, and one "Save all" in the savebar commits every dirty
- * area at once. `activePane`/`previewOpen` stay here so they reset per persona.
+ * area at once.
+ *
+ * The active pane lives in the URL (`useEditorPane`), so the phone's Back
+ * gesture steps back a pane instead of leaving the editor, and a pane survives
+ * a refresh. `previewOpen` stays local state: it is a viewing preference, not
+ * somewhere the owner navigated to. The rail groups are built ONCE here and
+ * handed to both the rail and the mobile switcher, so the two navigations
+ * cannot drift apart.
+ *
+ * That pane state is also published on `SubprofileEditorNavContext`, the one
+ * seam that lets something rendered INSIDE a pane move the editor to another
+ * one — the publish checklist's unmet rows jumping to the field they are about
+ * (`useEditorFieldJump`). Kept separate from `SubprofileEditorProvider` on
+ * purpose: that context owns the unsaved-edit state, and folding "where am I
+ * looking" into it would re-render every consumer of the edit state on each
+ * pane change.
  */
 export function SubprofileEditorShell({
   subprofile,
@@ -31,37 +60,59 @@ export function SubprofileEditorShell({
   subprofile: SubprofileView;
   backTo: string;
 }) {
-  const [activePane, setActivePane] = useState<EditorPaneKey>("identity");
   const [previewOpen, setPreviewOpen] = useState(true);
+  const isRailHidden = useMediaQuery(RAIL_HIDDEN_QUERY);
+
+  const groups = useMemo(() => buildEditorRailGroups(subprofile), [subprofile]);
+  // Flattened rail order — what `?pane=` is validated against, and the order
+  // the switcher's back/forward arrows walk.
+  const paneKeys = useMemo(
+    () =>
+      groups.flatMap((group): EditorPaneKey[] =>
+        group.entries.map((entry) => entry.key),
+      ),
+    [groups],
+  );
+  const pane = useEditorPane(paneKeys);
+  // Memoized: a fresh object every render would re-render every nav consumer
+  // on each keystroke in the editor, and remount nothing usefully.
+  const navValue = useMemo(
+    () => ({ activePane: pane.activePane, goToPane: pane.selectPane }),
+    [pane.activePane, pane.selectPane],
+  );
 
   return (
-    <div className="ed" data-preview={previewOpen ? "on" : "off"}>
+    <SubprofileEditorNavContext.Provider value={navValue}>
       <SubprofileEditorProvider subprofile={subprofile}>
-        <EditorRail
-          subprofile={subprofile}
-          activePane={activePane}
-          backTo={backTo}
-          onSelect={setActivePane}
-        />
+        {isRailHidden && <EditorPaneSwitcher groups={groups} pane={pane} />}
 
-        <div className="ed-main">
-          <EditorPaneRouter pane={activePane} subprofile={subprofile} />
-          <EditorSavebar
-            previewOpen={previewOpen}
-            onTogglePreview={() => setPreviewOpen((open) => !open)}
+        <div className="ed" data-preview={previewOpen ? "on" : "off"}>
+          <EditorRail
+            groups={groups}
+            activePane={pane.activePane}
+            backTo={backTo}
+            onSelect={pane.selectPane}
           />
-        </div>
 
-        {/* Kept MOUNTED regardless of `previewOpen` so the panel can animate OUT
+          <div className="ed-main">
+            <EditorPaneRouter pane={pane.activePane} subprofile={subprofile} />
+            <EditorSavebar
+              previewOpen={previewOpen}
+              onTogglePreview={() => setPreviewOpen((open) => !open)}
+            />
+          </div>
+
+          {/* Kept MOUNTED regardless of `previewOpen` so the panel can animate OUT
             (a conditional unmount would pop it away with no exit). While hidden
             it's `inert` — pulled out of the tab order and the a11y tree, and its
             in-flight "Open live" link made unfocusable — so the collapsed column
             is truly gone to keyboard/AT users even though it's still in the DOM.
             The visual collapse itself is driven by `data-preview` in CSS. */}
-        <div className="ed-preview" inert={!previewOpen}>
-          <EditorPreview subprofile={subprofile} />
+          <div className="ed-preview" inert={!previewOpen}>
+            <EditorPreview subprofile={subprofile} />
+          </div>
         </div>
       </SubprofileEditorProvider>
-    </div>
+    </SubprofileEditorNavContext.Provider>
   );
 }

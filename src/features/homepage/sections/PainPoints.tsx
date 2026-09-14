@@ -70,7 +70,7 @@ export function PainPoints() {
       onClickCapture={stopRotation}
       {...pauseHandlers}
     >
-      <div className={styles.wrap}>
+      <div className="wrap">
         <Reveal>
           <div className={styles.card}>
             <BuiltCardHead />

@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { BrandMark } from "../../shared/components/ui";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ForumAuthor.module.css";
@@ -14,7 +15,16 @@ export interface ForumPerson {
   official?: boolean;
 }
 
-/** A circular forum avatar: the member's photo when available, initials otherwise. */
+/**
+ * A circular forum avatar: the member's photo when available, initials
+ * otherwise.
+ *
+ * The institutional QueerPulse account has no face and no photo, so it wears
+ * the brand mark on plum instead of a letter: the same drawing the landing
+ * page gives our own voice in "why we built this" (`PainPointsParts`'s
+ * `.usAvatar`). The caller's tint is dropped for it on purpose, because the
+ * account is recognised by the mark rather than by a per-slug colour.
+ */
 export function ForumAvatar({
   className,
   style,
@@ -24,6 +34,15 @@ export function ForumAvatar({
   style?: CSSProperties;
   person: ForumPerson;
 }) {
+  if (person.official) {
+    return (
+      <span
+        className={[className, styles.brandAvatar].filter(Boolean).join(" ")}
+      >
+        <BrandMark state="rest" tone="mono" size="100%" />
+      </span>
+    );
+  }
   return (
     <span className={className} style={style}>
       {person.photo ? (

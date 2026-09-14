@@ -186,6 +186,27 @@ export const communities: Catalog = {
   "detail.join.public": "Join community",
   "detail.join.request": "Request to join",
   "detail.joined": "Joined",
+
+  // ── The gate card: a closed community, seen from outside ──────────────────
+  // Shown over the discover grid when somebody opens a `request`, `invite` or
+  // `private` community they are not on the roster of. It carries what an
+  // outsider may see and nothing else, so there is no copy here about posts,
+  // members by name, the house rules or who runs it.
+  "gate.eyebrow": "Members only",
+  "gate.about": "What this is for",
+  "gate.languages": "Spoken here",
+  "gate.nextGathering": "Next public gathering",
+  "gate.request.line":
+    "This community reviews who joins. Ask, and a moderator reads it.",
+  "gate.request.action": "Ask to join",
+  "gate.invited.line": "You have been invited to this one.",
+  "gate.invited.action": "Accept invitation",
+  "gate.online": "Online",
+  "gate.close": "Back to communities",
+  "gate.error.title": "That did not load",
+  "gate.error.description":
+    "We could not reach this community just now. Try again in a moment.",
+
   // PRD-148. The `Requested` chip was a disabled label with no way out. The body
   // names the wait on purpose: withdrawing costs nothing, while waiting for a
   // decline can write a 30 or 180 day reapply lock.

@@ -1,5 +1,6 @@
 // src/features/messages/MessageSendStatus.tsx
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { BubbleMetaAlign } from "./useBubbleMetaAlign";
 import styles from "./MessagesPage.module.css";
 
 /** The honest send-status ladder the in-bubble tick renders (own bubbles only):
@@ -90,17 +91,21 @@ export function SendStatusTick({
 /** WhatsApp-style meta shown on a run's last bubble: a small time, plus (on the
  *  user's own outgoing bubble) the send-status tick. `floating` tucks it into a
  *  text bubble's bottom-right (text wraps around it); otherwise it renders as a
- *  standalone line under an emoji-only message. */
+ *  standalone line under an emoji-only message. `align` is the floating case's
+ *  vertical position — centred on a one-line bubble's single text line, tucked
+ *  flush into the corner on a multi-line one (see `useBubbleMetaAlign`). */
 export function MessageMeta({
   time,
   isSent,
   metaStatus,
   floating,
+  align = "center",
 }: {
   time?: string;
   isSent: boolean;
   metaStatus: MetaStatus;
   floating: boolean;
+  align?: BubbleMetaAlign;
 }) {
   // Colour only tracks sent/received when tucked inside a coloured bubble; the
   // standalone (emoji) line always sits on the page, so it stays muted ink.
@@ -110,8 +115,12 @@ export function MessageMeta({
     <span
       className={[
         floating ? styles.bubbleMeta : styles.bubbleMetaBelow,
+        floating && align === "bottom" && styles.bubbleMetaBottom,
+        floating && align === "flush" && styles.bubbleMetaFlush,
         colorClass,
-      ].join(" ")}
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       {time && <span>{time}</span>}
       {isSent && metaStatus && <SendStatusTick status={metaStatus} />}

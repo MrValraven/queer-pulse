@@ -2,8 +2,7 @@ import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { FiChevronLeft } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { SubprofileView } from "./api/subprofiles.adapters";
-import { buildEditorRailGroups, type EditorPaneKey } from "./editorRail.data";
+import type { EditorPaneKey, EditorRailGroup } from "./editorRail.data";
 import { estimateEditorReadiness } from "./subprofileDraftReadiness";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SideReadinessRing } from "./SideReadinessRing";
@@ -16,24 +15,27 @@ import { SideReadinessRing } from "./SideReadinessRing";
  * entry give native keyboard operability (Tab + Enter/Space) for free; the
  * active entry gets `aria-current="page"`, which the CSS keys its solid-fill
  * active state off of. The Publish entry renders the draft-readiness `.ring`
- * in place of an icon (the design's "Get it live" row). Collapses to a
- * horizontal scroller ≤760px via the CSS's own `@container` rule — nothing
- * here needs to branch on viewport width.
+ * in place of an icon (the design's "Get it live" row). Hidden outright ≤760px
+ * by the CSS's own `@media` rule, where `EditorPaneSwitcher` navigates instead
+ * — nothing here needs to branch on viewport width.
+ *
+ * `groups` is built once by `SubprofileEditorShell` and shared with the mobile
+ * `EditorPaneSwitcher`, so the two navigations always offer the same entries in
+ * the same order with the same badges.
  */
 export function EditorRail({
-  subprofile,
+  groups,
   activePane,
   backTo,
   onSelect,
 }: {
-  subprofile: SubprofileView;
+  groups: EditorRailGroup[];
   activePane: EditorPaneKey;
   backTo: string;
   onSelect: (pane: EditorPaneKey) => void;
 }) {
   const { t } = useTranslation();
   const editor = useSubprofileEditorContext();
-  const groups = buildEditorRailGroups(subprofile);
   // The rail's "Get it live" ring tracks the LIVE editor snapshot (unsaved
   // edits included), matching the Publish pane's ring — `buildEditorRailGroups`
   // seeds it off the saved persona, so override with the live count here.

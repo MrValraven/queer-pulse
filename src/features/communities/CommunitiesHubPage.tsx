@@ -1,9 +1,11 @@
+import { useSearchParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CommunitiesHubHeader } from "./CommunitiesHubHeader";
 import { CommunitiesHome } from "./CommunitiesHomePage";
 import { CommunitiesDiscover } from "./CommunitiesPage";
+import { CommunityGateModal } from "./CommunityGateModal";
 import { useCommunitiesTopTab } from "./useCommunitiesTopTab";
 import { useDiscoverCommunities } from "./useDiscoverCommunities";
 
@@ -26,6 +28,12 @@ export function CommunitiesHubPage() {
   // owns an honest loading state — rather than flashing Discover then swapping.
   const active = resolving ? "mine" : tab;
   const discover = useDiscoverCommunities(active);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // `/community/:slug` redirects here with `?gate=<slug>` for a community the
+  // viewer is not on the roster of and whose tier is not `public`. The grid
+  // renders underneath as it always does, so dismissing the card leaves them
+  // somewhere they can act rather than on a page with every door locked.
+  const gateSlug = searchParams.get("gate");
 
   return (
     <AppShell>
@@ -50,6 +58,22 @@ export function CommunitiesHubPage() {
           <CommunitiesDiscover discover={discover} />
         )}
       </div>
+
+      {gateSlug && (
+        <CommunityGateModal
+          slug={gateSlug}
+          onClose={() =>
+            setSearchParams(
+              (previous) => {
+                const nextParams = new URLSearchParams(previous);
+                nextParams.delete("gate");
+                return nextParams;
+              },
+              { replace: true },
+            )
+          }
+        />
+      )}
     </AppShell>
   );
 }
