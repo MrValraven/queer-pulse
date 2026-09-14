@@ -2457,6 +2457,10 @@ export const marketing: Catalog = {
     "A clearer inbox filter row",
   "changelog.entries.a-clearer-inbox-filter-row.body":
     "Archived and Requests sit at the right edge, Requests has its own icon, and an empty count shows nothing.",
+  "changelog.entries.photos-you-attach-actually-send.title":
+    "Photos you attach now send",
+  "changelog.entries.photos-you-attach-actually-send.body":
+    "Picking a photo or a file from the attach menu no longer drops it when the menu closes.",
   "changelog.entries.older-messages-keep-their-time.title":
     "Older messages keep their time",
   "changelog.entries.older-messages-keep-their-time.body":

@@ -2518,6 +2518,10 @@ export const marketing: Catalog = {
     "Uma barra de filtros da caixa mais clara",
   "changelog.entries.a-clearer-inbox-filter-row.body":
     "Arquivadas e Pedidos ficam à direita, Pedidos tem um ícone próprio e uma contagem vazia deixa de mostrar zero.",
+  "changelog.entries.photos-you-attach-actually-send.title":
+    "As fotos que anexas são mesmo enviadas",
+  "changelog.entries.photos-you-attach-actually-send.body":
+    "Escolher uma foto ou um ficheiro no menu de anexos já não perde o ficheiro quando o menu fecha.",
   "changelog.entries.older-messages-keep-their-time.title":
     "As mensagens antigas mantêm a hora",
   "changelog.entries.older-messages-keep-their-time.body":

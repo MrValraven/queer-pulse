@@ -31,6 +31,15 @@
   animation: attachMenuIn var(--dur-fast) var(--ease);
 }
 
+/* The panel stays in the DOM when closed (see `ComposerAttachButton`: its
+   rows own hidden file inputs that must survive the menu closing mid-pick),
+   so `hidden` has to actually hide it — the UA's `[hidden] { display: none }`
+   loses to `.menu`'s own `display: flex`. Re-showing it restarts
+   `attachMenuIn`, so the entrance animation is unchanged. */
+.menu[hidden] {
+  display: none;
+}
+
 @keyframes attachMenuIn {
   from {
     opacity: 0;

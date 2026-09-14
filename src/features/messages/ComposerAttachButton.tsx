@@ -93,32 +93,39 @@ export function ComposerAttachButton({
         <FiPaperclip aria-hidden />
       </button>
 
-      {menuOpen && (
-        <div
-          className={menu.menu}
-          role="dialog"
-          aria-label={t("messages:attachments.menuLabel")}
-        >
-          {onSendImage && (
-            <ImageComposerButton onSendImage={onSendImage} onPicked={onClose} />
-          )}
-          {onSendDocument && (
-            <DocumentComposerButton
-              onSendDocument={onSendDocument}
-              onPicked={onClose}
-            />
-          )}
-          {showGifRow && (
-            <button type="button" className={menu.row} onClick={onOpenGif}>
-              {/* eslint-disable-next-line local/no-literal-string -- "GIF" is a universal file-format acronym, never translated. */}
-              <span className={menu.rowIcon} aria-hidden>
-                GIF
-              </span>
-              <span>{t("messages:gif.open")}</span>
-            </button>
-          )}
-        </div>
-      )}
+      {/* Kept MOUNTED and hidden with `hidden`, never unmounted: the Photo and
+          File rows each own a hidden <input type="file">, and picking either
+          row closes this menu while the OS file chooser is still open.
+          Unmounting detaches that input mid-pick, and a detached file input
+          never delivers its `change` event — the chosen file is silently
+          dropped and no message is ever sent. `.menu[hidden]` in the CSS
+          module restores the display:none the panel's own `display: flex`
+          would otherwise win against. */}
+      <div
+        className={menu.menu}
+        role="dialog"
+        aria-label={t("messages:attachments.menuLabel")}
+        hidden={!menuOpen}
+      >
+        {onSendImage && (
+          <ImageComposerButton onSendImage={onSendImage} onPicked={onClose} />
+        )}
+        {onSendDocument && (
+          <DocumentComposerButton
+            onSendDocument={onSendDocument}
+            onPicked={onClose}
+          />
+        )}
+        {showGifRow && (
+          <button type="button" className={menu.row} onClick={onOpenGif}>
+            {/* eslint-disable-next-line local/no-literal-string -- "GIF" is a universal file-format acronym, never translated. */}
+            <span className={menu.rowIcon} aria-hidden>
+              GIF
+            </span>
+            <span>{t("messages:gif.open")}</span>
+          </button>
+        )}
+      </div>
 
       {gifOpen && onSendGif && (
         <GifPicker

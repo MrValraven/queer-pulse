@@ -66,6 +66,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "photos-you-attach-actually-send",
+        category: "fix",
+        date: "14 Sep 2026",
+        ...entryKeys("photos-you-attach-actually-send"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
         id: "older-messages-keep-their-time",
         category: "improvement",
         date: "14 Sep 2026",
