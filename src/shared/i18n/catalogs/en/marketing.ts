@@ -2265,6 +2265,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-14.headline":
+    "Board posts show how long they have left, and who offered to help.",
   "changelog.releases.2026-09-12.headline":
     "Your Now card shows what your openness does, and listing photos come from your uploads.",
   "changelog.releases.2026-09-11.headline":
@@ -2449,6 +2451,14 @@ export const marketing: Catalog = {
     "Turn a blocked location back on from the directory",
   "changelog.entries.turn-a-blocked-location-back-on.body":
     "Steps for your own browser and device, and in Chrome a button that asks for location again.",
+  "changelog.entries.board-posts-that-breathe.title":
+    "Renew a board post, or respond to someone else's",
+  "changelog.entries.board-posts-that-breathe.body":
+    "Board posts now show how long they have left, who offered to help, and when someone else's post answers yours.",
+  "changelog.entries.people-close-by-cards-say-why.title":
+    "People close by say why they are close",
+  "changelog.entries.people-close-by-cards-say-why.body":
+    "Bigger, photo-led cards, each carrying one fact: a vouch, a shared community, an availability or a craft.",
   "changelog.entries.your-now-card-shows-what-your-openness-does.title":
     "Your Now card shows what your openness does",
   "changelog.entries.your-now-card-shows-what-your-openness-does.body":

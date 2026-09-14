@@ -14,6 +14,7 @@ import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBad
 import { routes } from "../../../app/routeMap";
 import type { ActivityBand } from "../activityBand";
 import type { OpenToEntry } from "../openTo.data";
+import type { RelatedCloseness } from "../relatedCloseness";
 import type { WorkLink } from "../workLink.data";
 import type { FeaturedCommunityRef } from "../profileCommunities.types";
 import type { RespondsWithin } from "../api/nowInsights.api";
@@ -62,6 +63,25 @@ export interface BoardItem {
   expiresAt: string;
   /** ISO timestamp the post was created. */
   createdAt: string;
+  /** Curated tags driving reciprocal matching. */
+  tags?: string[];
+  /** How many times the owner has renewed this post. */
+  renewCount?: number;
+  /** Offers to help on this post, and board-scoped hellos. */
+  responseCount?: number;
+  helloCount?: number;
+  /** The first few responders. `responseCount` drives the "+N" overflow, so it
+   *  is authoritative and this array is a display sample. */
+  responders?: {
+    slug: string;
+    first: string;
+    /** Ungated, same as `Member.last`/`RelatedMember.last` — absent only when
+     *  the member never set one, not gated by any visibility toggle. */
+    last?: string | null;
+    initials: string;
+    tint: string;
+    avatarUrl: string | null;
+  }[];
 }
 /** A skill or service the member offers on the barter board. */
 export interface SkillItem {
@@ -87,6 +107,10 @@ export interface RelatedMember {
   tint: AvatarTint;
   /** Real profile photo URL when the related member has one. */
   avatarUrl?: string;
+  /** Why this member is close to the PROFILE OWNER, as a token the card turns
+   *  into its one chip. `null`/absent renders no chip: every signal was absent
+   *  or hidden. See `../relatedCloseness.ts`. */
+  closeness?: RelatedCloseness | null;
 }
 /** A recent public action, linking to where it happened. */
 export interface ActivityItem {
@@ -444,16 +468,58 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         title: "A collaborator for a queer zine launching in September",
         slug: "zine-collab",
         status: "open",
-        expiresAt: "2026-09-01T12:00:00.000Z",
-        createdAt: "2026-08-02T12:00:00.000Z",
+        // Dated so that, against DEMO_BOARD_NOW_MS, this reads "Posted 18 Aug"
+        // with 5 days left of 30, exactly as the design shows.
+        createdAt: "2026-08-18T12:00:00.000Z",
+        expiresAt: "2026-09-17T12:00:00.000Z",
+        tags: ["Illustration"],
+        responseCount: 3,
+        helloCount: 2,
+        responders: [
+          {
+            slug: "beatriz",
+            first: "Beatriz",
+            initials: "BF",
+            tint: "default",
+            avatarUrl: null,
+          },
+          {
+            slug: "tomas",
+            first: "Tomás",
+            initials: "TE",
+            tint: "coral",
+            avatarUrl: null,
+          },
+          {
+            slug: "diogo",
+            first: "Diogo",
+            initials: "DV",
+            tint: "jade",
+            avatarUrl: null,
+          },
+        ],
       },
       {
         kind: "offering",
         title: "Portfolio reviews for junior queer designers",
         slug: "portfolio-reviews",
         status: "open",
-        expiresAt: "2026-10-24T12:00:00.000Z",
-        createdAt: "2026-07-26T12:00:00.000Z",
+        // "Posted 27 Jul", 43 days left of 90.
+        createdAt: "2026-07-27T12:00:00.000Z",
+        expiresAt: "2026-10-25T12:00:00.000Z",
+        tags: ["Graphic design"],
+      },
+      // Deliberately lapsed against DEMO_BOARD_NOW_MS, so the hatched expired
+      // row and the Repost action both appear in the walkthrough.
+      {
+        kind: "offering",
+        title: "A spare riso drum, teal, barely used",
+        slug: "riso-drum",
+        status: "open",
+        // "Posted 9 Jun", lapsed on 7 Sep, five days before the pinned clock.
+        createdAt: "2026-06-09T12:00:00.000Z",
+        expiresAt: "2026-09-07T12:00:00.000Z",
+        tags: ["Graphic design"],
       },
     ],
     vouchers: ["sofia", "rui", "beatriz"],

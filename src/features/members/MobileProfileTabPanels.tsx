@@ -6,11 +6,11 @@ import {
   ActivitySection,
   BoardSection,
   GroupsSection,
-  RelatedSection,
   SelectedWorkSection,
   ShapingsSection,
   SkillsSection,
 } from "./ProfileContentSections";
+import { RelatedSection } from "./ProfileRelatedSection";
 import { NowSection } from "./now/NowSection";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { PlacesSection } from "./PlacesSection";

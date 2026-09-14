@@ -7,11 +7,11 @@ import {
   ActivitySection,
   BoardSection,
   GroupsSection,
-  RelatedSection,
   SelectedWorkSection,
   ShapingsSection,
   SkillsSection,
 } from "./ProfileContentSections";
+import { RelatedSection } from "./ProfileRelatedSection";
 import { NowSection } from "./now/NowSection";
 import { LookingForEditor } from "./LookingForEditor";
 import { WorkEditor } from "./WorkEditor";
@@ -28,14 +28,17 @@ export function Section({
   aside,
   children,
 }: {
-  title: string;
+  /** `ReactNode` rather than `string` so a title can carry an italic accent
+   *  word through `<em>`, the pattern EmptyState and Outro already use. */
+  title: ReactNode;
   subtitle?: string;
   /** Anchor id for the desktop rail's section-jump nav (`ProfileSectionNav`,
    *  `profileSectionNav.data.ts`) — must match that data file's `id` exactly. */
   id?: string;
-  /** Optional trailing content for the head row, pushed to its far end: the Now
-   *  section's visibility badge is the only caller. Omitted everywhere else,
-   *  and the head lays out exactly as before when it is. */
+  /** Optional trailing content for the head row, pushed to its far end: the
+   *  Now section's visibility badge and the board section's count pill +
+   *  badge are today's callers. Omitted everywhere else, and the head lays
+   *  out exactly as before when it is. */
   aside?: ReactNode;
   children: ReactNode;
 }) {

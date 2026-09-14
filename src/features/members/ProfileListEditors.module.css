@@ -52,6 +52,40 @@
   margin-top: 2px;
 }
 
+/* Wraps one board row so the tag picker sits on its own line beneath the
+   existing kind/title/remove line, instead of crowding into it. */
+.rowStack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.rowStack:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Tiny uppercase label naming the tag picker for assistive tech, mirroring
+   ProfileEdit's .fieldLabel treatment at a smaller scale for an inline row. */
+.rowLabel {
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  font-style: italic;
+}
+
+/* A quiet sentence under the tag picker, associated with it via
+   aria-describedby rather than left floating. */
+.rowHelp {
+  font-size: var(--text-11-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 0;
+}
+
 /* Skills add bar: name + optional detail + an Add button, wrapping. */
 .addBar {
   display: flex;

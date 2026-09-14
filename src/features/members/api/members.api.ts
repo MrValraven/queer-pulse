@@ -16,6 +16,15 @@ export type Visibility = "open" | "network" | "private";
 export type OpenToEntryDTO =
   { kind: "preset"; id: string } | { kind: "custom"; label: string };
 
+/** Why a related member is close to the PROFILE OWNER, as a token plus at
+ *  most one name. The sentence is built on the client (see
+ *  `relatedCloseness.ts`), and the kinds mirror the backend's
+ *  `related-closeness.ts`. An unknown `kind` renders no chip. */
+export interface RelatedClosenessDTO {
+  kind: string;
+  value?: string | null;
+}
+
 export interface MemberCardDTO {
   slug: string;
   firstName: string;
@@ -63,6 +72,13 @@ export interface MemberCardDTO {
   vouchersVisible?: boolean;
 }
 
+/** A "People close by" card. Two fields a plain member card has no use for:
+ *  `closeness` (the chip) and a `location` the backend gates per viewer
+ *  exactly as it gates a directory card's. */
+export interface RelatedMemberCardDTO extends MemberCardDTO {
+  closeness?: RelatedClosenessDTO | null;
+}
+
 export interface MembersPage {
   items: MemberCardDTO[];
   total: number;
@@ -104,11 +120,24 @@ export interface WorkItemDTO {
   links?: WorkLinkDTO[];
 }
 
+/** A member who responded to a board post. `avatarUrl` is already gated by the
+ *  responder's own `photoVisible` server-side, so a null here means initials. */
+export interface BoardResponderDTO {
+  slug: string;
+  first: string;
+  /** Ungated (see `ProfileDTO.lastName`) — absent/null only when the member
+   *  never set one, not because of any visibility toggle. */
+  last?: string | null;
+  initials: string;
+  tint: string;
+  avatarUrl: string | null;
+}
+
 /** A barter-board post by the member ("On the board"). The lifecycle fields
  *  (`status`/`closedNote`/`closedAt`/`expiresAt`/`createdAt`) are read-only —
  *  present on every item the GET profile response returns (see backend
  *  `BoardView`), but never sent back on the PUT /profiles/me/board replace
- *  (see `boardToDto`, which only forwards `kind`/`title`/`slug`) or accepted
+ *  (see `boardToDto`, which forwards `kind`/`title`/`slug`/`tags`) or accepted
  *  by the backend's `ReplaceBoardDto`. `status` only changes via the
  *  dedicated `PATCH /profiles/me/board/:slug/close`. */
 export interface BoardItemDTO {
@@ -121,6 +150,15 @@ export interface BoardItemDTO {
   closedAt?: string | null;
   expiresAt?: string;
   createdAt?: string;
+  /** Curated tags driving reciprocal matching. Round-tripped on the PUT. */
+  tags?: string[];
+  /** Read-only. How many times the owner has renewed this post. */
+  renewCount?: number;
+  /** Read-only. Offers to help, and board-scoped hellos. */
+  responseCount?: number;
+  helloCount?: number;
+  /** Read-only. The first few responders; `responseCount` drives the overflow. */
+  responders?: BoardResponderDTO[];
 }
 
 /** A skill or service the member offers ("Skills & offerings"). */
@@ -239,7 +277,7 @@ export interface ProfileDTO extends MemberCardDTO {
   /** Recent public activity across the platform ("Recent activity"). */
   activity?: ActivityItemDTO[];
   /** Related members ("People close by") — nearby in craft or neighbourhood. */
-  related?: MemberCardDTO[];
+  related?: RelatedMemberCardDTO[];
   /** Communities the member has chosen to feature on their profile, resolved
    *  for display ("Communities"). */
   featuredCommunities?: FeaturedCommunityRefDTO[];
@@ -416,6 +454,30 @@ export const closeBoardItem = (slug: string, note?: string) =>
   apiPatch<BoardItemDTO>(
     `/profiles/me/board/${encodeURIComponent(slug)}/close`,
     { note },
+  );
+
+/** Renew one of the member's own board posts, or repost an expired one. Both
+ *  actions are this endpoint; the UI only changes the label.
+ *  PATCH /profiles/me/board/:slug/renew. */
+export const renewBoardItem = (slug: string) =>
+  apiPatch<BoardItemDTO>(
+    `/profiles/me/board/${encodeURIComponent(slug)}/renew`,
+    {},
+  );
+
+/** Offer to help with, or say hello about, another member's board post.
+ *  POST /profiles/:slug/board/:postSlug/responses. */
+export const respondToBoardItem = (
+  memberSlug: string,
+  postSlug: string,
+  kind: "help" | "hello",
+  note?: string,
+) =>
+  apiPost<{ kind: string; createdAt: string }>(
+    `/profiles/${encodeURIComponent(memberSlug)}/board/${encodeURIComponent(
+      postSlug,
+    )}/responses`,
+    { kind, note },
   );
 
 /** Replace the member's formative films/books/songs/moments (≤4). PUT /profiles/me/shapings. */

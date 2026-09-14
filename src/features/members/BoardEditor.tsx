@@ -6,6 +6,7 @@ import type { BoardItem } from "./data/members";
 import { BOARD_KIND_OPTIONS, newBoardItem } from "./boardEditor.data";
 import { useRowKeys } from "./useRowKeys";
 import { Section } from "./ProfileSections";
+import { TagEditor } from "./profileEditControls";
 import editStyles from "./ProfileEdit.module.css";
 import styles from "./ProfileListEditors.module.css";
 
@@ -51,39 +52,65 @@ export function BoardEditor({
       subtitle={t("members:profileEdit.board.subtitle")}
     >
       <div className={styles.rows}>
-        {board.map((item, index) => (
-          <div className={styles.row} key={keys[index]}>
-            <RadioCardGroup
-              className={`${editStyles.segmented} ${styles.rowLead}`}
-              optionClassName={editStyles.segment}
-              checkedClassName={editStyles.segmentActive}
-              ariaLabel={t("members:profileEdit.board.kindLabel")}
-              value={item.kind}
-              onChange={(kind) => update(index, { kind })}
-              options={BOARD_KIND_OPTIONS.map((option) => ({
-                id: option.value,
-                render: t(option.labelKey),
-              }))}
-            />
-            <input
-              className={`${editStyles.inlineInput} ${styles.grow}`}
-              value={item.title}
-              placeholder={t("members:profileEdit.board.titlePlaceholder")}
-              aria-label={t("members:profileEdit.board.titleLabel")}
-              onChange={(event) => update(index, { title: event.target.value })}
-            />
-            <button
-              type="button"
-              className={editStyles.workRemove}
-              aria-label={t("members:profileEdit.board.removeLabel", {
-                title: item.title || t("members:profileEdit.board.titleLabel"),
-              })}
-              onClick={() => remove(index)}
-            >
-              <FiTrash2 size={14} aria-hidden />
-            </button>
-          </div>
-        ))}
+        {board.map((item, index) => {
+          const tagsLabelId = `board-tags-label-${keys[index]}`;
+          const tagsHelpId = `board-tags-help-${keys[index]}`;
+          return (
+            <div className={styles.rowStack} key={keys[index]}>
+              <div className={styles.row}>
+                <RadioCardGroup
+                  className={`${editStyles.segmented} ${styles.rowLead}`}
+                  optionClassName={editStyles.segment}
+                  checkedClassName={editStyles.segmentActive}
+                  ariaLabel={t("members:profileEdit.board.kindLabel")}
+                  value={item.kind}
+                  onChange={(kind) => update(index, { kind })}
+                  options={BOARD_KIND_OPTIONS.map((option) => ({
+                    id: option.value,
+                    render: t(option.labelKey),
+                  }))}
+                />
+                <input
+                  className={`${editStyles.inlineInput} ${styles.grow}`}
+                  value={item.title}
+                  placeholder={t("members:profileEdit.board.titlePlaceholder")}
+                  aria-label={t("members:profileEdit.board.titleLabel")}
+                  onChange={(event) =>
+                    update(index, { title: event.target.value })
+                  }
+                />
+                <button
+                  type="button"
+                  className={editStyles.workRemove}
+                  aria-label={t("members:profileEdit.board.removeLabel", {
+                    title:
+                      item.title || t("members:profileEdit.board.titleLabel"),
+                  })}
+                  onClick={() => remove(index)}
+                >
+                  <FiTrash2 size={14} aria-hidden />
+                </button>
+              </div>
+              <div
+                role="group"
+                aria-labelledby={tagsLabelId}
+                aria-describedby={tagsHelpId}
+              >
+                <span id={tagsLabelId} className={styles.rowLabel}>
+                  {t("members:profileEdit.board.tagsLabel")}
+                </span>
+                <TagEditor
+                  tags={item.tags ?? []}
+                  onChange={(tags) => update(index, { tags })}
+                  placeholder={t("members:profileEdit.board.tagsPlaceholder")}
+                />
+                <p id={tagsHelpId} className={styles.rowHelp}>
+                  {t("members:profileEdit.board.tagsHelp")}
+                </p>
+              </div>
+            </div>
+          );
+        })}
       </div>
       <Button
         type="button"

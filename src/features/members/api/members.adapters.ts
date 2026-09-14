@@ -26,6 +26,7 @@ import type {
   MemberCardDTO,
   OpenToEntryDTO,
   ProfileDTO,
+  RelatedClosenessDTO,
   ShapingItemDTO,
   ShapingKind,
   SkillItemDTO,
@@ -35,6 +36,10 @@ import type {
 } from "./members.api";
 import type { MemberCard } from "../memberDirectoryFilter.data";
 import { toActivityBand } from "../activityBand";
+import type {
+  RelatedCloseness,
+  RelatedClosenessKind,
+} from "../relatedCloseness";
 
 const TINTS: AvatarTint[] = ["coral", "plum", "jade"];
 
@@ -55,6 +60,29 @@ export function toOpenToEntries(dto?: OpenToEntryDTO[]): OpenToEntry[] {
     const label = entry.label?.trim();
     return label ? [{ kind: "custom", label }] : [];
   });
+}
+
+const KNOWN_CLOSENESS_KINDS = new Set<RelatedClosenessKind>([
+  "vouchedForOwner",
+  "ownerVouchedFor",
+  "community",
+  "openToPreset",
+  "openToCustom",
+  "craft",
+  "hood",
+]);
+
+/** The "People close by" chip token, or `null`. A kind this build doesn't know
+ *  is dropped rather than rendered: a backend ahead of the frontend adds
+ *  kinds, and an unknown one has no sentence here to say it with. Same
+ *  forward-compatibility rule as `toOpenToEntries` above. */
+function toCloseness(
+  dto?: RelatedClosenessDTO | null,
+): RelatedCloseness | null {
+  if (!dto) return null;
+  return KNOWN_CLOSENESS_KINDS.has(dto.kind as RelatedClosenessKind)
+    ? { kind: dto.kind as RelatedClosenessKind, value: dto.value ?? null }
+    : null;
 }
 
 /** Backend activity kinds → the icon each renders with in "Recent activity". */
@@ -253,6 +281,23 @@ export function profileToMember(dto: ProfileDTO): Member {
       closedAt: b.closedAt ?? undefined,
       expiresAt: b.expiresAt ?? "",
       createdAt: b.createdAt ?? "",
+      tags: b.tags,
+      renewCount: b.renewCount,
+      responseCount: b.responseCount,
+      helloCount: b.helloCount,
+      // The backend's `BoardResponderView` carries `first`/`last` the same
+      // way a `MemberCardDTO` does (both ungated), but no real tint, so the
+      // tint degrades to an always-default avatar tag. Re-derive it the same
+      // way `cardToMember` above does for a member card: `tintForSlug`.
+      // Initials are re-derived too, through the same `initialsOf` helper, so
+      // a responder with a last name on file gets the two-letter mark the
+      // design calls for and one without still gets a clean single letter
+      // (`initialsFromParts` treats a missing/empty last name as "").
+      responders: b.responders?.map((responder) => ({
+        ...responder,
+        initials: initialsOf(responder.first, responder.last ?? ""),
+        tint: tintForSlug(responder.slug),
+      })),
     })),
     skills: (dto.skills ?? []).map((s) => ({ name: s.name, meta: s.meta })),
     groups: (dto.groups ?? []).map((g) => ({ name: g.name, role: g.role })),
@@ -287,6 +332,7 @@ export function profileToMember(dto: ProfileDTO): Member {
       initials: initialsOf(related.firstName, related.lastName),
       tint: tintForSlug(related.slug),
       avatarUrl: related.avatarUrl ?? undefined,
+      closeness: toCloseness(related.closeness),
     })),
     featuredCommunities: (dto.featuredCommunities ?? []).map((ref) => ({
       slug: ref.slug,
@@ -333,6 +379,7 @@ export function boardToDto(board: Member["board"]): BoardItemDTO[] {
     kind: post.kind,
     title: post.title,
     slug: post.slug,
+    tags: post.tags ?? [],
   }));
 }
 

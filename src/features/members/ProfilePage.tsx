@@ -8,7 +8,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMediaQuery } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { currentUserSlug } from "./data/memberProfiles";
-import { isMemberMissingError, useMemberProfile } from "./api/useMemberProfile";
+import { useMemberProfile } from "./api/useMemberProfile";
 import { profileBelowHeroNodes } from "./ProfileBelowHeroGroup";
 import { ProfileLayoutSwitch } from "./ProfileLayoutSwitch";
 import { ProfileBackBar, ProfilePreviewBanner } from "./ProfilePageChrome";
@@ -20,12 +20,8 @@ import { ProfileOwnerSheets } from "./ProfileOwnerSheets";
 import { useMovedHandleRedirect } from "./useMovedHandleRedirect";
 import { useProfileEditGuard } from "./useProfileEditGuard";
 import { useProfilePageSheets } from "./useProfilePageSheets";
-import {
-  ProfileLoadingState,
-  ProfileErrorState,
-  ProfileBlockedState,
-  ProfileNotFoundState,
-} from "./ProfileStateScreens";
+import { resolveProfilePageLoadGate } from "./ProfilePageLoadGate";
+import { ProfileEditBoardContext } from "./ProfileEditBoardContext";
 
 export function ProfilePage() {
   const { slug } = useParams();
@@ -112,28 +108,20 @@ export function ProfilePage() {
   // after them.
   const isMobile = useMediaQuery(mediaMax("md"));
 
-  if (isSelf && isProfileLoading) return <ProfileLoadingState />;
-  if (isSelf && isProfileError) {
-    return <ProfileErrorState onRetry={retryProfile} />;
-  }
-  if (!isSelf && isLoading) return <ProfileLoadingState />;
-  if (blocked) return <ProfileBlockedState />;
-  // The order here is the contract. A forwarded username must never flash the
-  // "no such member" wall on its way through, so this sits ABOVE both branches
-  // below, which would otherwise both claim a PROFILE_MOVED 404 as an absence.
-  if (isRedirectingToMovedSlug) return <ProfileLoadingState />;
-  // A 5xx, a timeout or an offline browser is an outage, not an absence. It
-  // used to fall through to the "no such member" wall, which reads as "this
-  // person left" and offers no retry, so a transient failure sent people away
-  // for good. Only a real 404/403 gets that wall now.
-  if (
-    !isSelf &&
-    isOtherMemberError &&
-    !isMemberMissingError(otherMemberError)
-  ) {
-    return <ProfileErrorState onRetry={() => void refetchOtherMember()} />;
-  }
-  if (!isSelf && !otherMember) return <ProfileNotFoundState />;
+  const loadGate = resolveProfilePageLoadGate({
+    isSelf,
+    isProfileLoading,
+    isProfileError,
+    onRetryProfile: retryProfile,
+    isOtherMemberLoading: isLoading,
+    blocked,
+    isRedirectingToMovedSlug,
+    isOtherMemberError,
+    otherMemberError,
+    onRetryOtherMember: () => void refetchOtherMember(),
+    otherMember,
+  });
+  if (loadGate) return loadGate;
 
   // Non-null by the guards above: isSelf → liveProfile (ProfileProvider always
   // has one), !isSelf → otherMember. The adapter has already zeroed out
@@ -169,62 +157,66 @@ export function ProfilePage() {
   });
 
   return (
-    <PageShell>
-      {/* The way back out belongs to the editor while the editor is open: the
-          sticky bar at the foot of the screen already offers Go back / Discard
-          next to Save. A second exit above the form pointed at wherever the
-          member came from ("Back to the feed"), which reads as an escape from a
-          page they are in the middle of filling in. */}
-      {!isEditing && <ProfileBackBar />}
-      <ProfileMovedNote />
+    // Threads `enterEdit` to `BoardSection`'s desktop read-mode path, which
+    // can't take it as a plain-function argument — see `ProfileEditBoardContext`.
+    <ProfileEditBoardContext.Provider value={() => enterEdit(false)}>
+      <PageShell>
+        {/* The way back out belongs to the editor while the editor is open: the
+            sticky bar at the foot of the screen already offers Go back / Discard
+            next to Save. A second exit above the form pointed at wherever the
+            member came from ("Back to the feed"), which reads as an escape from a
+            page they are in the middle of filling in. */}
+        {!isEditing && <ProfileBackBar />}
+        <ProfileMovedNote />
 
-      <ProfileLayoutSwitch
-        profile={resolvedProfile}
-        isSelf={isSelf}
-        selfView={selfView}
-        previewing={previewing}
-        isEditing={isEditing}
-        focusLinks={focusLinks}
-        useMobileLayout={useMobileLayout}
-        otherMember={isSelf ? null : otherMember}
-        ownerSlug={ownerSlug}
-        restBelowHero={restBelowHero}
-        belowHero={belowHero}
-        onEdit={() => enterEdit(false)}
-        onEditLinks={() => enterEdit(true)}
-        onPreview={() => {
-          setPreviewing(true);
-          window.scrollTo({ top: 0 });
-        }}
-        onOpenWhoSeesWhat={sheets.openWhoSeesWhat}
-        onOpenAccountData={sheets.openAccountData}
-        onToggleHidden={toggleHidden}
-      />
-
-      {/* PRD-203: a limited card is a hero and then nothing, which reads as
-          an abandoned account until something says whose choice it was. Sits
-          right under the hero because everything after it is empty here, and
-          never appears in demo, where `limited` is always false. */}
-      {!isSelf && limited && otherMember && (
-        <ProfileLimitedNote
-          slug={otherMember.slug}
-          firstName={otherMember.first}
-          visibility={otherMember.visibility}
+        <ProfileLayoutSwitch
+          profile={resolvedProfile}
+          isSelf={isSelf}
+          selfView={selfView}
+          previewing={previewing}
+          isEditing={isEditing}
+          focusLinks={focusLinks}
+          useMobileLayout={useMobileLayout}
+          otherMember={isSelf ? null : otherMember}
+          ownerSlug={ownerSlug}
+          restBelowHero={restBelowHero}
+          belowHero={belowHero}
+          onEdit={() => enterEdit(false)}
+          onEditLinks={() => enterEdit(true)}
+          onPreview={() => {
+            setPreviewing(true);
+            window.scrollTo({ top: 0 });
+          }}
+          onOpenWhoSeesWhat={sheets.openWhoSeesWhat}
+          onOpenAccountData={sheets.openAccountData}
+          onToggleHidden={toggleHidden}
         />
-      )}
 
-      {/* ACQ-08: owner-only, and last on the page so it pushes nothing down.
-          Hidden while editing (the sticky save bar owns the foot of the screen
-          then) and silent unless there are invites actually left to give. */}
-      {selfView && !isEditing && <ProfileInviteCard />}
+        {/* PRD-203: a limited card is a hero and then nothing, which reads as
+            an abandoned account until something says whose choice it was. Sits
+            right under the hero because everything after it is empty here, and
+            never appears in demo, where `limited` is always false. */}
+        {!isSelf && limited && otherMember && (
+          <ProfileLimitedNote
+            slug={otherMember.slug}
+            firstName={otherMember.first}
+            visibility={otherMember.visibility}
+          />
+        )}
 
-      {selfView && <ProfileEditBar />}
+        {/* ACQ-08: owner-only, and last on the page so it pushes nothing down.
+            Hidden while editing (the sticky save bar owns the foot of the screen
+            then) and silent unless there are invites actually left to give. */}
+        {selfView && !isEditing && <ProfileInviteCard />}
 
-      {isSelf && previewing && (
-        <ProfilePreviewBanner onExit={() => setPreviewing(false)} />
-      )}
+        {selfView && <ProfileEditBar />}
 
-      <ProfileOwnerSheets sheets={sheets} ownerSlug={ownerSlug} />
-    </PageShell>
+        {isSelf && previewing && (
+          <ProfilePreviewBanner onExit={() => setPreviewing(false)} />
+        )}
+
+        <ProfileOwnerSheets sheets={sheets} ownerSlug={ownerSlug} />
+      </PageShell>
+    </ProfileEditBoardContext.Provider>
   );
 }

@@ -2326,6 +2326,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-14.headline":
+    "As publicações do quadro mostram quanto tempo lhes resta, e quem se ofereceu para ajudar.",
   "changelog.releases.2026-09-12.headline":
     "O teu cartão Agora mostra o que a tua disponibilidade faz, e as fotos da ficha vêm dos teus ficheiros.",
   "changelog.releases.2026-09-11.headline":
@@ -2510,6 +2512,14 @@ export const marketing: Catalog = {
     "Volta a ligar uma localização bloqueada a partir do diretório",
   "changelog.entries.turn-a-blocked-location-back-on.body":
     "Passos para o teu navegador e dispositivo e, no Chrome, um botão que volta a pedir a localização.",
+  "changelog.entries.board-posts-that-breathe.title":
+    "Renova uma publicação do quadro, ou responde à de outra pessoa",
+  "changelog.entries.board-posts-that-breathe.body":
+    "As publicações do quadro mostram agora quanto tempo lhes resta, quem se ofereceu para ajudar, e quando a publicação de outra pessoa responde à tua.",
+  "changelog.entries.people-close-by-cards-say-why.title":
+    "As pessoas por perto dizem porque estão perto",
+  "changelog.entries.people-close-by-cards-say-why.body":
+    "Cartões maiores, com foto, e um facto em cada um: um voto de confiança, uma comunidade, uma disponibilidade ou o ofício.",
   "changelog.entries.your-now-card-shows-what-your-openness-does.title":
     "O teu cartão Agora mostra o que a tua disponibilidade faz",
   "changelog.entries.your-now-card-shows-what-your-openness-does.body":

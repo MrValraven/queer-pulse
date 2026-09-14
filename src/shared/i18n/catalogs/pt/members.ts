@@ -353,11 +353,49 @@ export const members: Catalog = {
   "content.board.subtitle": "O que {first} anda a pedir e a oferecer agora",
   "content.board.looking": "Precisa de",
   "content.board.offering": "Oferece",
+  "content.board.titleRich": "No <em>quadro de trocas</em>",
+  "content.board.countPillOpen_one": "{count} aberto",
+  "content.board.countPillOpen_other": "{count} abertos",
+  "content.board.countPillFound_one": "{count} encontrado este mês",
+  "content.board.countPillFound_other": "{count} encontrados este mês",
+  "content.board.postedOn": "Publicado {date}",
+  "content.board.postLength_one": "Publicação de {count} dia",
+  "content.board.postLength_other": "Publicação de {count} dias",
+  "content.board.daysLeft_one": "Falta {count} dia",
+  "content.board.daysLeft_other": "Faltam {count} dias",
+  "content.board.ofWindow": "de {count}",
+  "content.board.expiredQuietly": "Expirou discretamente",
+  "content.board.renewCta_one": "Renovar {count} dia",
+  "content.board.renewCta_other": "Renovar {count} dias",
+  "content.board.repostCta": "Publicar de novo",
+  "content.board.renewLimitReached":
+    "Esta já foi renovada o máximo de vezes. Escreve uma nova.",
+  "content.board.respondCta": "Oferecer ajuda",
+  "content.board.respondedLabel": "Ofereceste ajuda",
+  "content.board.helloCta": "Dizer olá",
+  "content.board.helloSentLabel": "Disseste olá",
+  "content.board.helloAlready": "Já disseste olá sobre isto.",
+  "content.board.respondNoteLabel": "Uma linha sobre como podes ajudar",
+  "content.board.respondNotePlaceholder": "Acrescenta uma linha (opcional)",
+  "content.board.respondSend": "Enviar",
+  "content.board.respondCancel": "Cancelar",
+  "content.board.offeredToHelp_one": "{names} ofereceu ajuda",
+  "content.board.offeredToHelp_other": "{names} ofereceram ajuda",
+  "content.board.offeredOverflow": "{names} +{count} ofereceram ajuda",
+  "content.board.matchOffers":
+    "<strong>{name}</strong> oferece isto no quadro de trocas",
+  "content.board.matchLooking": "<strong>{name}</strong> procura isto",
+  "content.board.footerRule":
+    "As procuras duram 30 dias, as ofertas 90. Expiram discretamente.",
+  "content.board.postToBoard": "Publicar no quadro",
+  // Sem etiquetas de estatísticas aqui: a faixa reutiliza `content.now.stats.*`.
+  // Ver a nota em inglês.
+  "content.board.respondSuccess": "Enviado. {name} vai ver no quadro.",
+  "content.board.respondAlready": "Já ofereceste ajuda nesta.",
+  "content.board.renewSuccess_one": "Renovada. Corre mais {count} dia.",
+  "content.board.renewSuccess_other": "Renovada. Corre mais {count} dias.",
 
   // ── Linha do quadro de trocas (BoardRow) ───────────────────────────────
-  "profile.board.postedAgo": "Publicado {time}",
-  "profile.board.expiresWarning_one": "Expira em {count} dia",
-  "profile.board.expiresWarning_other": "Expira em {count} dias",
   "profile.board.foundIt": "Encontrado, fechado",
   "profile.board.foundItWithNote": "Encontrado. {note}",
   "profile.board.markFoundCta": "Marcar como encontrado",
@@ -378,6 +416,18 @@ export const members: Catalog = {
   "content.activity.subtitle": "Momentos públicos por toda a plataforma",
   "content.related.title": "Pessoas por perto",
   "content.related.subtitle": "A partilhar ofício ou bairro.",
+  // A etiqueta única de cada cartão: porque é que essa pessoa está perto de
+  // QUEM é dono deste perfil, nunca de quem está a ler. Em português as formas
+  // com "também" evitam a concordância de género de "ambos/ambas", que numa
+  // grelha de quatro cartões estaria errada mais vezes do que certa.
+  "content.related.closeness.vouchedForOwner":
+    "Deu um voto de confiança a {first}",
+  "content.related.closeness.ownerVouchedFor":
+    "{first} deu-lhes um voto de confiança",
+  "content.related.closeness.community": "Também em {name}",
+  "content.related.closeness.openTo": "Também com interesse em {label}",
+  "content.related.closeness.craft": "Também trabalha em {label}",
+  "content.related.closeness.hood": "Também por {name}",
 
   // ── Etiquetas de "o que me formou" + visibilidade (profileSections.data) ──
   "shaping.film": "Um filme",
@@ -542,6 +592,10 @@ export const members: Catalog = {
   "profileEdit.board.titlePlaceholder": "ex.: Um estúdio emprestado",
   "profileEdit.board.titleLabel": "O que procuras ou ofereces",
   "profileEdit.board.removeLabel": "Remover {title}",
+  "profileEdit.board.tagsLabel": "Etiquetas de correspondência",
+  "profileEdit.board.tagsHelp":
+    "Escolhe algumas palavras. Quando a publicação de alguém combina com a tua, ambos veem.",
+  "profileEdit.board.tagsPlaceholder": "Procurar etiquetas…",
 
   // ── Editor de competências (SkillsEditor) ───────────────────────────────────
   "profileEdit.skills.subtitle":

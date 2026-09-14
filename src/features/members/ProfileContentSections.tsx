@@ -1,16 +1,13 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiExternalLink } from "react-icons/fi";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { Avatar, ImageSlot } from "../../shared/components/ui";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { memberProfiles, type MemberProfile } from "./data/memberProfiles";
+import type { MemberProfile } from "./data/memberProfiles";
 import type { ActivityItem } from "./data/members";
-import type { RelatedMember, WorkItem } from "./data/members";
+import type { WorkItem } from "./data/members";
 import { SHAPING_META } from "./profileSections.data";
 import { Section } from "./ProfileSections";
-import { BoardRow } from "./BoardRow";
 import { workLinkTarget, type WorkLink } from "./workLink.data";
 import styles from "./ProfilePage.module.css";
 
@@ -93,30 +90,7 @@ export function SelectedWorkSection({ profile }: { profile: MemberProfile }) {
   );
 }
 
-export function BoardSection({
-  profile,
-  isSelf = false,
-}: {
-  profile: MemberProfile;
-  /** Self-only: shows the "Mark as found" close action on open posts. */
-  isSelf?: boolean;
-}) {
-  const { t } = useTranslation();
-  if (profile.board.length === 0) return null;
-  return (
-    <Section
-      id="board"
-      title={t("members:content.board.title")}
-      subtitle={t("members:content.board.subtitle", { first: profile.first })}
-    >
-      <div className={styles.miniBoard}>
-        {profile.board.map((item) => (
-          <BoardRow key={item.slug} item={item} isSelf={isSelf} />
-        ))}
-      </div>
-    </Section>
-  );
-}
+export { BoardSection } from "./board/BoardSection";
 
 export function SkillsSection({ profile }: { profile: MemberProfile }) {
   const { t } = useTranslation();
@@ -240,71 +214,5 @@ function ActivityRow({ item }: { item: ActivityItem }) {
     <Link to={item.to} className={styles.actItem}>
       {body}
     </Link>
-  );
-}
-
-export function RelatedSection({ profile }: { profile: MemberProfile }) {
-  const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  // Live mode: the backend returns pre-resolved related cards; unresolved `related`
-  // slugs render nothing (real members aren't in the mock registry). Demo mode only:
-  // resolve the `related` slugs against the mock registry as a fallback.
-  const relatedMembers: RelatedMember[] = profile.relatedCards?.length
-    ? profile.relatedCards
-    : demoMode
-      ? profile.related.flatMap((relatedSlug) => {
-          const registryMember = memberProfiles[relatedSlug];
-          if (!registryMember) return [];
-          return [
-            {
-              slug: relatedSlug,
-              first: registryMember.first,
-              last: registryMember.last,
-              role: registryMember.role,
-              hood: registryMember.hood,
-              initials: registryMember.initials,
-              tint: registryMember.tint,
-              avatarUrl: registryMember.photo,
-            },
-          ];
-        })
-      : [];
-  if (relatedMembers.length === 0) return null;
-  return (
-    <Section
-      id="related"
-      title={t("members:content.related.title")}
-      subtitle={t("members:content.related.subtitle")}
-    >
-      <div className={styles.relGrid}>
-        {relatedMembers.map((relatedMember) => (
-          <Link
-            key={relatedMember.slug}
-            to={`/members/${relatedMember.slug}`}
-            className={styles.relCard}
-          >
-            <Avatar
-              initials={relatedMember.initials}
-              tint={relatedMember.tint}
-              src={relatedMember.avatarUrl}
-              alt={`${relatedMember.first} ${relatedMember.last}`}
-              size={46}
-            />
-            <div>
-              <div className={styles.relName}>
-                <span className={styles.nameRow}>
-                  {relatedMember.first} {relatedMember.last}
-                  <MemberStaffBadge slug={relatedMember.slug} />
-                </span>
-              </div>
-              <div className={styles.relRole}>
-                {relatedMember.role.split("·")[0]!.trim()}
-                {relatedMember.hood ? ` · ${relatedMember.hood}` : ""}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </Section>
   );
 }

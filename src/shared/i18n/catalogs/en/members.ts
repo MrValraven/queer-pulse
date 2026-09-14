@@ -363,11 +363,53 @@ export const members: Catalog = {
   "content.board.subtitle": "What {first} is asking for and offering right now",
   "content.board.looking": "Looking",
   "content.board.offering": "Offering",
+  // "board" carries the italic accent, so the title is rendered through Trans
+  // with an <em>. Keep the tag in the string.
+  "content.board.titleRich": "On the <em>board</em>",
+  "content.board.countPillOpen_one": "{count} open",
+  "content.board.countPillOpen_other": "{count} open",
+  "content.board.countPillFound_one": "{count} found this month",
+  "content.board.countPillFound_other": "{count} found this month",
+  "content.board.postedOn": "Posted {date}",
+  "content.board.postLength_one": "{count}-day post",
+  "content.board.postLength_other": "{count}-day post",
+  "content.board.daysLeft_one": "{count} day left",
+  "content.board.daysLeft_other": "{count} days left",
+  "content.board.ofWindow": "of {count}",
+  "content.board.expiredQuietly": "Expired quietly",
+  "content.board.renewCta_one": "Renew {count} day",
+  "content.board.renewCta_other": "Renew {count} days",
+  "content.board.repostCta": "Repost",
+  "content.board.renewLimitReached":
+    "This one has been renewed as often as it can be. Write a fresh post.",
+  "content.board.respondCta": "Offer to help",
+  "content.board.respondedLabel": "You offered to help",
+  "content.board.helloCta": "Say hello",
+  "content.board.helloSentLabel": "You said hello",
+  "content.board.helloAlready": "You have already said hello about this.",
+  "content.board.respondNoteLabel": "A line about how you can help",
+  "content.board.respondNotePlaceholder": "Add a line (optional)",
+  "content.board.respondSend": "Send",
+  "content.board.respondCancel": "Cancel",
+  "content.board.offeredToHelp_one": "{names} offered to help",
+  "content.board.offeredToHelp_other": "{names} offered to help",
+  "content.board.offeredOverflow": "{names} +{count} offered to help",
+  "content.board.matchOffers":
+    "<strong>{name}</strong> offers this on the board",
+  "content.board.matchLooking": "<strong>{name}</strong> is looking for this",
+  "content.board.footerRule":
+    "Looking posts last 30 days, offers 90. They expire quietly.",
+  "content.board.postToBoard": "Post to the board",
+  // No stats keys here on purpose. The funnel strip renders through the
+  // already-built `StatsFunnelLine`, which reads
+  // `members:content.now.stats.hellos/replies/window`. Those words are generic
+  // enough to serve both sections, and a second set of keys would drift.
+  "content.board.respondSuccess": "Sent. {name} will see it on their board.",
+  "content.board.respondAlready": "You have already offered to help with this.",
+  "content.board.renewSuccess_one": "Renewed. It runs another {count} day.",
+  "content.board.renewSuccess_other": "Renewed. It runs another {count} days.",
 
   // ── Barter board row (BoardRow) ────────────────────────────────────────
-  "profile.board.postedAgo": "Posted {time}",
-  "profile.board.expiresWarning_one": "Expires in {count} day",
-  "profile.board.expiresWarning_other": "Expires in {count} days",
   "profile.board.foundIt": "Found, closed",
   "profile.board.foundItWithNote": "Found. {note}",
   "profile.board.markFoundCta": "Mark as found",
@@ -388,6 +430,16 @@ export const members: Catalog = {
   "content.activity.subtitle": "Public moments from around the platform",
   "content.related.title": "People close by",
   "content.related.subtitle": "Sharing a craft or a neighbourhood.",
+  // The one chip each card carries: why that member is close to THIS profile's
+  // owner, never to whoever is reading. Ranked in `relatedCloseness.ts`, which
+  // also decides which single one shows. "Both" always means the owner and the
+  // member on the card.
+  "content.related.closeness.vouchedForOwner": "Vouched for {first}",
+  "content.related.closeness.ownerVouchedFor": "{first} vouched for them",
+  "content.related.closeness.community": "Both in {name}",
+  "content.related.closeness.openTo": "Both open to {label}",
+  "content.related.closeness.craft": "Both work in {label}",
+  "content.related.closeness.hood": "Neighbours in {name}",
 
   // ── Shaping-meta labels + visibility labels (profileSections.data) ─────────
   "shaping.film": "A film",
@@ -551,6 +603,11 @@ export const members: Catalog = {
   "profileEdit.board.titlePlaceholder": "e.g. A studio to borrow",
   "profileEdit.board.titleLabel": "What you're looking for or offering",
   "profileEdit.board.removeLabel": "Remove {title}",
+  // Board editor: the tag picker added per row.
+  "profileEdit.board.tagsLabel": "Tags for matching",
+  "profileEdit.board.tagsHelp":
+    "Pick a few words. When someone's post matches yours, you both see it.",
+  "profileEdit.board.tagsPlaceholder": "Search tags…",
 
   // ── Skills editor (SkillsEditor) ────────────────────────────────────────────
   "profileEdit.skills.subtitle":

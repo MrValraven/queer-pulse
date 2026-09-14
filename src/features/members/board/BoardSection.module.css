@@ -1,0 +1,260 @@
+/* One card holding every row, divided by hairlines. Replaces the old
+   two-column grid of separate `.ask` cards in ProfilePage.module.css. */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 28px 32px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.row:first-child {
+  border-top: 0;
+}
+
+/* An expired post keeps its title legible on a hatched ground. The gradient
+   sits over the row's inherited --paper. It uses --line-rgb rather than
+   --plum-rgb so the stripe keeps the same visible contrast in both themes,
+   the way hairlines do: --plum-rgb does not flip, and dark --paper sits so
+   close to it that a plum stripe disappears. */
+.rowExpired {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(var(--line-rgb), 0.04) 0 8px,
+    transparent 8px 16px
+  );
+}
+
+.rowLead {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.lifespan {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lifespanHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.lifespanDays {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.lifespanDaysWarn {
+  color: var(--accent-ink);
+}
+.lifespanTotal {
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.lifespanBar {
+  height: 3px;
+  border-radius: var(--radius-2);
+  background: rgba(var(--line-rgb), 0.12);
+  overflow: hidden;
+}
+.lifespanFill {
+  height: 100%;
+  border-radius: var(--radius-2);
+  background: var(--plum);
+  transition: width 0.4s var(--ease);
+}
+.lifespanFillWarn {
+  background: var(--accent);
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-22);
+  color: var(--text-strong);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.titleDone {
+  text-decoration: line-through;
+  color: var(--ink-40);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.metaExpired {
+  color: var(--accent-ink);
+}
+
+.responders {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.respondersLine {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* A reciprocal match. Reads as a quiet outlined pill so it never competes with
+   the row's real actions. */
+.matchPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  background: none;
+  text-decoration: none;
+}
+.matchPill strong {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.matchPillIcon {
+  color: var(--accent-ink);
+  flex-shrink: 0;
+}
+@media (hover: hover) {
+  .matchPill:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.respondConfirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.respondNoteInput {
+  flex: 1 1 180px;
+  min-width: 0;
+  font-size: var(--text-13);
+  font-family: inherit;
+  color: var(--text-strong);
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-10);
+  padding: 8px 10px;
+}
+.respondConfirmActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Header count pill: "2 open * 1 found this month". */
+.countPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.06);
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+.countPill strong {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.statsStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: -12px 0 20px;
+  font-size: var(--text-13);
+  color: var(--ink-40);
+}
+.statsStrip strong {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.footerStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 20px 32px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+}
+.footerRule {
+  font-size: var(--text-13);
+  color: var(--ink-40);
+}
+.footerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+/* Mobile: one column, with the lifespan block dropping under the body so the
+   title leads. */
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 22px 20px;
+  }
+  .rowLead {
+    order: 2;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+  .rowBody {
+    order: 1;
+  }
+  .lifespan {
+    flex: 1 1 auto;
+  }
+  .footerStrip {
+    padding: 18px 20px;
+  }
+  .footerActions {
+    margin-left: 0;
+  }
+}

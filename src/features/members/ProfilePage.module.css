@@ -460,6 +460,7 @@ div.backBar {
   margin-left: auto;
   display: flex;
   align-items: center;
+  gap: 10px;
   /* The head is baseline-aligned for its title and subtitle. A pill baselined
      against a 32px serif heading hangs low, so align it to the row's centre. */
   align-self: center;
@@ -470,6 +471,11 @@ div.backBar {
   .sectionAside {
     margin-left: 0;
   }
+}
+/* An italic accent word inside a section title. */
+.sectionHead h2 em {
+  font-style: italic;
+  color: var(--accent);
 }
 
 .lookingForHelper {
@@ -603,95 +609,6 @@ button.socialChip {
   }
 }
 
-.miniBoard {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-.ask {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-card);
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition:
-    transform 0.35s var(--ease),
-    box-shadow 0.35s var(--ease);
-}
-@media (hover: hover) {
-  .ask:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lift);
-  }
-}
-.ask h3 {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: var(--text-20);
-  color: var(--text-strong);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-}
-/* The chip + title used to BE the whole `.ask` card's link; now they're
-   wrapped in their own inner link (the card also holds the meta line and the
-   self-only "Mark as found" action, which can't nest inside a router Link). */
-.askTitleLink {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  color: inherit;
-  text-decoration: none;
-}
-.askTitleDone {
-  text-decoration: line-through;
-  color: var(--ink-40);
-}
-.askDone {
-  opacity: 0.75;
-}
-.askMeta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 10px;
-  font-size: var(--text-12-5);
-  color: var(--ink-40);
-}
-.askWarn {
-  color: var(--accent-ink);
-  font-weight: 600;
-}
-.askMarkFound {
-  align-self: flex-start;
-}
-/* Inline "mark as found?" confirm — replaces the card's action button while
-   armed, same pattern as PlacesSection's delete-with-confirm. */
-.askConfirm {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-.askNoteInput {
-  flex: 1 1 140px;
-  min-width: 0;
-  font-size: var(--text-13);
-  font-family: inherit;
-  color: var(--text-strong);
-  background: var(--cream);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-10);
-  padding: 8px 10px;
-}
-.askConfirmActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
 .shapingsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -730,46 +647,13 @@ button.socialChip {
   padding-left: 12px;
 }
 
-.relGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-.relCard {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-16);
-  padding: 16px 18px;
-  transition:
-    transform 0.35s var(--ease),
-    box-shadow 0.35s var(--ease);
-}
-@media (hover: hover) {
-  .relCard:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lift);
-  }
-}
-.relName {
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: var(--text-18);
-  color: var(--text-strong);
-  line-height: 1.1;
-}
+/* "People close by" moved to ProfileRelatedSection.module.css when its cards
+   became photo-led; only `.nameRow` below is still shared (HeroVouchRow). */
 .nameRow {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   flex-wrap: wrap;
-}
-.relRole {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  margin-top: 3px;
 }
 
 @media (--mobile) {
@@ -781,10 +665,6 @@ button.socialChip {
   }
   .workGrid {
     grid-template-columns: 1fr 1fr;
-  }
-  .miniBoard,
-  .relGrid {
-    grid-template-columns: 1fr;
   }
 }
 @media (--md) {
@@ -811,9 +691,7 @@ button.socialChip {
   }
 }
 
-:global([data-theme="dark"]) .ask,
 :global([data-theme="dark"]) .shapingCard,
-:global([data-theme="dark"]) .relCard,
 :global([data-theme="dark"]) .skillCard,
 :global([data-theme="dark"]) .groupCard,
 :global([data-theme="dark"]) .actItem {

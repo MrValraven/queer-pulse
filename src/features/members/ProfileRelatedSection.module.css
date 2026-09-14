@@ -1,0 +1,109 @@
+/* "People close by": four photo-led cards, one per member near the profile
+   owner in craft or neighbourhood. The section's whole job is to make four
+   strangers worth clicking, and the compact row this replaced (avatar plus two
+   lines) showed a face at thumbnail size, which did none of that work.
+
+   The backend returns at most four cards (`RELATED_LIMIT`), so the desktop
+   grid is a single row of four and never wraps. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+/* Tablet portrait: four 168px-tall photos in a row would each be narrower than
+   a face reads at. Two up, then one on small phones. */
+@media (--lg) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (--xs) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: 12px;
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+.photo {
+  margin-bottom: 12px;
+}
+
+/* Same serif treatment the compact card used, so a member's name reads
+   identically here and in the hero. */
+.name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-18);
+  color: var(--text-strong);
+  line-height: 1.1;
+  padding: 0 4px;
+}
+.nameRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.role {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  margin-top: 3px;
+  padding: 0 4px;
+}
+
+/* The one chip: why this person is close to the profile owner. Exactly one per
+   card, ranked in `relatedCloseness.ts`, so its tone is the only colour the
+   card carries and it always means the same thing. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: left;
+}
+.chip svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+/* A vouch is the platform's own trust signal, and jade is what trust is
+   painted in everywhere else (vouch badges, success panels). */
+.vouch {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+/* An availability chip is an invitation, so it carries the accent. */
+.invite {
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+/* Shared craft and shared neighbourhood are the rule that put the card in the
+   list at all, so most cards land here. Quiet on purpose: four coral chips in
+   a row would flatten the two tones above that mean more. */
+.quiet {
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.07);
+}
