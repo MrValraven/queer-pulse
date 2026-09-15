@@ -11,8 +11,8 @@ export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
     "15 Sep 2026": {
       highlights: [
         "pick-an-emoji-from-the-message-box",
+        "media-caption-screen",
         "chat-wallpapers-are-patterns",
-        "links-you-share-preview-in-the-bubble",
       ],
     },
     "14 Sep 2026": {

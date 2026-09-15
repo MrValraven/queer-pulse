@@ -29,6 +29,12 @@ import {
   mergeOptimisticGroups,
   realConversationId,
 } from "./useMessagesController.helpers";
+// TEMPORARY — see scrollTrace.ts's revert instructions.
+import {
+  buildScrollTraceInflatedMessages,
+  isScrollTraceLiveSimulationEnabled,
+  useScrollTraceDemoHistoryDelay,
+} from "./scrollTrace";
 import { useMessageThreadNav } from "./useMessageThreadNav";
 import { useMessageThreadList } from "./useMessageThreadList";
 import { useMessageSending } from "./useMessageSending";
@@ -50,6 +56,9 @@ export { nextLocalId } from "./useMessagesController.helpers";
  * `ConversationPanel`/`MessageArea` so a receipt or typing frame re-renders
  * only the open conversation, never this page's thread list.
  */
+// TEMPORARY — the scrolltrace simulation branch (see scrollTrace.ts) pushes
+// this hook over the line budget; remove the disable alongside that branch.
+// eslint-disable-next-line max-lines-per-function
 export function useMessagesController() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -207,14 +216,32 @@ export function useMessagesController() {
 
   const activeBlocked = active?.slug ? isBlocked(active.slug) : false;
 
+  // TEMPORARY — see scrollTrace.ts's revert instructions. No-op unless
+  // `?scrolltrace&simulatelive` is set; `demoHistoryReady` is `true` otherwise.
+  const demoHistoryReady = useScrollTraceDemoHistoryDelay(activeId, demoMode);
+
   /** Base history (mock groups in demo, fetched groups in live) + session sends. */
-  const messageGroups = useMemo(
-    () =>
-      active
-        ? mergeOptimisticGroups(active, demoMode, thread.groups, sent)
-        : [],
-    [active, demoMode, thread.groups, sent],
-  );
+  const messageGroups = useMemo(() => {
+    if (!active) return [];
+    if (demoMode && !demoHistoryReady) return [];
+    const base = mergeOptimisticGroups(active, demoMode, thread.groups, sent);
+    // TEMPORARY — see scrollTrace.ts's revert instructions. The repo's one
+    // demo GROUP thread is too short to ever overflow the viewport; inject
+    // filler ahead of its real tail so H1/H2 have real overflow to strand the
+    // reader against. No-op unless `?scrolltrace&simulatelive` is set.
+    if (
+      demoMode &&
+      active.isGroup &&
+      base.length > 0 &&
+      isScrollTraceLiveSimulationEnabled()
+    ) {
+      const filler = buildScrollTraceInflatedMessages();
+      return base.map((group, index) =>
+        index === 0 ? { ...group, items: [...filler, ...group.items] } : group,
+      );
+    }
+    return base;
+  }, [active, demoMode, thread.groups, sent, demoHistoryReady]);
 
   // Open-thread selection, cross-inbox jump-to-message, thread deletion.
   const navigation = useMessageThreadNav({

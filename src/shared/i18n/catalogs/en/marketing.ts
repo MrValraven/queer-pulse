@@ -2268,7 +2268,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-15.headline":
-    "Messages get an emoji picker, and shared links preview inside the bubble.",
+    "Messages get an emoji picker, captions on photos and GIFs, and patterned wallpapers.",
   "changelog.releases.2026-09-14.headline":
     "Chat photos open full screen with zoom and swipe, and closed communities stay closed.",
   "changelog.releases.2026-09-12.headline":
@@ -2514,6 +2514,14 @@ export const marketing: Catalog = {
     "Open photos full screen in chat",
   "changelog.entries.chat-photo-viewer.body":
     "Pinch or double-tap to zoom, swipe through the rest, and save, reply, forward or star what you're viewing.",
+  "changelog.entries.media-caption-screen.title":
+    "Caption photos and GIFs before sending",
+  "changelog.entries.media-caption-screen.body":
+    "Picking a photo or GIF opens a full-screen preview with a caption field, and both go out as one message.",
+  "changelog.entries.photos-in-chat-lost-their-square-corners.title":
+    "Photos in chat lost their square corners",
+  "changelog.entries.photos-in-chat-lost-their-square-corners.body":
+    "Pictures, GIFs and file cards are rounded now, so they sit like the messages around them.",
   "changelog.entries.the-emoji-panel-sits-square.title":
     "The emoji panel sits square",
   "changelog.entries.the-emoji-panel-sits-square.body":

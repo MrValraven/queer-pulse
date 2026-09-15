@@ -115,6 +115,13 @@ export const messages: Catalog = {
   "attachments.fallbackText": "Photo",
   "attachments.previewUnavailable": "Photo preview unavailable",
 
+  // WhatsApp Web-style caption screen (AttachmentCaptionScreen), opened after
+  // picking a photo or GIF, before it sends as a message.
+  "attachments.captionScreenLabel": "Add a caption before sending",
+  "attachments.captionPlaceholder": "Add a caption",
+  "attachments.captionSend": "Send",
+  "attachments.captionDiscard": "Discard",
+
   // Full-screen photo viewer (ChatImageViewer + its chrome), opened by tapping
   // a photo or GIF bubble. Reply/Forward/Star reuse the actions.* keys above,
   // so the viewer and the long-press overlay can never drift apart in wording.

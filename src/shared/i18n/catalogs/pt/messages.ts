@@ -104,6 +104,14 @@ export const messages: Catalog = {
   "attachments.fallbackText": "Foto",
   "attachments.previewUnavailable": "Pré-visualização indisponível",
 
+  // Ecrã de legenda em ecrã inteiro (AttachmentCaptionScreen), estilo
+  // WhatsApp Web, aberto depois de escolheres uma foto ou GIF, antes de
+  // seguir como mensagem.
+  "attachments.captionScreenLabel": "Adiciona uma legenda antes de enviar",
+  "attachments.captionPlaceholder": "Adiciona uma legenda",
+  "attachments.captionSend": "Enviar",
+  "attachments.captionDiscard": "Descartar",
+
   // Visualizador de fotos em ecrã inteiro (ChatImageViewer e a sua barra),
   // aberto ao tocar numa bolha de foto ou GIF. Responder/Reencaminhar/Guardar
   // reutilizam as chaves actions.* acima.

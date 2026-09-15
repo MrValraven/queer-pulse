@@ -8,6 +8,7 @@ import { ComposerSafetyNotice } from "./ComposerSafetyNotice";
 import { ComposerReplyPreview } from "./ComposerReplyPreview";
 import { ComposerSeveredNotice } from "./ComposerSeveredNotice";
 import { detectContactSafetySignals } from "./contactSafetyDetector";
+import { useAttachmentStaging } from "./useAttachmentStaging";
 import { useComposerAutoGrow } from "./useComposerAutoGrow";
 import { useComposerPopovers } from "./useComposerPopovers";
 import { useComposerTyping } from "./useComposerTyping";
@@ -50,7 +51,6 @@ interface ComposerProps {
 
 /**
  * Bottom composer: severed into a notice bar for official/blocked threads.
- *
  * Owns the new-message draft text itself (mounted with `key={active.id}` by
  * the caller so it resets per thread) — a keystroke here never bubbles state
  * up to the page, so it can't re-render the thread list or the message log.
@@ -58,11 +58,10 @@ interface ComposerProps {
  * thread switch used to rely on the controller for, plus (SOC-16) the
  * server's cross-device copy via `useDraftSync`; unrelated to the
  * message-edit inline editor, which owns its own local text entirely.
- *
  * The throttled typing frames (`useComposerTyping`), the mutually-exclusive
- * attach/GIF/shortcut popovers (`useComposerPopovers`), and the reply-quote banner
- * (`ComposerReplyPreview`) are split into colocated files, same as the draft
- * sync above, so this component stays under the line cap.
+ * attach/GIF/shortcut popovers (`useComposerPopovers`), the reply-quote
+ * banner, and the picked-media caption staging (`useAttachmentStaging`) are
+ * all split into colocated files/hooks too, so this stays under the line cap.
  */
 export function Composer({
   active,
@@ -106,6 +105,7 @@ export function Composer({
     closePopover,
   } = useComposerPopovers();
   useComposerAutoGrow(textareaRef, draft);
+  const staging = useAttachmentStaging({ onSendGif, onSendImage, textareaRef });
   const insertShortcut = useInsertMentionShortcut(
     conversationId,
     draft,
@@ -114,7 +114,6 @@ export function Composer({
     closePopover,
     textareaRef,
   );
-
   /** Enter-to-send and the send button both funnel through here so a send
    *  always clears the idle timer and tells the counterpart we've stopped.
    *  Clears the composer's own text (and its persisted + synced draft) in the
@@ -202,8 +201,8 @@ export function Composer({
         onTogglePopover={togglePopover}
         onOpenPopover={showPopover}
         onClosePopover={closePopover}
-        onSendGif={onSendGif}
-        onSendImage={onSendImage}
+        onSendGif={staging.onSendGif}
+        onSendImage={staging.onSendImage}
         onSendDocument={onSendDocument}
         onInsertShortcut={insertShortcut}
         placeholder={composerPlaceholder}
@@ -215,6 +214,7 @@ export function Composer({
         sendLabel={t("messages:conversation.send")}
         messageFieldLabel={t("messages:conversation.composeAria")}
       />
+      {staging.screen}
     </div>
   );
 }

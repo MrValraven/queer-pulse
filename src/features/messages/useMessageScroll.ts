@@ -8,6 +8,8 @@ import {
 import type { Virtualizer } from "@tanstack/react-virtual";
 import { isNearBottom } from "./useStickToBottom";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
+// TEMPORARY — see scrollTrace.ts's revert instructions.
+import { traceScrollEvent } from "./scrollTrace";
 
 /** Minimum genuine overflow (`scrollHeight - clientHeight`) required before a
  *  near-top `scrollTop` is trusted as "the reader scrolled to the top" — see
@@ -48,6 +50,9 @@ const OVERFLOW_MARGIN_PX = 4;
  * set-up only (its work runs async, off `atBottomRef`), so its position is
  * immaterial — it lives last.
  */
+// TEMPORARY — the `traceScrollEvent` call sites (see scrollTrace.ts) push this
+// hook over the line budget; remove the disable alongside the calls.
+// eslint-disable-next-line max-lines-per-function
 export function useMessageScroll(
   messageCount: number,
   /** How many of the rendered messages are inbound (`from === "them"`). Drives
@@ -105,12 +110,24 @@ export function useMessageScroll(
 
   const armInitialSettleGuard = useCallback(() => {
     initialSettleGuardRef.current = true;
+    traceScrollEvent(
+      "armInitialSettleGuard",
+      areaRef.current,
+      rowVirtualizer,
+      atBottomRef,
+    );
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         initialSettleGuardRef.current = false;
+        traceScrollEvent(
+          "clearInitialSettleGuard",
+          areaRef.current,
+          rowVirtualizer,
+          atBottomRef,
+        );
       });
     });
-  }, []);
+  }, [areaRef, rowVirtualizer]);
 
   /** Pin to the bottom, through the virtualizer's own scroll API (see the file
    *  comment for why a raw `element.scrollTop =` isn't safe here). `animate`
@@ -133,6 +150,17 @@ export function useMessageScroll(
       const rowCount = rowVirtualizer.options.count;
       const behavior =
         animate && !prefersReducedMotionNow() ? "smooth" : "auto";
+      traceScrollEvent(
+        "scrollToBottom:before",
+        areaRef.current,
+        rowVirtualizer,
+        atBottomRef,
+        {
+          rowCount,
+          targetIndex: rowCount > 0 ? rowCount - 1 : null,
+          behavior,
+        },
+      );
       if (rowCount > 0) {
         // `scrollToIndex` (not a raw offset) — it resolves iteratively across
         // frames if the target row's real height isn't known yet, which a
@@ -145,8 +173,18 @@ export function useMessageScroll(
         rowVirtualizer.scrollToOffset(0, { align: "start", behavior });
       }
       atBottomRef.current = true;
+      traceScrollEvent(
+        "scrollToBottom:after",
+        areaRef.current,
+        rowVirtualizer,
+        atBottomRef,
+        {
+          rowCount,
+          targetIndex: rowCount > 0 ? rowCount - 1 : null,
+        },
+      );
     },
-    [rowVirtualizer],
+    [rowVirtualizer, areaRef],
   );
 
   /** Restores the reader's remembered distance-from-bottom (see
@@ -154,17 +192,46 @@ export function useMessageScroll(
    *  both through the virtualizer's own offset API. */
   const restoreAnchor = useCallback(
     (distanceFromBottom: number) => {
+      traceScrollEvent(
+        "restoreAnchor:before",
+        areaRef.current,
+        rowVirtualizer,
+        atBottomRef,
+        {
+          distanceFromBottom,
+          targetOffset: rowVirtualizer.getTotalSize() - distanceFromBottom,
+        },
+      );
       rowVirtualizer.scrollToOffset(
         rowVirtualizer.getTotalSize() - distanceFromBottom,
         { align: "start", behavior: "auto" },
       );
+      traceScrollEvent(
+        "restoreAnchor:after",
+        areaRef.current,
+        rowVirtualizer,
+        atBottomRef,
+        {
+          distanceFromBottom,
+        },
+      );
     },
-    [rowVirtualizer],
+    [rowVirtualizer, areaRef],
   );
 
   // Thread switch: jump to bottom, reset the pill count and growth baselines,
   // and (desktop only) focus the composer. Declared BEFORE the content effect.
   useLayoutEffect(() => {
+    traceScrollEvent(
+      "threadSwitch:entry",
+      areaRef.current,
+      rowVirtualizer,
+      atBottomRef,
+      {
+        activeId,
+        messageCount,
+      },
+    );
     scrollToBottom(false);
     // Resets the scroll pill on thread switch, alongside the DOM scroll pin.
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -189,6 +256,19 @@ export function useMessageScroll(
   useLayoutEffect(() => {
     const previousCount = previousCountRef.current;
     const previousInbound = previousInboundCountRef.current;
+    traceScrollEvent(
+      "contentEffect:entry",
+      areaRef.current,
+      rowVirtualizer,
+      atBottomRef,
+      {
+        previousCount,
+        messageCount,
+        previousInbound,
+        inboundCount,
+        pendingAnchor: pendingAnchorRef.current,
+      },
+    );
     previousCountRef.current = messageCount;
     previousInboundCountRef.current = inboundCount;
     if (pendingAnchorRef.current !== null) {
@@ -216,6 +296,13 @@ export function useMessageScroll(
     // empty (count 0). Land on the latest message, never surface the pill.
     const isFirstPopulation = previousCount === 0 && messageCount > 0;
     const grew = messageCount > previousCount;
+    traceScrollEvent(
+      "contentEffect:branch",
+      areaRef.current,
+      rowVirtualizer,
+      atBottomRef,
+      { isFirstPopulation, grew },
+    );
     if (isFirstPopulation) {
       scrollToBottom(false);
       setNewMessagesCount(0);
@@ -228,12 +315,25 @@ export function useMessageScroll(
     }
     if (!grew) return;
     if (atBottomRef.current) {
+      traceScrollEvent(
+        "contentEffect:stick",
+        areaRef.current,
+        rowVirtualizer,
+        atBottomRef,
+      );
       scrollToBottom(false);
       setNewMessagesCount(0);
     } else {
       // Only inbound arrivals count as "new" on the pill; my own sends (which
       // also grow the list) never do.
       const inboundArrived = inboundCount - previousInbound;
+      traceScrollEvent(
+        "contentEffect:pill",
+        areaRef.current,
+        rowVirtualizer,
+        atBottomRef,
+        { inboundArrived },
+      );
       if (inboundArrived > 0) {
         setNewMessagesCount((current) => current + inboundArrived);
       }
@@ -268,11 +368,39 @@ export function useMessageScroll(
       // the bottom-stick branch below, so an older-history load never visibly
       // jumps even across that second, measurement-driven correction.
       if (pendingAnchorRef.current !== null) {
+        traceScrollEvent(
+          "contentResize:restoreAnchorBranch",
+          area,
+          rowVirtualizer,
+          atBottomRef,
+        );
         restoreAnchor(pendingAnchorRef.current);
         return;
       }
-      if (!atBottomRef.current) return;
-      if (isNearBottom(area, 1)) return; // already flush to the bottom
+      if (!atBottomRef.current) {
+        traceScrollEvent(
+          "contentResize:earlyReturn:notAtBottom",
+          area,
+          rowVirtualizer,
+          atBottomRef,
+        );
+        return;
+      }
+      if (isNearBottom(area, 1)) {
+        traceScrollEvent(
+          "contentResize:earlyReturn:alreadyFlush",
+          area,
+          rowVirtualizer,
+          atBottomRef,
+        );
+        return; // already flush to the bottom
+      }
+      traceScrollEvent(
+        "contentResize:rePin",
+        area,
+        rowVirtualizer,
+        atBottomRef,
+      );
       scrollToBottom(false);
     });
     // ONE stable node for the whole panel's lifetime (see `contentRef`'s
@@ -295,8 +423,20 @@ export function useMessageScroll(
     if (isNearBottom(element)) {
       atBottomRef.current = true;
       setNewMessagesCount(0);
+      traceScrollEvent(
+        "handleAreaScroll:nearBottom",
+        element,
+        rowVirtualizer,
+        atBottomRef,
+      );
     } else {
       atBottomRef.current = false;
+      traceScrollEvent(
+        "handleAreaScroll:notNearBottom",
+        element,
+        rowVirtualizer,
+        atBottomRef,
+      );
     }
     // Guard against a false "load older" trigger on a thread SHORTER than the
     // viewport (see `initialSettleGuardRef`'s and `OVERFLOW_MARGIN_PX`'s
@@ -327,9 +467,15 @@ export function useMessageScroll(
     ) {
       // Preserve the viewport: remember distance-from-bottom, restore after prepend.
       pendingAnchorRef.current = element.scrollHeight - element.scrollTop;
+      traceScrollEvent(
+        "handleAreaScroll:loadOlderTriggered",
+        element,
+        rowVirtualizer,
+        atBottomRef,
+      );
       onLoadOlder();
     }
-  }, [areaRef, hasMoreOlder, loadingOlder, onLoadOlder]);
+  }, [areaRef, hasMoreOlder, loadingOlder, onLoadOlder, rowVirtualizer]);
 
   const jumpToLatest = useCallback(() => {
     scrollToBottom(true);

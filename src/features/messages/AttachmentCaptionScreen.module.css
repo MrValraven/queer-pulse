@@ -1,0 +1,166 @@
+/* Full-screen WhatsApp Web-style caption step for a staged photo or GIF.
+   Mirrors chatImageViewer.module.css's ground treatment: a deep plum wash
+   built from --plum-rgb (which never flips in dark mode), cream chrome on
+   top of it, and the same --z-lightbox stacking order, so this reads as the
+   same family of full-screen surface as the photo viewer. */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overscroll-behavior: contain;
+}
+
+.scrimWash {
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--plum-rgb), 0.94);
+  pointer-events: none;
+}
+
+.dialog {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px 16px;
+  animation: captionScreenIn 200ms var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog {
+    animation: none;
+  }
+}
+
+@keyframes captionScreenIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.55);
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .closeButton:hover {
+    background: rgba(var(--plum-rgb), 0.7);
+  }
+}
+
+.closeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Fills the stage the way WhatsApp Web does: a fixed height with the width
+   following the aspect ratio, so a small GIF is scaled up to read as the
+   thing being sent instead of sitting at its intrinsic 200px in a sea of
+   plum. Capped at 480px so an upscaled provider preview stays acceptable;
+   the max-width plus object-fit keeps a very wide image letterboxed inside
+   that same box on a narrow viewport. */
+.media {
+  height: min(60vh, 480px);
+  width: auto;
+  max-width: min(90vw, 720px);
+  object-fit: contain;
+  border-radius: var(--radius-card);
+}
+
+.captionField {
+  width: 100%;
+  max-width: 600px;
+  resize: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 12px 20px;
+  min-height: 44px;
+  max-height: 120px;
+  font: inherit;
+  font-size: var(--text-body);
+  background: rgba(var(--cream-rgb), 0.14);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.captionField::placeholder {
+  color: rgba(var(--cream-rgb), 0.6);
+}
+
+.captionField:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.bottomBar {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.thumbnail {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  border: 2px solid var(--accent);
+}
+
+.sendButton {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .sendButton:hover {
+    background: var(--accent-deep);
+  }
+}
+
+.sendButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

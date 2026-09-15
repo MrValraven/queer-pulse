@@ -66,6 +66,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "photos-in-chat-lost-their-square-corners",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("photos-in-chat-lost-their-square-corners"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "media-caption-screen",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("media-caption-screen"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
         id: "the-emoji-panel-sits-square",
         category: "fix",
         date: "15 Sep 2026",

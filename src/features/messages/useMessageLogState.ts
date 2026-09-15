@@ -1,5 +1,7 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { Virtualizer } from "@tanstack/react-virtual";
+// TEMPORARY — see scrollTrace.ts's revert instructions.
+import { traceScrollEvent, isScrollTraceEnabled } from "./scrollTrace";
 import { useUnreadDivider } from "./useUnreadDivider";
 import { useGroupIndicators } from "./useGroupIndicators";
 import { useMessageRowVirtualizer } from "./useMessageRowVirtualizer";
@@ -142,6 +144,38 @@ export function useMessageLogState(
       contentRef,
       rowVirtualizer,
     );
+
+  // TEMPORARY — see scrollTrace.ts's revert instructions. A SECOND,
+  // independent ResizeObserver purely for tracing `areaRef` itself (the
+  // scroll VIEWPORT), separate from `useMessageScroll`'s own resize-follow
+  // observer on `contentRef` (the content wrapper). This one never writes
+  // scroll position — it only logs `.area`'s own `clientHeight`/`scrollTop`
+  // whenever the viewport box itself changes size, e.g. a sibling banner
+  // (`ConnectionStatusBanner`/`ConversationPinnedBanner`) mounting/growing
+  // above `.area` in the flex column and shrinking it from a fixed `scrollTop`
+  // — exactly the shape hypothesis H2 describes, made directly observable.
+  useEffect(() => {
+    if (!isScrollTraceEnabled()) return;
+    const area = areaRef.current;
+    if (!area || typeof ResizeObserver === "undefined") return;
+    let lastClientHeight = area.clientHeight;
+    const observer = new ResizeObserver(() => {
+      if (area.clientHeight === lastClientHeight) return;
+      traceScrollEvent(
+        "areaRef:viewportResize",
+        area,
+        rowVirtualizer,
+        undefined,
+        {
+          previousClientHeight: lastClientHeight,
+          nextClientHeight: area.clientHeight,
+        },
+      );
+      lastClientHeight = area.clientHeight;
+    });
+    observer.observe(area);
+    return () => observer.disconnect();
+  }, [active.id, areaRef, rowVirtualizer]);
 
   // Re-ack read as new inbound messages land while this thread stays open
   // (`openThread` only covers the moment it's FIRST opened) — see the hook's

@@ -2329,7 +2329,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-15.headline":
-    "As mensagens ganham um seletor de emojis, e os links partilhados aparecem dentro do balão.",
+    "As mensagens ganham um seletor de emojis, legendas nas fotos e GIFs, e fundos com padrões.",
   "changelog.releases.2026-09-14.headline":
     "As fotos do chat abrem em ecrã inteiro com zoom e deslize, e as comunidades fechadas ficam fechadas.",
   "changelog.releases.2026-09-12.headline":
@@ -2576,6 +2576,14 @@ export const marketing: Catalog = {
     "Abre fotos em ecrã inteiro no chat",
   "changelog.entries.chat-photo-viewer.body":
     "Belisca ou toca duas vezes para ampliar, desliza pelas outras e descarrega, responde, reencaminha ou destaca a que vês.",
+  "changelog.entries.media-caption-screen.title":
+    "Legenda fotos e GIFs antes de enviar",
+  "changelog.entries.media-caption-screen.body":
+    "Escolher uma foto ou GIF abre uma pré-visualização em ecrã inteiro com campo de legenda, e ambos seguem numa só mensagem.",
+  "changelog.entries.photos-in-chat-lost-their-square-corners.title":
+    "As fotos no chat perderam os cantos quadrados",
+  "changelog.entries.photos-in-chat-lost-their-square-corners.body":
+    "Imagens, GIFs e cartões de ficheiro ficam agora arredondados, a condizer com as mensagens à volta.",
   "changelog.entries.the-emoji-panel-sits-square.title":
     "O painel de emoji fica alinhado",
   "changelog.entries.the-emoji-panel-sits-square.body":

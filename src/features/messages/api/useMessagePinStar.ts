@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+// TEMPORARY — see ../scrollTrace.ts's revert instructions.
+import {
+  isScrollTraceLiveSimulationEnabled,
+  useScrollTraceSimulatedPinnedMessages,
+} from "../scrollTrace";
 import {
   patchMessagePinned,
   patchMessageStarred,
@@ -33,7 +38,17 @@ const EMPTY_STARRED: StarredMessagesResponse = { items: [], conversations: [] };
  *  thread cache-patch helpers never touch it. */
 export function usePinnedMessages(conversationId: string | null) {
   const { demoMode } = useDemoMode();
-  return useQuery<MessageResponse[]>({
+  // TEMPORARY — see ../scrollTrace.ts's revert instructions. Demo mode
+  // otherwise always resolves this empty (`initialData` below), so it can
+  // never exercise the async-arrival timing this investigation needed; the
+  // simulation hook is called unconditionally (stable across renders) and its
+  // result substituted below only when the flag is on.
+  const simulateLiveTiming = demoMode && isScrollTraceLiveSimulationEnabled();
+  const simulatedPins = useScrollTraceSimulatedPinnedMessages(
+    conversationId,
+    demoMode,
+  );
+  const query = useQuery<MessageResponse[]>({
     queryKey: ["conversation-pins", conversationId, demoMode],
     enabled: !demoMode && !!conversationId,
     queryFn: () =>
@@ -42,6 +57,10 @@ export function usePinnedMessages(conversationId: string | null) {
         : Promise.resolve(EMPTY_PINS),
     initialData: demoMode ? EMPTY_PINS : undefined,
   });
+  if (simulateLiveTiming) {
+    return { ...query, data: simulatedPins as unknown as MessageResponse[] };
+  }
+  return query;
 }
 
 /** GET /messages/starred — the caller's private starred messages. */

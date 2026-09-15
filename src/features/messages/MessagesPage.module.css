@@ -893,8 +893,6 @@
    appearing, not words arriving. */
 
 .bubble {
-  --bubble-radius: 20px;
-  --bubble-radius-tight: 7px;
   /* One line of body text, as a factor. Read by `line-height` here AND by the
      in-bubble meta's three vertical positions (see `.bubbleMeta`), which are
      exact arithmetic on it — keep them reading the same custom property so a
@@ -976,6 +974,18 @@
    itself) so the hover-revealed action bar and the reaction chips never
    stretch the run wider than the message actually is. */
 .bubbleWrap {
+  /* The bubble shape tokens live HERE, not on `.bubble`: a photo/GIF bubble
+     and a document card deliberately render with no `.bubble` element around
+     them (see `MessageBubbleBody`), so a token scoped to `.bubble` never
+     reached them — `border-radius: var(--bubble-radius)` resolved to nothing
+     and fell back to a square 0, which is exactly how those bubbles shipped.
+     `.bubbleWrap` is the one ancestor every message surface shares. */
+  --bubble-radius: 20px;
+  --bubble-radius-tight: 7px;
+  /* Media (a photo, a GIF, the stripped-preview stand-in) gets a smaller
+     corner than a text bubble: the picture IS the surface, so the same 20px
+     eats visible image, where on a text bubble it only shapes padding. */
+  --bubble-media-radius: var(--radius-12);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1646,7 +1656,7 @@
   max-width: 220px;
   width: 100%;
   height: auto;
-  border-radius: var(--bubble-radius);
+  border-radius: var(--bubble-media-radius);
   overflow: hidden;
   /* `aspect-ratio` is set inline per-message (see MessageRun.tsx) from the
      attachment's real width/height, falling back to a plain 1:1 box when the
@@ -1665,7 +1675,7 @@
   display: block;
   width: fit-content;
   cursor: zoom-in;
-  border-radius: var(--bubble-radius);
+  border-radius: var(--bubble-media-radius);
 }
 
 .photoOpener:focus-visible {
@@ -1685,7 +1695,7 @@
   width: 160px;
   max-width: 220px;
   aspect-ratio: 1;
-  border-radius: var(--bubble-radius);
+  border-radius: var(--bubble-media-radius);
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px dashed rgba(var(--line-rgb), 0.18);
   color: var(--ink-60);
