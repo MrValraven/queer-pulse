@@ -66,6 +66,57 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "the-emoji-panel-sits-square",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("the-emoji-panel-sits-square"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "emoji-sections-you-can-jump-between",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("emoji-sections-you-can-jump-between"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "pick-an-emoji-from-the-message-box",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("pick-an-emoji-from-the-message-box"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "staff-roles-fold-into-one-panel",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("staff-roles-fold-into-one-panel"),
+        tag: {
+          labelKey:
+            "marketing:changelog.entries.staff-roles-fold-into-one-panel.tag",
+          to: routes.adminMembers,
+        },
+      },
+      {
+        id: "photos-grow-out-of-the-bubble",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("photos-grow-out-of-the-bubble"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
         id: "chat-photo-viewer-whatsapp-layout",
         category: "feature",
         date: "15 Sep 2026",

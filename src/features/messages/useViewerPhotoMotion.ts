@@ -5,7 +5,6 @@ import {
   VIEWER_EASE,
   VIEWER_ENTER_MS,
   VIEWER_EXIT_MS,
-  type ViewerMotionVariant,
 } from "./chatViewerMotion";
 import type { ViewerCloseReason } from "./useViewerClose";
 
@@ -22,17 +21,16 @@ import type { ViewerCloseReason } from "./useViewerClose";
  * transforms compose instead of fighting, whatever the timing.
  *
  * Driven through the Web Animations API rather than CSS classes because the
- * zoom variant's keyframes are computed from two live rectangles and cannot be
- * written down in a stylesheet. Browsers without `element.animate` (and jsdom,
- * where every viewer test runs) simply get no animation, which is the same
- * thing reduced motion asks for.
+ * zoom keyframes are computed from two live rectangles and cannot be written
+ * down in a stylesheet. Browsers without `element.animate` (and jsdom, where
+ * every viewer test runs) simply get no animation, which is the same thing
+ * reduced motion asks for.
  */
 export function useViewerPhotoMotion({
   layerRef,
   stageRef,
   imageRef,
   originRef,
-  variant,
   closing,
   canFlipBack,
   isZoomed,
@@ -47,14 +45,13 @@ export function useViewerPhotoMotion({
    *  way. The clip only matters while a zoomed photo is being panned, which
    *  cannot happen during the open or the close. */
   stageRef: RefObject<HTMLDivElement | null>;
-  /** The photo itself, measured for the zoom variant's FLIP. */
+  /** The photo itself, measured for the FLIP. */
   imageRef: RefObject<HTMLImageElement | null>;
   /** The bubble thumbnail the viewer was opened from, held live rather than as
    *  a snapshotted rectangle so the close can re-measure it: the log scrolls
    *  under the viewer (a reply, a new message, an arrow key jump), and a rect
    *  taken at open time would aim the photo at where the bubble used to be. */
   originRef: RefObject<HTMLElement | null>;
-  variant: ViewerMotionVariant;
   /** Non-null once the viewer has started closing. */
   closing: ViewerCloseReason | null;
   /** Whether the photo on screen is still the one the viewer was opened on.
@@ -80,22 +77,18 @@ export function useViewerPhotoMotion({
   // pinch changes `isZoomed` — and without this the effect would re-fire and
   // restart the photo's departure halfway through.
   const hasExitedRef = useRef(false);
-  // Latest-value refs: the enter effect runs exactly once, on mount, and must
-  // not be re-run by a variant or preference change mid-viewing.
-  const enterRef = useRef({ variant, reducedMotion });
+  // Latest-value ref: the enter effect runs exactly once, on mount, and must
+  // not be re-run by a reduced-motion preference change mid-viewing.
+  const enterRef = useRef({ reducedMotion });
   useEffect(() => {
-    enterRef.current = { variant, reducedMotion };
+    enterRef.current = { reducedMotion };
   });
 
   useLayoutEffect(() => {
     const layer = layerRef.current;
-    const { variant: enterVariant, reducedMotion: enterReduced } =
-      enterRef.current;
+    const { reducedMotion: enterReduced } = enterRef.current;
     if (!layer || enterReduced || typeof layer.animate !== "function") return;
-    const from =
-      enterVariant === "zoom"
-        ? zoomKeyframe(imageRef.current, originRef.current)
-        : null;
+    const from = zoomKeyframe(imageRef.current, originRef.current);
     if (from) unclipWhile(stageRef.current, VIEWER_ENTER_MS);
     runningRef.current = layer.animate(
       from
@@ -108,8 +101,8 @@ export function useViewerPhotoMotion({
     );
     return () => runningRef.current?.cancel();
     // Refs only, so this runs exactly once per viewer: the entrance must not
-    // replay because the variant or the motion preference changed halfway
-    // through a viewing session. See `enterRef` above.
+    // replay because the motion preference changed halfway through a viewing
+    // session. See `enterRef` above.
   }, [layerRef, stageRef, imageRef, originRef]);
 
   useEffect(() => {
@@ -122,7 +115,7 @@ export function useViewerPhotoMotion({
     // left it parked there, so the exit only fades what is left; flying it
     // back to a bubble from a pose the member chose would yank it sideways.
     const to =
-      variant === "zoom" && closing !== "drag" && canFlipBack && !isZoomed
+      closing !== "drag" && canFlipBack && !isZoomed
         ? zoomKeyframe(imageRef.current, originRef.current)
         : null;
     if (to) unclipWhile(stageRef.current, VIEWER_EXIT_MS);
@@ -140,7 +133,6 @@ export function useViewerPhotoMotion({
     // frame in between.
   }, [
     closing,
-    variant,
     canFlipBack,
     isZoomed,
     reducedMotion,

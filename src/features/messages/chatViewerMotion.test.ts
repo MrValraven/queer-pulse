@@ -1,31 +1,11 @@
 import { describe, expect, it } from "vitest";
-import {
-  flipTransformFrom,
-  isOriginStillVisible,
-  readViewerMotionVariant,
-} from "./chatViewerMotion";
+import { flipTransformFrom, isOriginStillVisible } from "./chatViewerMotion";
 
 const rect = (left: number, top: number, width: number, height: number) => ({
   left,
   top,
   width,
   height,
-});
-
-describe("readViewerMotionVariant", () => {
-  it("reads the zoom variant off the query string", () => {
-    expect(readViewerMotionVariant("?photoAnim=zoom")).toBe("zoom");
-  });
-
-  it("falls back to the scale variant for anything else", () => {
-    // The fallback is the variant that needs nothing from the page it opened
-    // over, so a typo or a stale link can never leave the viewer with no
-    // animation at all.
-    expect(readViewerMotionVariant("")).toBe("scale");
-    expect(readViewerMotionVariant("?photoAnim=")).toBe("scale");
-    expect(readViewerMotionVariant("?photoAnim=sparkle")).toBe("scale");
-    expect(readViewerMotionVariant("?tab=photos")).toBe("scale");
-  });
 });
 
 describe("flipTransformFrom", () => {

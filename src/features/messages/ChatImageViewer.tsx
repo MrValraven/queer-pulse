@@ -3,17 +3,12 @@ import {
   useEffect,
   useRef,
   useState,
-  useSyncExternalStore,
   type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
 import { useDismiss, useScrimDismiss } from "../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  getViewerMotionVariant,
-  subscribeViewerMotionVariant,
-} from "./chatViewerMotion";
 import { useViewerClose } from "./useViewerClose";
 import { ChatImageViewerTopBar } from "./ChatImageViewerChrome";
 import { ChatImageViewerFilmstrip } from "./ChatImageViewerFilmstrip";
@@ -57,7 +52,7 @@ export function ChatImageViewer({
   startIndex: number;
   onClose: () => void;
   /** The bubble thumbnail this viewer was opened from, held live so the close
-   *  can re-measure it. Only the `?photoAnim=zoom` variant uses it, and it is
+   *  can re-measure it. The grow-from-the-bubble close uses it, and it is
    *  optional so a surface that opens the viewer without a bubble behind it
    *  (and every test) still gets the scale-and-fade. */
   originRef?: RefObject<HTMLElement | null>;
@@ -76,14 +71,6 @@ export function ChatImageViewer({
   // restore whatever the member had chosen.
   const [isGestureActive, setIsGestureActive] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
-  // Live, so flipping the toggle in the top bar takes effect on THIS close and
-  // on every open after it. The entrance is snapshotted separately, on mount,
-  // inside `useViewerPhotoMotion`: a mid-viewing flip must not leave an exit
-  // reversing an entrance that never played.
-  const motionVariant = useSyncExternalStore(
-    subscribeViewerMotionVariant,
-    getViewerMotionVariant,
-  );
   const { closing, beginClose } = useViewerClose(onClose, reducedMotion);
   // Stable identities. `dismissByDrag` in particular is handed to the gesture
   // layer, which memoizes its drag controller on the callbacks it receives.
@@ -210,7 +197,6 @@ export function ChatImageViewer({
           onToggleStar={
             onToggleStar ? () => onToggleStar(photo.message) : undefined
           }
-          motionVariant={motionVariant}
         />
         <ChatImageViewerStage
           photo={photo}
@@ -222,7 +208,6 @@ export function ChatImageViewer({
           onDismiss={dismissByDrag}
           onToggleChrome={toggleChrome}
           onGestureActive={setIsGestureActive}
-          motionVariant={motionVariant}
           closing={closing}
           originRef={originRef ?? fallbackOriginRef}
           canFlipBack={index === startIndex}

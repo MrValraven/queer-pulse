@@ -1,16 +1,17 @@
 // src/features/messages/useComposerPopovers.ts
 import { useEffect, useRef, useState } from "react";
 
-export type ComposerPopover = "attach" | "gif" | "shortcuts" | null;
+export type ComposerPopover = "attach" | "gif" | "shortcuts" | "emoji" | null;
 
 /**
- * Mutual exclusion + outside-click/Escape dismissal for the composer's three
- * popovers (the attach menu, the GIF picker it hands off to, and the shortcut
- * hint) — split out of `Composer` to keep it under the line cap. A single
- * `openPopover` state keeps them from ever stacking two floating panels over
- * the thread; `groupRef` is the shared boundary every popover button/panel
- * sits inside, so a click on any of them toggles rather than double-firing,
- * and a click anywhere else (the thread, the page) closes whichever is open.
+ * Mutual exclusion + outside-click/Escape dismissal for the composer's four
+ * popovers (the attach menu, the GIF picker it hands off to, the shortcut
+ * hint, and the emoji picker) — split out of `Composer` to keep it under the
+ * line cap. A single `openPopover` state keeps them from ever stacking two
+ * floating panels over the thread; `groupRef` is the shared boundary every
+ * popover button/panel sits inside, so a click on any of them toggles rather
+ * than double-firing, and a click anywhere else (the thread, the page)
+ * closes whichever is open.
  *
  * The boundary is now the input pill itself, which CONTAINS the textarea —
  * so an outside-click no longer fires when someone taps into the field.

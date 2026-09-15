@@ -8,8 +8,10 @@
   position: absolute;
   /* The trigger moved inside the input pill at its trailing edge, so the panel
      anchors right — `left: 0` there would push a 260px panel off the screen on
-     a narrow phone. `+10px` clears the pill's own border. */
-  bottom: calc(100% + 10px);
+     a narrow phone. `+16px` matches `EmojiPicker.module.css`: the trigger sits
+     inside the pill, and `.composer` wraps the pill in a 12px paper strip, so
+     10px cleared the pill but left the panel resting on that strip. */
+  bottom: calc(100% + 16px);
   right: 0;
   z-index: var(--z-popover);
   width: min(260px, calc(100vw - 32px));

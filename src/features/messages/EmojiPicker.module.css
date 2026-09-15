@@ -1,0 +1,253 @@
+/* The emoji picker popover — same surface treatment as `GifPicker.module.css`
+   (panel/search/state), opening above the trigger. Anchored to
+   `EmojiComposerButton`'s own `.control` wrapper, which sits between the
+   paperclip and the textarea inside the input pill, so `left: 0` here keeps
+   the panel flush with that button rather than centring on the whole row. */
+.panel {
+  position: absolute;
+  /* Measured from the 44px trigger BUTTON, which sits inside the composer
+     pill rather than above it, so its top edge is only ~1.5px (the pill's own
+     border) below the pill's outer edge. The 8px `GifPicker.module.css` uses
+     therefore left barely 6px of daylight and the panel read as sitting on
+     the field's top rim; 16px is what actually clears the pill. */
+  bottom: calc(100% + 16px);
+  left: 0;
+  z-index: var(--z-popover);
+  /* Sized so nine 36px `.emojiBtn` columns (324px) plus eight 4px gaps
+     (32px), 356px of row content, actually fit inside `.grid`, after
+     `.grid`'s own 20px horizontal padding, this panel's 2px border-box
+     border, and a realistic vertical scrollbar allowance (16px): 356 + 20 +
+     2 + 16 = 394px minimum, rounded up to 400px for headroom. That same
+     400px also clears the category rail: ten `.railBtn` cells at their 34px
+     flex BASIS (340px) plus nine 2px gaps (18px) is 358px, and `.rail` only
+     needs 378px of panel width to hold it (358 + 2px border + 20px
+     padding), well under 400px, so its own `overflow-x: auto` fallback
+     stays dormant and the buttons simply grow into the slack instead.
+     `min(..., calc(100vw - 32px))` keeps a narrow viewport from ever
+     pushing the panel off screen. */
+  width: min(400px, calc(100vw - 32px));
+  max-height: 380px;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e3);
+  overflow: hidden;
+  animation: emojiPanelIn var(--dur-fast) var(--ease);
+}
+@keyframes emojiPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
+.search {
+  flex: none;
+  margin: 10px 10px 6px;
+  padding: 9px 12px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: var(--cream);
+}
+.search:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+
+/* Category rail — a horizontal toolbar of icon-only buttons. Scrolls
+   sideways rather than wrapping if a narrow panel can't fit all nine plus
+   Recents, so the grid below it never loses height to a second rail row. */
+.rail {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  /* Same 10px horizontal inset as `.grid` below, so the rail's first and last
+     tab line up with the emoji columns instead of sitting 2px further out.
+     The rail is the panel's FIRST row now (WhatsApp's order: tabs, then the
+     search field), hence a top inset of its own rather than the 0 it had
+     while the search field above was providing one. */
+  padding: 8px 10px 6px;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.railBtn {
+  /* Grows into whatever the rail's ten tabs don't use at their 34px basis —
+     a 400px panel leaves 20px of slack, which as dead space on the RIGHT
+     read as the rail being mis-padded. Growing shares it across the tabs
+     instead, so the row ends flush with the grid below it. `flex-shrink: 0`
+     is deliberate: a panel too narrow for ten tabs must overflow into
+     `.rail`'s own horizontal scroll rather than squeeze them under 34px. */
+  flex: 1 0 34px;
+  min-width: 34px;
+  height: 34px;
+  /* Positioning context for `.railBtnActive::after`. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--ink-60);
+  font-size: var(--text-18);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .railBtn:hover {
+    color: var(--ink);
+    background: rgba(var(--line-rgb), 0.08);
+  }
+}
+.railBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  box-shadow: none;
+  color: var(--ink);
+}
+
+/* Active section indicator: the scroll-spy result from
+   `useEmojiGridVirtualizer` (or the in-flight jump target while a rail click
+   is still animating there).
+
+   One straight rule drawn ON the rail's bottom hairline, the way WhatsApp's
+   own tab strip marks its current category. It was an inset `box-shadow`
+   first, which is what made it feel wrong: an inset shadow is clipped to the
+   element's `--radius-badge` corners, so the "underline" bowed into a
+   shallow arc and read as a smudge beneath the icon rather than a tab
+   underline. A pseudo-element takes the corners out of it while keeping the
+   one property that made the shadow the right call originally — it is out of
+   flow, so it still cannot grow the button past its own 34px box
+   (`.panel`'s comment documents the rail's exact width budget).
+
+   `bottom: -6px` reaches down through `.rail`'s own bottom padding to land
+   the rule exactly on that border, which is also why it can't be clipped:
+   a scroll container's padding box is its clip edge, and this stops on it.
+   Unlike the shadow it no longer collides with the focus ring either — the
+   `box-shadow: none` in the focus-visible rule above is now only there to
+   clear base.css's global focus halo. */
+.railBtnActive {
+  color: var(--accent);
+}
+.railBtnActive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--accent);
+}
+@media (hover: hover) {
+  .railBtnActive:hover {
+    color: var(--accent);
+  }
+}
+
+/* One 28px label band per section, positioned absolutely by the virtualizer
+   the same way `.gridRow` is (see `HEADER_ROW_HEIGHT_PX` in
+   `useEmojiGridVirtualizer.ts`), which this rule's height must stay in sync
+   with. No horizontal padding of its own, same as `.gridRow`: both sit
+   inside `.grid`'s own `6px 10px 10px` padding already, so leaving this flush
+   at `left: 0` (its inherited position) lands the label directly over
+   `.gridRow`'s first column rather than double-indenting past it. No
+   vertical margin either: a margin would sit outside the measured box and
+   desync the virtualizer's row offsets from what's actually painted. */
+.sectionHeader {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* The virtualized grid's scroll container — the ONE node both
+   `useEmojiGridVirtualizer`'s column-width measurement and
+   `@tanstack/react-virtual`'s scroll tracking read off. Reaching its
+   top/bottom must not chain into the message log scrolling behind the
+   popover (same reasoning as `GifPicker.module.css`'s `.body`). */
+.grid {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  /* Belt-and-braces: the column count comes from a real measurement in
+     `useEmojiGridVirtualizer`, so `.gridRow` should never overflow. This
+     exists so a measurement that's ever off by a pixel clips instead of
+     growing a horizontal scrollbar. */
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 10px 10px;
+}
+/* A grid, not a flex row, so the columns actually CONSUME the row's full
+   content width. As a flex row of fixed 36px cells, whatever `.grid`'s
+   measured column count left over (up to 39px on a 400px panel) piled up as
+   dead space on the right and made the panel look mis-padded. Equal `1fr`
+   tracks spread that remainder evenly, so the first column starts and the
+   last column ends exactly on `.grid`'s own 10px inset. `--emoji-columns` is
+   set by `EmojiGrid` from the SAME measured count `useEmojiGridVirtualizer`
+   chunks rows with, so a partially filled last row still lands its cells in
+   the same tracks as the full rows above it. */
+.gridRow {
+  display: grid;
+  grid-template-columns: repeat(var(--emoji-columns, 1), minmax(0, 1fr));
+  gap: 4px;
+}
+.emojiBtn {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-badge);
+  background: transparent;
+  font-size: var(--text-20);
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .emojiBtn:hover {
+    background: rgba(var(--line-rgb), 0.08);
+  }
+}
+.emojiBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  box-shadow: none;
+  background: rgba(var(--line-rgb), 0.08);
+}
+
+.state {
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--ink-40);
+  font-family: var(--sans);
+  font-size: var(--text-14-5);
+}

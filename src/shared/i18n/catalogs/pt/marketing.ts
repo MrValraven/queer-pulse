@@ -2329,7 +2329,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-15.headline":
-    "As mensagens enviadas assentam de imediato, e os links partilhados aparecem dentro do balão.",
+    "As mensagens ganham um seletor de emojis, e os links partilhados aparecem dentro do balão.",
   "changelog.releases.2026-09-14.headline":
     "As fotos do chat abrem em ecrã inteiro com zoom e deslize, e as comunidades fechadas ficam fechadas.",
   "changelog.releases.2026-09-12.headline":
@@ -2576,6 +2576,28 @@ export const marketing: Catalog = {
     "Abre fotos em ecrã inteiro no chat",
   "changelog.entries.chat-photo-viewer.body":
     "Belisca ou toca duas vezes para ampliar, desliza pelas outras e descarrega, responde, reencaminha ou destaca a que vês.",
+  "changelog.entries.the-emoji-panel-sits-square.title":
+    "O painel de emoji fica alinhado",
+  "changelog.entries.the-emoji-panel-sits-square.body":
+    "Os separadores de categoria passaram para cima do campo de pesquisa, aquele onde estás fica sublinhado, e as colunas terminam à mesma distância dos dois lados.",
+  "changelog.entries.emoji-sections-you-can-jump-between.title":
+    "Salta entre secções de emoji",
+  "changelog.entries.emoji-sections-you-can-jump-between.body":
+    "O painel identifica agora cada grupo e realça aquele onde estás, por isso tocar numa categoria leva-te diretamente até lá.",
+  "changelog.entries.pick-an-emoji-from-the-message-box.title":
+    "Escolhe um emoji na caixa de mensagem",
+  "changelog.entries.pick-an-emoji-from-the-message-box.body":
+    "No computador, pesquisa o conjunto todo em português ou inglês, e os últimos que usaste ficam no topo.",
+  "changelog.entries.staff-roles-fold-into-one-panel.title":
+    "As funções de equipa ficam num só painel",
+  "changelog.entries.staff-roles-fold-into-one-panel.body":
+    "A gaveta de um membro diz quantas das oito estão atribuídas e só abre os interruptores quando pedires.",
+  "changelog.entries.staff-roles-fold-into-one-panel.tag":
+    "Abrir o diretório de membros",
+  "changelog.entries.photos-grow-out-of-the-bubble.title":
+    "Toca numa foto e ela cresce a partir do balão",
+  "changelog.entries.photos-grow-out-of-the-bubble.body":
+    "Ao fechar, volta a encolher para esse mesmo balão, e uma foto que saiu do ecrã abre com um fundido discreto.",
   "changelog.entries.chat-photo-viewer-whatsapp-layout.title":
     "Um visualizador de fotos mais arrumado no chat",
   "changelog.entries.chat-photo-viewer-whatsapp-layout.body":

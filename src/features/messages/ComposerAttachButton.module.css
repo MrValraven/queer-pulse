@@ -11,10 +11,16 @@
 /* Menu panel — same surface treatment as the GIF picker and the shortcut
    hint (`MentionHintButton.module.css`), opening upward so it never covers
    the conversation header. `left: 0` keeps it flush with the paperclip at
-   the pill's leading edge. */
+   the pill's leading edge.
+
+   The offset matches `EmojiPicker.module.css`: it is measured from the 44px
+   trigger BUTTON, which sits inside the pill only ~1.5px (the pill's border)
+   below its outer edge, and `.composer` wraps the pill in a 12px paper
+   strip. 10px cleared the pill but landed the panel's bottom edge right on
+   that strip; 16px lifts it onto the conversation like the emoji panel. */
 .menu {
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: calc(100% + 16px);
   left: 0;
   z-index: var(--z-popover);
   width: max-content;
@@ -89,8 +95,12 @@
   opacity: 0.55;
 }
 
-/* The leading glyph badge — plum chip, matching the shortcut popover's
-   `.sigil`, so the two composer menus read as one family. */
+/* The leading glyph. No chip behind it: a filled plum disc beside every row
+   read as three buttons inside a button and out-shouted the labels. The
+   Feather glyph carries the weight instead: full `--ink` (the labels beside
+   it are `--ink` too, so the row reads as one colour) and a size up from the
+   20px composer triggers, inside a fixed 30px box so the labels still line
+   up. Both `--ink` and the label flip together on dark, so no theme override. */
 .rowIcon {
   flex: none;
   width: 30px;
@@ -98,25 +108,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-badge);
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 0.95);
+  color: var(--ink);
+  /* The "GIF" wordmark row: a compact bold acronym in the same 30px slot. */
   font-family: var(--sans);
   font-weight: 700;
   font-size: var(--text-11-5);
   letter-spacing: 0.02em;
 }
-
-/* Dark mode inverts the chip. `--plum` deliberately does not flip (see
-   tokens/colors.css), so on dark `--paper` #1A1030 a plum disc lands at
-   1.15:1 and reads as no disc at all. Flipping it to a light surface with a
-   plum glyph mirrors what `--line-rgb` and `--ink-rgb` already do on dark, and
-   measures 12.79:1 against the panel with the glyph at 11.12:1 on the chip.
-   `[data-theme]` rather than `prefers-color-scheme`: ThemeProvider stamps the
-   attribute on <html> and the app deliberately ignores the system preference. */
-[data-theme="dark"] .rowIcon {
-  background: rgba(var(--cream-rgb), 0.92);
-  /* css-scale-allow: non-flipping-text. The ground under this glyph is a
-     locked-light fill, so it must stay dark. --text-strong would flip. */
-  color: var(--plum);
+/* react-icons render at 1em, so the glyph rows size their SVG here without
+   touching the wordmark's own font-size above. */
+.rowIcon > svg {
+  font-size: var(--text-22);
 }

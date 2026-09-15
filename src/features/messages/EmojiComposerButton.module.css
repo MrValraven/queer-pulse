@@ -1,0 +1,8 @@
+/* The emoji trigger's anchor — same shape as `MentionHintButton.module.css`'s
+   `.control` / `ComposerAttachButton.module.css`'s `.control`: a plain
+   relative wrapper so `EmojiPicker`'s absolutely-positioned panel opens
+   above this exact button rather than the whole composer row. */
+.control {
+  position: relative;
+  flex: none;
+}

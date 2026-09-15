@@ -704,6 +704,14 @@ export const admin: Catalog = {
     "Grant functional roles on top of this member's account level.",
   "staffRoles.accountLevelLabel": "Account level",
   "staffRoles.grantsLabel": "Staff roles",
+  // The grant list is collapsed by default, so the disclosure header has to
+  // say what is behind it. Rendered with a { count }, so the plural form is
+  // resolved by CLDR; English does not inflect this one, so _one and _other
+  // carry identical copy (the PT catalog inflects them). The zero case gets
+  // its own key because "0 of 8 granted" reads like a broken counter.
+  "staffRoles.grantsSummary_one": "{count} of {total} granted",
+  "staffRoles.grantsSummary_other": "{count} of {total} granted",
+  "staffRoles.grantsSummaryNone": "None granted",
   "staffRoles.magazineEditor.label": "Magazine Editor",
   "staffRoles.magazineEditor.desc":
     "Runs the editorial desk: publish pieces, manage decks, review pitches.",

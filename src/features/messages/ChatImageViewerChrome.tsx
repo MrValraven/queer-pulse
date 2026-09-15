@@ -9,39 +9,8 @@ import {
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
-import {
-  setViewerMotionVariant,
-  type ViewerMotionVariant,
-} from "./chatViewerMotion";
 import type { ViewerPhoto } from "./useThreadImageGallery";
 import styles from "./chatImageViewer.module.css";
-
-/**
- * TEMPORARY. Flips the viewer between its two candidate open/close animations
- * so they can be compared in the real app rather than described. Tapping it
- * changes THIS close and every open after it, so one tap plus a close plus a
- * reopen shows both halves of a variant.
- *
- * Deliberately not translated, and deliberately not in the i18n catalogs:
- * "Scale" and "Zoom" are the two variants' own names for the length of this
- * comparison, and this control is deleted along with the losing variant. Keys
- * for it would be catalog churn in two languages for something with a known
- * expiry. Delete this component, `chatViewerMotion`'s variant store, and the
- * `?photoAnim=` parameter together.
- */
-function MotionVariantToggle({ variant }: { variant: ViewerMotionVariant }) {
-  const next: ViewerMotionVariant = variant === "scale" ? "zoom" : "scale";
-  return (
-    <button
-      type="button"
-      className={styles.motionToggle}
-      onClick={() => setViewerMotionVariant(next)}
-      aria-label={`Photo animation: ${variant}. Switch to ${next}.`}
-    >
-      <span aria-hidden="true">{variant === "scale" ? "Scale" : "Zoom"}</span>
-    </button>
-  );
-}
 
 /** Class list for the top bar: the base bar class plus `barHidden` while the
  *  chrome is tapped away. */
@@ -113,7 +82,6 @@ export function ChatImageViewerTopBar({
   onReply,
   onForward,
   onToggleStar,
-  motionVariant,
 }: {
   photo: ViewerPhoto;
   index: number;
@@ -128,8 +96,6 @@ export function ChatImageViewerTopBar({
   onReply?: () => void;
   onForward?: () => void;
   onToggleStar?: () => void;
-  /** Which open/close animation is currently selected. */
-  motionVariant: ViewerMotionVariant;
 }) {
   const { t } = useTranslation();
 
@@ -174,7 +140,6 @@ export function ChatImageViewerTopBar({
           </span>
         </span>
       </div>
-      <MotionVariantToggle variant={motionVariant} />
       <div className={styles.actions}>
         {canAct && onToggleStar && (
           <ViewerIconButton

@@ -662,6 +662,70 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
+/* The grant list is a disclosure, collapsed by default: eight toggle cards
+   stacked flat made the drawer very tall. The button replaces what used to be
+   a plain `.subGroupLabel` span, so it keeps that label's type and the same
+   10px of air beneath it (as padding now, since a button is the flex row). */
+.staffRolesToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 10px;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.staffRolesToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-8);
+}
+
+.staffRolesToggleLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.staffRolesToggleMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Collapsed, this is the only thing telling the truth about the section. */
+.staffRolesSummary {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.staffRolesChevron {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-60);
+  transition: transform 0.15s var(--ease);
+}
+
+.staffRolesChevronOpen {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .staffRolesChevron {
+    transition: none;
+  }
+}
+
 .staffRoleList {
   list-style: none;
   margin: 0;

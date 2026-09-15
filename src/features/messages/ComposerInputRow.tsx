@@ -2,6 +2,7 @@
 import type { RefObject } from "react";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { ComposerAttachButton } from "./ComposerAttachButton";
+import { EmojiComposerButton } from "./EmojiComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
 import type { ComposerPopover } from "./useComposerPopovers";
 import type { GifAttachment } from "../../shared/api/gifs";
@@ -59,6 +60,10 @@ interface ComposerInputRowProps {
  * `popoverGroupRef` lands on the pill, which is also the outside-click
  * boundary — so tapping the textarea no longer counts as "outside". The
  * textarea's own `onFocus` closes instead.
+ *
+ * `EmojiComposerButton` sits between the paperclip and the textarea
+ * (WhatsApp's own position) and renders nothing at all on a coarse pointer —
+ * phones already have an emoji key on the OS keyboard, so it's desktop only.
  */
 export function ComposerInputRow({
   textareaRef,
@@ -94,6 +99,13 @@ export function ComposerInputRow({
           onToggleMenu={() => onTogglePopover("attach")}
           onOpenGif={() => onOpenPopover("gif")}
           onClose={onClosePopover}
+        />
+        <EmojiComposerButton
+          textareaRef={textareaRef}
+          draft={draft}
+          onChange={onChange}
+          openPopover={openPopover}
+          onToggle={() => onTogglePopover("emoji")}
         />
         <MentionTextarea
           id="messages-composer"

@@ -1,18 +1,14 @@
 /**
  * The photo viewer's open/close choreography, as pure values and maths.
  *
- * Two variants are shipped side by side so they can be compared in the real
- * app rather than described: `?photoAnim=scale` (default) opens the viewer as
- * a scale-and-fade, `?photoAnim=zoom` grows the photo out of the bubble that
- * was tapped and shrinks it back into it on close. Everything here is free of
- * React and the DOM apart from the two rectangles it is handed, the same way
+ * The photo grows out of the bubble that was tapped and shrinks back into it
+ * on close. The scale-and-fade survives only as the automatic fallback for
+ * when there is no usable origin rectangle to grow from or shrink into (an
+ * image that has not been measured yet, or a bubble the virtualized log has
+ * unmounted while the viewer was open). Everything here is free of React and
+ * the DOM apart from the two rectangles it is handed, the same way
  * `chatImageZoom.ts` keeps the gesture maths testable.
  */
-
-export type ViewerMotionVariant = "scale" | "zoom";
-
-/** Query parameter that picks the variant, e.g. `/messages?photoAnim=zoom`. */
-export const VIEWER_MOTION_PARAM = "photoAnim";
 
 /** How long the photo takes to arrive, and to leave. The exit is shorter: a
  *  member who asked to close has already decided, and making them wait for a
@@ -24,52 +20,6 @@ export const VIEWER_EXIT_MS = 180;
  *  literal easing string and cannot resolve a custom property, so the value is
  *  repeated here rather than read off the element. */
 export const VIEWER_EASE = "cubic-bezier(0.22, 0.68, 0.16, 1)";
-
-/**
- * Reads the variant off a query string. Anything unrecognised (a typo, a
- * missing parameter, a stale link) falls back to `scale`, which needs nothing
- * from the page it opened over and so can never fail to run.
- */
-export function readViewerMotionVariant(search: string): ViewerMotionVariant {
-  const value = new URLSearchParams(search).get(VIEWER_MOTION_PARAM);
-  return value === "zoom" ? "zoom" : "scale";
-}
-
-/**
- * TEMPORARY, and the whole reason this is a mutable module-level value rather
- * than state on a provider: the two variants exist side by side only until the
- * maintainer picks one, and the loser (along with this store and the toggle in
- * the viewer's top bar) is deleted with it. A module store rather than React
- * state because the viewer is mounted and unmounted on every open: the choice
- * has to outlive the component that shows it, or every close would forget it.
- *
- * Seeded lazily from the query string, so `?photoAnim=zoom` still works as an
- * opening position and a toggle overrides it from there.
- */
-let selectedVariant: ViewerMotionVariant | null = null;
-const variantListeners = new Set<() => void>();
-
-export function getViewerMotionVariant(): ViewerMotionVariant {
-  // Guarded because this is a `useSyncExternalStore` snapshot, which React
-  // can call in environments without a window. The viewer is only ever
-  // mounted from a tap, so this should not happen, but a snapshot that throws
-  // takes the whole conversation down rather than degrading.
-  selectedVariant ??= readViewerMotionVariant(
-    typeof window === "undefined" ? "" : window.location.search,
-  );
-  return selectedVariant;
-}
-
-export function setViewerMotionVariant(variant: ViewerMotionVariant): void {
-  if (selectedVariant === variant) return;
-  selectedVariant = variant;
-  for (const listener of variantListeners) listener();
-}
-
-export function subscribeViewerMotionVariant(listener: () => void): () => void {
-  variantListeners.add(listener);
-  return () => variantListeners.delete(listener);
-}
 
 /**
  * The transform that puts `target` exactly where `origin` is: the first half

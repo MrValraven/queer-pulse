@@ -708,6 +708,9 @@ export const admin: Catalog = {
     "Concede papéis funcionais para além do nível de conta desta pessoa.",
   "staffRoles.accountLevelLabel": "Nível de conta",
   "staffRoles.grantsLabel": "Papéis de equipa",
+  "staffRoles.grantsSummary_one": "{count} de {total} atribuído",
+  "staffRoles.grantsSummary_other": "{count} de {total} atribuídos",
+  "staffRoles.grantsSummaryNone": "Nenhum atribuído",
   "staffRoles.magazineEditor.label": "Editor da revista",
   "staffRoles.magazineEditor.desc":
     "Gere o desk editorial: publica peças, gere decks, revê propostas.",

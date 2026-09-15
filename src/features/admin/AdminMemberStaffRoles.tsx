@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { AdminToggle } from "./ui";
+import { AdminStaffRoleRow } from "./AdminStaffRoleRow";
+import { AdminStaffRolesDisclosure } from "./AdminStaffRolesDisclosure";
 import { useGrantStaffRole, useRevokeStaffRole } from "./api/useAdminMembers";
 import {
   STAFF_ROLES,
@@ -49,6 +50,12 @@ interface PendingStaffRoleChange {
  * about why. The dialog rides on `Modal`, which portals to `document.body`, so
  * its fixed scrim covers the member drawer it is opened from instead of being
  * trapped inside it.
+ *
+ * The grant list itself is a disclosure and starts collapsed: eight toggle
+ * cards stacked flat pushed everything below them out of the drawer. The
+ * header keeps the collapsed state honest by naming how many grants are live,
+ * and the `lockedReason` hint stays outside the collapsed region because it
+ * explains why the toggles are inert.
  */
 export function AdminMemberStaffRoles({
   memberId,
@@ -70,6 +77,7 @@ export function AdminMemberStaffRoles({
   const [pendingChange, setPendingChange] =
     useState<PendingStaffRoleChange | null>(null);
   const [reason, setReason] = useState("");
+  const [isGrantListOpen, setIsGrantListOpen] = useState(false);
 
   const isAdmin = role === "admin";
   const lockedReason = isSystem
@@ -79,6 +87,11 @@ export function AdminMemberStaffRoles({
       : null;
   const isPending = grantStaffRole.isPending || revokeStaffRole.isPending;
   const togglesDisabled = isSystem || isAdmin || isPending;
+  /** Scoped to the member so two open drawers can never claim the same `id`. */
+  const grantListId = `staff-roles-${memberId}`;
+  const grantedCount = STAFF_ROLES.filter(
+    (staffRole) => isAdmin || staffRoles.includes(staffRole.id),
+  ).length;
 
   const closeConfirm = () => {
     setPendingChange(null);
@@ -115,34 +128,30 @@ export function AdminMemberStaffRoles({
 
   return (
     <div className={styles.staffRolesGroup}>
-      <span className={styles.subGroupLabel}>
-        {t("admin:staffRoles.grantsLabel")}
-      </span>
+      <AdminStaffRolesDisclosure
+        listId={grantListId}
+        isOpen={isGrantListOpen}
+        onToggle={() => setIsGrantListOpen((wasOpen) => !wasOpen)}
+        grantedCount={grantedCount}
+        totalCount={STAFF_ROLES.length}
+      />
       {lockedReason && <p className={styles.dHint}>{lockedReason}</p>}
-      <ul className={styles.staffRoleList}>
-        {STAFF_ROLES.map((staffRole) => {
-          const checked = isAdmin || staffRoles.includes(staffRole.id);
-          return (
-            <li key={staffRole.id} className={styles.staffRoleRow}>
-              <div className={styles.staffRoleText}>
-                <span className={styles.staffRoleLabel}>
-                  {t(staffRole.labelKey)}
-                </span>
-                <span className={styles.staffRoleDesc}>
-                  {t(staffRole.descriptionKey)}
-                </span>
-              </div>
-              <AdminToggle
-                checked={checked}
-                disabled={togglesDisabled}
-                label={t(staffRole.labelKey)}
-                onChange={(nextChecked) =>
-                  setPendingChange({ staffRole, isGrant: nextChecked })
-                }
-              />
-            </li>
-          );
-        })}
+      <ul
+        id={grantListId}
+        hidden={!isGrantListOpen}
+        className={styles.staffRoleList}
+      >
+        {STAFF_ROLES.map((staffRole) => (
+          <AdminStaffRoleRow
+            key={staffRole.id}
+            staffRole={staffRole}
+            checked={isAdmin || staffRoles.includes(staffRole.id)}
+            disabled={togglesDisabled}
+            onRequestChange={(isGrant) =>
+              setPendingChange({ staffRole, isGrant })
+            }
+          />
+        ))}
       </ul>
 
       {pendingChange && (

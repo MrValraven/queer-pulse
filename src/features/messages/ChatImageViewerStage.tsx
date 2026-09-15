@@ -4,7 +4,6 @@ import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useViewerPhotoMotion } from "./useViewerPhotoMotion";
 import { useZoomPan } from "./useZoomPan";
-import type { ViewerMotionVariant } from "./chatViewerMotion";
 import type { ViewerCloseReason } from "./useViewerClose";
 import type { ViewerPhoto } from "./useThreadImageGallery";
 import styles from "./chatImageViewer.module.css";
@@ -25,7 +24,6 @@ export function ChatImageViewerStage({
   onDismiss,
   onToggleChrome,
   onGestureActive,
-  motionVariant,
   closing,
   originRef,
   canFlipBack,
@@ -45,12 +43,11 @@ export function ChatImageViewerStage({
    *  is in progress, so the shell can move the chrome out of the way of a
    *  photo that is being actively manipulated. */
   onGestureActive: (isGestureActive: boolean) => void;
-  /** Which open/close animation to play — see `chatViewerMotion.ts`. */
-  motionVariant: ViewerMotionVariant;
   /** Non-null once the viewer has started closing, which is this component's
    *  cue to play the photo out. */
   closing: ViewerCloseReason | null;
-  /** The bubble thumbnail the viewer was opened from, for the zoom variant. */
+  /** The bubble thumbnail the viewer was opened from, which the photo grows
+   *  out of on open and shrinks back into on close. */
   originRef: RefObject<HTMLElement | null>;
   /** Whether the photo on screen is still the one that bubble holds. */
   canFlipBack: boolean;
@@ -78,7 +75,6 @@ export function ChatImageViewerStage({
     stageRef: viewportRef,
     imageRef,
     originRef,
-    variant: motionVariant,
     closing,
     canFlipBack,
     isZoomed,

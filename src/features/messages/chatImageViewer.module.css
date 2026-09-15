@@ -255,10 +255,6 @@
   .navButton:hover {
     background: rgba(var(--plum-rgb), 0.7);
   }
-
-  .motionToggle:hover {
-    background: rgba(var(--cream-rgb), 0.14);
-  }
 }
 
 .iconButton:focus-visible,
@@ -287,29 +283,6 @@
      the rest of the chrome instead of snapping to full opacity the instant a
      gesture ends and riding the stage's settle transform back into place. */
   transition: opacity 160ms var(--ease);
-}
-
-/* TEMPORARY, paired with `MotionVariantToggle` in ChatImageViewerChrome.tsx:
-   the in-viewer switch between the two candidate open/close animations.
-   Deliberately quiet (an outlined pill rather than a filled button) so it
-   reads as scaffolding sitting in the chrome rather than as one of the
-   viewer's real actions. Delete with the losing variant. */
-.motionToggle {
-  flex: none;
-  border: 1px solid rgba(var(--cream-rgb), 0.4);
-  background: transparent;
-  color: rgba(var(--cream-rgb), 1);
-  border-radius: var(--radius-pill);
-  padding: 4px 12px;
-  font: inherit;
-  font-size: var(--text-12);
-  letter-spacing: 0.04em;
-  cursor: pointer;
-}
-
-.motionToggle:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
 }
 
 .navPrev {

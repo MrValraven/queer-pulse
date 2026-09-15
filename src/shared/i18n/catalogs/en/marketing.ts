@@ -2268,7 +2268,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-15.headline":
-    "Sent messages settle straight away, and shared links preview inside the bubble.",
+    "Messages get an emoji picker, and shared links preview inside the bubble.",
   "changelog.releases.2026-09-14.headline":
     "Chat photos open full screen with zoom and swipe, and closed communities stay closed.",
   "changelog.releases.2026-09-12.headline":
@@ -2514,6 +2514,28 @@ export const marketing: Catalog = {
     "Open photos full screen in chat",
   "changelog.entries.chat-photo-viewer.body":
     "Pinch or double-tap to zoom, swipe through the rest, and save, reply, forward or star what you're viewing.",
+  "changelog.entries.the-emoji-panel-sits-square.title":
+    "The emoji panel sits square",
+  "changelog.entries.the-emoji-panel-sits-square.body":
+    "Category tabs moved above the search field, the one you are in is underlined, and the columns now end flush on both sides.",
+  "changelog.entries.emoji-sections-you-can-jump-between.title":
+    "Jump between emoji sections",
+  "changelog.entries.emoji-sections-you-can-jump-between.body":
+    "The picker labels every group now and highlights the one you are in, so tapping a category glides you straight to it.",
+  "changelog.entries.pick-an-emoji-from-the-message-box.title":
+    "Pick an emoji from the message box",
+  "changelog.entries.pick-an-emoji-from-the-message-box.body":
+    "On a computer, search the whole set in English or Portuguese, and the ones you used last wait at the top.",
+  "changelog.entries.staff-roles-fold-into-one-panel.title":
+    "Staff roles fold into one panel",
+  "changelog.entries.staff-roles-fold-into-one-panel.body":
+    "A member's drawer says how many of the eight are granted, and opens the toggles only when you ask.",
+  "changelog.entries.staff-roles-fold-into-one-panel.tag":
+    "Open the member directory",
+  "changelog.entries.photos-grow-out-of-the-bubble.title":
+    "Tap a photo and it grows from its bubble",
+  "changelog.entries.photos-grow-out-of-the-bubble.body":
+    "Closing shrinks it back into that same bubble, and a photo scrolled out of view opens with a quiet fade.",
   "changelog.entries.chat-photo-viewer-whatsapp-layout.title":
     "A tidier photo viewer for chat",
   "changelog.entries.chat-photo-viewer-whatsapp-layout.body":

@@ -69,6 +69,28 @@ export const messages: Catalog = {
   "gif.comingSoonHint":
     "Estamos a preparar a pesquisa de GIFs. Volta em breve para dar movimento às tuas mensagens.",
 
+  // Seletor de emoji (EmojiComposerButton + EmojiPicker) — só no ambiente de
+  // computador, o botão de sorriso dentro da barra de escrita. Os nomes das
+  // categorias servem também de nome acessível para cada separador da lista
+  // (botões só com ícone).
+  "emoji.trigger": "Emoji",
+  "emoji.panelLabel": "Seletor de emoji",
+  "emoji.searchPlaceholder": "Procurar emoji",
+  "emoji.loading": "A carregar emoji…",
+  "emoji.loadError": "Não foi possível carregar os emoji. Tenta de novo",
+  "emoji.empty": "Nenhum emoji encontrado",
+  "emoji.railLabel": "Categorias de emoji",
+  "emoji.recentsLabel": "Usados recentemente",
+  "emoji.categorySmileys": "Smileys e emoções",
+  "emoji.categoryPeople": "Pessoas e corpo",
+  "emoji.categoryAnimals": "Animais e natureza",
+  "emoji.categoryFood": "Comida e bebida",
+  "emoji.categoryActivities": "Atividades",
+  "emoji.categoryTravel": "Viagens e lugares",
+  "emoji.categoryObjects": "Objetos",
+  "emoji.categorySymbols": "Símbolos",
+  "emoji.categoryFlags": "Bandeiras",
+
   // Menu de anexos (ComposerAttachButton) — o clipe dentro da barra de
   // escrita e o menu Foto / Ficheiro / GIF que abre. As linhas reutilizam
   // attachments.open, attachments.openDocument e gif.open como rótulos

@@ -81,6 +81,27 @@ export const messages: Catalog = {
   "gif.comingSoonHint":
     "We're wiring up GIF search. Check back soon to add a little motion to your messages.",
 
+  // Emoji picker (EmojiComposerButton + EmojiPicker) — desktop only, the
+  // "smile" affordance inside the composer pill. Category names double as
+  // each rail tab's accessible name (icon-only buttons).
+  "emoji.trigger": "Emoji",
+  "emoji.panelLabel": "Emoji picker",
+  "emoji.searchPlaceholder": "Search emoji",
+  "emoji.loading": "Loading emoji…",
+  "emoji.loadError": "Couldn't load emoji. Try again",
+  "emoji.empty": "No emoji found",
+  "emoji.railLabel": "Emoji categories",
+  "emoji.recentsLabel": "Recently used",
+  "emoji.categorySmileys": "Smileys & emotion",
+  "emoji.categoryPeople": "People & body",
+  "emoji.categoryAnimals": "Animals & nature",
+  "emoji.categoryFood": "Food & drink",
+  "emoji.categoryActivities": "Activities",
+  "emoji.categoryTravel": "Travel & places",
+  "emoji.categoryObjects": "Objects",
+  "emoji.categorySymbols": "Symbols",
+  "emoji.categoryFlags": "Flags",
+
   // Attach menu (ComposerAttachButton) — the paperclip inside the composer
   // pill and the Photo / File / GIF menu it opens. The rows themselves reuse
   // attachments.open, attachments.openDocument and gif.open below as their

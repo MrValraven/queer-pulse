@@ -1,6 +1,9 @@
+/* Same 16px as `ComposerAttachButton.module.css`'s `.menu`: this panel
+   opens from that same in-pill anchor, and 8px left it sitting on the
+   composer's 12px paper strip instead of above it. */
 .panel {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 16px);
   left: 0;
   z-index: var(--z-popover);
   width: min(340px, calc(100vw - 32px));
