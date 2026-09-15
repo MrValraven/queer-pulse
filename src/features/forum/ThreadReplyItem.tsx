@@ -12,10 +12,10 @@ import { type Reply } from "./forum.data";
 import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
 import { authorHref } from "./forumAuthor.helpers";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { MentionText } from "../../shared/mentions/MentionText";
+import { MarkdownLite } from "../../shared/markdown";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { PostActionsMenu } from "./PostActionsMenu";
-import { ForumPostImage } from "./ForumImageAttach";
+import { ForumPostPhotos } from "./ForumPostPhotos";
 import { ForumLinkPreview } from "./ForumLinkPreview";
 import { firstLinkIn, useInViewOnce } from "./api/useForumLinkPreview";
 import { ModeratorByline } from "./ThreadReplies";
@@ -193,12 +193,20 @@ export function ThreadReplyItem({
                   {reply.quote.text}
                 </div>
               )}
-              {reply.body.map((paragraph, paragraphIndex) => (
-                <p key={paragraphIndex}>
-                  <MentionText text={paragraph} />
-                </p>
-              ))}
-              <ForumPostImage src={reply.image} />
+              {/* Same reassembly as the opening post: `reply.body` is the
+                  split form, and `join("\n")` is what the inline editor below
+                  already treats as the raw body. One markdown-lite pass over
+                  the whole reply is what makes a multi-line list or quote
+                  render as one block instead of a run of paragraphs. */}
+              <MarkdownLite text={reply.body.join("\n")} />
+              {/* ONE gallery, up to four. The backend folds a reply's legacy
+                  single `image` into `photos` before it leaves the server, so
+                  that field is only reached for on a demo reply or on an
+                  optimistic one the member just posted. */}
+              <ForumPostPhotos
+                photos={reply.photos}
+                legacyImage={reply.image}
+              />
               <ForumLinkPreview url={firstLink} isEnabled={isInView} />
               {reply.editedAt && (
                 <span className={styles.editedMark}>

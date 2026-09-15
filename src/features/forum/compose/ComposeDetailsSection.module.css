@@ -1,0 +1,81 @@
+/* ── The optional details ──────────────────────────────────────────────────
+   A label column, a control, and a note that wraps onto its own line. The
+   label keeps a min-width so the three rows line up their controls without a
+   grid, and the whole row wraps on a narrow card column rather than squeezing
+   the control. */
+
+.section {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.optional {
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.rowLabel {
+  min-width: 150px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* The live detection readout, beside its control. */
+.rowHint {
+  font-size: var(--text-12-5);
+  color: var(--jade-ink);
+  font-weight: 600;
+}
+
+/* The explanation of what the row does. Its own line, so a long note never
+   compresses the control it belongs to. */
+.rowNote {
+  flex-basis: 100%;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: var(--lh-body);
+  max-width: 68ch;
+}
+
+/* Below this the label column stops earning its width and the row reads
+   better stacked. */
+@media (max-width: 560px) {
+  .rowLabel {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+}

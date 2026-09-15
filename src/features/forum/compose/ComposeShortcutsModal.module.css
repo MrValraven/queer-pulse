@@ -1,0 +1,58 @@
+/* The keyboard reference. Two columns on anything with room, one on a phone,
+   where the caps matter less than knowing the page has them. */
+
+.list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 16px;
+  margin: 0;
+  font-size: var(--text-13-5);
+}
+
+.keys {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.keys kbd {
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-5);
+  padding: 2px 7px;
+  color: var(--ink-60);
+  background: var(--paper);
+}
+
+.or {
+  color: var(--ink-40);
+  padding-inline: 2px;
+}
+
+.label {
+  margin: 0;
+  color: var(--ink);
+  line-height: var(--lh-body);
+}
+
+/* Pushes Close to the right edge of the modal footer. */
+.footSpacer {
+  flex: 1 1 auto;
+}
+
+@media (--sm) {
+  .list {
+    grid-template-columns: 1fr;
+    gap: 4px 0;
+  }
+
+  /* Each pair reads as one block: caps, then what they do, then a breath. */
+  .label {
+    margin-bottom: 8px;
+    color: var(--ink-60);
+  }
+}

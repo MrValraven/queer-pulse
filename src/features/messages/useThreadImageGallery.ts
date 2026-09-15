@@ -20,6 +20,9 @@ export interface ViewerPhoto {
    *  Optional so the other `ViewerPhoto` literals in ChatImageViewer.test.tsx
    *  keep compiling without it. */
   alt?: string;
+  /** The sender's profile photo for the viewer's top bar. Absent -> the
+   *  viewer falls back to an initials avatar. */
+  senderAvatar?: string;
   senderName: string;
   /** The day bucket the message sits in ("Today", "Yesterday", a date). */
   dayLabel: string;
@@ -40,6 +43,11 @@ interface CollectOptions {
   counterpartName: string;
   /** Localised "You", for own messages. */
   youLabel: string;
+  /** The conversation counterpart's profile photo, for a RECEIVED message in
+   *  a DM (only group messages carry their own `senderAvatar`). */
+  counterpartAvatar?: string;
+  /** The signed-in member's profile photo, for own messages. */
+  youAvatar?: string;
 }
 
 /**
@@ -62,7 +70,7 @@ export function isViewablePhoto(message: ChatMessage): boolean {
  */
 export function collectThreadPhotos(
   groups: { day: string; items: ChatMessage[] }[],
-  { counterpartName, youLabel }: CollectOptions,
+  { counterpartName, youLabel, counterpartAvatar, youAvatar }: CollectOptions,
 ): ViewerPhoto[] {
   const photos: ViewerPhoto[] = [];
   for (const group of groups) {
@@ -80,6 +88,10 @@ export function collectThreadPhotos(
           message.from === "me"
             ? youLabel
             : (message.senderName ?? counterpartName),
+        senderAvatar:
+          message.from === "me"
+            ? youAvatar
+            : (message.senderAvatar ?? counterpartAvatar),
         dayLabel: group.day,
         timeLabel: message.time ?? "",
         key:
@@ -122,9 +134,15 @@ export function useThreadImageGallery(
   groups: { day: string; items: ChatMessage[] }[],
   options: CollectOptions,
 ): ViewerPhoto[] {
-  const { counterpartName, youLabel } = options;
+  const { counterpartName, youLabel, counterpartAvatar, youAvatar } = options;
   return useMemo(
-    () => collectThreadPhotos(groups, { counterpartName, youLabel }),
-    [groups, counterpartName, youLabel],
+    () =>
+      collectThreadPhotos(groups, {
+        counterpartName,
+        youLabel,
+        counterpartAvatar,
+        youAvatar,
+      }),
+    [groups, counterpartName, youLabel, counterpartAvatar, youAvatar],
   );
 }

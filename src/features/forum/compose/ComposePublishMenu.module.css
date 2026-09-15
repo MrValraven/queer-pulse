@@ -1,0 +1,127 @@
+/* ── The caret on the split Publish button, and its menu ──────────────────
+   The caret is the right half of one control, so it carries the primary
+   button's coral fill and only the outer edge is rounded. The menu opens
+   UPWARD: the footer this sits in is sticky to the bottom of the viewport,
+   and a menu dropping below it would open off-screen. */
+
+.container {
+  display: inline-flex;
+  align-items: stretch;
+  position: relative;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px of tappable height with the button it joins; the ink stays narrow. */
+  min-width: 40px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+  /* Matches <Button variant="primary"> exactly, so the two halves read as one
+     control: --accent behind a light label is 2.91:1 and fails AA, which is
+     what --accent-fill exists for (see Button.module.css). */
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.trigger svg {
+  width: 15px;
+  height: 15px;
+}
+
+.trigger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger:not(:disabled):hover {
+    background: var(--accent-deep);
+  }
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ── The menu ────────────────────────────────────────────────────────────── */
+
+.menu {
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: calc(100% + 8px);
+  min-width: 280px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e3);
+  z-index: var(--z-popover);
+  animation: menuIn var(--dur-fast) var(--ease) both;
+}
+
+.item {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 9px 12px;
+  border-radius: var(--radius-10);
+  font-family: var(--sans);
+  text-align: start;
+  cursor: pointer;
+  color: var(--ink);
+  touch-action: manipulation;
+}
+
+.item b {
+  display: block;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  line-height: var(--lh-body);
+}
+
+.item small {
+  display: block;
+  font-size: var(--text-12);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  margin-top: 1px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+
+.item:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    animation: none;
+  }
+}

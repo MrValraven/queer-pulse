@@ -3,6 +3,7 @@ import type { AvatarTint } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
+import { composeHref } from "../forum/compose/useComposeThreadSeeds";
 import { gatheringPath } from "../gatherings/data";
 
 /** The badge shown top-right of a post card. */
@@ -92,15 +93,16 @@ export interface Topic {
 
 /**
  * DISC-5 — "Write a post" deep-links into forum thread creation with this
- * topic's tag pre-filled, reusing the SAME `?tag=`/`?compose=1` mechanism
- * `ForumPage`/`useForumPageState` already use (`?tag=` already scopes the
- * thread list; `?compose=1` auto-opens the compose modal seeded with that
- * tag — see `useForumPageState.ts`). Exported so
- * `api/topics.adapters.tsx`'s live `topicDetailToTopic` builds the identical
- * href from a fetched topic's tag.
+ * topic's tag pre-filled.
+ *
+ * It used to land on `/forum?tag=…&compose=1`, which opened a modal over the
+ * thread list. The composer is its own page now, so the link goes straight
+ * there and the tag rides as `?tag=`, which `useComposeThreadSeeds` reads on
+ * mount. Exported so `api/topics.adapters.tsx`'s live `topicDetailToTopic`
+ * builds the identical href from a fetched topic's tag.
  */
 export function writeHrefForTag(tag: string): string {
-  return `${routes.forum}?tag=${encodeURIComponent(tag)}&compose=1`;
+  return composeHref(routes.forumNew, { tag });
 }
 
 /** Serif hashtag heading: dim "#", body, coral italic tail. */

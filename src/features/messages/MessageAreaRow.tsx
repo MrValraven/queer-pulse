@@ -33,7 +33,7 @@ export interface MessageAreaRowProps {
   /** This row's absolute offset from the top of the virtualized sizer. */
   top: number;
   /** Reproduces the flex `gap` this row used to get for free — see
-   *  `gapAfterRow` in `messageRows.ts`. */
+   *  `ROW_GAP_PX` in `messageRows.ts`. */
   paddingBottomPx: number;
   counterpart: RunParticipant;
   counterpartName: string;
@@ -60,7 +60,6 @@ export interface MessageAreaRowProps {
   onSubmitEdit?: (message: ChatMessage, nextBody: string) => void;
   onCancelEdit?: () => void;
   onJumpToMessage?: (messageId: string) => void;
-  isNewMessage: (message: ChatMessage) => boolean;
   isNewReaction: (message: ChatMessage, key: MessageReactionKey) => boolean;
 }
 
@@ -92,7 +91,6 @@ function MessageAreaRowImpl({
   onSubmitEdit,
   onCancelEdit,
   onJumpToMessage,
-  isNewMessage,
   isNewReaction,
 }: MessageAreaRowProps) {
   const { t } = useTranslation();
@@ -172,7 +170,6 @@ function MessageAreaRowImpl({
           onSubmitEdit={onSubmitEdit}
           onCancelEdit={onCancelEdit}
           onJumpToMessage={onJumpToMessage}
-          isNewMessage={isNewMessage}
           isNewReaction={isNewReaction}
         />
       )}

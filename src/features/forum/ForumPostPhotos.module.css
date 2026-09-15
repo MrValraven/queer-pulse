@@ -1,0 +1,56 @@
+/* ── A post's photo gallery ────────────────────────────────────────────────
+   Up to four photos under an opening post or a reply. Every cell reserves its
+   own space with `aspect-ratio`, so the conversation underneath never shifts
+   as the images decode. The arrangement is driven off `data-count`, which is
+   the gallery's own length: one attribute, four layouts, no prop per case. */
+
+.gallery {
+  display: grid;
+  gap: 4px;
+  margin: 12px 0 4px;
+  padding: 0;
+  list-style: none;
+}
+
+/* One photo runs the full width of the post, in the same wide crop the
+   composer's preview strip uses. */
+.gallery[data-count="1"] {
+  grid-template-columns: 1fr;
+}
+
+.gallery[data-count="2"],
+.gallery[data-count="4"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Three photos lead with one across the top, then a pair beneath it. */
+.gallery[data-count="3"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gallery[data-count="3"] .cell:first-child {
+  grid-column: 1 / -1;
+}
+
+.cell {
+  min-width: 0;
+  /* The reserved box. A single photo is given room to breathe; a photo sharing
+     a row is squarer, so two side by side still read as one band. */
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: var(--radius-10);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  background: rgba(var(--plum-rgb), 0.04);
+}
+
+.gallery[data-count="1"] .cell,
+.gallery[data-count="3"] .cell:first-child {
+  aspect-ratio: 16 / 9;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -1,10 +1,8 @@
 // src/features/messages/MessageBubble.tsx
-import { memo, useRef, useState, type KeyboardEvent } from "react";
+import { memo, useRef, type KeyboardEvent } from "react";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
-import { firstLinkUrl } from "./linkify";
-import { LinkPreview } from "./LinkPreview";
 import { MessageActions } from "./MessageActions";
 import { SwipeReplyHint, BubbleReactionStrip } from "./MessageBubbleParts";
 import { findReactionMine } from "./reactionKeys";
@@ -51,14 +49,7 @@ export interface MessageBubbleProps {
   onCancelEdit?: () => void;
   /** Scrolls to and briefly highlights the quoted original message. */
   onJumpToMessage?: (messageId: string) => void;
-  /** True only for a message that is genuinely arriving for the first time
-   *  this session (never for the whole thread on open/switch, and never
-   *  replayed for a message already on screen) — gates the `msgBubbleIn`
-   *  entrance. Read exactly once, at this bubble's own mount (see
-   *  `playEntrance` below), so it can never be retriggered by a later,
-   *  unrelated re-render (a status-tick update, a sibling reaction). */
-  isNewMessage?: (message: ChatMessage) => boolean;
-  /** Same freshness gate, scoped to one reaction key on this message — an
+  /** Freshness gate for one reaction key on this message — an
    *  incremented count on an already-visible chip must not re-pop it. */
   isNewReaction?: (message: ChatMessage, key: MessageReactionKey) => boolean;
 }
@@ -83,7 +74,6 @@ function MessageBubbleImpl({
   onSubmitEdit,
   onCancelEdit,
   onJumpToMessage,
-  isNewMessage,
   isNewReaction,
 }: MessageBubbleProps) {
   const { t } = useTranslation();
@@ -94,21 +84,12 @@ function MessageBubbleImpl({
   // right-click, hover-bar or Enter away, exactly as on any other bubble).
   const canOpenPhoto = isViewablePhoto(message);
   const isLast = index === lastIndex;
-  // First http(s) link in the body → a compact unfurl card below the bubble.
-  const previewUrl = firstLinkUrl(message.text);
   const wrapRef = useRef<HTMLDivElement>(null);
   // Owned here (not by the gesture hook) so the hook's own return value never
   // bundles a ref alongside `swiping` — see `useMessageGestures`'s `hintRef`
   // option doc for why that matters to `react-hooks/refs`.
   const hintRef = useRef<HTMLSpanElement>(null);
   const bubbleDomId = message.id ? `message-${message.id}` : undefined;
-  // Decided ONCE, at this exact bubble instance's own mount — a lazy `useState`
-  // initializer runs exactly once per instance, so a later re-render (a
-  // status-tick update, a sibling's reaction) can never flip this back on or
-  // cut the entrance short. `isNewMessage` reflects the newness set as of
-  // JUST BEFORE this render (see `MessageArea`'s tracker), which is exactly
-  // right the one time this call matters: right as the bubble is created.
-  const [playEntrance] = useState(() => isNewMessage?.(message) ?? false);
   // A message with a server id can open the action overlay; give its bubble a
   // guaranteed keyboard entry point (Enter), mirroring long-press / right-click.
   const canOpenOverlay = !!message.id;
@@ -166,7 +147,17 @@ function MessageBubbleImpl({
     // Reuse the overlay's reply handler; only a message with a server id can be
     // replied to (optimistic ones can't), so swipe is inert until then.
     onReply: canInteract && onReply ? () => onReply(message) : undefined,
-    onActivate: canOpenPhoto ? () => openImage(message) : undefined,
+    onActivate: canOpenPhoto
+      ? () =>
+          openImage(
+            message,
+            // The tappable span around this bubble's photo, marked by
+            // `PhotoBubbleImage`. Read at tap time rather than held in a ref,
+            // because the gesture hook already owns `wrapRef` and the photo
+            // node is whatever this bubble currently renders.
+            wrapRef.current?.querySelector<HTMLElement>("[data-photo-opener]"),
+          )
+      : undefined,
     onQuickReact:
       canInteract && onReactionToggle && !canOpenPhoto ? quickReact : undefined,
     // Received (left-aligned) bubbles swipe right to reply; sent (own,
@@ -232,7 +223,6 @@ function MessageBubbleImpl({
         senderName={senderName}
         metaStatus={metaStatus ?? null}
         onJumpToMessage={onJumpToMessage}
-        playEntrance={playEntrance}
       />
       {message.editedAt && !message.deletedAt && (
         <span className={styles.editedMarker}>
@@ -243,7 +233,6 @@ function MessageBubbleImpl({
       {!message.deletedAt && (
         <MessageMarks pinned={!!message.pinnedAt} starred={!!message.starred} />
       )}
-      {previewUrl && <LinkPreview url={previewUrl} isSent={isSent} />}
       <div
         className={[
           styles.messageActionsSlot,

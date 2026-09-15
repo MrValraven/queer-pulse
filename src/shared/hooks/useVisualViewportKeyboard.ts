@@ -12,14 +12,31 @@ import { useEffect } from "react";
  * with `interactive-widget=resizes-content`), the overlap resolves to ~0px and
  * this hook is inert. It also no-ops where `visualViewport` is unavailable.
  *
- * Only `visualViewport`'s `resize` event schedules a recompute — that's what
- * fires on keyboard open/close, which is the only thing this var needs to
- * track. `scroll` fires continuously during iOS momentum scrolling and
- * address-bar show/hide without the keyboard's overlap actually changing, so
- * listening to it too only bought a style write (and the `.app` reflow it
- * triggers) on every tick for no visual benefit. Every recompute is also
- * coalesced through `requestAnimationFrame` (at most one write per frame) and
- * skipped entirely when the value hasn't changed.
+ * BOTH `visualViewport` events have to schedule a recompute, `resize` AND
+ * `scroll`. `resize` alone is the obvious reading — that's what fires on
+ * keyboard open/close — and it is wrong, because the overlap is measured off
+ * `offsetTop` as well as `height`, and iOS moves `offsetTop` with a `scroll`
+ * event and no `resize`. What that costs, concretely, on iOS with a
+ * bottom-anchored composer: focusing the field fires `resize` while the visual
+ * viewport is still flush with the layout viewport (`offsetTop` 0), so the
+ * overlap reads as the FULL keyboard height and `.app` shrinks by it, lifting
+ * the composer clear. iOS then does its own "scroll the focused field into
+ * view" pass — decided from where the field was BEFORE that shrink, i.e. under
+ * the keyboard — and shifts the visual viewport down by roughly the keyboard's
+ * height. That arrives as `scroll`, not `resize`. With no `scroll` listener
+ * `--keyboard-inset` stays at the stale full-keyboard value, so the keyboard is
+ * subtracted twice: once by the shrunken `.app`, once by the shifted viewport,
+ * and the composer ends up a whole keyboard-height ABOVE the keyboard with a
+ * dead band between them (reported on an installed iPhone PWA, in a chat
+ * thread, on the first tap into the composer).
+ *
+ * The cost of listening to `scroll` is close to nothing, despite it firing on
+ * every momentum tick: `window.innerHeight - height - offsetTop` is a CONSTANT
+ * 0 whenever no keyboard is up (the visual viewport is flush with the layout
+ * viewport, so the terms cancel), and the unchanged-value check below then
+ * returns before touching a style. Writes only happen when the overlap really
+ * moves. Every recompute is also coalesced through `requestAnimationFrame`, so
+ * at most one write lands per frame either way.
  */
 export function useVisualViewportKeyboard(): void {
   useEffect(() => {
@@ -52,8 +69,10 @@ export function useVisualViewportKeyboard(): void {
 
     applyKeyboardInset();
     visualViewport.addEventListener("resize", scheduleKeyboardInsetUpdate);
+    visualViewport.addEventListener("scroll", scheduleKeyboardInsetUpdate);
     return () => {
       visualViewport.removeEventListener("resize", scheduleKeyboardInsetUpdate);
+      visualViewport.removeEventListener("scroll", scheduleKeyboardInsetUpdate);
       if (pendingAnimationFrameId !== null) {
         window.cancelAnimationFrame(pendingAnimationFrameId);
       }

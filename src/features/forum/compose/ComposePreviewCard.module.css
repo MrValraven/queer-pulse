@@ -1,0 +1,306 @@
+/* ── Rail block: "How it will look" ────────────────────────────────────────
+   A paper card on the rail's cream ground, drawn to the same proportions as a
+   row of the forum list so the preview and the published thread read as one
+   thing. It sits a step further off the page than the similar-thread rows
+   (--shadow-e2 against their --shadow-e1) because it is the block the member
+   keeps glancing back at. */
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heading {
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 16px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  box-shadow: var(--shadow-e2);
+  min-width: 0;
+}
+
+/* ── Badges row ──────────────────────────────────────────────────────────── */
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.warningPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--radius-6);
+  background: rgba(var(--violet-rgb), 0.12);
+  color: var(--violet);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.warningPill svg {
+  flex: none;
+  width: 11px;
+  height: 11px;
+}
+
+.tag {
+  padding: 3px 8px;
+  border-radius: var(--radius-tag);
+  background: rgba(var(--plum-rgb), 0.06);
+  color: var(--ink-60);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+}
+
+/* ── Title & excerpt ─────────────────────────────────────────────────────── */
+
+.title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-17);
+  line-height: var(--lh-title);
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.excerpt {
+  font-size: var(--text-13);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Nothing typed yet. Lighter and italic, so an empty field never reads as
+   copy somebody wrote. */
+.placeholder {
+  color: var(--ink-40);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Exactly what the published card does behind a content warning: the words
+   are there, unreadable until somebody chooses to read them. */
+.excerptCovered {
+  filter: blur(4px);
+  user-select: none;
+}
+
+.reveal {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--violet);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Photo strip ─────────────────────────────────────────────────────────── */
+
+.photos {
+  display: flex;
+  gap: 4px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.photo {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-6);
+}
+
+/* ── Poll ────────────────────────────────────────────────────────────────── */
+
+.poll {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+/* Tracks with no fill on purpose: there are no votes to draw yet, and a bar
+   at an invented width would be the one part of this preview that lies. */
+.pollBar {
+  display: flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 4px 9px;
+  border-radius: var(--radius-7);
+  background: rgba(var(--plum-rgb), 0.06);
+  font-size: var(--text-12);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.pollNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+
+/* ── Byline & audience ───────────────────────────────────────────────────── */
+
+.byline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.bylineAvatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-ink);
+  font-size: var(--text-9-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+}
+
+.bylineAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bylineName {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.bylineVia {
+  color: var(--ink-40);
+}
+
+.metaDot {
+  flex: none;
+  width: 3px;
+  height: 3px;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--line-rgb), 0.3);
+}
+
+.audience {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  font-size: var(--text-12);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+.audience svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+/* ── Link unfurl placeholder ─────────────────────────────────────────────── */
+
+.unfurl {
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-10);
+  background: var(--paper);
+}
+
+/* A hatched band standing in for the image the unfurl will carry. */
+.unfurlThumb {
+  height: 56px;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(var(--plum-rgb), 0.06) 0 6px,
+    rgba(var(--plum-rgb), 0.02) 6px 12px
+  );
+}
+
+.unfurlBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+}
+
+.unfurlHost {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.unfurlHost svg {
+  flex: none;
+  width: 11px;
+  height: 11px;
+}
+
+.unfurlNote {
+  font-size: var(--text-12);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .reveal:hover {
+    color: var(--accent-ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .excerptCovered {
+    transition: none;
+  }
+}

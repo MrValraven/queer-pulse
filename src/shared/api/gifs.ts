@@ -11,6 +11,13 @@ export interface GifAttachment {
   /** Which service the GIF came from (e.g. "klipy"). Free-form on purpose —
    *  swapping providers must never require a schema or type change. */
   provider: string;
+  /** Optional member-written caption sent alongside the GIF in the SAME
+   *  message (WhatsApp-style: staged with the attachment in the composer,
+   *  typed once, sent together). Sanitized server-side like an ordinary
+   *  message body. Absent whenever the sender left it blank — never an
+   *  empty string, so callers can test it with a plain truthiness check
+   *  rather than comparing against a localized "GIF" fallback label. */
+  caption?: string;
 }
 
 export interface GifResult {

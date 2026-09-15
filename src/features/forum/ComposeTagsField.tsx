@@ -1,7 +1,6 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { FiGrid, FiPlus, FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import modalStyles from "./ComposeThreadModal.module.css";
 import styles from "./ComposeTagsField.module.css";
 import { ForumTagBrowseList } from "./ForumTagBrowseList";
 import { FORUM_TAG_OPTIONS, POPULAR_FORUM_TAGS } from "./forumTags.data";
@@ -10,17 +9,21 @@ const MAX_TAGS = 5;
 const MAX_SUGGESTIONS = 6;
 
 /**
- * Tag picker for the composer and for the thread's "Edit tags" modal: choose
- * from the curated vocabulary in `forumTags.data.ts`, search it, quick-add from
- * a popular row, or expand the full grouped list. The × on a chip removes one.
+ * Tag picker for the thread's "Edit tags" modal: choose from the curated
+ * vocabulary in `forumTags.data.ts`, search it, quick-add from a popular row,
+ * or expand the full grouped list. The × on a chip removes one.
+ *
+ * It used to serve the compose modal as well. That composer is gone, and the
+ * full page at `/forum/new` has its own `ComposeTagsSection` — so this is now
+ * the editing half alone, with its own field styles (see the module CSS).
  *
  * Only words in the vocabulary can be added, so the archive stays filed under
  * one set of words rather than drifting into near-duplicates that split a topic
  * across two filter links. Tags that predate the list still render as chips and
  * can still be removed, they just can't be re-added.
  *
- * The browse list expands INLINE rather than in its own modal: both call sites
- * are already modals, and stacking a second one over them to pick a word is a
+ * The browse list expands INLINE rather than in its own modal: the call site
+ * is already a modal, and stacking a second one over it to pick a word is a
  * heavier escape path than the choice deserves.
  */
 export function ComposeTagsField({
@@ -95,8 +98,8 @@ export function ComposeTagsField({
   }
 
   return (
-    <div className={modalStyles.field}>
-      <span className={modalStyles.fieldLabel}>
+    <div className={styles.field}>
+      <span className={styles.fieldLabel}>
         {t("forum:compose.tagsFieldLabel")}
       </span>
       <div className={styles.tagsInputWrap}>

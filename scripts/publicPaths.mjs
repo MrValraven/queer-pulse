@@ -56,7 +56,10 @@ export const GATED_PATTERNS = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // `/forum/*` covers the full-page composer at `/forum/new`; the bare
+  // "/forum" is an EXACT match in both matchers. Mirrors authGate.ts.
   "/forum",
+  "/forum/*",
   "/thread",
   "/thread/*",
   // `/coming-out` is deliberately NOT here: authGate keeps the coming-out guide

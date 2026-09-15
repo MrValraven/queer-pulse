@@ -2,8 +2,13 @@ import { tintForSlug, type SlugTint } from "../../../shared/api/refs";
 import { initialsFromName } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
-import type { Reply, Thread } from "../forum.data";
-import type { ForumPostResponse, ForumThreadResponse } from "./forum.api";
+import type { Reply, Thread, ThreadPhoto, ThreadPoll } from "../forum.data";
+import type {
+  ForumPollView,
+  ForumPostPhotoView,
+  ForumPostResponse,
+  ForumThreadResponse,
+} from "./forum.api";
 
 // Map the backend DTOs onto the EXISTING rich `Thread`/`Reply` view-models
 // (../forum.data.ts) so ForumThreadList / ThreadPage render unchanged. Author
@@ -82,6 +87,58 @@ function splitLeadingQuote(body: string): { quoted: string; rest: string } {
   return {
     quoted: quotedLines.join("\n").trim(),
     rest: lines.slice(index).join("\n"),
+  };
+}
+
+/**
+ * `ForumPostPhotoView[]` → the view-model's gallery, passed straight through.
+ *
+ * `alt` STAYS NULL when the author wrote none. The temptation here is to fill
+ * it with the thread title or a generic sentence so every image "has alt text";
+ * that would hand a screen reader a description nobody wrote as if the author
+ * had written it. The render site decides what to say about an undescribed
+ * photo, once, in one place.
+ */
+function photos(views: ForumPostPhotoView[] | undefined): ThreadPhoto[] {
+  return (views ?? []).map((view) => ({
+    id: view.id,
+    url: view.url,
+    alt: view.alt,
+  }));
+}
+
+/**
+ * `ForumPollView` → the view-model's poll, passed through field for field.
+ * Exported because the poll VOTE response is the same shape and takes the same
+ * trip: one mapping, so the bars a ballot redraws cannot drift from the bars
+ * the thread arrived with.
+ *
+ * `voteCount` and `totalVotes` are carried across AS THEY ARRIVE, null included.
+ * Coalescing a null to 0 anywhere on this path would be silent and permanent:
+ * every bar downstream would then be drawn from a number the server never sent,
+ * and a poll with hundreds of answers would read "0 votes" to everyone who has
+ * not voted yet. `resultsVisible` is the flag that says which of the two cases
+ * a null is, and it is the only thing a render site may branch on.
+ */
+export function pollView(
+  view: ForumPollView | null | undefined,
+): ThreadPoll | null {
+  if (!view) return null;
+  return {
+    id: view.id,
+    allowMultiple: view.allowMultiple,
+    options: view.options.map((option) => ({
+      id: option.id,
+      label: option.label,
+      position: option.position,
+      voteCount: option.voteCount,
+      selected: option.selected,
+    })),
+    totalVotes: view.totalVotes,
+    closesAt: view.closesAt,
+    isClosed: view.isClosed,
+    hasVoted: view.hasVoted,
+    resultsVisible: view.resultsVisible,
   };
 }
 
@@ -169,6 +226,36 @@ export function threadToCard(
     isLocked: dto.isLocked,
     lockReason: dto.lockReason,
     myVote: dto.myVote,
+    // ── The full-page composer's fields, as the server serves them ──────────
+    // The column is NOT NULL DEFAULT '{}' server-side, so "no warnings" is an
+    // empty array and nothing here has to branch on null.
+    contentWarnings: dto.contentWarnings ?? [],
+    // The byline above is already masked by the time this arrives (the author
+    // block carries an EMPTY handle, which is what makes it link nowhere), and
+    // a moderator receives `true` here beside the real author's name. Both are
+    // rendered exactly as given rather than re-deriving who may see whom.
+    isAnonymous: dto.isAnonymous ?? false,
+    coAuthor: dto.coAuthor
+      ? {
+          name: dto.coAuthor.displayName,
+          // Empty handle links nowhere, same rule as the author above.
+          slug: dto.coAuthor.handle || undefined,
+        }
+      : undefined,
+    poll: pollView(dto.poll),
+    opPhotos: photos(dto.opPhotos),
+    neighbourhood: dto.neighbourhood ?? null,
+    language: dto.language ?? null,
+    closesAt: dto.closesAt ?? null,
+    // The SERVER's derivation, never a fresh `new Date()` comparison here: the
+    // author's deadline and a moderator's lock are two different facts, and a
+    // second clock would be a second answer to one of them.
+    isClosed: dto.isClosed ?? false,
+    // Absent on an older backend reads as published, so a stale response can
+    // never hang a "scheduled" notice on a thread that is plainly live.
+    isPublished: dto.isPublished ?? true,
+    reviewState: dto.reviewState ?? null,
+    publishedAt: dto.publishedAt,
   };
 }
 
@@ -200,6 +287,10 @@ export function postToReply(
     ...(quoted ? { quote: { cite: quoteCite, text: quoted } } : {}),
     body: paragraphs(rest),
     image: dto.image ?? undefined,
+    // THE gallery. The backend has already reconciled `image` above into it (a
+    // legacy photo arrives as one entry with `id: null`), so this is what a
+    // reply renders and the old field is left to the surfaces that predate it.
+    photos: photos(dto.photos),
     // The server's own answer mark, not a client-side guess (SOC-13).
     accepted: dto.isAccepted ?? false,
     reactions: dto.voteCount,
@@ -281,6 +372,12 @@ export function threadDetail(
     replies: mappedReplies,
     opPostId: op?.id ?? card.opPostId,
     opImage: op?.image ?? undefined,
+    // The OP's OWN photo rows when its post has landed, falling back to the
+    // copy the thread DTO already denormalized onto the card. The two agree
+    // (both come from the same reconciliation server-side); reading the post's
+    // first keeps the card consistent with the vote count and edit mark right
+    // beside it, which are read off the post for the same reason.
+    opPhotos: op ? photos(op.photos) : card.opPhotos,
     editedAt: op?.editedAt ?? null,
     deleted: op?.deleted ?? false,
     removedByModerator: op?.moderationRemoved ?? false,

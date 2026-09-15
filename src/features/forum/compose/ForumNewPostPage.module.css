@@ -1,0 +1,146 @@
+/* ── /forum/new — the full-page composer's frame ───────────────────────────
+   Layout only: the header band, the two-column body and the paper card the
+   composer sits in. What goes INSIDE each of those is the section components'
+   own stylesheet.
+
+   Three things that used to live here have gone to the components that own
+   them. `ComposeRail` brings its own <aside>, sticky column, segmented row and
+   bottom sheet, and `ComposeFooter` brings its own sticky bar — so a second
+   copy of either here would be two sets of rules fighting over one element.
+
+   No nav clearance anywhere in this file. `main[data-page-main]` already
+   reserves `padding-top: var(--nav-band)` globally (base.css), so a page that
+   adds its own opens on a double gap. */
+
+/* ── Header band ─────────────────────────────────────────────────────────── */
+
+.head {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px var(--wrap-px) 6px;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap-lg);
+  flex-wrap: wrap;
+}
+
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  margin-bottom: 12px;
+  white-space: nowrap;
+}
+
+.crumbLink {
+  color: var(--jade);
+}
+
+.crumbSeparator {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-display);
+  /* --text-strong is the plum-for-text token: identical in light, and it
+     flips to a readable ink on the dark page, which bare --plum does not. */
+  color: var(--text-strong);
+  letter-spacing: var(--ls-display);
+  line-height: var(--lh-display);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lead {
+  font-size: var(--text-14-5);
+  color: var(--ink-60);
+  margin-top: 10px;
+  max-width: 56ch;
+  line-height: var(--lh-body);
+}
+
+/* ── Two-column body ─────────────────────────────────────────────────────── */
+
+.layout {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  /* minmax(0,1fr) rather than 1fr: a grid track's default `min-width: auto`
+     is its content's min-content width, so one long unbroken URL in the body
+     would widen the whole column and push the rail off the page. */
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 0 var(--gap-lg);
+  padding: 0 var(--wrap-px) var(--section-y-64);
+  align-items: start;
+}
+
+.main {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-24);
+  /* Visible, so the body's `@`/`#` autocomplete popover and the publish menu
+     can escape the card instead of being clipped by it. */
+  overflow: visible;
+  min-width: 0;
+}
+
+.mainHead {
+  padding: 16px 28px 0;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.mainHeadActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mainBody {
+  padding: 8px 32px 28px;
+}
+
+/* ── Single column ───────────────────────────────────────────────────────── */
+
+/* The rail moves itself into a bottom sheet at this same width; all the page
+   has to do is stop reserving a column for it. */
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Tighter ─────────────────────────────────────────────────────────────── */
+
+@media (--wide) {
+  .head {
+    padding: 12px var(--wrap-px) 4px;
+  }
+
+  .layout {
+    padding: 0 12px 40px;
+  }
+
+  .main {
+    border-radius: var(--radius-18);
+  }
+
+  .mainHead,
+  .mainBody {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

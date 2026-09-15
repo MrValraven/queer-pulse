@@ -16,6 +16,10 @@ import {
  * between gestures, while this is transient decoration that exists only while a
  * finger is down and is always fully cleared when it lifts.
  *
+ * One exception to "always fully cleared": a drag that commits to a dismiss
+ * leaves its pose on screen on purpose, because the viewer's exit animation
+ * takes over from exactly there. See the dismiss branch of `end` below.
+ *
  * Deliberately never touches the zoom state. Letting a drag offset into it
  * would feed a temporary translation back into the pan clamp and corrupt it.
  * It also never writes to the image node at all: the transform lands on the
@@ -225,12 +229,15 @@ export function useDragFeedback({
           }
         }
       } else if (deltaY >= SWIPE_DISMISS_PX) {
-        // Resets before closing, exactly as the commit branches above do. The
-        // viewer unmounts synchronously today so nothing would be seen either
-        // way, but leaving the stage parked at its dragged, shrunk, faded pose
-        // breaks this controller's own contract and would show the moment an
-        // exit transition is added to the viewer.
-        write(IDLE_DRAG, null);
+        // Deliberately NOT reset, unlike the navigate branches above. The
+        // viewer no longer unmounts on the same frame: it plays an exit
+        // animation first, and putting the photo back in the middle of the
+        // screen for that exit to fade would undo the throw the member just
+        // made. The pose stays exactly where the finger left it and the
+        // viewer's own exit carries it the rest of the way out (see
+        // `useViewerPhotoMotion`, which fades rather than flies on a drag
+        // close for this reason). The whole stage unmounts a breath later, so
+        // there is nothing left parked afterwards.
         onDismiss();
         return;
       }

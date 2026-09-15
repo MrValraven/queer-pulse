@@ -1,6 +1,7 @@
 import { FiEdit3 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
 import { useForumThreadDraftPreview } from "./useForumThreadDraftPreview";
 import styles from "./ForumDraftResumeNotice.module.css";
 
@@ -10,8 +11,8 @@ import styles from "./ForumDraftResumeNotice.module.css";
  *
  * Before this, a draft was visible ONLY on `/account/drafts`, so a member who
  * closed the composer had no reason to believe their words had survived, and
- * nothing on the forum said otherwise. Resume reopens the composer with the
- * whole draft in it.
+ * nothing on the forum said otherwise. Resume opens `/forum/new`, which
+ * restores the whole draft field by field.
  *
  * There is no discard control on purpose. Emptying the composer already deletes
  * the draft (see `useForumComposerDraft`), which is a path the member can see
@@ -21,7 +22,7 @@ import styles from "./ForumDraftResumeNotice.module.css";
  * Renders nothing when there is no draft, so the forum stays exactly as it was
  * for everyone else.
  */
-export function ForumDraftResumeNotice({ onResume }: { onResume: () => void }) {
+export function ForumDraftResumeNotice() {
   const { t } = useTranslation();
   const { hasDraft, label } = useForumThreadDraftPreview();
 
@@ -38,7 +39,7 @@ export function ForumDraftResumeNotice({ onResume }: { onResume: () => void }) {
         variant="ghost"
         size="sm"
         className={styles.action}
-        onClick={onResume}
+        to={routes.forumNew}
       >
         {t("forum:draftNotice.resumeCta")}
       </Button>

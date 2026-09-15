@@ -2267,6 +2267,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-15.headline":
+    "Sent messages settle straight away, and shared links preview inside the bubble.",
   "changelog.releases.2026-09-14.headline":
     "Chat photos open full screen with zoom and swipe, and closed communities stay closed.",
   "changelog.releases.2026-09-12.headline":
@@ -2457,6 +2459,38 @@ export const marketing: Catalog = {
     "A clearer inbox filter row",
   "changelog.entries.a-clearer-inbox-filter-row.body":
     "Archived and Requests sit at the right edge, Requests has its own icon, and an empty count shows nothing.",
+  "changelog.entries.you-can-tell-which-links-leave-queerpulse.title":
+    "You can tell which links leave QueerPulse",
+  "changelog.entries.you-can-tell-which-links-leave-queerpulse.body":
+    "Links in a message now read as links, and the ones that take you off QueerPulse carry a small arrow so you know before you tap.",
+  "changelog.entries.links-you-share-preview-in-the-bubble.title":
+    "Links you share preview inside the bubble",
+  "changelog.entries.links-you-share-preview-in-the-bubble.body":
+    "A long tracking address shortens to its site and page, and a message that is only a link becomes the card.",
+  "changelog.entries.the-messages-panel-is-just-messages.title":
+    "The messages panel is just messages",
+  "changelog.entries.the-messages-panel-is-just-messages.body":
+    "The notifications bell has left the inbox column; the bell you already know sits on the rest of the platform, one click through the way back.",
+  "changelog.entries.sent-messages-settle-instantly.title":
+    "Sent messages settle straight away",
+  "changelog.entries.sent-messages-settle-instantly.body":
+    "The send time shows immediately, the delivery tick keeps its size, and no false seen line flashes.",
+  "changelog.entries.other-chats-now-show-their-unread-dot.title":
+    "Other chats now show their unread dot",
+  "changelog.entries.other-chats-now-show-their-unread-dot.body":
+    "A new message in a chat you don't have open lights up its unread dot right away, instead of waiting for a reload.",
+  "changelog.entries.inbox-search-stops-flashing-empty.title":
+    "Message search stops flashing empty",
+  "changelog.entries.inbox-search-stops-flashing-empty.body":
+    "The empty state only shows once a real search settles; short queries just ask you to keep typing.",
+  "changelog.entries.send-button-waits-for-your-words.title":
+    "The send button waits for your words",
+  "changelog.entries.send-button-waits-for-your-words.body":
+    "Send now sits inside the message box and appears only once you have written something.",
+  "changelog.entries.message-box-sits-on-the-keyboard.title":
+    "The message box sits on the keyboard",
+  "changelog.entries.message-box-sits-on-the-keyboard.body":
+    "Tapping to type on an iPhone no longer leaves a tall empty band between the chat and the keyboard.",
   "changelog.entries.photos-you-attach-actually-send.title":
     "Photos you attach now send",
   "changelog.entries.photos-you-attach-actually-send.body":
@@ -2480,6 +2514,10 @@ export const marketing: Catalog = {
     "Open photos full screen in chat",
   "changelog.entries.chat-photo-viewer.body":
     "Pinch or double-tap to zoom, swipe through the rest, and save, reply, forward or star what you're viewing.",
+  "changelog.entries.chat-photo-viewer-whatsapp-layout.title":
+    "A tidier photo viewer for chat",
+  "changelog.entries.chat-photo-viewer-whatsapp-layout.body":
+    "The sender's name and time sit up top, quick icons handle save, reply, forward and star, and on desktop a filmstrip lets you jump to any photo in the conversation.",
   "changelog.entries.mutual-connections-show-real-faces.title":
     "Mutual connections show real faces",
   "changelog.entries.mutual-connections-show-real-faces.body":
@@ -2602,6 +2640,14 @@ export const marketing: Catalog = {
     "Writer and poet personas show their photo",
   "changelog.entries.writer-and-poet-personas-show-their-photo.body":
     "Journalists, editors, translators and academics too: an uploaded photo now sits as a portrait above the name.",
+  "changelog.entries.writing-a-post-has-a-page-of-its-own.title":
+    "Writing a post has a page of its own",
+  "changelog.entries.writing-a-post-has-a-page-of-its-own.body":
+    "Room to write, a live preview of the card people will see, and threads that already answer your question shown while you type.",
+  "changelog.entries.chat-wallpapers-are-patterns.title":
+    "Chat wallpapers are patterns now",
+  "changelog.entries.chat-wallpapers-are-patterns.body":
+    "Six line-drawn patterns to choose from: doodles, botanical, night sky, confetti, waves and terrazzo, or plain.",
   "changelog.entries.pick-a-wallpaper-for-each-chat.title":
     "Pick a wallpaper for each chat",
   "changelog.entries.pick-a-wallpaper-for-each-chat.body":

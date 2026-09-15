@@ -1,0 +1,232 @@
+/* ── Rail block: "Already discussed?" ──────────────────────────────────────
+   The rail's one block that asks to be READ rather than glanced at, so it is
+   the one that gets a surface. Each row is a paper card on the rail's cream
+   ground: title in the serif the forum list uses, meta under it, and the
+   accepted answer in a jade-tinted panel at full body size.
+
+   Row spacing is deliberately looser than the checklist's. Three dense rows
+   would scan as a list of links; three breathing ones scan as three answers. */
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.count {
+  margin-inline-start: auto;
+  flex: none;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--jade-ink);
+}
+
+/* Both quiet states: the invitation before there is a title to search on, and
+   the "you are first" once there is. */
+.note {
+  font-size: var(--text-13);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  max-width: 46ch;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 13px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e1);
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+/* The one that would be refused as a repeat. Outlined in accent AND labelled
+   in words above the title, so the state never rests on the colour alone. */
+.rowDuplicate {
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow: var(--ring-accent-soft);
+}
+
+.duplicateFlag {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.rowTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-15);
+  line-height: var(--lh-title);
+  color: var(--text-strong);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.rowMeta svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--line-rgb), 0.3);
+}
+
+/* The reason somebody stops and reads a row instead of scrolling past it. */
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  border-radius: var(--radius-9);
+  background: rgba(var(--jade-rgb), 0.08);
+  border-inline-start: 2px solid rgba(var(--jade-rgb), 0.45);
+}
+
+.answerLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--jade-ink);
+}
+
+.answerLabel svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.answerText {
+  font-size: var(--text-13);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  /* Four lines is enough to tell whether the answer is the one you needed,
+     and short enough that three rows still fit the rail. */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.replyInstead {
+  position: relative;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  padding: 7px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.replyInstead svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+/* The pill draws at ~31px tall and is TAPPED at 44: the hit area grows, the
+   ink does not, so the row keeps its rhythm on a phone. */
+.replyInstead::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: var(--tap-min);
+  transform: translateY(-50%);
+}
+
+.why {
+  font-size: var(--text-12-5);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  max-width: 46ch;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rowTitle:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .row:hover {
+    border-color: rgba(var(--line-rgb), 0.22);
+  }
+
+  .rowDuplicate:hover {
+    border-color: rgba(var(--accent-rgb), 0.7);
+  }
+
+  .replyInstead:hover {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    background: rgba(var(--accent-rgb), 0.07);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .replyInstead {
+    transition: none;
+  }
+}

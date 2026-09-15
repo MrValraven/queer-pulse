@@ -49,6 +49,7 @@ function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
     canRestore: false,
     canViewHistory: false,
     image: null,
+    photos: [],
     isAccepted: false,
     isOp: false,
     ...overrides,

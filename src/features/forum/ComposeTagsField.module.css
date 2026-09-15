@@ -1,3 +1,25 @@
+/* ── The tag picker's own field wrapper ───────────────────────────────────
+   `.field` / `.fieldLabel` used to come from `ComposeThreadModal.module.css`.
+   That composer is gone (the full page at `/forum/new` replaced it), and this
+   picker outlived it: `ThreadTagsModal` still mounts it to edit a published
+   thread's tags. So the two rules it borrowed now live beside it, where its
+   one remaining call site can see them. */
+
+.field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 7px;
+}
+
 .tagsInput {
   display: flex;
   flex-wrap: wrap;

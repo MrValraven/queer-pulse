@@ -175,11 +175,21 @@ export function ConversationPanel({
   } = useMessageActionMenu(active.id);
 
   // The thread's photo sequence and which one the full screen viewer is on.
-  const youLabel = t("messages:viewer.you");
-  const { photos, openIndex, openImage, closeViewer } = useChatImageViewerState(
-    messageGroups,
-    { counterpartName: active.name, youLabel },
-  );
+  const { photos, openIndex, openOriginRef, openImage, closeViewer } =
+    useChatImageViewerState(messageGroups, {
+      counterpartName: active.name,
+      youLabel: t("messages:viewer.you"),
+      /* Excluded for a group, where `avatarUrl` is the GROUP's picture, not a
+         person's. The gallery falls back to this whenever a message carries no
+         `senderAvatar` of its own, so passing it here painted the group's
+         image as the face of every member who has no profile photo. Undefined
+         lets the viewer's initials avatar do the right thing instead.
+         Deliberately NOT mirrored onto `counterpartName` above, which has the
+         same shape: a group message with no `senderName` already falls back to
+         the group's name today, and changing that is a separate call. */
+      counterpartAvatar: active.isGroup ? undefined : active.avatarUrl,
+      youAvatar: user?.profile.avatarUrl ?? undefined,
+    });
 
   // The counterpart's live presence + read/delivered watermarks: its own
   // hook, see useCounterpartStatus.
@@ -222,13 +232,12 @@ export function ConversationPanel({
   const wallpaper = useWallpaper(active.id);
 
   return (
-    // The two data attributes drive `.convoPanel::before` / `::after` (the
-    // ground tint and the doodle layer). They sit on the PANEL rather than on
-    // `.area` so the wallpaper stays put while the log scrolls.
+    // The data attribute drives `.convoPanel::after` (the pattern layer). It
+    // sits on the PANEL rather than on `.area` so the wallpaper stays put
+    // while the log scrolls.
     <div
       className={styles.convoPanel}
-      data-wallpaper-ground={wallpaper.ground}
-      data-wallpaper-doodles={wallpaper.hasDoodles ? "on" : "off"}
+      data-wallpaper-pattern={wallpaper.pattern}
     >
       <ConversationTopSection
         active={active}
@@ -307,6 +316,7 @@ export function ConversationPanel({
           deleteForMePending,
           photos,
           photoIndex: openIndex,
+          photoOrigin: openOriginRef,
           onClosePhoto: closeViewer,
           onForwardPhoto: onForwardMessage,
         }}

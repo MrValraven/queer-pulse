@@ -358,6 +358,45 @@ export function patchConversationRead(
   );
 }
 
+/** Raise a conversation-list row's unread state by ONE — used by the socket
+ *  layer's `message:new`/`conversation:message` handlers for a message that
+ *  landed in a NON-active thread (the open thread is marked read instead, via
+ *  `patchConversationRead` above). Sets `unread: true` and increments
+ *  `unreadCount` (default 0), leaving every other field untouched — no
+ *  `preview`/`time` bump here, that's `patchConversationPreview`'s job, called
+ *  separately by the same handlers.
+ *
+ *  This is a LOCAL ESTIMATE, not an authoritative count: it can drift from the
+ *  server (a burst that also raced a `["conversations"]` invalidate, a second
+ *  tab reading the same conversation, etc.), but the next `GET /conversations`
+ *  always corrects it, exactly like every other optimistic patch in this file.
+ *
+ *  Muted chats DO still count here — muting only suppresses push notifications,
+ *  not unread counting/badges (see `muted`'s doc on `Conversation` in
+ *  features/messages/data.ts: "unread counting/badges are unaffected (mirrors
+ *  WhatsApp)") — so this never branches on `muted`.
+ *
+ *  A no-op if the row isn't cached yet (a brand-new thread is `conversation:new`'s
+ *  job instead). */
+export function bumpConversationUnread(
+  queryClient: QueryClient,
+  conversationId: string,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? {
+              ...conversation,
+              unread: true,
+              unreadCount: (conversation.unreadCount ?? 0) + 1,
+            }
+          : conversation,
+      ),
+  );
+}
+
 /** Patch a conversation-list row's manual "mark unread" state in place
  *  (PRD-225) — used by `useToggleMarkUnread`'s optimistic update. Setting it
  *  true also flips `unread` immediately (the row menu's whole point is an

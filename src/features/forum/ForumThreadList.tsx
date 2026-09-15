@@ -2,6 +2,7 @@ import { FiMessageSquare, FiX } from "react-icons/fi";
 import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { routes } from "../../app/routeMap";
 import { type Thread } from "./forum.data";
 import { type ForumSort } from "./api/forum.api";
 import { SORT_TABS } from "./forumSort.data";
@@ -22,7 +23,6 @@ export function ForumThreadList({
   onVote,
   filtered,
   onShowAll,
-  onCompose,
   canEditThread,
   canMoveCategory,
   canDeleteThread,
@@ -49,7 +49,6 @@ export function ForumThreadList({
   onVote: (thread: Thread) => void;
   filtered: boolean;
   onShowAll: () => void;
-  onCompose: () => void;
   canEditThread: (thread: Thread) => boolean;
   /** May the viewer refile this thread (PRD-163)? Passed straight through to
    *  each row, which turns its category badge into the move control. */
@@ -156,7 +155,7 @@ export function ForumThreadList({
             description={t("forum:threadList.emptyAll.description")}
             action={{
               label: t("forum:threadList.emptyAll.action"),
-              onClick: onCompose,
+              to: routes.forumNew,
             }}
           />
         )}

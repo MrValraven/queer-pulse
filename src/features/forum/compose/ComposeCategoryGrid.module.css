@@ -1,0 +1,211 @@
+/* ── "Where does it go?" ───────────────────────────────────────────────────
+   A hairline above each composer section groups the page without boxing it:
+   whitespace does most of the work, and the rule only marks where one question
+   ends and the next begins.
+
+   The section's own head, rather than the page's, because the suggestion chip
+   belongs on the heading row. Padding here is component padding (20px), well
+   under the 48px floor the section-padding ratchet watches. */
+
+.section {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+/* The "Sounds like Housing" chip. Jade, because it is an offer rather than a
+   correction, and it sits at the end of the heading row so it never displaces
+   the question itself. */
+.suggestion {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 5px 11px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--jade-rgb), 0.14);
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 700;
+  color: var(--jade-ink);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .suggestion:hover {
+    background: rgba(var(--jade-rgb), 0.24);
+  }
+}
+
+/* ── The grid ──────────────────────────────────────────────────────────── */
+
+.gridWrap {
+  /* The popover is placed against this box, so every card's offsetLeft and
+     offsetTop are measured from here. */
+  position: relative;
+}
+
+/* auto-fit rather than a fixed four, so the cards reflow on a narrow card
+   column without a breakpoint per step. 150px is where a two-word category
+   name plus its description stops fitting on two lines. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: transparent;
+  font-family: var(--sans);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cardIcon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.cardDescription {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: 1.35;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    border-color: var(--line-2);
+  }
+}
+
+/* Selected. The plum fill is meant to stay plum in both themes, so the type on
+   it is written on the cream channel rather than as `color: var(--cream)`,
+   which flips to near-black and disappears. */
+.card[aria-checked="true"] {
+  background: var(--plum);
+  border-color: var(--line-strong);
+}
+
+.card[aria-checked="true"] .cardTitle {
+  color: rgba(var(--cream-rgb), 0.96);
+}
+
+.card[aria-checked="true"] .cardDescription {
+  color: rgba(var(--cream-rgb), 0.68);
+}
+
+/* The suggested card, while it is not the chosen one: a jade edge that echoes
+   the chip in the heading, so the offer is visible in two places. */
+.cardSuggested:not([aria-checked="true"]) {
+  border-color: rgba(var(--jade-rgb), 0.55);
+  box-shadow: var(--ring-jade);
+}
+
+/* ── The recent-threads popover ────────────────────────────────────────── */
+
+.popover {
+  position: absolute;
+  z-index: var(--z-popover);
+  width: 250px;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  box-shadow: var(--shadow-e3);
+  /* Decorative and never a focus target: the pointer passes straight through
+     it, so it can never sit between the cursor and a card. */
+  pointer-events: none;
+  animation: popoverIn var(--dur-fast) var(--ease) both;
+}
+
+@keyframes popoverIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popover {
+    animation: none;
+  }
+}
+
+/* A touch screen has no hover, and a popover that only ever appears under a
+   mouse pointer is noise in a coarse-pointer layout. */
+@media (pointer: coarse) {
+  .popover {
+    display: none;
+  }
+}
+
+.popoverLabel {
+  display: block;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 5px;
+}
+
+.popoverTitle {
+  display: block;
+  font-family: var(--serif);
+  font-size: var(--text-12-5);
+  color: var(--text-strong);
+  line-height: 1.3;
+  padding: 3px 0;
+}

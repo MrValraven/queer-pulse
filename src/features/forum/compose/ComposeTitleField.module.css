@@ -1,0 +1,73 @@
+.titleField {
+  display: block;
+}
+
+/* Serif and borderless: the title reads as the headline it will become rather
+   than as a form field. `field-sizing` grows it where the browser has it; the
+   component falls back to the shared auto-grow hook elsewhere, which is why
+   `overflow` is hidden either way. */
+.titleInput {
+  display: block;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  resize: none;
+  overflow: hidden;
+  field-sizing: content;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-34);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+
+.titleInput::placeholder {
+  font-weight: 400;
+  color: rgba(var(--ink-rgb), 0.3);
+}
+
+.titleInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 8px;
+  min-height: 18px;
+}
+
+.tip {
+  flex: 1;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* A tip that is confirming rather than correcting reads in jade. */
+.tipPositive {
+  color: var(--jade-ink);
+}
+
+.counter {
+  margin-left: auto;
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+}
+
+.counterWarn {
+  color: var(--accent-ink);
+}
+
+@media (max-width: 900px) {
+  .titleInput {
+    font-size: var(--text-27);
+  }
+}

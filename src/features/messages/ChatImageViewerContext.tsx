@@ -3,8 +3,15 @@ import type { ChatMessage } from "./data";
 
 interface ChatImageViewerApi {
   /** Opens the full screen viewer on `message`. A message that is not a
-   *  viewable photo in the current thread is ignored. */
-  openImage: (message: ChatMessage) => void;
+   *  viewable photo in the current thread is ignored.
+   *
+   *  `origin` is the bubble thumbnail the tap landed on, kept so the viewer's
+   *  `?photoAnim=zoom` variant can grow the photo out of it and shrink it back
+   *  into it. The ELEMENT rather than its rectangle, because the log scrolls
+   *  under the open viewer and a rectangle measured at open time would aim the
+   *  close at where the bubble used to be. Optional: without it the viewer
+   *  falls back to its scale-and-fade, which needs no origin. */
+  openImage: (message: ChatMessage, origin?: HTMLElement | null) => void;
 }
 
 const NOOP_API: ChatImageViewerApi = { openImage: () => {} };

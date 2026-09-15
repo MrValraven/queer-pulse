@@ -4,7 +4,8 @@ import { EmptyState, Modal, SearchInput } from "../../shared/components/ui";
 import { useDebouncedValue } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MessageHitRow } from "./MessagesSearchHitGroup";
-import { useMessageSearch } from "./api/useMessageSearch";
+import { MessageHitListSkeleton } from "./MessagesSkeleton";
+import { MIN_SEARCH_LENGTH, useMessageSearch } from "./api/useMessageSearch";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -41,11 +42,20 @@ export function ThreadSearchModal({
     conversation.id,
   );
   const trimmed = query.trim();
+  const debouncedTrimmed = debounced.trim();
   const hits = useMemo(
     () => search.groups.flatMap((group) => group.hits),
     [search.groups],
   );
-  const noMessages = search.enabled && !search.isLoading && hits.length === 0;
+
+  const isTooShortToSearch = trimmed.length < MIN_SEARCH_LENGTH;
+  // Pending covers both "debounce hasn't caught up with the live query yet"
+  // and "request in flight" — derived from the LIVE length, never the
+  // debounced one, so the empty state never flashes ahead of real hits.
+  const isSearching =
+    !isTooShortToSearch && (debouncedTrimmed !== trimmed || search.isLoading);
+  const isMessageSearchEmpty =
+    !isSearching && !isTooShortToSearch && hits.length === 0;
 
   function handleSelect(_conversationId: string, messageId?: string) {
     if (messageId) onJumpToMessage(messageId);
@@ -65,17 +75,19 @@ export function ThreadSearchModal({
       />
       <div className={styles.searchResults}>
         <section className={styles.searchSection}>
-          {search.isLoading && (
-            <div className={styles.searchStatus}>
-              {t("messages:search.searching")}
-            </div>
-          )}
-          {!search.isLoading && !search.enabled && (
+          {/* Announced to assistive tech even though the visible row is a
+           *  skeleton — kept mounted so the aria-live region is already
+           *  present when its text changes. */}
+          <p className="visuallyHidden" role="status" aria-live="polite">
+            {isSearching ? t("messages:search.searching") : ""}
+          </p>
+          {isSearching && <MessageHitListSkeleton />}
+          {!isSearching && isTooShortToSearch && (
             <div className={styles.searchStatus}>
               {t("messages:search.keepTyping")}
             </div>
           )}
-          {noMessages && (
+          {isMessageSearchEmpty && (
             <EmptyState
               compact
               icon={<FiSearch />}
@@ -83,14 +95,16 @@ export function ThreadSearchModal({
               description={t("messages:search.noMessages", { query: trimmed })}
             />
           )}
-          {hits.map((hit, index) => (
-            <MessageHitRow
-              key={hit.id ?? `${conversation.id}-${index}`}
-              hit={hit}
-              query={trimmed}
-              onSelect={handleSelect}
-            />
-          ))}
+          {!isSearching &&
+            !isTooShortToSearch &&
+            hits.map((hit, index) => (
+              <MessageHitRow
+                key={hit.id ?? `${conversation.id}-${index}`}
+                hit={hit}
+                query={trimmed}
+                onSelect={handleSelect}
+              />
+            ))}
         </section>
       </div>
     </Modal>

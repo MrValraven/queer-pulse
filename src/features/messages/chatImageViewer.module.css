@@ -4,6 +4,10 @@
    same in both themes. Chrome sits on that wash in cream. */
 
 .scrim {
+  /* Mirrors VIEWER_EXIT_MS in chatViewerMotion.ts, which is what actually
+     times the unmount. Kept as a token so the fades below and the photo's own
+     exit cannot drift apart. */
+  --viewer-exit: 180ms;
   position: fixed;
   inset: 0;
   z-index: var(--z-lightbox);
@@ -59,6 +63,32 @@
   will-change: transform;
 }
 
+/* The box the open/close animation moves, and the only thing that ever moves
+   it (see useViewerPhotoMotion). It exists because the two nodes around it are
+   already spoken for: the stage carries the drag's live transform and the
+   image carries the zoom pan's, both written inline frame by frame, and an
+   animated transform outranks an inline one in the cascade. A layer of its own
+   lets the entrance compose with a gesture instead of overriding it.
+
+   Absolutely positioned across the stage rather than participating in its
+   flex centring, so the image's max-width/max-height still resolve against
+   exactly the same box they did before this element existed and the zoom
+   maths keeps measuring the numbers it always measured. */
+.flipLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  /* No `will-change` here, deliberately, unlike .stage and .image. Those two
+     are re-written on every pointer frame of a gesture; this one moves twice
+     in the life of the viewer, both times through the Web Animations API,
+     which promotes it for exactly the length of the animation. Asking for a
+     permanent compositing layer the size of the screen to save two frames is
+     a bad trade. */
+}
+
 .image {
   max-width: 100%;
   max-height: 100%;
@@ -72,11 +102,22 @@
   cursor: grab;
 }
 
-.topBar,
-.bottomBar {
+.topBar {
   display: flex;
   align-items: center;
-  gap: 12px;
+  /* Wrapping, not shrinking. Below roughly 490px the identity block at its
+     140px basis plus the motion toggle plus the icon row cannot share one
+     line, so the icon row drops to a second line rather than the identity
+     being squeezed to a sliver or Close being clipped off the right edge.
+     See `.identity` below for the mechanism. Grid row one is `auto`, so the
+     bar simply grows and the 44x44 targets keep their size. */
+  flex-wrap: wrap;
+  /* Split, not the `gap` shorthand: the shorthand would put the full 12px
+     between the two WRAPPED lines as well, and those two lines are one group.
+     4px binds them and hands the stage back 8px of height on exactly the
+     short viewports that had to wrap in the first place. */
+  column-gap: 12px;
+  row-gap: 4px;
   padding: 12px 16px;
   color: rgba(var(--cream-rgb), 1);
   background: linear-gradient(
@@ -87,25 +128,44 @@
   transition: opacity 160ms var(--ease);
 }
 
-.bottomBar {
-  justify-content: space-around;
-  background: linear-gradient(
-    to top,
-    rgba(var(--plum-rgb), 0.55),
-    rgba(var(--plum-rgb), 0)
-  );
-}
-
 .barHidden {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Who sent the photo, as one group: avatar, name over timestamp, position.
+   It takes the free space so the icon row on the right keeps its natural
+   width, and `min-width: 0` is what lets the NAME be the thing that gives way
+   on a narrow screen instead of the icons being pushed off the edge. */
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* The 140px BASIS is what keeps the band between the old overlap width and
+     the wrap width covered. With a plain `flex: 1` the basis was 0, so all
+     three items stayed on one line down to roughly 355px and the identity was
+     handed only the leftover free space: about 35px at 390px, which with the
+     `overflow: hidden` below is a sliced avatar and no name, time or counter
+     at all on a real phone. A basis the block can actually use makes the bar
+     wrap first and keep the identity whole. `min-width: 0` stays, so the name
+     is still the thing that ellipsizes once it is on its own line. */
+  flex: 1 1 140px;
+  min-width: 0;
+  /* `min-width: 0` alone only lets the block shrink; without this the 36px
+     `flex: none` avatar kept painting outside the shrunken box and over the
+     motion toggle beside it. */
+  overflow: hidden;
+}
+
+.identityAvatar {
+  flex: none;
 }
 
 .sender {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  flex: 1;
+  flex: 0 1 auto;
 }
 
 .senderName {
@@ -121,13 +181,40 @@
   opacity: 0.78;
 }
 
+.counter {
+  flex: none;
+}
+
+/* On a pointer device the filmstrip along the bottom shows the position in the
+   sequence better than a number does, so the digits stand down there. Only the
+   digits: the worded announcement beside them is the viewer's only live region
+   for arrow-key paging, so it stays on every viewport. */
+@media (hover: hover) {
+  .counterDigits {
+    display: none;
+  }
+}
+
+/* Every action the viewer has, as one wordless icon row. Tighter than the
+   bar's own gap because these belong together and the identity block on the
+   left does not belong with them. */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  /* Holds the row against the end edge on the wrapped layout, where it is
+     alone on line two and would otherwise sit left, moving Close from the
+     top-right corner to the middle of the bar. A no-op on one line, where the
+     identity's own flex-grow already pushes this row over. */
+  margin-inline-start: auto;
+}
+
 .iconButton,
-.actionButton,
 .navButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   border: 0;
   background: transparent;
   color: rgba(var(--cream-rgb), 1);
@@ -137,40 +224,92 @@
   font: inherit;
 }
 
-.actionButton {
-  flex-direction: column;
-  font-size: var(--text-12);
-  padding: 6px 12px;
+/* The labels are gone, so the button is no wider than its icon. Hold a
+   finger-sized target under it rather than letting the icon set the size. */
+.iconButton {
+  min-width: 44px;
+  min-height: 44px;
 }
 
-.actionButtonActive {
+.iconButtonActive {
   color: var(--accent);
 }
 
-.iconButton:hover,
-.actionButton:hover,
-.navButton:hover {
-  background: rgba(var(--cream-rgb), 0.14);
+/* Save is disabled for the length of a save. Without this it looked exactly
+   as it did a moment earlier, so the only feedback was that nothing happened
+   on a second press. */
+.iconButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Hover only where there is a pointer to hover with: on a touchscreen the
+   highlight sticks to the last thing tapped. */
+@media (hover: hover) {
+  .iconButton:hover {
+    background: rgba(var(--cream-rgb), 0.24);
+  }
+
+  /* The chevrons sit ON the photo, so they lift by deepening their own plum
+     disc rather than by washing cream over it. */
+  .navButton:hover {
+    background: rgba(var(--plum-rgb), 0.7);
+  }
+
+  .motionToggle:hover {
+    background: rgba(var(--cream-rgb), 0.14);
+  }
 }
 
 .iconButton:focus-visible,
-.actionButton:focus-visible,
 .navButton:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
 
+/* The paging chevrons, sitting over the photo at the stage edges rather than
+   in a bar: a round, finger-sized button on a translucent PLUM ground that
+   deepens under the pointer (see the hover block above). Plum rather than
+   cream because a landscape photo fills the stage width, so the chevron
+   genuinely sits on the image: a cream chevron on a near-white translucent
+   disc disappeared entirely over a bright photo. The shared rule above
+   already rounds this to --radius-pill, which draws the same circle on a
+   48x48 box. */
 .navButton {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(var(--plum-rgb), 0.5);
-  padding: 12px;
-  /* Matches .topBar/.bottomBar's own fade, so the arrows cross-fade out and
-     back in with the rest of the chrome instead of snapping to full opacity
-     the instant a gesture ends and riding the stage's settle transform back
-     into place. */
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: rgba(var(--plum-rgb), 0.55);
+  /* Matches .topBar's own fade, so the arrows cross-fade out and back in with
+     the rest of the chrome instead of snapping to full opacity the instant a
+     gesture ends and riding the stage's settle transform back into place. */
   transition: opacity 160ms var(--ease);
+}
+
+/* TEMPORARY, paired with `MotionVariantToggle` in ChatImageViewerChrome.tsx:
+   the in-viewer switch between the two candidate open/close animations.
+   Deliberately quiet (an outlined pill rather than a filled button) so it
+   reads as scaffolding sitting in the chrome rather than as one of the
+   viewer's real actions. Delete with the losing variant. */
+.motionToggle {
+  flex: none;
+  border: 1px solid rgba(var(--cream-rgb), 0.4);
+  background: transparent;
+  color: rgba(var(--cream-rgb), 1);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font: inherit;
+  font-size: var(--text-12);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.motionToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .navPrev {
@@ -188,10 +327,72 @@
   }
 }
 
+/* ── Open and close ──────────────────────────────────────────────────────────
+   The photo's own motion is run from JavaScript on .flipLayer, because the
+   zoom variant's keyframes are two live rectangles. What is left here is the
+   ground and the chrome, which fade the same way in both variants.
+
+   Every keyframe below is deliberately one-sided. A `from`-only or `to`-only
+   animation interpolates against the element's own computed value, so the
+   wash fades out from WHEREVER a dismiss drag left it (the gesture writes its
+   opacity inline, frame by frame) instead of jumping back to full and then
+   fading, and it still fades from the right value when no drag happened. */
+.scrimWash {
+  animation: viewerWashIn 200ms var(--ease);
+}
+
+.closing .scrimWash {
+  animation: viewerWashOut var(--viewer-exit) var(--ease) forwards;
+}
+
+.topBar,
+.navButton {
+  animation: viewerChromeIn 200ms var(--ease);
+}
+
+.closing .topBar,
+.closing .navButton {
+  animation: viewerChromeOut var(--viewer-exit) var(--ease) forwards;
+}
+
+@keyframes viewerWashIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes viewerWashOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes viewerChromeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes viewerChromeOut {
+  to {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .topBar,
-  .bottomBar,
   .navButton {
     transition: none;
+  }
+  /* The viewer still closes on the same frame under reduced motion (the
+     close hook skips its exit phase entirely), so these only need to stop
+     anything from moving on the way in. */
+  .scrimWash,
+  .topBar,
+  .navButton,
+  .closing .scrimWash,
+  .closing .topBar,
+  .closing .navButton {
+    animation: none;
   }
 }

@@ -91,26 +91,40 @@ export function SendStatusTick({
 /** WhatsApp-style meta shown on a run's last bubble: a small time, plus (on the
  *  user's own outgoing bubble) the send-status tick. `floating` tucks it into a
  *  text bubble's bottom-right (text wraps around it); otherwise it renders as a
- *  standalone line under an emoji-only message. `align` is the floating case's
+ *  standalone line under the bubble's content. `align` is the floating case's
  *  vertical position — centred on a one-line bubble's single text line, tucked
- *  flush into the corner on a multi-line one (see `useBubbleMetaAlign`). */
+ *  flush into the corner on a multi-line one (see `useBubbleMetaAlign`).
+ *
+ *  `isOnBubbleSurface` is a separate question from `floating`: whether this meta
+ *  sits on a COLOURED bubble surface (plum sent / paper received) rather than
+ *  directly on the cream page. The two usually coincide — a floating meta is
+ *  always on a bubble, a standalone line under an emoji/image/document bubble
+ *  is always on the page — so it defaults to `floating` and none of those
+ *  callers need to pass it. The one caller where they diverge is the
+ *  card-only link-preview text bubble: its meta doesn't float (there's no
+ *  text line to tuck into), but it still sits on the coloured bubble, not the
+ *  page, so it passes `isOnBubbleSurface={true}` explicitly. */
 export function MessageMeta({
   time,
   isSent,
   metaStatus,
   floating,
+  isOnBubbleSurface = floating,
   align = "center",
 }: {
   time?: string;
   isSent: boolean;
   metaStatus: MetaStatus;
   floating: boolean;
+  isOnBubbleSurface?: boolean;
   align?: BubbleMetaAlign;
 }) {
-  // Colour only tracks sent/received when tucked inside a coloured bubble; the
-  // standalone (emoji) line always sits on the page, so it stays muted ink.
+  // Colour only tracks sent/received when this meta sits on a coloured bubble
+  // surface; a standalone line on the cream page always stays muted ink.
   const colorClass =
-    floating && isSent ? styles.bubbleMetaSent : styles.bubbleMetaReceived;
+    isOnBubbleSurface && isSent
+      ? styles.bubbleMetaSent
+      : styles.bubbleMetaReceived;
   return (
     <span
       className={[

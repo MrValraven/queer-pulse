@@ -19,8 +19,20 @@ export interface SeenByEntry {
  * computed client-side from each member's read watermark (surfaced per-member on
  * the group DTO), so there's no N+1 per-message receipts endpoint. A member has
  * seen the message when their `lastReadAt` is at-or-after the message's `at`.
- * The signed-in member is always excluded. Demo has no timestamps, so any member
- * with a seeded watermark counts (a simulated receipt).
+ * The signed-in member is always excluded. A message still in flight is never
+ * "seen": an optimistic send (`!id && !!localId`) has no `at` of its own, so
+ * without this guard every member who has EVER read anything in the thread
+ * would satisfy the no-timestamp fallback below the instant the send fires,
+ * a false "Seen by N" that flashes and then vanishes once the server row
+ * (with a real `at`) lands. The one exception is the demo simulation, which
+ * drives an optimistic message straight to `status: "seen"` on a timer and
+ * never gives it a server `id`, so that message stays optimistic forever and
+ * must still pass once the ladder reaches "seen". That demo-"seen" message is
+ * itself a SIMULATED receipt, not a real one: its `at` is stamped from this
+ * device's clock while the seeded member watermarks are fixed in the past, so
+ * comparing them would never match. It takes the same no-timestamp branch as
+ * seeded demo history below, which carries neither `id` nor `localId` and so
+ * never trips the in-flight check at all.
  */
 export function computeGroupSeenBy(
   members: GroupMemberView[] | undefined,
@@ -28,7 +40,12 @@ export function computeGroupSeenBy(
   self: { id: string | null; slug?: string },
 ): SeenByEntry[] {
   if (!members || !lastOutbound) return [];
-  const messageAt = lastOutbound.at;
+  const isOptimistic = !lastOutbound.id && !!lastOutbound.localId;
+  if (isOptimistic && lastOutbound.status !== "seen") return [];
+  // A still-optimistic message the demo ladder has marked "seen" simulates a
+  // receipt against a fixed-past seeded watermark, not a real clock reading:
+  // take the no-timestamp branch for it, exactly as seeded demo history does.
+  const messageAt = isOptimistic ? undefined : lastOutbound.at;
   return members
     .filter((member) => {
       const isSelf =

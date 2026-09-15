@@ -891,3 +891,168 @@
   border-radius: var(--radius-14);
   background: rgba(var(--line-rgb), 0.03);
 }
+
+/* ── Content warnings on the opening post ─────────────────────────────────
+   The same pill the composer's preview draws, so the card a member arranged
+   while writing is the card the forum publishes. */
+.opWarning {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.warningPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: var(--radius-6);
+  background: rgba(var(--violet-rgb), 0.12);
+  color: var(--violet);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+.warningPill svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+/* The control that uncovers the post. A real button: focusable, pressable with
+   Enter and Space, and labelled with what is behind it. */
+.warningReveal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: var(--radius-5);
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--violet);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.warningReveal svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+.warningReveal:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* The post itself, present and unreadable. Never auto-revealed: only the
+   control above can lift this. */
+.opBodyCovered {
+  filter: blur(7px);
+  user-select: none;
+}
+
+/* ── The co-author and the anonymity mark on the byline ───────────────────── */
+.coAuthor {
+  font-size: var(--text-13);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+/* Only a moderator ever sees this: the real author beside the fact that the
+   room does not. Quiet, because it marks a state rather than a problem. */
+.anonMark {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.06);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.anonMark svg {
+  flex: none;
+  width: 11px;
+  height: 11px;
+}
+
+/* ── Neighbourhood & language ──────────────────────────────────────────────
+   Quiet metadata under the post: small ink beside the tags, deliberately not a
+   badge competing with the title. */
+.opMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  font-size: var(--text-12-5);
+  line-height: var(--lh-body);
+  color: var(--ink-40);
+}
+.opMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.opMetaItem svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+/* ── The author's own view of a thread the forum cannot see yet ────────────
+   Scheduled, or waiting on the editors. A cream-tinted panel rather than the
+   plum one: this is a status the author already chose, so it reassures rather
+   than announces. */
+.stateNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius-14);
+  border: 1px solid rgba(var(--amber-rgb), 0.28);
+  background: rgba(var(--amber-rgb), 0.1);
+}
+.stateNoticeIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  color: var(--amber-ink);
+}
+.stateNoticeIcon svg {
+  width: 17px;
+  height: 17px;
+}
+.stateNoticeTitle {
+  font-weight: 700;
+  font-size: var(--text-13-5);
+  color: var(--text-strong);
+  margin-bottom: 2px;
+}
+.stateNoticeBody {
+  font-size: var(--text-13);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .warningReveal:hover {
+    color: var(--accent-ink);
+  }
+  .coAuthor:hover {
+    color: var(--accent-ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opBodyCovered {
+    transition: none;
+  }
+}

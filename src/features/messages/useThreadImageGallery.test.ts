@@ -98,6 +98,39 @@ describe("collectThreadPhotos", () => {
     ]);
   });
 
+  it("resolves the sender avatar: own -> youAvatar, group -> the message's own avatar, DM received -> the counterpart's avatar", () => {
+    const withAvatars = {
+      ...options,
+      counterpartAvatar: "https://cdn.example/nadia.jpg",
+      youAvatar: "https://cdn.example/me.jpg",
+    };
+    const receivedInDm = photoMessage({ id: "m1" });
+    const own = photoMessage({ id: "m2", from: "me" });
+    const groupSender = photoMessage({
+      id: "m3",
+      senderName: "Ines",
+      senderAvatar: "https://cdn.example/ines.jpg",
+    });
+    const photos = collectThreadPhotos(
+      [{ day: "Today", items: [receivedInDm, own, groupSender] }],
+      withAvatars,
+    );
+    expect(photos.map((photo) => photo.senderAvatar)).toEqual([
+      "https://cdn.example/nadia.jpg",
+      "https://cdn.example/me.jpg",
+      "https://cdn.example/ines.jpg",
+    ]);
+  });
+
+  it("leaves the sender avatar undefined when nothing resolves", () => {
+    const receivedInDm = photoMessage({ id: "m1" });
+    const photos = collectThreadPhotos(
+      [{ day: "Today", items: [receivedInDm] }],
+      options,
+    );
+    expect(photos[0]?.senderAvatar).toBeUndefined();
+  });
+
   it("carries the message's own text as alt for a gif", () => {
     const gif = photoMessage({ id: "m1", kind: "gif", text: "A cat waving" });
     const photos = collectThreadPhotos(

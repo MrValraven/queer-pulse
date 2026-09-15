@@ -37,8 +37,15 @@ import type { ForumDraftMeta } from "./api/forumDrafts.api";
  * and a half-understood old payload is exactly how a composer crashes. The same
  * rule applies to the server's copy, which carries the same version key: a
  * client that has not shipped yet must not try to read a shape it predates.
+ *
+ * Version 2 is the full-page composer at `/forum/new`: the kind, the audience
+ * cross-post, the byline switches, the co-author, the content warnings, the
+ * poll, the language, the neighbourhood, the auto-close, and up to four photos
+ * instead of one. A version-1 payload is dropped on the next read, which costs
+ * whoever had a draft open across the deploy their unsent post and nobody
+ * else anything.
  */
-export const FORUM_DRAFT_SNAPSHOT_VERSION = 1;
+export const FORUM_DRAFT_SNAPSHOT_VERSION = 2;
 
 const BASE_KEY = "qp.forum.draft.fields";
 
@@ -62,9 +69,78 @@ export interface ForumThreadDraftSnapshot {
   imageKey: string | null;
   /** The local preview URL for that photo, when one is still renderable. */
   imagePreviewUrl: string | null;
+
+  // ── The full-page composer's fields (`/forum/new`) ─────────────────────────
+  // All OPTIONAL, because the older modal composer writes the same snapshot
+  // shape with none of them and must keep working unchanged. Absent reads as
+  // "this draft was written by a composer that has no such field", which is
+  // exactly right.
+  //
+  // Every one of them is FLAT AND SCALAR, which is the contract `@IsDraftMeta`
+  // enforces on the draft row's `meta` bag (see `api/forumDrafts.api.ts`): a
+  // string, a number, a boolean, null, or an array of strings. Two fields of
+  // the composer's state are neither, and both are taken apart here rather
+  // than nested. See `photoKeys` and `pollOptions` below.
+
+  /** The chosen `PostKind`, or null before one is picked. */
+  kind?: string | null;
+  /** Also surface a community post in the town square. */
+  crossPost?: boolean;
+  /** Publish under the "QueerPulse Official" byline. */
+  isOfficial?: boolean;
+  /** Hide the author's name from other members. */
+  isAnonymous?: boolean;
+  /** A second member credited on the post, by slug. */
+  coAuthorSlug?: string | null;
+  /** Ids from `CONTENT_WARNINGS`. */
+  contentWarnings?: string[];
+  /** The chosen `PostLanguage`. */
+  language?: string;
+  /** A neighbourhood value, or null. */
+  neighbourhood?: string | null;
+  /** The chosen `CloseAfter`. */
+  closeAfter?: string;
+
+  /**
+   * The staged photos, TAKEN APART into three parallel arrays.
+   *
+   * `ComposePhoto[]` is an array of objects, which `@IsDraftMeta` refuses:
+   * the bag is flat by contract, because it is rewritten on a typing debounce
+   * by every active member and a free-form nested tree is a storage-abuse
+   * vector. Three `string[]`s carry the same information inside the contract.
+   * They are the same length and share an index; a payload where they are not
+   * is read as far as the shortest one, so a truncated write costs a photo
+   * rather than a mismatched description.
+   *
+   * Each entry is the photo's REFERENCE (a storage key live, a blob URL in
+   * demo), never the bytes, for the same reason as `imageKey` above.
+   */
+  photoKeys?: string[];
+  /** The local preview URLs for those photos, index-aligned with `photoKeys`. */
+  photoPreviewUrls?: string[];
+  /** Their descriptions, index-aligned with `photoKeys`. */
+  photoAlts?: string[];
+
+  /**
+   * The poll's options, or null when there is no poll. Flattened for the same
+   * reason as the photos: `ComposePoll` is an object, and the bag holds no
+   * objects. Null distinguishes "no poll" from "a poll whose options are all
+   * still blank", which is a state the composer allows while typing.
+   */
+  pollOptions?: string[] | null;
+  pollAllowMultiple?: boolean;
+  /** The chosen `PollCloses`. */
+  pollCloses?: string;
 }
 
-/** True when a snapshot carries nothing worth keeping. */
+/**
+ * True when a snapshot carries nothing worth keeping.
+ *
+ * Only fields the member actively CHOSE count. The language, the cross-post
+ * switch and the auto-close all have defaults the composer sets on its own, so
+ * a composer that was merely opened would otherwise put a row on the member's
+ * drafts list for a post they never wrote.
+ */
 export function isEmptyThreadDraftSnapshot(
   snapshot: ForumThreadDraftSnapshot,
 ): boolean {
@@ -72,7 +148,13 @@ export function isEmptyThreadDraftSnapshot(
     !snapshot.title.trim() &&
     !snapshot.communitySlug &&
     snapshot.tags.length === 0 &&
-    !snapshot.imageKey
+    !snapshot.imageKey &&
+    !snapshot.kind &&
+    !snapshot.coAuthorSlug &&
+    !snapshot.neighbourhood &&
+    !snapshot.pollOptions &&
+    (snapshot.contentWarnings?.length ?? 0) === 0 &&
+    (snapshot.photoKeys?.length ?? 0) === 0
   );
 }
 
@@ -97,6 +179,77 @@ function isNullableString(value: unknown): value is string | null {
   return value === null || typeof value === "string";
 }
 
+/** An optional field: absent is always fine, present must type-check. */
+function isAbsentOr<T>(
+  value: unknown,
+  check: (candidate: unknown) => candidate is T,
+): value is T | undefined {
+  return value === undefined || check(value);
+}
+
+function isBoolean(value: unknown): value is boolean {
+  return typeof value === "boolean";
+}
+
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function isNullableStringArray(value: unknown): value is string[] | null {
+  return value === null || isStringArray(value);
+}
+
+/**
+ * Whether every optional field of the full-page composer type-checks.
+ *
+ * Split out of `readSnapshotFields` purely for size: the two together run past
+ * the 200-line function budget `max-lines-per-function` enforces.
+ */
+function areComposePageFieldsValid(
+  candidate: Record<string, unknown>,
+): boolean {
+  return (
+    isAbsentOr(candidate.kind, isNullableString) &&
+    isAbsentOr(candidate.crossPost, isBoolean) &&
+    isAbsentOr(candidate.isOfficial, isBoolean) &&
+    isAbsentOr(candidate.isAnonymous, isBoolean) &&
+    isAbsentOr(candidate.coAuthorSlug, isNullableString) &&
+    isAbsentOr(candidate.contentWarnings, isStringArray) &&
+    isAbsentOr(candidate.language, isString) &&
+    isAbsentOr(candidate.neighbourhood, isNullableString) &&
+    isAbsentOr(candidate.closeAfter, isString) &&
+    isAbsentOr(candidate.photoKeys, isStringArray) &&
+    isAbsentOr(candidate.photoPreviewUrls, isStringArray) &&
+    isAbsentOr(candidate.photoAlts, isStringArray) &&
+    isAbsentOr(candidate.pollOptions, isNullableStringArray) &&
+    isAbsentOr(candidate.pollAllowMultiple, isBoolean) &&
+    isAbsentOr(candidate.pollCloses, isString)
+  );
+}
+
+/** The optional fields, copied across once they have all type-checked. */
+function composePageFields(
+  candidate: Record<string, unknown>,
+): Partial<ForumThreadDraftSnapshot> {
+  return {
+    kind: candidate.kind as string | null | undefined,
+    crossPost: candidate.crossPost as boolean | undefined,
+    isOfficial: candidate.isOfficial as boolean | undefined,
+    isAnonymous: candidate.isAnonymous as boolean | undefined,
+    coAuthorSlug: candidate.coAuthorSlug as string | null | undefined,
+    contentWarnings: candidate.contentWarnings as string[] | undefined,
+    language: candidate.language as string | undefined,
+    neighbourhood: candidate.neighbourhood as string | null | undefined,
+    closeAfter: candidate.closeAfter as string | undefined,
+    photoKeys: candidate.photoKeys as string[] | undefined,
+    photoPreviewUrls: candidate.photoPreviewUrls as string[] | undefined,
+    photoAlts: candidate.photoAlts as string[] | undefined,
+    pollOptions: candidate.pollOptions as string[] | null | undefined,
+    pollAllowMultiple: candidate.pollAllowMultiple as boolean | undefined,
+    pollCloses: candidate.pollCloses as string | undefined,
+  };
+}
+
 /**
  * Reads one already-parsed record into a snapshot, or null when it is not one.
  *
@@ -119,6 +272,7 @@ function readSnapshotFields(
   if (!isStringArray(candidate.tags)) return null;
   if (!isNullableString(candidate.imageKey)) return null;
   if (!isNullableString(candidate.imagePreviewUrl)) return null;
+  if (!areComposePageFieldsValid(candidate)) return null;
   return {
     title: candidate.title,
     category: candidate.category,
@@ -126,6 +280,7 @@ function readSnapshotFields(
     tags: candidate.tags,
     imageKey: candidate.imageKey,
     imagePreviewUrl: candidate.imagePreviewUrl,
+    ...composePageFields(candidate),
   };
 }
 
@@ -175,6 +330,25 @@ export function threadDraftSnapshotToMeta(
     tags: snapshot.tags,
     imageKey: snapshot.imageKey,
     imagePreviewUrl: snapshot.imagePreviewUrl,
+    // Normalized rather than spread: `meta` accepts null but not `undefined`,
+    // and a composer that keeps none of these fields (the older modal) must
+    // still produce a bag the server accepts. Twenty-two keys in total, well
+    // inside the thirty-two `@IsDraftMeta` allows.
+    kind: snapshot.kind ?? null,
+    crossPost: snapshot.crossPost ?? false,
+    isOfficial: snapshot.isOfficial ?? false,
+    isAnonymous: snapshot.isAnonymous ?? false,
+    coAuthorSlug: snapshot.coAuthorSlug ?? null,
+    contentWarnings: snapshot.contentWarnings ?? [],
+    language: snapshot.language ?? "auto",
+    neighbourhood: snapshot.neighbourhood ?? null,
+    closeAfter: snapshot.closeAfter ?? "never",
+    photoKeys: snapshot.photoKeys ?? [],
+    photoPreviewUrls: snapshot.photoPreviewUrls ?? [],
+    photoAlts: snapshot.photoAlts ?? [],
+    pollOptions: snapshot.pollOptions ?? null,
+    pollAllowMultiple: snapshot.pollAllowMultiple ?? false,
+    pollCloses: snapshot.pollCloses ?? "never",
   };
 }
 

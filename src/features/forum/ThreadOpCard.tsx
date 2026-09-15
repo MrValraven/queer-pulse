@@ -1,16 +1,19 @@
+import { useId } from "react";
 import { FiHeart, FiTag } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { CATS, CAT_STYLE, type Thread } from "./forum.data";
-import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
-import { authorHref } from "./forumAuthor.helpers";
-import { ModeratorByline } from "./ThreadReplies";
-import { MentionText } from "../../shared/mentions/MentionText";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { type Thread, type ThreadPoll } from "./forum.data";
+import { MarkdownLite } from "../../shared/markdown";
 import { FeatureHelp } from "../../shared/components/ui";
-import { PostActionsMenu } from "./PostActionsMenu";
-import { ForumPostImage } from "./ForumImageAttach";
+import { ForumPostPhotos } from "./ForumPostPhotos";
 import { ForumLinkPreview } from "./ForumLinkPreview";
+import {
+  ContentWarningPill,
+  ContentWarningReveal,
+} from "./ForumContentWarning";
+import { useContentWarningReveal } from "./forumWarnings.helpers";
+import { ThreadOpCardHead } from "./ThreadOpCardHead";
+import { ThreadOpMeta, ThreadStateNotice } from "./ThreadOpNotices";
+import { ThreadPollCard } from "./ThreadPollCard";
 import { firstLinkIn, useInViewOnce } from "./api/useForumLinkPreview";
 import styles from "./ThreadPage.module.css";
 
@@ -34,6 +37,10 @@ export function ThreadOpCard({
   onHistory,
   onMoveCategory,
   onEditTags,
+  poll,
+  onPollVote,
+  isPollVoting,
+  pollError,
 }: {
   thread: Thread;
   title: string;
@@ -59,21 +66,20 @@ export function ThreadOpCard({
   onHistory: () => void;
   /** Re-file this thread into another category (PRD-163). Omitted for a viewer
    *  outside the author's 24-hour window who is not a moderator, which is what
-   *  keeps the action off a menu the server would refuse. */
+   *  keeps the affordance off a menu the server would refuse. */
   onMoveCategory?: () => void;
   /** Open the tag editor (SOC-13). Omitted for a viewer who may not re-file
    *  this thread, which is what hides the control. */
   onEditTags?: () => void;
+  /** The ballot as `useThreadPoll` resolves it (the thread's own, or the one a
+   *  ballot just came back with). Null when the thread carries no poll. */
+  poll: ThreadPoll | null;
+  onPollVote: (optionIds: string[]) => void;
+  isPollVoting: boolean;
+  pollError: "closed" | "failed" | null;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const catMeta = CATS.find((c) => c.id === thread.category);
-  // DES-120's fix, applied to the last place that still had the old fallback:
-  // `--plum` does NOT flip in dark mode, so an unknown category printed its
-  // name in near-black on the dark card. `--text-strong` IS the plum-for-text
-  // token and flips, and it is what `CAT_STYLE.general` already resolves to.
-  const catColor = CAT_STYLE[thread.category]?.color ?? "var(--text-strong)";
-  const voted = !!thread.myVote;
+  const bodyId = useId();
   // ENG-130. Explicit `false` only: undefined is "the posts page has not landed
   // yet", which must read as loading rather than as a missing opening post.
   const isOpUnavailable = thread.isOpAvailable === false;
@@ -82,100 +88,63 @@ export function ThreadOpCard({
   const { ref: bodyRef, isInView } = useInViewOnce<HTMLDivElement>();
   const firstLink = firstLinkIn(body);
 
+  // The author's warnings cover the post until a reader chooses otherwise, and
+  // that choice is remembered for this thread for the rest of the session. A
+  // tombstoned or withheld post has nothing left to cover.
+  const hasWarnings = !!thread.contentWarnings?.length;
+  const { isRevealed, reveal, cover } = useContentWarningReveal(
+    thread.slug ?? String(thread.id),
+  );
+  const isCovered = hasWarnings && !deleted && !isOpUnavailable && !isRevealed;
+
   return (
     <div className={styles.opCard}>
-      <div className={styles.opHead}>
-        <ProfileLink
-          to={authorHref(thread.author)}
-          name={thread.author.name}
-          official={thread.author.official}
-          className={styles.avLink}
-        >
-          <ForumAvatar
-            className={styles.opAv}
-            style={{
-              background: thread.author.background,
-              color: thread.author.color,
-            }}
-            person={{
-              slug: thread.author.slug,
-              photo: thread.author.photo,
-              initials: thread.author.initials,
-              name: thread.author.name,
-              official: thread.author.official,
-            }}
-          />
-        </ProfileLink>
-        <div>
-          <div className={styles.opName}>
-            <ProfileLink
-              to={authorHref(thread.author)}
-              name={thread.author.name}
-              official={thread.author.official}
-              className={styles.authorLink}
-            >
-              {thread.author.name}
-            </ProfileLink>
-            <MemberStaffBadge slug={thread.author.slug} />
-            {thread.author.official && <OfficialBadge />}
-          </div>
-          <ModeratorByline mod={thread.author.mod} />
-          <div className={styles.opSub}>
-            <span className={styles.opCat} style={{ color: catColor }}>
-              {catMeta && t(catMeta.nameKey)}
-            </span>
-            <span>·</span>
-            <span>
-              {t("forum:threadOp.postedPrefix", { time: thread.posted })}
-            </span>
-            {/* Live threads carry no view count (the DTO has none), so the
-                stat is omitted entirely rather than printing "0 views". */}
-            {thread.views != null && (
-              <>
-                <span>·</span>
-                <span>
-                  {t("forum:threadOp.viewsCount", {
-                    count: thread.views,
-                    formatted: fmt.number(thread.views),
-                  })}
-                </span>
-              </>
-            )}
-            {editedAt && (
-              <>
-                <span>·</span>
-                <span className={styles.editedMark}>
-                  {t("forum:edited.mark")}
-                </span>
-              </>
-            )}
-          </div>
-        </div>
-        <div className={styles.opMenu}>
-          <PostActionsMenu
-            canEdit={canEdit}
-            canDelete={canDelete}
-            canRestore={canRestore}
-            canViewHistory={canViewHistory}
-            // Adds Mute / Block for the thread's author (self-aware no-op).
-            author={{
-              slug: thread.author.slug,
-              name: thread.author.name,
-              official: thread.author.official,
-            }}
-            canMoveCategory={!!onMoveCategory}
-            onMoveCategory={onMoveCategory}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onRestore={onRestore}
-            onHistory={onHistory}
-          />
-        </div>
-      </div>
+      <ThreadOpCardHead
+        thread={thread}
+        editedAt={editedAt}
+        canEdit={canEdit}
+        canDelete={canDelete}
+        canRestore={canRestore}
+        canViewHistory={canViewHistory}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onRestore={onRestore}
+        onHistory={onHistory}
+        onMoveCategory={onMoveCategory}
+      />
+      <ThreadStateNotice thread={thread} />
       <h1 className={styles.opTitle}>
         {title} <FeatureHelp id="forum.thread" />
       </h1>
-      <div className={styles.opBody} ref={bodyRef}>
+      {hasWarnings && !deleted && !isOpUnavailable && (
+        <div className={styles.opWarning}>
+          <ContentWarningPill
+            warnings={thread.contentWarnings}
+            className={styles.warningPill}
+          />
+          <ContentWarningReveal
+            warnings={thread.contentWarnings}
+            isRevealed={isRevealed}
+            onToggle={isRevealed ? cover : reveal}
+            controlsId={bodyId}
+            className={styles.warningReveal}
+          />
+        </div>
+      )}
+      <div
+        id={bodyId}
+        // The words stay in the DOM and go unreadable, so uncovering them is
+        // instant and costs no second request. A blur is no cover at all to a
+        // screen reader or to a keyboard, so the covered region is hidden from
+        // assistive tech AND made inert: nothing inside it can be read out, and
+        // no link inside it can take focus behind the blur.
+        aria-hidden={isCovered || undefined}
+        inert={isCovered}
+        className={[styles.opBody, isCovered && styles.opBodyCovered]
+          .filter(Boolean)
+          .join(" ")}
+        ref={bodyRef}
+      >
         {isOpUnavailable ? (
           // The server told us there is no opening post THIS viewer can see.
           // State that and nothing else: the reason (a mute, a block, a
@@ -194,21 +163,42 @@ export function ThreadOpCard({
           </p>
         ) : (
           <>
-            {body.map((paragraph, index) => (
-              <p key={index}>
-                <MentionText text={paragraph} />
-              </p>
-            ))}
-            <ForumPostImage src={thread.opImage} />
+            {/* `body` is the paragraph array the adapters split the raw post
+                into, and `join("\n")` is the exact inverse the edit flow
+                already relies on (`ThreadOpSection` seeds the editor with
+                `opBody.join("\n")`). Reassembling it here is what lets one
+                markdown-lite pass see the lists, quotes and headings that span
+                more than a single paragraph, and keeps the composer's preview
+                and the published post rendering the same source. */}
+            <MarkdownLite text={body.join("\n")} />
+            {/* ONE gallery. The backend has already folded the legacy single
+                `opImage` into it, so that field is only reached for on a demo
+                fixture, which never went through the reconciliation. */}
+            <ForumPostPhotos
+              photos={thread.opPhotos}
+              legacyImage={thread.opImage}
+            />
             <ForumLinkPreview url={firstLink} isEnabled={isInView} />
           </>
         )}
       </div>
+      {poll && !deleted && !isOpUnavailable && (
+        <ThreadPollCard
+          poll={poll}
+          onVote={onPollVote}
+          isVoting={isPollVoting}
+          error={pollError}
+        />
+      )}
+      <ThreadOpMeta
+        neighbourhood={thread.neighbourhood}
+        language={thread.language}
+      />
       <OpTagsRow tags={thread.tags} onEditTags={onEditTags} />
       {!deleted && !isOpUnavailable && (
         <OpFooterActions
           upvotes={thread.upvotes}
-          voted={voted}
+          voted={!!thread.myVote}
           onVote={onVote}
           bookmarked={bookmarked}
           onToggleBookmark={onToggleBookmark}

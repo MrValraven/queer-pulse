@@ -1,0 +1,183 @@
+/* ── The poll panel ────────────────────────────────────────────────────────
+   Same cream inset as the content-warning panel, so the two optional blocks
+   read as one family sitting a step back from the writing. */
+
+.panel {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: var(--cream);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  line-height: var(--lh-body);
+  max-width: 60ch;
+}
+
+/* ── Option rows ───────────────────────────────────────────────────────── */
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.optionNumber {
+  width: 16px;
+  flex: none;
+  text-align: right;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+
+.optionInput {
+  flex: 1;
+  /* Without this a long option pushes the row past the panel instead of the
+     input scrolling its own text. */
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-10);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+.optionInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--line-strong);
+}
+
+.removeOption {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.removeOption:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .removeOption:not(:disabled):hover {
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.1);
+  }
+}
+
+/* ── The row under the options ─────────────────────────────────────────── */
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: var(--text-13);
+}
+
+.addOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--radius-pill);
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.addOption:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .addOption:not(:disabled):hover {
+    border-style: solid;
+    background: rgba(var(--ink-rgb), 0.04);
+  }
+}
+
+.limit {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.checkLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+.checkBox {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+
+.closes {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.closesLabel {
+  color: var(--ink-60);
+  white-space: nowrap;
+}

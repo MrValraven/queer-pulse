@@ -91,7 +91,12 @@
   gap: var(--gap-xs);
   margin-block-start: 18px;
 }
+/* Each chip is a link to a seeded composer, so it needs the block box and the
+   underline reset an <a> does not bring on its own. */
 .starter {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
   padding: 8px 14px;
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-pill);

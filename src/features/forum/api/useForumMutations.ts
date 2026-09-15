@@ -25,9 +25,10 @@ import {
   unfollowThread,
   unlockThread,
   unpinThread,
+  votePoll,
   votePost,
 } from "./forum.api";
-import type { ForumPostResponse } from "./forum.api";
+import type { ForumPollView, ForumPostResponse } from "./forum.api";
 import type { ThreadListPage, ThreadPostsPage } from "./useForum";
 
 /**
@@ -553,6 +554,64 @@ export function useFollowThread() {
     ) => mutation.mutate({ slug, isFollowing }, options),
     isPending: mutation.isPending,
   };
+}
+
+/**
+ * Cast a ballot on a thread's poll (POST /forum/threads/:slug/poll/vote).
+ *
+ * Consumer interface:
+ * ```ts
+ * const { castVote, isPending } = useVotePoll();
+ * castVote(slug, [optionId], { onSuccess: (poll) => …, onError: … });
+ * ```
+ * `optionIds` is the voter's COMPLETE selection, so re-voting replaces the
+ * previous one and sending the same array twice changes nothing.
+ *
+ * The response IS the poll with its counts released, so it is handed back to
+ * the caller rather than discarded: that answer is the very first time most
+ * members see a tally, and waiting for a refetch to redraw the bars would
+ * leave the poll sitting in its "no counts yet" state for a beat after the
+ * voter had answered. The thread meta is invalidated as well, so the poll the
+ * cache holds catches up with the one on screen.
+ *
+ * `silentError` because the poll card owns this write's error UI: a closed
+ * poll (403) is a different sentence from a network failure, and the card says
+ * which while leaving the options exactly as the member left them.
+ *
+ * DEMO is a no-op here and resolves to `undefined`; `useThreadPoll` overlays
+ * the prototype's own ballot on the mock thread, the same shape the OP vote
+ * and the follow toggle already use.
+ */
+export function useVotePoll() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<ForumPollView | undefined, Error, PollVoteVars>({
+    meta: { silentError: true },
+    mutationFn: async ({ slug, optionIds }) => {
+      if (demoMode) return undefined;
+      return votePoll(slug, optionIds);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      invalidateThread(queryClient);
+    },
+  });
+
+  return {
+    castVote: (
+      slug: string,
+      optionIds: string[],
+      options?: MutateOptions<ForumPollView | undefined, Error, PollVoteVars>,
+    ) => mutation.mutate({ slug, optionIds }, options),
+    isPending: mutation.isPending,
+  };
+}
+
+/** Mutation variables for a poll ballot. `optionIds` is the whole selection. */
+interface PollVoteVars {
+  slug: string;
+  optionIds: string[];
 }
 
 /** Mutation variables for the follow toggle. */

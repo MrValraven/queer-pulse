@@ -1,0 +1,169 @@
+/* The chat photo viewer's bottom thumbnail strip. It sits on the same deep
+   plum wash as the rest of the viewer, so everything here is cream on
+   --plum-rgb, matching chatImageViewer.module.css rather than the app's
+   cream-page palette. Deliberately paints no ground of its own: this row sits
+   directly on the scrim's plum wash, which already covers the whole viewport,
+   and a second wash over it would band. */
+
+.filmstrip {
+  /* One source of truth for the thumbnail box. Both axes read it, so the strip
+     stays square whatever the photo's aspect ratio is. 56px is large enough to
+     recognise a face in and comfortably past the 44px touch-target floor for
+     the pointer devices that do get this strip. */
+  --filmstrip-thumb: 56px;
+  display: flex;
+  /* Centred, so a three-photo gallery reads as a small cluster under the photo
+     instead of a stub pinned to the left edge. Once the strip overflows, the
+     track below takes over and this has no effect. */
+  justify-content: center;
+  min-width: 0;
+  /* Matches the .topBar/.navButton fade in chatImageViewer.module.css, so the
+     whole chrome cross-fades as one thing when a gesture starts. The filmstrip
+     row is the third and last piece of that chrome. */
+  transition: opacity 160ms var(--ease);
+}
+
+/* Chrome tapped away, or a gesture in flight. Opacity and pointer-events
+   rather than `display` or `inert` ON PURPOSE: the viewer's shared focus trap
+   collects its focusables by layout, and any keydown brings the chrome
+   straight back, so a thumbnail that is invisible this frame but still in the
+   tab order is the behaviour we want. A keyboard member tabbing into a hidden
+   strip re-reveals it and lands exactly where they expected to. */
+.filmstripHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  overflow-x: auto;
+  /* The padding is not decoration: `overflow-x` clips the cross axis too, and
+     the focus ring is drawn 3px outside the thumbnail it belongs to. Without
+     the room it would be sliced off along both long edges of the track. */
+  padding: var(--gap-xs);
+  /* A horizontal scroll that reaches its end must not chain to the browser's
+     back gesture. The viewer is a full-screen surface; being swiped out of the
+     conversation from here would be a surprise. */
+  overscroll-behavior-x: contain;
+  /* Nothing steers the eye to a scrollbar here: the thumbnails are cropped at
+     the track's edge, which says "more this way" more clearly than a 4px bar
+     over a photo. Scrolling still works by wheel, trackpad, and by paging the
+     gallery, which pulls the active thumbnail into view. */
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.thumb {
+  position: relative;
+  flex: none;
+  width: var(--filmstrip-thumb);
+  height: var(--filmstrip-thumb);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-8);
+  /* Something to look at while a lazy thumbnail decodes, in the viewer's own
+     cream-on-plum key rather than an empty hole. */
+  background: rgba(var(--cream-rgb), 0.08);
+  overflow: hidden;
+  cursor: pointer;
+  /* The photos that are not on stage step back so the ringed one reads first,
+     without going so faint that the strip stops being scannable. */
+  opacity: 0.55;
+  transition: opacity 160ms var(--ease);
+}
+
+@media (hover: hover) {
+  .thumb:hover {
+    opacity: 1;
+  }
+}
+
+.thumbActive {
+  opacity: 1;
+}
+
+/* The coral frame around the photo on stage, as an overlay rather than as the
+   thumbnail's own `outline`, which is what it used to be.
+
+   An overlay because the two meanings have to be able to show at once. The
+   outline was the SAME property .thumb:focus-visible below needs, and that
+   rule is both more specific and later in source, so focusing the thumbnail
+   already on stage swapped its coral frame for the focus ring and the tile
+   stopped saying which of the two it meant. Moving the frame off `outline`
+   settles the fight instead of escalating it.
+
+   A pseudo-element rather than `box-shadow: inset`, which cannot work here:
+   an inner shadow paints above the background but BELOW content, and
+   .thumbImage covers the whole box, so an inset ring would be hidden under
+   the photo. A positioned ::after paints above it.
+
+   Never a border on .thumb itself: a border would add 2px to the box and
+   shove every thumbnail after it sideways each time the stage photo changed,
+   which turns paging through a gallery into a shuffling strip. */
+.thumbActive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px var(--accent);
+  pointer-events: none;
+}
+
+.thumb:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  /* The cream halo fills the outline's offset gap, which is what keeps the
+     coral ring legible against an arbitrary photo underneath it. */
+  box-shadow: var(--ring-cream);
+}
+
+.thumbImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Cover, not contain: a strip of letterboxed photos in mixed aspect ratios
+     reads as noise, while a uniform grid of crops reads as a filmstrip. */
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+
+.gifBadge {
+  position: absolute;
+  inset-inline-start: 4px;
+  inset-block-end: 4px;
+  padding: 1px 4px;
+  border-radius: var(--radius-4);
+  background: rgba(var(--plum-rgb), 0.72);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-10);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+/* Touch devices get the swipe gesture instead of the strip, exactly as they
+   get it instead of the viewer's arrow buttons (see .navButton in
+   chatImageViewer.module.css). `display: none` here does NOT contradict the
+   opacity-only rule above: that rule is about the chrome being momentarily out
+   of the way on a device that still has the strip, whereas this removes the
+   strip from the layout for the whole session, which is precisely what takes
+   its buttons out of the focus trap on a device with no pointer to click them
+   with. */
+@media (hover: none) {
+  .filmstrip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filmstrip,
+  .thumb {
+    transition: none;
+  }
+}

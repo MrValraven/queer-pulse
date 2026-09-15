@@ -10,6 +10,7 @@ import { useSaved } from "../../app/providers/useSaved";
 import { thread as threadPath } from "../../app/routeMap";
 import { CATS, type Reply, type ReplySortId } from "./forum.data";
 import { useThread } from "./api/useForum";
+import { isMaskedByline } from "./forumAuthor.helpers";
 import {
   useMarkThreadRead,
   useReply,
@@ -97,7 +98,11 @@ export function useThreadPageState() {
       kind: "post",
       title: threadData.title,
       href: threadPath(threadData.slug ?? threadData.id),
-      meta: threadData.author.name,
+      // The byline the reader saw. A masked thread saves under the
+      // placeholder rather than under a name the room was never shown.
+      meta: isMaskedByline(threadData)
+        ? t("forum:composePage.preview.anonymousName")
+        : threadData.author.name,
     });
   };
 

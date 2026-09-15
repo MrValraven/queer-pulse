@@ -10,6 +10,7 @@ import type { StagedPostImage } from "../communities/usePostImageAttach";
 import { thread as threadPath } from "../../app/routeMap";
 import { type useThreadModeration } from "./useThreadModeration";
 import { type useNestedReplyComposer } from "./useNestedReplyComposer";
+import { ThreadClosedBanner } from "./ThreadOpNotices";
 import styles from "./ThreadPage.module.css";
 
 /** The whole reply area of a thread: the sort bar, the reply tree (with its
@@ -27,6 +28,8 @@ export function ThreadReplySection({
   loading,
   isLocked,
   lockReason,
+  isClosed,
+  closesAt,
   nodes,
   replyKey,
   likedReplies,
@@ -58,6 +61,14 @@ export function ThreadReplySection({
   /** Optional moderator note explaining why the thread was locked, shown on
    *  the locked banner. Live-only; undefined/null in demo. */
   lockReason?: string | null;
+  /** The AUTHOR's own reply deadline has passed (`ForumThreadResponse.isClosed`).
+   *  Closes the thread to replies exactly as a moderator's lock does, and says
+   *  so in its own words: nobody did anything wrong, the window simply ran out.
+   *  A lock takes precedence when both are true, because a moderator's decision
+   *  is the one a reader needs to know about. */
+  isClosed?: boolean;
+  /** When the author's window shut (ISO), for the closed banner's date. */
+  closesAt?: string | null;
   /** Reply tree, already sorted (see buildReplyTree) — top-level nodes only;
    *  each node recurses into its own children. */
   nodes: ReplyNode[];
@@ -94,13 +105,15 @@ export function ThreadReplySection({
   onQuote: (replyItem: Reply) => void;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
 }) {
+  // Both bar the composer; which banner stands in for it is decided below.
+  const isRepliesShut = isLocked || !!isClosed;
   return (
     <>
       <ReplySortBar count={count} sort={sort} setSort={setSort} />
 
       <ThreadReplies
         loading={loading}
-        isLocked={isLocked}
+        isLocked={isRepliesShut}
         nodes={nodes}
         replyKey={replyKey}
         likedReplies={likedReplies}
@@ -151,6 +164,8 @@ export function ThreadReplySection({
 
       {isLocked ? (
         <LockedBanner reason={lockReason} />
+      ) : isClosed ? (
+        <ThreadClosedBanner closesAt={closesAt} />
       ) : (
         <ThreadComposer
           authorName={authorName}

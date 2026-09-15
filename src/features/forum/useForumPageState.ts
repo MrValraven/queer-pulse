@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useAuth } from "../../app/providers/authContext";
 import { useSocial } from "../../app/providers/useSocial";
+import { routes } from "../../app/routeMap";
 import { type Thread } from "./forum.data";
 import { useForumCounts, usePinnedThreads, useThreads } from "./api/useForum";
 import { useVotePost } from "./api/useForumMutations";
 import { type ForumThreadCounts } from "./api/forum.api";
-import { useCreateThreadFlow } from "./useCreateThreadFlow";
+import { composeHref } from "./compose/useComposeThreadSeeds";
 import { useForumRowModeration } from "./useForumRowModeration";
 import { useForumUrlParams } from "./useForumUrlParams";
 import { useForumFirstPostPrompt } from "./useForumFirstPostPrompt";
@@ -23,8 +24,13 @@ import {
 /**
  * Owns every ForumPage concern that isn't markup — thread source (with server
  * sort/tag/search), real OP voting, truthful counts, the first-post prompt, the
- * create-thread flow, the title-edit flow, and row moderation — lifting them
- * out of ForumPage so the route component stays well under the line budget.
+ * title-edit flow, and row moderation — lifting them out of ForumPage so the
+ * route component stays well under the line budget.
+ *
+ * Composing is NOT one of them any more. It has a route of its own
+ * (`/forum/new`), so there is no modal to open, nothing to seed through this
+ * hook, and no publish for it to own; every "write a post" affordance on this
+ * page is a plain link.
  *
  * `sort` is a plain state; `tag` + `q` live in the URL so they're shareable and
  * survive reloads. All three flow to `useThreads`/`useForumCounts`, which apply
@@ -36,21 +42,11 @@ import {
  */
 export function useForumPageState() {
   const { demoMode } = useDemoMode();
-  const { user } = useAuth();
+  const navigate = useNavigate();
   const simLoading = useSimulatedLoad();
 
-  const {
-    searchParams,
-    setSearchParams,
-    tag,
-    setTag,
-    q,
-    setQ,
-    cat,
-    setCat,
-    sort,
-    setSort,
-  } = useForumUrlParams();
+  const { searchParams, tag, setTag, q, setQ, cat, setCat, sort, setSort } =
+    useForumUrlParams();
 
   // Thread source: demo returns the full mock as one terminal page, live pages
   // through GET /forum/threads (already sorted/filtered) via "Load more".
@@ -106,46 +102,19 @@ export function useForumPageState() {
     extraThreadsCount: extraThreads.length,
   });
 
-  // Surface the new post regardless of current filter/sort, and treat it like
-  // any other first post — the invitation has done its job once they publish.
-  const {
-    composing,
-    composeSeed,
-    composeTags,
-    publishStatus,
-    openCompose,
-    closeCompose,
-    publishThread,
-  } = useCreateThreadFlow({
-    demoMode,
-    user,
-    setExtraThreads,
-    onAfterPublish: () => {
-      setCat("all");
-      setSort("new");
-      setTag(null);
-      setQ("");
-      dismissPrompt();
-    },
-  });
-
-  // DISC-5 — a topic page's "Write a post" CTA (`writeHrefForTag`) deep-links
-  // here as `?tag=<topic>&compose=1`. `tag` already scopes the thread list
-  // (read above); `compose=1` additionally auto-opens the composer seeded
-  // with that same tag, on mount only — a later in-page tag change (the
-  // sidebar filter chips) must NOT reopen the modal. The `compose` param is
-  // then stripped so a reload/share of the URL doesn't reopen it again.
+  // `?compose=1` used to open a modal over this page. That modal is gone, but
+  // the link outlived it: an old draft row, a bookmarked topic CTA, a shared
+  // URL. Anyone holding one lands on the composer itself, carrying the tag
+  // they arrived with. Replace rather than push, so Back goes where they came
+  // from instead of bouncing them straight through again.
+  //
+  // Mount only: a later in-page tag change (the sidebar filter chips) must not
+  // navigate anyone away mid-browse.
   useEffect(() => {
     if (searchParams.get("compose") !== "1") return;
-    openCompose("", tag ? [tag] : []);
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        next.delete("compose");
-        return next;
-      },
-      { replace: true },
-    );
+    void navigate(composeHref(routes.forumNew, tag ? { tag } : {}), {
+      replace: true,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -210,12 +179,6 @@ export function useForumPageState() {
     fetchNextPage,
     isFetchingNextPage,
     loading,
-    composing,
-    composeSeed,
-    composeTags,
-    publishStatus,
-    openCompose,
-    closeCompose,
     showFirstPostPrompt,
     dismissPrompt,
     allThreads,
@@ -242,6 +205,5 @@ export function useForumPageState() {
     resetFilters,
     onVote,
     moderation,
-    publishThread,
   };
 }

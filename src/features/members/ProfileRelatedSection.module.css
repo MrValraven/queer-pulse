@@ -23,6 +23,9 @@
   }
 }
 
+/* The card carries no padding of its own: the photo runs edge to edge and
+   `overflow: hidden` is what rounds its top corners, so everything below the
+   photo takes its inset from `.body`. */
 .card {
   display: flex;
   flex-direction: column;
@@ -30,7 +33,7 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-16);
-  padding: 12px;
+  overflow: hidden;
   transition:
     transform 0.35s var(--ease),
     box-shadow 0.35s var(--ease);
@@ -42,8 +45,12 @@
   }
 }
 
-.photo {
-  margin-bottom: 12px;
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 12px 14px 14px;
 }
 
 /* Same serif treatment the compact card used, so a member's name reads
@@ -54,7 +61,6 @@
   font-size: var(--text-18);
   color: var(--text-strong);
   line-height: 1.1;
-  padding: 0 4px;
 }
 .nameRow {
   display: inline-flex;
@@ -66,7 +72,6 @@
   font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 3px;
-  padding: 0 4px;
 }
 
 /* The one chip: why this person is close to the profile owner. Exactly one per

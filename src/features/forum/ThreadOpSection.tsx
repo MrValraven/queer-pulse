@@ -1,9 +1,12 @@
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Thread } from "./forum.data";
+import { isMaskedByline } from "./forumAuthor.helpers";
 import {
   canDeleteThread,
   canMoveThreadCategory,
 } from "./forumPageState.helpers";
 import { ThreadOpCard } from "./ThreadOpCard";
+import { useThreadPoll } from "./useThreadPoll";
 import {
   type deriveOpView,
   type useThreadModeration,
@@ -51,6 +54,17 @@ export function ThreadOpSection({
   // `canDeleteThread` is false on a demo thread (no slug), which is what leaves
   // the prototype's local tombstone behaviour exactly as it was.
   const canDelete = opView.opCanDelete || canDeleteThread(thread);
+  // The ballot, in whichever mode this is. Live casts the real vote and applies
+  // the response's released counts; demo overlays the prototype's own ballot on
+  // the mock, the same shape the OP vote already uses.
+  const poll = useThreadPoll(thread.slug, thread.poll);
+  const { t } = useTranslation();
+  // The report sheet names the byline the reader can SEE. On a masked thread
+  // that is the placeholder: a report is filed against a post, and the server
+  // already knows whose it is.
+  const reportedName = isMaskedByline(thread)
+    ? t("forum:composePage.preview.anonymousName")
+    : thread.author.name;
   return (
     <ThreadOpCard
       thread={thread}
@@ -66,7 +80,7 @@ export function ThreadOpSection({
         // numeric thread id — the latter targets a non-existent subject and
         // never reaches moderators. Demo mock threads carry a stub `opPostId`.
         moderation.setReportTarget({
-          authorName: thread.author.name,
+          authorName: reportedName,
           subjectId: thread.opPostId ?? String(thread.id),
           subjectType: "post",
         })
@@ -86,6 +100,10 @@ export function ThreadOpSection({
       }
       onMoveCategory={onMoveCategory}
       onEditTags={onEditTags}
+      poll={poll.poll}
+      onPollVote={poll.vote}
+      isPollVoting={poll.isVoting}
+      pollError={poll.error}
     />
   );
 }

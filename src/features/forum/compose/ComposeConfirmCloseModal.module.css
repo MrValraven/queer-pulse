@@ -1,0 +1,23 @@
+/* "Keep this as a draft?" The leave-the-composer question. */
+
+.body {
+  margin: 0;
+  font-size: var(--text-14-5);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  max-width: 48ch;
+}
+
+/* The draft's own words, quoted back. Kept to one line so a long title cannot
+   turn a three-line dialog into a page. */
+.body b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Holds Discard against the left edge and the two keep-it actions against the
+   right, so the destructive choice never sits under the thumb heading for
+   "Keep draft". */
+.footSpacer {
+  flex: 1 1 auto;
+}

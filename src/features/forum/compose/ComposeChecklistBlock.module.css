@@ -1,0 +1,104 @@
+/* ── Rail block: "Ready to post" ───────────────────────────────────────────
+   Status, so it is drawn as quietly as a list can be drawn: no card, no
+   border, no surface of its own. The rail already groups it; whitespace is
+   the grouping, and one more box would make the rail read as five competing
+   panels instead of one column of advice. */
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: var(--text-13-5);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+/* Advice rather than a requirement, so it sits a tier back until it is met. */
+.rowOptional {
+  color: var(--ink-40);
+}
+
+/* Done: full-strength ink, so a finished row reads as settled rather than as
+   one more thing on the list. */
+.rowDone {
+  color: var(--ink);
+}
+
+.rowOptional.rowDone {
+  color: var(--ink-60);
+}
+
+.box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-avatar);
+  border: 1.5px solid rgba(var(--line-rgb), 0.25);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-10);
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+
+.rowDone .box {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+.label {
+  min-width: 0;
+}
+
+/* "17 more characters": the one row that counts down. Pushed to the far edge
+   so the labels stay a clean left-aligned column to read down. */
+.hint {
+  margin-inline-start: auto;
+  flex: none;
+  font-size: var(--text-11-5);
+  color: var(--accent-ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.optional {
+  margin-inline-start: auto;
+  flex: none;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box {
+    transition: none;
+  }
+}

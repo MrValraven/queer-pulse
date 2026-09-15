@@ -1,0 +1,188 @@
+/* The body sits under a hairline that separates it from the title, which is
+   the only rule between the two fields in the prototype. */
+.bodyField {
+  position: relative;
+  margin-top: 22px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  padding-top: 14px;
+}
+
+/* ---- Toolbar row --------------------------------------------------------- */
+.toolsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
+}
+
+.toolIcon {
+  width: 15px;
+  height: 15px;
+}
+
+@media (hover: hover) {
+  .tool:not(:disabled):hover {
+    background: rgba(var(--plum-rgb), 0.06);
+    color: var(--ink);
+  }
+}
+
+.tool:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tool:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.toolSeparator {
+  width: 1px;
+  height: 18px;
+  margin: 0 6px;
+  border: none;
+  background: rgba(var(--line-rgb), 0.12);
+}
+
+/* Write | Preview is pushed to the far end of the same row. */
+.modeSwitch {
+  margin-left: auto;
+}
+
+/* ---- The body itself ----------------------------------------------------- */
+.bodyWrap {
+  position: relative;
+}
+
+.bodyInput {
+  width: 100%;
+  min-height: 220px;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  resize: vertical;
+  font-family: var(--sans);
+  font-size: var(--text-17);
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.bodyInput::placeholder {
+  color: rgba(var(--ink-rgb), 0.35);
+}
+
+.bodyInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The preview stands in the same box as the input, so switching tabs does not
+   move the footer under it. */
+.preview {
+  min-height: 220px;
+  font-size: var(--text-17);
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.previewEmpty {
+  margin: 0;
+  font-style: italic;
+  color: var(--ink-40);
+}
+
+/* ---- "Start from an outline" -------------------------------------------- */
+.scaffold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  margin-top: 6px;
+  border: 1px dashed rgba(var(--line-rgb), 0.25);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  padding: 7px 13px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+
+.scaffoldIcon {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+@media (hover: hover) {
+  .scaffold:hover {
+    border-style: solid;
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+}
+
+.scaffold:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ---- Footer -------------------------------------------------------------- */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.footerHint {
+  flex: 1;
+  min-width: 180px;
+}
+
+.footerCount {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool,
+  .scaffold {
+    transition: none;
+  }
+}

@@ -1,0 +1,219 @@
+/* ── Rail block: "Posting as" ──────────────────────────────────────────────
+   The author row is the only carded surface here; the two switches under it
+   sit on the rail's own ground, tucked close so proximity says they belong to
+   the row above rather than to the preview below. */
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heading {
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 2px;
+}
+
+/* ── Author row ──────────────────────────────────────────────────────────── */
+
+.authorRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  transition:
+    background var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+
+/* The byline changed, so the row changes with it: coral for the institutional
+   voice, violet for a post going out without a name. The words in the row say
+   the same thing, so the wash is reinforcement rather than the signal. */
+.authorRowOfficial {
+  background: rgba(var(--accent-rgb), 0.08);
+  border-color: rgba(var(--accent-rgb), 0.25);
+}
+
+.authorRowAnonymous {
+  background: rgba(var(--violet-rgb), 0.08);
+  border-color: rgba(var(--violet-rgb), 0.25);
+}
+
+.avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-ink);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.authorText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.authorName {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.authorSub {
+  font-size: var(--text-12);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+/* ── Switch rows ─────────────────────────────────────────────────────────── */
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.optionLabel {
+  font-size: var(--text-13);
+  color: var(--ink);
+}
+
+.optionHint {
+  font-size: var(--text-11-5);
+  line-height: var(--lh-body);
+  color: var(--ink-40);
+  max-width: 40ch;
+}
+
+/* A bare fieldset used for its `disabled` behaviour alone: it natively
+   disables the switch inside it, which is what keeps an unavailable control
+   out of the tab order without reaching for `inert`. */
+.guard {
+  margin: 0;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+  display: inline-flex;
+}
+
+.guard:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Co-author ───────────────────────────────────────────────────────────── */
+
+.coAuthor {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 6px 4px 0;
+}
+
+.coAuthorPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.coAuthorChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 11px 3px 3px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+/* Grows the tap area to 44px without moving the chip's ink. */
+.coAuthorChip::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: var(--tap-min);
+  transform: translateY(-50%);
+}
+
+.coAuthorChip[aria-pressed="true"] {
+  border-color: rgba(var(--accent-rgb), 0.6);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+.coAuthorAvatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+  background: rgba(var(--jade-rgb), 0.18);
+  color: var(--jade-ink);
+  font-size: var(--text-9);
+  font-weight: 700;
+}
+
+.coAuthorAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .coAuthorChip:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+  }
+
+  .coAuthorChip[aria-pressed="true"]:hover {
+    border-color: rgba(var(--accent-rgb), 0.75);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .authorRow,
+  .coAuthorChip {
+    transition: none;
+  }
+}

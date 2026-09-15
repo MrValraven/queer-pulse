@@ -134,21 +134,20 @@ export function estimateRowHeight(row: MessageRow | undefined): number {
   }
 }
 
-/** The vertical space that used to come from flexbox `gap` between this row
- *  and the next: 10px across a day boundary (day separator ↔ its first block,
- *  or a day's last block ↔ the next day separator — matches `.dayGroup`'s and
- *  `.areaContent`'s own 10px gaps), 12px between ordinary content in the same
- *  day (matches `.runs`' 12px), and 0 for the very last row — `.areaContent`
- *  is still a flex column with its own 10px gap between the virtualized sizer
- *  and the typing-indicator row that follows it, so baking in a trailing gap
- *  here would double it. Applied as `paddingBottom` (not `margin`) on the
- *  row's own measured element, so it's counted in `measureElement`'s
- *  `getBoundingClientRect()` and the virtualizer's offsets stay correct. */
-export function gapAfterRow(
-  row: MessageRow,
-  nextRow: MessageRow | undefined,
-): number {
-  if (!nextRow) return 0;
-  if (row.kind === "daySeparator" || nextRow.kind === "daySeparator") return 10;
-  return 12;
-}
+/** The vertical space between two virtualized rows, applied as
+ *  `paddingBottom` (not `margin`) on the row's own measured element so it is
+ *  counted in `measureElement`'s `getBoundingClientRect()` and the
+ *  virtualizer's offsets stay correct. It replaced the flexbox `gap` the
+ *  day-groups used before the log was virtualized.
+ *
+ *  ONE value for every row, including the last one, and deliberately not a
+ *  function of what comes next: a row's measured height must never change
+ *  because of its neighbours, or the virtualizer only learns the new height a
+ *  frame later and everything below hops. Measured, when the last row's gap
+ *  was 0 and a followed row's was 10-12px: sending a message grew the row
+ *  ABOVE the new one by 10px and the whole log jumped one frame after the new
+ *  bubble had painted, which is the "tiny flash" this pane was reported for.
+ *  The earlier 10px-across-a-day-boundary rhythm is folded into this single
+ *  12px for the same reason — a 2px difference at day separators, against a
+ *  height that is final the moment a row is measured. */
+export const ROW_GAP_PX = 12;

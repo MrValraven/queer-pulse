@@ -1,5 +1,7 @@
+import { useId } from "react";
 import { Link } from "react-router-dom";
 import { TbPin, TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
+import { FiBarChart2 } from "react-icons/fi";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -7,9 +9,14 @@ import { thread as threadPath } from "../../app/routeMap";
 import { type Thread } from "./forum.data";
 import { ForumAvatar, ProfileLink, OfficialBadge } from "./ForumAuthor";
 import { ForumCategoryBadge } from "./ForumCategoryBadge";
-import { authorHref } from "./forumAuthor.helpers";
+import { authorHref, isMaskedByline } from "./forumAuthor.helpers";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "./PostActionsMenu";
+import {
+  ContentWarningPill,
+  ContentWarningReveal,
+} from "./ForumContentWarning";
+import { useContentWarningReveal } from "./forumWarnings.helpers";
 import styles from "./ForumPage.module.css";
 
 /** The server caps `unreadReplyCount` at 99, so 99 means "99 or more" and is
@@ -81,11 +88,25 @@ export function ForumThreadRow({
   // insisting there is nothing new. Only 1..99 shows, and 99 is the server's
   // cap, so it reads as "99+" rather than claiming an exact ninety-nine.
   const unreadReplyCount = thread.unreadReplyCount ?? 0;
-  const hasUnreadReplies = unreadReplyCount > 0;
   const unreadReplyLabel =
     unreadReplyCount >= UNREAD_REPLY_CAP
       ? t("forum:threadList.unreadCap")
       : fmt.number(unreadReplyCount);
+  // The author's warnings cover the taste of the post until a reader chooses
+  // otherwise. The choice is remembered for this thread for the session, so
+  // uncovering it here and opening the thread does not ask twice.
+  const excerptId = useId();
+  const hasWarnings = !!thread.contentWarnings?.length;
+  const { isRevealed, reveal, cover } = useContentWarningReveal(
+    thread.slug ?? String(thread.id),
+  );
+  const isExcerptCovered = hasWarnings && !!thread.excerpt && !isRevealed;
+  // A masked byline links nowhere (`authorHref` already returns undefined for
+  // a handle-less author) and wears the same placeholder name the composer's
+  // preview drew while the thread was being written.
+  const isMasked = isMaskedByline(thread);
+  const anonymousName = t("forum:composePage.preview.anonymousName");
+  const authorName = isMasked ? anonymousName : thread.author.name;
   return (
     // `.rowFade` lets the open menu escape this row's stacking context — the
     // FadeIn wrapper keeps `will-change: transform` for the life of the element,
@@ -119,37 +140,12 @@ export function ForumThreadRow({
             <span className={styles.voteN}>{thread.upvotes}</span>
           </button>
           <div>
-            <div className={styles.badges}>
-              {thread.pinned && (
-                <span className={styles.pinBadge}>
-                  <TbPin /> {t("forum:threadList.pinnedBadge")}
-                </span>
-              )}
-              {/* Withdrawn threads reach only a platform moderator's list
-                  (PRD-160); everyone else's read path filters them out. */}
-              {thread.isDeleted && (
-                <span className={styles.withdrawnBadge}>
-                  {t("forum:threadList.withdrawnBadge")}
-                </span>
-              )}
-              <ForumCategoryBadge
-                category={thread.category}
-                onMove={isMovable ? () => onMoveCategory?.(thread) : undefined}
-              />
-              {thread.tags.map((tg) => (
-                <button
-                  key={tg}
-                  type="button"
-                  className={styles.tag}
-                  aria-label={t("forum:threadList.filterByTagAria", {
-                    tag: tg,
-                  })}
-                  onClick={() => onTagClick(tg)}
-                >
-                  #{tg}
-                </button>
-              ))}
-            </div>
+            <ThreadRowBadges
+              thread={thread}
+              isMovable={isMovable}
+              onMoveCategory={onMoveCategory}
+              onTagClick={onTagClick}
+            />
             <div className={styles.threadTitle}>
               <Link
                 to={threadPath(thread.slug ?? thread.id)}
@@ -164,60 +160,39 @@ export function ForumThreadRow({
                 which maps to "" here: render nothing at all, no placeholder and
                 no reserved space. */}
             {thread.excerpt && (
-              <div className={styles.threadExcerpt}>{thread.excerpt}</div>
-            )}
-            <div className={styles.threadMeta}>
-              <ProfileLink
-                to={authorHref(thread.author)}
-                name={thread.author.name}
-                official={thread.author.official}
-                className={styles.tmWho}
+              <div
+                id={excerptId}
+                // A blur is no cover at all to a screen reader, so the covered
+                // taste is hidden from assistive tech too. It holds no focusable
+                // content, so there is nothing to make inert.
+                aria-hidden={isExcerptCovered || undefined}
+                className={[
+                  styles.threadExcerpt,
+                  isExcerptCovered && styles.threadExcerptCovered,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
               >
-                <ForumAvatar
-                  className={styles.tmAv}
-                  style={{
-                    background: thread.author.background,
-                    color: thread.author.color,
-                  }}
-                  person={{
-                    slug: thread.author.slug,
-                    photo: thread.author.photo,
-                    initials: thread.author.initials,
-                    name: thread.author.name,
-                    official: thread.author.official,
-                  }}
-                />
-                <span className={styles.tmAuthor}>{thread.author.name}</span>
-                <MemberStaffBadge slug={thread.author.slug} />
-                {thread.author.official && <OfficialBadge />}
-              </ProfileLink>
-              <span className={styles.tmDot} />
-              <span>{thread.posted}</span>
-              <span className={styles.tmDot} />
-              <span>
-                {t("forum:repliesCount", {
-                  count: thread.comments,
-                  formatted: fmt.number(thread.comments),
-                })}
-              </span>
-              {hasUnreadReplies && (
-                <span
-                  className={styles.unreadBadge}
-                  // The visible chip is deliberately terse; the accessible name
-                  // says what the number MEANS, so it is never announced as a
-                  // bare digit floating after the reply count.
-                  aria-label={t("forum:threadList.unreadAria", {
-                    count: unreadReplyCount,
-                    formatted: unreadReplyLabel,
-                  })}
-                >
-                  {t("forum:threadList.unreadBadge", {
-                    count: unreadReplyCount,
-                    formatted: unreadReplyLabel,
-                  })}
-                </span>
-              )}
-            </div>
+                {thread.excerpt}
+              </div>
+            )}
+            {hasWarnings && thread.excerpt && (
+              <ContentWarningReveal
+                warnings={thread.contentWarnings}
+                isRevealed={isRevealed}
+                onToggle={isRevealed ? cover : reveal}
+                controlsId={excerptId}
+                className={styles.warningReveal}
+              />
+            )}
+            <ThreadRowMeta
+              thread={thread}
+              authorName={authorName}
+              isMasked={isMasked}
+              anonymousName={anonymousName}
+              unreadReplyCount={unreadReplyCount}
+              unreadReplyLabel={unreadReplyLabel}
+            />
           </div>
         </div>
         {/* Always rendered: the menu holds mute/block for every other member's
@@ -246,7 +221,7 @@ export function ForumThreadRow({
             pinned={!!thread.pinned}
             author={{
               slug: thread.author.slug,
-              name: thread.author.name,
+              name: authorName,
               official: thread.author.official,
             }}
             onEdit={() => onEditTitle(thread)}
@@ -258,5 +233,156 @@ export function ForumThreadRow({
         </div>
       </div>
     </FadeIn>
+  );
+}
+
+/**
+ * The chips above a row's title: pinned, withdrawn, category, the author's
+ * content warning, a poll indicator, and the tag filters.
+ *
+ * Its own component so `ForumThreadRow` stays inside the 200-line budget as the
+ * full-page composer's fields reached the list.
+ */
+function ThreadRowBadges({
+  thread,
+  isMovable,
+  onMoveCategory,
+  onTagClick,
+}: {
+  thread: Thread;
+  isMovable: boolean;
+  onMoveCategory?: (thread: Thread) => void;
+  onTagClick: (tag: string) => void;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const pollOptionCount = thread.poll?.options.length ?? 0;
+  return (
+    <div className={styles.badges}>
+      {thread.pinned && (
+        <span className={styles.pinBadge}>
+          <TbPin /> {t("forum:threadList.pinnedBadge")}
+        </span>
+      )}
+      {/* Withdrawn threads reach only a platform moderator's list
+                (PRD-160); everyone else's read path filters them out. */}
+      {thread.isDeleted && (
+        <span className={styles.withdrawnBadge}>
+          {t("forum:threadList.withdrawnBadge")}
+        </span>
+      )}
+      <ForumCategoryBadge
+        category={thread.category}
+        onMove={isMovable ? () => onMoveCategory?.(thread) : undefined}
+      />
+      <ContentWarningPill
+        warnings={thread.contentWarnings}
+        className={styles.warningPill}
+      />
+      {/* A quiet note that there is something to answer here, with how
+                many answers it offers. No counts: the row has no business
+                showing a tally the thread page may be withholding. */}
+      {pollOptionCount > 0 && (
+        <span className={styles.pollBadge}>
+          <FiBarChart2 aria-hidden="true" />
+          {t("forum:threadList.pollBadge", {
+            count: pollOptionCount,
+            formatted: fmt.number(pollOptionCount),
+          })}
+        </span>
+      )}
+      {thread.tags.map((tg) => (
+        <button
+          key={tg}
+          type="button"
+          className={styles.tag}
+          aria-label={t("forum:threadList.filterByTagAria", {
+            tag: tg,
+          })}
+          onClick={() => onTagClick(tg)}
+        >
+          #{tg}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** The byline and counts under a row's excerpt. A MASKED byline wears the
+ *  placeholder name and links nowhere, which the caller has already resolved
+ *  off the response rather than re-deriving here. */
+function ThreadRowMeta({
+  thread,
+  authorName,
+  isMasked,
+  anonymousName,
+  unreadReplyCount,
+  unreadReplyLabel,
+}: {
+  thread: Thread;
+  authorName: string;
+  isMasked: boolean;
+  anonymousName: string;
+  unreadReplyCount: number;
+  unreadReplyLabel: string;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const hasUnreadReplies = unreadReplyCount > 0;
+  return (
+    <div className={styles.threadMeta}>
+      <ProfileLink
+        to={authorHref(thread.author)}
+        name={authorName}
+        official={thread.author.official}
+        className={styles.tmWho}
+      >
+        <ForumAvatar
+          className={styles.tmAv}
+          style={{
+            background: thread.author.background,
+            color: thread.author.color,
+          }}
+          person={{
+            slug: thread.author.slug,
+            photo: isMasked ? undefined : thread.author.photo,
+            initials: isMasked
+              ? anonymousName.slice(0, 1)
+              : thread.author.initials,
+            name: authorName,
+            official: thread.author.official,
+          }}
+        />
+        <span className={styles.tmAuthor}>{authorName}</span>
+        {!isMasked && <MemberStaffBadge slug={thread.author.slug} />}
+        {thread.author.official && <OfficialBadge />}
+      </ProfileLink>
+      <span className={styles.tmDot} />
+      <span>{thread.posted}</span>
+      <span className={styles.tmDot} />
+      <span>
+        {t("forum:repliesCount", {
+          count: thread.comments,
+          formatted: fmt.number(thread.comments),
+        })}
+      </span>
+      {hasUnreadReplies && (
+        <span
+          className={styles.unreadBadge}
+          // The visible chip is deliberately terse; the accessible name
+          // says what the number MEANS, so it is never announced as a
+          // bare digit floating after the reply count.
+          aria-label={t("forum:threadList.unreadAria", {
+            count: unreadReplyCount,
+            formatted: unreadReplyLabel,
+          })}
+        >
+          {t("forum:threadList.unreadBadge", {
+            count: unreadReplyCount,
+            formatted: unreadReplyLabel,
+          })}
+        </span>
+      )}
+    </div>
   );
 }

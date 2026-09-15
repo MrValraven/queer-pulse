@@ -1,0 +1,11 @@
+/* "Schedule this post": one field, and the reason when the moment will not
+   work. */
+
+.field {
+  padding-block: 4px;
+}
+
+/* Pushes Back and Schedule to the right edge of the modal footer. */
+.footSpacer {
+  flex: 1 1 auto;
+}

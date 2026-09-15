@@ -25,7 +25,7 @@ export interface MyCommunityOption {
  * given roles (e.g. `["owner", "mod"]` for a picker that requires speaking
  * for the community, not just belonging to it) — omitted/empty keeps every
  * membership, unchanged for existing "attach to any of my communities"
- * callers (`ComposeThreadModal`, gathering creation).
+ * callers (the forum composer, gathering creation).
  */
 export function useMyCommunityOptions(
   options: { roles?: CommunityRole[] } = {},

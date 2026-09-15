@@ -119,7 +119,15 @@ export function useMessageScroll(
    *  WhatsApp-style snap) EXCEPT the explicit pill tap (`jumpToLatest`), which
    *  is a user-initiated jump across potentially many messages and reads
    *  better as a glide. Thread-switch, new-message, and resize-follow are all
-   *  instant — the reader should never watch a growing thread glide into place. */
+   *  instant — the reader should never watch a growing thread glide into place.
+   *
+   *  Nothing wraps this in an animation: a transform on the log would hang
+   *  below its layout box and hand the next pin scroll room that does not
+   *  really exist. `.area`'s block padding is outside the virtualizer's
+   *  coordinate space (no `scrollMargin`/`paddingStart` is passed), so
+   *  `scrollToIndex(last, "end")` already targets ~40px past the true bottom
+   *  and will consume any such room on sight. Measured: an animated log walked
+   *  itself up 45px per frame and then snapped back. */
   const scrollToBottom = useCallback(
     (animate: boolean) => {
       const rowCount = rowVirtualizer.options.count;

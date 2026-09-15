@@ -38,6 +38,7 @@ vi.mock("socket.io-client", () => ({ io: ioMock }));
 // rather than blanket-invalidating queries). Every export realtime.ts imports
 // is provided so its other frame handlers still resolve.
 vi.mock("./messageCache", () => ({
+  bumpConversationUnread: vi.fn(),
   upsertMessage: vi.fn(),
   patchConversationPreview: vi.fn(),
   patchMessageDelete: vi.fn(),
@@ -273,6 +274,69 @@ describe("cache invalidation", () => {
     expect(invalidateSpy).toHaveBeenCalledWith({
       queryKey: ["conversations-unread-count"],
     });
+  });
+
+  // Regression: a member sitting on /messages with a DIFFERENT chat open never
+  // saw an unread dot/count on that chat's inbox row until a remount — the nav
+  // badge (`["conversations-unread-count"]`, asserted above) updated, but
+  // nothing ever raised the row's own `unread`/`unreadCount`. Fixed by
+  // `bumpConversationUnread`, called from the same non-active-conversation
+  // branch as the badge invalidate.
+  it("conversation:message raises the inbox row's unread state for a NON-active conversation", async () => {
+    const mod = await loadRealtime();
+    const messageCache = await import("./messageCache");
+    await mount(mod);
+    const call = socket.on.mock.calls.find(
+      (c) => c[0] === "conversation:message",
+    );
+    const handler = call?.[1] as (data: unknown) => void;
+    const message = { id: "m-1" };
+    handler({ conversationId: "c-1", message });
+    expect(messageCache.bumpConversationUnread).toHaveBeenCalledWith(
+      expect.anything(),
+      "c-1",
+    );
+  });
+
+  it("conversation:message does NOT raise the inbox row's unread state for the ACTIVE conversation", async () => {
+    const mod = await loadRealtime();
+    const { RealtimeProvider, useRealtimeConnection, useJoinConversation } =
+      mod;
+    const messageCache = await import("./messageCache");
+    function Consumer() {
+      useRealtimeConnection();
+      useJoinConversation("c-1");
+      return null;
+    }
+    render(
+      <RealtimeProvider>
+        <Consumer />
+      </RealtimeProvider>,
+    );
+    await settle();
+    const call = socket.on.mock.calls.find(
+      (c) => c[0] === "conversation:message",
+    );
+    const handler = call?.[1] as (data: unknown) => void;
+    const message = { id: "m-1" };
+    handler({ conversationId: "c-1", message });
+    expect(messageCache.bumpConversationUnread).not.toHaveBeenCalled();
+  });
+
+  it("only counts a message once toward the inbox unread badge, even if both message:new and conversation:message deliver it", async () => {
+    const mod = await loadRealtime();
+    const messageCache = await import("./messageCache");
+    await mount(mod);
+    const messageNewHandler = socket.on.mock.calls.find(
+      (c) => c[0] === "message:new",
+    )?.[1] as (data: unknown) => void;
+    const conversationMessageHandler = socket.on.mock.calls.find(
+      (c) => c[0] === "conversation:message",
+    )?.[1] as (data: unknown) => void;
+    const message = { id: "m-1", sender: { handle: "someone-else" } };
+    messageNewHandler({ conversationId: "c-1", message });
+    conversationMessageHandler({ conversationId: "c-1", message });
+    expect(messageCache.bumpConversationUnread).toHaveBeenCalledTimes(1);
   });
 
   it("read is a watermark-only frame and does NOT refetch the conversation list", async () => {

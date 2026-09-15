@@ -5,6 +5,7 @@ import type { GifAttachment } from "../../shared/api/gifs";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import { nextLocalId } from "./useMessagesController.helpers";
 import { mediaKindOf, type MediaKind } from "./messageSending.helpers";
+import { clockLabel } from "./api/messages.adapters";
 
 interface SendActionsDeps {
   active: Conversation | null;
@@ -91,12 +92,22 @@ export function useMessageSendActions({
       const convId = active.id;
       const localId = nextLocalId();
       const replyTo = currentReplyPreview();
+      // Stamp the optimistic bubble with a REAL send time, formatted with the
+      // same `clockLabel` the server rows use, rather than a "Just now"
+      // placeholder, so the label is final from the first paint and never
+      // changes on ack. That keeps the bubble's width, its run grouping (a
+      // same-sender run only splits on a >15 min gap when both messages carry
+      // `at`), and the group "Seen by N" maths (which needs `at` to compare
+      // against read watermarks) stable across the optimistic-to-server swap,
+      // so nothing re-lays out.
+      const at = new Date().toISOString();
       // Optimistic append — instant feedback in both modes. In live mode the
       // server refetch is authoritative, so clear the optimistic copy on success.
       appendOptimistic(convId, {
         from: "me",
         text: trimmedBody,
-        time: t("messages:time.justNow"),
+        time: clockLabel(at),
+        at,
         status: "sending",
         localId,
         replyTo,
@@ -110,7 +121,6 @@ export function useMessageSendActions({
       active,
       currentReplyPreview,
       appendOptimistic,
-      t,
       replyDraft,
       setReplyDraft,
       deliver,
@@ -127,12 +137,17 @@ export function useMessageSendActions({
       const convId = active.id;
       const localId = nextLocalId();
       const replyTo = currentReplyPreview();
+      // See `send`: a real `at` plus a final clock label from the first paint,
+      // so the ack cannot resize the bubble, re-group its run, or flash a
+      // premature "Seen by N".
+      const at = new Date().toISOString();
       appendOptimistic(convId, {
         from: "me",
         text: "GIF",
         kind: "gif",
         attachment,
-        time: t("messages:time.justNow"),
+        time: clockLabel(at),
+        at,
         status: "sending",
         localId,
         replyTo,
@@ -146,7 +161,6 @@ export function useMessageSendActions({
       active,
       currentReplyPreview,
       appendOptimistic,
-      t,
       replyDraft,
       setReplyDraft,
       deliver,
@@ -166,6 +180,10 @@ export function useMessageSendActions({
       const localId = nextLocalId();
       const replyTo = currentReplyPreview();
       const fallbackText = t("messages:attachments.fallbackText");
+      // See `send`: a real `at` plus a final clock label from the first paint,
+      // so the ack cannot resize the bubble, re-group its run, or flash a
+      // premature "Seen by N".
+      const at = new Date().toISOString();
       appendOptimistic(convId, {
         from: "me",
         text: fallbackText,
@@ -174,7 +192,8 @@ export function useMessageSendActions({
         // storage key (`sendAttachment`) if this ever needs a retry/replay.
         attachment: localAttachment ?? attachment,
         sendAttachment: attachment,
-        time: t("messages:time.justNow"),
+        time: clockLabel(at),
+        at,
         status: "sending",
         localId,
         replyTo,
@@ -215,13 +234,18 @@ export function useMessageSendActions({
       const localId = nextLocalId();
       const replyTo = currentReplyPreview();
       const fallbackText = t("messages:attachments.documentFallbackText");
+      // See `send`: a real `at` plus a final clock label from the first paint,
+      // so the ack cannot resize the bubble, re-group its run, or flash a
+      // premature "Seen by N".
+      const at = new Date().toISOString();
       appendOptimistic(convId, {
         from: "me",
         text: fallbackText,
         kind: "document",
         attachment: localAttachment ?? attachment,
         sendAttachment: attachment,
-        time: t("messages:time.justNow"),
+        time: clockLabel(at),
+        at,
         status: "sending",
         localId,
         replyTo,

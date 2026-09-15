@@ -21,6 +21,13 @@ export interface DocumentAttachment {
   contentType: string;
   /** Mirrors `GifAttachment.provider` — always `"upload"` today. */
   provider: string;
+  /** Optional member-written caption sent alongside the file in the SAME
+   *  message (WhatsApp-style: staged with the attachment in the composer,
+   *  typed once, sent together). Sanitized server-side like an ordinary
+   *  message body. Absent whenever the sender left it blank — never an
+   *  empty string, so callers can test it with a plain truthiness check
+   *  rather than comparing against a localized "Document" fallback label. */
+  caption?: string;
 }
 
 /**

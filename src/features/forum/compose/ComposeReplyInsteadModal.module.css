@@ -1,0 +1,59 @@
+/* "Reply there instead?" The offer to join a thread that already exists. */
+
+.body {
+  margin: 0;
+  font-size: var(--text-14-5);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  max-width: 56ch;
+}
+
+.body b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* The member's own words, framed as the reply they are about to become. */
+.preview {
+  margin-top: 14px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-12);
+  padding: 10px 12px;
+}
+
+.previewLabel {
+  display: block;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 6px;
+}
+
+.previewText {
+  margin: 0;
+  /* The composer's line breaks survive into the preview, so the member is
+     looking at their own paragraphs rather than one run-on block. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: var(--text-13-5);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  /* Tall drafts scroll inside the box instead of pushing the two actions off
+     the bottom of a phone screen. */
+  max-height: 180px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.previewText[data-empty="true"] {
+  color: var(--ink-40);
+  font-style: italic;
+}
+
+/* Pushes both actions to the right edge of the modal footer. */
+.footSpacer {
+  flex: 1 1 auto;
+}

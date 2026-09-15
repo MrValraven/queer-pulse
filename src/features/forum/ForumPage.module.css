@@ -729,3 +729,90 @@
   justify-content: center;
   margin-top: 12px;
 }
+
+/* ── Content warnings & polls on a row ─────────────────────────────────────
+   The same pill the composer's preview draws (ComposePreviewCard.module.css →
+   `.warningPill`), so what a member saw while writing is what the list
+   publishes. */
+.warningPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--radius-6);
+  background: rgba(var(--violet-rgb), 0.12);
+  color: var(--violet);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+.warningPill svg {
+  flex: none;
+  width: 11px;
+  height: 11px;
+}
+/* A poll is attached, and here is how many answers it offers. No tally: the
+   thread page may still be withholding one, and a row that leaked it would
+   undo the whole point of withholding. */
+.pollBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--ink-60);
+}
+.pollBadge svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+/* The taste of a warned post, present but unreadable until somebody asks for
+   it. Never auto-revealed. */
+.threadExcerptCovered {
+  filter: blur(4px);
+  user-select: none;
+}
+/* The control that uncovers it. It sits above the title's stretched ::after
+   (the same `z-index: 1` every other control on this row uses), so pressing it
+   reveals the excerpt instead of opening the thread. */
+.warningReveal {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: var(--radius-5);
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--violet);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.warningReveal svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+.warningReveal:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) and (pointer: fine) {
+  .warningReveal:hover {
+    color: var(--accent-ink);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .threadExcerptCovered {
+    transition: none;
+  }
+}

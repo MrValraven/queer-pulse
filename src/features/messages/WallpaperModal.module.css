@@ -1,10 +1,11 @@
-/* Chat-wallpaper picker. Both the preview and the swatches paint themselves
-   with the SAME tokens the conversation panel uses (chat-wallpaper.css), so a
-   swatch is a real miniature of the wallpaper rather than an approximation of
-   it that can drift.
+/* Chat-wallpaper picker. Both the preview and the swatch miniatures paint
+   themselves with the SAME tokens the conversation panel uses
+   (chat-wallpaper.css), so a swatch is a real miniature of the wallpaper
+   rather than an approximation of it that can drift.
 
-   Both shrink `--chat-doodle-tile` locally: the real tile is 400px, which at
-   swatch size would land nothing but empty space between marks. */
+   Both shrink the pattern tile with `--chat-pattern-scale` rather than
+   overriding `--chat-pattern-tile` directly: a pattern that sets its own tile
+   size in chat-wallpaper.css still scales down correctly this way. */
 
 /* ── Preview ──────────────────────────────────────────────────────────────── */
 .preview {
@@ -14,14 +15,7 @@
   border-radius: var(--radius-14);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   background-color: var(--cream);
-  /* The ground tint is a translucent colour, so it goes on as a flat gradient
-     layer over --cream rather than as background-color, which the cream
-     already occupies. */
-  background-image: linear-gradient(
-    var(--chat-ground, transparent),
-    var(--chat-ground, transparent)
-  );
-  --chat-doodle-tile: 190px;
+  --chat-pattern-scale: 0.475;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -34,17 +28,20 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0;
-  background-color: rgba(var(--line-rgb), var(--chat-doodle-alpha));
-  -webkit-mask-image: var(--chat-doodle-mask);
-  mask-image: var(--chat-doodle-mask);
-  -webkit-mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
-  mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  opacity: var(--chat-pattern-on, 0);
+  background-color: rgba(var(--line-rgb), var(--chat-pattern-alpha));
+  -webkit-mask-image: var(--chat-pattern-mask, none);
+  mask-image: var(--chat-pattern-mask, none);
+  -webkit-mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
+  mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
   -webkit-mask-repeat: repeat;
   mask-repeat: repeat;
-}
-.preview[data-wallpaper-doodles="on"]::after {
-  opacity: 1;
 }
 .previewBubbleReceived,
 .previewBubbleSent {
@@ -71,35 +68,46 @@
   color: rgba(var(--cream-rgb), 0.97);
 }
 
-/* ── Ground swatches ──────────────────────────────────────────────────────── */
+/* ── Pattern swatches ─────────────────────────────────────────────────────── */
 .swatches {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
 }
+/* Plain unstyled column: it exists only to group the miniature and its
+   caption into one radio control, so the selected-state ring below stays on
+   the miniature rather than boxing the caption text too. */
+.swatchButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 56px;
+  background: none;
+  border: 0;
+  padding: 0;
+  border-radius: var(--radius-12);
+  cursor: pointer;
+}
 .swatch,
 .swatchSelected {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* 44px is the touch floor the rest of this route holds to (see `.ctbIconBtn`
-     and the topbar's 44px rows). */
-  width: 44px;
-  height: 44px;
+  /* A line-art miniature needs enough area to show a few recognisable marks.
+     The old colour swatches were 44px, since a flat colour reads fine at any
+     size. */
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-12);
-  cursor: pointer;
   background-color: var(--cream);
-  background-image: linear-gradient(
-    var(--chat-ground, transparent),
-    var(--chat-ground, transparent)
-  );
-  --chat-doodle-tile: 62px;
-  /* Deliberately far above the log's own 8%: at 44px an 8% wash of any
-     hue is indistinguishable from plain cream, so the six swatches would
-     all read as the same empty square. The swatch identifies the colour;
-     the preview above it shows the real strength. */
-  --chat-ground-tint: 30%;
+  /* At 0.32 a 400px tile becomes 128px, so a 56px miniature shows around
+     three marks at roughly 6px, enough to tell a leaf from a star, while the
+     caption below carries the name. Waves is a 480px tile, so its miniature
+     shows a 154px window instead, and the math still holds because the scale
+     multiplies each pattern's own tile size. */
+  --chat-pattern-scale: 0.32;
   transition: transform var(--dur-fast) var(--ease);
 }
 .swatch::after,
@@ -109,74 +117,77 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0;
-  background-color: rgba(var(--line-rgb), var(--chat-doodle-alpha));
-  -webkit-mask-image: var(--chat-doodle-mask);
-  mask-image: var(--chat-doodle-mask);
-  -webkit-mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
-  mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  opacity: var(--chat-pattern-on, 0);
+  /* Lifted well above the log's own alpha: at 56px a swatch shows only a
+     handful of marks, and at the page's own alpha they would read as a smudge
+     rather than as the pattern being chosen. It also flattens each pattern's
+     own alpha difference (waves ships lighter and confetti heavier in the
+     log, but every miniature paints at the same weight), and the preview
+     above shows the real weight. */
+  background-color: rgba(var(--line-rgb), 0.3);
+  -webkit-mask-image: var(--chat-pattern-mask, none);
+  mask-image: var(--chat-pattern-mask, none);
+  -webkit-mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
+  mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
   -webkit-mask-repeat: repeat;
   mask-repeat: repeat;
-}
-.swatch[data-wallpaper-doodles="on"]::after,
-.swatchSelected[data-wallpaper-doodles="on"]::after {
-  /* Lifted well above the log's own alpha: at 62px a swatch shows only three
-     or four marks, and at 5% they would read as a smudge rather than as the
-     pattern being chosen. */
-  opacity: 1;
-  background-color: rgba(var(--line-rgb), 0.3);
 }
 .swatch {
   border: 1px solid rgba(var(--line-rgb), 0.14);
 }
 .swatchSelected {
   /* The selected state is a ring rather than a checkmark: a mark drawn over a
-     44px swatch hides the very pattern it is confirming. */
+     56px swatch hides the very pattern it is confirming. */
   border: 2px solid var(--accent-ink);
   box-shadow: var(--ring-accent-strong);
 }
-.swatch:hover,
-.swatchSelected:hover {
+.swatchButton:hover .swatch,
+.swatchButton:hover .swatchSelected {
   transform: translateY(-1px);
 }
-.swatch:focus-visible,
-.swatchSelected:focus-visible {
+/* The miniature is the visual control; the caption is its label, so the
+   focus ring belongs on the miniature, not on the whole column. */
+.swatchButton:focus-visible {
+  outline: none;
+}
+.swatchButton:focus-visible .swatch,
+.swatchButton:focus-visible .swatchSelected {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
+}
+/* Unselected only: a selected miniature already carries its accent ring as
+   `box-shadow` (see `.swatchSelected` above), and this would replace it. The
+   outline above is enough of a focus indicator for the selected swatch. */
+.swatchButton:focus-visible .swatch {
+  box-shadow: var(--ring-cream);
 }
 @media (prefers-reduced-motion: reduce) {
   .swatch,
   .swatchSelected {
     transition: none;
   }
-  .swatch:hover,
-  .swatchSelected:hover {
+  .swatchButton:hover .swatch,
+  .swatchButton:hover .swatchSelected {
     transform: none;
   }
 }
-
-/* ── Doodles switch ───────────────────────────────────────────────────────── */
-.doodleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 18px 0 14px;
+.caption,
+.captionSelected {
+  font-size: var(--text-12);
+  text-align: center;
 }
-.doodleText {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+.caption {
+  color: rgba(var(--ink-rgb), 0.72);
 }
-.doodleTitle {
-  font-size: var(--text-14);
-  font-weight: 600;
+.captionSelected {
   color: var(--ink);
-}
-.doodleSub {
-  font-size: var(--text-13);
-  color: rgba(var(--ink-rgb), 0.66);
+  font-weight: 600;
 }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
@@ -189,7 +200,7 @@
   flex-wrap: wrap;
 }
 /* Keeps Cancel/Save hugging the end even when Reset is absent (the common
-   case — a chat following the base wallpaper has nothing to reset). */
+   case, a chat following the base wallpaper has nothing to reset). */
 .footerEnd {
   display: flex;
   align-items: center;

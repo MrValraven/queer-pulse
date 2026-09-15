@@ -13,6 +13,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { Socket } from "socket.io-client";
 import { queryClient } from "./queryClient";
 import {
+  bumpConversationUnread,
   patchConversationPreview,
   patchMessageDelete,
   patchMessageEdit,
@@ -48,6 +49,11 @@ import type {
  *  for a conversation. The ack is a "received up to now" watermark, so a burst
  *  collapses to one cheap frame instead of one per message. */
 const DELIVERED_ACK_DEBOUNCE_MS = 500;
+
+/** How many message ids `countInboxUnread` remembers for its dedupe guard
+ *  (FIFO-evicted past this). Only needs to cover a burst's worth of frames, not
+ *  a session's worth — see `countedInboxMessageIds`. */
+const INBOX_UNREAD_DEDUPE_LIMIT = 200;
 
 /** socket.io wants event maps as listener signatures; ours are payload types. */
 type ServerListeners = {
@@ -105,6 +111,13 @@ class RealtimeClient {
   /** Per-conversation debounce timers for the outbound delivered ack — an
    *  inbound burst coalesces into one "received up to now" frame. */
   private deliveredAckTimers = new Map<string, number>();
+  /** Message ids already counted toward an inbox row's unread badge by
+   *  `countInboxUnread`, FIFO-evicted past `INBOX_UNREAD_DEDUPE_LIMIT`. A
+   *  participant could in principle receive the SAME message over BOTH
+   *  `message:new` and `conversation:message` on a non-active conversation
+   *  (e.g. a room join that hasn't caught up with `activeConversationId` yet),
+   *  which would otherwise double-count it into `unreadCount`. */
+  private countedInboxMessageIds = new Set<string>();
   /** The current set of online user ids, maintained from `presence` (single
    *  add/remove) and `presence:snapshot` (full replace) frames. */
   private onlineUserIds = new Set<string>();
@@ -191,6 +204,22 @@ class RealtimeClient {
       this.socket?.emit("delivered", { conversationId });
     }, DELIVERED_ACK_DEBOUNCE_MS);
     this.deliveredAckTimers.set(conversationId, timer);
+  }
+  /** Raise a NON-active conversation's inbox row unread badge for one message,
+   *  deduped by `countedInboxMessageIds` so the same message can't double-count
+   *  if it reaches us on both `message:new` and `conversation:message` (see
+   *  that field's doc). Owns both the dedupe bookkeeping and the actual
+   *  `bumpConversationUnread` cache patch — called from both handlers' existing
+   *  non-active-conversation branch, right alongside their unread-count
+   *  invalidate. */
+  private countInboxUnread(conversationId: string, messageId: string): void {
+    if (this.countedInboxMessageIds.has(messageId)) return;
+    this.countedInboxMessageIds.add(messageId);
+    if (this.countedInboxMessageIds.size > INBOX_UNREAD_DEDUPE_LIMIT) {
+      const oldest = this.countedInboxMessageIds.values().next().value;
+      if (oldest !== undefined) this.countedInboxMessageIds.delete(oldest);
+    }
+    bumpConversationUnread(this.qc, conversationId);
   }
   onPresence(handler: (online: ReadonlySet<string>) => void): () => void {
     this.presenceHandlers.add(handler);
@@ -345,6 +374,13 @@ class RealtimeClient {
         void this.qc.invalidateQueries({
           queryKey: ["conversations-unread-count"],
         });
+        // The NAV badge invalidate above is a separate, isolated key from the
+        // inbox row's own `unread`/`unreadCount` in `["conversations"]` — the
+        // list is never invalidated here (see the file header), so nothing else
+        // raises that row's dot/count for a chat the member doesn't have open.
+        // Bump it locally too; the member's OWN send always targets the open
+        // thread, so this branch can never fire for our own message.
+        this.countInboxUnread(conversationId, message.id);
       }
       // We received it → ack delivery so the SENDER's tick advances to a double
       // check. Only the joined (open) thread streams `message:new`, so this only
@@ -439,6 +475,16 @@ class RealtimeClient {
         void this.qc.invalidateQueries({
           queryKey: ["conversations-unread-count"],
         });
+        // ENG-160 follow-up: this frame is what a member sitting on /messages
+        // with a DIFFERENT chat open never had raise that OTHER chat's inbox
+        // row — `patchConversationPreview` above only ever touches
+        // preview/time, nothing else here raised `unread`/`unreadCount`, so the
+        // row stayed at 0 until a remount refetched `["conversations"]`. Bump
+        // it locally now, deduped against `message:new` double-delivery by
+        // `countInboxUnread`. No own-echo check needed: the gateway's fan-out
+        // (`fanOutConversationMessage`) already excludes the sender server-side,
+        // so this branch can never fire for our own send.
+        this.countInboxUnread(conversationId, message.id);
       }
       // We received it (over our OWN user room, even though this thread isn't
       // the open one) → ack delivery so the SENDER's tick advances from one
@@ -622,6 +668,7 @@ class RealtimeClient {
       window.clearTimeout(timer);
     }
     this.deliveredAckTimers.clear();
+    this.countedInboxMessageIds.clear();
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;

@@ -99,6 +99,11 @@ export const messages: Catalog = {
   "viewer.prev": "Foto anterior",
   "viewer.next": "Foto seguinte",
 
+  // Tira de miniaturas na parte inferior do visualizador de fotos em ecrã inteiro
+  "viewer.filmstripLabel": "Fotos nesta conversa",
+  "viewer.filmstripItem": "Foto {index} de {total}, de {sender}",
+  "viewer.gifBadge": "GIF",
+
   // Anexos de documento (DocumentComposerButton, MessageDocumentAttachment,
   // MessageBubbleBody, documentUploadProcessing)
   "attachments.openDocument": "Enviar um ficheiro",
@@ -113,6 +118,10 @@ export const messages: Catalog = {
     "Esse ficheiro é demasiado grande. Mantém-no abaixo de {maxLabel}.",
   "attachments.documentError.retry":
     "Não conseguimos enviar esse ficheiro. Tenta de novo.",
+
+  // Links dentro de uma mensagem (linkify.tsx). Texto só para leitores de ecrã
+  // que explica o ícone de link externo.
+  "link.opensExternally": "abre um site externo",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
@@ -144,6 +153,11 @@ export const messages: Catalog = {
   "search.emptyTitle": "Ainda não há correspondências",
   "search.emptyDescription":
     "Nada na tua caixa de entrada corresponde a “{query}”. Tenta outra palavra, ou o nome de alguém.",
+  // Mostrado para uma pesquisa demasiado curta para ter corrido de facto —
+  // distinto de `emptyTitle`, que assume uma pesquisa real sem resultados.
+  "search.tooShortTitle": "Continua a escrever",
+  "search.tooShortDescription":
+    "Escreve pelo menos duas letras e procuramos na tua caixa de entrada.",
 
   // "Pesquisar nesta conversa" (ThreadSearchModal), aberto a partir do
   // cabeçalho da conversa — limitado à conversa aberta, não a toda a caixa de
@@ -398,22 +412,21 @@ export const messages: Catalog = {
   // `chromeless`), por isso a caixa de entrada leva a sua própria saída.
   "rail.backToPlatform": "Voltar ao QueerPulse",
   // ── Papel de parede da conversa (ConversationMenu → WallpaperModal) ──
-  // Os nomes dos fundos são os nomes dos QUADRADOS de cor, ou seja, o que um
-  // leitor de ecrã anuncia num botão sem texto. Cores simples de propósito:
-  // quem escolhe de ouvido precisa de saber o que está a levar.
+  // Os nomes dos padrões são a legenda sob cada amostra em miniatura, servindo
+  // também de nome acessível do botão. Nomes simples de propósito: quem
+  // compara as legendas precisa de saber o que está a escolher.
   "conversation.menuAriaLabel": "Mais opções para esta conversa",
   "wallpaper.menuAction": "Papel de parede",
   "wallpaper.title": "Papel de parede",
   "wallpaper.sub": "Escolhe o fundo para {name}.",
-  "wallpaper.groundLegend": "Cor de fundo",
-  "wallpaper.ground.default": "Liso",
-  "wallpaper.ground.lilac": "Lilás",
-  "wallpaper.ground.jade": "Jade",
-  "wallpaper.ground.coral": "Coral",
-  "wallpaper.ground.amber": "Âmbar",
-  "wallpaper.ground.rose": "Rosa",
-  "wallpaper.doodlesTitle": "Rabiscos",
-  "wallpaper.doodlesSub": "Um padrão suave por cima da cor.",
+  "wallpaper.patternLegend": "Padrão",
+  "wallpaper.pattern.plain": "Liso",
+  "wallpaper.pattern.doodles": "Rabiscos",
+  "wallpaper.pattern.botanical": "Botânico",
+  "wallpaper.pattern.sky": "Céu noturno",
+  "wallpaper.pattern.confetti": "Confetti",
+  "wallpaper.pattern.waves": "Ondas",
+  "wallpaper.pattern.terrazzo": "Terrazzo",
   "wallpaper.everyChatTitle": "Usar em todas as conversas",
   "wallpaper.everyChatSub":
     "Aplica-se às conversas que não têm papel de parede próprio.",

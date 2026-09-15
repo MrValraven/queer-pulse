@@ -14,12 +14,13 @@ import {
 import { Section } from "./ProfileSections";
 import styles from "./ProfileRelatedSection.module.css";
 
-/** Height of a card's photo panel. Four of these sit in a row on a 1100px
- *  profile column, so the panel stays a little wider than it is tall: the
- *  proportions of a portrait crop of a face. */
-const PHOTO_HEIGHT = 168;
+/** Height of a card's photo panel. The photo is full-bleed, so on a 1100px
+ *  profile column four cards in a row give it roughly 260px of width: at 190
+ *  the panel stays a little wider than it is tall, which is the proportion a
+ *  portrait crop of a face reads at. */
+const PHOTO_HEIGHT = 190;
 
-/** Pixels to request from a resizable photo host. A card is roughly 250px wide
+/** Pixels to request from a resizable photo host. A card is roughly 260px wide
  *  on a desktop profile column and full-width on a phone, so 640 covers both at
  *  2x; without it a fluid `width="100%"` slot asks for the whole viewport
  *  width (see `ImageSlot`'s `defaultSrcSize`), four times over. */
@@ -100,6 +101,8 @@ function RelatedMemberCard({
   const roleLine = member.hood ? `${craft} · ${member.hood}` : craft;
   return (
     <Link to={`/members/${member.slug}`} className={styles.card}>
+      {/* The photo runs edge to edge: the card's own `overflow: hidden` rounds
+          its top corners, so the slot asks for no radius of its own. */}
       <ImageSlot
         src={member.avatarUrl}
         alt={fullName}
@@ -108,28 +111,29 @@ function RelatedMemberCard({
         height={PHOTO_HEIGHT}
         width="100%"
         srcSize={PHOTO_SRC_PX}
-        radius={14}
-        className={styles.photo}
+        radius={0}
       />
-      <div className={styles.name}>
-        <span className={styles.nameRow}>
-          {fullName}
-          <MemberStaffBadge slug={member.slug} />
-        </span>
+      <div className={styles.body}>
+        <div className={styles.name}>
+          <span className={styles.nameRow}>
+            {fullName}
+            <MemberStaffBadge slug={member.slug} />
+          </span>
+        </div>
+        <div className={styles.role}>{roleLine}</div>
+        {member.closeness && (
+          <span
+            className={`${styles.chip} ${styles[closenessTone(member.closeness.kind)]}`}
+          >
+            {closenessTone(member.closeness.kind) === "vouch" ? (
+              <FiCheck aria-hidden />
+            ) : (
+              <FiArrowRight aria-hidden />
+            )}
+            {closenessLabel(member.closeness, ownerFirst, t)}
+          </span>
+        )}
       </div>
-      <div className={styles.role}>{roleLine}</div>
-      {member.closeness && (
-        <span
-          className={`${styles.chip} ${styles[closenessTone(member.closeness.kind)]}`}
-        >
-          {closenessTone(member.closeness.kind) === "vouch" ? (
-            <FiCheck aria-hidden />
-          ) : (
-            <FiArrowRight aria-hidden />
-          )}
-          {closenessLabel(member.closeness, ownerFirst, t)}
-        </span>
-      )}
     </Link>
   );
 }

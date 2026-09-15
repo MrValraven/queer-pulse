@@ -1,6 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn, LoadErrorState } from "../../shared/components/ui";
-import { ComposeThreadModal } from "./ComposeThreadModal";
 import { ConfirmDeleteModal } from "./ConfirmDeleteModal";
 import { EditTitleModal } from "./EditTitleModal";
 import { FirstPostPrompt } from "./FirstPostPrompt";
@@ -19,11 +18,7 @@ export function ForumPage() {
 
   return (
     <PageShell>
-      <ForumHero
-        onNewPost={() => page.openCompose()}
-        q={page.q}
-        onSearch={page.setQ}
-      />
+      <ForumHero q={page.q} onSearch={page.setQ} />
 
       <section className={styles.body}>
         <div className="wrap">
@@ -37,11 +32,7 @@ export function ForumPage() {
             <div>
               {page.showFirstPostPrompt && (
                 <FadeIn>
-                  <FirstPostPrompt
-                    onWrite={() => page.openCompose()}
-                    onPickStarter={(text) => page.openCompose(text)}
-                    onDismiss={page.dismissPrompt}
-                  />
+                  <FirstPostPrompt onDismiss={page.dismissPrompt} />
                 </FadeIn>
               )}
               {page.hasThreadsError ? (
@@ -60,7 +51,6 @@ export function ForumPage() {
                   onVote={page.onVote}
                   filtered={page.filtered}
                   onShowAll={page.resetFilters}
-                  onCompose={() => page.openCompose()}
                   canEditThread={page.canEditThread}
                   canMoveCategory={page.canMoveCategory}
                   canDeleteThread={page.canDeleteThread}
@@ -84,16 +74,6 @@ export function ForumPage() {
           </div>
         </div>
       </section>
-
-      {page.composing && (
-        <ComposeThreadModal
-          initialTitle={page.composeSeed}
-          initialTags={page.composeTags}
-          status={page.publishStatus}
-          onClose={page.closeCompose}
-          onPublish={page.publishThread}
-        />
-      )}
 
       {page.editingThread && (
         <EditTitleModal

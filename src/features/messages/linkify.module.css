@@ -1,0 +1,45 @@
+/* Styling for the anchors `linkify.tsx` builds inside a chat bubble.
+
+   `src/styles/base.css` resets every `a` to `color: inherit` +
+   `text-decoration: none`, which is right for the rest of the app (nav items,
+   cards, buttons-as-links) and wrong here: a pasted URL sitting in a run of
+   sent text has no other affordance, so without an explicit colour and
+   underline it reads as ordinary prose and nobody taps it.
+
+   `--chat-link-ink` is an indirection rather than a fixed colour because the
+   same anchor renders on two very different grounds. A received bubble is
+   `--paper`, where the AA-safe text coral `--accent-text` is the right ink; a
+   sent bubble is `--plum`, where that same ink would be nearly invisible.
+   MessagesPage.module.css sets `--chat-link-ink` on `.sent` and lets
+   `.received` fall through to the default below. Custom-property inheritance
+   is what makes this work across two CSS Modules: class names are localized
+   per file, so a descendant selector written over there could never match
+   `.chatLink` in here, but an inherited variable crosses the boundary for
+   free — and the long-press overlay, which reuses the same bubble classes,
+   picks up the right value with no extra rule. */
+
+.chatLink {
+  color: var(--chat-link-ink, var(--accent-text));
+  text-decoration: underline;
+  /* Enough offset to clear descenders in the shortened label without the rule
+     drifting off the word it belongs to. */
+  text-underline-offset: 0.18em;
+  text-decoration-skip-ink: auto;
+}
+
+/* The external-link icon is glued to the end of the label, so it has to sit on
+   the text baseline instead of riding at the cap line the way an inline-flex
+   box otherwise would. */
+.externalIcon {
+  display: inline-flex;
+  align-items: center;
+  width: 0.85em;
+  height: 0.85em;
+  margin-inline-start: 0.25em;
+  vertical-align: -0.09em;
+}
+
+.externalIcon svg {
+  width: 100%;
+  height: 100%;
+}

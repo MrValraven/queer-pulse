@@ -62,15 +62,9 @@
   padding: 10px 12px 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
-.railFooterRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-/* The way out takes the row's slack; the bell stays a fixed square beside it,
-   so the two line up with the full-width account chip below. */
+/* The way out spans the footer, lining up with the full-width account chip
+   below it. */
 .railBack {
-  flex: 1;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -104,53 +98,10 @@
     transform: none;
   }
 }
-.railBell {
-  position: relative;
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-11);
-  background: rgba(var(--plum-rgb), 0.04);
-  color: rgba(var(--ink-rgb), 0.72);
-  font-size: var(--text-17);
-  text-decoration: none;
-  /* A <button> now (it opens the notifications popover), so drop the UA
-     padding and restore the pointer the old link had. */
-  padding: 0;
-  cursor: pointer;
-  transition:
-    background var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
-}
-@media (hover: hover) {
-  .railBell:hover {
-    background: rgba(var(--plum-rgb), 0.09);
-    color: var(--text-strong);
-  }
-}
-.railBack:focus-visible,
-.railBell:focus-visible {
+.railBack:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
-}
-.railBellBadge {
-  position: absolute;
-  top: 3px;
-  right: 4px;
-  min-width: 15px;
-  height: 15px;
-  padding: 0 3px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-  color: rgb(var(--cream-rgb));
-  font-size: var(--text-9);
-  font-weight: 700;
 }
 
 /* Thread list */
@@ -496,57 +447,55 @@
   flex-direction: column;
   min-width: 0;
   position: relative;
-  /* The two wallpaper layers below sit at z-index 0 and every child is raised
-     to 1, so the panel needs its own stacking context or those z-indexes would
+  /* The wallpaper layer below sits at z-index 0 and every child is raised to
+     1, so the panel needs its own stacking context or those z-indexes would
      be compared against boxes outside it (the thread list, the app chrome). */
   isolation: isolate;
 }
 /* ── Chat wallpaper ────────────────────────────────────────────────────────
-   Two layers, because one element cannot carry both a masked and an unmasked
-   background: `::before` is the flat ground tint, `::after` is the doodle tile
-   masked out of a flat ink fill. Tokens (including the tile itself) live in
-   chat-wallpaper.css; the pick that sets the data-attributes lives in
+   One layer: `::after` is the pattern tile masked out of a flat ink fill.
+   Tokens (including the tile itself) live in chat-wallpaper.css, keyed off
+   `data-wallpaper-pattern`; the pick that sets that attribute lives in
    wallpaper.ts.
 
-   Both hang off the PANEL rather than `.area`, the scroller, so the pattern
-   stays put while messages scroll — the WhatsApp behaviour — and the browser
-   never repaints the tile on scroll. `.topbar` and `.composer` paint their own
+   `--chat-pattern-on` is unset for "plain" (chat-wallpaper.css has no rule for
+   it), so the layer falls back to opacity 0 with no code here caring which
+   pattern is picked: adding a new pattern is purely a chat-wallpaper.css
+   change.
+
+   Hangs off the PANEL rather than `.area`, the scroller, so the pattern stays
+   put while messages scroll, the WhatsApp behaviour, and the browser never
+   repaints the tile on scroll. `.topbar` and `.composer` paint their own
    opaque `--paper`, so they cover the wallpaper and read as the distinct bands
    above and below the log that this look wants. */
-.convoPanel::before,
 .convoPanel::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-}
-.convoPanel::before {
-  background-color: var(--chat-ground, transparent);
-}
-.convoPanel::after {
   /* --line-rgb is one of the tokens that flips with the theme, which is the
      whole reason the tile is a mask: plum ink on cream, cream ink on
      near-black, one asset. */
-  background-color: rgba(var(--line-rgb), var(--chat-doodle-alpha));
-  -webkit-mask-image: var(--chat-doodle-mask);
-  mask-image: var(--chat-doodle-mask);
-  -webkit-mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
-  mask-size: var(--chat-doodle-tile) var(--chat-doodle-tile);
+  opacity: var(--chat-pattern-on, 0);
+  background-color: rgba(var(--line-rgb), var(--chat-pattern-alpha));
+  -webkit-mask-image: var(--chat-pattern-mask, none);
+  mask-image: var(--chat-pattern-mask, none);
+  -webkit-mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
+  mask-size: calc(
+      var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1)
+    )
+    calc(var(--chat-pattern-tile, 400px) * var(--chat-pattern-scale, 1));
   -webkit-mask-repeat: repeat;
   mask-repeat: repeat;
-  /* Off unless the pick asks for it. Hiding via opacity (rather than not
-     emitting the layer) keeps the mask decoded once and makes the toggle in
-     the picker flip instantly. */
-  opacity: 0;
 }
-.convoPanel[data-wallpaper-doodles="on"]::after {
-  opacity: 1;
-}
-/* Every child rides above both layers. `> *` rather than the three class names
-   because ConversationTopSection is a fragment: the header, the connection
-   banner and the pinned banner are all direct children here, and a future
-   fourth would otherwise render behind the wallpaper. `.composerDock` is
+/* Every child rides above the wallpaper layer. `> *` rather than the three
+   class names because ConversationTopSection is a fragment: the header, the
+   connection banner and the pinned banner are all direct children here, and a
+   future fourth would otherwise render behind the wallpaper. `.composerDock` is
    already `position: relative` (it anchors `.jumpPill`); adding it to `.area`
    and the banners is inert, since nothing in the panel positions against
    `.convoPanel` itself. */
@@ -759,6 +708,19 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  /* NO bottom-anchoring here (`margin-block-start: auto`, to make a short
+     thread hug the composer). It was tried, and it breaks the virtualizer:
+     `useMessageRowVirtualizer` passes no `scrollMargin`, so
+     @tanstack/react-virtual computes every row offset as if `.virtualSizer`
+     began at this scroller's origin. An auto margin pushes the sizer down by
+     however much slack the thread has, so `scrollToIndex(last, "end")` then
+     targets an offset that EXISTS ONLY IF something inflates the scroll area
+     — which an entrance transform does, for as long as it runs. Measured: the
+     pin ate that phantom room, the glide read it as real content movement and
+     grew, which made more room, and an already-onscreen row travelled
+     441 → 457 → 403 → 471 → 457px before settling. Bottom-anchoring needs the
+     virtualizer's coordinate space fixed first (`scrollMargin`, or moving
+     `.area`'s block padding into `paddingStart`/`paddingEnd`). */
 }
 /* The virtualized message rows' positioning root — `@tanstack/react-virtual`
    sizes this to its running total-height and absolutely positions each row
@@ -907,18 +869,6 @@
     transform: none;
   }
 }
-/* Sent bubbles rise from the composer side (bottom-right); received from the
-   left — a small directional cue that new messages spring from where they came. */
-@keyframes msgBubbleInSent {
-  from {
-    opacity: 0;
-    transform: translate(4px, 8px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 /* Plain fade + rise (no scale) — used by controls that float centered rather
    than growing from a bottom corner (the jump-to-latest pill). */
 @keyframes jumpPillIn {
@@ -931,25 +881,16 @@
     transform: none;
   }
 }
-.bubble,
-.emojiOnly {
-  transform-origin: bottom left;
-}
-.sent {
-  transform-origin: bottom right;
-}
-/* Entrance plays ONLY for a genuinely new bubble — see `playEntrance` in
-   MessageRun.tsx, frozen at this exact bubble's own mount so a later
-   re-render (a status-tick update, a sibling's reaction) can never retrigger
-   it. Applied as its own modifier class rather than unconditionally on
-   `.bubble`/`.emojiOnly` so opening/switching a thread SNAPS every
-   already-there bubble into place instead of animating a 20-50-bubble swarm. */
-.bubbleEnter {
-  animation: msgBubbleIn var(--dur-base) var(--ease) both;
-}
-.sent.bubbleEnter {
-  animation-name: msgBubbleInSent;
-}
+/* A bubble has NO entrance animation, deliberately: it pops in where it
+   belongs and the log snaps up under it, which is how WhatsApp reads and what
+   this pane was asked for. Fading one in flashes the text; scaling it shimmers
+   as the glyphs resnap to the pixel grid; and translating it is worse than
+   either, because a transform hanging below its layout box adds that much to
+   the scroller's `scrollHeight` for as long as it runs, and this log's pin
+   will consume that room on sight (see `.areaContent` above and
+   `scrollToBottom` in `useMessageScroll`). The chrome keyframes keep their
+   fade+scale: a picker, the typing row and the overlay clones are surfaces
+   appearing, not words arriving. */
 
 .bubble {
   --bubble-radius: 20px;
@@ -981,6 +922,22 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 0.97);
   box-shadow: var(--shadow-e2);
+
+  /* Ink for a link inside this bubble, read by `.chatLink` in
+     linkify.module.css. Class names are localized per CSS Module, so a
+     descendant selector from here could never reach that class — an inherited
+     custom property is the one thing that crosses the boundary.
+
+     `--accent-text` (the default over there) is the palette's AA-safe text
+     coral for light grounds; on this plum bubble it all but disappears.
+     `--accent-soft` #ffc4af on `--plum` #2d1b3d clears 8:1, so it stays
+     unmistakably a link without shouting over the cream body text. No new
+     token: both already exist in colors.css.
+
+     `.received` needs no counterpart — it falls through to the default. The
+     long-press overlay reuses these same bubble classes, so it inherits the
+     right value for free. */
+  --chat-link-ink: var(--accent-soft);
 }
 
 /* ── Grouped-run corner shaping ──
@@ -1505,6 +1462,21 @@
 .runSent .bubbleMetaBelow {
   align-self: flex-end;
 }
+/* The card-only link-preview text bubble's meta (`floating={false}` but still
+   `isOnBubbleSurface`) is the one `.bubbleMetaBelow` that lands as a child of
+   `.bubble` itself, not a direct flex child of `.bubbleWrap` — `.bubble` is
+   `display: flow-root` (see above), so `align-self` above has nothing to act
+   on there, sent or received. Swap the inline-flex box for a block-level one
+   sized to its own content, then a lone start-margin of `auto` pushes it
+   flush against the bubble's end edge — the standard end-align trick for a
+   block box in normal flow. Scoped to `.bubble`'s direct child so the
+   emoji/image/document bubbles above (never nested in `.bubble`) are
+   untouched. */
+.bubble > .bubbleMetaBelow {
+  display: flex;
+  width: fit-content;
+  margin-inline-start: auto;
+}
 .bubbleMetaReceived {
   color: var(--ink-40);
 }
@@ -1514,6 +1486,13 @@
 .metaTick {
   display: inline-flex;
   align-items: center;
+  /* Pinned to the WIDEST glyph on the ladder (the 17px double check), with the
+     narrower clock/single check centred inside it. Without this the meta grows
+     5px the moment "sent" becomes "delivered", and since the bubble is
+     `width: fit-content` around a FLOATED meta, that twitches the whole bubble
+     (and can re-wrap its text) about a second after the message lands. */
+  width: 17px;
+  justify-content: center;
 }
 /* The ladder's ticks: the sending clock, the single-check "sent", and the
    double-check "delivered" all inherit the muted meta ink (`.bubbleMetaSent` /
@@ -1598,11 +1577,10 @@
 .composerRow {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
 }
 
-/* The input pill. Everything except the send button lives inside it — the
-   attach paperclip, the textarea, the shortcut "?" — the way WhatsApp and
+/* The input pill. Everything lives inside it — the attach paperclip, the
+   textarea, the shortcut "?", the send button — the way WhatsApp and
    Telegram build a composer, rather than a row of outlined circles flanking
    a separate field. It owns the border, radius, fill and focus treatment that
    used to sit on `.composerTa`, so the whole thing reads as ONE control.
@@ -1773,6 +1751,61 @@
   font-size: var(--text-12);
   color: var(--ink-60);
 }
+
+/* ── Attachment caption (image/gif, document, and the preview-unavailable
+   stand-ins) ──
+   WhatsApp-style: an attachment can carry an optional member-written caption
+   staged with it in the composer and sent as ONE message (see
+   `GifAttachment.caption` / `DocumentAttachment.caption`).
+
+   `.attachmentGroup` uses `display: table` — the one CSS mechanism built
+   specifically for "a caption reads at exactly its content's own width,
+   never wider": the media (photo, GIF, file-card, or the dashed "unavailable"
+   stand-in) becomes the table's single anonymous cell, which is what sets the
+   table's shrink-to-fit width; `.attachmentCaption`, a `table-caption`, is
+   laid out AT that already-computed width without ever feeding its own
+   content width back into it. A `flex-direction: column` + `align-items:
+   stretch` box was tried first, but a caption's max-content width (its width
+   if it never wrapped) can legally feed back into a shrink-to-fit flex
+   container's own size before stretch applies — exactly the "long caption
+   stretches the bubble" bug this rule exists to prevent — where
+   `table-caption` has no such feedback path. */
+.attachmentGroup {
+  display: table;
+  max-width: 100%;
+}
+/* No coloured bubble surface to sit on (the media above it has none either),
+   so the caption gets the same small washed panel this file already gives
+   other chrome-less attachment content (`.documentCard`, `.imagePreviewUnavailable`)
+   rather than bare text floating on the cream ground. Body-copy size/leading
+   match `.bubble` exactly (`--bubble-line`'s 1.42 restated as a literal here,
+   since that custom property is scoped to `.bubble` and this panel is never
+   its descendant), since a caption IS message text, just attached to a photo
+   instead of standing alone. */
+.attachmentCaption {
+  display: table-caption;
+  caption-side: bottom;
+  margin-block-start: 6px;
+  padding: 7px 11px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-inline-start-width: 3px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--plum-rgb), 0.06);
+  color: var(--ink);
+  font-size: var(--text-body);
+  line-height: 1.42;
+  overflow-wrap: break-word;
+}
+/* Sent/received accent-bar language matches `.replyQuote` above (plum vs.
+   coral) — the only existing precedent in this file for telling sent and
+   received content apart when neither has its own coloured bubble surface. */
+.attachmentCaptionReceived {
+  border-inline-start-color: var(--plum);
+}
+.attachmentCaptionSent {
+  border-inline-start-color: var(--accent);
+}
+
 /* The composer's in-pill icon buttons: the attach paperclip at the leading
    edge and the shortcut "?" at the trailing one. Flush 44px squares with no
    border or fill of their own — `.composerField` already draws the one box
@@ -1884,17 +1917,28 @@
   box-shadow: none;
   border-radius: 0;
 }
+/* Send sits at the pill's trailing edge, INSIDE it — a filled plum circle
+   against the field's quiet outline, the only thing in the composer with that
+   much weight. It is only on screen once there's something to send: an empty
+   composer shows attach, the field and the shortcut "?" alone, and the circle
+   swells in the moment the first non-blank character lands.
+
+   It stays mounted and collapses to zero width rather than unmounting, so
+   clearing the draft (or sending it) plays the same transition BACKWARDS from
+   a state the browser has actually painted, instead of blinking out. `width`
+   is what the transition animates, which is also what lets the textarea take
+   the space back — `overflow: hidden` clips the arrow while it closes.
+
+   38px against the 44px inner line leaves ~3px of field visible around the
+   circle, which is what reads as "inside the input" rather than as a button
+   butted up against its edge; `margin-block-end` centres it on a single-line
+   draft while the pill's `align-items: flex-end` pins it to the last line once
+   the textarea grows. */
 .sendBtn {
-  /* The one control OUTSIDE the pill — a filled plum circle against the
-     field's quiet outline, so "send" is the only thing in the row with
-     weight. 47px matches `.composerField`'s single-line height (44px of
-     textarea + its 1.5px borders); with the row's `align-items: flex-end`,
-     an equal height is what makes the button's centre line up with a
-     single-line input's centre, while still bottom-aligning to the last line
-     once the textarea grows. A shorter button would sit low against the
-     taller input. */
-  width: 47px;
-  height: 47px;
+  width: 0;
+  height: 38px;
+  margin-block-end: 3px;
+  padding: 0;
   border-radius: var(--radius-avatar);
   background: var(--plum);
   color: rgba(var(--cream-rgb), 0.9);
@@ -1903,18 +1947,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   flex: none;
   touch-action: manipulation;
+  opacity: 0;
+  transform: scale(0.6);
   transition:
+    width var(--dur-base) var(--ease),
+    margin-inline-start var(--dur-base) var(--ease),
     opacity var(--dur-fast) var(--ease),
-    transform var(--dur-fast) var(--ease);
-  opacity: 0.4;
+    transform var(--dur-base) var(--ease);
 }
 .sendBtn:disabled {
   cursor: default;
 }
+/* The arrow keeps its own size while the button's width animates around it,
+   instead of being squeezed flat by the flex container. */
+.sendBtn > svg {
+  flex: none;
+}
+/* Same reason `.composerIconBtn` restates these: base.css's global
+   `:focus-visible` would otherwise square the circle off to `--radius-4` and
+   hang a cream halo outside the pill. Inset, so a button this close to the
+   pill's edge rings inside the field rather than spilling over its border. */
+.sendBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  border-radius: var(--radius-avatar);
+  box-shadow: none;
+}
 .sendBtnActive {
+  width: 38px;
+  /* Only while open — a collapsed button must take up no horizontal room at
+     all, margins included. */
+  margin-inline-start: 2px;
   opacity: 1;
+  transform: scale(1);
 }
 @media (hover: hover) {
   .sendBtnActive:hover {
@@ -1925,7 +1993,6 @@
   transform: scale(0.88);
 }
 @media (prefers-reduced-motion: reduce) {
-  .bubbleEnter,
   .jumpPill,
   .typingBubble {
     animation: none;
@@ -1936,6 +2003,13 @@
     animation: none;
     transform: none;
     opacity: 0.7;
+  }
+  /* The button still appears and disappears with the draft — it just does it
+     at once, with no swell and no width slide. */
+  .sendBtn,
+  .sendBtnActive {
+    transition: none;
+    transform: none;
   }
   .sendBtnActive:active {
     transform: none;
@@ -2262,6 +2336,15 @@
 :global([data-theme="dark"]) .replyPreview {
   border-inline-start-color: rgba(var(--cream-rgb), 0.45);
   background: rgba(var(--cream-rgb), 0.08);
+}
+/* Same plum-wash-doesn't-flip fix as `.replyQuoteReceived` above. The sent
+   variant's `--accent` border needs no override — it already clears the dark
+   page (see colors.css's dark `--accent-ink`/`--accent-text` comment). */
+:global([data-theme="dark"]) .attachmentCaption {
+  background: rgba(var(--cream-rgb), 0.08);
+}
+:global([data-theme="dark"]) .attachmentCaptionReceived {
+  border-inline-start-color: rgba(var(--cream-rgb), 0.45);
 }
 @media (hover: hover) {
   :global([data-theme="dark"]) .replyQuoteReceived:hover:not(:disabled) {

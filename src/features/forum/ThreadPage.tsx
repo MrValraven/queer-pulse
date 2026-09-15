@@ -9,6 +9,7 @@ import {
   ThreadPrivateState,
 } from "./ThreadNotFoundState";
 import { ThreadPageModals } from "./ThreadPageModals";
+import { isMaskedByline } from "./forumAuthor.helpers";
 import { deriveOpView } from "./useThreadModeration";
 import { useThreadPageState } from "./useThreadPageState";
 import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
@@ -123,6 +124,11 @@ export function ThreadPage() {
               loading={loading}
               isLocked={!!thread.isLocked}
               lockReason={thread.lockReason}
+              // The author's own deadline, server-derived. A separate fact from
+              // the moderator lock above, so the banner can say which of the
+              // two closed the thread.
+              isClosed={!!thread.isClosed}
+              closesAt={thread.closesAt}
               nodes={replyTree}
               replyKey={replyKey}
               likedReplies={likedReplies}
@@ -134,7 +140,14 @@ export function ThreadPage() {
               demoOwns={demoOwns}
               moderation={moderation}
               nestedReplies={nestedReplies}
-              authorName={thread.author.name}
+              // The name a reader can actually see. On a masked byline that is
+              // the placeholder, so the composer never invites somebody to
+              // "reply to" a person the thread declined to name.
+              authorName={
+                isMaskedByline(thread)
+                  ? t("forum:composePage.preview.anonymousName")
+                  : thread.author.name
+              }
               threadSlug={thread.slug}
               threadTitle={thread.title}
               reply={reply}

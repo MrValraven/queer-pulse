@@ -1,0 +1,172 @@
+/* ── The composer's sticky footer ─────────────────────────────────────────
+   Self-contained: it brings its own sticky positioning, hairline and blurred
+   ground, so the page can drop it straight into the paper card without a
+   second wrapper repeating the same rules.
+
+   The bottom radius matches the card it closes (`--radius-24`), and the
+   translucent ground is a color-mix on --paper rather than a literal white,
+   so it follows the theme. */
+
+.foot {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  padding: 14px 28px;
+  /* Clears the home indicator when the footer is the last thing on screen. */
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  border-radius: 0 0 var(--radius-24) var(--radius-24);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+}
+
+/* Pushes the hint and the actions to the right edge. */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* ── Autosave status ─────────────────────────────────────────────────────── */
+
+.saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+  white-space: nowrap;
+  /* Reserves the row's height while the status is still silent, so the whole
+     footer does not jump the first time a save lands. */
+  min-height: 18px;
+}
+
+.savedDot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-avatar);
+  flex: none;
+  background: var(--jade);
+  transition: background var(--dur-base) var(--ease);
+}
+
+/* Coral while the text is still travelling; jade once the server holds it. */
+.savedDot[data-state="pending"] {
+  background: var(--accent);
+}
+
+/* ── The blocker / ready line ────────────────────────────────────────────── */
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-12-5);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  /* Long blocker sentences wrap inside the footer instead of pushing the
+     buttons off the right edge. */
+  min-width: 0;
+  max-width: 44ch;
+}
+
+.hint svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/* Colour is never the only signal here: each tone carries its own icon, and
+   the pending tone carries a full sentence. */
+.hint[data-tone="blocked"] {
+  color: var(--accent-ink);
+}
+
+.hint[data-tone="ready"] {
+  color: var(--jade-ink);
+}
+
+/* ── Keyboard affordance ─────────────────────────────────────────────────── */
+
+.shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+  white-space: nowrap;
+}
+
+.shortcut kbd {
+  font-family: var(--sans);
+  font-size: var(--text-10-5);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-5);
+  padding: 1px 5px;
+  color: var(--ink-60);
+}
+
+/* ── The split Publish button ────────────────────────────────────────────── */
+
+.publishGroup {
+  display: inline-flex;
+  /* The caret matches whatever height <Button> resolves to, rather than both
+     halves guessing at 44px separately. */
+  align-items: stretch;
+  position: relative;
+}
+
+/* Square off the edge the caret sits against, so the two halves read as one
+   control rather than two pills that happen to touch. Written as a descendant
+   so it out-specifies <Button>'s own `border-radius` shorthand whichever way
+   the two stylesheets land in the bundle. */
+.publishGroup .publishButton {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  padding-inline-end: 16px;
+}
+
+/* ── Narrow ──────────────────────────────────────────────────────────────── */
+
+/* The hint and the shortcut are both nice-to-have next to a Publish button
+   that has to stay in the thumb arc. The shortcut goes first: there is no
+   ⌘ key on a phone. */
+@media (max-width: 1040px) {
+  .shortcut {
+    display: none;
+  }
+}
+
+@media (--wide) {
+  .foot {
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    border-radius: 0 0 var(--radius-18) var(--radius-18);
+  }
+
+  /* On a phone the status line and the hint each take the full width above
+     the actions, so neither is squeezed to two characters. */
+  .saved,
+  .hint {
+    flex: 1 0 100%;
+    max-width: none;
+  }
+
+  .spacer {
+    display: none;
+  }
+
+  .publishGroup {
+    margin-inline-start: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .savedDot {
+    transition: none;
+  }
+}

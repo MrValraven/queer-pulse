@@ -2328,6 +2328,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-15.headline":
+    "As mensagens enviadas assentam de imediato, e os links partilhados aparecem dentro do balão.",
   "changelog.releases.2026-09-14.headline":
     "As fotos do chat abrem em ecrã inteiro com zoom e deslize, e as comunidades fechadas ficam fechadas.",
   "changelog.releases.2026-09-12.headline":
@@ -2518,6 +2520,38 @@ export const marketing: Catalog = {
     "Uma barra de filtros da caixa mais clara",
   "changelog.entries.a-clearer-inbox-filter-row.body":
     "Arquivadas e Pedidos ficam à direita, Pedidos tem um ícone próprio e uma contagem vazia deixa de mostrar zero.",
+  "changelog.entries.you-can-tell-which-links-leave-queerpulse.title":
+    "Vês logo que links saem do QueerPulse",
+  "changelog.entries.you-can-tell-which-links-leave-queerpulse.body":
+    "Os links numa mensagem passam a ler-se como links, e os que te levam para fora do QueerPulse trazem uma seta pequena para saberes antes de tocar.",
+  "changelog.entries.links-you-share-preview-in-the-bubble.title":
+    "Os links que partilhas mostram o cartão dentro do balão",
+  "changelog.entries.links-you-share-preview-in-the-bubble.body":
+    "Um endereço longo encurta para o site e a página, e uma mensagem que é só um link passa a ser o cartão.",
+  "changelog.entries.the-messages-panel-is-just-messages.title":
+    "O painel de mensagens é só mensagens",
+  "changelog.entries.the-messages-panel-is-just-messages.body":
+    "O sino das notificações saiu da coluna da caixa de entrada; o sino que já conheces continua no resto da plataforma, a um clique pelo caminho de volta.",
+  "changelog.entries.sent-messages-settle-instantly.title":
+    "As mensagens enviadas assentam de imediato",
+  "changelog.entries.sent-messages-settle-instantly.body":
+    "A hora de envio aparece logo, o visto de entrega mantém o tamanho e não pisca nenhuma linha falsa de leitura.",
+  "changelog.entries.other-chats-now-show-their-unread-dot.title":
+    "As outras conversas voltam a mostrar o ponto de não lida",
+  "changelog.entries.other-chats-now-show-their-unread-dot.body":
+    "Uma mensagem nova numa conversa que não tens aberta acende logo o ponto de não lida, sem esperares por um recarregamento.",
+  "changelog.entries.inbox-search-stops-flashing-empty.title":
+    "A pesquisa deixa de piscar vazio primeiro",
+  "changelog.entries.inbox-search-stops-flashing-empty.body":
+    "O estado vazio só aparece quando uma pesquisa real termina; consultas curtas pedem que continues a escrever.",
+  "changelog.entries.send-button-waits-for-your-words.title":
+    "O botão de enviar espera pelas tuas palavras",
+  "changelog.entries.send-button-waits-for-your-words.body":
+    "O enviar passa a ficar dentro da caixa de mensagem e só aparece quando já escreveste alguma coisa.",
+  "changelog.entries.message-box-sits-on-the-keyboard.title":
+    "A caixa de mensagem encosta ao teclado",
+  "changelog.entries.message-box-sits-on-the-keyboard.body":
+    "Tocar para escrever no iPhone já não deixa uma faixa vazia entre a conversa e o teclado.",
   "changelog.entries.photos-you-attach-actually-send.title":
     "As fotos que anexas são mesmo enviadas",
   "changelog.entries.photos-you-attach-actually-send.body":
@@ -2542,6 +2576,10 @@ export const marketing: Catalog = {
     "Abre fotos em ecrã inteiro no chat",
   "changelog.entries.chat-photo-viewer.body":
     "Belisca ou toca duas vezes para ampliar, desliza pelas outras e descarrega, responde, reencaminha ou destaca a que vês.",
+  "changelog.entries.chat-photo-viewer-whatsapp-layout.title":
+    "Um visualizador de fotos mais arrumado no chat",
+  "changelog.entries.chat-photo-viewer-whatsapp-layout.body":
+    "O nome e a hora de quem enviou ficam no topo, ícones rápidos tratam de descarregar, responder, reencaminhar e destacar, e no computador uma tira de miniaturas deixa-te saltar para qualquer foto da conversa.",
   "changelog.entries.mutual-connections-show-real-faces.title":
     "As ligações em comum mostram caras reais",
   "changelog.entries.mutual-connections-show-real-faces.body":
@@ -2664,6 +2702,14 @@ export const marketing: Catalog = {
     "As personas de escrita e poesia mostram a sua foto",
   "changelog.entries.writer-and-poet-personas-show-their-photo.body":
     "Jornalistas, editores, tradutores e académicos também: a foto que carregas aparece agora como retrato por cima do nome.",
+  "changelog.entries.writing-a-post-has-a-page-of-its-own.title":
+    "Escrever um post tem agora uma página só para isso",
+  "changelog.entries.writing-a-post-has-a-page-of-its-own.body":
+    "Espaço para escreveres, uma pré-visualização do cartão que as pessoas vão ver, e conversas que já respondem à tua pergunta enquanto escreves.",
+  "changelog.entries.chat-wallpapers-are-patterns.title":
+    "Os papéis de parede das conversas são padrões",
+  "changelog.entries.chat-wallpapers-are-patterns.body":
+    "Seis padrões desenhados à mão para escolheres: rabiscos, botânico, céu noturno, confetti, ondas e terrazzo, ou liso.",
   "changelog.entries.pick-a-wallpaper-for-each-chat.title":
     "Escolhe um papel de parede para cada conversa",
   "changelog.entries.pick-a-wallpaper-for-each-chat.body":

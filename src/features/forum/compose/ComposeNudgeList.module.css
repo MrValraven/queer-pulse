@@ -1,0 +1,194 @@
+/* ── Advisory rows under the body ──────────────────────────────────────────
+   Three tones, all quiet. The tint carries the tone, and an icon plus the
+   bolded opening clause carry it again in a second channel, so nothing here
+   depends on colour alone.
+
+   Every ground is a low-alpha wash over a channel token: --ink-rgb for the
+   neutral note, --accent-rgb for the caution, --jade-rgb for the crisis row.
+   All three flip with the theme, which a flat --plum wash would not. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin-top: 14px;
+  list-style: none;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--radius-12);
+  font-size: var(--text-13);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  animation: nudgeIn var(--dur-base) var(--ease) both;
+}
+
+@keyframes nudgeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    animation: none;
+  }
+}
+
+.rowIcon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  margin-top: 2px;
+}
+
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  /* Keeps a long explanation inside a comfortable measure on a wide card. */
+  max-width: 68ch;
+}
+
+.rowText {
+  margin: 0;
+}
+
+.rowTitle {
+  font-weight: 600;
+}
+
+/* ── Tones ─────────────────────────────────────────────────────────────── */
+
+.toneNeutral {
+  background: rgba(var(--ink-rgb), 0.05);
+}
+
+.toneNeutral .rowIcon {
+  color: var(--ink-60);
+}
+
+.toneWarn {
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.toneWarn .rowIcon {
+  color: var(--accent-ink);
+}
+
+/* The crisis row. Jade is this app's colour for care, and the row is given a
+   little more room than the other two because it is read under pressure. */
+.toneHelp {
+  background: rgba(var(--jade-rgb), 0.12);
+  padding: 13px 14px;
+}
+
+.toneHelp .rowIcon {
+  color: var(--jade-ink);
+}
+
+/* ── Helplines ─────────────────────────────────────────────────────────── */
+
+.helplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* A whole row per service rather than a run of text: on a phone this is the
+   thing being tapped, so it gets a target well past 44px in both axes. */
+.helpline {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 44px;
+  justify-content: center;
+  padding: 7px 14px;
+  border-radius: var(--radius-10);
+  background: var(--paper);
+  border: 1px solid rgba(var(--jade-rgb), 0.28);
+  text-decoration: none;
+  color: var(--ink);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+.helplineName {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.helplineNumber {
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--jade-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .helpline:hover {
+    border-color: rgba(var(--jade-rgb), 0.55);
+    box-shadow: var(--ring-jade);
+  }
+}
+
+/* ── The doxxing acknowledgement ───────────────────────────────────────── */
+
+.acknowledge {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.acknowledgeBox {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+
+/* ── Dismiss ───────────────────────────────────────────────────────────── */
+
+.dismiss {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dismiss:hover {
+    color: var(--ink);
+    background: rgba(var(--ink-rgb), 0.06);
+  }
+}

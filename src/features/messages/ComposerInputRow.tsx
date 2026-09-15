@@ -44,13 +44,17 @@ interface ComposerInputRowProps {
  * frames, popovers, autogrow, draft persistence) is owned by `Composer` and
  * its own colocated hooks.
  *
- * The attach and shortcut controls sit INSIDE the pill (`.composerField`),
- * the way WhatsApp/Telegram place them, rather than as outlined circles
- * flanking the input: one bordered box reads as one field, and the send
- * button is then the only thing outside it competing for the eye. The pill
- * owns the border, radius, background and focus ring that used to live on the
- * textarea — see `.composerField` / `.composerTa` for why the field keeps its
- * own 44px min-height and 16px font size through that move.
+ * Every control sits INSIDE the pill (`.composerField`), the way
+ * WhatsApp/Telegram place them, rather than as outlined circles flanking the
+ * input: one bordered box reads as one field. The pill owns the border,
+ * radius, background and focus ring that used to live on the textarea — see
+ * `.composerField` / `.composerTa` for why the field keeps its own 44px
+ * min-height and 16px font size through that move.
+ *
+ * The send button is in that pill too, and only appears once the draft has
+ * something in it: it stays mounted and collapses to zero width rather than
+ * unmounting, so clearing or sending a draft plays the same transition
+ * backwards from a painted state instead of blinking out.
  *
  * `popoverGroupRef` lands on the pill, which is also the outside-click
  * boundary — so tapping the textarea no longer counts as "outside". The
@@ -76,6 +80,8 @@ export function ComposerInputRow({
   sendLabel,
   messageFieldLabel,
 }: ComposerInputRowProps) {
+  const hasDraft = draft.trim().length > 0;
+
   return (
     <div className={styles.composerRow}>
       <div className={styles.composerField} ref={popoverGroupRef}>
@@ -109,20 +115,26 @@ export function ComposerInputRow({
           onToggle={() => onTogglePopover("shortcuts")}
           onInsert={onInsertShortcut}
         />
+        <button
+          type="button"
+          className={[styles.sendBtn, hasDraft && styles.sendBtnActive]
+            .filter(Boolean)
+            .join(" ")}
+          onClick={onSend}
+          aria-label={sendLabel}
+          disabled={!hasDraft}
+        >
+          <svg
+            width={16}
+            height={16}
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden
+          >
+            <path d="M14 8l-12-6 4 6-4 6 12-6Z" fill="currentColor" />
+          </svg>
+        </button>
       </div>
-      <button
-        type="button"
-        className={[styles.sendBtn, draft.trim() && styles.sendBtnActive]
-          .filter(Boolean)
-          .join(" ")}
-        onClick={onSend}
-        aria-label={sendLabel}
-        disabled={!draft.trim()}
-      >
-        <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden>
-          <path d="M14 8l-12-6 4 6-4 6 12-6Z" fill="currentColor" />
-        </svg>
-      </button>
     </div>
   );
 }

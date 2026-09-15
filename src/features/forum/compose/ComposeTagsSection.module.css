@@ -1,0 +1,168 @@
+/* ── Tags ──────────────────────────────────────────────────────────────────
+   The input lives inside the chip box, so the box reads as one field: clicking
+   anywhere in it lands on the caret, and the focus ring is drawn around the
+   whole thing rather than around a bare input floating among chips. */
+
+.section {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.optional {
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.counter {
+  margin-inline-start: auto;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── The box ───────────────────────────────────────────────────────────── */
+
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: var(--cream);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.box:focus-within {
+  border-color: var(--line-strong);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.07);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-avatar);
+  background: none;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chipRemove:hover {
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.12);
+  }
+}
+
+.entry {
+  flex: 1;
+  min-width: 150px;
+  border: 0;
+  background: none;
+  outline: 0;
+  padding: 4px 2px;
+  font-family: var(--sans);
+  font-size: var(--text-15);
+  color: var(--ink);
+}
+
+.entry::placeholder {
+  color: var(--ink-40);
+}
+
+.full {
+  padding: 4px 2px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.inputHint {
+  margin: 6px 0 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+/* ── Suggestions ───────────────────────────────────────────────────────── */
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.suggestionsLabel {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+/* Dashed, so an offer never looks like something already chosen. */
+.suggestion {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 30px;
+  padding: 5px 11px;
+  border: 1px dashed var(--line-2);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+  transition:
+    border-style var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .suggestion:hover {
+    border-style: solid;
+    background: rgba(var(--ink-rgb), 0.05);
+  }
+}

@@ -1,0 +1,82 @@
+/* Markdown-lite block styles, shared by the forum composer's preview tab and
+   the published post.
+
+   These are BASE styles on purpose. A host surface that already styles its own
+   body copy (`.opBody p`, `.replyBody p` on the thread page) out-specifies a
+   single class, so wrapping an existing body in <MarkdownLite> leaves a plain
+   paragraph looking exactly as it did, while the blocks that had no styling
+   before — headings, quotes, lists — pick theirs up from here. */
+
+.paragraph {
+  font-size: var(--text-15-5);
+  color: var(--ink);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+/* A section heading inside a post body: the serif, one step up from body copy,
+   and noticeably tighter above than a paragraph so it reads as attached to
+   what follows it. */
+.heading {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-17);
+  line-height: 1.35;
+  color: var(--text-strong);
+  margin: 18px 0 8px;
+}
+
+.heading:first-child {
+  margin-top: 0;
+}
+
+/* Matches the reply-quote treatment already on the thread page, so a quoted
+   passage someone typed and one the Quote action inserted look alike. */
+.blockquote {
+  border-left: 3px solid rgba(var(--line-rgb), 0.2);
+  padding: 4px 0 4px 14px;
+  margin: 0 0 12px;
+  color: var(--ink-60);
+  font-style: italic;
+}
+
+.list {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.item {
+  font-size: var(--text-15);
+  color: var(--ink);
+  line-height: 1.7;
+  margin-bottom: 4px;
+}
+
+.item::marker {
+  color: rgba(var(--ink-rgb), 0.45);
+}
+
+.link {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.18s var(--ease);
+}
+
+.link:hover {
+  opacity: 0.75;
+}
+
+/* The last block in a body should not push the actions row away from it. */
+.paragraph:last-child,
+.heading:last-child,
+.blockquote:last-child,
+.list:last-child {
+  margin-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

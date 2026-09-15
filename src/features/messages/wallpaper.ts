@@ -1,8 +1,7 @@
 import { useSyncExternalStore } from "react";
 
 /**
- * Per-conversation chat wallpaper — the ground tint behind the message log and
- * whether the doodle pattern rides on top of it.
+ * Per-conversation chat wallpaper: the pattern tiled behind the message log.
  *
  * Why its own store rather than `conversationPrefs`: that module is the DEMO
  * fallback for pin/favorite/mute, and `clearConversationPrefs()` wipes it
@@ -13,46 +12,49 @@ import { useSyncExternalStore } from "react";
  *
  * Why device-local: the pick never leaves this browser, which is also how
  * WhatsApp treats its own wallpaper. Nothing here is member content, so unlike
- * `outbox.ts`/`drafts.ts` the key is NOT scoped per member — the worst case on
- * a shared device is that the next person sees a ground tint someone else
- * chose, and a cosmetic carry-over is not worth threading `useStorageScope`
- * through the header. If this ever needs to follow a member across devices it
- * becomes one JSON column on member settings and this module becomes its
- * cache; the UI would not change.
+ * `outbox.ts`/`drafts.ts` the key is NOT scoped per member: the worst case on
+ * a shared device is that the next person sees a pattern someone else chose,
+ * and a cosmetic carry-over is not worth threading `useStorageScope` through
+ * the header. If this ever needs to follow a member across devices it becomes
+ * one JSON column on member settings and this module becomes its cache; the
+ * UI would not change.
  *
  * Shape follows `skipLinkPref.ts`: a module-level store read once, persisted on
  * write, and subscribed to via `useSyncExternalStore` so the picker and the
  * panel it repaints stay in step with no context to mount.
+ *
+ * Was two axes (a colour ground plus a doodles on/off toggle) until they
+ * collapsed into this one pattern axis: the colour washes competed with the
+ * pattern for attention on the same surface, and the pattern was the thing
+ * people actually picked. See the v1 -> v2 migration in `read()` below.
  */
 
-const STORAGE_KEY = "qp.messages.wallpaper.v1";
+const STORAGE_KEY = "qp.messages.wallpaper.v2";
+const LEGACY_STORAGE_KEY = "qp.messages.wallpaper.v1";
 
-/** The selectable grounds. `default` is the untinted page ground, which is what
- *  every chat looked like before wallpapers existed. Each of the others is a
- *  low-alpha wash of an existing brand token (see chat-wallpaper.css) rather
- *  than a new colour. */
-export const WALLPAPER_GROUNDS = [
-  "default",
-  "lilac",
-  "jade",
-  "coral",
-  "amber",
-  "rose",
+/** The selectable patterns tiled over the chat log. `plain` renders no tile at
+ *  all, which is what every chat looked like before wallpapers existed. Each
+ *  of the others is a seamless mask tile of an existing ink token (see
+ *  chat-wallpaper.css) rather than a new colour. */
+export const WALLPAPER_PATTERNS = [
+  "plain",
+  "doodles",
+  "botanical",
+  "sky",
+  "confetti",
+  "waves",
+  "terrazzo",
 ] as const;
 
-export type WallpaperGround = (typeof WALLPAPER_GROUNDS)[number];
+export type WallpaperPattern = (typeof WALLPAPER_PATTERNS)[number];
 
 export interface WallpaperChoice {
-  ground: WallpaperGround;
-  /** Whether the doodle tile is masked over the ground. */
-  hasDoodles: boolean;
+  pattern: WallpaperPattern;
 }
 
-/** Doodles on the plain ground — the look every chat opens with until someone
- *  picks otherwise. */
+/** Doodles is the look every chat opens with until someone picks otherwise. */
 export const DEFAULT_WALLPAPER: WallpaperChoice = {
-  ground: "default",
-  hasDoodles: true,
+  pattern: "doodles",
 };
 
 interface WallpaperStore {
@@ -66,28 +68,95 @@ const EMPTY_STORE: WallpaperStore = {
   byConversation: {},
 };
 
-function isGround(value: unknown): value is WallpaperGround {
+function isPattern(value: unknown): value is WallpaperPattern {
   return (
     typeof value === "string" &&
-    (WALLPAPER_GROUNDS as readonly string[]).includes(value)
+    (WALLPAPER_PATTERNS as readonly string[]).includes(value)
   );
 }
 
 function isChoice(value: unknown): value is WallpaperChoice {
   if (!value || typeof value !== "object") return false;
   const candidate = value as Record<string, unknown>;
+  return isPattern(candidate.pattern);
+}
+
+/** A legacy v1 choice: a colour ground plus a doodles on/off toggle. Kept only
+ *  long enough to migrate it below. */
+interface LegacyWallpaperChoice {
+  ground: string;
+  hasDoodles: boolean;
+}
+
+function isLegacyChoice(value: unknown): value is LegacyWallpaperChoice {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
   return (
-    isGround(candidate.ground) && typeof candidate.hasDoodles === "boolean"
+    typeof candidate.ground === "string" &&
+    typeof candidate.hasDoodles === "boolean"
   );
 }
 
+/** v1 -> v2: the colour ground is dropped (the pattern is now the whole
+ *  choice), and whether doodles were on becomes the pattern itself. */
+function migrateLegacyChoice(legacy: LegacyWallpaperChoice): WallpaperChoice {
+  return { pattern: legacy.hasDoodles ? "doodles" : "plain" };
+}
+
+/** Reads and migrates the legacy v1 payload, if any. Runs at most once: the
+ *  caller persists the result as v2 and removes the v1 key so this never
+ *  fires again. Returns null when there is nothing to migrate. */
+function migrateLegacyStore(): WallpaperStore | null {
+  try {
+    const raw = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    const candidate = parsed as Record<string, unknown>;
+    const byConversation: Record<string, WallpaperChoice> = {};
+    if (
+      candidate.byConversation &&
+      typeof candidate.byConversation === "object"
+    ) {
+      for (const [conversationId, choice] of Object.entries(
+        candidate.byConversation as Record<string, unknown>,
+      )) {
+        if (isLegacyChoice(choice)) {
+          byConversation[conversationId] = migrateLegacyChoice(choice);
+        }
+      }
+    }
+    return {
+      base: isLegacyChoice(candidate.base)
+        ? migrateLegacyChoice(candidate.base)
+        : DEFAULT_WALLPAPER,
+      byConversation,
+    };
+  } catch {
+    return null;
+  }
+}
+
 /** Read the persisted store, tolerating an absent, corrupt or foreign payload.
- *  Unknown grounds (a value written by a later build, then rolled back) are
+ *  Unknown patterns (a value written by a later build, then rolled back) are
  *  dropped rather than allowed to render as an empty `data-` attribute. */
 function read(): WallpaperStore {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return EMPTY_STORE;
+    if (!raw) {
+      const migrated = migrateLegacyStore();
+      if (migrated) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+          localStorage.removeItem(LEGACY_STORAGE_KEY);
+        } catch {
+          // ignore, private mode / a full quota still leaves the migrated
+          // pick working in memory for this session
+        }
+        return migrated;
+      }
+      return EMPTY_STORE;
+    }
     const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return EMPTY_STORE;
     const candidate = parsed as Record<string, unknown>;
@@ -107,7 +176,7 @@ function read(): WallpaperStore {
       byConversation,
     };
   } catch {
-    // ignore — private mode / corrupt value falls through to the default
+    // ignore, private mode / corrupt value falls through to the default
     return EMPTY_STORE;
   }
 }
@@ -124,13 +193,13 @@ function persist(next: WallpaperStore) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {
-    // ignore — keep working in-memory
+    // ignore, keep working in-memory
   }
   emit();
 }
 
 function isSameChoice(a: WallpaperChoice, b: WallpaperChoice): boolean {
-  return a.ground === b.ground && a.hasDoodles === b.hasDoodles;
+  return a.pattern === b.pattern;
 }
 
 /** The wallpaper a given conversation renders with: its own pick, else the
@@ -185,7 +254,7 @@ function subscribe(listener: () => void): () => void {
 }
 
 const getSnapshot = () => current;
-/** Prerender has no localStorage — report the default store. Its identity is
+/** Prerender has no localStorage, so this reports the default store. Its identity is
  *  constant, which `useSyncExternalStore` requires of a server snapshot. */
 const getServerSnapshot = () => EMPTY_STORE;
 
@@ -215,6 +284,7 @@ export function resetWallpaperForTests(): void {
   current = EMPTY_STORE;
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
   } catch {
     // ignore
   }

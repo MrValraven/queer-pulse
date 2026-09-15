@@ -1,49 +1,56 @@
-/* ── Link preview / unfurl card ──
-   Sits beneath a message bubble inside `.bubbleWrap`, so it aligns to the run's
-   side and shares its width constraint. The card is always a paper-like surface
-   (it reads on the cream page under either bubble); only the accent recolors per
-   side — plum for received, coral for sent — the same convention the reply-quote
-   uses to sit on paper vs. plum. Tokens only. */
+/* ── Link preview / unfurl panel ──
+   An INNER panel of the message bubble (WhatsApp-style), styled off the exact
+   vocabulary `.replyQuote` already uses inside the same bubble — a rounded
+   panel with a colored accent bar and a translucent wash, never a detached
+   `--paper` card with its own shadow. `Received` reads on the paper bubble
+   (plum accent, plum wash); `Sent` reads on the plum bubble (coral accent,
+   cream wash) — same convention the reply-quote uses to sit on paper vs.
+   plum, and the same rgb-channel approach (`--plum-rgb`/`--cream-rgb`) since
+   `--plum` never flips and `--cream` flips wrong in dark mode. Tokens only. */
 .card {
   display: flex;
   flex-direction: column;
-  width: min(260px, 100%);
-  margin-block-start: 4px;
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: var(--radius-14);
-  background: var(--paper);
+  width: 100%;
+  margin-block: 0 6px;
+  border-inline-start: 3px solid var(--plum);
+  border-radius: var(--radius-7);
+  background: rgba(var(--plum-rgb), 0.07);
   overflow: hidden;
   text-decoration: none;
   color: var(--ink);
-  box-shadow: var(--shadow-card);
-  transition:
-    box-shadow var(--dur-fast) var(--ease),
-    transform var(--dur-fast) var(--ease);
+  transition: background var(--dur-fast) var(--ease);
   animation: linkPreviewIn var(--dur-base) var(--ease) both;
 }
 @media (hover: hover) {
-  .card:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-lift);
+  .cardReceived:hover {
+    background: rgba(var(--plum-rgb), 0.12);
+  }
+  .cardSent:hover {
+    background: rgba(var(--cream-rgb), 0.28);
   }
 }
 .card:focus-visible {
-  outline: 2px solid var(--plum);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 
-/* Accent rail: the side tint that ties the card to its bubble. */
+/* Accent rail: the side tint that ties the panel to its bubble — plum for
+   received (on paper), coral for sent (on plum). */
 .cardReceived {
-  border-inline-start: 3px solid var(--plum);
+  border-inline-start-color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 .cardSent {
-  border-inline-start: 3px solid var(--accent);
+  border-inline-start-color: var(--accent);
+  background: rgba(var(--cream-rgb), 0.22);
 }
 
 .thumb {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
+  max-height: 150px;
   object-fit: cover;
   background: rgba(var(--plum-rgb), 0.05);
 }
@@ -61,16 +68,15 @@
   font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--ink-40);
+  color: var(--text-strong);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.cardReceived .site {
-  color: var(--text-strong);
-}
 .cardSent .site {
-  color: var(--accent);
+  /* Same rgb-channel treatment `.replyQuoteSent` uses for its name/snippet —
+     never `--ink`-based colours here, since those don't read on plum. */
+  color: rgba(var(--cream-rgb), 0.75);
 }
 
 .title {
@@ -85,6 +91,9 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.cardSent .title {
+  color: rgba(var(--cream-rgb), 1);
+}
 
 .desc {
   font-size: var(--text-caption);
@@ -96,16 +105,20 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.cardSent .desc {
+  color: rgba(var(--cream-rgb), 0.86);
+}
 
-/* ── Loading skeleton ── a slim resolving bar; no content, no jump.
-   --line-rgb (not --plum-rgb) because it flips to light channels in dark
-   mode, so the shimmer stays visible there instead of going dark-on-dark.
-   Same fix as the shared Skeleton primitive (src/shared/components/ui/Skeleton.module.css). */
+/* ── Loading skeleton ── a slim resolving bar spanning the panel's full
+   width; no content, no jump when it resolves. --line-rgb (not --plum-rgb)
+   because it flips to light channels in dark mode, so the shimmer stays
+   visible there instead of going dark-on-dark. Same fix as the shared
+   Skeleton primitive (src/shared/components/ui/Skeleton.module.css). */
 .skeleton {
-  width: min(260px, 100%);
+  width: 100%;
   height: 14px;
-  margin-block-start: 4px;
-  border-radius: var(--radius-8);
+  margin-block: 0 6px;
+  border-radius: var(--radius-7);
   background: linear-gradient(
     90deg,
     rgba(var(--line-rgb), 0.06) 25%,
@@ -140,9 +153,6 @@
   .card {
     animation: linkPreviewFade var(--dur-fast) var(--ease) both;
     transition: none;
-  }
-  .card:hover {
-    transform: none;
   }
   .skeleton {
     animation: none;

@@ -281,19 +281,18 @@ describe("useDragFeedback when the finger lifts", () => {
     expect(actions.onPrev).not.toHaveBeenCalled();
   });
 
-  it("resets the photo and wash instantly when a drag dismisses, same as a committed navigate", () => {
-    // Mirrors the horizontal commit branches: the viewer unmounts
-    // synchronously today, so nothing would be seen either way, but this is
-    // the controller honouring its own reset-before-exit contract, and it
-    // stays correct the moment an exit transition is ever added to the
-    // viewer.
+  it("leaves the dragged pose on screen when a drag dismisses, for the exit to carry out", () => {
+    // The one place this controller deliberately does NOT reset, unlike the
+    // horizontal commit branches. The viewer plays an exit animation before it
+    // unmounts, and snapping the photo back to the middle of the screen first
+    // would visibly undo the throw the member just made.
     const { controller, stageNode, washNode, actions } = setup();
     controller.follow(100, 100, pointerAt(100, 230));
     controller.end(0, 130);
     expect(actions.onDismiss).toHaveBeenCalledTimes(1);
-    expect(stageNode.style.transform).toBe("translate(0px, 0px) scale(1)");
+    expect(stageNode.style.transform).toContain("translate(0px, 130px)");
     expect(stageNode.style.transition).toBe("none");
-    expect(washNode.style.opacity).toBe("1");
+    expect(Number(washNode.style.opacity)).toBeLessThan(1);
   });
 
   it("commits a navigation only once even if end is called twice in a row", () => {

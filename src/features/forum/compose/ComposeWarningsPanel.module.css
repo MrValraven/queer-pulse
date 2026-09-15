@@ -1,0 +1,37 @@
+/* ── The content-warning panel ─────────────────────────────────────────────
+   A cream inset inside the paper card: the composer's optional blocks sit a
+   step back from the writing, and a tinted ground says that without a heavier
+   border. */
+
+.panel {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: var(--cream);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  font-weight: 400;
+  color: var(--ink-60);
+  line-height: var(--lh-body);
+  max-width: 60ch;
+}

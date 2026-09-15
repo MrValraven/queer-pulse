@@ -1,29 +1,30 @@
 import { useState } from "react";
-import { Button, CheckLine, Modal, Toggle } from "../../shared/components/ui";
+import { Button, CheckLine, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { WallpaperPreview } from "./WallpaperPreview";
 import {
-  WALLPAPER_GROUNDS,
+  WALLPAPER_PATTERNS,
   clearConversationWallpaper,
   resolveWallpaper,
   setBaseWallpaper,
   setConversationWallpaper,
   useWallpaperStore,
-  type WallpaperGround,
+  type WallpaperPattern,
 } from "./wallpaper";
 import styles from "./WallpaperModal.module.css";
 
 /**
  * The chat-wallpaper picker, opened from the conversation menu.
  *
- * Two axes rather than a list of finished presets: a ground swatch and a
- * doodles switch. Six grounds and one switch give twelve looks out of far less
- * markup than twelve preset tiles would need, and adding a hue later is one
- * line in chat-wallpaper.css plus one entry in `WALLPAPER_GROUNDS`.
+ * One axis rather than two: a pattern. Colour grounds are retired because
+ * they competed with the pattern for attention, and the swatches at 44px
+ * could not show a colour honestly anyway. Seven patterns give seven looks
+ * out of one list, and adding one later is one entry in `WALLPAPER_PATTERNS`
+ * plus one rule in chat-wallpaper.css.
  *
  * The pick is held locally until Save so the preview can be scrubbed without
  * repainting the chat underneath on every tap. "Every chat" writes the base
- * instead of this conversation's own entry — see `setBaseWallpaper`, which also
+ * instead of this conversation's own entry, see `setBaseWallpaper`, which also
  * clears the per-chat entries that only duplicated it.
  */
 export function WallpaperModal({
@@ -41,12 +42,11 @@ export function WallpaperModal({
   const applied = resolveWallpaper(store, conversationId);
   const hasOwnChoice = !!store.byConversation[conversationId];
 
-  const [ground, setGround] = useState<WallpaperGround>(applied.ground);
-  const [hasDoodles, setHasDoodles] = useState(applied.hasDoodles);
+  const [pattern, setPattern] = useState<WallpaperPattern>(applied.pattern);
   const [isForEveryChat, setIsForEveryChat] = useState(false);
 
   const save = () => {
-    const choice = { ground, hasDoodles };
+    const choice = { pattern };
     if (isForEveryChat) setBaseWallpaper(choice);
     else setConversationWallpaper(conversationId, choice);
     onClose();
@@ -54,8 +54,7 @@ export function WallpaperModal({
 
   const reset = () => {
     clearConversationWallpaper(conversationId);
-    setGround(store.base.ground);
-    setHasDoodles(store.base.hasDoodles);
+    setPattern(store.base.pattern);
   };
 
   return (
@@ -81,47 +80,39 @@ export function WallpaperModal({
         </div>
       }
     >
-      <WallpaperPreview choice={{ ground, hasDoodles }} />
+      <WallpaperPreview choice={{ pattern }} />
 
       <div
         className={styles.swatches}
         role="radiogroup"
-        aria-label={t("messages:wallpaper.groundLegend")}
+        aria-label={t("messages:wallpaper.patternLegend")}
       >
-        {WALLPAPER_GROUNDS.map((option) => (
-          <button
-            key={option}
-            type="button"
-            role="radio"
-            aria-checked={ground === option}
-            // Each swatch is a colour with no text, so the name has to come
-            // from here or the a11y gate fails the control outright.
-            aria-label={t(`messages:wallpaper.ground.${option}`)}
-            title={t(`messages:wallpaper.ground.${option}`)}
-            className={
-              ground === option ? styles.swatchSelected : styles.swatch
-            }
-            data-wallpaper-ground={option}
-            data-wallpaper-doodles={hasDoodles ? "on" : "off"}
-            onClick={() => setGround(option)}
-          />
-        ))}
-      </div>
-
-      <div className={styles.doodleRow}>
-        <span className={styles.doodleText}>
-          <span className={styles.doodleTitle}>
-            {t("messages:wallpaper.doodlesTitle")}
-          </span>
-          <span className={styles.doodleSub}>
-            {t("messages:wallpaper.doodlesSub")}
-          </span>
-        </span>
-        <Toggle
-          checked={hasDoodles}
-          onChange={setHasDoodles}
-          label={t("messages:wallpaper.doodlesTitle")}
-        />
+        {WALLPAPER_PATTERNS.map((option) => {
+          const isSelected = pattern === option;
+          return (
+            <button
+              key={option}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              className={styles.swatchButton}
+              onClick={() => setPattern(option)}
+            >
+              <span
+                className={isSelected ? styles.swatchSelected : styles.swatch}
+                data-wallpaper-pattern={option}
+              />
+              {/* The caption is the accessible name for the radio button above
+                  it, so a screen reader announces the pattern rather than
+                  nothing at all. */}
+              <span
+                className={isSelected ? styles.captionSelected : styles.caption}
+              >
+                {t(`messages:wallpaper.pattern.${option}`)}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <CheckLine

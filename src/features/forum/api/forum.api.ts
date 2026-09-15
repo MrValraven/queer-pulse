@@ -56,6 +56,118 @@ export interface ForumThreadResponse extends BaseForumThreadResponse {
    *  Populated on the list, the pinned bucket, `/threads/:slug`, search and
    *  the community pulse lane. */
   unreadReplyCount: number | null;
+  /** What the thread IS: one of the four composer kinds, or null for every
+   *  thread written before the composer asked. Null is "unclassified", which a
+   *  card renders as no chip at all rather than guessing one. */
+  kind: string | null;
+  /** The author's own warnings about what is inside, rendered in front of the
+   *  body. Always an array: the column is NOT NULL DEFAULT '{}', so "none" is
+   *  `[]` and no render site has to branch on null. */
+  contentWarnings: string[];
+  /** Whether the BYLINE above is masked. It leaks nothing — the masking has
+   *  already happened by the time this is set — and a moderator sees `true`
+   *  alongside the real author, which is the honest pair. */
+  isAnonymous: boolean;
+  /** A second member credited on the thread, or null for the ordinary
+   *  single-author case. Null as well whenever the byline is masked: an
+   *  "anonymous" thread co-credited to a named member is not anonymous. */
+  coAuthor: AuthorSummary | null;
+  /** When the thread became visible, which stops being `createdAt` the moment
+   *  the composer can schedule. A future value only ever reaches the author or
+   *  a moderator. */
+  publishedAt: string;
+  /** 'pending' / 'approved' / 'rejected', or null for the threads nobody ever
+   *  submitted for review, which is most of them. */
+  reviewState: string | null;
+  /** Whether the thread is live to the forum RIGHT NOW — the conjunction the
+   *  server applies, so the composer's success screen and an author's drafts
+   *  view tell the three states apart without re-implementing the gate:
+   *  published (`true`), scheduled (`false` + a future `publishedAt`), or
+   *  awaiting review (`false` + `reviewState` 'pending'). */
+  isPublished: boolean;
+  /** A community thread its author also carried out to the town square. */
+  crossPosted: boolean;
+  /** The part of the city the thread is about, or null for nowhere in
+   *  particular. */
+  neighbourhood: string | null;
+  /** When the thread stops taking new replies, or null when it never does.
+   *  Enforced on the write path rather than by a job. */
+  closesAt: string | null;
+  /** 'pt', 'en' or 'both', or null for "unstated". */
+  language: string | null;
+  /** Derived: `closesAt` is set and has passed. The author's own deadline and
+   *  a moderator's lock (`isLocked`) are different facts, so they stay two
+   *  fields and a card can say which of the two closed the thread. */
+  isClosed: boolean;
+  /** The ballot attached to this thread, or null when it carries none. */
+  poll: ForumPollView | null;
+  /** The opening post's photos, resolved and ordered, so a card can draw the
+   *  gallery without a second request. Reconciles the legacy single `image`
+   *  column with the newer photo rows, so a post holding either renders the
+   *  same way. EMPTY — never partial — whenever the OP is unshowable: a
+   *  tombstone or a takedown blanks the photos exactly as it blanks the
+   *  excerpt, because a photo is content. */
+  opPhotos: ForumPostPhotoView[];
+}
+
+/** One photo on a post, already resolved to a URL the browser can fetch. */
+export interface ForumPostPhotoView {
+  /** Row id, or null for a legacy `image` presented as a one-photo gallery. */
+  id: string | null;
+  url: string;
+  /** The author's description, or null when they wrote none. Null is honest
+   *  and is never to be replaced with an invented string. */
+  alt: string | null;
+}
+
+/** One answer on a poll, with the caller's own position on it. */
+export interface ForumPollOptionView {
+  id: string;
+  label: string;
+  /** The author's display order, 0-based. */
+  position: number;
+  /**
+   * How many members picked this option, or NULL while the results are
+   * withheld from this caller (see `ForumPollView.resultsVisible`).
+   *
+   * NULL IS NOT ZERO. It is the server declining to say, and a bar drawn at 0%
+   * from it would tell a member that nobody has answered. A poll nobody has
+   * answered reports a real `0` to a caller entitled to the count.
+   */
+  voteCount: number | null;
+  /** Whether THIS caller picked it. Never withheld: it is their own ballot. */
+  selected: boolean;
+}
+
+/**
+ * The poll attached to a thread.
+ *
+ * The counts are WITHHELD rather than hidden client-side: a poll here can carry
+ * answers that are nobody else's business, and a member who can read the tally
+ * before answering is being invited to answer with the majority rather than
+ * with the truth. They are released once this caller has voted, once the poll
+ * has closed, and to a platform moderator. `hasVoted` and each option's
+ * `selected` are always truthful, because they are facts about the caller's own
+ * ballot rather than anybody else's.
+ */
+export interface ForumPollView {
+  id: string;
+  allowMultiple: boolean;
+  /** Ordered by `position`. */
+  options: ForumPollOptionView[];
+  /** Sum of every option's count, or null while results are withheld. On a
+   *  multi-choice poll this counts SELECTIONS, not voters. */
+  totalVotes: number | null;
+  /** When voting shuts, or null when the poll stays open as long as the thread
+   *  does. */
+  closesAt: string | null;
+  /** Derived: `closesAt` is set and has passed. A closed poll still READS. */
+  isClosed: boolean;
+  /** Whether this caller has cast a ballot. */
+  hasVoted: boolean;
+  /** Whether the counts above are populated rather than withheld. Branch on
+   *  THIS before rendering a number, never on a count being falsy. */
+  resultsVisible: boolean;
 }
 
 export interface ForumPostResponse extends BaseForumPostResponse {
@@ -64,6 +176,10 @@ export interface ForumPostResponse extends BaseForumPostResponse {
   image: string | null;
   /** Is this post its thread's accepted answer? */
   isAccepted: boolean;
+  /** Every photo on this post, resolved and ordered. Reconciles the legacy
+   *  single `image` field above with the newer photo rows: a post carrying
+   *  either renders the same way, and an unshowable post carries none. */
+  photos: ForumPostPhotoView[];
   /** Is this the thread's GENUINE opening post (ENG-130)? Read off the post's
    *  own `is_op` column, never inferred from position, and still `true` when
    *  that post is tombstoned or removed by a moderator. The client used to
@@ -229,12 +345,24 @@ export async function getThreadPosts(
 export const markThreadRead = (slug: string) =>
   apiPost<{ ok: true }>(`/forum/threads/${slug}/read`);
 
+/**
+ * `POST /forum/threads` body. Mirrors the backend's own `CreateThreadDto`
+ * FIELD FOR FIELD, and that is load-bearing rather than tidy: the API runs
+ * under a global `ValidationPipe` with `whitelist` + `forbidNonWhitelisted`,
+ * so one key the server has never heard of does not get dropped — it fails
+ * the whole request with a 400 and the member loses the publish.
+ *
+ * `image` and `photos` are two spellings of ONE thing and the server refuses a
+ * body carrying both: `image` is the legacy single-photo column that every
+ * already-published post still renders from, and `photos` is the gallery the
+ * full-page composer writes. Send one or the other, never the pair.
+ */
 export interface CreateThreadDto {
   title: string;
   body: string;
   category: string;
-  /** Optional free-text tags collected by ComposeThreadModal; the backend
-   *  already persists them. */
+  /** Optional free-text tags collected by the composer; the backend already
+   *  persists them. Up to 5, each ≤ 24 characters. */
   tags?: string[];
   /** Attach the thread to one of the author's communities. Omitted (or
    *  undefined) keeps it a global thread, as before. */
@@ -243,12 +371,86 @@ export interface CreateThreadDto {
    *  Only an admin's value is actually honored — the backend silently
    *  coerces it to `false` for anyone else. */
   isOfficial?: boolean;
-  /** Storage key of one photo on the opening post, from the shared presigned
-   *  upload pipeline (`useUploadImage`). */
+  /** Storage key of ONE photo on the opening post, from the shared presigned
+   *  upload pipeline (`useUploadImage`). The legacy spelling: `ThreadComposer`
+   *  still writes it, and the full-page composer writes `photos` instead.
+   *  Never both. */
   image?: string;
+  /** What the thread IS. A closed vocabulary server-side: anything outside the
+   *  four values is a 400, and omitting it stores NULL ("unclassified"), which
+   *  is a real state rather than a missing one. */
+  kind?: "question" | "guide" | "proposal" | "share";
+  /** The author's own warnings about what is inside, rendered ahead of the
+   *  body. Up to 8, each ≤ 40 characters. */
+  contentWarnings?: string[];
+  /** Publish without the byline. Honoured only in the categories where
+   *  anonymity is the difference between asking and not asking, and always
+   *  lost to `isOfficial`; both are silent server-side coercions. */
+  isAnonymous?: boolean;
+  /** A second member to credit, by HANDLE — the identifier a member can read
+   *  off a profile, never an internal id. A handle matching no active member
+   *  is a 400, as is the caller's own. */
+  coAuthorHandle?: string;
+  /** The part of the city the thread is about. Free text, ≤ 60 characters:
+   *  neighbourhood names are contested and member-defined, so the server
+   *  validates no list. */
+  neighbourhood?: string;
+  /** Which language the thread is written in. `both` is a real answer for a
+   *  post written twice over; the composer's own `auto` is a UI state and is
+   *  never sent. */
+  language?: "pt" | "en" | "both";
+  /** Carry a community's thread out to the town square too. Coerced to false
+   *  without a `communitySlug`, since a thread that belongs to no community is
+   *  already there. */
+  crossPosted?: boolean;
+  /** When the thread stops taking replies, ISO-8601. The window (strictly
+   *  future, at most a year out) is enforced in the service, not the DTO. */
+  closesAt?: string;
+  /** Publish later instead of now, ISO-8601. Every member-facing read path
+   *  hides the row until that instant arrives. Same window as `closesAt`. */
+  publishAt?: string;
+  /** Send it to the editors (a guide) or the council (a proposal) first: the
+   *  thread is created `reviewState: 'pending'` and stays out of every
+   *  member-facing read until somebody approves it. */
+  submitForReview?: boolean;
+  /** An optional ballot, created in the same transaction as the thread. */
+  poll?: CreateThreadPollDto;
+  /** Up to four photos on the opening post, in the order the author arranged
+   *  them. The ARRAY POSITION is the ordering — there is no `position` field,
+   *  because two sources of truth for one ordering is how a gallery ends up
+   *  rendering in an order nobody chose. Mutually exclusive with `image`. */
+  photos?: CreateThreadPhotoDto[];
 }
 
-/** POST /forum/threads — ComposeThreadModal. */
+/** One photo on a new opening post. */
+export interface CreateThreadPhotoDto {
+  /** Storage key from the presigned upload pipeline. */
+  image: string;
+  /** The author's description, at most 280 characters (the column's width).
+   *  Omitted rather than empty when there is none: a placeholder auto-filled
+   *  to satisfy a field is worse for a screen reader than no alt at all. */
+  alt?: string;
+}
+
+/** One answer on a new poll. Labels must carry a visible character, are at
+ *  most 60, and may not repeat once trimmed and case-folded. */
+export interface CreateThreadPollOptionDto {
+  label: string;
+}
+
+/** The optional poll on `POST /forum/threads`. Between 2 and 6 options. */
+export interface CreateThreadPollDto {
+  options: CreateThreadPollOptionDto[];
+  /** False (the default) means a voter picks exactly one. Settable only at
+   *  creation: a poll that changed its arity after people had voted would be a
+   *  different question asked of the same ballots. */
+  allowMultiple?: boolean;
+  /** When voting shuts, ISO-8601. Independent of the thread's own `closesAt`:
+   *  a thread can keep taking replies after its poll has closed. */
+  closesAt?: string;
+}
+
+/** POST /forum/threads — the full-page composer at `/forum/new`. */
 export const createThread = (dto: CreateThreadDto) =>
   apiPost<ForumThreadResponse>("/forum/threads", dto);
 
@@ -411,3 +613,19 @@ export async function getPostHistory(
     })),
   };
 }
+
+/**
+ * POST /forum/threads/:slug/poll/vote — cast a ballot on the thread's poll.
+ *
+ * A BALLOT, not a toggle: `optionIds` is the caller's COMPLETE selection and
+ * replaces whatever they had picked before, so sending the same array twice
+ * changes nothing and re-voting on a single-choice poll simply moves the
+ * answer. One id for a single-choice poll, one to six for a multi-choice one.
+ *
+ * Answers with the poll, and the counts are RELEASED in that answer because
+ * the caller has now voted — which is the moment most members first see a
+ * tally at all (see `ForumPollView.resultsVisible`). A closed poll answers 403
+ * and keeps reading fine.
+ */
+export const votePoll = (slug: string, optionIds: string[]) =>
+  apiPost<ForumPollView>(`/forum/threads/${slug}/poll/vote`, { optionIds });

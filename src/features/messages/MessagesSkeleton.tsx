@@ -28,3 +28,29 @@ export function MessageThreadListSkeleton({ count = 6 }: { count?: number }) {
     </>
   );
 }
+
+/** Mirrors a search hit row (`MessageHitRow`'s `.hitRow` shape): sender + time
+ *  header, then a snippet line. Shown in place of the "searching…" status
+ *  text while a message-body search is pending, so the results area never
+ *  reads as empty before it has actually settled. */
+function MessageHitRowSkeleton() {
+  return (
+    <div className={styles.hitRow} aria-hidden>
+      <div className={styles.hitHeader}>
+        <SkeletonLine width="40%" height={13} />
+        <SkeletonLine width={30} height={11} />
+      </div>
+      <SkeletonLine width="90%" height={14} style={{ marginTop: 4 }} />
+    </div>
+  );
+}
+
+export function MessageHitListSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <MessageHitRowSkeleton key={i} />
+      ))}
+    </>
+  );
+}

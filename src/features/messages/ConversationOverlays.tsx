@@ -1,5 +1,5 @@
 // src/features/messages/ConversationOverlays.tsx
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { ChatImageViewer } from "./ChatImageViewer";
 import { DeleteMessageDialog } from "./DeleteMessageDialog";
@@ -66,6 +66,9 @@ export interface ConversationOverlaysProps {
   photos: ViewerPhoto[];
   /** Index into `photos` the viewer is open on, or null when it is closed. */
   photoIndex: number | null;
+  /** The bubble thumbnail the viewer was opened from, for its open/close
+   *  animation. See `useChatImageViewerState`. */
+  photoOrigin: RefObject<HTMLElement | null>;
   /** Closes the full screen viewer. */
   onClosePhoto: () => void;
   /** Opens the forward picker for the photo being viewed. */
@@ -98,6 +101,7 @@ export function ConversationOverlays({
   deleteForMePending,
   photos,
   photoIndex,
+  photoOrigin,
   onClosePhoto,
   onForwardPhoto,
 }: ConversationOverlaysProps) {
@@ -107,6 +111,7 @@ export function ConversationOverlays({
         <ChatImageViewer
           photos={photos}
           startIndex={photoIndex}
+          originRef={photoOrigin}
           onClose={onClosePhoto}
           onReply={onSetReply}
           onForward={onForwardPhoto}

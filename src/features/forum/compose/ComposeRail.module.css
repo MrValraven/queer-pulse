@@ -1,0 +1,264 @@
+/* ── The composer's rail ───────────────────────────────────────────────────
+   Two shapes for one set of blocks.
+
+   Wide: a sticky column beside the main card, on the page's own cream ground
+   with no surface of its own. Each block brings whatever card it needs, so the
+   rail reads as one column of advice rather than as four stacked panels.
+
+   Compact: the column has nowhere to go, so it collapses to a row of three
+   openers and the blocks move into a bottom sheet. */
+
+.rail {
+  position: sticky;
+  /* Under the floating nav rather than beneath it. --sticky-top is the value
+     every in-page sticky bar reads, and the sidebar and installed-app nav
+     layouts override it in place, so this follows them without knowing they
+     exist. */
+  top: calc(var(--sticky-top) + 16px);
+  align-self: start;
+  max-height: calc(100svh - var(--sticky-top) - 36px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 8px 0 24px;
+  background: transparent;
+  min-width: 0;
+  scrollbar-width: thin;
+}
+
+/* ── House rules ─────────────────────────────────────────────────────────── */
+
+.note {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: var(--text-12-5);
+  line-height: var(--lh-body);
+  color: var(--ink-40);
+}
+
+.noteLink {
+  color: var(--jade-ink);
+  font-weight: 600;
+}
+
+/* ── Compact: openers in flow, blocks in a sheet ─────────────────────────── */
+
+.compactRail {
+  display: none;
+}
+
+.compactLead {
+  font-size: var(--text-13);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+  max-width: 52ch;
+}
+
+.tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.tab {
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 8px 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.tab svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/* The pane the sheet is showing. Filled AND pressed, so the state is carried
+   by more than its wash. */
+.tab[aria-pressed="true"] {
+  background: rgba(var(--plum-rgb), 0.08);
+  border-color: rgba(var(--line-rgb), 0.3);
+}
+
+.tabCount {
+  flex: none;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--jade-rgb), 0.16);
+  color: var(--jade-ink);
+  font-size: var(--text-11);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── The sheet ───────────────────────────────────────────────────────────── */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-end;
+  background: var(--scrim-soft);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  animation: railScrimIn var(--dur-fast) var(--ease) both;
+}
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  /* svh, so the sheet is not cut off under a phone's browser chrome. */
+  height: min(78svh, 720px);
+  padding: 10px 20px calc(20px + env(safe-area-inset-bottom));
+  background: var(--cream);
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-20) var(--radius-20) 0 0;
+  box-shadow: var(--shadow-e4);
+  animation: railSheetIn var(--dur-base) var(--ease) both;
+}
+
+/* The visible bar is 38×4; the element around it is 72×22 so the drag can be
+   started by a thumb rather than by a fingernail. `touch-action: none` because
+   this surface is fully driven by the pointer handlers: without it the browser
+   would claim the vertical gesture for scrolling. */
+.grabber {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 22px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.grabber::before {
+  content: "";
+  width: 38px;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.22);
+}
+
+.sheetHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--plum-rgb), 0.06);
+  color: var(--text-strong);
+  font-size: var(--text-16);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Drawn at 34px, tapped at 44. */
+.close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  transform: translate(-50%, -50%);
+}
+
+.sheetBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 4px;
+}
+
+@keyframes railScrimIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes railSheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@media (max-width: 1023px) {
+  .rail {
+    display: none;
+  }
+
+  .compactRail {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 0 8px;
+    min-width: 0;
+  }
+
+  .note {
+    margin-top: 0;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tab:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+  }
+
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.11);
+  }
+
+  .noteLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+
+  .scrim,
+  .sheet {
+    animation: none;
+  }
+}

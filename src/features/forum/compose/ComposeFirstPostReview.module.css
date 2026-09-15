@@ -1,0 +1,19 @@
+/* The first-post summary. A calm confirmation, so the surface is the same
+   cream panel the composer uses for its own optional sections rather than any
+   caution colour. */
+
+.summary {
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-16);
+  padding: 14px 16px;
+}
+
+.skip {
+  margin-top: 14px;
+}
+
+/* Pushes Back and the publish action to the right edge of the modal footer. */
+.footSpacer {
+  flex: 1 1 auto;
+}

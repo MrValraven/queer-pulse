@@ -76,6 +76,86 @@ export const CAT_STYLE: Record<string, { color: string }> = {
   trans: { color: "var(--violet)" },
 };
 
+/**
+ * One photo on a published post, already resolved to a URL the browser can
+ * fetch. Mirrors the backend's `ForumPostPhotoView` one field for one field.
+ *
+ * `id` is null for a post that still carries the LEGACY single `image` column:
+ * the backend reconciles the old column and the newer photo rows into this one
+ * gallery, so a render site consumes the gallery and never branches on which
+ * of the two a post was written with.
+ */
+export interface ThreadPhoto {
+  /** Row id, or null for a legacy single `image` shown as a one-photo gallery. */
+  id: string | null;
+  url: string;
+  /** The author's own description, or null when they wrote none. NEVER
+   *  replaced with an invented sentence: a guess read aloud as fact is worse
+   *  for a screen reader than a generic label saying what the thing is. */
+  alt: string | null;
+}
+
+/** One answer on a thread's poll, with the viewer's own position on it. */
+export interface ThreadPollOption {
+  id: string;
+  label: string;
+  /** The author's display order, 0-based. */
+  position: number;
+  /**
+   * How many members picked this option, or NULL while the server is
+   * withholding the tally from this viewer.
+   *
+   * NULL IS NOT ZERO, and the difference is the whole point: `null` is the
+   * server declining to say until the viewer has voted (or the poll has
+   * closed), while `0` is a real count on a poll nobody has answered yet. A
+   * bar drawn from a null at 0% would tell a member "no votes" about a poll
+   * that may hold hundreds. Branch on `ThreadPoll.resultsVisible`, never on
+   * this being falsy.
+   */
+  voteCount: number | null;
+  /** Whether THIS viewer picked it. Never withheld: it is their own ballot. */
+  selected: boolean;
+  /**
+   * DEMO CORPUS ONLY: the tally the prototype reveals once the demo visitor
+   * votes. Demo has no server to release a count, so the scripted number lives
+   * here and `useThreadPoll` moves it into `voteCount` at the same moment a
+   * live vote response would carry the real one. Always undefined on a live
+   * poll, which gets its counts from the API and nowhere else.
+   */
+  demoTally?: number;
+}
+
+/**
+ * The ballot attached to a thread.
+ *
+ * The counts are withheld by the SERVER rather than hidden here: a poll on this
+ * platform can ask something that is nobody else's business, and a member who
+ * reads the tally before answering is being invited to answer with the majority
+ * instead of with the truth. `hasVoted` and each option's `selected` are always
+ * truthful, because they are facts about the viewer's own ballot.
+ */
+export interface ThreadPoll {
+  id: string;
+  /** Whether a voter may pick more than one option. Fixed at creation. */
+  allowMultiple: boolean;
+  /** Ordered by `position`. */
+  options: ThreadPollOption[];
+  /** Sum of every option's count, or null while the results are withheld. On a
+   *  multi-choice poll this counts SELECTIONS rather than voters, which is what
+   *  the bars are drawn against. */
+  totalVotes: number | null;
+  /** When voting shuts (ISO), or null when it stays open as long as the thread
+   *  does. Independent of the thread's own `closesAt`. */
+  closesAt: string | null;
+  /** Voting has shut. A closed poll still READS, and still refuses votes. */
+  isClosed: boolean;
+  /** Whether this viewer has cast a ballot. */
+  hasVoted: boolean;
+  /** Whether the counts above are populated rather than withheld. THE flag to
+   *  branch on before rendering any number or bar. */
+  resultsVisible: boolean;
+}
+
 export interface Reply {
   /** Stable identity for tree assembly. Live = backend post id; demo = seeded/generated id. */
   id: string;
@@ -112,6 +192,14 @@ export interface Reply {
   /** Resolved URL of a photo attached to this reply (live), or a local blob
    *  preview (demo / an optimistic just-posted reply). */
   image?: string;
+  /** Every photo on this reply, resolved and ordered (up to four).
+   *
+   *  THE gallery: the backend has already reconciled the legacy single `image`
+   *  above into it (a legacy photo arrives as one entry with `id: null`), so a
+   *  render site consumes this and never branches on the old column. Undefined
+   *  on a demo reply that carries none and on an optimistic just-posted one,
+   *  which still falls back to `image`. */
+  photos?: ThreadPhoto[];
   reactions: number;
   // ── Live edit/delete/restore metadata (backend-provided; absent in demo) ──
   /** Backend post id — the edit/delete/restore/history target. */
@@ -229,6 +317,59 @@ export interface Thread {
    *  `1..99` earns a badge; `null` and `0` render nothing. Undefined on demo
    *  threads, which have no server. */
   unreadReplyCount?: number | null;
+  /** The author's own warnings about what is inside (`CONTENT_WARNINGS` ids,
+   *  or free text a member typed). Drives the CW pill and the obscured excerpt
+   *  on the row and the opening-post card. Absent/empty means no warning, and
+   *  nothing is ever obscured without one. */
+  contentWarnings?: string[];
+  /** The byline above is MASKED. Absent means an ordinary named thread.
+   *
+   *  The masking has already happened server-side by the time this arrives, so
+   *  it leaks nothing, and a MODERATOR sees `true` beside the real author's
+   *  name — which is the honest pair rather than a contradiction. Render what
+   *  the response gives: `author.slug` is empty exactly when the name is
+   *  withheld, so that, and never a re-derived rule, decides whether a byline
+   *  links anywhere. */
+  isAnonymous?: boolean;
+  /** A second member credited on the thread. Absent for the ordinary
+   *  single-author case, and absent whenever the byline is masked: an
+   *  "anonymous" thread co-credited to a named member is not anonymous. */
+  coAuthor?: {
+    name: string;
+    /** Member slug, when the co-author links to a profile. */
+    slug?: string;
+  };
+  /** The ballot attached to this thread, or null/absent when it carries none. */
+  poll?: ThreadPoll | null;
+  /** The opening post's photos, resolved and ordered (up to four). The backend
+   *  has already folded the legacy single `opImage` into this gallery, so the
+   *  card renders THIS and leaves the old field to the surfaces that predate
+   *  it. Empty on an unshowable OP: a takedown blanks the photos exactly as it
+   *  blanks the excerpt, because a photo is content. */
+  opPhotos?: ThreadPhoto[];
+  /** The part of the city the thread is about, printed verbatim (these are
+   *  proper nouns), or null/absent for nowhere in particular. */
+  neighbourhood?: string | null;
+  /** Which language the thread is written in: 'pt', 'en' or 'both'. Null or
+   *  absent is "unstated", which renders as nothing rather than a guess. */
+  language?: string | null;
+  /** When the thread stops taking new replies (ISO), or null when it never
+   *  does. The AUTHOR's deadline, which is a different fact from a moderator's
+   *  `isLocked`, so a banner can say which of the two closed the thread. */
+  closesAt?: string | null;
+  /** `closesAt` is set and has passed: the thread is closed to new replies.
+   *  Server-derived — never recomputed from the clock here. */
+  isClosed?: boolean;
+  /** Whether the thread is live to the forum RIGHT NOW. `false` reaches only
+   *  its author (by link) and a moderator, and splits into two states with
+   *  `reviewState`/`publishedAt`: scheduled, or awaiting review. */
+  isPublished?: boolean;
+  /** 'pending' / 'approved' / 'rejected', or null for the threads nobody ever
+   *  submitted for review, which is most of them. */
+  reviewState?: string | null;
+  /** When the thread became visible (ISO). A FUTURE value is a scheduled
+   *  thread, and only its author or a moderator ever receives one. */
+  publishedAt?: string;
   /** Whether the OPENING POST is readable by this viewer (ENG-130).
    *
    *  Undefined while the posts page is still in flight and on demo threads.
@@ -338,6 +479,52 @@ const qpReply = (
   mod,
   ...rest,
 });
+
+// ── Demo photos, polls and masked bylines ───────────────────────────────────
+// DEMO CORPUS ONLY. Live galleries and ballots are resolved by the backend and
+// arrive through `forum.adapters`; nothing below can reach a live render.
+
+/** One photo on a demo post. `alt` is the description a demo author wrote, and
+ *  `null` where one deliberately wrote none, so the published surfaces get
+ *  exercised on both. */
+function demoPhoto(unsplashId: string, alt: string | null): ThreadPhoto {
+  return {
+    id: `demo-photo-${unsplashId}`,
+    url: `https://images.unsplash.com/${unsplashId}?q=80&w=900&auto=format&fit=crop`,
+    alt,
+  };
+}
+
+/** One answer on a demo ballot. `tally` is the count the demo RELEASES once the
+ *  visitor has voted (see `useThreadPoll`); `voteCount` stays whatever the
+ *  poll's own `resultsVisible` says it should be, which for a withheld poll is
+ *  null and never zero. */
+function demoPollOption(
+  pollId: string,
+  index: number,
+  label: string,
+  tally: number,
+  isReleased: boolean,
+): ThreadPollOption {
+  return {
+    id: `${pollId}-opt-${index}`,
+    label,
+    position: index,
+    voteCount: isReleased ? tally : null,
+    selected: false,
+    demoTally: tally,
+  };
+}
+
+/** The byline a MASKED thread wears in demo. Live never builds one of these:
+ *  the server sends the masked author block itself, carrying an empty handle,
+ *  which is what makes the name link nowhere. Same here: no slug, no photo. */
+const maskedAuthor: Thread["author"] = {
+  initials: "",
+  name: "",
+  background: "rgba(var(--plum-rgb), .1)",
+  color: "var(--text-strong)",
+};
 
 /** Author block for the logged-in member, shown when they publish a thread —
  *  DEMO ONLY. It is built from the mock `currentUser` (the "Tiago Costa"
@@ -467,6 +654,11 @@ export const THREADS: Thread[] = [
   {
     id: 2,
     opPostId: "demo-op-2",
+    // A guide that walks through hormones, surgery routes and gatekeeping.
+    // The warning is the author's own, and the taste of it stays covered on
+    // the list until a reader asks for it.
+    contentWarnings: ["medical"],
+    language: "en",
     category: "health",
     pinned: true,
     title: "Trans-affirming healthcare in Lisbon: the full guide",
@@ -620,6 +812,42 @@ export const THREADS: Thread[] = [
   {
     id: 6,
     opPostId: "demo-op-6",
+    // The author gave the question a deadline and it has passed. Replies are
+    // shut, the conversation stays readable, and the ballot below shows its
+    // final tally: a closed poll still READS, it just refuses new votes.
+    closesAt: "2026-09-01T18:00:00.000Z",
+    isClosed: true,
+    language: "both",
+    poll: {
+      id: "demo-poll-6",
+      allowMultiple: true,
+      options: [
+        demoPollOption("demo-poll-6", 0, "A quiet daytime cafe", 148, true),
+        demoPollOption("demo-poll-6", 1, "A lesbian bar", 211, true),
+        demoPollOption(
+          "demo-poll-6",
+          2,
+          "A bookshop with a back room for readings",
+          96,
+          true,
+        ),
+        demoPollOption(
+          "demo-poll-6",
+          3,
+          "A sober night that runs past midnight",
+          134,
+          true,
+        ),
+      ],
+      totalVotes: 589,
+      closesAt: "2026-09-01T18:00:00.000Z",
+      isClosed: true,
+      hasVoted: false,
+      // Released because the poll has CLOSED: there is no longer a ballot for
+      // the tally to influence, and the results are the point of a finished
+      // question.
+      resultsVisible: true,
+    },
     category: "general",
     title: "What queer spaces in Lisbon do you miss or want to see return?",
     excerpt:
@@ -674,6 +902,21 @@ export const THREADS: Thread[] = [
   {
     id: 8,
     opPostId: "demo-op-8",
+    neighbourhood: "Arroios",
+    language: "en",
+    opPhotos: [
+      demoPhoto(
+        "photo-1560448204-e02f11c3d0e2",
+        "A viewing queue on a Lisbon stairwell, a dozen people waiting on the landing",
+      ),
+      demoPhoto(
+        "photo-1502672260266-1c1ef2d93688",
+        "A rental listing photo of a small kitchen with a window onto a light well",
+      ),
+      // Nobody wrote a description for this one, and none is invented on their
+      // behalf: the gallery says what it is and no more.
+      demoPhoto("photo-1493809842364-78817add7ffb", null),
+    ],
     category: "housing",
     title: "Honest guide to finding a flat in Lisbon as a newcomer",
     excerpt:
@@ -704,6 +947,12 @@ export const THREADS: Thread[] = [
         id: "reply-thread8-luisa",
         parentPostId: null,
         time: "12 days ago",
+        photos: [
+          demoPhoto(
+            "photo-1522708323590-d24dbb6b0267",
+            "A shared living room with two sofas and a bookcase, taken from the doorway",
+          ),
+        ],
         body: [
           "Adding the obvious one people forget: the QueerPulse housing board has flatshares that never touch the public portals. I found my room there in a week after a month of portal misery.",
         ],
@@ -714,6 +963,10 @@ export const THREADS: Thread[] = [
   {
     id: 16,
     opPostId: "demo-op-16",
+    language: "en",
+    contentWarnings: ["medical"],
+    // Two people wrote it, and the byline says both.
+    coAuthor: { name: fullName(MEMBERS.rita!), slug: "rita" },
     category: "trans",
     pinned: true,
     title: "Trans healthcare in Portugal 2026: the complete SNS guide",
@@ -755,6 +1008,42 @@ export const THREADS: Thread[] = [
   {
     id: 11,
     opPostId: "demo-op-11",
+    language: "both",
+    poll: {
+      id: "demo-poll-11",
+      allowMultiple: false,
+      options: [
+        demoPollOption(
+          "demo-poll-11",
+          0,
+          "Tchindas (Cabo Verde, 2015)",
+          42,
+          false,
+        ),
+        demoPollOption(
+          "demo-poll-11",
+          1,
+          "Madame Satã (Brazil, 2002)",
+          37,
+          false,
+        ),
+        demoPollOption(
+          "demo-poll-11",
+          2,
+          "Morrer Como Um Homem (Portugal, 2009)",
+          55,
+          false,
+        ),
+      ],
+      // WITHHELD, not zero. Nobody has voted from this browser yet, so the
+      // server would decline to say — and the card shows choosable options
+      // with no numbers and no bars rather than a tally of nothing.
+      totalVotes: null,
+      closesAt: "2026-10-03T21:00:00.000Z",
+      isClosed: false,
+      hasVoted: false,
+      resultsVisible: false,
+    },
     category: "arts",
     title: "Vote: Queer film series, what do we watch in July?",
     excerpt:
@@ -857,6 +1146,10 @@ export const THREADS: Thread[] = [
   {
     id: 18,
     opPostId: "demo-op-18",
+    // A proposal its author sent to the council. Invisible to the forum until
+    // somebody approves it, and reachable by its author in the meantime.
+    isPublished: false,
+    reviewState: "pending",
     category: "activism",
     title: "Micro-grants: Q3 2026 applications now open",
     excerpt:
@@ -896,6 +1189,13 @@ export const THREADS: Thread[] = [
   {
     id: 15,
     opPostId: "demo-op-15",
+    neighbourhood: "Anjos",
+    language: "pt",
+    // Written now, going live when the shop opens applications. Only its author
+    // and a moderator can reach it until then, so the page says which state it
+    // is in rather than leaving that silence unexplained.
+    isPublished: false,
+    publishedAt: "2026-12-01T09:00:00.000Z",
     category: "jobs",
     title: "Queer-run bookshop in Anjos: hiring a bookseller",
     excerpt:
@@ -990,6 +1290,52 @@ export const THREADS: Thread[] = [
           `Both logged into the map: Registos Centrais green, the smaller office flagged with ${MEMBERS["sofia-castano"]!.first}'s tip about bringing the statute. This is exactly the ground-truth I hoped for.`,
         ],
         reactions: 7,
+      }),
+    ],
+  },
+  {
+    id: 21,
+    opPostId: "demo-op-21",
+    category: "health",
+    // The byline is masked, which is exactly why this question got asked at
+    // all. No slug and no photo, so nothing on the card links to a person.
+    isAnonymous: true,
+    contentWarnings: ["medical", "family-rejection"],
+    language: "pt",
+    title:
+      "Asking without my name on it: coming out to a GP who knows my family",
+    excerpt:
+      "My family doctor has looked after my parents for twenty years. I need to talk to someone about hormones and I do not know how to start.",
+    author: maskedAuthor,
+    posted: "3 days ago",
+    views: 890,
+    upvotes: 57,
+    comments: 9,
+    tags: ["healthcare", "coming-out"],
+    body: [
+      "My family doctor has looked after my parents for twenty years and is the only person in the health centre who knows my history. I want to start talking about hormones and I keep putting the appointment off, because the part I cannot get past is what happens after I leave the room.",
+      "I know confidentiality is the law. I am asking about the everyday reality of it in a small centre where everybody knows everybody, and about what people actually said when they opened that conversation. If changing doctors is the honest answer, say so.",
+    ],
+    replies: [
+      reply("jonas", {
+        id: "reply-thread21-jonas",
+        parentPostId: null,
+        time: "3 days ago",
+        helpful: true,
+        body: [
+          "Confidentiality holds, including from your parents, and you can say at the start of the appointment that you want it noted. If that still does not feel like enough, asking to be transferred to another GP inside the same centre is a normal request and needs no reason.",
+          "You can also go straight to a gender team referral without opening any of it with your family doctor first. That route exists precisely for this.",
+        ],
+        reactions: 31,
+      }),
+      reply("rita", {
+        id: "reply-thread21-rita",
+        parentPostId: null,
+        time: "2 days ago",
+        body: [
+          "I changed GP before I started, for the same reason, and I have never regretted it. The new one had no history with anyone in my family and the first appointment was simply a medical appointment. That was worth more to me than the twenty years of continuity.",
+        ],
+        reactions: 18,
       }),
     ],
   },

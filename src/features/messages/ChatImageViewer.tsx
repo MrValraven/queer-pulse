@@ -1,11 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type RefObject,
+} from "react";
 import { createPortal } from "react-dom";
 import { useDismiss, useScrimDismiss } from "../../shared/components/ui";
+import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  ChatImageViewerTopBar,
-  ChatImageViewerBottomBar,
-} from "./ChatImageViewerChrome";
+  getViewerMotionVariant,
+  subscribeViewerMotionVariant,
+} from "./chatViewerMotion";
+import { useViewerClose } from "./useViewerClose";
+import { ChatImageViewerTopBar } from "./ChatImageViewerChrome";
+import { ChatImageViewerFilmstrip } from "./ChatImageViewerFilmstrip";
 import { ChatImageViewerStage } from "./ChatImageViewerStage";
 import { useChatImageSave } from "./useChatImageSave";
 import type { ViewerPhoto } from "./useThreadImageGallery";
@@ -26,6 +37,12 @@ import styles from "./chatImageViewer.module.css";
  * long-press action overlay and the report modal, so Escape must not close
  * this viewer unless it is actually on top. Arrow key navigation is not part
  * of `useDismiss`, so it is handled locally below.
+ *
+ * Opening and closing are animated, which is why nothing here calls `onClose`
+ * directly any more: `onClose` is what unmounts this component, so it has to
+ * come LAST. Every close path goes through `beginClose` instead, which flips a
+ * closing phase on, lets the exit play, and only then reports up. See
+ * `useViewerClose` and `useViewerPhotoMotion`.
  */
 export function ChatImageViewer({
   photos,
@@ -34,10 +51,16 @@ export function ChatImageViewer({
   onReply,
   onForward,
   onToggleStar,
+  originRef,
 }: {
   photos: ViewerPhoto[];
   startIndex: number;
   onClose: () => void;
+  /** The bubble thumbnail this viewer was opened from, held live so the close
+   *  can re-measure it. Only the `?photoAnim=zoom` variant uses it, and it is
+   *  optional so a surface that opens the viewer without a bubble behind it
+   *  (and every test) still gets the scale-and-fade. */
+  originRef?: RefObject<HTMLElement | null>;
   onReply?: (message: ChatMessage) => void;
   onForward?: (message: ChatMessage) => void;
   onToggleStar?: (message: ChatMessage) => void;
@@ -52,9 +75,24 @@ export function ChatImageViewer({
   // without dismissing, rather than the gesture having to remember and
   // restore whatever the member had chosen.
   const [isGestureActive, setIsGestureActive] = useState(false);
-  const dialogRef = useDismiss(onClose);
+  const reducedMotion = usePrefersReducedMotion();
+  // Live, so flipping the toggle in the top bar takes effect on THIS close and
+  // on every open after it. The entrance is snapshotted separately, on mount,
+  // inside `useViewerPhotoMotion`: a mid-viewing flip must not leave an exit
+  // reversing an entrance that never played.
+  const motionVariant = useSyncExternalStore(
+    subscribeViewerMotionVariant,
+    getViewerMotionVariant,
+  );
+  const { closing, beginClose } = useViewerClose(onClose, reducedMotion);
+  // Stable identities. `dismissByDrag` in particular is handed to the gesture
+  // layer, which memoizes its drag controller on the callbacks it receives.
+  const requestClose = useCallback(() => beginClose("default"), [beginClose]);
+  const dismissByDrag = useCallback(() => beginClose("drag"), [beginClose]);
+  const dialogRef = useDismiss(requestClose);
   const scrimWashRef = useRef<HTMLDivElement>(null);
-  const scrimProps = useScrimDismiss(onClose);
+  const fallbackOriginRef = useRef<HTMLElement | null>(null);
+  const scrimProps = useScrimDismiss(requestClose);
   const { saveImage, isSaving } = useChatImageSave();
 
   const total = photos.length;
@@ -86,8 +124,8 @@ export function ChatImageViewer({
 
   // Escape is owned by `useDismiss` (which also respects the modal stack), so
   // this handler is arrow keys plus one more thing: re-showing the chrome.
-  // Hidden bars stay visually and pointer-wise gone (`barHidden` in
-  // `ChatImageViewerChrome`: opacity 0, pointer-events none) but stay in the
+  // The hidden top bar stays visually and pointer-wise gone (`barHidden` in
+  // `ChatImageViewerChrome`: opacity 0, pointer-events none) but stays in the
   // focus trap `useDismiss` builds, since that trap collects focusables by
   // layout alone. Re-showing the chrome on every keydown is what keeps a
   // Tab press from landing focus on a control the keyboard user can't see:
@@ -122,11 +160,22 @@ export function ChatImageViewer({
   const canAct = !!photo.message.id;
   const closeAfter = (act: () => void) => () => {
     act();
-    onClose();
+    requestClose();
   };
+  // The chrome stays out of the way of a photo a member has just flung off the
+  // bottom of the screen: `useDragFeedback` announces the drag ended the
+  // moment it commits, and without this the bar and the filmstrip would fade
+  // back in over a viewer that is already leaving.
+  const showChrome = isChromeVisible && !isGestureActive && closing !== "drag";
 
   return createPortal(
-    <div className={styles.scrim} role="presentation" {...scrimProps}>
+    <div
+      className={[styles.scrim, closing && styles.closing]
+        .filter(Boolean)
+        .join(" ")}
+      role="presentation"
+      {...scrimProps}
+    >
       {/* The plum ground, as its own layer rather than a background on the
           scrim: a downward drag fades it so the conversation reads through,
           and fading the scrim itself would take the photo and the chrome with
@@ -147,25 +196,10 @@ export function ChatImageViewer({
           photo={photo}
           index={index}
           total={total}
-          isChromeVisible={isChromeVisible && !isGestureActive}
-          onClose={onClose}
-        />
-        <ChatImageViewerStage
-          photo={photo}
-          hasSiblings={total > 1}
-          isChromeVisible={isChromeVisible && !isGestureActive}
-          scrimWashRef={scrimWashRef}
-          onPrev={goPrev}
-          onNext={goNext}
-          onDismiss={onClose}
-          onToggleChrome={toggleChrome}
-          onGestureActive={setIsGestureActive}
-        />
-        <ChatImageViewerBottomBar
-          photo={photo}
-          isChromeVisible={isChromeVisible && !isGestureActive}
+          isChromeVisible={showChrome}
           isSaving={isSaving}
           canAct={canAct}
+          onClose={requestClose}
           onSave={() => void saveImage(photo.url)}
           onReply={
             onReply ? closeAfter(() => onReply(photo.message)) : undefined
@@ -176,6 +210,33 @@ export function ChatImageViewer({
           onToggleStar={
             onToggleStar ? () => onToggleStar(photo.message) : undefined
           }
+          motionVariant={motionVariant}
+        />
+        <ChatImageViewerStage
+          photo={photo}
+          hasSiblings={total > 1}
+          isChromeVisible={showChrome}
+          scrimWashRef={scrimWashRef}
+          onPrev={goPrev}
+          onNext={goNext}
+          onDismiss={dismissByDrag}
+          onToggleChrome={toggleChrome}
+          onGestureActive={setIsGestureActive}
+          motionVariant={motionVariant}
+          closing={closing}
+          originRef={originRef ?? fallbackOriginRef}
+          canFlipBack={index === startIndex}
+        />
+        {/* Row three of the grid, where the labelled action bar used to sit.
+            The filmstrip returns null for a single-photo gallery and hides
+            itself on touch, where the swipe gesture pages instead, so it is
+            mounted unconditionally rather than gated from here. `setIndex` is
+            this component's own setter, so it is already stable. */}
+        <ChatImageViewerFilmstrip
+          photos={photos}
+          index={index}
+          isChromeVisible={showChrome}
+          onSelect={setIndex}
         />
       </div>
     </div>,

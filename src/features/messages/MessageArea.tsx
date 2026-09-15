@@ -12,7 +12,7 @@ import type { TFunction } from "../../shared/i18n/types";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { type RunParticipant } from "./MessageRun";
 import { MessageAreaRow } from "./MessageAreaRow";
-import { gapAfterRow, type MessageRow } from "./messageRows";
+import { ROW_GAP_PX, type MessageRow } from "./messageRows";
 import { TypingIndicatorRow } from "./TypingIndicatorRow";
 import type { LongPressOrigin } from "./useLongPress";
 import type { SeenByEntry } from "./groupReceipts";
@@ -26,19 +26,6 @@ function messageKey(message: ChatMessage): string | undefined {
   return message.id ?? message.at;
 }
 
-/** Every stable identity a message may be known under across its lifetime: the
- *  server id, the client-generated `localId` (set while an optimistic send is
- *  still in flight), and the ISO timestamp as a last resort. A message keeps
- *  ALL of these once acquired (an acked optimistic send gains an `id` but
- *  keeps its original `localId`) — `useMessageNewness` below treats a message
- *  as new only when NONE of its current identities have been seen before, so
- *  gaining an `id` on ack never makes an already-on-screen bubble "new" again. */
-function messageIdentities(message: ChatMessage): string[] {
-  return [message.id, message.localId, message.at].filter(
-    (identity): identity is string => !!identity,
-  );
-}
-
 /** Composite identity for one reaction chip on a message — only meaningful
  *  once the message has a server id (reactions don't exist on demo/optimistic
  *  messages, see `ChatMessage.reactions`). */
@@ -49,18 +36,15 @@ function reactionIdentity(
   return message.id ? `${message.id}::reaction::${key}` : undefined;
 }
 
-/** Every message + reaction-chip identity currently in `messageGroups`, as a
- *  fresh `Set` (a plain value, never a persisted mutable reference — safe to
- *  compute directly in a render body). */
-function collectAllIdentities(
+/** Every reaction-chip identity currently in `messageGroups`, as a fresh `Set`
+ *  (a plain value, never a persisted mutable reference — safe to compute
+ *  directly in a render body). */
+function collectReactionIdentities(
   messageGroups: { day: string; items: ChatMessage[] }[],
 ): Set<string> {
   const identities = new Set<string>();
   for (const group of messageGroups) {
     for (const message of group.items) {
-      for (const identity of messageIdentities(message)) {
-        identities.add(identity);
-      }
       for (const reaction of message.reactions ?? []) {
         if (reaction.count <= 0) continue;
         const identity = reactionIdentity(message, reaction.key);
@@ -72,11 +56,12 @@ function collectAllIdentities(
 }
 
 /**
- * Tracks which message + reaction-chip identities have already been on
- * screen for this conversation, so the `msgBubbleIn` entrance plays ONLY for
- * a genuinely new arrival — never for the whole thread on open/switch (which
- * would animate 20-50 bubbles/chips at once, a "swarm"), and never replayed
- * for a message/chip an unrelated re-render happens to touch again.
+ * Tracks which reaction-chip identities have already been on screen for this
+ * conversation, so a chip's `msgBubbleIn` pop plays ONLY for a genuinely new
+ * one — never for every chip in the thread on open/switch (which would pop
+ * 20-50 at once, a "swarm"), and never replayed for a chip an unrelated
+ * re-render happens to touch again. Bubbles themselves have no entrance to
+ * gate: they pop straight in (see the note above `.bubble` in the stylesheet).
  *
  * Two layers, deliberately split so neither needs a ref read/write in the
  * render body (`react-hooks/refs` disallows that outright):
@@ -86,13 +71,13 @@ function collectAllIdentities(
  *    `useFeedPage.tsx`'s `prevDemo` pattern) — calling `setState` directly in
  *    the render body when `conversationId` has changed causes React to
  *    re-render immediately with the corrected value BEFORE any child (a
- *    bubble's own mount-time `playEntrance` decision) ever sees it, so even
- *    the FIRST paint of a freshly opened thread treats every message/chip in
- *    it as already-known. Because this only changes on an actual thread
- *    switch, `isNewMessage`/`isNewReaction`'s `useCallback` reference below
- *    stays stable across ordinary new-message arrivals within the same
- *    thread — passing them to the memoized `MessageRunView`/`MessageBubble`
- *    tree doesn't defeat that memoization on every message.
+ *    chip's own mount-time `playEntrance` decision) ever sees it, so even the
+ *    FIRST paint of a freshly opened thread treats every chip in it as
+ *    already-known. Because this only changes on an actual thread switch,
+ *    `isNewReaction`'s `useCallback` reference below stays stable across
+ *    ordinary new-message arrivals within the same thread — passing it to the
+ *    memoized `MessageRunView`/`MessageBubble` tree doesn't defeat that
+ *    memoization on every message.
  *  - `accumulatedRef` (a plain ref) layers in everything that has arrived
  *    SINCE the thread settled — written only inside the `useLayoutEffect`s
  *    below, never at the top level of render, and read only from inside the
@@ -100,18 +85,18 @@ function collectAllIdentities(
  *    not synchronously in this hook's own render flow) — the same shape
  *    `useMessageScroll`'s `handleAreaScroll` already uses for `areaRef`.
  */
-function useMessageNewness(
+function useReactionNewness(
   conversationId: string,
   messageGroups: { day: string; items: ChatMessage[] }[],
 ) {
   const [settledConversationId, setSettledConversationId] =
     useState(conversationId);
   const [baseSeenSet, setBaseSeenSet] = useState(() =>
-    collectAllIdentities(messageGroups),
+    collectReactionIdentities(messageGroups),
   );
   if (conversationId !== settledConversationId) {
     setSettledConversationId(conversationId);
-    setBaseSeenSet(collectAllIdentities(messageGroups));
+    setBaseSeenSet(collectReactionIdentities(messageGroups));
   }
 
   const accumulatedRef = useRef<Set<string>>(new Set());
@@ -125,22 +110,10 @@ function useMessageNewness(
   }, [conversationId]);
 
   useLayoutEffect(() => {
-    for (const identity of collectAllIdentities(messageGroups)) {
+    for (const identity of collectReactionIdentities(messageGroups)) {
       accumulatedRef.current.add(identity);
     }
   }, [messageGroups]);
-
-  const isNewMessage = useCallback(
-    (message: ChatMessage): boolean => {
-      const identities = messageIdentities(message);
-      if (identities.length === 0) return false;
-      return identities.every(
-        (identity) =>
-          !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity),
-      );
-    },
-    [baseSeenSet],
-  );
 
   const isNewReaction = useCallback(
     (message: ChatMessage, key: MessageReactionKey): boolean => {
@@ -153,7 +126,7 @@ function useMessageNewness(
     [baseSeenSet],
   );
 
-  return { isNewMessage, isNewReaction };
+  return { isNewReaction };
 }
 
 /**
@@ -318,12 +291,9 @@ export function MessageArea({
     counterpartName,
     t,
   );
-  // Gates each bubble/reaction-chip entrance to a genuine first arrival —
-  // see `useMessageNewness` above.
-  const { isNewMessage, isNewReaction } = useMessageNewness(
-    conversationId,
-    messageGroups,
-  );
+  // Gates each reaction chip's pop to a genuine first arrival — see
+  // `useReactionNewness` above.
+  const { isNewReaction } = useReactionNewness(conversationId, messageGroups);
   const groupSeenByCount = groupSeenBy?.length ?? 0;
   return (
     <>
@@ -381,7 +351,7 @@ export function MessageArea({
                   index={virtualRow.index}
                   measureElementRef={rowVirtualizer.measureElement}
                   top={virtualRow.start}
-                  paddingBottomPx={gapAfterRow(row, rows[virtualRow.index + 1])}
+                  paddingBottomPx={ROW_GAP_PX}
                   counterpart={counterpart}
                   counterpartName={counterpartName}
                   isGroup={isGroup}
@@ -399,7 +369,6 @@ export function MessageArea({
                   onSubmitEdit={onSubmitEdit}
                   onCancelEdit={onCancelEdit}
                   onJumpToMessage={onJumpToMessage}
-                  isNewMessage={isNewMessage}
                   isNewReaction={isNewReaction}
                 />
               );

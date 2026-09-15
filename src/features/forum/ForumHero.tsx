@@ -9,11 +9,9 @@ import { ForumDraftResumeNotice } from "./ForumDraftResumeNotice";
 import styles from "./ForumPage.module.css";
 
 export function ForumHero({
-  onNewPost,
   q,
   onSearch,
 }: {
-  onNewPost: () => void;
   q: string;
   onSearch: (q: string) => void;
 }) {
@@ -43,14 +41,16 @@ export function ForumHero({
               </Link>
             </p>
           </div>
-          <Button className={styles.newBtn} onClick={onNewPost}>
+          {/* A route, so it opens in a new tab, survives a reload and can be
+              shared. The composer is a page of its own now. */}
+          <Button className={styles.newBtn} to={routes.forumNew}>
             {t("forum:newPostCta")}
           </Button>
         </div>
         <ForumSearch value={q} onChange={onSearch} />
         {/* PRD-165 — an unsent draft is visible on the forum itself, not only
             on /account/drafts. Renders nothing when there is none. */}
-        <ForumDraftResumeNotice onResume={onNewPost} />
+        <ForumDraftResumeNotice />
       </div>
     </section>
   );

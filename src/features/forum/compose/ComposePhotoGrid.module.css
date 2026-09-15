@@ -1,0 +1,177 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+}
+
+.preview {
+  display: block;
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+
+/* ---- The "still needs a description" flag -------------------------------- */
+.flag {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: var(--radius-5);
+  background: rgba(var(--accent-rgb), 0.95);
+  /* A coral fill is light in BOTH themes, so this type must stay dark.
+     css-scale-allow: non-flipping-text */
+  color: var(--plum);
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.flagDone {
+  background: rgba(var(--jade-rgb), 0.95);
+  /* Same reasoning: a jade fill is light in both themes.
+     css-scale-allow: non-flipping-text */
+  color: var(--plum);
+}
+
+.flagIcon {
+  width: 10px;
+  height: 10px;
+}
+
+/* ---- Reorder + remove ---------------------------------------------------- */
+.controls {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(var(--plum-rgb), 0.7);
+  /* Type on a locked plum chip: it must stay cream in both themes. */
+  color: rgba(var(--cream-rgb), 0.95);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.18s var(--ease);
+}
+
+.controlIcon {
+  width: 13px;
+  height: 13px;
+}
+
+.control:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .control:not(:disabled):hover {
+    background: rgba(var(--plum-rgb), 0.88);
+  }
+}
+
+.control:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ---- Description field --------------------------------------------------- */
+/* The placeholder is accent while the description is missing, so an unfinished
+   tile reads as unfinished even before the flag is noticed. */
+.alt {
+  display: block;
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  outline: none;
+  background: var(--paper);
+  padding: 7px 9px;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  color: var(--ink);
+}
+
+.alt::placeholder {
+  color: var(--accent-ink);
+}
+
+.altDone::placeholder {
+  color: var(--ink-40);
+}
+
+.alt:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+/* ---- The attach control -------------------------------------------------- */
+.attachWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attachButton {
+  gap: 7px;
+}
+
+.attachIcon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* Reachable by the picker and by a screen reader, invisible on the page. */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.attachNote {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+.attachError {
+  font-size: var(--text-12);
+  color: var(--danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control {
+    transition: none;
+  }
+}

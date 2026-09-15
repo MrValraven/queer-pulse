@@ -1,8 +1,11 @@
+import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import { TbPencilPlus } from "react-icons/tb";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
+import { composeHref } from "./compose/useComposeThreadSeeds";
 import { FIRST_POST_STARTER_KEYS } from "./firstPostPrompt.data";
 import styles from "./FirstPostPrompt.module.css";
 
@@ -10,16 +13,13 @@ import styles from "./FirstPostPrompt.module.css";
  * A warm, dismissible invitation shown at the top of the thread list to members
  * who haven't posted yet. Not a success surface — an offer, so it lives on a
  * soft coral card rather than the plum panel.
+ *
+ * Both the button and the starter chips are real links to `/forum/new`; a chip
+ * carries its opening line as `?title=`, which the composer reads on mount. A
+ * seeded composer is therefore something a member can open in a new tab, come
+ * back to, or send to somebody else.
  */
-export function FirstPostPrompt({
-  onWrite,
-  onPickStarter,
-  onDismiss,
-}: {
-  onWrite: () => void;
-  onPickStarter: (text: string) => void;
-  onDismiss: () => void;
-}) {
+export function FirstPostPrompt({ onDismiss }: { onDismiss: () => void }) {
   const { t } = useTranslation();
   return (
     <div className={styles.card}>
@@ -48,19 +48,18 @@ export function FirstPostPrompt({
 
         <div className={styles.starters}>
           {FIRST_POST_STARTER_KEYS.map((key) => (
-            <button
+            <Link
               key={key}
-              type="button"
               className={styles.starter}
-              onClick={() => onPickStarter(t(key))}
+              to={composeHref(routes.forumNew, { title: t(key) })}
             >
               {t(key)}
-            </button>
+            </Link>
           ))}
         </div>
 
         <div className={styles.actions}>
-          <Button onClick={onWrite}>{t("forum:firstPost.writeCta")}</Button>
+          <Button to={routes.forumNew}>{t("forum:firstPost.writeCta")}</Button>
           <Button variant="ghost" onClick={onDismiss}>
             {t("forum:firstPost.maybeLater")}
           </Button>

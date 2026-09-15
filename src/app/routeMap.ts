@@ -252,6 +252,10 @@ export const routes = {
   flatmates: "/local/housing/flatmates",
   forOrganisations: "/about/for-organisations",
   forum: "/forum",
+  /** The full-page forum composer. A member-only sibling of the forum itself,
+   *  so it is gated by the `/forum/*` pattern in `authGate.ts` rather than by
+   *  the bare `/forum` entry, which matchPath treats as an exact match. */
+  forumNew: "/forum/new",
   /** One-time founder bootstrap. Public, and 404s from the API once used. */
   genesis: "/genesis",
   gatherings: "/gatherings",

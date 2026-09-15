@@ -1,0 +1,212 @@
+/* ── "Who sees it?" ────────────────────────────────────────────────────────
+   One row per audience, wide and quiet. The selection is carried three ways at
+   once — the filled dot, the plum edge, and `aria-checked` — so it never rests
+   on colour alone. */
+
+.section {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: transparent;
+  font-family: var(--sans);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover {
+    border-color: var(--line-2);
+  }
+}
+
+.row[aria-checked="true"] {
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+}
+
+/* ── The radio dot ─────────────────────────────────────────────────────── */
+
+.radioDot {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border-radius: var(--radius-avatar);
+  border: 1.5px solid var(--line-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.row[aria-checked="true"] .radioDot {
+  border-color: var(--line-strong);
+}
+
+.row[aria-checked="true"] .radioDot::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-avatar);
+  background: var(--plum);
+}
+
+/* ── The town square's mark ────────────────────────────────────────────── */
+
+.townSquareMark {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
+}
+
+.townSquareMark svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Text ──────────────────────────────────────────────────────────────── */
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  /* Lets a long community name shrink instead of pushing the count off the
+     row. */
+  min-width: 0;
+}
+
+.rowName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rowSub {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.privateTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: var(--radius-5);
+  background: rgba(var(--violet-rgb), 0.14);
+  color: var(--violet);
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.privateTag svg {
+  width: 10px;
+  height: 10px;
+}
+
+.memberCount {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+.memberCount svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ── Cross-post ────────────────────────────────────────────────────────── */
+
+.crossPost {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.crossPostLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 32px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.crossPostBox {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+
+.crossPostHint {
+  margin: 0;
+  /* Lines the hint up under the label's text rather than its checkbox. */
+  padding-inline-start: 25px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: var(--lh-body);
+  max-width: 68ch;
+}

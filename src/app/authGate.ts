@@ -79,8 +79,11 @@ const GATED_PATTERNS: string[] = [
   "/rsvp",
   "/host",
   "/create-gathering",
-  // Forum
+  // Forum. `/forum/*` is what covers the full-page composer at `/forum/new`:
+  // matchPath treats the bare "/forum" as an EXACT match, so without the
+  // wildcard every child route under it would be publicly reachable.
   "/forum",
+  "/forum/*",
   "/thread",
   "/thread/*",
   // Community stories & pathways. The coming-out guide (/coming-out) is a public

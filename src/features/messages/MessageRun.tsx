@@ -7,7 +7,6 @@ import { initialsFromName } from "../../shared/lib/initials";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import type { MessageRun } from "./messageRuns";
 import { MessageBubble } from "./MessageBubble";
-import type { MetaStatus } from "./MessageSendStatus";
 import { resolveSendStatus } from "./resolveSendStatus";
 import type { LongPressOrigin } from "./useLongPress";
 import type { ChatMessage } from "./data";
@@ -38,7 +37,6 @@ function MessageRunViewImpl({
   onSubmitEdit,
   onCancelEdit,
   onJumpToMessage,
-  isNewMessage,
   isNewReaction,
 }: {
   run: MessageRun;
@@ -89,10 +87,7 @@ function MessageRunViewImpl({
   onCancelEdit?: () => void;
   /** Scrolls to and briefly highlights the quoted original message. */
   onJumpToMessage?: (messageId: string) => void;
-  /** True only for a message genuinely arriving for the first time this
-   *  session — gates each bubble's entrance (see `MessageBubbleImpl`). */
-  isNewMessage?: (message: ChatMessage) => boolean;
-  /** Same freshness gate, scoped to one reaction key on a message. */
+  /** Freshness gate for one reaction key on a message. */
   isNewReaction?: (message: ChatMessage, key: MessageReactionKey) => boolean;
 }) {
   const { t } = useTranslation();
@@ -117,13 +112,6 @@ function MessageRunViewImpl({
   const senderName = runSenderName;
   const lastIndex = run.items.length - 1;
   const lastMessage = run.items[lastIndex];
-  // The status tick on the last outgoing bubble, resolved through the honest
-  // ladder (failed > seen > delivered > sent > sending). Failed keeps its own
-  // retry affordance below (the tick itself is null for it).
-  const lastMetaStatus: MetaStatus =
-    isSent && lastMessage
-      ? resolveSendStatus(lastMessage, !!showSeen, !!showDelivered)
-      : null;
 
   return (
     // No `role` here: this run's `listitem` semantics now live one level up,
@@ -156,13 +144,38 @@ function MessageRunViewImpl({
         )}
         {run.items.map((message, index) => (
           <MessageBubble
-            key={message.id ?? `pos-${index}`}
+            // `localId` sits in the middle because an acked send KEEPS it once
+            // it gains a server `id` (`messageToChat` carries it over), so the
+            // key never changes as the ack lands. Without it the key would flip
+            // from `pos-N` to the server id and React would remount the bubble
+            // rather than update it in place, resetting `useBubbleMetaAlign`'s
+            // measured alignment to its `"center"` default and re-laying the
+            // bubble out a beat after it appears. Same identity ladder as
+            // `messageRows.ts`'s `stableMessageKey`.
+            key={message.id ?? message.localId ?? `pos-${index}`}
             message={message}
             index={index}
             lastIndex={lastIndex}
             isSent={isSent}
             senderName={senderName}
-            metaStatus={index === lastIndex ? lastMetaStatus : null}
+            // EVERY own bubble carries its own time + tick, WhatsApp-style,
+            // resolved through the same honest ladder (failed > seen >
+            // delivered > sent > sending). The thread-level watermark flags
+            // describe the FINAL outbound message only, so they are passed to
+            // that bubble alone; earlier ones read their own `deliveredAt` /
+            // `status` / `id` — which is exactly what `deliveredAt` is on the
+            // DTO for. Keeping the meta on the last bubble alone meant that
+            // bubble's time and tick jumped down into each new message,
+            // snapping the one above 62px narrower mid-send (measured).
+            metaStatus={
+              isSent
+                ? resolveSendStatus(
+                    message,
+                    index === lastIndex && !!showSeen,
+                    index === lastIndex && !!showDelivered,
+                  )
+                : null
+            }
             onReactionToggle={onReactionToggle}
             onReply={onReply}
             onOpenActions={onOpenActions}
@@ -170,11 +183,10 @@ function MessageRunViewImpl({
             onSubmitEdit={onSubmitEdit}
             onCancelEdit={onCancelEdit}
             onJumpToMessage={onJumpToMessage}
-            isNewMessage={isNewMessage}
             isNewReaction={isNewReaction}
           />
         ))}
-        {/* Time + sending/seen ticks now live in the last bubble's meta; only the
+        {/* Time + sending/seen ticks live in each bubble's own meta; only the
             failed state keeps a standalone row, since retry is an action. */}
         {isSent && lastMessage?.status === "failed" && (
           <button

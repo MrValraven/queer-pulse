@@ -111,6 +111,11 @@ export const messages: Catalog = {
   "viewer.prev": "Previous photo",
   "viewer.next": "Next photo",
 
+  // Thumbnail filmstrip along the bottom of the full-screen photo viewer
+  "viewer.filmstripLabel": "Photos in this conversation",
+  "viewer.filmstripItem": "Photo {index} of {total}, from {sender}",
+  "viewer.gifBadge": "GIF",
+
   // Document attachments (DocumentComposerButton, MessageDocumentAttachment,
   // MessageBubbleBody, documentUploadProcessing)
   "attachments.openDocument": "Send a file",
@@ -123,6 +128,10 @@ export const messages: Catalog = {
   "attachments.documentError.tooLarge":
     "That file is too large. Keep it under {maxLabel}.",
   "attachments.documentError.retry": "We couldn't send that file. Try again.",
+
+  // Links inside a message bubble (linkify.tsx). Screen-reader-only gloss for
+  // the external-link icon that marks a link leaving QueerPulse.
+  "link.opensExternally": "opens an external site",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
@@ -153,6 +162,11 @@ export const messages: Catalog = {
   "search.emptyTitle": "Nothing matches yet",
   "search.emptyDescription":
     "Nothing in your inbox matches “{query}”. Try another word, or someone's name.",
+  // Shown for a query too short to have actually searched — distinct from
+  // `emptyTitle`, which claims a real search came back with zero hits.
+  "search.tooShortTitle": "Keep typing",
+  "search.tooShortDescription":
+    "Type at least two letters and we'll look through your inbox.",
 
   // "Search in this chat" (ThreadSearchModal), opened from the conversation
   // header — scoped to the open thread instead of the whole inbox.
@@ -401,23 +415,22 @@ export const messages: Catalog = {
   // so the inbox panel carries its own way back out.
   "rail.backToPlatform": "Back to QueerPulse",
   // ── Chat wallpaper (ConversationMenu → WallpaperModal) ──
-  // The ground names are the SWATCH names, so they are what a screen reader
-  // announces for an otherwise wordless colour button. Keep them plain colours
-  // rather than poetic ones: someone picking by ear needs to know what they
-  // are getting.
+  // The pattern names are the caption under each miniature swatch, so they
+  // double as the swatch button's accessible name. Keep them plain pattern
+  // names rather than poetic ones: someone comparing captions needs to know
+  // what they are picking.
   "conversation.menuAriaLabel": "More options for this chat",
   "wallpaper.menuAction": "Wallpaper",
   "wallpaper.title": "Wallpaper",
   "wallpaper.sub": "Choose the background for {name}.",
-  "wallpaper.groundLegend": "Background colour",
-  "wallpaper.ground.default": "Plain",
-  "wallpaper.ground.lilac": "Lilac",
-  "wallpaper.ground.jade": "Jade",
-  "wallpaper.ground.coral": "Coral",
-  "wallpaper.ground.amber": "Amber",
-  "wallpaper.ground.rose": "Rose",
-  "wallpaper.doodlesTitle": "Doodles",
-  "wallpaper.doodlesSub": "A soft pattern over the colour.",
+  "wallpaper.patternLegend": "Pattern",
+  "wallpaper.pattern.plain": "Plain",
+  "wallpaper.pattern.doodles": "Doodles",
+  "wallpaper.pattern.botanical": "Botanical",
+  "wallpaper.pattern.sky": "Night sky",
+  "wallpaper.pattern.confetti": "Confetti",
+  "wallpaper.pattern.waves": "Waves",
+  "wallpaper.pattern.terrazzo": "Terrazzo",
   "wallpaper.everyChatTitle": "Use for every chat",
   "wallpaper.everyChatSub":
     "Applies to chats that don't have a wallpaper of their own.",

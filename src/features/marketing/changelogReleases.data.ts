@@ -8,6 +8,13 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "15 Sep 2026": {
+      highlights: [
+        "chat-wallpapers-are-patterns",
+        "links-you-share-preview-in-the-bubble",
+        "sent-messages-settle-instantly",
+      ],
+    },
     "14 Sep 2026": {
       highlights: [
         "chat-photo-viewer",

@@ -66,6 +66,116 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "chat-photo-viewer-whatsapp-layout",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("chat-photo-viewer-whatsapp-layout"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "writing-a-post-has-a-page-of-its-own",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("writing-a-post-has-a-page-of-its-own"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forumNew,
+        },
+      },
+      {
+        id: "inbox-search-stops-flashing-empty",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("inbox-search-stops-flashing-empty"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-wallpapers-are-patterns",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("chat-wallpapers-are-patterns"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "you-can-tell-which-links-leave-queerpulse",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("you-can-tell-which-links-leave-queerpulse"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "links-you-share-preview-in-the-bubble",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("links-you-share-preview-in-the-bubble"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "the-messages-panel-is-just-messages",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("the-messages-panel-is-just-messages"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "sent-messages-settle-instantly",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("sent-messages-settle-instantly"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "other-chats-now-show-their-unread-dot",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("other-chats-now-show-their-unread-dot"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "send-button-waits-for-your-words",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("send-button-waits-for-your-words"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "message-box-sits-on-the-keyboard",
+        category: "fix",
+        date: "14 Sep 2026",
+        ...entryKeys("message-box-sits-on-the-keyboard"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
         id: "photos-you-attach-actually-send",
         category: "fix",
         date: "14 Sep 2026",
