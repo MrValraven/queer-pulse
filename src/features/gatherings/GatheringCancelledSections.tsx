@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FiArrowDown, FiArrowRight } from "react-icons/fi";
+import { FiArrowDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -31,7 +31,6 @@ import {
 } from "./gatheringCancelled.data";
 import styles from "./GatheringCancelledPage.module.css";
 
-const MESSAGES = routes.messages;
 const GATHERING = routes.gatherings;
 
 const Tick = () => (
@@ -159,10 +158,12 @@ export function CancelledEventCard() {
           </b>{" "}
           · {t("gatherings:cancelled.hostSentLabel")}
         </div>
-        <Link to={MESSAGES} className={styles.hostLink}>
-          {t("gatherings:cancelled.sendWellWishesCta")}{" "}
-          <FiArrowRight aria-hidden />
-        </Link>
+        {/* PRD-337: dropped rather than fixed with a real recipient. This
+            fictional host has no member account anywhere in the registry, and
+            `LiveCancelledEventCard` above already omits this same CTA for the
+            identical reason (no real per-cancellation host message to reply
+            to), so the demo card is brought in line with the live one instead
+            of inventing a slug for a person who does not exist. */}
       </div>
     </div>
   );

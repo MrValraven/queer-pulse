@@ -104,7 +104,13 @@ export function useMessageSending({
   t,
   sendMessage,
 }: SendingDeps): MessageSending {
-  const { appendOptimistic, setStatus, deliver } = useMessageDeliverCore({
+  const {
+    appendOptimistic,
+    setStatus,
+    deliver,
+    deliverAsync,
+    isDeliveryInFlight,
+  } = useMessageDeliverCore({
     setSent,
     demoMode,
     sendMessage,
@@ -127,6 +133,8 @@ export function useMessageSending({
     setSent,
     demoMode,
     deliver,
+    deliverAsync,
+    isDeliveryInFlight,
   });
 
   return {

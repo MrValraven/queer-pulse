@@ -45,6 +45,8 @@ export const GATED_PATTERNS = [
   "/reading-groups",
   "/family",
   "/messages",
+  // `/messages/join/:token` is a child route; mirrors authGate.ts.
+  "/messages/*",
   "/notifications",
   "/communities",
   "/communities/*",

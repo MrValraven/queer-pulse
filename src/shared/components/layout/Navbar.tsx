@@ -96,11 +96,16 @@ function MessagesLink() {
   // page has to thread a count down. Mirrors NotificationsBell exactly.
   const count = useUnreadMessages();
   const { t } = useTranslation();
+  // The badge is sighted-only (DES-191): the count rides along in the
+  // accessible name too, so a blind member hears "Messages, 3 unread"
+  // instead of just "Messages".
   return (
     <Link
       to={routes.messages}
       className={styles.bell}
-      aria-label={t("nav:messages")}
+      aria-label={
+        count > 0 ? t("nav:messagesUnread", { count }) : t("nav:messages")
+      }
     >
       <MessageIcon />
       {count > 0 && <span className={styles.bellBadge}>{count}</span>}

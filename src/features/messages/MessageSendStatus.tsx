@@ -1,6 +1,7 @@
 // src/features/messages/MessageSendStatus.tsx
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { BubbleMetaAlign } from "./useBubbleMetaAlign";
+import { PendingIcon, SentIcon, DoubleTickIcon } from "./messageIcons";
 import styles from "./MessagesPage.module.css";
 
 /** The honest send-status ladder the in-bubble tick renders (own bubbles only):
@@ -40,49 +41,27 @@ export function SendStatusTick({
       title={label}
     >
       {status === "sending" ? (
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 16 16"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="8" cy="8" r="6" />
-          <path d="M8 4.6V8l2.3 1.6" />
-        </svg>
+        <PendingIcon size={12} strokeWidth={2.5} aria-hidden="true" />
       ) : status === "sent" ? (
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 14 14"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M1.5 7.5 5 11l7-8" />
-        </svg>
+        <SentIcon size={12} strokeWidth={2.5} aria-hidden="true" />
       ) : (
-        <svg
-          width="17"
-          height="12"
-          viewBox="0 0 20 14"
+        // Tabler's double-tick glyph sits in a 24x24 viewBox with its ink
+        // spanning roughly y:6-18, so a vertical crop (viewBox="0 3.5 24 17")
+        // keeps every stroke intact while an explicit style height wins over
+        // react-icons' forced square width/height attributes (CSS beats a
+        // presentation attribute). That renders the icon at the bespoke
+        // original's 17x12 footprint, so `.metaTick`'s fixed-width container
+        // stays untouched, at a scale close enough between the two axes to
+        // read as uniform, and lands the stroke around 1.4px to match the
+        // other rungs (pending/sent get the same target via strokeWidth
+        // above instead, since their icons render from an uncropped square
+        // viewBox).
+        <DoubleTickIcon
+          size={17}
+          viewBox="0 3.5 24 17"
+          style={{ height: 12 }}
           aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M1.5 7.5 5 11l6.5-8" />
-          <path d="M8.5 11 15 3" />
-        </svg>
+        />
       )}
     </span>
   );

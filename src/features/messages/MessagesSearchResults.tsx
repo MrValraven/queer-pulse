@@ -1,12 +1,9 @@
 import { FiSearch } from "react-icons/fi";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { useDebouncedValue } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { HitGroup } from "./MessagesSearchHitGroup";
-import {
-  MessageHitListSkeleton,
-  MessageThreadListSkeleton,
-} from "./MessagesSkeleton";
+import { MessagesSearchMessagesSection } from "./MessagesSearchMessagesSection";
+import { MessageThreadListSkeleton } from "./MessagesSkeleton";
 import { MessagesThreadRow } from "./MessagesThreadRow";
 import { MIN_SEARCH_LENGTH, useMessageSearch } from "./api/useMessageSearch";
 import type { Conversation } from "./data";
@@ -30,6 +27,13 @@ import styles from "./MessagesPage.module.css";
  * back empty, and none ran. It gets its own "keep typing" empty state (no
  * "Clear search" action) when no conversation name matched, or the same
  * "keep typing" status line inline when one did.
+ *
+ * A failed body search (`search.isError`, DES-184) gets the same treatment,
+ * one step further up the honesty ladder: an outage is never described as
+ * "no messages match" either, since that claims a real search came back
+ * empty. It gets the shared `LoadErrorState` (full when no conversation name
+ * matched, its `compact` form inline otherwise) with Retry, wired to
+ * `search.refetch`.
  */
 export function MessagesSearchResults({
   query,
@@ -73,8 +77,15 @@ export function MessagesSearchResults({
   // debounced one, so "keep typing" vs. "searching" reflects what's on screen.
   const isSearching =
     !isTooShortToSearch && (debouncedTrimmed !== trimmed || search.isLoading);
+  // Excludes an errored search from ever reading as a settled miss; see
+  // isMessageSearchError below.
   const isMessageSearchEmpty =
-    !isSearching && !isTooShortToSearch && search.totalHits === 0;
+    !isSearching &&
+    !isTooShortToSearch &&
+    !search.isError &&
+    search.totalHits === 0;
+  const isMessageSearchError =
+    !isSearching && !isTooShortToSearch && search.isError;
 
   const hasConversations = threads.length > 0;
 
@@ -89,6 +100,18 @@ export function MessagesSearchResults({
         icon={<FiSearch />}
         title={t("messages:search.tooShortTitle")}
         description={t("messages:search.tooShortDescription")}
+      />
+    );
+  }
+
+  // The body search failed and no conversation name matched either: an
+  // outage must never read as "nothing matches" (DES-184).
+  if (isMessageSearchError && hasConversations === false) {
+    return (
+      <LoadErrorState
+        compact
+        onRetry={search.refetch}
+        description={t("messages:search.loadErrorBody")}
       />
     );
   }
@@ -112,12 +135,14 @@ export function MessagesSearchResults({
   }
 
   return (
-    <div className={styles.searchResults}>
+    // aria-busy while the debounced query/fetch is pending (DES-194): the
+    // list beneath is a skeleton, not settled content, until this clears.
+    <div className={styles.searchResults} aria-busy={isSearching}>
       {hasConversations && (
         <section className={styles.searchSection}>
-          <div className={styles.searchSectionLabel}>
+          <h2 className={styles.searchSectionLabel}>
             {t("messages:search.conversationsLabel")}
-          </div>
+          </h2>
           {threads.map((thread) => (
             <MessagesThreadRow
               key={thread.id}
@@ -135,46 +160,24 @@ export function MessagesSearchResults({
       )}
       {!hasConversations && isSearching && (
         <section className={styles.searchSection}>
-          <div className={styles.searchSectionLabel}>
+          <h2 className={styles.searchSectionLabel}>
             {t("messages:search.conversationsLabel")}
-          </div>
+          </h2>
           <MessageThreadListSkeleton count={2} />
         </section>
       )}
 
-      <section className={styles.searchSection}>
-        <div className={styles.searchSectionLabel}>
-          {t("messages:search.messagesLabel")}
-        </div>
-        {/* Announced to assistive tech even though the visible row is a
-         *  skeleton — kept mounted so the aria-live region is already
-         *  present when its text changes. */}
-        <p className="visuallyHidden" role="status" aria-live="polite">
-          {isSearching ? t("messages:search.searching") : ""}
-        </p>
-        {isSearching && <MessageHitListSkeleton />}
-        {!isSearching && isTooShortToSearch && (
-          <div className={styles.searchStatus}>
-            {t("messages:search.keepTyping")}
-          </div>
-        )}
-        {!isSearching && isMessageSearchEmpty && (
-          <div className={styles.searchStatus}>
-            {t("messages:search.noMessages", { query: trimmed })}
-          </div>
-        )}
-        {!isSearching &&
-          !isTooShortToSearch &&
-          search.groups.map((group) => (
-            <HitGroup
-              key={group.conversationId}
-              group={group}
-              query={trimmed}
-              onOpen={onOpen}
-              onSelect={onSelectResult}
-            />
-          ))}
-      </section>
+      <MessagesSearchMessagesSection
+        isSearching={isSearching}
+        isTooShortToSearch={isTooShortToSearch}
+        isMessageSearchError={isMessageSearchError}
+        isMessageSearchEmpty={isMessageSearchEmpty}
+        query={trimmed}
+        groups={search.groups}
+        onRetry={search.refetch}
+        onOpen={onOpen}
+        onSelect={onSelectResult}
+      />
     </div>
   );
 }

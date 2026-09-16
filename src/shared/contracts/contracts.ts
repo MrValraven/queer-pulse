@@ -117,6 +117,10 @@ export interface AuthorSummary {
    *  (a thread an admin posted as "QueerPulse Official"). Absent/`undefined`
    *  everywhere else. */
   official?: boolean;
+  /** Messaging only (ENG-243): true for the author of a message whose sender
+   *  erased their account. `handle` is empty and `avatarUrl` null; render a
+   *  localized "Former member" with a neutral avatar and no profile link. */
+  isFormerMember?: boolean;
 }
 
 export interface CommunityPostResponse {
@@ -137,6 +141,24 @@ export interface ReactionSummary {
   mine: boolean;
 }
 
+/** One member's reaction on a message, for the "who reacted" sheet (PRD-352).
+ *  Fetched lazily from `GET /conversations/:id/messages/:messageId/reactions`
+ *  and never carried on `MessageResponse`. */
+export interface MessageReactor {
+  key: MessageReactionKey;
+  member: AuthorSummary;
+  /** The signed-in member's own reaction, which the sheet offers to remove. */
+  isMine: boolean;
+  /** When the reaction was made. Null until the backend records it. */
+  reactedAt: string | null;
+}
+
+export interface MessageReactorsResponse {
+  reactors: MessageReactor[];
+}
+
+// PRD-375: a message page persisted offline carries this shape verbatim; bump
+// MESSAGING_CACHE_SCHEMA_VERSION (messagingCacheSelection.ts) if it changes.
 export interface MessageResponse {
   id: string;
   conversationId: string;
@@ -182,7 +204,19 @@ export interface MessageResponse {
     id: string;
     snippet: string;
     senderName: string;
+    /** ENG-243: the quoted message's author erased their account; render the
+     *  localized "Former member" label in place of `senderName`. Optional so
+     *  an older cached response still parses. */
+    senderIsFormerMember?: boolean;
     deleted: boolean;
+    /** The quoted parent's own kind, reported even when it is deleted. */
+    kind: "user" | "system" | "gif" | "image" | "document";
+    /** The parent's resolved preview URL for a `gif`/`image`, else null (and
+     *  null once the parent is deleted or taken down). */
+    thumbnailUrl: string | null;
+    /** The parent document's file name, else null (and null once the parent
+     *  is deleted or taken down). */
+    fileName: string | null;
   } | null;
   /** `user` (an ordinary bubble), `system` (a rendered event pill), `gif` (a
    *  picked provider GIF), `image` (a member-uploaded photo) — both render as
@@ -201,6 +235,8 @@ export interface MessageResponse {
         width: number;
         height: number;
         provider: string;
+        /** The sender's caption, when one was written. */
+        caption?: string | null;
       }
     | {
         url: string;
@@ -208,6 +244,8 @@ export interface MessageResponse {
         byteSize: number;
         contentType: string;
         provider: string;
+        /** The sender's caption, when one was written. */
+        caption?: string | null;
       }
     | null;
   /** Resolved system event for a `system` message (else null). Actor/target come
@@ -219,10 +257,37 @@ export interface MessageResponse {
       | "member_added"
       | "member_removed"
       | "member_left"
-      | "group_renamed";
+      | "group_renamed"
+      | "member_promoted"
+      | "member_demoted"
+      | "owner_changed"
+      | "group_photo_changed"
+      | "group_description_changed"
+      | "member_joined"
+      | "group_dissolved";
     actorName: string;
     targetName: string | null;
+    /** For `member_joined`: `"link"` (the invite-link path) or `"invite"` (an
+     *  accepted group invite). Null for every other event type. */
     value: string | null;
+    /** True when the SIGNED-IN member is the actor: the client swaps to
+     *  "You …" phrasing instead of naming them. Optional-tolerant: absent on
+     *  an older cached response, which the adapter falls back to computing
+     *  from the sender handle for (see `messageToChat`). */
+    actorIsMe?: boolean;
+    /** True when the SIGNED-IN member is the TARGET (e.g. the one added,
+     *  removed, promoted, demoted or made owner): the client swaps to "…
+     *  you" phrasing instead of naming them. Optional-tolerant: absent/undefined
+     *  on an older cached response or an event with no target, which the
+     *  adapter treats as false. */
+    targetIsMe?: boolean;
+    /** Actor's public profile handle, absent on a room broadcast the actor
+     *  cannot be identified against (e.g. a stale cache). The adapter falls
+     *  back to it when `actorIsMe` itself is absent. */
+    actorHandle?: string | null;
+    /** Target's public profile handle, null when the event has no target.
+     *  The adapter falls back to it when `targetIsMe` itself is absent. */
+    targetHandle?: string | null;
   } | null;
 }
 
@@ -231,19 +296,91 @@ export type ConversationRole = "owner" | "admin" | "member";
 /** One member of a GROUP conversation (empty for DMs). `id` is the user id. */
 export interface ConversationMemberSummary {
   id: string;
-  /** Profile handle (slug) — member link + avatar tint seed. */
+  /** Profile handle (slug), member link + avatar tint seed. */
   handle: string;
   name: string;
   avatarUrl: string | null;
   role: ConversationRole;
-  /** This member's read watermark (ISO), else null — the client computes
+  /** This member's read watermark (ISO), else null. The client computes
    *  "Seen by N" by comparing it against a message's timestamp (no per-message
    *  receipts fetch). */
   lastReadAt?: string | null;
   /** This member's delivered watermark (ISO), else null (one rung below read). */
   deliveredAt?: string | null;
+  /** PRD-351: the real INSTANT this member last read (distinct from the
+   *  `lastReadAt` watermark above, which is a message timestamp, not the
+   *  moment of reading). Null for a member who has never read, and withheld
+   *  under the same read-receipt privacy gate as `lastReadAt`. */
+  lastReadInstant?: string | null;
 }
 
+/**
+ * ENG-253: the trimmed avatar-stack preview `ConversationResponse.
+ * memberPreview` carries INSTEAD of the full `members` roster on an inbox
+ * list row. Enough to render group avatars; never a role or a
+ * read/delivered watermark, which the inbox list never rendered. Populated
+ * for a group on every `ConversationResponse` (list and single-conversation
+ * alike), capped server-side at a small avatar-stack size. Empty for DMs.
+ */
+export interface ConversationMemberPreview {
+  id: string;
+  handle: string;
+  name: string;
+  avatarUrl: string | null;
+}
+
+/** One outstanding invite on a group's `ConversationResponse.pendingInvites`
+ *  (owner/admin only, else always `[]`). Distinct from `GroupInviteSummary`
+ *  below, which is the INVITEE's own `GET /group-invites` row. */
+export interface ConversationPendingInvite {
+  id: string;
+  user: Pick<ConversationMemberSummary, "id" | "handle" | "name" | "avatarUrl">;
+  createdAt: string;
+}
+
+/** PRD-353: who may add the caller to a group directly. `"connections"`
+ *  (default): an owner/admin who is an accepted connection may seat the
+ *  caller directly. `"invite_only"`: every add becomes an invite the caller
+ *  accepts or declines. There is deliberately no third "everyone" value: only
+ *  accepted connections of the adder can ever be added or invited. */
+export type GroupAddPolicy = "connections" | "invite_only";
+
+/**
+ * PRD-366: who may send the caller a new message/connection request.
+ * `"everyone"` (default): today's profile-visibility rules, unchanged.
+ * `"introduced"`: a new request needs a mutual-connection introducer
+ * regardless of visibility. `"connections"`: every new message/connection
+ * request is refused — except an enquiry about the caller's own published
+ * listing, which always still reaches them. Enforced server-side
+ * (`ConnectionsService.resolveRequestGate`); this type only names the choice.
+ */
+export type WhoCanMessage = "everyone" | "introduced" | "connections";
+
+/** GET /conversations/group-invites row: one pending invite ADDRESSED TO the
+ *  caller, grouped by the group it invites them into. */
+export interface GroupInviteSummary {
+  id: string;
+  conversationId: string;
+  title: string | null;
+  avatarUrl: string | null;
+  memberCount: number;
+  inviter: AuthorSummary;
+  createdAt: string;
+}
+
+/** GET /conversations/join/:token: a preview of the group an invite link
+ *  points at, shown before the caller decides to join. */
+export interface GroupJoinPreview {
+  conversationId: string;
+  title: string | null;
+  avatarUrl: string | null;
+  description: string | null;
+  memberCount: number;
+  isMember: boolean;
+}
+
+// PRD-375: the inbox persisted offline carries rows in this shape verbatim;
+// bump MESSAGING_CACHE_SCHEMA_VERSION (messagingCacheSelection.ts) if it changes.
 export interface ConversationResponse {
   id: string;
   type: "dm" | "group";
@@ -263,9 +400,65 @@ export interface ConversationResponse {
    *  (`push` module only pushes to unmuted recipients) and drives the row's
    *  mute indicator; unread counting/badges are unaffected. */
   muted?: boolean;
+  /** When a TIMED mute (PRD-349) expires. Null while `muted` is false, and
+   *  also null while `muted` is true but the caller chose "Always" (there is
+   *  no separate forever sentinel). Absent/null = not muted, or muted
+   *  forever. */
+  mutedUntil?: string | null;
+  /** PRD-349: the caller's own mute MODE, a second axis independent of
+   *  `muted`/`mutedUntil` above. `"all"` (absent reads the same) is the
+   *  ordinary ladder those two fields already govern; `"mentionsOnly"` means
+   *  this caller never gets the plain "new message" push for this thread (an
+   *  `@`-mention still reaches them) regardless of `muted`'s own value — the
+   *  two axes can coexist rather than collapsing into one. Mapped onto the
+   *  `Conversation` view model in this feature's `messages.adapters.ts`. */
+  muteMode?: "all" | "mentionsOnly";
+  /** PRD-348: whether an UNREAD message in this thread `@`-mentions the
+   *  caller, server-computed from the caller's own read watermark. */
+  hasUnreadMention?: boolean;
+  /** ISO timestamp THIS caller archived the thread out of their main inbox.
+   *  Null/absent = not archived. Auto-cleared server-side the instant a new
+   *  message lands. */
+  archivedAt?: string | null;
+  /** ISO timestamp THIS caller explicitly marked the thread unread from the
+   *  inbox row menu (PRD-225). Null/absent = not manually marked unread.
+   *  Independent of `unreadCount`: a genuinely-read thread can still carry
+   *  this until the caller re-opens it. */
+  markedUnreadAt?: string | null;
+  /**
+   * THIS caller's own unsent composer text for the thread, synced across
+   * devices. Null/absent = no stored draft.
+   *
+   * ENG-253: no longer sent on an inbox LIST row (`GET /conversations`),
+   * where it can run to 5000 characters and only a short preview is ever
+   * rendered. Present in full only on `GET /conversations/:id` (the
+   * single-conversation read path) and on responses that already returned
+   * full detail before ENG-253 (create/leave/add-member/etc.). A list row
+   * instead carries `draftPreview`/`hasDraft` below, which ARE present on
+   * every response shape, list and single-conversation alike.
+   */
+  draft?: string | null;
+  /** ENG-253: the first 120 characters of `draft`, present wherever `draft`
+   *  itself would have been considered (list and single-conversation alike).
+   *  Enough for the inbox row's own draft preview without shipping the full
+   *  body on every refetch. Null exactly when `hasDraft` is false. */
+  draftPreview?: string | null;
+  /** ENG-253: whether a draft is currently stored at all. Lets the client
+   *  show the "Draft" label/badge without inspecting `draftPreview`'s length. */
+  hasDraft?: boolean;
+  /** THIS caller's own read watermark (ISO), for placing the "New messages"
+   *  divider on open: every message after it that the caller did not send is
+   *  unread. Null when the caller has never read the thread. */
+  myLastReadAt: string | null;
   /** The OTHER participant's read watermark (ISO), for "Seen" receipts. Null for
    *  official/group threads or a counterpart who has never read. */
   otherLastReadAt: string | null;
+  /** PRD-351: the OTHER participant's real read INSTANT (ISO), distinct from
+   *  the watermark above (`otherLastReadAt` is a message timestamp, not the
+   *  moment of reading). Drives the message info sheet's "Read" row with an
+   *  actual time instead of no time at all. Null under the exact same
+   *  conditions as `otherLastReadAt`. */
+  otherLastReadInstant?: string | null;
   /** The OTHER participant's delivered watermark (ISO), for the "double check".
    *  Mirrors `otherLastReadAt` one rung down; null for official/group threads or
    *  a counterpart whose device hasn't acked anything yet. */
@@ -280,6 +473,22 @@ export interface ConversationResponse {
    *  normal input. Always false for official/group threads. Absent on an
    *  older cached response is treated as false (no gate) client-side. */
   replyRequiresConnection?: boolean;
+  /** PRD-340: the one-tap-reply state of a DM the two aren't accepted
+   *  connections in, from the caller's side: `"open"` (an ordinary send will
+   *  succeed), `"awaitingTheirReply"` (the caller started it and is waiting on
+   *  the other side's first reply), or `"needsConnection"` (the original
+   *  rule, neither side may send). Absent for official/group threads or an
+   *  older cached response; treat a missing value as `"open"`. */
+  replyGate?: "open" | "awaitingTheirReply" | "needsConnection";
+  /** True for the QueerPulse official thread. A `direct` thread whose
+   *  `otherParticipant` is null and that is NOT official lost its counterpart
+   *  to account erasure and renders as a former member. Absent on an older
+   *  response, where a null counterpart still means official. */
+  isOfficial?: boolean;
+  /** ISO timestamp the caller and a DM's counterpart became accepted
+   *  connections (DES-225). Null for groups, official threads and a DM
+   *  between members who aren't connected; absent on an older response. */
+  connectedSince?: string | null;
   /** `direct` (1:1 DM / official) or `group` (member-created, titled,
    *  multi-participant). DMs stay `direct` and render exactly as before. */
   kind: "direct" | "group";
@@ -291,10 +500,23 @@ export interface ConversationResponse {
    *  when the group's avatar was cropped in the reframe editor. Null/absent
    *  for DMs and for an uncropped group avatar. */
   avatarCrop?: CropRect | null;
-  /** Active member count for a group; 0 for DMs. */
+  /** Active member count for a group; 0 for DMs. Always the true count,
+   *  independent of how many rows `members`/`memberPreview` actually carry. */
   memberCount: number;
-  /** Group member roster (empty for DMs). */
+  /**
+   * Group member roster with role and per-member read/delivered watermarks
+   * (empty for DMs). ENG-253: no longer populated on an inbox LIST row
+   * (`GET /conversations`); only non-empty on `GET /conversations/:id` (the
+   * single-conversation read path) and on responses that already returned
+   * full detail before ENG-253 (create/leave/add-member/role-change/etc.). A
+   * list row gets `[]` here and reads `memberPreview` below for its avatar
+   * stack instead.
+   */
   members: ConversationMemberSummary[];
+  /** ENG-253: the lightweight avatar-stack preview, populated for a group on
+   *  EVERY response shape (list and single-conversation alike). See
+   *  `ConversationMemberPreview`'s own doc. Empty for DMs. */
+  memberPreview?: ConversationMemberPreview[];
   /** For a group: whether THIS caller has left it. Absent/false for DMs. */
   hasLeft?: boolean;
   /** This caller's own standing in the group. Null/absent for DMs. */
@@ -306,7 +528,50 @@ export interface ConversationResponse {
   canRemoveMembers?: boolean;
   canRename?: boolean;
   canManageRoles?: boolean;
+  /** GROUP only (PRD-358): the group's description, editable by owner/admin.
+   *  Null for DMs and for a group with no description set. */
+  description?: string | null;
+  /** GROUP only (PRD-357): ISO timestamp the group was dissolved. Once set,
+   *  the group is read-only for every former participant. Null while active;
+   *  absent for DMs. */
+  dissolvedAt?: string | null;
+  /** GROUP only, THIS caller (DES-227): why the composer is severed:
+   *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
+   *  `"dissolved"` (the owner ended the group). Null while the caller is an
+   *  active member; absent for DMs. Drives `ComposerSeveredNotice`'s copy. */
+  leftReason?: "left" | "removed" | "dissolved" | null;
+  /** GROUP only (PRD-358): the group's revocable invite-link token. Only ever
+   *  set for the owner/admin who may manage it; null for every other member
+   *  and for a group with no active link. Absent for DMs. */
+  inviteToken?: string | null;
+  /** GROUP only: whether THIS caller may create/rotate/disable the invite
+   *  link, gated on being owner/admin with the group active and not
+   *  dissolved. Absent/false for DMs and a member who has left. */
+  canManageInviteLink?: boolean;
+  /** GROUP only: whether THIS caller (the owner) may transfer ownership,
+   *  gated on the group being active and not dissolved. Absent/false for
+   *  DMs, non-owners, and a member who has left. */
+  canTransferOwnership?: boolean;
+  /** GROUP only: whether THIS caller (the owner) may dissolve the group,
+   *  gated on it being active and not already dissolved. Absent/false for
+   *  DMs, non-owners, and a member who has left. */
+  canDissolve?: boolean;
+  /** GROUP only, owner/admin (PRD-353): invites still awaiting a response.
+   *  Always `[]` for a non-owner/admin, a DM, or a member who has left. */
+  pendingInvites?: ConversationPendingInvite[];
 }
+
+/**
+ * ENG-253: `GET /conversations` (the inbox) now returns one cursor-paginated
+ * page of this shape, replacing the previous bare `ConversationResponse[]`.
+ * `data` is this page's rows, most-recently-active first; `pageInfo` is the
+ * shared `PageInfo` envelope (`nextCursor`/`hasMore`) every other
+ * cursor-paginated list in this app already uses, passed back as `?cursor=`
+ * for the next page. Every row in `data` is a LIST row: see
+ * `ConversationResponse.members`/`.draft`'s own docs for exactly which
+ * fields are trimmed relative to `GET /conversations/:id`.
+ */
+export type ConversationListPage = Paginated<ConversationResponse>;
 
 // --- Message search (cross-inbox body search) ---
 
@@ -319,15 +584,29 @@ export interface MessageSearchHit {
   snippet: string;
   sender: AuthorSummary;
   createdAt: string;
+  /** Mirrors `MessageResponse.kind` for this hit's message. */
+  kind: "user" | "system" | "gif" | "image" | "document";
+  /** Mirrors `MessageResponse.attachment` for this hit's message, null for a
+   *  plain-text hit. */
+  attachment: MessageResponse["attachment"];
 }
 
 /** Per-conversation grouping metadata for search hits: the counterpart (null for
- *  the official/welcome thread) and `isOfficial` so the client renders the right
- *  name/avatar without a second request. */
+ *  the official/welcome thread OR a group, which renders under its own identity
+ *  instead) and `isOfficial` so the client renders the right name/avatar without
+ *  a second request. `kind`/`title`/`avatarUrl` mirror `ConversationResponse`'s
+ *  own fields so a hit inside a GROUP conversation labels under the group's own
+ *  name/avatar rather than an arbitrary member's. */
 export interface MessageSearchConversationGroup {
   conversationId: string;
   otherParticipant: AuthorSummary | null;
   isOfficial: boolean;
+  /** `direct` (DM/official) or `group` — mirrors `ConversationResponse.kind`. */
+  kind: "direct" | "group";
+  /** Group name, null for a DM/official thread. */
+  title: string | null;
+  /** Group avatar URL, null for a DM/official thread. */
+  avatarUrl: string | null;
 }
 
 /** GET /messages/search response: the echoed (trimmed) query, flat hits
@@ -345,10 +624,17 @@ export interface StarredMessageHit extends MessageSearchHit {
 }
 
 /** GET /messages/starred response: the caller's starred messages newest-star-first,
- *  plus the per-conversation grouping metadata (reused from search). */
+ *  plus the per-conversation grouping metadata (reused from search).
+ *
+ *  PRD-374: keyset-paginated. `nextCursor` is the opaque cursor for the next
+ *  older page, null once the last page is reached; `hasMore` is the same
+ *  fact as a plain boolean, so a caller doesn't need to null-check the
+ *  cursor just to decide whether to show a "Load more" affordance. */
 export interface StarredMessagesResponse {
   items: StarredMessageHit[];
   conversations: MessageSearchConversationGroup[];
+  nextCursor: string | null;
+  hasMore: boolean;
 }
 
 /**

@@ -277,6 +277,7 @@ export const shared: Catalog = {
   "adminNav.items.roadmap": "Roteiro",
   "adminNav.items.reports": "Relatórios",
   "adminNav.items.systemAccounts": "Contas de sistema",
+  "adminNav.items.officialMessages": "Mensagens oficiais",
 
   // errorHandling.ts / errorMessage.ts
   "apiError.server": "Algo correu mal do nosso lado. Tenta outra vez.",
@@ -680,4 +681,9 @@ export const shared: Catalog = {
   "richText.linkInvalid":
     "Usa um endereço completo, como https://exemplo.com, ou um email, como mailto:ola@exemplo.com.",
   "richText.slashMenuAria": "Inserir um bloco",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "tabs.labelWithCount": "{label}, {count}",
+  "pullToRefresh.failed":
+    "A atualização falhou. Tenta outra vez daqui a um momento.",
 };

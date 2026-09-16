@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { paneScrollRegistry } from "../../app/paneScrollRegistry";
 import { PullToRefresh } from "../../shared/components/ui";
 import { useMessageRequestsCount } from "./api/useMessageRequestsCount";
+import { ConnectionStatusBanner } from "./ConnectionStatusBanner";
 import { DeleteConversationDialog } from "./DeleteConversationDialog";
 import { MessagesRailFooter } from "./MessagesRailChrome";
 import { MessagesThreadListBody } from "./MessagesThreadListBody";
 import { MessagesThreadListHeader } from "./MessagesThreadListHeader";
+import { MessagesThreadListLoadMore } from "./MessagesThreadListLoadMore";
 import { filterThreadsByTab, type InboxTab } from "./threadFilters";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -35,6 +38,11 @@ export function MessagesThreadList({
   activeId,
   readIds,
   query,
+  isError,
+  onRetry,
+  hasMoreThreads,
+  isLoadingMoreThreads,
+  onLoadMoreThreads,
   onQueryChange,
   onOpen,
   onCompose,
@@ -51,6 +59,24 @@ export function MessagesThreadList({
   activeId: string;
   readIds: Set<string>;
   query: string;
+  /** DES-183: the inbox query settled in error (`useMessagesController`'s
+   *  `inboxLoadError`), forwarded straight through to `MessagesThreadListBody`,
+   *  which decides the load-error-vs-empty-state branching. */
+  isError?: boolean;
+  /** Refetches the inbox (`useMessagesController`'s `refetchInbox`). */
+  onRetry?: () => void;
+  /** ENG-253: `useMessagesController`'s own `hasMoreThreads`/
+   *  `isLoadingMoreThreads`/`loadMoreThreads`, driving the "load more"
+   *  sentinel/footer below the row list (`MessagesThreadListLoadMore`).
+   *  Optional/undefined until a caller wires all three through. Every
+   *  branch below then simply never renders the footer (today's existing
+   *  "stops at the first page" shape), rather than throwing, so an older or
+   *  test-only caller that only passes the props above keeps working
+   *  unchanged. See this build's report for the one call site
+   *  (`MessagesPage.tsx`) that still needs the three-line hookup. */
+  hasMoreThreads?: boolean;
+  isLoadingMoreThreads?: boolean;
+  onLoadMoreThreads?: () => void;
   onQueryChange: (value: string) => void;
   onOpen: (id: string) => void;
   onCompose: () => void;
@@ -81,6 +107,27 @@ export function MessagesThreadList({
   // control for.
   const [activeTab, setActiveTab] = useState<InboxTab>("all");
   const requestsCount = useMessageRequestsCount();
+  // PRD-353: the `group_invite` bell row and its push counterpart deep-link to
+  // `/messages?tab=requests` (mirrors the `?tab=` deep links other consoles
+  // already use, e.g. `/admin/moderation?tab=health`). One-shot, cleared right
+  // after so a later manual tab switch or a refresh never re-fires it.
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get("tab") !== "requests") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot deep-link intent from the URL (an external signal), consumed and cleared immediately below; mirrors useMessageDeepLinks' own notification-tap effect.
+    setActiveTab("requests");
+    // Delete only `tab`, not the whole query string: a `?c=<id>` deep-link
+    // arriving alongside it (or any other param) must survive this clear.
+    setSearchParams(
+      (previous) => {
+        const next = new URLSearchParams(previous);
+        next.delete("tab");
+        return next;
+      },
+      { replace: true },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
   const searching = !loading && query.trim().length > 0;
   // Tabs stay visible whenever there's SOMETHING to filter — either an actual
   // conversation, or a pending message request (a brand-new member with
@@ -120,6 +167,7 @@ export function MessagesThreadList({
         }}
         onCompose={onCompose}
         onComposeGroup={onComposeGroup}
+        loading={loading}
         showTabs={showTabs}
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -127,7 +175,29 @@ export function MessagesThreadList({
         showBackButton={!showRailChrome}
       />
 
-      <div className={styles.threadList} ref={threadListRef}>
+      {/* The reconnecting/offline strip: it otherwise only mounts inside the
+          open thread (`ConversationTopSection`). A phone viewing just the
+          list, or a desktop member with no thread open yet (where the panel
+          is `MessagesEmptyPanel` instead), never learns the socket is down
+          while pulling on stale rows (DES-197). `showRailChrome` is this
+          route's own desktop signal (see its prop doc below); suppressed
+          there once a thread IS open so the split view never shows the
+          identical strip twice, since the open thread's own copy already
+          covers it. Self-contained (reads the socket via `useRealtime`) and
+          already demo-mode-inert. */}
+      {!(showRailChrome && activeId) && <ConnectionStatusBanner />}
+
+      <div
+        className={styles.threadList}
+        ref={threadListRef}
+        // DES-194: the skeleton rows underneath are all `aria-hidden`
+        // (MessagesSkeleton.tsx), so without this a screen-reader member
+        // hears nothing at all while the inbox's first load is in flight.
+        // Mirrors the `aria-busy` the search-results loading state already
+        // carries (ThreadSearchModal/MessagesSearchResults) rather than a
+        // second pattern.
+        aria-busy={loading}
+      >
         {/* `queryKey: ["conversations"]` matches useConversations' inline
             `["conversations", demoMode, deletedToken]` as a prefix — the same
             convention every conversations mutation in this feature already
@@ -140,7 +210,18 @@ export function MessagesThreadList({
         <PullToRefresh
           scrollable
           onRefresh={() =>
-            queryClient.invalidateQueries({ queryKey: ["conversations"] })
+            // DES-197: `invalidateQueries` forwards straight to
+            // `refetchQueries`, which swallows a failed refetch in its own
+            // `.catch(noop)` unless `throwOnError` is set (query-core's
+            // `queryClient.js`); without this the promise below never
+            // rejected, so `usePullToRefresh`'s existing failure toast never
+            // fired. This is the one path where the member needs to actually
+            // learn THIS specific pull failed, since the ambient query-error
+            // toast stays deliberately suppressed while cached rows exist.
+            queryClient.invalidateQueries(
+              { queryKey: ["conversations"] },
+              { throwOnError: true },
+            )
           }
         >
           <MessagesThreadListBody
@@ -153,6 +234,8 @@ export function MessagesThreadList({
             activeId={activeId}
             readIds={readIds}
             pinnedCount={pinnedCount}
+            isError={isError}
+            onRetry={onRetry}
             onOpen={onOpen}
             onCompose={onCompose}
             onQueryChange={onQueryChange}
@@ -161,12 +244,28 @@ export function MessagesThreadList({
             onMarkThreadRead={onMarkThreadRead}
             onMarkThreadUnread={onMarkThreadUnread}
           />
+          {/* ENG-253: the raw inbox's own next-page cursor, never shown
+              mid-search (search is a name/body match over ALREADY-loaded rows
+              rather than a server-paged view of its own) or under the
+              "Requests" tab (its body swaps out for `MessagesRequestsPanel`
+              entirely, unrelated to conversation paging). */}
+          {!loading &&
+            !searching &&
+            activeTab !== "requests" &&
+            onLoadMoreThreads && (
+              <MessagesThreadListLoadMore
+                hasNextPage={!!hasMoreThreads}
+                isFetchingNextPage={!!isLoadingMoreThreads}
+                onLoadMore={onLoadMoreThreads}
+              />
+            )}
         </PullToRefresh>
       </div>
       {showRailChrome && <MessagesRailFooter />}
       {confirmDelete && (
         <DeleteConversationDialog
           name={confirmDelete.name}
+          isGroup={confirmDelete.isGroup}
           pending={deletePending}
           onClose={() => setConfirmDelete(null)}
           onConfirm={() => {

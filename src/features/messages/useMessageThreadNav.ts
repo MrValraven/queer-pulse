@@ -110,17 +110,17 @@ export function useMessageThreadNav({
   /** Open a conversation from a cross-inbox search result and, when the hit
    *  carries a server message id, arm the jump-to + highlight of that bubble.
    *  Clears the search so the opened thread is fully in view (on mobile the
-   *  thread pane replaces the list). Demo hits carry no id — the thread still
-   *  opens, it just can't scroll to the exact message. */
+   *  thread pane replaces the list). Demo hits carry their seeded message ids,
+   *  so they jump to the exact message the same way live hits do. */
   function openThreadAtMessage(conversationId: string, messageId?: string) {
     openThread(conversationId);
     setJumpMessageId(messageId ?? null);
     setQuery("");
   }
 
-  // Stable identity: the conversation panel's jump effect depends on this, and a
-  // fresh function each render would restart its retry loop (resetting the
-  // attempt count) on unrelated re-renders (typing/presence frames).
+  // Stable identity: the conversation panel's search-jump effect depends on
+  // this, and a fresh function each render would cancel and re-schedule its
+  // one-frame hand-off on unrelated re-renders (typing/presence frames).
   const clearJumpMessage = useCallback(() => setJumpMessageId(null), []);
 
   function deleteThread(conversationId: string) {

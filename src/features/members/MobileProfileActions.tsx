@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
 import { useIncomingRequestActions } from "../connect/useIncomingRequestActions";
 import { useVouch } from "../../app/providers/useVouch";
@@ -32,8 +29,6 @@ export function MobileProfileActions({
   realSelf: boolean;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { showToast } = useToast();
   const { connected, hasIncomingRequest, contact } = useMemberContact(
     profile.slug,
   );
@@ -46,21 +41,6 @@ export function MobileProfileActions({
   const vouched = hasVouched(profile.slug);
   const [helloOpen, setHelloOpen] = useState(false);
   const fullName = `${profile.first} ${profile.last}`;
-
-  function handleSendHello(draft: string) {
-    try {
-      void navigate(routes.messages, {
-        state: { to: { slug: profile.slug, name: fullName, text: draft } },
-      });
-      setHelloOpen(false);
-      showToast(
-        t("members:profile.hello.sentToast", { first: profile.first }),
-        "success",
-      );
-    } catch {
-      showToast(t("members:profile.hello.errorToast"), "error");
-    }
-  }
 
   const primary = asVisitor ? (
     <Button size="lg" disabled>
@@ -131,7 +111,6 @@ export function MobileProfileActions({
         <ProfileHelloModal
           profile={profile}
           onClose={() => setHelloOpen(false)}
-          onSend={handleSendHello}
         />
       )}
     </>

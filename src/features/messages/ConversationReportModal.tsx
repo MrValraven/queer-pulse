@@ -11,41 +11,89 @@ import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./MessagesPage.module.css";
 
-export interface ConversationReportModalProps {
-  /** The counterpart's user id (live) — falls back to their slug in demo mode,
-   *  where the report never leaves the device (see `useCreateReport`). */
-  subjectId: string;
-  /** First name, for the title/toast copy. */
-  name: string;
-  onClose: () => void;
-}
+export type ConversationReportModalProps =
+  | {
+      kind: "member";
+      /** The counterpart's user id (live) — falls back to their slug in demo
+       *  mode, where the report never leaves the device (see `useCreateReport`). */
+      subjectId: string;
+      /** First name, for the title/toast copy. */
+      name: string;
+      onClose: () => void;
+    }
+  | {
+      kind: "group";
+      /** The group conversation's own id — the report subject (PRD-356). */
+      conversationId: string;
+      /** The group's title, for the modal heading + success copy. */
+      groupTitle: string;
+      onClose: () => void;
+    };
 
 /**
- * Report the person on the other end of a DM — not a single message, the
- * member themself (spec 03's `member` report subject). Opened from
- * `ConversationSafetyMenu`, alongside Block. Structurally a twin of
- * `MessageReportModal` (same reason-taxonomy + detail-textarea shape, same
- * `/reports` mutation) with `subjectType: "member"` instead of `"message"`,
- * so the reason set matches the member-shaped taxonomy (outing/doxxing/
- * harassment/unwanted contact/impersonation/discrimination) rather than the
- * message one.
+ * Report the DM counterpart themself, or a whole GROUP (PRD-356) — never one
+ * message. Opened from `ConversationSafetyMenu` (member) or the group's own
+ * conversation menu (group, wired separately). Same reason-taxonomy +
+ * detail-textarea shape and the same `/reports` mutation either way;
+ * `kind` picks the subject type (`member` vs `conversation`), which reason
+ * set `useReportReasons` renders, and which copy this modal shows — a group
+ * report is about the group itself (its name, who its owner lets in), not
+ * about any one person in it, so its lead/success copy says that rather than
+ * offering to block somebody.
  */
-export function ConversationReportModal({
-  subjectId,
-  name,
-  onClose,
-}: ConversationReportModalProps) {
+export function ConversationReportModal(props: ConversationReportModalProps) {
+  const { onClose } = props;
+  const isGroupReport = props.kind === "group";
+  const subjectId = isGroupReport ? props.conversationId : props.subjectId;
+  const displayName = isGroupReport ? props.groupTitle : props.name;
+
   const { t } = useTranslation();
   const { showToast } = useToast();
   // Server-owned taxonomy when it answers, the local one instantly and
   // silently when it does not. Never a spinner, never an empty list.
-  const reasons = useReportReasons("member");
+  const reasons = useReportReasons(isGroupReport ? "conversation" : "member");
   const [reason, setReason] = useState<string>(reasons[0]!.code);
   const detailFieldId = useId();
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
   const createReport = useCreateReport();
   const describeReportError = useReportSubmissionError();
+
+  const copy = isGroupReport
+    ? {
+        lead: t("safety:reportGroup.form.lead"),
+        reasonLabel: t("safety:reportGroup.form.reasonLabel"),
+        detailLabel: t("safety:reportGroup.form.detailLabel"),
+        detailPlaceholder: t("safety:reportGroup.form.detailPlaceholder"),
+        cancelCta: t("safety:reportGroup.form.cancelCta"),
+        submitting: t("safety:reportGroup.form.submitting"),
+        submitCta: t("safety:reportGroup.form.submitCta"),
+        errorFallback: t("safety:reportGroup.error"),
+        successTitleKey: "safety:reportGroup.success.title",
+        successBody: t("safety:reportGroup.success.body"),
+        successDoneCta: t("safety:reportGroup.success.doneCta"),
+        charsRemaining: (count: number) =>
+          t("safety:reportGroup.form.charsRemaining", { count }),
+        charsCount: (count: number) =>
+          t("safety:reportGroup.form.charsCount", { count }),
+      }
+    : {
+        lead: t("safety:reportPerson.form.lead"),
+        reasonLabel: t("safety:reportPerson.form.reasonLabel"),
+        detailLabel: t("safety:reportPerson.form.detailLabel"),
+        detailPlaceholder: t("safety:reportPerson.form.detailPlaceholder"),
+        cancelCta: t("safety:reportPerson.form.cancelCta"),
+        submitting: t("safety:reportPerson.form.submitting"),
+        submitCta: t("safety:reportPerson.form.submitCta"),
+        errorFallback: t("safety:reportPerson.error"),
+        successTitleKey: "safety:reportPerson.success.title",
+        successBody: t("safety:reportPerson.success.body"),
+        successDoneCta: t("safety:reportPerson.success.doneCta"),
+        charsRemaining: (count: number) =>
+          t("safety:reportPerson.form.charsRemaining", { count }),
+        charsCount: (count: number) =>
+          t("safety:reportPerson.form.charsCount", { count }),
+      };
 
   const canSubmit = detail.trim().length >= 10;
   const charsLeft = 10 - detail.trim().length;
@@ -54,7 +102,7 @@ export function ConversationReportModal({
     if (!canSubmit || createReport.isPending) return;
     createReport.mutate(
       {
-        subjectType: "member",
+        subjectType: isGroupReport ? "conversation" : "member",
         subjectId,
         reasonCode: asReasonCode(reason),
         detail: detail.trim(),
@@ -62,15 +110,16 @@ export function ConversationReportModal({
       {
         onSuccess: () => setDone(true),
         onError: (error) => {
-          logError(error, { scope: "messages.reportMember" });
+          logError(error, {
+            scope: isGroupReport
+              ? "messages.reportGroup"
+              : "messages.reportMember",
+          });
           // Never tell a reporter "received" when the report didn't land —
           // surface an honest error and keep the form filled in to retry. A
           // rolling flood cap answers with its own member-facing explanation,
           // which `describeReportError` shows in place of the generic line.
-          showToast(
-            describeReportError(error, t("safety:reportPerson.error")),
-            "error",
-          );
+          showToast(describeReportError(error, copy.errorFallback), "error");
         },
       },
     );
@@ -81,47 +130,47 @@ export function ConversationReportModal({
       <Modal
         title={
           <Translation
-            i18nKey="safety:reportPerson.success.title"
+            i18nKey={copy.successTitleKey}
             components={{ em: <em /> }}
           />
         }
         onClose={onClose}
         footer={
           <Button variant="ghost" onClick={onClose}>
-            {t("safety:reportPerson.success.doneCta")}
+            {copy.successDoneCta}
           </Button>
         }
       >
-        <p>{t("safety:reportPerson.success.body")}</p>
+        <p>{copy.successBody}</p>
       </Modal>
     );
   }
 
   return (
     <Modal
-      title={t("messages:report.memberTitle", { name })}
+      title={
+        isGroupReport
+          ? t("messages:report.groupTitle", { name: displayName })
+          : t("messages:report.memberTitle", { name: displayName })
+      }
       onClose={onClose}
-      sub={t("safety:reportPerson.form.lead")}
+      sub={copy.lead}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
-            {t("safety:reportPerson.form.cancelCta")}
+            {copy.cancelCta}
           </Button>
           <Button
             variant="primary"
             onClick={submit}
             disabled={!canSubmit || createReport.isPending}
           >
-            {createReport.isPending
-              ? t("safety:reportPerson.form.submitting")
-              : t("safety:reportPerson.form.submitCta")}
+            {createReport.isPending ? copy.submitting : copy.submitCta}
           </Button>
         </>
       }
     >
-      <div className={styles.reportLabel}>
-        {t("safety:reportPerson.form.reasonLabel")}
-      </div>
+      <div className={styles.reportLabel}>{copy.reasonLabel}</div>
       <div className={styles.reportOpts}>
         {reasons.map((option) => (
           <label
@@ -145,21 +194,19 @@ export function ConversationReportModal({
         ))}
       </div>
       <label className={styles.reportLabel} htmlFor={detailFieldId}>
-        {t("safety:reportPerson.form.detailLabel")}
+        {copy.detailLabel}
       </label>
       <textarea
         id={detailFieldId}
         className={styles.reportTextarea}
-        placeholder={t("safety:reportPerson.form.detailPlaceholder")}
+        placeholder={copy.detailPlaceholder}
         value={detail}
         onChange={(event) => setDetail(event.target.value)}
       />
       <div className={styles.reportCounter}>
         {charsLeft > 0
-          ? t("safety:reportPerson.form.charsRemaining", { count: charsLeft })
-          : t("safety:reportPerson.form.charsCount", {
-              count: detail.trim().length,
-            })}
+          ? copy.charsRemaining(charsLeft)
+          : copy.charsCount(detail.trim().length)}
       </div>
     </Modal>
   );

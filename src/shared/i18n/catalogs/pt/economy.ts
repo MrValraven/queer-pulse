@@ -4601,4 +4601,9 @@ export const economy: Catalog = {
   "housingViewing.review.gonePublicBody":
     "Esta avaliação ficou pública, por isso já não pode ser alterada. Uma avaliação pode ser corrigida até ao momento em que fica pública.",
   "housingViewing.list.yourReview": "A tua avaliação",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "barterDetail.propose.openThreadCta": "Abrir a conversa",
+  "housingModal.message.replyNotice":
+    "{name} pode responder-te já a isto. Podes escrever mais assim que o fizer.",
 };

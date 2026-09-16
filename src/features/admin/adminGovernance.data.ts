@@ -101,7 +101,8 @@ export type AuditRange = "today" | "week" | "quarter";
 
 /** Chip tone for each backend action code — shared by demo→live remapping in
  *  `useAdminAudit` when a live row's raw action code needs a fallback tone. */
-export const ACTION_TONE: Record<AuditType, AdminTone> = {
+export const ACTION_TONE: Record<AuditType, AdminTone> &
+  Partial<Record<string, AdminTone>> = {
   dismiss: "coral",
   warn: "coral",
   hide_content: "amber",
@@ -121,6 +122,14 @@ export const ACTION_TONE: Record<AuditType, AdminTone> = {
   // Ghost-quiet on purpose: a recorded look is not an enforcement action, and
   // toning it like one would have it read as something done to the member.
   member_sign_in_email_viewed: "ghost",
+  // Outside the filter union, toned here so the feed shows them as neutral
+  // records instead of the plum fallback: a moderator reading the conversation
+  // around a report, a staff delete for everyone, and the two official sends.
+  conversation_context_viewed: "ghost",
+  report_message_attachment_viewed: "ghost",
+  message_deleted_by_staff: "ghost",
+  official_message_sent: "ghost",
+  official_broadcast_sent: "ghost",
 };
 
 export interface AuditEntry {

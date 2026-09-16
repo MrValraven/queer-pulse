@@ -1,12 +1,14 @@
+import { useMemo } from "react";
 import {
   useMutation,
+  useMutationState,
   useQueryClient,
   type QueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
-  newestCachedMessageId,
+  newestCachedMessage,
   patchConversationPreview,
   patchConversationRead,
   upsertMessage,
@@ -121,6 +123,9 @@ export function useCreateGroup() {
     Error,
     { title: string; memberHandles: string[]; avatarUrl?: string }
   >({
+    // useGroupCreation's onError shows groupErrorMessage(...) for every
+    // failure, so the global mutation-error toast would otherwise duplicate it.
+    meta: { silentError: true },
     mutationFn: async ({ title, memberHandles, avatarUrl }) => {
       if (demoMode) return null;
       const dto = await createGroup(title, memberHandles, avatarUrl);
@@ -154,8 +159,11 @@ export function useLeaveGroup() {
  *  `["conversations"]` list in place — instead of `invalidateQueries`, which
  *  would throw the returned DTO away and pay for a full `GET /conversations`
  *  round-trip the mutation's own response already made unnecessary. A no-op if
- *  the row isn't cached yet (falls back to the next real fetch). */
-function patchConversationInList(
+ *  the row isn't cached yet (falls back to the next real fetch). Exported for
+ *  `useGroupManagementMutations.ts` (section 8: transfer ownership, dissolve),
+ *  which returns the SAME shape of already-fresh `Conversation` for an
+ *  existing row and patches it the same way rather than forking this logic. */
+export function patchConversationInList(
   queryClient: QueryClient,
   updated: Conversation,
 ): void {
@@ -185,6 +193,10 @@ export function useAddGroupMembers() {
     Error,
     { conversationId: string; memberHandles: string[] }
   >({
+    // The add-members call's onError shows groupErrorMessage(...) for every
+    // failure (DES-229's GROUP_FULL toast among them), so the global
+    // mutation-error toast would otherwise duplicate it.
+    meta: { silentError: true },
     mutationFn: async ({ conversationId, memberHandles }) => {
       if (demoMode) return null;
       return conversationToView(
@@ -208,6 +220,9 @@ export function useRemoveGroupMember() {
     Error,
     { conversationId: string; userId: string }
   >({
+    // useMessageGroupActions' onError shows groupErrorMessage(...) for every
+    // failure, so the global mutation-error toast would otherwise duplicate it.
+    meta: { silentError: true },
     mutationFn: async ({ conversationId, userId }) => {
       if (demoMode) return null;
       return conversationToView(
@@ -231,6 +246,9 @@ export function useChangeGroupMemberRole() {
     Error,
     { conversationId: string; userId: string; role: "admin" | "member" }
   >({
+    // useMessageGroupActions' onError shows groupErrorMessage(...) for every
+    // failure, so the global mutation-error toast would otherwise duplicate it.
+    meta: { silentError: true },
     mutationFn: async ({ conversationId, userId, role }) => {
       if (demoMode) return null;
       return conversationToView(
@@ -252,12 +270,23 @@ export function useUpdateGroup() {
   return useMutation<
     Conversation | null,
     Error,
-    { conversationId: string; title?: string; avatarUrl?: string }
+    {
+      conversationId: string;
+      title?: string;
+      avatarUrl?: string;
+      /** PRD-358: group description (max 500, trimmed server-side). Posts a
+       *  `group_description_changed` pill, same as a title/avatar change
+       *  posts `group_renamed`/`group_photo_changed`. */
+      description?: string;
+    }
   >({
-    mutationFn: async ({ conversationId, title, avatarUrl }) => {
+    // useMessageGroupActions' onError shows groupErrorMessage(...) for every
+    // failure, so the global mutation-error toast would otherwise duplicate it.
+    meta: { silentError: true },
+    mutationFn: async ({ conversationId, title, avatarUrl, description }) => {
       if (demoMode) return null;
       return conversationToView(
-        await updateGroup(conversationId, { title, avatarUrl }),
+        await updateGroup(conversationId, { title, avatarUrl, description }),
         t,
       );
     },
@@ -267,6 +296,10 @@ export function useUpdateGroup() {
     },
   });
 }
+
+/** Shared by `useMarkRead` and `useMarkReadActivity`, so every read POST
+ *  (thread open, row menu, `useMarkReadOnInbound`) is visible to the latter. */
+const MARK_READ_MUTATION_KEY = ["messages", "markRead"] as const;
 
 /** POST /conversations/:id/read — clear the unread badge for a thread. The
  *  target conversation id is passed at mutate time, not bound when the hook
@@ -290,25 +323,90 @@ export function useUpdateGroup() {
  *  only when nothing is cached yet for this thread (e.g. a just-opened
  *  conversation whose history hasn't loaded into this tab at all) — the same
  *  "mark fully caught up" intent `openThread` already relies on, just without
- *  a more precise id to send instead. */
+ *  a more precise id to send instead.
+ *
+ *  Resolves with the exact watermark the request carried (null in demo), so
+ *  `onSuccess` patches what the server stored and `useMarkReadActivity` can
+ *  report it. */
 export function useMarkRead() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string>({
+  return useMutation<string | null, Error, string>({
+    mutationKey: MARK_READ_MUTATION_KEY,
     mutationFn: async (conversationId) => {
-      if (demoMode || !conversationId) return;
-      const upToMessageId = newestCachedMessageId(queryClient, conversationId);
+      if (demoMode || !conversationId) return null;
+      const newest = newestCachedMessage(queryClient, conversationId);
+      const readThrough = newest?.createdAt ?? new Date().toISOString();
       await markConversationRead(conversationId, {
-        upToMessageId: upToMessageId ?? undefined,
-        lastReadAt: upToMessageId ? undefined : new Date().toISOString(),
+        upToMessageId: newest?.id,
+        lastReadAt: newest ? undefined : readThrough,
       });
+      return readThrough;
     },
-    onSuccess: (_result, conversationId) => {
-      if (demoMode) return;
-      patchConversationRead(queryClient, conversationId);
+    onSuccess: (readThrough, conversationId) => {
+      if (demoMode || !readThrough) return;
+      patchConversationRead(queryClient, conversationId, readThrough);
       // Reading a thread clears its unread → refresh the cheap nav DM badge
       // (its own isolated key, so the list patch above doesn't touch it).
       void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
     },
   });
+}
+
+export interface MarkReadActivity {
+  /** A read POST for this thread is on the wire, from any caller. */
+  isInFlight: boolean;
+  /** The newest watermark a successful read POST for this thread carried. */
+  acknowledgedThrough: string | undefined;
+  /** `submittedAt` (epoch ms) of the newest failed read POST for this thread. */
+  latestFailedAt: number | undefined;
+}
+
+/** Every read POST for `conversationId` as the mutation cache sees it. Read
+ *  from the cache instead of per-call `mutate` callbacks: TanStack only runs
+ *  those for the LATEST `mutate` on a shared observer, and `openThread`, the
+ *  row menu and `useMarkReadOnInbound` all share `useMarkRead`'s one observer,
+ *  so a callback could silently never fire. The selection ignores
+ *  `conversationId` (it is filtered afterwards) because `useMutationState`
+ *  only picks up new options on its next cache event. */
+export function useMarkReadActivity(
+  conversationId: string | null,
+): MarkReadActivity {
+  const attempts = useMutationState({
+    filters: { mutationKey: MARK_READ_MUTATION_KEY },
+    select: (mutation) => ({
+      conversationId: mutation.state.variables,
+      status: mutation.state.status,
+      readThrough: mutation.state.data,
+      submittedAt: mutation.state.submittedAt,
+    }),
+  });
+  return useMemo(() => {
+    const activity: MarkReadActivity = {
+      isInFlight: false,
+      acknowledgedThrough: undefined,
+      latestFailedAt: undefined,
+    };
+    if (!conversationId) return activity;
+    for (const attempt of attempts) {
+      if (attempt.conversationId !== conversationId) continue;
+      if (attempt.status === "pending") activity.isInFlight = true;
+      if (
+        attempt.status === "success" &&
+        typeof attempt.readThrough === "string" &&
+        (activity.acknowledgedThrough === undefined ||
+          attempt.readThrough > activity.acknowledgedThrough)
+      ) {
+        activity.acknowledgedThrough = attempt.readThrough;
+      }
+      if (
+        attempt.status === "error" &&
+        (activity.latestFailedAt === undefined ||
+          attempt.submittedAt > activity.latestFailedAt)
+      ) {
+        activity.latestFailedAt = attempt.submittedAt;
+      }
+    }
+    return activity;
+  }, [attempts, conversationId]);
 }

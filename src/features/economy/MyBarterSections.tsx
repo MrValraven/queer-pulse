@@ -213,9 +213,23 @@ export function MySentProposalCard({
           >
             {t("economy:myBarter.sent.actions.view")}
           </Link>
-          <Link to={routes.messages} className={styles.viewLink}>
-            {t("economy:myBarter.sent.actions.thread")}
-          </Link>
+          {/* PRD-337: only offered with a real poster slug to message. The
+              server sends `slug: null` alongside an empty `name` when the
+              poster could not be resolved (removed, or blocked since). */}
+          {proposal.listing.slug && (
+            <Link
+              to={routes.messages}
+              state={{
+                to: {
+                  slug: proposal.listing.slug,
+                  name: proposal.listing.name,
+                },
+              }}
+              className={styles.viewLink}
+            >
+              {t("economy:myBarter.sent.actions.thread")}
+            </Link>
+          )}
         </div>
       )}
     </FadeIn>

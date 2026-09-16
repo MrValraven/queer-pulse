@@ -521,6 +521,15 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiCpu,
       },
       {
+        // PRD-372: speaking as QueerPulse in members' official threads. The
+        // backend controller is `@Roles(Admin)` alone (product decision: never
+        // Moderators), so a moderator's rail must not offer it.
+        labelKey: "shared:adminNav.items.officialMessages",
+        to: routes.adminOfficialMessages,
+        icon: FiRadio,
+        isAdminOnly: true,
+      },
+      {
         labelKey: "shared:adminNav.items.media",
         to: routes.adminMedia,
         icon: FiImage,

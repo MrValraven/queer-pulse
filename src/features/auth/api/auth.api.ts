@@ -100,7 +100,16 @@ export const fetchMe = () =>
 // that cookie, and the backend's revoke-row + socket-disconnect step would
 // silently no-op. Best-effort — the caller clears local session state in a
 // `.finally` regardless of the result.
-export const postLogout = () => postUnversioned("/auth/logout");
+//
+// `pushEndpoint` names this device's push subscription, so the backend removes
+// it in the same request that revokes the session (ENG-225). Omitted when the
+// device has none, and the body is then empty exactly as before. `keepalive`
+// lets the request finish when the tab is closed right after "Sign out".
+export const postLogout = (pushEndpoint?: string) =>
+  postUnversioned("/auth/logout", {
+    body: pushEndpoint ? { pushEndpoint } : undefined,
+    keepalive: true,
+  });
 /**
  * Stamp the member as having finished onboarding (idempotent server-side — the
  * first completion time wins). Fired when a new member reaches the wizard's

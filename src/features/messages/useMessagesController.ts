@@ -11,8 +11,13 @@ import { type ChatMessage, type Conversation } from "./data";
 import { clearConversationPrefs } from "./conversationPrefs";
 import { clearOutbox, loadOutbox, setMessageOutboxScope } from "./outbox";
 import { clearDrafts } from "./drafts";
-import { useConversations, useUnreadMessages } from "./api/useConversations";
+import {
+  useConversationDetail,
+  useConversations,
+  useUnreadMessages,
+} from "./api/useConversations";
 import { useMessageThread } from "./api/useMessageThread";
+import { withDemoLocalOnlyMessages } from "./api/demoThreadCache";
 import { useDeleteConversation } from "./api/useMessageActions";
 import {
   useAddGroupMembers,
@@ -25,6 +30,13 @@ import {
   useStartConversation,
   useUpdateGroup,
 } from "./api/useMessageMutations";
+import {
+  useCreateGroupInviteLink,
+  useDisableGroupInviteLink,
+  useDissolveGroup,
+  useRevokeGroupInvite,
+  useTransferGroupOwnership,
+} from "./api/useGroupManagementMutations";
 import {
   mergeOptimisticGroups,
   realConversationId,
@@ -40,7 +52,9 @@ import { useMessageThreadList } from "./useMessageThreadList";
 import { useMessageSending } from "./useMessageSending";
 import { useMessageCreation } from "./useMessageCreation";
 import { useMessageGroupActions } from "./useMessageGroupActions";
+import { useGroupOwnershipActions } from "./useGroupOwnershipActions";
 import { useMarkThreadUnread } from "./useMarkThreadUnread";
+import type { ThreadHistory } from "./useOlderPageAnchor";
 
 export { nextLocalId } from "./useMessagesController.helpers";
 
@@ -94,7 +108,31 @@ export function useMessagesController() {
   const convosQuery = useConversations();
   const baseThreads = useMemo(() => convosQuery.data ?? [], [convosQuery.data]);
   const loading = demoMode ? simLoading : convosQuery.isLoading;
+  // DES-183: the list body needs to tell "genuinely empty" apart from "failed
+  // to load". Demo mode's mock query never errors, so this stays false there,
+  // the same way `loading` special-cases it above.
+  const inboxLoadError = !demoMode && convosQuery.isError;
+  // `() => void` (not `refetch` itself) so this can be handed straight to a
+  // void-typed `onRetry` prop without an unhandled-promise lint complaint,
+  // mirroring `useConnectionsList`'s own `refetch: () => void query.refetch()`.
+  const refetchInbox = () => void convosQuery.refetch();
   const unread = useUnreadMessages();
+  // ENG-253: cursor-pagination for the inbox list itself (`useConversations`'s
+  // own `fetchNextPage`/`hasNextPage`/`isFetchingNextPage`), forwarded so
+  // `MessagesThreadList` can drive its "load more" sentinel/footer. Always
+  // `false`/inert in demo mode (the seeded inbox is one page; see
+  // `useConversations`'s own doc). No dedicated error surface here: a failed
+  // page fetch simply leaves `hasMoreThreads` exactly as it was (the cursor is
+  // only advanced on success), so scrolling back to the sentinel retries it,
+  // the same "no separate failure UI" shape `fetchNextPage` was already built
+  // with. Swallowing the rejection here (rather than letting it become an
+  // unhandled promise rejection) is what makes that retry-by-rescroll the
+  // whole story instead of also logging a spurious console error every time.
+  const loadMoreThreads = () => {
+    void convosQuery.fetchNextPage().catch(() => {});
+  };
+  const hasMoreThreads = convosQuery.hasNextPage;
+  const isLoadingMoreThreads = convosQuery.isFetchingNextPage;
 
   const [extraThreads, setExtraThreads] = useState<Conversation[]>([]);
   /** Conversation ids deleted this session, ahead of the async cache prune —
@@ -108,6 +146,14 @@ export function useMessagesController() {
    *  composer severs and Group info reflect the departure immediately in both
    *  modes. A live refetch then carries `hasLeft` from the server. */
   const [leftGroupIds, setLeftGroupIds] = useState<Set<string>>(new Set());
+  /** The optimistic reason beside `leftGroupIds`, so a live dissolve reads
+   *  "This group has ended" rather than the generic "You left this group"
+   *  before the refetch lands with the server's own `leftReason`. Demo mode
+   *  never needs this: its simulators already return a full `Conversation`
+   *  with `leftReason` set on the patched object itself. */
+  const [leftGroupReasons, setLeftGroupReasons] = useState<
+    Map<string, "left" | "removed" | "dissolved">
+  >(new Map());
 
   const [activeId, setActiveId] = useState<string>("");
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
@@ -141,6 +187,7 @@ export function useMessagesController() {
     clearDrafts();
     // Session-scoped group state must not cross the boundary either.
     setLeftGroupIds(new Set());
+    setLeftGroupReasons(new Map());
     // Demo pin/favorite is local fiction (see conversationPrefs.ts) — it must
     // never bleed into a real session, nor a real pin into demo.
     clearConversationPrefs();
@@ -172,39 +219,149 @@ export function useMessagesController() {
     () => allThreads.find((c) => c.id === activeId) ?? allThreads[0] ?? null,
     [allThreads, activeId],
   );
+
+  // Real conversation UUID for the open thread, or null while it's still a
+  // just-picked placeholder (id === slug) or in demo mode. Computed off
+  // `rawActive` (identical to `active`'s own id: neither merge below ever
+  // touches `id`) so it's available before `active` itself is built, for the
+  // detail fetch right below. The live conversation-scoped hooks further down
+  // key off this too, so they never fire against a slug and trip the
+  // backend's `ParseUUIDPipe` before reconciliation lands the UUID.
+  const liveConversationId = demoMode ? null : realConversationId(rawActive);
+
+  // ENG-253: `GET /conversations` (what `allThreads`/`rawActive` are built
+  // from) no longer carries a group's real member roster or a stored draft;
+  // see `ConversationResponse.members`/`.draft`'s own docs. Fetch the FULL
+  // detail (`GET /conversations/:id`) for the OPEN thread only, never the
+  // whole inbox, and merge its `members`/`draft` onto `rawActive` below.
+  // Disabled in demo mode (`useConversationDetail`'s own gate): the seeded
+  // mock conversation already carries both fields in full, so
+  // `activeDetailQuery.data` stays `undefined` there forever and the merge
+  // beneath is a pure no-op. Demo mode renders byte-identical to before.
+  const activeDetailQuery = useConversationDetail(liveConversationId);
+
+  // `rawActive` merged with the resolved detail fetch. Until the detail
+  // resolves, `members`/`draft` stay exactly what the list row carried
+  // (`[]`/`undefined` live post-ENG-253). Every consumer below already reads
+  // an absent/empty roster as "still loading" (a live group always has at
+  // least its owner, so an empty roster can only ever mean that), so this
+  // loading window renders nothing false, only briefly less than the whole
+  // picture.
+  const activeWithDetail = useMemo(() => {
+    if (!rawActive) return null;
+    const detail = activeDetailQuery.data;
+    // Require the id match explicitly, on top of just checking `detail` is
+    // present: react-query already keys `activeDetailQuery` by
+    // `liveConversationId`, so `detail` can only ever be a response FOR that
+    // id today, but this check is what actually stops thread A's roster from
+    // ever rendering under thread B if that invariant is ever weakened (e.g.
+    // a future `placeholderData` option), and it makes the guarantee visible
+    // and testable here rather than resting entirely on cache-key behaviour
+    // the reader has to trust from elsewhere.
+    if (!detail || detail.id !== rawActive.id) return rawActive;
+    return {
+      ...rawActive,
+      // A group mutation (add/remove member, role change, rename) patches an
+      // already-fresh, already-correct roster straight into `extraThreads`/the
+      // `["conversations"]` cache the instant it succeeds (see
+      // `useMessageGroupActions`'s `patchGroupThread` and
+      // `patchConversationInList`), well ahead of this query's own refetch.
+      // That patched roster must win over `detail.members`, which can still be
+      // the PRE-mutation snapshot until its own refetch lands, or an optimistic
+      // add/remove would flash back to the stale roster for a beat. Only fall
+      // back to the detail fetch's roster/draft while `rawActive`'s own copy is
+      // still the list's trimmed placeholder (`[]` / absent).
+      members:
+        rawActive.members && rawActive.members.length > 0
+          ? rawActive.members
+          : detail.members,
+      draft: rawActive.draft ?? detail.draft,
+    };
+  }, [rawActive, activeDetailQuery.data]);
+
   // Apply the optimistic "left this group" flag so the composer severs + Group
   // info update the instant the member leaves, before the refetch lands.
   const active = useMemo(
     () =>
-      rawActive && leftGroupIds.has(rawActive.id)
-        ? { ...rawActive, hasLeft: true }
-        : rawActive,
-    [rawActive, leftGroupIds],
+      activeWithDetail && leftGroupIds.has(activeWithDetail.id)
+        ? {
+            ...activeWithDetail,
+            hasLeft: true,
+            leftReason:
+              leftGroupReasons.get(activeWithDetail.id) ??
+              activeWithDetail.leftReason,
+          }
+        : activeWithDetail,
+    [activeWithDetail, leftGroupIds, leftGroupReasons],
   );
-
-  // Real conversation UUID for the open thread, or null while it's still a
-  // just-picked placeholder (id === slug). The live conversation-scoped hooks
-  // below key off this, not `active.id`, so they never fire against a slug and
-  // trip the backend's `ParseUUIDPipe` before reconciliation lands the UUID.
-  const liveConversationId = demoMode ? null : realConversationId(active);
 
   // Join the open thread's realtime room so the gateway's per-conversation
   // frames (a new message from either side, read receipts) stream in live
   // instead of only appearing after a refresh. Inert in demo mode.
   useJoinConversation(liveConversationId);
 
-  // Live message history for the open thread (inert in demo mode).
-  const thread = useMessageThread(liveConversationId);
-  const hasMoreOlder = demoMode ? false : (thread.hasNextPage ?? false);
-  const loadingOlder = demoMode ? false : thread.isFetchingNextPage;
+  // Message history for the open thread. Demo pages the seeded thread from a
+  // local session store through the same query (see `demoThreadCache.ts`), so
+  // load-older and the prepend anchor run exactly as they do live.
+  const thread = useMessageThread(
+    demoMode ? (active?.id ?? null) : liveConversationId,
+  );
+  const hasMoreOlder = thread.hasNextPage ?? false;
+  const loadingOlder = thread.isLoadingOlder;
+  const { isHistorySettled, isHistoryError } = thread;
   function loadOlder() {
-    if (!demoMode && thread.hasNextPage && !thread.isFetchingNextPage) {
-      void thread.fetchNextPage();
+    // Page 0 failed: an older page would append to the stale page and stamp
+    // it fresh, so retry page 0 itself instead.
+    if (isHistoryError) {
+      void thread.refetch({ cancelRefetch: false });
+      return;
+    }
+    // No older page while page 0 is (re)fetching, for the same reason: it
+    // would hide whatever arrived while the thread was closed.
+    // `cancelRefetch: false` also keeps a caller holding a render-old closure
+    // from cancelling that refetch.
+    if (hasMoreOlder && !loadingOlder && isHistorySettled) {
+      void thread.fetchNextPage({ cancelRefetch: false });
     }
   }
+  const threadHistory: ThreadHistory = {
+    hasMoreOlder,
+    loadingOlder,
+    onLoadOlder: loadOlder,
+    isHistorySettled,
+    isHistoryError,
+    hasLoadedThreadData: thread.data !== undefined,
+  };
 
   const sendMessage = useSendMessage();
   const markRead = useMarkRead();
+  // PRD-341: on desktop the open thread's messages render the instant it's
+  // selected. There is no separate "open" tap the way mobile's list->thread
+  // swap requires (`useMessageThreadNav.openThread` marks read there). So a
+  // thread that becomes `active` on desktop, including the render-time
+  // default-select above, IS being read the moment it's on screen, and must
+  // go through the SAME mark-read path a tap would, or the nav badge
+  // (`useUnreadMessages`), the Unread tab and this very thread disagree about
+  // whether it's read. Guarded by `readIds` so it only ever fires once per
+  // thread per session; a tap-driven `openThread` already added its target to
+  // `readIds` itself, so this is a no-op for that path, not a duplicate mark.
+  // Mobile is exempt: the list stays in "list" view until an explicit tap
+  // opens the thread, which is what marks it read there.
+  useEffect(() => {
+    if (isMobile || !active) return;
+    if (!active.unread && !active.unreadCount) return;
+    if (readIds.has(active.id)) return;
+    // Deliberate: `readIds` must stay in sync with WHICH thread is on screen
+    // right now (switching straight from this thread to another must not
+    // flash it back to "unread" before the mark-read patch below lands), not
+    // just be derived from render-time props, and the guard above already
+    // makes this idempotent per thread per session.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setReadIds((current) => new Set(current).add(active.id));
+    if (demoMode) return;
+    const realId = realConversationId(active);
+    if (realId) markRead.mutate(realId);
+  }, [isMobile, active, readIds, demoMode, markRead]);
   const startConversation = useStartConversation();
   const createGroupMutation = useCreateGroup();
   const leaveGroupMutation = useLeaveGroup();
@@ -212,6 +369,11 @@ export function useMessagesController() {
   const removeMemberMutation = useRemoveGroupMember();
   const changeRoleMutation = useChangeGroupMemberRole();
   const updateGroupMutation = useUpdateGroup();
+  const transferOwnershipMutation = useTransferGroupOwnership();
+  const dissolveGroupMutation = useDissolveGroup();
+  const createInviteLinkMutation = useCreateGroupInviteLink();
+  const disableInviteLinkMutation = useDisableGroupInviteLink();
+  const revokeInviteMutation = useRevokeGroupInvite();
   const deleteConversationMutation = useDeleteConversation();
 
   const activeBlocked = active?.slug ? isBlocked(active.slug) : false;
@@ -220,13 +382,21 @@ export function useMessagesController() {
   // `?scrolltrace&simulatelive` is set; `demoHistoryReady` is `true` otherwise.
   const demoHistoryReady = useScrollTraceDemoHistoryDelay(activeId, demoMode);
 
-  /** Base history (mock groups in demo, fetched groups in live) + session sends. */
+  /** Base history (the paged thread cache, in both modes) + session sends. */
   const messageGroups = useMemo(() => {
     if (!active) return [];
     if (demoMode && !demoHistoryReady) return [];
-    const base = mergeOptimisticGroups(active, demoMode, thread.groups, sent);
-    // TEMPORARY — see scrollTrace.ts's revert instructions. The repo's one
-    // demo GROUP thread is too short to ever overflow the viewport; inject
+    // `false`: the base is always the thread cache now. Demo also carries the
+    // bubbles its store never pages (a pill a demo group action appended, a
+    // thread created this session), merged in beside the session sends.
+    const base = mergeOptimisticGroups(
+      active,
+      false,
+      thread.groups,
+      demoMode ? withDemoLocalOnlyMessages(sent, active) : sent,
+    );
+    // TEMPORARY: see scrollTrace.ts's revert instructions. The demo GROUP
+    // threads are too short to reliably overflow the viewport; inject
     // filler ahead of its real tail so H1/H2 have real overflow to strand the
     // reader against. No-op unless `?scrolltrace&simulatelive` is set.
     if (
@@ -315,12 +485,31 @@ export function useMessagesController() {
     myProfile: user?.profile,
     setExtraThreads,
     setLeftGroupIds,
+    setLeftGroupReasons,
     t,
     leaveGroupMutation,
     addMembersMutation,
     removeMemberMutation,
     changeRoleMutation,
     updateGroupMutation,
+  });
+
+  // Section 8 (Groups): transfer ownership (DES-228), dissolve (PRD-357), and
+  // the invite-link lifecycle (PRD-358). See `useGroupOwnershipActions`'s own
+  // doc for why this is a sibling hook rather than folded into the one above.
+  const groupOwnershipActions = useGroupOwnershipActions({
+    demoMode,
+    allThreads,
+    myProfile: user?.profile,
+    setExtraThreads,
+    setLeftGroupIds,
+    setLeftGroupReasons,
+    t,
+    transferOwnershipMutation,
+    dissolveGroupMutation,
+    createInviteLinkMutation,
+    disableInviteLinkMutation,
+    revokeInviteMutation,
   });
 
   // Row menu "Mark as unread" (PRD-225) — own hook purely to keep this
@@ -333,7 +522,12 @@ export function useMessagesController() {
     view,
     setView,
     loading,
+    inboxLoadError,
+    refetchInbox,
     unread,
+    hasMoreThreads,
+    isLoadingMoreThreads,
+    loadMoreThreads,
     visibleThreads,
     forwardableGroups,
     activeId,
@@ -347,12 +541,11 @@ export function useMessagesController() {
     active,
     activeBlocked,
     messageGroups,
-    hasMoreOlder,
-    loadingOlder,
-    loadOlder,
+    threadHistory,
     ...navigation,
     ...creation,
     ...groupActions,
+    ...groupOwnershipActions,
     myUserId,
     send,
     sendGif,

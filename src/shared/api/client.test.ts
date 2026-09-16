@@ -328,6 +328,107 @@ describe("stale-CSRF retry on /auth/refresh", () => {
   });
 });
 
+describe("refresh outcome signal", () => {
+  // Observational only: request() still answers every failed refresh with
+  // ApiError(401) and fires onAuthLost. The signal records WHY the refresh
+  // failed, so the offline messaging cache (PRD-375) can tell a network fault
+  // apart from a server rejection before purging anything.
+  function stubRefresh(refreshResponse: () => Promise<Response>) {
+    return stubFetch(
+      vi.fn((url: string | URL | Request) => {
+        const requestedUrl = requestUrl(url);
+        if (requestedUrl.includes("/csrf-token"))
+          return Promise.resolve(res(200, { csrfToken: "tok" }));
+        if (requestedUrl.includes("/auth/refresh")) return refreshResponse();
+        return Promise.resolve(res(401));
+      }),
+    );
+  }
+
+  it("is null before any refresh", async () => {
+    const { readLastRefreshSettlement } = await loadClient();
+    expect(readLastRefreshSettlement()).toBeNull();
+  });
+
+  it("records a success", async () => {
+    const { refreshSession, readLastRefreshSettlement } = await loadClient();
+    stubRefresh(() => Promise.resolve(res(200)));
+
+    await expect(refreshSession()).resolves.toBe(true);
+    expect(readLastRefreshSettlement()?.outcome).toEqual({ kind: "succeeded" });
+  });
+
+  it("records a server rejection with its status", async () => {
+    const { refreshSession, readLastRefreshSettlement } = await loadClient();
+    stubRefresh(() => Promise.resolve(res(401)));
+
+    await expect(refreshSession()).resolves.toBe(false);
+    expect(readLastRefreshSettlement()?.outcome).toEqual({
+      kind: "rejected",
+      status: 401,
+    });
+  });
+
+  it("records a network failure and still resolves false", async () => {
+    const { refreshSession, readLastRefreshSettlement } = await loadClient();
+    stubRefresh(() => Promise.reject(new TypeError("Failed to fetch")));
+
+    await expect(refreshSession()).resolves.toBe(false);
+    expect(readLastRefreshSettlement()?.outcome).toEqual({
+      kind: "networkFailed",
+    });
+  });
+
+  it("keeps the 401 and onAuthLost behaviour when the refresh fails on the network", async () => {
+    const { apiGet, setOnAuthLost, readLastRefreshSettlement } =
+      await loadClient();
+    const lost = vi.fn();
+    setOnAuthLost(lost);
+    stubRefresh(() => Promise.reject(new TypeError("Failed to fetch")));
+
+    await expect(apiGet("/thing")).rejects.toMatchObject({
+      name: "ApiError",
+      status: 401,
+    });
+    expect(lost).toHaveBeenCalledTimes(1);
+    expect(readLastRefreshSettlement()?.outcome.kind).toBe("networkFailed");
+  });
+
+  it("records an abandoned refresh lock and keeps the 401 and onAuthLost behaviour", async () => {
+    const { apiGet, setOnAuthLost, readLastRefreshSettlement } =
+      await loadClient();
+    const lost = vi.fn();
+    setOnAuthLost(lost);
+    const refreshResponse = vi.fn(() => Promise.resolve(res(200)));
+    stubRefresh(refreshResponse);
+    // jsdom has no Web Locks; install one whose wait is aborted, the way a
+    // wedged lock holder makes the bounded wait give up.
+    Object.defineProperty(navigator, "locks", {
+      configurable: true,
+      value: {
+        request: vi.fn(() =>
+          Promise.reject(
+            new DOMException("The lock request was aborted", "AbortError"),
+          ),
+        ),
+      },
+    });
+    try {
+      await expect(apiGet("/thing")).rejects.toMatchObject({
+        name: "ApiError",
+        status: 401,
+      });
+      expect(lost).toHaveBeenCalledTimes(1);
+      expect(refreshResponse).not.toHaveBeenCalled();
+      expect(readLastRefreshSettlement()?.outcome).toEqual({
+        kind: "lockTimedOut",
+      });
+    } finally {
+      Reflect.deleteProperty(navigator, "locks");
+    }
+  });
+});
+
 describe("request behaviours", () => {
   it("does not fetch a CSRF token for safe verbs (GET)", async () => {
     const { apiGet } = await loadClient();

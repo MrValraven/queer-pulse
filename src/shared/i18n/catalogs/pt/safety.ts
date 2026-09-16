@@ -177,6 +177,11 @@ export const safety: Catalog = {
   // Ver o comentário na versão EN: só cobre o limite de rajada de 60 segundos.
   "report.tooFast":
     "Estás a enviar denúncias mais depressa do que conseguimos recebê-las. Espera um momento e envia esta outra vez.",
+  "report.notParticipant":
+    "Esta mensagem não está numa conversa da qual fazes parte, por isso não pode ser denunciada.",
+  // Ver o comentário na versão EN: a cópia de prova da mensagem já expirou.
+  "report.evidenceExpired":
+    "Já não podes denunciar esta mensagem. Foi apagada há algum tempo e o QueerPulse já não guarda uma cópia para a equipa de moderação ver.",
 
   // ── CommunityReportControl / CommunityReportModal ───────────────────────
   // Ver o comentário na versão EN: denunciar uma comunidade INTEIRA, a partir
@@ -222,6 +227,33 @@ export const safety: Catalog = {
   "reportPerson.form.cancelCta": "Cancelar",
   "reportPerson.form.submitting": "A enviar…",
   "reportPerson.form.submitCta": "Enviar denúncia",
+
+  // ── ConversationReportModal, `kind: "group"` (PRD-356) ──────────────────
+  // Denuncia o GRUPO em si, não uma pessoa dentro dele: o nome, a descrição,
+  // quem o dono deixa entrar. Nunca oferece bloquear ninguém; o equivalente,
+  // em forma de grupo, de dar um passo atrás é sair do grupo, e é isso que o
+  // texto de sucesso diz em vez disso. Mesma taxonomia de motivos que
+  // `report.community.*` (`SUBJECT_REASONS.conversation` em reportReasons.ts).
+  "reportGroup.success.title": "A denúncia está <em>com quem modera.</em>",
+  "reportGroup.success.body":
+    "Quem modera vai rever este grupo como um todo. A gravidade e o prazo de revisão são definidos a partir do motivo que escolheste, por isso isto já está na fila certa. Se quiseres distância entretanto, podes sair do grupo a qualquer momento, independentemente da revisão.",
+  "reportGroup.success.doneCta": "Concluído",
+  "reportGroup.error":
+    "Não conseguimos enviar essa denúncia. Ainda não foi submetida. Verifica a tua ligação e tenta outra vez.",
+  "reportGroup.form.lead":
+    "Isto denuncia o grupo em si, não uma pessoa dentro dele. Quem modera lê o que escreveres aqui: detalhes ajudam, como à volta do que o grupo está organizado, o que deixa acontecer, ou o que se passa nele. Escolhe o motivo mais próximo do que aconteceu, porque é ele que define com que rapidez isto é revisto.",
+  "reportGroup.form.reasonLabel": "O que está errado aqui?",
+  "reportGroup.form.detailLabel": "O que deve quem modera saber?",
+  "reportGroup.form.detailPlaceholder":
+    "O que se passa neste grupo, desde quando, e qualquer coisa que ajude quem modera a encontrar isto. Sê tão específique quanto te sintas confortável.",
+  "reportGroup.form.charsRemaining_one": "Falta {count} carácter para enviar",
+  "reportGroup.form.charsRemaining_other":
+    "Faltam {count} carateres para enviar",
+  "reportGroup.form.charsCount_one": "{count} carácter",
+  "reportGroup.form.charsCount_other": "{count} carateres",
+  "reportGroup.form.cancelCta": "Cancelar",
+  "reportGroup.form.submitting": "A enviar…",
+  "reportGroup.form.submitCta": "Enviar denúncia",
 
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
@@ -358,6 +390,8 @@ export const safety: Catalog = {
     "Acrescenta qualquer contexto para a equipa de moderação…",
   "blockModal.cancelCta": "Cancelar",
   "blockModal.confirmCta": "Bloquear {name}",
+  "blockModal.reportMessagesFirstNote":
+    "Se {name} já te enviou mensagens, podes denunciá-las primeiro a partir da conversa, para que a equipa de moderação as possa ver.",
 
   // ── AppealOutcomePage.tsx ──────────────────────────────────────────────
   "appeal.state.pending": "Pendente",
@@ -1161,4 +1195,10 @@ export const safety: Catalog = {
   "mutedMembers.toast.unmuted": "{name} deixou de estar silenciado.",
   "mutedMembers.toast.unmutedError":
     "Não conseguimos deixar de silenciar esse membro. Tenta novamente.",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "blockMute.blocked.manageFollowUpToast":
+    "Podes gerir {name} e todas as pessoas que bloqueaste quando quiseres.",
+  "blockMute.blocked.unblockedNoConnectionToast":
+    "Desbloqueaste {name}. Não tinham ligação antes, por isso envia um pedido se quiseres voltar a enviar mensagens.",
 };

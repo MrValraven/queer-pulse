@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiStar } from "react-icons/fi";
+import { FiLink2, FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -8,6 +8,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { ModalShell } from "./ModalKit";
+import { useHousingListingContact } from "./api/useHousingListingContact";
 import { useRecommendLandlord } from "./api/useRecommendLandlord";
 import { useSendHousingEnquiry } from "./api/useSendHousingEnquiry";
 import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
@@ -69,6 +70,11 @@ export function MessageModal({
   );
   const sendEnquiry = useSendHousingEnquiry();
   const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
+  // PRD-339, refined PRD-340: read before the member types anything,
+  // mirroring `DirectoryEnquiryModal`'s consult of `useListingContact`. The
+  // lister can reply to this first message in one tap (no connection
+  // needed), so the field is read fresh rather than assumed.
+  const { followUpAwaitsReply } = useHousingListingContact(listingRef);
   const canSend = text.trim().length >= 20;
   const remaining = 20 - text.trim().length;
 
@@ -155,6 +161,20 @@ export function MessageModal({
               components={{ strong: <strong /> }}
             />
           </p>
+          {/* PRD-339/PRD-340: said before they type, not discovered from a
+              reply that never comes. Housing is the highest-stakes enquiry
+              on the platform, so the enquirer meets this rule up front
+              rather than only via a composer they never see. */}
+          {followUpAwaitsReply && (
+            <div className={styles.notice}>
+              <FiLink2 aria-hidden />
+              <span>
+                {t("economy:housingModal.message.replyNotice", {
+                  name: toName,
+                })}
+              </span>
+            </div>
+          )}
           <textarea
             className={styles.textarea}
             aria-label={t("economy:housingModal.message.eyebrow")}

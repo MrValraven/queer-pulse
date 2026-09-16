@@ -88,8 +88,9 @@ function formatClearsIn(clearsAt: string, fmt: Formatters): string | null {
  *
  *  - Whether anybody is on the other end at all, and WHY NOT when nobody is.
  *  - That the message arrives as a direct message from the member's account.
- *  - That a reply may need an accepted connection (`replyRequiresConnection`),
- *    since the first enquiry lands but the thread then closes to both sides.
+ *  - That the owner can reply to this first message straight away
+ *    (`followUpAwaitsReply`, PRD-340), and the member can send more once
+ *    they do, when the two are not already accepted connections.
  *  - The conversation they already have with this owner, when they have one,
  *    so a follow-up goes to the thread rather than starting a second one.
  *
@@ -219,7 +220,7 @@ export function DirectoryMessageBusiness({
       ) : (
         <p className={styles.note}>
           {t("marketing:directory.detail.enquiry.deliveryNote")}
-          {contact.replyRequiresConnection
+          {contact.followUpAwaitsReply
             ? ` ${t("marketing:directory.detail.enquiry.replyNote")}`
             : ""}
         </p>
@@ -233,7 +234,7 @@ export function DirectoryMessageBusiness({
         <DirectoryEnquiryModal
           slug={place.slug}
           placeName={place.name}
-          replyRequiresConnection={contact.replyRequiresConnection}
+          followUpAwaitsReply={contact.followUpAwaitsReply}
           onClose={() => setIsComposerOpen(false)}
           onCapReached={setCapReason}
         />

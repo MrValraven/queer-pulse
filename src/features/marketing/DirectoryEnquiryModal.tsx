@@ -28,9 +28,10 @@ const ANNOUNCE_REMAINING_BELOW = 200;
 interface Props {
   slug: string;
   placeName: string;
-  /** From `GET /directory/:slug/contact`: this first message lands, and the
-   *  thread then closes to both sides until a connection is accepted. */
-  replyRequiresConnection: boolean;
+  /** From `GET /directory/:slug/contact` (PRD-340): true when the two are not
+   *  accepted connections, so this first message stays a one-message thread
+   *  until the OWNER replies to it (their reply needs no connection). */
+  followUpAwaitsReply: boolean;
   onClose: () => void;
   /** Raised when the backend refuses on a cap, so the listing page can keep the
    *  trigger disabled with the reason instead of inviting a second attempt. */
@@ -64,7 +65,7 @@ const REFUSAL_KEYS: Record<ListingEnquiryRefusalKind, string> = {
 export function DirectoryEnquiryModal({
   slug,
   placeName,
-  replyRequiresConnection,
+  followUpAwaitsReply,
   onClose,
   onCapReached,
 }: Props) {
@@ -115,8 +116,12 @@ export function DirectoryEnquiryModal({
           onClose={onClose}
           closeLabel={t("marketing:directory.detail.enquiry.doneCta")}
           steps={
-            replyRequiresConnection
-              ? [t("marketing:directory.detail.enquiry.successReplyStep")]
+            followUpAwaitsReply
+              ? [
+                  t("marketing:directory.detail.enquiry.successReplyStep", {
+                    name: placeName,
+                  }),
+                ]
               : undefined
           }
           // The thread the message actually went into. Live only: a demo send
@@ -161,10 +166,14 @@ export function DirectoryEnquiryModal({
         {t("marketing:directory.detail.enquiry.sub")}
       </p>
 
-      {replyRequiresConnection && (
+      {followUpAwaitsReply && (
         <div className={styles.notice}>
           <FiLink2 aria-hidden />
-          <span>{t("marketing:directory.detail.enquiry.replyNotice")}</span>
+          <span>
+            {t("marketing:directory.detail.enquiry.replyNotice", {
+              name: placeName,
+            })}
+          </span>
         </div>
       )}
 

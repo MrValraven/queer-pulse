@@ -62,6 +62,10 @@ const AdminBotsPage = lazyNamed(
   () => import("./AdminBotsPage"),
   "AdminBotsPage",
 );
+const AdminOfficialMessagesPage = lazyNamed(
+  () => import("./AdminOfficialMessagesPage"),
+  "AdminOfficialMessagesPage",
+);
 const AdminSafeSpacesPage = lazyNamed(
   () => import("./AdminSafeSpacesPage"),
   "AdminSafeSpacesPage",
@@ -243,6 +247,12 @@ export function adminRoutes() {
       />
       <Route path={routes.adminStaff} element={<AdminStaffPage />} />
       <Route path={routes.adminBots} element={<AdminBotsPage />} />
+      {/* PRD-372: official messages. `@Roles(Admin)` alone on the backend, so
+          it is deliberately absent from MOD_ACCESSIBLE_ADMIN_PATTERNS. */}
+      <Route
+        path={routes.adminOfficialMessages}
+        element={<AdminOfficialMessagesPage />}
+      />
       <Route path={routes.adminSafeSpaces} element={<AdminSafeSpacesPage />} />
       <Route path={routes.adminListings} element={<AdminListingsPage />} />
       <Route path={routes.adminMedia} element={<AdminMediaPage />} />

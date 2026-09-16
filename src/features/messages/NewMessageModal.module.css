@@ -334,6 +334,38 @@
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
+
+/* DES-196: MessageRequestComposer's message field. Extends `.groupNameField`'s
+   look (same tokens) with the min-height/resize a multi-line message needs, since
+   `.groupNameField` alone is an `<input>` shape (no min-height, no resize)
+   built for `NewGroupModal`'s single-line name field. */
+.requestComposerField {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-12);
+  padding: 11px 14px;
+  min-height: 104px;
+  resize: vertical;
+  margin-bottom: 6px;
+}
+.requestComposerField:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.requestComposerCounter {
+  margin: 0 0 10px;
+  text-align: right;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-40);
+}
 .pickBox {
   flex: none;
   width: 22px;
@@ -348,4 +380,30 @@
 .pickBoxOn {
   background: var(--accent);
   border-color: var(--accent);
+}
+
+/* DES-229: the "N of max selected" hint above a capped MemberSelectList, and
+   the full-group notice that replaces the list entirely once cap reaches 0. */
+.capHint {
+  margin: 0 0 8px;
+  text-align: right;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+.capHintAtLimit {
+  color: var(--accent-ink);
+}
+.groupFull {
+  margin: 0;
+  padding: 24px 10px;
+  text-align: center;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+.groupFullTitle {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 700;
+  color: var(--text-strong);
 }

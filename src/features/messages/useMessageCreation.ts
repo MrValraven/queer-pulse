@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
@@ -8,6 +8,7 @@ import type {
   useCreateGroup,
   useStartConversation,
 } from "./api/useMessageMutations";
+import type { StrangerMemberResult } from "./api/useStrangerMemberSearch";
 import { useThreadCreation } from "./useThreadCreation";
 import { useGroupCreation } from "./useGroupCreation";
 import { useMessageForwarding } from "./useMessageForwarding";
@@ -22,8 +23,8 @@ interface CreationDeps {
   allThreads: Conversation[];
   myProfile: { firstName: string; lastName: string; slug?: string } | undefined;
   t: TFunction;
-  /** The currently open thread's id, so a failed `startThread`/`forwardMessage`
-   *  can restore whatever was open before the optimistic placeholder took over. */
+  /** The currently open thread's id, so a failed `startThread` can restore
+   *  whatever was open before the optimistic placeholder took over. */
   activeId: string;
   setComposing: Dispatch<SetStateAction<boolean>>;
   setQuery: Dispatch<SetStateAction<string>>;
@@ -69,8 +70,34 @@ export interface MessageCreation {
     text: string,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
-    outcome?: CreationOutcome,
-  ) => void;
+  ) => Promise<boolean>;
+  /**
+   * PRD-343: set when `startThread` hit the "not an accepted connection"
+   * refusal, naming who was being messaged. The caller opens
+   * `NewMessageModal`'s `initialRequestTarget` step with this instead of the
+   * blank picker, so a "Message" CTA for a non-connection lands on the
+   * request composer for that exact person. `null` the rest of the time.
+   */
+  pendingRequestTarget: StrangerMemberResult | null;
+  /** Clears `pendingRequestTarget`, e.g. when the modal it opened closes. */
+  clearPendingRequestTarget: () => void;
+}
+
+/** A `Conversation` (the shape `startThread` receives) has everything a
+ *  `StrangerMemberResult` needs except `sub` (a subtitle the picker's search
+ *  results carry and a known recipient does not), which is left blank. */
+function conversationToStrangerResult(
+  recipient: Conversation,
+): StrangerMemberResult | null {
+  if (!recipient.slug) return null;
+  return {
+    slug: recipient.slug,
+    name: recipient.name,
+    sub: "",
+    initials: recipient.initials,
+    tint: recipient.tint,
+    avatarUrl: recipient.avatarUrl,
+  };
 }
 
 /**
@@ -104,6 +131,9 @@ export function useMessageCreation({
   deliver,
   migrateOutboxConversation,
 }: CreationDeps): MessageCreation {
+  const [pendingRequestTarget, setPendingRequestTarget] =
+    useState<StrangerMemberResult | null>(null);
+
   const { startThread } = useThreadCreation({
     demoMode,
     allThreads,
@@ -117,6 +147,14 @@ export function useMessageCreation({
     setLocallyDeletedIds,
     startConversation,
     migrateOutboxConversation,
+    // PRD-343: reuses the SAME `composing` flag `NewMessageModal` already
+    // mounts on, seeded with a target so it opens straight to the request
+    // step instead of the blank picker. Keeps `composing` the single source
+    // of truth for "is this modal open" (`onClose` clears both).
+    onRequiresConnection: (recipient) => {
+      setPendingRequestTarget(conversationToStrangerResult(recipient));
+      setComposing(true);
+    },
   });
 
   const { startGroup } = useGroupCreation({
@@ -134,14 +172,10 @@ export function useMessageCreation({
     demoMode,
     allThreads,
     t,
-    activeId,
     setExtraThreads,
-    setActiveId,
     setReadIds,
-    setView,
     setLocallyDeletedIds,
     startConversation,
-    openThread,
     appendOptimistic,
     deliver,
     migrateOutboxConversation,
@@ -154,5 +188,11 @@ export function useMessageCreation({
     startThread,
   });
 
-  return { startThread, startGroup, forwardMessage };
+  return {
+    startThread,
+    startGroup,
+    forwardMessage,
+    pendingRequestTarget,
+    clearPendingRequestTarget: () => setPendingRequestTarget(null),
+  };
 }

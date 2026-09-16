@@ -405,6 +405,49 @@ export const settings: Catalog = {
   "visibility.activityStatus.toastError":
     "We couldn't save that setting. Try again.",
 
+  // PRD-353: "Who can add me to groups" (GroupAddPolicySection). Only ever an
+  // accepted connection of the adder can add or invite you, so there is no
+  // third "everyone" option; this only decides whether that connection seats
+  // you directly (`connections`, the default) or has to invite you first
+  // (`invite_only`).
+  "visibility.groupAddPolicy.title": "Who can add me to groups",
+  "visibility.groupAddPolicy.connections.label": "My connections",
+  "visibility.groupAddPolicy.inviteOnly.label":
+    "Nobody, send me an invite instead",
+  "visibility.groupAddPolicy.explanation":
+    "Only your connections can ever add you to a group or invite you to one.",
+  "visibility.groupAddPolicy.toastError":
+    "We couldn't save that setting. Try again.",
+
+  // Scan section 9: the messaging privacy pane (MessagingPrivacySection,
+  // api/useMessagingPrivacy). Read receipts, the typing indicator and online
+  // status are reciprocal: turning one off also hides what other people share
+  // with you.
+  "visibility.messagingPrivacy.title": "Messaging privacy",
+  "visibility.messagingPrivacy.readReceipts.label": "Read receipts",
+  "visibility.messagingPrivacy.readReceipts.help":
+    "Let people see when you've read their messages. Turn this off and you'll stop seeing when they've read yours too.",
+  "visibility.messagingPrivacy.typing.label": "Typing indicator",
+  "visibility.messagingPrivacy.typing.help":
+    "Show when you're typing a reply. Turn this off and you'll stop seeing when others are typing too.",
+  "visibility.messagingPrivacy.presence.label": "Online status",
+  "visibility.messagingPrivacy.presence.help":
+    "Let your connections see when you're online. Turn this off and you'll stop seeing when they're online too.",
+  "visibility.messagingPrivacy.whoCanMessage.title": "Who can message me",
+  "visibility.messagingPrivacy.whoCanMessage.everyone.label": "Everyone",
+  "visibility.messagingPrivacy.whoCanMessage.everyone.hint":
+    "Anyone can start a conversation with you, following your profile's visibility settings.",
+  "visibility.messagingPrivacy.whoCanMessage.introduced.label":
+    "People we both know",
+  "visibility.messagingPrivacy.whoCanMessage.introduced.hint":
+    "New messages need someone you both know to introduce you first.",
+  "visibility.messagingPrivacy.whoCanMessage.connections.label":
+    "Only my connections",
+  "visibility.messagingPrivacy.whoCanMessage.connections.hint":
+    "New messages and connection requests are limited to people you're already connected with. Enquiries about your housing or other listings still reach you.",
+  "visibility.messagingPrivacy.toastError":
+    "We couldn't save that. Check your connection and try again.",
+
   // ── SettingsPanes.tsx — AccountPane ────────────────────────────────────────
   "account.title": "Account <em>settings.</em>",
   "account.sub": "Login and security preferences.",
@@ -815,6 +858,8 @@ export const settings: Catalog = {
   "dataExport.type.profile.sub": "Name, pronouns, bio, photo",
   "dataExport.type.messages.label": "Messages",
   "dataExport.type.messages.sub": "All direct & group conversations",
+  "dataExport.type.messages.subDetailed":
+    "Your messages, plus the threads you reported",
   "dataExport.type.forumPosts.label": "Forum posts",
   "dataExport.type.forumPosts.sub": "All posts, replies, reactions",
   "dataExport.type.events.label": "Events",
@@ -887,6 +932,8 @@ export const settings: Catalog = {
   "dataExport.accordion.messages.title": "Messages",
   "dataExport.accordion.messages.body":
     "All direct messages and group conversations you participated in. Includes message content, timestamps, and read receipts. Messages from members who have deleted their accounts are anonymised.",
+  "dataExport.accordion.messages.bodyDetailed":
+    "Every message you sent, with the conversation it belongs to, its type, any attachment, and whether it was a reply or a forward. For each conversation where you reported a message or a person, the archive also keeps that thread's messages from everyone in it, so you hold your own copy of what happened. Very long histories keep the newest messages and are marked as truncated. Members who deleted their account appear as “Former member”.",
   "dataExport.accordion.forumPosts.title": "Forum posts & replies",
   "dataExport.accordion.forumPosts.body":
     "Every post and reply you made in the forum, including the thread it belongs to, any edits, and reactions you gave or received.",
@@ -938,6 +985,7 @@ export const settings: Catalog = {
   "dataExport.tag.transactions": "transactions",
   "dataExport.tag.amounts": "amounts",
   "dataExport.tag.dates": "dates",
+  "dataExport.tag.reportedThreads": "reported threads",
   "dataExport.demoArchiveNote":
     "Demo export generated in-browser. No personal data left this device.",
 

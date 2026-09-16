@@ -1,0 +1,71 @@
+/* src/features/messages/BlockReportMessagesStep.module.css */
+
+.lead {
+  font-size: var(--text-15);
+  color: var(--ink-60);
+  margin-block-end: 12px;
+}
+.lead:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+}
+
+.itemLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.itemPreview {
+  font-size: var(--text-14);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.field {
+  margin-block-start: 16px;
+}
+
+.label {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-block-end: 6px;
+}
+
+.anonymousRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  margin-block-start: 14px;
+  font-size: var(--text-15);
+  color: var(--ink);
+}
+
+.anonymousHelper {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  margin-block-start: 4px;
+}

@@ -21,14 +21,34 @@ export type MessageRow =
   | { kind: "system"; key: string; day: string; message: ChatMessage }
   | { kind: "groupSeenBy"; key: string };
 
-/** Stable identity for a message across its lifetime (server id, then the
- *  client-generated `localId` while still optimistic, then its timestamp as a
- *  last resort) — mirrors `MessageArea`'s own `messageIdentities` so a row's
- *  virtualizer key never changes as an optimistic send gets acked. */
-function stableMessageKey(
-  message: ChatMessage | undefined,
-): string | undefined {
-  return message?.id ?? message?.localId ?? message?.at;
+/**
+ * Stable identity for a message across its whole lifetime, and the ONE
+ * identity every row key and the unread divider's anchor are matched on.
+ *
+ * The client-generated `localId` comes first because an acked send KEEPS it
+ * (`messageToChat` carries it over) while its server `id` only appears on the
+ * ack, so preferring `id` flipped the row key at the ack and remounted the
+ * just-sent run. Same order as the gallery's `ViewerPhoto.key`. The server
+ * `id` covers everything this client did not send, `at` covers a message with
+ * neither, and the position in the flattened loaded list is the last resort
+ * for demo mock messages, which carry none of the three. That position is
+ * stable in demo mode because demo history never pages older messages in.
+ */
+export function messageIdentity(
+  message: ChatMessage,
+  flatIndex: number,
+): string {
+  return message.localId ?? message.id ?? message.at ?? `pos-${flatIndex}`;
+}
+
+/** Index of the last message in `items` that is not a soft-deleted tombstone,
+ *  or -1. A tombstone renders no meta, so the read/delivered escalation has
+ *  to ride the newest bubble that can still show it. */
+export function lastUndeletedIndex(items: ChatMessage[]): number {
+  for (let index = items.length - 1; index >= 0; index -= 1) {
+    if (!items[index]!.deletedAt) return index;
+  }
+  return -1;
 }
 
 /**
@@ -36,57 +56,70 @@ function stableMessageKey(
  * virtualizer renders, reproducing exactly what the pre-virtualization JSX
  * produced: a day separator, then each day's timeline blocks (via the SAME
  * `buildTimeline` grouping pass `MessageRun.tsx` always used), with the
- * one-time unread divider inserted immediately before its anchor block and the
- * group "Seen by" line immediately after the run ending in `lastOutbound`.
+ * one-time unread divider inserted immediately before the block headed by the
+ * message whose `messageIdentity` is `dividerAnchorKey`, and the group "Seen
+ * by" line immediately after the run whose newest undeleted item is
+ * `lastOutbound`.
  */
 export function buildMessageRows(
   messageGroups: { day: string; items: ChatMessage[] }[],
-  dividerAnchorMessage: ChatMessage | undefined,
+  dividerAnchorKey: string | undefined,
   lastOutbound: ChatMessage | undefined,
   isGroup: boolean | undefined,
   hasGroupSeenBy: boolean,
 ): MessageRow[] {
   const rows: MessageRow[] = [];
+  let flatOffset = 0;
   for (const group of messageGroups) {
     rows.push({
       kind: "daySeparator",
       key: `day-sep-${group.day}`,
       day: group.day,
     });
-    const blocks = buildTimeline(group.items, undefined, dividerAnchorMessage);
+    const identities = new Map<ChatMessage, string>();
+    let dividerAnchor: ChatMessage | undefined;
+    group.items.forEach((message, index) => {
+      const identity = messageIdentity(message, flatOffset + index);
+      identities.set(message, identity);
+      if (identity === dividerAnchorKey) dividerAnchor = message;
+    });
+    flatOffset += group.items.length;
+    // The anchor is resolved from its identity on every build, so a live cache
+    // patch that rebuilds every `ChatMessage` object still finds it. The object
+    // it resolves to belongs to THIS build, which is what `buildTimeline`'s
+    // `breakBefore` compares against.
+    const blocks = buildTimeline(group.items, undefined, dividerAnchor);
     for (const block of blocks) {
-      const anchor = block.kind === "run" ? block.run.items[0] : block.message;
-      if (
-        dividerAnchorMessage !== undefined &&
-        anchor === dividerAnchorMessage
-      ) {
+      const head = block.kind === "run" ? block.run.items[0] : block.message;
+      if (dividerAnchor !== undefined && head === dividerAnchor) {
         rows.push({ kind: "unreadDivider", key: "unread-divider" });
       }
       if (block.kind === "system") {
         rows.push({
           kind: "system",
-          key: stableMessageKey(block.message) ?? `sys-${rows.length}`,
+          key: identities.get(block.message) ?? `sys-${rows.length}`,
           day: group.day,
           message: block.message,
         });
         continue;
       }
-      const lastItem = block.run.items[block.run.items.length - 1];
+      const runItems = block.run.items;
       rows.push({
         kind: "run",
-        key: stableMessageKey(block.run.items[0]) ?? `run-${rows.length}`,
+        key: identities.get(runItems[0]!) ?? `run-${rows.length}`,
         day: group.day,
         run: block.run,
       });
+      const receiptItem = runItems[lastUndeletedIndex(runItems)];
       if (
         isGroup &&
         hasGroupSeenBy &&
-        lastItem !== undefined &&
-        lastItem === lastOutbound
+        receiptItem !== undefined &&
+        receiptItem === lastOutbound
       ) {
         rows.push({
           kind: "groupSeenBy",
-          key: `group-seen-by-${stableMessageKey(lastItem) ?? "x"}`,
+          key: `group-seen-by-${identities.get(receiptItem) ?? "x"}`,
         });
       }
     }
@@ -95,9 +128,10 @@ export function buildMessageRows(
 }
 
 /** Row index of the block containing `messageId`, or -1 if it isn't in any
- *  currently-loaded row (either genuinely not loaded — an older, unpaged
- *  message — or a bug). Used to scroll a message that's virtualized off-screen
- *  into view BEFORE the DOM-based highlight (`useJumpToMessage`) looks for it. */
+ *  currently-loaded row (either genuinely not loaded, an older unpaged
+ *  message, or a bug). The jump hunter (`messageJumpHunt.ts`) uses it to decide
+ *  between revealing a loaded message and paging back for it, and
+ *  `revealMessageRow` re-reads it every frame as prepends shift the index. */
 export function findRowIndexForMessage(
   rows: MessageRow[],
   messageId: string,

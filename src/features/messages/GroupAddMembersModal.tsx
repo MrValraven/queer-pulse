@@ -10,11 +10,16 @@ import { useSocial } from "../../app/providers/useSocial";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import type { ConnectionView } from "../connect/connections.data";
+import { MAX_GROUP_MEMBERS, remainingGroupSlots } from "./groupLimits";
 import type { GroupMemberPick } from "./NewGroupModal";
+import styles from "./NewMessageModal.module.css";
 
 interface GroupAddMembersModalProps {
-  /** Slugs already in the group — excluded from the picker. */
+  /** Slugs already in the group, excluded from the picker. */
   existingSlugs: string[];
+  /** The group's current active member count (DES-229, caps how many more
+   *  this request can pick, mirroring the server's member limit). */
+  activeMemberCount: number;
   onClose: () => void;
   /** Fired with the picked members (owner/admin only; server re-checks). */
   onAdd: (members: GroupMemberPick[]) => void;
@@ -23,15 +28,16 @@ interface GroupAddMembersModalProps {
 }
 
 /**
- * Add-members picker for an existing group — the same connection pool + drain-
+ * Add-members picker for an existing group: the same connection pool + drain-
  * all-pages behaviour as NewGroupModal, minus the group-name field, and with the
  * current roster filtered out. Multi-select; confirms with the picked members.
  * Adds are owner/admin-gated server-side (each member must also be a connection +
- * not blocked) — this UI only surfaces for a caller whose can-flags allow it.
+ * not blocked), this UI only surfaces for a caller whose can-flags allow it.
  * Built on the shared `Modal` and `MemberSelectList`.
  */
 export function GroupAddMembersModal({
   existingSlugs,
+  activeMemberCount,
   onClose,
   onAdd,
   busy,
@@ -40,6 +46,9 @@ export function GroupAddMembersModal({
   const { isBlocked } = useSocial();
   const staffMap = useStaffMap();
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const cap = remainingGroupSlots(activeMemberCount);
+  const isGroupFull = cap === 0;
+  const isAtCap = cap > 0 && selected.size >= cap;
 
   const { views, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useConnectionsList("all");
@@ -106,13 +115,38 @@ export function GroupAddMembersModal({
         </Button>
       }
     >
-      <MemberSelectList
-        people={people}
-        selected={selected}
-        onToggle={toggle}
-        excludeSlugs={existingSlugs}
-        searchPlaceholder={t("messages:group.searchPlaceholder")}
-      />
+      {isGroupFull ? (
+        <p className={styles.groupFull}>
+          <span className={styles.groupFullTitle}>
+            {t("messages:group.full")}
+          </span>
+          {t("messages:group.fullBody", { max: MAX_GROUP_MEMBERS })}
+        </p>
+      ) : (
+        <>
+          <p
+            className={[styles.capHint, isAtCap && styles.capHintAtLimit]
+              .filter(Boolean)
+              .join(" ")}
+            aria-live="polite"
+          >
+            {selected.size > 0 &&
+              t("messages:group.selectedOfCap", {
+                selected: selected.size,
+                max: cap,
+              })}
+            {isAtCap && ` ${t("messages:group.capReachedExtra")}`}
+          </p>
+          <MemberSelectList
+            people={people}
+            selected={selected}
+            onToggle={toggle}
+            excludeSlugs={existingSlugs}
+            cap={cap}
+            searchPlaceholder={t("messages:group.searchPlaceholder")}
+          />
+        </>
+      )}
     </Modal>
   );
 }

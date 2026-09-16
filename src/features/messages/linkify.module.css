@@ -43,3 +43,21 @@
   width: 100%;
   height: 100%;
 }
+
+/* PRD-371: a suspicious link's warning triangle — amber rather than the link's
+   own ink, so it reads as a caution rather than more link decoration, on both
+   a sent (plum) and received (paper) bubble. */
+.suspiciousIcon {
+  display: inline-flex;
+  align-items: center;
+  width: 0.85em;
+  height: 0.85em;
+  margin-inline-start: 0.25em;
+  vertical-align: -0.09em;
+  color: var(--amber-ink);
+}
+
+.suspiciousIcon svg {
+  width: 100%;
+  height: 100%;
+}

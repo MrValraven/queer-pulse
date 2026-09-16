@@ -66,6 +66,389 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "choose-who-can-add-you-to-a-group",
+        category: "feature",
+        date: "16 Sep 2026",
+        ...entryKeys("choose-who-can-add-you-to-a-group"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "end-a-group-or-hand-it-to-someone-else",
+        category: "feature",
+        date: "16 Sep 2026",
+        ...entryKeys("end-a-group-or-hand-it-to-someone-else"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "give-a-group-a-description-and-a-join-link",
+        category: "feature",
+        date: "16 Sep 2026",
+        ...entryKeys("give-a-group-a-description-and-a-join-link"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "block-and-report-now-reach-into-groups",
+        category: "improvement",
+        date: "16 Sep 2026",
+        ...entryKeys("block-and-report-now-reach-into-groups"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "group-timelines-explain-what-changed",
+        category: "improvement",
+        date: "16 Sep 2026",
+        ...entryKeys("group-timelines-explain-what-changed"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "sanctioned-members-lose-their-group-powers",
+        category: "fix",
+        date: "16 Sep 2026",
+        ...entryKeys("sanctioned-members-lose-their-group-powers"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "leaving-a-group-actually-leaves-it-behind",
+        category: "fix",
+        date: "16 Sep 2026",
+        ...entryKeys("leaving-a-group-actually-leaves-it-behind"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "choose-what-your-chats-reveal",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("choose-what-your-chats-reveal"),
+        tag: {
+          labelKey: "marketing:changelog.tag.privacySettings",
+          to: routes.settings,
+        },
+      },
+      {
+        id: "spot-a-risky-link-or-request",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("spot-a-risky-link-or-request"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "moderators-read-a-report-in-context",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("moderators-read-a-report-in-context"),
+      },
+      {
+        id: "a-message-straight-from-queerpulse",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("a-message-straight-from-queerpulse"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "report-and-block-in-one-move",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("report-and-block-in-one-move"),
+        hasDetails: true,
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "a-deleted-message-can-still-be-reported",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("a-deleted-message-can-still-be-reported"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "slow-down-unwanted-first-contact",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("slow-down-unwanted-first-contact"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "erasing-an-account-keeps-a-report-readable",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("erasing-an-account-keeps-a-report-readable"),
+      },
+      {
+        id: "your-download-carries-what-you-reported",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("your-download-carries-what-you-reported"),
+        tag: {
+          labelKey: "marketing:changelog.tag.dataExport",
+          to: routes.dataExport,
+        },
+      },
+      {
+        id: "media-links-and-docs-in-every-chat",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("media-links-and-docs-in-every-chat"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "read-recent-chats-offline",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("read-recent-chats-offline"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "search-and-filter-starred-messages",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("search-and-filter-starred-messages"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-actions-match-what-you-can-do",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("chat-actions-match-what-you-can-do"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-photo-albums-message-info",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("chat-photo-albums-message-info"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-group-attribution-accessibility",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("chat-group-attribution-accessibility"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "send-several-photos-and-files-at-once",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("send-several-photos-and-files-at-once"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "forward-to-several-chats",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("forward-to-several-chats"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "paste-or-drop-files-into-a-chat",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("paste-or-drop-files-into-a-chat"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-actions-for-keyboards-and-screen-readers",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("chat-actions-for-keyboards-and-screen-readers"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "safety-notice-ignores-dates-and-prices",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("safety-notice-ignores-dates-and-prices"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "reply-to-an-enquiry-straight-away",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("reply-to-an-enquiry-straight-away"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "send-things-in-a-message",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("send-things-in-a-message"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "mute-a-chat-for-a-while",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("mute-a-chat-for-a-while"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "message-buttons-open-the-right-person",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("message-buttons-open-the-right-person"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "inbox-rows-show-drafts-and-mentions",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("inbox-rows-show-drafts-and-mentions"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "unread-badge-matches-your-inbox",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("unread-badge-matches-your-inbox"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "inbox-says-when-loading-failed",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("inbox-says-when-loading-failed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "scroll-back-through-a-whole-conversation",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("scroll-back-through-a-whole-conversation"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-realtime-reliability",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("chat-realtime-reliability"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "group-notifications-say-which-group",
+        category: "feature",
+        date: "15 Sep 2026",
+        ...entryKeys("group-notifications-say-which-group"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "new-messages-reach-you-inside-the-app",
+        category: "improvement",
+        date: "15 Sep 2026",
+        ...entryKeys("new-messages-reach-you-inside-the-app"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "signing-out-stops-this-devices-notifications",
+        category: "fix",
+        date: "15 Sep 2026",
+        ...entryKeys("signing-out-stops-this-devices-notifications"),
+      },
+      {
         id: "photos-in-chat-lost-their-square-corners",
         category: "fix",
         date: "15 Sep 2026",

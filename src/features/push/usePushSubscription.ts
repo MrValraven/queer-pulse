@@ -1,33 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import { useDisplayMode } from "../../app/providers/displayModeContext";
 import { detectPlatform } from "../../shared/hooks/useInstallPrompt";
 import {
-  clearPendingSubscription,
-  readLastSyncedEndpoint,
-  readPendingSubscription,
-  writeLastSyncedEndpoint,
+  addPushEnabledMemberId,
+  clearLastSyncedSubscription,
+  removePushEnabledMemberId,
+  writeLastSyncedSubscription,
 } from "../../pushSubStore";
 import { subscribePush, unsubscribePush } from "./push.api";
+import {
+  hasPushApis,
+  matchesApplicationServerKey,
+  vapidPublicKey,
+} from "./pushSupport";
 import { urlBase64ToUint8Array } from "./urlBase64ToUint8Array";
-
-const vapidPublicKey = (import.meta.env.VITE_VAPID_PUBLIC_KEY ?? "").trim();
-
-/**
- * A deploy with no `VITE_VAPID_PUBLIC_KEY` cannot create a subscription at
- * all, so it counts as unsupported rather than as a toggle that flips back
- * with no explanation.
- */
-function hasPushApis(): boolean {
-  return (
-    typeof navigator !== "undefined" &&
-    "serviceWorker" in navigator &&
-    typeof window !== "undefined" &&
-    "PushManager" in window &&
-    "Notification" in window &&
-    vapidPublicKey.length > 0
-  );
-}
 
 /**
  * Why push is or is not available here.
@@ -65,23 +53,6 @@ function resolvePushSupportState(isInstalled: boolean): PushSupportState {
 }
 
 /**
- * Whether an existing browser subscription was created with the VAPID key this
- * build uses. A mismatch (a redeploy with rotated keys, a shared device) makes
- * `pushManager.subscribe()` throw `InvalidStateError` forever, so the stale one
- * has to be dropped before re-subscribing.
- */
-function matchesApplicationServerKey(
-  subscription: PushSubscription,
-  key: Uint8Array,
-): boolean {
-  const existing = subscription.options?.applicationServerKey;
-  if (!existing) return false;
-  const bytes = new Uint8Array(existing);
-  if (bytes.length !== key.length) return false;
-  return bytes.every((byte, index) => byte === key[index]);
-}
-
-/**
  * How an `enable()` attempt ended. `denied` is the member's own choice (the
  * calling row already explains it through `permission`); `failed` carries the
  * error so the caller can say WHY instead of just snapping the toggle back.
@@ -106,6 +77,8 @@ export interface PushSubscriptionApi {
 
 export function usePushSubscription(): PushSubscriptionApi {
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
+  const memberId = user?.id ?? null;
   const { isInstalled } = useDisplayMode();
   const supportState = resolvePushSupportState(isInstalled);
   const supported = supportState === "supported";
@@ -130,73 +103,11 @@ export function usePushSubscription(): PushSubscriptionApi {
     };
   }, [supported]);
 
-  // Boot-time subscription health re-sync. Complements the server-side
-  // 404/410 pruning: the *client* can also drift from what the server has on
-  // file — either because sw.ts's `pushsubscriptionchange` handler rotated
-  // the subscription (it can't POST /push/subscribe itself; CSRF-guarded, see
-  // that handler's comment) and stashed it as "pending", or because the live
-  // subscription's endpoint no longer matches the last one we successfully
-  // synced (e.g. IndexedDB was cleared, or a sync attempt failed silently
-  // before this session). Skipped in demo mode — there is no server to sync
-  // to. Runs on mount, on the tab becoming visible again, and whenever the SW
-  // reports it rotated the subscription — the three moments a drift is worth
-  // checking for.
-  useEffect(() => {
-    if (!supported || demoMode) return;
-
-    async function syncSubscriptionHealth() {
-      if (Notification.permission !== "granted") return;
-      try {
-        const registration = await navigator.serviceWorker.ready;
-        const subscription = await registration.pushManager.getSubscription();
-        if (!subscription) return;
-        const { endpoint } = subscription;
-        const [pending, lastSyncedEndpoint] = await Promise.all([
-          readPendingSubscription(),
-          readLastSyncedEndpoint(),
-        ]);
-        if (!pending && endpoint === lastSyncedEndpoint) return;
-        const json = subscription.toJSON();
-        const p256dh = json.keys?.p256dh;
-        const auth = json.keys?.auth;
-        if (!p256dh || !auth) return;
-        await subscribePush({ endpoint, keys: { p256dh, auth } });
-        await writeLastSyncedEndpoint(endpoint);
-        await clearPendingSubscription();
-      } catch {
-        // Best-effort — a failed re-sync here just gets retried on the next
-        // trigger (visibility change, SW message, or the next app boot).
-      }
-    }
-
-    void syncSubscriptionHealth();
-
-    function handleVisibilityChange() {
-      if (document.visibilityState === "visible") void syncSubscriptionHealth();
-    }
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    function handleServiceWorkerMessage(event: MessageEvent) {
-      if (
-        (event.data as { type?: string } | undefined)?.type ===
-        "push-subscription-changed"
-      ) {
-        void syncSubscriptionHealth();
-      }
-    }
-    navigator.serviceWorker.addEventListener(
-      "message",
-      handleServiceWorkerMessage,
-    );
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      navigator.serviceWorker.removeEventListener(
-        "message",
-        handleServiceWorkerMessage,
-      );
-    };
-  }, [supported, demoMode]);
+  // The subscription health re-sync (pending rotation, endpoint drift, member
+  // change, weekly refresh, VAPID key rotation) lives in
+  // `usePushSubscriptionSync`, mounted once app-wide through `PushAppEffects`.
+  // It used to run here, which meant it only ran while Settings or the
+  // onboarding opt-in was on screen.
 
   const enable = useCallback(async (): Promise<PushEnableResult> => {
     if (!supported) return { status: "unsupported" };
@@ -230,9 +141,18 @@ export function usePushSubscription(): PushSubscriptionApi {
         const auth = json.keys?.auth;
         if (endpoint && p256dh && auth) {
           await subscribePush({ endpoint, keys: { p256dh, auth } });
-          // Record what we just synced so the boot-time health re-sync doesn't
-          // fire a redundant (idempotent) re-POST on the next visit.
-          await writeLastSyncedEndpoint(endpoint);
+          // Record what we just synced, and for whom, so the health re-sync
+          // doesn't fire a redundant (idempotent) re-POST on the next visit.
+          if (memberId) {
+            await writeLastSyncedSubscription({
+              endpoint,
+              userId: memberId,
+              syncedAt: Date.now(),
+            });
+            // Push is on for this member here, so signing out and back in on
+            // this device restores it without asking again.
+            await addPushEnabledMemberId(memberId);
+          }
         }
       }
       setIsSubscribed(true);
@@ -250,7 +170,7 @@ export function usePushSubscription(): PushSubscriptionApi {
     } finally {
       setBusy(false);
     }
-  }, [demoMode, supported]);
+  }, [demoMode, memberId, supported]);
 
   const disable = useCallback(async () => {
     if (!supported) return;
@@ -271,14 +191,19 @@ export function usePushSubscription(): PushSubscriptionApi {
           // endpoint on its next 410 (Gone) push response.
           await unsubscribePush(endpoint).catch(() => {});
         }
+        // The record describes a subscription that no longer exists.
+        await clearLastSyncedSubscription();
+        // The member turned push off here: a later sign-in must not restore it.
+        if (memberId) await removePushEnabledMemberId(memberId);
         setIsSubscribed(false);
       } else {
+        if (memberId) await removePushEnabledMemberId(memberId);
         setIsSubscribed(false);
       }
     } finally {
       setBusy(false);
     }
-  }, [demoMode, supported]);
+  }, [demoMode, memberId, supported]);
 
   return {
     supported,

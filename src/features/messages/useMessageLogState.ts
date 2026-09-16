@@ -6,6 +6,7 @@ import { useUnreadDivider } from "./useUnreadDivider";
 import { useGroupIndicators } from "./useGroupIndicators";
 import { useMessageRowVirtualizer } from "./useMessageRowVirtualizer";
 import { useMessageScroll } from "./useMessageScroll";
+import type { ThreadHistory } from "./useOlderPageAnchor";
 import { useMessageRowJump } from "./useMessageRowJump";
 import { useMarkReadOnInbound } from "./useMarkReadOnInbound";
 import { realConversationId } from "./useMessagesController.helpers";
@@ -57,9 +58,8 @@ export function useMessageLogState(
   mySlug: string | undefined,
   counterpartLastReadAt: string | null,
   counterpartDeliveredAt: string | null,
-  hasMoreOlder: boolean,
-  loadingOlder: boolean,
-  onLoadOlder: () => void,
+  /** Paging state plus whether page 0 is current (see `ThreadHistory`). */
+  history: ThreadHistory,
   jumpToMessageId: string | null | undefined,
   onJumpHandled: (() => void) | undefined,
   /** Acks the thread read against the server. Called on thread-open by the
@@ -72,25 +72,48 @@ export function useMessageLogState(
     [messageGroups],
   );
   const messageCount = flatMessages.length;
-  // Inbound-only tally for the jump-pill count — a reader's own sends never count as "new".
-  const inboundCount = useMemo(
-    () => flatMessages.filter((message) => message.from === "them").length,
-    [flatMessages],
-  );
-  const dividerAnchorMessage = useUnreadDivider(
+  // Inbound-only tally for the jump-pill count (a reader's own sends never
+  // count as "new"), plus the newest inbound timestamp, which is what
+  // `useMarkReadOnInbound` compares against its last mark. One pass for both.
+  const { inboundCount, newestInboundAt } = useMemo(() => {
+    let count = 0;
+    let newestAt: string | undefined;
+    for (const message of flatMessages) {
+      if (message.from !== "them") continue;
+      count += 1;
+      if (message.at && (newestAt === undefined || message.at > newestAt)) {
+        newestAt = message.at;
+      }
+    }
+    return { inboundCount: count, newestInboundAt: newestAt };
+  }, [flatMessages]);
+  const divider = useUnreadDivider(
     flatMessages,
     active.id,
     active.unreadCount ?? 0,
+    active.unread,
+    active.myLastReadAt,
+    history.hasMoreOlder,
+    history.isHistorySettled && !history.isHistoryError,
   );
 
-  // "Seen": the last message I sent, and whether the counterpart's read
-  // watermark has caught up to it — only that message's run shows the label. A
-  // single backward walk (not a copy+reverse of the whole history, which grows
-  // unbounded as the thread does) finds it in the fewest steps.
+  // "Seen": the last message I sent that still shows a meta, and whether the
+  // counterpart's read watermark has caught up to it; only that bubble shows
+  // the escalation. A deleted message is skipped because its tombstone renders
+  // no meta, so pointing at it dropped the tick from the bubble before it. A
+  // system pill is skipped for the same reason. The group "Seen by" row and
+  // `useGroupIndicators` read this same value. A single backward walk (not a
+  // copy+reverse of the whole history) finds it in the fewest steps.
   const lastOutbound = useMemo(() => {
     for (let index = flatMessages.length - 1; index >= 0; index -= 1) {
       const candidate = flatMessages[index]!;
-      if (candidate.from === "me") return candidate;
+      if (
+        candidate.from === "me" &&
+        !candidate.deletedAt &&
+        candidate.kind !== "system"
+      ) {
+        return candidate;
+      }
     }
     return undefined;
   }, [flatMessages]);
@@ -125,25 +148,35 @@ export function useMessageLogState(
   // `useMessageRowVirtualizer`).
   const { rows, rowVirtualizer } = useMessageRowVirtualizer(
     messageGroups,
-    dividerAnchorMessage,
+    divider.anchorKey,
     lastOutbound,
     active.isGroup,
     groupSeenBy.length > 0,
     areaRef,
   );
 
-  const { showJumpPill, newMessagesCount, handleAreaScroll, jumpToLatest } =
-    useMessageScroll(
-      messageCount,
-      inboundCount,
-      active.id,
-      hasMoreOlder,
-      loadingOlder,
-      onLoadOlder,
-      areaRef,
-      contentRef,
-      rowVirtualizer,
-    );
+  const {
+    showJumpPill,
+    newMessagesCount,
+    handleAreaScroll,
+    jumpToLatest,
+    jumpScroll,
+  } = useMessageScroll(
+    messageCount,
+    inboundCount,
+    active.id,
+    history,
+    areaRef,
+    contentRef,
+    rowVirtualizer,
+    rows,
+    {
+      unreadCount: active.unreadCount ?? 0,
+      isFlaggedUnread: active.unread,
+      isDividerResolved: divider.isResolved,
+      hasPendingJump: !!jumpToMessageId,
+    },
+  );
 
   // TEMPORARY — see scrollTrace.ts's revert instructions. A SECOND,
   // independent ResizeObserver purely for tracing `areaRef` itself (the
@@ -183,18 +216,30 @@ export function useMessageLogState(
   // just-picked placeholder thread, so this is inert until a real UUID exists.
   useMarkReadOnInbound(
     realConversationId(active),
-    inboundCount,
+    newestInboundAt,
     showJumpPill,
+    history.isHistorySettled,
+    !!active.unread || (active.unreadCount ?? 0) > 0,
     onMarkThreadRead,
   );
 
   // Reply-quote / pinned-banner / cross-inbox-search jumps all resolve
-  // through this one virtualizer-aware function (see the hook).
+  // through this one virtualizer-aware function (see the hook). It pages back
+  // for an unloaded message through the same load-older trigger as scrolling.
   const jumpToMessageVirtualized = useMessageRowJump(
     rows,
     rowVirtualizer,
     jumpToMessageId,
     onJumpHandled,
+    {
+      conversationId: active.id,
+      hasMoreOlder: history.hasMoreOlder,
+      isLoadingOlder: history.loadingOlder,
+      isHistorySettled: history.isHistorySettled,
+      isHistoryError: history.isHistoryError,
+      onLoadOlder: history.onLoadOlder,
+      scroll: jumpScroll,
+    },
   );
 
   // Memoized on the counterpart's actual identity fields (not `active` itself,

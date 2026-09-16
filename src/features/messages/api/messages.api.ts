@@ -3,10 +3,14 @@ import {
   apiGet,
   apiPatch,
   apiPost,
+  apiPostWithMeta,
 } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type {
-  ConversationResponse as BaseConversationResponse,
+  ConversationResponse,
+  GroupInviteSummary,
+  GroupJoinPreview,
+  MessageReactorsResponse,
   MessageRequestResponse,
   MessageResponse,
   MessageSearchResponse,
@@ -21,41 +25,76 @@ import type { GifAttachment } from "../../../shared/api/gifs";
 // for the message history — it's an infinite, newest-first thread the panel loads
 // older on scroll-up. The conversations list is small enough to fetch in one page.
 
-/**
- * `ConversationResponse` widened with `archivedAt`/`draft` (SOC-16: archive +
- * cross-device draft sync) — the backend's `message-response.ts` already sends
- * both (per-caller preferences, same convention as `pinnedAt`/`muted`/
- * `favorite`), but the SHARED contract type in `shared/contracts/contracts.ts`
- * is outside this change's file ownership for this build pass, so the two
- * fields are widened locally here rather than edited there directly.
- * Coordination note: add `archivedAt?: string | null` and
- * `draft?: string | null` to `ConversationResponse` in
- * `shared/contracts/contracts.ts` directly (mirroring `pinnedAt`) as a
- * follow-up cleanup — purely additive, no behavior change once done.
- */
-export interface ConversationResponse extends BaseConversationResponse {
-  archivedAt?: string | null;
-  draft?: string | null;
-  /** PRD-225: when THIS caller manually marked the thread unread from the row
-   *  menu. Widened here for the same file-ownership reason as `archivedAt`/
-   *  `draft` above — the backend already sends it (`message-response.ts`). */
-  markedUnreadAt?: string | null;
-}
-
-export type { MessageResponse };
+export type {
+  ConversationResponse,
+  MessageResponse,
+  GroupInviteSummary,
+  GroupJoinPreview,
+};
 
 /**
  * GET /conversations — the inbox list, most-recent first.
- * The backend returns a bare array (the list fits in one page); older/other
- * envelopes wrap it in `{ data }`. Normalize to always resolve a plain array so
- * callers never have to guess the shape.
+ * ENG-253: the backend now ALWAYS answers the cursor-paginated
+ * `{ data, pageInfo }` envelope (default page size 30) instead of the whole
+ * inbox as a bare array. This helper stays call-compatible with its existing
+ * non-paging callers (e.g. `useIncomingMessageBanner.ts`'s own cache-priming
+ * lookup) by resolving just the first page's `data`, which is fine for a
+ * single-row lookup but is no longer the whole inbox. The inbox UI itself
+ * pages properly through `getConversationsPage`/`useConversations` below;
+ * `useIncomingMessageBanner.ts` should move onto that if it ever needs to see
+ * past page 1 (an adjacent gap this build leaves for a follow-up; see this
+ * build's report).
  */
 export async function getConversations(): Promise<ConversationResponse[]> {
   const res = await apiGet<
     ConversationResponse[] | Paginated<ConversationResponse>
   >("/conversations");
-  return Array.isArray(res) ? res : (res?.data ?? []);
+  return toPage(res).data;
 }
+
+export interface GetConversationsPageOptions {
+  /** Opaque keyset cursor from a previous page's `pageInfo.nextCursor`. */
+  cursor?: string;
+  /** 1-100, server default 30. */
+  limit?: number;
+  signal?: AbortSignal;
+}
+
+/**
+ * GET /conversations?cursor=&limit= (ENG-253): the inbox, one cursor-
+ * paginated page, most-recently-active first. `useConversations` pages
+ * through this so the member's full inbox is actually reachable by paging
+ * (the bug ENG-253 fixes: the old bare-array endpoint silently truncated at
+ * a fixed count).
+ */
+export async function getConversationsPage(
+  options: GetConversationsPageOptions = {},
+): Promise<Paginated<ConversationResponse>> {
+  const { cursor, limit, signal } = options;
+  const params = new URLSearchParams();
+  if (cursor) params.set("cursor", cursor);
+  if (limit) params.set("limit", String(limit));
+  const qs = params.toString();
+  const res = await apiGet<
+    ConversationResponse[] | Paginated<ConversationResponse>
+  >(`/conversations${qs ? `?${qs}` : ""}`, undefined, undefined, signal);
+  return toPage(res);
+}
+
+/**
+ * GET /conversations/:id (ENG-253): the full-detail single-conversation read.
+ * Carries the real member roster (with per-member read/delivered watermarks)
+ * and the full stored draft that a LIST row (`getConversationsPage` above) no
+ * longer does; see `ConversationResponse.members`/`.draft`'s own docs. 404s
+ * if the caller isn't a participant or the thread is invisible to them.
+ */
+export const getConversation = (conversationId: string, signal?: AbortSignal) =>
+  apiGet<ConversationResponse>(
+    `/conversations/${conversationId}`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /**
  * GET /conversations/unread-count — the count of conversations with unread
@@ -68,21 +107,60 @@ export async function getConversationsUnreadCount(): Promise<number> {
   return res?.count ?? 0;
 }
 
-/** GET /conversations/:id/messages?cursor= — cursor page of history. */
-export async function getMessages(conversationId: string, cursor?: string) {
-  const q = new URLSearchParams();
-  if (cursor) q.set("cursor", cursor);
-  const qs = q.toString();
+/**
+ * GET /conversations/:id/messages?cursor= — one backward page of history,
+ * newest first. The backend answers with the `{ data, pageInfo }` envelope
+ * (ENG-192); `toPage` still accepts a bare array from an older backend and
+ * treats it as the single terminal page, so load-older simply stays off there.
+ * `signal` is react-query's cancellation signal (ENG-201): switching threads
+ * aborts the abandoned fetch instead of letting it finish in the background.
+ */
+export async function getMessages(
+  conversationId: string,
+  cursor?: string,
+  signal?: AbortSignal,
+): Promise<Paginated<MessageResponse>> {
+  const searchParams = new URLSearchParams();
+  if (cursor) searchParams.set("cursor", cursor);
+  const queryString = searchParams.toString();
   const res = await apiGet<MessageResponse[] | Paginated<MessageResponse>>(
-    `/conversations/${conversationId}/messages${qs ? `?${qs}` : ""}`,
+    `/conversations/${conversationId}/messages${queryString ? `?${queryString}` : ""}`,
+    undefined,
+    undefined,
+    signal,
   );
   return toPage(res);
 }
 
+/**
+ * ENG-222: messages resolved from a send whose response carried the
+ * backend's `Idempotent-Replayed: true` header (`messaging.controller.ts:613`).
+ * The server recognized the client's `clientMessageId` and handed back the
+ * already-stored row instead of creating a new one (a retry, or the HTTP+WS
+ * dual write path), so this was never a genuine first create. Tracked by
+ * object identity rather than widening `sendMessage`/`sendDocumentMessage`'s
+ * return shape, which `useMessageMutations.ts#useSendMessage` and everything
+ * downstream of it depend on staying a bare `MessageResponse`. Read via
+ * `wasMessageReplayed`; the WeakSet entry is eligible for GC the moment
+ * nothing else references the message.
+ */
+const replayedMessages = new WeakSet<object>();
+
+/** True when `message` is the exact object `sendMessage`/`sendDocumentMessage`
+ *  resolved for a request the server answered as a replay (see
+ *  `replayedMessages`). `useMessageDeliverCore.ts`'s send path reads this to
+ *  skip whatever side effects should fire only on a genuine first create.
+ *  False for a `MessageResponse` from any other source (history load, a
+ *  socket frame, demo mode). */
+export function wasMessageReplayed(message: MessageResponse): boolean {
+  return replayedMessages.has(message);
+}
+
 /** POST /conversations/:id/messages — send. Rejects a blocked pair with 403.
  *  `clientMessageId` is the sender's idempotency key — the server dedupes on it,
- *  so a retry (or the HTTP + WS dual path) returns the same message, never two. */
-export const sendMessage = (
+ *  so a retry (or the HTTP + WS dual path) returns the same message, never two
+ *  (ENG-222: flagged via `wasMessageReplayed` above when it does). */
+export async function sendMessage(
   conversationId: string,
   body: string,
   replyToId?: string,
@@ -90,16 +168,24 @@ export const sendMessage = (
   forwarded?: boolean,
   attachment?: GifAttachment,
   kind?: "user" | "gif" | "image",
-) =>
-  apiPost<MessageResponse>(`/conversations/${conversationId}/messages`, {
-    body,
-    ...(replyToId ? { replyToId } : {}),
-    ...(clientMessageId ? { clientMessageId } : {}),
-    ...(forwarded ? { forwarded: true } : {}),
-    ...((kind === "gif" || kind === "image") && attachment
-      ? { kind, attachment }
-      : {}),
-  });
+): Promise<MessageResponse> {
+  const { data, headers } = await apiPostWithMeta<MessageResponse>(
+    `/conversations/${conversationId}/messages`,
+    {
+      body,
+      ...(replyToId ? { replyToId } : {}),
+      ...(clientMessageId ? { clientMessageId } : {}),
+      ...(forwarded ? { forwarded: true } : {}),
+      ...((kind === "gif" || kind === "image") && attachment
+        ? { kind, attachment }
+        : {}),
+    },
+  );
+  if (headers.get("Idempotent-Replayed") === "true") {
+    replayedMessages.add(data);
+  }
+  return data;
+}
 
 /** GET /conversations/:id/pins — the conversation's SHARED pinned messages,
  *  newest-pin-first. */
@@ -132,12 +218,40 @@ export const unstarMessage = (conversationId: string, messageId: string) =>
     `/conversations/${conversationId}/messages/${messageId}/star`,
   );
 
-/** GET /messages/starred — my starred messages, newest-star-first. */
+export interface GetStarredMessagesOptions {
+  /** Free-text term, matched server-side against the body, attachment
+   *  caption/file name, sender name, group title, and DM counterpart name
+   *  (PRD-374). Omitted or blank means no text filter. */
+  q?: string;
+  /** Narrows by kind; omitted means every kind. */
+  type?: "photos" | "documents" | "links";
+  /** Opaque keyset cursor from a previous page's `nextCursor`. */
+  cursor?: string;
+  limit?: number;
+  /** react-query forwards its `queryFn` signal here so a superseded page
+   *  request (a fresh keystroke, or a demo→live toggle) is cancelled instead
+   *  of racing a stale one to the cache. */
+  signal?: AbortSignal;
+}
+
+/** GET /messages/starred: my starred messages, newest-star-first, optionally
+ *  narrowed by `q`/`type` and paged by `cursor` (PRD-374). */
 export async function getStarredMessages(
-  limit?: number,
+  options: GetStarredMessagesOptions = {},
 ): Promise<StarredMessagesResponse> {
-  const qs = limit ? `?limit=${limit}` : "";
-  return apiGet<StarredMessagesResponse>(`/messages/starred${qs}`);
+  const { q, type, cursor, limit, signal } = options;
+  const params = new URLSearchParams();
+  if (q && q.trim()) params.set("q", q.trim());
+  if (type) params.set("type", type);
+  if (cursor) params.set("cursor", cursor);
+  if (limit) params.set("limit", String(limit));
+  const qs = params.toString();
+  return apiGet<StarredMessagesResponse>(
+    `/messages/starred${qs ? `?${qs}` : ""}`,
+    undefined,
+    undefined,
+    signal,
+  );
 }
 
 /** PATCH /conversations/:id/messages/:messageId — edit own message (15-min window). */
@@ -163,6 +277,12 @@ export const updateConversationPrefs = (
     pinned?: boolean;
     favorite?: boolean;
     muted?: boolean;
+    /** PRD-349: the mute MODE, a second axis independent of `muted` above
+     *  (`"all"` \| `"mentionsOnly"`, see `useConversationPrefs.ts`'s
+     *  `useToggleMuteMode`). Never bundled with `muted`/`mutedUntil` in the
+     *  same call; the row menu sends this alone. */
+    muteMode?: "all" | "mentionsOnly";
+    mutedUntil?: string | null;
     archived?: boolean;
     markUnread?: boolean;
     draft?: string;
@@ -234,13 +354,93 @@ export const changeGroupMemberRole = (
     { role },
   );
 
-/** PATCH /conversations/:id — owner/admin edits a group's title/avatar. A title
- *  change posts a `group_renamed` pill server-side. Returns the group DTO. */
+/** PATCH /conversations/:id — owner/admin edits a group's title/avatar/
+ *  description (PRD-358; `description` posts a `group_description_changed`
+ *  pill server-side, max 500 chars, trimmed + sanitised server-side like a
+ *  caption). A title change posts `group_renamed`, an avatar change
+ *  `group_photo_changed`. Returns the group DTO. */
 export const updateGroup = (
   conversationId: string,
-  changes: { title?: string; avatarUrl?: string },
+  changes: { title?: string; avatarUrl?: string; description?: string },
 ) =>
   apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
+
+/** POST /conversations/:id/owner: owner transfers ownership to another
+ *  active member; the actor becomes admin. Posts an `owner_changed` pill.
+ *  Returns the group DTO. */
+export const transferGroupOwnership = (
+  conversationId: string,
+  userId: string,
+) =>
+  apiPost<ConversationResponse>(`/conversations/${conversationId}/owner`, {
+    userId,
+  });
+
+/** POST /conversations/:id/dissolve: owner ends the group for everyone
+ *  (PRD-357): `dissolvedAt` is set, every active participant is left, the
+ *  invite link disabled and pending invites revoked. Returns the (now
+ *  read-only) group DTO. */
+export const dissolveGroup = (conversationId: string) =>
+  apiPost<ConversationResponse>(
+    `/conversations/${conversationId}/dissolve`,
+    {},
+  );
+
+/** POST /conversations/:id/invite-link: owner/admin creates (or rotates) the
+ *  group's revocable invite link (PRD-358, no QR). Rotating invalidates any
+ *  previously shared link. */
+export const createGroupInviteLink = (conversationId: string) =>
+  apiPost<{ inviteToken: string }>(
+    `/conversations/${conversationId}/invite-link`,
+    {},
+  );
+
+/** DELETE /conversations/:id/invite-link: owner/admin disables the group's
+ *  invite link; any previously shared link stops working. */
+export const disableGroupInviteLink = (conversationId: string) =>
+  apiDelete<void>(`/conversations/${conversationId}/invite-link`);
+
+/** GET /conversations/join/:token: unauthenticated-of-membership preview of
+ *  the group an invite link points at (title/avatar/description/member
+ *  count/whether the caller is already a member). 404s
+ *  `INVITE_LINK_INVALID` for an unknown or dissolved link; throttled. */
+export const getGroupJoinPreview = (token: string) =>
+  apiGet<GroupJoinPreview>(`/conversations/join/${encodeURIComponent(token)}`);
+
+/** POST /conversations/join/:token: the caller seats themself via the
+ *  invite link (voluntary, so the "who can add me" preference is never
+ *  consulted). Refused `REMOVED_FROM_GROUP` if this caller previously left
+ *  or was removed; refused `GROUP_FULL`/`GROUP_DISSOLVED` as usual. Posts a
+ *  `member_joined` (`value: "link"`) pill. Returns the group DTO. */
+export const joinGroupByToken = (token: string) =>
+  apiPost<ConversationResponse>(
+    `/conversations/join/${encodeURIComponent(token)}`,
+    {},
+  );
+
+/** GET /conversations/group-invites: pending group invites addressed to the
+ *  caller (Requests tab). */
+export const getGroupInvites = () =>
+  apiGet<GroupInviteSummary[]>("/conversations/group-invites");
+
+/** POST /conversations/group-invites/:inviteId/accept: the invitee seats
+ *  themself (re-checks the cap, blocks and `GROUP_DISSOLVED` at accept time).
+ *  Posts a `member_joined` (`value: "invite"`) pill. Returns the group DTO. */
+export const acceptGroupInvite = (inviteId: string) =>
+  apiPost<ConversationResponse>(
+    `/conversations/group-invites/${inviteId}/accept`,
+    {},
+  );
+
+/** POST /conversations/group-invites/:inviteId/decline: the invitee turns
+ *  down the invite. */
+export const declineGroupInvite = (inviteId: string) =>
+  apiPost<void>(`/conversations/group-invites/${inviteId}/decline`, {});
+
+/** DELETE /conversations/:id/invites/:inviteId: owner/admin revokes a
+ *  pending invite before it's answered. */
+export const revokeGroupInvite = (conversationId: string, inviteId: string) =>
+  apiDelete<void>(`/conversations/${conversationId}/invites/${inviteId}`);
 
 /** GET /messages/search?q= — cross-conversation body search, scoped server-side
  *  to the caller's conversations and floored by their `clearedAt`. Accepts an
@@ -306,6 +506,19 @@ export const removeMessageReaction = (
     `/conversations/${conversationId}/messages/${messageId}/reactions/${encodeURIComponent(key)}`,
   );
 
+/** GET /conversations/:id/messages/:messageId/reactions: who reacted (PRD-352). */
+export const getMessageReactors = (
+  conversationId: string,
+  messageId: string,
+  signal?: AbortSignal,
+) =>
+  apiGet<MessageReactorsResponse>(
+    `/conversations/${conversationId}/messages/${messageId}/reactions`,
+    undefined,
+    undefined,
+    signal,
+  );
+
 /** DELETE /conversations/:id/messages/:messageId — soft-delete a message. */
 export const deleteMessage = (conversationId: string, messageId: string) =>
   apiDelete<{ ok: true }>(
@@ -335,19 +548,29 @@ export const deleteConversation = (conversationId: string) =>
  * so this is appended standalone instead of editing that function's shape.
  * Hits the SAME endpoint and is equally idempotent on `clientMessageId`.
  */
-export const sendDocumentMessage = (
+export async function sendDocumentMessage(
   conversationId: string,
   body: string,
   attachment: import("../../../shared/api/documentAttachment").DocumentAttachment,
   replyToId?: string,
   clientMessageId?: string,
   forwarded?: boolean,
-) =>
-  apiPost<MessageResponse>(`/conversations/${conversationId}/messages`, {
-    body,
-    kind: "document",
-    attachment,
-    ...(replyToId ? { replyToId } : {}),
-    ...(clientMessageId ? { clientMessageId } : {}),
-    ...(forwarded ? { forwarded: true } : {}),
-  });
+): Promise<MessageResponse> {
+  const { data, headers } = await apiPostWithMeta<MessageResponse>(
+    `/conversations/${conversationId}/messages`,
+    {
+      body,
+      kind: "document",
+      attachment,
+      ...(replyToId ? { replyToId } : {}),
+      ...(clientMessageId ? { clientMessageId } : {}),
+      ...(forwarded ? { forwarded: true } : {}),
+    },
+  );
+  // ENG-222: same idempotent-replay flag as `sendMessage` above, see
+  // `wasMessageReplayed`'s own doc.
+  if (headers.get("Idempotent-Replayed") === "true") {
+    replayedMessages.add(data);
+  }
+  return data;
+}

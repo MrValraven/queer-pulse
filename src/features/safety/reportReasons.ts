@@ -70,7 +70,16 @@ export type ReportSubjectType =
   //
   // Mirrors the backend `ReportSubjectType.Volunteering`, backed by
   // `AddVolunteeringReportSubjectAndAnonymousFloodKey1813000000000`.
-  | "volunteering";
+  | "volunteering"
+  // PRD-356: a GROUP messaging conversation, addressed by the conversation's
+  // own uuid (never a DM — a DM has no group-shaped "report this thread"
+  // control; reporting a DM counterpart still files as `member`). Shaped on
+  // `community`, the closest analogue: a group is a body of member-authored
+  // conversation with an owner who answers for it, exactly like a community
+  // and its owner. Mirrors the backend `ReportSubjectType.Conversation`,
+  // backed by `AddGroupConsentInvitesAndDissolve` (adds the value to
+  // `reports_subject_type_enum`).
+  | "conversation";
 
 export type ReasonCode =
   | "outing"
@@ -428,6 +437,25 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "harassment",
     "housing_scam",
     "spam",
+    "other",
+  ],
+  // PRD-356: a group conversation. Shaped on `community` exactly (same codes,
+  // same order) rather than on `message`: a group report is about the group
+  // itself (its name, its description, who its owner lets in), the way a
+  // community report is about the community, not about one message in it. As
+  // of this change the backend's `reason-catalogue.ts` had not yet landed its
+  // own `conversation` entry (a sibling change in flight); this list is
+  // expected to be reconciled against it once it does, and should match
+  // exactly, since `GET /reports/reasons` renders the server's list in live
+  // mode and this is only the demo-mode fallback + label source.
+  conversation: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
+    "discrimination",
+    "spam",
+    "off_topic",
     "other",
   ],
 };

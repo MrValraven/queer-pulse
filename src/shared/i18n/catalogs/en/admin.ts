@@ -2622,6 +2622,16 @@ export const admin: Catalog = {
   "governance.audit.actionType.thread_official_cleared":
     "Thread no longer official",
   "governance.audit.actionType.thread_deleted": "Thread deleted",
+  // Staff actions in messaging (`ReportConversationContextService`,
+  // `staff-message-deletion.ts`) and official messages
+  // (`official-messages.constants.ts`). Toned ghost in `ACTION_TONE`.
+  "governance.audit.actionType.conversation_context_viewed":
+    "Conversation context viewed",
+  "governance.audit.actionType.message_deleted_by_staff":
+    "Message deleted for everyone",
+  "governance.audit.actionType.official_message_sent": "Official message sent",
+  "governance.audit.actionType.official_broadcast_sent":
+    "Official broadcast sent",
   "governance.audit.range.today": "Today",
   "governance.audit.range.week": "This week",
   "governance.audit.range.quarter": "This quarter",
@@ -4395,6 +4405,11 @@ export const admin: Catalog = {
     "Saving is on hold until every highlighted amount reads as a number.",
   "moderation.action.created": "Report received",
   "moderation.action.appealOverturned": "Appeal overturned",
+  "moderation.action.conversationContextViewed":
+    "Opened the conversation around the reported message",
+  "moderation.action.messageDeletedByStaff": "Deleted a message for everyone",
+  "moderation.action.reportMessageAttachmentViewed":
+    "Opened the file attached to the reported message",
   "moderation.oldestNote_one":
     "Showing {count} open report · the oldest landed {oldest}",
   "moderation.oldestNote_other":
@@ -5959,6 +5974,61 @@ export const admin: Catalog = {
     "Posted to the album on {date}",
   "moderation.reportDrawer.photoEvidence.fullSizeCta": "Open at full size",
 
+  // Scan section 9: the reported message snapshot (AdminReportEvidence) and
+  // the conversation around it (AdminReportConversationContext).
+  "moderation.reportDrawer.messageEvidence.title":
+    "Reported message, as it was when reported",
+  "moderation.reportDrawer.messageEvidence.noBody":
+    "No text came with this message.",
+  "moderation.reportDrawer.messageEvidence.sentLabel": "Sent",
+  "moderation.reportDrawer.messageEvidence.capturedLabel": "Captured",
+  "moderation.reportDrawer.messageEvidence.kindLabel": "Type",
+  "moderation.reportDrawer.messageEvidence.kindText": "Text",
+  "moderation.reportDrawer.messageEvidence.editedNote":
+    "Its sender edited it before it was reported.",
+  "moderation.reportDrawer.messageEvidence.deletedWhenReported":
+    "Its sender had already deleted it for everyone when this report was filed. QueerPulse kept it so you can review it.",
+  "moderation.reportDrawer.messageEvidence.imageAlt":
+    "The photo attached to the reported message",
+  "moderation.reportDrawer.messageEvidence.attachmentUnavailable":
+    "This file is no longer available. The details here still stand, and the report is still yours to decide.",
+  "moderation.reportDrawer.messageEvidence.openFileCta":
+    "Show the attached file",
+  "moderation.reportDrawer.messageEvidence.fileAuditNotice":
+    "Opening it is recorded in this report's action history. Nobody in the conversation is told.",
+  "moderation.reportDrawer.conversationContext.openCta":
+    "Show the conversation around this message",
+  "moderation.reportDrawer.conversationContext.auditNotice":
+    "Opening it is recorded in this report's action history. The people in the conversation are not told.",
+  "moderation.reportDrawer.conversationContext.loading":
+    "Opening the conversation",
+  "moderation.reportDrawer.conversationContext.error":
+    "We couldn't open this conversation. The message may no longer exist, or the connection dropped.",
+  "moderation.reportDrawer.conversationContext.retryCta": "Try again",
+  "moderation.reportDrawer.conversationContext.windowNote":
+    "Up to 20 messages before and after the reported one, oldest first.",
+  "moderation.reportDrawer.conversationContext.listLabel":
+    "Messages around the reported message",
+  "moderation.reportDrawer.conversationContext.earlierNotShown":
+    "There are earlier messages this view does not show.",
+  "moderation.reportDrawer.conversationContext.laterNotShown":
+    "There are later messages this view does not show.",
+  "moderation.reportDrawer.conversationContext.formerMember": "Former member",
+  "moderation.reportDrawer.conversationContext.reportedTag": "Reported",
+  "moderation.reportDrawer.conversationContext.deletedTag": "Deleted",
+  "moderation.reportDrawer.conversationContext.editedTag": "Edited",
+  "moderation.reportDrawer.conversationContext.deletedBody":
+    "This message was deleted.",
+  "moderation.reportDrawer.conversationContext.photoLabel": "Photo",
+  "moderation.reportDrawer.conversationContext.gifLabel": "GIF",
+  "moderation.reportDrawer.conversationContext.documentLabel": "Document",
+
+  // PRD-356: the reported GROUP snapshot (AdminReportGroupEvidence.tsx),
+  // rendered only for a `conversation` (group) report.
+  "moderation.reportDrawer.groupEvidence.title": "Reported group",
+  "moderation.reportDrawer.groupEvidence.memberCountLabel": "Members",
+  "moderation.reportDrawer.groupEvidence.capturedLabel": "Captured",
+
   // ── PRD-282, the staff triage console (`AdminQueuesPage`) ──────────────
   // The three "null" cells below are three different sentences on purpose and
   // must stay that way. `cell.noDeadline` is a queue that never promised
@@ -6105,4 +6175,60 @@ export const admin: Catalog = {
   "featureUsage.loadError":
     "We could not load feature usage. Try again in a moment.",
   "featureUsage.empty": "No features to show for this range yet.",
+
+  // Scan section 9: official messages console (AdminOfficialMessagesPage).
+  // `status.*` resolves dynamically from the broadcast row's status.
+  "officialMessages.eyebrow": "Platform",
+  "officialMessages.title": "Official messages",
+  "officialMessages.subtitle":
+    "Speak as QueerPulse, in each member's official thread. Admins only.",
+  "officialMessages.member.title": "Message one member",
+  "officialMessages.member.subtitle":
+    "It lands in their official QueerPulse thread, pinned at the top of their inbox. No phone notification is sent.",
+  "officialMessages.member.searchLabel": "Find a member",
+  "officialMessages.member.searchPlaceholder": "Search by name or handle",
+  "officialMessages.member.noResults": "No members match that search.",
+  "officialMessages.member.change": "Change",
+  "officialMessages.member.notActive": "Account not active",
+  "officialMessages.member.bodyLabel": "Message",
+  "officialMessages.member.bodyPlaceholder":
+    "Write what you want them to know.",
+  "officialMessages.member.send": "Send message",
+  "officialMessages.member.sending": "Sending",
+  "officialMessages.member.sent": "Sent to {name}.",
+  "officialMessages.member.recipientGone":
+    "That member's account no longer exists. Pick someone else.",
+  "officialMessages.member.sendFailed":
+    "The message didn't send. Try again in a moment.",
+  "officialMessages.body.count": "{used}/{max}",
+  "officialMessages.broadcast.title": "Broadcast to everyone",
+  "officialMessages.broadcast.subtitle":
+    "One message to every active member, each in their own official thread. Keep it for things everyone needs to know.",
+  "officialMessages.broadcast.bodyLabel": "Broadcast message",
+  "officialMessages.broadcast.bodyPlaceholder":
+    "Maintenance windows, safety notices, changes that affect the whole community.",
+  "officialMessages.broadcast.review": "Review and send",
+  "officialMessages.broadcast.confirmTitle":
+    "Send this to every active member?",
+  "officialMessages.broadcast.confirmScope":
+    "Every active member receives it in their official QueerPulse thread. Suspended and paused accounts are left out. Once sent, it can't be taken back.",
+  "officialMessages.broadcast.confirm": "Send to everyone",
+  "officialMessages.broadcast.cancel": "Keep editing",
+  "officialMessages.broadcast.accepted":
+    "Broadcast on its way. Its progress shows below.",
+  "officialMessages.broadcast.keyReused":
+    "This draft changed after it was sent. Send it again and it goes out as a new broadcast.",
+  "officialMessages.broadcast.failed":
+    "The broadcast didn't go through. Try again: it will never reach anyone twice.",
+  "officialMessages.history.title": "Broadcast history",
+  "officialMessages.history.empty": "No broadcasts yet.",
+  "officialMessages.history.loadFailed":
+    "Broadcast history didn't load. Refresh to try again.",
+  "officialMessages.history.progress": "{delivered} of {total} delivered",
+  "officialMessages.history.sentBy": "Sent by {name}",
+  "officialMessages.history.sentByErased": "Sent by a former admin",
+  "officialMessages.status.pending": "Queued",
+  "officialMessages.status.sending": "Sending",
+  "officialMessages.status.completed": "Delivered",
+  "officialMessages.status.failed": "Stopped",
 };

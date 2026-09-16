@@ -510,6 +510,21 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> sent you a message about a piece on the desk.",
   "type.magazine_piece_message.meta": "Desk message",
 
+  // PRD-334: someone added the member to a group chat. Kept out of
+  // `PERSONALIZED_KINDS` so `text` can carry both the adder's name and the
+  // group title; the row's avatar still links the adder's profile.
+  "type.group_added.text": "{name} added you to {groupTitle}.",
+  "type.group_added.meta": "Group chat",
+  "type.group_added.groupFallback": "a group",
+  "type.group_added.nameFallback": "Someone",
+
+  // PRD-353: an owner/admin invited the member to a group chat rather than
+  // seating them outright (their `invite_only` preference, or a prior left/
+  // removed row). Shares `group_added`'s own title/name fallbacks above,
+  // resolved by the same `groupTitleToken` helper (formatNotification.ts).
+  "type.group_invite.text": "{name} invited you to {groupTitle}.",
+  "type.group_invite.meta": "Group invite",
+
   // Concern outcome — headline per terminal status (resolved/dismissed); the
   // flat keys are the fallback for an unrecognised status.
   "type.concern_update.text": "There's an update on a concern you raised.",

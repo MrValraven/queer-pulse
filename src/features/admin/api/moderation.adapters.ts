@@ -8,6 +8,9 @@ import type {
   PriorReports,
   Ratification,
   ReportDetail,
+  ReportEvidenceSnapshot,
+  ReportedGroupSnapshot,
+  ReportedMessageSnapshot,
   ReportedPhoto,
   ReporterCredibility,
   ReportChip,
@@ -282,7 +285,101 @@ export function modReportDetailFrom(
   // half-rendered one.
   const reportedPhoto = reportedPhotoFrom(dto.detail.evidence);
   if (reportedPhoto) detail.reportedPhoto = reportedPhoto;
+  // PRD-360: whether the audited conversation viewer can open anything.
+  if (dto.detail.conversationContextAvailable) {
+    detail.conversationContextAvailable = true;
+  }
+  const evidenceSnapshots = evidenceSnapshotsFrom(dto.detail.evidence);
+  if (evidenceSnapshots.length) detail.evidenceSnapshots = evidenceSnapshots;
   return detail;
+}
+
+function stringOrNull(value: unknown): string | null {
+  return typeof value === "string" && value ? value : null;
+}
+
+/**
+ * The server snapshots the drawer renders as evidence blocks, read defensively
+ * from the raw `jsonb` array for the same reason `reportedPhotoFrom` is: an
+ * entry that does not parse is skipped rather than half-rendered, and an entry
+ * of a shape this build does not know is left alone.
+ *
+ * Insertion point for another snapshot kind: a `kind: "group"` entry
+ * (`GroupSnapshotEvidence`, discriminated on `kind` rather than `type`) parses
+ * here into its own `ReportEvidenceSnapshot` member.
+ */
+export function evidenceSnapshotsFrom(
+  evidence: unknown[] | undefined,
+): ReportEvidenceSnapshot[] {
+  if (!evidence) return [];
+  const snapshots: ReportEvidenceSnapshot[] = [];
+  for (const entry of evidence) {
+    if (typeof entry !== "object" || entry === null) continue;
+    const candidate = entry as Record<string, unknown>;
+    if (candidate.type === "message-snapshot") {
+      const message = reportedMessageFrom(candidate);
+      if (message) snapshots.push({ kind: "message", message });
+    }
+    if (candidate.kind === "group") {
+      const group = reportedGroupFrom(candidate);
+      if (group) snapshots.push({ kind: "group", group });
+    }
+  }
+  return snapshots;
+}
+
+/** One `GroupSnapshotEvidence` entry (PRD-356), or null when its required
+ *  fields are missing. `memberIds` drops any non-string entry rather than
+ *  failing the whole snapshot, so a malformed id never crashes the drawer. */
+function reportedGroupFrom(
+  candidate: Record<string, unknown>,
+): ReportedGroupSnapshot | null {
+  if (typeof candidate.title !== "string" || !candidate.title) return null;
+  if (typeof candidate.ownerId !== "string" || !candidate.ownerId) return null;
+  if (typeof candidate.memberCount !== "number") return null;
+  if (typeof candidate.capturedAt !== "string") return null;
+  const memberIds = Array.isArray(candidate.memberIds)
+    ? candidate.memberIds.filter(
+        (memberId): memberId is string => typeof memberId === "string",
+      )
+    : [];
+  return {
+    title: candidate.title,
+    description: stringOrNull(candidate.description),
+    ownerId: candidate.ownerId,
+    memberCount: candidate.memberCount,
+    memberIds,
+    capturedAt: candidate.capturedAt,
+  };
+}
+
+/** One `message-snapshot` entry, or null when its required fields are missing.
+ *  Fields added later (`kind`, `attachment`, `capturedAt`) are optional so a
+ *  snapshot filed before them still renders what it has. */
+function reportedMessageFrom(
+  candidate: Record<string, unknown>,
+): ReportedMessageSnapshot | null {
+  if (typeof candidate.body !== "string") return null;
+  if (typeof candidate.createdAt !== "string") return null;
+  let attachment: ReportedMessageSnapshot["attachment"] = null;
+  if (typeof candidate.attachment === "object" && candidate.attachment) {
+    const facts = candidate.attachment as Record<string, unknown>;
+    attachment = {
+      fileName: stringOrNull(facts.fileName),
+      mimeType: stringOrNull(facts.mimeType),
+      sizeBytes: typeof facts.sizeBytes === "number" ? facts.sizeBytes : null,
+      hasStoredFile: stringOrNull(facts.storageKey) !== null,
+    };
+  }
+  return {
+    body: candidate.body,
+    kind: stringOrNull(candidate.kind),
+    attachment,
+    sentAt: candidate.createdAt,
+    editedAt: stringOrNull(candidate.editedAt),
+    capturedAt: stringOrNull(candidate.capturedAt),
+    wasDeletedWhenReported: candidate.deletedAtTimeOfReport === true,
+  };
 }
 
 /**

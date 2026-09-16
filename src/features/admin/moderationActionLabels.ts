@@ -25,6 +25,14 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   escalate: "admin:members.timeline.action.escalate",
   appeal_upheld: "admin:members.timeline.action.appealUpheld",
   appeal_overturned: "admin:moderation.action.appealOverturned",
+  // PRD-360: a moderator opened the conversation around a message report.
+  conversation_context_viewed:
+    "admin:moderation.action.conversationContextViewed",
+  // ENG-245: a staff "delete for everyone" on a member's message.
+  message_deleted_by_staff: "admin:moderation.action.messageDeletedByStaff",
+  // PRD-361: a moderator opened the file attached to a reported message.
+  report_message_attachment_viewed:
+    "admin:moderation.action.reportMessageAttachmentViewed",
 };
 
 /** The moderator-facing label for one audit entry. An unmapped code falls

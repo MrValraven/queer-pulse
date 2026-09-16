@@ -4,30 +4,48 @@ import { createPortal } from "react-dom";
 import { useScrollLock, usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
-import { MessageActionMenu } from "./MessageActionMenu";
+import { MessageActionMenu, TombstoneReportMenu } from "./MessageActionMenu";
 import { ReactionPicker } from "./ReactionPicker";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { renderWithLinks } from "./linkify";
 import { useActionOverlayFocusTrap } from "./useActionOverlayFocusTrap";
+import { MessageActionOverlayMedia } from "./MessageActionOverlayMedia";
+import { isMediaMessage } from "./messageCopy";
+import { myReactionKeys } from "./reactionKeys";
+import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
+import overlayStyles from "./MessageActionOverlay.module.css";
 
 export interface MessageActionOverlayProps {
-  /** The bubble body, rendered read-only in the lifted clone. */
-  text: string;
+  /** The full message, rendered read-only in the lifted clone (DES-203):
+   *  text renders as the bubble clone below; `kind:"gif"`/`"image"`/
+   *  `"document"` renders as the photo/document clone `MessageActionOverlayMedia`
+   *  owns instead. */
+  message: ChatMessage;
   /** Right-align the lifted bubble like the real one. */
   isSent: boolean;
   /** Where the pressed bubble is, for positioning the lifted clone + menu. */
   anchorRect: DOMRect;
+  /** True for a reportable tombstone (`ChatMessage.canReport` on a "deleted
+   *  for everyone" message, within the server's evidence hold) — hides the
+   *  reaction row, shows the tombstone placeholder as the clone preview, and
+   *  renders `TombstoneReportMenu` instead of the full `MessageActionMenu` so
+   *  Report is the only action offered. Defaults to false. */
+  isTombstone?: boolean;
   /** Server-authoritative: own message AND within the server's edit window. */
   canEdit: boolean;
   /** Server-authoritative: own message OR staff. */
   canDelete: boolean;
   /** Server-authoritative: NOT own message. */
   canReport: boolean;
-  /** May pin/unpin this message (server-authoritative). */
+  /** May pin/unpin this message (server-authoritative AND has a server id;
+   *  a demo/optimistic message with no id can't be pinned). */
   canPin: boolean;
   /** Message is currently pinned (SHARED). */
   pinned: boolean;
+  /** May star/unstar this message: has a server id. A demo/optimistic
+   *  message with no id hides Star, so the toggle never silently no-ops. */
+  canStar: boolean;
   /** Viewer has privately starred it. */
   starred: boolean;
   onReact: (key: MessageReactionKey) => void;
@@ -37,6 +55,15 @@ export interface MessageActionOverlayProps {
   onToggleStar: () => void;
   onEdit: () => void;
   onCopy: () => void;
+  /** DES-203: whether Copy should be offered. False for a media message
+   *  with no caption. See `MessageActionMenu`'s own doc. */
+  canCopy: boolean;
+  /** PRD-351 "Info": see `MessageActionMenu`'s own doc. */
+  canShowInfo?: boolean;
+  onInfo?: () => void;
+  /** PRD-352 "Reactions": see `MessageActionMenu`'s own doc. */
+  canShowReactions?: boolean;
+  onReactions?: () => void;
   onDelete: () => void;
   /** "Delete for me" (PRD-227) — see `MessageActionMenu`'s own doc. */
   onDeleteForMe: () => void;
@@ -54,14 +81,16 @@ export interface MessageActionOverlayProps {
  * follow-up UI (e.g. the delete confirm dialog).
  */
 export function MessageActionOverlay({
-  text,
+  message,
   isSent,
   anchorRect,
+  isTombstone = false,
   canEdit,
   canDelete,
   canReport,
   canPin,
   pinned,
+  canStar,
   starred,
   onReact,
   onReply,
@@ -70,6 +99,11 @@ export function MessageActionOverlay({
   onToggleStar,
   onEdit,
   onCopy,
+  canCopy,
+  canShowInfo,
+  onInfo,
+  canShowReactions,
+  onReactions,
   onDelete,
   onDeleteForMe,
   onReport,
@@ -152,40 +186,79 @@ export function MessageActionOverlay({
         aria-modal="true"
         aria-label={t("messages:actions.overlayLabel")}
       >
-        <div className={styles.overlayReactions}>
-          <ReactionPicker
-            onPick={(key) => runThenClose(() => onReact(key))()}
+        {/* A tombstone never had a reaction to begin with. */}
+        {!isTombstone && (
+          <div className={styles.overlayReactions}>
+            <ReactionPicker
+              onPick={(key) => runThenClose(() => onReact(key))()}
+              myReactionKeys={myReactionKeys(message.reactions)}
+            />
+          </div>
+        )}
+
+        {/* Read-only preview: `aria-hidden` (and `clonePreview`'s
+            `pointer-events: none`) keep the lifted bubble/media clone out of
+            reach of the Tab trap and the mouse alike, so any link or
+            document card it renders can't be focused or clicked here. A
+            tombstone previews its own placeholder, never the retained
+            server snapshot behind `canReport` — that stays moderation-only. */}
+        <div aria-hidden="true" className={overlayStyles.clonePreview}>
+          {isTombstone ? (
+            <div
+              className={[
+                styles.overlayBubble,
+                isSent ? styles.sent : styles.received,
+              ].join(" ")}
+            >
+              {t("messages:tombstone")}
+            </div>
+          ) : isMediaMessage(message) ? (
+            <MessageActionOverlayMedia message={message} isSent={isSent} />
+          ) : (
+            <div
+              className={[
+                styles.overlayBubble,
+                isSent ? styles.sent : styles.received,
+              ].join(" ")}
+            >
+              <MentionText text={message.text} renderText={renderWithLinks} />
+            </div>
+          )}
+        </div>
+
+        {isTombstone ? (
+          <TombstoneReportMenu
+            menuRef={menuRef}
+            onReport={onReport}
+            onClose={onClose}
           />
-        </div>
-
-        <div
-          className={[
-            styles.overlayBubble,
-            isSent ? styles.sent : styles.received,
-          ].join(" ")}
-        >
-          <MentionText text={text} renderText={renderWithLinks} />
-        </div>
-
-        <MessageActionMenu
-          menuRef={menuRef}
-          canEdit={canEdit}
-          canDelete={canDelete}
-          canReport={canReport}
-          canPin={canPin}
-          pinned={pinned}
-          starred={starred}
-          onReply={onReply}
-          onForward={onForward}
-          onTogglePin={onTogglePin}
-          onToggleStar={onToggleStar}
-          onEdit={onEdit}
-          onCopy={onCopy}
-          onDelete={onDelete}
-          onDeleteForMe={onDeleteForMe}
-          onReport={onReport}
-          onClose={onClose}
-        />
+        ) : (
+          <MessageActionMenu
+            menuRef={menuRef}
+            canEdit={canEdit}
+            canDelete={canDelete}
+            canReport={canReport}
+            canPin={canPin}
+            pinned={pinned}
+            canStar={canStar}
+            starred={starred}
+            onReply={onReply}
+            onForward={onForward}
+            onTogglePin={onTogglePin}
+            onToggleStar={onToggleStar}
+            onEdit={onEdit}
+            onCopy={onCopy}
+            canCopy={canCopy}
+            canShowInfo={canShowInfo}
+            onInfo={onInfo}
+            canShowReactions={canShowReactions}
+            onReactions={onReactions}
+            onDelete={onDelete}
+            onDeleteForMe={onDeleteForMe}
+            onReport={onReport}
+            onClose={onClose}
+          />
+        )}
       </div>
     </div>,
     document.body,

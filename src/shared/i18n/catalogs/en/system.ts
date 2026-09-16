@@ -255,7 +255,7 @@ export const system: Catalog = {
     "No signal, or we can't reach our servers right now. QueerPulse keeps a copy of the app itself on this device, which is why <b>this screen still loads</b>.",
   "offline.noCache.title": "What you can do",
   "offline.noCache.body":
-    "Nothing on QueerPulse is readable offline yet: every page fetches what it shows. This screen clears itself the moment your connection comes back, and you'll land where you were going.",
+    "Most of QueerPulse needs a connection, since each page fetches what it shows. This screen clears itself the moment your connection comes back, and you'll land where you were going.",
   "offline.status": "Listening for signal",
   "offline.retryCta": "Try again",
   "offline.retryingCta": "Still offline",
@@ -263,6 +263,14 @@ export const system: Catalog = {
   // in the shared banner, so nothing half-typed is lost while the signal is gone.
   "offline.sessionBanner":
     "You're offline. Your page stays as it is. Anything you send won't go through until the connection is back.",
+  // Cold offline launch with a saved messaging cache (PRD-375): OfflineGate
+  // shows the banner on /messages; OfflinePage offers the way in.
+  "offline.savedMessagesBanner":
+    "You're offline. You're reading the messages saved on this device, so newer ones may be missing. Anything you send goes out when the connection is back.",
+  "offline.savedMessages.title": "Saved on this device",
+  "offline.savedMessages.body":
+    "The conversations you opened most recently are saved here, so you can read them while you're offline.",
+  "offline.readSavedMessagesCta": "Read saved messages",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Add to home screen · no app store needed",

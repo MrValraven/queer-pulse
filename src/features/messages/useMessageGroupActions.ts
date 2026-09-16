@@ -1,6 +1,12 @@
 import { type Dispatch, type SetStateAction } from "react";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { groupErrorMessage } from "./api/groupErrorMessages";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Conversation, GroupMemberView } from "./data";
+import {
+  simulateOwnerLeave,
+  simulateUpdateGroupInfo,
+} from "./groupOwnershipDemo";
 import type { GroupMemberPick } from "./NewGroupModal";
 import { withDemoSystemPill } from "./useMessagesController.helpers";
 import type {
@@ -18,6 +24,11 @@ interface GroupActionsDeps {
   myProfile: { firstName: string; lastName: string; slug?: string } | undefined;
   setExtraThreads: Dispatch<SetStateAction<Conversation[]>>;
   setLeftGroupIds: Dispatch<SetStateAction<Set<string>>>;
+  /** The optimistic reason beside `setLeftGroupIds`; see
+   *  `useMessagesController`'s own doc on `leftGroupReasons`. */
+  setLeftGroupReasons: Dispatch<
+    SetStateAction<Map<string, "left" | "removed" | "dissolved">>
+  >;
   t: TFunction;
   leaveGroupMutation: ReturnType<typeof useLeaveGroup>;
   addMembersMutation: ReturnType<typeof useAddGroupMembers>;
@@ -38,19 +49,22 @@ export interface GroupActions {
   ) => void;
   updateGroupInfo: (
     conversationId: string,
-    changes: { title?: string; avatarUrl?: string },
+    changes: { title?: string; avatarUrl?: string; description?: string },
   ) => void;
   groupManaging: boolean;
 }
 
 /**
  * Group management (feature #17 Phase 2): leave, add/remove members, change a
- * member's role, edit group info. Live: the mutation calls the API (the server
- * re-checks the caller's role on EVERY one — the can-flags are only a UI hint)
- * and returns the updated group view, patched straight into `extraThreads` so it
- * wins the `allThreads` dedupe ahead of the refetch. Demo: the same change is
- * simulated locally on the mock group (no network), including the system pill.
- * Extracted from `useMessagesController`; behaviour is unchanged.
+ * member's role, edit group info (title/avatar, plus PRD-358's description).
+ * Live: the mutation calls the API (the server re-checks the caller's role on
+ * EVERY one, the can-flags are only a UI hint) and returns the updated group
+ * view, patched straight into `extraThreads` so it wins the `allThreads`
+ * dedupe ahead of the refetch. Demo: the same change is simulated locally on
+ * the mock group (no network), including the system pill. Extracted from
+ * `useMessagesController`; behaviour is unchanged. See
+ * `useGroupOwnershipActions.ts` for section 8's transfer/dissolve/invite-link
+ * actions, split into their own colocated file for the same size-cap reason.
  */
 export function useMessageGroupActions({
   demoMode,
@@ -58,6 +72,7 @@ export function useMessageGroupActions({
   myProfile,
   setExtraThreads,
   setLeftGroupIds,
+  setLeftGroupReasons,
   t,
   leaveGroupMutation,
   addMembersMutation,
@@ -65,6 +80,11 @@ export function useMessageGroupActions({
   changeRoleMutation,
   updateGroupMutation,
 }: GroupActionsDeps): GroupActions {
+  const { showToast } = useToast();
+  const genericErrorFallback = t("messages:group.error.generic");
+  const onGroupMutationError = (error: unknown) =>
+    showToast(groupErrorMessage(error, t, genericErrorFallback), "error");
+
   /** The signed-in member's display name, for demo-simulated system pills where
    *  the current user is always the actor (owner of the demo group). */
   const myDisplayName = myProfile
@@ -72,10 +92,28 @@ export function useMessageGroupActions({
     : t("messages:conversation.you");
 
   /** The signed-in member leaves a group. Optimistically marks it left (composer
-   *  severs immediately); live also POSTs /conversations/:id/leave. */
+   *  severs immediately); live also POSTs /conversations/:id/leave. Demo also
+   *  simulates DES-228's auto-succession when the leaver is the owner (see
+   *  `simulateOwnerLeave`); a non-owner leave stays the plain severance it
+   *  always was. */
   function leaveGroupThread(conversationId: string) {
     setLeftGroupIds((previous) => new Set(previous).add(conversationId));
-    if (!demoMode) leaveGroupMutation.mutate(conversationId);
+    setLeftGroupReasons((previous) =>
+      new Map(previous).set(conversationId, "left"),
+    );
+    if (demoMode) {
+      const group = allThreads.find((thread) => thread.id === conversationId);
+      if (group?.isGroup && group.myRole === "owner") {
+        const myMember = (group.members ?? []).find(
+          (member) => !member.id && member.role === "owner",
+        );
+        if (myMember) {
+          patchGroupThread(simulateOwnerLeave(group, myMember, myDisplayName));
+        }
+      }
+      return;
+    }
+    leaveGroupMutation.mutate(conversationId);
   }
 
   /** Overlay an updated group view onto the thread list (extraThreads wins the
@@ -123,7 +161,10 @@ export function useMessageGroupActions({
     }
     addMembersMutation.mutate(
       { conversationId, memberHandles: picks.map((pick) => pick.slug) },
-      { onSuccess: (updated) => updated && patchGroupThread(updated) },
+      {
+        onSuccess: (updated) => updated && patchGroupThread(updated),
+        onError: onGroupMutationError,
+      },
     );
   }
 
@@ -149,7 +190,10 @@ export function useMessageGroupActions({
     if (!member.id) return;
     removeMemberMutation.mutate(
       { conversationId, userId: member.id },
-      { onSuccess: (updated) => updated && patchGroupThread(updated) },
+      {
+        onSuccess: (updated) => updated && patchGroupThread(updated),
+        onError: onGroupMutationError,
+      },
     );
   }
 
@@ -170,38 +214,29 @@ export function useMessageGroupActions({
     if (!member.id) return;
     changeRoleMutation.mutate(
       { conversationId, userId: member.id, role },
-      { onSuccess: (updated) => updated && patchGroupThread(updated) },
+      {
+        onSuccess: (updated) => updated && patchGroupThread(updated),
+        onError: onGroupMutationError,
+      },
     );
   }
 
   function updateGroupInfo(
     conversationId: string,
-    changes: { title?: string; avatarUrl?: string },
+    changes: { title?: string; avatarUrl?: string; description?: string },
   ) {
     const group = allThreads.find((thread) => thread.id === conversationId);
     if (!group) return;
     if (demoMode) {
-      const trimmedTitle = changes.title?.trim();
-      const renamed = !!trimmedTitle && trimmedTitle !== group.name;
-      let next: Conversation = {
-        ...group,
-        name: trimmedTitle || group.name,
-        avatarUrl: changes.avatarUrl ?? group.avatarUrl,
-      };
-      if (renamed) {
-        next = withDemoSystemPill(next, {
-          type: "group_renamed",
-          actorName: myDisplayName,
-          value: trimmedTitle,
-          actorIsMe: true,
-        });
-      }
-      patchGroupThread(next);
+      patchGroupThread(simulateUpdateGroupInfo(group, changes, myDisplayName));
       return;
     }
     updateGroupMutation.mutate(
       { conversationId, ...changes },
-      { onSuccess: (updated) => updated && patchGroupThread(updated) },
+      {
+        onSuccess: (updated) => updated && patchGroupThread(updated),
+        onError: onGroupMutationError,
+      },
     );
   }
 

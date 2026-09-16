@@ -6,6 +6,7 @@ import { BrandMark, SearchInput } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InboxTabs } from "./InboxTabs";
+import { FilterTabRowSkeleton } from "./MessagesSkeleton";
 import { MessagesBackButton } from "./MessagesRailChrome";
 import type { InboxTab } from "./threadFilters";
 import styles from "./MessagesPage.module.css";
@@ -21,6 +22,7 @@ export function MessagesThreadListHeader({
   onQueryChange,
   onCompose,
   onComposeGroup,
+  loading,
   showTabs,
   activeTab,
   onTabChange,
@@ -32,6 +34,11 @@ export function MessagesThreadListHeader({
   onCompose: () => void;
   /** Opens the create-group picker. */
   onComposeGroup: () => void;
+  /** True while the inbox's first load is in flight. Reserves the filter-tab
+   *  row's own footprint via a skeleton (DES-192): `showTabs` is always
+   *  false during this window, so without it the header grows by one row's
+   *  height the moment the real tabs mount, under the finger on mobile. */
+  loading: boolean;
   showTabs: boolean;
   activeTab: InboxTab;
   onTabChange: (tab: InboxTab) => void;
@@ -92,6 +99,7 @@ export function MessagesThreadListHeader({
           requestsCount={requestsCount}
         />
       )}
+      {!showTabs && loading && <FilterTabRowSkeleton />}
     </div>
   );
 }

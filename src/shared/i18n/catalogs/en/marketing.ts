@@ -2267,8 +2267,10 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-16.headline":
+    "Groups get consent-based invitations, block and report, and a way to end or hand one over.",
   "changelog.releases.2026-09-15.headline":
-    "Messages get an emoji picker, captions on photos and GIFs, and patterned wallpapers.",
+    "Chats reach their whole history, you choose what they reveal, and reports carry context.",
   "changelog.releases.2026-09-14.headline":
     "Chat photos open full screen with zoom and swipe, and closed communities stay closed.",
   "changelog.releases.2026-09-12.headline":
@@ -2518,6 +2520,138 @@ export const marketing: Catalog = {
     "Caption photos and GIFs before sending",
   "changelog.entries.media-caption-screen.body":
     "Picking a photo or GIF opens a full-screen preview with a caption field, and both go out as one message.",
+  "changelog.entries.choose-what-your-chats-reveal.title":
+    "Choose what your chats reveal about you",
+  "changelog.entries.choose-what-your-chats-reveal.body":
+    "Turn off read receipts, typing and online status, each of them reciprocal, and pick who can write to you.",
+  "changelog.entries.spot-a-risky-link-or-request.title":
+    "Spot a risky link or request in a chat",
+  "changelog.entries.spot-a-risky-link-or-request.body":
+    "A warning appears when a message moves you to another app, asks for payment or dresses up a link.",
+  "changelog.entries.spot-a-risky-link-or-request.details":
+    "When a message pushes the conversation to WhatsApp or Telegram, or asks you for money, a quiet warning appears so you can slow down before you answer. Links get the same treatment when they hide behind a shortener, a look-alike domain or a raw address. Documents sent by someone you are not connected with now download instead of opening, and ask you first.",
+  "changelog.entries.moderators-read-a-report-in-context.title":
+    "Moderators read a report in context",
+  "changelog.entries.moderators-read-a-report-in-context.body":
+    "They can open the 20 messages either side of a report, and every opening lands in the audit log.",
+  "changelog.entries.a-message-straight-from-queerpulse.title":
+    "A message straight from QueerPulse",
+  "changelog.entries.a-message-straight-from-queerpulse.body":
+    "Admins can write as QueerPulse to one member or to everyone, so a notice arrives in your chats.",
+  "changelog.entries.report-and-block-in-one-move.title":
+    "Report a message and block in one move",
+  "changelog.entries.report-and-block-in-one-move.body":
+    "A reason on its own is enough, you can report anonymously, and blocking offers the recent messages.",
+  "changelog.entries.report-and-block-in-one-move.details":
+    "Reporting a message asks you for a reason and nothing more, and in the same step you can stay anonymous or block the person. Blocking from a chat offers to report that person's recent messages first, so a moderator sees what actually happened. Only people in the conversation can report its messages. Undoing a block restores the connection you had before it, so the conversation works again.",
+  "changelog.entries.a-deleted-message-can-still-be-reported.title":
+    "A deleted message can still be reported",
+  "changelog.entries.a-deleted-message-can-still-be-reported.body":
+    "Deleting for everyone keeps it 30 days for whoever received it, and moderators see its attachment.",
+  "changelog.entries.slow-down-unwanted-first-contact.title":
+    "Slow down unwanted first contact",
+  "changelog.entries.slow-down-unwanted-first-contact.body":
+    "New requests are capped each day and while they wait, and pause when several people report someone.",
+  "changelog.entries.erasing-an-account-keeps-a-report-readable.title":
+    "Erasing an account keeps an open report readable",
+  "changelog.entries.erasing-an-account-keeps-a-report-readable.body":
+    "Those messages stay in a thread under report, and elsewhere read as deleted instead of vanishing.",
+  "changelog.entries.your-download-carries-what-you-reported.title":
+    "Your download carries what you reported",
+  "changelog.entries.your-download-carries-what-you-reported.body":
+    "The export now adds the messages around yours and the full threads of conversations you reported.",
+  "changelog.entries.media-links-and-docs-in-every-chat.title":
+    "Find photos, links and documents from any chat",
+  "changelog.entries.media-links-and-docs-in-every-chat.body":
+    "Open Media, links and docs from the chat menu or group info to browse everything shared there.",
+  "changelog.entries.read-recent-chats-offline.title":
+    "Read your recent chats offline",
+  "changelog.entries.read-recent-chats-offline.body":
+    "Recent chats stay on this device so you can reread them without signal, and signing out clears them.",
+  "changelog.entries.search-and-filter-starred-messages.title":
+    "Search and filter your starred messages",
+  "changelog.entries.search-and-filter-starred-messages.body":
+    "Find a starred message by its text, sender or chat, or narrow the list to photos, documents or links.",
+  "changelog.entries.chat-actions-match-what-you-can-do.title":
+    "Search shows group names, and chat actions match what you can do",
+  "changelog.entries.chat-actions-match-what-you-can-do.body":
+    "Groups you left stop offering Pin or Edit, and a message you deleted for yourself stays hidden in replies.",
+  "changelog.entries.chat-photo-albums-message-info.title":
+    "Photo albums, message info and who reacted in chats",
+  "changelog.entries.chat-photo-albums-message-info.body":
+    "Photo bursts fold into a grid, Info shows delivery state, and holding a reaction lists who reacted.",
+  "changelog.entries.chat-group-attribution-accessibility.title":
+    "Group chats credit the right member and read better aloud",
+  "changelog.entries.chat-group-attribution-accessibility.body":
+    "Messages from different members no longer merge under one name, and screen readers name each sender once.",
+  "changelog.entries.send-several-photos-and-files-at-once.title":
+    "Send several photos or files at once, each with a caption",
+  "changelog.entries.send-several-photos-and-files-at-once.body":
+    "Uploads start as soon as you pick, with progress and cancel, and phones get a camera shortcut.",
+  "changelog.entries.forward-to-several-chats.title":
+    "Forward a message to up to five chats at once",
+  "changelog.entries.forward-to-several-chats.body":
+    "You see a preview of what you're forwarding and stay in the conversation you were reading.",
+  "changelog.entries.paste-or-drop-files-into-a-chat.title":
+    "Paste or drop photos and files straight into a chat",
+  "changelog.entries.paste-or-drop-files-into-a-chat.body":
+    "The message box also shows how close you are to the 5,000-character limit.",
+  "changelog.entries.chat-actions-for-keyboards-and-screen-readers.title":
+    "Reactions and message actions work with keyboards and screen readers",
+  "changelog.entries.chat-actions-for-keyboards-and-screen-readers.body":
+    "Reactions have translated names, arrow keys move through pickers, and pin or star confirms with a notice.",
+  "changelog.entries.safety-notice-ignores-dates-and-prices.title":
+    "The contact safety notice stops flagging dates and prices",
+  "changelog.entries.safety-notice-ignores-dates-and-prices.body":
+    "You can also close it, and it stays closed for that conversation.",
+  "changelog.entries.reply-to-an-enquiry-straight-away.title":
+    "Reply to an enquiry straight away",
+  "changelog.entries.reply-to-an-enquiry-straight-away.body":
+    "Whoever gets a housing or directory enquiry can answer at once, and your sent requests now sit in Requests.",
+  "changelog.entries.send-things-in-a-message.title":
+    "Send articles, places and listings in a message",
+  "changelog.entries.send-things-in-a-message.body":
+    "Pick up to five chats, add a note, and the link arrives with its preview.",
+  "changelog.entries.mute-a-chat-for-a-while.title":
+    "Mute a chat for 8 hours, a week or for good",
+  "changelog.entries.mute-a-chat-for-a-while.body":
+    "Mute now sits in the open chat's menu as well, beside a link to everyone you have blocked.",
+  "changelog.entries.message-buttons-open-the-right-person.title":
+    "Message buttons open a chat with the right person",
+  "changelog.entries.message-buttons-open-the-right-person.body":
+    "Companies, swaps and event hosts open their own thread, and Say hello now really sends.",
+  "changelog.entries.inbox-rows-show-drafts-and-mentions.title":
+    "Inbox rows show drafts, mentions and who spoke last",
+  "changelog.entries.inbox-rows-show-drafts-and-mentions.body":
+    "Rows read Draft:, You: and an @ when you were mentioned, and screen readers hear each state.",
+  "changelog.entries.unread-badge-matches-your-inbox.title":
+    "The unread badge matches your inbox",
+  "changelog.entries.unread-badge-matches-your-inbox.body":
+    "Chats you mark unread now count, archived chats leave the badge, and archive or delete offers Undo.",
+  "changelog.entries.inbox-says-when-loading-failed.title":
+    "The inbox says when something failed to load",
+  "changelog.entries.inbox-says-when-loading-failed.body":
+    "Inbox, search and member lookup offer a retry, and swiping a chat row works on phones again.",
+  "changelog.entries.chat-realtime-reliability.title":
+    "Messages keep flowing through reconnects",
+  "changelog.entries.chat-realtime-reliability.body":
+    "Queued messages send in order from any page, and chat reconnects on its own after a drop.",
+  "changelog.entries.scroll-back-through-a-whole-conversation.title":
+    "Scroll back through a whole conversation",
+  "changelog.entries.scroll-back-through-a-whole-conversation.body":
+    "Chats open on New messages, and tapping a quote, pin or search result now finds even older messages.",
+  "changelog.entries.group-notifications-say-which-group.title":
+    "Group notifications say which group",
+  "changelog.entries.group-notifications-say-which-group.body":
+    "Lock-screen alerts name the group and the sender, and you hear when someone adds you to a group.",
+  "changelog.entries.new-messages-reach-you-inside-the-app.title":
+    "New messages reach you while the app is open",
+  "changelog.entries.new-messages-reach-you-inside-the-app.body":
+    "A banner shows messages from other chats, and tapping a notification opens the chat without reloading.",
+  "changelog.entries.signing-out-stops-this-devices-notifications.title":
+    "Signing out stops this device's notifications",
+  "changelog.entries.signing-out-stops-this-devices-notifications.body":
+    "The next person on a shared phone no longer receives your messages, and reading a chat clears its alert.",
   "changelog.entries.photos-in-chat-lost-their-square-corners.title":
     "Photos in chat lost their square corners",
   "changelog.entries.photos-in-chat-lost-their-square-corners.body":
@@ -3168,6 +3302,7 @@ export const marketing: Catalog = {
   "changelog.tag.aboutCommunities": "See how communities work",
   "changelog.tag.work": "Open your Work hub",
   "changelog.tag.settings": "Notification settings",
+  "changelog.tag.privacySettings": "Open your privacy settings",
   "changelog.tag.messages": "Open messages",
   "changelog.tag.createGathering": "Create a gathering",
   "changelog.tag.startCommunity": "Start a community",
@@ -8717,7 +8852,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.deliveryNote":
     "It arrives as a direct message from your account, and only the people who run this listing can read it.",
   "directory.detail.enquiry.replyNote":
-    "Your first message gets through. A reply from either side needs an accepted connection.",
+    "They can reply to this straight away. You can send more once they do.",
   "directory.detail.enquiry.existingThreadCta":
     "Open the conversation you already have",
   "directory.detail.enquiry.signInPrompt":
@@ -8741,7 +8876,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.sub":
     "This goes to the people who run this listing as a direct message from your account. It is not published anywhere on the listing.",
   "directory.detail.enquiry.replyNotice":
-    "You are not connected yet, so this first message gets through and the thread then stays closed to both of you until one of you accepts a connection.",
+    "{name} can reply to this straight away. You can send more once they do.",
   "directory.detail.enquiry.bodyLabel": "Your message",
   "directory.detail.enquiry.bodyPlaceholder":
     "What would you like to ask them?",
@@ -8767,7 +8902,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.successBody":
     "It is in the inbox of whoever runs {name}, as a direct message from you.",
   "directory.detail.enquiry.successReplyStep":
-    "You are not connected yet, so the thread stays closed to both of you until one of you accepts a connection.",
+    "{name} can reply to this straight away. You'll be able to send more once they do.",
   "directory.detail.enquiry.openThreadCta": "Open the conversation",
   "directory.detail.enquiry.doneCta": "Done",
   "directory.detail.enquiry.limit.thisBusiness":
@@ -9156,4 +9291,40 @@ export const marketing: Catalog = {
     "Saved lists flag a dead item before you file it",
   "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.body":
     "The recent-saves row on your lists marks items whose page has come down, like the rest of your saved items.",
+
+  // Section 8 (Groups), 16 Sep 2026.
+  "changelog.entries.choose-who-can-add-you-to-a-group.title":
+    "Choose who can add you to a group",
+  "changelog.entries.choose-who-can-add-you-to-a-group.body":
+    "Invitations land in Requests with Accept and Decline, a notification and a push, and no silent re-adds.",
+  "changelog.entries.choose-who-can-add-you-to-a-group.details":
+    "A new setting under privacy lets you allow your connections to add you straight into a group, or require an invitation instead. Invitations arrive as a request you can accept or decline, with a notification and a push either way, and nobody who left or was removed from a group can be quietly put back into it.",
+  "changelog.entries.end-a-group-or-hand-it-to-someone-else.title":
+    "End a group, or hand it to someone else",
+  "changelog.entries.end-a-group-or-hand-it-to-someone-else.body":
+    "Leaving now asks for confirmation and names who inherits ownership, whether or not you were the owner.",
+  "changelog.entries.give-a-group-a-description-and-a-join-link.title":
+    "Give a group a description and a join link",
+  "changelog.entries.give-a-group-a-description-and-a-join-link.body":
+    "Owners and admins share a join link that previews the group, and can reset or turn it off any time.",
+  "changelog.entries.block-and-report-now-reach-into-groups.title":
+    "Block and report now reach into groups",
+  "changelog.entries.block-and-report-now-reach-into-groups.body":
+    "Blocked members can't see each other in a group, every row offers Block and Report, groups can be reported.",
+  "changelog.entries.block-and-report-now-reach-into-groups.details":
+    "Two members who have blocked each other no longer see one another's messages in a shared group, and can't be seated together by an invite, a link or an add. Every member row now carries Block and Report, and a group itself can be reported straight to moderators, who see the group, its owner and its full roster.",
+  "changelog.entries.group-timelines-explain-what-changed.title":
+    "Group timelines explain what changed",
+  "changelog.entries.group-timelines-explain-what-changed.body":
+    "New messages mark admin, ownership, photo and description changes, and speak to you when it's about you.",
+  "changelog.entries.group-timelines-explain-what-changed.details":
+    'The timeline now says when someone is made or removed as an admin, when ownership changes hands, when the photo or description changes, when someone joins by link or invitation, and when a group ends. These messages read as "you" when they\'re about you, for example "Ana removed you", instead of naming you in the third person.',
+  "changelog.entries.sanctioned-members-lose-their-group-powers.title":
+    "Sanctioned members lose their group powers",
+  "changelog.entries.sanctioned-members-lose-their-group-powers.body":
+    "They can no longer add, remove or promote people, rename a group or change its photo, and pinning is capped.",
+  "changelog.entries.leaving-a-group-actually-leaves-it-behind.title":
+    "Leaving a group actually leaves it behind",
+  "changelog.entries.leaving-a-group-actually-leaves-it-behind.body":
+    "Leavers lose the roster and read receipts, pickers stop at the size limit, and old mentions stop arriving.",
 };

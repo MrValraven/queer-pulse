@@ -1,0 +1,102 @@
+/* "Who reacted" sheet (PRD-352): the reaction filter tabs, the reactor rows
+   and the error state. The sheet chrome is the shared `Modal`, the same
+   primitive `GroupSeenBySheet` and `MessageInfoSheet` use, so it becomes a
+   bottom sheet on phones with no styling here. The list, the names and the
+   empty copy reuse `NewMessageModal.module.css`; the tab pills echo the
+   reaction chips under a bubble. Colour transitions only, and none under
+   reduced motion. */
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding-block-end: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+  padding: 4px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font: inherit;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.tabSelected {
+  background: rgba(var(--plum-rgb), 0.12);
+  border-color: rgba(var(--line-rgb), 0.35);
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.tab:focus-visible,
+.remove:focus-visible,
+.panel:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+}
+
+.rowText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+}
+
+.remove {
+  min-height: 24px;
+  padding: 2px 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: var(--text-12);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.remove[aria-disabled="true"] {
+  color: var(--ink-40);
+  cursor: default;
+}
+
+.reaction {
+  flex: none;
+  font-size: var(--text-20);
+  line-height: 1;
+}
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-block-end: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

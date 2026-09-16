@@ -20,6 +20,25 @@ const INTERPOLATION = /\{(\w+)\}/g;
 const en: Record<string, string> = {
   "push:event.reminder.body": "Starting soon — tap to see the details.",
   "push:messages.coalesced": "{count} new messages from {name}",
+  // PRD-333: a group burst names the group, since its senders differ.
+  "push:messages.coalescedGroup": "{count} new messages in {group}",
+  // ENG-227: attachment-only messages. The server picks the key from the
+  // message kind, so the recipient reads the kind in their own language.
+  "push:messages.attachment.photo": "Photo",
+  "push:messages.attachment.gif": "GIF",
+  "push:messages.attachment.document": "Document",
+  "push:messages.group.attachment.photo": "{name}: Photo",
+  "push:messages.group.attachment.gif": "{name}: GIF",
+  "push:messages.group.attachment.document": "{name}: Document",
+  // PRD-336: a group message that also `@`-mentions the recipient gets
+  // exactly one push. This is that push's body, folding "you were mentioned"
+  // and the message itself into one line. `{preview}` carries the message
+  // text verbatim (already in whichever language the sender typed it), so
+  // only the surrounding phrase is translated.
+  "push:messages.group.mention.body": "{name} mentioned you: {preview}",
+  "push:messages.group.mention.photo": "{name} mentioned you: Photo",
+  "push:messages.group.mention.gif": "{name} mentioned you: GIF",
+  "push:messages.group.mention.document": "{name} mentioned you: Document",
   "push:test.title": "Test notification",
   "push:test.body": "This is a test — your notifications are working.",
   "push:connection.request.title": "New connection request",
@@ -82,6 +101,9 @@ const en: Record<string, string> = {
   // it tells the member whether to unlock now, and tells a bystander only that
   // this platform has messages in it.
   "push:preview.hidden.message": "You have a new message.",
+  // ENG-229: the same generic copy for a burst, so hiding previews keeps the
+  // count and still names nobody.
+  "push:preview.hidden.messages": "{count} new messages.",
 
   // ── Decisions on something the member submitted ───────────────────────────
   // The housing review queue (LOC-01) and the four approval queues (LOC-19).
@@ -135,11 +157,40 @@ const en: Record<string, string> = {
   "push:community.supportOffered.title": "An offer of support",
   "push:community.supportOffered.body":
     "Someone from QueerPulse has offered {communityName} a hand. Tap to read it.",
+  // ENG-228: the security sign-in push. The English fallback in
+  // `PushNotificationListener.pushSecurityNewSignIn` must stay word-for-word.
+  "push:security.newSignIn.body": "A new device signed in to your account.",
+  // PRD-334: someone added the member to a group conversation.
+  "push:groupAdded.title": "Added to a group",
+  "push:groupAdded.body": "{name} added you to {group}.",
+  // A group with no title yet, so there is no {group} to name.
+  "push:groupAdded.bodyUntitled": "{name} added you to a group.",
+  // PRD-353: someone invited the member into a group (not seated directly —
+  // their "who can add me" preference is `invite_only`, or they left/were
+  // removed and are being asked back). Answered on the Requests tab, so this
+  // deliberately does NOT say "added".
+  "push:groupInvite.title": "New group invite",
+  "push:groupInvite.body": "{name} invited you to {group}.",
+  // A group with no title yet, so there is no {group} to name.
+  "push:groupInvite.bodyUntitled": "{name} invited you to a group.",
 };
 
 const pt: Record<string, string> = {
   "push:event.reminder.body": "A começar em breve — toca para ver os detalhes.",
   "push:messages.coalesced": "{count} novas mensagens de {name}",
+  "push:messages.coalescedGroup": "{count} novas mensagens em {group}",
+  "push:messages.attachment.photo": "Foto",
+  "push:messages.attachment.gif": "GIF",
+  "push:messages.attachment.document": "Documento",
+  "push:messages.group.attachment.photo": "{name}: Foto",
+  "push:messages.group.attachment.gif": "{name}: GIF",
+  "push:messages.group.attachment.document": "{name}: Documento",
+  // PRD-336: ver a nota no bloco EN. Uma mensagem de grupo que também te
+  // menciona gera UMA notificação só.
+  "push:messages.group.mention.body": "{name} mencionou-te: {preview}",
+  "push:messages.group.mention.photo": "{name} mencionou-te: Foto",
+  "push:messages.group.mention.gif": "{name} mencionou-te: GIF",
+  "push:messages.group.mention.document": "{name} mencionou-te: Documento",
   "push:test.title": "Notificação de teste",
   "push:test.body": "Isto é um teste — as tuas notificações estão a funcionar.",
   "push:connection.request.title": "Novo pedido de ligação",
@@ -181,6 +232,7 @@ const pt: Record<string, string> = {
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "Tens uma notificação nova.",
   "push:preview.hidden.message": "Tens uma mensagem nova.",
+  "push:preview.hidden.messages": "{count} mensagens novas.",
 
   // ── Decisões sobre algo que a pessoa submeteu ─────────────────────────────
   "push:housing.decision.approved.title": "A tua casa está publicada",
@@ -230,6 +282,14 @@ const pt: Record<string, string> = {
   "push:community.supportOffered.title": "Uma oferta de apoio",
   "push:community.supportOffered.body":
     "Alguém da QueerPulse ofereceu ajuda a {communityName}. Toca para leres.",
+  "push:security.newSignIn.body":
+    "Um novo dispositivo iniciou sessão na tua conta.",
+  "push:groupAdded.title": "Adicionaram-te a um grupo",
+  "push:groupAdded.body": "{name} adicionou-te a {group}.",
+  "push:groupAdded.bodyUntitled": "{name} adicionou-te a um grupo.",
+  "push:groupInvite.title": "Novo convite de grupo",
+  "push:groupInvite.body": "{name} convidou-te para {group}.",
+  "push:groupInvite.bodyUntitled": "{name} convidou-te para um grupo.",
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };

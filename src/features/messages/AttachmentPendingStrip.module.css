@@ -1,0 +1,98 @@
+/* The compact strip above the composer input for items whose upload was
+   still running when "Send" was pressed (DES-199), cream-on-paper, unlike
+   the caption screen's cream-on-plum, since this sits on the ordinary
+   conversation ground rather than the full-screen wash. */
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 12px;
+  margin-block-end: 6px;
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.thumb {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: var(--radius-8);
+}
+
+.thumbIcon {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-8);
+  background: var(--cream);
+  color: var(--accent);
+  font-size: var(--text-16);
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  font-size: var(--text-13);
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cancelButton {
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+/* A 32px button reads right at this density, but a coarse pointer needs a
+   44px hit target, grown via an invisible inset pseudo-element rather than
+   the button's own box, so the visual size stays exactly as designed. */
+@media (any-pointer: coarse) {
+  .cancelButton::before {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (hover: hover) {
+  .cancelButton:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+}
+
+.cancelButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}

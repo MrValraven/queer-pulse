@@ -123,6 +123,10 @@ const KINDS: NotificationKind[] = [
   // somebody being asked to act.
   "ban_evasion_escalation_raised",
   "ban_evasion_escalation_resolved",
+  // PRD-334. Listed with an empty payload and no actor for the same reason: a
+  // row missing its `groupTitle` and its adder still has to read as a whole
+  // sentence rather than leaving `{groupTitle}` or `{name}` on screen.
+  "group_added",
 ];
 
 describe("formatNotification", () => {

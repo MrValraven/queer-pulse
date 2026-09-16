@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { ApiError } from "../../shared/api/client";
 import { Button, Sending } from "../../shared/components/ui";
@@ -7,6 +8,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
+import { routes } from "../../app/routeMap";
 import { useProposeBarterSwap } from "./api/useBarter";
 import { BarterQuestionModal } from "./BarterQuestionModal";
 import styles from "./BarterDetailPage.module.css";
@@ -49,6 +51,7 @@ export function BarterProposeCard({
   hasProposed?: boolean;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const [message, setMessage] = useState("");
@@ -67,13 +70,26 @@ export function BarterProposeCard({
     }
     if (propose.isPending) return;
     try {
-      await propose.mutateAsync(message.trim());
+      const result = await propose.mutateAsync(message.trim());
       // Confirmation comes from the resolved mutation, never from the click.
       setMessage("");
       setSentThisVisit(true);
       showToast(
         t("economy:barterDetail.propose.toastSent", { name }),
         "success",
+        undefined,
+        // PRD-337: the ack already carried a conversation id nothing linked
+        // to. Live only: demo's `useProposeBarterSwap` resolves `null`, and
+        // the API can omit it if messaging failed to open a conversation.
+        !demoMode && result?.conversationId
+          ? {
+              label: t("economy:barterDetail.propose.openThreadCta"),
+              onClick: () =>
+                void navigate(
+                  `${routes.messages}?c=${encodeURIComponent(result.conversationId!)}`,
+                ),
+            }
+          : undefined,
       );
     } catch (error) {
       showToast(refusalMessage(error, t), "error");

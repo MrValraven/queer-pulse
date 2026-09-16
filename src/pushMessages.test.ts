@@ -96,3 +96,57 @@ describe("formatPushCopy", () => {
     ).toBe("3 new messages from Priya");
   });
 });
+
+describe("formatPushCopy: section 4 keys", () => {
+  const expectedCopy: Record<string, { en: string; pt: string }> = {
+    "push:messages.coalescedGroup": {
+      en: "3 new messages in Terrace crew",
+      pt: "3 novas mensagens em Terrace crew",
+    },
+    "push:messages.attachment.photo": { en: "Photo", pt: "Foto" },
+    "push:messages.attachment.gif": { en: "GIF", pt: "GIF" },
+    "push:messages.attachment.document": { en: "Document", pt: "Documento" },
+    "push:messages.group.attachment.photo": {
+      en: "Bo: Photo",
+      pt: "Bo: Foto",
+    },
+    "push:messages.group.attachment.gif": { en: "Bo: GIF", pt: "Bo: GIF" },
+    "push:messages.group.attachment.document": {
+      en: "Bo: Document",
+      pt: "Bo: Documento",
+    },
+    "push:preview.hidden.messages": {
+      en: "3 new messages.",
+      pt: "3 mensagens novas.",
+    },
+    "push:security.newSignIn.body": {
+      en: "A new device signed in to your account.",
+      pt: "Um novo dispositivo iniciou sessão na tua conta.",
+    },
+    "push:groupAdded.title": {
+      en: "Added to a group",
+      pt: "Adicionaram-te a um grupo",
+    },
+    "push:groupAdded.body": {
+      en: "Bo added you to Terrace crew.",
+      pt: "Bo adicionou-te a Terrace crew.",
+    },
+    "push:groupAdded.bodyUntitled": {
+      en: "Bo added you to a group.",
+      pt: "Bo adicionou-te a um grupo.",
+    },
+  };
+  const params = { count: "3", group: "Terrace crew", name: "Bo" };
+
+  for (const [key, copy] of Object.entries(expectedCopy)) {
+    it(`resolves ${key} in EN and PT`, () => {
+      const source = {
+        title: "fallback title",
+        body: "fallback body",
+        l10n: { bodyKey: key, params },
+      };
+      expect(formatPushCopy(source, "en").body).toBe(copy.en);
+      expect(formatPushCopy(source, "pt").body).toBe(copy.pt);
+    });
+  }
+});

@@ -1,0 +1,64 @@
+/* PRD-358: the group invite-link landing page. One centered card on the
+   AppShell's cream background, since this is a member-only surface, not a
+   marketing one. */
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--section-y-48) 24px var(--section-y-80);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: var(--section-y-64) 0;
+  color: var(--ink-60);
+  font-size: var(--text-15);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 36px 32px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.avatar {
+  margin-bottom: 4px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-24);
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.description {
+  font-size: var(--text-14-5);
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 40ch;
+}
+
+.memberCount {
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  margin: 0 0 8px;
+}
+
+.alreadyMember {
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+  margin: 0;
+}

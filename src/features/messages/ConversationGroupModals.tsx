@@ -36,10 +36,29 @@ export interface ConversationGroupModalsProps {
   ) => void;
   onUpdateGroupInfo?: (
     conversationId: string,
-    changes: { title?: string; avatarUrl?: string },
+    changes: { title?: string; avatarUrl?: string; description?: string },
   ) => void;
   /** True while any group-management mutation is in flight. */
   groupManaging?: boolean;
+  /** Opens the "Media, links and docs" sheet over the group info (PRD-373). */
+  onOpenMediaGallery?: (trigger?: HTMLElement | null) => void;
+  /** DES-228: the owner hands ownership to another member. */
+  onTransferGroupOwnership?: (
+    conversationId: string,
+    member: GroupMemberView,
+  ) => void;
+  transferOwnershipPending?: boolean;
+  /** PRD-357: the owner ends the group for everyone. */
+  onDissolveGroup?: (conversationId: string) => void;
+  dissolvePending?: boolean;
+  /** PRD-358: create/rotate/disable the group's revocable invite link. */
+  onCreateGroupInviteLink?: (conversationId: string) => void;
+  onDisableGroupInviteLink?: (conversationId: string) => void;
+  inviteLinkPending?: boolean;
+  onRevokeGroupInvite?: (conversationId: string, inviteId: string) => void;
+  /** The pending invite currently being revoked, or null; see
+   *  `GroupInviteLinkSection`'s own doc. */
+  busyInviteId?: string | null;
 }
 
 /** The two GROUP-only overlays a conversation can open — the group-info /
@@ -61,6 +80,16 @@ export function ConversationGroupModals({
   onChangeGroupMemberRole,
   onUpdateGroupInfo,
   groupManaging = false,
+  onOpenMediaGallery,
+  onTransferGroupOwnership,
+  transferOwnershipPending = false,
+  onDissolveGroup,
+  dissolvePending = false,
+  onCreateGroupInviteLink,
+  onDisableGroupInviteLink,
+  inviteLinkPending = false,
+  onRevokeGroupInvite,
+  busyInviteId = null,
 }: ConversationGroupModalsProps) {
   if (!active.isGroup) return null;
   return (
@@ -82,6 +111,24 @@ export function ConversationGroupModals({
             onChangeGroupMemberRole?.(active.id, member, role)
           }
           onUpdateInfo={(changes) => onUpdateGroupInfo?.(active.id, changes)}
+          onOpenMediaGallery={onOpenMediaGallery}
+          onTransferOwnership={(member) =>
+            onTransferGroupOwnership?.(active.id, member)
+          }
+          transferPending={transferOwnershipPending}
+          onDissolve={() => {
+            onDissolveGroup?.(active.id);
+            onCloseGroupInfo();
+          }}
+          dissolvePending={dissolvePending}
+          onCreateInviteLink={() => onCreateGroupInviteLink?.(active.id)}
+          onResetInviteLink={() => onCreateGroupInviteLink?.(active.id)}
+          onDisableInviteLink={() => onDisableGroupInviteLink?.(active.id)}
+          inviteLinkPending={inviteLinkPending}
+          onRevokeInvite={(inviteId) =>
+            onRevokeGroupInvite?.(active.id, inviteId)
+          }
+          busyInviteId={busyInviteId}
         />
       )}
       {seenBySheetOpen && (

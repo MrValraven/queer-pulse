@@ -65,7 +65,11 @@ export function MentorDetailHeader({
               ? t("economy:mentorship.cta.joinWaitlist")
               : t("economy:mentorship.cta.requestMatch")}
           </Button>
-          <Button variant="ghost" to={routes.messages}>
+          <Button
+            variant="ghost"
+            to={routes.messages}
+            state={{ to: { slug: m.slug, name: m.name } }}
+          >
             {t("economy:mentorDetail.messageCta", { firstName: first })}
           </Button>
         </div>

@@ -1,0 +1,32 @@
+/* A labelled progress bar for an in-flight upload, shared by the caption
+   screen's big stage view and the compact post-send pending-uploads strip
+   (`AttachmentPendingStrip`), cream-on-plum in the former, cream-on-paper
+   in the latter, so both variants use `currentColor` rather than baking in
+   one ground. */
+.track {
+  width: 100%;
+  max-width: 220px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 0.25);
+  overflow: hidden;
+}
+
+.compact {
+  max-width: none;
+  height: 4px;
+  background: rgba(var(--plum-rgb), 0.14);
+}
+
+.fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  transition: width var(--dur-fast) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

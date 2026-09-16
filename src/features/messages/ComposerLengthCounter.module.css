@@ -1,0 +1,41 @@
+/* src/features/messages/ComposerLengthCounter.module.css
+ * DES-202's composer-side length counter. Mirrors `InlineEditField.module.css`'s
+ * `.editCounter`/`.editCounterOverLimit`/`.srOnly` rules, split into its own
+ * file (rather than the shared `MessagesPage.module.css`, edited concurrently
+ * by several sessions) since this component is new.
+ */
+.counterRow {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px 4px 0;
+}
+.counter {
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-fast) var(--ease);
+}
+.counterOverLimit {
+  color: var(--danger);
+  font-weight: 600;
+}
+/* Standard visually-hidden pattern (mirrors `MessagesPage.module.css`'s
+   `.srOnly`) for the polite over-limit-crossing announcement. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .counter {
+    transition: none;
+  }
+}

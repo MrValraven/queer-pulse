@@ -51,8 +51,17 @@ export interface ListingContactDTO {
    * The first enquiry lands, and after it the thread is closed to further
    * messages from EITHER side until a connection is accepted. Surfaced in the
    * composer so nobody writes expecting a conversation they cannot have.
+   * Superseded by `followUpAwaitsReply` below (PRD-340); kept on the wire for
+   * older clients.
    */
   replyRequiresConnection: boolean;
+  /**
+   * PRD-340: true when the two are not accepted connections, so this first
+   * enquiry stays a one-message thread until the OWNER replies to it (their
+   * reply needs no connection). The honest thing to tell the enquirer instead
+   * of `replyRequiresConnection` above.
+   */
+  followUpAwaitsReply: boolean;
   /** The thread this member already has with this listing's owner, when they
    *  have written before. Backs the "open the conversation" shortcut. */
   existingConversationId: string | null;
@@ -84,6 +93,7 @@ export interface ListingEnquirySentDTO {
   conversationId: string;
   enquiryId: string;
   replyRequiresConnection: boolean;
+  followUpAwaitsReply: boolean;
 }
 
 /**

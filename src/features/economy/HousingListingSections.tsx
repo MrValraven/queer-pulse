@@ -12,6 +12,7 @@ import { HousingReviewList } from "./HousingReviewList";
 import { HousingLocationCard } from "./HousingLocationCard";
 import { HousingVirtualTour } from "./HousingVirtualTour";
 import { GAL_BG } from "./housingListing.data";
+import { ShareToChatAction } from "../messages/share/ShareToChatAction";
 import s from "./HousingListingPage.module.css";
 
 export function HousingListingMain({ listing }: { listing: HousingListing }) {
@@ -200,6 +201,13 @@ export function HousingListingSidebar({
         <Button variant="primary" className={s.sideFull} onClick={onMessage}>
           {t("economy:housingListing.messageCta", { name: first })}
         </Button>
+        <ShareToChatAction
+          url={`${routes.housing}/${listing.slug}`}
+          title={listing.title}
+          kind="listing"
+          variant="ghost"
+          className={s.sideFull}
+        />
       </div>
 
       <div className={s.sideCard}>

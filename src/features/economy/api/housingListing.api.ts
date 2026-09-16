@@ -271,6 +271,15 @@ export const sendHousingEnquiry = (ref: string, body: { body: string }) =>
     body,
   );
 
+/** GET /housing-listings/:ref/contact (PRD-339, refined PRD-340): what will
+ * happen if this member writes to the lister, read before they type
+ * anything. Mirrors `getListingContact` on the local directory's enquiry
+ * flow, narrowed to the two fields the housing modal needs. */
+export const getHousingListingContact = (ref: string) =>
+  apiGet<{ replyRequiresConnection: boolean; followUpAwaitsReply: boolean }>(
+    `/housing-listings/${ref}/contact`,
+  );
+
 /** PATCH /housing-listings/:ref body — reuses the create form's shape (see
  * `useListSpaceForm`/`ListSpaceFields`) for the edit flow; every field
  * optional, only present fields are applied. */

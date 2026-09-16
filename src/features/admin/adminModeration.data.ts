@@ -136,7 +136,77 @@ export interface ReportDetail {
   /** Present only on an `event_photo` report filed after the snapshot existed.
    *  A report whose whole content is an image needs the image. */
   reportedPhoto?: ReportedPhoto;
+  /** PRD-360: the staff conversation viewer can open the conversation around
+   *  this (message) report. Every opening is audited server-side. */
+  conversationContextAvailable?: boolean;
+  /** The server snapshots this report carries that the drawer renders as
+   *  evidence blocks, one entry per recognised snapshot (see
+   *  `AdminReportEvidence.tsx`). Absent when there are none. */
+  evidenceSnapshots?: ReportEvidenceSnapshot[];
 }
+
+/**
+ * The reported message as the server snapshotted it when the report was filed
+ * (`MessageSnapshotEvidence` in queerpulse-backend `reports/report-evidence.ts`),
+ * minus the ids the drawer has no use for. No URL on it: the bytes of an
+ * attachment come from the staff-only `GET /mod/report-message-attachment/<reportId>`.
+ */
+export interface ReportedMessageSnapshot {
+  body: string;
+  /** `user` | `gif` | `image` | `document`; null on a snapshot filed before
+   *  the field existed. */
+  kind: string | null;
+  attachment: {
+    fileName: string | null;
+    mimeType: string | null;
+    sizeBytes: number | null;
+    /** A platform-stored file the staff route can serve (an uploaded image or
+     *  document, never an external GIF). */
+    hasStoredFile: boolean;
+  } | null;
+  /** When the message was sent (ISO). */
+  sentAt: string;
+  editedAt: string | null;
+  /** When the snapshot was taken, i.e. the report was filed (ISO). Null on a
+   *  snapshot filed before the field existed. */
+  capturedAt: string | null;
+  /** The sender had already deleted it when the report was filed. */
+  wasDeletedWhenReported: boolean;
+}
+
+/**
+ * PRD-356: the reported group as the server snapshotted it when the report was
+ * filed (`GroupSnapshotEvidence` in queerpulse-backend `reports/report-evidence.ts`).
+ * The owner is already surfaced as the report's content author (the subject
+ * resolver seats the group's current owner there), so this snapshot carries
+ * `ownerId`/`memberIds` for a moderator's own cross-check rather than for the
+ * drawer to redraw them.
+ */
+export interface ReportedGroupSnapshot {
+  title: string;
+  description: string | null;
+  ownerId: string;
+  memberCount: number;
+  memberIds: string[];
+  /** When the snapshot was taken, i.e. the report was filed (ISO). */
+  capturedAt: string;
+}
+
+/**
+ * One evidence block the drawer renders, discriminated by `kind`. A new
+ * snapshot shape joins as a new member here, a parse branch in
+ * `evidenceSnapshotsFrom` (`api/moderation.adapters.ts`) and a `case` in
+ * `ReportEvidenceSnapshots` (`AdminReportEvidence.tsx`).
+ */
+export type ReportEvidenceSnapshot =
+  | {
+      kind: "message";
+      message: ReportedMessageSnapshot;
+    }
+  | {
+      kind: "group";
+      group: ReportedGroupSnapshot;
+    };
 
 /** Real per-member counts, resolved via `admin:moderation.priorReports.*` at
  *  render — never a baked "N prior reports" string. */
@@ -416,6 +486,68 @@ export const EMERGENCY_REPORTS: ModReport[] = [
 ];
 
 export const OTHER_REPORTS: ModReport[] = [
+  // PRD-360 / PRD-361 demo: a message report on an unsent photo, so demo mode
+  // shows the message evidence block and the audited conversation viewer
+  // (fixture in `adminReportConversationContext.data.ts`).
+  {
+    id: "r-msg-unsent",
+    subjectType: "message",
+    subjectId: "demo-message-unsent-photo",
+    severity: "high",
+    category: "Harassment",
+    chips: [{ tone: "coral", labelKey: "admin:moderation.chip.harassment" }],
+    title: "Explicit photo sent in a DM, then deleted",
+    preview:
+      "Member says someone sent an explicit photo after being told no, then deleted it for everyone a minute later.",
+    reporterName: "Ana L.",
+    reportedName: "@nightowl",
+    priorReports: { kind: "count", count: 4 },
+    reporterCredibility: { kind: "history", filed: 1, dismissed: 0 },
+    age: "2h",
+    risk: { tone: "coral", key: "admin:moderation.risk.high" },
+    slaDueAt: new Date(Date.now() + 120 * 60_000).toISOString(),
+    detail: {
+      contentAuthor: "@nightowl · direct message",
+      excerpt: "Photo",
+      thread: [],
+      conversationContextAvailable: true,
+      evidenceSnapshots: [
+        {
+          kind: "message",
+          message: {
+            body: "Photo",
+            kind: "image",
+            attachment: {
+              fileName: null,
+              mimeType: "image/jpeg",
+              sizeBytes: null,
+              hasStoredFile: false,
+            },
+            sentAt: new Date(Date.now() - 160 * 60_000).toISOString(),
+            editedAt: null,
+            capturedAt: new Date(Date.now() - 118 * 60_000).toISOString(),
+            wasDeletedWhenReported: true,
+          },
+        },
+      ],
+      people: [
+        {
+          role: "Reporter",
+          name: "Ana L.",
+          initials: "AL",
+          tone: "jade",
+          meta: "Member since 2023 · received the photo.",
+        },
+        {
+          role: "Reported",
+          name: "@nightowl",
+          initials: "RC",
+          tone: "coral",
+          meta: "Member since Jan 2026 · 4 prior reports.",
+        },
+      ],
+    },
+  },
   {
     id: "r-harass",
     subjectType: "member",

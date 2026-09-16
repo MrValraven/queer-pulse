@@ -42,6 +42,10 @@ export interface ConnectionMeta {
   sentAgo?: string;
   /** The mutual who introduced this requester (live-mode network intros only). */
   introducedBy?: { slug: string; name: string };
+  /** PRD-344: has the addressee seen this OUTGOING pending request? `null`/
+   *  absent covers both "not applicable" and "withheld by their read-receipts
+   *  preference", deliberately indistinguishable; see the backend. */
+  requestRead?: boolean | null;
 }
 
 export const CONNECTION_META: Record<string, ConnectionMeta> = {
@@ -109,8 +113,21 @@ export const CONNECTION_META: Record<string, ConnectionMeta> = {
   "bilal-kaya": { pron: "he/him", mutuals: 3, sentAgo: "3 days ago" },
   "ines-fonseca": { pron: "she/her", mutuals: 0, sentAgo: "5 days ago" },
   // — sent —
-  "raquel-baptista": { pron: "she/her", sentAgo: "2 days ago" },
-  "catarina-melo": { pron: "she/her", sentAgo: "5 days ago" },
+  // PRD-344: one read, one unread, so the demo shows both request-read states.
+  "raquel-baptista": {
+    pron: "she/her",
+    sentAgo: "2 days ago",
+    requestMessage:
+      '"Hi Raquel, I loved your talk at the last mixer. Would love to keep in touch."',
+    requestRead: false,
+  },
+  "catarina-melo": {
+    pron: "she/her",
+    sentAgo: "5 days ago",
+    requestMessage:
+      '"Hey! We overlapped at the book club last month. Say hello?"',
+    requestRead: true,
+  },
   // — "Load more" pool —
   beatriz: {
     pron: "she/her",

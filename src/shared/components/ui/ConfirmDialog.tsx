@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { Button } from "./Button";
 import { FormField } from "./FormField";
 import { Modal } from "./Modal";
@@ -42,6 +42,12 @@ export interface ConfirmDialogProps {
   loading?: boolean;
   reason?: ConfirmDialogReason;
   children?: ReactNode;
+  /** Opens with focus already on Cancel instead of the head's close button,
+   *  for a dialog where Cancel is the safer of the two actions and should be
+   *  the one an Enter press (or a screen-reader user's very next action)
+   *  lands on (`OpenExternalConfirmDialog`'s "Go back"). Every other caller
+   *  omits this and keeps the ordinary "first focusable" default. */
+  initialFocus?: "cancel";
 }
 
 /**
@@ -69,8 +75,10 @@ export function ConfirmDialog({
   loading = false,
   reason,
   children,
+  initialFocus,
 }: ConfirmDialogProps) {
   const { t } = useTranslation();
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
   if (!open) return null;
 
   const reasonMissing = Boolean(
@@ -83,9 +91,15 @@ export function ConfirmDialog({
     <Modal
       title={title}
       onClose={onClose}
+      initialFocusRef={initialFocus === "cancel" ? cancelButtonRef : undefined}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={loading}>
+          <Button
+            ref={cancelButtonRef}
+            variant="ghost"
+            onClick={onClose}
+            disabled={loading}
+          >
             {cancelLabel ?? t("shared:confirmDialog.cancel")}
           </Button>
           <Button

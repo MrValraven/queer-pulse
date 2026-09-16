@@ -26,10 +26,23 @@ export type PitchAction = {
   labelKey?: string;
   primary?: boolean;
   to?: string;
+  /**
+   * PRD-337: for a `to: routes.messages` action, the recipient to seed the
+   * thread with, so "Message Marta" opens a real (demo) conversation instead
+   * of landing on the inbox's first auto-selected thread. Every editorial
+   * contact in this demo registry is the fictional editor "Marta" (see
+   * `note.author` above), given a stable slug purely so this navigation has
+   * something real to key a synthetic demo thread on.
+   */
+  state?: { to: { slug: string; name: string } };
   /** Marks the destructive "pull this pitch back" action. `PitchCard` routes it
    *  to `onWithdraw` (a confirm step) instead of the generic click handler. */
   withdraw?: boolean;
 };
+
+/** The demo pitch tracker's one editorial contact, addressed by every
+ *  "Message Marta"/"Nudge editorial" action below. */
+const EDITOR_MARTA = { slug: "marta-editor", name: "Marta" };
 
 export type Pitch = {
   id: string;
@@ -113,7 +126,11 @@ export const PITCHES: Pitch[] = [
     },
     actions: [
       { label: "Open in editor", primary: true, to: routes.submitStory },
-      { label: "Message Marta", to: routes.messages },
+      {
+        label: "Message Marta",
+        to: routes.messages,
+        state: { to: EDITOR_MARTA },
+      },
       { label: "View Marta's edits" },
     ],
   },
@@ -146,7 +163,11 @@ export const PITCHES: Pitch[] = [
     ),
     actions: [
       { label: "View pitch", primary: true },
-      { label: "Nudge editorial", to: routes.messages },
+      {
+        label: "Nudge editorial",
+        to: routes.messages,
+        state: { to: EDITOR_MARTA },
+      },
       { label: "Withdraw", withdraw: true },
     ],
   },
@@ -180,7 +201,11 @@ export const PITCHES: Pitch[] = [
     },
     actions: [
       { label: "Start draft", primary: true, to: routes.submitStory },
-      { label: "Message Marta", to: routes.messages },
+      {
+        label: "Message Marta",
+        to: routes.messages,
+        state: { to: EDITOR_MARTA },
+      },
     ],
   },
   {

@@ -23,6 +23,8 @@ import {
 import { useLoginAlerts } from "./api/useLoginAlerts";
 import { useActivityVisibility } from "./api/useActivityVisibility";
 import { useSuggestionVisibility } from "./api/useSuggestionVisibility";
+import { GroupAddPolicySection } from "./GroupAddPolicySection";
+import { MessagingPrivacySection } from "./MessagingPrivacySection";
 import {
   DataCard,
   Pane,
@@ -426,6 +428,8 @@ export function VisibilityPane({
           />
         </ToggleList>
       </Section>
+      <GroupAddPolicySection />
+      <MessagingPrivacySection />
     </Pane>
   );
 }

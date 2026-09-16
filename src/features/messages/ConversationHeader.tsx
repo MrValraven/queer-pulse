@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiSearch, FiStar } from "react-icons/fi";
+import { FiChevronLeft, FiSearch, FiStar } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { hapticTap } from "../../shared/lib/haptics";
 import { Avatar } from "../../shared/components/ui";
@@ -22,6 +22,8 @@ export interface ConversationHeaderProps {
   onOpenSearch: () => void;
   /** GROUP only — opens the read-only group-info view (member list). */
   onOpenGroupInfo?: () => void;
+  /** Opens the "Media, links and docs" sheet from the overflow menu (PRD-373). */
+  onOpenMediaGallery?: (trigger?: HTMLElement | null) => void;
 }
 
 /** Conversation top bar. The avatar + name + presence/pronouns meta form a
@@ -36,6 +38,7 @@ export function ConversationHeader({
   onOpenStarred,
   onOpenSearch,
   onOpenGroupInfo,
+  onOpenMediaGallery,
 }: ConversationHeaderProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -124,21 +127,7 @@ export function ConversationHeader({
           onClick={onBack}
           aria-label={t("messages:conversation.backToList")}
         >
-          <svg
-            width={18}
-            height={18}
-            viewBox="0 0 18 18"
-            fill="none"
-            aria-hidden
-          >
-            <path
-              d="M11 3.5 5.5 9l5.5 5.5"
-              stroke="currentColor"
-              strokeWidth={1.6}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <FiChevronLeft size={18} aria-hidden />
         </button>
       )}
 
@@ -182,6 +171,10 @@ export function ConversationHeader({
                 }
               : undefined
           }
+          isGroup={isGroup}
+          muted={active.muted}
+          mutedUntil={active.mutedUntil}
+          onOpenMediaGallery={onOpenMediaGallery}
         />
         <button
           type="button"

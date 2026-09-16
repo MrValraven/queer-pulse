@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { FiArrowLeft, FiArrowRight, FiRepeat } from "react-icons/fi";
+import { FiArrowLeft, FiRepeat } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Avatar, EmptyState, FadeIn } from "../../shared/components/ui";
+import { EmptyState, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
@@ -16,6 +16,7 @@ import {
   type Mode,
 } from "./barter.data";
 import { useBarterListing } from "./api/useBarter";
+import { BarterListingProvider } from "./BarterDetailSections";
 import { BarterProposeCard } from "./BarterProposeCard";
 import { BarterDetailSkeleton } from "./BarterDetailSkeleton";
 import styles from "./BarterDetailPage.module.css";
@@ -127,37 +128,18 @@ export function BarterDetailPage() {
           <p className={styles.sub}>{t(SUBLINE_KEY[b.mode])}</p>
         </header>
 
-        <div className={styles.provider}>
-          <Avatar
-            initials={info.initials}
-            tint={info.tint}
-            size={56}
-            src={b.avatarUrl ?? undefined}
-          />
-          <div>
-            <div className={styles.provName}>{info.name}</div>
-            {/* Rendered only when the poster shares their neighbourhood (the
-                server gates it on their own `hoodVisible`). When they don't,
-                the line goes entirely rather than falling back to a location
-                nobody stated. */}
-            {info.hood && (
-              <div className={styles.provRole}>
-                {t("economy:barterDetail.locationWithHood", {
-                  hood: info.hood,
-                })}
-              </div>
-            )}
-          </div>
-          <div className={styles.provAction}>
-            <span className={styles.now}>
-              {t("economy:barterDetail.repliesFast")}
-            </span>
-            <Link to={routes.messages} className={styles.provLink}>
-              {t("economy:barterDetail.messageCta", { firstName })}{" "}
-              <FiArrowRight aria-hidden />
-            </Link>
-          </div>
-        </div>
+        {/* `memberSlug` is the live field (`barterListingToView`); `member`
+            is the demo fixture's own slug key (`barter.data.ts`'s
+            `getMemberInfo` reads the same field). */}
+        <BarterListingProvider
+          initials={info.initials}
+          tint={info.tint}
+          name={info.name}
+          hood={info.hood}
+          avatarUrl={b.avatarUrl}
+          firstName={firstName}
+          memberSlug={b.memberSlug ?? b.member}
+        />
 
         <div className={styles.grid}>
           <div>

@@ -2,7 +2,10 @@ export interface DirectMessagePush {
   title: string;
   body: string;
   tag?: string;
-  data?: { conversationId?: string; url?: string };
+  // `isGroup` is true only on a group conversation's message push (contract
+  // C1); absent for DMs and every other push type. It picks the coalesced
+  // "{count} new messages in {group}" copy in sw.ts.
+  data?: { conversationId?: string; url?: string; isGroup?: boolean };
   icon?: string;
   image?: string;
   actions?: { action: string; title: string }[];
@@ -169,7 +172,8 @@ function safeL10n(value: unknown): DirectMessagePush["l10n"] {
  * malformed or shape-drifted payload (a backend field rename, a truncated body)
  * must not throw here or render garbage like "undefined" in the notification.
  * We only assert the fields we actually use, and only their primitive shape;
- * a body that fails returns null and the caller drops the push silently.
+ * a body that fails returns null, and `readPushEventPayload` below swaps in the
+ * generic fallback notification.
  */
 export function toDirectMessagePush(raw: unknown): DirectMessagePush | null {
   if (!isRecord(raw)) return null;
@@ -188,6 +192,9 @@ export function toDirectMessagePush(raw: unknown): DirectMessagePush | null {
               ? raw.data.conversationId
               : undefined,
           url: typeof raw.data.url === "string" ? raw.data.url : undefined,
+          ...(typeof raw.data.isGroup === "boolean"
+            ? { isGroup: raw.data.isGroup }
+            : {}),
         }
       : undefined,
     icon: safeImageUrl(raw.icon),
@@ -200,4 +207,61 @@ export function toDirectMessagePush(raw: unknown): DirectMessagePush | null {
     l10n: safeL10n(raw.l10n),
     timestamp: safeTimestamp(raw.timestamp),
   };
+}
+
+/** Tag of the generic notification shown when a push cannot be read (ENG-234). */
+export const FALLBACK_PUSH_TAG = "qp-fallback";
+
+/**
+ * The generic notification for a push this worker cannot read. It names
+ * nothing, localizes through the same hidden-preview keys, and opens the app
+ * root. A fresh object every call, because sw.ts spreads its `data`.
+ */
+export function createFallbackPush(): DirectMessagePush {
+  return {
+    title: "QueerPulse",
+    body: "You have a new notification.",
+    tag: FALLBACK_PUSH_TAG,
+    data: { url: "/" },
+    l10n: {
+      titleKey: "push:preview.hidden.title",
+      bodyKey: "push:preview.hidden.body",
+    },
+  };
+}
+
+/** The one method this module needs from a `PushMessageData`. */
+export interface PushEventDataSource {
+  json(): unknown;
+}
+
+export interface ReadPushEventPayloadResult {
+  payload: DirectMessagePush;
+  /** True when `payload` is the generic fallback from `createFallbackPush`. */
+  isFallback: boolean;
+}
+
+/**
+ * ENG-234: turn a push event's data into something that can always be shown.
+ *
+ * Every subscription is created with `userVisibleOnly: true`, a promise that
+ * each push shows a notification. Chrome answers a push that shows nothing
+ * with its own "This site has been updated in the background" notice, and can
+ * revoke the permission after repeats. So a push with no data, a body that is
+ * not JSON, or JSON that `toDirectMessagePush` rejects still produces the
+ * generic fallback here instead of returning early.
+ */
+export function readPushEventPayload(
+  eventData: PushEventDataSource | null | undefined,
+): ReadPushEventPayloadResult {
+  const fallback = { payload: createFallbackPush(), isFallback: true };
+  if (!eventData) return fallback;
+  let raw: unknown;
+  try {
+    raw = eventData.json();
+  } catch {
+    return fallback;
+  }
+  const payload = toDirectMessagePush(raw);
+  return payload ? { payload, isFallback: false } : fallback;
 }

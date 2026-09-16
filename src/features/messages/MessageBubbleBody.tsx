@@ -1,6 +1,7 @@
 // src/features/messages/MessageBubbleBody.tsx
-import { useRef, type ReactNode } from "react";
+import { useMemo, useRef, type ReactNode } from "react";
 import { FiFile, FiImage } from "react-icons/fi";
+import { PinIcon, StarIcon } from "./messageIcons";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { isEmojiOnly } from "./messageRuns";
@@ -14,14 +15,32 @@ import {
   MessageDocumentAttachment,
 } from "./MessageDocumentAttachment";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
-import { useChatImageViewer } from "./ChatImageViewerContext";
+import { PhotoBubbleImage } from "./PhotoBubbleImage";
+import { ReplyQuoteContent } from "./ReplyQuoteContent";
+import { replyQuoteSourceFromReplyTo } from "./replyQuoteSource";
+import { detectContactSafetySignals } from "./contactSafetyDetector";
+import { InboundSafetyCaution } from "./InboundSafetyCaution";
+import { useMessageSafetyContext } from "./MessageSafetyContext";
+import type { BubbleLabelIds } from "./bubbleLabelIds";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
+
+const replyQuoteClassNames = {
+  text: styles.replyQuoteText,
+  name: styles.replyQuoteName,
+  snippet: styles.replyQuoteSnippet,
+};
 
 /** The bubble's content: the quoted-reply block (when present), the emoji-only
  *  or text body, and — on a run's last bubble — the time + status-tick meta.
  *  Split out of `MessageBubble` so that component stays under the line cap once
- *  it also owns the touch gestures. */
+ *  it also owns the touch gestures.
+ *
+ *  Every branch puts `labelIds.content` on the node that renders the message
+ *  itself (and `labelIds.caption` on a caption), which is what the focusable
+ *  wrapper's `aria-labelledby` reads. No `aria-label` on a plain div here: a
+ *  generic element cannot carry a name, and where one is honoured it masks the
+ *  links and mentions inside. */
 export function MessageBubbleBody({
   message,
   index,
@@ -30,6 +49,7 @@ export function MessageBubbleBody({
   isLast,
   senderName,
   metaStatus,
+  labelIds,
   onJumpToMessage,
 }: {
   message: ChatMessage;
@@ -39,6 +59,7 @@ export function MessageBubbleBody({
   isLast: boolean;
   senderName: string;
   metaStatus: MetaStatus;
+  labelIds: BubbleLabelIds;
   onJumpToMessage?: (messageId: string) => void;
 }) {
   const { t } = useTranslation();
@@ -53,6 +74,8 @@ export function MessageBubbleBody({
   // bubble (WhatsApp-style, tucked under the shared radius); a `sent`/`received`
   // variant recolors the accent so it reads on plum vs. paper. Emoji-only
   // bubbles have no surface to tuck it into, so it sits above them instead.
+  // A photo/GIF/document parent quotes its localized kind label (plus a
+  // thumbnail) or file name, never the fallback text the sender's client wrote.
   const replyQuoteNode = message.replyTo && (
     <button
       type="button"
@@ -65,16 +88,15 @@ export function MessageBubbleBody({
         !message.replyTo!.deleted && onJumpToMessage?.(message.replyTo!.id)
       }
     >
-      <span className={styles.replyQuoteName}>
-        {message.replyTo.senderName}
-      </span>
-      <span className={styles.replyQuoteSnippet}>
-        {message.replyTo.deleted ? (
-          t("messages:replyDeleted")
-        ) : (
-          <MentionText text={message.replyTo.snippet} />
-        )}
-      </span>
+      <ReplyQuoteContent
+        senderName={
+          message.replyTo.senderIsFormerMember
+            ? t("messages:formerMember")
+            : message.replyTo.senderName
+        }
+        source={replyQuoteSourceFromReplyTo(message.replyTo)}
+        classNames={replyQuoteClassNames}
+      />
     </button>
   );
 
@@ -90,6 +112,7 @@ export function MessageBubbleBody({
         message={message}
         isSent={isSent}
         metaStatus={metaStatus}
+        labelIds={labelIds}
         forwardedNode={forwardedNode}
         replyQuoteNode={replyQuoteNode}
       />
@@ -115,6 +138,7 @@ export function MessageBubbleBody({
         senderName={senderName}
         isSent={isSent}
         metaStatus={metaStatus}
+        labelIds={labelIds}
         forwardedNode={forwardedNode}
         replyQuoteNode={replyQuoteNode}
       />
@@ -128,9 +152,9 @@ export function MessageBubbleBody({
         {forwardedNode}
         {replyQuoteNode}
         <div
+          id={labelIds.content}
           className={styles.emojiOnly}
           title={message.time}
-          aria-label={`${senderName}: ${message.text}`}
         >
           {message.text}
         </div>
@@ -150,8 +174,8 @@ export function MessageBubbleBody({
       lastIndex={lastIndex}
       isSent={isSent}
       isLast={isLast}
-      senderName={senderName}
       metaStatus={metaStatus}
+      contentLabelId={labelIds.content}
       forwardedNode={forwardedNode}
       replyQuoteNode={replyQuoteNode}
     />
@@ -170,13 +194,16 @@ export function MessageBubbleBody({
 function AttachmentCaption({
   caption,
   isSent,
+  id,
 }: {
   caption: string | undefined;
   isSent: boolean;
+  id: string;
 }) {
   if (!caption) return null;
   return (
     <div
+      id={id}
       className={[
         styles.attachmentCaption,
         isSent
@@ -197,12 +224,14 @@ function DocumentBubble({
   message,
   isSent,
   metaStatus,
+  labelIds,
   forwardedNode,
   replyQuoteNode,
 }: {
   message: ChatMessage;
   isSent: boolean;
   metaStatus: MetaStatus;
+  labelIds: BubbleLabelIds;
   forwardedNode: ReactNode;
   replyQuoteNode: ReactNode;
 }) {
@@ -225,14 +254,33 @@ function DocumentBubble({
       {replyQuoteNode}
       <div className={styles.attachmentGroup}>
         {documentAttachment ? (
-          <MessageDocumentAttachment attachment={documentAttachment} />
+          <MessageDocumentAttachment
+            attachment={documentAttachment}
+            isSent={isSent}
+          />
         ) : (
           <AttachmentPreviewUnavailable
             icon={<FiFile aria-hidden size={20} />}
             label={t("messages:attachments.documentPreviewUnavailable")}
           />
         )}
-        <AttachmentCaption caption={documentCaption} isSent={isSent} />
+        {/* The card's own name is its download action, so the bubble's label
+            reads this hidden "File <name>" instead. */}
+        <span id={labelIds.content} hidden>
+          {documentAttachment ? (
+            <>
+              {t("messages:attachments.documentFallbackText")}{" "}
+              {documentAttachment.fileName}
+            </>
+          ) : (
+            t("messages:attachments.documentPreviewUnavailable")
+          )}
+        </span>
+        <AttachmentCaption
+          caption={documentCaption}
+          isSent={isSent}
+          id={labelIds.caption}
+        />
       </div>
       <MessageMeta
         time={message.time}
@@ -256,6 +304,7 @@ function ImageOrGifBubble({
   senderName,
   isSent,
   metaStatus,
+  labelIds,
   forwardedNode,
   replyQuoteNode,
 }: {
@@ -263,6 +312,7 @@ function ImageOrGifBubble({
   senderName: string;
   isSent: boolean;
   metaStatus: MetaStatus;
+  labelIds: BubbleLabelIds;
   forwardedNode: ReactNode;
   replyQuoteNode: ReactNode;
 }) {
@@ -302,14 +352,22 @@ function ImageOrGifBubble({
         height={height}
         aspectRatio={aspectRatio}
         imageAlt={imageAlt}
+        contentLabelId={labelIds.content}
       />
     );
   } else {
+    const unavailableLabel = t("messages:attachments.previewUnavailable");
     media = (
-      <AttachmentPreviewUnavailable
-        icon={<FiImage aria-hidden size={20} />}
-        label={t("messages:attachments.previewUnavailable")}
-      />
+      <>
+        <AttachmentPreviewUnavailable
+          icon={<FiImage aria-hidden size={20} />}
+          label={unavailableLabel}
+        />
+        {/* The stand-in takes no id, so the bubble's label reads this copy. */}
+        <span id={labelIds.content} hidden>
+          {unavailableLabel}
+        </span>
+      </>
     );
   }
   return (
@@ -318,7 +376,11 @@ function ImageOrGifBubble({
       {replyQuoteNode}
       <div className={styles.attachmentGroup}>
         {media}
-        <AttachmentCaption caption={caption} isSent={isSent} />
+        <AttachmentCaption
+          caption={caption}
+          isSent={isSent}
+          id={labelIds.caption}
+        />
       </div>
       <MessageMeta
         time={message.time}
@@ -348,8 +410,8 @@ function TextBubble({
   lastIndex,
   isSent,
   isLast,
-  senderName,
   metaStatus,
+  contentLabelId,
   forwardedNode,
   replyQuoteNode,
 }: {
@@ -358,13 +420,37 @@ function TextBubble({
   lastIndex: number;
   isSent: boolean;
   isLast: boolean;
-  senderName: string;
   metaStatus: MetaStatus;
+  contentLabelId: string;
   forwardedNode: ReactNode;
   replyQuoteNode: ReactNode;
 }) {
   const bubbleRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
+  // PRD-367: the recipient-side half of the same advisory the sender sees
+  // while typing (`ComposerSafetyNotice`). Memoised on the text itself, so an
+  // edit re-scans but an unrelated re-render (a typing frame, a reaction on a
+  // different bubble) never re-runs the detector. Never computed for the
+  // viewer's own outgoing bubbles (see the render gate below) — this is about
+  // content someone ELSE sent, not a live draft.
+  const inboundSafetySignals = useMemo(
+    () => (isSent ? [] : detectContactSafetySignals(message.text)),
+    [isSent, message.text],
+  );
+  // All three signals only read as a caution while this thread is still an
+  // unaccepted, first-contact DM (`useMessageSafetyContext`), which is where
+  // the actual scam pattern lives (a stranger pushing for a phone number, a
+  // bank transfer, or "let's move to WhatsApp" before you've ever met). Once
+  // two members are connected, the same words are just how people talk: MB
+  // WAY and a bank transfer are how friends in Portugal split a bill, so
+  // showing the caution forever (including on scroll-back through old
+  // messages) would just be noise two connected members learn to ignore.
+  const { isPendingConnection } = useMessageSafetyContext();
+  const showInboundSafetyCaution =
+    isPendingConnection &&
+    (inboundSafetySignals.includes("banking") ||
+      inboundSafetySignals.includes("externalPayment") ||
+      inboundSafetySignals.includes("offPlatform"));
   const previewUrl = firstLinkUrl(message.text);
   const { data: previewData, isLoading: isPreviewLoading } =
     useLinkPreview(previewUrl);
@@ -401,7 +487,6 @@ function TextBubble({
         .filter(Boolean)
         .join(" ")}
       title={message.time}
-      aria-label={`${senderName}: ${message.text}`}
       ref={bubbleRef}
     >
       {forwardedNode}
@@ -414,12 +499,18 @@ function TextBubble({
           isSent={isSent}
         />
       )}
-      {shouldRenderText && (
+      {shouldRenderText ? (
         // Inline wrapper (no styles of its own) so the body's line boxes are
         // measurable on their own — `getClientRects()` on it is the line count
         // the floating meta's vertical position depends on.
-        <span ref={textRef}>
+        <span ref={textRef} id={contentLabelId}>
           <MentionText text={message.text} renderText={renderWithLinks} />
+        </span>
+      ) : (
+        // A link-only message whose unfurl card replaced the text still needs
+        // content for the bubble's label to read.
+        <span id={contentLabelId} hidden>
+          {message.text}
         </span>
       )}
       <MessageMeta
@@ -434,74 +525,8 @@ function TextBubble({
         isOnBubbleSurface
         align={metaAlign}
       />
+      {showInboundSafetyCaution && <InboundSafetyCaution />}
     </div>
-  );
-}
-
-/** The tappable image inside a photo/GIF bubble: a keyboard-reachable
- *  `<span role="button">` wrapping the `<img>`. Deliberately a span, not a
- *  `<button>`: a real button is treated as an interactive target by
- *  `isInteractiveTarget` in `useMessageGestures`, which would suppress
- *  long-press, right-click and swipe-to-reply on every photo bubble.
- *
- *  No `onClick` here on purpose. Pointer/touch/mouse activation already flows
- *  through the bubble wrap's `onActivate` (see `MessageBubble`), which is the
- *  path that correctly arbitrates against swipe-to-reply and long-press; a
- *  click handler on this span would fire a SECOND time for the same physical
- *  tap, since nothing on the pointer path calls `preventDefault()` to stop
- *  the synthesized click. Keyboard activation is `onKeyDown` alone, which
- *  never goes through the pointer path, so it stays exactly one call.
- *
- *  Split out of `MessageBubbleBody` purely to keep that function under the
- *  line cap; it owns no state beyond the viewer context it reads. */
-function PhotoBubbleImage({
-  message,
-  senderName,
-  url,
-  width,
-  height,
-  aspectRatio,
-  imageAlt,
-}: {
-  message: ChatMessage;
-  senderName: string;
-  url: string;
-  width: number;
-  height: number;
-  aspectRatio: number;
-  imageAlt: string;
-}) {
-  const { t } = useTranslation();
-  const { openImage } = useChatImageViewer();
-  return (
-    <span
-      className={styles.photoOpener}
-      role="button"
-      tabIndex={0}
-      // How the pointer path finds this exact node to animate the viewer out
-      // of (see `MessageBubble`). A marker rather than a `querySelector("img")`
-      // hop: a bubble can carry other images (a reply preview, a link unfurl
-      // card), and picking the wrong one would fly the photo to the wrong box
-      // with no type error and nothing failing.
-      data-photo-opener=""
-      aria-label={t("messages:viewer.open", { sender: senderName })}
-      onKeyDown={(event) => {
-        if (event.key !== "Enter" && event.key !== " ") return;
-        event.preventDefault();
-        event.stopPropagation();
-        openImage(message, event.currentTarget);
-      }}
-    >
-      <img
-        className={styles.gifBubble}
-        src={url}
-        width={width || undefined}
-        height={height || undefined}
-        style={{ aspectRatio: String(aspectRatio) }}
-        loading="lazy"
-        alt={imageAlt}
-      />
-    </span>
   );
 }
 
@@ -525,21 +550,7 @@ export function MessageMarks({
           role="img"
           aria-label={t("messages:pinned.indicator")}
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 20 20"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M12.5 2.5 17.5 7.5M11 4 4 11l1 4 4 1 7-7M8 12l-4.5 4.5"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <PinIcon size={12} aria-hidden="true" />
         </span>
       )}
       {starred && (
@@ -548,15 +559,7 @@ export function MessageMarks({
           role="img"
           aria-label={t("messages:starred.indicator")}
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M10 1.8l2.35 4.76 5.25.76-3.8 3.7.9 5.23L10 13.75l-4.7 2.48.9-5.23-3.8-3.7 5.25-.76z" />
-          </svg>
+          <StarIcon size={12} aria-hidden="true" />
         </span>
       )}
     </span>

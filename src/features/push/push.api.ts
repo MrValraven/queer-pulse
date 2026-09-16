@@ -9,7 +9,11 @@ export interface PushSubscribePayload {
 export const subscribePush = (payload: PushSubscribePayload) =>
   apiPost<{ ok: true }>("/push/subscribe", payload);
 
-/** POST /push/unsubscribe — drop this device's subscription. */
+/**
+ * POST /push/unsubscribe: drop this device's subscription when the member turns
+ * push off. Sign-out does not call it: `POST /auth/logout` carries the endpoint
+ * and removes the row in the same request.
+ */
 export const unsubscribePush = (endpoint: string) =>
   apiPost<{ ok: true }>("/push/unsubscribe", { endpoint });
 

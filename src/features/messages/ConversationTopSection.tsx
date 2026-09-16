@@ -13,6 +13,7 @@ interface ConversationTopSectionProps {
   onBack?: () => void;
   onOpenStarred: () => void;
   onOpenGroupInfo: () => void;
+  onOpenMediaGallery: (trigger?: HTMLElement | null) => void;
   pinnedMessages: MessageResponse[];
   onJumpToMessage: (messageId: string) => boolean;
 }
@@ -29,6 +30,7 @@ export function ConversationTopSection({
   onBack,
   onOpenStarred,
   onOpenGroupInfo,
+  onOpenMediaGallery,
   pinnedMessages,
   onJumpToMessage,
 }: ConversationTopSectionProps) {
@@ -42,6 +44,7 @@ export function ConversationTopSection({
         onOpenStarred={onOpenStarred}
         onOpenSearch={() => setThreadSearchOpen(true)}
         onOpenGroupInfo={onOpenGroupInfo}
+        onOpenMediaGallery={onOpenMediaGallery}
       />
       {threadSearchOpen && (
         <ThreadSearchModal

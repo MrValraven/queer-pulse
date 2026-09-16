@@ -139,6 +139,15 @@
   border: 2px solid var(--accent);
 }
 
+/* The bottom bar's document reminder (the `.thumbnail` photo's counterpart
+   for a staged document, which has no pixels to preview), capped so a long
+   file name never crowds the send button off the row. */
+.bottomBarDocument {
+  flex: 1;
+  min-width: 0;
+  max-width: calc(100% - 68px);
+}
+
 .sendButton {
   width: 56px;
   height: 56px;

@@ -2328,8 +2328,10 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-16.headline":
+    "Grupos ganham convites com consentimento, bloqueio e denúncia, e forma de terminar ou entregar a posse.",
   "changelog.releases.2026-09-15.headline":
-    "As mensagens ganham um seletor de emojis, legendas nas fotos e GIFs, e fundos com padrões.",
+    "As conversas chegam a todo o histórico, escolhes o que revelam e as denúncias levam contexto.",
   "changelog.releases.2026-09-14.headline":
     "As fotos do chat abrem em ecrã inteiro com zoom e deslize, e as comunidades fechadas ficam fechadas.",
   "changelog.releases.2026-09-12.headline":
@@ -2580,6 +2582,138 @@ export const marketing: Catalog = {
     "Legenda fotos e GIFs antes de enviar",
   "changelog.entries.media-caption-screen.body":
     "Escolher uma foto ou GIF abre uma pré-visualização em ecrã inteiro com campo de legenda, e ambos seguem numa só mensagem.",
+  "changelog.entries.choose-what-your-chats-reveal.title":
+    "Escolhe o que as tuas conversas revelam sobre ti",
+  "changelog.entries.choose-what-your-chats-reveal.body":
+    "Desliga as confirmações de leitura, a escrita e o estado online, todos recíprocos, e escolhe quem te pode escrever.",
+  "changelog.entries.spot-a-risky-link-or-request.title":
+    "Repara num link ou pedido arriscado numa conversa",
+  "changelog.entries.spot-a-risky-link-or-request.body":
+    "Aparece um aviso quando uma mensagem te leva para outra app, pede um pagamento ou disfarça um link.",
+  "changelog.entries.spot-a-risky-link-or-request.details":
+    "Quando uma mensagem empurra a conversa para o WhatsApp ou o Telegram, ou te pede dinheiro, aparece um aviso discreto para abrandares antes de responder. Os links levam o mesmo aviso quando se escondem atrás de um encurtador, de um domínio parecido com outro ou de um endereço em números. Os documentos de quem não tens ligação passam a ser transferidos em vez de abertos, e perguntam-te primeiro.",
+  "changelog.entries.moderators-read-a-report-in-context.title":
+    "A moderação lê uma denúncia com o contexto",
+  "changelog.entries.moderators-read-a-report-in-context.body":
+    "Pode abrir as 20 mensagens de cada lado da denúncia, e cada abertura fica no registo de auditoria.",
+  "changelog.entries.a-message-straight-from-queerpulse.title":
+    "Uma mensagem vinda da QueerPulse",
+  "changelog.entries.a-message-straight-from-queerpulse.body":
+    "A administração pode escrever como QueerPulse a um membro ou a toda a gente, e o aviso chega às tuas conversas.",
+  "changelog.entries.report-and-block-in-one-move.title":
+    "Denuncia uma mensagem e bloqueia num só passo",
+  "changelog.entries.report-and-block-in-one-move.body":
+    "Basta um motivo, podes denunciar de forma anónima e, ao bloquear, levar contigo as mensagens recentes.",
+  "changelog.entries.report-and-block-in-one-move.details":
+    "Denunciar uma mensagem pede-te um motivo e mais nada, e no mesmo passo podes manter o anonimato ou bloquear a pessoa. Bloquear a partir de uma conversa propõe denunciar primeiro as mensagens recentes dessa pessoa, para que a moderação veja o que aconteceu. Só quem está na conversa pode denunciar as mensagens dela. Desfazer um bloqueio repõe a ligação que existia antes, e a conversa volta a funcionar.",
+  "changelog.entries.a-deleted-message-can-still-be-reported.title":
+    "Uma mensagem apagada continua a poder ser denunciada",
+  "changelog.entries.a-deleted-message-can-still-be-reported.body":
+    "Apagar para todos guarda-a 30 dias para quem a recebeu, e a moderação consegue vê-la com o anexo.",
+  "changelog.entries.slow-down-unwanted-first-contact.title":
+    "Trava o primeiro contacto indesejado",
+  "changelog.entries.slow-down-unwanted-first-contact.body":
+    "Os pedidos novos têm limite por dia e à espera, e param quando várias pessoas denunciam alguém.",
+  "changelog.entries.erasing-an-account-keeps-a-report-readable.title":
+    "Apagar a conta mantém legível uma denúncia aberta",
+  "changelog.entries.erasing-an-account-keeps-a-report-readable.body":
+    "Essas mensagens ficam na conversa com denúncia aberta e, nas outras, aparecem como apagadas.",
+  "changelog.entries.your-download-carries-what-you-reported.title":
+    "A tua transferência leva o que denunciaste",
+  "changelog.entries.your-download-carries-what-you-reported.body":
+    "A exportação passa a incluir as mensagens à volta das tuas e as conversas completas que denunciaste.",
+  "changelog.entries.media-links-and-docs-in-every-chat.title":
+    "Encontra fotos, links e documentos em qualquer conversa",
+  "changelog.entries.media-links-and-docs-in-every-chat.body":
+    "Abre Multimédia, links e documentos no menu da conversa ou na informação do grupo para veres tudo o que foi partilhado.",
+  "changelog.entries.read-recent-chats-offline.title":
+    "Lê as tuas conversas recentes offline",
+  "changelog.entries.read-recent-chats-offline.body":
+    "As conversas recentes ficam neste dispositivo para as releres sem rede, e terminar sessão apaga-as.",
+  "changelog.entries.search-and-filter-starred-messages.title":
+    "Pesquisa e filtra as tuas mensagens guardadas",
+  "changelog.entries.search-and-filter-starred-messages.body":
+    "Encontra uma mensagem guardada pelo texto, remetente ou conversa, ou mostra só fotos, documentos ou links.",
+  "changelog.entries.chat-actions-match-what-you-can-do.title":
+    "A pesquisa mostra nomes de grupos e as ações batem com o que podes fazer",
+  "changelog.entries.chat-actions-match-what-you-can-do.body":
+    "Grupos que deixaste já não oferecem Fixar nem Editar, e uma mensagem que apagaste para ti fica escondida nas respostas.",
+  "changelog.entries.chat-photo-albums-message-info.title":
+    "Álbuns de fotos, info da mensagem e quem reagiu nas conversas",
+  "changelog.entries.chat-photo-albums-message-info.body":
+    "Fotos seguidas juntam-se numa grelha, a Info mostra a entrega e ao manter uma reação vês quem reagiu.",
+  "changelog.entries.chat-group-attribution-accessibility.title":
+    "Os grupos mostram o membro certo e leem-se melhor em voz alta",
+  "changelog.entries.chat-group-attribution-accessibility.body":
+    "As mensagens de membros diferentes já não se juntam sob um só nome e os leitores de ecrã dizem cada remetente uma vez.",
+  "changelog.entries.send-several-photos-and-files-at-once.title":
+    "Envia várias fotos ou ficheiros de uma vez, cada um com legenda",
+  "changelog.entries.send-several-photos-and-files-at-once.body":
+    "O envio começa assim que escolhes, com progresso e cancelar, e no telemóvel tens atalho para a câmara.",
+  "changelog.entries.forward-to-several-chats.title":
+    "Reencaminha uma mensagem para até cinco conversas de uma vez",
+  "changelog.entries.forward-to-several-chats.body":
+    "Vês uma pré-visualização do que reencaminhas e continuas na conversa que estavas a ler.",
+  "changelog.entries.paste-or-drop-files-into-a-chat.title":
+    "Cola ou arrasta fotos e ficheiros diretamente para a conversa",
+  "changelog.entries.paste-or-drop-files-into-a-chat.body":
+    "A caixa de mensagem também mostra quando estás perto do limite de 5000 caracteres.",
+  "changelog.entries.chat-actions-for-keyboards-and-screen-readers.title":
+    "Reações e ações nas mensagens funcionam com teclado e leitor de ecrã",
+  "changelog.entries.chat-actions-for-keyboards-and-screen-readers.body":
+    "As reações têm nomes traduzidos, as setas percorrem os seletores e fixar ou guardar mostra uma confirmação.",
+  "changelog.entries.safety-notice-ignores-dates-and-prices.title":
+    "O aviso de segurança deixa de assinalar datas e preços",
+  "changelog.entries.safety-notice-ignores-dates-and-prices.body":
+    "Também o podes fechar, e fica fechado nessa conversa.",
+  "changelog.entries.reply-to-an-enquiry-straight-away.title":
+    "Responde logo a um pedido de contacto",
+  "changelog.entries.reply-to-an-enquiry-straight-away.body":
+    "Quem recebe um contacto sobre casa ou diretório pode responder logo, e os teus pedidos enviados aparecem em Pedidos.",
+  "changelog.entries.send-things-in-a-message.title":
+    "Envia artigos, espaços e anúncios numa mensagem",
+  "changelog.entries.send-things-in-a-message.body":
+    "Escolhe até cinco conversas, junta uma nota, e o link chega com a pré-visualização.",
+  "changelog.entries.mute-a-chat-for-a-while.title":
+    "Silencia uma conversa por 8 horas, uma semana ou de vez",
+  "changelog.entries.mute-a-chat-for-a-while.body":
+    "Silenciar está agora também no menu da conversa aberta, junto a um link para quem bloqueaste.",
+  "changelog.entries.message-buttons-open-the-right-person.title":
+    "Os botões de mensagem abrem a conversa certa",
+  "changelog.entries.message-buttons-open-the-right-person.body":
+    "Empresas, trocas e anfitriões abrem a própria conversa, e Dizer olá agora envia mesmo a mensagem.",
+  "changelog.entries.inbox-rows-show-drafts-and-mentions.title":
+    "As conversas mostram rascunhos, menções e quem falou por último",
+  "changelog.entries.inbox-rows-show-drafts-and-mentions.body":
+    "As linhas mostram Rascunho:, Tu: e um @ quando te mencionam, e os leitores de ecrã ouvem cada estado.",
+  "changelog.entries.unread-badge-matches-your-inbox.title":
+    "O contador de não lidas bate certo com a caixa",
+  "changelog.entries.unread-badge-matches-your-inbox.body":
+    "As conversas marcadas por ler contam, as arquivadas saem do contador, e arquivar ou eliminar dá para desfazer.",
+  "changelog.entries.inbox-says-when-loading-failed.title":
+    "A caixa de entrada avisa quando algo falha",
+  "changelog.entries.inbox-says-when-loading-failed.body":
+    "Caixa, pesquisa e procura de membros oferecem tentar outra vez, e deslizar uma conversa volta a funcionar no telemóvel.",
+  "changelog.entries.chat-realtime-reliability.title":
+    "As mensagens continuam a chegar depois de uma falha de ligação",
+  "changelog.entries.chat-realtime-reliability.body":
+    "As mensagens em fila saem por ordem a partir de qualquer página, e a ligação recupera sozinha.",
+  "changelog.entries.scroll-back-through-a-whole-conversation.title":
+    "Percorre uma conversa inteira para trás",
+  "changelog.entries.scroll-back-through-a-whole-conversation.body":
+    "As conversas abrem nas mensagens novas, e uma citação, mensagem fixada ou pesquisa encontra até as mais antigas.",
+  "changelog.entries.group-notifications-say-which-group.title":
+    "As notificações de grupo dizem qual é o grupo",
+  "changelog.entries.group-notifications-say-which-group.body":
+    "Os alertas no ecrã bloqueado mostram o grupo e quem escreveu, e sabes quando alguém te adiciona a um grupo.",
+  "changelog.entries.new-messages-reach-you-inside-the-app.title":
+    "As mensagens novas chegam com a app aberta",
+  "changelog.entries.new-messages-reach-you-inside-the-app.body":
+    "Um aviso mostra mensagens de outras conversas, e tocar numa notificação abre a conversa sem recarregar.",
+  "changelog.entries.signing-out-stops-this-devices-notifications.title":
+    "Terminar sessão desliga as notificações deste dispositivo",
+  "changelog.entries.signing-out-stops-this-devices-notifications.body":
+    "Quem usar o telemóvel a seguir já não recebe as tuas mensagens, e ler uma conversa limpa o alerta.",
   "changelog.entries.photos-in-chat-lost-their-square-corners.title":
     "As fotos no chat perderam os cantos quadrados",
   "changelog.entries.photos-in-chat-lost-their-square-corners.body":
@@ -3230,6 +3364,7 @@ export const marketing: Catalog = {
   "changelog.tag.aboutCommunities": "Ver como funcionam as comunidades",
   "changelog.tag.work": "Abrir o teu Trabalho",
   "changelog.tag.settings": "Definições de notificações",
+  "changelog.tag.privacySettings": "Abrir as tuas definições de privacidade",
   "changelog.tag.messages": "Abrir mensagens",
   "changelog.tag.createGathering": "Criar um convívio",
   "changelog.tag.startCommunity": "Começar uma comunidade",
@@ -8836,7 +8971,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.deliveryNote":
     "Chega como mensagem direta da tua conta, e só quem gere esta ficha a pode ler.",
   "directory.detail.enquiry.replyNote":
-    "A tua primeira mensagem passa. Uma resposta, de qualquer um dos lados, precisa de uma ligação aceite.",
+    "Podem responder-te já a esta mensagem. Podes escrever mais assim que o fizerem.",
   "directory.detail.enquiry.existingThreadCta": "Abrir a conversa que já tens",
   "directory.detail.enquiry.signInPrompt":
     "Com sessão iniciada podes escrever a um negócio aqui, sem dar um número de telefone nem um email.",
@@ -8859,7 +8994,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.sub":
     "Isto vai para quem gere esta ficha, como mensagem direta da tua conta. Não fica publicado na ficha.",
   "directory.detail.enquiry.replyNotice":
-    "Ainda não têm uma ligação, por isso esta primeira mensagem passa e a conversa fica depois fechada para ambos até que um de vocês aceite uma ligação.",
+    "{name} pode responder-te já a isto. Podes escrever mais assim que o fizer.",
   "directory.detail.enquiry.bodyLabel": "A tua mensagem",
   "directory.detail.enquiry.bodyPlaceholder":
     "O que gostarias de lhes perguntar?",
@@ -8885,7 +9020,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.successBody":
     "Está na caixa de entrada de quem gere o {name}, como mensagem direta tua.",
   "directory.detail.enquiry.successReplyStep":
-    "Ainda não têm uma ligação, por isso a conversa fica fechada para ambos até que um de vocês aceite uma ligação.",
+    "{name} pode responder-te já a isto. Vais poder escrever mais assim que o fizer.",
   "directory.detail.enquiry.openThreadCta": "Abrir a conversa",
   "directory.detail.enquiry.doneCta": "Concluído",
   "directory.detail.enquiry.limit.thisBusiness":
@@ -9274,4 +9409,40 @@ export const marketing: Catalog = {
     "As listas de guardados assinalam um item morto antes de o arrumares",
   "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.body":
     "A linha de guardados recentes nas tuas listas marca os itens cuja página saiu, como o resto dos teus guardados.",
+
+  // Section 8 (Groups), 16 Sep 2026.
+  "changelog.entries.choose-who-can-add-you-to-a-group.title":
+    "Escolhe quem te pode juntar a um grupo",
+  "changelog.entries.choose-who-can-add-you-to-a-group.body":
+    "Os convites chegam aos Pedidos com Aceitar e Recusar, mais uma notificação e um push, e ninguém é readicionado em silêncio.",
+  "changelog.entries.choose-who-can-add-you-to-a-group.details":
+    "Uma nova definição de privacidade deixa-te escolher entre as tuas ligações te poderem juntar direto a um grupo, ou exigir um convite em vez disso. Os convites chegam como um pedido que aceitas ou recusas, com uma notificação e um push nos dois casos, e ninguém que saiu ou foi removido de um grupo pode ser posto lá de volta em silêncio.",
+  "changelog.entries.end-a-group-or-hand-it-to-someone-else.title":
+    "Termina um grupo, ou passa-o a outra pessoa",
+  "changelog.entries.end-a-group-or-hand-it-to-someone-else.body":
+    "Sair pede agora confirmação e diz quem fica com a posse, quer fosses ou não o dono.",
+  "changelog.entries.give-a-group-a-description-and-a-join-link.title":
+    "Dá a um grupo uma descrição e uma ligação de convite",
+  "changelog.entries.give-a-group-a-description-and-a-join-link.body":
+    "Quem é dono ou admin partilha uma ligação de convite que mostra o grupo antes, e pode repor ou desligar quando quiser.",
+  "changelog.entries.block-and-report-now-reach-into-groups.title":
+    "Bloquear e denunciar chegam agora aos grupos",
+  "changelog.entries.block-and-report-now-reach-into-groups.body":
+    "Bloqueados deixam de se ver no grupo, cada membro tem Bloquear e Denunciar, e o grupo também pode ser denunciado.",
+  "changelog.entries.block-and-report-now-reach-into-groups.details":
+    "Duas pessoas que se bloquearam deixam de ver as mensagens uma da outra num grupo partilhado, e não podem ser postas juntas por um convite, uma ligação ou uma adição. Cada membro passa a ter Bloquear e Denunciar, e o próprio grupo pode ser denunciado à moderação, que vê o grupo, o dono e toda a lista de membros.",
+  "changelog.entries.group-timelines-explain-what-changed.title":
+    "As linhas do tempo dos grupos explicam o que mudou",
+  "changelog.entries.group-timelines-explain-what-changed.body":
+    "As novas mensagens marcam mudanças de admin, de dono, de foto e de descrição, e falam contigo quando a mudança é sobre ti.",
+  "changelog.entries.group-timelines-explain-what-changed.details":
+    'A linha do tempo passa a dizer quando alguém é tornado ou deixa de ser admin, quando a posse muda de mãos, quando a foto ou a descrição mudam, quando alguém entra por ligação ou convite, e quando um grupo termina. Estas mensagens passam a dizer "tu" quando são sobre ti, por exemplo "A Ana removeu-te", em vez de te nomear na terceira pessoa.',
+  "changelog.entries.sanctioned-members-lose-their-group-powers.title":
+    "Membros sancionados perdem os poderes no grupo",
+  "changelog.entries.sanctioned-members-lose-their-group-powers.body":
+    "Deixam de poder adicionar, remover ou promover pessoas, mudar o nome ou a foto do grupo, e fixar passa a ter um limite.",
+  "changelog.entries.leaving-a-group-actually-leaves-it-behind.title":
+    "Sair de um grupo agora deixa-o mesmo para trás",
+  "changelog.entries.leaving-a-group-actually-leaves-it-behind.body":
+    "Quem sai perde a lista de membros e quem leu o quê, os seletores param no limite, e as menções antigas deixam de chegar.",
 };

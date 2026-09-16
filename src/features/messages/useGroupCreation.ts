@@ -1,4 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { groupErrorMessage } from "./api/groupErrorMessages";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Conversation } from "./data";
 import type { GroupMemberPick } from "./NewGroupModal";
@@ -40,6 +42,8 @@ export function useGroupCreation({
   setView,
   createGroupMutation,
 }: GroupCreationDeps): GroupCreation {
+  const { showToast } = useToast();
+
   /**
    * Create a group from the picked members + name and open its thread. Live mode
    * POSTs /conversations/group and opens the returned thread; demo mode builds a
@@ -86,14 +90,23 @@ export function useGroupCreation({
           setView("thread");
           outcome?.onSuccess?.();
         },
-        // Nothing was created, so there's no placeholder thread to clean up —
+        // Nothing was created, so there's no placeholder thread to clean up:
         // unlike `startThread`/`forwardMessage`, the picker never opens a
         // thread optimistically before the server confirms the group exists.
         // The caller (MessagesPage) uses this to keep the NewGroup modal open
         // with its title/members/avatar intact so the member can retry rather
-        // than losing the whole picked list to a closed modal; the global
-        // mutation-error toast already surfaces the failure.
-        onError: () => outcome?.onError?.(),
+        // than losing the whole picked list to a closed modal.
+        onError: (error) => {
+          // DES-229: the client-side cap (see NewGroupModal's `cap` prop)
+          // should already stop a GROUP_FULL race from being picked, but this
+          // shows every coded refusal (mapped by `groupErrorMessage`) so
+          // nothing goes silent now the mutation itself is `silentError`.
+          showToast(
+            groupErrorMessage(error, t, t("messages:group.error.generic")),
+            "error",
+          );
+          outcome?.onError?.();
+        },
       },
     );
   }

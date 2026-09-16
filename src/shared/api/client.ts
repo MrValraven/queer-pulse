@@ -246,7 +246,14 @@ function withRefreshLock(task: () => Promise<boolean>): Promise<boolean> {
   const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
   return locks
     .request(REFRESH_LOCK, { signal: controller.signal }, task)
-    .catch(() => false)
+    .catch(() => {
+      // The lock wait was abandoned, so no refresh ran and none recorded an
+      // outcome. Record the abandonment itself: callers still get `false`,
+      // and a reader of the settlement can see it said nothing about the
+      // session.
+      recordRefreshSettlement({ kind: "lockTimedOut" });
+      return false;
+    })
     .finally(() => {
       clearTimeout(timeout);
     });
@@ -283,10 +290,46 @@ async function runRefresh(): Promise<boolean> {
       await ensureCsrf();
       res = await attempt();
     }
+    recordRefreshSettlement(
+      res.ok ? { kind: "succeeded" } : { kind: "rejected", status: res.status },
+    );
     return res.ok;
   } catch {
+    recordRefreshSettlement({ kind: "networkFailed" });
     return false;
   }
+}
+
+/**
+ * How a POST /auth/refresh ended. `request` turns every failed refresh into
+ * the same `ApiError(401)`, so a caller that must tell a network fault apart
+ * from a server rejection (the offline messaging cache purge, PRD-375) reads
+ * this. `rejected` means the server answered with a non-2xx status.
+ * `lockTimedOut` means the wait for the cross-tab refresh lock was abandoned,
+ * so no refresh ran at all.
+ */
+export type RefreshOutcome =
+  | { kind: "succeeded" }
+  | { kind: "rejected"; status: number }
+  | { kind: "networkFailed" }
+  | { kind: "lockTimedOut" };
+
+export interface RefreshSettlement {
+  outcome: RefreshOutcome;
+  /** `Date.now()` when the refresh settled. */
+  settledAt: number;
+}
+
+let lastRefreshSettlement: RefreshSettlement | null = null;
+
+function recordRefreshSettlement(outcome: RefreshOutcome): void {
+  lastRefreshSettlement = { outcome, settledAt: Date.now() };
+}
+
+/** The most recent refresh's outcome in this tab, or null before the first.
+ *  Purely observational: recording it changes nothing about a refresh. */
+export function readLastRefreshSettlement(): RefreshSettlement | null {
+  return lastRefreshSettlement;
 }
 
 let refreshing: Promise<boolean> | null = null;
@@ -316,6 +359,19 @@ export function refreshSession(): Promise<boolean> {
   return refreshOnce();
 }
 
+/** Optional extras for `postUnversioned`. */
+export interface UnversionedPostOptions {
+  /** Sent as JSON when present. */
+  body?: unknown;
+  /**
+   * Let the request outlive the page, so a logout fired just before the tab
+   * closes still reaches the backend. An engine that refuses a keepalive
+   * request (some reject one that needs a CORS preflight) throws a TypeError
+   * before anything is sent, and gets one plain attempt instead.
+   */
+  keepalive?: boolean;
+}
+
 /**
  * POST to an UNVERSIONED backend path — i.e. one whose controller is
  * `@Version(VERSION_NEUTRAL)` and therefore answers at `/auth/...` rather than
@@ -327,14 +383,36 @@ export function refreshSession(): Promise<boolean> {
  * `runRefresh`'s direct fetch: credentials included, CSRF header attached, no
  * version prefix. Resolves true on a 2xx. Best-effort — never throws.
  */
-export async function postUnversioned(path: string): Promise<boolean> {
+export async function postUnversioned(
+  path: string,
+  options: UnversionedPostOptions = {},
+): Promise<boolean> {
   try {
     await ensureCsrf();
-    const res = await timedFetch(`${API_BASE_URL}${path}`, {
+    const headers: Record<string, string> = csrfToken
+      ? { "X-CSRF-Token": csrfToken }
+      : {};
+    const hasBody = options.body !== undefined;
+    if (hasBody) headers["Content-Type"] = "application/json";
+    const init: RequestInit = {
       method: "POST",
       credentials: "include",
-      headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
-    });
+      headers,
+      body: hasBody ? JSON.stringify(options.body) : undefined,
+    };
+    const url = `${API_BASE_URL}${path}`;
+    if (options.keepalive) {
+      try {
+        const keepaliveResponse = await timedFetch(url, {
+          ...init,
+          keepalive: true,
+        });
+        return keepaliveResponse.ok;
+      } catch (error) {
+        if (!(error instanceof TypeError)) return false;
+      }
+    }
+    const res = await timedFetch(url, init);
     return res.ok;
   } catch {
     return false;
@@ -396,7 +474,17 @@ function finalizeBody<T>(
   return parsed as T;
 }
 
-async function request<T>(
+/** ENG-222: `requestMeta`'s resolved shape: the parsed body plus the raw
+ *  response `Headers`, for the rare caller that needs to read one (e.g.
+ *  detecting the backend's `Idempotent-Replayed: true` on a deduped message
+ *  send). `request()` below stays the plain body-only shape every existing
+ *  caller depends on; it's a thin wrapper over this. */
+export interface ApiResponseMeta<T> {
+  data: T;
+  headers: Headers;
+}
+
+async function requestMeta<T>(
   method: string,
   path: string,
   body?: unknown,
@@ -404,7 +492,7 @@ async function request<T>(
   timeoutMs = DEFAULT_TIMEOUT_MS,
   validate?: ResponseValidator<T>,
   externalSignal?: AbortSignal,
-): Promise<T> {
+): Promise<ApiResponseMeta<T>> {
   const headers: Record<string, string> = {};
   if (body !== undefined) headers["Content-Type"] = "application/json";
   if (!SAFE.has(method)) {
@@ -480,7 +568,7 @@ async function request<T>(
   if (res.status === 401 && retry) {
     const ok = await refreshOnce();
     if (ok) {
-      return request<T>(
+      return requestMeta<T>(
         method,
         path,
         body,
@@ -519,7 +607,7 @@ async function request<T>(
     if (res.status === 403 && retry && !SAFE.has(method)) {
       csrfToken = null;
       await ensureCsrf();
-      return request<T>(
+      return requestMeta<T>(
         method,
         path,
         body,
@@ -544,7 +632,7 @@ async function request<T>(
     throw new ApiError(res.status, message, data);
   }
 
-  if (res.status === 204) return undefined as T;
+  if (res.status === 204) return { data: undefined as T, headers: res.headers };
   // Some endpoints answer 200 with an empty body (e.g. GET /me/affiliation when
   // the member has none). `res.json()` throws on empty input, so parse the text
   // ourselves and treat an empty body as "no content".
@@ -560,7 +648,34 @@ async function request<T>(
     // `request()` as an unhandled non-ApiError the toast/retry layers can't read.
     throw new ApiError(422, `Malformed JSON in response from ${path}`, text);
   }
-  return finalizeBody<T>(parsed, path, validate);
+  return {
+    data: finalizeBody<T>(parsed, path, validate),
+    headers: res.headers,
+  };
+}
+
+/** The plain body-only shape every existing `apiGet`/`apiPost`/... caller
+ *  depends on. Unwraps `requestMeta`, whose full behaviour (retries,
+ *  refresh, CSRF self-heal, timeout) this delegates to unchanged. */
+async function request<T>(
+  method: string,
+  path: string,
+  body?: unknown,
+  retry = true,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  validate?: ResponseValidator<T>,
+  externalSignal?: AbortSignal,
+): Promise<T> {
+  const { data } = await requestMeta<T>(
+    method,
+    path,
+    body,
+    retry,
+    timeoutMs,
+    validate,
+    externalSignal,
+  );
+  return data;
 }
 
 // Three optional trailing params, all fully backward-compatible (every existing
@@ -620,6 +735,23 @@ export const apiPost = <T>(
   validate?: ResponseValidator<T>,
   signal?: AbortSignal,
 ) => request<T>("POST", path, body, true, timeoutMs, validate, signal);
+/**
+ * ENG-222: the opt-in POST variant that also resolves the raw response
+ * `Headers` alongside the body. An additive sibling of `apiPost` that keeps
+ * every one of its many other callers on the same shape they already have.
+ * Today's one use: `messages.api.ts#sendMessage`/`sendDocumentMessage`
+ * reading the backend's `Idempotent-Replayed: true` header on a send the
+ * server recognized as an already-stored `clientMessageId` (a retry, or the
+ * HTTP+WS dual write path) rather than a genuine first create.
+ */
+export const apiPostWithMeta = <T>(
+  path: string,
+  body?: unknown,
+  timeoutMs?: number,
+  validate?: ResponseValidator<T>,
+  signal?: AbortSignal,
+): Promise<ApiResponseMeta<T>> =>
+  requestMeta<T>("POST", path, body, true, timeoutMs, validate, signal);
 export const apiPatch = <T>(
   path: string,
   body?: unknown,
@@ -683,4 +815,62 @@ export async function apiGetText(
     throw new ApiError(res.status, res.statusText);
   }
   return res.text();
+}
+
+/** `POST /auth/socket-ticket`'s response shape: a single-use, short-lived
+ *  ticket and how long (in ms) it stays redeemable. See `mintSocketTicket`'s
+ *  own doc. */
+export interface SocketTicketMintResult {
+  ticket: string;
+  ttlMs: number;
+}
+
+function isSocketTicketMintResult(
+  data: unknown,
+): data is SocketTicketMintResult {
+  if (typeof data !== "object" || data === null) return false;
+  const candidate = data as Record<string, unknown>;
+  return (
+    typeof candidate.ticket === "string" && typeof candidate.ttlMs === "number"
+  );
+}
+
+/**
+ * Mint a short-lived, single-use ticket for the realtime layer's
+ * `session:reauth` frame (ENG-219, frontend half). `access_token` is
+ * `httpOnly`, so it never reaches JavaScript, and the socket layer
+ * (`realtime.ts`) cannot put the real access token in a `session:reauth`
+ * frame the way a non-browser client could. This ticket is the stand-in: it
+ * proves the caller currently holds a valid, active session over the SAME
+ * authenticated cookie every other mutation in this file uses, without ever
+ * exposing the JWT itself.
+ *
+ * Deliberately routed through `apiPost` rather than a hand-rolled `fetch`,
+ * the same way every other authenticated mutation here is: this reuses
+ * `ensureCsrf`'s CSRF token attach/self-heal, `credentials: "include"`, the
+ * fail-fast timeout, and the one-shot 401 refresh-and-retry `requestMeta`
+ * already provides. That last point matters here specifically: if the
+ * access-token cookie has already lapsed by the time this is called (the
+ * realtime layer's own proactive scheduling undershot, or a backgrounded tab
+ * let the timer fire late), this call refreshes and retries on its own
+ * rather than failing outright, so `realtime.ts` doesn't have to duplicate
+ * that recovery.
+ *
+ * Does NOT spend a `POST /auth/refresh` rotation itself. Minting a ticket is
+ * a separate, cheap, idempotent-in-effect call; the on-401 refresh above is
+ * `requestMeta`'s own existing shared recovery path, triggered only when the
+ * mint request itself comes back 401.
+ */
+export function mintSocketTicket(): Promise<SocketTicketMintResult> {
+  return apiPost<SocketTicketMintResult>(
+    "/auth/socket-ticket",
+    undefined,
+    undefined,
+    (data) => {
+      if (!isSocketTicketMintResult(data)) {
+        throw new Error("expected { ticket: string; ttlMs: number }");
+      }
+      return data;
+    },
+  );
 }

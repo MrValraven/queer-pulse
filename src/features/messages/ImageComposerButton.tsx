@@ -1,116 +1,77 @@
-import { useRef, useState } from "react";
-import { FiImage } from "react-icons/fi";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { useRef } from "react";
+import { FiCamera, FiImage } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useUploadImage } from "../members/api/useUploadImage";
-import { ImageProcessingError } from "../members/api/uploadProcessing";
-import type { GifAttachment } from "../../shared/api/gifs";
 import menu from "./ComposerAttachButton.module.css";
 
 interface ImageComposerButtonProps {
-  /** Sends the uploaded image as its own message. `attachment` is the SEND
-   *  payload (a private storage key); `localAttachment` is the upload's local
-   *  blob preview, for the optimistic bubble to render instantly. */
-  onSendImage: (
-    attachment: GifAttachment,
-    localAttachment?: GifAttachment,
-  ) => void;
-  /** Closes the attach menu this row lives in. Fired as soon as the file
-   *  dialog opens — the upload itself resolves long after, and leaving the
+  /** Hands the picked files (one or several, the gallery input carries
+   *  `multiple`) straight to `useAttachmentStaging`, which stages each
+   *  immediately with a local preview and starts its upload in the
+   *  background (DES-198/DES-199). Never resolves an upload itself: the
+   *  actual `useUploadImage` call lives in `useAttachmentUploadQueue`. */
+  onFilesPicked: (files: File[]) => void;
+  /** Closes the attach menu this row lives in. Fired as soon as a file
+   *  dialog opens: the upload itself resolves long after, and leaving the
    *  menu hanging over the thread until then reads as a stuck panel. */
   onPicked: () => void;
 }
 
-/** Reads a decoded image's intrinsic pixel size, so the bubble can reserve its
- *  box before the image paints (mirrors the GIF picker's provider-supplied
- *  dimensions — see `MessageBubbleBody`'s aspect-ratio handling). */
-function readImageDimensions(
-  url: string,
-): Promise<{ width: number; height: number }> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () =>
-      resolve({ width: image.naturalWidth, height: image.naturalHeight });
-    image.onerror = () => reject(new Error("dimension-read-failed"));
-    image.src = url;
-  });
+/** PRD-350: a coarse-pointer-only second row that opens the device camera
+ *  directly (`capture="environment"`) instead of the OS gallery/file picker.
+ *  On the mobile PWA, the primary surface, "take a photo" would otherwise be
+ *  one extra tap behind the gallery. Recomputed on every render rather than
+ *  cached in state: pointer type essentially never changes mid-session, and
+ *  this mirrors the same inline `matchMedia` check `Composer` and
+ *  `AttachmentCaptionScreen` already use for Enter-vs-newline. */
+function isCoarsePointer(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    Boolean(window.matchMedia?.("(pointer: coarse)").matches)
+  );
 }
 
 /**
- * The composer's photo-attach affordance (MSG-8): a hidden file input behind
- * a button, uploaded through the SAME dual-mode `useUploadImage` pipeline
- * every other image surface in the app already uses — client-side EXIF/GPS
- * strip, presigned direct-to-storage PUT with progress + one retry, demo mode
- * a local blob with no network — never a bespoke messaging-only upload path.
+ * The composer's photo-attach affordance (MSG-8): two hidden file inputs
+ * behind two menu rows, the OS gallery (always) and, on a coarse pointer
+ * only, the device camera (PRD-350), both feeding the SAME `onFilesPicked`
+ * staging path, so a photo taken live and a photo picked from the gallery
+ * get identical preview/caption/progress treatment.
  *
- * Renders as a row of `ComposerAttachButton`'s menu rather than a standalone
- * circle beside the input: the composer's controls moved INSIDE the pill, and
- * one paperclip opening a menu is what keeps that pill uncrowded. The upload
- * pipeline below is untouched by that move.
+ * Renders as rows of `ComposerAttachButton`'s menu rather than a standalone
+ * circle beside the input: the composer's controls moved INSIDE the pill,
+ * and one paperclip opening a menu is what keeps that pill uncrowded.
  */
 export function ImageComposerButton({
-  onSendImage,
+  onFilesPicked,
   onPicked,
 }: ImageComposerButtonProps) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const uploadImage = useUploadImage("message-image");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  async function handleFile(file: File) {
-    setUploading(true);
-    try {
-      const { key, previewUrl } = await uploadImage(file);
-      const { width, height } = await readImageDimensions(previewUrl);
-      const sendAttachment: GifAttachment = {
-        url: key,
-        previewUrl: key,
-        width,
-        height,
-        provider: "upload",
-      };
-      const localAttachment: GifAttachment = {
-        url: previewUrl,
-        previewUrl,
-        width,
-        height,
-        provider: "upload",
-      };
-      onSendImage(sendAttachment, localAttachment);
-    } catch (err) {
-      const message =
-        err instanceof ImageProcessingError
-          ? t(err.i18nKey, err.values)
-          : t("members:upload.error.retry");
-      showToast(message, "error");
-    } finally {
-      setUploading(false);
-    }
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files ? Array.from(event.target.files) : [];
+    // Reset so picking the SAME file(s) twice in a row still fires `onChange`.
+    event.target.value = "";
+    if (files.length > 0) onFilesPicked(files);
   }
 
   return (
     <>
       <input
-        ref={inputRef}
+        ref={galleryInputRef}
         type="file"
         accept="image/jpeg,image/png,image/webp,image/gif"
+        multiple
         aria-label={t("messages:attachments.open")}
         hidden
-        onChange={(event) => {
-          const file = event.target.files?.[0];
-          // Reset so picking the SAME file twice in a row still fires `onChange`.
-          event.target.value = "";
-          if (file) void handleFile(file);
-        }}
+        onChange={handleChange}
       />
       <button
         type="button"
         className={menu.row}
-        aria-busy={uploading}
-        disabled={uploading}
         onClick={() => {
-          inputRef.current?.click();
+          galleryInputRef.current?.click();
           onPicked();
         }}
       >
@@ -119,6 +80,42 @@ export function ImageComposerButton({
         </span>
         <span>{t("messages:attachments.open")}</span>
       </button>
+      {isCoarsePointer() && (
+        <>
+          {/* `accept` deliberately stays the broad `image/*` here rather than
+              the gallery input's exact allow-list above: several mobile
+              browsers (notably older Android WebViews) only honour
+              `capture="environment"` and open the camera UI at all when
+              `accept` is the generic `image/*`, silently falling back to a
+              plain file picker for a narrower list. The camera itself only
+              ever produces a JPEG, and `validateTypeAndSize` (run before
+              staging, see `useAttachmentSendQueue`) still rejects anything
+              outside the real allow-list regardless of what this attribute
+              let through. */}
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            aria-label={t("messages:attachments.openCamera")}
+            hidden
+            onChange={handleChange}
+          />
+          <button
+            type="button"
+            className={menu.row}
+            onClick={() => {
+              cameraInputRef.current?.click();
+              onPicked();
+            }}
+          >
+            <span className={menu.rowIcon} aria-hidden>
+              <FiCamera />
+            </span>
+            <span>{t("messages:attachments.openCamera")}</span>
+          </button>
+        </>
+      )}
     </>
   );
 }

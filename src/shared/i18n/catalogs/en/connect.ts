@@ -176,6 +176,10 @@ export const connect: Catalog = {
     "That didn't go through. Check your connection and try again.",
   "form.rateLimitError":
     "You're reaching out to a lot of people right now. Give it a minute, then try again.",
+  "form.dailyLimitError":
+    "You've reached out to a lot of new people today. You can send more requests tomorrow.",
+  "form.pendingLimitError":
+    "You have lots of requests still waiting for an answer. Once some are answered or you withdraw a few, you can send more.",
 
   // Success panel after sending (ConnectSentPanel)
   "sent.title": "Message <em>sent.</em>",
@@ -225,6 +229,12 @@ export const connect: Catalog = {
     "They reach out through people they already know. Ask a mutual connection to introduce you.",
   "notice.cannotConnect.title": "You can't reach {name} <em>right now.</em>",
   "notice.cannotConnect.body": "This connection isn't available right now.",
+  "notice.requestsPaused.title": "New requests are <em>paused</em> for now.",
+  "notice.requestsPaused.body":
+    "Our moderators are looking into something on your account. Your existing connections and conversations carry on as usual while they do.",
+  "notice.connectionsOnly.title":
+    "{name} is only accepting messages from <em>their connections</em> right now.",
+  "notice.connectionsOnly.body": "You're welcome to try again another time.",
   // People you might know (SOC-05). Every suggestion carries the FACT behind
   // it, so these lines are the whole point of the card: there is deliberately
   // no "recommended for you" string here, because the server never sends a
@@ -245,4 +255,7 @@ export const connect: Catalog = {
   "suggested.hideStripAria": "Hide people you might know",
   "suggested.browseMembers": "Browse all members",
   "contact.message": "Message",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "form.charactersLeft": "Characters left: {remaining}",
 };

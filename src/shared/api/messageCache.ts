@@ -10,8 +10,8 @@ import type {
 import {
   previewForMessage,
   timeLabel,
+  type ConversationWithPreview,
 } from "../../features/messages/api/messages.adapters";
-import type { Conversation } from "../../features/messages/data";
 
 // ── Message-thread cache patches ─────────────────────────────────────────────
 // The messages page keeps HTTP authoritative but avoids a blanket
@@ -22,8 +22,11 @@ import type { Conversation } from "../../features/messages/data";
 //
 // The thread's query key is `["messages", conversationId, demoMode]`; a
 // PREFIX filter (`["messages", conversationId]`) matches it regardless of the
-// demoMode suffix. In demo mode the query is disabled (no cache entry), so every
-// helper here is a safe no-op — demo mode is untouched.
+// demoMode suffix. In demo mode the same query pages a local session store of
+// the seeded thread, kept at `["messages", conversationId, "demo-store"]`
+// (`features/messages/api/demoThreadCache.ts`). The prefix matches that entry
+// too, so every helper here patches a demo thread and its store exactly as it
+// patches a live thread.
 
 /** One page of the infinite thread query (see `useMessageThread`). */
 interface MessagePage {
@@ -236,6 +239,20 @@ export function patchMessageStarred(
 // `useSendMessage.onSuccess` and the `message:new` socket handler. Both fire
 // for the sender's own send; applying the same message twice is harmless
 // (idempotent — same input, same output, just re-affirms the row's position).
+//
+// ENG-253: `useConversations` now pages the inbox past its first ~30 rows
+// (the bug ENG-253 fixes: the old bare-array endpoint truncated at a fixed
+// count) by APPENDING later pages into this SAME flat `ConversationWithPreview[]`
+// cache entry via a plain `setQueryData` in `useConversations.ts`'s own
+// `fetchNextPage`. This deliberately avoids `useInfiniteQuery`'s
+// `InfiniteData<Page>` wrapper, which would have changed this cache entry's
+// shape out from under at least seven OTHER `setQueriesData<Conversation[]>`
+// call sites across the messages feature (group management, conversation
+// prefs, invites, demo signals; see this build's report) that assume a flat
+// array and are outside this build's file allowlist. So every patch below is
+// unchanged in shape from before ENG-253; only the element type widens to
+// `ConversationWithPreview`, a structural superset of `Conversation`, so
+// nothing downstream typed as `Conversation[]` even needs to change.
 
 /** Patch a conversation-list row's `preview`/`time` from a new message and
  *  move it to the top (most-recently-active-first, matching the server's own
@@ -247,14 +264,14 @@ export function patchConversationPreview(
   conversationId: string,
   message: MessageResponse,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
+  queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) => {
       if (!previous) return previous;
       const index = previous.findIndex((c) => c.id === conversationId);
       if (index === -1) return previous;
       const conversation = previous[index]!;
-      const updated: Conversation = {
+      const updated: ConversationWithPreview = {
         ...conversation,
         preview: previewForMessage(!!conversation.isGroup, message),
         time: timeLabel(message.createdAt),
@@ -263,6 +280,14 @@ export function patchConversationPreview(
         // row's age stops advancing for an actively-chatting thread and
         // `useThreadRowTimeLabel` has nothing newer to re-derive from.
         updatedAt: message.createdAt,
+        // DES-190: carry the raw sender/body/kind behind `preview` forward too
+        // (same fields `messages.adapters.ts` maps on load), so a live-patched
+        // send/receive doesn't leave the row's "You: " substitution and DM
+        // delivery-status tick pointing at the PREVIOUS last message until the
+        // next full inbox refetch.
+        lastMessageSenderHandle: message.sender.handle || undefined,
+        lastMessageBody: message.body,
+        lastMessageIsSystem: message.kind === "system",
       };
       const next = previous.slice();
       next.splice(index, 1);
@@ -281,7 +306,7 @@ export function patchConversationPinned(
   conversationId: string,
   pinnedAt: string | undefined,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
+  queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) =>
       previous?.map((conversation) =>
@@ -300,7 +325,7 @@ export function patchConversationFavorite(
   conversationId: string,
   favorite: boolean,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
+  queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) =>
       previous?.map((conversation) =>
@@ -319,7 +344,7 @@ export function patchConversationMuted(
   conversationId: string,
   muted: boolean,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
+  queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) =>
       previous?.map((conversation) =>
@@ -330,6 +355,28 @@ export function patchConversationMuted(
   );
 }
 
+/** The newest message cached for a thread across every demoMode variant, by
+ *  `(createdAt, id)`, or null when nothing is cached. `useMarkRead` reads it
+ *  once per POST so the id it sends and the watermark it patches locally come
+ *  from the same message. */
+export function newestCachedMessage(
+  queryClient: QueryClient,
+  conversationId: string,
+): MessageResponse | null {
+  let newest: MessageResponse | null = null;
+  const entries = queryClient.getQueriesData<ThreadData>(
+    threadFilter(conversationId),
+  );
+  for (const [, data] of entries) {
+    for (const page of data?.pages ?? []) {
+      for (const message of page.items) {
+        if (!newest || isNewerMessage(message, newest)) newest = message;
+      }
+    }
+  }
+  return newest;
+}
+
 /** Patch a conversation-list row's unread state to zero — used by
  *  `useMarkRead.onSuccess` instead of `invalidateQueries(["conversations"])`,
  *  so opening an unread thread (which fires on every thread-open-with-unread)
@@ -337,12 +384,22 @@ export function patchConversationMuted(
  *  Also clears `markedUnreadAt` (PRD-225): re-opening/reading a thread is the
  *  ONLY thing that clears a manual "mark unread", mirroring exactly what the
  *  server's `markRead` does in the same request this patches the response of —
- *  so the two can never disagree. */
+ *  so the two can never disagree.
+ *
+ *  Also advances the viewer's own `myLastReadAt`, so reopening the thread
+ *  before an inbox refetch places "New messages" after what was just read.
+ *  `readThrough` is the exact watermark the POST carried, captured when it
+ *  STARTED: the `createdAt` of the message sent as `upToMessageId` (whose
+ *  `created_at` the server stores), or the wall-clock ISO sent as `lastReadAt`
+ *  when nothing was cached. Re-reading the cache here on success would count a
+ *  `message:new` upserted mid-request as read locally while the server still
+ *  counts it unread. It never moves backwards. */
 export function patchConversationRead(
   queryClient: QueryClient,
   conversationId: string,
+  readThrough: string,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
+  queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) =>
       previous?.map((conversation) =>
@@ -352,6 +409,11 @@ export function patchConversationRead(
               unread: false,
               unreadCount: 0,
               markedUnreadAt: undefined,
+              myLastReadAt:
+                conversation.myLastReadAt &&
+                conversation.myLastReadAt > readThrough
+                  ? conversation.myLastReadAt
+                  : readThrough,
             }
           : conversation,
       ),
@@ -382,7 +444,7 @@ export function bumpConversationUnread(
   queryClient: QueryClient,
   conversationId: string,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
+  queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) =>
       previous?.map((conversation) =>
@@ -408,7 +470,7 @@ export function patchConversationMarkedUnread(
   conversationId: string,
   markedUnreadAt: string | undefined,
 ): void {
-  queryClient.setQueriesData<Conversation[]>(
+  queryClient.setQueriesData<ConversationWithPreview[]>(
     { queryKey: ["conversations"] },
     (previous) =>
       previous?.map((conversation) =>
@@ -436,14 +498,69 @@ function isSameMessage(
   );
 }
 
+/** True when `candidate` sorts after `reference` in the thread's total order
+ *  `(createdAt, id)`: the same tie-break `newestCachedMessageId` uses. */
+function isNewerMessage(
+  candidate: MessageResponse,
+  reference: MessageResponse,
+): boolean {
+  return (
+    candidate.createdAt > reference.createdAt ||
+    (candidate.createdAt === reference.createdAt && candidate.id > reference.id)
+  );
+}
+
+/** `pages` with page `pageIndex`'s items swapped; every other page (and every
+ *  untouched message object) passes through by reference. */
+function withPageItems(
+  pages: MessagePage[],
+  pageIndex: number,
+  items: MessageResponse[],
+): MessagePage[] {
+  return pages.map((page, index) =>
+    index === pageIndex ? { ...page, items } : page,
+  );
+}
+
+/**
+ * Place an unseen message at its `(createdAt, id)` slot (ENG-204). Pages and
+ * the items inside them are newest-first, and consecutive pages are contiguous
+ * ranges, so the message belongs to the first page whose oldest item is older
+ * than it. Messages almost always arrive newest, which stops at index 0 of
+ * page 0. Returns null when the message is older than everything loaded while
+ * older history is still unfetched: that page will bring it, and inserting it
+ * now would render it at the wrong edge and duplicate it once the page lands.
+ */
+function insertInOrder(
+  pages: MessagePage[],
+  message: MessageResponse,
+): MessagePage[] | null {
+  for (let pageIndex = 0; pageIndex < pages.length; pageIndex += 1) {
+    const page = pages[pageIndex]!;
+    const oldestInPage = page.items.at(-1);
+    if (!oldestInPage || !isNewerMessage(message, oldestInPage)) continue;
+    let insertIndex = 0;
+    while (!isNewerMessage(message, page.items[insertIndex]!)) insertIndex += 1;
+    return withPageItems(pages, pageIndex, [
+      ...page.items.slice(0, insertIndex),
+      message,
+      ...page.items.slice(insertIndex),
+    ]);
+  }
+  const lastIndex = pages.length - 1;
+  const lastPage = pages[lastIndex]!;
+  if (lastPage.nextCursor) return null;
+  return withPageItems(pages, lastIndex, [...lastPage.items, message]);
+}
+
 /**
  * Insert (or replace) one message in the thread cache, deduping by server id and
- * by client id. Used for inbound `message:new` socket frames and reconnect
- * history sync. Pages are newest-first within the newest page (page[0]), so a
- * genuinely new message prepends there; a message already present (the socket
- * echo of our own send, a duplicate frame, or a reconnect overlap) is replaced
- * in place rather than doubled. A no-op if the thread was never loaded — the
- * message will arrive with the first page fetch.
+ * by client id. Used for inbound `message:new` socket frames, send acks and
+ * reconnect history sync. A message already present (the socket echo of our own
+ * send, a duplicate frame, or a reconnect overlap) is replaced in place rather
+ * than doubled. A genuinely new message is inserted at its chronological slot
+ * (see `insertInOrder`), so thread order never depends on arrival order. A
+ * no-op if the thread was never loaded: the message arrives with the first page.
  */
 export function upsertMessage(
   queryClient: QueryClient,
@@ -468,11 +585,8 @@ export function upsertMessage(
         };
       });
       if (replaced) return { ...data, pages };
-      const [newest, ...rest] = pages;
-      return {
-        ...data,
-        pages: [{ ...newest!, items: [message, ...newest!.items] }, ...rest],
-      };
+      const orderedPages = insertInOrder(pages, message);
+      return orderedPages ? { ...data, pages: orderedPages } : data;
     },
   );
 }

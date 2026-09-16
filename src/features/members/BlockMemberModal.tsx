@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Button, Modal, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
@@ -30,10 +30,18 @@ export function BlockMemberModal({
   firstName,
   onCancel,
   onConfirm,
+  /** False only once a conversation-started block (PRD-362) has already
+   *  offered its own "report messages before you block?" step right before
+   *  this one — showing this line there too would be redundant. Every other
+   *  caller (starting from a profile, with no thread in view) keeps the
+   *  default: this is the ONLY place that ever tells that member reporting
+   *  specific messages is even possible. */
+  showReportMessagesGuidance = true,
 }: {
   firstName: string;
   onCancel: () => void;
   onConfirm: (options: BlockOptions) => void;
+  showReportMessagesGuidance?: boolean;
 }) {
   const { t } = useTranslation();
   const [alsoReport, setAlsoReport] = useState(false);
@@ -45,6 +53,15 @@ export function BlockMemberModal({
   const [reasonCode, setReasonCode] = useState<string | null>(
     reportReasons[0]?.code ?? null,
   );
+  // Multi-step-dialog rule: when this is the SECOND step of a conversation
+  // block flow (PRD-362), a screen-reader member moving from the "report
+  // messages" step into this one should hear THIS step's own warning, not
+  // silently land on the close button (`Modal`'s own default). Harmless as
+  // the sole step too — it is still the most useful thing to land on.
+  const warnRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    warnRef.current?.focus();
+  }, []);
 
   return (
     <Modal
@@ -76,9 +93,15 @@ export function BlockMemberModal({
         </>
       }
     >
-      <p className={styles.warn}>
+      <p ref={warnRef} tabIndex={-1} className={styles.warn}>
         {t("safety:blockModal.body", { name: firstName })}
       </p>
+
+      {showReportMessagesGuidance && (
+        <p className={styles.reportMessagesNote}>
+          {t("safety:blockModal.reportMessagesFirstNote", { name: firstName })}
+        </p>
+      )}
 
       <label className={styles.reportRow}>
         <input

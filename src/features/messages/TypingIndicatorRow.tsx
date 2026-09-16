@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { initialsFromName } from "../../shared/lib/initials";
 import { resolveGroupTypingLabel } from "./groupReceipts";
 import { useTypingIndicator } from "./useTypingIndicator";
 import type { RunParticipant } from "./MessageRun";
@@ -20,6 +21,37 @@ export interface TypingIndicatorRowProps {
   isGroup?: boolean;
   /** GROUP roster, used to resolve the aggregated typing label. Absent for DMs. */
   members?: GroupMemberView[];
+}
+
+/**
+ * The face beside the typing bubble. A DM shows its counterpart. A group shows
+ * the first typer who resolves against the roster, drawn from the same member
+ * record that names them in the label: their photo, initials from their name,
+ * and the roster tint, which is seeded from the handle exactly like a message's
+ * `senderTint` (so it matches that member's avatar on their runs). An unknown
+ * typer keeps the group's initials and tint but never its photo, since the
+ * group's picture is nobody's face (DES-223).
+ */
+function resolveTypingAvatar(
+  counterpart: RunParticipant,
+  isGroup: boolean | undefined,
+  members: GroupMemberView[] | undefined,
+  typerIds: string[],
+): RunParticipant {
+  if (!isGroup) return counterpart;
+  let firstTyper: GroupMemberView | undefined;
+  for (const typerId of typerIds) {
+    firstTyper = members?.find((member) => member.id === typerId);
+    if (firstTyper) break;
+  }
+  if (!firstTyper) {
+    return { initials: counterpart.initials, tint: counterpart.tint };
+  }
+  return {
+    initials: initialsFromName(firstTyper.name, firstTyper.initials),
+    tint: firstTyper.tint,
+    src: firstTyper.avatarUrl,
+  };
 }
 
 /**
@@ -49,10 +81,37 @@ export function TypingIndicatorRow({
   members,
 }: TypingIndicatorRowProps) {
   const { t } = useTranslation();
-  const { typing: counterpartTyping, typingUserIds } =
-    useTypingIndicator(conversationId);
-  const [mounted, setMounted] = useState(counterpartTyping);
+  const { typingUserIds } = useTypingIndicator(conversationId);
+  const [mounted, setMounted] = useState(typingUserIds.length > 0);
   const hideTimeoutRef = useRef<number | undefined>(undefined);
+
+  // Thread switch. This row is not remounted when the open thread changes, and
+  // `useTypingIndicator` only empties its list in an effect, so the first
+  // render for the new thread still carries the previous thread's typers. That
+  // exact list is remembered as stale and read as nobody typing (the row hides
+  // at once, with no fade) until the hook hands over a fresh list.
+  const [trackedConversationId, setTrackedConversationId] =
+    useState(conversationId);
+  const [staleTyperIds, setStaleTyperIds] = useState<string[] | null>(null);
+  // The typers the avatar describes, held through the fade-out: the live list
+  // empties the instant typing stops, and resolving from it then would swap
+  // the member's face for the fallback while the row is still fading.
+  const [shownTyperIds, setShownTyperIds] = useState(typingUserIds);
+  const isThreadSwitch = conversationId !== trackedConversationId;
+  if (isThreadSwitch) {
+    setTrackedConversationId(conversationId);
+    setStaleTyperIds(typingUserIds);
+    setShownTyperIds([]);
+    setMounted(false);
+  } else if (staleTyperIds !== null && typingUserIds !== staleTyperIds) {
+    setStaleTyperIds(null);
+  }
+  const liveTyperIds =
+    isThreadSwitch || typingUserIds === staleTyperIds ? [] : typingUserIds;
+  const counterpartTyping = liveTyperIds.length > 0;
+  if (counterpartTyping && liveTyperIds !== shownTyperIds) {
+    setShownTyperIds(liveTyperIds);
+  }
 
   useEffect(() => {
     if (counterpartTyping) {
@@ -71,10 +130,17 @@ export function TypingIndicatorRow({
   // GROUP threads name WHO is typing; a DM's single counterpart is already
   // named by the header, so it falls back to the generic aria-label below.
   const typingLabel = isGroup
-    ? resolveGroupTypingLabel(typingUserIds, counterpartTyping, members, t)
+    ? resolveGroupTypingLabel(liveTyperIds, counterpartTyping, members, t)
     : undefined;
 
-  if (!mounted) return null;
+  const typingAvatar = resolveTypingAvatar(
+    counterpart,
+    isGroup,
+    members,
+    counterpartTyping ? liveTyperIds : shownTyperIds,
+  );
+
+  if (!mounted || isThreadSwitch) return null;
 
   return (
     <div
@@ -87,9 +153,9 @@ export function TypingIndicatorRow({
     >
       <div className={styles.runAvatar}>
         <Avatar
-          initials={counterpart.initials}
-          tint={counterpart.tint}
-          src={counterpart.src}
+          initials={typingAvatar.initials}
+          tint={typingAvatar.tint}
+          src={typingAvatar.src}
           size={28}
         />
       </div>

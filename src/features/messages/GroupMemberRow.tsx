@@ -4,6 +4,7 @@ import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { ConversationRole } from "../../shared/contracts/contracts";
+import { GroupMemberRowSafetyMenu } from "./GroupMemberRowSafetyMenu";
 import type { GroupMemberView } from "./data";
 import styles from "./NewMessageModal.module.css";
 
@@ -22,12 +23,16 @@ interface GroupMemberRowProps {
   canManageRoles: boolean;
   /** The caller may remove members (owner/admin). */
   canRemoveMembers: boolean;
+  /** DES-228: the caller (the owner) may hand ownership to another member. */
+  canTransferOwnership: boolean;
   /** The caller is the owner — required to act on another admin. */
   callerIsOwner: boolean;
   /** True while a management mutation is in flight (disables the row actions). */
   busy: boolean;
   onRemove: (member: GroupMemberView) => void;
   onChangeRole: (member: GroupMemberView, role: "admin" | "member") => void;
+  /** DES-228: opens the "Make {name} the owner?" confirm for this member. */
+  onTransferOwnership: (member: GroupMemberView) => void;
 }
 
 /**
@@ -42,10 +47,12 @@ export function GroupMemberRow({
   isSelf,
   canManageRoles,
   canRemoveMembers,
+  canTransferOwnership,
   callerIsOwner,
   busy,
   onRemove,
   onChangeRole,
+  onTransferOwnership,
 }: GroupMemberRowProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -57,6 +64,7 @@ export function GroupMemberRow({
   const canDemote = canManageRoles && !isSelf && isAdmin;
   const canRemove =
     canRemoveMembers && !isSelf && !isOwner && (!isAdmin || callerIsOwner);
+  const canMakeOwner = canTransferOwnership && !isSelf && !isOwner;
 
   return (
     <li className={styles.memberRow}>
@@ -82,8 +90,18 @@ export function GroupMemberRow({
         </div>
       </button>
       {labelKey && <span className={styles.roleBadge}>{t(labelKey)}</span>}
-      {(canPromote || canDemote || canRemove) && (
+      {(canPromote || canDemote || canRemove || canMakeOwner) && (
         <span className={styles.memberActions}>
+          {canMakeOwner && (
+            <button
+              type="button"
+              className={styles.rowActionBtn}
+              disabled={busy}
+              onClick={() => onTransferOwnership(member)}
+            >
+              {t("messages:group.makeOwner")}
+            </button>
+          )}
           {canPromote && (
             <button
               type="button"
@@ -116,6 +134,7 @@ export function GroupMemberRow({
           )}
         </span>
       )}
+      {!isSelf && <GroupMemberRowSafetyMenu member={member} />}
     </li>
   );
 }

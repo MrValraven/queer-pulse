@@ -172,6 +172,18 @@ export function buildDemoGroupConversation(
     unread: false,
     members: memberViews,
     memberCount: memberViews.length,
+    myRole: "owner",
+    // The creator is always the owner of a freshly-made demo group, so every
+    // owner-only capability starts true here, mirroring the seeded
+    // `brunchCrewConversation` (see `demoGroupThreads.data.ts`), which this
+    // builder otherwise leaves undefined/false for a group nobody seeded.
+    canAddMembers: true,
+    canRemoveMembers: true,
+    canRename: true,
+    canManageRoles: true,
+    canTransferOwnership: true,
+    canDissolve: true,
+    canManageInviteLink: true,
     messages: [
       {
         day: "Today",
@@ -193,7 +205,7 @@ export function buildDemoGroupConversation(
 }
 
 /**
- * Base history (mock groups in demo, fetched groups in live) merged with the
+ * Base history (the paged thread cache, in both modes) merged with the
  * thread's optimistic (session) sends. Drops any optimistic bubble whose server
  * row has already landed in the base history — the socket `message:new` patch
  * (deduped by `clientMessageId`) can arrive a beat before the send mutation
@@ -207,6 +219,7 @@ export function mergeOptimisticGroups(
   threadGroups: MessageGroup[],
   sent: Record<string, ChatMessage[]>,
 ): MessageGroup[] {
+  // Demo now goes through the shared thread cache path (the controller passes `false`).
   const base = demoMode ? active.messages : threadGroups;
   const optimistic = sent[active.id];
   if (!optimistic || optimistic.length === 0) return base;

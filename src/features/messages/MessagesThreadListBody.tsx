@@ -1,6 +1,7 @@
 import { FiMessageCircle } from "react-icons/fi";
-import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { EmptyState, FadeIn, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { InboxLoadErrorStrip } from "./InboxLoadErrorStrip";
 import { MessagesRequestsPanel } from "./MessagesRequestsPanel";
 import { MessagesSearchResults } from "./MessagesSearchResults";
 import { MessageThreadListSkeleton } from "./MessagesSkeleton";
@@ -40,6 +41,8 @@ export function MessagesThreadListBody({
   activeId,
   readIds,
   pinnedCount,
+  isError,
+  onRetry,
   onOpen,
   onCompose,
   onQueryChange,
@@ -60,6 +63,13 @@ export function MessagesThreadListBody({
   activeId: string;
   readIds: Set<string>;
   pinnedCount: number;
+  /** DES-183: the inbox query settled in error (mirrors `useConversations()`'s
+   *  own `isError` from `useMessagesController`). Optional/undefined until the
+   *  controller/list wire it through; every branch below degrades to today's
+   *  behaviour when absent. */
+  isError?: boolean;
+  /** Refetches the inbox, wired to `useConversations()`'s own `refetch`. */
+  onRetry?: () => void;
   onOpen: (id: string) => void;
   onCompose: () => void;
   onQueryChange: (value: string) => void;
@@ -78,6 +88,14 @@ export function MessagesThreadListBody({
   }
   return (
     <>
+      {/* DES-194: announced to assistive tech even though the skeleton rows
+       *  beneath are all `aria-hidden`. Kept mounted so the aria-live
+       *  region already exists in the tree when its text changes, mirroring
+       *  `MessagesSearchResults`'/`ThreadSearchModal`'s own pattern for the
+       *  search-results loading state. */}
+      <p className="visuallyHidden" role="status" aria-live="polite">
+        {loading ? t("messages:thread.loadingInbox") : ""}
+      </p>
       {loading && <MessageThreadListSkeleton count={6} />}
       {/* Query present → the unified search view: name-matched conversations
           (already filtered by the controller into `threads`) alongside
@@ -97,7 +115,19 @@ export function MessagesThreadListBody({
           onMarkThreadUnread={onMarkThreadUnread}
         />
       )}
-      {!loading && !searching && threads.length === 0 && (
+      {/* DES-183: no cached rows to fall back to, the same shape as
+          `MessagesRequestsPanel`'s own `LoadErrorState`, so a 5xx/throttle/
+          expired-session never reads as "you have no conversations". */}
+      {!loading && !searching && isError && threads.length === 0 && (
+        <LoadErrorState
+          compact
+          onRetry={onRetry}
+          description={t("messages:thread.loadErrorBody")}
+        />
+      )}
+      {/* "No conversations yet" only on a SETTLED, SUCCESSFUL empty list,
+          never while a failed refresh just hasn't produced any rows yet. */}
+      {!loading && !searching && !isError && threads.length === 0 && (
         <EmptyState
           compact
           icon={<FiMessageCircle />}
@@ -108,6 +138,11 @@ export function MessagesThreadListBody({
             onClick: onCompose,
           }}
         />
+      )}
+      {/* Cached rows survive a failed refresh: a compact inline retry line
+          ABOVE the stale rows, rather than replacing them. */}
+      {!loading && !searching && isError && threads.length > 0 && onRetry && (
+        <InboxLoadErrorStrip onRetry={onRetry} />
       )}
       {!loading &&
         !searching &&
@@ -120,26 +155,32 @@ export function MessagesThreadListBody({
             title={t(`messages:${TAB_EMPTY_KEY[activeTab]}`)}
           />
         )}
-      {!loading &&
-        !searching &&
-        visibleThreads.map((thread, index) => (
-          <FadeIn
-            key={thread.id}
-            delay={Math.min(index, 8) * 60}
-            className={styles.threadRowFade}
-          >
-            <MessagesThreadRow
-              thread={thread}
-              activeId={activeId}
-              readIds={readIds}
-              pinnedCount={pinnedCount}
-              onOpen={onOpen}
-              onRequestDelete={onRequestDelete}
-              onMarkThreadRead={onMarkThreadRead}
-              onMarkThreadUnread={onMarkThreadUnread}
-            />
-          </FadeIn>
-        ))}
+      {/* DES-188: a real list. `aria-current`/visually-hidden state on each
+          row (see `MessagesThreadRow`) only reads as list-item state to a
+          screen reader inside actual `ul`/`li` semantics. */}
+      {!loading && !searching && visibleThreads.length > 0 && (
+        <ul className={styles.threadRowList}>
+          {visibleThreads.map((thread, index) => (
+            <FadeIn
+              as="li"
+              key={thread.id}
+              delay={Math.min(index, 8) * 60}
+              className={styles.threadRowFade}
+            >
+              <MessagesThreadRow
+                thread={thread}
+                activeId={activeId}
+                readIds={readIds}
+                pinnedCount={pinnedCount}
+                onOpen={onOpen}
+                onRequestDelete={onRequestDelete}
+                onMarkThreadRead={onMarkThreadRead}
+                onMarkThreadUnread={onMarkThreadUnread}
+              />
+            </FadeIn>
+          ))}
+        </ul>
+      )}
     </>
   );
 }

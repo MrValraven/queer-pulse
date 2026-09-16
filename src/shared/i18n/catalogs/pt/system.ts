@@ -255,12 +255,18 @@ export const system: Catalog = {
     "Sem sinal, ou não conseguimos contactar os nossos servidores neste momento. A QueerPulse guarda uma cópia da própria aplicação neste dispositivo, e é por isso que <b>este ecrã ainda carrega</b>.",
   "offline.noCache.title": "O que podes fazer",
   "offline.noCache.body":
-    "Ainda não há nada na QueerPulse que se leia offline: cada página vai buscar o que mostra. Este ecrã desaparece sozinho assim que a ligação voltar, e ficas onde ias.",
+    "Quase tudo na QueerPulse precisa de ligação, porque cada página vai buscar o que mostra. Este ecrã desaparece sozinho assim que a ligação voltar, e ficas onde ias.",
   "offline.status": "À escuta de sinal",
   "offline.retryCta": "Tentar outra vez",
   "offline.retryingCta": "Ainda offline",
   "offline.sessionBanner":
     "Estás offline. A página fica como está. O que enviares só segue quando a ligação voltar.",
+  "offline.savedMessagesBanner":
+    "Estás offline. Estás a ler as mensagens guardadas neste dispositivo, por isso as mais recentes podem faltar. O que enviares segue quando a ligação voltar.",
+  "offline.savedMessages.title": "Guardadas neste dispositivo",
+  "offline.savedMessages.body":
+    "As conversas que abriste mais recentemente ficam guardadas aqui, para as leres enquanto estás offline.",
+  "offline.readSavedMessagesCta": "Ler mensagens guardadas",
 
   // ── PwaPromptPage.tsx ─────────────────────────────────────────────────────
   "pwaPrompt.kicker": "Adicionar ao ecrã principal · sem loja de aplicações",

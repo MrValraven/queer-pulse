@@ -98,9 +98,19 @@ export function useSendListingEnquiry(slug: string) {
           conversationId: "",
           enquiryId: "",
           replyRequiresConnection: true,
+          followUpAwaitsReply: true,
         };
       }
       return sendListingEnquiry(slug, body);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      // PRD-342: the same gap housing's enquiry mutation had. Without this,
+      // a member who had the inbox open (or cached) within react-query's
+      // staleness window sees the success panel's "Open thread" link land on
+      // whatever thread is already open, with `?c=` still in the URL and no
+      // feedback, because the new conversation never enters the inbox cache.
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
     onSettled: () => {
       if (demoMode) return;

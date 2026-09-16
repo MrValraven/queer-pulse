@@ -1,5 +1,7 @@
 import { useCallback, useRef, useState, type PointerEvent } from "react";
 import { useMotionValue, type MotionValue } from "motion/react";
+import { useToast } from "../feedback/useToast";
+import { useTranslation } from "../../i18n/useTranslation";
 
 // ── Pull-to-refresh ──────────────────────────────────────────────────────────
 // Reusable drag-down-to-refresh gesture for a scrollable feed. Mirrors the
@@ -102,6 +104,8 @@ export function usePullToRefresh({
   const pull = useMotionValue(0);
   const [refreshing, setRefreshing] = useState(false);
   const dragRef = useRef<DragState | null>(null);
+  const { showToast } = useToast();
+  const { t } = useTranslation();
   // Ref mirror of `refreshing` so pointer handlers (memoized once, closed
   // over at mount) always see the latest value without needing `refreshing`
   // itself in their dependency arrays.
@@ -162,18 +166,25 @@ export function usePullToRefresh({
       }
       refreshingRef.current = true;
       setRefreshing(true);
-      // A failed refresh still releases the gesture — the caller owns
-      // surfacing the error (e.g. a toast), this hook only owns the gesture
-      // lifecycle.
+      // A failed refresh still releases the gesture. The rejection used to be
+      // swallowed here entirely, so a pull that failed (socket down, offline,
+      // a 5xx) looked identical to one that found nothing new, since the
+      // ambient query-error toast is also suppressed while cached rows still
+      // exist. Surface it with a toast instead: the one piece of feedback the
+      // gesture itself owns, regardless of what `onRefresh` is (every caller
+      // today is a bare `invalidateQueries`, with nowhere else to report a
+      // failure).
       void Promise.resolve(onRefresh())
-        .catch(() => undefined)
+        .catch(() => {
+          showToast(t("shared:pullToRefresh.failed"), "error");
+        })
         .finally(() => {
           refreshingRef.current = false;
           setRefreshing(false);
           pull.set(0);
         });
     },
-    [disabled, onRefresh, pull, threshold],
+    [disabled, onRefresh, pull, threshold, showToast, t],
   );
 
   const onPointerCancel = useCallback(() => reset(), [reset]);

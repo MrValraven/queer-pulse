@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import {
@@ -10,9 +11,10 @@ import {
 } from "../../../shared/api/messageCache";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { Conversation } from "../data";
+import type { Conversation, ConversationMuteMode } from "../data";
 import { writeConversationPrefOverride } from "../conversationPrefs";
 import { updateConversationPrefs } from "./messages.api";
+import { UNREAD_COUNT_KEY } from "./useConversations";
 
 /**
  * Patches `archivedAt` onto a cached inbox row in place — `useToggleArchive`'s
@@ -139,23 +141,137 @@ export interface ToggleMuteInput {
   conversationId: string;
   /** Whether this chat is currently muted — decides mute vs. unmute. */
   muted: boolean;
+  /**
+   * PRD-349: the timed-mute expiry to mute UNTIL, only meaningful when going
+   * from unmuted to muted (`muted` is currently `false`); ignored when
+   * unmuting. Three shapes: an ISO timestamp (the "8 hours"/"1 week" row-menu
+   * choices), `null` (explicit "Always", mutes forever), or omitted (a bare
+   * re-mute with no duration picked, which also mutes forever: the pre-
+   * PRD-349 shape every existing caller still uses).
+   */
+  mutedUntil?: string | null;
 }
 
-/** Mute/unmute a chat's push notifications (any thread — DM or group). */
+/**
+ * Patches `mutedUntil` onto a cached inbox row in place: `useToggleMute`'s
+ * optimistic update for the PRD-349 timed-mute expiry, alongside the existing
+ * `patchConversationMuted` (the plain boolean). Kept local rather than added
+ * to `shared/api/messageCache.ts` for the same file-ownership reason
+ * `patchConversationArchived` above is: that shared file sits outside this
+ * change's file ownership for this build pass.
+ */
+function patchConversationMutedUntil(
+  queryClient: QueryClient,
+  conversationId: string,
+  mutedUntil: string | null | undefined,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? { ...conversation, mutedUntil }
+          : conversation,
+      ),
+  );
+}
+
+/** Mute/unmute a chat's push notifications (any thread, DM or group), with
+ *  an optional timed expiry (PRD-349: 8 hours / 1 week / "Always"). */
 export function useToggleMute() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
   return useMutation<void, Error, ToggleMuteInput>({
-    mutationFn: async ({ conversationId, muted }) => {
+    mutationFn: async ({ conversationId, muted, mutedUntil }) => {
       if (demoMode) {
+        // Demo has no server-side expiry check; the chosen duration only
+        // reaches the optimistic cache patch below (see this session's own
+        // report for the exact tradeoff). `conversationPrefs.ts`'s override
+        // shape stays untouched here (outside this change's file ownership),
+        // so a reload falls back to a plain forever-mute rather than losing
+        // the mute entirely.
         writeConversationPrefOverride(conversationId, { muted: !muted });
         return;
       }
-      await updateConversationPrefs(conversationId, { muted: !muted });
+      await updateConversationPrefs(conversationId, {
+        muted: !muted,
+        ...(muted ? {} : { mutedUntil: mutedUntil ?? null }),
+      });
     },
-    onSuccess: (_result, { conversationId, muted }) => {
+    onSuccess: (_result, { conversationId, muted, mutedUntil }) => {
       patchConversationMuted(queryClient, conversationId, !muted);
+      patchConversationMutedUntil(
+        queryClient,
+        conversationId,
+        muted ? undefined : mutedUntil,
+      );
+      if (!demoMode) {
+        void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      }
+    },
+  });
+}
+
+export interface ToggleMuteModeInput {
+  conversationId: string;
+  /** The mute MODE to switch this thread TO (`"all"` \| `"mentionsOnly"`), a
+   *  second axis independent of `useToggleMute`'s plain `muted`/`mutedUntil`
+   *  ladder above (`ConversationParticipant.muteMode`'s own doc, mirrored on
+   *  `Conversation.muteMode`). Sent ALONE, never bundled with `muted` in the
+   *  same PATCH, so picking "Mentions only" from the row menu never touches
+   *  an existing timed mute, and a duration pick never touches this field. */
+  muteMode: ConversationMuteMode;
+}
+
+/**
+ * Patches `muteMode` onto a cached inbox row in place, mirroring
+ * `patchConversationMutedUntil` above. Kept local for the same
+ * file-ownership reason as `patchConversationArchived`/
+ * `patchConversationMutedUntil`: `shared/api/messageCache.ts` sits outside
+ * this change's file ownership.
+ */
+function patchConversationMuteMode(
+  queryClient: QueryClient,
+  conversationId: string,
+  muteMode: ConversationMuteMode,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? { ...conversation, muteMode }
+          : conversation,
+      ),
+  );
+}
+
+/**
+ * PRD-349: set this caller's own "mentions only" mute MODE for a
+ * conversation (or switch it back to `"all"`), the sibling toggle to
+ * `useToggleMute` above, for the SECOND, independent mute axis. Mirrors its
+ * shape exactly: live mode PATCHes `/conversations/:id` with `{ muteMode }`
+ * alone (the backend dispatch reads it independently of `muted`/
+ * `mutedUntil`); DEMO mode has no server, so it optimistically patches the
+ * `["conversations"]` cache for the rest of the session, same as every other
+ * demo toggle here, lasting only for the current session:
+ * `conversationPrefs.ts`'s localStorage-backed override map sits outside
+ * this change's file ownership, so this session-only cache patch is the
+ * honest ceiling for demo mode here, the same tradeoff
+ * `patchConversationArchived`'s own doc calls out.
+ */
+export function useToggleMuteMode() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, ToggleMuteModeInput>({
+    mutationFn: async ({ conversationId, muteMode }) => {
+      if (demoMode) return;
+      await updateConversationPrefs(conversationId, { muteMode });
+    },
+    onSuccess: (_result, { conversationId, muteMode }) => {
+      patchConversationMuteMode(queryClient, conversationId, muteMode);
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
       }
@@ -182,9 +298,16 @@ export interface ToggleArchiveInput {
 export function useToggleArchive() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
 
-  return useMutation<void, Error, ToggleArchiveInput>({
-    mutationFn: async ({ conversationId, archived }) => {
+  // Shared by the primary mutation below AND its own Undo action (PRD-345,
+  // mirroring the block-undo pattern in `useConversationBlockAction.ts`).
+  // Undo can't call the mutation's own `.mutate` (circular: it's not
+  // constructed yet inside its own config), so both directions go through
+  // these two plain functions instead.
+  const applyArchive = useCallback(
+    async (conversationId: string, archived: boolean) => {
       if (demoMode) {
         writeConversationPrefOverride(conversationId, {
           archivedAt: archived ? undefined : new Date().toISOString(),
@@ -193,14 +316,45 @@ export function useToggleArchive() {
       }
       await updateConversationPrefs(conversationId, { archived: !archived });
     },
-    onSuccess: (_result, { conversationId, archived }) => {
+    [demoMode],
+  );
+  const applyArchiveSuccess = useCallback(
+    (conversationId: string, archived: boolean) => {
       patchConversationArchived(
         queryClient,
         conversationId,
         archived ? undefined : new Date().toISOString(),
       );
+      // PRD-341: an archived thread is out of the nav badge's "unread"
+      // definition too (the badge, the Unread tab and the row highlight must
+      // all agree an archived thread isn't unread), so archiving/unarchiving
+      // can change the badge number even when no message was read.
+      void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      }
+    },
+    [queryClient, demoMode],
+  );
+
+  return useMutation<void, Error, ToggleArchiveInput>({
+    mutationFn: ({ conversationId, archived }) =>
+      applyArchive(conversationId, archived),
+    onSuccess: (_result, { conversationId, archived }) => {
+      applyArchiveSuccess(conversationId, archived);
+      // PRD-345: archiving (never unarchiving) gets an Undo toast. A
+      // mis-swipe/mis-click on archive used to flip instantly with no way
+      // back. Mirrors `useConversationBlockAction`'s undo-toast pattern
+      // exactly, including the 6s window.
+      if (!archived) {
+        showToast(t("messages:thread.archivedToast"), "success", 6000, {
+          label: t("messages:thread.archiveUndoCta"),
+          onClick: () => {
+            void applyArchive(conversationId, true).then(() =>
+              applyArchiveSuccess(conversationId, true),
+            );
+          },
+        });
       }
     },
   });
@@ -247,6 +401,11 @@ export function useToggleMarkUnread() {
         conversationId,
         markedUnread ? undefined : new Date().toISOString(),
       );
+      // PRD-341: the nav badge counts "not archived AND (unread count > 0 OR
+      // markedUnreadAt set)", the SAME predicate the Unread tab/row use, so
+      // a manual mark-unread/mark-read must move the badge too, not just the
+      // row and tab.
+      void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
       }

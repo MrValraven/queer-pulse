@@ -2057,4 +2057,10 @@ export const members: Catalog = {
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-34c — PRD-34c - /search category tabs. The tab strip now asks the backend (GET /search/types) which result types are actually live, so a closed surface no longer gets a tab that can only show the empty state. These two keys cover the case where that lookup itself fails: the strip falls back to the categories that need no feature flag (All, Pages) and this compact panel says why, with a retry. Search itself still works, so the copy must not read as a search failure. Rendered through the shared LoadErrorState in SearchPage.tsx.
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "profile.hello.sendErrorToast":
+    "Couldn't send your message. Check your connection and try again.",
+  "profile.hello.openThreadCta": "Open the conversation",
+  "profile.hello.sending": "Sending…",
 };

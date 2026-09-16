@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FiPaperclip } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -9,30 +9,24 @@ import {
   isGifProviderConfigured,
   type GifAttachment,
 } from "../../shared/api/gifs";
-import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import menu from "./ComposerAttachButton.module.css";
 import styles from "./MessagesPage.module.css";
 
 interface ComposerAttachButtonProps {
   /** Sends a picked GIF as its own message. Absent = no GIF row. */
   onSendGif?: (attachment: GifAttachment) => void;
-  /** Sends an uploaded image as its own message. Absent = no Photo row. */
-  onSendImage?: (
-    attachment: GifAttachment,
-    localAttachment?: GifAttachment,
-  ) => void;
-  /** Sends an uploaded document as its own message (PRD-226). Absent = no
-   *  File row. */
-  onSendDocument?: (
-    attachment: DocumentAttachment,
-    localAttachment?: DocumentAttachment,
-  ) => void;
+  /** Hands picked image file(s) to staging (DES-198/DES-199). Absent = no
+   *  Photo/Camera rows. */
+  onImagePicked?: (files: File[]) => void;
+  /** Hands picked document file(s) to staging (PRD-226/DES-198). Absent =
+   *  no File row. */
+  onDocumentPicked?: (files: File[]) => void;
   /** Whether the attach MENU is the open composer popover. */
   menuOpen: boolean;
-  /** Whether the GIF PICKER is the open composer popover — the menu hands off
+  /** Whether the GIF PICKER is the open composer popover; the menu hands off
    *  to it, so the two are never open at once. */
   gifOpen: boolean;
-  /** Toggle request for the menu — the Composer flips its single popover state. */
+  /** Toggle request for the menu; the Composer flips its single popover state. */
   onToggleMenu: () => void;
   /** Swaps the menu for the GIF picker in this same anchor slot. */
   onOpenGif: () => void;
@@ -42,23 +36,25 @@ interface ComposerAttachButtonProps {
 
 /**
  * The composer's single attach affordance: a paperclip sitting INSIDE the
- * input pill (WhatsApp-style) that opens a small menu — Photo, File, GIF —
+ * input pill (WhatsApp-style) that opens a small menu (Photo, File, GIF)
  * instead of the row of outlined circles that used to flank the input. One
  * trigger is what keeps the pill uncrowded however many attachment kinds get
  * added later, and it stops the "GIF" wordmark competing with the placeholder.
  *
  * Picking GIF closes the menu and opens `GifPicker` from the same anchor, so
- * a panel never stacks on a panel — `useComposerPopovers` owns that mutual
+ * a panel never stacks on a panel; `useComposerPopovers` owns that mutual
  * exclusion plus outside-click/Escape dismissal for both.
  *
- * Photo and File keep their own components: each owns a hidden file input and
- * a real upload pipeline (EXIF strip, presigned PUT, demo-mode blob), which
- * has nothing to do with how the menu renders.
+ * Photo and File keep their own components: each owns its own hidden file
+ * input(s) (Photo also owns the coarse-pointer-only Camera row, PRD-350) and
+ * hands picked files straight to `useAttachmentStaging`, which owns the
+ * actual upload pipeline (EXIF strip, presigned PUT, demo-mode blob); none of
+ * that has anything to do with how this menu renders.
  */
 export function ComposerAttachButton({
   onSendGif,
-  onSendImage,
-  onSendDocument,
+  onImagePicked,
+  onDocumentPicked,
   menuOpen,
   gifOpen,
   onToggleMenu,
@@ -68,6 +64,37 @@ export function ComposerAttachButton({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  // Wraps the paperclip and both its panels: the focus-return effect below
+  // checks focus against THIS boundary rather than the popover state, so it
+  // can tell "focus already moved somewhere deliberate" apart from "focus
+  // has nowhere left to go" regardless of what closed the popover.
+  const controlRef = useRef<HTMLDivElement>(null);
+  // A document-level Escape (or outside click) closes the popover in
+  // `useComposerPopovers` BEFORE either panel below gets a turn to react to
+  // it, so a listener inside the menu/`GifPicker` itself would never fire
+  // for that dismissal path. Watching the open-to-closed transition here
+  // instead catches every close uniformly: Escape, outside click, handing
+  // off to the GIF picker's sibling slot, tapping into the textarea
+  // (`ComposerInputRow`'s own `onFocus` close), or a reply arming while the
+  // menu is open. In every one of those cases focus already landed
+  // somewhere the member meant it to, so `isFocusStranded` below only
+  // reclaims it for the paperclip when it would otherwise land nowhere.
+  const wasMenuOpenRef = useRef(menuOpen);
+  const wasGifOpenRef = useRef(gifOpen);
+  useEffect(() => {
+    const justClosed =
+      (wasMenuOpenRef.current && !menuOpen) ||
+      (wasGifOpenRef.current && !gifOpen);
+    wasMenuOpenRef.current = menuOpen;
+    wasGifOpenRef.current = gifOpen;
+    if (!justClosed) return;
+    const activeElement = document.activeElement;
+    const isFocusStranded =
+      !activeElement ||
+      activeElement === document.body ||
+      controlRef.current?.contains(activeElement);
+    if (isFocusStranded) buttonRef.current?.focus();
+  }, [menuOpen, gifOpen]);
 
   // Live mode without a configured provider (KLIPY key unset): the picker has
   // no live source, so drop the row entirely rather than offer one that opens
@@ -77,10 +104,10 @@ export function ComposerAttachButton({
 
   // Nothing to attach on this surface — render no trigger at all rather than a
   // paperclip that opens an empty menu.
-  if (!onSendImage && !onSendDocument && !showGifRow) return null;
+  if (!onImagePicked && !onDocumentPicked && !showGifRow) return null;
 
   return (
-    <div className={menu.control}>
+    <div className={menu.control} ref={controlRef}>
       <button
         ref={buttonRef}
         type="button"
@@ -107,12 +134,15 @@ export function ComposerAttachButton({
         aria-label={t("messages:attachments.menuLabel")}
         hidden={!menuOpen}
       >
-        {onSendImage && (
-          <ImageComposerButton onSendImage={onSendImage} onPicked={onClose} />
+        {onImagePicked && (
+          <ImageComposerButton
+            onFilesPicked={onImagePicked}
+            onPicked={onClose}
+          />
         )}
-        {onSendDocument && (
+        {onDocumentPicked && (
           <DocumentComposerButton
-            onSendDocument={onSendDocument}
+            onFilesPicked={onDocumentPicked}
             onPicked={onClose}
           />
         )}
@@ -132,12 +162,8 @@ export function ComposerAttachButton({
           onPick={(attachment) => {
             onSendGif(attachment);
             onClose();
-            buttonRef.current?.focus();
           }}
-          onClose={() => {
-            onClose();
-            buttonRef.current?.focus();
-          }}
+          onClose={onClose}
         />
       )}
     </div>

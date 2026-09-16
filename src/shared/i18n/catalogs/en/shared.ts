@@ -301,6 +301,7 @@ export const shared: Catalog = {
   "adminNav.items.roadmap": "Roadmap",
   "adminNav.items.reports": "Reports",
   "adminNav.items.systemAccounts": "System accounts",
+  "adminNav.items.officialMessages": "Official messages",
 
   // errorHandling.ts / errorMessage.ts — API failure copy, resolved through
   // setQueryErrorTranslator so non-React modules can stay i18n-aware.
@@ -732,4 +733,8 @@ export const shared: Catalog = {
   "richText.linkInvalid":
     "Use a full web address like https://example.com, or an email address like mailto:hello@example.com.",
   "richText.slashMenuAria": "Insert a block",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "tabs.labelWithCount": "{label}, {count}",
+  "pullToRefresh.failed": "Refresh failed. Try again in a moment.",
 };

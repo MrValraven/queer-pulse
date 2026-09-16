@@ -11,6 +11,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { reasonFor } from "../../../shared/api/errorMessage";
 import {
   removeConnection,
+  replyToConnectionRequest,
   respondConnection,
   sendConnection,
   type ConnectionAction,
@@ -121,6 +122,36 @@ export function useConnectionActions() {
       }
     },
     [decline, patch, snapshot, rollback],
+  );
+
+  /**
+   * PRD-340: reply-implies-accept. Accept the request waiting from this
+   * member AND deliver `body` as the thread's own first reply, in the one
+   * action WhatsApp/Instagram treat a typed reply as. Live mode goes through
+   * `PATCH /connections/:id/reply`, which reuses every guard the plain
+   * `acceptRequest` above does (see the backend's `respondWithReply`), so
+   * this is never a looser path to "connected" than the Accept button.
+   *
+   * Demo mode has no message-request thread to deliver a reply into, so it
+   * mirrors `acceptRequest`'s own local move only: there is nothing further
+   * to simulate.
+   */
+  const acceptRequestWithReply = useCallback(
+    async (ref: ConnectionRef, body: string): Promise<boolean> => {
+      const prev = snapshot();
+      accept(ref.slug); // demo + optimistic local move
+      if (demoMode || !ref.id) return true;
+      try {
+        await replyToConnectionRequest(ref.id, body);
+        invalidate();
+        void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+        return true;
+      } catch (error) {
+        rollback(prev, error);
+        return false;
+      }
+    },
+    [accept, demoMode, invalidate, queryClient, snapshot, rollback],
   );
 
   /**
@@ -241,6 +272,7 @@ export function useConnectionActions() {
 
   return {
     acceptRequest,
+    acceptRequestWithReply,
     declineRequest,
     withdrawRequest,
     block,

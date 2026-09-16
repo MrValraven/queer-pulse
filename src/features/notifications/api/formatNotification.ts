@@ -518,6 +518,25 @@ export type NotificationKind =
   // opens, which is the same rule that keeps
   // `listing_public_question_answered`'s answer body off the bell.
   | "review_replied"
+  // PRD-334. Sent to a member a group owner or admin added to a group
+  // conversation, at creation or through "Add members" (mirrors the backend
+  // `notifications_type_enum` value added in
+  // `AddGroupAddedNotificationType1818700000000`, written by
+  // `GroupNotificationsListener`). Member-driven: carries `payload.actorId`
+  // (the adder), plus `source: 'message'` and `conversationId`, which
+  // `sourceHrefFromPayload` already resolves to `/messages?c=<id>`, and
+  // `groupTitle` for the sentence.
+  | "group_added"
+  // PRD-353. Sent to a member INVITED into a group whose "who can add me"
+  // preference is `invite_only`, or who left/was removed and is being asked
+  // back rather than silently re-seated (mirrors the backend
+  // `notifications_type_enum` value added by `GROUP_INVITE_CREATED`, written
+  // by the same `GroupNotificationsListener` as `group_added`, respecting the
+  // same block/mute rules). Member-driven: carries `payload.actorId` (the
+  // inviter) plus `groupTitle` for the sentence. Deliberately does NOT open
+  // the group itself (the invitee isn't a member yet): `sourceHrefFromPayload`
+  // resolves it to `/messages?tab=requests`, where the invite is answered.
+  | "group_invite"
   // Sent to the staff who can work an admin review queue when an item lands in
   // it (mirrors the backend `notifications_type_enum` value added in
   // `AddAdminQueueItemNotificationType`, written by
@@ -695,6 +714,12 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // about a place, same tab as listing_review, which is the row on the other
   // side of the same conversation.
   review_replied: "community",
+  // Another member putting you in a group chat is activity between members,
+  // same tab as connection_request and introduction_made.
+  group_added: "community",
+  // Being invited to a group is the same kind of activity between members as
+  // being added to one outright, same tab as group_added.
+  group_invite: "community",
   // An arrival in a review queue is platform duty mail that deep-links into a
   // console, same tab as moderation_queue_alert.
   admin_queue_item: "platform",
@@ -1078,6 +1103,21 @@ function reviewSubjectToken(payload: unknown, t: TFunction): string {
   return typeof subjectLabel === "string" && subjectLabel.trim() !== ""
     ? subjectLabel
     : t("notifications:type.review_replied.subjectFallback");
+}
+
+/**
+ * Resolves the `{groupTitle}` token a `group_added` OR `group_invite` row
+ * interpolates. A group title is required at creation and on rename, so the
+ * fallback covers a malformed payload only, and reads "a group" rather than
+ * leaving the brace token on screen. Both kinds share the ONE fallback string
+ * (`group_added.groupFallback`) rather than each carrying their own, since
+ * neither ever actually reaches a member without a real title.
+ */
+function groupTitleToken(payload: unknown, t: TFunction): string {
+  const groupTitle = (payload as { groupTitle?: string } | null)?.groupTitle;
+  return typeof groupTitle === "string" && groupTitle.trim() !== ""
+    ? groupTitle
+    : t("notifications:type.group_added.groupFallback");
 }
 
 /**
@@ -1621,6 +1661,13 @@ export function formatNotification(
    * predates it keeps compiling.
    */
   otherActorCount?: number,
+  /**
+   * The resolved acting member's display name. Only `group_added` reads it:
+   * its sentence needs the adder AND the group's title, and `NotificationItem`
+   * can interpolate only `{name}` into a personalized string, so the name
+   * rides the token path instead. Optional, like the two arguments above.
+   */
+  actorDisplayName?: string,
 ): FormattedNotification {
   const known = isKnownKind(type);
   // TS-04 is the ONE type whose copy lives outside the `notifications:`
@@ -1836,6 +1883,16 @@ export function formatNotification(
     // through, so a listing that only asks for something reads as a phrase
     // instead of leaving a gap where the swap's name should be.
     tokens.listingOffer = barterOfferToken(payload, t);
+  }
+  if (type === "group_added" || type === "group_invite") {
+    // Both slots are defensively resolved so a row missing either still reads
+    // as a whole sentence: no resolvable adder/inviter reads as "Someone", and
+    // a missing title reads as "a group". `group_invite` shares `group_added`'s
+    // own name fallback for the same reason it shares its title fallback above.
+    tokens.groupTitle = groupTitleToken(payload, t);
+    tokens.name =
+      actorDisplayName?.trim() ||
+      t("notifications:type.group_added.nameFallback");
   }
   return {
     text: t(`notifications:type.${key}.text`, tokens),

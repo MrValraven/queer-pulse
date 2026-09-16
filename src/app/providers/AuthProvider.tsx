@@ -19,6 +19,8 @@ import {
   currentUserSlug,
 } from "../../features/members/data/demoCurrentUser";
 import { clearStoredGatheringDrafts } from "../../features/gatherings/createGatheringDraftStorage";
+import { logoutAndDetachPush } from "../../features/push/detachPushOnSignOut";
+import { purgeMessagingCache } from "../../shared/api/queryPersistence/messagingCachePersistence";
 import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
 import {
   useLiveSessionBootstrap,
@@ -188,8 +190,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // next member reads a different cache entry whether or not this line ever
     // runs. Keep the clear anyway, for every key that is not yet member-scoped
     // and for the memory it frees.
+    //
+    // The messaging cache persisted for offline reading (PRD-375) goes first,
+    // so the clear below cannot race a queued write, and every other open tab
+    // of this app drops its copy too.
+    void purgeMessagingCache();
     queryClient.clear();
-    void postLogout();
+    // Still fire-and-forget, so nothing above waits on it. One logout request
+    // goes out as soon as this device's push endpoint is read (a local read,
+    // capped at a few hundred ms) and carries it, so the backend removes the
+    // push row in the same request that revokes the session (ENG-225). The
+    // browser unsubscribe, the shown notifications, the badge and the local
+    // sync records are cleared in parallel and never hold the logout.
+    void logoutAndDetachPush(postLogout);
   }, [demoMode]);
 
   const endPreparing = useCallback(() => setPreparing(false), []);

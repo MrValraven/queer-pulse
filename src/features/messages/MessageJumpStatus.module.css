@@ -1,0 +1,90 @@
+/* Zero-height slot between the conversation's top chrome and `.area`. The
+   `[data-log-overlay]` half of the selector outranks `.convoPanel > *`'s
+   z-index of 1, so the pills paint over the log that follows it in the DOM.
+   2 keeps them under the topbar (`--z-raised`), whose menu popover must win. */
+.statusAnchor[data-log-overlay] {
+  position: relative;
+  z-index: 2;
+  flex: none;
+  height: 0;
+  pointer-events: none;
+}
+
+.statusPill {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline: 0;
+  margin: 0 auto;
+  width: max-content;
+  max-width: calc(100% - 48px);
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: var(--shadow-toast);
+  animation: jumpStatusIn var(--dur-base) var(--ease-out) both;
+}
+
+/* While older pages load the pill breathes gently, so it reads as work in
+   progress rather than a settled notice. Opacity only. */
+.statusPillFinding {
+  animation:
+    jumpStatusIn var(--dur-base) var(--ease-out) both,
+    jumpStatusBreathe 1.6s var(--ease) var(--dur-base) infinite alternate;
+}
+
+/* Older history loading: a quiet pill over the top of the log instead of a
+   line inside it, so a page load never shifts the log (Safari fires no scroll
+   event for that shift). It sits below the floating day pill's band. */
+.loadingOlder {
+  position: absolute;
+  inset-block-start: 44px;
+  inset-inline: 0;
+  margin: 0 auto;
+  width: max-content;
+  max-width: calc(100% - 48px);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+  box-shadow: var(--shadow-e2);
+  color: var(--ink-40);
+  font-size: var(--text-12);
+  line-height: 1.35;
+  text-align: center;
+  animation: jumpStatusIn var(--dur-base) var(--ease-out) both;
+}
+
+@keyframes jumpStatusIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes jumpStatusBreathe {
+  to {
+    opacity: 0.78;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusPill,
+  .statusPillFinding,
+  .loadingOlder {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .statusPill,
+:global(html[data-reduce-motion="true"]) .statusPillFinding,
+:global(html[data-reduce-motion="true"]) .loadingOlder {
+  animation: none;
+}

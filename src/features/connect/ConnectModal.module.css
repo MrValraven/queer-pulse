@@ -123,6 +123,15 @@
   line-height: 1.5;
   margin-bottom: 24px;
 }
+/* DES-196: shared with `MessageRequestComposer`'s and the directory-enquiry
+   composer's counter. */
+.counter {
+  margin: -6px 0 10px;
+  text-align: right;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-40);
+}
 .sendError {
   font-size: var(--text-13);
   line-height: 1.5;

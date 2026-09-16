@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { matchPath } from "react-router-dom";
 import { registeredChunkLoaders } from "./routeHelpers";
+import { isSpeculationUnwelcome } from "./speculationPreference";
 import { useAuth } from "./providers/authContext";
 import {
   MEMBER_TABS,
@@ -31,28 +32,6 @@ import {
  * per destination rather than once per `pointerover`.
  */
 const attempted = new Set<string>();
-
-interface SaveDataConnection {
-  saveData?: boolean;
-  effectiveType?: string;
-}
-
-/**
- * Never spend someone's data on a page they have not asked for. Prefetching is
- * a bet that a hover becomes a click; on Data Saver or a 2g-class connection the
- * bet is a bad one, and the losing case (bytes burned on a page never opened) is
- * exactly the case those settings exist to prevent.
- */
-function isSpeculationUnwelcome(): boolean {
-  const connection = (
-    navigator as Navigator & { connection?: SaveDataConnection }
-  ).connection;
-  if (!connection) return false;
-  if (connection.saveData) return true;
-  return (
-    connection.effectiveType === "2g" || connection.effectiveType === "slow-2g"
-  );
-}
 
 /**
  * Start loading the chunk that serves `pathname`, at most once per pathname.

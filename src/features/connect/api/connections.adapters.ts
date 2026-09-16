@@ -91,6 +91,7 @@ export function dtoToMeta(
     // there is nothing here to gate on the client.
     note: dto.note ?? undefined,
     sentAgo: relativeAgo(dto.createdAt, t, fmt),
+    requestRead: dto.requestRead,
     introducedBy: introducer
       ? {
           slug: introducer.slug,

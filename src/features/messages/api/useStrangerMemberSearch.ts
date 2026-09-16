@@ -2,7 +2,13 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
-import { useDebouncedValue } from "../../../shared/hooks";
+// Imported from the concrete module rather than the `shared/hooks` barrel:
+// `isDebounceSettling` is new (DES-185) and this keeps the change from
+// touching the barrel file, which is outside this task's scope.
+import {
+  isDebounceSettling,
+  useDebouncedValue,
+} from "../../../shared/hooks/useDebouncedValue";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import { searchApi } from "../../members/api/search.api";
 import { SEARCH_DATA } from "../../members/search.data";
@@ -54,6 +60,17 @@ export function useStrangerMemberSearch(
   const trimmed = query.trim();
   const debounced = useDebouncedValue(trimmed, 200);
   const enabled = debounced.length >= STRANGER_SEARCH_MIN_LENGTH;
+  // DES-185: the ~200ms gap between a keystroke and this debounce settling.
+  // Gated on the LIVE text already passing the length floor rather than the
+  // stale `debounced` one `enabled` reads above; without this, the
+  // PREVIOUS round's already-settled empty result renders "No one matching
+  // {query}" against the fresh keystroke for the beat before the new round
+  // even starts. Applies to both live mode (ahead of `liveQuery.isFetching`,
+  // which only reflects the OLD debounced query) and demo mode, whose local
+  // filter below also runs off `debounced` rather than the live value.
+  const isSettling =
+    trimmed.length >= STRANGER_SEARCH_MIN_LENGTH &&
+    isDebounceSettling(trimmed, debounced);
 
   const liveQuery = useQuery({
     queryKey: ["strangerMemberSearch", debounced, demoMode],
@@ -98,7 +115,7 @@ export function useStrangerMemberSearch(
   const results = demoMode ? demoResults : liveResults;
   return {
     results: results.filter((result) => !excludeSlugs.has(result.slug)),
-    loading: enabled && !demoMode && liveQuery.isFetching,
+    loading: isSettling || (enabled && !demoMode && liveQuery.isFetching),
     isError: enabled && !demoMode && liveQuery.isError,
   };
 }

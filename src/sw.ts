@@ -16,12 +16,25 @@ import {
   StaleWhileRevalidate,
 } from "workbox-strategies";
 import { urlBase64ToUint8Array } from "./features/push/urlBase64ToUint8Array";
-import { decideCoalesce } from "./pushCoalesce";
-import { isViewingTarget } from "./pushFocus";
+import {
+  PUSH_BRIDGE_NAVIGATE,
+  isNavigateReply,
+  requestPushBridgeReply,
+} from "./pushBridge";
+import {
+  decideCoalesce,
+  resolveShownPushCopy,
+  sumAppBadgeCount,
+} from "./pushCoalesce";
+import { isAnyWindowViewingConversation, isViewingTarget } from "./pushFocus";
 import { readPushLang } from "./pushLang";
 import { readHidePushPreviews } from "./pushPrivacy";
-import { formatPushCopy } from "./pushMessages";
-import { type DirectMessagePush, toDirectMessagePush } from "./pushPayload";
+import { type PushLang, formatPushCopy } from "./pushMessages";
+import {
+  type DirectMessagePush,
+  createFallbackPush,
+  readPushEventPayload,
+} from "./pushPayload";
 import { writePendingSubscription } from "./pushSubStore";
 
 declare const self: ServiceWorkerGlobalScope & typeof globalThis;
@@ -138,146 +151,313 @@ type RichNotificationOptions = NotificationOptions & {
   timestamp?: number;
 };
 
-self.addEventListener("push", (event) => {
-  if (!event.data) return;
-  let raw: unknown;
-  try {
-    raw = event.data.json();
-  } catch {
-    return;
-  }
-  const payload: DirectMessagePush | null = toDirectMessagePush(raw);
-  if (!payload) return;
-  event.waitUntil(
-    (async () => {
-      // Focus-aware suppression: a push for a conversation the recipient is
-      // ALREADY looking at, in a focused window, is noise (Signal/WhatsApp/
-      // Telegram all do this). Conservative by design — isViewingTarget only
-      // matches the exact conversation URL, so a focused window on a
-      // different conversation, the bare list view, or any unfocused window
-      // never suppresses. Checked before the localization read below so a
-      // suppressed push skips that work entirely.
-      const targetUrl = payload.data?.url;
-      if (targetUrl) {
-        const windows = await self.clients.matchAll({ type: "window" });
-        for (const win of windows) {
-          const windowClient = win as WindowClient;
-          if (
-            windowClient.focused &&
-            isViewingTarget(windowClient.url, targetUrl)
-          ) {
-            return;
-          }
-        }
-      }
-      // The recipient's language lives in IndexedDB (written by the app on
-      // boot/language-switch — see pushLang.ts), never in the payload itself:
-      // the backend stays language-neutral and does not know the recipient's
-      // locale. formatPushCopy resolves payload.l10n's key(s) in that
-      // language, falling back to the payload's plain English title/body when
-      // there's no l10n block or the key/lang can't be resolved (also what
-      // iOS renders — it never runs this handler's JS).
-      const lang = await readPushLang();
-      // Lock-screen privacy: when the member has asked for hidden
-      // previews, nothing identifying may reach showNotification.
-      const shouldHidePreviews = await readHidePushPreviews();
+// PRD-335. A push whose `tag` starts with this prefix is a "this thread was
+// read elsewhere" marker for `data.conversationId`, carrying nothing to
+// show, sent so a standing notification for that thread clears on this
+// device too. LOCKSTEP with the backend
+// (queerpulse-backend/src/push/push.service.ts, `READ_DISMISS_TAG_PREFIX`):
+// the exact string must match on both sides, since the two repos share no
+// package to enforce this at compile time.
+const READ_DISMISS_TAG_PREFIX = "qp-read-dismiss:";
 
-      // Message coalescing: a DM push (identified by data.conversationId)
-      // checks for an already-showing notification on the SAME tag (every DM
-      // push tags itself with its conversationId, and sets renotify: true, so
-      // at most one live notification per conversation exists at a time). If
-      // one is found, this is a burst — fold it into "{count} new messages
-      // from {name}" instead of stacking a second notification, and carry the
-      // running count forward in `data` so the NEXT message in the burst can
-      // read it back. `decideCoalesce` holds the pure count/label decision so
-      // it's unit-testable without the unmockable `getNotifications()` call.
-      // Require a tag too (every real DM push sets one to its conversationId):
-      // without it, `getNotifications({ tag: undefined })` would return EVERY
-      // live notification across the whole origin, not just this conversation's.
-      const isDirectMessagePush = Boolean(
-        payload.data?.conversationId && payload.tag,
-      );
-      const existingNotifications = isDirectMessagePush
-        ? await self.registration.getNotifications({ tag: payload.tag })
-        : [];
-      const { count, coalesced } = decideCoalesce(existingNotifications);
-      const { title, body } = coalesced
-        ? formatPushCopy(
-            {
-              title: payload.title,
-              body: payload.body,
-              l10n: {
-                titleKey: payload.l10n?.titleKey,
-                bodyKey: "push:messages.coalesced",
-                params: { count: String(count), name: payload.title },
-              },
-            },
-            lang,
-          )
-        : formatPushCopy(payload, lang);
-      // DEFENCE IN DEPTH, no longer the primary mechanism (ID-13). The server
-      // now reads `member_preferences.hide_push_previews` per recipient and
-      // composes a generic payload for anyone hiding previews, so on the happy
-      // path there is nothing left here to redact. This substitution stays
-      // because it costs nothing and covers what the server cannot: a payload
-      // composed by an older backend, or a type that reaches `showNotification`
-      // without having gone through the split. It has never worked on iOS,
-      // which is why the server had to take over.
-      //
-      // Substitute AFTER coalescing so the burst logic still runs (the tag and
-      // count are not identifying), but before the options are built so the
-      // sender's name in `title` and the message text in `body` never render.
-      const { title: shownTitle, body: shownBody } = shouldHidePreviews
-        ? formatPushCopy(
-            {
-              title: "QueerPulse",
-              body: "You have a new notification.",
-              l10n: {
-                titleKey: "push:preview.hidden.title",
-                bodyKey: "push:preview.hidden.body",
-              },
-            },
-            lang,
-          )
-        : { title, body };
-      const options: RichNotificationOptions = {
-        body: shownBody,
-        tag: payload.tag,
-        data: isDirectMessagePush ? { ...payload.data, count } : payload.data,
-        // The sender's avatar arrives as `payload.icon` on most types, and a
-        // face on the lock screen names them as surely as the text does, so
-        // hidden previews fall back to the app icon rather than merely
-        // rewriting the words above it. The server no longer sends an actor
-        // icon to a member who hides previews; this is the same rule applied
-        // locally, for a payload composed before that landed.
-        icon: shouldHidePreviews
-          ? "/icons/icon-192-v3.png"
-          : (payload.icon ?? "/icons/icon-192-v3.png"),
-        // Android/Chrome renders `badge` as a small monochrome status-bar glyph
-        // and hard-masks it to a single colour: a full-colour app icon here comes
-        // out as a grey blob. Point at a dedicated transparent, single-colour
-        // (white-on-transparent) 96×96 mark. ASSET TO PRODUCE:
-        // public/icons/badge-monochrome-96.png (see generate-icons.mjs). Falls
-        // back gracefully to the app icon on engines that ignore `badge`.
-        badge: "/icons/badge-monochrome-96.png",
-        // A preview image can be as identifying as the text (an avatar, a
-        // photo attachment), so it goes when previews are hidden.
-        image: shouldHidePreviews ? undefined : payload.image,
-        actions: payload.actions,
-        renotify: payload.renotify,
-        // Per the Notifications spec, `silent` and a vibration pattern conflict;
-        // silent wins, so suppress vibrate when the payload asked for silent.
-        vibrate: payload.silent ? undefined : payload.vibrate,
-        requireInteraction: payload.requireInteraction,
-        silent: payload.silent,
-        // The true event time (message createdAt / event start / notification
-        // createdAt), not delivery time — every sender now sets this.
-        timestamp: payload.timestamp,
-      };
-      await self.registration.showNotification(shownTitle, options);
-    })(),
+function isReadDismissPush(payload: DirectMessagePush): boolean {
+  return (
+    payload.tag !== undefined && payload.tag.startsWith(READ_DISMISS_TAG_PREFIX)
+  );
+}
+
+self.addEventListener("push", (event) => {
+  // ENG-234: every subscription is created with userVisibleOnly: true, so
+  // every push has to end in showNotification. A push with no data, a body
+  // that is not JSON, or a payload the validator rejects renders the generic
+  // fallback (readPushEventPayload) instead of returning before waitUntil.
+  const { payload, isFallback } = readPushEventPayload(event.data);
+  event.waitUntil(
+    !isFallback && isReadDismissPush(payload)
+      ? handleReadDismissPush(payload)
+      : showPushNotification(payload, isFallback),
   );
 });
+
+/**
+ * PRD-335: the receiving half of "reading a thread anywhere clears its
+ * notification everywhere". `payload` carries no message to show, only
+ * `data.conversationId`, the thread that was just read on another device.
+ *
+ * `userVisibleOnly: true` (every subscription here is created that way)
+ * still obliges a `showNotification` call for THIS push too, or the engine
+ * can start showing its own "this site has been updated in the background"
+ * notice and eventually revoke the permission (see ENG-234's note above).
+ * There is no way to opt out of that platform contract for a genuinely
+ * silent/data-only push, so this shows a throwaway marker notification
+ * (`silent: true`, `payload`'s own near-empty title/body) and closes it again
+ * in the same tick, before this handler resolves; the standard workaround,
+ * and in practice no visible frame is painted.
+ *
+ * The actual work: close every notification tagged with the conversation's
+ * OWN bare tag (what a real message push for that thread uses; see
+ * `isReadDismissPush`'s doc for why this marker's tag is namespaced away
+ * from it) and re-sync the app badge from what's left, exactly as if the
+ * member had opened or dismissed them by hand.
+ */
+async function handleReadDismissPush(
+  payload: DirectMessagePush,
+): Promise<void> {
+  const markerTag = payload.tag ?? `${READ_DISMISS_TAG_PREFIX}unknown`;
+  try {
+    await self.registration.showNotification(payload.title, {
+      body: payload.body,
+      tag: markerTag,
+      silent: true,
+    });
+    const markerNotifications = await self.registration.getNotifications({
+      tag: markerTag,
+    });
+    markerNotifications.forEach((notification) => notification.close());
+  } catch {
+    // Nothing to fall back to: this marker was never meant to stay visible.
+  }
+  const conversationId = payload.data?.conversationId;
+  if (!conversationId) return;
+  try {
+    const staleNotifications = await self.registration.getNotifications({
+      tag: conversationId,
+    });
+    staleNotifications.forEach((notification) => notification.close());
+    await syncAppBadge();
+  } catch {
+    // Best-effort: worst case the stale row/badge count lingers until the
+    // member opens the thread themself, which already clears both.
+  }
+}
+
+/**
+ * Focus-aware suppression: a push for a conversation the recipient is ALREADY
+ * looking at, in a focused window, is noise (Signal, WhatsApp and Telegram all
+ * suppress it). Only focused windows are considered, so an unfocused or
+ * background window never suppresses. Two paths, and either one suppresses:
+ *
+ * - `isViewingTarget` matches a focused window whose URL is exactly the push's
+ *   target. It rarely fires for messages, since the inbox strips `?c=` once a
+ *   deep link is consumed, but it still covers every other push type.
+ * - For a message push, `isAnyWindowViewingConversation` asks each focused
+ *   window over the page bridge (pushBridge.ts) whether that conversation is
+ *   on screen (ENG-226). A window that does not answer in time counts as not
+ *   viewing, so on uncertainty the notification shows.
+ *
+ * `includeUncontrolled: true` for the same reason as openNotificationTarget
+ * below: right after a deploy the tabs opened under the previous build are
+ * uncontrolled, and they are still the member's open windows.
+ */
+async function isPushTargetOnScreen(
+  payload: DirectMessagePush,
+  isDirectMessagePush: boolean,
+): Promise<boolean> {
+  const targetUrl = payload.data?.url;
+  const conversationId = isDirectMessagePush
+    ? payload.data?.conversationId
+    : undefined;
+  if (!targetUrl && !conversationId) return false;
+  const windows = await self.clients.matchAll({
+    type: "window",
+    includeUncontrolled: true,
+  });
+  const focusedWindows = windows.filter((windowClient) => windowClient.focused);
+  if (focusedWindows.length === 0) return false;
+  if (
+    targetUrl &&
+    focusedWindows.some((focusedWindow) =>
+      isViewingTarget(focusedWindow.url, targetUrl),
+    )
+  ) {
+    return true;
+  }
+  if (!conversationId) return false;
+  return isAnyWindowViewingConversation(focusedWindows, conversationId);
+}
+
+/**
+ * Render one push. Resolves once the notification is on screen, or once the
+ * suppression check decides this push is noise. Never rejects: anything that
+ * throws on the way (an IndexedDB read, getNotifications, showNotification
+ * itself) ends in the generic fallback notification, for the same
+ * userVisibleOnly reason as the push listener above.
+ */
+async function showPushNotification(
+  payload: DirectMessagePush,
+  isFallback: boolean,
+): Promise<void> {
+  let lang: PushLang = "en";
+  try {
+    // A message push carries data.conversationId and a tag; see the
+    // coalescing note below for why the tag is required. Worked out before
+    // the suppression check, which only asks windows about message pushes.
+    const isDirectMessagePush = Boolean(
+      payload.data?.conversationId && payload.tag,
+    );
+    // Checked before the localization read below so a suppressed push skips
+    // that work entirely. The fallback has no target to match, so it always
+    // shows.
+    if (
+      !isFallback &&
+      (await isPushTargetOnScreen(payload, isDirectMessagePush))
+    ) {
+      return;
+    }
+    // The recipient's language lives in IndexedDB (written by the app on
+    // boot/language-switch — see pushLang.ts), never in the payload itself:
+    // the backend stays language-neutral and does not know the recipient's
+    // locale. formatPushCopy resolves payload.l10n's key(s) in that
+    // language, falling back to the payload's plain English title/body when
+    // there's no l10n block or the key/lang can't be resolved (also what
+    // iOS renders — it never runs this handler's JS).
+    lang = await readPushLang();
+    // Lock-screen privacy: when the member has asked for hidden
+    // previews, nothing identifying may reach showNotification.
+    const shouldHidePreviews = await readHidePushPreviews();
+
+    // Message coalescing: a DM push (identified by data.conversationId)
+    // checks for an already-showing notification on the SAME tag (every DM
+    // push tags itself with its conversationId, and sets renotify: true, so
+    // at most one live notification per conversation exists at a time). If
+    // one is found, this is a burst — fold it into "{count} new messages
+    // from {name}" (or "in {group}" for a group, PRD-333) instead of stacking
+    // a second notification, and carry the running count forward in `data`
+    // so the NEXT message in the burst can read it back. `decideCoalesce`
+    // holds the pure count/label decision so it's unit-testable without the
+    // unmockable `getNotifications()` call.
+    // Require a tag too (every real DM push sets one to its conversationId):
+    // without it, `getNotifications({ tag: undefined })` would return EVERY
+    // live notification across the whole origin, not just this conversation's.
+    const existingNotifications = isDirectMessagePush
+      ? await self.registration.getNotifications({ tag: payload.tag })
+      : [];
+    const decision = decideCoalesce(existingNotifications);
+    // DEFENCE IN DEPTH, no longer the primary mechanism (ID-13). The server
+    // now reads `member_preferences.hide_push_previews` per recipient and
+    // composes a generic payload for anyone hiding previews, so on the happy
+    // path there is nothing left here to redact. This substitution stays
+    // because it costs nothing and covers what the server cannot: a payload
+    // composed by an older backend, or a type that reaches `showNotification`
+    // without having gone through the split. It has never worked on iOS,
+    // which is why the server had to take over.
+    //
+    // Substitute AFTER coalescing so the burst logic still runs (the tag and
+    // count are not identifying), but before the options are built so the
+    // sender's name in `title` and the message text in `body` never render.
+    // resolveShownPushCopy (pushCoalesce.ts) makes the whole copy decision;
+    // for a hidden message push it keeps the message wording and the burst
+    // count (ENG-229).
+    const { title: shownTitle, body: shownBody } = resolveShownPushCopy({
+      payload,
+      lang,
+      isDirectMessagePush,
+      decision,
+      shouldHidePreviews,
+    });
+    const options: RichNotificationOptions = {
+      body: shownBody,
+      tag: payload.tag,
+      data: isDirectMessagePush
+        ? { ...payload.data, count: decision.count }
+        : payload.data,
+      // The sender's avatar arrives as `payload.icon` on most types, and a
+      // face on the lock screen names them as surely as the text does, so
+      // hidden previews fall back to the app icon rather than merely
+      // rewriting the words above it. The server no longer sends an actor
+      // icon to a member who hides previews; this is the same rule applied
+      // locally, for a payload composed before that landed.
+      icon: shouldHidePreviews
+        ? "/icons/icon-192-v3.png"
+        : (payload.icon ?? "/icons/icon-192-v3.png"),
+      // Android/Chrome renders `badge` as a small monochrome status-bar glyph
+      // and hard-masks it to a single colour: a full-colour app icon here comes
+      // out as a grey blob. Point at a dedicated transparent, single-colour
+      // (white-on-transparent) 96×96 mark. ASSET TO PRODUCE:
+      // public/icons/badge-monochrome-96.png (see generate-icons.mjs). Falls
+      // back gracefully to the app icon on engines that ignore `badge`.
+      badge: "/icons/badge-monochrome-96.png",
+      // A preview image can be as identifying as the text (an avatar, a
+      // photo attachment), so it goes when previews are hidden.
+      image: shouldHidePreviews ? undefined : payload.image,
+      actions: payload.actions,
+      renotify: payload.renotify,
+      // Per the Notifications spec, `silent` and a vibration pattern conflict;
+      // silent wins, so suppress vibrate when the payload asked for silent.
+      vibrate: payload.silent ? undefined : payload.vibrate,
+      requireInteraction: payload.requireInteraction,
+      silent: payload.silent,
+      // The true event time (message createdAt / event start / notification
+      // createdAt), not delivery time — every sender now sets this.
+      timestamp: payload.timestamp,
+    };
+    await self.registration.showNotification(shownTitle, options);
+    // The icon badge follows the message notifications on screen (PRD-335).
+    // Other push types leave it alone, so they never overwrite the unread
+    // count the open app set.
+    if (isDirectMessagePush) await syncAppBadge();
+  } catch {
+    await showFallbackNotification(lang);
+  }
+}
+
+/** ENG-234: the generic notification, for a push that failed to render. */
+async function showFallbackNotification(lang: PushLang): Promise<void> {
+  const fallback = createFallbackPush();
+  const { title, body } = formatPushCopy(fallback, lang);
+  try {
+    await self.registration.showNotification(title, {
+      body,
+      tag: fallback.tag,
+      data: fallback.data,
+      icon: "/icons/icon-192-v3.png",
+      badge: "/icons/badge-monochrome-96.png",
+    });
+  } catch {
+    // Nothing left to try: the engine refused to show even the generic copy
+    // (permission revoked mid-flight). Swallowed so the push promise settles.
+  }
+}
+
+interface AppBadgeNavigator {
+  setAppBadge(contents?: number): Promise<void>;
+  clearAppBadge(): Promise<void>;
+}
+
+/** The Badging API ships on some engines only; detect it at runtime. */
+function hasAppBadge(
+  navigatorLike: object,
+): navigatorLike is AppBadgeNavigator {
+  return (
+    "setAppBadge" in navigatorLike &&
+    typeof navigatorLike.setAppBadge === "function" &&
+    "clearAppBadge" in navigatorLike &&
+    typeof navigatorLike.clearAppBadge === "function"
+  );
+}
+
+/**
+ * PRD-335 worker half: set the installed app's icon badge to the number of
+ * messages the notifications on screen represent (`sumAppBadgeCount`), or
+ * clear it at zero. `excludedTag` leaves out a notification that was just
+ * closed. Best-effort and never rejects: a badge is a hint, and the open app
+ * sets the authoritative unread count itself.
+ */
+async function syncAppBadge(excludedTag?: string): Promise<void> {
+  const workerNavigator: object = self.navigator;
+  if (!hasAppBadge(workerNavigator)) return;
+  try {
+    const notifications = await self.registration.getNotifications();
+    const badgeCount = sumAppBadgeCount(notifications, excludedTag);
+    if (badgeCount > 0) {
+      await workerNavigator.setAppBadge(badgeCount);
+    } else {
+      await workerNavigator.clearAppBadge();
+    }
+  } catch {
+    // A refused badge write changes nothing the member relies on.
+  }
+}
 
 const vapidPublicKey = (import.meta.env.VITE_VAPID_PUBLIC_KEY ?? "").trim();
 
@@ -371,9 +551,23 @@ async function openNotificationTarget(targetUrl: string): Promise<void> {
 
   if (existingWindow) {
     let windowToFocus = existingWindow;
+    // ENG-235: ask the running app to route in-app first. navigate() is a
+    // full document load that throws away the socket, the react-query cache,
+    // scroll position and in-memory state, then refetches the inbox before
+    // the deep link resolves. `targetUrl` has already been through
+    // safeNotificationPath, so the page receives the same same-origin path
+    // navigate() would. The bridge request never rejects, and a window that
+    // does not answer within the bridge timeout (an older build, no listener
+    // mounted) resolves null and takes the navigate() path below unchanged.
+    const navigateReply = await requestPushBridgeReply(
+      existingWindow,
+      { type: PUSH_BRIDGE_NAVIGATE, url: targetUrl },
+      isNavigateReply,
+    );
+    const isRoutedInApp = navigateReply?.isHandled === true;
     // Guarded at runtime as well as by the type: WindowClient.navigate is not
     // implemented everywhere the rest of this handler works.
-    if ("navigate" in existingWindow) {
+    if (!isRoutedInApp && "navigate" in existingWindow) {
       try {
         // Route first, then focus, so the window is already on the conversation
         // when it comes up. navigate() resolves with the client that ended up
@@ -414,5 +608,17 @@ self.addEventListener("notificationclick", (event) => {
   // multi-destination action (e.g. "mark as read" vs. "view") would read
   // event.action here and choose a different target/behaviour per action id.
   const targetUrl = safeNotificationPath(event.notification.data?.url);
-  event.waitUntil(openNotificationTarget(targetUrl));
+  // Closing a message notification lowers the icon badge (PRD-335). The
+  // badge sync runs beside the navigation inside the same waitUntil, and it
+  // never rejects, so it cannot hold up or break raising the window.
+  const isMessageNotification =
+    typeof event.notification.data?.conversationId === "string";
+  event.waitUntil(
+    Promise.all([
+      openNotificationTarget(targetUrl),
+      isMessageNotification
+        ? syncAppBadge(event.notification.tag)
+        : Promise.resolve(),
+    ]),
+  );
 });

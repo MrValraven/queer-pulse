@@ -1,0 +1,278 @@
+/* ForwardPickerModal: the message preview, the selected-count chip strip,
+   the People/Groups checkbox list, and the cap notice. Tokens only; the
+   list/row/check styling mirrors NewMessageModal.module.css and
+   shared/components/ui/MemberSelectList.module.css so a forward pick reads
+   like every other member picker in the app. */
+
+.preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+}
+.previewThumb {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-8);
+  object-fit: cover;
+}
+.previewDocIcon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-8);
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--ink-60);
+  display: grid;
+  place-items: center;
+}
+.previewText {
+  min-width: 0;
+  font-size: var(--text-13-5);
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.chipStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+/* The grown coarse-pointer remove button (see `.chipRemove` below) makes
+   each chip pill a little taller; a larger row-gap keeps wrapped rows of
+   chips from sitting close enough to feel cramped. */
+@media (any-pointer: coarse) {
+  .chipStrip {
+    row-gap: 10px;
+  }
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 160px;
+  padding: 4px 6px 4px 4px;
+  background: rgba(var(--jade-rgb), 0.1);
+  border-radius: var(--radius-pill);
+}
+.chipName {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chipRemove {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+.chipRemove:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.chipRemove svg {
+  width: 12px;
+  height: 12px;
+}
+@media (hover: hover) {
+  .chipRemove:hover:not(:disabled) {
+    color: var(--text-strong);
+  }
+}
+/* Grow the REAL button box (not an invisible overlay) toward the Material
+   touch target minimum on any attached coarse pointer. An invisible
+   hit-area extension here would bleed past this chip's own pill into a
+   neighbouring chip's, since chips sit only a few px apart in the wrap
+   flow; growing the box itself stays contained within this chip's own
+   layout, and `.chipStrip`'s larger coarse-pointer gap below keeps whole
+   rows of chips from crowding once they're taller. */
+@media (any-pointer: coarse) {
+  .chipRemove {
+    width: 30px;
+    height: 30px;
+  }
+  .chipRemove svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.capNotice {
+  margin: 0 0 10px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.searchField {
+  margin-bottom: 12px;
+}
+
+/* Reset the People/Groups `<fieldset>`s: no default border/padding, so each
+   reads as a plain grouped section, not a boxed form control. */
+.section {
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 8px;
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  transition: background 0.15s var(--ease);
+}
+.row > :nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+/* The real checkbox is visually hidden (standard sr-only pattern) so the
+   row's own `.check` circle carries the visual state, while the input
+   itself stays in the accessibility tree and the tab order, where a screen
+   reader and keyboard both expect an actual checkbox to be. */
+.rowCheckbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (hover: hover) {
+  .row:has(.rowCheckbox:not(:disabled)):hover {
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+}
+.row:focus-within {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.row:has(.rowCheckbox:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.row:has(.rowCheckbox[aria-disabled="true"]) {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.rowSelected {
+  background: rgba(var(--jade-rgb), 0.09);
+}
+@media (hover: hover) {
+  .rowSelected:has(.rowCheckbox:not(:disabled)):hover {
+    background: rgba(var(--jade-rgb), 0.12);
+  }
+}
+.rowIdentity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.rowName {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.rowMeta {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+.check {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-7);
+  border: 1.5px solid rgba(var(--line-rgb), 0.28);
+  display: grid;
+  place-items: center;
+  color: var(--paper);
+  transition:
+    background 0.16s var(--ease),
+    border-color 0.16s var(--ease);
+}
+.check svg {
+  width: 14px;
+  height: 14px;
+}
+.checkOn {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+.empty {
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-40);
+  padding: 16px 8px;
+  text-align: center;
+}
+.sectionLabel {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 4px 4px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+/* People and Groups are two separate `<fieldset>`s now, so a legend can no
+   longer rely on `:first-child` to tell "first section" from "second":
+   both are the sole child of their own fieldset. A `.section` that follows
+   another one (Groups after People) gets the extra top padding + gap that
+   used to come from that `:first-child` exception instead. */
+.section + .section {
+  margin-top: 4px;
+}
+.section + .section .sectionLabel {
+  padding-top: 12px;
+}
+
+/* The row hover wash is a --plum-rgb tint, which does not flip to dark.
+   Without this the dark surface gives no hover feedback at all. */
+@media (hover: hover) {
+  :global([data-theme="dark"])
+    .row:has(.rowCheckbox:not(:disabled)):hover {
+    background: rgba(var(--cream-rgb), 0.07);
+  }
+}

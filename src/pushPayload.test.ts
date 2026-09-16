@@ -1,5 +1,99 @@
 import { describe, expect, it } from "vitest";
-import { toDirectMessagePush } from "./pushPayload";
+import {
+  FALLBACK_PUSH_TAG,
+  readPushEventPayload,
+  toDirectMessagePush,
+} from "./pushPayload";
+
+describe("toDirectMessagePush: data.isGroup", () => {
+  const base = { title: "Terrace crew", body: "Bo: hi" };
+
+  it("keeps a boolean isGroup", () => {
+    expect(
+      toDirectMessagePush({
+        ...base,
+        data: { conversationId: "g1", isGroup: true },
+      })?.data?.isGroup,
+    ).toBe(true);
+    expect(
+      toDirectMessagePush({
+        ...base,
+        data: { conversationId: "c1", isGroup: false },
+      })?.data?.isGroup,
+    ).toBe(false);
+  });
+
+  it("drops a non-boolean isGroup and leaves the key absent", () => {
+    const result = toDirectMessagePush({
+      ...base,
+      data: { conversationId: "g1", isGroup: "true" },
+    });
+    expect(result?.data).not.toHaveProperty("isGroup");
+    expect(
+      toDirectMessagePush({ ...base, data: { conversationId: "c1" } })?.data,
+    ).not.toHaveProperty("isGroup");
+  });
+});
+
+describe("readPushEventPayload", () => {
+  const expectedFallback = {
+    payload: {
+      title: "QueerPulse",
+      body: "You have a new notification.",
+      tag: FALLBACK_PUSH_TAG,
+      data: { url: "/" },
+      l10n: {
+        titleKey: "push:preview.hidden.title",
+        bodyKey: "push:preview.hidden.body",
+      },
+    },
+    isFallback: true,
+  };
+
+  it("falls back when the push carries no data", () => {
+    expect(readPushEventPayload(null)).toEqual(expectedFallback);
+    expect(readPushEventPayload(undefined)).toEqual(expectedFallback);
+  });
+
+  it("falls back when the data is not JSON", () => {
+    expect(
+      readPushEventPayload({
+        json: () => {
+          throw new SyntaxError("Unexpected token");
+        },
+      }),
+    ).toEqual(expectedFallback);
+  });
+
+  it("falls back when the validator rejects the payload", () => {
+    expect(readPushEventPayload({ json: () => ({ body: "hi" }) })).toEqual(
+      expectedFallback,
+    );
+    expect(readPushEventPayload({ json: () => "just a string" })).toEqual(
+      expectedFallback,
+    );
+  });
+
+  it("uses the tag qp-fallback", () => {
+    expect(FALLBACK_PUSH_TAG).toBe("qp-fallback");
+  });
+
+  it("returns a fresh fallback object every time", () => {
+    const first = readPushEventPayload(null).payload;
+    const second = readPushEventPayload(null).payload;
+    expect(first).not.toBe(second);
+    expect(first.data).not.toBe(second.data);
+  });
+
+  it("passes a valid payload through untouched", () => {
+    const result = readPushEventPayload({
+      json: () => ({ title: "Ana", body: "hi", tag: "c1" }),
+    });
+    expect(result.isFallback).toBe(false);
+    expect(result.payload.title).toBe("Ana");
+    expect(result.payload.tag).toBe("c1");
+  });
+});
 
 describe("toDirectMessagePush", () => {
   it("accepts a minimal valid payload", () => {

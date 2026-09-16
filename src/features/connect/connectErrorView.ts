@@ -1,4 +1,8 @@
 import { ApiError } from "../../shared/api/client";
+import {
+  firstContactErrorReason,
+  type FirstContactErrorReason,
+} from "../messages/api/firstContactError";
 
 /**
  * Which calm mark the terminal notice panel shows. `reached` = the message
@@ -54,6 +58,32 @@ const GENERIC_INLINE: ConnectErrorView = {
 };
 
 /**
+ * The views for the coded first-contact refusals. The two caps lift on their
+ * own, so they stay inline with the draft in place; a paused account and a
+ * recipient who only hears from connections cannot be retried past, so they
+ * get the terminal notice panel.
+ */
+const FIRST_CONTACT_VIEW: Record<FirstContactErrorReason, ConnectErrorView> = {
+  dailyLimit: { mode: "inline", messageKey: "connect:form.dailyLimitError" },
+  pendingLimit: {
+    mode: "inline",
+    messageKey: "connect:form.pendingLimitError",
+  },
+  paused: {
+    mode: "panel",
+    titleKey: "connect:notice.requestsPaused.title",
+    bodyKey: "connect:notice.requestsPaused.body",
+    icon: "held",
+  },
+  recipientConnectionsOnly: {
+    mode: "panel",
+    titleKey: "connect:notice.connectionsOnly.title",
+    bodyKey: "connect:notice.connectionsOnly.body",
+    icon: "held",
+  },
+};
+
+/**
  * Map a rejected reach-out to the experience the user should see. Anything we
  * don't explicitly recognise — a non-`ApiError` network drop, a 5xx, a 403 that
  * isn't one of the business cases below (e.g. a CSRF/active-member guard, or a
@@ -70,6 +100,11 @@ const GENERIC_INLINE: ConnectErrorView = {
  */
 export function describeConnectError(error: unknown): ConnectErrorView {
   if (!(error instanceof ApiError)) return GENERIC_INLINE;
+
+  // PRD-365/366: coded refusals come first, so a daily or pending cap is not
+  // mistaken for the per-minute throttle that shares its 429.
+  const firstContactReason = firstContactErrorReason(error);
+  if (firstContactReason) return FIRST_CONTACT_VIEW[firstContactReason];
 
   if (error.status === 429) {
     return { mode: "inline", messageKey: "connect:form.rateLimitError" };

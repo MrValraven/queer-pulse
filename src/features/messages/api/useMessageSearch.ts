@@ -5,9 +5,12 @@ import { useDeletedConversations } from "../../../app/providers/useDeletedConver
 import { useAuth } from "../../../app/providers/authContext";
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
 import { activeLocale } from "../../../shared/i18n/locale";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { MessageSearchResponse } from "../../../shared/contracts/contracts";
+import type { TFunction } from "../../../shared/i18n/types";
 import { conversations as mockConversations } from "../data";
+import { groupInitials } from "./messages.adapters";
 import { searchMessages } from "./messages.api";
 
 /** Least query length that fans out — a single character matches too much to be
@@ -52,8 +55,6 @@ export interface MessageSearchState {
   refetch: () => void;
 }
 
-const OFFICIAL_NAME = "QueerPulse Team";
-
 /** A short window of `text` around the first case-insensitive match of `query`,
  *  ellipsed where cut — the demo counterpart of the backend's snippet builder. */
 function snippetAround(text: string, query: string): string {
@@ -72,10 +73,21 @@ function snippetAround(text: string, query: string): string {
 }
 
 /** Adapts the live GET /messages/search payload into render-ready groups,
- *  preserving the newest-first hit order (and therefore group order). */
+ *  preserving the newest-first hit order (and therefore group order). `t`
+ *  resolves `messages:conversation.officialName` for an official thread's
+ *  name and `messages:group.untitled` for a nameless group, the same keys the
+ *  thread adapter's `conversationToView`/`groupConversationToView`
+ *  (`messages.adapters.ts`) resolve for the identical fallback cases.
+ *
+ * ENG-251: a hit inside a GROUP conversation (`meta.kind === "group"`) is
+ * labelled with the group's own title/avatar, never an arbitrary member's,
+ * before this fix `otherParticipant` was only nulled for the official
+ * thread, so a group hit rendered under whichever non-caller participant the
+ * backend's grouping query happened to pick first. */
 function toGroups(
   response: MessageSearchResponse,
   myHandle: string | null,
+  t: TFunction,
 ): MessageSearchGroupView[] {
   const metaByConversation = new Map(
     response.conversations.map((group) => [group.conversationId, group]),
@@ -86,18 +98,36 @@ function toGroups(
     let group = groupByConversation.get(hit.conversationId);
     if (!group) {
       const meta = metaByConversation.get(hit.conversationId);
+      const isGroupConversation = meta?.kind === "group";
       const other = meta?.otherParticipant ?? null;
       const official = meta?.isOfficial ?? !other;
-      const name = official ? OFFICIAL_NAME : (other?.displayName ?? "Member");
+      const name = isGroupConversation
+        ? (meta?.title ?? t("messages:group.untitled"))
+        : official
+          ? t("messages:conversation.officialName")
+          : (other?.displayName ?? "Member");
       const parts = name.trim().split(/\s+/);
       group = {
         conversationId: hit.conversationId,
         name,
-        initials: official
-          ? "QP"
-          : initialsOf(parts[0] ?? "", parts.length > 1 ? parts.at(-1)! : ""),
-        tint: official || !other ? "plum" : tintForSlug(other.handle),
-        avatarUrl: other?.avatarUrl ?? undefined,
+        // Brand mark "QP": invariant across languages, matching the thread
+        // adapter's official-avatar fallback and `orgBadgeInitials`'s default
+        // (`shared/lib/initials.ts`). A group's initials come from its own
+        // title, mirroring the inbox row's `groupInitials`.
+        initials: isGroupConversation
+          ? groupInitials(name)
+          : official
+            ? "QP"
+            : initialsOf(parts[0] ?? "", parts.length > 1 ? parts.at(-1)! : ""),
+        // Groups always render "plum", matching the inbox row's group tint,
+        // a group has no single member's handle to derive a tint from.
+        tint:
+          isGroupConversation || official || !other
+            ? "plum"
+            : tintForSlug(other.handle),
+        avatarUrl: isGroupConversation
+          ? (meta?.avatarUrl ?? undefined)
+          : (other?.avatarUrl ?? undefined),
         official,
         hits: [],
       };
@@ -110,7 +140,10 @@ function toGroups(
       snippet: hit.snippet,
       time: shortTime(hit.createdAt),
       from: myHandle && hit.sender.handle === myHandle ? "me" : "them",
-      senderName: hit.sender.displayName,
+      // ENG-243: an erased sender's hit is labelled in the viewer's language.
+      senderName: hit.sender.isFormerMember
+        ? t("messages:formerMember")
+        : hit.sender.displayName,
     });
   }
   return order.map((conversationId) =>
@@ -200,6 +233,7 @@ export function useMessageSearch(
   const { demoMode } = useDemoMode();
   const { deletedIds } = useDeletedConversations();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const myHandle = user?.profile.slug ?? null;
   const trimmed = debouncedQuery.trim();
   const enabled = trimmed.length >= MIN_SEARCH_LENGTH;
@@ -241,8 +275,8 @@ export function useMessageSearch(
   );
 
   const liveGroups = useMemo(
-    () => (liveQuery.data ? toGroups(liveQuery.data, myHandle) : []),
-    [liveQuery.data, myHandle],
+    () => (liveQuery.data ? toGroups(liveQuery.data, myHandle, t) : []),
+    [liveQuery.data, myHandle, t],
   );
 
   const groups = demoMode ? demoGroups : liveGroups;

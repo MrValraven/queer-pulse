@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppShell } from "../../shared/components/layout";
-import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
-import { mediaMax } from "../../shared/theme/breakpoints";
 import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
+import { AttachmentQueueProvider } from "./AttachmentQueueContext";
 import { ConversationPanel } from "./ConversationPanel";
 import { MessagesEmptyPanel } from "./MessagesEmptyPanel";
+import { MessagesPageModals } from "./MessagesPageModals";
 import { MessagesThreadList } from "./MessagesThreadList";
-import { NewGroupModal } from "./NewGroupModal";
-import { NewMessageModal } from "./NewMessageModal";
-import { StarredMessagesModal } from "./StarredMessagesModal";
+import { useForwardPicker } from "./useForwardPicker";
+import { useHideBottomTabBarInThread } from "./useHideBottomTabBarInThread";
+import { useIsDesktopMessagesChrome } from "./useIsDesktopMessagesChrome";
 import { useMessagesController } from "./useMessagesController";
-import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 // Chat-wallpaper tokens (grounds + the doodle tile). Imported HERE rather than
 // from styles/index.css, mirroring persona-skins.css: this route is the only
@@ -24,6 +23,8 @@ export function MessagesPage() {
     view,
     setView,
     loading,
+    inboxLoadError,
+    refetchInbox,
     visibleThreads,
     forwardableGroups,
     activeId,
@@ -37,14 +38,14 @@ export function MessagesPage() {
     active,
     activeBlocked,
     messageGroups,
-    hasMoreOlder,
-    loadingOlder,
-    loadOlder,
+    threadHistory,
     openThread,
     openThreadAtMessage,
     jumpMessageId,
     clearJumpMessage,
     startThread,
+    pendingRequestTarget,
+    clearPendingRequestTarget,
     startGroup,
     leaveGroupThread,
     leavePending,
@@ -54,6 +55,15 @@ export function MessagesPage() {
     changeGroupMemberRole,
     updateGroupInfo,
     groupManaging,
+    transferGroupOwnership,
+    transferOwnershipPending,
+    dissolveGroupThread,
+    dissolvePending,
+    createGroupInviteLink,
+    disableGroupInviteLink,
+    inviteLinkPending,
+    revokeGroupInvite,
+    busyInviteId,
     deleteThread,
     deletePending,
     send,
@@ -64,152 +74,130 @@ export function MessagesPage() {
     forwardMessage,
     markThreadRead,
     markThreadUnread,
+    hasMoreThreads,
+    isLoadingMoreThreads,
+    loadMoreThreads,
   } = useMessagesController();
 
-  // Which way back does the panel carry right now? `chromeless` below hides the
-  // top bar everywhere, but the bottom tab bar only gives way above the mobile
-  // breakpoint (AppChrome gates the Navbar on the same named query). So the
-  // panel's replacement chrome answers to THAT width, and the controller's
-  // `isMobile` is the wrong signal: the controller splits one pane from two at
-  // 768, while the bottom tab bar swaps in at 860. Gated on the controller's
-  // value, the 92px between the two would get the account footer stacked above
-  // the tab bar and no back chevron.
-  const isDesktopChrome = !useMediaQuery(mediaMax("mobile"));
+  // See useIsDesktopMessagesChrome's own doc for why this reads a different
+  // breakpoint than the controller's own `isMobile`.
+  const isDesktopChrome = useIsDesktopMessagesChrome();
 
-  // The message being forwarded (its recipient is picked in NewMessageModal's
-  // forward mode), whether the "Starred messages" view is open, and whether the
-  // create-group picker is open. Page-level so their modals sit beside NewMessageModal.
-  const [forwardSource, setForwardSource] = useState<ChatMessage | null>(null);
+  // Whether the "Starred messages" view is open, and whether the create-group
+  // picker is open. Page-level so their modals sit beside NewMessageModal.
+  // The forward picker's own open state lives in `useForwardPicker` below.
   const [starredOpen, setStarredOpen] = useState(false);
   const [groupComposing, setGroupComposing] = useState(false);
+  const { openForward, forwardPickerNode } = useForwardPicker(
+    forwardableGroups,
+    forwardMessage,
+  );
 
   const showList = !isMobile || view === "list";
   const showThread = !isMobile || view === "thread";
 
-  // Inside a conversation on a phone, hide the global bottom tab bar (like
-  // WhatsApp/Telegram) so two bottom bars don't stack. The html signal also
-  // collapses `--bottom-inset` to just the home-indicator inset (standalone.css)
-  // so the composer doesn't reserve space for a bar that's no longer there.
-  useEffect(() => {
-    const inMobileThread = isMobile && view === "thread";
-    const root = document.documentElement;
-    if (inMobileThread) root.setAttribute("data-messages-thread", "true");
-    else root.removeAttribute("data-messages-thread");
-    return () => root.removeAttribute("data-messages-thread");
-  }, [isMobile, view]);
+  // See useHideBottomTabBarInThread's own doc.
+  useHideBottomTabBarInThread(isMobile, view);
 
   return (
     <AppShell fullHeight chromeless>
       <MentionNamesProvider>
-        <div className={styles.app}>
-          {showList && (
-            <MessagesThreadList
-              loading={loading}
-              threads={visibleThreads}
-              activeId={activeId}
-              readIds={readIds}
-              query={query}
-              onQueryChange={setQuery}
-              onOpen={openThread}
-              onCompose={() => setComposing(true)}
-              onComposeGroup={() => setGroupComposing(true)}
-              onDelete={deleteThread}
-              onSelectResult={openThreadAtMessage}
-              deletePending={deletePending}
-              onMarkThreadRead={markThreadRead}
-              onMarkThreadUnread={markThreadUnread}
-              showRailChrome={isDesktopChrome}
-            />
-          )}
-
-          {showThread &&
-            (active ? (
-              <ConversationPanel
-                active={active}
-                messageGroups={messageGroups}
-                onSend={send}
-                onSendGif={sendGif}
-                onSendImage={sendImage}
-                onSendDocument={sendDocument}
-                blocked={activeBlocked}
-                onBack={isMobile ? () => setView("list") : undefined}
-                onRetry={retrySend}
-                hasMoreOlder={hasMoreOlder}
-                loadingOlder={loadingOlder}
-                onLoadOlder={loadOlder}
-                replyDraft={replyDraft}
-                onSetReply={setReplyDraft}
-                onCancelReply={() => setReplyDraft(null)}
-                jumpToMessageId={jumpMessageId}
-                onJumpHandled={clearJumpMessage}
-                onForwardMessage={setForwardSource}
-                onOpenStarred={() => setStarredOpen(true)}
-                onLeaveGroup={leaveGroupThread}
-                leavePending={leavePending}
-                myUserId={myUserId}
-                onAddGroupMembers={addGroupMembers}
-                onRemoveGroupMember={removeGroupMember}
-                onChangeGroupMemberRole={changeGroupMemberRole}
-                onUpdateGroupInfo={updateGroupInfo}
-                groupManaging={groupManaging}
+        {/* Page-level owner of staged and uploading attachments, so a mobile
+            back-to-list or a breakpoint flip keeps in-flight sends alive. */}
+        <AttachmentQueueProvider
+          onSendGif={sendGif}
+          onSendImage={sendImage}
+          onSendDocument={sendDocument}
+        >
+          <div className={styles.app}>
+            {showList && (
+              <MessagesThreadList
+                loading={loading}
+                isError={inboxLoadError}
+                onRetry={refetchInbox}
+                threads={visibleThreads}
+                activeId={activeId}
+                readIds={readIds}
+                query={query}
+                onQueryChange={setQuery}
+                onOpen={openThread}
+                onCompose={() => setComposing(true)}
+                onComposeGroup={() => setGroupComposing(true)}
+                onDelete={deleteThread}
+                onSelectResult={openThreadAtMessage}
+                deletePending={deletePending}
                 onMarkThreadRead={markThreadRead}
+                onMarkThreadUnread={markThreadUnread}
+                showRailChrome={isDesktopChrome}
+                hasMoreThreads={hasMoreThreads}
+                isLoadingMoreThreads={isLoadingMoreThreads}
+                onLoadMoreThreads={loadMoreThreads}
               />
-            ) : (
-              <MessagesEmptyPanel />
-            ))}
-        </div>
+            )}
+
+            {showThread &&
+              (active ? (
+                <ConversationPanel
+                  active={active}
+                  messageGroups={messageGroups}
+                  onSend={send}
+                  onSendGif={sendGif}
+                  onSendImage={sendImage}
+                  onSendDocument={sendDocument}
+                  blocked={activeBlocked}
+                  onBack={isMobile ? () => setView("list") : undefined}
+                  onRetry={retrySend}
+                  history={threadHistory}
+                  replyDraft={replyDraft}
+                  onSetReply={setReplyDraft}
+                  onCancelReply={() => setReplyDraft(null)}
+                  jumpToMessageId={jumpMessageId}
+                  onJumpHandled={clearJumpMessage}
+                  onForwardMessage={openForward}
+                  onOpenStarred={() => setStarredOpen(true)}
+                  myUserId={myUserId}
+                  groupManagement={{
+                    onLeaveGroup: leaveGroupThread,
+                    leavePending,
+                    onAddGroupMembers: addGroupMembers,
+                    onRemoveGroupMember: removeGroupMember,
+                    onChangeGroupMemberRole: changeGroupMemberRole,
+                    onUpdateGroupInfo: updateGroupInfo,
+                    groupManaging,
+                    onTransferGroupOwnership: transferGroupOwnership,
+                    transferOwnershipPending,
+                    onDissolveGroup: dissolveGroupThread,
+                    dissolvePending,
+                    onCreateGroupInviteLink: createGroupInviteLink,
+                    onDisableGroupInviteLink: disableGroupInviteLink,
+                    inviteLinkPending,
+                    onRevokeGroupInvite: revokeGroupInvite,
+                    busyInviteId,
+                  }}
+                  onMarkThreadRead={markThreadRead}
+                />
+              ) : (
+                <MessagesEmptyPanel />
+              ))}
+          </div>
+        </AttachmentQueueProvider>
       </MentionNamesProvider>
-      {composing && (
-        <NewMessageModal
-          onClose={() => setComposing(false)}
-          onPick={startThread}
-        />
-      )}
-      {groupComposing && (
-        <NewGroupModal
-          onClose={() => setGroupComposing(false)}
-          onCreate={(title, members, avatarUrl) => {
-            // Only close on success — on failure the modal (and its title/
-            // member picks/avatar, all local to it) stays open so the member
-            // can retry without re-entering everything. The global mutation-
-            // error toast already told them it failed.
-            startGroup(title, members, avatarUrl, {
-              onSuccess: () => setGroupComposing(false),
-            });
-          }}
-        />
-      )}
-      {forwardSource && (
-        <NewMessageModal
-          mode="forward"
-          groups={forwardableGroups}
-          onClose={() => setForwardSource(null)}
-          onPick={(recipient: Conversation) => {
-            // Only close on success — on failure the picker stays open on the
-            // same message so the member can retry or pick another recipient.
-            forwardMessage(
-              recipient,
-              forwardSource.text,
-              forwardSource.attachment,
-              forwardSource.kind === "gif" ||
-                forwardSource.kind === "image" ||
-                forwardSource.kind === "document"
-                ? forwardSource.kind
-                : undefined,
-              { onSuccess: () => setForwardSource(null) },
-            );
-          }}
-        />
-      )}
-      {starredOpen && (
-        <StarredMessagesModal
-          onClose={() => setStarredOpen(false)}
-          onPick={(conversationId, messageId) => {
-            openThreadAtMessage(conversationId, messageId);
-            setStarredOpen(false);
-          }}
-        />
-      )}
+      <MessagesPageModals
+        composing={composing}
+        onCloseComposing={() => {
+          setComposing(false);
+          clearPendingRequestTarget();
+        }}
+        onPickNewMessage={startThread}
+        pendingRequestTarget={pendingRequestTarget}
+        groupComposing={groupComposing}
+        onCloseGroupComposing={() => setGroupComposing(false)}
+        onCreateGroup={startGroup}
+        forwardPickerNode={forwardPickerNode}
+        starredOpen={starredOpen}
+        onCloseStarred={() => setStarredOpen(false)}
+        onPickStarred={openThreadAtMessage}
+      />
     </AppShell>
   );
 }

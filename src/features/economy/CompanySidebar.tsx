@@ -62,18 +62,31 @@ export function CompanySidebar({ profile }: { profile: CompanyProfile }) {
         <h4>{t("economy:company.sidebar.hiringContactTitle")}</h4>
         <p className={styles.contactName}>{profile.hiringContact.name}</p>
         <p className={styles.contactRole}>{profile.hiringContact.role}</p>
-        <Button
-          variant="ghost"
-          to={routes.messages}
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            padding: "10px 16px",
-            fontSize: 13,
-          }}
-        >
-          {messageLabel}
-        </Button>
+        {/* PRD-337: `hiringContact` above is free text the company typed
+            (often a team name, not a person) and is never itself a safe
+            messaging target. `owner` is the real member behind the profile;
+            with none on file, the CTA hides instead of landing on a bare
+            inbox. */}
+        {profile.owner && (
+          <Button
+            variant="ghost"
+            to={routes.messages}
+            state={{
+              to: {
+                slug: profile.owner.slug,
+                name: `${profile.owner.firstName} ${profile.owner.lastName}`,
+              },
+            }}
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              padding: "10px 16px",
+              fontSize: 13,
+            }}
+          >
+            {messageLabel}
+          </Button>
+        )}
       </div>
 
       <ReportSubjectControl

@@ -1,0 +1,118 @@
+/* Section 8 (Groups): styles for the pieces GroupInfoModal was split into,
+   namely description, invite link, pending invites, dissolved/left notice,
+   and danger actions. Kept in its own module (rather than growing the
+   already very large MessagesPage.module.css/NewMessageModal.module.css) so
+   this build never has to hand-merge into a file another session is also
+   editing. */
+
+.groupDescription {
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+  margin-top: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.descriptionField {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: var(--text-14);
+  color: var(--text-strong);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-12);
+  padding: 10px 12px;
+  min-height: 64px;
+  resize: vertical;
+}
+.descriptionField:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.descriptionCounter {
+  display: block;
+  text-align: right;
+  font-size: var(--text-11-5);
+  color: var(--ink-40);
+  margin-top: 4px;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  margin: 8px 0 6px;
+}
+
+.section {
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.sectionTitle {
+  font-size: var(--text-12-5);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 8px;
+}
+
+.inviteLinkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border-radius: var(--radius-12);
+  padding: 10px 12px;
+}
+.inviteLinkText {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-13);
+  color: var(--text-strong);
+}
+.inviteActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.pendingInviteList {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pendingInviteRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px;
+}
+.pendingInviteName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-13-5);
+  color: var(--text-strong);
+}
+
+.leftNotice {
+  text-align: center;
+  padding: 24px 12px;
+  color: var(--ink-60);
+  font-size: var(--text-14);
+}
+

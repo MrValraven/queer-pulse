@@ -1,12 +1,17 @@
 // src/features/messages/MessageRun.tsx
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Avatar } from "../../shared/components/ui";
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
+import { isMessageBodyOverLimit } from "./messageBodyLimit";
 import type { MessageRun } from "./messageRuns";
+import { groupIntoAlbums } from "./messageAlbums";
+import { lastUndeletedIndex } from "./messageRows";
+import { MessageAlbum } from "./MessageAlbum";
 import { MessageBubble } from "./MessageBubble";
+import type { MetaStatus } from "./MessageSendStatus";
 import { resolveSendStatus } from "./resolveSendStatus";
 import type { LongPressOrigin } from "./useLongPress";
 import type { ChatMessage } from "./data";
@@ -20,25 +25,35 @@ export interface RunParticipant {
   src?: string;
 }
 
-/** Renders one sender run: a vertical stack of bubbles. */
-function MessageRunViewImpl({
-  run,
-  counterpart,
-  selfName,
-  counterpartName,
-  isGroup,
-  onRetry,
-  showSeen,
-  showDelivered,
-  onReactionToggle,
-  onReply,
-  onOpenActions,
-  editingMessageId,
-  onSubmitEdit,
-  onCancelEdit,
-  onJumpToMessage,
-  isNewReaction,
-}: {
+/**
+ * The tick for the own message at run position `index`. EVERY own bubble (and
+ * album) carries its own time + tick, WhatsApp-style, resolved through the
+ * same honest ladder (failed > seen > delivered > sent > sending). The
+ * thread-level watermark flags describe the FINAL outbound message only, so
+ * they reach the `receiptIndex` message alone; earlier ones read their own
+ * `deliveredAt` / `status` / `id`, which is exactly what `deliveredAt` is on
+ * the DTO for. Keeping the meta on the last bubble alone meant that bubble's
+ * time and tick jumped down into each new message, snapping the one above
+ * 62px narrower mid-send (measured). Received messages carry no tick.
+ */
+function runMetaStatus(
+  message: ChatMessage,
+  index: number,
+  isSent: boolean,
+  receiptIndex: number,
+  showSeen: boolean | undefined,
+  showDelivered: boolean | undefined,
+): MetaStatus {
+  if (!isSent) return null;
+  const isReceiptMessage = index === receiptIndex;
+  return resolveSendStatus(
+    message,
+    isReceiptMessage && !!showSeen,
+    isReceiptMessage && !!showDelivered,
+  );
+}
+
+export interface MessageRunViewProps {
   run: MessageRun;
   counterpart: RunParticipant;
   /** Localized display name for the signed-in member, used in per-message aria-labels. */
@@ -89,7 +104,27 @@ function MessageRunViewImpl({
   onJumpToMessage?: (messageId: string) => void;
   /** Freshness gate for one reaction key on a message. */
   isNewReaction?: (message: ChatMessage, key: MessageReactionKey) => boolean;
-}) {
+}
+
+/** Renders one sender run: a vertical stack of bubbles and photo albums. */
+function MessageRunViewImpl({
+  run,
+  counterpart,
+  selfName,
+  counterpartName,
+  isGroup,
+  onRetry,
+  showSeen,
+  showDelivered,
+  onReactionToggle,
+  onReply,
+  onOpenActions,
+  editingMessageId,
+  onSubmitEdit,
+  onCancelEdit,
+  onJumpToMessage,
+  isNewReaction,
+}: MessageRunViewProps) {
   const { t } = useTranslation();
   const isSent = run.from === "me";
   const firstMessage = run.items[0];
@@ -97,21 +132,44 @@ function MessageRunViewImpl({
   // received run can be a different member); DMs keep the single shared
   // counterpart. Own runs never show a name/other-avatar (alignment identifies them).
   const showGroupSender = !!isGroup && !isSent;
+  // ENG-243: a received run from a member who erased their account reads as a
+  // localized "Former member" behind a blank neutral avatar, in a DM too.
+  const isFormerMemberRun = !isSent && !!firstMessage?.isSenderFormerMember;
   const runSenderName = isSent
     ? selfName
+    : isFormerMemberRun
+      ? t("messages:formerMember")
+      : showGroupSender
+        ? (firstMessage?.senderName ?? counterpartName)
+        : counterpartName;
+  const runAvatar: RunParticipant = isFormerMemberRun
+    ? { initials: "", tint: "default" }
     : showGroupSender
-      ? (firstMessage?.senderName ?? counterpartName)
-      : counterpartName;
-  const runAvatar: RunParticipant = showGroupSender
-    ? {
-        initials: initialsFromName(firstMessage?.senderName ?? counterpartName),
-        tint: firstMessage?.senderTint ?? counterpart.tint,
-        src: firstMessage?.senderAvatar,
-      }
-    : counterpart;
+      ? {
+          initials: initialsFromName(
+            firstMessage?.senderName ?? counterpartName,
+          ),
+          tint: firstMessage?.senderTint ?? counterpart.tint,
+          src: firstMessage?.senderAvatar,
+        }
+      : counterpart;
   const senderName = runSenderName;
   const lastIndex = run.items.length - 1;
   const lastMessage = run.items[lastIndex];
+  // The bubble the thread-level seen/delivered flags ride: the newest one that
+  // is not a tombstone, which renders no meta to carry them.
+  const receiptIndex = lastUndeletedIndex(run.items);
+  // Photo bursts collapse into albums (DES-219); everything else stays a bubble.
+  const segments = useMemo(() => groupIntoAlbums(run.items), [run.items]);
+  const metaStatusAt = (index: number) =>
+    runMetaStatus(
+      run.items[index]!,
+      index,
+      isSent,
+      receiptIndex,
+      showSeen,
+      showDelivered,
+    );
 
   return (
     // No `role` here: this run's `listitem` semantics now live one level up,
@@ -142,61 +200,96 @@ function MessageRunViewImpl({
         {showGroupSender && (
           <span className={styles.runSenderName}>{runSenderName}</span>
         )}
-        {run.items.map((message, index) => (
-          <MessageBubble
-            // `localId` sits in the middle because an acked send KEEPS it once
-            // it gains a server `id` (`messageToChat` carries it over), so the
-            // key never changes as the ack lands. Without it the key would flip
-            // from `pos-N` to the server id and React would remount the bubble
-            // rather than update it in place, resetting `useBubbleMetaAlign`'s
-            // measured alignment to its `"center"` default and re-laying the
-            // bubble out a beat after it appears. Same identity ladder as
-            // `messageRows.ts`'s `stableMessageKey`.
-            key={message.id ?? message.localId ?? `pos-${index}`}
-            message={message}
-            index={index}
-            lastIndex={lastIndex}
-            isSent={isSent}
-            senderName={senderName}
-            // EVERY own bubble carries its own time + tick, WhatsApp-style,
-            // resolved through the same honest ladder (failed > seen >
-            // delivered > sent > sending). The thread-level watermark flags
-            // describe the FINAL outbound message only, so they are passed to
-            // that bubble alone; earlier ones read their own `deliveredAt` /
-            // `status` / `id` — which is exactly what `deliveredAt` is on the
-            // DTO for. Keeping the meta on the last bubble alone meant that
-            // bubble's time and tick jumped down into each new message,
-            // snapping the one above 62px narrower mid-send (measured).
-            metaStatus={
-              isSent
-                ? resolveSendStatus(
-                    message,
-                    index === lastIndex && !!showSeen,
-                    index === lastIndex && !!showDelivered,
-                  )
-                : null
-            }
-            onReactionToggle={onReactionToggle}
-            onReply={onReply}
-            onOpenActions={onOpenActions}
-            editingMessageId={editingMessageId}
-            onSubmitEdit={onSubmitEdit}
-            onCancelEdit={onCancelEdit}
-            onJumpToMessage={onJumpToMessage}
-            isNewReaction={isNewReaction}
-          />
-        ))}
+        {segments.map((segment) => {
+          if (segment.kind === "album") {
+            // Keyed by its first photo, which stays first as the burst grows;
+            // its one meta comes from its last photo.
+            const firstPhoto = segment.messages[0]!;
+            const lastIndexInRun =
+              segment.startIndex + segment.messages.length - 1;
+            return (
+              <MessageAlbum
+                key={`album-${firstPhoto.localId ?? firstPhoto.id ?? segment.startIndex}`}
+                messages={segment.messages}
+                isSent={isSent}
+                senderName={senderName}
+                metaStatus={metaStatusAt(lastIndexInRun)}
+                onOpenActions={onOpenActions}
+              />
+            );
+          }
+          const { message, index } = segment;
+          return (
+            <MessageBubble
+              // `localId` comes first because an acked send KEEPS it once it
+              // gains a server `id` (`messageToChat` carries it over), so the
+              // key never changes as the ack lands. Preferring `id` flipped the
+              // key at the ack and React remounted the bubble rather than
+              // updating it in place, resetting `useBubbleMetaAlign`'s measured
+              // alignment and any gesture in flight. Same identity ladder as
+              // `messageRows.ts`'s `messageIdentity`.
+              key={message.localId ?? message.id ?? `pos-${index}`}
+              message={message}
+              index={index}
+              lastIndex={lastIndex}
+              isSent={isSent}
+              senderName={senderName}
+              metaStatus={metaStatusAt(index)}
+              onReactionToggle={onReactionToggle}
+              onReply={onReply}
+              onOpenActions={onOpenActions}
+              editingMessageId={editingMessageId}
+              onSubmitEdit={onSubmitEdit}
+              onCancelEdit={onCancelEdit}
+              onJumpToMessage={onJumpToMessage}
+              isNewReaction={isNewReaction}
+            />
+          );
+        })}
         {/* Time + sending/seen ticks live in each bubble's own meta; only the
-            failed state keeps a standalone row, since retry is an action. */}
-        {isSent && lastMessage?.status === "failed" && (
-          <button
-            type="button"
-            className={styles.retryBtn}
-            onClick={() => onRetry?.(lastMessage)}
-          >
-            {t("messages:status.retry")}
-          </button>
-        )}
+            failed state keeps a standalone row, since retry is an action.
+            A body that's grown past the server's length limit since it was
+            typed (DES-202) can never succeed on retry: the server rejects it
+            the same way every time, so Retry is misleading there. A short
+            reason replaces it instead of offering a dead action. */}
+        {isSent &&
+          lastMessage?.status === "failed" &&
+          (isMessageBodyOverLimit(lastMessage.text) ? (
+            <span className={styles.failedReason}>
+              {t("messages:status.tooLongToSend")}
+            </span>
+          ) : lastMessage.failureCode === "ACCOUNT_RESTRICTED" ? (
+            // ENG-242: a moderator `restrict` action refused this send. Named
+            // honestly rather than folded into the generic Retry copy — this
+            // is a standing moderation state, not a network hiccup, and
+            // nothing like an expired session (no sign-in prompt applies
+            // here). Retry stays offered: the restriction is timed and may
+            // have lifted by the time the member tries again.
+            <>
+              <span className={styles.failedReason}>
+                {t("messages:status.restricted")}
+              </span>
+              {/* `status.retryAction` is the bare verb ("Retry"), not
+                  `status.retry`'s "Not delivered · Retry" — the reason span
+                  above already says "Not delivered", so pairing it with the
+                  full string would repeat that prefix on two stacked lines. */}
+              <button
+                type="button"
+                className={styles.retryBtn}
+                onClick={() => onRetry?.(lastMessage)}
+              >
+                {t("messages:status.retryAction")}
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              className={styles.retryBtn}
+              onClick={() => onRetry?.(lastMessage)}
+            >
+              {t("messages:status.retry")}
+            </button>
+          ))}
       </div>
     </div>
   );

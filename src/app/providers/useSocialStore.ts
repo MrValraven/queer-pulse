@@ -187,8 +187,10 @@ export function useSocialStore(): SocialContextValue {
       // `false` if it was rolled back. Optional and additive, so the callers
       // that only need the optimistic flip are unchanged. A caller that wants
       // to CONFIRM the action to the member must wait for this instead of
-      // toasting success the moment the button is pressed.
-      onSettled?: (didSucceed: boolean) => void,
+      // toasting success the moment the button is pressed. The second
+      // argument is whatever `add`/`remove` resolved with (see `toggleBlock`'s
+      // own doc on `SocialContextValue` for why it stays `unknown` here).
+      onSettled?: (didSucceed: boolean, result?: unknown) => void,
     ): boolean => {
       // Decide from the CURRENT state before touching it, never from a variable
       // assigned inside the updater. React only runs an updater synchronously at
@@ -208,7 +210,7 @@ export function useSocialStore(): SocialContextValue {
       if (!demoMode) {
         const call = now ? add(slug) : remove(slug);
         Promise.resolve(call)
-          .then(() => {
+          .then((result) => {
             // Blocking severs connections server-side — refresh those surfaces.
             // A block also hides the pair's DM from the inbox server-side
             // (`ConversationsService.listConversations`), so re-fetch the
@@ -224,8 +226,17 @@ export function useSocialStore(): SocialContextValue {
               void queryClient.invalidateQueries({
                 queryKey: [UNREAD_COUNT_KEY],
               });
+              // PRD-363: an unblock (and, symmetrically, a block) can change
+              // what the open thread's own composer gate reads (severed vs.
+              // restored `replyGate`/`replyRequiresConnection` live on the
+              // `["conversations"]` row above, but a thread's own message
+              // page can carry per-message `canReport`/`canDelete` flags that
+              // are just as stale) — refetch every open thread's history too,
+              // so the composer re-enables and the log's own flags catch up
+              // without a reload.
+              void queryClient.invalidateQueries({ queryKey: ["messages"] });
             }
-            onSettled?.(true);
+            onSettled?.(true, result);
           })
           .catch((err) => {
             logError(err, { scope: "social", key, slug, added: now });
@@ -248,8 +259,18 @@ export function useSocialStore(): SocialContextValue {
             onSettled?.(false);
           });
       } else {
-        // Demo has no server to wait for: the local store IS the record.
-        onSettled?.(true);
+        // Demo has no server to wait for: the local store IS the record. An
+        // unblock's result mirrors what live's `DELETE /blocks/:slug` answers
+        // once the backend ships `restoredStatus` (PRD-363, task T3): demo has
+        // no real connection state to sever in the first place, so it always
+        // reports the honest best case rather than staying silent on a field
+        // a caller (`useConversationBlockAction`'s undo) now reads.
+        onSettled?.(
+          true,
+          key === "blocked" && !now
+            ? { restoredStatus: "accepted" as const }
+            : undefined,
+        );
       }
       return now;
     },

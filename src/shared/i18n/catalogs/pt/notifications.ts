@@ -469,6 +469,20 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> enviou-te uma mensagem sobre uma peça na redação.",
   "type.magazine_piece_message.meta": "Mensagem da redação",
 
+  // PRD-334: alguém adicionou a pessoa a uma conversa de grupo. Ver a nota EN.
+  "type.group_added.text": "{name} adicionou-te a {groupTitle}.",
+  "type.group_added.meta": "Conversa de grupo",
+  "type.group_added.groupFallback": "um grupo",
+  "type.group_added.nameFallback": "Alguém",
+
+  // PRD-353: um dono/admin convidou a pessoa para um grupo em vez de a
+  // colocar diretamente (a preferência `invite_only`, ou uma linha anterior
+  // de saída/remoção). Reutiliza os recursos alternativos de título/nome de
+  // `group_added` acima, resolvidos pelo mesmo `groupTitleToken`
+  // (formatNotification.ts).
+  "type.group_invite.text": "{name} convidou-te para {groupTitle}.",
+  "type.group_invite.meta": "Convite de grupo",
+
   // Desfecho de uma preocupação — título por estado terminal
   // (resolvida/descartada); as chaves simples são o recurso alternativo.
   "type.concern_update.text":

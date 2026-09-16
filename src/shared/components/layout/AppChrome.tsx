@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { useShellFrame } from "../../../app/providers/shellFrame";
 import { useRealtimeConnection } from "../../api/realtime";
+import { useBackgroundOutboxReplay } from "../../../features/messages/useBackgroundOutboxReplay";
 import { InstallNudge } from "../../../features/system/InstallNudge";
+import { PushAppEffects } from "../../../features/push/PushAppEffects";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
 import { Navbar } from "./Navbar";
@@ -41,6 +43,12 @@ export function AppChrome() {
   // "must be used within DeletedConversationsProvider", and that provider is in
   // DataProviders. Rendered above it, every page load throws on render.
   useRealtimeConnection();
+  // ENG-214: replay the offline outbox for the whole signed-in session, so a
+  // member who queues a send offline still gets it replayed while browsing
+  // elsewhere with the Messages page closed. See the hook's own doc for the
+  // full trigger/gating contract (inert in demo mode, signed out, and while
+  // the Messages page's own outbox replay already owns it).
+  useBackgroundOutboxReplay();
   const { active, chromeless } = useShellFrame();
   const isMobile = useMediaQuery(mediaMax("mobile"));
   // A chromeless route (Messages) draws its own brand row, back button and
@@ -74,6 +82,7 @@ export function AppChrome() {
           where it points). It is position:fixed, so its place in the flow is
           irrelevant. */}
       <InstallNudge />
+      <PushAppEffects />
     </>
   );
 }

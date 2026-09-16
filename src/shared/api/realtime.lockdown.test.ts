@@ -7,11 +7,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * socket.io-client), scoped to one behaviour: a `PLATFORM_LOCKED` exception
  * must turn off reconnection so a lockdown doesn't trigger a reconnect storm
  * (see the comment above `socket.on("exception", …)` in realtime.ts). A
- * A generic exception (e.g. an expired access token) takes the opposite path:
+ * generic exception (e.g. an expired access token) takes the opposite path:
  * it PAUSES reconnection only while `refreshSession()` is in flight, so the
  * next attempt carries the new cookie instead of racing the dead one, then
  * turns it back on. The distinction that matters is permanence — a lockdown
  * stays off, an auth blip comes back.
+ *
+ * A generic exception only RECORDS a pending refusal (ENG-206) - it takes a
+ * confirming `disconnect` with reason `"io server disconnect"` for the
+ * refresh to actually start, so the generic-exception tests below drive both
+ * the exception AND that disconnect before asserting.
  */
 
 const state = vi.hoisted(() => ({ demoMode: false, loggedIn: true }));
@@ -101,6 +106,12 @@ function exceptionHandler(): (data: {
   }) => void;
 }
 
+/** The handler registered via `socket.on("disconnect", …)`. */
+function disconnectHandler(): (reason: string) => void {
+  const call = socket.on.mock.calls.find((c) => c[0] === "disconnect");
+  return call?.[1] as (reason: string) => void;
+}
+
 beforeEach(() => {
   state.demoMode = false;
   state.loggedIn = true;
@@ -133,6 +144,9 @@ describe("platform-lockdown exception handling", () => {
     await mount(mod);
     const handler = exceptionHandler();
     handler({ status: "error", message: "Unauthorized" });
+    // A generic exception only records the refusal (ENG-206); it takes a
+    // confirming server-forced disconnect to actually start the refresh.
+    disconnectHandler()("io server disconnect");
     await settle();
 
     expect(refreshSessionMock).toHaveBeenCalledTimes(1);
@@ -151,6 +165,9 @@ describe("platform-lockdown exception handling", () => {
     await mount(mod);
     const handler = exceptionHandler();
     handler({ status: "error", message: "Unauthorized" });
+    // A generic exception only records the refusal (ENG-206); it takes a
+    // confirming server-forced disconnect to actually start the refresh.
+    disconnectHandler()("io server disconnect");
     await settle();
 
     // No `reconnection(true)`: a dead session must not cost a JWT verify per

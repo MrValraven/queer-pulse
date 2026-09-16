@@ -67,9 +67,22 @@ export async function getBlocks(page?: number) {
 export const blockMember = (slug: string, body?: BlockOptions) =>
   apiPost<BlockDTO>(`/blocks/${encodeURIComponent(slug)}`, body);
 
-/** DELETE /blocks/:slug — unblock. Does not restore any severed connection. */
+/**
+ * What the pair's connection reads once the block is gone (PRD-363, task T3
+ * on the backend). `"accepted"`/`"pending"` mean the connection that existed
+ * before the block is restored to that state; `"none"` means there was never
+ * one, so the DM stays severed until a fresh connection request is sent and
+ * accepted. Absent entirely on a backend that has not shipped the restore
+ * yet — callers must treat a missing field as unknown, not as `"none"`.
+ */
+export interface UnblockResultDTO {
+  restoredStatus?: "accepted" | "pending" | "none";
+}
+
+/** DELETE /blocks/:slug — unblock. Restores the prior connection state, if
+ *  any (see `UnblockResultDTO`). */
 export const unblockMember = (slug: string) =>
-  apiDelete<void>(`/blocks/${encodeURIComponent(slug)}`);
+  apiDelete<UnblockResultDTO | void>(`/blocks/${encodeURIComponent(slug)}`);
 
 /** GET /mutes — members the actor has muted, newest first. */
 export async function getMutes(page?: number) {

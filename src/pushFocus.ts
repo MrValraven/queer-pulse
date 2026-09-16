@@ -11,6 +11,14 @@
  * client on the same conversation) must still show the notification.
  */
 
+import {
+  PUSH_BRIDGE_IS_VIEWING_CONVERSATION,
+  PUSH_BRIDGE_REPLY_TIMEOUT_MS,
+  type PushBridgeMessageTarget,
+  isIsViewingConversationReply,
+  requestPushBridgeReply,
+} from "./pushBridge";
+
 /**
  * True when `clientUrl` (an open window's current URL, e.g. from
  * `WindowClient.url`) is already showing the push's target (`dataUrl`, e.g.
@@ -36,4 +44,35 @@ export function isViewingTarget(clientUrl: string, dataUrl: string): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * ENG-226: ask every focused window, over the page bridge (pushBridge.ts),
+ * whether it has `conversationId` open right now.
+ *
+ * `isViewingTarget` alone can rarely match, because the inbox strips `?c=`
+ * from the URL once a deep link is consumed and opening a thread in-app never
+ * writes it back. Only the running page knows which thread is on screen, so
+ * the worker asks it. All windows are asked in parallel, each bounded by the
+ * bridge timeout, so the push is delayed by at most one timeout. A window that
+ * does not answer (an older build, a busy main thread) counts as not viewing:
+ * on uncertainty the notification still shows.
+ */
+export async function isAnyWindowViewingConversation(
+  focusedWindows: readonly PushBridgeMessageTarget[],
+  conversationId: string,
+  timeoutMs: number = PUSH_BRIDGE_REPLY_TIMEOUT_MS,
+): Promise<boolean> {
+  if (focusedWindows.length === 0 || !conversationId) return false;
+  const replies = await Promise.all(
+    focusedWindows.map((focusedWindow) =>
+      requestPushBridgeReply(
+        focusedWindow,
+        { type: PUSH_BRIDGE_IS_VIEWING_CONVERSATION, conversationId },
+        isIsViewingConversationReply,
+        timeoutMs,
+      ),
+    ),
+  );
+  return replies.some((reply) => reply?.isViewing === true);
 }

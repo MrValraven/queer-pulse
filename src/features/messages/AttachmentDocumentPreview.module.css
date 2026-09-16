@@ -1,0 +1,66 @@
+/* The staged-document file card: name, format/size and a type icon, shown
+   on the cream-on-plum ground the caption screen and pending-uploads strip
+   both use (never the bubble's own `.documentCard`, which is tuned for a
+   cream page background, see `AttachmentCaptionScreen.module.css`'s file
+   doc for that same cream-on-plum pattern). */
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  padding: 14px 16px;
+  border-radius: var(--radius-card);
+  background: rgba(var(--cream-rgb), 0.1);
+  border: 1px solid rgba(var(--cream-rgb), 0.2);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.card.compact {
+  max-width: none;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--cream-rgb), 0.14);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-18);
+}
+
+.compact .icon {
+  width: 30px;
+  height: 30px;
+  font-size: var(--text-15);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 600;
+  font-size: var(--text-14);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.compact .name {
+  font-size: var(--text-12-5);
+}
+
+.meta {
+  font-size: var(--text-12);
+  color: rgba(var(--cream-rgb), 0.65);
+}

@@ -2591,6 +2591,15 @@ export const admin: Catalog = {
   "governance.audit.actionType.thread_official_cleared":
     "Tópico já não é oficial",
   "governance.audit.actionType.thread_deleted": "Tópico eliminado",
+  // Ações da equipa nas mensagens e mensagens oficiais.
+  "governance.audit.actionType.conversation_context_viewed":
+    "Contexto da conversa consultado",
+  "governance.audit.actionType.message_deleted_by_staff":
+    "Mensagem apagada para toda a gente",
+  "governance.audit.actionType.official_message_sent":
+    "Mensagem oficial enviada",
+  "governance.audit.actionType.official_broadcast_sent":
+    "Mensagem oficial enviada a todos",
   "governance.audit.range.today": "Hoje",
   "governance.audit.range.week": "Esta semana",
   "governance.audit.range.quarter": "Este trimestre",
@@ -4374,6 +4383,12 @@ export const admin: Catalog = {
     "Só podes guardar quando todos os valores assinalados forem números.",
   "moderation.action.created": "Denúncia recebida",
   "moderation.action.appealOverturned": "Recurso revogado",
+  "moderation.action.conversationContextViewed":
+    "Abriu a conversa em redor da mensagem denunciada",
+  "moderation.action.messageDeletedByStaff":
+    "Apagou uma mensagem para toda a gente",
+  "moderation.action.reportMessageAttachmentViewed":
+    "Abriu o ficheiro anexado à mensagem denunciada",
   "moderation.oldestNote_one":
     "A mostrar {count} denúncia em aberto · a mais antiga chegou {oldest}",
   "moderation.oldestNote_other":
@@ -5959,6 +5974,60 @@ export const admin: Catalog = {
     "Publicada no album a {date}",
   "moderation.reportDrawer.photoEvidence.fullSizeCta": "Abrir em tamanho real",
 
+  // Scan section 9: the reported message snapshot (AdminReportEvidence) and
+  // the conversation around it (AdminReportConversationContext).
+  "moderation.reportDrawer.messageEvidence.title":
+    "Mensagem denunciada, tal como estava no momento da denúncia",
+  "moderation.reportDrawer.messageEvidence.noBody":
+    "Esta mensagem não trazia texto.",
+  "moderation.reportDrawer.messageEvidence.sentLabel": "Enviada",
+  "moderation.reportDrawer.messageEvidence.capturedLabel": "Registada",
+  "moderation.reportDrawer.messageEvidence.kindLabel": "Tipo",
+  "moderation.reportDrawer.messageEvidence.kindText": "Texto",
+  "moderation.reportDrawer.messageEvidence.editedNote":
+    "Quem a enviou editou-a antes de ser denunciada.",
+  "moderation.reportDrawer.messageEvidence.deletedWhenReported":
+    "Quem a enviou já a tinha apagado para toda a gente quando esta denúncia foi feita. A QueerPulse guardou-a para a poderes rever.",
+  "moderation.reportDrawer.messageEvidence.imageAlt":
+    "A fotografia anexada à mensagem denunciada",
+  "moderation.reportDrawer.messageEvidence.attachmentUnavailable":
+    "Este ficheiro já não está disponível. Os detalhes aqui continuam válidos e a denúncia continua à espera da tua decisão.",
+  "moderation.reportDrawer.messageEvidence.openFileCta":
+    "Mostrar o ficheiro anexado",
+  "moderation.reportDrawer.messageEvidence.fileAuditNotice":
+    "Abrir o ficheiro fica registado no histórico de ações desta denúncia. Ninguém na conversa é avisado.",
+  "moderation.reportDrawer.conversationContext.openCta":
+    "Mostrar a conversa em redor desta mensagem",
+  "moderation.reportDrawer.conversationContext.auditNotice":
+    "Abrir a conversa fica registado no histórico de ações desta denúncia. As pessoas na conversa não são avisadas.",
+  "moderation.reportDrawer.conversationContext.loading": "A abrir a conversa",
+  "moderation.reportDrawer.conversationContext.error":
+    "Não conseguimos abrir esta conversa. A mensagem pode já não existir, ou a ligação falhou.",
+  "moderation.reportDrawer.conversationContext.retryCta": "Tentar de novo",
+  "moderation.reportDrawer.conversationContext.windowNote":
+    "Até 20 mensagens antes e depois da denunciada, das mais antigas para as mais recentes.",
+  "moderation.reportDrawer.conversationContext.listLabel":
+    "Mensagens em redor da mensagem denunciada",
+  "moderation.reportDrawer.conversationContext.earlierNotShown":
+    "Há mensagens anteriores que esta vista não mostra.",
+  "moderation.reportDrawer.conversationContext.laterNotShown":
+    "Há mensagens posteriores que esta vista não mostra.",
+  "moderation.reportDrawer.conversationContext.formerMember": "Antigo membro",
+  "moderation.reportDrawer.conversationContext.reportedTag": "Denunciada",
+  "moderation.reportDrawer.conversationContext.deletedTag": "Apagada",
+  "moderation.reportDrawer.conversationContext.editedTag": "Editada",
+  "moderation.reportDrawer.conversationContext.deletedBody":
+    "Esta mensagem foi apagada.",
+  "moderation.reportDrawer.conversationContext.photoLabel": "Fotografia",
+  "moderation.reportDrawer.conversationContext.gifLabel": "GIF",
+  "moderation.reportDrawer.conversationContext.documentLabel": "Documento",
+
+  // PRD-356: a fotografia do GRUPO denunciado (AdminReportGroupEvidence.tsx),
+  // mostrada só numa denúncia `conversation` (de grupo).
+  "moderation.reportDrawer.groupEvidence.title": "Grupo reportado",
+  "moderation.reportDrawer.groupEvidence.memberCountLabel": "Membros",
+  "moderation.reportDrawer.groupEvidence.capturedLabel": "Captado",
+
   // ── PRD-282, the staff triage console (`AdminQueuesPage`) ──────────────
   // The three "null" cells below are three different sentences on purpose and
   // must stay that way. `cell.noDeadline` is a queue that never promised
@@ -6106,4 +6175,61 @@ export const admin: Catalog = {
     "Não foi possível carregar a utilização de funcionalidades. Tenta novamente daqui a pouco.",
   "featureUsage.empty":
     "Ainda não há funcionalidades para mostrar neste período.",
+
+  // Scan section 9: official messages console (AdminOfficialMessagesPage).
+  // `status.*` resolves dynamically from the broadcast row's status.
+  "officialMessages.eyebrow": "Plataforma",
+  "officialMessages.title": "Mensagens oficiais",
+  "officialMessages.subtitle":
+    "Fala como QueerPulse, na conversa oficial de cada membro. Só para admins.",
+  "officialMessages.member.title": "Enviar mensagem a um membro",
+  "officialMessages.member.subtitle":
+    "Chega à conversa oficial da QueerPulse, fixada no topo da caixa de entrada. Não é enviada nenhuma notificação para o telemóvel.",
+  "officialMessages.member.searchLabel": "Procurar um membro",
+  "officialMessages.member.searchPlaceholder":
+    "Pesquisa por nome ou identificador",
+  "officialMessages.member.noResults":
+    "Nenhum membro corresponde a essa pesquisa.",
+  "officialMessages.member.change": "Mudar",
+  "officialMessages.member.notActive": "Conta inativa",
+  "officialMessages.member.bodyLabel": "Mensagem",
+  "officialMessages.member.bodyPlaceholder": "Escreve o que queres que saibam.",
+  "officialMessages.member.send": "Enviar mensagem",
+  "officialMessages.member.sending": "A enviar",
+  "officialMessages.member.sent": "Enviada a {name}.",
+  "officialMessages.member.recipientGone":
+    "A conta desse membro já não existe. Escolhe outra pessoa.",
+  "officialMessages.member.sendFailed":
+    "A mensagem não foi enviada. Tenta de novo daqui a pouco.",
+  "officialMessages.body.count": "{used}/{max}",
+  "officialMessages.broadcast.title": "Enviar a toda a gente",
+  "officialMessages.broadcast.subtitle":
+    "Uma mensagem para cada membro ativo, na sua conversa oficial. Guarda isto para o que toda a gente precisa de saber.",
+  "officialMessages.broadcast.bodyLabel": "Mensagem para todos",
+  "officialMessages.broadcast.bodyPlaceholder":
+    "Janelas de manutenção, avisos de segurança, mudanças que afetam toda a comunidade.",
+  "officialMessages.broadcast.review": "Rever e enviar",
+  "officialMessages.broadcast.confirmTitle":
+    "Enviar isto a todos os membros ativos?",
+  "officialMessages.broadcast.confirmScope":
+    "Cada membro ativo recebe-a na sua conversa oficial da QueerPulse. Contas suspensas ou em pausa ficam de fora. Depois de enviada, não dá para voltar atrás.",
+  "officialMessages.broadcast.confirm": "Enviar a todos",
+  "officialMessages.broadcast.cancel": "Continuar a editar",
+  "officialMessages.broadcast.accepted":
+    "Mensagem a caminho. Vês o progresso abaixo.",
+  "officialMessages.broadcast.keyReused":
+    "Este rascunho mudou depois de ser enviado. Envia de novo e sai como uma nova mensagem.",
+  "officialMessages.broadcast.failed":
+    "A mensagem não seguiu. Tenta de novo: nunca chega duas vezes à mesma pessoa.",
+  "officialMessages.history.title": "Histórico de envios",
+  "officialMessages.history.empty": "Ainda não há envios.",
+  "officialMessages.history.loadFailed":
+    "O histórico não carregou. Atualiza para tentar de novo.",
+  "officialMessages.history.progress": "{delivered} de {total} entregues",
+  "officialMessages.history.sentBy": "Enviado por {name}",
+  "officialMessages.history.sentByErased": "Enviado por um antigo admin",
+  "officialMessages.status.pending": "Na fila",
+  "officialMessages.status.sending": "A enviar",
+  "officialMessages.status.completed": "Entregue",
+  "officialMessages.status.failed": "Interrompido",
 };

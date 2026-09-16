@@ -189,6 +189,17 @@ export function companyDetailToProfile(
       name: t("economy:company.hiringContact.fallbackName"),
       role: t("economy:company.hiringContact.fallbackRole"),
     },
+    // The real member behind the profile (owner/claimant), for a "Message"
+    // CTA to address. `hiringContact` above is free text the company typed
+    // and is never itself a safe recipient (PRD-337). `null` on an unclaimed
+    // company, which hides the CTA rather than landing on a bare inbox.
+    owner: dto.owner
+      ? {
+          slug: dto.owner.slug,
+          firstName: dto.owner.firstName,
+          lastName: dto.owner.lastName,
+        }
+      : null,
   };
 }
 

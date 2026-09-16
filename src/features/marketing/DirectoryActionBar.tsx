@@ -13,6 +13,7 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import { placeCoordinates } from "./businessCoords";
+import { ShareToChatAction } from "../messages/share/ShareToChatAction";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -143,6 +144,13 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
         <FiShare2 aria-hidden />
         {t("marketing:directory.detail.action.share")}
       </Button>
+      <ShareToChatAction
+        url={businessPath(place.slug)}
+        title={place.name}
+        kind="directory"
+        variant="ghost"
+        className={s.actionBarBtn}
+      />
       {user ? (
         <Button
           variant={saved ? "jade" : "ghost"}

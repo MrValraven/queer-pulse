@@ -91,9 +91,25 @@ export function CompanyCover({
                   ? t("economy:company.cover.following")
                   : t("economy:company.cover.follow")}
               </Button>
-              <Button variant="ghost-dark" to={routes.messages}>
-                {t("economy:company.cover.message")}
-              </Button>
+              {/* PRD-337: only offered when there's a real member behind this
+                  company's profile to message. An unclaimed company (or a
+                  team-wide demo contact) has nobody on the other end, so the
+                  CTA hides rather than landing on the inbox's first
+                  auto-selected thread. */}
+              {profile.owner && (
+                <Button
+                  variant="ghost-dark"
+                  to={routes.messages}
+                  state={{
+                    to: {
+                      slug: profile.owner.slug,
+                      name: `${profile.owner.firstName} ${profile.owner.lastName}`,
+                    },
+                  }}
+                >
+                  {t("economy:company.cover.message")}
+                </Button>
+              )}
             </div>
           </div>
         </div>

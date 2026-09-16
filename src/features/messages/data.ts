@@ -1,9 +1,29 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import type {
+  ConversationPendingInvite,
   ConversationRole,
   ReactionSummary,
 } from "../../shared/contracts/contracts";
+import {
+  anikaConversation,
+  bilalConversation,
+  jordanConversation,
+  kaiConversation,
+  marcoConversation,
+  noahConversation,
+  priyaConversation,
+  teamConversation,
+  tomasConversation,
+  yusufConversation,
+} from "./demoDirectThreads.data";
+import {
+  bookSwapConversation,
+  brunchCrewConversation,
+  portoMentorsConversation,
+  prideVolunteersConversation,
+} from "./demoGroupThreads.data";
+import { mariaConversation } from "./demoLongThread.data";
 
 /** The resolved system-event a `kind: "system"` message renders as a centred
  *  pill. Names are already resolved (never user ids); the pill text is built
@@ -14,13 +34,27 @@ export interface ChatSystemEvent {
     | "member_added"
     | "member_removed"
     | "member_left"
-    | "group_renamed";
+    | "group_renamed"
+    | "member_promoted"
+    | "member_demoted"
+    | "owner_changed"
+    | "group_photo_changed"
+    | "group_description_changed"
+    | "member_joined"
+    | "group_dissolved";
   actorName: string;
   targetName?: string | null;
+  /** For `member_joined`: `"link"` (the invite-link path) or `"invite"` (an
+   *  accepted group invite). Absent for every other event type. */
   value?: string | null;
-  /** True when the signed-in member is the actor — lets the pill read "You
+  /** True when the signed-in member is the actor: lets the pill read "You
    *  created the group" rather than the actor's name. */
   actorIsMe?: boolean;
+  /** True when the signed-in member is the TARGET (e.g. the one added,
+   *  removed, promoted, demoted or made owner): lets the pill read "…you"
+   *  rather than the target's name. Absent/false when the event carries no
+   *  target, or the target isn't the viewer. */
+  targetIsMe?: boolean;
 }
 
 /** One member of a GROUP thread, for the header/info roster + bubble avatars. */
@@ -80,11 +114,18 @@ export interface ChatMessage {
   senderHandle?: string;
   senderTint?: AvatarTint;
   senderAvatar?: string;
-  /** Stable server id (live mode) for React keys. Absent for demo/optimistic
-   *  messages, which fall back to a positional key. */
+  /** ENG-243: the sender erased their account. The run renders a localized
+   *  "Former member" with a neutral avatar in place of `senderName`, and the
+   *  message carries no handle, so nothing links to a profile. */
+  isSenderFormerMember?: boolean;
+  /** Stable server id for React keys and every per-message action. Live mode
+   *  gets it from the DTO; the demo seed carries a readable stable one
+   *  (`demo-msg-<thread>-NNN`). Absent only for optimistic messages, which
+   *  fall back to their `localId`. */
   id?: string;
-  /** ISO timestamp (live mode) used to break same-sender runs across large time
-   *  gaps. Absent in demo (mock groups are day-bucketed and need no gap logic). */
+  /** ISO timestamp used to break same-sender runs across large time gaps, to
+   *  place the unread divider and to derive `time`. Set on live and demo
+   *  history; absent on an optimistic send. */
   at?: string;
   /** Delivery state of an optimistic (this-session) send. Absent for server/history
    *  messages, whose state is derived from `at` + the counterpart's watermarks.
@@ -109,6 +150,16 @@ export interface ChatMessage {
    *  still attempts it again regardless of this flag — only the unattended
    *  replay loop honours it. Set by `useMessageDeliverCore`'s `onError`. */
   isRetryable?: boolean;
+  /** ENG-242: the machine-readable code off a failed send's error body, when
+   *  one was present (e.g. `"ACCOUNT_RESTRICTED"` — a moderator `restrict`
+   *  action refused this send). Absent for a plain network/timeout failure,
+   *  which carries no such code. Lets the failed-send row show an honest,
+   *  specific reason instead of a generic "Retry" for a refusal retrying
+   *  cannot fix right now — distinct from an auth/session failure, which
+   *  never reaches this per-message state at all (it is handled at the
+   *  transport/session layer, not rendered on a bubble). Set by
+   *  `useMessageDeliverCore`'s `onError`. */
+  failureCode?: string;
   /** Count of AUTOMATIC outbox-replay attempts made for this send (mount /
    *  `online` / reconnect only — a manual `retrySend` never advances this).
    *  Bounds a still-transient failure's automatic retries and picks its
@@ -120,11 +171,13 @@ export interface ChatMessage {
    *  close together can't hammer the same still-cooling-down entry. Absent =
    *  never attempted. */
   lastAttemptAt?: number;
-  /** Per-key reaction counts + whether the signed-in member reacted (live mode).
-   *  Absent for demo/optimistic messages, which carry no reactions. */
+  /** Per-key reaction counts + whether the signed-in member reacted (live mode,
+   *  and on a few demo seed messages). Absent for optimistic messages, which
+   *  carry no reactions. */
   reactions?: ReactionSummary[];
-  /** ISO timestamp the message was soft-deleted at (live mode). Absent for a
-   *  message that hasn't been deleted, and for demo/optimistic messages. */
+  /** ISO timestamp the message was soft-deleted at (live mode, and one demo
+   *  tombstone). Absent for a message that hasn't been deleted, and for
+   *  optimistic messages. */
   deletedAt?: string;
   /** ISO timestamp of the last edit (live mode). Absent if never edited. */
   editedAt?: string;
@@ -133,7 +186,16 @@ export interface ChatMessage {
     id: string;
     snippet: string;
     senderName: string;
+    /** ENG-243: the quoted author erased their account. */
+    senderIsFormerMember?: boolean;
     deleted: boolean;
+    /** The quoted parent's kind (live mode and demo seed quotes). Absent on
+     *  optimistic quotes, which only ever carry text. */
+    kind?: "user" | "system" | "gif" | "image" | "document";
+    /** The parent's gif/image preview URL (live mode), else null/absent. */
+    thumbnailUrl?: string | null;
+    /** The parent document's file name (live mode), else null/absent. */
+    fileName?: string | null;
   };
   /** True when this message was created by forwarding — renders a "Forwarded"
    *  label on the bubble. Absent/false otherwise. */
@@ -148,8 +210,10 @@ export interface ChatMessage {
   canPin?: boolean;
   /** Server-authoritative: whether the viewer may edit this message (live) —
    *  author, within the server's edit window, not deleted. Drives the Edit
-   *  action; never recomputed client-side. Absent for demo/optimistic messages
-   *  (which have no server id and never reach the action menu). */
+   *  action; never recomputed client-side at render. The demo seed stamps it
+   *  once at load with the server's own rule (`demoTimeline.data.ts`). Absent
+   *  for optimistic messages, which have no server id and never reach the
+   *  action menu. */
   canEdit?: boolean;
   /** Server-authoritative: whether the viewer may delete this message (live) —
    *  author or platform staff, not already deleted. Drives the Delete action. */
@@ -158,6 +222,15 @@ export interface ChatMessage {
    *  not the viewer's own message, not deleted. Drives the Report action. */
   canReport?: boolean;
 }
+
+/** PRD-349: this caller's own mute MODE, mirroring the backend's
+ *  `ConversationMuteMode` enum as a plain string union (the two repos don't
+ *  share types). `"all"` is the ordinary `muted`/`mutedUntil` ladder;
+ *  `"mentionsOnly"` means this caller never gets the plain "new message"
+ *  push for the thread (an `@`-mention still reaches them), independent of
+ *  whatever `muted`/`mutedUntil` are set to. See `Conversation.muteMode`'s
+ *  own doc for how the two axes coexist. */
+export type ConversationMuteMode = "all" | "mentionsOnly";
 
 export interface Conversation {
   id: string;
@@ -176,16 +249,15 @@ export interface Conversation {
   pronouns: string;
   connectedSince: string;
   /** Pre-formatted relative/short time label ("14:02", "Mon", "1 Jun") baked
-   *  at fetch/patch time — kept for backwards compatibility (`messageCache.ts`'s
+   *  at fetch/patch time, kept for backwards compatibility (`messageCache.ts`'s
    *  `patchConversationPreview` only ever has this shorthand to write, no ISO
-   *  timestamp) and as the DEMO row's only source (mock data has no ISO
-   *  `updatedAt`). LIVE rows additionally carry `updatedAt` below, which
-   *  `MessagesThreadRow` prefers so the label re-derives at render time
-   *  instead of going stale (e.g. "Today" past midnight) until the next fetch. */
+   *  timestamp). Rows that also carry `updatedAt` below (live rows and every
+   *  demo row) have `MessagesThreadRow` re-derive the label from it at render
+   *  time instead, so it never goes stale (e.g. "Today" past midnight). */
   time: string;
-  /** ISO timestamp of the conversation's last activity (LIVE mode only — see
-   *  `time`'s doc). Absent for DEMO rows and any row a shared cache patch built
-   *  before this field existed. */
+  /** ISO timestamp of the conversation's last activity. Live rows get it from
+   *  the DTO; demo rows derive it from their newest seeded message. Absent only
+   *  on a row a shared cache patch built before this field existed. */
   updatedAt?: string;
   preview: string;
   unread: boolean;
@@ -206,6 +278,45 @@ export interface Conversation {
    *  counting/badges are unaffected (mirrors WhatsApp). Drives the row's
    *  mute indicator. */
   muted?: boolean;
+  /** ISO timestamp a TIMED mute (PRD-349) expires, else null/absent for a
+   *  plain forever-mute (`muted` above) or no mute at all. Governs the row's
+   *  mute indicator independently of `muted` once set: in the future it's
+   *  muted with a "Muted until {time}" accessible name; in the past it
+   *  renders as unmuted even if `muted` hasn't been cleared server-side yet.
+   *  Mapped from `ConversationResponse.mutedUntil` in this feature's
+   *  `messages.adapters.ts`. */
+  mutedUntil?: string | null;
+  /** PRD-349: this caller's own mute MODE, a second axis independent of
+   *  `muted`/`mutedUntil` above. Absent reads as `"all"` (the ordinary
+   *  ladder those two fields already govern). `"mentionsOnly"` means this
+   *  caller never gets the plain "new message" push for this thread (an
+   *  `@`-mention still reaches them), regardless of `muted`'s own value: a
+   *  thread can be in mentions-only mode while also carrying a plain timed
+   *  mute, or carrying none at all. The row/thread menu renders ONE coherent
+   *  choice from the two axes together (see `useThreadRowMenuItems.tsx`),
+   *  never two competing "muted" states. Mapped from
+   *  `ConversationResponse.muteMode` in this feature's `messages.adapters.ts`. */
+  muteMode?: ConversationMuteMode;
+  /** Whether this viewer was @-mentioned in an unread message in this thread
+   *  (PRD-348). Absent/false = no pending mention. Drives the row's `@`
+   *  indicator, independent of the plain unread count/badge. Mapped from
+   *  `ConversationResponse.hasUnreadMention` in this feature's
+   *  `messages.adapters.ts`. */
+  hasUnreadMention?: boolean;
+  /** The handle of whoever sent `preview`/`lastMessageBody`, letting the row
+   *  substitute "You: " for the sender's own name when the viewer sent the
+   *  last message (DES-190), in both DMs and groups. Absent when the DTO
+   *  predates this field or the thread has no messages yet. */
+  lastMessageSenderHandle?: string;
+  /** The raw (unprefixed) body of the last message, needed for the "You: "
+   *  substitution in a GROUP row, whose `preview` already has the real
+   *  sender's first name baked in by `groupPreview`. Absent/ignored for a
+   *  `lastMessageIsSystem` row (an event pill has no "sender" to substitute). */
+  lastMessageBody?: string;
+  /** True when the last message is a rendered system event ("Ana created the
+   *  group") rather than a member's own text. The "You: "/status-tick
+   *  treatment never applies to it, even when the actor is the viewer. */
+  lastMessageIsSystem?: boolean;
   /** ISO timestamp this chat was archived out of the main inbox. Absent/null =
    *  not archived. The reversible replacement for the destructive clear-for-me
    *  as the everyday way to declutter — server auto-clears this the instant a
@@ -230,9 +341,18 @@ export interface Conversation {
   otherLastReadAt?: string;
   /** Counterpart's delivered watermark (ISO, live). Drives the "double check". */
   otherDeliveredAt?: string;
+  /** The signed-in member's OWN read watermark (ISO, live, DMs and groups).
+   *  Null when they have never read the thread; absent for most demo rows
+   *  (the long demo thread carries one). Places the "New messages" divider by
+   *  timestamp (ENG-195). */
+  myLastReadAt?: string | null;
   /** Counterpart's user id (live) — correlates presence events. */
   otherParticipantId?: string;
   official?: boolean;
+  /** ENG-243 (live): a DM whose counterpart erased their account. The thread
+   *  stays readable, renders as "Former member", and the composer is replaced
+   *  by a notice. Absent for official threads, groups and demo rows. */
+  isCounterpartErased?: boolean;
   /** SERVER-AUTHORITATIVE (PRD-220): true for a DM the two aren't accepted
    *  connections in — e.g. a housing/flatmate enquiry that opened a thread
    *  cold. The ordinary send path 403s every message past the enquiry itself,
@@ -240,6 +360,16 @@ export interface Conversation {
    *  instead of a normal input. Always false/absent for official and group
    *  threads (the connection gate doesn't apply to them). */
   replyRequiresConnection?: boolean;
+  /** SERVER-AUTHORITATIVE (PRD-340): the one-tap-reply state of a DM the two
+   *  aren't accepted connections in, from the signed-in member's side.
+   *  `"open"` means an ordinary send will succeed (they may reply, or the
+   *  thread is already opened). `"awaitingTheirReply"` means this member
+   *  started the thread and is waiting on the other side's first reply.
+   *  `"needsConnection"` is the platform's original rule: neither side may
+   *  send yet. Absent for official/group threads and for a demo row; treat a
+   *  missing value as `"open"`. `ComposerConnectionNotice` reads this to tell
+   *  "they haven't answered yet" apart from "you two aren't connected". */
+  replyGate?: "open" | "awaitingTheirReply" | "needsConnection";
   /** True for a GROUP thread — swaps the header/inbox to group framing (title +
    *  member-count subtitle, per-sender attribution, "Group info"). Absent = DM. */
   isGroup?: boolean;
@@ -258,14 +388,45 @@ export interface Conversation {
   canRemoveMembers?: boolean;
   canRename?: boolean;
   canManageRoles?: boolean;
-  /** `dayKey` (a stable, ISO calendar-date machine id) is set on LIVE-mode
-   *  buckets (`messages.adapters.ts`'s `groupMessages`) so the optimistic
-   *  merge in `useMessagesController.helpers.ts` matches "today's bucket" by
-   *  an absolute date rather than the `day` display label, which can go stale
-   *  ("Today" said yesterday) in a long-lived tab — see FE-MSG-30. DEMO's
-   *  hand-authored buckets below never set it: their `day` label is fiction
-   *  that never rolls over on a real clock, so matching on it directly stays
-   *  correct there. */
+  /** GROUP only (PRD-358): the group's description. Absent/null for DMs and
+   *  for a group with no description set. */
+  description?: string | null;
+  /** GROUP only (PRD-357): ISO timestamp the group was dissolved. Once set,
+   *  the group is read-only for every former participant. Absent/null while
+   *  active, and for DMs. */
+  dissolvedAt?: string | null;
+  /** GROUP only, THIS member (DES-227): why the composer is severed:
+   *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
+   *  `"dissolved"` (the owner ended the group). Absent/null while an active
+   *  member, and for DMs. Drives `ComposerSeveredNotice`'s copy; a group with
+   *  `hasLeft` true but no `leftReason` (an older cached response) falls back
+   *  to the `"left"` wording. */
+  leftReason?: "left" | "removed" | "dissolved" | null;
+  /** GROUP only (PRD-358): the revocable invite-link token, only ever
+   *  populated for the owner/admin who may manage it. Absent/null for every
+   *  other member, a group with no active link, and DMs. */
+  inviteToken?: string | null;
+  /** Whether THIS member may create/rotate/disable the invite link, gated on
+   *  being owner/admin with the group active and not dissolved. Absent/false
+   *  for DMs and a member who has left. */
+  canManageInviteLink?: boolean;
+  /** Whether THIS member (the owner) may transfer ownership, gated on the
+   *  group being active and not dissolved. Absent/false for DMs, non-owners,
+   *  and a member who has left. */
+  canTransferOwnership?: boolean;
+  /** Whether THIS member (the owner) may dissolve the group, gated on it
+   *  being active and not already dissolved. Absent/false for DMs,
+   *  non-owners, and a member who has left. */
+  canDissolve?: boolean;
+  /** GROUP only, owner/admin (PRD-353): invites still awaiting a response.
+   *  Absent/empty for a non-owner/admin, a member who has left, and DMs. */
+  pendingInvites?: ConversationPendingInvite[];
+  /** `dayKey` (a stable, ISO calendar-date machine id) is set on every bucket,
+   *  live (`messages.adapters.ts`'s `groupMessages`) and demo
+   *  (`demoTimeline.data.ts`'s `demoThread`), so the optimistic merge in
+   *  `useMessagesController.helpers.ts` matches "today's bucket" by an
+   *  absolute date rather than the `day` display label, which can go stale
+   *  ("Today" said yesterday) in a long-lived tab (FE-MSG-30). */
   messages: { day: string; dayKey?: string; items: ChatMessage[] }[];
 }
 
@@ -278,314 +439,36 @@ export interface Conversation {
  */
 export const me = { initials: "", tint: "default" as AvatarTint };
 
+/**
+ * The demo inbox registry (demo mode only; live rows come from the API). Seeds
+ * live in colocated `demo*.data.ts` files split by concern, every message has a
+ * stable `demo-msg-<thread>-NNN` id, and every label derives from an ISO `at`
+ * through the live formatters (see `demoTimeline.data.ts`). Listed newest
+ * activity first, since the inbox keeps this order below any pinned rows.
+ */
+/** DEMO ONLY: the line `useDemoInboundMessageSimulation` delivers into
+ *  Maria's thread a fixed delay after it opens (`DEMO_INBOUND_MESSAGE_DELAY_MS`,
+ *  `demoSignalSimulation.ts`), a natural continuation of the Saturday
+ *  flatshare-visit thread above, so the arrival reads as a genuine reply
+ *  rather than a stock line. EN only, like every other demo message body
+ *  (see `demoDirectThreads.data.ts`'s own file comment). */
+export const DEMO_INBOUND_SIMULATION_MESSAGE_BODY =
+  "One more thing: should Inês bring anything Saturday, or just herself?";
+
 export const conversations: Conversation[] = [
-  {
-    id: "brunch-crew",
-    initials: "PB",
-    tint: "coral",
-    name: "Pride Brunch Crew",
-    pronouns: "",
-    connectedSince: "",
-    time: "Now",
-    // Group previews are prefixed with the sender's first name (see the live
-    // adapter); the demo bakes the same shape in.
-    preview: "Anika: The terrace is booked for 11am, see you all there!",
-    unread: true,
-    unreadCount: 3,
-    isGroup: true,
-    memberCount: 4,
-    // The signed-in demo member ("Tiago Costa") owns this group, so the demo
-    // shows the full management surface (add/remove/rename/roles). The two
-    // members with a `lastReadAt` past the last own message drive a demo
-    // "Seen by 2" receipt; Kai (no watermark) hasn't caught up.
-    myRole: "owner",
-    canAddMembers: true,
-    canRemoveMembers: true,
-    canRename: true,
-    canManageRoles: true,
-    members: [
-      {
-        name: "Tiago Costa",
-        initials: "TC",
-        tint: "plum",
-        role: "owner",
-        slug: "tiago",
-      },
-      {
-        name: "Anika Kovač",
-        initials: "AK",
-        tint: "coral",
-        role: "member",
-        slug: "anika",
-        lastReadAt: "2026-07-29T10:00:00.000Z",
-      },
-      {
-        name: "Jordan Park",
-        initials: "JP",
-        tint: "jade",
-        role: "admin",
-        slug: "jordan",
-        lastReadAt: "2026-07-29T10:00:00.000Z",
-      },
-      {
-        name: "Kai Larsson",
-        initials: "KL",
-        tint: "plum",
-        role: "member",
-        slug: "kai",
-      },
-    ],
-    messages: [
-      {
-        day: "Today",
-        items: [
-          {
-            from: "me",
-            text: "created the group",
-            kind: "system",
-            systemEvent: {
-              type: "group_created",
-              actorName: "You",
-              actorIsMe: true,
-            },
-          },
-          {
-            from: "them",
-            text: "So excited for this! What time are we thinking?",
-            senderName: "Anika Kovač",
-            senderHandle: "anika",
-            senderTint: "coral",
-          },
-          {
-            from: "them",
-            text: "Late morning works best for me, 11ish?",
-            senderName: "Jordan Park",
-            senderHandle: "jordan",
-            senderTint: "jade",
-          },
-          {
-            from: "me",
-            text: "11am it is. I'll confirm the terrace booking.",
-            at: "2026-07-29T09:00:00.000Z",
-          },
-          {
-            from: "them",
-            text: "The terrace is booked for 11am, see you all there!",
-            senderName: "Anika Kovač",
-            senderHandle: "anika",
-            senderTint: "coral",
-            time: "Just now",
-            reactions: [{ key: "love", count: 2, mine: true }],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "anika",
-    slug: "anika",
-    initials: "AK",
-    tint: "coral",
-    name: "Anika Kovač",
-    pronouns: "she/they",
-    connectedSince: "Feb 2026",
-    time: "Now",
-    preview: "Thanks for the recommendation! I'll reach out to her this week",
-    unread: true,
-    unreadCount: 2,
-    messages: [
-      {
-        day: "Yesterday",
-        items: [
-          {
-            from: "them",
-            text: "Hey! I saw your question in the Trans & Non-Binary thread about GPs. Dr. Carla Nunes at Clínica do Marquês is brilliant. She gets it without needing a full explanation every visit.",
-          },
-          {
-            from: "me",
-            text: "Oh brilliant, thank you! Is she taking new patients?",
-          },
-          {
-            from: "them",
-            text: "Yes, I'd recommend booking by email rather than phone, she's quicker to respond. You can request a first appointment here: https://clinicadomarques.pt/book",
-          },
-        ],
-      },
-      {
-        day: "Today",
-        items: [
-          {
-            from: "me",
-            text: "That would be amazing, yes please. And I saw the brunch is confirmed: https://queerpulse.example/pride-brunch",
-          },
-          {
-            from: "them",
-            text: "Thanks for the recommendation! I'll reach out to her this week. Really appreciate you taking the time.",
-            time: "Just now",
-            // Demo-only seed so the reaction chips have something to render in
-            // the prototype; toggling is inert here (no server id to mutate —
-            // see `useToggleReaction`'s demo no-op branch).
-            reactions: [
-              { key: "love", count: 2, mine: false },
-              { key: "like", count: 1, mine: true },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "jordan",
-    slug: "jordan",
-    initials: "JP",
-    tint: "plum",
-    name: "Jordan Park",
-    pronouns: "they/them",
-    connectedSince: "Mar 2026",
-    time: "Yesterday",
-    preview: "See you at the book club on Saturday",
-    unread: false,
-    online: true,
-    messages: [
-      {
-        day: "Yesterday",
-        items: [
-          { from: "me", text: "Are you going to the book club on Saturday?" },
-          {
-            from: "them",
-            text: "See you at the book club on Saturday",
-            time: "3:14 PM",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "tomas",
-    slug: "tomas-mendes",
-    initials: "TM",
-    tint: "jade",
-    name: "Tomás Mendes",
-    pronouns: "he/him",
-    connectedSince: "Jan 2026",
-    time: "Mon",
-    preview: "The venue confirmed. We're all set for the…",
-    unread: true,
-    messages: [
-      {
-        day: "Monday",
-        items: [
-          {
-            from: "them",
-            text: "The venue confirmed. We're all set for the Pride Brunch. They've given us the whole terrace from 11am.",
-            time: "2:30 PM",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "maria",
-    slug: "maria",
-    initials: "MF",
-    tint: "jade",
-    name: "Maria Ferreira",
-    pronouns: "she/her",
-    connectedSince: "Apr 2026",
-    time: "Sun",
-    preview: "Of course, happy to chat. Are you free Thursday?",
-    unread: false,
-    messages: [
-      {
-        day: "Sunday",
-        items: [
-          {
-            from: "me",
-            text: "Hi Maria, would you be open to a quick chat sometime? I have some questions about trans healthcare resources.",
-          },
-          {
-            from: "them",
-            text: "Of course, happy to chat. Are you free Thursday?",
-            time: "11:22 AM",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "kai",
-    slug: "kai",
-    initials: "KL",
-    tint: "plum",
-    name: "Kai Larsson",
-    pronouns: "they/them",
-    connectedSince: "May 2026",
-    time: "Fri",
-    preview: "That's exactly the angle I was looking for, thank you",
-    unread: false,
-    messages: [
-      {
-        day: "Friday",
-        items: [
-          {
-            from: "me",
-            text: "I think the angle you want is less about documentation and more about memory: what communities choose to remember vs forget.",
-          },
-          {
-            from: "them",
-            text: "That's exactly the angle I was looking for, thank you",
-            time: "6:48 PM",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "team",
-    initials: "QP",
-    tint: "plum",
-    name: "QueerPulse Team",
-    pronouns: "Official",
-    connectedSince: "",
-    time: "1 Jun",
-    preview: "Welcome to QueerPulse! Here's what to explore first…",
-    unread: false,
-    official: true,
-    messages: [
-      {
-        day: "1 June 2026",
-        items: [
-          {
-            from: "them",
-            text: "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming gatherings, and the member directory. We're glad you're here.",
-            time: "9:00 AM",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "bilal",
-    slug: "bilal-kaya",
-    initials: "BK",
-    tint: "coral",
-    name: "Bilal Kaya",
-    pronouns: "he/him",
-    connectedSince: "May 2026",
-    time: "28 May",
-    preview: "Let me know if you want me to introduce you",
-    unread: false,
-    messages: [
-      {
-        day: "28 May",
-        items: [
-          {
-            from: "them",
-            text: "Let me know if you want me to introduce you to Nadia. She does exactly the kind of work you're describing.",
-            time: "4:12 PM",
-          },
-        ],
-      },
-    ],
-  },
+  brunchCrewConversation,
+  anikaConversation,
+  mariaConversation,
+  priyaConversation,
+  jordanConversation,
+  noahConversation,
+  portoMentorsConversation,
+  tomasConversation,
+  yusufConversation,
+  marcoConversation,
+  kaiConversation,
+  prideVolunteersConversation,
+  bookSwapConversation,
+  bilalConversation,
+  teamConversation,
 ];

@@ -4617,4 +4617,9 @@ export const economy: Catalog = {
   "housingViewing.review.gonePublicBody":
     "This review has gone public, so it can no longer be changed. A review can be corrected up until the moment it goes public.",
   "housingViewing.list.yourReview": "Your review",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "barterDetail.propose.openThreadCta": "Open the conversation",
+  "housingModal.message.replyNotice":
+    "{name} can reply to this straight away. You can send more once they do.",
 };

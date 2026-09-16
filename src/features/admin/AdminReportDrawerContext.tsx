@@ -20,6 +20,8 @@ import {
 import { auditActionLabel } from "./moderationActionLabels";
 import { isAnonymousReporter, reporterDisplayName } from "./moderationReporter";
 import { useReportAudit } from "./api/useReportAudit";
+import { ReportConversationContext } from "./AdminReportConversationContext";
+import { ReportEvidenceSnapshots } from "./AdminReportEvidence";
 import styles from "./AdminModerationPage.module.css";
 
 /**
@@ -95,13 +97,16 @@ function AmbiguousAuthorsNote({
 /** Reported content + surrounding thread + people involved (read-only context). */
 export function ReportContext({
   detail,
-  subjectType,
+  report,
 }: {
   detail: ReportDetail;
-  /** Carried in solely so the two-authors note can render beside the author
-   *  name. `ReportDetail` has no subject type of its own. */
-  subjectType: ModReport["subjectType"];
+  /** `subjectType` so the two-authors note can render beside the author name
+   *  (`ReportDetail` has no subject type of its own); `id` keys the staff-only
+   *  evidence file route and the audited conversation viewer, both of which
+   *  resolve everything from the report itself. */
+  report: Pick<ModReport, "id" | "subjectType">;
 }) {
+  const { subjectType, id: reportId } = report;
   const { t } = useTranslation();
   // Demo fixtures only. The registry is keyed by name, and in live mode every
   // name in a report belongs to a real member the moderator is judging.
@@ -121,6 +126,15 @@ export function ReportContext({
           </p>
         )}
       </section>
+
+      {/* Server snapshots taken when the report was filed (a message as it
+          stood, its attachment). One block per snapshot kind. */}
+      {detail.evidenceSnapshots && detail.evidenceSnapshots.length > 0 && (
+        <ReportEvidenceSnapshots
+          reportId={reportId}
+          snapshots={detail.evidenceSnapshots}
+        />
+      )}
 
       {detail.disputeReason && (
         <section className={styles.dSec}>
@@ -189,6 +203,11 @@ export function ReportContext({
             </div>
           ))}
         </div>
+        {/* PRD-360: a message report's surrounding conversation, opened only
+            on request because every opening is audited. */}
+        {detail.conversationContextAvailable && (
+          <ReportConversationContext reportId={reportId} />
+        )}
       </section>
 
       <section className={styles.dSec}>

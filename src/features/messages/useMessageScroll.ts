@@ -8,6 +8,14 @@ import {
 import type { Virtualizer } from "@tanstack/react-virtual";
 import { isNearBottom } from "./useStickToBottom";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
+import type { MessageRow } from "./messageRows";
+import {
+  useJumpScrollBridge,
+  useOlderPageAnchor,
+  type ThreadHistory,
+} from "./useOlderPageAnchor";
+import { useScrollResizeFollow } from "./useScrollResizeFollow";
+import { useUnreadLanding, type UnreadLandingInput } from "./useUnreadLanding";
 // TEMPORARY — see scrollTrace.ts's revert instructions.
 import { traceScrollEvent } from "./scrollTrace";
 
@@ -43,12 +51,16 @@ const OVERFLOW_MARGIN_PX = 4;
  * own API keeps its internal bookkeeping (and therefore that correction)
  * consistent with what's actually on screen.
  *
- * The two content-mutating `useLayoutEffect`s MUST stay in this declaration
- * order: React flushes layout effects before paint in declaration order, so the
- * thread-switch effect runs first (resetting the growth baseline) and the
- * content effect then sees no spurious growth. The ResizeObserver effect is
- * set-up only (its work runs async, off `atBottomRef`), so its position is
- * immaterial — it lives last.
+ * The content-mutating `useLayoutEffect`s MUST stay in this declaration order:
+ * React flushes layout effects before paint in declaration order, so the
+ * thread-switch effect runs first (resetting the growth baseline), the content
+ * effect then sees no spurious growth, and `useUnreadLanding` runs last so it
+ * can override the first-population pin before paint. The resize-follow
+ * observer (`useScrollResizeFollow`) is set-up only (its work runs async, off
+ * `atBottomRef`), so its position is immaterial.
+ *
+ * Every remembered position (prepend anchor, unread landing) lives in the
+ * scroller's DOM scroll space; see `scrollAnchor.ts` for why that matters.
  */
 // TEMPORARY — the `traceScrollEvent` call sites (see scrollTrace.ts) push this
 // hook over the line budget; remove the disable alongside the calls.
@@ -60,31 +72,31 @@ export function useMessageScroll(
    *  count as unread — the reader's own sends never do. */
   inboundCount: number,
   activeId: string,
-  hasMoreOlder: boolean,
-  loadingOlder: boolean,
-  onLoadOlder: () => void,
+  history: ThreadHistory,
   areaRef: RefObject<HTMLDivElement | null>,
   /** A single stable wrapper around the virtualized sizer + typing row (see
-   *  `MessageArea`'s `.areaContent`) — the ONE node the resize-follow effect
-   *  below observes. `areaRef`'s own box is fixed (`overflow-y: auto`), so it
-   *  never reports a growing bubble; a plain in-flow wrapper's box grows with
-   *  any descendant, so observing just this one node (instead of re-observing
-   *  every child on every new message) catches every resize for the whole
-   *  life of the thread. */
+   *  `MessageArea`'s `.areaContent`). Its box grows with any descendant, so
+   *  the resize-follow observer watches it (alongside `areaRef`, whose box
+   *  changes when the layout around the log does), and its top edge is where
+   *  the virtualizer's coordinate space begins (see `scrollAnchor.ts`). */
   contentRef: RefObject<HTMLDivElement | null>,
   /** The SAME `@tanstack/react-virtual` instance `MessageArea` renders from
    *  (built alongside `areaRef`/`contentRef` in `ConversationPanel`) — every
    *  scroll-position write in this hook goes through it (see above). */
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>,
+  /** The same row list the virtualizer renders: picks a prepend-safe anchor
+   *  row and finds the unread divider row. */
+  rows: MessageRow[],
+  /** The open thread's unread state, read when it opens (see
+   *  `useUnreadLanding`). */
+  landing: UnreadLandingInput,
 ) {
+  const { hasMoreOlder, loadingOlder, onLoadOlder, isHistorySettled } = history;
   /** Inbound messages that arrived while the reader was scrolled up; 0 when
    *  they're at the bottom. Shown on the jump-to-latest pill. */
   const [newMessagesCount, setNewMessagesCount] = useState(0);
   const previousCountRef = useRef(0);
   const previousInboundCountRef = useRef(0);
-  /** Distance-from-bottom to restore after an older-history prepend, so the
-   *  viewport doesn't jump; null when no restore is pending. */
-  const pendingAnchorRef = useRef<number | null>(null);
   /** Whether the reader is currently anchored to the bottom — the single source
    *  of truth for stick-to-bottom. Read on resize (a growing bubble must not
    *  un-stick a reader who WAS at the bottom) and on new content; updated on
@@ -107,6 +119,23 @@ export function useMessageScroll(
    *  round-trip, so two rAFs is comfortably past it — the same window the
    *  prepend-anchor logic below already waits out for the same reason). */
   const initialSettleGuardRef = useRef(false);
+  // The reader's place through an older-history prepend (see the hook).
+  const {
+    pendingAnchorRef,
+    restoreAnchor,
+    resetOlderPageAnchor,
+    settleOlderPage,
+    followReaderWhileArmed,
+    armOlderPageAnchor,
+    armHistoryPageAnchor,
+    releaseSettlingAnchor,
+  } = useOlderPageAnchor(
+    areaRef,
+    contentRef,
+    rowVirtualizer,
+    rows,
+    atBottomRef,
+  );
 
   const armInitialSettleGuard = useCallback(() => {
     initialSettleGuardRef.current = true;
@@ -187,38 +216,6 @@ export function useMessageScroll(
     [rowVirtualizer, areaRef],
   );
 
-  /** Restores the reader's remembered distance-from-bottom (see
-   *  `pendingAnchorRef`) — the prepend-anchor and its resize-follow settle,
-   *  both through the virtualizer's own offset API. */
-  const restoreAnchor = useCallback(
-    (distanceFromBottom: number) => {
-      traceScrollEvent(
-        "restoreAnchor:before",
-        areaRef.current,
-        rowVirtualizer,
-        atBottomRef,
-        {
-          distanceFromBottom,
-          targetOffset: rowVirtualizer.getTotalSize() - distanceFromBottom,
-        },
-      );
-      rowVirtualizer.scrollToOffset(
-        rowVirtualizer.getTotalSize() - distanceFromBottom,
-        { align: "start", behavior: "auto" },
-      );
-      traceScrollEvent(
-        "restoreAnchor:after",
-        areaRef.current,
-        rowVirtualizer,
-        atBottomRef,
-        {
-          distanceFromBottom,
-        },
-      );
-    },
-    [rowVirtualizer, areaRef],
-  );
-
   // Thread switch: jump to bottom, reset the pill count and growth baselines,
   // and (desktop only) focus the composer. Declared BEFORE the content effect.
   useLayoutEffect(() => {
@@ -238,7 +235,7 @@ export function useMessageScroll(
     setNewMessagesCount(0);
     previousCountRef.current = messageCount;
     previousInboundCountRef.current = inboundCount;
-    pendingAnchorRef.current = null;
+    resetOlderPageAnchor(loadingOlder);
     atBottomRef.current = true;
     // A freshly-opened thread is exactly when a row can be measured for the
     // first time — arm the false-load-older guard (see its declaration).
@@ -250,7 +247,8 @@ export function useMessageScroll(
   }, [activeId]);
 
   // Single owner of scroll position on content change, in priority order:
-  //  1. An older-history page just prepended → restore the reader's viewport.
+  //  1. An older-history page request just settled with an anchor armed →
+  //     restore the reader's viewport if rows landed, disarm if none did.
   //  2. New content at the bottom → stick if the reader is pinned there, else
   //     accrue the inbound arrivals onto the pill count.
   useLayoutEffect(() => {
@@ -266,36 +264,23 @@ export function useMessageScroll(
         messageCount,
         previousInbound,
         inboundCount,
-        pendingAnchor: pendingAnchorRef.current,
+        loadingOlder,
       },
     );
     previousCountRef.current = messageCount;
     previousInboundCountRef.current = inboundCount;
-    if (pendingAnchorRef.current !== null) {
-      restoreAnchor(pendingAnchorRef.current);
-      // Keep the anchor armed for two more frames instead of clearing it here:
-      // a freshly-prepended row above the viewport may still be sized off its
-      // ESTIMATE (not yet measured) at the exact moment this restore runs. If
-      // `measureElement` corrects that estimate a frame later, the resize-follow
-      // ResizeObserver below reapplies this SAME distance-from-bottom (see its
-      // pendingAnchorRef branch) so that second, smaller correction never shows
-      // as a jump either. Two rAFs is comfortably past when that correction
-      // lands (it's a synchronous remeasure + re-render, not a network
-      // round-trip); after that the anchor is released so an unrelated LATER
-      // resize (a reaction landing on some other bubble, say) doesn't keep
-      // re-snapping the reader to a now-stale distance.
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          pendingAnchorRef.current = null;
-        });
-      });
-      return;
-    }
+    const grew = messageCount > previousCount;
+    // Restores the reader's place (rows landed) or disarms the anchor (failed
+    // or empty page) on the older-page settle edge.
+    const { isOlderPageSettle, isConsumed } = settleOlderPage(
+      loadingOlder,
+      grew,
+    );
+    if (isConsumed) return;
     // First time this thread's messages populate — in live mode history arrives
     // on a LATER commit than the thread switch, when the container was still
     // empty (count 0). Land on the latest message, never surface the pill.
     const isFirstPopulation = previousCount === 0 && messageCount > 0;
-    const grew = messageCount > previousCount;
     traceScrollEvent(
       "contentEffect:branch",
       areaRef.current,
@@ -323,7 +308,9 @@ export function useMessageScroll(
       );
       scrollToBottom(false);
       setNewMessagesCount(0);
-    } else {
+    } else if (!isOlderPageSettle) {
+      // An older page that landed without an anchor (the unread landing's own
+      // paging) is history, never an arrival, so it skips the pill.
       // Only inbound arrivals count as "new" on the pill; my own sends (which
       // also grow the list) never do.
       const inboundArrived = inboundCount - previousInbound;
@@ -341,76 +328,46 @@ export function useMessageScroll(
   }, [
     messageCount,
     inboundCount,
+    loadingOlder,
     scrollToBottom,
-    restoreAnchor,
+    settleOlderPage,
     armInitialSettleGuard,
   ]);
 
-  // Stick-to-bottom must survive a *resize* of already-rendered content — a
-  // late-loading image, an added reaction chip, an expanding inline edit —
-  // none of which change `messageCount`, so the effect above never fires for
-  // them. A ResizeObserver re-pins a reader who WAS at the bottom (read off
-  // `atBottomRef`, never a post-resize re-measure), and does it INSTANTLY —
-  // WhatsApp-style, a pinned reader's viewport should snap as content grows,
-  // not glide, and a smooth scroll here would otherwise compete with (and get
-  // visibly interrupted by) the very next resize a moment later. It never
-  // fights the two other paths: during an older-history load the reader is at
-  // the TOP, so `atBottomRef` is false and this stays inert; and it only ever
-  // pins toward the bottom, never toward a prepend.
-  useLayoutEffect(() => {
-    const area = areaRef.current;
-    const content = contentRef.current;
-    if (!area || !content || typeof ResizeObserver === "undefined") return;
-    const observer = new ResizeObserver(() => {
-      // A prepend restore (above) is still settling — a virtualized row's
-      // estimated height just got corrected to its measured size. Reapply the
-      // SAME remembered distance-from-bottom rather than falling through to
-      // the bottom-stick branch below, so an older-history load never visibly
-      // jumps even across that second, measurement-driven correction.
-      if (pendingAnchorRef.current !== null) {
-        traceScrollEvent(
-          "contentResize:restoreAnchorBranch",
-          area,
-          rowVirtualizer,
-          atBottomRef,
-        );
-        restoreAnchor(pendingAnchorRef.current);
-        return;
-      }
-      if (!atBottomRef.current) {
-        traceScrollEvent(
-          "contentResize:earlyReturn:notAtBottom",
-          area,
-          rowVirtualizer,
-          atBottomRef,
-        );
-        return;
-      }
-      if (isNearBottom(area, 1)) {
-        traceScrollEvent(
-          "contentResize:earlyReturn:alreadyFlush",
-          area,
-          rowVirtualizer,
-          atBottomRef,
-        );
-        return; // already flush to the bottom
-      }
-      traceScrollEvent(
-        "contentResize:rePin",
-        area,
-        rowVirtualizer,
-        atBottomRef,
-      );
-      scrollToBottom(false);
-    });
-    // ONE stable node for the whole panel's lifetime (see `contentRef`'s
-    // comment) — no re-subscribing per message. `MessageArea` itself isn't
-    // remounted per thread, so `content` doesn't actually change across a
-    // switch either; re-running on `activeId` is a cheap, defensive refresh
-    // rather than a requirement.
-    observer.observe(content);
-    return () => observer.disconnect();
-  }, [activeId, areaRef, contentRef, restoreAnchor, scrollToBottom]);
+  // Opening a thread with unreads lands on the "New messages" divider. MUST
+  // stay after the content effect (see the hook's own comment).
+  const cancelUnreadLanding = useUnreadLanding(
+    activeId,
+    landing,
+    rows,
+    history,
+    areaRef,
+    atBottomRef,
+    pendingAnchorRef,
+    restoreAnchor,
+    armHistoryPageAnchor,
+  );
+  // The scroll layer's side of a jump-to-message (see `JumpScrollBridge`).
+  const jumpScroll = useJumpScrollBridge(
+    areaRef,
+    atBottomRef,
+    releaseSettlingAnchor,
+    cancelUnreadLanding,
+    armHistoryPageAnchor,
+  );
+
+  // Stick-to-bottom across a resize of the content OR of the scroll container
+  // itself (keyboard, auto-growing composer), and the anchor settle window.
+  useScrollResizeFollow(
+    activeId,
+    areaRef,
+    contentRef,
+    rowVirtualizer,
+    atBottomRef,
+    pendingAnchorRef,
+    restoreAnchor,
+    scrollToBottom,
+  );
 
   // Stabilized: `ConversationPanel` re-renders more often than this hook's own
   // logic changes (a receipt tick, a thread-unrelated state update), and this
@@ -455,6 +412,8 @@ export function useMessageScroll(
     // A real long-thread scroll-to-top always clears both comfortably: it
     // happens long after the thread has settled, and the content genuinely
     // overflows.
+    // An anchor armed for an in-flight page follows the reader's scrolling.
+    followReaderWhileArmed(element);
     const hasGenuineOverflow =
       element.scrollHeight - element.clientHeight > OVERFLOW_MARGIN_PX;
     if (
@@ -463,10 +422,13 @@ export function useMessageScroll(
       element.scrollTop <= 48 &&
       hasMoreOlder &&
       !loadingOlder &&
-      pendingAnchorRef.current === null
+      // The controller ignores the request while page 0 refetches; arming
+      // then would leave an anchor waiting on a page that never comes.
+      isHistorySettled &&
+      // Preserve the viewport: remember a prepend-safe row's on-screen spot,
+      // put it back once the older page lands (see `useOlderPageAnchor`).
+      armOlderPageAnchor(element)
     ) {
-      // Preserve the viewport: remember distance-from-bottom, restore after prepend.
-      pendingAnchorRef.current = element.scrollHeight - element.scrollTop;
       traceScrollEvent(
         "handleAreaScroll:loadOlderTriggered",
         element,
@@ -475,7 +437,16 @@ export function useMessageScroll(
       );
       onLoadOlder();
     }
-  }, [areaRef, hasMoreOlder, loadingOlder, onLoadOlder, rowVirtualizer]);
+  }, [
+    areaRef,
+    hasMoreOlder,
+    loadingOlder,
+    isHistorySettled,
+    onLoadOlder,
+    rowVirtualizer,
+    followReaderWhileArmed,
+    armOlderPageAnchor,
+  ]);
 
   const jumpToLatest = useCallback(() => {
     scrollToBottom(true);
@@ -487,5 +458,6 @@ export function useMessageScroll(
     newMessagesCount,
     handleAreaScroll,
     jumpToLatest,
+    jumpScroll,
   };
 }

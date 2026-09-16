@@ -15,7 +15,7 @@ export const DATA_TYPES: DataType[] = [
   {
     id: "messages",
     labelKey: "settings:dataExport.type.messages.label",
-    subKey: "settings:dataExport.type.messages.sub",
+    subKey: "settings:dataExport.type.messages.subDetailed",
     defaultChecked: true,
   },
   {
@@ -144,12 +144,12 @@ export const ACCORDION_ITEMS: AccordionItem[] = [
   {
     id: "messages",
     titleKey: "settings:dataExport.accordion.messages.title",
-    bodyKey: "settings:dataExport.accordion.messages.body",
+    bodyKey: "settings:dataExport.accordion.messages.bodyDetailed",
     tagKeys: [
       "settings:dataExport.tag.content",
       "settings:dataExport.tag.timestamps",
-      "settings:dataExport.tag.readReceipts",
       "settings:dataExport.tag.attachments",
+      "settings:dataExport.tag.reportedThreads",
     ],
   },
   {

@@ -3,6 +3,7 @@ import {
   FiCheck,
   FiMinus,
   FiPlus,
+  FiSend,
   FiShare2,
   FiType,
 } from "react-icons/fi";
@@ -11,6 +12,8 @@ import { useShareLink } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
+import { useShareToChat } from "../messages/share/useShareToChat";
+import { ShareToChatModal } from "../messages/share/ShareToChatModal";
 import styles from "./ArticleToolbar.module.css";
 
 export type TextSize = "sm" | "md" | "lg";
@@ -73,10 +76,16 @@ export function ArticleToolbar({
     failed: t("magazine:toolbar.linkCopyErrorToast"),
   });
   const hasShareSheet = canOpenShareSheet();
+  const shareToChat = useShareToChat();
 
   const { slug, href } = deriveIdentity(articleId);
   const id = `article:${slug}`;
   const saved = isSaved(id);
+  const resolvedTitle =
+    articleTitle ??
+    (typeof document !== "undefined"
+      ? document.title
+      : t("magazine:toolbar.fallbackTitle"));
 
   const sizeIndex = SIZES.indexOf(textSize);
   const decSize = () => sizeIndex > 0 && onTextSize(SIZES[sizeIndex - 1]!);
@@ -215,10 +224,31 @@ export function ArticleToolbar({
         <span>{t("magazine:toolbar.shareCta")}</span>
       </button>
 
+      {shareToChat.canShare && (
+        <button
+          type="button"
+          className={styles.action}
+          onClick={shareToChat.open}
+          aria-label={t("messages:share.ariaLabel", { title: resolvedTitle })}
+        >
+          <FiSend aria-hidden />
+          <span>{t("messages:share.cta")}</span>
+        </button>
+      )}
+
       {saved && (
         <span className={styles.savedHint} aria-hidden>
           <FiCheck /> {t("magazine:toolbar.savedHint")}
         </span>
+      )}
+
+      {shareToChat.isOpen && (
+        <ShareToChatModal
+          url={href}
+          title={resolvedTitle}
+          kind="article"
+          onClose={shareToChat.close}
+        />
       )}
     </div>
   );

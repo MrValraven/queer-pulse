@@ -109,6 +109,13 @@ export interface ModReportDTO {
     }[];
     people: { role: string; name: string; handle?: string; meta: string }[];
     /**
+     * PRD-360: true when `GET /mod/reports/:id/conversation-context` can open
+     * the conversation around a message report. Optional so a server from
+     * before the viewer existed reads as "not available". `thread` stays empty:
+     * opening a private conversation is always an explicit, audited request.
+     */
+    conversationContextAvailable?: boolean;
+    /**
      * Listing-report enrichment — only present on a `listing`-subject report's
      * detail (hand-mapped server-side; see queerpulse-backend
      * `moderation-response.ts` / `buildListingEnrichment`). `disputeReason` is
@@ -366,6 +373,53 @@ export const getModReports = (params: ModReportsParams = {}) =>
 /** Full detail for the drawer (excerpt, thread, people). Deadnames redacted server-side. */
 export const getModReport = (id: string) =>
   apiGet<ModReportDTO>(`/mod/reports/${encodeURIComponent(id)}`);
+
+/** One message of the staff conversation window (PRD-360). Mirrors
+ *  `ConversationContextMessageDTO` in queerpulse-backend
+ *  `moderation/report-conversation-context-response.ts`. */
+export interface ConversationContextMessageDTO {
+  id: string;
+  /** Null once the sender erased their account. */
+  senderId: string | null;
+  /** Null exactly when `senderId` is null: render "Former member". */
+  senderDisplayName: string | null;
+  senderSlug: string | null;
+  kind: "user" | "system" | "gif" | "image" | "document";
+  /** Null for a deleted message, except the reported one. */
+  body: string | null;
+  /** Display facts only, never a URL. */
+  attachment: {
+    fileName: string | null;
+    mimeType: string | null;
+    sizeBytes: number | null;
+  } | null;
+  sentAt: string;
+  editedAt: string | null;
+  isDeleted: boolean;
+  isReportedMessage: boolean;
+}
+
+export interface ReportConversationContextDTO {
+  reportId: string;
+  conversationId: string;
+  reportedMessageId: string;
+  hasEarlierMessages: boolean;
+  hasLaterMessages: boolean;
+  /** Oldest first, up to 20 either side of the reported message. */
+  messages: ConversationContextMessageDTO[];
+}
+
+/**
+ * PRD-360: the conversation around a message report. EVERY call writes a
+ * `conversation_context_viewed` audit row server-side, so the hook only ever
+ * fires it on an explicit moderator click and never refetches in the
+ * background. 404 with `code: CONVERSATION_CONTEXT_UNAVAILABLE` when there is
+ * no message left to anchor on.
+ */
+export const getReportConversationContext = (id: string) =>
+  apiGet<ReportConversationContextDTO>(
+    `/mod/reports/${encodeURIComponent(id)}/conversation-context`,
+  );
 
 /** Take one moderation action. Backend writes the audit entry + notifications. */
 export const actOnReport = (id: string, body: ModActionInput) =>

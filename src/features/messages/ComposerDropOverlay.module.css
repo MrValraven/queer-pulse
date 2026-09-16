@@ -1,0 +1,47 @@
+/* src/features/messages/ComposerDropOverlay.module.css
+ * DES-204's drop-to-send affordance. New file (rather than the shared
+ * `MessagesPage.module.css`, edited concurrently by several sessions); see
+ * `ComposerDropOverlay.tsx`'s own doc for why it renders `aria-hidden`.
+ */
+/* Applied to `Composer.tsx`'s own `.composer` wrapper (composed alongside
+   `MessagesPage.module.css`'s class, not replacing it) so `.overlay` below
+   has a positioning ancestor without editing that shared, concurrently-
+   edited file. */
+.composerDropZone {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  /* Never intercepts the drag: the composer's OWN drag handlers (on its
+     wrapping element) keep tracking dragenter/dragleave/drop underneath
+     this purely visual layer. */
+  pointer-events: none;
+  background: rgba(var(--plum-rgb), 0.06);
+  border-radius: var(--radius-badge);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-badge);
+  border: 1.5px dashed var(--accent);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.card svg {
+  color: var(--accent);
+  flex: none;
+}

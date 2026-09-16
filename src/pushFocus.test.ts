@@ -1,5 +1,72 @@
 import { describe, expect, it } from "vitest";
-import { isViewingTarget } from "./pushFocus";
+import {
+  PUSH_BRIDGE_IS_VIEWING_CONVERSATION,
+  type PushBridgeMessageTarget,
+} from "./pushBridge";
+import { isAnyWindowViewingConversation, isViewingTarget } from "./pushFocus";
+
+/** A window double that answers the bridge with `reply`, or stays silent. */
+function bridgeWindow(
+  reply: unknown,
+  receivedMessages: unknown[] = [],
+): PushBridgeMessageTarget {
+  return {
+    postMessage(message, transfer) {
+      receivedMessages.push(message);
+      const port = transfer[0];
+      if (reply !== undefined && port instanceof MessagePort) {
+        port.postMessage(reply);
+      }
+    },
+  };
+}
+
+describe("isAnyWindowViewingConversation", () => {
+  it("is false with no focused windows", async () => {
+    await expect(isAnyWindowViewingConversation([], "conv-1")).resolves.toBe(
+      false,
+    );
+  });
+
+  it("is true when any focused window reports the conversation on screen", async () => {
+    await expect(
+      isAnyWindowViewingConversation(
+        [bridgeWindow({ isViewing: false }), bridgeWindow({ isViewing: true })],
+        "conv-1",
+      ),
+    ).resolves.toBe(true);
+  });
+
+  it("is false when every window says no", async () => {
+    await expect(
+      isAnyWindowViewingConversation(
+        [bridgeWindow({ isViewing: false })],
+        "conv-1",
+      ),
+    ).resolves.toBe(false);
+  });
+
+  it("counts a silent window and a malformed reply as not viewing", async () => {
+    await expect(
+      isAnyWindowViewingConversation(
+        [bridgeWindow(undefined), bridgeWindow({ isViewing: "yes" })],
+        "conv-1",
+        20,
+      ),
+    ).resolves.toBe(false);
+  });
+
+  it("asks each window about the push's conversation", async () => {
+    const receivedMessages: unknown[] = [];
+    await isAnyWindowViewingConversation(
+      [bridgeWindow({ isViewing: false }, receivedMessages)],
+      "conv-7",
+    );
+    expect(receivedMessages).toEqual([
+      { type: PUSH_BRIDGE_IS_VIEWING_CONVERSATION, conversationId: "conv-7" },
+    ]);
+  });
+});
 
 describe("isViewingTarget", () => {
   it("matches when the focused window is on the exact same conversation", () => {

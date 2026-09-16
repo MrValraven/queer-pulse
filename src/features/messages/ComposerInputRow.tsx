@@ -1,12 +1,12 @@
 // src/features/messages/ComposerInputRow.tsx
 import type { RefObject } from "react";
+import { FiSend } from "react-icons/fi";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { ComposerAttachButton } from "./ComposerAttachButton";
 import { EmojiComposerButton } from "./EmojiComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
 import type { ComposerPopover } from "./useComposerPopovers";
 import type { GifAttachment } from "../../shared/api/gifs";
-import type { DocumentAttachment } from "../../shared/api/documentAttachment";
 import styles from "./MessagesPage.module.css";
 
 interface ComposerInputRowProps {
@@ -17,26 +17,33 @@ interface ComposerInputRowProps {
   onOpenPopover: (which: NonNullable<ComposerPopover>) => void;
   onClosePopover: () => void;
   onSendGif?: (attachment: GifAttachment) => void;
-  onSendImage?: (
-    attachment: GifAttachment,
-    localAttachment?: GifAttachment,
-  ) => void;
-  /** Sends an uploaded document as its own message (PRD-226). */
-  onSendDocument?: (
-    attachment: DocumentAttachment,
-    localAttachment?: DocumentAttachment,
-  ) => void;
+  /** Hands picked image file(s) to staging (DES-198/DES-199). */
+  onImagePicked?: (files: File[]) => void;
+  /** Hands picked document file(s) to staging (PRD-226/DES-198). */
+  onDocumentPicked?: (files: File[]) => void;
   onInsertShortcut: (sigil: string) => void;
   placeholder: string;
   draft: string;
   onChange: (nextValue: string) => void;
   onBlur: () => void;
   onKeyDown: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  /** Passthrough to `MentionTextarea` for pasted-file staging (DES-204). */
+  onPaste?: (event: React.ClipboardEvent<HTMLTextAreaElement>) => void;
   onSend: () => void;
   sendLabel: string;
   /** Accessible name for the message textarea. The placeholder vanishes as
    *  soon as someone types, so the field needs a name of its own. */
   messageFieldLabel: string;
+  /** Over the server's length limit (DES-202): the send button stays
+   *  reachable through `aria-disabled` rather than the native `disabled`
+   *  attribute, while `Composer`'s own `handleSend`/Enter-to-send both no-op
+   *  while this is true. */
+  isOverLimit?: boolean;
+  /** `ComposerLengthCounter`'s visible span id (I5): wired onto both the
+   *  textarea and the send button's `aria-describedby` once `isOverLimit` is
+   *  true, so a screen reader reaches the "too long" reason from either
+   *  control. */
+  counterId: string;
 }
 
 /**
@@ -73,17 +80,20 @@ export function ComposerInputRow({
   onOpenPopover,
   onClosePopover,
   onSendGif,
-  onSendImage,
-  onSendDocument,
+  onImagePicked,
+  onDocumentPicked,
   onInsertShortcut,
   placeholder,
   draft,
   onChange,
   onBlur,
   onKeyDown,
+  onPaste,
   onSend,
   sendLabel,
   messageFieldLabel,
+  isOverLimit,
+  counterId,
 }: ComposerInputRowProps) {
   const hasDraft = draft.trim().length > 0;
 
@@ -92,8 +102,8 @@ export function ComposerInputRow({
       <div className={styles.composerField} ref={popoverGroupRef}>
         <ComposerAttachButton
           onSendGif={onSendGif}
-          onSendImage={onSendImage}
-          onSendDocument={onSendDocument}
+          onImagePicked={onImagePicked}
+          onDocumentPicked={onDocumentPicked}
           menuOpen={openPopover === "attach"}
           gifOpen={openPopover === "gif"}
           onToggleMenu={() => onTogglePopover("attach")}
@@ -113,6 +123,8 @@ export function ComposerInputRow({
           className={styles.composerTa}
           placeholder={placeholder}
           aria-label={messageFieldLabel}
+          aria-describedby={isOverLimit ? counterId : undefined}
+          aria-invalid={isOverLimit || undefined}
           value={draft}
           rows={1}
           textareaRef={textareaRef}
@@ -121,6 +133,7 @@ export function ComposerInputRow({
           onBlur={onBlur}
           onFocus={onClosePopover}
           onKeyDown={onKeyDown}
+          onPaste={onPaste}
         />
         <MentionHintButton
           open={openPopover === "shortcuts"}
@@ -135,16 +148,10 @@ export function ComposerInputRow({
           onClick={onSend}
           aria-label={sendLabel}
           disabled={!hasDraft}
+          aria-disabled={isOverLimit || undefined}
+          aria-describedby={isOverLimit ? counterId : undefined}
         >
-          <svg
-            width={16}
-            height={16}
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden
-          >
-            <path d="M14 8l-12-6 4 6-4 6 12-6Z" fill="currentColor" />
-          </svg>
+          <FiSend aria-hidden size={16} />
         </button>
       </div>
     </div>

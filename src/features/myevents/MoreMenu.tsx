@@ -12,7 +12,6 @@ import type { TFunction } from "../../shared/i18n/types";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { Icons } from "./MyEventsIcons";
-import { COMMITTED } from "./myEvents.helpers";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import { NewMessageModal } from "../messages/NewMessageModal";
@@ -28,7 +27,10 @@ interface Item {
 function buildItems(
   ev: MyEvent,
   c: ReturnType<typeof useMyEvents>,
-  nav: (path: string) => void,
+  nav: (
+    path: string,
+    options?: { state?: { to: { slug: string; name: string } } },
+  ) => void,
   translate: TFunction,
   openInvitePicker: () => void,
 ): (Item | "sep")[] {
@@ -38,10 +40,6 @@ function buildItems(
       c.closeMore();
       c.toast(msg, type);
     };
-  const go = (path: string) => () => {
-    c.closeMore();
-    nav(path);
-  };
   const share = () => {
     c.closeMore();
     const url =
@@ -77,22 +75,33 @@ function buildItems(
         openInvitePicker();
       },
     });
+  // PRD-337: only offered with a real member host to message. An org-hosted
+  // gathering carries no `hostSlug`, and landing on the bare inbox would be
+  // worse than no CTA at all.
   if (
     ev.category !== "past" &&
     ev.category !== "hosting" &&
-    ev.category !== "sent"
+    ev.category !== "sent" &&
+    ev.hostSlug
   )
     items.push({
       icon: Icons.message,
       label: translate("myevents:moreMenu.messageHost"),
-      onClick: go(routes.messages),
+      onClick: () => {
+        c.closeMore();
+        nav(routes.messages, {
+          state: {
+            to: { slug: ev.hostSlug!, name: ev.hostName ?? ev.title },
+          },
+        });
+      },
     });
-  if (COMMITTED[ev.category])
-    items.push({
-      icon: Icons.chat,
-      label: translate("myevents:moreMenu.openGroupChat"),
-      onClick: go(routes.messages),
-    });
+  // "Open group chat" is dropped rather than fixed with a recipient: no
+  // gathering carries a group conversation id anywhere in the stack (the
+  // messaging schema is multi-participant-capable, but group chats are not
+  // built yet, per the messaging-craft map's genuine-gaps list), so the item
+  // had nothing real to open and always landed on the inbox's first
+  // auto-selected thread.
   if (ev.category === "going" && !ev.cancelled) {
     items.push(
       ev.maybe
@@ -257,7 +266,7 @@ export function MoreMenu() {
             buildItems(
               ev,
               c,
-              (path) => void navigate(path),
+              (path, options) => void navigate(path, options),
               t,
               () => setInvitingEvent(ev),
             ).map((it, i) =>

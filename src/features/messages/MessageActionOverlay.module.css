@@ -1,0 +1,41 @@
+/* Styles specific to the lifted media clone (DES-203) inside
+   MessageActionOverlay's overlayColumn, kept separate from the shared
+   MessagesPage.module.css because that file is edited by several sessions in
+   parallel; only the entrance-animation wrapper lives here, everything else
+   (`.attachmentGroup`, `.gifBubble`, `.documentCard`, `.attachmentCaption`,
+   …) is reused as-is from the shared module. */
+
+/* Mirrors `.overlayBubble`'s own entrance animation (`msgBubbleIn` in
+   MessagesPage.module.css). CSS Modules localize `@keyframes` names per
+   file, so that keyframe can't be referenced from here; this repeats the
+   same from/to instead of trying to import it. */
+@keyframes overlayMediaCloneIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.overlayMediaClone {
+  animation: overlayMediaCloneIn var(--dur-fast) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlayMediaClone {
+    animation: none;
+  }
+}
+
+/* The lifted bubble/media clone is a read-only preview, marked
+   `aria-hidden="true"` in MessageActionOverlay.tsx so it's excluded from the
+   Tab focus-trap's collection (see useActionOverlayFocusTrap.ts) and from
+   assistive tech. `pointer-events: none` backs that up visually, so a link or
+   document card inside the clone can't be clicked or focused by a mouse
+   either. */
+.clonePreview {
+  pointer-events: none;
+}

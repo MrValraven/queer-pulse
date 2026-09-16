@@ -1,11 +1,12 @@
 // src/features/messages/useMessageRowVirtualizer.ts
-import { useMemo, type RefObject } from "react";
+import { useCallback, useMemo, useState, type RefObject } from "react";
 import { useVirtualizer, type Virtualizer } from "@tanstack/react-virtual";
 import {
   buildMessageRows,
   estimateRowHeight,
   type MessageRow,
 } from "./messageRows";
+import { createMessageRowReuser } from "./messageRowReuse";
 import type { ChatMessage } from "./data";
 
 export interface UseMessageRowVirtualizerResult {
@@ -32,7 +33,8 @@ export interface UseMessageRowVirtualizerResult {
  */
 export function useMessageRowVirtualizer(
   messageGroups: { day: string; items: ChatMessage[] }[],
-  dividerAnchorMessage: ChatMessage | undefined,
+  /** `messageIdentity` of the unread divider's anchor (see `useUnreadDivider`). */
+  dividerAnchorKey: string | undefined,
   lastOutbound: ChatMessage | undefined,
   isGroup: boolean | undefined,
   hasGroupSeenBy: boolean,
@@ -47,22 +49,44 @@ export function useMessageRowVirtualizer(
   // detects this pattern.
   "use no memo";
 
+  // Structural sharing across cache patches: an unchanged row keeps its
+  // previous object (and its run keeps its previous `items` array), so the
+  // memoized `MessageAreaRow`/`MessageRunView` skip every row whose messages
+  // didn't change. See `createMessageRowReuser` for why a lazily created
+  // closure cache is safe here.
+  const [reuseRows] = useState(createMessageRowReuser);
   const rows = useMemo(
     () =>
-      buildMessageRows(
-        messageGroups,
-        dividerAnchorMessage,
-        lastOutbound,
-        isGroup,
-        hasGroupSeenBy,
+      reuseRows(
+        buildMessageRows(
+          messageGroups,
+          dividerAnchorKey,
+          lastOutbound,
+          isGroup,
+          hasGroupSeenBy,
+        ),
       ),
     [
+      reuseRows,
       messageGroups,
-      dividerAnchorMessage,
+      dividerAnchorKey,
       lastOutbound,
       isGroup,
       hasGroupSeenBy,
     ],
+  );
+
+  // `getItemKey` is part of virtual-core's measurement memo deps, so a fresh
+  // closure on every render rebuilt the whole measurement array on every
+  // render, including each visible-range change while scrolling. Tied to
+  // `rows` instead, it only rebuilds when the row list really changed.
+  const getItemKey = useCallback(
+    (index: number) => rows[index]?.key ?? index,
+    [rows],
+  );
+  const estimateSize = useCallback(
+    (index: number) => estimateRowHeight(rows[index]),
+    [rows],
   );
 
   // The lint rule still flags this call even with the "use no memo" directive
@@ -74,8 +98,8 @@ export function useMessageRowVirtualizer(
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollElementRef.current,
-    estimateSize: (index) => estimateRowHeight(rows[index]),
-    getItemKey: (index) => rows[index]?.key ?? index,
+    estimateSize,
+    getItemKey,
     // A little deeper than the default: a swipe-to-reply gesture or the
     // long-press overlay's lifted-bubble clone briefly reads layout off a
     // neighbour, and a generous overscan keeps those neighbours mounted

@@ -73,6 +73,18 @@ export interface CompanyProfile {
   teamCount: number;
   membersLabel: string;
   hiringContact: { name: string; role: string };
+  /**
+   * The real member behind this company's profile (its owner/claimant), so
+   * "Message" CTAs can address an actual inbox instead of landing on the
+   * inbox's first auto-selected thread (PRD-337). `hiringContact` above is
+   * free text the company typed (often a team name rather than a person), so
+   * it is never itself a safe messaging target; `owner` is the one account
+   * genuinely tied to the profile. `null` when the company is unclaimed (no
+   * member has ever claimed it, or in demo the fixture models a team-wide
+   * contact with nobody specific behind it), in which case the Message CTA
+   * is hidden rather than shown pointing nowhere.
+   */
+  owner: { slug: string; firstName: string; lastName: string } | null;
 }
 
 const PROFILES: CompanyProfile[] = [
@@ -225,6 +237,10 @@ const PROFILES: CompanyProfile[] = [
       name: "Inês Mateus",
       role: "Founder & design director. Handles all hiring personally.",
     },
+    // The one demo member the members registry already models as this
+    // studio's founder (`members/data/members.ts`), so "Message" opens a real
+    // thread with a real profile instead of an invented slug.
+    owner: { slug: "ines", firstName: "Inês", lastName: "Tavares" },
   },
   {
     slug: "national-lgbtq-rights-org",
@@ -343,6 +359,9 @@ const PROFILES: CompanyProfile[] = [
       name: "Programmes team",
       role: "Applications are read by the programmes team directly.",
     },
+    // A team-wide contact with no one specific member behind it, so the
+    // Message CTA hides rather than pointing at an invented person.
+    owner: null,
   },
   {
     slug: "opus-diversus",
@@ -457,6 +476,7 @@ const PROFILES: CompanyProfile[] = [
       name: "The Opus Diversus team",
       role: "We read every application ourselves and reply to all of them.",
     },
+    owner: null,
   },
   {
     slug: "livraria-devagar",
@@ -560,6 +580,7 @@ const PROFILES: CompanyProfile[] = [
       name: "The founders",
       role: "Tell us about a book that mattered to you. That's what we read first.",
     },
+    owner: null,
   },
   {
     slug: "queerpulse",
@@ -680,6 +701,7 @@ const PROFILES: CompanyProfile[] = [
       name: "The QueerPulse team",
       role: "First review is by the team you'd join.",
     },
+    owner: null,
   },
 ];
 

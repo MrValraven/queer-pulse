@@ -22,6 +22,28 @@ vi.mock("./push.api", () => ({
   subscribePush: (...args: unknown[]) => subscribePush(...args),
   unsubscribePush: (...args: unknown[]) => unsubscribePush(...args),
 }));
+vi.mock("../../app/providers/authContext", () => ({
+  useAuth: () => ({ user: { id: "member-a" } }),
+}));
+const writeLastSyncedSubscription = vi.fn((..._args: unknown[]) =>
+  Promise.resolve(),
+);
+const clearLastSyncedSubscription = vi.fn(() => Promise.resolve());
+const addPushEnabledMemberId = vi.fn((..._args: unknown[]) =>
+  Promise.resolve(),
+);
+const removePushEnabledMemberId = vi.fn((..._args: unknown[]) =>
+  Promise.resolve(),
+);
+vi.mock("../../pushSubStore", () => ({
+  writeLastSyncedSubscription: (...args: unknown[]) =>
+    writeLastSyncedSubscription(...args),
+  clearLastSyncedSubscription: () => clearLastSyncedSubscription(),
+  addPushEnabledMemberId: (...args: unknown[]) =>
+    addPushEnabledMemberId(...args),
+  removePushEnabledMemberId: (...args: unknown[]) =>
+    removePushEnabledMemberId(...args),
+}));
 
 const subscribe = vi.fn();
 const getSubscription = vi.fn();
@@ -32,6 +54,11 @@ beforeEach(() => {
   // throwing; its exact value is irrelevant (the subscribe mock ignores it).
   vi.stubEnv("VITE_VAPID_PUBLIC_KEY", "dGVzdGtleQ");
   subscribePush.mockClear();
+  unsubscribePush.mockClear();
+  writeLastSyncedSubscription.mockClear();
+  clearLastSyncedSubscription.mockClear();
+  addPushEnabledMemberId.mockClear();
+  removePushEnabledMemberId.mockClear();
   vi.stubGlobal("Notification", {
     permission: "default",
     requestPermission: vi.fn().mockResolvedValue("granted"),
@@ -51,9 +78,8 @@ beforeEach(() => {
       ready: Promise.resolve({
         pushManager: { subscribe, getSubscription },
       }),
-      // The subscription-health re-sync effect (live mode) subscribes to the
-      // SW `message` channel to react to `push-subscription-changed`; the mock
-      // must expose the listener pair or the effect throws on mount.
+      // The health re-sync moved to `usePushSubscriptionSync` (see its own
+      // test); the listener pair stays so this mock also fits that hook.
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
     },
@@ -86,5 +112,51 @@ describe("usePushSubscription", () => {
       keys: { p256dh: "key", auth: "auth" },
     });
     await waitFor(() => expect(result.current.isSubscribed).toBe(true));
+  });
+
+  it("enable() records the synced endpoint with the signed-in member and a time", async () => {
+    const usePushSubscription = await loadUsePushSubscription();
+    const { result } = renderHook(() => usePushSubscription());
+    await act(async () => {
+      await result.current.enable();
+    });
+    const [record] = writeLastSyncedSubscription.mock.calls[0] as [
+      { endpoint: string; userId: string; syncedAt: unknown },
+    ];
+    expect(record.endpoint).toBe("https://push.example/abc");
+    expect(record.userId).toBe("member-a");
+    expect(typeof record.syncedAt).toBe("number");
+    // Remembered across sign-out, so this member's next sign-in restores push.
+    expect(addPushEnabledMemberId).toHaveBeenCalledWith("member-a");
+  });
+
+  it("enable() records nothing when the server POST fails", async () => {
+    subscribePush.mockRejectedValueOnce(new Error("offline"));
+    const usePushSubscription = await loadUsePushSubscription();
+    const { result } = renderHook(() => usePushSubscription());
+    await act(async () => {
+      await result.current.enable();
+    });
+    expect(writeLastSyncedSubscription).not.toHaveBeenCalled();
+    expect(addPushEnabledMemberId).not.toHaveBeenCalled();
+  });
+
+  it("disable() unsubscribes, drops the server row and clears the sync record", async () => {
+    const existing = {
+      endpoint: "https://push.example/abc",
+      unsubscribe: vi.fn().mockResolvedValue(true),
+    };
+    getSubscription.mockResolvedValue(existing);
+    const usePushSubscription = await loadUsePushSubscription();
+    const { result } = renderHook(() => usePushSubscription());
+    await act(async () => {
+      await result.current.disable();
+    });
+    expect(existing.unsubscribe).toHaveBeenCalled();
+    expect(unsubscribePush).toHaveBeenCalledWith("https://push.example/abc");
+    expect(clearLastSyncedSubscription).toHaveBeenCalled();
+    // An explicit turn-off is the only thing that stops a later restore.
+    expect(removePushEnabledMemberId).toHaveBeenCalledWith("member-a");
+    await waitFor(() => expect(result.current.isSubscribed).toBe(false));
   });
 });

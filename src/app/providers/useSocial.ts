@@ -28,13 +28,23 @@ export interface SocialContextValue {
   isBlocked: (slug: string) => boolean;
   /** Toggle block; returns the new state (true = now blocked). Opts feed the
    *  live `POST /blocks/:slug` body (reason / "also report"). */
-  /** Returns the OPTIMISTIC new state immediately. Pass `onSettled` to learn
-   *  what the server actually did: a caller that confirms the action to the
-   *  member must wait for that rather than toasting on the click. */
+  /**
+   * Returns the OPTIMISTIC new state immediately. Pass `onSettled` to learn
+   * what the server actually did: a caller that confirms the action to the
+   * member must wait for that rather than toasting on the click.
+   *
+   * `onSettled`'s second argument is whatever the underlying call resolved
+   * with, `unknown` because it differs by direction: blocking resolves a
+   * `BlockDTO`, unblocking a `UnblockResultDTO` carrying `restoredStatus`
+   * (PRD-363) once the backend ships it, `void`/`undefined` on an older
+   * backend or in demo mode's block direction. A caller that cares (an
+   * unblock reading `restoredStatus`) narrows it itself; every existing
+   * caller that only reads the first argument is unaffected.
+   */
   toggleBlock: (
     slug: string,
     opts?: BlockOptions,
-    onSettled?: (didSucceed: boolean) => void,
+    onSettled?: (didSucceed: boolean, result?: unknown) => void,
   ) => boolean;
 }
 

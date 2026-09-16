@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Modal, SearchInput } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
@@ -18,16 +19,19 @@ import styles from "./NewMessageModal.module.css";
 interface NewMessageModalProps {
   onClose: () => void;
   onPick: (recipient: Conversation) => void;
-  /** "forward" swaps the title/subtitle to the forward-a-message framing; the
-   *  picker (accepted connections) and pick behaviour are otherwise identical. */
-  mode?: "new" | "forward";
-  /** Forward mode only: the caller's active group conversations, shown as a
-   *  second "Groups" section below People. Omitted (empty) in "new" mode. */
-  groups?: Conversation[];
-  /** Overrides the mode's default title/sub, for other single-recipient
+  /** Overrides the default title/sub, for other single-recipient
    *  picker use cases (e.g. inviting a friend to a gathering). */
   title?: string;
   sub?: string;
+  /**
+   * PRD-343: pre-selects the request-compose step for a specific person,
+   * skipping the picker entirely. Used when a caller already knows WHO
+   * (e.g. `useThreadCreation`'s `onRequiresConnection`, fired when
+   * `POST /conversations` 403s a fresh non-connection): the caller had
+   * already committed to messaging this exact person before the picker
+   * ever opened. Omit for the ordinary "pick someone, then maybe request" flow.
+   */
+  initialRequestTarget?: StrangerMemberResult | null;
 }
 
 /**
@@ -56,28 +60,25 @@ function connectionToRecipient(view: ConnectionView): Conversation {
 /** Self-contained recipient picker — opens (or reuses) a thread for the chosen
  *  member. Built on the shared `Modal` (scroll-lock / focus-trap / Escape); the
  *  People rows reuse the shared `MemberIdentity` block. Keeps its own search box
- *  (it filters the People AND Groups sections together) and single-tap pick. */
+ *  and single-tap pick. */
 export function NewMessageModal({
   onClose,
   onPick,
-  mode = "new",
-  groups = [],
   title,
   sub,
+  initialRequestTarget = null,
 }: NewMessageModalProps) {
   const { t } = useTranslation();
-  const isForward = mode === "forward";
+  const queryClient = useQueryClient();
   const { isBlocked } = useSocial();
   const { user } = useAuth();
   const staffMap = useStaffMap();
   const [query, setQuery] = useState("");
   // The member picked from the "Message someone new" fall-through, once
   // they're confirmed not an accepted connection — swaps this modal's body to
-  // the request compose step (MSG-1). Cleared automatically by `mode`/`isForward`
-  // never being true here: forwarding always targets an existing thread/group,
-  // never a first-contact request.
+  // the request compose step (MSG-1).
   const [requestTarget, setRequestTarget] =
-    useState<StrangerMemberResult | null>(null);
+    useState<StrangerMemberResult | null>(initialRequestTarget);
 
   // The recipient pool is the member's accepted connections — demo resolves the
   // mock relationships locally, live fetches GET /connections. (Mirrors the
@@ -109,20 +110,9 @@ export function NewMessageModal({
       : candidates;
   }, [query, candidates]);
 
-  const groupResults = useMemo(() => {
-    const trimmedQuery = query.trim().toLowerCase();
-    const activeGroups = groups.filter((group) => group.isGroup);
-    return trimmedQuery
-      ? activeGroups.filter((group) =>
-          group.name.toLowerCase().includes(trimmedQuery),
-        )
-      : activeGroups;
-  }, [query, groups]);
-
   // MSG-1 fall-through: anyone the People search doesn't already cover
   // (accepted connections) can still be reached — picking one opens the
-  // message-request composer instead of an existing thread. Forward mode never
-  // offers this (a forward always targets an existing thread or group).
+  // message-request composer instead of an existing thread.
   // `selfSlug` is read out BEFORE the memo rather than inside it: reading
   // `user` in the body while depending on `user?.profile.slug` makes the
   // compiler infer a broader dependency than the one written, and it then
@@ -136,16 +126,19 @@ export function NewMessageModal({
     if (selfSlug) slugs.add(selfSlug);
     return slugs;
   }, [candidates, selfSlug]);
-  const strangerSearch = useStrangerMemberSearch(
-    isForward ? "" : query,
-    excludeSlugs,
-  );
+  const strangerSearch = useStrangerMemberSearch(query, excludeSlugs);
   // Blocked members are unreachable here too (mirrors the People/`candidates`
   // filter above) — otherwise a blocked stranger still shows up as a pickable
   // "message someone new" result and only 403s server-side once tapped.
-  const strangers = isForward
-    ? []
-    : strangerSearch.results.filter((result) => !isBlocked(result.slug));
+  const strangers = strangerSearch.results.filter(
+    (result) => !isBlocked(result.slug),
+  );
+  // `useStrangerMemberSearch` exposes no `refetch`. Invalidate by its
+  // query-key PREFIX instead (`["strangerMemberSearch", debounced,
+  // demoMode]`), the same convention this feature's mutations already use
+  // for `["conversations"]` (DES-185's Retry).
+  const retryStrangerSearch = () =>
+    void queryClient.invalidateQueries({ queryKey: ["strangerMemberSearch"] });
 
   if (requestTarget) {
     return (
@@ -164,16 +157,8 @@ export function NewMessageModal({
 
   return (
     <Modal
-      title={
-        title ??
-        (isForward
-          ? t("messages:forward.title")
-          : t("messages:newMessage.title"))
-      }
-      sub={
-        sub ??
-        (isForward ? t("messages:forward.sub") : t("messages:newMessage.sub"))
-      }
+      title={title ?? t("messages:newMessage.title")}
+      sub={sub ?? t("messages:newMessage.sub")}
       onClose={onClose}
     >
       <SearchInput
@@ -185,8 +170,10 @@ export function NewMessageModal({
       />
       <NewMessagePickList
         people={people}
-        groupResults={groupResults}
         strangers={strangers}
+        strangersLoading={strangerSearch.loading}
+        strangersError={strangerSearch.isError}
+        onRetryStrangers={retryStrangerSearch}
         staffMap={staffMap}
         loading={loading}
         candidatesCount={candidates.length}

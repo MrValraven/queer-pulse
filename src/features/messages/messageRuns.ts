@@ -8,9 +8,35 @@ export interface MessageRun {
 }
 
 /**
+ * Who sent a received group message: the handle, falling back to the display
+ * name when the handle is absent. DM messages carry neither, so every DM
+ * message resolves to `undefined` and they all count as one sender.
+ */
+function senderIdentity(message: ChatMessage): string | undefined {
+  return message.senderHandle || message.senderName || undefined;
+}
+
+/**
+ * True when `message` may join the run `previousMessage` ends: same side, and
+ * for two received messages the same member too. Own messages always share a
+ * sender. Without the member check a group merged back-to-back messages from
+ * two members into one run, rendering the second under the first's name and
+ * avatar (DES-215).
+ */
+export function isSameSender(
+  previousMessage: ChatMessage,
+  message: ChatMessage,
+): boolean {
+  if (previousMessage.from !== message.from) return false;
+  if (message.from === "me") return true;
+  return senderIdentity(previousMessage) === senderIdentity(message);
+}
+
+/**
  * Split a day-group's flat message list into runs — consecutive messages from
  * the same sender collapse into one run so the timestamp renders once and inner
- * spacing can tighten. A run also breaks when two consecutive messages both have
+ * spacing can tighten. "Same sender" is `isSameSender`: the same side, and in a
+ * group the same member. A run also breaks when two consecutive messages both have
  * `at` and differ by more than `maxGapMs` (default 15 minutes), and — when
  * `breakBefore` is given — immediately before that exact message object, so the
  * unread divider always sits at the head of a run even when the read/unread
@@ -33,7 +59,8 @@ export function groupIntoRuns(
     const forcedBreak = breakBefore !== undefined && message === breakBefore;
     if (
       currentRun &&
-      currentRun.from === message.from &&
+      previousMessage &&
+      isSameSender(previousMessage, message) &&
       !gapTooLarge &&
       !forcedBreak
     ) {

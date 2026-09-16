@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FiCheck, FiEdit3, FiEye } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { routes } from "../../app/routeMap";
 import { useMemberContact } from "../connect/useMemberContact";
 import { useIncomingRequestActions } from "../connect/useIncomingRequestActions";
 import { useVouch } from "../../app/providers/useVouch";
@@ -34,8 +31,6 @@ export function ProfileHeroActions({
   onPreview?: () => void;
 }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { showToast } = useToast();
   const { connected, hasIncomingRequest, contact } = useMemberContact(
     profile.slug,
   );
@@ -51,30 +46,11 @@ export function ProfileHeroActions({
   const fullName = `${profile.first} ${profile.last}`;
 
   // The reason-first "say hello" modal only applies to members you can
-  // actually message directly (an accepted connection) — it hands off to the
-  // same real "deep-link into the compose flow with a prefilled draft" entry
-  // point every other "message this person" CTA in the app already uses (see
-  // ConnectionsPage.tsx / the myevents "message host" CTA): navigate to
-  // `routes.messages` with `state.to.text`, which seeds the composer's draft
-  // for the member to review before they actually hit send. A visitor who
-  // isn't connected yet still goes through `contact()`'s existing
-  // connection-request flow (`ConnectModal`, which already offers this same
-  // member's `openTo` entries as reasons) rather than a message that could
-  // never actually be delivered.
-  function handleSendHello(draft: string) {
-    try {
-      void navigate(routes.messages, {
-        state: { to: { slug: profile.slug, name: fullName, text: draft } },
-      });
-      setHelloOpen(false);
-      showToast(
-        t("members:profile.hello.sentToast", { first: profile.first }),
-        "success",
-      );
-    } catch {
-      showToast(t("members:profile.hello.errorToast"), "error");
-    }
-  }
+  // actually message directly (an accepted connection); `ProfileHelloModal`
+  // sends it for real (PRD-338). A visitor who isn't connected yet still goes
+  // through `contact()`'s existing connection-request flow (`ConnectModal`,
+  // which already offers this same member's `openTo` entries as reasons)
+  // rather than a message that could never actually be delivered.
 
   return (
     <>
@@ -171,7 +147,6 @@ export function ProfileHeroActions({
         <ProfileHelloModal
           profile={profile}
           onClose={() => setHelloOpen(false)}
-          onSend={handleSendHello}
         />
       )}
     </>

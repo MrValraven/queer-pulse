@@ -3,7 +3,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
-import { MessageActionMenu } from "./MessageActionMenu";
+import { MessageActionMenu, TombstoneReportMenu } from "./MessageActionMenu";
+import { focusMessageNextFrame } from "./messageFocusRestore";
 import { ReactionPicker } from "./ReactionPicker";
 import styles from "./MessagesPage.module.css";
 
@@ -11,6 +12,9 @@ export interface MessageContextMenuProps {
   /** Where to open — the cursor for a right-click, or the bubble corner for a
    *  keyboard/"⋯" open. Viewport coordinates. */
   anchor: { x: number; y: number };
+  /** True for a reportable tombstone — see `MessageActionOverlay`'s own doc.
+   *  Defaults to false. */
+  isTombstone?: boolean;
   /** Server-authoritative: own message AND within the server's edit window. */
   canEdit: boolean;
   /** Server-authoritative: own message OR staff. */
@@ -23,6 +27,10 @@ export interface MessageContextMenuProps {
   pinned: boolean;
   /** Viewer has privately starred it. */
   starred: boolean;
+  /** The signed-in member's current reaction keys on this message, forwarded
+   *  straight to `ReactionPicker`'s `myReactionKeys`: derive with
+   *  `myReactionKeys`/`findReactionMine` from `reactionKeys.ts`. */
+  myReactionKeys: MessageReactionKey[];
   onReact: (key: MessageReactionKey) => void;
   onReply: () => void;
   onForward: () => void;
@@ -30,6 +38,13 @@ export interface MessageContextMenuProps {
   onToggleStar: () => void;
   onEdit: () => void;
   onCopy: () => void;
+  canCopy?: boolean;
+  /** PRD-351 "Info": see `MessageActionMenu`'s own doc. */
+  canShowInfo?: boolean;
+  onInfo?: () => void;
+  /** PRD-352 "Reactions": see `MessageActionMenu`'s own doc. */
+  canShowReactions?: boolean;
+  onReactions?: () => void;
   onDelete: () => void;
   /** "Delete for me" (PRD-227) — see `MessageActionMenu`'s own doc. */
   onDeleteForMe: () => void;
@@ -49,12 +64,14 @@ const EDGE_GAP = 8;
  */
 export function MessageContextMenu({
   anchor,
+  isTombstone = false,
   canEdit,
   canDelete,
   canReport,
   canPin,
   pinned,
   starred,
+  myReactionKeys,
   onReact,
   onReply,
   onForward,
@@ -62,6 +79,11 @@ export function MessageContextMenu({
   onToggleStar,
   onEdit,
   onCopy,
+  canCopy,
+  canShowInfo,
+  onInfo,
+  canShowReactions,
+  onReactions,
   onDelete,
   onDeleteForMe,
   onReport,
@@ -117,6 +139,12 @@ export function MessageContextMenu({
   useEffect(() => {
     const close = () => onCloseRef.current();
     const previouslyFocused = document.activeElement as HTMLElement | null;
+    // The bubble or album tile the menu opened from. When the action swaps
+    // that row for another component in the same commit that closes the menu
+    // (a photo breaking out of its album), the opener is gone by cleanup and
+    // focus goes to whatever now carries this id instead.
+    const openerMessageDomId =
+      previouslyFocused?.closest?.('[id^="message-"]')?.id ?? null;
     menuRef.current?.focus();
     function handleMouseDown(event: MouseEvent) {
       if (
@@ -140,6 +168,10 @@ export function MessageContextMenu({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("scroll", close, true);
       window.removeEventListener("resize", close);
+      if (previouslyFocused && !previouslyFocused.isConnected) {
+        if (openerMessageDomId) focusMessageNextFrame(openerMessageDomId);
+        return;
+      }
       previouslyFocused?.focus?.();
     };
   }, []);
@@ -162,28 +194,47 @@ export function MessageContextMenu({
         visibility: placement ? "visible" : "hidden",
       }}
     >
-      <div className={styles.overlayReactions}>
-        <ReactionPicker onPick={(key) => runThenClose(() => onReact(key))()} />
-      </div>
-      <MessageActionMenu
-        menuRef={menuRef}
-        canEdit={canEdit}
-        canDelete={canDelete}
-        canReport={canReport}
-        canPin={canPin}
-        pinned={pinned}
-        starred={starred}
-        onReply={onReply}
-        onForward={onForward}
-        onTogglePin={onTogglePin}
-        onToggleStar={onToggleStar}
-        onEdit={onEdit}
-        onCopy={onCopy}
-        onDelete={onDelete}
-        onDeleteForMe={onDeleteForMe}
-        onReport={onReport}
-        onClose={onClose}
-      />
+      {/* A tombstone never had a reaction to begin with. */}
+      {!isTombstone && (
+        <div className={styles.overlayReactions}>
+          <ReactionPicker
+            onPick={(key) => runThenClose(() => onReact(key))()}
+            myReactionKeys={myReactionKeys}
+          />
+        </div>
+      )}
+      {isTombstone ? (
+        <TombstoneReportMenu
+          menuRef={menuRef}
+          onReport={onReport}
+          onClose={onClose}
+        />
+      ) : (
+        <MessageActionMenu
+          menuRef={menuRef}
+          canEdit={canEdit}
+          canDelete={canDelete}
+          canReport={canReport}
+          canPin={canPin}
+          pinned={pinned}
+          starred={starred}
+          onReply={onReply}
+          onForward={onForward}
+          onTogglePin={onTogglePin}
+          onToggleStar={onToggleStar}
+          onEdit={onEdit}
+          onCopy={onCopy}
+          canCopy={canCopy}
+          canShowInfo={canShowInfo}
+          onInfo={onInfo}
+          canShowReactions={canShowReactions}
+          onReactions={onReactions}
+          onDelete={onDelete}
+          onDeleteForMe={onDeleteForMe}
+          onReport={onReport}
+          onClose={onClose}
+        />
+      )}
     </div>,
     document.body,
   );

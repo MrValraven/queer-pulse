@@ -1,6 +1,4 @@
 import { memo, useRef } from "react";
-import { FiArchive, FiBellOff, FiHeart } from "react-icons/fi";
-import { TbPinnedFilled } from "react-icons/tb";
 import { Avatar } from "../../shared/components/ui";
 import { useIsOnline } from "../../shared/api/realtime";
 import { usePrefersReducedMotion } from "../../shared/hooks";
@@ -12,9 +10,13 @@ import {
   useToggleMute,
   useTogglePin,
 } from "./api/useConversationPrefs";
+import { SendStatusTick } from "./MessageSendStatus";
+import { resolveMuteState } from "./muteUntilLabel";
+import { ThreadRowIndicators } from "./ThreadRowIndicators";
 import { ThreadRowMenu } from "./ThreadRowMenu";
 import { ThreadRowSwipeAffordances } from "./ThreadRowSwipeAffordances";
 import { isThreadUnread } from "./threadFilters";
+import { useThreadRowPreview } from "./useThreadRowPreview";
 import { useThreadRowSwipe } from "./useThreadRowSwipe";
 import { useThreadRowTimeLabel } from "./useThreadRowTimeLabel";
 import type { Conversation } from "./data";
@@ -67,19 +69,28 @@ function MessagesThreadRowImpl({
 }: MessagesThreadRowProps) {
   const { t } = useTranslation();
   const isUnread = isThreadUnread(thread, activeId, readIds);
+  const isCurrentlyOpen = thread.id === activeId;
   const presenceOnline = useIsOnline(thread.otherParticipantId);
   const isOnline =
     (!!thread.otherParticipantId && presenceOnline) ||
     (!thread.otherParticipantId && !!thread.online);
   const isPinned = !!thread.pinnedAt;
   const isFavorite = !!thread.favorite;
-  const isMuted = !!thread.muted;
+  const { isMuted, mutedUntilTime, isMentionsOnly } = resolveMuteState(thread);
   const isArchived = !!thread.archivedAt;
+  const hasUnreadMention = !!thread.hasUnreadMention;
   const togglePin = useTogglePin();
   const toggleFavorite = useToggleFavorite();
   const toggleMute = useToggleMute();
   const toggleArchive = useToggleArchive();
   const displayedTime = useThreadRowTimeLabel(thread.time, thread.updatedAt);
+  // DES-189/190: draft-over-"You: "-over-plain preview decision, kept in its
+  // own hook so this component stays under the 200-line cap.
+  const { draftText, previewText, metaStatus } = useThreadRowPreview(
+    thread,
+    isCurrentlyOpen,
+  );
+  const hasDraft = draftText.length > 0;
 
   // Shared by BOTH the ⋯ menu items and the mobile swipe gesture below — one
   // toggle callback per action, never two paths computing the same mutation.
@@ -130,9 +141,10 @@ function MessagesThreadRowImpl({
         <button
           ref={rowRef}
           type="button"
+          aria-current={isCurrentlyOpen ? "true" : undefined}
           className={[
             styles.threadRow,
-            thread.id === activeId && styles.threadActive,
+            isCurrentlyOpen && styles.threadActive,
             swipe.swiping && styles.threadRowSwiping,
           ]
             .filter(Boolean)
@@ -153,10 +165,11 @@ function MessagesThreadRowImpl({
               size={42}
             />
             {isOnline && (
-              <span
-                className={styles.presenceRing}
-                title={t("messages:thread.presenceOnline")}
-              />
+              <span className={styles.presenceRing}>
+                <span className="visuallyHidden">
+                  {t("messages:thread.presenceOnline")}
+                </span>
+              </span>
             )}
           </div>
           <div className={styles.trBody}>
@@ -165,41 +178,16 @@ function MessagesThreadRowImpl({
                 <span className={styles.trName}>{thread.name}</span>
                 <MemberStaffBadge slug={thread.slug} />
               </span>
-              <span className={styles.trIndicators}>
-                {isArchived && (
-                  <span
-                    className={styles.trArchivedIcon}
-                    title={t("messages:thread.archivedIndicator")}
-                  >
-                    <FiArchive aria-hidden />
-                  </span>
-                )}
-                {isMuted && (
-                  <span
-                    className={styles.trMutedIcon}
-                    title={t("messages:thread.mutedIndicator")}
-                  >
-                    <FiBellOff aria-hidden />
-                  </span>
-                )}
-                {isFavorite && (
-                  <span
-                    className={styles.trFavoriteIcon}
-                    title={t("messages:thread.favoriteIndicator")}
-                  >
-                    <FiHeart aria-hidden />
-                  </span>
-                )}
-                {isPinned && (
-                  <span
-                    className={styles.trPinnedIcon}
-                    title={t("messages:thread.pinnedIndicator")}
-                  >
-                    <TbPinnedFilled aria-hidden />
-                  </span>
-                )}
-                <span className={styles.trTime}>{displayedTime}</span>
-              </span>
+              <ThreadRowIndicators
+                isArchived={isArchived}
+                hasUnreadMention={hasUnreadMention}
+                isMuted={isMuted}
+                mutedUntilTime={mutedUntilTime}
+                isMentionsOnly={isMentionsOnly}
+                isFavorite={isFavorite}
+                isPinned={isPinned}
+                time={displayedTime}
+              />
             </div>
             <div className={styles.trPreviewRow}>
               <div
@@ -210,15 +198,36 @@ function MessagesThreadRowImpl({
                   .filter(Boolean)
                   .join(" ")}
               >
-                {thread.preview}
+                {hasDraft ? (
+                  <>
+                    <span className={styles.trDraftLabel}>
+                      {t("messages:thread.draftLabel")}
+                    </span>{" "}
+                    {draftText}
+                  </>
+                ) : (
+                  <>
+                    {metaStatus && <SendStatusTick status={metaStatus} />}
+                    {previewText}
+                  </>
+                )}
               </div>
               {isUnread &&
                 (thread.unreadCount && thread.unreadCount > 0 ? (
                   <span className={styles.unreadBadge}>
-                    {thread.unreadCount}
+                    <span aria-hidden="true">{thread.unreadCount}</span>
+                    <span className="visuallyHidden">
+                      {t("messages:thread.unreadCountAria", {
+                        count: thread.unreadCount,
+                      })}
+                    </span>
                   </span>
                 ) : (
-                  <span className={styles.unreadDot} />
+                  <span className={styles.unreadDot}>
+                    <span className="visuallyHidden">
+                      {t("messages:thread.unreadAria")}
+                    </span>
+                  </span>
                 ))}
             </div>
           </div>

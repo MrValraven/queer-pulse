@@ -1,0 +1,28 @@
+/* InboundSafetyCaution.module.css
+   Only ever rendered inside a RECEIVED bubble (see the component's own doc),
+   so it needs no "sent" recolor the way ReplyQuote/LinkPreview do. */
+
+.caution {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  /* The floating time/status meta right before this in the DOM (`MessageMeta`,
+     see `TextBubble`) is a CSS float — `clear` guarantees this always starts
+     on its own line below it rather than wrapping into whatever horizontal
+     room the float left on its last line. */
+  clear: both;
+  margin-block-start: 6px;
+  padding: 7px 10px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--amber-rgb), 0.12);
+  border: 1px solid rgba(var(--amber-rgb), 0.3);
+  color: var(--amber-ink);
+  font-size: var(--text-13);
+  line-height: 1.4;
+}
+.caution svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-block-start: 1px;
+}

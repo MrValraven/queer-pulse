@@ -129,6 +129,10 @@ export function mySentBarterProposalToRow(
           want: dto.listing.want,
           status: dto.listing.status,
           name: poster?.name ?? "",
+          // PRD-337: lets "open thread" address the real poster instead of
+          // landing on the inbox's first auto-selected thread. Null exactly
+          // when `name` is also empty (the poster could not be resolved).
+          slug: poster?.slug ?? null,
         }
       : null,
     message: dto.message,

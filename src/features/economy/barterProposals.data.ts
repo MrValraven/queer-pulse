@@ -44,6 +44,9 @@ export interface MySentBarterProposalRow {
     status: BarterListingStatus;
     /** The poster, empty when their profile could not be resolved. */
     name: string;
+    /** The poster's profile slug, so "open thread" (PRD-337) can address a
+     *  real member. `null` exactly when `name` is also empty. */
+    slug: string | null;
   } | null;
   /** What the reader wrote when they proposed. */
   message: string;
@@ -194,6 +197,7 @@ export const DEMO_MY_SENT_BARTER_PROPOSALS: MySentBarterProposalRow[] = [
       want: "Help rebuilding a shop website",
       status: "open",
       name: memberName("mariana"),
+      slug: "mariana",
     },
     message:
       "I build small shop sites for a living and yours would take me a weekend. Four evenings at the wheel would be a fair trade for me.",
@@ -213,6 +217,7 @@ export const DEMO_MY_SENT_BARTER_PROPOSALS: MySentBarterProposalRow[] = [
       want: "",
       status: "open",
       name: memberName("rui"),
+      slug: "rui",
     },
     message:
       "My landlord sent a renewal I do not understand. I can trade a full day of photography, or a set of portraits if that is more useful.",
@@ -232,6 +237,7 @@ export const DEMO_MY_SENT_BARTER_PROPOSALS: MySentBarterProposalRow[] = [
       want: "Someone to walk a nervous dog",
       status: "closed",
       name: memberName("tomas"),
+      slug: "tomas",
     },
     message:
       "I walk my neighbour's dog most mornings and would happily add yours. My bike is also very much in need of you.",

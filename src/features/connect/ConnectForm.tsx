@@ -1,15 +1,7 @@
-import { type FormEvent } from "react";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import {
-  Avatar,
-  Button,
-  FormField,
-  Select,
-  Sending,
-  type AvatarTint,
-} from "../../shared/components/ui";
+import { FormField, Select, type AvatarTint } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { FirstContactComposer } from "../messages/FirstContactComposer";
 import {
   openToLabel,
   reasonValue,
@@ -25,7 +17,7 @@ type FormMember = {
   initials: string;
   tint?: AvatarTint;
   photo?: string;
-  /** The member's own "open to" entries — offered above the generic reasons. */
+  /** The member's own "open to" entries, offered above the generic reasons. */
   openTo?: OpenToEntry[];
 };
 
@@ -36,6 +28,12 @@ type FormMember = {
  * refusal that replaced this form with a notice panel destroyed whatever the
  * member had written. It now lives in `ConnectModal`, which outlives every
  * panel the send can end on, and this component renders it.
+ *
+ * The identity header, status line, safety notice, message field/counter,
+ * and footer are ALL owned by the shared `FirstContactComposer` (PRD-340,
+ * door="connect"); this component contributes only what's genuinely its
+ * own: the "Say hello." title and the "what's this about?" reason picker,
+ * passed in as `heading`/`extraFields`.
  */
 export function ConnectForm({
   member,
@@ -64,8 +62,6 @@ export function ConnectForm({
   const { t } = useTranslation();
   const memberOpenTo = member.openTo ?? [];
 
-  const canSend = message.trim().length > 0;
-
   const openToGroupLabel = t("connect:form.reasonOpenToGroup", {
     first: member.first,
   });
@@ -83,82 +79,42 @@ export function ConnectForm({
     })),
   ];
 
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-    if (!canSend || sending) return;
-    onSubmit(message.trim(), reason);
-  }
-
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={styles.toRow}>
-        <Avatar
-          initials={member.initials}
-          tint={member.tint}
-          size={56}
-          src={member.photo}
-          alt={`${member.first} ${member.last}`}
-        />
-        <div>
-          <div className={styles.toName}>
-            {member.first} {member.last}
-          </div>
-          <div className={styles.toRole}>{member.role}</div>
-        </div>
-      </div>
-
-      <h1 className={styles.title}>
-        <Translation i18nKey="connect:form.title" components={{ em: <em /> }} />
-      </h1>
-      <p className={styles.sub}>{t("connect:form.sub")}</p>
-
-      <FormField label={t("connect:form.reasonLabel")}>
-        <Select
-          id="connect-about"
-          placeholder={t("connect:form.reasonPlaceholder")}
-          value={reason || null}
-          onChange={(value) => onReasonChange(value ?? "")}
-          disabled={sending}
-          options={reasonOptions}
-        />
-      </FormField>
-      <FormField label={t("connect:form.messageLabel")} required>
-        <textarea
-          id="connect-msg"
-          placeholder={t("connect:form.messagePlaceholder")}
-          value={message}
-          onChange={(event) => onMessageChange(event.target.value)}
-          disabled={sending}
-        />
-      </FormField>
-
-      <div className={styles.note}>{t("connect:form.note")}</div>
-
-      {error && (
-        <p className={styles.sendError} role="alert">
-          {error}
-        </p>
-      )}
-
-      <div className={styles.foot}>
-        <button
-          type="button"
-          className={styles.back}
-          onClick={onClose}
-          disabled={sending}
-        >
-          <FiArrowLeft aria-hidden /> {t("connect:form.cancel")}
-        </button>
-        <Button size="lg" type="submit" disabled={!canSend || sending}>
-          {sending ? (
-            <Sending label={t("connect:form.sendingLabel")} />
-          ) : (
-            <>
-              {t("connect:form.send")} <FiArrowRight aria-hidden />
-            </>
-          )}
-        </Button>
-      </div>
-    </form>
+    <FirstContactComposer
+      door="connect"
+      target={{
+        name: `${member.first} ${member.last}`.trim(),
+        initials: member.initials,
+        tint: member.tint,
+        avatarUrl: member.photo,
+      }}
+      heading={
+        <h1 className={styles.title}>
+          <Translation
+            i18nKey="connect:form.title"
+            components={{ em: <em /> }}
+          />
+        </h1>
+      }
+      extraFields={
+        <FormField label={t("connect:form.reasonLabel")}>
+          <Select
+            id="connect-about"
+            placeholder={t("connect:form.reasonPlaceholder")}
+            value={reason || null}
+            onChange={(value) => onReasonChange(value ?? "")}
+            disabled={sending}
+            options={reasonOptions}
+          />
+        </FormField>
+      }
+      message={message}
+      onMessageChange={onMessageChange}
+      isSending={sending}
+      error={error}
+      onSubmit={() => onSubmit(message.trim(), reason)}
+      onBack={onClose}
+      backLabel={t("connect:form.cancel")}
+    />
   );
 }

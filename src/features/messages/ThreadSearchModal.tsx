@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
 import { FiSearch } from "react-icons/fi";
-import { EmptyState, Modal, SearchInput } from "../../shared/components/ui";
+import {
+  EmptyState,
+  LoadErrorState,
+  Modal,
+  SearchInput,
+} from "../../shared/components/ui";
 import { useDebouncedValue } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MessageHitRow } from "./MessagesSearchHitGroup";
@@ -12,11 +17,13 @@ import styles from "./MessagesPage.module.css";
 interface ThreadSearchModalProps {
   conversation: Conversation;
   onClose: () => void;
-  /** Jumps to (and highlights) a message already loaded in the OPEN thread —
-   *  the same mechanism the pinned-messages banner and a reply-quote tap use
-   *  (`jumpToMessageVirtualized`). A demo hit with no server id is a no-op
-   *  here — the thread is already open, so there's simply nothing to scroll
-   *  to (mirrors the cross-inbox search's own demo behaviour). */
+  /** Starts the jump to a message in the OPEN thread, the same mechanism the
+   *  pinned-messages banner and a reply-quote tap use
+   *  (`jumpToMessageVirtualized`): it scrolls to a loaded message, or pages
+   *  back for an older one with its own status over the log, or says the
+   *  message can't be found. A demo hit with no server id just closes, since
+   *  the thread is already open (mirrors the cross-inbox search's demo
+   *  behaviour). */
   onJumpToMessage: (messageId: string) => void;
 }
 
@@ -54,10 +61,16 @@ export function ThreadSearchModal({
   // debounced one, so the empty state never flashes ahead of real hits.
   const isSearching =
     !isTooShortToSearch && (debouncedTrimmed !== trimmed || search.isLoading);
+  // Excludes an errored search from ever reading as a settled miss (DES-184);
+  // see isMessageSearchError below.
   const isMessageSearchEmpty =
-    !isSearching && !isTooShortToSearch && hits.length === 0;
+    !isSearching && !isTooShortToSearch && !search.isError && hits.length === 0;
+  const isMessageSearchError =
+    !isSearching && !isTooShortToSearch && search.isError;
 
   function handleSelect(_conversationId: string, messageId?: string) {
+    // Jump first, close second: by the time focus returns to the header the
+    // jump is underway and its feedback lives over the log, outside this modal.
     if (messageId) onJumpToMessage(messageId);
     onClose();
   }
@@ -73,7 +86,13 @@ export function ThreadSearchModal({
         placeholder={t("messages:search.inChatPlaceholder")}
         ariaLabel={t("messages:search.inChatAria")}
       />
-      <div className={styles.searchResults}>
+      <div
+        className={styles.searchResults}
+        // aria-busy while the debounced query/fetch is pending (DES-194):
+        // the section beneath is a skeleton, not settled content, until this
+        // clears.
+        aria-busy={isSearching}
+      >
         <section className={styles.searchSection}>
           {/* Announced to assistive tech even though the visible row is a
            *  skeleton — kept mounted so the aria-live region is already
@@ -83,9 +102,23 @@ export function ThreadSearchModal({
           </p>
           {isSearching && <MessageHitListSkeleton />}
           {!isSearching && isTooShortToSearch && (
-            <div className={styles.searchStatus}>
+            <div
+              className={styles.searchStatus}
+              role="status"
+              aria-live="polite"
+            >
               {t("messages:search.keepTyping")}
             </div>
+          )}
+          {/* An outage never reads as "no messages match" either (DES-184).
+           *  `EmptyState`/`LoadErrorState` both carry their own role="status"
+           *  live region. */}
+          {isMessageSearchError && (
+            <LoadErrorState
+              compact
+              onRetry={search.refetch}
+              description={t("messages:search.loadErrorBody")}
+            />
           )}
           {isMessageSearchEmpty && (
             <EmptyState

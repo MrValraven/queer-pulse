@@ -6,6 +6,7 @@ import {
   useDeleteMessageForMe,
   useEditMessage,
 } from "./api/useMessageActions";
+import { attachmentCaption, isMediaMessage } from "./messageCopy";
 import { type LongPressOrigin } from "./useLongPress";
 import { type ChatMessage } from "./data";
 
@@ -19,7 +20,8 @@ export type ActionOverlayTarget = {
   /** Server-authoritative (`MessageResponse.canEdit`), snapshotted at open
    *  time. Never recomputed client-side — the server is the sole authority
    *  on the edit window, mirroring exactly what the edit endpoint accepts.
-   *  Absent (demo/optimistic messages) reads as false. */
+   *  Absent (optimistic messages) reads as false. Demo seed messages carry
+   *  it, stamped once at load with the server's own rule. */
   canEdit: boolean;
   source: "touch" | "pointer";
   point?: { x: number; y: number };
@@ -65,8 +67,9 @@ export interface MessageActionMenu {
  * overlay + delete-confirm + report-modal state, inline-edit state, and the
  * reaction toggle — extracted from `ConversationPanel` to keep it under the
  * component-size cap (mirrors `useConversationPinStar`). Edit/delete/report/
- * reaction only ever fire on a message with a server id (demo mock/optimistic
- * messages have none), so every handler no-ops without one.
+ * reaction only ever fire on a message with a stable id (live server messages
+ * and demo seed messages carry one; optimistic sends have none), so every
+ * handler no-ops without one.
  */
 export function useMessageActionMenu(
   conversationId: string,
@@ -112,10 +115,14 @@ export function useMessageActionMenu(
     setEditingMessageId(null);
   }, []);
 
-  // optimistic/failed messages have no server id yet, so the menu can't open
+  // optimistic/failed messages have no server id yet, so the menu can't open;
+  // neither can a tombstone the server hasn't marked `canReport` (defense in
+  // depth alongside `MessageBubble`'s own gating — the surface a tombstone
+  // opens only ever offers Report, so anything else reaching here is a bug).
   const openActions = useCallback(
     (message: ChatMessage, origin: LongPressOrigin, isSent: boolean) => {
       if (!message.id) return;
+      if (message.deletedAt && !message.canReport) return;
       setActionTarget({
         message,
         rect: origin.rect,
@@ -129,12 +136,21 @@ export function useMessageActionMenu(
     [],
   );
 
+  // Copies the caption for a media message (never its send-time fallback
+  // word); the Copy menu item is hidden entirely when there's nothing to
+  // copy (see `canCopyMessage`). This guard is a second line of defense for
+  // any other caller reaching it directly.
   const copyMessage = useCallback((message: ChatMessage) => {
-    void navigator.clipboard?.writeText(message.text);
+    const textToCopy = isMediaMessage(message)
+      ? attachmentCaption(message)
+      : message.text;
+    if (!textToCopy) return;
+    void navigator.clipboard?.writeText(textToCopy);
   }, []);
 
-  /** Adds/removes a reaction. Live-only: `message.id` is the server id the
-   *  mutation needs; demo messages have none, so this is a no-op there. */
+  /** Adds/removes a reaction on a message with a stable id: a live server
+   *  message, or a demo seed message, which the mutation's demo branch
+   *  patches locally. Optimistic sends have no id, so this no-ops for them. */
   const handleReactionToggle = useCallback(
     (message: ChatMessage, key: MessageReactionKey, mine: boolean) => {
       if (!message.id) return;

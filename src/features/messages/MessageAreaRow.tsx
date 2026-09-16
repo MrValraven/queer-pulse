@@ -1,26 +1,14 @@
 // src/features/messages/MessageAreaRow.tsx
 import { memo } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { TFunction } from "../../shared/i18n/types";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { MessageRunView, type RunParticipant } from "./MessageRun";
 import { SystemMessagePill } from "./SystemMessagePill";
+import { dayHeading } from "./dayHeading";
 import type { LongPressOrigin } from "./useLongPress";
 import type { ChatMessage } from "./data";
-import type { MessageRow } from "./messageRows";
+import { lastUndeletedIndex, type MessageRow } from "./messageRows";
 import styles from "./MessagesPage.module.css";
-
-/**
- * `day` is a stable canonical id ("Today" / "Yesterday", or an already
- * locale-formatted date string from the adapter) — only the two chrome
- * buckets computed client-side resolve through the catalog; any other value
- * is a date string rendered as-is.
- */
-function dayHeading(day: string, t: TFunction): string {
-  if (day === "Today") return t("messages:day.today");
-  if (day === "Yesterday") return t("messages:day.yesterday");
-  return day;
-}
 
 export interface MessageAreaRowProps {
   row: MessageRow;
@@ -109,6 +97,9 @@ function MessageAreaRowImpl({
       // their OWN inner role (`separator` for day/unread breaks, `status` for
       // system pills) nested inside this listitem — a listitem containing a
       // separator is valid ARIA; a list containing a non-listitem child is not.
+      // The one direct child of the sizer that is not a row is
+      // `FloatingDayHeader`'s sticky host, which is `aria-hidden` and so
+      // absent from the accessibility tree the list's ownership rule reads.
       role="listitem"
       style={{
         position: "absolute",
@@ -156,11 +147,11 @@ function MessageAreaRowImpl({
           onRetry={onRetry}
           showSeen={
             seenActive &&
-            row.run.items[row.run.items.length - 1] === lastOutbound
+            row.run.items[lastUndeletedIndex(row.run.items)] === lastOutbound
           }
           showDelivered={
             deliveredActive &&
-            row.run.items[row.run.items.length - 1] === lastOutbound
+            row.run.items[lastUndeletedIndex(row.run.items)] === lastOutbound
           }
           onReactionToggle={onReactionToggle}
           onReply={onReply}

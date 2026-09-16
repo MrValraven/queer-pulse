@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { expect, it } from "vitest";
 import { Composer } from "./Composer";
 import type { Conversation } from "./data";
+import type { AttachmentStaging } from "./useAttachmentStaging";
 import { TestProviders } from "../../test/TestProviders";
 
 const convo = {
@@ -10,6 +11,13 @@ const convo = {
   initials: "AC",
   tint: "plum",
 } as Conversation;
+
+// `textareaRef`/`staging` are lifted to `ConversationComposerDock` now (see
+// `useAttachmentStaging`'s own doc for why): nothing staged, no attach rows
+// wired, which is exactly the SAME behaviour these tests exercised before
+// the lift, when `Composer` created an equally-empty `staging` internally.
+const textareaRef = { current: null };
+const emptyStaging: AttachmentStaging = { screen: false, pendingStrip: null };
 
 it("grows the textarea height with content", () => {
   // The composer owns its own draft text now (no controlled `draft`/
@@ -21,6 +29,8 @@ it("grows the textarea height with content", () => {
       conversationId={convo.id}
       onSend={() => {}}
       blocked={false}
+      textareaRef={textareaRef}
+      staging={emptyStaging}
     />,
     {
       wrapper: TestProviders,
@@ -53,6 +63,8 @@ it("renders a connection-request notice instead of the input for a thread the se
       conversationId={gatedConvo.id}
       onSend={() => {}}
       blocked={false}
+      textareaRef={textareaRef}
+      staging={emptyStaging}
     />,
     { wrapper: TestProviders },
   );

@@ -39,3 +39,17 @@ export function findReactionMine(
 ): boolean {
   return reactions?.find((reaction) => reaction.key === key)?.mine ?? false;
 }
+
+/**
+ * Every reaction key the signed-in member already holds on a message, in
+ * `REACTION_ORDER`: what `ReactionPicker`'s `myReactionKeys` prop expects for
+ * its `aria-pressed` state. A thin wrapper over `findReactionMine` for callers
+ * that want the whole held set at once (the picker) rather than one key at a
+ * time (the hover-bar/menu's optimistic toggle handlers, which keep calling
+ * `findReactionMine` directly).
+ */
+export function myReactionKeys(
+  reactions: ReactionSummary[] | undefined,
+): MessageReactionKey[] {
+  return REACTION_ORDER.filter((key) => findReactionMine(reactions, key));
+}

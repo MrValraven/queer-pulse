@@ -397,6 +397,50 @@ export const settings: Catalog = {
   "visibility.activityStatus.toastError":
     "Não conseguimos guardar essa definição. Tenta novamente.",
 
+  // PRD-353: "Quem me pode adicionar a grupos" (GroupAddPolicySection). Só uma
+  // ligação aceite de quem adiciona te pode alguma vez adicionar ou convidar,
+  // por isso não existe uma terceira opção "todos"; isto só decide se essa
+  // ligação te coloca diretamente (`connections`, a predefinição) ou tem de te
+  // convidar primeiro (`invite_only`).
+  "visibility.groupAddPolicy.title": "Quem me pode adicionar a grupos",
+  "visibility.groupAddPolicy.connections.label": "As minhas ligações",
+  "visibility.groupAddPolicy.inviteOnly.label":
+    "Ninguém, envia-me um convite em vez disso",
+  "visibility.groupAddPolicy.explanation":
+    "Só as tuas ligações te podem adicionar a um grupo ou convidar-te para um.",
+  "visibility.groupAddPolicy.toastError":
+    "Não conseguimos guardar essa definição. Tenta novamente.",
+
+  // Ver o comentário na versão EN: o painel de privacidade das mensagens
+  // (MessagingPrivacySection). As confirmações de leitura, o indicador de
+  // escrita e o estado em linha são recíprocos.
+  "visibility.messagingPrivacy.title": "Privacidade das mensagens",
+  "visibility.messagingPrivacy.readReceipts.label": "Confirmações de leitura",
+  "visibility.messagingPrivacy.readReceipts.help":
+    "Deixa as pessoas verem quando lês as mensagens delas. Se desligares isto, também deixas de ver quando elas leem as tuas.",
+  "visibility.messagingPrivacy.typing.label": "Indicador de escrita",
+  "visibility.messagingPrivacy.typing.help":
+    "Mostra quando estás a escrever uma resposta. Se desligares isto, também deixas de ver quando as outras pessoas estão a escrever.",
+  "visibility.messagingPrivacy.presence.label": "Estado em linha",
+  "visibility.messagingPrivacy.presence.help":
+    "Deixa as tuas ligações verem quando estás em linha. Se desligares isto, também deixas de ver quando elas estão em linha.",
+  "visibility.messagingPrivacy.whoCanMessage.title":
+    "Quem me pode enviar mensagens",
+  "visibility.messagingPrivacy.whoCanMessage.everyone.label":
+    "Todas as pessoas",
+  "visibility.messagingPrivacy.whoCanMessage.everyone.hint":
+    "Qualquer pessoa pode iniciar uma conversa contigo, de acordo com as definições de visibilidade do teu perfil.",
+  "visibility.messagingPrivacy.whoCanMessage.introduced.label":
+    "Pessoas conhecidas em comum",
+  "visibility.messagingPrivacy.whoCanMessage.introduced.hint":
+    "As novas mensagens precisam de alguém em comum que faça a apresentação primeiro.",
+  "visibility.messagingPrivacy.whoCanMessage.connections.label":
+    "Só as minhas ligações",
+  "visibility.messagingPrivacy.whoCanMessage.connections.hint":
+    "As novas mensagens e os pedidos de ligação ficam limitados a pessoas com quem já tens uma ligação. As perguntas sobre a tua habitação ou outros anúncios continuam a chegar-te.",
+  "visibility.messagingPrivacy.toastError":
+    "Não conseguimos guardar isto. Verifica a tua ligação e tenta de novo.",
+
   // ── SettingsPanes.tsx — AccountPane ────────────────────────────────────────
   "account.title": "Definições da <em>conta.</em>",
   "account.sub": "Preferências de sessão e segurança.",
@@ -815,6 +859,8 @@ export const settings: Catalog = {
   "dataExport.type.profile.sub": "Nome, pronomes, biografia, foto",
   "dataExport.type.messages.label": "Mensagens",
   "dataExport.type.messages.sub": "Todas as conversas diretas e de grupo",
+  "dataExport.type.messages.subDetailed":
+    "As tuas mensagens e as conversas que denunciaste",
   "dataExport.type.forumPosts.label": "Publicações no fórum",
   "dataExport.type.forumPosts.sub": "Todas as publicações, respostas, reações",
   "dataExport.type.events.label": "Eventos",
@@ -891,6 +937,8 @@ export const settings: Catalog = {
   "dataExport.accordion.messages.title": "Mensagens",
   "dataExport.accordion.messages.body":
     "Todas as mensagens diretas e conversas de grupo em que participaste. Inclui o conteúdo das mensagens, datas/horas e confirmações de leitura. As mensagens de pessoas que eliminaram a conta são anonimizadas.",
+  "dataExport.accordion.messages.bodyDetailed":
+    "Todas as mensagens que enviaste, com a conversa a que pertencem, o tipo, qualquer anexo e se eram uma resposta ou um reencaminhamento. Para cada conversa em que denunciaste uma mensagem ou uma pessoa, o arquivo guarda também as mensagens de todas as pessoas nessa conversa, para teres a tua própria cópia do que aconteceu. Históricos muito longos guardam as mensagens mais recentes e ficam marcados como truncados. Quem eliminou a conta aparece como “Antigo membro”.",
   "dataExport.accordion.forumPosts.title": "Publicações e respostas no fórum",
   "dataExport.accordion.forumPosts.body":
     "Cada publicação e resposta que fizeste no fórum, incluindo o tópico a que pertence, quaisquer edições e reações que deste ou recebeste.",
@@ -942,6 +990,7 @@ export const settings: Catalog = {
   "dataExport.tag.transactions": "transações",
   "dataExport.tag.amounts": "montantes",
   "dataExport.tag.dates": "datas",
+  "dataExport.tag.reportedThreads": "conversas denunciadas",
   "dataExport.demoArchiveNote":
     "Exportação de demonstração gerada no navegador. Nenhum dado pessoal saiu deste dispositivo.",
 

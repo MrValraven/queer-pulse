@@ -1,0 +1,156 @@
+/* A burst of photos collapsed into one grid (see MessageAlbum). The album is
+   not a `.bubbleWrap`, so it restates the media corner that wrap scopes as
+   `--bubble-media-radius` rather than reading it. */
+.album {
+  --album-radius: var(--radius-12);
+  --album-gap: 2px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 264px;
+  max-width: min(80%, 46ch);
+}
+.albumSent {
+  align-items: flex-end;
+}
+
+/* Two columns for every layout; the three-photo layout lets its first tile
+   span both. No `overflow: hidden` here: it would clip each tile's focus ring
+   and the jump highlight, so the outer corners are rounded per tile below. */
+.albumGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--album-gap);
+  width: 100%;
+}
+
+.tile {
+  --tile-corner-start-start: 0;
+  --tile-corner-start-end: 0;
+  --tile-corner-end-start: 0;
+  --tile-corner-end-end: 0;
+  /* Read by the photo opener and its fallback inside this tile; the corners
+     that matter are the per-tile ones on the frame. */
+  --bubble-media-radius: 0;
+  position: relative;
+  aspect-ratio: 1;
+  /* Same gesture surface contract as `.bubbleWrap`: vertical panning stays
+     native, and a long-press never raises the OS selection loupe or callout. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 250ms var(--ease-out);
+}
+.tile:active {
+  transform: scale(0.985);
+}
+.tile[data-long-press-active="true"] {
+  transform: scale(1.03);
+}
+.tileHighlighted {
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+  .tile:active,
+  .tile[data-long-press-active="true"] {
+    transform: none;
+  }
+}
+
+/* The photo opener and its sized frame fill the tile instead of sizing
+   themselves from the photo, and the frame carries this tile's corners. */
+.tile [data-photo-opener] {
+  position: absolute;
+  inset: 0;
+  width: auto;
+}
+/* Both sizes explicit: the frame's inline `aspect-ratio` would otherwise
+   derive its height from its width, which made the wide three-photo tile's
+   frame a 264px square spilling under the two tiles below it (measured). */
+.tile [data-photo-opener] > span {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  border-start-start-radius: var(--tile-corner-start-start);
+  border-start-end-radius: var(--tile-corner-start-end);
+  border-end-start-radius: var(--tile-corner-end-start);
+  border-end-end-radius: var(--tile-corner-end-end);
+}
+/* The ring moves from the opener onto the tile, which is where the corners
+   are drawn. */
+.tile [data-photo-opener]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.tile:has([data-photo-opener]:focus-visible) {
+  z-index: 1;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Two photos: side by side. */
+.albumTwo > :nth-child(1) {
+  --tile-corner-start-start: var(--album-radius);
+  --tile-corner-end-start: var(--album-radius);
+}
+.albumTwo > :nth-child(2) {
+  --tile-corner-start-end: var(--album-radius);
+  --tile-corner-end-end: var(--album-radius);
+}
+
+/* Three photos: one full-width tile on top, two squares below. */
+.albumThree > :nth-child(1) {
+  grid-column: 1 / -1;
+  aspect-ratio: 2;
+  --tile-corner-start-start: var(--album-radius);
+  --tile-corner-start-end: var(--album-radius);
+}
+.albumThree > :nth-child(2) {
+  --tile-corner-end-start: var(--album-radius);
+}
+.albumThree > :nth-child(3) {
+  --tile-corner-end-end: var(--album-radius);
+}
+
+/* Four or more: a two by two grid. */
+.albumGridOfFour > :nth-child(1) {
+  --tile-corner-start-start: var(--album-radius);
+}
+.albumGridOfFour > :nth-child(2) {
+  --tile-corner-start-end: var(--album-radius);
+}
+.albumGridOfFour > :nth-child(3) {
+  --tile-corner-end-start: var(--album-radius);
+}
+.albumGridOfFour > :nth-child(4) {
+  --tile-corner-end-end: var(--album-radius);
+}
+
+/* The "+N" count over the fourth tile. Pointer events pass through, so a tap
+   or long-press on it reaches the tile's own gestures. The scrim is built on
+   --scrim-rgb, the near-black the shared scrims use, which does not flip with
+   the theme; --cream-rgb does not flip either, so the count reads light on dark
+   in both themes. (--ink-rgb turns light in dark mode and washed it out.) The
+   default 0.55 strength, over a white photo, keeps the bold 28px count near
+   3.5:1, where 0.45 fell to about 2.6:1. */
+.moreOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-end-end-radius: var(--tile-corner-end-end);
+  background: var(--scrim);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-28);
+  font-weight: 700;
+  pointer-events: none;
+}

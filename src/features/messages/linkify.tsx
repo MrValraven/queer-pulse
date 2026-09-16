@@ -1,10 +1,17 @@
 import { Fragment, type ReactNode } from "react";
-import { FiExternalLink } from "react-icons/fi";
+import { FiAlertTriangle, FiExternalLink } from "react-icons/fi";
 import { messages as enMessages } from "../../shared/i18n/catalogs/en/messages";
 import { messages as ptMessages } from "../../shared/i18n/catalogs/pt/messages";
 import { detectLanguage, intlLocale } from "../../shared/i18n/locale";
 import { resolveEntry } from "../../shared/i18n/translate";
-import type { Catalog, Language } from "../../shared/i18n/types";
+import type {
+  Catalog,
+  Language,
+  TranslateOptions,
+} from "../../shared/i18n/types";
+import { linkSafetyReasonsLabelStatic } from "./linkSafetyCopy";
+import { OpenExternalConfirmDialog } from "./OpenExternalConfirmDialog";
+import { useLinkSafetyGuard } from "./useLinkSafetyGuard";
 import styles from "./linkify.module.css";
 
 // Match http(s):// URLs and bare www. hosts. Trailing sentence punctuation is
@@ -120,34 +127,121 @@ const MESSAGES_CATALOGS: Record<Language, Catalog> = {
   en: enMessages,
   pt: ptMessages,
 };
-const EXTERNAL_HINT_PATH = "link.opensExternally";
 
 /**
- * The screen-reader gloss for the external-link icon, resolved WITHOUT a hook.
+ * Resolves one `messages` catalog entry WITHOUT a hook — same technique
+ * `externalLinkHint` (below) always used, generalized to take any path and
+ * optional `{token}` values (PRD-371's suspicious-link copy needs one:
+ * `{host}`).
  *
  * `renderWithLinks` is handed to `MentionText` as a bare function reference and
  * invoked once per text segment inside a `map`, so the number of calls per
- * render varies with the message — `useTranslation()` here would be a
- * rules-of-hooks violation waiting to happen. Instead this composes the same
- * non-hook pieces the rest of the app already uses outside React:
- * `detectLanguage()` (what `activeLocale()` reads for socket cache patches and
- * message-timestamp adapters) and `resolveEntry` (what `loadCatalogTranslate`
- * resolves moderation labels with). The two `messages` catalogs are imported
- * statically rather than through the lazy namespace loader because this needs
- * an answer synchronously on first paint, and they land in the messages chunk
- * this module already belongs to. EN is the fallback, as everywhere else.
+ * render varies with the message — `useTranslation()` anywhere in this module
+ * would be a rules-of-hooks violation waiting to happen, and `ChatLinkAnchor`
+ * below is exercised directly (no `I18nProvider` ancestor) by
+ * `linkify.test.tsx`. Instead this composes the same non-hook pieces the rest
+ * of the app already uses outside React: `detectLanguage()` (what
+ * `activeLocale()` reads for socket cache patches and message-timestamp
+ * adapters) and `resolveEntry` (what `loadCatalogTranslate` resolves
+ * moderation labels with). The two `messages` catalogs are imported statically
+ * rather than through the lazy namespace loader because this needs an answer
+ * synchronously on first paint, and they land in the messages chunk this
+ * module already belongs to. EN is the fallback, as everywhere else.
  */
-function externalLinkHint(): string {
+function resolveMessagesString(
+  path: string,
+  options?: TranslateOptions,
+): string {
   const language = detectLanguage();
   const active = resolveEntry(
     MESSAGES_CATALOGS[language],
-    EXTERNAL_HINT_PATH,
+    path,
     intlLocale(language),
+    options,
   );
   if (active !== undefined) return active;
   return (
-    resolveEntry(MESSAGES_CATALOGS.en, EXTERNAL_HINT_PATH, "en") ??
-    `messages:${EXTERNAL_HINT_PATH}`
+    resolveEntry(MESSAGES_CATALOGS.en, path, "en", options) ??
+    `messages:${path}`
+  );
+}
+
+/** The screen-reader gloss for the external-link icon. */
+function externalLinkHint(): string {
+  return resolveMessagesString("link.opensExternally");
+}
+
+/**
+ * One linkified URL: a safe new-tab anchor, unless `assessLinkSafety` (PRD-
+ * 371) flags it as suspicious, in which case a plain left-click pauses on
+ * `OpenExternalConfirmDialog` instead of navigating — see `useLinkSafetyGuard`
+ * for exactly what counts as suspicious and what a modified click still does.
+ * A non-suspicious link is completely unaffected: same anchor, same `href`,
+ * same external-site hint as before. Its own component (not inlined in
+ * `renderWithLinks`, which isn't one) so it can hold the confirm dialog's
+ * open/closed state.
+ */
+function ChatLinkAnchor({ href }: { href: string }) {
+  const {
+    isSuspicious,
+    reasons,
+    displayHost,
+    isConfirmOpen,
+    handleAnchorClick,
+    openAnyway,
+    cancel,
+  } = useLinkSafetyGuard(href);
+  // Resolved without `useTranslation()` — see `resolveMessagesString`'s own
+  // doc for why this whole module stays hook-free. `OpenExternalConfirmDialog`
+  // itself still uses the ordinary hook for its OWN button labels; that's
+  // fine, since it only ever mounts once `isSuspicious` is true.
+  const reasonsLabel = isSuspicious
+    ? linkSafetyReasonsLabelStatic(reasons)
+    : "";
+  return (
+    <>
+      <a
+        className={styles.chatLink}
+        href={href}
+        title={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={handleAnchorClick}
+      >
+        {formatLinkLabel(href)}
+        {isSuspicious ? (
+          <span
+            className={styles.suspiciousIcon}
+            role="img"
+            aria-label={reasonsLabel}
+          >
+            <FiAlertTriangle aria-hidden />
+          </span>
+        ) : isExternalHref(href) ? (
+          <>
+            <span className={styles.externalIcon}>
+              <FiExternalLink aria-hidden />
+            </span>
+            <span className="visuallyHidden">{externalLinkHint()}</span>
+          </>
+        ) : null}
+      </a>
+      {isSuspicious && (
+        <OpenExternalConfirmDialog
+          open={isConfirmOpen}
+          onClose={cancel}
+          onConfirm={openAnyway}
+          title={resolveMessagesString("link.confirmTitle")}
+        >
+          <p>
+            {resolveMessagesString("link.confirmDestination", {
+              host: displayHost,
+            })}
+          </p>
+          <p>{reasonsLabel}</p>
+        </OpenExternalConfirmDialog>
+      )}
+    </>
   );
 }
 
@@ -157,25 +251,6 @@ export function renderWithLinks(text: string): ReactNode {
   return parts.map((part, index) => {
     if (index % 2 === 0) return <Fragment key={index}>{part}</Fragment>;
     const href = part.startsWith("www.") ? `https://${part}` : part;
-    return (
-      <a
-        key={index}
-        className={styles.chatLink}
-        href={href}
-        title={href}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {formatLinkLabel(href)}
-        {isExternalHref(href) ? (
-          <>
-            <span className={styles.externalIcon}>
-              <FiExternalLink aria-hidden />
-            </span>
-            <span className="visuallyHidden">{externalLinkHint()}</span>
-          </>
-        ) : null}
-      </a>
-    );
+    return <ChatLinkAnchor key={index} href={href} />;
   });
 }

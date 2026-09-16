@@ -193,8 +193,12 @@
   transform: scale(0.94);
 }
 .composeBtn:focus-visible {
-  outline: 2px solid var(--plum);
-  outline-offset: 2px;
+  /* DES-193: the shared focus-ring TRIPLE (base.css ~L107-111) instead of a
+     bare plum outline. Plum never flips with the theme, so a bare outline
+     loses the cream halo that keeps the ring visible on a dark surface. */
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 /* Back chevron + wordmark, mobile only (MessagesBackButton). The chevron is a
    `.composeBtn` circle for the 44px tap target, pulled left by the space
@@ -222,6 +226,47 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+/* DES-188: the row list is a real `<ul>` (`MessagesThreadListBody`). Reset
+   the browser's default bullet + inset so it stays pixel-identical to the
+   bare-fragment markup it replaces. */
+.threadRowList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* ENG-253: the inbox "load more" sentinel/footer below the row list
+   (`MessagesThreadListLoadMore`), mirroring `ConversationMediaLoadMore`'s own
+   footer (`ConversationMediaGallery.module.css`) at this feature's inbox-row
+   horizontal inset (16px, matching `.threadRow`) rather than the gallery
+   sheet's own padding. */
+.threadListLoadMore {
+  display: flex;
+  justify-content: center;
+  padding: 14px 16px 20px;
+}
+/* DES-183: the compact inline retry line above STALE rows when a refresh
+   fails but cached rows still exist (see `InboxLoadErrorStrip`). A plain
+   text line, not a card, so it reads as a transient notice rather than
+   another empty state competing with the real rows below it. */
+.inboxLoadErrorStrip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
+  background: var(--paper);
+}
+.inboxLoadErrorIcon {
+  flex: none;
+  color: var(--danger);
+  font-size: var(--text-16);
+}
+.inboxLoadErrorText {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
 /* "Requests" tab body (MessagesRequestsPanel) — a plain vertical stack of the
    shared `IncomingCard` (the SAME card the /connections Incoming tab renders),
    matching `.threadRow`'s own 16px horizontal inset. */
@@ -240,6 +285,28 @@
 .requestsList > *:has([aria-expanded="true"]) {
   position: relative;
   z-index: 3;
+}
+/* PRD-344: the two sections (inbound / your sent requests) stack with room
+   between them; each section's own heading only renders when BOTH sections
+   are present (a single section needs no label to disambiguate). */
+.requestsPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.requestsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.requestsSectionHeading {
+  margin: 0;
+  padding: 4px 16px 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-40);
 }
 .threadRow {
   display: flex;
@@ -288,6 +355,18 @@
 .threadRowWrap:hover .threadRow,
 .threadRowWrap:focus-within .threadRow {
   padding-inline-end: 44px;
+}
+/* DES-187: on a touch device the "⋯" trigger is ALWAYS visible (see
+   `.rowMenuTrigger`'s own `(hover: none)` rule below), never gated behind
+   `:hover`/`:focus-within`, which touch never triggers. Without this, the
+   reservation above never applied there, so the timestamp/unread badge
+   painted straight under the kebab and a tap aimed at either opened the menu
+   instead of the thread. Permanent on touch; the hover-gated rule above still
+   governs pointer devices, where the trigger only appears on hover/focus. */
+@media (hover: none) {
+  .threadRow {
+    padding-inline-end: 44px;
+  }
 }
 /* Every interaction state keeps an OPAQUE base: the plum wash is composited
    OVER `--paper`, never used as a bare translucent fill. A translucent row
@@ -390,7 +469,9 @@
 .trPinnedIcon,
 .trFavoriteIcon,
 .trMutedIcon,
-.trArchivedIcon {
+.trMutedMentionsOnlyIcon,
+.trArchivedIcon,
+.trMentionIcon {
   display: inline-flex;
   font-size: var(--text-12);
 }
@@ -403,8 +484,21 @@
 .trMutedIcon {
   color: var(--ink-40);
 }
+/* PRD-349: mentions-only is a lighter restriction than a full mute (it still
+   lets mentions through), so it shares the same neutral ink-40 tone as
+   `.trMutedIcon`, the same family, distinguished by its own glyph
+   (`TbBellExclamation` vs `FiBellOff`) rather than by color. */
+.trMutedMentionsOnlyIcon {
+  color: var(--ink-40);
+}
 .trArchivedIcon {
   color: var(--ink-40);
+}
+/* PRD-348: the "@" mention indicator reads as an unresolved call to action,
+   same accent as the row's own unread badge, distinct from the neutral
+   ink-40 status icons beside it. */
+.trMentionIcon {
+  color: var(--accent);
 }
 .trPreviewRow {
   display: flex;
@@ -422,6 +516,13 @@
 }
 .trPreviewUnread {
   color: var(--ink);
+  font-weight: 600;
+}
+/* DES-189: the "Draft:" label preceding a draft's text in the preview slot,
+   accent-coloured so a half-written reply reads as unmistakably different
+   from a real last message, matching the mention indicator's accent. */
+.trDraftLabel {
+  color: var(--accent);
   font-weight: 600;
 }
 .unreadBadge {
@@ -507,9 +608,11 @@
    to the SAME z-index made them siblings in one stacking context, where DOM
    order decides — and `.area` comes after `.topbar`, so it painted over the
    header's open kebab popover and swallowed its clicks. The bar (and anything
-   it hangs, i.e. `ConversationMenu`'s menu) sits above the log. */
+   it hangs, i.e. `ConversationMenu`'s menu) sits above the log, and above the
+   log's overlay slot (`MessageJumpStatus`, z-index 2) too, so an open menu is
+   never covered by a status pill. */
 .convoPanel > .topbar {
-  z-index: 2;
+  z-index: var(--z-raised);
 }
 /* Compact conversation bar — 59px tall, the rhythm people know from
    WhatsApp/Telegram, so the log starts as high up the screen as it can. Every
@@ -692,12 +795,6 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
-}
-.loadingOlder {
-  text-align: center;
-  font-size: var(--text-12);
-  color: var(--ink-40);
-  padding-block: 8px;
 }
 /* A single stable in-flow wrapper around the day-groups + typing row — the
    ONE node `useMessageScroll`'s resize-follow observer watches. Mirrors
@@ -1081,10 +1178,15 @@
 }
 /* The bubble is a focusable keyboard entry point to the action overlay (Enter /
    Menu key). Show a clear focus ring; focus-within already reveals the hover
-   action bar for the same keyboard path. */
+   action bar for the same keyboard path. The shared focus-ring TRIPLE (see
+   effects.css), not a bare single-colour outline: a lone coloured outline
+   here can fail contrast against a bubble sitting on either a plum ground
+   (dark mode) or a cream one, which is exactly what the cream box-shadow
+   halo exists to fix. */
 .bubbleWrap:focus-visible {
-  outline: 2px solid var(--plum);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   border-radius: var(--radius-badge);
 }
 
@@ -1095,9 +1197,8 @@
    tint so it reads against the plum bubble. */
 .replyQuote {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   max-width: 100%;
   margin-block: 0 6px;
@@ -1141,6 +1242,16 @@
 .replyQuoteSent:focus-visible {
   outline-color: rgba(var(--cream-rgb), 0.85);
 }
+/* The name over snippet column; a photo/GIF parent's thumbnail sits beside it
+   on the trailing side (see `ReplyQuoteContent`). */
+.replyQuoteText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+}
 .replyQuoteName {
   font-size: var(--text-11);
   font-weight: 700;
@@ -1159,6 +1270,33 @@
 }
 .replyQuoteSent .replyQuoteSnippet {
   color: rgba(var(--cream-rgb), 0.86);
+}
+/* The photo/file glyph before a kind label or file name; inherits the
+   snippet's colour, so the sent/received variants need nothing extra. */
+.replyQuoteKindIcon {
+  margin-inline-end: 4px;
+  vertical-align: -0.125em;
+}
+/* A photo/GIF parent's thumbnail, shared by the bubble quote and the composer
+   preview. The square is sized and washed before the image decodes, so the
+   quote never reflows when it lands; 36px sits inside the two text lines, so
+   the quote keeps its text-only height. */
+.replyQuoteThumbnail {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: var(--radius-6);
+  background: rgba(var(--line-rgb), 0.1);
+}
+.replyQuoteSent .replyQuoteThumbnail {
+  background: rgba(var(--cream-rgb), 0.2);
+}
+.replyQuoteThumbnail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 /* Slightly tighten the bubble top over an inline reply quote. */
 .bubbleWithReply {
@@ -1190,11 +1328,17 @@
     opacity: 0;
   }
 }
+/* Reduced motion keeps the landing cue as a static ring: the store removes
+   `.messageHighlight` when the flash ends, so it still lasts only that long. */
 @media (prefers-reduced-motion: reduce) {
   .messageHighlight::after {
     animation: none;
-    opacity: 0;
+    opacity: 1;
   }
+}
+:global(html[data-reduce-motion="true"]) .messageHighlight::after {
+  animation: none;
+  opacity: 1;
 }
 
 .messageActionsSlot {
@@ -1526,43 +1670,20 @@
   align-self: flex-end;
 }
 
+/* I7: the "too long to send" reason (DES-202) replaces `.retryBtn` in the
+   same slot for a failed send that can never succeed on retry, so it shares
+   its font family/size and top margin; never reuses `.editedMarker`, which
+   is a distinct semantic (a successful edit), not a failure reason. */
+.failedReason {
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  color: var(--danger);
+  margin-block-start: 2px;
+}
+
 .editedMarker {
   font-size: var(--text-11);
   color: var(--ink-40);
-}
-
-.editField {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: min(80vw, 46ch);
-}
-.editTextarea {
-  width: 100%;
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-badge);
-  padding: 11px 14px;
-  font-family: var(--sans);
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: var(--paper);
-  resize: none;
-  line-height: 1.5;
-  transition: border-color var(--dur-fast) var(--ease);
-}
-.editTextarea:focus-visible {
-  outline: none;
-  border-color: var(--line-strong);
-}
-.editFieldActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .editTextarea {
-    transition: none;
-  }
 }
 
 .composer {
@@ -1705,6 +1826,75 @@
 }
 .imagePreviewUnavailable svg {
   opacity: 0.7;
+}
+/* The sized box a photo or GIF bubble paints into (see PhotoBubbleImage). A
+   bare lazy `<img>` inside the fit-content bubble chain measured 0x0 until it
+   decoded, so the frame owns the size instead: the attachment's own width
+   capped at 220px (220px when the width is unknown), with the inline
+   `aspect-ratio` giving the height before a single byte arrives. */
+.photoFrame {
+  position: relative;
+  display: block;
+  width: min(220px, var(--photo-natural-width, 220px));
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: var(--bubble-media-radius);
+}
+.photoFrameImage {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Loading wash until the photo's first `load`. On --line-rgb (like the shared
+   Skeleton) so it still reads in dark mode; the sweep is a transform on a
+   pseudo layer, and reduced motion keeps only the still wash. */
+.photoFrameLoading {
+  background: rgba(var(--line-rgb), 0.07);
+}
+.photoFrameLoading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--line-rgb), 0.07),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: photoFrameShimmer 1.5s var(--ease) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .photoFrameLoading::after {
+    display: none;
+  }
+}
+@keyframes photoFrameShimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+/* The load-error fallback reuses `.imagePreviewUnavailable` (the restored
+   outbox stand-in) so the two never drift; this only stretches it over the
+   frame the photo reserved. */
+.photoFallback {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  max-width: none;
+  aspect-ratio: auto;
+}
+.photoFallbackRetry {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+/* A failed photo retries on activation instead of opening the viewer. */
+.photoOpener[data-photo-state="failed"] {
+  cursor: pointer;
 }
 /* The file-card bubble for a `kind:"document"` message (PRD-226) — a bordered
    card rather than the inline-image treatment, since a document has no
@@ -2002,6 +2192,16 @@
 .sendBtnActive:active {
   transform: scale(0.88);
 }
+/* I5: over the length limit, the send button stays reachable via
+   `aria-disabled` (never native `disabled`, see `ComposerInputRow`) but
+   reads as dimmed and non-interactive, matching `.composerIconBtn:disabled`'s
+   own 0.5 opacity. Same specificity as `.sendBtnActive:hover` above and
+   placed after it in source order, so hovering a disabled send button never
+   fades back in past this. */
+.sendBtn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 @media (prefers-reduced-motion: reduce) {
   .jumpPill,
   .typingBubble {
@@ -2098,6 +2298,8 @@
 }
 .replyPreviewBody {
   display: flex;
+  /* Grows so a photo parent's thumbnail sits beside the close button. */
+  flex: 1;
   flex-direction: column;
   gap: 1px;
   min-width: 0;
@@ -2115,6 +2317,7 @@
   white-space: nowrap;
 }
 .replyPreviewClose {
+  position: relative;
   flex: none;
   width: 26px;
   height: 26px;
@@ -2130,6 +2333,19 @@
   transition:
     background var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease);
+}
+/* Coarse-pointer hit target grown to 44px via an invisible pseudo-element
+   rather than resizing the button itself, so the pill's visual weight in the
+   composer doesn't change on touch while the tap target still meets the
+   44px minimum (26px button + 9px on every side = 44px). `any-pointer`
+   (not `pointer`) so a hybrid touch laptop with a precise primary pointer
+   still gets the larger target when touch is available. */
+@media (any-pointer: coarse) {
+  .replyPreviewClose::after {
+    content: "";
+    position: absolute;
+    inset: -9px;
+  }
 }
 @media (hover: hover) {
   .replyPreviewClose:hover {
@@ -2371,6 +2587,21 @@
   font-style: italic;
   color: var(--ink-40);
 }
+/* A tombstone the server marks `canReport: true` (evidence-hold window) is
+   the one deleted message that's still interactive, for Report alone — a
+   comfortable 44px touch target and the same focus ring `.bubbleWrap` uses. */
+.tombstoneReportable {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+.tombstoneReportable:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+}
 
 /* ── Message report modal (reason radios + detail) ── */
 .reportLabel {
@@ -2532,8 +2763,12 @@
   opacity: 1;
 }
 
-.rowMenuTrigger:hover {
-  background: rgba(var(--plum-rgb), 0.08);
+/* DES-193: guarded like every other hover in this file. Unguarded, a tap on
+   touch leaves this wash stuck on until the next unrelated repaint. */
+@media (hover: hover) {
+  .rowMenuTrigger:hover {
+    background: rgba(var(--plum-rgb), 0.08);
+  }
 }
 
 @media (hover: none) {
@@ -2597,8 +2832,10 @@
   cursor: pointer;
 }
 
-.rowMenuItem:hover {
-  background: rgba(var(--plum-rgb), 0.06);
+@media (hover: hover) {
+  .rowMenuItem:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
 }
 
 .rowMenuItemDanger {
@@ -2616,8 +2853,10 @@
   cursor: pointer;
 }
 
-.rowMenuItemDanger:hover {
-  background: rgba(var(--plum-rgb), 0.06);
+@media (hover: hover) {
+  .rowMenuItemDanger:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
 }
 
 /* ── Long-press/right-click message action overlay (MessageActionOverlay) ──
@@ -2796,6 +3035,10 @@
   border-bottom: none;
 }
 .searchSectionLabel {
+  /* Now an `<h2>` (DES-194), so its default block margin is reset here to
+     keep it flush with `.searchSection`'s own padding, exactly as the div
+     it replaced did. */
+  margin: 0;
   padding: 10px 16px 6px;
   font-family: var(--sans);
   font-size: var(--text-11-5);
@@ -2808,6 +3051,15 @@
   padding: 6px 16px 10px;
   font-size: var(--text-13-5);
   color: var(--ink-60);
+}
+
+/* ── Filter-tab row skeleton (DES-192) ── */
+.tabRowSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  margin-top: 12px;
 }
 .hitGroup {
   padding-block: 2px 6px;
@@ -2849,9 +3101,17 @@
     background: rgba(var(--plum-rgb), 0.05);
   }
 }
+/* DES-193: `--plum` never flips with the theme, so a bare plum ring loses the
+   cream halo that keeps focus visible on a dark surface, the same defect as
+   `.composeBtn`'s old ring above. This row sits inside `.threadList`, whose
+   `overflow-y: auto` computes `overflow-x` to `auto` too (not `visible`), so
+   an OUTWARD ring would clip at the scroller's edges exactly like
+   `.threadRow:focus-visible` already documents; matching that row's own
+   class-scoped INSET override (`--accent-deep`, 3:1 against `--paper` in both
+   themes) fixes the token without reintroducing that clipping. */
 .hitRow:focus-visible {
-  outline: 2px solid var(--plum);
-  outline-offset: -2px;
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--accent-deep);
 }
 .hitHeader {
   display: flex;
@@ -3048,4 +3308,57 @@
   display: inline-flex;
   align-items: center;
   color: var(--ink-40);
+}
+
+/* ── Floating day header (FloatingDayHeader) ──
+   A zero-height sticky host, first child of `.virtualSizer`: it pins to the
+   top of `.area` while taking no height, so no row moves and the sizer's
+   JS-driven height is untouched. The sizer is a plain block (not a flex
+   container like `.area`/`.areaContent`), so no flex `gap` is added for it
+   either. `overflow-anchor: none` keeps a pinned decoration from being chosen
+   as the scroll anchor, and it never takes a pointer event away from the
+   bubbles underneath it. Rows are transformed (each its own stacking
+   context), hence the raised tier. */
+.floatingDayHeader {
+  position: sticky;
+  top: 0;
+  height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: var(--z-raised);
+  pointer-events: none;
+  overflow-anchor: none;
+}
+/* The in-flow `.daySepLabel`'s type and pill shape. The ground is opaque
+   `--paper` with the card hairline because this one floats over bubbles,
+   where the separator's 5% tint would let message text show through it. */
+.floatingDayHeaderLabel {
+  margin-block-start: 8px;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-40);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  box-shadow: var(--shadow-e2);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+.floatingDayHeaderVisible .floatingDayHeaderLabel {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .floatingDayHeaderLabel {
+    transform: none;
+    transition: opacity var(--dur-fast) linear;
+  }
 }

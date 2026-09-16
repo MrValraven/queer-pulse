@@ -23,6 +23,12 @@ interface MentionTextareaProps {
   placement?: "below" | "above";
   onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onBlur?: () => void;
+  /** Passthrough for a paste directly on this textarea: the chat composer
+   *  uses it to detect a pasted FILE (an image copied from another app) and
+   *  stage it as an attachment instead of letting the paste fall through to
+   *  plain text insertion (DES-204). A paste that carries no file is left
+   *  entirely alone: this never changes ordinary text-paste behaviour. */
+  onPaste?: (event: React.ClipboardEvent<HTMLTextAreaElement>) => void;
   /** Focus of the field itself. The chat composer uses it to dismiss whichever
    *  attach/shortcut panel is open once someone starts typing — those panels
    *  now live INSIDE the input pill, so an outside-click never fires for them. */
@@ -165,6 +171,7 @@ export function MentionTextarea(props: MentionTextareaProps) {
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onPaste={props.onPaste}
         onFocus={() => props.onFocus?.()}
         onBlur={() => {
           props.onBlur?.();

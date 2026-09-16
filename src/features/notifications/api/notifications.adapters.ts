@@ -248,6 +248,12 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // carries `{title}`) wins. Their editor is still named by the avatar and the
   // profile link beside the row.
   "magazine_piece_message",
+  // PRD-334. `group_added` deliberately stays OUT of this set, for the same
+  // reason as the three PRD-121 desk kinds above: `NotificationItem`
+  // interpolates `{name}` and nothing else into a `textNamed` string, and the
+  // group's name is what makes the row worth reading. Its generic `.text`
+  // carries both `{name}` (the adder, handed to `formatNotification` below)
+  // and `{groupTitle}`, while the avatar and profile link still name the adder.
 ]);
 
 export function notificationDtoToView(
@@ -265,6 +271,9 @@ export function notificationDtoToView(
     // `admin_queue_item` renders its own count, because it bundles on the
     // queue and one row can stand for several arrivals.
     dto.otherActorCount,
+    // `group_added` names the adder in its plain `.text` (it is not a
+    // personalized kind); every other kind ignores this argument.
+    dto.actor ? actorName(dto.actor) : undefined,
   );
   const view: Notification = {
     // Backend ids are uuids — pass through as-is. Coercing with Number() would
@@ -508,6 +517,16 @@ function sourceHrefFromPayload(
   // standing there with a reference and a status. Keyed on `type` for the same
   // reason its sibling is: the payload carries no `source` that resolves here.
   if (type === "report_received") return routes.myReports;
+  // PRD-353. A group invite is answered on the Messages inbox's Requests tab,
+  // never the group itself (the invitee isn't a member yet, so a plain
+  // `/messages?c=<id>` would open a conversation they can't read). Keyed on
+  // `type` rather than `payload.source`, same reasoning as the two report
+  // branches above: the generic `source: "message"` branch further down
+  // resolves to the conversation, which is the wrong destination here even if
+  // the payload happened to carry one. `?tab=requests` mirrors the `?tab=`
+  // deep links other consoles already use (e.g. `?tab=health` above) and is
+  // read by `MessagesThreadList`'s own one-shot deep-link effect.
+  if (type === "group_invite") return `${routes.messages}?tab=requests`;
   // TS-04. `payload.source` is `"moderation"`, and the destination is the
   // console's own queue-health tab: the alert is about the state of the work,
   // so it opens the reading rather than one of the queues it summarises.

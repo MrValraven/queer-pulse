@@ -2,13 +2,14 @@ import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft, FiBookmark, FiMail, FiShare2 } from "react-icons/fi";
 import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
+import { communityPath, routes } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Person } from "./communityDetails";
 import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
 import { CommunityHeroActions } from "./CommunityHeroActions";
 import { CommunityNotificationControl } from "./CommunityNotificationControl";
 import { CommunityReportControl } from "../safety/CommunityReportControl";
+import { ShareToChatAction } from "../messages/share/ShareToChatAction";
 import { leadingInitials } from "../../shared/lib/initials";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -170,6 +171,14 @@ export function CommunityDetailHero({
           >
             <FiShare2 aria-hidden /> {t("communities:detail.share.cta")}
           </Button>
+          {communitySlug && (
+            <ShareToChatAction
+              url={communityPath(communitySlug)}
+              title={community.name}
+              kind="community"
+              variant="ghost-dark"
+            />
+          )}
           <CommunityHeroAvatars
             avatars={heroAvatars}
             memberNum={memberNum}

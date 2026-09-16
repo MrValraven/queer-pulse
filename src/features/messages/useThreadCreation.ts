@@ -1,6 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
+import { ApiError } from "../../shared/api/client";
 import type { Conversation } from "./data";
 import { clearDraft, loadDraft, saveDraft } from "./drafts";
+import { notifyAttachmentConversationMigrated } from "./attachmentConversationMigration";
 import type { useStartConversation } from "./api/useMessageMutations";
 
 interface ThreadCreationDeps {
@@ -20,7 +22,28 @@ interface ThreadCreationDeps {
   /** From the sending sub-hook — re-keys and re-drives any outbox entries
    *  queued under a placeholder id once its real conversation exists. */
   migrateOutboxConversation: (oldConvId: string, newConvId: string) => void;
+  /**
+   * PRD-343: `POST /conversations` now 403s a FRESH thread with a
+   * non-connection (cold first contact must go through a message request or
+   * enquiry instead; see `ConversationsService.createConversation`). When
+   * `startThread` hits exactly that refusal, this is called with the intended
+   * recipient INSTEAD of the generic "reopen the blank picker" fallback, so
+   * the caller can swap in the message-request composer for that specific
+   * person. Optional and backward-compatible: omitting it keeps today's
+   * generic recovery (reopen the picker, toast already shown globally).
+   */
+  onRequiresConnection?: (recipient: Conversation) => void;
 }
+
+/** The discriminator `ConversationsService.createConversation` puts on a
+ *  fresh, non-connected 1:1 thread's 403 body (PRD-343): a code, not the
+ *  message text, so a reword or localization on the server can never silently
+ *  break this match. Mirrors `COMMUNITY_MEMBERS_ONLY` (see
+ *  `useCommunity.ts`). Distinguishes it from a block refusal ("You cannot
+ *  start a conversation with this member") or a generic failure, both of
+ *  which keep the old fallback. */
+const CONVERSATION_REQUIRES_CONNECTION_CODE =
+  "CONVERSATION_REQUIRES_CONNECTION";
 
 export interface ThreadCreation {
   startThread: (recipient: Conversation) => void;
@@ -43,6 +66,7 @@ export function useThreadCreation({
   setLocallyDeletedIds,
   startConversation,
   migrateOutboxConversation,
+  onRequiresConnection,
 }: ThreadCreationDeps): ThreadCreation {
   function startThread(recipient: Conversation) {
     setComposing(false);
@@ -81,7 +105,7 @@ export function useThreadCreation({
     setView("thread");
     if (demoMode || !recipient.slug) return;
     startConversation.mutate(recipient.slug, {
-      onError: () => {
+      onError: (error) => {
         // The conversation never materialized server-side: drop the dead
         // placeholder (its live composer would fail every send), restore
         // whatever thread was open before, and reopen the picker so the
@@ -103,6 +127,20 @@ export function useThreadCreation({
           current === recipient.id ? previousActiveId : current,
         );
         setView(previousActiveId ? "thread" : "list");
+        // PRD-343: this exact refusal means the recipient isn't a connection
+        // and no thread between them is already open. The fix is the
+        // message-request composer for THIS person, in place of the generic
+        // blank picker.
+        if (
+          onRequiresConnection &&
+          error instanceof ApiError &&
+          error.status === 403 &&
+          (error.data as { code?: string } | undefined)?.code ===
+            CONVERSATION_REQUIRES_CONNECTION_CODE
+        ) {
+          onRequiresConnection(recipient);
+          return;
+        }
         setComposing(true);
       },
       onSuccess: (conversation) => {
@@ -153,6 +191,7 @@ export function useThreadCreation({
         // flips (mergeOptimisticGroups reads `sent[active.id]`) and never
         // actually reach the server.
         migrateOutboxConversation(recipient.id, conversation.id);
+        notifyAttachmentConversationMigrated(recipient.id, conversation.id);
       },
     });
   }

@@ -2,6 +2,7 @@ import {
   useId,
   useRef,
   type ReactNode,
+  type RefObject,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { createPortal } from "react-dom";
@@ -23,6 +24,10 @@ interface ModalProps {
   full?: boolean;
   className?: string;
   children: ReactNode;
+  /** Overrides the default "focus the first focusable element" rule on open
+   *  (see `useDismiss`'s own doc), for the rare dialog where a SPECIFIC
+   *  footer action, not the head's close button, must be where focus lands. */
+  initialFocusRef?: RefObject<HTMLElement | null>;
 }
 
 /**
@@ -39,9 +44,10 @@ export function Modal({
   full = false,
   className,
   children,
+  initialFocusRef,
 }: ModalProps) {
   const { t } = useTranslation();
-  const dialogRef = useDismiss(onClose);
+  const dialogRef = useDismiss(onClose, initialFocusRef);
   const scrimProps = useScrimDismiss(onClose);
   const titleId = useId();
   // Portal to <body> so the fixed scrim is anchored to the viewport, never to a

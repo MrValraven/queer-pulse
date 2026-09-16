@@ -14,6 +14,7 @@ import { ChatImageViewerTopBar } from "./ChatImageViewerChrome";
 import { ChatImageViewerFilmstrip } from "./ChatImageViewerFilmstrip";
 import { ChatImageViewerStage } from "./ChatImageViewerStage";
 import { useChatImageSave } from "./useChatImageSave";
+import { useViewerPhotoCursor } from "./useChatImageViewerState";
 import type { ViewerPhoto } from "./useThreadImageGallery";
 import type { ChatMessage } from "./data";
 import styles from "./chatImageViewer.module.css";
@@ -61,7 +62,10 @@ export function ChatImageViewer({
   onToggleStar?: (message: ChatMessage) => void;
 }) {
   const { t } = useTranslation();
-  const [index, setIndex] = useState(startIndex);
+  // Which photo is on screen, tracked by identity so a photo deleted elsewhere
+  // in the thread never silently swaps it (see `useViewerPhotoCursor`).
+  const { index, photo, isOnStartPhoto, move, selectIndex } =
+    useViewerPhotoCursor(photos, startIndex);
   const [isChromeVisible, setIsChromeVisible] = useState(true);
   // True while any gesture (a scale-1 drag, a pinch, or a pan above scale 1)
   // is in progress, so the chrome hides while a member is actively
@@ -83,21 +87,6 @@ export function ChatImageViewer({
   const { saveImage, isSaving } = useChatImageSave();
 
   const total = photos.length;
-  // Held in a latest-value ref so `move` keeps one identity for the life of the
-  // viewer. It is read by the gesture layer, which memoizes its drag controller
-  // on the callbacks it is handed, and that controller is a dependency of a
-  // layout effect that resets zoom and pan. With `total` as a dependency, a
-  // second photo arriving in a one-photo thread would snap a zoomed member back
-  // to 1 and silently abandon a drag in flight.
-  const totalRef = useRef(total);
-  useEffect(() => {
-    totalRef.current = total;
-  });
-  const move = useCallback((delta: number) => {
-    const count = totalRef.current;
-    if (count === 0) return;
-    setIndex((current) => (current + delta + count) % count);
-  }, []);
   // Stable identities, because the gesture layer memoizes its drag controller
   // on the callbacks it is handed and that controller is a dependency of a
   // layout effect. Inline arrows here would make it fresh on every render and
@@ -129,15 +118,13 @@ export function ChatImageViewer({
     return () => document.removeEventListener("keydown", onKey);
   }, [move]);
 
-  const photo = photos[index];
-
   // `useDismiss` above locks scroll and pushes onto the modal stack
   // unconditionally, before this component knows whether it has anything to
   // show, so those two effects are already live by the time we would render
-  // nothing below. Reachable in live mode when the last photo in a thread is
-  // deleted while the viewer is open, shrinking `photos` below `index`. Close
-  // rather than leave the page scroll-locked with no visible dialog and no
-  // target for a mouse-only user to dismiss it.
+  // nothing below. Reachable in live mode when the photo on screen is deleted
+  // while the viewer is open and none of its neighbours remain (see
+  // `useViewerPhotoCursor`). Close rather than leave the page scroll-locked
+  // with no visible dialog and no target for a mouse-only user to dismiss it.
   useEffect(() => {
     if (!photo) onClose();
   }, [photo, onClose]);
@@ -210,18 +197,18 @@ export function ChatImageViewer({
           onGestureActive={setIsGestureActive}
           closing={closing}
           originRef={originRef ?? fallbackOriginRef}
-          canFlipBack={index === startIndex}
+          canFlipBack={isOnStartPhoto}
         />
         {/* Row three of the grid, where the labelled action bar used to sit.
             The filmstrip returns null for a single-photo gallery and hides
             itself on touch, where the swipe gesture pages instead, so it is
-            mounted unconditionally rather than gated from here. `setIndex` is
-            this component's own setter, so it is already stable. */}
+            mounted unconditionally rather than gated from here. `selectIndex`
+            is `useCallback`-stable inside `useViewerPhotoCursor`. */}
         <ChatImageViewerFilmstrip
           photos={photos}
           index={index}
           isChromeVisible={showChrome}
-          onSelect={setIndex}
+          onSelect={selectIndex}
         />
       </div>
     </div>,

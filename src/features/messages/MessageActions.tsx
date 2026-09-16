@@ -18,6 +18,10 @@ export interface MessageActionsProps {
    *  just React: the hover bar is reachable via `:focus-within`, so Tab lands
    *  here and Enter opens the overlay, which then manages its own focus. */
   onOpenOverlay: () => void;
+  /** The signed-in member's current reaction keys on this message, forwarded
+   *  straight to `ReactionPicker`'s `myReactionKeys`: derive with
+   *  `myReactionKeys`/`findReactionMine` from `reactionKeys.ts`. */
+  myReactionKeys: MessageReactionKey[];
 }
 
 /**
@@ -32,6 +36,7 @@ export function MessageActions({
   onReact,
   onReply,
   onOpenOverlay,
+  myReactionKeys,
 }: MessageActionsProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -104,6 +109,7 @@ export function MessageActions({
               setPickerOpen(false);
               onReact(key);
             }}
+            myReactionKeys={myReactionKeys}
           />
         </div>
       )}

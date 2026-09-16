@@ -61,10 +61,17 @@ export function SidebarFooter({
           {theme === "dark" ? <FiSun aria-hidden /> : <FiMoon aria-hidden />}
         </button>
         {loggedIn && (
+          // The badge is sighted-only (DES-191): the count rides along in
+          // the accessible name too, so a blind member hears "Messages, 3
+          // unread" instead of just "Messages".
           <Link
             to={routes.messages}
             className={styles.utilBtn}
-            aria-label={t("nav:messages")}
+            aria-label={
+              unreadMessages > 0
+                ? t("nav:messagesUnread", { count: unreadMessages })
+                : t("nav:messages")
+            }
           >
             <FiMessageSquare aria-hidden />
             {unreadMessages > 0 && (

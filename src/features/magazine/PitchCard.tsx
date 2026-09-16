@@ -83,7 +83,12 @@ export function PitchCard({
           const key = action.labelKey ?? action.label ?? "";
           if (action.to) {
             return (
-              <Link key={key} to={action.to} className={className}>
+              <Link
+                key={key}
+                to={action.to}
+                state={action.state}
+                className={className}
+              >
                 {label}
               </Link>
             );

@@ -50,4 +50,8 @@ export const nav: Catalog = {
   places: "Places",
   resources: "Resources",
   about: "About",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  messagesUnread_one: "Messages, {count} unread",
+  messagesUnread_other: "Messages, {count} unread",
 };

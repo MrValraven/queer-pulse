@@ -109,6 +109,26 @@
   color: rgba(var(--cream-rgb), 0.86);
 }
 
+/* PRD-371: shown instead of trusting the title/description alone once
+   `assessLinkSafety` flags this card's href — the icon is decorative, the
+   text alone carries the reason so it survives on both grounds without a
+   `cardSent` recolor of its own (amber reads as caution on both). */
+.suspiciousNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-block-start: 2px;
+  font-size: var(--text-caption);
+  line-height: 1.35;
+  color: var(--amber-ink);
+}
+.suspiciousNote svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-block-start: 1px;
+}
+
 /* ── Loading skeleton ── a slim resolving bar spanning the panel's full
    width; no content, no jump when it resolves. --line-rgb (not --plum-rgb)
    because it flips to light channels in dark mode, so the shimmer stays

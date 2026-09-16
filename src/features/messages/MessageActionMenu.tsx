@@ -16,6 +16,12 @@ export interface MessageActionMenuProps {
   canPin: boolean;
   /** Message is currently pinned (SHARED) — toggles the Pin/Unpin label. */
   pinned: boolean;
+  /** May star/unstar this message: has a server id, so the toggle never
+   *  silently no-ops on a demo/optimistic message with none. Optional,
+   *  defaulting to true, mirroring `canCopy`'s own default so a caller with
+   *  no notion of a message id (the desktop context menu, today) keeps its
+   *  prior always-show behavior unchanged. */
+  canStar?: boolean;
   /** Viewer has privately starred it — toggles the Star/Unstar label. */
   starred: boolean;
   onReply: () => void;
@@ -24,6 +30,24 @@ export interface MessageActionMenuProps {
   onToggleStar: () => void;
   onEdit: () => void;
   onCopy: () => void;
+  /** DES-203: whether to offer Copy at all. False hides it for a media
+   *  message with no caption (there's nothing meaningful to copy; WhatsApp
+   *  hides Copy the same way). Optional, defaulting to true, so a caller
+   *  that has no notion of attachments (the desktop context menu, today)
+   *  keeps its prior always-show behavior unchanged. */
+  canCopy?: boolean;
+  /** PRD-351: whether to offer "Info" (delivery and read details). Only the
+   *  viewer's own, server-confirmed, not-deleted message qualifies (see
+   *  `canShowMessageInfo`). Optional, defaulting to false, so a caller with
+   *  no info surface never shows an item that does nothing. */
+  canShowInfo?: boolean;
+  onInfo?: () => void;
+  /** PRD-352: whether to offer "Reactions" (who reacted). Only a
+   *  server-confirmed, not-deleted message with a reaction qualifies (see
+   *  `canShowMessageReactors`). Optional, defaulting to false, the same as
+   *  `canShowInfo`. The keyboard and screen-reader path to the sheet. */
+  canShowReactions?: boolean;
+  onReactions?: () => void;
   onDelete: () => void;
   /** "Delete for me" (PRD-227) — hides this message from the caller's own
    *  view only. Unconditional (unlike `onDelete`/`canDelete`): ANY
@@ -49,6 +73,7 @@ export function MessageActionMenu({
   canReport,
   canPin,
   pinned,
+  canStar = true,
   starred,
   onReply,
   onForward,
@@ -56,6 +81,11 @@ export function MessageActionMenu({
   onToggleStar,
   onEdit,
   onCopy,
+  canCopy = true,
+  canShowInfo = false,
+  onInfo,
+  canShowReactions = false,
+  onReactions,
   onDelete,
   onDeleteForMe,
   onReport,
@@ -133,14 +163,16 @@ export function MessageActionMenu({
           {pinned ? t("messages:actions.unpin") : t("messages:actions.pin")}
         </button>
       )}
-      <button
-        type="button"
-        className={styles.overlayMenuItem}
-        role="menuitem"
-        onClick={runThenClose(onToggleStar)}
-      >
-        {starred ? t("messages:actions.unstar") : t("messages:actions.star")}
-      </button>
+      {canStar && (
+        <button
+          type="button"
+          className={styles.overlayMenuItem}
+          role="menuitem"
+          onClick={runThenClose(onToggleStar)}
+        >
+          {starred ? t("messages:actions.unstar") : t("messages:actions.star")}
+        </button>
+      )}
       {canEdit && (
         <button
           type="button"
@@ -151,14 +183,36 @@ export function MessageActionMenu({
           {t("messages:actions.edit")}
         </button>
       )}
-      <button
-        type="button"
-        className={styles.overlayMenuItem}
-        role="menuitem"
-        onClick={runThenClose(onCopy)}
-      >
-        {t("messages:actions.copy")}
-      </button>
+      {canCopy && (
+        <button
+          type="button"
+          className={styles.overlayMenuItem}
+          role="menuitem"
+          onClick={runThenClose(onCopy)}
+        >
+          {t("messages:actions.copy")}
+        </button>
+      )}
+      {canShowInfo && onInfo && (
+        <button
+          type="button"
+          className={styles.overlayMenuItem}
+          role="menuitem"
+          onClick={runThenClose(onInfo)}
+        >
+          {t("messages:actions.info")}
+        </button>
+      )}
+      {canShowReactions && onReactions && (
+        <button
+          type="button"
+          className={styles.overlayMenuItem}
+          role="menuitem"
+          onClick={runThenClose(onReactions)}
+        >
+          {t("messages:actions.reactions")}
+        </button>
+      )}
       {/* "Delete for me" (PRD-227) is unconditional — every participant may
           hide a message from their own view, not just the author/staff who
           can tombstone it for everyone below. */}
@@ -193,6 +247,48 @@ export function MessageActionMenu({
           {t("messages:actions.report")}
         </button>
       )}
+    </div>
+  );
+}
+
+/**
+ * The action surface for a reportable tombstone (a "deleted for everyone"
+ * message the server still lets a non-author report during its 30-day
+ * evidence hold, `ChatMessage.canReport`) — the touch overlay and desktop
+ * context menu both render THIS instead of the full `MessageActionMenu`, so
+ * Reply/React/Forward/Star/Copy/Pin/Edit/Delete/Info can never leak onto a
+ * tombstone: this menu simply never has them to gate.
+ */
+export function TombstoneReportMenu({
+  menuRef,
+  onReport,
+  onClose,
+}: {
+  /** Focus target: the parent moves focus here on open and traps it. */
+  menuRef: RefObject<HTMLDivElement | null>;
+  onReport: () => void;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div
+      ref={menuRef}
+      className={styles.overlayMenu}
+      role="menu"
+      tabIndex={-1}
+      aria-label={t("messages:actions.menuLabel")}
+    >
+      <button
+        type="button"
+        className={styles.overlayMenuItem}
+        role="menuitem"
+        onClick={() => {
+          onReport();
+          onClose();
+        }}
+      >
+        {t("messages:actions.report")}
+      </button>
     </div>
   );
 }

@@ -1,21 +1,16 @@
 // src/features/messages/ConversationMenu.tsx
-import { useState, type ReactNode } from "react";
-import { FiFlag, FiImage, FiMoreHorizontal, FiSlash } from "react-icons/fi";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { BlockMemberModal } from "../members/BlockMemberModal";
-import { ConversationReportModal } from "./ConversationReportModal";
-import { WallpaperModal } from "./WallpaperModal";
+import { buildConversationMenuItems } from "./buildConversationMenuItems";
+import { ConversationMenuModals } from "./ConversationMenuModals";
+import { ConversationMenuTrigger } from "./ConversationMenuTrigger";
 import { useConversationBlockAction } from "./useConversationBlockAction";
+import { useConversationMuteMenuItems } from "./useConversationMuteMenuItems";
+import { useGroupReportMenuItem } from "./useGroupReportMenuItem";
 import { useKebabMenuA11y } from "./useKebabMenuA11y";
 import styles from "./MessagesPage.module.css";
-
-interface MenuItemDef {
-  key: string;
-  label: string;
-  icon: ReactNode;
-  onSelect: () => void;
-  danger?: boolean;
-}
 
 /** The DM-only half of the menu. Absent for a group (no single counterpart to
  *  act against) and for an official thread (no member behind it at all). */
@@ -48,121 +43,115 @@ export function ConversationMenu({
   conversationId,
   name,
   safety,
+  isGroup = false,
+  muted = false,
+  mutedUntil = null,
+  onOpenMediaGallery,
 }: {
-  /** The thread whose wallpaper this menu edits. */
+  /** The thread whose wallpaper this menu edits. Also the report subject id
+   *  for a group report (PRD-356) — a group's report subject IS the
+   *  conversation itself. */
   conversationId: string;
   /** Counterpart's first name, or the group's name — used in confirm/menu copy. */
   name: string;
   safety?: ConversationSafetyTarget;
+  /** GROUP only — enables "Report group" in place of the DM-only `safety`
+   *  items (mutually exclusive with `safety`: a group has no single
+   *  counterpart to block, only itself to report). */
+  isGroup?: boolean;
+  /** Whether THIS caller currently has the thread muted (PRD-346/349). Any
+   *  thread, DM or group. Defaults to `false` until the caller passes the
+   *  real value (see this component's HANDOFF note in the messaging-craft
+   *  build report: `ConversationHeader.tsx` does not thread it through
+   *  yet). */
+  muted?: boolean;
+  /** When a TIMED mute expires (PRD-349); null/undefined while unmuted or
+   *  muted forever. See `muted`'s own doc for the same HANDOFF note. */
+  mutedUntil?: string | null;
+  /** Opens the "Media, links and docs" sheet (PRD-373). Receives the kebab
+   *  trigger so focus lands back on it when the sheet is dismissed. */
+  onOpenMediaGallery?: (trigger?: HTMLElement | null) => void;
 }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isReporting, setIsReporting] = useState(false);
   const [isPickingWallpaper, setIsPickingWallpaper] = useState(false);
   // Called unconditionally (hook rules): for a group or an official thread
   // there is no slug, and the empty key simply reads back as "not blocked" —
   // the items it powers are not in the list for those threads anyway.
-  const { blocked, confirmingBlock, beginBlock, cancelBlock, confirmBlock } =
-    useConversationBlockAction(safety?.slug ?? "", name);
+  // PRD-362: the third argument lets the hook offer its own "report messages
+  // before you block?" step from this thread's cache.
+  const {
+    blocked,
+    confirmingBlock,
+    reportingMessagesBeforeBlock,
+    reportableMessages,
+    beginBlock,
+    cancelBlock,
+    confirmBlock,
+    skipReportMessagesStep,
+    finishReportMessagesStep,
+  } = useConversationBlockAction(safety?.slug ?? "", name, conversationId);
+  // PRD-349: mute is reachable from every thread (DM or group), unlike block,
+  // which stays DM-only (a group has no single counterpart to block). See
+  // `useConversationMuteMenuItems`'s own doc for why this menu owns a
+  // separate status label from the mute items.
+  const { items: muteItems, statusLabel: muteStatusLabel } =
+    useConversationMuteMenuItems(conversationId, muted, mutedUntil);
+  // PRD-356: the group-only "Report group" item, mirroring the DM-only
+  // `safety.report` item pushed further down.
+  const groupReportItems = useGroupReportMenuItem(isGroup, () =>
+    setIsReporting(true),
+  );
 
-  const items: MenuItemDef[] = [
-    {
-      key: "wallpaper",
-      label: t("messages:wallpaper.menuAction"),
-      icon: <FiImage aria-hidden />,
-      onSelect: () => setIsPickingWallpaper(true),
-    },
-  ];
-  if (safety) {
-    items.push(
-      {
-        key: "block",
-        label: t(
-          blocked ? "safety:profileMenu.unblock" : "safety:profileMenu.block",
-          { name },
-        ),
-        icon: <FiSlash aria-hidden />,
-        onSelect: beginBlock,
-        danger: !blocked,
-      },
-      {
-        key: "report",
-        label: t("messages:conversation.reportMemberAction", { name }),
-        icon: <FiFlag aria-hidden />,
-        onSelect: () => setIsReporting(true),
-        danger: true,
-      },
-    );
-  }
+  const items = buildConversationMenuItems({
+    t,
+    name,
+    onOpenMediaGallery,
+    getMediaTrigger: () => triggerRef.current,
+    onOpenWallpaper: () => setIsPickingWallpaper(true),
+    muteItems,
+    groupReportItems,
+    safety,
+    blocked,
+    onBeginBlock: beginBlock,
+    onManageBlockedMembers: () => void navigate(routes.blockMute),
+    onOpenReport: () => setIsReporting(true),
+  });
 
   const { open, setOpen, containerRef, triggerRef, itemRefs, onMenuKeyDown } =
     useKebabMenuA11y(items.length);
 
   return (
     <div className={styles.safetyMenuWrap} ref={containerRef}>
-      <button
-        ref={triggerRef}
-        type="button"
-        className={styles.ctbIconBtn}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label={t("messages:conversation.menuAriaLabel", { name })}
-        title={t("messages:conversation.menuAriaLabel", { name })}
-        onClick={() => setOpen((previous) => !previous)}
-      >
-        <FiMoreHorizontal aria-hidden />
-      </button>
-      {open && (
-        <div
-          className={styles.rowMenuPopover}
-          role="menu"
-          tabIndex={-1}
-          onKeyDown={onMenuKeyDown}
-        >
-          {items.map((item, index) => (
-            <button
-              key={item.key}
-              ref={(node) => {
-                itemRefs.current[index] = node;
-              }}
-              type="button"
-              role="menuitem"
-              tabIndex={-1}
-              className={
-                item.danger ? styles.rowMenuItemDanger : styles.rowMenuItem
-              }
-              onClick={() => {
-                setOpen(false);
-                item.onSelect();
-              }}
-            >
-              {item.icon}
-              {item.label}
-            </button>
-          ))}
-        </div>
-      )}
+      <ConversationMenuTrigger
+        name={name}
+        open={open}
+        setOpen={setOpen}
+        triggerRef={triggerRef}
+        itemRefs={itemRefs}
+        onMenuKeyDown={onMenuKeyDown}
+        muteStatusLabel={muteStatusLabel}
+        items={items}
+      />
 
-      {isPickingWallpaper && (
-        <WallpaperModal
-          conversationId={conversationId}
-          chatName={name}
-          onClose={() => setIsPickingWallpaper(false)}
-        />
-      )}
-      {safety && confirmingBlock && (
-        <BlockMemberModal
-          firstName={name}
-          onCancel={cancelBlock}
-          onConfirm={confirmBlock}
-        />
-      )}
-      {safety && isReporting && (
-        <ConversationReportModal
-          subjectId={safety.reportSubjectId ?? safety.slug}
-          name={name}
-          onClose={() => setIsReporting(false)}
-        />
-      )}
+      <ConversationMenuModals
+        conversationId={conversationId}
+        name={name}
+        isGroup={isGroup}
+        safety={safety}
+        isPickingWallpaper={isPickingWallpaper}
+        onCloseWallpaper={() => setIsPickingWallpaper(false)}
+        reportingMessagesBeforeBlock={reportingMessagesBeforeBlock}
+        reportableMessages={reportableMessages}
+        onSkipReportMessagesStep={skipReportMessagesStep}
+        onFinishReportMessagesStep={finishReportMessagesStep}
+        confirmingBlock={confirmingBlock}
+        onCancelBlock={cancelBlock}
+        onConfirmBlock={confirmBlock}
+        isReporting={isReporting}
+        onCloseReporting={() => setIsReporting(false)}
+      />
     </div>
   );
 }

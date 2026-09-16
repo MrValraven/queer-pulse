@@ -1,4 +1,6 @@
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useIsOnline } from "../../shared/api/realtime";
+import { useDemoPresenceSimulation } from "./useDemoSignalSimulation";
 import { useMessageReceipts } from "./useMessageReceipts";
 import type { Conversation } from "./data";
 
@@ -18,6 +20,11 @@ export function useCounterpartStatus(
   counterpartLastReadAt: string | null;
   counterpartDeliveredAt: string | null;
 } {
+  // Demo has no presence frames: one seeded connection flips online and
+  // offline on a slow cycle instead, published through `active.online` (the
+  // field read below for a thread with no participant id). A no-op live.
+  const { demoMode } = useDemoMode();
+  useDemoPresenceSimulation(demoMode);
   // Presence for JUST this counterpart: re-renders only on THEIR status flip,
   // not every presence frame for every other member (see `useIsOnline`).
   const counterpartOnline = useIsOnline(active.otherParticipantId);

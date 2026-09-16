@@ -66,6 +66,11 @@ const GATED_PATTERNS: string[] = [
   "/reading-groups",
   "/family",
   "/messages",
+  // `/messages/join/:token` (PRD-358, the group invite-link landing page) is a
+  // child route: matchPath treats the bare "/messages" as an EXACT match, the
+  // same gap the `/forum` comment above already names, so without the
+  // wildcard the join link would be reachable while signed out.
+  "/messages/*",
   "/notifications",
   // Communities
   "/communities",

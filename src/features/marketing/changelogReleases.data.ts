@@ -8,11 +8,18 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "16 Sep 2026": {
+      highlights: [
+        "choose-who-can-add-you-to-a-group",
+        "end-a-group-or-hand-it-to-someone-else",
+        "block-and-report-now-reach-into-groups",
+      ],
+    },
     "15 Sep 2026": {
       highlights: [
-        "pick-an-emoji-from-the-message-box",
-        "media-caption-screen",
-        "chat-wallpapers-are-patterns",
+        "scroll-back-through-a-whole-conversation",
+        "choose-what-your-chats-reveal",
+        "send-several-photos-and-files-at-once",
       ],
     },
     "14 Sep 2026": {

@@ -46,6 +46,11 @@ export interface ConnectionMemberDTO {
 export interface ConnectionDTO {
   /** Stable connection id — the target of PATCH /connections/:id and DELETE. */
   id: string;
+  /** PRD-344: has the addressee seen this request? Only ever non-null on the
+   *  viewer's own outgoing pending requests; null covers both "not
+   *  applicable" and "withheld by their read-receipts preference" (see the
+   *  backend's `ConnectionsService.requestReadFlagsByConnectionId`). */
+  requestRead: boolean | null;
   status: ConnectionStatus;
   direction: ConnectionDirection;
   /** The note attached to a request. */
@@ -135,6 +140,15 @@ export const respondConnection = (id: string, action: ConnectionAction) =>
 /** DELETE /connections/:id — remove an existing connection. */
 export const removeConnection = (id: string) =>
   apiDelete<{ ok: true }>(`/connections/${id}`);
+
+/**
+ * PATCH /connections/:id/reply: reply to a stranger's pending message
+ * request (PRD-340). Accepts it and delivers `body` as the thread's next
+ * message in one call: reply-implies-accept, the way WhatsApp/Instagram
+ * treat a typed reply as consent.
+ */
+export const replyToConnectionRequest = (id: string, body: string) =>
+  apiPatch<ConnectionDTO>(`/connections/${id}/reply`, { body });
 
 /** The stored private note, echoed back after a write. */
 export interface ConnectionNoteDTO {

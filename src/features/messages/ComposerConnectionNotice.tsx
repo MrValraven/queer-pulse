@@ -20,7 +20,18 @@ interface ComposerConnectionNoticeProps {
  * enquiry, so this tells the truth instead of letting the composer render as
  * normal and fail silently on send.
  *
- * Three honest states, symmetric for whichever side is looking at the thread:
+ * PRD-340: the server's `replyGate` may ALSO explain this without any
+ * connection at all. `"awaitingTheirReply"` means the signed-in member
+ * started this cold thread and the other side simply hasn't answered yet.
+ * That state gets its own honest, action-free copy (there is nothing to do
+ * but wait) rather than folding it into the "you two aren't connected" story
+ * below. `"open"` never reaches this component in practice (`Composer.tsx`
+ * only renders it while `replyRequiresConnection` is true, which tracks
+ * `replyGate !== "open"`), but a defensive `null` covers a stale/optimistic
+ * value.
+ *
+ * Otherwise, three honest connection states, symmetric for whichever side is
+ * looking at the thread:
  *  - the counterpart already asked to connect -> accept/decline right here;
  *  - the caller already asked -> say so, no repeat action;
  *  - neither has asked yet -> offer to send the request.
@@ -45,6 +56,23 @@ export function ComposerConnectionNotice({
   // Defensive only: `replyRequiresConnection` is server-derived from a DM's
   // real counterpart, so a DM here always carries a slug.
   if (!slug) return null;
+
+  if (active.replyGate === "open") return null;
+
+  if (active.replyGate === "awaitingTheirReply") {
+    return (
+      <div className={styles.connectionNotice} role="status" aria-live="polite">
+        <FiUserPlus aria-hidden className={styles.connectionNoticeIcon} />
+        <div className={styles.connectionNoticeBody}>
+          <p className={styles.connectionNoticeText}>
+            {t("messages:conversation.awaitingReplyNotice", {
+              name: firstName,
+            })}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const pending = isPending(slug);
 

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTypingFrames } from "../../shared/api/realtime";
+import { useDemoTypingSimulation } from "./useDemoSignalSimulation";
 
 /** How long a "typing" signal lives without a refresh frame before it self-clears. */
 const TYPING_TTL_MS = 4000;
@@ -20,10 +22,13 @@ export interface TypingState {
  * Tracks EACH typer independently (per-user self-clearing timer) so a group can
  * show "Ana is typing" / "Ana and Bea are typing" / "Several people are typing…"
  * — the single-counterpart DM case is just the one-element path through the same
- * machinery (no forked hook). Always empty in demo mode (no socket). Resets on
- * thread switch and never leaves a timer running past unmount.
+ * machinery (no forked hook). Demo mode has no socket, so there one seeded
+ * thread feeds simulated frames into the same handler after the viewer sends
+ * (`useDemoTypingSimulation`). Resets on thread switch and never leaves a
+ * timer running past unmount.
  */
 export function useTypingIndicator(activeId: string): TypingState {
+  const { demoMode } = useDemoMode();
   const [typingUserIds, setTypingUserIds] = useState<string[]>([]);
   // Per-user auto-clear timers, keyed by userId — a typer clears on its own if a
   // `typing:false` frame never arrives, independently of the others.
@@ -75,6 +80,7 @@ export function useTypingIndicator(activeId: string): TypingState {
     [activeId],
   );
   useTypingFrames(handleTyping);
+  useDemoTypingSimulation(activeId, demoMode, handleTyping);
 
   useEffect(() => () => clearAllTimers(), [clearAllTimers]);
 

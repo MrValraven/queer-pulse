@@ -60,7 +60,10 @@ export function MentorDetailSidebar({
           {t("economy:mentorDetail.sidebar.notSureYet")}
         </h4>
         <div className={styles.moreLinks}>
-          <Link to={routes.messages}>
+          <Link
+            to={routes.messages}
+            state={{ to: { slug: m.slug, name: m.name } }}
+          >
             <FiArrowRight aria-hidden />{" "}
             {t("economy:mentorDetail.sidebar.askQuestion", {
               firstName: first,

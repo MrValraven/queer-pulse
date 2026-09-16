@@ -1,10 +1,16 @@
 // src/features/messages/StarredMessagesModal.tsx
-import { useMemo } from "react";
-import { Avatar, Modal } from "../../shared/components/ui";
-import { initialsOf, tintForSlug } from "../../shared/api/refs";
+import { useState } from "react";
+import { FiStar } from "react-icons/fi";
+import { Avatar, EmptyState, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { MessageSearchConversationGroup } from "../../shared/contracts/contracts";
+import { groupIdentity } from "./starredMessageIdentity";
 import { useStarredMessages } from "./api/useMessagePinStar";
+import { StarredMessagesError } from "./StarredMessagesError";
+import { StarredMessagesLoadMore } from "./StarredMessagesLoadMore";
+import { StarredMessagesToolbar } from "./StarredMessagesToolbar";
+import { useStarredMessagesLoadMoreAnnouncement } from "./useStarredMessagesLoadMoreAnnouncement";
+import { useStarredMessagesView } from "./useStarredMessagesView";
+import type { StarredMessageFilterType } from "./starredMessagesFilter";
 import styles from "./NewMessageModal.module.css";
 
 interface StarredMessagesModalProps {
@@ -13,45 +19,67 @@ interface StarredMessagesModalProps {
   onPick: (conversationId: string, messageId: string) => void;
 }
 
-/** Counterpart identity for a starred hit's conversation (official → org). */
-function groupIdentity(group: MessageSearchConversationGroup | undefined) {
-  const participant = group?.otherParticipant;
-  if (!participant)
-    return { name: "QueerPulse Team", initials: "QP", tint: "plum" as const };
-  const parts = participant.displayName.trim().split(/\s+/);
-  const initials = initialsOf(
-    parts[0] ?? "",
-    parts.length > 1 ? parts.at(-1)! : "",
-  );
-  return {
-    name: participant.displayName,
-    initials,
-    tint: tintForSlug(participant.handle),
-    avatarUrl: participant.avatarUrl ?? undefined,
-  };
-}
-
 /**
- * The "Starred messages" view — the caller's PRIVATE bookmarks, newest-star-first,
+ * The "Starred messages" view: the caller's PRIVATE bookmarks, newest-star-first,
  * each with the counterpart, a snippet, and a jump-to. Reuses the cross-inbox
- * jump (`onPick` → `openThreadAtMessage`) so tapping opens the thread and
- * highlights the original. Empty in demo mode (stars need a server message id).
+ * jump (`onPick`, `openThreadAtMessage`) so tapping opens the thread and
+ * highlights the original. Demo mode lists the seeded stars plus this
+ * session's, derived from the demo thread cache (`readDemoStarredMessages`).
+ *
+ * PRD-374: a toolbar (`StarredMessagesToolbar`) narrows the list by text
+ * (body/sender/conversation/group title, and attachment caption/file name)
+ * and by type (All/Photos/Documents/Links). Demo mode still filters the
+ * already-loaded list purely client-side (`starredMessagesFilter.ts`), no
+ * network. Live mode fans `q`/`type` out to a debounced, keyset-paginated
+ * server search (`useStarredMessages`). Which of the two is actually driving
+ * `visibleItems` at any moment (`useStarredMessagesView`) depends on whether
+ * the server has answered the CURRENT filters yet: while it hasn't
+ * (`isSearchPending`), the client filter narrows whatever page is still on
+ * screen so typing keeps feeling instant; once it has, the server's own page
+ * renders as-is; it alone can match text past the 160-character snippet a
+ * starred hit carries, and it folds accents server-side the same way the
+ * client filter does.
  */
 export function StarredMessagesModal({
   onClose,
   onPick,
 }: StarredMessagesModalProps) {
   const { t } = useTranslation();
-  const { data, isLoading } = useStarredMessages(true);
-  const items = data?.items ?? [];
+  const [query, setQuery] = useState("");
+  const [filterType, setFilterType] = useState<StarredMessageFilterType>("all");
+  const {
+    data,
+    isLoading,
+    isSearchPending,
+    shouldFilterClientSide,
+    isError,
+    refetch,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetchNextPageError,
+    fetchNextPage,
+  } = useStarredMessages(true, { q: query, type: filterType });
+  const view = useStarredMessagesView(
+    data,
+    query,
+    filterType,
+    isLoading,
+    isSearchPending,
+    shouldFilterClientSide,
+    hasNextPage,
+  );
+  const { listRef, announcement, isAnnouncementPending } =
+    useStarredMessagesLoadMoreAnnouncement(
+      view.visibleItems.length,
+      isFetchingNextPage,
+      isFetchNextPageError,
+      hasNextPage,
+    );
 
-  const groupsById = useMemo(() => {
-    const map = new Map<string, MessageSearchConversationGroup>();
-    for (const group of data?.conversations ?? []) {
-      map.set(group.conversationId, group);
-    }
-    return map;
-  }, [data]);
+  function clearFilters() {
+    setQuery("");
+    setFilterType("all");
+  }
 
   return (
     <Modal
@@ -59,37 +87,80 @@ export function StarredMessagesModal({
       sub={t("messages:starred.sub")}
       onClose={onClose}
     >
-      <ul className={styles.list}>
-        {items.map((item) => {
-          const identity = groupIdentity(groupsById.get(item.conversationId));
-          return (
-            <li key={item.id}>
-              <button
-                type="button"
-                className={styles.row}
-                onClick={() => onPick(item.conversationId, item.id)}
-              >
-                <Avatar
-                  initials={identity.initials}
-                  tint={identity.tint}
-                  src={identity.avatarUrl}
-                  size={40}
-                />
-                <div className={styles.rowBody}>
-                  <span className={styles.rowName}>{identity.name}</span>
-                  <span className={styles.rowMeta}>{item.snippet}</span>
-                </div>
-              </button>
+      {view.shouldShowToolbar && (
+        <StarredMessagesToolbar
+          query={query}
+          onQueryChange={setQuery}
+          type={filterType}
+          onTypeChange={setFilterType}
+          shouldAnnounceResultCount={
+            view.shouldAnnounceResultCount && !isAnnouncementPending
+          }
+          resultCount={view.resultCount}
+          resultCountIsPartial={view.resultCountIsPartial}
+        />
+      )}
+      {isError && !isFetchNextPageError ? (
+        <StarredMessagesError onRetry={refetch} />
+      ) : view.hasNoMatches ? (
+        <EmptyState
+          compact
+          icon={<FiStar />}
+          title={t("messages:starred.noMatchesTitle")}
+          description={t("messages:starred.noMatchesDescription")}
+          action={{
+            label: t("messages:starred.clearFilters"),
+            onClick: clearFilters,
+          }}
+        />
+      ) : (
+        <ul className={styles.list} ref={listRef} tabIndex={-1}>
+          {view.visibleItems.map((item) => {
+            const identity = groupIdentity(
+              view.groupsById.get(item.conversationId),
+              t,
+            );
+            return (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  className={styles.row}
+                  onClick={() => onPick(item.conversationId, item.id)}
+                >
+                  <Avatar
+                    initials={identity.initials}
+                    tint={identity.tint}
+                    src={identity.avatarUrl}
+                    size={40}
+                  />
+                  <div className={styles.rowBody}>
+                    <span className={styles.rowName}>{identity.name}</span>
+                    <span className={styles.rowMeta}>{item.snippet}</span>
+                  </div>
+                </button>
+              </li>
+            );
+          })}
+          {(isLoading || isSearchPending) && (
+            <li className={styles.empty}>{t("messages:starred.loading")}</li>
+          )}
+          {view.isNeverStarred && (
+            <li className={styles.empty}>{t("messages:starred.empty")}</li>
+          )}
+          {hasNextPage && !isSearchPending && view.visibleItems.length > 0 && (
+            <li>
+              <StarredMessagesLoadMore
+                isFetchingNextPage={isFetchingNextPage}
+                isFetchNextPageError={isFetchNextPageError}
+                onLoadMore={fetchNextPage}
+              />
             </li>
-          );
-        })}
-        {isLoading && items.length === 0 && (
-          <li className={styles.empty}>{t("messages:starred.loading")}</li>
-        )}
-        {!isLoading && items.length === 0 && (
-          <li className={styles.empty}>{t("messages:starred.empty")}</li>
-        )}
-      </ul>
+          )}
+        </ul>
+      )}
+      <p className="visuallyHidden" role="status" aria-live="polite">
+        {announcement}
+      </p>
     </Modal>
   );
 }

@@ -1,192 +1,19 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { type RefObject } from "react";
 import type { Virtualizer } from "@tanstack/react-virtual";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { TFunction } from "../../shared/i18n/types";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { type RunParticipant } from "./MessageRun";
-import { MessageAreaRow } from "./MessageAreaRow";
-import { ROW_GAP_PX, type MessageRow } from "./messageRows";
+import { MessageLogRows } from "./MessageLogRows";
+import { MessageJumpStatus } from "./MessageJumpStatus";
+import { MessageThreadOfflineEmptyState } from "./MessageThreadOfflineEmptyState";
+import { useReactionNewness } from "./useReactionNewness";
+import { useNewIncomingAnnouncement } from "./useNewIncomingAnnouncement";
+import type { MessageRow } from "./messageRows";
 import { TypingIndicatorRow } from "./TypingIndicatorRow";
 import type { LongPressOrigin } from "./useLongPress";
 import type { SeenByEntry } from "./groupReceipts";
 import type { ChatMessage, GroupMemberView } from "./data";
 import styles from "./MessagesPage.module.css";
-
-/** Stable identity of a message for continuity tracking: the server id, or the
- *  ISO timestamp as a fallback. Demo/optimistic messages have neither → the
- *  live-region announcer treats them as unannounceable (undefined). */
-function messageKey(message: ChatMessage): string | undefined {
-  return message.id ?? message.at;
-}
-
-/** Composite identity for one reaction chip on a message — only meaningful
- *  once the message has a server id (reactions don't exist on demo/optimistic
- *  messages, see `ChatMessage.reactions`). */
-function reactionIdentity(
-  message: ChatMessage,
-  key: string,
-): string | undefined {
-  return message.id ? `${message.id}::reaction::${key}` : undefined;
-}
-
-/** Every reaction-chip identity currently in `messageGroups`, as a fresh `Set`
- *  (a plain value, never a persisted mutable reference — safe to compute
- *  directly in a render body). */
-function collectReactionIdentities(
-  messageGroups: { day: string; items: ChatMessage[] }[],
-): Set<string> {
-  const identities = new Set<string>();
-  for (const group of messageGroups) {
-    for (const message of group.items) {
-      for (const reaction of message.reactions ?? []) {
-        if (reaction.count <= 0) continue;
-        const identity = reactionIdentity(message, reaction.key);
-        if (identity) identities.add(identity);
-      }
-    }
-  }
-  return identities;
-}
-
-/**
- * Tracks which reaction-chip identities have already been on screen for this
- * conversation, so a chip's `msgBubbleIn` pop plays ONLY for a genuinely new
- * one — never for every chip in the thread on open/switch (which would pop
- * 20-50 at once, a "swarm"), and never replayed for a chip an unrelated
- * re-render happens to touch again. Bubbles themselves have no entrance to
- * gate: they pop straight in (see the note above `.bubble` in the stylesheet).
- *
- * Two layers, deliberately split so neither needs a ref read/write in the
- * render body (`react-hooks/refs` disallows that outright):
- *  - `baseSeenSet` (real state) is everything that was ALREADY on screen the
- *    moment we most recently arrived at `conversationId`. Reseeded via
- *    React's sanctioned "adjust state while rendering" idiom (matching
- *    `useFeedPage.tsx`'s `prevDemo` pattern) — calling `setState` directly in
- *    the render body when `conversationId` has changed causes React to
- *    re-render immediately with the corrected value BEFORE any child (a
- *    chip's own mount-time `playEntrance` decision) ever sees it, so even the
- *    FIRST paint of a freshly opened thread treats every chip in it as
- *    already-known. Because this only changes on an actual thread switch,
- *    `isNewReaction`'s `useCallback` reference below stays stable across
- *    ordinary new-message arrivals within the same thread — passing it to the
- *    memoized `MessageRunView`/`MessageBubble` tree doesn't defeat that
- *    memoization on every message.
- *  - `accumulatedRef` (a plain ref) layers in everything that has arrived
- *    SINCE the thread settled — written only inside the `useLayoutEffect`s
- *    below, never at the top level of render, and read only from inside the
- *    `useCallback` bodies (which run later, as event/render-prop callbacks,
- *    not synchronously in this hook's own render flow) — the same shape
- *    `useMessageScroll`'s `handleAreaScroll` already uses for `areaRef`.
- */
-function useReactionNewness(
-  conversationId: string,
-  messageGroups: { day: string; items: ChatMessage[] }[],
-) {
-  const [settledConversationId, setSettledConversationId] =
-    useState(conversationId);
-  const [baseSeenSet, setBaseSeenSet] = useState(() =>
-    collectReactionIdentities(messageGroups),
-  );
-  if (conversationId !== settledConversationId) {
-    setSettledConversationId(conversationId);
-    setBaseSeenSet(collectReactionIdentities(messageGroups));
-  }
-
-  const accumulatedRef = useRef<Set<string>>(new Set());
-
-  // Thread switch: drop whatever the PREVIOUS conversation accumulated — it's
-  // for a different set of message ids and would just grow this ref forever
-  // across a long session otherwise. Declared before the mark-effect below so
-  // it clears first within the same commit when both fire together.
-  useLayoutEffect(() => {
-    accumulatedRef.current = new Set();
-  }, [conversationId]);
-
-  useLayoutEffect(() => {
-    for (const identity of collectReactionIdentities(messageGroups)) {
-      accumulatedRef.current.add(identity);
-    }
-  }, [messageGroups]);
-
-  const isNewReaction = useCallback(
-    (message: ChatMessage, key: MessageReactionKey): boolean => {
-      const identity = reactionIdentity(message, key);
-      if (!identity) return false;
-      return (
-        !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity)
-      );
-    },
-    [baseSeenSet],
-  );
-
-  return { isNewReaction };
-}
-
-/**
- * Announces ONLY genuinely-new inbound messages to a polite live region — never
- * history loads (the tail message is unchanged when older pages prepend above)
- * and never thread switches (the previously-tracked tail message is absent from
- * the freshly-loaded list, so we re-seed silently instead of reading it out).
- * The signed-in member's own sends are never announced. Returns the string to
- * render inside the sr-only region; empty until the first real arrival.
- */
-function useNewIncomingAnnouncement(
-  messageGroups: { day: string; items: ChatMessage[] }[],
-  counterpartName: string,
-  t: TFunction,
-): string {
-  const [announcement, setAnnouncement] = useState("");
-  const lastTailKeyRef = useRef<string | undefined>(undefined);
-  const initializedRef = useRef(false);
-
-  useEffect(() => {
-    const flat = messageGroups.flatMap((group) => group.items);
-    const tail = flat[flat.length - 1];
-    const tailKey = tail ? messageKey(tail) : undefined;
-    const previousTailKey = lastTailKeyRef.current;
-
-    // Tail unchanged (older history prepended above, or an unrelated re-render)
-    // → nothing arrived at the bottom, so there is nothing new to announce.
-    if (initializedRef.current && tailKey === previousTailKey) return;
-
-    // Continuity check: is the message we last tracked as the tail still present
-    // in this list? If so, messages were appended to the SAME thread. If it's
-    // gone, the whole list was replaced (thread switch) → re-seed silently.
-    const keys = new Set(flat.map(messageKey));
-    const isContinuation =
-      initializedRef.current &&
-      previousTailKey !== undefined &&
-      keys.has(previousTailKey);
-
-    lastTailKeyRef.current = tailKey;
-    initializedRef.current = true;
-
-    if (
-      isContinuation &&
-      tail &&
-      tail.from === "them" &&
-      tailKey !== undefined &&
-      !tail.deletedAt
-    ) {
-      const snippet = tail.text.trim().slice(0, 120);
-      setAnnouncement(
-        t("messages:conversation.newMessageAnnouncement", {
-          name: counterpartName,
-          snippet,
-        }),
-      );
-    }
-  }, [messageGroups, counterpartName, t]);
-
-  return announcement;
-}
 
 export interface MessageAreaProps {
   areaRef: RefObject<HTMLDivElement | null>;
@@ -206,6 +33,11 @@ export interface MessageAreaProps {
    *  mount, built alongside `rows` so both stay in lock-step. */
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
   loadingOlder: boolean;
+  /** True when the offline stand-in session (PRD-375) opened this thread and
+   *  the device never saved it: there is nothing to render and no network to
+   *  fetch it with, so a short explanation replaces the (otherwise empty and
+   *  permanently pending) log. */
+  isThreadUnsavedOffline?: boolean;
   onScroll: () => void;
   counterpart: RunParticipant;
   counterpartName: string;
@@ -261,9 +93,8 @@ export function MessageArea({
   areaRef,
   contentRef,
   messageGroups,
-  rows,
-  rowVirtualizer,
   loadingOlder,
+  isThreadUnsavedOffline = false,
   onScroll,
   counterpart,
   counterpartName,
@@ -271,43 +102,43 @@ export function MessageArea({
   conversationId,
   groupMembers,
   groupSeenBy,
-  onOpenSeenBy,
-  onRetry,
-  seenActive,
-  deliveredActive,
-  lastOutbound,
-  onReactionToggle,
-  onReply,
-  onOpenActions,
-  editingMessageId,
-  onBeginEdit,
-  onSubmitEdit,
-  onCancelEdit,
-  onJumpToMessage,
+  ...rowProps
 }: MessageAreaProps) {
   const { t } = useTranslation();
   const liveAnnouncement = useNewIncomingAnnouncement(
     messageGroups,
+    isGroup === true,
     counterpartName,
     t,
   );
   // Gates each reaction chip's pop to a genuine first arrival — see
-  // `useReactionNewness` above.
+  // `useReactionNewness`.
   const { isNewReaction } = useReactionNewness(conversationId, messageGroups);
-  const groupSeenByCount = groupSeenBy?.length ?? 0;
   return (
     <>
-      {/* Scoped live region: announces ONLY new inbound messages (see the
-          hook). Kept OUTSIDE the log so prepending history or switching threads
-          never dumps the whole thread to a screen reader. */}
+      {/* Scoped live region, the log's ONLY one: announces new inbound messages
+          and live system events (see the hook). Kept OUTSIDE the log so
+          prepending history or switching threads never dumps the whole thread
+          to a screen reader. The inner node is keyed on the announced message,
+          so an identical repeat ("ok", "ok") replaces the node and is read
+          again. */}
       <div
         className={styles.srOnly}
         role="status"
         aria-live="polite"
         aria-atomic="true"
       >
-        {liveAnnouncement}
+        {liveAnnouncement ? (
+          <span key={liveAnnouncement.key}>{liveAnnouncement.text}</span>
+        ) : null}
       </div>
+      {/* Jump-to-message status ("finding it" / couldn't reach it) and the
+          older-history loading pill, overlaid on the top of the log from a
+          zero-height slot outside the scroller, so neither shifts the log. */}
+      <MessageJumpStatus
+        conversationId={conversationId}
+        isLoadingOlder={loadingOlder}
+      />
       <div
         className={styles.area}
         ref={areaRef}
@@ -319,11 +150,6 @@ export function MessageArea({
         aria-live="off"
         onScroll={onScroll}
       >
-        {loadingOlder && (
-          <div className={styles.loadingOlder}>
-            {t("messages:conversation.loadingOlder")}
-          </div>
-        )}
         {/* The ONE node `useMessageScroll`'s resize-follow ResizeObserver
             watches (see its `contentRef` comment) — a plain in-flow wrapper,
             so its own box grows with any descendant (a late image, an added
@@ -331,49 +157,24 @@ export function MessageArea({
             correcting an estimated row to its measured height), unlike
             `.area` itself, whose `overflow-y: auto` box never changes size. */}
         <div className={styles.areaContent} ref={contentRef}>
-          {/* The virtualized sizer: its height is the virtualizer's running
-              total across every row's real (or, until measured, estimated)
-              height, and each row below is absolutely positioned within it by
-              its own `top` offset — only the visible window + a small
-              overscan actually mounts, however long the thread gets. */}
-          <div
-            className={styles.virtualSizer}
-            role="list"
-            style={{ height: rowVirtualizer.getTotalSize() }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const row = rows[virtualRow.index];
-              if (!row) return null;
-              return (
-                <MessageAreaRow
-                  key={virtualRow.key}
-                  row={row}
-                  index={virtualRow.index}
-                  measureElementRef={rowVirtualizer.measureElement}
-                  top={virtualRow.start}
-                  paddingBottomPx={ROW_GAP_PX}
-                  counterpart={counterpart}
-                  counterpartName={counterpartName}
-                  isGroup={isGroup}
-                  onRetry={onRetry}
-                  lastOutbound={lastOutbound}
-                  seenActive={seenActive}
-                  deliveredActive={deliveredActive}
-                  groupSeenByCount={groupSeenByCount}
-                  onOpenSeenBy={onOpenSeenBy}
-                  onReactionToggle={onReactionToggle}
-                  onReply={onReply}
-                  onOpenActions={onOpenActions}
-                  editingMessageId={editingMessageId}
-                  onBeginEdit={onBeginEdit}
-                  onSubmitEdit={onSubmitEdit}
-                  onCancelEdit={onCancelEdit}
-                  onJumpToMessage={onJumpToMessage}
-                  isNewReaction={isNewReaction}
-                />
-              );
-            })}
-          </div>
+          {/* The virtualized sizer, its rows and the floating day pill; see
+              `MessageLogRows`. Swapped for a short explanation when the
+              offline stand-in session opened a thread the device never
+              saved (PRD-375 gap 6), so the log never renders blank there. */}
+          {isThreadUnsavedOffline ? (
+            <MessageThreadOfflineEmptyState />
+          ) : (
+            <MessageLogRows
+              {...rowProps}
+              areaRef={areaRef}
+              conversationId={conversationId}
+              counterpart={counterpart}
+              counterpartName={counterpartName}
+              isGroup={isGroup}
+              groupSeenByCount={groupSeenBy?.length ?? 0}
+              isNewReaction={isNewReaction}
+            />
+          )}
           {/* In-list typing indicator: styled as an incoming bubble on the left
               (same avatar + alignment as a received run) so the signal lives
               inside the conversation flow (WhatsApp/Signal-style) instead of only

@@ -13,18 +13,19 @@ const RECOMPUTE_INTERVAL_MS = 60_000;
  * "Today" long after real midnight, and a clock time ("21:14") stays frozen
  * instead of rolling into "Yesterday" and then a weekday as days pass.
  *
- * `updatedAt` (ISO, LIVE mode only, see `Conversation.updatedAt`) is the
- * machine-readable instant behind that label, so this hook re-derives the
- * label from the CURRENT time. `patchConversationPreview` advances
+ * `updatedAt` (ISO, see `Conversation.updatedAt`) is the machine-readable
+ * instant behind that label, so this hook re-derives the label from the
+ * CURRENT time. `patchConversationPreview` advances
  * `updatedAt` alongside `preview`/`time` on every live patch, so the instant
  * stays authoritative for a chatty conversation as well as a quiet one, and
  * this hook needs no special case for either.
  *
- * Demo rows carry no `updatedAt` (their buckets are hand-authored), so they
- * fall through to the baked label unchanged.
+ * Demo rows carry `updatedAt` too (their newest seeded message), so they
+ * re-derive exactly like live rows.
  *
  * Recomputes on `visibilitychange` (a backgrounded tab regaining focus) and
- * on a 60s interval. Rows without `updatedAt` register neither.
+ * on a 60s interval. A row without `updatedAt` (one a cache patch built
+ * before the field existed) registers neither.
  */
 export function useThreadRowTimeLabel(
   time: string,

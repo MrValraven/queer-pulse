@@ -66,12 +66,37 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
  *  one code covers both the daily and the per-subject cap. */
 const REPORT_FLOOD_CAP_CODE = "REPORT_FLOOD_CAP";
 
+/**
+ * PRD-368: a `message` report's subject-membership check refuses a caller who
+ * isn't a participant in the conversation the message belongs to — a 403,
+ * carrying this code, distinct from the generic 401/403 "auth" case below
+ * (which means "sign in and try again"). A non-participant signing in again
+ * would refuse the same way, so it needs its own honest copy instead.
+ */
+const REPORT_NOT_PARTICIPANT_CODE = "REPORT_NOT_PARTICIPANT";
+
+/**
+ * PRD-361: the reported message is a tombstone whose evidence hold has ended,
+ * or one a moderator already took down, so the server has nothing left to show
+ * a reviewer and refuses the filing with a coded 400. Mirrors
+ * `REPORT_EVIDENCE_EXPIRED_CODE` in the backend's `reports/reports.service.ts`.
+ *
+ * The member-facing half matters: without its own copy this fell through to the
+ * surface's generic "couldn't send that" line, which invites a retry that will
+ * be refused every time, for a reason the reporter cannot guess.
+ */
+const REPORT_EVIDENCE_EXPIRED_CODE = "REPORT_EVIDENCE_EXPIRED";
+
 /** How a failed report submission should be explained to the member. */
 export type ReportSubmissionRefusal =
   /** A rolling flood cap. `message` is server-authored member-facing copy. */
   | { kind: "cap"; message: string }
   /** The burst throttle: refused, but with no copy worth showing. */
   | { kind: "burst" }
+  /** PRD-368: the caller isn't a participant in this message's conversation. */
+  | { kind: "notParticipant" }
+  /** PRD-361: nothing of the reported message is left for staff to review. */
+  | { kind: "evidenceExpired" }
   /**
    * The server would not accept this filing from this caller: a 401, or a 403
    * that survived the API client's own CSRF re-fetch and retry.
@@ -98,6 +123,23 @@ export function classifyReportSubmissionError(
   error: unknown,
 ): ReportSubmissionRefusal {
   if (!(error instanceof ApiError)) return { kind: "failure" };
+  // Read BEFORE the generic 401/403 branch below: a non-participant filing a
+  // message report is a 403 too, but "sign in and try again" is the wrong
+  // thing to tell a signed-in member who simply isn't in that conversation.
+  if (
+    error.status === 403 &&
+    (error.data as { code?: unknown } | null | undefined)?.code ===
+      REPORT_NOT_PARTICIPANT_CODE
+  ) {
+    return { kind: "notParticipant" };
+  }
+  if (
+    error.status === 400 &&
+    (error.data as { code?: unknown } | null | undefined)?.code ===
+      REPORT_EVIDENCE_EXPIRED_CODE
+  ) {
+    return { kind: "evidenceExpired" };
+  }
   // Read BEFORE the 429 branch: a refused-outright filing is its own answer and
   // has nothing to do with rate limiting. 403 is included because the API
   // client already spent its one CSRF self-heal (`request()` evicts the cached
@@ -143,10 +185,22 @@ export function useReportSubmissionError(): (
   // be frozen at whatever the catalog held right then.
   const tooFastMessage = t("safety:report.tooFast");
   const authRefusedMessage = t("safety:report.authRefused");
+  const notParticipantMessage = t("safety:report.notParticipant");
+  const evidenceExpiredMessage = t("safety:report.evidenceExpired");
   return useCallback(
     (error: unknown, fallbackMessage: string) => {
       const refusal = classifyReportSubmissionError(error);
       if (refusal.kind === "cap") return refusal.message;
+      if (refusal.kind === "notParticipant") {
+        return notParticipantMessage === "safety:report.notParticipant"
+          ? fallbackMessage
+          : notParticipantMessage;
+      }
+      if (refusal.kind === "evidenceExpired") {
+        return evidenceExpiredMessage === "safety:report.evidenceExpired"
+          ? fallbackMessage
+          : evidenceExpiredMessage;
+      }
       if (refusal.kind === "burst") {
         // `t()` echoes the key back while its namespace is still loading, and a
         // raw `safety:report.tooFast` in front of a member is worse than the
@@ -163,6 +217,11 @@ export function useReportSubmissionError(): (
       }
       return fallbackMessage;
     },
-    [tooFastMessage, authRefusedMessage],
+    [
+      tooFastMessage,
+      authRefusedMessage,
+      notParticipantMessage,
+      evidenceExpiredMessage,
+    ],
   );
 }

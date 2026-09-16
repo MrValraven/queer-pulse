@@ -180,6 +180,12 @@ export const safety: Catalog = {
   // this string covers the burst case only. See api/reportSubmissionError.ts.
   "report.tooFast":
     "You're sending reports faster than we can take them in. Wait a moment, then send this one again.",
+  "report.notParticipant":
+    "This message isn't in a conversation you're part of, so it can't be reported.",
+  // Scan section 9: the message was deleted long enough ago that its evidence
+  // snapshot has aged out, so there is nothing left for a moderator to read.
+  "report.evidenceExpired":
+    "This message can no longer be reported. It was deleted a while ago and QueerPulse no longer keeps a copy for the moderation team to look at.",
 
   // ── CommunityReportControl / CommunityReportModal ───────────────────────
   // Reporting a WHOLE community, from the community detail hero. The backend
@@ -236,6 +242,32 @@ export const safety: Catalog = {
   "reportPerson.form.cancelCta": "Cancel",
   "reportPerson.form.submitting": "Sending…",
   "reportPerson.form.submitCta": "Send report",
+
+  // ── ConversationReportModal, `kind: "group"` (PRD-356) ──────────────────
+  // Reports the GROUP itself, not one person in it: its name, its
+  // description, who its owner lets in. Never offers to block anyone; the
+  // group-shaped equivalent of stepping back is leaving the group, which the
+  // success copy says instead. Same reason taxonomy as `report.community.*`
+  // (`SUBJECT_REASONS.conversation` in reportReasons.ts).
+  "reportGroup.success.title": "The report is <em>with a moderator.</em>",
+  "reportGroup.success.body":
+    "A moderator will review this group as a whole. The severity and the review deadline are set from the reason you picked, so this is already in the right queue. If you want distance in the meantime, you can leave the group at any time, independently of the review.",
+  "reportGroup.success.doneCta": "Done",
+  "reportGroup.error":
+    "We couldn't send that report. Nothing has been submitted yet. Check your connection and try again.",
+  "reportGroup.form.lead":
+    "This reports the group itself, not one person in it. A moderator reads what you write here: specifics help, like what the group is organised around, what it lets stand, or what happens in it. Pick the reason closest to what happened, because it sets how quickly this gets reviewed.",
+  "reportGroup.form.reasonLabel": "What is wrong here?",
+  "reportGroup.form.detailLabel": "What should the moderator know?",
+  "reportGroup.form.detailPlaceholder":
+    "What's happening in this group, since when, and anything that helps a moderator find it. Be as specific as you're comfortable with.",
+  "reportGroup.form.charsRemaining_one": "{count} more character to send",
+  "reportGroup.form.charsRemaining_other": "{count} more characters to send",
+  "reportGroup.form.charsCount_one": "{count} character",
+  "reportGroup.form.charsCount_other": "{count} characters",
+  "reportGroup.form.cancelCta": "Cancel",
+  "reportGroup.form.submitting": "Sending…",
+  "reportGroup.form.submitCta": "Send report",
 
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
@@ -377,6 +409,8 @@ export const safety: Catalog = {
   "blockModal.reasonPlaceholder": "Add any context for the moderation team…",
   "blockModal.cancelCta": "Cancel",
   "blockModal.confirmCta": "Block {name}",
+  "blockModal.reportMessagesFirstNote":
+    "If {name} has messaged you, you can report those messages from the chat first so the moderation team can see them.",
 
   // ── AppealOutcomePage.tsx ──────────────────────────────────────────────
   "appeal.state.pending": "Pending",
@@ -1179,4 +1213,10 @@ export const safety: Catalog = {
   "mutedMembers.toast.unmuted": "{name} is unmuted.",
   "mutedMembers.toast.unmutedError":
     "We couldn't unmute that member. Try again.",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "blockMute.blocked.manageFollowUpToast":
+    "You can manage {name} and everyone else you've blocked anytime.",
+  "blockMute.blocked.unblockedNoConnectionToast":
+    "You unblocked {name}. You weren't connected before, so send a request if you want to message again.",
 };

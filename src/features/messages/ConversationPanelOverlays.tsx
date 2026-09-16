@@ -11,7 +11,10 @@ import {
 interface ConversationPanelOverlaysProps {
   /** The message action overlay/context-menu + delete-confirm + report-modal
    *  surfaces (`useMessageActionMenu`'s own state/handlers). */
-  overlays: ConversationOverlaysProps;
+  overlays: Omit<
+    ConversationOverlaysProps,
+    "active" | "myUserId" | "groupSeenBy"
+  >;
   /** The group-info + "Seen by" sheet (groups only). */
   groupModals: ConversationGroupModalsProps;
 }
@@ -26,7 +29,14 @@ export function ConversationPanelOverlays({
 }: ConversationPanelOverlaysProps) {
   return (
     <>
-      <ConversationOverlays {...overlays} />
+      {/* PRD-351: the "Info" surface reuses the conversation, member id and
+          live "Seen by" receipt the group sheets already receive. */}
+      <ConversationOverlays
+        {...overlays}
+        active={groupModals.active}
+        myUserId={groupModals.myUserId}
+        groupSeenBy={groupModals.groupSeenBy}
+      />
       <ConversationGroupModals {...groupModals} />
     </>
   );

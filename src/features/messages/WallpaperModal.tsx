@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { Button, CheckLine, Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { WallpaperPreview } from "./WallpaperPreview";
@@ -44,6 +44,11 @@ export function WallpaperModal({
 
   const [pattern, setPattern] = useState<WallpaperPattern>(applied.pattern);
   const [isForEveryChat, setIsForEveryChat] = useState(false);
+  // Roving tabindex (WAI-ARIA APG radio group, DES-222): the DOM refs the
+  // arrow/Home/End handlers below move focus onto, since `tabIndex` alone
+  // moves the tab stop but not the browser's actual focus.
+  const swatchRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const selectedIndex = WALLPAPER_PATTERNS.indexOf(pattern);
 
   const save = () => {
     const choice = { pattern };
@@ -55,6 +60,52 @@ export function WallpaperModal({
   const reset = () => {
     clearConversationWallpaper(conversationId);
     setPattern(store.base.pattern);
+  };
+
+  /** Moves focus to (and selects) the swatch at `nextIndex`: radios select
+   *  on arrow movement rather than needing a separate Space press. */
+  const focusAndSelectSwatch = (nextIndex: number) => {
+    const option = WALLPAPER_PATTERNS[nextIndex];
+    if (!option) return;
+    setPattern(option);
+    swatchRefs.current[nextIndex]?.focus();
+  };
+
+  const onSwatchKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    const count = WALLPAPER_PATTERNS.length;
+    switch (event.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        event.preventDefault();
+        focusAndSelectSwatch((index + 1) % count);
+        break;
+      case "ArrowLeft":
+      case "ArrowUp":
+        event.preventDefault();
+        focusAndSelectSwatch((index - 1 + count) % count);
+        break;
+      case "Home":
+        event.preventDefault();
+        focusAndSelectSwatch(0);
+        break;
+      case "End":
+        event.preventDefault();
+        focusAndSelectSwatch(count - 1);
+        break;
+      case " ": {
+        const option = WALLPAPER_PATTERNS[index];
+        if (option) {
+          event.preventDefault();
+          setPattern(option);
+        }
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   return (
@@ -87,16 +138,24 @@ export function WallpaperModal({
         role="radiogroup"
         aria-label={t("messages:wallpaper.patternLegend")}
       >
-        {WALLPAPER_PATTERNS.map((option) => {
+        {WALLPAPER_PATTERNS.map((option, index) => {
           const isSelected = pattern === option;
+          // One tab stop for the whole group: the checked swatch is it, or
+          // the first swatch if somehow none is checked yet.
+          const isTabStop = selectedIndex === -1 ? index === 0 : isSelected;
           return (
             <button
               key={option}
+              ref={(node) => {
+                swatchRefs.current[index] = node;
+              }}
               type="button"
               role="radio"
               aria-checked={isSelected}
+              tabIndex={isTabStop ? 0 : -1}
               className={styles.swatchButton}
               onClick={() => setPattern(option)}
+              onKeyDown={(event) => onSwatchKeyDown(event, index)}
             >
               <span
                 className={isSelected ? styles.swatchSelected : styles.swatch}

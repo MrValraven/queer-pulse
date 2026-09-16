@@ -1,0 +1,71 @@
+/* src/features/messages/MessageReportModal.module.css */
+
+.reportLabel {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-block: 12px 6px;
+}
+.reportOpts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.reportOpt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  min-height: 44px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  font-size: var(--text-15);
+  color: var(--ink);
+  cursor: pointer;
+}
+.reportOptChecked {
+  border-color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+.reportTextarea {
+  width: 100%;
+  min-height: 84px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  color: var(--ink);
+}
+.reportTextarea:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.reportCounter {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  margin-block-start: 6px;
+}
+
+.anonymousRow,
+.alsoBlockRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  margin-block-start: 14px;
+  font-size: var(--text-15);
+  color: var(--ink);
+  cursor: pointer;
+}
+.anonymousHelper {
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  margin-block-start: 4px;
+}
+.blockFailedNote {
+  margin-block-start: 10px;
+  font-size: var(--text-13);
+  color: var(--danger);
+}

@@ -65,6 +65,36 @@ export function computeGroupSeenBy(
 }
 
 /**
+ * Overlays live per-member `read`-frame watermarks onto a group roster,
+ * keeping whichever `lastReadAt` is newer per member (ENG-223). The roster's
+ * own `lastReadAt` is only an inbox snapshot, so a member who reads the
+ * thread while it's open would otherwise not show as having seen it until
+ * the next refetch. Returns the original `members` reference unchanged when
+ * there's nothing to overlay (no roster, no live watermarks for this
+ * conversation, or every live watermark is already stale), so callers that
+ * memoise on the result don't recompute for no reason.
+ */
+export function overlayLiveReadWatermarks(
+  members: GroupMemberView[] | undefined,
+  liveReadWatermarksByMemberId: Record<string, string> | undefined,
+): GroupMemberView[] | undefined {
+  if (!members || !liveReadWatermarksByMemberId) return members;
+  let hasNewerWatermark = false;
+  const overlaidMembers = members.map((member) => {
+    const liveReadWatermark = member.id
+      ? liveReadWatermarksByMemberId[member.id]
+      : undefined;
+    if (!liveReadWatermark) return member;
+    if (member.lastReadAt && member.lastReadAt >= liveReadWatermark) {
+      return member; // ISO strings compare lexicographically
+    }
+    hasNewerWatermark = true;
+    return { ...member, lastReadAt: liveReadWatermark };
+  });
+  return hasNewerWatermark ? overlaidMembers : members;
+}
+
+/**
  * First names of the members currently typing, resolved from the live typing
  * user ids against the roster (unknown ids — e.g. a just-added member not yet in
  * the fetched roster — are dropped). Drives the group typing label

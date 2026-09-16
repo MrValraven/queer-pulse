@@ -1,4 +1,5 @@
 import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
+import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./Tabs.module.css";
 import { tabIds } from "./tabIds";
 
@@ -57,6 +58,7 @@ export function Tabs({
   /** Accessible name for the tablist itself, e.g. "Filter members". */
   label?: string;
 }) {
+  const { t } = useTranslation();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const fallbackId = useId();
   const prefix = idPrefix ?? fallbackId;
@@ -141,8 +143,22 @@ export function Tabs({
               .filter(Boolean)
               .join(" ")}
             // Icon-only: the glyph carries no text, so the label becomes the
-            // accessible name (the tooltip below it is decorative).
-            aria-label={isIconOnly ? tab.label : undefined}
+            // accessible name (the tooltip below it is decorative), and
+            // when the tab also carries a count, the count rides along in
+            // the name too (DES-191). `aria-label` replaces an element's
+            // whole accessible-text subtree, so without this the visible
+            // `.tabCount` badge below is drawn on screen but never reaches a
+            // screen reader: a blind member hears "Requests" and never "3".
+            aria-label={
+              isIconOnly
+                ? tab.count
+                  ? t("shared:tabs.labelWithCount", {
+                      label: tab.label,
+                      count: tab.count,
+                    })
+                  : tab.label
+                : undefined
+            }
             onClick={() => onChange(tab.id)}
             onKeyDown={(event) => handleKeyDown(event, index)}
           >

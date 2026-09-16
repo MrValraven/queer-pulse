@@ -1,9 +1,11 @@
 import { useCallback, useRef, useState, type RefObject } from "react";
+import { hapticTap } from "../../shared/lib/haptics";
 import {
   useLongPress,
   type LongPressOrigin,
   type UseLongPressHandlers,
 } from "./useLongPress";
+import { isWhoReactedGestureTarget } from "./useWhoReactedGesture";
 
 // ── Bubble gestures ──────────────────────────────────────────────────────────
 // Composes the existing long-press/right-click overlay trigger with two touch
@@ -52,6 +54,12 @@ interface PressState {
    *  reply-or-snap-back. */
   engaged: boolean;
   offset: number;
+  /** DES-210: true once this drag has crossed `SWIPE_TRIGGER_PX`, gating the
+   *  one-shot haptic tick so it fires exactly once per crossing (not once per
+   *  `pointermove` past the threshold) and fires again if the finger retreats
+   *  below the threshold and re-crosses. Lives on this ref, mutated in place;
+   *  see the file's own note on why the whole move path stays state-free. */
+  pastTrigger: boolean;
 }
 
 export interface UseMessageGesturesOptions {
@@ -187,7 +195,11 @@ export function useMessageGestures({
 
   const onPointerDown = useCallback(
     (event: React.PointerEvent) => {
-      longPress.onPointerDown(event);
+      // PRD-352: a hold on the reaction chip row is that row's own long-press
+      // ("who reacted"), so the bubble's action overlay never arms under it.
+      if (!isWhoReactedGestureTarget(event.target)) {
+        longPress.onPointerDown(event);
+      }
       if (!enabled || isInteractiveTarget(event)) {
         pressRef.current = null;
         return;
@@ -200,6 +212,7 @@ export function useMessageGestures({
         pointerType: event.pointerType,
         engaged: false,
         offset: 0,
+        pastTrigger: false,
       };
     },
     [longPress, enabled],
@@ -239,6 +252,14 @@ export function useMessageGestures({
       const magnitude = Math.max(0, Math.min(SWIPE_MAX_PX, travel));
       const offset = sign * magnitude; // signed: negative for a left-swiping bubble
       press.offset = offset;
+      // DES-210: one haptic tick the instant the drag first reaches the reply
+      // threshold, confirming release-now will arm the reply, and again if
+      // the finger retreats below it and crosses back. `pastTrigger` lives on
+      // the press ref (mutated in place, no `setState`) so this stays exactly
+      // as state-free as the rest of the move path below.
+      const pastTrigger = magnitude >= SWIPE_TRIGGER_PX;
+      if (pastTrigger && !press.pastTrigger) hapticTap();
+      press.pastTrigger = pastTrigger;
       // Direct DOM writes only — no `setState` here. This is the ONE line that
       // used to re-render the whole bubble subtree every pointer frame.
       writeBubbleTransform(bubbleRef.current, offset, reducedMotion);
@@ -318,6 +339,16 @@ export function useMessageGestures({
     [longPress, resetSwipe],
   );
 
+  // A right-click on the reaction chip row opens "who reacted" instead, the
+  // same step-aside as `onPointerDown` above (PRD-352).
+  const onContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      if (isWhoReactedGestureTarget(event.target)) return;
+      longPress.onContextMenu(event);
+    },
+    [longPress],
+  );
+
   return {
     handlers: {
       onPointerDown,
@@ -325,7 +356,7 @@ export function useMessageGestures({
       onPointerMove,
       onPointerLeave,
       onPointerCancel,
-      onContextMenu: longPress.onContextMenu,
+      onContextMenu,
     },
     swiping,
   };

@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { FiAlertTriangle } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { hasPreviewContent } from "./api/useLinkPreview";
+import { linkSafetyReasonsLabel } from "./linkSafetyCopy";
+import { OpenExternalConfirmDialog } from "./OpenExternalConfirmDialog";
+import { useLinkSafetyGuard } from "./useLinkSafetyGuard";
 import type { LinkPreviewResponse } from "../../shared/contracts/contracts";
 import styles from "./LinkPreview.module.css";
 
@@ -38,6 +42,19 @@ export function LinkPreview({
 }: LinkPreviewProps) {
   const { t } = useTranslation();
   const [imageFailed, setImageFailed] = useState(false);
+  // PRD-371: the whole card is one big anchor, so the guard's click-intercept
+  // goes on it directly — same suspicious-link check `linkify.tsx` applies to
+  // an inline URL, since an unfurled card is just a richer rendering of the
+  // same href.
+  const {
+    isSuspicious,
+    reasons,
+    displayHost,
+    isConfirmOpen,
+    handleAnchorClick,
+    openAnyway,
+    cancel,
+  } = useLinkSafetyGuard(url);
 
   // Slim placeholder while the unfurl is in flight (live mode only — demo
   // resolves synchronously). Kept intentionally minimal so it never dominates.
@@ -54,31 +71,51 @@ export function LinkPreview({
     : t("messages:linkPreview.ariaGeneric", { site: siteName ?? url });
 
   return (
-    <a
-      className={[
-        styles.card,
-        isSent ? styles.cardSent : styles.cardReceived,
-      ].join(" ")}
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={accessibleName}
-    >
-      {showImage && (
-        <img
-          className={styles.thumb}
-          src={imageUrl}
-          alt=""
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onError={() => setImageFailed(true)}
-        />
+    <>
+      <a
+        className={[
+          styles.card,
+          isSent ? styles.cardSent : styles.cardReceived,
+        ].join(" ")}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={accessibleName}
+        onClick={handleAnchorClick}
+      >
+        {showImage && (
+          <img
+            className={styles.thumb}
+            src={imageUrl}
+            alt=""
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={() => setImageFailed(true)}
+          />
+        )}
+        <span className={styles.body}>
+          {siteName && <span className={styles.site}>{siteName}</span>}
+          {title && <span className={styles.title}>{title}</span>}
+          {description && <span className={styles.desc}>{description}</span>}
+          {isSuspicious && (
+            <span className={styles.suspiciousNote}>
+              <FiAlertTriangle aria-hidden />
+              {linkSafetyReasonsLabel(reasons, t)}
+            </span>
+          )}
+        </span>
+      </a>
+      {isSuspicious && (
+        <OpenExternalConfirmDialog
+          open={isConfirmOpen}
+          onClose={cancel}
+          onConfirm={openAnyway}
+          title={t("messages:link.confirmTitle")}
+        >
+          <p>{t("messages:link.confirmDestination", { host: displayHost })}</p>
+          <p>{linkSafetyReasonsLabel(reasons, t)}</p>
+        </OpenExternalConfirmDialog>
       )}
-      <span className={styles.body}>
-        {siteName && <span className={styles.site}>{siteName}</span>}
-        {title && <span className={styles.title}>{title}</span>}
-        {description && <span className={styles.desc}>{description}</span>}
-      </span>
-    </a>
+    </>
   );
 }

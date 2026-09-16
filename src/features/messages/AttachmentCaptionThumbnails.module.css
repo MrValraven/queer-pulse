@@ -1,0 +1,124 @@
+/* The multi-item strip in `AttachmentCaptionScreen` (DES-198/DES-199): one
+   square tile per staged item, switches which one the big stage + caption
+   field are showing. Only rendered at all once there are 2+ staged items:
+   see that component for why a single staged item skips this entirely. */
+.strip {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 600px;
+  overflow-x: auto;
+  padding-block: 2px;
+}
+
+/* Positioning context for the tile's own remove badge + uploading ring,
+   both absolutely positioned relative to this wrapper rather than the
+   `<button>` itself, so the button can stay a plain, unstyled-position
+   element (never an inline `style` override of the shared `.tile` class). */
+.tileWrap {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 56px;
+}
+
+.tile {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border-radius: var(--radius-10);
+  border: 2px solid transparent;
+  background: rgba(var(--cream-rgb), 0.12);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.tile.selected {
+  border-color: var(--accent);
+}
+
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-8);
+  display: block;
+}
+
+.thumbDocument {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-22);
+}
+
+/* Uploading indicator: a thin ring around the tile rather than a numeric
+   label, which has no room at this size; the caption screen's big stage
+   view carries the real `role="progressbar"` with `aria-valuenow`. */
+.uploadingRing {
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-10);
+  border: 2px solid rgba(var(--cream-rgb), 0.4);
+  border-top-color: rgba(var(--cream-rgb), 0.95);
+  animation: attachmentThumbSpin 900ms linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uploadingRing {
+    animation: none;
+  }
+}
+
+@keyframes attachmentThumbSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.removeButton {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.85);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-13);
+  cursor: pointer;
+}
+
+/* A 22px badge reads right at this density, but a coarse pointer needs a
+   44px hit target, grown via an invisible inset pseudo-element rather than
+   the button's own box, so the visual size stays exactly as designed. */
+@media (any-pointer: coarse) {
+  .removeButton::before {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.removeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

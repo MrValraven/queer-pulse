@@ -214,7 +214,7 @@ export function AdminReportDrawer({
               photo={detail.reportedPhoto}
             />
           )}
-          <ReportContext detail={detail} subjectType={report.subjectType} />
+          <ReportContext detail={detail} report={report} />
         </>
       ) : (
         <ReportContextFallback report={report} />

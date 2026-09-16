@@ -54,3 +54,25 @@ export function MessageHitListSkeleton({ count = 3 }: { count?: number }) {
     </>
   );
 }
+
+/** Reserves the filter-tab row's (`InboxTabs`) own footprint while the inbox's
+ *  first load is in flight, so the header doesn't grow by a tab row's height
+ *  the moment the tabs mount (DES-192). `showTabs` is false throughout the
+ *  loading window, so without this the search box and rows below it jump
+ *  down under the finger on mobile the instant loading settles. Pill widths
+ *  are rough stand-ins for All/Unread/Favorites/Groups plus the two
+ *  icon-only tabs, kept approximate rather than echoing the real labels. */
+export function FilterTabRowSkeleton() {
+  return (
+    <div className={styles.tabRowSkeleton} aria-hidden>
+      {[52, 76, 84, 68, 32, 32].map((width, i) => (
+        <SkeletonLine
+          key={i}
+          width={width}
+          height={30}
+          style={{ borderRadius: 999 }}
+        />
+      ))}
+    </div>
+  );
+}

@@ -1,0 +1,57 @@
+/* ComposerSafetyNotice.module.css
+   New rules only (DES-209). The notice's base pill and icon
+   (.composerSafetyNotice / its svg) stay in MessagesPage.module.css, which
+   several sessions share. This file only adds what the dismiss control
+   needs: room for the button, and its own hit target/focus/hover states. */
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.dismissButton {
+  position: relative;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-block-start: -2px;
+  margin-inline-end: -4px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: currentColor;
+  opacity: 0.7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease);
+}
+.dismissButton svg {
+  width: 14px;
+  height: 14px;
+}
+/* Coarse-pointer hit target grown to 44px via an invisible pseudo-element
+   instead of resizing the visible button, matching the reply-preview close
+   button's convention (`.replyPreviewClose` in MessagesPage.module.css):
+   22px button + 11px on every side = 44px. */
+@media (any-pointer: coarse) {
+  .dismissButton::after {
+    content: "";
+    position: absolute;
+    inset: -11px;
+  }
+}
+@media (hover: hover) {
+  .dismissButton:hover {
+    background: rgba(var(--plum-rgb), 0.1);
+    opacity: 1;
+  }
+}
+.dismissButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  opacity: 1;
+}

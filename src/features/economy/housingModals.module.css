@@ -188,6 +188,25 @@
   margin-bottom: 22px;
 }
 
+/* PRD-339: the connection rule, stated before anybody types. Same pattern as
+ * `DirectoryEnquiryModal.module.css`'s `.notice`. */
+.notice {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: var(--cream);
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+.notice svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-text);
+}
+
 .actions {
   display: flex;
   gap: 10px;

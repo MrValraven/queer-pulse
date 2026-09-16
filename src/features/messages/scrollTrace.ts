@@ -155,15 +155,16 @@ export function useScrollTraceSimulatedPinnedMessages(
   return pins;
 }
 
-/** The repo's one demo GROUP thread (`brunch-crew`) is only 5 messages —
- *  nowhere near tall enough to overflow the ~700-870px desktop viewport, so
- *  neither H1's reconcile-during-settle window nor H2's post-shrink stranding
- *  can ever become VISIBLE (both need real overflow: `scrollHeight >
- *  clientHeight`) on it as-is. Synthetic filler, injected only under the
- *  simulation flag, ahead of the thread's real tail — long enough (40
- *  messages, several from each of the group's three other members) to push
- *  `scrollHeight` well past a shrunk `.area`. TEMPORARY — see the revert list
- *  below; never touches the real demo fixture in data.ts. */
+/** The demo GROUP threads are short (`brunch-crew`, the longest, has 16
+ *  messages), too short to reliably overflow the ~700-870px desktop
+ *  viewport, so neither H1's reconcile-during-settle window nor H2's
+ *  post-shrink stranding can ever become VISIBLE (both need real overflow:
+ *  `scrollHeight > clientHeight`) on it as-is. Synthetic filler, injected
+ *  only under the simulation flag, ahead of the thread's real tail — long
+ *  enough (40 messages, several from each of the group's three other
+ *  members) to push `scrollHeight` well past a shrunk `.area`.
+ *  TEMPORARY — see the revert list below; never touches the real demo
+ *  fixture in data.ts. */
 export function buildScrollTraceInflatedMessages(): {
   from: "me" | "them";
   text: string;

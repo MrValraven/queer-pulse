@@ -175,6 +175,10 @@ export const connect: Catalog = {
     "Não foi possível enviar. Verifica a ligação e tenta novamente.",
   "form.rateLimitError":
     "Estás a contactar muitas pessoas agora. Espera um minuto e tenta novamente.",
+  "form.dailyLimitError":
+    "Hoje já contactaste muitas pessoas novas. Podes enviar mais pedidos amanhã.",
+  "form.pendingLimitError":
+    "Tens muitos pedidos ainda à espera de resposta. Quando alguns forem respondidos ou retirares alguns, podes enviar mais.",
 
   // Painel de sucesso após o envio (ConnectSentPanel)
   "sent.title": "Mensagem <em>enviada.</em>",
@@ -225,6 +229,13 @@ export const connect: Catalog = {
   "notice.cannotConnect.title":
     "Não consegues contactar {name} <em>agora.</em>",
   "notice.cannotConnect.body": "Este contacto não está disponível de momento.",
+  "notice.requestsPaused.title":
+    "Os novos pedidos estão <em>em pausa</em> por agora.",
+  "notice.requestsPaused.body":
+    "A equipa de moderação está a analisar uma situação na tua conta. Entretanto, as tuas ligações e conversas continuam como sempre.",
+  "notice.connectionsOnly.title":
+    "{name} só está a aceitar mensagens das <em>suas ligações</em> neste momento.",
+  "notice.connectionsOnly.body": "Podes tentar noutra altura.",
   // Pessoas que talvez conheças (SOC-05). Cada sugestão traz o FACTO que a
   // explica. Redigido na 3.ª pessoa para evitar concordância de género
   // ("Também está em" em vez de "Estão os dois em"). Nomes de comunidades,
@@ -244,4 +255,7 @@ export const connect: Catalog = {
   "suggested.hideStripAria": "Esconder pessoas que talvez conheças",
   "suggested.browseMembers": "Ver todas as pessoas",
   "contact.message": "Mensagem",
+
+  // Messaging inbox and entry points (scan section 5, 2026-09-15)
+  "form.charactersLeft": "Carateres restantes: {remaining}",
 };

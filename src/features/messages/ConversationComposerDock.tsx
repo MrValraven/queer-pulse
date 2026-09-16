@@ -1,87 +1,19 @@
 // src/features/messages/ConversationComposerDock.tsx
-import { FiArrowDown } from "react-icons/fi";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Composer } from "./Composer";
-import type { ChatMessage, Conversation } from "./data";
-import type { GifAttachment } from "../../shared/api/gifs";
-import type { DocumentAttachment } from "../../shared/api/documentAttachment";
-import styles from "./MessagesPage.module.css";
-
-interface ConversationComposerDockProps {
-  active: Conversation;
-  onSend: (body: string) => void;
-  onSendGif?: (attachment: GifAttachment) => void;
-  onSendImage?: (
-    attachment: GifAttachment,
-    localAttachment?: GifAttachment,
-  ) => void;
-  /** Sends an uploaded document as its own message (PRD-226). */
-  onSendDocument?: (
-    attachment: DocumentAttachment,
-    localAttachment?: DocumentAttachment,
-  ) => void;
-  blocked: boolean;
-  replyDraft?: ChatMessage | null;
-  onCancelReply?: () => void;
-  /** Shows the "N new messages" jump-to-latest pill above the composer. */
-  showJumpPill: boolean;
-  newMessagesCount: number;
-  onJumpToLatest: () => void;
-}
+import {
+  ComposerDockContent,
+  type ComposerDockContentProps,
+} from "./ComposerDockContent";
 
 /**
- * The composer plus its floating "jump to latest" pill, wrapped in one
- * positioned dock (`.composerDock`) so the pill can anchor to the composer's
- * OWN top edge (`inset-block-end: 100%` in CSS) instead of a fixed px guess at
- * its height — it then survives a multi-line draft or an open reply-preview
- * banner without overlapping either. Split out of `ConversationPanel` to keep
- * that component under the line cap.
+ * A thin pass-through to `ComposerDockContent` (composer, jump pill,
+ * attachment staging via `useAttachmentStaging`), kept as its own
+ * component/file so `ConversationPanel` has a stable name to render and a
+ * future change here never has to touch every call site. The attachment
+ * queue itself is owned once, at the Messages page level, by
+ * `AttachmentQueueProvider` (see `AttachmentQueueContext.tsx` and
+ * `MessagesPage.tsx`), so this component has no provider logic of its own to
+ * decide.
  */
-export function ConversationComposerDock({
-  active,
-  onSend,
-  onSendGif,
-  onSendImage,
-  onSendDocument,
-  blocked,
-  replyDraft,
-  onCancelReply,
-  showJumpPill,
-  newMessagesCount,
-  onJumpToLatest,
-}: ConversationComposerDockProps) {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.composerDock}>
-      {showJumpPill && (
-        <button
-          type="button"
-          className={styles.jumpPill}
-          onClick={onJumpToLatest}
-        >
-          <span>
-            {t("messages:conversation.newMessagesCount", {
-              count: newMessagesCount,
-            })}
-          </span>
-          <FiArrowDown aria-hidden />
-        </button>
-      )}
-
-      <Composer
-        // Remounts per thread so the draft (owned inside `Composer` now) resets
-        // instead of leaking the previous thread's typed-but-unsent text.
-        key={active.id}
-        active={active}
-        conversationId={active.id}
-        onSend={onSend}
-        onSendGif={onSendGif}
-        onSendImage={onSendImage}
-        onSendDocument={onSendDocument}
-        blocked={blocked}
-        replyDraft={replyDraft}
-        onCancelReply={onCancelReply}
-      />
-    </div>
-  );
+export function ConversationComposerDock(props: ComposerDockContentProps) {
+  return <ComposerDockContent {...props} />;
 }

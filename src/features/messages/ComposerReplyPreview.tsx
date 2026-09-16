@@ -1,9 +1,16 @@
 // src/features/messages/ComposerReplyPreview.tsx
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { MentionText } from "../../shared/mentions/MentionText";
+import { ReplyQuoteContent } from "./ReplyQuoteContent";
+import { replyQuoteSourceFromMessage } from "./replyQuoteSource";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
+
+const replyPreviewClassNames = {
+  text: styles.replyPreviewBody,
+  name: styles.replyPreviewName,
+  snippet: styles.replyPreviewSnippet,
+};
 
 interface ComposerReplyPreviewProps {
   /** The message being quoted, lagging the exit animation by design (see
@@ -37,22 +44,23 @@ export function ComposerReplyPreview({
     <div className={styles.replyPreviewWrap} data-open={open}>
       {previewMessage && (
         <div className={styles.replyPreview}>
-          <div className={styles.replyPreviewBody}>
-            <span className={styles.replyPreviewName}>
-              {previewMessage.from === "me"
+          <ReplyQuoteContent
+            senderName={
+              previewMessage.from === "me"
                 ? t("messages:conversation.you")
-                : isGroup
-                  ? (previewMessage.senderName ?? activeName)
-                  : activeName}
-            </span>
-            <span className={styles.replyPreviewSnippet}>
-              <MentionText text={previewMessage.text} />
-            </span>
-          </div>
+                : previewMessage.isSenderFormerMember
+                  ? t("messages:formerMember")
+                  : isGroup
+                    ? (previewMessage.senderName ?? activeName)
+                    : activeName
+            }
+            source={replyQuoteSourceFromMessage(previewMessage)}
+            classNames={replyPreviewClassNames}
+          />
           <button
             type="button"
             className={styles.replyPreviewClose}
-            aria-label={t("messages:actions.editCancel")}
+            aria-label={t("messages:actions.replyCancel")}
             onClick={onCancelReply}
           >
             <FiX aria-hidden />

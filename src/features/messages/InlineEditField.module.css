@@ -1,0 +1,81 @@
+/* src/features/messages/InlineEditField.module.css
+ * `InlineEditField`'s own styles, split out of the shared
+ * `MessagesPage.module.css` (several other sessions are editing that file
+ * concurrently) to keep this component's rules together in one place.
+ * `.editField`/`.editTextarea`/`.editFieldActions` here are the same rules
+ * that used to live there, plus the new length-counter/hint row
+ * (DES-202/DES-208).
+ */
+.editField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(80vw, 46ch);
+}
+.editTextarea {
+  width: 100%;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  color: var(--ink);
+  background: var(--paper);
+  resize: none;
+  line-height: 1.5;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.editTextarea:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+}
+/* Holds the counter/empty-hint on the left and Save/Cancel on the right, so
+   the limit feedback sits right next to the action it affects. */
+.editFieldFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.editFieldActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.editCounter {
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-fast) var(--ease);
+}
+.editCounterOverLimit {
+  color: var(--danger);
+  font-weight: 600;
+}
+.editHint {
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+/* Standard visually-hidden pattern (mirrors `MessagesPage.module.css`'s
+   `.srOnly`) for the polite over-limit-crossing announcement. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .editTextarea,
+  .editCounter {
+    transition: none;
+  }
+}

@@ -68,6 +68,10 @@ export const routes = {
   adminJoinRequests: "/admin/join-requests",
   adminStaff: "/admin/staff",
   adminBots: "/admin/bots",
+  /** PRD-372: post to one member's official thread or broadcast to all.
+   *  Admin only, so it rides the blanket `/admin/*` gate in authGate.ts and
+   *  stays out of MOD_ACCESSIBLE_ADMIN_PATTERNS. */
+  adminOfficialMessages: "/admin/official-messages",
   adminChangemakers: "/admin/changemakers",
   adminChangemakerNominations: "/admin/changemaker-nominations",
   adminCommissionInterests: "/admin/commission-interests",
@@ -315,6 +319,13 @@ export const routes = {
   mentalHealth: "/resources/mental-health",
   mentorship: "/work/mentorship",
   messages: "/messages",
+  /** PRD-358: the group invite-link landing page (`${groupJoin}/:token`,
+   *  declared in `messages/routes.tsx`). Named `groupJoin` rather than
+   *  `inviteLink` to avoid a clash with the platform's own `inviteLink`
+   *  (the `/auth/invite/:code` account-invite link) — a wholly different
+   *  flow. Gated by `/messages/*` in authGate.ts, same as the rest of the
+   *  inbox. */
+  groupJoin: "/messages/join",
   myEvents: "/account/events",
   /** The member's own wallet of membership cards. Sits under the already
    *  gated `/account/*` pattern in authGate.ts, so no new gate is needed. */

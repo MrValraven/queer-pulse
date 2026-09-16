@@ -64,6 +64,7 @@ export function useListingContact({
           canMessageOwner: isDemoOwnerOnPlatform,
           unavailableReason: isDemoOwnerOnPlatform ? null : "unclaimed",
           replyRequiresConnection: true,
+          followUpAwaitsReply: true,
           existingConversationId: null,
           // The demo personas never send anything, so nothing counts against
           // them and there is no cap to report.

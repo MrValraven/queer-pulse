@@ -1,18 +1,26 @@
 // src/features/messages/MessageBubble.tsx
-import { memo, useRef, type KeyboardEvent } from "react";
-import { usePrefersReducedMotion } from "../../shared/hooks";
+import { memo, useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { MessageActions } from "./MessageActions";
-import { SwipeReplyHint, BubbleReactionStrip } from "./MessageBubbleParts";
-import { findReactionMine } from "./reactionKeys";
+import {
+  SwipeReplyHint,
+  BubbleReactionStrip,
+  BubbleHiddenLabels,
+  BubbleTombstone,
+  BubbleTrailingMarks,
+} from "./MessageBubbleParts";
+import { useBubbleLabelIds } from "./bubbleLabelIds";
+import {
+  findReactionMine,
+  myReactionKeys as heldReactionKeys,
+} from "./reactionKeys";
 import { InlineEditField } from "./InlineEditField";
-import { MessageBubbleBody, MessageMarks } from "./MessageBubbleBody";
+import { MessageBubbleBody } from "./MessageBubbleBody";
 import type { MetaStatus } from "./MessageSendStatus";
 import type { LongPressOrigin } from "./useLongPress";
-import { useMessageGestures } from "./useMessageGestures";
-import { isViewablePhoto } from "./useThreadImageGallery";
-import { useChatImageViewer } from "./ChatImageViewerContext";
+import { useBubbleInteractionState } from "./useBubbleInteractionState";
+import { useIsMessageHighlighted } from "./messageJumpStore";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -22,7 +30,7 @@ export interface MessageBubbleProps {
   lastIndex: number;
   isSent: boolean;
   senderName: string;
-  /** Resolved send-status for the in-bubble tick — only set on the last outgoing
+  /** Resolved send-status for the in-bubble tick, only set on the last outgoing
    *  bubble of a run (null everywhere else, incl. all received bubbles). */
   metaStatus?: MetaStatus;
   /** Adds/removes a reaction on `message`; `mine` is whether the signed-in
@@ -38,7 +46,7 @@ export interface MessageBubbleProps {
     origin: LongPressOrigin,
     isSent: boolean,
   ) => void;
-  /** Arms a reply to `message` (swipe-to-reply on touch — the SAME handler the
+  /** Arms a reply to `message` (swipe-to-reply on touch, the SAME handler the
    *  overlay's Reply calls). Undefined disables swipe for this bubble. */
   onReply?: (message: ChatMessage) => void;
   /** Server id of the message currently showing the inline editor, if any. */
@@ -49,14 +57,14 @@ export interface MessageBubbleProps {
   onCancelEdit?: () => void;
   /** Scrolls to and briefly highlights the quoted original message. */
   onJumpToMessage?: (messageId: string) => void;
-  /** Freshness gate for one reaction key on this message — an
+  /** Freshness gate for one reaction key on this message: an
    *  incremented count on an already-visible chip must not re-pop it. */
   isNewReaction?: (message: ChatMessage, key: MessageReactionKey) => boolean;
 }
 
 /** One rendered bubble within a run: its body (see `MessageBubbleBody`), the
  *  desktop hover action bar, reaction chips, and touch gestures via
- *  `useMessageGestures` — long-press/right-click → action overlay, a rightward
+ *  `useMessageGestures`: long-press/right-click → action overlay, a rightward
  *  swipe → reply (reuses `onReply`), a double-tap/double-click → love reaction
  *  (reuses `onReactionToggle`). While `editingMessageId` matches, content swaps
  *  for the inline editor. */
@@ -77,98 +85,36 @@ function MessageBubbleImpl({
   isNewReaction,
 }: MessageBubbleProps) {
   const { t } = useTranslation();
-  const reducedMotion = usePrefersReducedMotion();
-  const { openImage } = useChatImageViewer();
-  // A photo/GIF bubble opens the viewer on a single tap, and gives up its
-  // double-tap reaction so the open is instant (reactions stay one long-press,
-  // right-click, hover-bar or Enter away, exactly as on any other bubble).
-  const canOpenPhoto = isViewablePhoto(message);
   const isLast = index === lastIndex;
   const wrapRef = useRef<HTMLDivElement>(null);
   // Owned here (not by the gesture hook) so the hook's own return value never
-  // bundles a ref alongside `swiping` — see `useMessageGestures`'s `hintRef`
+  // bundles a ref alongside `swiping`; see `useMessageGestures`'s `hintRef`
   // option doc for why that matters to `react-hooks/refs`.
   const hintRef = useRef<HTMLSpanElement>(null);
+  const labelIds = useBubbleLabelIds();
   const bubbleDomId = message.id ? `message-${message.id}` : undefined;
-  // A message with a server id can open the action overlay; give its bubble a
-  // guaranteed keyboard entry point (Enter), mirroring long-press / right-click.
-  const canOpenOverlay = !!message.id;
-  const canInteract = canOpenOverlay && !message.deletedAt;
-  // Gestures themselves must be live even before a message has a server id, as
-  // long as its bubble has some tap action to reach: a viewable photo opens on
-  // tap in demo mode, and in live mode for the whole window between an
-  // optimistic send and its ack, or after an outbox restore. `canOpenPhoto`
-  // already excludes deleted messages (see `isViewablePhoto`), so this can't
-  // re-enable a tombstoned bubble. The action overlay itself stays gated on
-  // `canInteract` alone, at the `onOpenActions` call below.
-  const canGesture = canInteract || canOpenPhoto;
-  const reactions = message.reactions ?? [];
-  function openOverlayFromBubble() {
-    const node = wrapRef.current;
-    if (!node) return;
-    const rect = node.getBoundingClientRect();
-    onOpenActions?.(
-      message,
-      {
-        rect,
-        source: "pointer",
-        point: { x: isSent ? rect.right : rect.left, y: rect.top },
-      },
-      isSent,
-    );
-  }
-  function handleBubbleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    // Only when the bubble itself is focused — never when the event bubbled up
-    // from a nested control (React/More buttons, reply-quote, reaction chips).
-    if (event.target !== event.currentTarget) return;
-    if (event.key === "Enter") {
-      event.preventDefault();
-      openOverlayFromBubble();
-    }
-  }
-  // Double-tap/double-click → toggle the love reaction through the EXISTING handler
-  // (no second reaction path). WhatsApp-style: the feedback is simply the
-  // reaction chip landing under the bubble (it has its own subtle entrance),
-  // with no separate overlay flourish.
-  function quickReact() {
-    const loveMine = findReactionMine(reactions, "love");
-    onReactionToggle?.(message, "love", loveMine);
-  }
-
-  const gestures = useMessageGestures({
-    enabled: canGesture,
-    // Only a message with a server id can open the action overlay (Reply,
-    // Forward, Star, Edit, Delete, Report all need one). Undefined here keeps
-    // long-press/right-click genuinely inert for an id-less bubble even though
-    // `canGesture` now lets it through for tap-to-open-photo.
-    onOpenActions: canInteract
-      ? (origin) => onOpenActions?.(message, origin, isSent)
-      : undefined,
-    // Reuse the overlay's reply handler; only a message with a server id can be
-    // replied to (optimistic ones can't), so swipe is inert until then.
-    onReply: canInteract && onReply ? () => onReply(message) : undefined,
-    onActivate: canOpenPhoto
-      ? () =>
-          openImage(
-            message,
-            // The tappable span around this bubble's photo, marked by
-            // `PhotoBubbleImage`. Read at tap time rather than held in a ref,
-            // because the gesture hook already owns `wrapRef` and the photo
-            // node is whatever this bubble currently renders.
-            wrapRef.current?.querySelector<HTMLElement>("[data-photo-opener]"),
-          )
-      : undefined,
-    onQuickReact:
-      canInteract && onReactionToggle && !canOpenPhoto ? quickReact : undefined,
-    // Received (left-aligned) bubbles swipe right to reply; sent (own,
-    // right-aligned) bubbles swipe left — always away from where they sit.
-    replyDirection: isSent ? "left" : "right",
-    // The hook writes the follow-transform/hint-progress straight to these
-    // same nodes — no React state, no per-frame re-render of this bubble's
-    // subtree.
-    bubbleRef: wrapRef,
+  // Jump highlight read from the store at render, so it survives this bubble
+  // being unmounted and remounted by the virtualizer mid-flash.
+  const isHighlighted = useIsMessageHighlighted(message.id);
+  // Overlay/keyboard gates, touch/pointer gestures and the focus-follows-
+  // remount effect: one cohesive hook, see useBubbleInteractionState's own
+  // file comment for why they're split out of this render function.
+  const {
+    canOpenOverlay,
+    canInteract,
+    canReportThisTombstone,
+    reactions,
+    gestures,
+    openOverlayFromBubble,
+    handleBubbleKeyDown,
+  } = useBubbleInteractionState({
+    message,
+    isSent,
+    onOpenActions,
+    onReply,
+    onReactionToggle,
+    wrapRef,
     hintRef,
-    reducedMotion,
   });
 
   if (editingMessageId && editingMessageId === message.id) {
@@ -183,24 +129,38 @@ function MessageBubbleImpl({
     );
   }
 
-  // Tombstoned messages (soft-deleted, live mode): muted placeholder — no
-  // bubble colour, no action bar, no reaction chips, no gestures.
+  // Tombstoned (soft-deleted): muted placeholder, no action bar/reactions.
+  // See `BubbleTombstone`'s own doc for the evidence-hold Report exception.
   if (message.deletedAt) {
-    return <div className={styles.tombstone}>{t("messages:tombstone")}</div>;
+    return (
+      <BubbleTombstone
+        message={message}
+        senderName={senderName}
+        canReport={canReportThisTombstone}
+        wrapRef={wrapRef}
+        gestureHandlers={gestures.handlers}
+        onOpenOverlay={openOverlayFromBubble}
+      />
+    );
   }
 
   return (
     // The bubble is a deliberately focusable composite widget: a guaranteed
     // keyboard entry to the action overlay (Enter / Menu key), mirroring
-    // long-press + right-click. `role="button"` is intentionally NOT used — it
+    // long-press + right-click. `role="button"` is intentionally NOT used: it
     // prohibits the interactive descendants this bubble legitimately owns.
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    // `role="group"` is what lets it carry a name at all (a generic div can't).
+    // The name stays short (the sender, APG Feed pattern) so browse mode does
+    // not read the message twice on entering the group; the content, caption,
+    // time and marks ride the description, which focus still announces.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- intentional: the named group is still the focusable composite widget described above, and Enter on it opens the action overlay.
     <div
       id={bubbleDomId}
       ref={wrapRef}
       className={[
         styles.bubbleWrap,
         gestures.swiping && styles.bubbleWrapSwiping,
+        isHighlighted && styles.messageHighlight,
       ]
         .filter(Boolean)
         .join(" ")}
@@ -209,7 +169,24 @@ function MessageBubbleImpl({
       tabIndex={canOpenOverlay ? 0 : undefined}
       onKeyDown={canOpenOverlay ? handleBubbleKeyDown : undefined}
       aria-keyshortcuts={canOpenOverlay ? "Enter" : undefined}
+      role="group"
+      aria-roledescription={t("messages:bubble.roleDescription")}
+      aria-labelledby={labelIds.sender}
+      aria-describedby={[
+        labelIds.content,
+        // Only when `MessageBubbleBody` actually renders a caption node.
+        (message.attachment?.caption ?? message.sendAttachment?.caption) &&
+          labelIds.caption,
+        labelIds.details,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
+      <BubbleHiddenLabels
+        labelIds={labelIds}
+        senderName={senderName}
+        message={message}
+      />
       {/* Reply-hint icon revealed as the bubble swipes toward `replyDirection`;
           `useMessageGestures` writes opacity/scale progress straight to `hintRef`
           every pointer move (no React state). See `SwipeReplyHint`. */}
@@ -222,17 +199,10 @@ function MessageBubbleImpl({
         isLast={isLast}
         senderName={senderName}
         metaStatus={metaStatus ?? null}
+        labelIds={labelIds}
         onJumpToMessage={onJumpToMessage}
       />
-      {message.editedAt && !message.deletedAt && (
-        <span className={styles.editedMarker}>
-          {" "}
-          · {t("messages:actions.edited")}
-        </span>
-      )}
-      {!message.deletedAt && (
-        <MessageMarks pinned={!!message.pinnedAt} starred={!!message.starred} />
-      )}
+      <BubbleTrailingMarks message={message} />
       <div
         className={[
           styles.messageActionsSlot,
@@ -243,9 +213,9 @@ function MessageBubbleImpl({
       >
         <MessageActions
           onReact={(reactionKey) =>
-            // Actual prior state, not a hardcoded `false` — otherwise
-            // re-picking a reaction you already have "adds" it again instead
-            // of toggling it off.
+            // Reads the reaction's actual prior state, so re-picking a
+            // reaction you already have toggles it off instead of "adding"
+            // it again.
             onReactionToggle?.(
               message,
               reactionKey,
@@ -256,6 +226,7 @@ function MessageBubbleImpl({
           // message can be quoted, so the button hides until then.
           onReply={canInteract && onReply ? () => onReply(message) : undefined}
           onOpenOverlay={openOverlayFromBubble}
+          myReactionKeys={heldReactionKeys(reactions)}
         />
       </div>
       <BubbleReactionStrip
@@ -271,7 +242,7 @@ function MessageBubbleImpl({
   );
 }
 
-/** One rendered bubble, memoized — a run can hold many bubbles, and once its
+/** One rendered bubble, memoized: a run can hold many bubbles, and once its
  *  callback/object props are stabilized upstream (see `ConversationPanel`'s
  *  `counterpart` memo and `useMessageActionMenu`/`useMessageSending`'s
  *  `useCallback`-wrapped handlers), an unrelated re-render higher up the tree

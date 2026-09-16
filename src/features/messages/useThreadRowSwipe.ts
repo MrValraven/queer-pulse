@@ -1,5 +1,4 @@
 import { useCallback, useRef, useState, type RefObject } from "react";
-import { isInteractiveTarget } from "./useMessageGestures";
 
 // ── Thread-row swipe (pin / favorite) ───────────────────────────────────────
 // Generalizes `useMessageGestures`'s single-direction swipe-to-reply into a
@@ -79,6 +78,25 @@ export interface UseThreadRowSwipeResult {
   consumeSwipeClick: () => boolean;
 }
 
+// DES-186: `useMessageGestures`'s `isInteractiveTarget` bails on the CLOSEST
+// `button, a, textarea, input, select`, which for this hook is always the row
+// `<button>` itself (the pointer handlers are attached to it directly), so
+// that check bailed on every single pointerdown and no phone could ever
+// engage the swipe. The row's own kebab (`ThreadRowMenu`) is a SIBLING of this
+// button, never nested inside it (see `.threadRowWrap` in
+// MessagesPage.module.css), so there is no nested interactive descendant to
+// guard against today. This stays a real, row-aware check rather than a
+// removed one, though, so a future inline control INSIDE the row button
+// (unlike the kebab) still correctly blocks the swipe from starting on it.
+function isNestedInteractiveTarget(
+  event: React.PointerEvent,
+  rowNode: HTMLElement | null,
+): boolean {
+  const target = event.target as HTMLElement | null;
+  const interactive = target?.closest("button, a, textarea, input, select");
+  return !!interactive && interactive !== rowNode;
+}
+
 function writeRowTransform(
   node: HTMLElement | null,
   offsetPx: number,
@@ -134,14 +152,14 @@ export function useThreadRowSwipe({
   const onPointerDown = useCallback(
     (event: React.PointerEvent) => {
       // Touch/pen only (a mouse drag isn't a row swipe — desktop uses the ⋯
-      // menu) and never starting on an interactive descendant (the row has
-      // none today, but this stays the same defensive guard the bubble
-      // gesture uses, and it's what makes "can't start on the ⋯ trigger"
-      // true even if the row ever grows another inline control).
+      // menu) and never starting on an interactive descendant NESTED inside
+      // the row (the row `<button>` itself must NOT trip this; see
+      // `isNestedInteractiveTarget`'s own doc for why the naive
+      // `isInteractiveTarget` check killed every swipe).
       if (
         !enabled ||
         event.pointerType === "mouse" ||
-        isInteractiveTarget(event)
+        isNestedInteractiveTarget(event, rowRef.current)
       ) {
         pressRef.current = null;
         return;
@@ -154,7 +172,7 @@ export function useThreadRowSwipe({
         offset: 0,
       };
     },
-    [enabled],
+    [enabled, rowRef],
   );
 
   const onPointerMove = useCallback(

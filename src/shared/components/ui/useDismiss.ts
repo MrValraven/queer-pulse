@@ -19,9 +19,18 @@ const FOCUSABLE =
  * out to the inert page behind, and focus restore to the trigger on close.
  * Returns a ref to attach to the dialog container. Mount the modal only while
  * open (self-contained modals own their state), so this runs per open.
+ *
+ * `preferredInitialFocusRef` overrides the default "first focusable inside"
+ * rule (which is ordinarily the head's close button, since it renders before
+ * the body/footer in DOM order): a caller that needs a SPECIFIC control to
+ * open with focus (e.g. the safer of two footer actions) passes a ref to it
+ * here instead of fighting the default afterwards. Omit it and nothing
+ * changes: the existing "first focusable, else the dialog itself" rule still
+ * applies exactly as before.
  */
 export function useDismiss<ElementType extends HTMLElement = HTMLDivElement>(
   onClose: () => void,
+  preferredInitialFocusRef?: { current: HTMLElement | null },
 ) {
   // Generic so a dialog that is semantically something other than a div can
   // still use it: AdminDrawer's container is an <aside>, and weakening that to
@@ -51,10 +60,15 @@ export function useDismiss<ElementType extends HTMLElement = HTMLDivElement>(
           )
         : [];
 
-    // Initial focus: first focusable inside, else the dialog itself.
-    const first = focusables()[0];
-    if (first) first.focus();
-    else dialog?.focus();
+    // Initial focus: the caller's preferred control when given and actually
+    // rendered, else the first focusable inside, else the dialog itself.
+    const preferred = preferredInitialFocusRef?.current;
+    if (preferred) preferred.focus();
+    else {
+      const first = focusables()[0];
+      if (first) first.focus();
+      else dialog?.focus();
+    }
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -90,7 +104,7 @@ export function useDismiss<ElementType extends HTMLElement = HTMLDivElement>(
       document.removeEventListener("keydown", onKey);
       previouslyFocused?.focus?.();
     };
-  }, [modalId]);
+  }, [modalId, preferredInitialFocusRef]);
 
   return dialogRef;
 }

@@ -11,6 +11,7 @@ import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { useConnectionsList } from "../connect/api/useConnectionsList";
 import type { ConnectionView } from "../connect/connections.data";
 import { GroupAvatarField } from "./GroupAvatarField";
+import { remainingGroupSlots } from "./groupLimits";
 import styles from "./NewMessageModal.module.css";
 
 /** One picked group member (identity only; the server/demo fills history). */
@@ -38,7 +39,7 @@ interface NewGroupModalProps {
  * Create-group picker: an optional group photo + a group name + a MULTI-select
  * of the member's accepted connections. Reuses the same connection pool +
  * drain-all-pages behaviour as `NewMessageModal` (so search sees every
- * connection) — this is the sibling the feature spec allows. The photo reuses
+ * connection), this is the sibling the feature spec allows. The photo reuses
  * the shared presign upload pipeline via {@link GroupAvatarField}; skipping it
  * opens the group with a default initials avatar. Built on the shared `Modal`
  * (scroll-lock / focus-trap / Escape) and the shared `MemberSelectList`.
@@ -50,6 +51,13 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
   const [title, setTitle] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  // The creator already occupies one seat, so the picker can offer at most
+  // this many more (DES-229, never more than the server will accept). A
+  // brand-new group's active count is always 1, so this is always
+  // `MAX_MEMBERS_PER_REQUEST` (50): the group can never be FULL at creation
+  // time the way an existing group's add-members picker can be.
+  const cap = remainingGroupSlots(1);
+  const isAtCap = selected.size >= cap;
 
   const { views, hasNextPage, fetchNextPage, isFetchingNextPage } =
     useConnectionsList("all");
@@ -129,10 +137,24 @@ export function NewGroupModal({ onClose, onCreate }: NewGroupModalProps) {
         aria-label={t("messages:group.nameAria")}
         maxLength={80}
       />
+      <p
+        className={[styles.capHint, isAtCap && styles.capHintAtLimit]
+          .filter(Boolean)
+          .join(" ")}
+        aria-live="polite"
+      >
+        {selected.size > 0 &&
+          t("messages:group.selectedOfCap", {
+            selected: selected.size,
+            max: cap,
+          })}
+        {isAtCap && ` ${t("messages:group.capReachedExtra")}`}
+      </p>
       <MemberSelectList
         people={people}
         selected={selected}
         onToggle={toggle}
+        cap={cap}
         searchPlaceholder={t("messages:group.searchPlaceholder")}
       />
     </Modal>
