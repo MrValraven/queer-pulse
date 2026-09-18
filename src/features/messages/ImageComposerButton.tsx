@@ -1,7 +1,19 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FiCamera, FiImage } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ChatCameraCapture } from "./ChatCameraCapture";
 import menu from "./ComposerAttachButton.module.css";
+
+/** Whether the in-app camera sheet (`ChatCameraCapture`) has anything to work
+ *  with at all. Checked once per Camera-row tap rather than cached, since a
+ *  permission prompt answered mid-session could in principle change this,
+ *  and the check itself is cheap (a property read, no I/O). */
+function hasCameraStreamSupport(): boolean {
+  return (
+    typeof navigator !== "undefined" &&
+    typeof navigator.mediaDevices?.getUserMedia === "function"
+  );
+}
 
 interface ImageComposerButtonProps {
   /** Hands the picked files (one or several, the gallery input carries
@@ -48,6 +60,12 @@ export function ImageComposerButton({
   const { t } = useTranslation();
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  // PRD-350 follow-up: the in-app camera sheet (`ChatCameraCapture`), shown
+  // instead of the hidden `capture="environment"` input below whenever the
+  // browser can actually stream from the camera. That input never goes away:
+  // it's still `hasCameraStreamSupport`'s own fallback, and the sheet's own
+  // `onFallback` reaches for it too if the live stream is denied or fails.
+  const [isCameraSheetOpen, setIsCameraSheetOpen] = useState(false);
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files ? Array.from(event.target.files) : [];
@@ -105,7 +123,11 @@ export function ImageComposerButton({
             type="button"
             className={menu.row}
             onClick={() => {
-              cameraInputRef.current?.click();
+              // No live-stream support at all (no `getUserMedia`, an old
+              // WebView): skip the in-app sheet entirely and go straight to
+              // the OS camera, same as before this sheet existed.
+              if (hasCameraStreamSupport()) setIsCameraSheetOpen(true);
+              else cameraInputRef.current?.click();
               onPicked();
             }}
           >
@@ -115,6 +137,19 @@ export function ImageComposerButton({
             <span>{t("messages:attachments.openCamera")}</span>
           </button>
         </>
+      )}
+      {isCameraSheetOpen && (
+        <ChatCameraCapture
+          onCapture={(file) => {
+            setIsCameraSheetOpen(false);
+            onFilesPicked([file]);
+          }}
+          onClose={() => setIsCameraSheetOpen(false)}
+          onFallback={() => {
+            setIsCameraSheetOpen(false);
+            cameraInputRef.current?.click();
+          }}
+        />
       )}
     </>
   );

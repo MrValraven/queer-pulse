@@ -2329,7 +2329,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-18.headline":
-    "Voltar de uma conversa leva-te à lista de conversas, e descarregar uma foto guarda-a.",
+    "As fotos do chat vão da câmara à legenda num só ecrã, e voltar de uma conversa leva-te às conversas.",
   "changelog.releases.2026-09-16.headline":
     "Grupos ganham convites com consentimento, bloqueio e denúncia, e forma de terminar ou entregar a posse.",
   "changelog.releases.2026-09-15.headline":
@@ -9413,6 +9413,18 @@ export const marketing: Catalog = {
     "A linha de guardados recentes nas tuas listas marca os itens cuja página saiu, como o resto dos teus guardados.",
 
   // Section 8 (Groups), 16 Sep 2026.
+  "changelog.entries.reply-quotes-look-like-whatsapp.title":
+    "As respostas citam a mensagem como no WhatsApp",
+  "changelog.entries.reply-quotes-look-like-whatsapp.body":
+    "A mensagem citada fica num painel mais escuro, com o nome a cores e a miniatura da foto na ponta.",
+  "changelog.entries.chat-camera-in-one-screen.title":
+    "Tira uma foto no chat num só ecrã",
+  "changelog.entries.chat-camera-in-one-screen.body":
+    "A câmara abre dentro da conversa, e a tua foto enche o ecrã com a legenda e o botão de enviar.",
+  "changelog.entries.photo-captions-sit-in-a-bubble.title":
+    "As legendas das fotos ficam num balão",
+  "changelog.entries.photo-captions-sit-in-a-bubble.body":
+    "A legenda por baixo de uma foto na conversa usa agora o mesmo balão de uma mensagem de texto.",
   "changelog.entries.saving-a-chat-photo-downloads-it.title":
     "Descarregar uma foto da conversa guarda-a",
   "changelog.entries.saving-a-chat-photo-downloads-it.body":

@@ -782,6 +782,13 @@ export const messages: Catalog = {
 
   // Scan section 6: composer, attachments and actions (DES-198..214, PRD-350).
   "attachments.openCamera": "Câmara",
+  "attachments.cameraSheetLabel": "Tira uma foto",
+  "attachments.cameraClose": "Fechar a câmara",
+  "attachments.cameraFlip": "Trocar de câmara",
+  "attachments.cameraShutter": "Tirar foto",
+  "attachments.cameraDenied": "O acesso à câmara foi negado.",
+  "attachments.cameraFailed": "Não foi possível iniciar a câmara.",
+  "attachments.cameraUseSystem": "Usar a câmara do sistema",
   "attachments.removePhoto": "Remover foto",
   "attachments.removeGif": "Remover GIF",
   "attachments.removeDocument": "Remover {fileName}",

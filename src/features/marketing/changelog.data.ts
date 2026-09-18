@@ -66,6 +66,36 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "reply-quotes-look-like-whatsapp",
+        category: "improvement",
+        date: "18 Sep 2026",
+        ...entryKeys("reply-quotes-look-like-whatsapp"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "chat-camera-in-one-screen",
+        category: "improvement",
+        date: "18 Sep 2026",
+        ...entryKeys("chat-camera-in-one-screen"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "photo-captions-sit-in-a-bubble",
+        category: "improvement",
+        date: "18 Sep 2026",
+        ...entryKeys("photo-captions-sit-in-a-bubble"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
         id: "saving-a-chat-photo-downloads-it",
         category: "fix",
         date: "18 Sep 2026",

@@ -1,0 +1,177 @@
+/* The in-app camera sheet (`ChatCameraCapture`, PRD-350 follow-up): a live
+   viewfinder filling the screen edge to edge on TRUE black, the way a real
+   camera app looks. The rest of the chat's full-screen surfaces use a deep
+   plum wash instead, but the photo/video feed is the whole point of this
+   screen, so it reads as a camera first. `rgba(0, 0, 0, …)` is allowed
+   everywhere by the design-token ratchet as a photographic wash, so no new
+   colour token is needed for it. */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox);
+  background: rgba(0, 0, 0, 1);
+  overscroll-behavior: contain;
+}
+
+.dialog {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: cameraSheetIn 200ms var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog {
+    animation: none;
+  }
+}
+
+@keyframes cameraSheetIn {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Fills the sheet edge to edge and crops rather than letterboxes: a real
+   viewfinder covers the frame the way the phone's own camera app does. The
+   captured STILL, once it lands on the caption screen, is shown with
+   `object-fit: contain` instead so nothing is cropped out of what actually
+   gets sent. */
+.viewfinder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 0.16);
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .closeButton:hover {
+    background: rgba(var(--cream-rgb), 0.26);
+  }
+}
+
+.closeButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.flipButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 0.16);
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .flipButton:hover {
+    background: rgba(var(--cream-rgb), 0.26);
+  }
+}
+
+.flipButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The shutter: a plain white disc inside a slightly larger translucent ring,
+   the universal camera-app shape, so it reads as "the button that takes the
+   photo" on sight without a label. */
+.shutterButton {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72px;
+  height: 72px;
+  padding: 4px;
+  border: 3px solid rgba(var(--cream-rgb), 0.6);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--cream-rgb), 1);
+  background-clip: content-box;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .shutterButton:hover {
+    background: rgba(var(--cream-rgb), 0.88);
+    background-clip: content-box;
+  }
+}
+
+.shutterButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The denied/failed state: the viewfinder never started, so this sits
+   centred over plain black instead of over a live feed. */
+.errorPanel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 32px;
+  text-align: center;
+}
+
+.errorText {
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-body);
+}
+
+.fallbackButton {
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 12px 24px;
+  font: inherit;
+  font-size: var(--text-body);
+  font-weight: 600;
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .fallbackButton:hover {
+    background: var(--accent-deep);
+  }
+}
+
+.fallbackButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

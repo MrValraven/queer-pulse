@@ -143,7 +143,6 @@ export function AttachmentCaptionScreen({
 
   return createPortal(
     <div className={styles.scrim} role="presentation">
-      <div className={styles.scrimWash} aria-hidden="true" />
       <div
         ref={dialogRef}
         className={styles.dialog}
@@ -152,14 +151,6 @@ export function AttachmentCaptionScreen({
         aria-label={t("messages:attachments.captionScreenLabel")}
         tabIndex={-1}
       >
-        <button
-          type="button"
-          className={styles.closeButton}
-          aria-label={t("messages:attachments.captionDiscard")}
-          onClick={onClose}
-        >
-          <FiX aria-hidden size={22} />
-        </button>
         <div className={styles.stage}>
           {selectedItem.kind === "document" ? (
             <AttachmentDocumentPreview item={selectedItem} />
@@ -173,60 +164,64 @@ export function AttachmentCaptionScreen({
             />
           )}
         </div>
-        {selectedItem.status === "uploading" && (
-          <AttachmentUploadProgress
-            percent={selectedItem.progress}
-            label={
-              selectedItem.kind === "document"
-                ? selectedItem.fileName
-                : t("messages:attachments.pendingPhotoLabel")
-            }
-          />
-        )}
-        {items.length > 1 && (
-          <AttachmentCaptionThumbnails
-            items={items}
-            selectedId={selectedItem.id}
-            onSelect={setSelectedId}
-            onRemove={handleRemove}
-            onTileRef={registerThumbnailRef}
-          />
-        )}
-        <textarea
-          ref={textareaRef}
-          className={styles.captionField}
-          rows={1}
-          maxLength={1000}
-          value={selectedItem.caption}
-          placeholder={t("messages:attachments.captionPlaceholder")}
-          aria-label={t("messages:attachments.captionPlaceholder")}
-          onChange={(event) =>
-            onCaptionChange(selectedItem.id, event.target.value)
-          }
-          onKeyDown={handleKeyDown}
-        />
-        <div className={styles.bottomBar}>
-          {selectedItem.kind === "document" ? (
-            <div className={styles.bottomBarDocument}>
-              <AttachmentDocumentPreview item={selectedItem} compact />
+        <button
+          type="button"
+          className={styles.closeButton}
+          aria-label={t("messages:attachments.captionDiscard")}
+          onClick={onClose}
+        >
+          <FiX aria-hidden size={22} />
+        </button>
+        <div className={styles.bottomOverlay}>
+          {selectedItem.status === "uploading" && (
+            <div className={styles.uploadProgress}>
+              <AttachmentUploadProgress
+                percent={selectedItem.progress}
+                label={
+                  selectedItem.kind === "document"
+                    ? selectedItem.fileName
+                    : t("messages:attachments.pendingPhotoLabel")
+                }
+              />
             </div>
-          ) : (
-            <img
-              className={styles.thumbnail}
-              src={selectedItem.previewUrl}
-              width={56}
-              height={56}
-              alt=""
+          )}
+          {items.length > 1 && (
+            <AttachmentCaptionThumbnails
+              items={items}
+              selectedId={selectedItem.id}
+              onSelect={setSelectedId}
+              onRemove={handleRemove}
+              onTileRef={registerThumbnailRef}
             />
           )}
-          <button
-            type="button"
-            className={styles.sendButton}
-            aria-label={t("messages:attachments.captionSend")}
-            onClick={onSend}
-          >
-            <FiSend aria-hidden size={22} />
-          </button>
+          <div className={styles.captionRow}>
+            {selectedItem.kind === "document" && (
+              <div className={styles.bottomBarDocument}>
+                <AttachmentDocumentPreview item={selectedItem} compact />
+              </div>
+            )}
+            <textarea
+              ref={textareaRef}
+              className={styles.captionField}
+              rows={1}
+              maxLength={1000}
+              value={selectedItem.caption}
+              placeholder={t("messages:attachments.captionPlaceholder")}
+              aria-label={t("messages:attachments.captionPlaceholder")}
+              onChange={(event) =>
+                onCaptionChange(selectedItem.id, event.target.value)
+              }
+              onKeyDown={handleKeyDown}
+            />
+            <button
+              type="button"
+              className={styles.sendButton}
+              aria-label={t("messages:attachments.captionSend")}
+              onClick={onSend}
+            >
+              <FiSend aria-hidden size={22} />
+            </button>
+          </div>
         </div>
       </div>
     </div>,

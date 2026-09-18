@@ -8,7 +8,12 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
-    "18 Sep 2026": { highlights: [] },
+    "18 Sep 2026": {
+      highlights: [
+        "chat-camera-in-one-screen",
+        "back-from-a-chat-returns-to-your-chats",
+      ],
+    },
     "16 Sep 2026": {
       highlights: [
         "choose-who-can-add-you-to-a-group",

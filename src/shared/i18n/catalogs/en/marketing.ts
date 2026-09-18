@@ -2268,7 +2268,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-18.headline":
-    "Back from a chat returns to your chats list, and saving a chat photo downloads it.",
+    "Chat photos go from camera to caption in one screen, and back returns to your chats.",
   "changelog.releases.2026-09-16.headline":
     "Groups get consent-based invitations, block and report, and a way to end or hand one over.",
   "changelog.releases.2026-09-15.headline":
@@ -9295,6 +9295,18 @@ export const marketing: Catalog = {
     "The recent-saves row on your lists marks items whose page has come down, like the rest of your saved items.",
 
   // Section 8 (Groups), 16 Sep 2026.
+  "changelog.entries.reply-quotes-look-like-whatsapp.title":
+    "Replies quote the message like WhatsApp",
+  "changelog.entries.reply-quotes-look-like-whatsapp.body":
+    "The quoted message sits in a darker panel with the name in colour and a photo thumbnail at its edge.",
+  "changelog.entries.chat-camera-in-one-screen.title":
+    "Take a chat photo in one screen",
+  "changelog.entries.chat-camera-in-one-screen.body":
+    "The camera opens inside the chat, and your shot fills the screen with the caption and send button.",
+  "changelog.entries.photo-captions-sit-in-a-bubble.title":
+    "Photo captions sit in a message bubble",
+  "changelog.entries.photo-captions-sit-in-a-bubble.body":
+    "A caption under a chat photo now uses the same bubble as a text message, in your colour or theirs.",
   "changelog.entries.saving-a-chat-photo-downloads-it.title":
     "Saving a chat photo downloads it",
   "changelog.entries.saving-a-chat-photo-downloads-it.body":

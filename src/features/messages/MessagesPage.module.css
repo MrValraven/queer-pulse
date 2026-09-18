@@ -1192,43 +1192,71 @@
 
 /* ── Reply quote (tap-to-scroll to the original message) ──
    Rendered *inside* the bubble (WhatsApp-style quoted-reply block): a rounded
-   inner panel with a colored accent bar tucked under the bubble's top radius.
-   `Received` accents in plum on a light plum wash; `Sent` accents in a cream
-   tint so it reads against the plum bubble. */
+   inner panel that reads as an embedded, DARKER island than the bubble it
+   sits on, with a coloured accent bar on the inline-start edge. `Received`
+   washes a thin near-black scrim over the paper bubble and keeps a plum
+   bar/name; `Sent` washes the same scrim more heavily over the plum bubble
+   and keeps a coral bar/name. The bar paints on a `::before` rather than a
+   straight-edged border, so the panel's own `overflow: hidden` clips its top
+   and bottom to the shared corner radius instead of squaring it off. The
+   panel fills the bubble's width and carries a min-width, so the bubble grows
+   to fit it and a short reply body never squeezes the sender name and
+   snippet onto a cramped line. */
 .replyQuote {
+  --reply-quote-pad-block: 6px;
+  --reply-quote-pad-inline-end: 10px;
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
+  min-width: min(180px, 100%);
   max-width: 100%;
   margin-block: 0 6px;
-  padding: 5px 10px;
+  padding-block: var(--reply-quote-pad-block);
+  padding-inline: 12px var(--reply-quote-pad-inline-end);
   border: none;
-  border-inline-start: 3px solid var(--plum);
   border-radius: var(--radius-7);
-  background: rgba(var(--plum-rgb), 0.07);
   text-align: start;
   cursor: pointer;
   overflow: hidden;
   transition: background var(--dur-fast) var(--ease);
 }
+/* The accent bar. Absolutely positioned inside the panel's own box so
+   `overflow: hidden` on `.replyQuote` clips it to the rounded corners; a
+   straight `border-inline-start` would overhang them as a square edge
+   instead of following the curve. */
+.replyQuote::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 4px;
+}
 .replyQuoteReceived {
-  border-inline-start-color: var(--plum);
-  background: rgba(var(--plum-rgb), 0.07);
+  background: rgba(var(--scrim-rgb), 0.05);
+}
+.replyQuoteReceived::before {
+  background: var(--plum);
 }
 .replyQuoteSent {
-  /* A coral accent bar + a more opaque cream wash reads cleanly as a nested
-     quote against the plum bubble (the old 0.16 cream wash was muddy and the
-     cream bar disappeared into the bubble). */
-  border-inline-start-color: var(--accent);
-  background: rgba(var(--cream-rgb), 0.22);
+  /* Deliberately `--scrim-rgb`, the fixed near-black channel (see
+     effects.css): plum doesn't flip in dark mode either, so a wash built from
+     `--plum-rgb` would land the same colour as the bubble under it and read
+     as no wash at all. The heavier 0.2 (vs. the received panel's 0.05) is
+     what reads as "island darker than its own bubble" on the lighter plum
+     ground. */
+  background: rgba(var(--scrim-rgb), 0.2);
+}
+.replyQuoteSent::before {
+  background: var(--accent);
 }
 @media (hover: hover) {
   .replyQuoteReceived:hover:not(:disabled) {
-    background: rgba(var(--plum-rgb), 0.12);
+    background: rgba(var(--scrim-rgb), 0.09);
   }
   .replyQuoteSent:hover:not(:disabled) {
-    background: rgba(var(--cream-rgb), 0.24);
+    background: rgba(var(--scrim-rgb), 0.28);
   }
 }
 .replyQuote:disabled {
@@ -1252,24 +1280,32 @@
   gap: 1px;
   min-width: 0;
 }
+/* The sender name reads as the same signal as the accent bar beside it.
+   `Received` uses `--text-strong`, the plum-coloured-text token that already
+   flips to a light ink in dark mode. The bar's own bare `--plum` fill is fine
+   as a background, but disappears as TEXT once the dark theme's paper turns
+   nearly the same hue. `Sent` uses `--accent-soft`, the light coral already
+   proven elsewhere in this file (`.sent`'s `--chat-link-ink`) to clear AA on
+   the plum bubble; the bar itself keeps the brighter `--accent`, since a solid
+   fill carries no text-contrast requirement. */
 .replyQuoteName {
-  font-size: var(--text-11);
-  font-weight: 700;
+  font-size: var(--text-13);
+  font-weight: 600;
   color: var(--text-strong);
 }
 .replyQuoteSent .replyQuoteName {
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--accent-soft);
 }
 .replyQuoteSnippet {
   max-width: 100%;
-  font-size: var(--text-12);
+  font-size: var(--text-13);
   color: var(--ink-60);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .replyQuoteSent .replyQuoteSnippet {
-  color: rgba(var(--cream-rgb), 0.86);
+  color: rgba(var(--cream-rgb), 0.75);
 }
 /* The photo/file glyph before a kind label or file name; inherits the
    snippet's colour, so the sent/received variants need nothing extra. */
@@ -1280,7 +1316,7 @@
 /* A photo/GIF parent's thumbnail, shared by the bubble quote and the composer
    preview. The square is sized and washed before the image decodes, so the
    quote never reflows when it lands; 36px sits inside the two text lines, so
-   the quote keeps its text-only height. */
+   the composer preview's own inset panel keeps a text-only height. */
 .replyQuoteThumbnail {
   flex: none;
   width: 36px;
@@ -1297,6 +1333,29 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* In the bubble quote only (never the composer preview, which keeps the base
+   36px inset square above) the thumbnail bleeds flush to the panel's own top,
+   bottom and trailing edges, WhatsApp's quoted-media treatment. A fixed 52px
+   square (this file's usual literal-pixel sizing, same as the 36px above) is
+   what makes this predictable: the img inside is percentage-sized off its own
+   parent, so letting the parent's own height stay `auto` too (a stretch
+   fills-the-row approach without a definite size to stretch to) leaves the
+   browser nothing to resolve either dimension from, and it was falling back to
+   a runaway default box instead of a square thumbnail. A fixed 52px, taller
+   than the two text lines beside it, is what then makes the ROW (and so the
+   whole panel) grow to the thumbnail's own height, exactly like WhatsApp's
+   quoted-media block. The negative margins cancel exactly the padding
+   declared on `.replyQuote` above (the same custom properties, so the two can
+   never drift apart), which is what lets the thumbnail's edges land flush on
+   the panel's own top and bottom; the panel's own `overflow: hidden` rounds
+   only the thumbnail's outer corners to match. */
+.replyQuote .replyQuoteThumbnail {
+  width: 52px;
+  height: 52px;
+  margin-block: calc(var(--reply-quote-pad-block) * -1);
+  margin-inline-end: calc(var(--reply-quote-pad-inline-end) * -1);
+  border-radius: 0;
 }
 /* Slightly tighten the bubble top over an inline reply quote. */
 .bubbleWithReply {
@@ -1974,36 +2033,34 @@
   display: table;
   max-width: 100%;
 }
-/* No coloured bubble surface to sit on (the media above it has none either),
-   so the caption gets the same small washed panel this file already gives
-   other chrome-less attachment content (`.documentCard`, `.imagePreviewUnavailable`)
-   rather than bare text floating on the cream ground. Body-copy size/leading
-   match `.bubble` exactly (`--bubble-line`'s 1.42 restated as a literal here,
-   since that custom property is scoped to `.bubble` and this panel is never
-   its descendant), since a caption IS message text, just attached to a photo
-   instead of standing alone. */
+/* A caption IS message text, just attached to a photo, so it sits in the same
+   surface an ordinary text bubble uses: `.bubble`'s padding, radius and
+   leading (`--bubble-line`'s 1.42 restated as a literal, since that custom
+   property is scoped to `.bubble` and this node is never its descendant), and
+   the `.sent`/`.received` fills below. `table-caption` keeps it exactly as
+   wide as the photo above it. */
 .attachmentCaption {
   display: table-caption;
   caption-side: bottom;
-  margin-block-start: 6px;
-  padding: 7px 11px;
-  border: 1px solid rgba(var(--line-rgb), 0.12);
-  border-inline-start-width: 3px;
-  border-radius: var(--radius-10);
-  background: rgba(var(--plum-rgb), 0.06);
-  color: var(--ink);
+  margin-block-start: 2px;
+  padding: 8px 14px;
+  border-radius: var(--bubble-radius);
   font-size: var(--text-body);
   line-height: 1.42;
   overflow-wrap: break-word;
 }
-/* Sent/received accent-bar language matches `.replyQuote` above (plum vs.
-   coral) — the only existing precedent in this file for telling sent and
-   received content apart when neither has its own coloured bubble surface. */
+/* Same fills as `.received`/`.sent`, including the plum bubble's link ink. */
 .attachmentCaptionReceived {
-  border-inline-start-color: var(--plum);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.07);
+  color: var(--ink);
+  box-shadow: var(--shadow-card);
 }
 .attachmentCaptionSent {
-  border-inline-start-color: var(--accent);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 0.97);
+  box-shadow: var(--shadow-e2);
+  --chat-link-ink: var(--accent-soft);
 }
 
 /* The composer's in-pill icon buttons: the attach paperclip at the leading
@@ -2558,14 +2615,23 @@
   background: rgba(var(--cream-rgb), 0.14);
   border-color: rgba(var(--cream-rgb), 0.34);
 }
-:global([data-theme="dark"]) .replyQuoteReceived,
 :global([data-theme="dark"]) .replyPreview {
   border-inline-start-color: rgba(var(--cream-rgb), 0.45);
   background: rgba(var(--cream-rgb), 0.08);
 }
-/* Same plum-wash-doesn't-flip fix as `.replyQuoteReceived` above. The sent
-   variant's `--accent` border needs no override — it already clears the dark
+/* The bubble quote's received wash is a near-black scrim over `--paper`, which
+   itself darkens to nearly the same near-black in dark mode, the same
+   collapse-to-invisible failure the plum wash this replaced also had. Repaint
+   with a light (cream) wash instead, and move the accent bar's own colour
+   (painted on the `::before` above) to match. The sent variant's `--accent`
+   bar and `--accent-soft` name need no override: both already clear the dark
    page (see colors.css's dark `--accent-ink`/`--accent-text` comment). */
+:global([data-theme="dark"]) .replyQuoteReceived {
+  background: rgba(var(--cream-rgb), 0.08);
+}
+:global([data-theme="dark"]) .replyQuoteReceived::before {
+  background: rgba(var(--cream-rgb), 0.45);
+}
 :global([data-theme="dark"]) .attachmentCaption {
   background: rgba(var(--cream-rgb), 0.08);
 }
