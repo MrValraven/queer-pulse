@@ -2328,6 +2328,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-18.headline":
+    "Voltar de uma conversa leva-te à lista de conversas, e descarregar uma foto guarda-a.",
   "changelog.releases.2026-09-16.headline":
     "Grupos ganham convites com consentimento, bloqueio e denúncia, e forma de terminar ou entregar a posse.",
   "changelog.releases.2026-09-15.headline":
@@ -9411,6 +9413,14 @@ export const marketing: Catalog = {
     "A linha de guardados recentes nas tuas listas marca os itens cuja página saiu, como o resto dos teus guardados.",
 
   // Section 8 (Groups), 16 Sep 2026.
+  "changelog.entries.saving-a-chat-photo-downloads-it.title":
+    "Descarregar uma foto da conversa guarda-a",
+  "changelog.entries.saving-a-chat-photo-downloads-it.body":
+    "O botão Descarregar no visualizador de fotos guarda agora o ficheiro diretamente no teu dispositivo.",
+  "changelog.entries.back-from-a-chat-returns-to-your-chats.title":
+    "O gesto de voltar do telemóvel já leva de uma conversa para a lista de conversas.",
+  "changelog.entries.back-from-a-chat-returns-to-your-chats.body":
+    "No telemóvel, voltar de uma conversa aberta leva-te à lista de conversas, e voltar outra vez sai das Mensagens.",
   "changelog.entries.choose-who-can-add-you-to-a-group.title":
     "Escolhe quem te pode juntar a um grupo",
   "changelog.entries.choose-who-can-add-you-to-a-group.body":

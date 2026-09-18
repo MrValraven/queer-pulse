@@ -10,6 +10,7 @@ import { useForwardPicker } from "./useForwardPicker";
 import { useHideBottomTabBarInThread } from "./useHideBottomTabBarInThread";
 import { useIsDesktopMessagesChrome } from "./useIsDesktopMessagesChrome";
 import { useMessagesController } from "./useMessagesController";
+import { useMobileThreadHistoryEntry } from "./useMobileThreadHistoryEntry";
 import styles from "./MessagesPage.module.css";
 // Chat-wallpaper tokens (grounds + the doodle tile). Imported HERE rather than
 // from styles/index.css, mirroring persona-skins.css: this route is the only
@@ -98,6 +99,8 @@ export function MessagesPage() {
 
   // See useHideBottomTabBarInThread's own doc.
   useHideBottomTabBarInThread(isMobile, view);
+  // See useMobileThreadHistoryEntry's own doc.
+  useMobileThreadHistoryEntry(isMobile, view, setView);
 
   return (
     <AppShell fullHeight chromeless>

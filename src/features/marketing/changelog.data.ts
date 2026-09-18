@@ -66,6 +66,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "saving-a-chat-photo-downloads-it",
+        category: "fix",
+        date: "18 Sep 2026",
+        ...entryKeys("saving-a-chat-photo-downloads-it"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "back-from-a-chat-returns-to-your-chats",
+        category: "fix",
+        date: "18 Sep 2026",
+        ...entryKeys("back-from-a-chat-returns-to-your-chats"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
         id: "choose-who-can-add-you-to-a-group",
         category: "feature",
         date: "16 Sep 2026",

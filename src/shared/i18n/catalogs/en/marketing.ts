@@ -2267,6 +2267,8 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-18.headline":
+    "Back from a chat returns to your chats list, and saving a chat photo downloads it.",
   "changelog.releases.2026-09-16.headline":
     "Groups get consent-based invitations, block and report, and a way to end or hand one over.",
   "changelog.releases.2026-09-15.headline":
@@ -9293,6 +9295,14 @@ export const marketing: Catalog = {
     "The recent-saves row on your lists marks items whose page has come down, like the rest of your saved items.",
 
   // Section 8 (Groups), 16 Sep 2026.
+  "changelog.entries.saving-a-chat-photo-downloads-it.title":
+    "Saving a chat photo downloads it",
+  "changelog.entries.saving-a-chat-photo-downloads-it.body":
+    "The Save button in the photo viewer now downloads the file straight to your device.",
+  "changelog.entries.back-from-a-chat-returns-to-your-chats.title":
+    "Your phone's back gesture now returns from a chat to your chats list.",
+  "changelog.entries.back-from-a-chat-returns-to-your-chats.body":
+    "On a phone, back from an open chat lands on your chats list, and a second back leaves Messages.",
   "changelog.entries.choose-who-can-add-you-to-a-group.title":
     "Choose who can add you to a group",
   "changelog.entries.choose-who-can-add-you-to-a-group.body":
