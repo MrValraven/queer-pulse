@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Button,
   FormField,
   ModalSheet,
   Sending,
-  SuccessPanel,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -13,7 +11,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useClaimListing } from "./api/useClaimListing";
 import { useListingClaimPolicy } from "./listBusiness/api/useListingClaims";
-import { routes } from "../../app/routeMap";
+import { ClaimAffirmingBaselinePledge } from "./ClaimAffirmingBaselinePledge";
+import { DirectoryClaimSuccessPanel } from "./DirectoryClaimSuccessPanel";
 import styles from "./DirectoryClaimModal.module.css";
 
 const NOTE_MAX_LENGTH = 2000;
@@ -47,12 +46,16 @@ export function DirectoryClaimModal({
   const { policy } = useListingClaimPolicy();
   const [note, setNote] = useState("");
   const [done, setDone] = useState(false);
+  // Claiming a listing means becoming its owner, and the API rejects the
+  // request outright without this: see `ClaimAffirmingBaselinePledge` for why
+  // it is required even on a listing that already carries an acceptance.
+  const [isBaselineAgreed, setIsBaselineAgreed] = useState(false);
 
   const submit = () => {
-    if (claim.isPending) return;
+    if (claim.isPending || !isBaselineAgreed) return;
     const trimmedNote = note.trim();
     claim.mutate(
-      { note: trimmedNote || undefined },
+      { note: trimmedNote || undefined, affirmingBaselineAccepted: true },
       {
         onSuccess: () => setDone(true),
         onError: () =>
@@ -63,46 +66,12 @@ export function DirectoryClaimModal({
 
   if (done) {
     return (
-      <ModalSheet
+      <DirectoryClaimSuccessPanel
         onClose={onClose}
-        success
-        ariaLabel={t("marketing:directory.detail.claim.successAriaLabel")}
-      >
-        <SuccessPanel
-          title={t("marketing:directory.detail.claim.successTitle")}
-          em={t("marketing:directory.detail.claim.successEm")}
-          onClose={onClose}
-          closeLabel={t("marketing:directory.detail.claim.doneCta")}
-          steps={
-            policy
-              ? [
-                  t("marketing:directory.detail.claim.policyTurnaround", {
-                    count: policy.reviewTurnaroundDays,
-                  }),
-                ]
-              : undefined
-          }
-          // Where the claim can be watched from here. QueerPulse sends no mail,
-          // so the claimant comes back to this page rather than waiting on a
-          // message that would never arrive.
-          //
-          // Live only, matching `DirectoryAsideOwner`'s guard on the same
-          // destination: a demo claim resolves in the browser and is never
-          // stored, so that page would answer this confirmation with "you
-          // haven't claimed a listing yet".
-          footer={
-            demoMode ? undefined : (
-              <Link className={styles.trackLink} to={routes.listingClaims}>
-                {t("marketing:directory.detail.claim.trackCta")}
-              </Link>
-            )
-          }
-        >
-          {t("marketing:directory.detail.claim.successBody", {
-            name: placeName,
-          })}
-        </SuccessPanel>
-      </ModalSheet>
+        placeName={placeName}
+        policy={policy}
+        demoMode={demoMode}
+      />
     );
   }
 
@@ -174,11 +143,22 @@ export function DirectoryClaimModal({
         {t("marketing:directory.detail.claim.note")}
       </p>
 
+      <ClaimAffirmingBaselinePledge
+        placeName={placeName}
+        isAgreed={isBaselineAgreed}
+        isDisabled={claim.isPending}
+        onChange={setIsBaselineAgreed}
+      />
+
       <div className={styles.foot}>
         <Button variant="ghost" onClick={onClose}>
           {t("marketing:directory.detail.claim.cancel")}
         </Button>
-        <Button variant="primary" onClick={submit} disabled={claim.isPending}>
+        <Button
+          variant="primary"
+          onClick={submit}
+          disabled={claim.isPending || !isBaselineAgreed}
+        >
           {claim.isPending ? (
             <Sending label={t("marketing:directory.detail.claim.submitting")} />
           ) : (

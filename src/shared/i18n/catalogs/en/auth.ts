@@ -296,6 +296,11 @@ export const auth: Catalog = {
     "That email doesn't look right. Mind checking it?",
   "requestInvite.field.email.errorRequired":
     "We need an email so we can write back.",
+  "requestInvite.field.heardFrom.label": "Where did you hear about QueerPulse?",
+  "requestInvite.field.heardFrom.placeholder":
+    "A friend, a post, an event, a search...",
+  "requestInvite.field.heardFrom.error":
+    "Tell us where you heard about us, even in a word or two.",
   "requestInvite.field.mutual.label":
     "A member's email <optional>(optional)</optional>",
   "requestInvite.field.mutual.helper":

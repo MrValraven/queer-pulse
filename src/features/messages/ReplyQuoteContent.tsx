@@ -1,6 +1,6 @@
 // src/features/messages/ReplyQuoteContent.tsx
 import { useState } from "react";
-import { FiFile, FiImage } from "react-icons/fi";
+import { FiFile, FiImage, FiSmile } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import type { ReplyQuoteSource } from "./replyQuoteSource";
@@ -18,9 +18,9 @@ export interface ReplyQuoteClassNames {
 
 /** The inside of a reply quote, shared by the in-bubble quote and the
  *  composer's reply preview: the sender's name over a kind-aware snippet line
- *  (a photo/GIF kind label, a document's file name, the deleted copy, or the
- *  text with its mentions) and, for a photo or GIF, a small square thumbnail
- *  on the trailing side.
+ *  (a photo/GIF kind label, a document's file name, a sticker's own generic
+ *  label, the deleted copy, or the text with its mentions) and, for a photo,
+ *  GIF or sticker, a small square thumbnail on the trailing side.
  *
  *  Returned as a fragment (text column, then thumbnail) so each caller keeps
  *  its own wrapper element and row layout. The label is plain text inside the
@@ -37,6 +37,7 @@ export function ReplyQuoteContent({
 }) {
   const { t } = useTranslation();
   const isMedia = source.kind === "image" || source.kind === "gif";
+  const isSticker = source.kind === "sticker";
   let snippet;
   if (source.isDeleted) {
     snippet = t("messages:replyDeleted");
@@ -47,6 +48,16 @@ export function ReplyQuoteContent({
         {source.kind === "gif"
           ? t("messages:viewer.gifBadge")
           : t("messages:attachments.fallbackText")}
+      </>
+    );
+  } else if (isSticker) {
+    // Mirrors the media branch above with a generic kind label. The wire
+    // quote carries no `label` field for a sticker, only a thumbnail (see
+    // `MessageResponse.replyTo`'s own doc).
+    snippet = (
+      <>
+        <FiSmile aria-hidden className={styles.replyQuoteKindIcon} />
+        {t("messages:sticker.attachmentLabel")}
       </>
     );
   } else if (source.kind === "document") {
@@ -60,7 +71,7 @@ export function ReplyQuoteContent({
     snippet = <MentionText text={source.text} />;
   }
   const thumbnailUrl =
-    !source.isDeleted && isMedia ? source.thumbnailUrl : null;
+    !source.isDeleted && (isMedia || isSticker) ? source.thumbnailUrl : null;
   return (
     <>
       <span className={classNames.text}>

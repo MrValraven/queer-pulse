@@ -1,11 +1,14 @@
 import { Modal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { AdminChip } from "./ui";
 import { DirectorySpaceView } from "../marketing/DirectorySpaceView";
 import { listingDtoToPreviewPlace } from "./api/listingPreviewPlace";
 import { ListingModerationActions } from "./ListingModerationActions";
 import { ListingHistoryPanel } from "./ListingHistoryPanel";
+import { ListingDelegationSection } from "./ListingDelegationSection";
 import {
   LISTING_STATUS_TONE,
   type ListingQueueRow,
@@ -21,7 +24,15 @@ export function ListingPreviewDrawer({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { role } = useAuth();
+  const { demoMode } = useDemoMode();
   const place = listingDtoToPreviewPlace(row.detail);
+  // Every delegation route is `@StaffRoles()` + `@Roles(Admin)`, so a
+  // `directory_moderator` opening this same drawer would be refused by all
+  // six. The section is gated the way `AdminSidebar` gates its admin-only
+  // rail entries, and for the same reason: never offer a control the route
+  // gate then bounces.
+  const isAdmin = demoMode || role === "admin";
 
   return (
     <Modal
@@ -58,6 +69,12 @@ export function ListingPreviewDrawer({
         </div>
         <ListingHistoryPanel listingRef={row.ref} />
       </div>
+      {isAdmin && (
+        <ListingDelegationSection
+          listingRef={row.ref}
+          ownerSlug={row.detail.submittedBy?.slug ?? null}
+        />
+      )}
     </Modal>
   );
 }

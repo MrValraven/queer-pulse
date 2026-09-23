@@ -66,6 +66,110 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "pages-stay-in-one-language",
+        category: "fix",
+        date: "22 Sep 2026",
+        ...entryKeys("pages-stay-in-one-language"),
+      },
+      {
+        id: "invite-requests-ask-where-you-heard-about-us",
+        category: "improvement",
+        date: "22 Sep 2026",
+        ...entryKeys("invite-requests-ask-where-you-heard-about-us"),
+      },
+      {
+        id: "reply-as-your-business",
+        category: "feature",
+        date: "22 Sep 2026",
+        ...entryKeys("reply-as-your-business"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "community-spaces",
+        category: "feature",
+        date: "22 Sep 2026",
+        ...entryKeys("community-spaces"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "hosts-can-delete-a-gathering-from-manage",
+        category: "improvement",
+        date: "22 Sep 2026",
+        ...entryKeys("hosts-can-delete-a-gathering-from-manage"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "uno-reverse-stickers-look-like-the-real-card",
+        category: "improvement",
+        date: "22 Sep 2026",
+        ...entryKeys("uno-reverse-stickers-look-like-the-real-card"),
+      },
+      {
+        id: "admin-authored-listings",
+        category: "feature",
+        date: "20 Sep 2026",
+        ...entryKeys("admin-authored-listings"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "stickers-in-messages",
+        category: "feature",
+        date: "20 Sep 2026",
+        ...entryKeys("stickers-in-messages"),
+      },
+      {
+        id: "a-listing-with-no-photos-skips-the-cover",
+        category: "fix",
+        date: "20 Sep 2026",
+        ...entryKeys("a-listing-with-no-photos-skips-the-cover"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "a-listing-header-says-who-each-button-is-for",
+        category: "improvement",
+        date: "20 Sep 2026",
+        ...entryKeys("a-listing-header-says-who-each-button-is-for"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "who-runs-a-place-is-one-line",
+        category: "improvement",
+        date: "20 Sep 2026",
+        ...entryKeys("who-runs-a-place-is-one-line"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "the-map-on-a-listing-draws-every-time",
+        category: "fix",
+        date: "20 Sep 2026",
+        ...entryKeys("the-map-on-a-listing-draws-every-time"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "reply-quotes-look-like-whatsapp",
         category: "improvement",
         date: "18 Sep 2026",

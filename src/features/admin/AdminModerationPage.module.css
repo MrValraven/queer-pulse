@@ -653,6 +653,21 @@ button.reportMain:focus-visible {
   font-weight: 600;
   color: var(--ink-60);
 }
+.dSentAsIdentity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.dSentAsIdentity svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  color: var(--ink-40);
+}
 .dExcerpt {
   margin: 0;
   padding: 16px 18px;

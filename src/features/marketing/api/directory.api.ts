@@ -304,6 +304,13 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   hoursType: HoursType;
   hoursNote: string;
   owner: Owner;
+  /** True when the listing has no owner at all (`ownerId === null` on the
+   * backend). It is NEVER derived from a blank owner name: a listing whose
+   * owner chose `anon` visibility also arrives with `owner.name: ''`, and
+   * inviting a claim on that one would out an owner who asked not to be
+   * named. Optional on the wire: a payload predating the field reads as an
+   * owned listing, which is the safe default. */
+  isUnclaimed?: boolean;
   social: {
     instagram: string;
     website: string;

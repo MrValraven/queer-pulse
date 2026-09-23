@@ -36,6 +36,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-07-01T09:11:40.000Z",
     termsVersion: "2.4",
     source: "homepage_hero",
+    heardFrom: "A friend at Porto Pride",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -62,6 +63,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-06-30T18:39:12.000Z",
     termsVersion: "2.4",
     source: "skills",
+    heardFrom: "Instagram",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -94,6 +96,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // No source — went straight to the request page, so demo covers the
     // "Opened the invite page directly" fallback.
     source: null,
+    heardFrom: "My therapist mentioned it",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -122,6 +125,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-08-01T00:00:00.000Z",
     termsVersion: "2.4",
     source: "skills",
+    heardFrom: "Saw a flyer at a bookshop",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -153,6 +157,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-06-20T09:59:20.000Z",
     termsVersion: "2.4",
     source: "directory",
+    heardFrom: "Someone in my reading group",
     reviewedAt: "2026-06-21T08:30:00.000Z",
     reviewedBy: "demo-moderator",
     reviewedByName: "Inês Duarte",
@@ -181,6 +186,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-06-15T14:19:50.000Z",
     termsVersion: "2.4",
     source: null,
+    heardFrom: "google",
     reviewedAt: "2026-06-16T09:00:00.000Z",
     reviewedBy: "demo-moderator",
     reviewedByName: "Inês Duarte",
@@ -210,6 +216,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-05-30T08:14:10.000Z",
     termsVersion: "2.4",
     source: "magazine",
+    heardFrom: "The housing co-ops piece in the magazine",
     reviewedAt: "2026-05-31T17:45:00.000Z",
     reviewedBy: "mod-ana",
     reviewedByName: "Ana Reis",
@@ -239,6 +246,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-05-12T18:59:30.000Z",
     termsVersion: "2.4",
     source: "public_profile",
+    heardFrom: "A friend at Lisbon Pride",
     reviewedAt: "2026-05-13T09:20:00.000Z",
     reviewedBy: "mod-ana",
     reviewedByName: "Ana Reis",
@@ -269,6 +277,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-05-08T22:09:44.000Z",
     termsVersion: "2.4",
     source: "sign_in",
+    heardFrom: "Around",
     reviewedAt: "2026-05-09T10:05:00.000Z",
     // Decided, but the row carries no reviewer. This is also exactly what an
     // erased reviewer's past decisions look like: `join_requests.reviewed_by`
@@ -298,6 +307,9 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     ageAttestedAt: "2026-04-27T13:29:50.000Z",
     termsVersion: "2.4",
     source: "homepage_hero",
+    // Predates the "where did you hear" question, so demo covers the
+    // legacy null branch (the queue hides the row).
+    heardFrom: null,
     reviewedAt: "2026-04-28T11:00:00.000Z",
     // An id the server could not put a name to (no profile row behind the
     // account). Covers the card's short-reference fallback, which still groups

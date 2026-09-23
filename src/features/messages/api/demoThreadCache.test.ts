@@ -167,11 +167,16 @@ describe("demo session store", () => {
   });
 
   it("sends all six reaction keys, keeping the seeded counts", () => {
-    const newest = readDemoThread(new QueryClient(), "anika")[0]!;
-    expect(newest.id).toBe("demo-msg-anika-006");
-    expect(newest.reactions).toHaveLength(6);
+    // Looked up by id: the seed's own reportable tombstone
+    // (demo-msg-anika-007) sorts after this one now, so the reacted message
+    // is no longer the thread's newest row. The reaction normalization this
+    // test pins holds regardless of which row is newest.
+    const reacted = readDemoThread(new QueryClient(), "anika").find(
+      (message) => message.id === "demo-msg-anika-006",
+    )!;
+    expect(reacted.reactions).toHaveLength(6);
     expect(
-      newest.reactions.find((reaction) => reaction.key === "love"),
+      reacted.reactions.find((reaction) => reaction.key === "love"),
     ).toEqual({ key: "love", count: 1, mine: true });
   });
 
@@ -267,7 +272,10 @@ describe("withDemoPresentation", () => {
     ].reverse();
     return withDemoPresentation(
       "brunch-crew",
-      groupMessages(oldestFirst, DEMO_VIEWER_HANDLE),
+      groupMessages(oldestFirst, {
+        myHandle: DEMO_VIEWER_HANDLE,
+        staffedIdentityIds: new Set(),
+      }),
     );
   }
 

@@ -1,4 +1,5 @@
 import type { AvatarTone } from "./ui";
+import type { AdminSubcommunityDTO } from "./api/adminCommunities.api";
 
 export type BadgeTone = "plum" | "coral" | "jade" | "violet" | "amber";
 export type Visibility = "private" | "public" | "network";
@@ -230,6 +231,15 @@ export interface Community {
    *  community's detail — some of its reports may not be reflected in the
    *  queue/health numbers above. Optional: only the detail endpoint carries it. */
   truncated?: boolean;
+  /** Whether this community may host spaces (subcommunities) inside it.
+   *  Staff-only switch. Optional: only the detail endpoint carries it. */
+  allowsSubcommunities?: boolean;
+  /** The parent this community is a space inside, or null when it's a
+   *  top-level community. Optional: only the detail endpoint carries it. */
+  parent?: { slug: string; name: string } | null;
+  /** The spaces this community hosts, empty when it's a space itself.
+   *  Optional: only the detail endpoint carries it. */
+  subcommunities?: AdminSubcommunityDTO[];
   support: boolean;
   moderators: Moderator[];
   queue: QueueItem[];
@@ -263,6 +273,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: true,
     autoFreezeOnReports: false,
     isFeatured: true,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     name: "Trans & Friends",
     initials: "TR",
     tone: "jade",
@@ -320,6 +333,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
     isFeatured: false,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     name: "Queer Creatives",
     initials: "QC",
     tone: "violet",
@@ -377,6 +393,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: false,
     autoFreezeOnReports: true,
     isFeatured: false,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     name: "Lisbon Queers",
     initials: "LQ",
     tone: "coral",
@@ -434,6 +453,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
     isFeatured: false,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     name: "Newly Arrived",
     initials: "NA",
     tone: "jade",
@@ -469,6 +491,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: true,
     autoFreezeOnReports: true,
     isFeatured: false,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     frozen: true,
     name: "Trans Healthcare",
     initials: "TH",
@@ -505,6 +530,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: false,
     autoFreezeOnReports: true,
     isFeatured: false,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     name: "Nightlife & Afters",
     initials: "NF",
     tone: "violet",
@@ -562,6 +590,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: true,
     autoFreezeOnReports: false,
     isFeatured: false,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     name: "Elders & Memory",
     initials: "EM",
     tone: "amber",
@@ -597,6 +628,9 @@ export const COMMUNITIES: Community[] = [
     requiresSecondVouch: false,
     autoFreezeOnReports: false,
     isFeatured: false,
+    allowsSubcommunities: false,
+    parent: null,
+    subcommunities: [],
     name: "Mutual Aid Lisbon",
     initials: "MA",
     tone: "coral",

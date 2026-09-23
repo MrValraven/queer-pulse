@@ -11,15 +11,20 @@ import {
 } from "./api/useCommunityFreezeDetail";
 import styles from "./CommunityFrozenBanner.module.css";
 
+type FrozenReasonKey = CommunityFrozenReason | "unknown";
+
 /** One body sentence per reason. A manual pause has no report behind it, so it
  *  must not be narrated as one: telling a community its moderators are
- *  reviewing reports when nobody reported anything is simply untrue. The
- *  `unknown` line is the honest fallback for a backend that reports the pause
- *  without saying why. */
-const BODY_KEY: Record<CommunityFrozenReason | "unknown", string> = {
+ *  reviewing reports when nobody reported anything is simply untrue. A space
+ *  (subcommunity) paused because its parent is paused gets its own sentence,
+ *  naming the parent, since the space's own staff has nothing to review here.
+ *  The `unknown` line is the honest fallback for a backend that reports the
+ *  pause without saying why. */
+const BODY_KEY: Record<FrozenReasonKey, string> = {
   manual: "communities:detail.frozen.body.manual",
   emergency_report: "communities:detail.frozen.body.emergencyReport",
   report_pileup: "communities:detail.frozen.body.reportPileup",
+  parent_frozen: "communities:spaces.paused.parent",
   unknown: "communities:detail.frozen.body.unknown",
 };
 
@@ -34,9 +39,15 @@ const BODY_KEY: Record<CommunityFrozenReason | "unknown", string> = {
 export function CommunityFrozenBanner({
   slug,
   canManage,
+  parentName,
 }: {
   slug: string;
   canManage: boolean;
+  /** Set when this community is a space (subcommunity): its parent's name,
+   *  needed to fill `spaces.paused.parent`'s "{name}" when the pause is
+   *  `parent_frozen`. Without it, a `parent_frozen` pause falls back to the
+   *  honest "unknown" wording, which needs no name. */
+  parentName?: string;
 }) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -53,6 +64,14 @@ export function CommunityFrozenBanner({
   const isValidDate =
     frozenSince != null && !Number.isNaN(frozenSince.getTime());
   const publicNote = freezeDetail.frozenNote?.trim() ?? "";
+  const isParentFrozen =
+    freezeDetail.frozenReason === "parent_frozen" && Boolean(parentName);
+  const reasonKey: FrozenReasonKey = isParentFrozen
+    ? "parent_frozen"
+    : (freezeDetail.frozenReason ?? "unknown");
+  // A space's own staff cannot lift a pause that belongs to the parent: only
+  // the parent's own staff can, from the parent's page.
+  const canUnfreeze = canManage && !isParentFrozen;
 
   return (
     <div className={styles.banner} role="status">
@@ -64,7 +83,9 @@ export function CommunityFrozenBanner({
           {t("communities:detail.frozen.title")}
         </div>
         <p className={styles.body}>
-          {t(BODY_KEY[freezeDetail.frozenReason ?? "unknown"])}
+          {isParentFrozen
+            ? t(BODY_KEY.parent_frozen, { name: parentName })
+            : t(BODY_KEY[reasonKey])}
         </p>
         {isValidDate && (
           <p className={styles.since}>
@@ -83,7 +104,7 @@ export function CommunityFrozenBanner({
           </blockquote>
         )}
       </div>
-      {canManage && (
+      {canUnfreeze && (
         <Button
           variant="ghost"
           size="sm"

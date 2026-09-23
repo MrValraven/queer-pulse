@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { modReportClusterDtoToView } from "./moderation.adapters";
-import type { ModReportClusterDTO } from "./moderation.api";
+import {
+  modReportClusterDtoToView,
+  modReportDetailFrom,
+} from "./moderation.adapters";
+import type { ModReportClusterDTO, ModReportDTO } from "./moderation.api";
 import type { ReportSubjectType } from "../../safety/reportReasons";
 
 /**
@@ -86,5 +89,89 @@ describe("modReportClusterDtoToView subject types", () => {
     modReportClusterDtoToView(clusterDto("repeated_future_subject"));
     modReportClusterDtoToView(clusterDto("repeated_future_subject"));
     expect(warn).toHaveBeenCalledTimes(1);
+  });
+});
+
+/**
+ * Business mailboxes, design section 9 (I2 fix): `ModReportDetail.sentAsIdentity`
+ * must reach the drawer's view model unchanged, so `AdminReportDrawerContext`
+ * can render "Sent as <business>" beside the human sender. Before this fix
+ * `modReportDetailFrom` never read the field at all. The backend has sent it
+ * since `sent-as-identity.ts` shipped, and nothing in `src` consumed it.
+ */
+function reportDto(detail: NonNullable<ModReportDTO["detail"]>): ModReportDTO {
+  return {
+    id: "r-1",
+    severity: "medium",
+    reasonCode: "harassment",
+    subjectType: "message",
+    subjectId: "msg-1",
+    reporter: { anonymous: true },
+    reported: { id: "u-1", handle: "@nightowl", priorReports: 0 },
+    community: null,
+    createdAt: "2026-09-01T10:00:00.000Z",
+    slaDueAt: "2026-09-02T10:00:00.000Z",
+    status: "open",
+    detail,
+  };
+}
+
+describe("modReportDetailFrom sentAsIdentity", () => {
+  it("carries a present sentAsIdentity through to the view model", () => {
+    const detail = modReportDetailFrom(
+      reportDto({
+        contentAuthor: "@nightowl",
+        excerpt: "we don't do refunds",
+        thread: [],
+        people: [],
+        sentAsIdentity: {
+          identityId: "identity-cafe-lisboa",
+          kind: "listing",
+          displayName: "Café Lisboa",
+          handle: "cafe-lisboa",
+        },
+      }),
+    );
+    expect(detail?.sentAsIdentity).toEqual({
+      identityId: "identity-cafe-lisboa",
+      kind: "listing",
+      displayName: "Café Lisboa",
+      handle: "cafe-lisboa",
+    });
+  });
+
+  it("omits sentAsIdentity from the view model for a personal message", () => {
+    const detail = modReportDetailFrom(
+      reportDto({
+        contentAuthor: "@nightowl",
+        excerpt: "hey",
+        thread: [],
+        people: [],
+      }),
+    );
+    expect(detail?.sentAsIdentity).toBeUndefined();
+  });
+
+  it("carries a deleted identity's null fields through unchanged", () => {
+    const detail = modReportDetailFrom(
+      reportDto({
+        contentAuthor: "@nightowl",
+        excerpt: "we don't do refunds",
+        thread: [],
+        people: [],
+        sentAsIdentity: {
+          identityId: "identity-gone",
+          kind: null,
+          displayName: null,
+          handle: null,
+        },
+      }),
+    );
+    expect(detail?.sentAsIdentity).toEqual({
+      identityId: "identity-gone",
+      kind: null,
+      displayName: null,
+      handle: null,
+    });
   });
 });

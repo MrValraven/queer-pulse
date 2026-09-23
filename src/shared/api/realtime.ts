@@ -22,6 +22,15 @@ import {
   reconcileConversationHistory,
   upsertMessage,
 } from "./messageCache";
+import { patchConversationClaim, recordClaimFrame } from "./claimCache";
+import { claimStateFromFrame } from "./conversationClaim";
+import {
+  isFromViewerSide,
+  MAILBOXES_QUERY_KEY_PREFIX,
+  readStaffedIdentityIds,
+  type MessageViewer,
+} from "./mailboxViewer";
+import { MessageTombstones } from "./messageTombstones";
 import { API_BASE_URL, apiAvailable } from "./config";
 import {
   mintSocketTicket,
@@ -239,6 +248,10 @@ class RealtimeClient {
    *  (e.g. a room join that hasn't caught up with `activeConversationId` yet),
    *  which would otherwise double-count it into `unreadCount`. */
   private countedInboxMessageIds = new Set<string>();
+  /** Messages this client saw deleted: a create or edit frame for one of them
+   *  that lands after its `message:deleted` is dropped (see
+   *  `MessageTombstones`). */
+  private tombstones = new MessageTombstones();
   /** The current set of online user ids, maintained from `presence` (single
    *  add/remove) and `presence:snapshot` (full replace) frames. */
   private onlineUserIds = new Set<string>();
@@ -451,6 +464,15 @@ class RealtimeClient {
       if (oldest !== undefined) this.countedInboxMessageIds.delete(oldest);
     }
     bumpConversationUnread(this.qc, conversationId);
+  }
+  /** Who is reading, for the "is this from our side" test: the member's
+   *  handle plus every mailbox identity they staff, read from whatever
+   *  mailbox lists are cached. */
+  private viewer(): MessageViewer {
+    return {
+      myHandle: this.myHandle,
+      staffedIdentityIds: readStaffedIdentityIds(this.qc),
+    };
   }
   onPresence(handler: (online: ReadonlySet<string>) => void): () => void {
     this.presenceHandlers.add(handler);
@@ -997,6 +1019,8 @@ class RealtimeClient {
     // instead of refetching the whole page. The reaction / updated / deleted
     // frames below only carry ids, so those still invalidate (see each note).
     socket.on("message:new", ({ conversationId, message }) => {
+      // A create that lands after its own delete would resurrect the message.
+      if (this.tombstones.has(message.id)) return;
       // ENG-216: computed FIRST, because it gates everything below it - the
       // backend broadcasts `message:new` to the WHOLE room including the
       // sender (useMessageMutations.ts), so this fires for our own send too,
@@ -1004,8 +1028,11 @@ class RealtimeClient {
       // always target the open thread: a SECOND device of ours can send into
       // a conversation this tab has open, closed, or doesn't even have
       // cached - the echo still needs the same own-message handling either way.
-      const isOwnMessage =
-        !!this.myHandle && message.sender.handle === this.myHandle;
+      // "Own" means sent from the member's side of the thread, as themselves
+      // or as a business they answer for, so a colleague's business reply
+      // skips the unread bump and the delivered ack exactly as the member's
+      // own echo does.
+      const isOwnMessage = isFromViewerSide(message.sender, this.viewer());
       upsertMessage(this.qc, conversationId, message);
       // The frame carries the full new message, so patch the inbox row's
       // preview/time in place (and move it to the top) instead of refetching
@@ -1121,6 +1148,9 @@ class RealtimeClient {
     // can't create one), so this can't accidentally seed a single-message
     // "page" for a thread nobody has opened yet.
     socket.on("conversation:message", ({ conversationId, message }) => {
+      // Same late-create guard as `message:new` above.
+      if (this.tombstones.has(message.id)) return;
+      const isFromOwnSide = isFromViewerSide(message.sender, this.viewer());
       upsertMessage(this.qc, conversationId, message);
       // Peer-requested fan-out (additive to the cache patching in this handler,
       // exactly like `onRead`/`onDelivered` above) - for a consumer that wants
@@ -1167,10 +1197,14 @@ class RealtimeClient {
         // preview/time, nothing else here raised `unread`/`unreadCount`, so the
         // row stayed at 0 until a remount refetched `["conversations"]`. Bump
         // it locally now, deduped against `message:new` double-delivery by
-        // `countInboxUnread`. No own-echo check needed: the gateway's fan-out
-        // (`fanOutConversationMessage`) already excludes the sender server-side,
-        // so this branch can never fire for our own send.
-        this.countInboxUnread(conversationId, message.id);
+        // `countInboxUnread`. The gateway's fan-out
+        // (`fanOutConversationMessage`) already excludes the sender
+        // server-side, but on a business mailbox it reaches every OTHER staff
+        // member, so a colleague's reply sent as the business arrives here.
+        // Backend ruling (Task 15): a message sent as the business is never
+        // unread for that business's staff, and the server's own counts
+        // already exclude it, so a reply from the member's side bumps no row.
+        if (!isFromOwnSide) this.countInboxUnread(conversationId, message.id);
       }
       // We received it (over our OWN user room, even though this thread isn't
       // the open one) → ack delivery so the SENDER's tick advances from one
@@ -1185,8 +1219,9 @@ class RealtimeClient {
       // fan-out already excludes the sender server-side
       // (`fanOutConversationMessage`), so this can't fire for our own send in
       // practice — kept for parity with the sibling handler and as a second
-      // line of defence if that server-side exclusion ever changes.
-      if (this.myHandle && message.sender.handle === this.myHandle) return;
+      // line of defence if that server-side exclusion ever changes. A
+      // colleague's business reply is from our side too, and skips the ack.
+      if (isFromOwnSide) return;
       this.scheduleDeliveredAck(conversationId);
     });
     // A reaction changed on a message in this room. The frame carries the
@@ -1205,6 +1240,8 @@ class RealtimeClient {
         void this.qc.invalidateQueries({
           queryKey: ["messageReactors", messageId],
         });
+        // A business's reaction reaches its customer as an `identityId`
+        // frame with no `userId`, so it is applied as the counterpart's.
         if (this.myUserId && userId === this.myUserId) return;
         patchMessageReactionCounts(
           this.qc,
@@ -1226,6 +1263,9 @@ class RealtimeClient {
     // check whether this message was the inbox preview, so the preview is left
     // alone here — it self-corrects on the next `["conversations"]` fetch.
     socket.on("message:deleted", ({ conversationId, messageId }) => {
+      // Recorded first, so a create or edit of this message that the gateway
+      // delivers after the delete is dropped (`MessageTombstones`).
+      this.tombstones.record(messageId);
       patchMessageDelete(
         this.qc,
         conversationId,
@@ -1253,6 +1293,8 @@ class RealtimeClient {
     // Same idempotent-SET / no-own-echo-skip / preview-left-alone reasoning as
     // `message:deleted` above.
     socket.on("message:updated", ({ conversationId, message }) => {
+      // An edit that lands after the delete would restore the body.
+      if (this.tombstones.has(message.id)) return;
       patchMessageEdit(
         this.qc,
         conversationId,
@@ -1261,6 +1303,7 @@ class RealtimeClient {
         message.editedAt ?? new Date().toISOString(),
       );
     });
+    this.registerMailboxHandlers(socket);
 
     // Per-event fan-out to component subscribers (additive — the invalidation
     // handlers above still run for every frame).
@@ -1269,6 +1312,10 @@ class RealtimeClient {
       // sender's `user:<id>` room, but a member signed in on two devices must
       // never see themselves typing even if that frame reaches us (older
       // backend, future broadcast path) — mirrors the reaction echo-skip above.
+      // An `identityId` frame (a business typing, as its customer sees it)
+      // carries no `userId` and passes straight through. A business never
+      // reports presence, so no identity frame is ever added to
+      // `onlineUserIds`.
       if (this.myUserId && frame.userId === this.myUserId) return;
       for (const handler of this.typingHandlers) handler(frame);
     });
@@ -1312,6 +1359,39 @@ class RealtimeClient {
       }
       this.onlineUserIds = new Set(online);
       this.notifyPresence();
+    });
+  }
+
+  /** The business mailbox frames, both sent to the member's own `user:` room
+   *  (called from `connectAsync` beside every other handler). */
+  private registerMailboxHandlers(
+    socket: Socket<ServerListeners, ClientEmitters>,
+  ): void {
+    // A business mailbox thread's claim changed. This frame goes only to the
+    // business's staff, the member's own other devices included, and it is
+    // newer than any claim response still in flight (a losing claim's re-read
+    // can name a claimant who is releasing at that moment), so it always
+    // wins: the counter is bumped first, and the claim hook reads it to drop
+    // the stale response. The frame carries the full claim state, so no
+    // refetch. A reply's automatic claim arrives here too (`isImplicit`); the
+    // client itself never claims after a send.
+    socket.on("conversation:claim", (frame) => {
+      recordClaimFrame(frame.conversationId);
+      patchConversationClaim(
+        this.qc,
+        frame.conversationId,
+        claimStateFromFrame(frame),
+      );
+    });
+    // The member gained or lost standing on a mailbox. The frame reaches only
+    // the affected member. The refetched switcher adds or drops the mailbox,
+    // and the lost-access fallback moves the member to their personal mailbox
+    // when the active one is gone.
+    socket.on("mailbox:staffing", () => {
+      void this.qc.invalidateQueries({
+        queryKey: MAILBOXES_QUERY_KEY_PREFIX,
+      });
+      void this.qc.invalidateQueries({ queryKey: ["conversations"] });
     });
   }
 

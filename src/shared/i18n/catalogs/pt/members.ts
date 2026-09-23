@@ -1256,6 +1256,31 @@ export const members: Catalog = {
   "places.coManagerInvites.declinedToast": "Convite recusado.",
   "places.coManagerInvites.error":
     "Não conseguimos enviar a tua resposta. Tenta outra vez.",
+  // Ofertas de propriedade. A equipa pode escrever sobre um espaço no
+  // diretório e pô-lo em nome de um membro; é aqui que esse membro responde.
+  // Aceitar é também onde a pessoa concorda com o compromisso afirmativo,
+  // por isso a linha abre um segundo passo e espera por uma resposta a ele.
+  "places.ownerOffers.title_one": "1 espaço em teu nome",
+  "places.ownerOffers.title_other": "{count} espaços em teu nome",
+  "places.ownerOffers.sub":
+    "Alguém da equipa acrescentou um espaço ao diretório e pô-lo em teu nome. Nada muda até responderes.",
+  "places.ownerOffers.fromNamed": "Oferecido por <b>{name}</b>.",
+  "places.ownerOffers.from": "Oferecido pela equipa da QueerPulse.",
+  "places.ownerOffers.note": "Escreveram: {note}",
+  "places.ownerOffers.acceptCta": "Aceitar",
+  "places.ownerOffers.declineCta": "Recusar",
+  "places.ownerOffers.acceptCloseCta": "Deixa estar",
+  "places.ownerOffers.pledgeLead":
+    "Se disseres que sim, <b>{listing}</b> passa a ser teu para gerires, com uma promessa à mistura. Todos os espaços do diretório fizeram a mesma.",
+  "places.ownerOffers.agreeTitle": "Concordo com isto, por este espaço",
+  "places.ownerOffers.agreeSub":
+    "O teu acordo fica registado com o teu nome e a data em que aceitas.",
+  "places.ownerOffers.pledgeBackCta": "Ainda não",
+  "places.ownerOffers.pledgeAcceptCta": "Concordar e aceitar",
+  "places.ownerOffers.acceptedToast": "{listing} é teu a partir de agora.",
+  "places.ownerOffers.declinedToast": "Oferta recusada.",
+  "places.ownerOffers.error":
+    "Não conseguimos enviar a tua resposta. Tenta outra vez.",
   "places.empty.title": "Ainda sem espaços",
   "places.empty.description":
     "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",

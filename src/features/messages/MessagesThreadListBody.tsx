@@ -1,7 +1,9 @@
 import { FiMessageCircle } from "react-icons/fi";
+import type { MailboxSummary } from "../../shared/api/mailboxViewer";
 import { EmptyState, FadeIn, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InboxLoadErrorStrip } from "./InboxLoadErrorStrip";
+import { mailboxDisplayName } from "./mailboxes/mailboxLabels";
 import { MessagesRequestsPanel } from "./MessagesRequestsPanel";
 import { MessagesSearchResults } from "./MessagesSearchResults";
 import { MessageThreadListSkeleton } from "./MessagesSkeleton";
@@ -23,6 +25,8 @@ const TAB_EMPTY_KEY: Partial<Record<InboxTab, string>> = {
   favorites: "thread.tabEmptyFavorites",
   groups: "thread.tabEmptyGroups",
   archived: "thread.tabEmptyArchived",
+  unclaimed: "mailbox.tab.unclaimedEmpty",
+  mine: "mailbox.tab.mineEmpty",
 };
 
 /**
@@ -50,6 +54,7 @@ export function MessagesThreadListBody({
   onRequestDelete,
   onMarkThreadRead,
   onMarkThreadUnread,
+  activeMailbox,
 }: {
   loading: boolean;
   searching: boolean;
@@ -78,8 +83,15 @@ export function MessagesThreadListBody({
   /** Row menu "Mark as read"/"Mark as unread" (PRD-225). */
   onMarkThreadRead: (conversationId: string) => void;
   onMarkThreadUnread: (conversationId: string) => void;
+  /** The active mailbox. A business, persona or company mailbox only
+   *  replies, so its empty state explains that and offers no compose. */
+  activeMailbox: MailboxSummary | null;
 }) {
   const { t } = useTranslation();
+  const replyOnlyMailboxName =
+    activeMailbox && activeMailbox.kind !== "profile"
+      ? mailboxDisplayName(activeMailbox, t)
+      : null;
   // "Requests" isn't a conversation filter at all (see `threadFilters.ts`) —
   // it swaps the whole body for the incoming message-request list, bypassing
   // every conversation-list/empty-state branch below.
@@ -127,18 +139,45 @@ export function MessagesThreadListBody({
       )}
       {/* "No conversations yet" only on a SETTLED, SUCCESSFUL empty list,
           never while a failed refresh just hasn't produced any rows yet. */}
-      {!loading && !searching && !isError && threads.length === 0 && (
-        <EmptyState
-          compact
-          icon={<FiMessageCircle />}
-          title={t("messages:thread.emptyTitle")}
-          description={t("messages:thread.emptyDescription")}
-          action={{
-            label: t("messages:thread.newMessage"),
-            onClick: onCompose,
-          }}
-        />
-      )}
+      {/* Explains the header's missing compose buttons for a business,
+          persona or company mailbox: shown whenever it has conversations to
+          list (the whole-inbox empty state just below already covers the
+          reply-only explanation when it has none). */}
+      {!loading &&
+        !searching &&
+        replyOnlyMailboxName !== null &&
+        threads.length > 0 && (
+          <p className={styles.tpComposeHint}>
+            {t("messages:mailbox.replyOnly.composeHint", {
+              name: replyOnlyMailboxName,
+            })}
+          </p>
+        )}
+      {!loading &&
+        !searching &&
+        !isError &&
+        threads.length === 0 &&
+        (replyOnlyMailboxName !== null ? (
+          <EmptyState
+            compact
+            icon={<FiMessageCircle />}
+            title={t("messages:mailbox.replyOnly.emptyTitle")}
+            description={t("messages:mailbox.replyOnly.emptyBody", {
+              name: replyOnlyMailboxName,
+            })}
+          />
+        ) : (
+          <EmptyState
+            compact
+            icon={<FiMessageCircle />}
+            title={t("messages:thread.emptyTitle")}
+            description={t("messages:thread.emptyDescription")}
+            action={{
+              label: t("messages:thread.newMessage"),
+              onClick: onCompose,
+            }}
+          />
+        ))}
       {/* Cached rows survive a failed refresh: a compact inline retry line
           ABOVE the stale rows, rather than replacing them. */}
       {!loading && !searching && isError && threads.length > 0 && onRetry && (

@@ -331,6 +331,7 @@ export const communities: Catalog = {
   "detail.tabs.discussion": "Discussão",
   "detail.tabs.events": "Eventos",
   "detail.tabs.modtools": "Ferramentas de moderação",
+  "detail.tabs.spaces": "Espaços",
   // Mostrado a um dono/moderador num separador escondido dos membros.
   "detail.hiddenFromMembers":
     "Escondido dos membros. Só donos e moderadores veem este separador.",
@@ -430,6 +431,7 @@ export const communities: Catalog = {
   "detail.modtools.nav.history": "Histórico",
   "detail.modtools.nav.card": "Cartão de membro",
   "detail.modtools.nav.danger": "Zona de risco",
+  "detail.modtools.nav.spaces": "Espaços",
   "detail.modtools.overview.attention.label": "A precisar de ti",
   "detail.modtools.overview.attention.requests_one":
     "Uma pessoa está à espera para entrar",
@@ -2113,4 +2115,45 @@ export const communities: Catalog = {
     "Ninguém fala em nome de toda a comunidade sem que lho peçam.",
   "values.lib.disagreeOnTactics":
     "Podes discordar nas táticas e continuar a pertencer aqui.",
+
+  // ── Espaços (subcomunidades) ────────────────────────────────────────────────
+  "spaces.tab.intro":
+    "Espaços mais pequenos dentro de {name}. Entra nos que fazem sentido para ti.",
+  "spaces.tab.empty.title": "Ainda não há espaços",
+  "spaces.tab.empty.body":
+    "A moderação pode abrir um espaço nas ferramentas de moderação.",
+  "spaces.tab.error": "Não foi possível carregar os espaços.",
+  "spaces.tab.retry": "Tentar de novo",
+  "spaces.card.count_one": "{count} pessoa",
+  "spaces.card.count_other": "{count} pessoas",
+  "spaces.card.joined": "Estás dentro",
+  "spaces.breadcrumb.label": "Voltar a {name}",
+  "spaces.rules.fromParent": "De {name}",
+  "spaces.rules.spaceAdds": "Este espaço acrescenta",
+  "spaces.join.parentFirst": "Entra primeiro em {name}",
+  "spaces.join.rulesNote":
+    "Já aceitaste as regras de {name}. Este espaço acrescenta algumas próprias.",
+  "spaces.paused.parent":
+    "Este espaço está em pausa porque {name} está em pausa.",
+  "spaces.mod.label": "Espaços",
+  "spaces.mod.intro":
+    "Abre um espaço mais pequeno dentro desta comunidade. Só quem já está aqui pode entrar.",
+  "spaces.mod.create": "Criar um espaço",
+  "spaces.mod.form.name": "Nome",
+  "spaces.mod.form.handle": "Endereço",
+  "spaces.mod.form.tagline": "Frase curta",
+  "spaces.mod.form.purpose": "Para que serve",
+  "spaces.mod.form.tier": "Quem pode entrar",
+  "spaces.mod.form.rules": "Regras extra para este espaço",
+  "spaces.mod.form.rulesHint": "As regras de {name} já se aplicam aqui.",
+  "spaces.mod.form.addRule": "Adicionar regra",
+  "spaces.mod.form.tierLocked":
+    "Um espaço não pode ser mais aberto do que {name}.",
+  "spaces.mod.form.submit": "Criar espaço",
+  "spaces.mod.created": "Espaço criado",
+  "spaces.mod.createError": "Não foi possível criar o espaço. Tenta de novo.",
+  "spaces.mod.notAllowed":
+    "Esta comunidade não pode abrir espaços neste momento.",
+  "spaces.mod.list.title": "Espaços nesta comunidade",
+  "spaces.mod.list.empty": "Ainda não há espaços.",
 };

@@ -1,8 +1,15 @@
-import { FiAlertTriangle, FiFileText, FiImage, FiSlash } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiBriefcase,
+  FiFileText,
+  FiImage,
+  FiSlash,
+} from "react-icons/fi";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatBytes } from "./adminMedia.format";
 import type { ConversationContextMessageDTO } from "./api/moderation.api";
+import { sentAsIdentityLabel } from "./sentAsIdentityLabel";
 import styles from "./AdminReportEvidence.module.css";
 
 const ATTACHMENT_LABEL_KEY: Partial<
@@ -49,6 +56,15 @@ export function ConversationContextMessage({
           {message.senderDisplayName ??
             t("admin:moderation.reportDrawer.conversationContext.formerMember")}
         </span>
+        {/* Business mailboxes, design section 9 (I2): the identity this
+            message was sent as, beside the human sender above, whatever
+            either attribution switch says a customer sees. */}
+        {message.sentAsIdentity && (
+          <span className={styles.contextSentAsIdentity}>
+            <FiBriefcase aria-hidden />
+            {sentAsIdentityLabel(message.sentAsIdentity, t)}
+          </span>
+        )}
         <time className={styles.contextTime} dateTime={message.sentAt}>
           {format.date(sentAt, { day: "numeric", month: "short" })}{" "}
           {format.time(sentAt)}

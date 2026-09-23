@@ -66,6 +66,22 @@ describe("saveOutbox / loadOutbox", () => {
     expect(loadOutbox()[convId]).toEqual([message]);
   });
 
+  it("keeps the identity an entry was composed as through a round-trip", () => {
+    const scope = uniqueId("scope");
+    setMessageOutboxScope(scope);
+    const convId = uniqueId("conv");
+    const message = buildMessage({
+      status: "sending",
+      sendAsIdentityId: "identity-cafe",
+    });
+
+    saveOutbox({ [convId]: [message] });
+
+    expect(loadOutbox(scope)[convId]?.[0]?.sendAsIdentityId).toBe(
+      "identity-cafe",
+    );
+  });
+
   it("drops entries that don't look like a ChatMessage, tolerating a corrupt/foreign shape", () => {
     const scope = uniqueId("scope");
     setMessageOutboxScope(scope);

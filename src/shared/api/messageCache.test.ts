@@ -159,3 +159,85 @@ describe("patchConversationPinned / patchConversationRead against the flat cache
     expect(row?.myLastReadAt).toBe("2026-09-14T12:00:00Z");
   });
 });
+
+describe("patchConversationPreview, business mailbox fields", () => {
+  const cafeSender = {
+    handle: "cafe-lisboa",
+    displayName: "Café Lisboa",
+    avatarUrl: null,
+    identityId: "identity-cafe",
+    identityKind: "listing" as const,
+  };
+
+  function readRow(queryClient: QueryClient): Conversation | undefined {
+    return queryClient.getQueryData<Conversation[]>([
+      "conversations",
+      false,
+      "",
+    ])?.[0];
+  }
+
+  it("clears the staff viewer's own reply fields when the customer writes next", () => {
+    const queryClient = new QueryClient();
+    seedConversationsCache(queryClient, [conversation({ id: "c1" })]);
+
+    patchConversationPreview(
+      queryClient,
+      "c1",
+      message({
+        id: "m-own",
+        sender: { ...cafeSender, staffFirstName: "Tiago" },
+        isSentByViewer: true,
+      }),
+    );
+    expect(readRow(queryClient)?.lastMessageIsSentByViewer).toBe(true);
+
+    patchConversationPreview(
+      queryClient,
+      "c1",
+      message({
+        id: "m-customer",
+        sender: {
+          handle: "fatima",
+          displayName: "Fátima Mendes",
+          avatarUrl: null,
+        },
+      }),
+    );
+    const row = readRow(queryClient);
+    expect(row?.lastMessageSenderIdentityId).toBeUndefined();
+    expect(row?.lastMessageStaffFirstName).toBeUndefined();
+    expect(row?.lastMessageIsSentByViewer).toBeUndefined();
+  });
+
+  it("names the colleague whose reply follows a customer message", () => {
+    const queryClient = new QueryClient();
+    seedConversationsCache(queryClient, [conversation({ id: "c1" })]);
+
+    patchConversationPreview(
+      queryClient,
+      "c1",
+      message({
+        id: "m-customer",
+        sender: {
+          handle: "fatima",
+          displayName: "Fátima Mendes",
+          avatarUrl: null,
+        },
+      }),
+    );
+    patchConversationPreview(
+      queryClient,
+      "c1",
+      message({
+        id: "m-colleague",
+        sender: { ...cafeSender, staffFirstName: "Rui" },
+        isSentByViewer: false,
+      }),
+    );
+    const row = readRow(queryClient);
+    expect(row?.lastMessageSenderIdentityId).toBe("identity-cafe");
+    expect(row?.lastMessageStaffFirstName).toBe("Rui");
+    expect(row?.lastMessageIsSentByViewer).toBe(false);
+  });
+});

@@ -2,6 +2,7 @@
 :root {
   /* ── Max widths ── */
   --maxw: 1240px;
+  --maxw-nav: 1180px; /* the floating nav pill's cap; the alignment reference for a page container that must line up edge to edge with the nav */
   --maxw-page: 1080px; /* de-facto standard page container */
   --maxw-text: 680px;
   --wrap-px: 28px; /* horizontal gutter */

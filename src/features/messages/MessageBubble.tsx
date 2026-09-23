@@ -3,6 +3,7 @@ import { memo, useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import { MessageActions } from "./MessageActions";
+import { attachmentCaption } from "./messageCopy";
 import {
   SwipeReplyHint,
   BubbleReactionStrip,
@@ -175,8 +176,11 @@ function MessageBubbleImpl({
       aria-describedby={[
         labelIds.content,
         // Only when `MessageBubbleBody` actually renders a caption node.
-        (message.attachment?.caption ?? message.sendAttachment?.caption) &&
-          labelIds.caption,
+        // Reuses `messageCopy.ts`'s own `attachmentCaption` (rather than
+        // reading `message.attachment?.caption` directly) so the one place
+        // that already excludes the sticker shape's captionless attachment
+        // is not duplicated here.
+        attachmentCaption(message) && labelIds.caption,
         labelIds.details,
       ]
         .filter(Boolean)

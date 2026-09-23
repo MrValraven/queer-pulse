@@ -58,6 +58,12 @@ export interface GetConversationsPageOptions {
   /** 1-100, server default 30. */
   limit?: number;
   signal?: AbortSignal;
+  /** The mailbox to list, an identity uuid the member staffs (or their own
+   *  profile identity for the personal mailbox). The server declares `as` on
+   *  this route; `forbidNonWhitelisted` rejects any parameter it does not
+   *  declare, so nothing else is added. Omitted, the server lists the merged
+   *  view. */
+  as?: string;
 }
 
 /**
@@ -70,10 +76,11 @@ export interface GetConversationsPageOptions {
 export async function getConversationsPage(
   options: GetConversationsPageOptions = {},
 ): Promise<Paginated<ConversationResponse>> {
-  const { cursor, limit, signal } = options;
+  const { cursor, limit, signal, as } = options;
   const params = new URLSearchParams();
   if (cursor) params.set("cursor", cursor);
   if (limit) params.set("limit", String(limit));
+  if (as) params.set("as", as);
   const qs = params.toString();
   const res = await apiGet<
     ConversationResponse[] | Paginated<ConversationResponse>
@@ -159,7 +166,11 @@ export function wasMessageReplayed(message: MessageResponse): boolean {
 /** POST /conversations/:id/messages — send. Rejects a blocked pair with 403.
  *  `clientMessageId` is the sender's idempotency key — the server dedupes on it,
  *  so a retry (or the HTTP + WS dual path) returns the same message, never two
- *  (ENG-222: flagged via `wasMessageReplayed` above when it does). */
+ *  (ENG-222: flagged via `wasMessageReplayed` above when it does).
+ *  `asIdentityId` is the identity the message was composed as (a business,
+ *  persona or company mailbox seat). Omitted, the server sends as the
+ *  caller's profile, which it refuses inside a business thread with
+ *  `IDENTITY_NOT_IN_CONVERSATION`. */
 export async function sendMessage(
   conversationId: string,
   body: string,
@@ -167,7 +178,9 @@ export async function sendMessage(
   clientMessageId?: string,
   forwarded?: boolean,
   attachment?: GifAttachment,
-  kind?: "user" | "gif" | "image",
+  kind?: "user" | "gif" | "image" | "sticker",
+  stickerId?: string,
+  asIdentityId?: string,
 ): Promise<MessageResponse> {
   const { data, headers } = await apiPostWithMeta<MessageResponse>(
     `/conversations/${conversationId}/messages`,
@@ -179,6 +192,11 @@ export async function sendMessage(
       ...((kind === "gif" || kind === "image") && attachment
         ? { kind, attachment }
         : {}),
+      // A sticker carries no attachment at all: the server reads the row and
+      // bakes one. Sending both is rejected server-side, so the two spreads
+      // above and below are mutually exclusive by construction.
+      ...(kind === "sticker" && stickerId ? { kind, stickerId } : {}),
+      ...(asIdentityId ? { asIdentityId } : {}),
     },
   );
   if (headers.get("Idempotent-Replayed") === "true") {
@@ -232,6 +250,10 @@ export interface GetStarredMessagesOptions {
    *  request (a fresh keystroke, or a demo→live toggle) is cancelled instead
    *  of racing a stale one to the cache. */
   signal?: AbortSignal;
+  /** The mailbox whose stars to list (an identity uuid). The server declares
+   *  `as` on this route; `forbidNonWhitelisted` rejects any parameter it does
+   *  not declare, so nothing else is added. */
+  as?: string;
 }
 
 /** GET /messages/starred: my starred messages, newest-star-first, optionally
@@ -239,12 +261,13 @@ export interface GetStarredMessagesOptions {
 export async function getStarredMessages(
   options: GetStarredMessagesOptions = {},
 ): Promise<StarredMessagesResponse> {
-  const { q, type, cursor, limit, signal } = options;
+  const { q, type, cursor, limit, signal, as } = options;
   const params = new URLSearchParams();
   if (q && q.trim()) params.set("q", q.trim());
   if (type) params.set("type", type);
   if (cursor) params.set("cursor", cursor);
   if (limit) params.set("limit", String(limit));
+  if (as) params.set("as", as);
   const qs = params.toString();
   return apiGet<StarredMessagesResponse>(
     `/messages/starred${qs ? `?${qs}` : ""}`,
@@ -449,16 +472,22 @@ export const revokeGroupInvite = (conversationId: string, inviteId: string) =>
  *  letting it run to completion against the backend. */
 /** `conversationId`, when supplied, scopes the search to that single thread
  *  ("search in this chat", opened from an already-open conversation) instead
- *  of the caller's whole inbox. */
+ *  of the caller's whole inbox. `as`, when supplied, limits the hits to one
+ *  mailbox (an identity uuid); the server applies it together with
+ *  `conversationId`. The server declares `as` on this route;
+ *  `forbidNonWhitelisted` rejects any parameter it does not declare, so
+ *  nothing else is added. */
 export async function searchMessages(
   query: string,
   limit?: number,
   signal?: AbortSignal,
   conversationId?: string,
+  as?: string,
 ): Promise<MessageSearchResponse> {
   const params = new URLSearchParams({ q: query });
   if (limit) params.set("limit", String(limit));
   if (conversationId) params.set("conversationId", conversationId);
+  if (as) params.set("as", as);
   return apiGet<MessageSearchResponse>(
     `/messages/search?${params.toString()}`,
     undefined,
@@ -547,6 +576,9 @@ export const deleteConversation = (conversationId: string) =>
  * ownership is shared with another build pass touching `sendMessage` directly,
  * so this is appended standalone instead of editing that function's shape.
  * Hits the SAME endpoint and is equally idempotent on `clientMessageId`.
+ * `asIdentityId` is the composing identity, exactly as on `sendMessage`:
+ * omitted, the server sends as the caller's profile, which it refuses inside
+ * a business thread with `IDENTITY_NOT_IN_CONVERSATION`.
  */
 export async function sendDocumentMessage(
   conversationId: string,
@@ -555,6 +587,7 @@ export async function sendDocumentMessage(
   replyToId?: string,
   clientMessageId?: string,
   forwarded?: boolean,
+  asIdentityId?: string,
 ): Promise<MessageResponse> {
   const { data, headers } = await apiPostWithMeta<MessageResponse>(
     `/conversations/${conversationId}/messages`,
@@ -565,6 +598,7 @@ export async function sendDocumentMessage(
       ...(replyToId ? { replyToId } : {}),
       ...(clientMessageId ? { clientMessageId } : {}),
       ...(forwarded ? { forwarded: true } : {}),
+      ...(asIdentityId ? { asIdentityId } : {}),
     },
   );
   // ENG-222: same idempotent-replay flag as `sendMessage` above, see

@@ -63,6 +63,7 @@ export function useConversationOverlays(
          the group's name today, and changing that is a separate call. */
       counterpartAvatar: active.isGroup ? undefined : active.avatarUrl,
       youAvatar: options.youAvatar,
+      t,
     });
 
   const overlays: ConversationPanelOverlayProps = {

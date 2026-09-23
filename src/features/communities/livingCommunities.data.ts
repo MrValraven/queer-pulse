@@ -5,6 +5,7 @@ import type {
   CommunityEvent,
   CommunityResource,
   LivingCommunity,
+  LivingCommunitySeed,
   ModReport,
   ModRequest,
   Post,
@@ -13,6 +14,12 @@ import type {
   ReactionKey,
   RosterMember,
 } from "./community.model";
+import {
+  DEMO_SPACE_FLINTA_SLUG,
+  DEMO_SPACE_PARENTS_SLUG,
+  DEMO_SPACES_INHERITED_RULES,
+  DEMO_SPACES_PARENT_REF,
+} from "./spaces.data";
 
 /* ----------------------------------------------------------------------------
  * Helpers — keep the data below readable.
@@ -2042,10 +2049,31 @@ const RUNNERS_REPORTS: ModReport[] = [
  * Registry
  * ------------------------------------------------------------------------- */
 
-export const LIVING: Record<string, LivingCommunity> = {
+/* ----------------------------------------------------------------------------
+ * Spaces (subcommunities) under queer-runners. Their cards and parent ref live
+ * in `spaces.data.ts`; this is their hub data.
+ * ------------------------------------------------------------------------- */
+
+const SPACE_PARENTS_ROSTER: RosterMember[] = [
+  R("sofia", "owner", { pronouns: "she/her", hood: "Graça", verified: true }),
+  R("nuno", "member", { pronouns: "he/him", hood: "Benfica" }),
+  R("rita", "member", { pronouns: "she/her", hood: "Intendente" }),
+];
+
+const SPACE_FLINTA_ROSTER: RosterMember[] = [
+  R("carla", "owner", { pronouns: "she/her", hood: "Arroios", verified: true }),
+  R("kai", "mod", { pronouns: "they/them", hood: "Anjos" }),
+  R("beatriz", "member", { pronouns: "she/her", hood: "Graça" }),
+];
+
+/** Every entry below may leave out the subcommunity fields; `LIVING` fills in
+ *  the top-level defaults (no parent, hosts no spaces). */
+const LIVING_SEEDS: Record<string, LivingCommunitySeed> = {
   "queer-runners": {
     slug: "queer-runners",
     accessTier: "public",
+    allowsSubcommunities: true,
+    subcommunityCount: 2,
     rules: RUNNERS_RULES,
     resources: RUNNERS_RESOURCES,
     events: RUNNERS_EVENTS,
@@ -2190,7 +2218,57 @@ export const LIVING: Record<string, LivingCommunity> = {
     moments: DISABLED_MOMENTS,
     stats: { members: 44, activeThisWeek: 13, postsThisWeek: 4 },
   },
+  [DEMO_SPACE_PARENTS_SLUG]: {
+    slug: DEMO_SPACE_PARENTS_SLUG,
+    accessTier: "public",
+    parent: DEMO_SPACES_PARENT_REF,
+    inheritedRules: DEMO_SPACES_INHERITED_RULES,
+    rules: [
+      "Buggies set the pace on the park loop.",
+      "Kids are welcome at the coffee after.",
+    ],
+    resources: [],
+    events: [],
+    roster: SPACE_PARENTS_ROSTER,
+    pinned: [],
+    pulse: [],
+    moments: [],
+    stats: { members: 18, activeThisWeek: 6, postsThisWeek: 2 },
+  },
+  [DEMO_SPACE_FLINTA_SLUG]: {
+    slug: DEMO_SPACE_FLINTA_SLUG,
+    accessTier: "request",
+    parent: DEMO_SPACES_PARENT_REF,
+    inheritedRules: DEMO_SPACES_INHERITED_RULES,
+    rules: [
+      "This space is for FLINTA* runners. Ask a mod if you are unsure.",
+      "Share your route home in the group if you want company.",
+    ],
+    resources: [],
+    events: [],
+    roster: SPACE_FLINTA_ROSTER,
+    pinned: [],
+    pulse: [],
+    moments: [],
+    stats: { members: 24, activeThisWeek: 9, postsThisWeek: 3 },
+  },
 };
+
+/** The demo registry with every subcommunity field filled in. Built once, so
+ *  `getLiving` hands back the same object on every call. */
+export const LIVING: Record<string, LivingCommunity> = Object.fromEntries(
+  Object.entries(LIVING_SEEDS).map(([slug, seed]) => [
+    slug,
+    {
+      frozenReason: null,
+      parent: null,
+      inheritedRules: null,
+      allowsSubcommunities: false,
+      subcommunityCount: 0,
+      ...seed,
+    },
+  ]),
+);
 
 export function getLiving(slug?: string): LivingCommunity | undefined {
   return slug ? LIVING[slug] : undefined;

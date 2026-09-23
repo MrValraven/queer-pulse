@@ -26,6 +26,9 @@ export interface CommunityDigestEntryDTO {
   slug: string;
   name: string;
   avatarImageUrl: string | null;
+  /** The parent community's name when this entry is a space (subcommunity),
+   *  else null. Optional so an older backend still types. */
+  parentName?: string | null;
   /** The viewer's own role on this roster. */
   myRole: RosterRole;
   /** The viewer's own notification level for this community. */

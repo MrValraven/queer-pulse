@@ -17,6 +17,8 @@ import {
   useUnreadMessages,
 } from "./api/useConversations";
 import { useMessageThread } from "./api/useMessageThread";
+import { useActiveMailbox } from "./mailboxes/useActiveMailbox";
+import { isNotStaffError, withMailboxSeat } from "./mailboxes/mailboxScope";
 import { withDemoLocalOnlyMessages } from "./api/demoThreadCache";
 import { useDeleteConversation } from "./api/useMessageActions";
 import {
@@ -103,19 +105,48 @@ export function useMessagesController() {
   // mounted) — no need for this page to additionally request it; `request()`
   // is refcounted, so the old call here was harmless but redundant.
 
+  // The active mailbox (`?as=`): the inbox lists that mailbox only.
+  const activeMailbox = useActiveMailbox();
+  const mailboxScope = activeMailbox.scope;
+  const activeMailboxIdentityId = activeMailbox.active?.identityId ?? null;
+
   // Source of truth for the inbox: demo returns the scripted mock, live calls
-  // GET /conversations. Either way the page renders the same view-model.
-  const convosQuery = useConversations();
+  // GET /conversations?as=. Either way the page renders the same view-model.
+  const convosQuery = useConversations(mailboxScope);
   const baseThreads = useMemo(() => convosQuery.data ?? [], [convosQuery.data]);
-  const loading = demoMode ? simLoading : convosQuery.isLoading;
+  // The server refused the active mailbox (the member stopped staffing it):
+  // `reportLostAccess` falls back to the personal mailbox, so the generic
+  // load error never shows for it.
+  const isMailboxRefused = isNotStaffError(convosQuery.error);
+  const { reportLostAccess } = activeMailbox;
+  useEffect(() => {
+    if (isNotStaffError(convosQuery.error)) reportLostAccess();
+  }, [convosQuery.error, reportLostAccess]);
+  // Live: still loading while no mailbox scope has resolved, since the inbox
+  // query waits for one, and while a refused mailbox falls back, so the
+  // empty-list state never paints for that frame.
+  const loading = demoMode
+    ? simLoading
+    : (mailboxScope === null && !activeMailbox.isError) ||
+      isMailboxRefused ||
+      convosQuery.isLoading;
   // DES-183: the list body needs to tell "genuinely empty" apart from "failed
   // to load". Demo mode's mock query never errors, so this stays false there,
-  // the same way `loading` special-cases it above.
-  const inboxLoadError = !demoMode && convosQuery.isError;
+  // the same way `loading` special-cases it above. A failed mailbox list
+  // leaves the inbox with no scope to load, so it counts as a load error too.
+  const inboxLoadError =
+    !demoMode &&
+    (activeMailbox.isError || (convosQuery.isError && !isMailboxRefused));
   // `() => void` (not `refetch` itself) so this can be handed straight to a
   // void-typed `onRetry` prop without an unhandled-promise lint complaint,
   // mirroring `useConnectionsList`'s own `refetch: () => void query.refetch()`.
-  const refetchInbox = () => void convosQuery.refetch();
+  const refetchInbox = () => {
+    if (activeMailbox.isError) {
+      activeMailbox.refetch();
+      return;
+    }
+    void convosQuery.refetch();
+  };
   const unread = useUnreadMessages();
   // ENG-253: cursor-pagination for the inbox list itself (`useConversations`'s
   // own `fetchNextPage`/`hasNextPage`/`isFetchingNextPage`), forwarded so
@@ -197,6 +228,27 @@ export function useMessagesController() {
    *  with a stable server `id` can be replied to (optimistic messages can't). */
   const [replyDraft, setReplyDraft] = useState<ChatMessage | null>(null);
 
+  // A mailbox switch starts the new mailbox fresh: no open thread, no search,
+  // no quoted reply, and no thread carried over from the previous mailbox's
+  // list. Same setState-during-render reset as the outbox scope above. The
+  // first resolve (nothing to a mailbox) is no switch, so a thread a deep
+  // link started before the mailboxes loaded survives it.
+  const [previousMailboxIdentityId, setPreviousMailboxIdentityId] = useState(
+    activeMailboxIdentityId,
+  );
+  if (previousMailboxIdentityId !== activeMailboxIdentityId) {
+    setPreviousMailboxIdentityId(activeMailboxIdentityId);
+    if (previousMailboxIdentityId !== null && activeMailboxIdentityId) {
+      setActiveId("");
+      setReadIds(new Set());
+      setQuery("");
+      setReplyDraft(null);
+      setExtraThreads([]);
+      setLocallyDeletedIds(new Set());
+      if (isMobile) setView("list");
+    }
+  }
+
   const { allThreads, visibleThreads, forwardableGroups } =
     useMessageThreadList({
       extraThreads,
@@ -258,9 +310,18 @@ export function useMessagesController() {
     // a future `placeholderData` option), and it makes the guarantee visible
     // and testable here rather than resting entirely on cache-key behaviour
     // the reader has to trust from elsewhere.
-    if (!detail || detail.id !== rawActive.id) return rawActive;
-    return {
+    if (!detail || detail.id !== rawActive.id) {
+      return mailboxScope
+        ? withMailboxSeat(rawActive, mailboxScope)
+        : rawActive;
+    }
+    const merged = {
       ...rawActive,
+      // A thread opened by deep link before the list holds it may be a bare
+      // placeholder; the detail read names its mailbox, so the seat below
+      // still lands.
+      mailboxIdentityId:
+        rawActive.mailboxIdentityId ?? detail.mailboxIdentityId,
       // A group mutation (add/remove member, role change, rename) patches an
       // already-fresh, already-correct roster straight into `extraThreads`/the
       // `["conversations"]` cache the instant it succeeds (see
@@ -277,7 +338,8 @@ export function useMessagesController() {
           : detail.members,
       draft: rawActive.draft ?? detail.draft,
     };
-  }, [rawActive, activeDetailQuery.data]);
+    return mailboxScope ? withMailboxSeat(merged, mailboxScope) : merged;
+  }, [rawActive, activeDetailQuery.data, mailboxScope]);
 
   // Apply the optimistic "left this group" flag so the composer severs + Group
   // info update the instant the member leaves, before the refetch lands.
@@ -447,6 +509,7 @@ export function useMessagesController() {
   const {
     send,
     sendGif,
+    sendSticker,
     sendImage,
     sendDocument,
     retrySend,
@@ -549,10 +612,12 @@ export function useMessagesController() {
     myUserId,
     send,
     sendGif,
+    sendSticker,
     sendImage,
     sendDocument,
     retrySend,
     markThreadRead: markRead.mutate,
     markThreadUnread,
+    activeMailbox,
   };
 }

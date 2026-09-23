@@ -1287,6 +1287,10 @@ export const gatherings: Catalog = {
   "manage.settings.cancelText":
     "Todas as pessoas serão avisadas e as inscrições serão libertadas. Isto não pode ser desfeito. Será enviada automaticamente uma mensagem de cancelamento.",
   "manage.settings.cancelCta": "Cancelar convívio",
+  "manage.settings.deleteLabel": "Eliminar este convívio",
+  "manage.settings.deleteText":
+    "Remove o convívio com as inscrições, as fotografias e os avisos dele, para sempre. Ninguém é notificado. Se já há pessoas inscritas, cancela-o primeiro para que sejam avisadas.",
+  "manage.settings.deleteCta": "Eliminar convívio",
 
   // ── Manage: sidebar ───────────────────────────────────────────────────────────
   "manage.sidebar.coverAlt": "Foto de capa de {title}",

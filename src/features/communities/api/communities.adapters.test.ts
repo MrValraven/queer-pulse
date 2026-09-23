@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   cardDtoToCommunity,
+  detailDtoToLiving,
   draftToCreateDto,
   draftToUpdateDto,
   dtoToEditable,
@@ -229,6 +230,62 @@ describe("the welcome greeting and the avatar survive the owner's round trip", (
     // has to carry them: omitting them founded every community with an empty
     // tag list, and the founder's picks were silently dropped on save.
     expect(created.tags).toEqual(["sports-fitness"]);
+  });
+});
+
+describe("detailDtoToLiving carries the subcommunity fields", () => {
+  it("maps a space's parent, inherited rules and pause reason", () => {
+    const living = detailDtoToLiving(
+      detail({
+        frozen: true,
+        frozenReason: "parent_frozen",
+        parent: {
+          slug: "queer-runners",
+          name: "Queer Runners",
+          avatarImageUrl: null,
+          isMember: true,
+        },
+        inheritedRules: { rules: ["Every pace belongs."], rulesVersion: 3 },
+        allowsSubcommunities: false,
+        subcommunityCount: 0,
+      }),
+    );
+    expect(living.parent).toEqual({
+      slug: "queer-runners",
+      name: "Queer Runners",
+      avatarImageUrl: null,
+      isMember: true,
+    });
+    expect(living.inheritedRules).toEqual({
+      rules: ["Every pace belongs."],
+      rulesVersion: 3,
+    });
+    expect(living.frozenReason).toBe("parent_frozen");
+    expect(living.allowsSubcommunities).toBe(false);
+    expect(living.subcommunityCount).toBe(0);
+  });
+
+  it("maps a parent that hosts spaces", () => {
+    const living = detailDtoToLiving(
+      detail({
+        parent: null,
+        inheritedRules: null,
+        allowsSubcommunities: true,
+        subcommunityCount: 2,
+      }),
+    );
+    expect(living.parent).toBeNull();
+    expect(living.allowsSubcommunities).toBe(true);
+    expect(living.subcommunityCount).toBe(2);
+  });
+
+  it("defaults every field when an older backend leaves them out", () => {
+    const living = detailDtoToLiving(detail());
+    expect(living.parent).toBeNull();
+    expect(living.inheritedRules).toBeNull();
+    expect(living.allowsSubcommunities).toBe(false);
+    expect(living.subcommunityCount).toBe(0);
+    expect(living.frozenReason).toBeNull();
   });
 });
 

@@ -141,6 +141,22 @@ describe("SUBJECT_REASONS", () => {
     },
   );
 
+  // PRD-376: a business, persona or company, reported by its customer from
+  // their thread with it. Mirrors the backend's
+  // `SUBJECT_REASONS[ReportSubjectType.Identity]` exactly.
+  it("offers a customer the thread codes first when reporting a business", () => {
+    expect(SUBJECT_REASONS.identity).toEqual([
+      "harassment",
+      "hate_speech",
+      "unwanted_contact",
+      "housing_scam",
+      "spam",
+      "venue_safety",
+      "discrimination",
+      "other",
+    ]);
+  });
+
   // Every subject offers a free-text escape hatch, so no reporter is ever
   // stuck without a way to say what happened.
   it("offers `other` on every subject type", () => {
@@ -174,6 +190,9 @@ describe("SUBJECT_REASONS", () => {
       "listing_public_question",
       "event_photo",
       "landlord_recommendation",
+      "volunteering",
+      "conversation",
+      "identity",
     ];
     expect(Object.keys(SUBJECT_REASONS).sort()).toEqual(
       [...backendSubjectTypes].sort(),

@@ -289,6 +289,12 @@ export function modReportDetailFrom(
   if (dto.detail.conversationContextAvailable) {
     detail.conversationContextAvailable = true;
   }
+  // Business mailboxes, design section 9 (spec 9 / I2): the identity a
+  // reported message was sent as, passed through unchanged. Every field is
+  // backend-fetched content, so nothing here needs a translator.
+  if (dto.detail.sentAsIdentity) {
+    detail.sentAsIdentity = dto.detail.sentAsIdentity;
+  }
   const evidenceSnapshots = evidenceSnapshotsFrom(dto.detail.evidence);
   if (evidenceSnapshots.length) detail.evidenceSnapshots = evidenceSnapshots;
   return detail;

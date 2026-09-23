@@ -55,6 +55,27 @@
     color: rgba(var(--cream-rgb), 0.72);
   }
 }
+/* A space's (subcommunity's) breadcrumb: the same "back to" link style as
+   `.breadcrumb` above, followed by a chevron and the space's own name. The
+   wrapper alone carries the bottom margin: the link's own `.breadcrumb`
+   margin is zeroed so the two never double up. */
+.spaceBreadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+.spaceBreadcrumb .breadcrumb {
+  margin-bottom: 0;
+}
+.spaceBreadcrumbChevron {
+  color: rgba(var(--cream-rgb), 0.35);
+}
+.spaceBreadcrumbName {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 0.9);
+}
 .typeBadge {
   display: inline-flex;
   align-items: center;

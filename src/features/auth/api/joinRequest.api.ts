@@ -36,6 +36,9 @@ export interface JoinRequestDTO {
    * legacy row. Shown as a "came from" line in the mod queue.
    */
   source: string | null;
+  /** The applicant's own answer to "Where did you hear about QueerPulse?",
+   *  shown to reviewers. Null on legacy rows that predate the question. */
+  heardFrom: string | null;
   /** ISO timestamp the request was submitted. */
   createdAt: string;
   reviewedAt: string | null;
@@ -110,6 +113,9 @@ export interface CreateJoinRequestInput {
    *  structured field a reviewer can match, distinct from the free-text
    *  `message`. Omit when they named nobody. */
   mutualMemberEmail?: string;
+  /** Required: where the applicant heard about QueerPulse, in their own
+   *  words (1 to 200 chars). */
+  heardFrom: string;
   /** The 18+ self-attestation (spec 06). Must be true; the backend re-validates. */
   ageAttested: true;
   /** Which Terms version's eligibility clause was affirmed. */

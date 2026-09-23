@@ -62,7 +62,14 @@ export function useSendMessage() {
       clientMessageId?: string;
       forwarded?: boolean;
       attachment?: GifAttachment;
-      kind?: "user" | "gif" | "image";
+      kind?: "user" | "gif" | "image" | "sticker";
+      /** Set only when `kind === "sticker"`: the catalogue sticker's id, the
+       *  entire wire payload for a sticker send (see `sendMessage`'s own doc
+       *  in `messages.api.ts` for why no attachment ever rides alongside). */
+      stickerId?: string;
+      /** The identity the message was composed as (a mailbox seat), read
+       *  off the message itself. Omitted for a personal send. */
+      asIdentityId?: string;
     }
   >({
     mutationFn: async ({
@@ -73,6 +80,8 @@ export function useSendMessage() {
       forwarded,
       attachment,
       kind,
+      stickerId,
+      asIdentityId,
     }) => {
       if (demoMode) return null;
       return sendMessage(
@@ -83,6 +92,8 @@ export function useSendMessage() {
         forwarded,
         attachment,
         kind,
+        stickerId,
+        asIdentityId,
       );
     },
     onSuccess: (message, { conversationId }) => {

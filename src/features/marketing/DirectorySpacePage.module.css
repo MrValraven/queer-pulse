@@ -8,8 +8,10 @@
 .coverHead {
   padding-top: 24px;
 }
+/* The cover container carries the nav pill's cap so the listing lines up
+   edge to edge with the nav above it. */
 .coverInner {
-  max-width: var(--maxw-page);
+  max-width: var(--maxw-nav);
   margin: 0 auto;
   padding: 18px 16px 0;
 }
@@ -133,41 +135,6 @@
   font-weight: 600;
 }
 
-/* Cover placeholder for a listing with no uploaded photos AND no captions —
-   an intentional tinted panel (matching the caption cells' tint) carrying the
-   place's monogram, so the cover never renders as an empty box. */
-.galleryEmpty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-height: 300px;
-  border-radius: var(--radius-card);
-  background: rgba(var(--accent-rgb), 0.1);
-}
-.galleryEmptyMonogram {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.533em;
-  height: 2.533em;
-  border-radius: 50%;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  font-family: var(--serif);
-  font-size: var(--text-30);
-  font-weight: 600;
-  color: var(--text-strong);
-  letter-spacing: 0.01em;
-}
-.galleryEmptyLabel {
-  font-size: var(--text-12);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
 @media (--lg) {
   .gallery {
     grid-template-columns: 1fr;
@@ -408,8 +375,10 @@
   }
 }
 
+/* The body container carries the nav pill's cap so the listing lines up
+   edge to edge with the nav above it. */
 .page {
-  max-width: var(--maxw-page);
+  max-width: var(--maxw-nav);
   margin: 0 auto;
   padding: 36px 28px var(--section-y-80);
   /* Query container so the two-column body responds to the width it actually
@@ -441,9 +410,9 @@
 
 /* ── Identity header (full-width, above the gallery) ─────────────────────────
    Name/eyebrow/tagline/meta on the left; the primary actions inline on the
-   right, aligned to the top of the name. On narrow viewports the row wraps and
-   the actions drop below (on phones they become the fixed bottom bar, out of
-   flow entirely — see `.actionBar`). */
+   right, aligned to the top of the name. The actions are one compact row of
+   icon buttons at every size (see `.actionBar`); on narrow viewports the
+   header simply wraps and that row drops below the identity column. */
 .identity {
   padding-top: 8px;
 }
@@ -459,9 +428,29 @@
   flex: 1 1 min(100%, 460px);
   min-width: 0;
 }
+/* Auto width: the icon row is exactly as wide as its five 44px buttons and
+   four 8px gaps (252px), so it no longer reserves a 320px card's worth of the
+   header. */
 .spaceHeadActions {
   flex: 0 0 auto;
-  width: min(320px, 100%);
+}
+/* Both columns start at the same y (`.spaceHead` is `align-items: flex-start`),
+   which would leave the icon row level with the eyebrow, floating above the
+   name. 36px lands its optical centre on the name instead, derived as:
+   the eyebrow's line box is 11px (`--text-11`) at the 1.55 body line height,
+   so 17px, plus its own 14px `margin-bottom`, which puts the h1's first line
+   box 31px down. That box is one `font-size` tall (`line-height: 1`), and
+   wherever this row sits side by side the name is at or near its 4rem cap, so
+   64px, centring 32px into the box (63px from the top). Fraunces caps sit high
+   inside a `line-height: 1` box, which reserves descender room the name mostly
+   does not use, so the optical centre is about 5px above that, at 58px. A 44px
+   button centres 22px into its own box, so the row starts at 58 - 22 = 36px.
+   Scoped above the wrap point: once the row drops below the identity column,
+   the flex row's own gap is the only spacing it needs. */
+@media (--mobile-up) {
+  .spaceHeadActions {
+    margin-top: 36px;
+  }
 }
 .eyebrow {
   font-size: var(--text-11);
@@ -1268,57 +1257,36 @@
   gap: 14px;
 }
 
-/* ── Primary action bar (Directions / Call / Share / Save) ───────────────────
-   Desktop: an ordinary card, first in the aside column, above the map.
-   Mobile: pinned to the bottom of the viewport for one-handed reach — see the
-   760px override below, which mirrors BottomTabBar's fixed + safe-area-inset
-   pattern. PageShell always mounts BottomTabBar (it self-gates on
-   isInstalled && isMobile), so in an installed standalone PWA that bar sits
-   fixed at bottom:0, z-index:100, opaque, on TOP of a naive `bottom: 0` bar.
-   `--bottom-inset` (0 in an ordinary browser tab; the tab bar's full occupied
-   height in standalone — see standalone.css) raises us clear of it, same
-   precedent as QuickExit.module.css / Consent.module.css. `--consent-inset`
-   (set by ConsentBanner itself while it's showing, 0 otherwise) additionally
-   clears the cookie banner — without it the banner (z-index 1200) fully
-   occludes this bar on first paint since both anchor to the viewport bottom. */
+/* ── Primary action row (Directions / Call / Share / Send / Save) ────────────
+   Five icon-only controls on one line, to the right of the listing name, at
+   every viewport. No card surface, no divider, no labels: the icons plus their
+   tooltips are the whole affordance, and the row no longer needs a box to hold
+   labels inside. Every control is a 44px square (`Button variant="icon"`), so
+   five of them with four 8px gaps measure 252px, which clears the 288px a
+   320px viewport leaves inside `.coverInner`'s 16px gutters. `nowrap` (the
+   flex default) keeps them on that one line, and nothing here is wider than
+   its content, so the row cannot push the page into horizontal scroll. */
 .actionBar {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  padding: 14px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-18);
 }
-.actionBarBtn {
-  flex: 1 1 auto;
-  min-width: 0;
+/* Directions is the reason most readers open a venue page, so it keeps a coral
+   tint and reads as first among equals. The tint lives on the icon rather than
+   the button so the quiet hover treatment in Button.module.css (which repaints
+   the button's own `color`) leaves it coral. */
+.actionBarDirectionsIcon {
+  color: var(--accent);
 }
-@media (--lg) {
-  .actionBar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: calc(var(--bottom-inset, 0px) + var(--consent-inset, 0px));
-    z-index: var(--z-sticky);
-    gap: 8px;
-    padding: 10px 12px max(env(safe-area-inset-bottom), 8px);
-    background: var(--paper);
-    border: none;
-    border-top: 1px solid rgba(var(--line-rgb), 0.09);
-    border-radius: 0;
-    box-shadow: 0 -8px 24px rgba(var(--plum-rgb), 0.1);
-  }
-  .actionBarBtn {
-    flex-basis: 0;
-  }
-  /* Clear the fixed bar so page content (and the footer) never sits under it.
-     The installed-PWA tab-bar reserve is already applied once by
-     standalone.css on main[data-page-main], so don't add var(--bottom-inset)
-     again here. */
-  .page {
-    padding-bottom: calc(80px + 60px + env(safe-area-inset-bottom));
-  }
+/* A Feather heart is stroked and hollow by default. Both of these set a real
+   value: an `undefined` fill paints the icon solid black. Saved fills in jade,
+   on the icon for the same reason the Directions tint sits there. */
+.actionBarHeartFull {
+  fill: currentColor;
+  color: var(--jade);
+}
+.actionBarHeartHollow {
+  fill: none;
 }
 /* The aside's closing affordances (report / suggest an edit). Both ship their
    own centred wrapper sized for the loose stack they used to sit in, which left
@@ -1337,6 +1305,15 @@
 .sideFooter > div > button {
   padding: 7px 0;
   text-align: left;
+}
+/* The "nobody owns this yet" line above the claim paths. Quiet, so it reads
+   as context for the controls under it. */
+.footerUnclaimedNote {
+  margin: 0 0 4px;
+  padding: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
 }
 .sideCard {
   background: var(--paper);
@@ -1412,26 +1389,36 @@
   height: 22px;
   color: var(--jade);
 }
-.claimLink {
-  display: inline-block;
-  margin-top: 12px;
-  font-size: var(--text-13);
+/* The "claims you've filed" link, sitting with the footer's two button
+   controls: same quiet weight and left alignment as `.trigger` in
+   DirectoryContestControl / ReportSubjectControl, whose vertical padding the
+   `.sideFooter > div > button` rule above already normalises. */
+.footerClaimsLink {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 0;
+  font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--accent-ink);
+  color: var(--ink-40);
   text-decoration: none;
-  /* Also used on a <button> (DirectoryAsideOwner) when the claim opens a
-     modal rather than navigating — reset native button chrome so it reads
-     identically to the <Link> fallback. */
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: inherit;
-  cursor: pointer;
+  transition: color var(--dur-base) var(--ease);
+}
+.footerClaimsLink svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
 }
 @media (hover: hover) {
-  .claimLink:hover {
-    text-decoration: underline;
+  .footerClaimsLink:hover {
+    color: var(--ink-60);
   }
+}
+.footerClaimsLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
 }
 .notFound {
   max-width: 640px;
@@ -1501,53 +1488,53 @@
   justify-content: center;
 }
 
-/* Owner card */
-.ownerAv {
-  margin-bottom: 12px;
-}
-.ownerName {
-  font-size: var(--text-16);
-  font-weight: 700;
-  color: var(--text-strong);
-  margin-bottom: 3px;
-}
-.ownerRole {
-  font-size: var(--text-12-5);
+/* ── "Run by …" byline ───────────────────────────────────────────────────────
+   One compact row closing the identity block, where the sticky rail's "Who
+   runs it" card used to carry the same attribution. Wraps rather than
+   overflowing: the role is free text an owner typed, so it can be long. */
+.ownerByline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: var(--text-13);
   color: var(--ink-40);
-  margin-bottom: 10px;
+  min-width: 0;
 }
-.qpChip {
+.ownerBylineName {
+  min-width: 0;
+  color: var(--ink-60);
+}
+.ownerBylineLink {
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: none;
+  border-radius: var(--radius-4);
+}
+@media (hover: hover) {
+  .ownerBylineLink:hover {
+    text-decoration: underline;
+  }
+}
+.ownerBylineLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.ownerBylineState {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--text-11);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border-radius: var(--radius-6);
-  padding: 4px 9px;
-  margin-bottom: 12px;
+  gap: 5px;
 }
-.qpChipYes {
-  color: var(--jade);
-  background: rgba(var(--jade-rgb), 0.1);
-}
-.qpChipYes::before {
-  content: "";
+/* The same small filled dot the old "On QueerPulse" chip drew, kept so the
+   signal still has a visual marker once the pill is gone. */
+.ownerBylineDot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--jade);
-}
-.qpChipNo {
-  color: var(--ink-60);
-  background: rgba(var(--plum-rgb), 0.06);
-}
-.ownerBio {
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  line-height: 1.55;
-  margin-bottom: 14px;
+  flex: none;
 }
 
 .whoHere {
@@ -1846,7 +1833,7 @@
 
 /* ── "More like this" related places row ─────────────────────────────────── */
 .related {
-  max-width: var(--maxw-page);
+  max-width: var(--maxw-nav);
   margin: 0 auto;
   padding: 28px 28px var(--section-y-64);
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
@@ -1978,7 +1965,7 @@
    DirectoryNearbyPlaces) in the shared `.relatedGrid`, above the wider
    "More like this" row. Distance rides on each card's photo. */
 .nearby {
-  max-width: var(--maxw-page);
+  max-width: var(--maxw-nav);
   margin: 0 auto;
   padding: 28px 28px 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.1);

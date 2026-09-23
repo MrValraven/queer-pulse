@@ -1,15 +1,27 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
-import { useAuth } from "../../../app/providers/authContext";
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
+import {
+  isFromViewerSide,
+  type MessageViewer,
+} from "../../../shared/api/mailboxViewer";
 import { activeLocale } from "../../../shared/i18n/locale";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { MessageSearchResponse } from "../../../shared/contracts/contracts";
 import type { TFunction } from "../../../shared/i18n/types";
-import { conversations as mockConversations } from "../data";
+import { conversations as mockConversations, type ChatMessage } from "../data";
+import { demoIdentityAuthor } from "../demoIdentities.data";
+import {
+  belongsToMailbox,
+  isNotStaffError,
+  type ConversationListScope,
+} from "../mailboxes/mailboxScope";
+import { useActiveMailbox } from "../mailboxes/useActiveMailbox";
+import { useMessageViewer } from "../useMessageViewer";
+import { colleagueSenderLabel, isTypedByViewer } from "../viewerSideSender";
 import { groupInitials } from "./messages.adapters";
 import { searchMessages } from "./messages.api";
 
@@ -86,7 +98,7 @@ function snippetAround(text: string, query: string): string {
  * backend's grouping query happened to pick first. */
 function toGroups(
   response: MessageSearchResponse,
-  myHandle: string | null,
+  viewer: MessageViewer,
   t: TFunction,
 ): MessageSearchGroupView[] {
   const metaByConversation = new Map(
@@ -139,7 +151,8 @@ function toGroups(
       conversationId: hit.conversationId,
       snippet: hit.snippet,
       time: shortTime(hit.createdAt),
-      from: myHandle && hit.sender.handle === myHandle ? "me" : "them",
+      // A reply sent as a business the viewer staffs is on the viewer's side.
+      from: isFromViewerSide(hit.sender, viewer) ? "me" : "them",
       // ENG-243: an erased sender's hit is labelled in the viewer's language.
       senderName: hit.sender.isFormerMember
         ? t("messages:formerMember")
@@ -168,20 +181,46 @@ function shortTime(iso: string): string {
   return date.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }
 
+/** A demo hit's sender: "You" for the member's own message, the business
+ *  with the colleague's first name for a colleague's business reply, the
+ *  thread's name otherwise. A seed carries the identity it was sent as and
+ *  the business name comes from the demo directory, as the thread's own
+ *  sender does (`demoThreadCache.ts`). */
+function demoHitSenderName(
+  item: ChatMessage,
+  conversationName: string,
+  youLabel: string,
+  t: TFunction,
+): string {
+  if (isTypedByViewer(item)) return youLabel;
+  if (item.from !== "me") return conversationName;
+  const business = item.senderIdentityId
+    ? demoIdentityAuthor(item.senderIdentityId).displayName
+    : undefined;
+  return colleagueSenderLabel(
+    { senderName: business, senderStaffFirstName: item.senderStaffFirstName },
+    t,
+  );
+}
+
 /** Demo search: filter the colocated mock message set locally — no network.
  *  `scopedToConversationId`, when set, only searches that one conversation's
  *  mock messages (the "search in this chat" mode), mirroring the live-mode
- *  `conversationId` query param. */
+ *  `conversationId` query param. `mailboxScope` keeps the hits of the active
+ *  mailbox's threads, mirroring the live-mode `as` query param. */
 function searchDemo(
   query: string,
   deletedIds: ReadonlySet<string>,
   youLabel: string,
+  mailboxScope: ConversationListScope,
+  t: TFunction,
   scopedToConversationId?: string,
 ): MessageSearchGroupView[] {
   const needle = query.toLowerCase();
   const groups: MessageSearchGroupView[] = [];
   for (const conversation of mockConversations) {
     if (deletedIds.has(conversation.id)) continue;
+    if (!belongsToMailbox(conversation, mailboxScope)) continue;
     if (scopedToConversationId && conversation.id !== scopedToConversationId) {
       continue;
     }
@@ -195,7 +234,7 @@ function searchDemo(
           snippet: snippetAround(item.text, query),
           time: item.time ?? conversation.time,
           from: item.from,
-          senderName: item.from === "me" ? youLabel : conversation.name,
+          senderName: demoHitSenderName(item, conversation.name, youLabel, t),
         });
       }
     }
@@ -224,6 +263,11 @@ function searchDemo(
  * thread instead of the caller's whole inbox — the "search in this chat" mode
  * opened from an already-open conversation (`ThreadSearchModal`). Omitted
  * (the default) searches every conversation, as the inbox-root search box does.
+ *
+ * Both modes search the active mailbox only: live sends its identity as `as`
+ * (together with `conversationId` when scoped; the server applies both), and
+ * the query key carries it. A refused mailbox (`IDENTITY_NOT_STAFF`) falls
+ * back to the personal one through `reportLostAccess`.
  */
 export function useMessageSearch(
   debouncedQuery: string,
@@ -232,9 +276,11 @@ export function useMessageSearch(
 ): MessageSearchState {
   const { demoMode } = useDemoMode();
   const { deletedIds } = useDeletedConversations();
-  const { user } = useAuth();
+  const viewer = useMessageViewer();
   const { t } = useTranslation();
-  const myHandle = user?.profile.slug ?? null;
+  const activeMailbox = useActiveMailbox();
+  const mailboxScope = activeMailbox.scope;
+  const mailboxIdentityId = mailboxScope?.identityId ?? null;
   const trimmed = debouncedQuery.trim();
   const enabled = trimmed.length >= MIN_SEARCH_LENGTH;
   const deletedToken = [...deletedIds].sort().join(",");
@@ -245,22 +291,41 @@ export function useMessageSearch(
       trimmed,
       demoMode,
       scopedToConversationId ?? null,
+      mailboxIdentityId,
     ],
-    enabled: enabled && !demoMode,
+    enabled: enabled && !demoMode && mailboxIdentityId !== null,
     // Forward react-query's own cancellation signal into the fetch — a fast
     // retype (new `trimmed` → new queryKey) cancels the previous keystroke's
     // request at the network layer, not just in the query cache.
     queryFn: ({ signal }) =>
-      searchMessages(trimmed, SEARCH_LIMIT, signal, scopedToConversationId),
+      searchMessages(
+        trimmed,
+        SEARCH_LIMIT,
+        signal,
+        scopedToConversationId,
+        mailboxIdentityId ?? undefined,
+      ),
     // A search term is short-lived; keep results briefly so re-typing the same
     // query doesn't refetch, but don't hoard stale corpora.
     staleTime: 30_000,
   });
 
+  const { reportLostAccess } = activeMailbox;
+  useEffect(() => {
+    if (isNotStaffError(liveQuery.error)) reportLostAccess();
+  }, [liveQuery.error, reportLostAccess]);
+
   const demoGroups = useMemo(
     () =>
-      demoMode && enabled
-        ? searchDemo(trimmed, deletedIds, youLabel, scopedToConversationId)
+      demoMode && enabled && mailboxScope
+        ? searchDemo(
+            trimmed,
+            deletedIds,
+            youLabel,
+            mailboxScope,
+            t,
+            scopedToConversationId,
+          )
         : [],
     // deletedToken stands in for the deletedIds set identity.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -270,13 +335,15 @@ export function useMessageSearch(
       trimmed,
       deletedToken,
       youLabel,
+      mailboxScope,
+      t,
       scopedToConversationId,
     ],
   );
 
   const liveGroups = useMemo(
-    () => (liveQuery.data ? toGroups(liveQuery.data, myHandle, t) : []),
-    [liveQuery.data, myHandle, t],
+    () => (liveQuery.data ? toGroups(liveQuery.data, viewer, t) : []),
+    [liveQuery.data, viewer, t],
   );
 
   const groups = demoMode ? demoGroups : liveGroups;
@@ -285,9 +352,22 @@ export function useMessageSearch(
   return {
     groups,
     totalHits,
-    isLoading: enabled && !demoMode && liveQuery.isLoading,
+    // Live: still loading while no mailbox has resolved, since the search
+    // waits for one.
+    isLoading:
+      enabled &&
+      !demoMode &&
+      ((mailboxIdentityId === null && !activeMailbox.isError) ||
+        liveQuery.isLoading),
     enabled,
-    isError: enabled && !demoMode && liveQuery.isError,
-    refetch: () => void liveQuery.refetch(),
+    isError:
+      enabled && !demoMode && (liveQuery.isError || activeMailbox.isError),
+    refetch: () => {
+      if (activeMailbox.isError) {
+        activeMailbox.refetch();
+        return;
+      }
+      void liveQuery.refetch();
+    },
   };
 }

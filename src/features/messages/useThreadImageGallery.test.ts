@@ -4,6 +4,7 @@ import {
   findPhotoIndex,
   isViewablePhoto,
 } from "./useThreadImageGallery";
+import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage } from "./data";
 
 const options = { counterpartName: "Nadia", youLabel: "You" };
@@ -119,6 +120,47 @@ describe("collectThreadPhotos", () => {
       "https://cdn.example/nadia.jpg",
       "https://cdn.example/me.jpg",
       "https://cdn.example/ines.jpg",
+    ]);
+  });
+
+  it("names a colleague's business photo by the business and first name, with the business's photo", () => {
+    const translate: TFunction = (key, values) =>
+      key === "messages:mailbox.attribution.customerLine"
+        ? `${values?.name} from ${values?.business}`
+        : key;
+    const businessReply = {
+      from: "me" as const,
+      senderName: "Café Lisboa",
+      senderAvatar: "https://cdn.example/cafe.jpg",
+      senderIdentityId: "identity-cafe",
+      senderStaffFirstName: "Rui",
+    };
+    const colleagues = photoMessage({
+      id: "m1",
+      ...businessReply,
+      isSentByViewer: false,
+    });
+    const mine = photoMessage({
+      id: "m2",
+      ...businessReply,
+      senderStaffFirstName: "Tiago",
+      isSentByViewer: true,
+    });
+    const photos = collectThreadPhotos(
+      [{ day: "Today", items: [colleagues, mine] }],
+      { ...options, youAvatar: "https://cdn.example/me.jpg", t: translate },
+    );
+    expect(
+      photos.map(({ senderName, senderAvatar }) => ({
+        senderName,
+        senderAvatar,
+      })),
+    ).toEqual([
+      {
+        senderName: "Rui from Café Lisboa",
+        senderAvatar: "https://cdn.example/cafe.jpg",
+      },
+      { senderName: "You", senderAvatar: "https://cdn.example/me.jpg" },
     ]);
   });
 

@@ -3,6 +3,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { ChatMessage, Conversation } from "./data";
 import type { MessageForwarding } from "./useMessageForwarding";
+import { mediaKindOf } from "./messageSending.helpers";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 
 export interface ForwardSendResult {
   /** Fires one `forwardMessage` call per recipient, in parallel, and calls
@@ -87,11 +89,13 @@ export function useForwardSend(
       setIsSending(true);
       setFailedRecipientIds(new Set());
       const requestedForMessage = message;
-      const mediaKind =
-        message.kind === "gif" ||
-        message.kind === "image" ||
-        message.kind === "document"
-          ? message.kind
+      // The shared `mediaKindOf` helper recognizes every kind `deliver`
+      // understands, sticker included, so a forwarded sticker carries its
+      // kind onward the same way any other media kind does.
+      const mediaKind = mediaKindOf(message);
+      const stickerId =
+        message.attachment && isStickerAttachment(message.attachment)
+          ? message.attachment.stickerId
           : undefined;
       void (async () => {
         const outcomes = await Promise.allSettled(
@@ -101,6 +105,7 @@ export function useForwardSend(
               message.text,
               message.attachment,
               mediaKind,
+              stickerId,
             ),
           ),
         );

@@ -1,0 +1,19 @@
+/* The affirming-baseline pledge inside DirectoryClaimModal. Mirrors
+ * ownership/Ownership.module.css's `.pledge`/`.pledgeLead` recipe (paper on
+ * cream, a firmer border so the tinted notice panel inside it stays
+ * distinct), written out here rather than shared across features per this
+ * repo's no-cross-feature-CSS-import convention. */
+.pledge {
+  margin-bottom: 18px;
+  padding: 15px 16px;
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+}
+
+.pledgeLead {
+  margin: 0 0 14px;
+  font-size: var(--text-13-5);
+  line-height: 1.6;
+  color: var(--ink);
+}

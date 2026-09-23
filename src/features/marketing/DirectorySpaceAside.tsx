@@ -1,5 +1,4 @@
 import { type DirectoryPlace } from "./directoryPlaces";
-import { DirectoryAsideOwner } from "./DirectoryAsideOwner";
 import { DirectoryAsideExtras } from "./DirectoryAsideExtras";
 import { DirectoryAsideFooter } from "./DirectoryAsideFooter";
 import s from "./DirectorySpacePage.module.css";
@@ -15,8 +14,8 @@ interface Props {
 }
 
 /**
- * The trust layer: who else has been here, what is happening here next, who
- * runs the place, and the ways to challenge or report any of it.
+ * The trust layer: who else has been here, what is happening here next, and
+ * the ways to challenge or report any of it.
  *
  * This rail used to open with the map, the address and every contact route.
  * Those are the answers a member came for, so they moved into the main column
@@ -25,8 +24,10 @@ interface Props {
  * about the people behind the listing.
  *
  * The order within the rail follows the same logic. "Upcoming here" can still
- * change a plan, so it leads; the owner's card sits under it; the report and
- * suggest-an-edit paths close it out.
+ * change a plan, so it leads; the report, suggest-an-edit and claim paths close
+ * it out. Owner attribution moved up into the page header as a one-line byline
+ * (`DirectoryOwnerByline`), which is why the rail no longer opens with a card
+ * about the person behind the listing.
  */
 export function DirectorySpaceAside({
   place,
@@ -36,11 +37,6 @@ export function DirectorySpaceAside({
   return (
     <aside className={s.side}>
       <DirectoryAsideExtras place={place} preview={preview} />
-      <DirectoryAsideOwner
-        place={place}
-        preview={preview}
-        ownerRef={ownerRef}
-      />
       <DirectoryAsideFooter
         place={place}
         preview={preview}

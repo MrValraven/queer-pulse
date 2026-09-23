@@ -23,7 +23,8 @@ const GCELL: Record<Tint, string> = {
  * Directory detail cover. Places with real uploaded photos get a photo hero
  * + thumbnail grid that opens a lightbox on click; places without photos
  * (demo places, or listings the owner hasn't uploaded images for yet) fall
- * back to the original tinted caption blocks.
+ * back to the original tinted caption blocks. A listing with neither renders
+ * no cover at all.
  */
 export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
@@ -34,28 +35,11 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
   if (shots.length === 0) {
     // No uploaded photos. If the listing at least described its slots, keep the
     // tinted caption grid. Otherwise (a fresh submission with no captions
-    // either) a bare grid renders as dead space — show an honest placeholder
-    // panel with the place's initials instead so the cover still reads as
-    // intentional (this is what a moderator sees before any photos exist).
+    // either) the cover has nothing to show, so the page skips it entirely and
+    // goes from the header straight to the body rather than holding space for
+    // photos that do not exist.
     if (place.gallery.length === 0) {
-      return (
-        <div className={styles.cover}>
-          <div className={styles.coverInner}>
-            <div
-              className={[styles.galleryEmpty, GCELL[place.tint]].join(" ")}
-              role="img"
-              aria-label={t("marketing:directory.detail.galleryAria", {
-                name: place.name,
-              })}
-            >
-              <span className={styles.galleryEmptyMonogram}>{place.av}</span>
-              <span className={styles.galleryEmptyLabel}>
-                {t("marketing:directory.detail.noPhotos")}
-              </span>
-            </div>
-          </div>
-        </div>
-      );
+      return null;
     }
     return (
       <div className={styles.cover}>

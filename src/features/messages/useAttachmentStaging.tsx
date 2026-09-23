@@ -160,9 +160,15 @@ export function useAttachmentStaging({
   // right away, so the banner never sits open once the caption screen hands
   // its batch to the queue (see `sendStaged` in `useAttachmentQueueLifecycle`).
   // A haptic tick confirms the send (DES-210), only when something is staged.
+  // The mailbox seat is snapshotted beside the reply, so an upload that
+  // finishes after a thread or mailbox switch still sends as the identity it
+  // was composed as.
   const sendStaged = useCallback(() => {
     if (staged.length > 0) hapticTap();
-    const snapshot = buildReplySnapshot(replyDraft, active, t);
+    const snapshot = {
+      ...buildReplySnapshot(replyDraft, active, t),
+      sendAsIdentityId: active.mailboxSeatIdentityId,
+    };
     if (replyDraft) onCancelReply?.();
     queueSendStaged?.(conversationId, snapshot);
   }, [

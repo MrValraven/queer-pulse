@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar, Button, SpaceLabel } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { photoOf } from "../communities/communityPeople";
@@ -40,6 +40,7 @@ export function CommunityPostCard({
   hub,
   signals,
   muteTarget,
+  parentName = null,
 }: {
   post?: FeedPost;
   hub?: HubPost;
@@ -55,6 +56,13 @@ export function CommunityPostCard({
   /** The community this post came from, so the card's menu can offer
    *  "show me less of this" (SOC-18). Muting it never leaves the community. */
   muteTarget?: FeedMuteTarget;
+  /** The parent community's name when a live post's source is a space
+   *  (subcommunity), else null. Carried on `FeedItem.source.parentName`,
+   *  which `feedItemToPost` does not map onto `FeedPost`, so `FeedPage`
+   *  passes it alongside `post` the same way it already passes `signals`
+   *  and `muteTarget`. Ignored on the `hub` branch, which carries its own
+   *  `HubPost.parentName` instead. */
+  parentName?: string | null;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -76,6 +84,10 @@ export function CommunityPostCard({
     : (post.avatarUrl ?? undefined);
   const body = hub ? hub.post.body : post.body;
   const communityName = hub ? hub.communityName : post.context;
+  // A `hub` item carries its own `parentName` (from `useCommunitiesHomeData`);
+  // a live `post` carries it on the sibling `parentName` prop (see its doc
+  // above), since `FeedPost` itself has no such field.
+  const communityParentName = hub ? (hub.parentName ?? null) : parentName;
   const replyCount = hub ? hub.post.replies.length : post.replies.length;
   const reactionCount = hub
     ? hub.post.reactions.reduce((sum, reaction) => sum + reaction.count, 0)
@@ -121,7 +133,9 @@ export function CommunityPostCard({
           </span>
         }
         meta={t("feed:post.inCommunity", {
-          community: communityName,
+          community: communityParentName
+            ? `${communityParentName}, ${communityName}`
+            : communityName,
           count: replyCount,
         })}
       />
@@ -155,7 +169,11 @@ export function CommunityPostCard({
             />
           )
         }
-        link={<FeedActionLink to={threadLink}>{communityName}</FeedActionLink>}
+        link={
+          <FeedActionLink to={threadLink}>
+            <SpaceLabel parentName={communityParentName} name={communityName} />
+          </FeedActionLink>
+        }
       />
       {reporting && (
         <ReportModal

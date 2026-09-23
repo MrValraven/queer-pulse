@@ -26,6 +26,8 @@ interface ForwardingDeps {
     forwarded?: boolean,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
+    stickerId?: string,
+    asIdentityId?: string,
   ) => void;
   /** From the sending sub-hook. Re-keys and re-drives any outbox entries
    *  queued under a placeholder id once its real conversation exists. */
@@ -48,6 +50,7 @@ export interface MessageForwarding {
     text: string,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
+    stickerId?: string,
   ) => Promise<boolean>;
 }
 
@@ -88,22 +91,52 @@ export function useMessageForwarding({
     text: string,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
+    stickerId?: string,
   ): Promise<boolean> {
     const localId = nextLocalId();
     const optimistic: ChatMessage = {
       from: "me",
       text,
-      // Forwarding a GIF/image carries its attachment so it renders (and
-      // re-sends) as one, rather than as bare fallback text. `mediaKind` is
-      // the ORIGINAL message's kind (passed in by the caller from the
-      // message being forwarded); it can't be re-derived from "an
-      // attachment is present" alone, since that's true for both kinds.
-      kind: attachment ? mediaKind : undefined,
+      // Forwarding a GIF/image/document carries its attachment so it renders
+      // (and re-sends) as one, rather than as bare fallback text; `mediaKind`
+      // is the ORIGINAL message's kind (passed in by the caller from the
+      // message being forwarded), since it can't be re-derived from "an
+      // attachment is present" alone (true for every media kind). A sticker
+      // is resolved from `stickerId` explicitly, the same way
+      // `resolveSendKind` (`useMessageDeliverCore.ts`) resolves it for an
+      // ordinary send: a forwarded sticker still carries its attachment (for
+      // the bubble to render), so "an attachment is present" alone would
+      // stay true for it too, and only `stickerId` tells the two apart.
+      kind: stickerId ? "sticker" : attachment ? mediaKind : undefined,
       attachment,
       time: t("messages:time.justNow"),
       status: "sending",
       localId,
       forwarded: true,
+    };
+    // Append and send into one target thread, as that thread's own mailbox
+    // seat: the forward is stamped with the identity it goes out as, so a
+    // retry or replay sends the same one. Undefined (a personal thread, a
+    // group, a brand-new first contact) sends as the member's own profile.
+    const forwardInto = (
+      conversationId: string,
+      seatIdentityId: string | undefined,
+    ): void => {
+      appendOptimistic(conversationId, {
+        ...optimistic,
+        sendAsIdentityId: seatIdentityId,
+      });
+      deliver(
+        conversationId,
+        text,
+        localId,
+        undefined,
+        true,
+        attachment,
+        mediaKind,
+        stickerId,
+        seatIdentityId,
+      );
     };
     // Group target: the conversation already exists (real UUID in live, mock
     // id in demo), so there is nothing to materialize. Append + deliver on
@@ -114,32 +147,14 @@ export function useMessageForwarding({
     // it to "read" here for an unrelated reason (the member's own outgoing
     // forward) would hide those from them.
     if (recipient.isGroup) {
-      appendOptimistic(recipient.id, optimistic);
-      deliver(
-        recipient.id,
-        text,
-        localId,
-        undefined,
-        true,
-        attachment,
-        mediaKind,
-      );
+      forwardInto(recipient.id, recipient.mailboxSeatIdentityId);
       return true;
     }
     const existing = allThreads.find(
       (thread) => thread.slug && thread.slug === recipient.slug,
     );
     if (existing) {
-      appendOptimistic(existing.id, optimistic);
-      deliver(
-        existing.id,
-        text,
-        localId,
-        undefined,
-        true,
-        attachment,
-        mediaKind,
-      );
+      forwardInto(existing.id, existing.mailboxSeatIdentityId);
       return true;
     }
     // New thread: no existing conversation to append to yet, so add the
@@ -155,20 +170,11 @@ export function useMessageForwarding({
     );
     setReadIds((current) => new Set(current).add(recipient.id));
     if (demoMode || !recipient.slug) {
-      appendOptimistic(recipient.id, optimistic);
       // Demo mode simulates the honest ladder locally (sent -> delivered ->
       // seen), exactly like the existing-thread/group branches above.
-      // Without this call the bubble is stuck at "sending" forever, and
+      // Without the delivery the bubble is stuck at "sending" forever, and
       // since the outbox persists demo sends, it survives reloads too.
-      deliver(
-        recipient.id,
-        text,
-        localId,
-        undefined,
-        true,
-        attachment,
-        mediaKind,
-      );
+      forwardInto(recipient.id, recipient.mailboxSeatIdentityId);
       return true;
     }
     // Live: materialize the conversation first, then append + deliver on the
@@ -213,16 +219,9 @@ export function useMessageForwarding({
       // flight) may have queued outbox entries under `recipient.id` too.
       // Migrate those before adding this forward's own optimistic bubble.
       migrateOutboxConversation(recipient.id, conversation.id);
-      appendOptimistic(conversation.id, optimistic);
-      deliver(
-        conversation.id,
-        text,
-        localId,
-        undefined,
-        true,
-        attachment,
-        mediaKind,
-      );
+      // A conversation `startConversation` just opened is a personal first
+      // contact, so its seat is the member's own profile.
+      forwardInto(conversation.id, conversation.mailboxSeatIdentityId);
       return true;
     } catch {
       // The conversation never materialized: drop the dead placeholder.

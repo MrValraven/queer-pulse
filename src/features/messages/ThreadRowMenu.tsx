@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  useConversationClaim,
+  useTakeOverConfirm,
+  type ClaimStatus,
+} from "./api/useConversationClaim";
+import { TakeOverConfirmDialog } from "./mailboxes/ComposerMailboxBar";
 import { useThreadRowMenuItems } from "./useThreadRowMenuItems";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -18,6 +24,7 @@ export function ThreadRowMenu({
   onToggleArchive,
   onToggleReadUnread,
   onDelete,
+  claimStatus = "none",
 }: {
   /** Carries this row's own pinned/favorite/muted/archived state — the pin cap
    *  check itself lives in `useTogglePin` (the caller computes and passes the
@@ -37,12 +44,21 @@ export function ThreadRowMenu({
   onToggleReadUnread: () => void;
   /** Opens the delete-confirmation flow for this conversation. */
   onDelete: () => void;
+  /** Business mailboxes: the row's claim, computed once by the row. */
+  claimStatus?: ClaimStatus;
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const {
+    claim,
+    release,
+    takeOver,
+    isPending: isClaimPending,
+  } = useConversationClaim(thread);
+  const takeOverConfirm = useTakeOverConfirm(thread, claimStatus);
 
   // Item definitions live in their own hook purely to keep this component
   // under the 200-line cap — see `useThreadRowMenuItems`'s own doc.
@@ -53,6 +69,15 @@ export function ThreadRowMenu({
     onToggleArchive,
     onToggleReadUnread,
     onDelete,
+    claimStatus,
+    onClaim: () => void claim(),
+    onRelease: () => void release(),
+    onRequestTakeOver: () => {
+      // The chosen menu item unmounts as the menu closes: park focus on the
+      // trigger first, so the confirm returns focus there.
+      triggerRef.current?.focus();
+      takeOverConfirm.open();
+    },
   });
 
   useEffect(() => {
@@ -165,6 +190,17 @@ export function ThreadRowMenu({
           ))}
         </div>
       )}
+      {/* The same take-over confirm the composer bar uses. */}
+      <TakeOverConfirmDialog
+        open={takeOverConfirm.isOpen}
+        claimantName={takeOverConfirm.claimantName}
+        loading={isClaimPending}
+        onClose={takeOverConfirm.close}
+        onConfirm={() => {
+          takeOverConfirm.close();
+          void takeOver();
+        }}
+      />
     </div>
   );
 }

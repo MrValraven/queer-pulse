@@ -28,6 +28,7 @@
     "og": "node scripts/generate-og-image.mjs",
     "press:assets": "node scripts/generate-press-assets.mjs",
     "chat-wallpapers": "node scripts/generate-chat-wallpapers.mjs",
+    "stickers": "node scripts/generate-sticker-packs.mjs",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

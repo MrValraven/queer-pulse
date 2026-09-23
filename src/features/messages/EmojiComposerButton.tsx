@@ -6,6 +6,7 @@ import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { EmojiPicker } from "./EmojiPicker";
 import { useInsertEmoji } from "./useInsertEmoji";
 import type { ComposerPopover } from "./useComposerPopovers";
+import type { StickerResponse } from "../../shared/contracts/contracts";
 import panel from "./EmojiComposerButton.module.css";
 import styles from "./MessagesPage.module.css";
 
@@ -21,6 +22,10 @@ interface EmojiComposerButtonProps {
   openPopover: ComposerPopover;
   /** Toggle request — the Composer flips its single open-popover state. */
   onToggle: () => void;
+  /** Sends a picked sticker as its own message. Forwarded straight to
+   *  `EmojiPicker`'s `onPickSticker`: absent means the Stickers tab isn't
+   *  rendered at all. */
+  onPickSticker?: (sticker: StickerResponse) => void;
 }
 
 /**
@@ -54,6 +59,7 @@ export function EmojiComposerButton({
   onChange,
   openPopover,
   onToggle,
+  onPickSticker,
 }: EmojiComposerButtonProps) {
   const { t } = useTranslation();
   const isPointerFine = useMediaQuery("(pointer: fine)");
@@ -82,7 +88,9 @@ export function EmojiComposerButton({
       >
         <FiSmile aria-hidden />
       </button>
-      {open && <EmojiPicker onPick={insertEmoji} />}
+      {open && (
+        <EmojiPicker onPick={insertEmoji} onPickSticker={onPickSticker} />
+      )}
     </div>
   );
 }

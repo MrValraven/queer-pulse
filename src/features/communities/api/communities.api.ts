@@ -115,6 +115,65 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
    *  "has this member seen it yet") is `GET /communities/:slug/preferences`,
    *  behind `useCommunityPreferences`. Null for a community with no greeting. */
   welcomeMessage?: string | null;
+  /** Why the community is paused, while `frozen` is true: `manual`,
+   *  `emergency_report`, `report_pileup`, or `parent_frozen` for a space
+   *  paused because its parent community is. Typed as a plain string so a
+   *  reason added server-side still reads. Null while not frozen. */
+  frozenReason?: string | null;
+  /** The parent community when this community is a space (subcommunity), or
+   *  null for a top-level community. Optional so an older backend still types. */
+  parent?: CommunityParentRef | null;
+  /** The parent's house rules a space inherits, shown ahead of its own
+   *  additions. Non-null only on a space. */
+  inheritedRules?: CommunityInheritedRules | null;
+  /** Whether platform staff allow this community to host spaces. Always false
+   *  on a space (spaces nest one level only). */
+  allowsSubcommunities?: boolean;
+  /** How many spaces this community hosts that the viewer may see. 0 on a
+   *  space. */
+  subcommunityCount?: number;
+  /** True when the viewer holds their own roster row in THIS community.
+   *  `myRole` is the effective role, which a parent's staff also carry into
+   *  a space they never joined, so the Join/Leave CTA and the notification
+   *  control read this field. Optional so an older backend still types; the
+   *  adapters then fall back to `myRole != null`. */
+  isRosterMember?: boolean;
+}
+
+/** One item of `GET /communities/:slug/subcommunities`: a discover card plus
+ *  `isMember`, the viewer's own roster row in that space. The card's `myRole`
+ *  is the effective role (parent staff carry one into every space), so the
+ *  "You're in" badge reads `isMember`. Optional for an older backend. */
+export type SubcommunityCardDTO = CommunityCardDTO & { isMember?: boolean };
+
+/** The parent a space (subcommunity) belongs to, as the detail DTO carries it.
+ *  `isMember` is true when the viewer holds a roster row in the parent, which
+ *  every space join requires. */
+export interface CommunityParentRef {
+  slug: string;
+  name: string;
+  avatarImageUrl: string | null;
+  isMember: boolean;
+}
+
+/** The parent's rules a space inherits, with the version the parent is on. */
+export interface CommunityInheritedRules {
+  rules: string[];
+  rulesVersion: number;
+}
+
+/** `POST /communities/:slug/subcommunities` body: found a space under `:slug`.
+ *  `rules` are the space's own additions to the inherited parent rules. */
+export interface CreateSubcommunityBody {
+  handle: string;
+  name: string;
+  tagline: string;
+  purpose: string;
+  whoFor?: string;
+  accessTier: AccessTier;
+  rules: string[];
+  coverImageUrl?: string;
+  avatarImageUrl?: string;
 }
 export interface CommunityReactionSummary {
   key: ReactionKey;
@@ -197,6 +256,9 @@ export interface MyCommunityDTO {
   name: string;
   role: RosterRole;
   joinedAt: string;
+  /** The parent community's slug when this row is a space, else null.
+   *  Optional so an older backend still types. */
+  parentSlug?: string | null;
 }
 
 export interface CreateCommunityDto {
@@ -339,6 +401,22 @@ export const getSuggestedCommunities = () =>
 
 export const createCommunity = (dto: CreateCommunityDto) =>
   apiPost<CommunityDetailDTO>("/communities", dto);
+
+/** GET /communities/:slug/subcommunities: the spaces under `slug` the viewer
+ *  may see, as cards whose `myRole` is the viewer's effective role and whose
+ *  `isMember` is the viewer's own roster row. */
+export const getSubcommunities = (slug: string) =>
+  apiGet<{ items: SubcommunityCardDTO[] }>(
+    `/communities/${slug}/subcommunities`,
+  );
+
+/** POST /communities/:slug/subcommunities: found a space under `slug`. 409
+ *  `SUBCOMMUNITIES_NOT_ALLOWED` when the parent may not host spaces, 400
+ *  `SUBCOMMUNITY_TIER_TOO_OPEN` when the tier is more open than the parent's. */
+export const createSubcommunity = (
+  slug: string,
+  body: CreateSubcommunityBody,
+) => apiPost<CommunityDetailDTO>(`/communities/${slug}/subcommunities`, body);
 
 export const updateCommunity = (slug: string, dto: UpdateCommunityDto) =>
   apiPatch<CommunityDetailDTO>(`/communities/${slug}`, dto);

@@ -229,7 +229,7 @@ describe("cache invalidation", () => {
     await mount(mod);
     const call = socket.on.mock.calls.find((c) => c[0] === "message:new");
     const handler = call?.[1] as (data: unknown) => void;
-    const message = { id: "m-1" };
+    const message = { id: "m-1", sender: { handle: "someone-else" } };
     handler({ conversationId: "c-1", message });
     // The frame carries the full message, so it's upserted into the thread cache
     // and the inbox row's preview is patched — not a blanket refetch of either.
@@ -259,7 +259,7 @@ describe("cache invalidation", () => {
       (c) => c[0] === "conversation:message",
     );
     const handler = call?.[1] as (data: unknown) => void;
-    const message = { id: "m-1" };
+    const message = { id: "m-1", sender: { handle: "someone-else" } };
     handler({ conversationId: "c-1", message });
     // Patches the inbox row in place, exactly like `message:new` does — no
     // conversation-list refetch.
@@ -290,7 +290,7 @@ describe("cache invalidation", () => {
       (c) => c[0] === "conversation:message",
     );
     const handler = call?.[1] as (data: unknown) => void;
-    const message = { id: "m-1" };
+    const message = { id: "m-1", sender: { handle: "someone-else" } };
     handler({ conversationId: "c-1", message });
     expect(messageCache.bumpConversationUnread).toHaveBeenCalledWith(
       expect.anything(),
@@ -318,7 +318,7 @@ describe("cache invalidation", () => {
       (c) => c[0] === "conversation:message",
     );
     const handler = call?.[1] as (data: unknown) => void;
-    const message = { id: "m-1" };
+    const message = { id: "m-1", sender: { handle: "someone-else" } };
     handler({ conversationId: "c-1", message });
     expect(messageCache.bumpConversationUnread).not.toHaveBeenCalled();
   });

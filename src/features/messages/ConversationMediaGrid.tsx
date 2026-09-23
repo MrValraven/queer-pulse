@@ -10,6 +10,7 @@ import {
   type ConversationMediaEntry,
 } from "./conversationMediaFilters";
 import type { ChatMessage } from "./data";
+import { isTypedByViewer } from "./viewerSideSender";
 import styles from "./ConversationMediaGallery.module.css";
 
 interface ConversationMediaGridProps {
@@ -38,12 +39,12 @@ export function ConversationMediaGrid({
 
   const photoLabel = (entry: ConversationMediaEntry) => {
     const date = entryDateLabel(entry.at, locale);
-    if (entry.message.from === "me") {
+    if (isTypedByViewer(entry.message)) {
       return date
         ? t("messages:mediaGallery.photoLabelOwn", { date })
         : t("messages:mediaGallery.photoLabelOwnUndated");
     }
-    const name = entrySenderName(entry.message, counterpartName, youLabel);
+    const name = entrySenderName(entry.message, counterpartName, youLabel, t);
     return date
       ? t("messages:mediaGallery.photoLabel", { name, date })
       : t("messages:mediaGallery.photoLabelUndated", { name });

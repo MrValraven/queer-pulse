@@ -1,0 +1,72 @@
+/* The mailbox attribution settings: two switch rows, each with a help line
+   and, when locked, the reason. Tokens only; the switch brings its own focus
+   ring from the shared `Toggle`. */
+.list {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowText {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.rowDescription {
+  margin-top: 3px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.rowNote,
+.readOnlyNote {
+  font-size: var(--text-12-5);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.rowNote {
+  margin-top: 4px;
+}
+
+.readOnlyNote {
+  margin: 0 0 12px;
+}
+
+/* A bare wrapper: the fieldset only carries the native disabled state. The
+   shared `Toggle` has no disabled look of its own, so a locked switch dims
+   the way the settings page dims its locked controls. */
+.control {
+  flex: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
+.control:disabled {
+  opacity: 0.5;
+}

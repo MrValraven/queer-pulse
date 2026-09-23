@@ -1,19 +1,20 @@
 import { Link, useParams } from "react-router-dom";
-import { FiArrowLeft, FiBookmark, FiMail, FiShare2 } from "react-icons/fi";
-import { Button, FeatureHelp } from "../../shared/components/ui";
+import { FiArrowLeft, FiMail } from "react-icons/fi";
+import { FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { communityPath, routes } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import type { Community } from "../homepage/data/types";
 import type { CommunityDetail, Person } from "./communityDetails";
-import { CommunityHeroAvatars } from "./CommunityHeroAvatars";
+import type { CommunityParentRef } from "./api/communities.api";
 import { CommunityHeroActions } from "./CommunityHeroActions";
-import { CommunityNotificationControl } from "./CommunityNotificationControl";
-import { CommunityReportControl } from "../safety/CommunityReportControl";
-import { ShareToChatAction } from "../messages/share/ShareToChatAction";
+import { CommunityHeroSecondaryActions } from "./CommunityHeroSecondaryActions";
+import { SpaceBreadcrumb } from "./SpaceBreadcrumb";
 import { leadingInitials } from "../../shared/lib/initials";
 import styles from "./CommunityDetailPage.module.css";
 
-/** Community detail hero: breadcrumb, title, meta row and the join/edit CTAs. */
+/** Community detail hero: breadcrumb, title, meta row and the join/edit CTAs.
+ *  The save/share/report icon row is `CommunityHeroSecondaryActions`, split
+ *  out purely to keep this component under the repo's 200-line limit. */
 export function CommunityDetailHero({
   community,
   detail,
@@ -38,6 +39,8 @@ export function CommunityDetailHero({
   onDeclineInvite,
   onWithdrawRequest,
   onEdit,
+  parent = null,
+  isParentMembershipRequired = false,
 }: {
   community: Community;
   detail: CommunityDetail;
@@ -65,6 +68,11 @@ export function CommunityDetailHero({
   onDeclineInvite: () => void;
   onWithdrawRequest: () => void;
   onEdit: () => void;
+  /** Set on a space (subcommunity): its parent. Swaps the plain back link
+   *  for `SpaceBreadcrumb` and drives `CommunityHeroActions`' parent gate. */
+  parent?: CommunityParentRef | null;
+  /** True until the viewer joins the space's parent. */
+  isParentMembershipRequired?: boolean;
 }) {
   const { t } = useTranslation();
   // The report subject id for a `community` report IS the slug. Prefer the one
@@ -82,9 +90,13 @@ export function CommunityDetailHero({
       data-plum
     >
       <div className={`wrap ${styles.heroInner}`}>
-        <Link to={routes.communities} className={styles.breadcrumb}>
-          <FiArrowLeft aria-hidden /> {t("communities:detail.breadcrumb")}
-        </Link>
+        {parent ? (
+          <SpaceBreadcrumb parent={parent} spaceName={community.name} />
+        ) : (
+          <Link to={routes.communities} className={styles.breadcrumb}>
+            <FiArrowLeft aria-hidden /> {t("communities:detail.breadcrumb")}
+          </Link>
+        )}
         <div className={styles.typeBadge}>
           <span className={styles.dot} />
           {detail.badge}
@@ -133,78 +145,27 @@ export function CommunityDetailHero({
             canDeclineInvite={canDeclineInvite}
             canWithdrawRequest={canWithdrawRequest}
             joinLabel={joinLabel}
+            parent={parent}
+            isParentMembershipRequired={isParentMembershipRequired}
             onJoin={onJoin}
             onLeave={onLeave}
             onAcceptInvite={onAcceptInvite}
             onDeclineInvite={onDeclineInvite}
             onWithdrawRequest={onWithdrawRequest}
           />
-          {canEdit && (
-            <Button variant="ghost-dark" onClick={onEdit}>
-              {t("communities:edit.cta")}
-            </Button>
-          )}
-          <Button
-            variant="ghost-dark"
-            onClick={onToggleSave}
-            aria-pressed={saved}
-            aria-label={t(
-              saved
-                ? "communities:detail.save.unsaveAriaLabel"
-                : "communities:detail.save.saveAriaLabel",
-              { name: community.name },
-            )}
-          >
-            <FiBookmark aria-hidden fill={saved ? "currentColor" : "none"} />
-            {t(
-              saved
-                ? "communities:detail.save.saved"
-                : "communities:detail.save.cta",
-            )}
-          </Button>
-          <Button
-            variant="ghost-dark"
-            onClick={onShare}
-            aria-label={t("communities:detail.share.ariaLabel", {
-              name: community.name,
-            })}
-          >
-            <FiShare2 aria-hidden /> {t("communities:detail.share.cta")}
-          </Button>
-          {communitySlug && (
-            <ShareToChatAction
-              url={communityPath(communitySlug)}
-              title={community.name}
-              kind="community"
-              variant="ghost-dark"
-            />
-          )}
-          <CommunityHeroAvatars
-            avatars={heroAvatars}
+          <CommunityHeroSecondaryActions
+            canEdit={canEdit}
+            onEdit={onEdit}
+            saved={saved}
+            onToggleSave={onToggleSave}
+            onShare={onShare}
+            communityName={community.name}
+            communitySlug={communitySlug}
+            joined={joined}
+            heroAvatars={heroAvatars}
             memberNum={memberNum}
             hasCount={hasCount}
           />
-          {/* Two quiet icon affordances close the row: the member's own
-              notification level for this community, and reporting the space
-              itself. Both are named by a tooltip rather than a label, so
-              neither competes with Join / Save / Share. */}
-          {communitySlug && joined && (
-            <CommunityNotificationControl
-              key={communitySlug}
-              slug={communitySlug}
-              communityName={community.name}
-            />
-          )}
-          {/* Reports the community ITSELF, which until now had no path at all:
-              the only recourse was reporting one post at a time, and that
-              never puts the space in front of a moderator. Signed-in members
-              only, membership not required. */}
-          {communitySlug && (
-            <CommunityReportControl
-              slug={communitySlug}
-              communityName={community.name}
-            />
-          )}
         </div>
       </div>
     </header>

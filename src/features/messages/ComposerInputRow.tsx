@@ -7,6 +7,7 @@ import { EmojiComposerButton } from "./EmojiComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
 import type { ComposerPopover } from "./useComposerPopovers";
 import type { GifAttachment } from "../../shared/api/gifs";
+import type { StickerResponse } from "../../shared/contracts/contracts";
 import styles from "./MessagesPage.module.css";
 
 interface ComposerInputRowProps {
@@ -21,6 +22,12 @@ interface ComposerInputRowProps {
   onImagePicked?: (files: File[]) => void;
   /** Hands picked document file(s) to staging (PRD-226/DES-198). */
   onDocumentPicked?: (files: File[]) => void;
+  /** Sends a picked sticker as its own message, reached from the emoji
+   *  popover's Stickers tab on desktop and the attach menu's Sticker row on
+   *  touch. Forwarded to both `EmojiComposerButton` and
+   *  `ComposerAttachButton`; each one only actually shows its own entry
+   *  point on the matching pointer type. */
+  onSendSticker?: (sticker: StickerResponse) => void;
   onInsertShortcut: (sigil: string) => void;
   placeholder: string;
   draft: string;
@@ -82,6 +89,7 @@ export function ComposerInputRow({
   onSendGif,
   onImagePicked,
   onDocumentPicked,
+  onSendSticker,
   onInsertShortcut,
   placeholder,
   draft,
@@ -104,10 +112,13 @@ export function ComposerInputRow({
           onSendGif={onSendGif}
           onImagePicked={onImagePicked}
           onDocumentPicked={onDocumentPicked}
+          onSendSticker={onSendSticker}
           menuOpen={openPopover === "attach"}
           gifOpen={openPopover === "gif"}
+          stickerOpen={openPopover === "sticker"}
           onToggleMenu={() => onTogglePopover("attach")}
           onOpenGif={() => onOpenPopover("gif")}
+          onOpenSticker={() => onOpenPopover("sticker")}
           onClose={onClosePopover}
         />
         <EmojiComposerButton
@@ -116,6 +127,7 @@ export function ComposerInputRow({
           onChange={onChange}
           openPopover={openPopover}
           onToggle={() => onTogglePopover("emoji")}
+          onPickSticker={onSendSticker}
         />
         <MentionTextarea
           id="messages-composer"

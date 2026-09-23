@@ -143,12 +143,15 @@ describe("RequestInviteForm age gate", () => {
     const first = container.querySelector<HTMLInputElement>("#ri-first")!;
     const email = container.querySelector<HTMLInputElement>("#ri-email")!;
     const why = container.querySelector<HTMLTextAreaElement>("#ri-why")!;
+    const heardFrom =
+      container.querySelector<HTMLInputElement>("#ri-heard-from")!;
     const agree = container.querySelector<HTMLInputElement>("#ri-agree")!;
     const age = container.querySelector<HTMLInputElement>("#ri-age")!;
 
     fireEvent.change(first, { target: { value: "Alex" } });
     fireEvent.change(email, { target: { value: "alex@example.com" } });
     fireEvent.change(why, { target: { value: "I want to find community." } });
+    fireEvent.change(heardFrom, { target: { value: "A friend" } });
     // Consent is not clickable: reading the guidelines to the end is what
     // ticks it. (A direct click is `preventDefault`ed in the browser; jsdom
     // leaves the DOM property toggled because the controlled value never

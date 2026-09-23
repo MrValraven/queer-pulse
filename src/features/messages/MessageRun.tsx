@@ -5,11 +5,13 @@ import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
-import { isMessageBodyOverLimit } from "./messageBodyLimit";
+import { MailboxAttributionLabel } from "./mailboxes/MailboxAttributionLabel";
+import { MessageRunFailedRow } from "./MessageRunFailedRow";
 import type { MessageRun } from "./messageRuns";
 import { groupIntoAlbums } from "./messageAlbums";
 import { lastUndeletedIndex } from "./messageRows";
 import { MessageAlbum } from "./MessageAlbum";
+import { colleagueSenderLabel, isTypedByViewer } from "./viewerSideSender";
 import { MessageBubble } from "./MessageBubble";
 import type { MetaStatus } from "./MessageSendStatus";
 import { resolveSendStatus } from "./resolveSendStatus";
@@ -135,14 +137,27 @@ function MessageRunViewImpl({
   // ENG-243: a received run from a member who erased their account reads as a
   // localized "Former member" behind a blank neutral avatar, in a DM too.
   const isFormerMemberRun = !isSent && !!firstMessage?.isSenderFormerMember;
+  // A run from a business since deleted reads as a localized "Former
+  // business" behind the same blank avatar, with no staff line and no link.
+  const isFormerBusinessRun = !isSent && !!firstMessage?.isSenderFormerBusiness;
+  // A reply a colleague typed as the business sits on the viewer's side and
+  // is named for the colleague's business, so the bubble's accessible name
+  // calls a colleague's message theirs.
+  const colleagueRunName =
+    isSent && firstMessage && !isTypedByViewer(firstMessage)
+      ? colleagueSenderLabel(firstMessage, t)
+      : null;
   const runSenderName = isSent
-    ? selfName
+    ? (colleagueRunName ?? selfName)
     : isFormerMemberRun
       ? t("messages:formerMember")
-      : showGroupSender
-        ? (firstMessage?.senderName ?? counterpartName)
-        : counterpartName;
-  const runAvatar: RunParticipant = isFormerMemberRun
+      : isFormerBusinessRun
+        ? t("messages:mailbox.formerBusiness")
+        : showGroupSender
+          ? (firstMessage?.senderName ?? counterpartName)
+          : counterpartName;
+  const hasBlankAvatar = isFormerMemberRun || isFormerBusinessRun;
+  const runAvatar: RunParticipant = hasBlankAvatar
     ? { initials: "", tint: "default" }
     : showGroupSender
       ? {
@@ -200,6 +215,15 @@ function MessageRunViewImpl({
         {showGroupSender && (
           <span className={styles.runSenderName}>{runSenderName}</span>
         )}
+        {/* A run sent as a business carries its optional staff line; runs
+            break on the staff sender, so the first message speaks for all. */}
+        {firstMessage && !hasBlankAvatar && (
+          <MailboxAttributionLabel
+            message={firstMessage}
+            side={run.from}
+            businessName={counterpartName}
+          />
+        )}
         {segments.map((segment) => {
           if (segment.kind === "album") {
             // Keyed by its first photo, which stays first as the burst grows;
@@ -247,49 +271,10 @@ function MessageRunViewImpl({
           );
         })}
         {/* Time + sending/seen ticks live in each bubble's own meta; only the
-            failed state keeps a standalone row, since retry is an action.
-            A body that's grown past the server's length limit since it was
-            typed (DES-202) can never succeed on retry: the server rejects it
-            the same way every time, so Retry is misleading there. A short
-            reason replaces it instead of offering a dead action. */}
-        {isSent &&
-          lastMessage?.status === "failed" &&
-          (isMessageBodyOverLimit(lastMessage.text) ? (
-            <span className={styles.failedReason}>
-              {t("messages:status.tooLongToSend")}
-            </span>
-          ) : lastMessage.failureCode === "ACCOUNT_RESTRICTED" ? (
-            // ENG-242: a moderator `restrict` action refused this send. Named
-            // honestly rather than folded into the generic Retry copy — this
-            // is a standing moderation state, not a network hiccup, and
-            // nothing like an expired session (no sign-in prompt applies
-            // here). Retry stays offered: the restriction is timed and may
-            // have lifted by the time the member tries again.
-            <>
-              <span className={styles.failedReason}>
-                {t("messages:status.restricted")}
-              </span>
-              {/* `status.retryAction` is the bare verb ("Retry"), not
-                  `status.retry`'s "Not delivered · Retry" — the reason span
-                  above already says "Not delivered", so pairing it with the
-                  full string would repeat that prefix on two stacked lines. */}
-              <button
-                type="button"
-                className={styles.retryBtn}
-                onClick={() => onRetry?.(lastMessage)}
-              >
-                {t("messages:status.retryAction")}
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className={styles.retryBtn}
-              onClick={() => onRetry?.(lastMessage)}
-            >
-              {t("messages:status.retry")}
-            </button>
-          ))}
+            failed state keeps a standalone row (`MessageRunFailedRow`). */}
+        {isSent && lastMessage?.status === "failed" && (
+          <MessageRunFailedRow message={lastMessage} onRetry={onRetry} />
+        )}
       </div>
     </div>
   );

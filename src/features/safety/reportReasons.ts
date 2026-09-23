@@ -79,7 +79,14 @@ export type ReportSubjectType =
   // and its owner. Mirrors the backend `ReportSubjectType.Conversation`,
   // backed by `AddGroupConsentInvitesAndDissolve` (adds the value to
   // `reports_subject_type_enum`).
-  | "conversation";
+  | "conversation"
+  // Business mailboxes (spec 2026-09-20): a business, persona or company
+  // identity, addressed by its uuid, reported by one of its CUSTOMERS
+  // (current or former) from a thread with it. The identity's own staff get
+  // 403, and nobody else can even open the thread this report grows out of.
+  // Mirrors the backend `ReportSubjectType.Identity`, backed by migration
+  // `AddIdentityReportSubject1821281000000`.
+  | "identity";
 
 export type ReasonCode =
   | "outing"
@@ -456,6 +463,30 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "discrimination",
     "spam",
     "off_topic",
+    "other",
+  ],
+  // A business, persona or company, reported by a customer from their
+  // thread with it. Mirrors the backend's `SUBJECT_REASONS[ReportSubjectType
+  // .Identity]` exactly, order included: the two thread-shaped codes lead
+  // (`harassment`, `hate_speech`) because a customer reporting a business is
+  // almost always reporting what happened inside the conversation itself,
+  // then `unwanted_contact` for a business that keeps writing after being
+  // asked to stop, `housing_scam` ("Scam or fake listing") for a fake or
+  // fraudulent business, `spam` for self-promotion abuse, `venue_safety` for
+  // an incident at the business's own space, `discrimination` for
+  // discriminatory conduct, and `other` for anything else. `outing` and
+  // `doxxing` are absent on purpose: those codes describe what a PERSON did
+  // to another person, and the person behind a business reply stays
+  // reachable and reportable on their own profile, unaffected by this
+  // subject.
+  identity: [
+    "harassment",
+    "hate_speech",
+    "unwanted_contact",
+    "housing_scam",
+    "spam",
+    "venue_safety",
+    "discrimination",
     "other",
   ],
 };

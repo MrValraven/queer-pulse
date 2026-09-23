@@ -20,6 +20,7 @@ import type {
   PostReply,
   Reaction,
   RosterMember,
+  SpaceCardModel,
 } from "../community.model";
 import type { CommunityDraft } from "../startCommunity/startCommunity.data";
 import type {
@@ -37,6 +38,7 @@ import type {
   CommunityType,
   CreateCommunityDto,
   RosterEntryDTO,
+  SubcommunityCardDTO,
   UpdateCommunityDto,
 } from "./communities.api";
 
@@ -165,6 +167,19 @@ export function cardDtoToCommunity(
   };
 }
 
+/** One `GET /communities/:slug/subcommunities` item to a Spaces-tab card.
+ *  An older backend sends no `isMember`, so it falls back to `myRole`, which
+ *  is what the badge read before the field existed. */
+export function spaceCardDtoToModel(
+  dto: SubcommunityCardDTO,
+  translate: TFunction,
+): SpaceCardModel {
+  return {
+    ...cardDtoToCommunity(dto, translate),
+    isMember: dto.isMember ?? dto.myRole != null,
+  };
+}
+
 /** The detail DTO also carries card fields, so reuse the card mapping. */
 export function detailDtoToCommunity(
   dto: CommunityDetailDTO,
@@ -248,6 +263,20 @@ export function detailDtoToLiving(dto: CommunityDetailDTO): LivingCommunity {
     frozen: dto.frozen ?? false,
     features: dto.features,
     rosterVisible: dto.rosterVisible,
+    // The subcommunity fields default to "a top-level community that hosts no
+    // spaces", so a backend that predates them reads the way it always did.
+    frozenReason: dto.frozenReason ?? null,
+    parent: dto.parent
+      ? {
+          slug: dto.parent.slug,
+          name: dto.parent.name,
+          avatarImageUrl: dto.parent.avatarImageUrl ?? null,
+          isMember: dto.parent.isMember === true,
+        }
+      : null,
+    inheritedRules: dto.inheritedRules ?? null,
+    allowsSubcommunities: dto.allowsSubcommunities ?? false,
+    subcommunityCount: dto.subcommunityCount ?? 0,
   };
 }
 

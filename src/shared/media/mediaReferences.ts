@@ -37,7 +37,8 @@ export type MediaReferenceType =
   | "magazine-article" // MagazineArticle.blocks[].src / .socialImage
   | "magazine-deck" // MagazineDeck.cover / .slides[] image refs
   | "message-photo" // Message.attachment (a photo sent in a conversation)
-  | "press-contact"; // PressContact.avatarUrl
+  | "press-contact" // PressContact.avatarUrl
+  | "sticker"; // Sticker.storageKey
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -94,10 +95,11 @@ export function mediaReferenceLabelKey(type: MediaReferenceType): string {
  *   single-post route — posts render inline in a community's tabs),
  *   `story-cover` (the issue route has no `:number` param yet — it always
  *   shows the current issue), `collection` (`/account/collections` is
- *   the owner-only list rather than a per-collection page), and
+ *   the owner-only list rather than a per-collection page),
  *   `message-photo` (a private conversation the cross-user admin console
- *   must never deep-link into) have no viewer-appropriate route today →
- *   label only.
+ *   must never deep-link into), and `sticker` (platform artwork belonging
+ *   to an admin-built pack, with no member-visible page of its own) have
+ *   no viewer-appropriate route today → label only.
  */
 export function mediaReferenceHref(reference: MediaReference): string | null {
   const { type, entityId, slug } = reference;
@@ -153,13 +155,16 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     // group-avatar (private conversation), community-post (no single-post
     // route), story-cover (issue route has no per-issue param yet), collection
     // (the owner-only /account/collections list has no per-collection page),
-    // and message-photo (a private conversation, which the cross-user admin
-    // console must never deep-link into) → no viewer-appropriate route.
+    // message-photo (a private conversation, which the cross-user admin
+    // console must never deep-link into), and sticker (platform artwork
+    // belonging to an admin-built pack, with no member-visible page of its
+    // own) → no viewer-appropriate route.
     case "group-avatar":
     case "community-post":
     case "story-cover":
     case "collection":
     case "message-photo":
+    case "sticker":
       return null;
     default: {
       const exhaustiveCheck: never = type;

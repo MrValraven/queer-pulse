@@ -937,4 +937,32 @@ export const notifications: Catalog = {
     "Alguém deixou uma pergunta em {listingName}.",
   "type.listing_public_question.meta": "Pergunta na tua ficha",
   "type.listing_public_question.subjectFallback": "a tua ficha",
+
+  // ── Espaços escritos pela equipa: ofertas de propriedade e cogestão ───────
+  // Quatro linhas da mesma funcionalidade. `listing_co_manager_invite` vai
+  // para quem é convidado; `_accepted` e `_declined` voltam para quem
+  // convidou; `listing_owner_offer` vai para o membro em cujo nome a equipa
+  // pôs um espaço. As quatro interpolam {name} e {listingName}, e as quatro
+  // partilham os dois valores de recurso abaixo (ver `listingNameToken` e
+  // `listingActorNameToken` em formatNotification.ts), para que uma linha sem
+  // pessoa ou sem negócio se leia na mesma como uma frase inteira e nunca
+  // mostre um token entre chavetas. Nenhuma delas leva a resposta: a oferta é
+  // aceite, e o compromisso afirmativo assinado, no painel de espaços do
+  // próprio membro. Nada aqui diz que algo foi enviado por email ou está a
+  // caminho: a QueerPulse não envia email.
+  "type.listing_co_manager_invite.text":
+    "{name} convidou-te para ajudar a gerir {listingName}.",
+  "type.listing_co_manager_invite.meta": "Convite de cogestão",
+  "type.listing_co_manager_invite_accepted.text":
+    "{name} aceitou o teu convite para cogerir {listingName}.",
+  "type.listing_co_manager_invite_accepted.meta": "Convite de cogestão aceite",
+  "type.listing_co_manager_invite_declined.text":
+    "{name} recusou o teu convite para cogerir {listingName}.",
+  "type.listing_co_manager_invite_declined.meta":
+    "Convite de cogestão recusado",
+  "type.listing_owner_offer.text":
+    "{name} ofereceu-te a propriedade de {listingName}.",
+  "type.listing_owner_offer.meta": "Oferta de propriedade",
+  "type.listing_co_manager_invite.listingNameFallback": "este espaço",
+  "type.listing_co_manager_invite.nameFallback": "Alguém",
 };

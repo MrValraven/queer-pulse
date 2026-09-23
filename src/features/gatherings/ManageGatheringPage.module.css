@@ -576,6 +576,10 @@
   line-height: 1.65;
   margin-bottom: 16px;
 }
+/* The delete block sits under the cancel block as a second danger card. */
+.dangerZoneFollow {
+  margin-top: 12px;
+}
 .cancelBtn {
   border-color: rgba(var(--accent-rgb), 0.4) !important;
   color: var(--accent-ink) !important;

@@ -1,0 +1,100 @@
+/* Moderator band for a public listing page. It reads as page chrome sitting
+   above the listing's own content: full-bleed plum, cream text, the nav
+   pill's own max width inside it so the chips line up with the columns
+   below. */
+
+.band {
+  background: var(--plum);
+  /* The band's fill is locked plum in both themes, so its type is written
+     against the cream channels. */
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.inner {
+  max-width: var(--maxw-nav);
+  margin: 0 auto;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.82);
+  white-space: nowrap;
+}
+
+.labelIcon {
+  flex: none;
+  font-size: var(--text-15);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--cream-rgb), 0.16);
+  background: rgba(var(--cream-rgb), 0.1);
+  color: rgba(var(--cream-rgb), 0.92);
+  font-size: var(--text-13);
+  line-height: 1.3;
+}
+
+.chip svg {
+  flex: none;
+}
+
+/* An ageing badge is a scheduling fact, so it gets the amber palette. The
+   badge still stands while the re-review is pending. */
+.chipDue {
+  border-color: rgba(var(--amber-rgb), 0.42);
+  background: rgba(var(--amber-rgb), 0.18);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: none;
+}
+
+@media (max-width: 720px) {
+  .inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .label {
+    white-space: normal;
+  }
+}

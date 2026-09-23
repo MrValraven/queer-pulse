@@ -2,10 +2,12 @@ import { FiUsers } from "react-icons/fi";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
+import type { MailboxSummary } from "../../shared/api/mailboxViewer";
 import { BrandMark, SearchInput } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { InboxTabs } from "./InboxTabs";
+import { MailboxSwitcher } from "./mailboxes/MailboxSwitcher";
 import { FilterTabRowSkeleton } from "./MessagesSkeleton";
 import { MessagesBackButton } from "./MessagesRailChrome";
 import type { InboxTab } from "./threadFilters";
@@ -16,6 +18,10 @@ import styles from "./MessagesPage.module.css";
  * and (below it) the filter tabs — split out of `MessagesThreadList` to keep
  * both components under the 200-line cap. Purely presentational; all state
  * lives in the parent.
+ *
+ * The mailbox switcher follows the wordmark. A business, persona or company
+ * mailbox only replies to conversations members start, so it shows no
+ * compose buttons.
  */
 export function MessagesThreadListHeader({
   query,
@@ -28,6 +34,10 @@ export function MessagesThreadListHeader({
   onTabChange,
   requestsCount,
   showBackButton,
+  mailboxes,
+  activeMailbox,
+  onSelectMailbox,
+  onOpenMailboxSettings,
 }: {
   query: string;
   onQueryChange: (value: string) => void;
@@ -47,8 +57,17 @@ export function MessagesThreadListHeader({
   /** Mobile, where this route hides the app bar: a back chevron before the
    *  wordmark. */
   showBackButton: boolean;
+  /** Every mailbox the member may read, profile first. */
+  mailboxes: MailboxSummary[];
+  /** The active mailbox, null until the mailboxes load. */
+  activeMailbox: MailboxSummary | null;
+  onSelectMailbox: (identityId: string) => void;
+  /** Opens a business, persona or company mailbox's settings from the
+   *  switcher's settings slot. */
+  onOpenMailboxSettings: (identityId: string) => void;
 }) {
   const { t } = useTranslation();
+  const isBusinessMailbox = !!activeMailbox && activeMailbox.kind !== "profile";
   return (
     <div className={styles.tpTop}>
       <div className={styles.tpHeadRow}>
@@ -64,27 +83,35 @@ export function MessagesThreadListHeader({
               />
             </span>
           </Link>
+          <MailboxSwitcher
+            mailboxes={mailboxes}
+            active={activeMailbox}
+            onSelect={onSelectMailbox}
+            onOpenSettings={onOpenMailboxSettings}
+          />
         </div>
-        <div className={styles.tpHeadActions}>
-          <button
-            type="button"
-            className={styles.composeBtn}
-            title={t("messages:group.newTooltip")}
-            aria-label={t("messages:group.newTooltip")}
-            onClick={onComposeGroup}
-          >
-            <FiUsers aria-hidden />
-          </button>
-          <button
-            type="button"
-            className={styles.composeBtn}
-            title={t("messages:thread.composeTooltip")}
-            aria-label={t("messages:thread.composeTooltip")}
-            onClick={onCompose}
-          >
-            <LuMessageSquarePlus aria-hidden />
-          </button>
-        </div>
+        {!isBusinessMailbox && (
+          <div className={styles.tpHeadActions}>
+            <button
+              type="button"
+              className={styles.composeBtn}
+              title={t("messages:group.newTooltip")}
+              aria-label={t("messages:group.newTooltip")}
+              onClick={onComposeGroup}
+            >
+              <FiUsers aria-hidden />
+            </button>
+            <button
+              type="button"
+              className={styles.composeBtn}
+              title={t("messages:thread.composeTooltip")}
+              aria-label={t("messages:thread.composeTooltip")}
+              onClick={onCompose}
+            >
+              <LuMessageSquarePlus aria-hidden />
+            </button>
+          </div>
+        )}
       </div>
       <SearchInput
         value={query}
@@ -97,6 +124,7 @@ export function MessagesThreadListHeader({
           active={activeTab}
           onChange={onTabChange}
           requestsCount={requestsCount}
+          isBusinessMailbox={isBusinessMailbox}
         />
       )}
       {!showTabs && loading && <FilterTabRowSkeleton />}

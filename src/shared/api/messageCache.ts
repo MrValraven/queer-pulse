@@ -8,6 +8,8 @@ import type {
   ReactionSummary,
 } from "../contracts/contracts";
 import {
+  lastMessageMailboxFields,
+  messageDisplayText,
   previewForMessage,
   timeLabel,
   type ConversationWithPreview,
@@ -286,8 +288,12 @@ export function patchConversationPreview(
         // delivery-status tick pointing at the PREVIOUS last message until the
         // next full inbox refetch.
         lastMessageSenderHandle: message.sender.handle || undefined,
-        lastMessageBody: message.body,
+        lastMessageBody: messageDisplayText(message),
         lastMessageIsSystem: message.kind === "system",
+        // Business mailboxes: all three keys are written on every patch, so
+        // a customer message after a colleague's reply drops that colleague's
+        // name and a reply the viewer typed reads "You: " at once.
+        ...lastMessageMailboxFields(message),
       };
       const next = previous.slice();
       next.splice(index, 1);

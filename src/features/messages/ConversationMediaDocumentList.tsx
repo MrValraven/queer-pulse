@@ -11,6 +11,7 @@ import {
   type ConversationMediaEntry,
 } from "./conversationMediaFilters";
 import { useMessageSafetyContext } from "./MessageSafetyContext";
+import { isTypedByViewer } from "./viewerSideSender";
 import { OpenExternalConfirmDialog } from "./OpenExternalConfirmDialog";
 import styles from "./ConversationMediaGallery.module.css";
 
@@ -35,7 +36,7 @@ export function ConversationMediaDocumentList({
             }
             attachment={attachment}
             date={entryDateLabel(entry.at, locale)}
-            isSent={entry.message.from === "me"}
+            isSent={isTypedByViewer(entry.message)}
           />
         );
       })}

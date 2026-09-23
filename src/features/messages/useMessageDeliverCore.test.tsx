@@ -9,6 +9,7 @@ import { isDueForAutoReplay } from "./outboxReplay.helpers";
 import { ApiError } from "../../shared/api/client";
 import type { MessageResponse } from "../../shared/contracts/contracts";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
+import { MAILBOXES_QUERY_KEY_PREFIX } from "../../shared/api/mailboxViewer";
 
 // ENG-263: unit coverage for `useMessageDeliverCore`, the send-to-server
 // primitive both replay loops and every send action (send/sendGif/sendImage/
@@ -69,6 +70,27 @@ function createWrapper() {
     return (
       <QueryClientProvider client={client}>{children}</QueryClientProvider>
     );
+  };
+}
+
+/** Like `createWrapper`, but also hands back the `QueryClient` itself, for a
+ *  test that needs to observe what it invalidates (the `IDENTITY_REMOVED`
+ *  case below). */
+function createWrapperWithClient(): {
+  Wrapper: ({ children }: { children: ReactNode }) => ReactNode;
+  client: QueryClient;
+} {
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+  return {
+    Wrapper: ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    ),
+    client,
   };
 }
 
@@ -222,6 +244,54 @@ describe("useMessageDeliverCore delivery outcomes", () => {
     const entry = result.current.sent[SERVER_CONVERSATION_ID]?.[0];
     expect(entry?.status).toBe("failed");
     expect(entry?.isRetryable).toBe(true);
+  });
+
+  it("refreshes the mailbox list on a 403 IDENTITY_REMOVED refusal, so the composer reads the mailbox read-only", async () => {
+    const mutateAsync = vi
+      .fn()
+      .mockRejectedValue(
+        new ApiError(403, "Persona removed", { code: "IDENTITY_REMOVED" }),
+      );
+    const { Wrapper, client } = createWrapperWithClient();
+    const invalidateSpy = vi.spyOn(client, "invalidateQueries");
+    const { result } = renderHook(() => useHarness({ mutateAsync }), {
+      wrapper: Wrapper,
+    });
+
+    await act(async () => {
+      await result.current.core.deliverAsync(
+        SERVER_CONVERSATION_ID,
+        "hi",
+        "local-identity-removed",
+      );
+    });
+
+    expect(invalidateSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ queryKey: MAILBOXES_QUERY_KEY_PREFIX }),
+    );
+  });
+
+  it("leaves the mailbox list alone on an unrelated 403 refusal", async () => {
+    const mutateAsync = vi
+      .fn()
+      .mockRejectedValue(
+        new ApiError(403, "Blocked", { code: "SOME_OTHER_CODE" }),
+      );
+    const { Wrapper, client } = createWrapperWithClient();
+    const invalidateSpy = vi.spyOn(client, "invalidateQueries");
+    const { result } = renderHook(() => useHarness({ mutateAsync }), {
+      wrapper: Wrapper,
+    });
+
+    await act(async () => {
+      await result.current.core.deliverAsync(
+        SERVER_CONVERSATION_ID,
+        "hi",
+        "local-other-refusal",
+      );
+    });
+
+    expect(invalidateSpy).not.toHaveBeenCalled();
   });
 });
 
@@ -451,5 +521,62 @@ describe("useMessageDeliverCore demo mode", () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+});
+
+describe("useMessageDeliverCore composing identity", () => {
+  it("sends the composing identity with a text message", async () => {
+    const mutateAsync = vi.fn().mockResolvedValue(buildMessageResponse());
+    const { result } = renderHook(() => useHarness({ mutateAsync }), {
+      wrapper: createWrapper(),
+    });
+    await act(async () => {
+      result.current.core.deliver(
+        SERVER_CONVERSATION_ID,
+        "hello",
+        "local-9",
+        undefined,
+        false,
+        undefined,
+        undefined,
+        undefined,
+        "identity-cafe",
+      );
+      await Promise.resolve();
+    });
+    expect(mutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({ asIdentityId: "identity-cafe" }),
+    );
+  });
+
+  it("sends the composing identity with a document", async () => {
+    const document: DocumentAttachment = {
+      url: "files/key",
+      fileName: "menu.pdf",
+      byteSize: 1,
+      contentType: "application/pdf",
+      provider: "upload",
+    };
+    vi.mocked(sendDocumentMessage).mockResolvedValue(buildMessageResponse());
+    const { result } = renderHook(() => useHarness({ mutateAsync: vi.fn() }), {
+      wrapper: createWrapper(),
+    });
+    await act(async () => {
+      result.current.core.deliver(
+        SERVER_CONVERSATION_ID,
+        "Document",
+        "local-10",
+        undefined,
+        false,
+        document,
+        "document",
+        undefined,
+        "identity-cafe",
+      );
+      await Promise.resolve();
+    });
+    expect(vi.mocked(sendDocumentMessage).mock.calls[0]!.at(-1)).toBe(
+      "identity-cafe",
+    );
   });
 });

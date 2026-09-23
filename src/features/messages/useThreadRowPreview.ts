@@ -87,6 +87,21 @@ export function useThreadRowPreview(
     !!thread.lastMessageSenderHandle &&
     thread.lastMessageSenderHandle === myHandle &&
     !thread.lastMessageIsSystem;
+  // A reply sent as the business this member answers for on this thread.
+  // The server's `isSentByViewer` says who typed it; staff always receive
+  // the writer's first name inside their own mailbox, so a row without the
+  // flag still reads by name.
+  const isLastMessageBusinessReply =
+    !!thread.lastMessageSenderIdentityId &&
+    thread.lastMessageSenderIdentityId === thread.mailboxSeatIdentityId &&
+    !thread.lastMessageIsSystem;
+  const isLastMessageTypedByViewer =
+    isLastMessageMine ||
+    (isLastMessageBusinessReply && thread.lastMessageIsSentByViewer === true);
+  const colleagueFirstName =
+    isLastMessageBusinessReply && !isLastMessageTypedByViewer
+      ? thread.lastMessageStaffFirstName
+      : undefined;
 
   // A DM's `preview` is already the bare body (never name-prefixed); a
   // group's bakes the REAL sender's first name in, so the "You: " swap needs
@@ -95,12 +110,15 @@ export function useThreadRowPreview(
   const bodyForOwnPreview = thread.isGroup
     ? (thread.lastMessageBody ?? thread.preview)
     : thread.preview;
-  const previewText = isLastMessageMine
+  const previewText = isLastMessageTypedByViewer
     ? `${t("messages:thread.previewYou")} ${bodyForOwnPreview}`
-    : thread.preview;
+    : colleagueFirstName
+      ? `${colleagueFirstName}: ${bodyForOwnPreview}`
+      : thread.preview;
 
+  // The tick follows our side's reply, whichever staff member typed it.
   const metaStatus: MetaStatus =
-    !thread.isGroup && isLastMessageMine
+    !thread.isGroup && (isLastMessageMine || isLastMessageBusinessReply)
       ? resolveThreadDeliveryStatus(thread)
       : null;
 

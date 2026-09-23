@@ -115,6 +115,11 @@ export function StepReview({
 }) {
   const { t } = useTranslation();
   const { draft } = form;
+  /* A staff-authored draft has no owner yet, so it has no name, no initials
+     and no visibility choice belonging to anybody. Every recap block below
+     that describes the submitter is withheld, the same way step 4's owner
+     block is. Whoever accepts the handover answers all of it then. */
+  const isOwnerAuthored = !draft.isStaffAuthored;
   return (
     <div className={styles.stepBody}>
       <PaneHeader
@@ -215,24 +220,35 @@ export function StepReview({
         </Row>
       </Group>
 
-      <Group
-        title={t("marketing:listBusiness.step5.group.photosYou")}
-        onEdit={() => onEdit(4)}
-      >
-        <Row k={t("marketing:listBusiness.step5.row.you")}>
-          {draft.ownerName}
-          {draft.ownerRole ? ` · ${draft.ownerRole}` : ""}
-        </Row>
-        <Row k={t("marketing:listBusiness.step5.row.nameShown")}>
-          {draft.visibility === "public"
-            ? t("marketing:listBusiness.step5.nameShown.public")
-            : draft.visibility === "role"
-              ? t("marketing:listBusiness.step5.nameShown.role")
-              : t("marketing:listBusiness.step5.nameShown.anon")}
-        </Row>
-      </Group>
+      {/* Both rows in this group are the submitter's own: who they are, and
+          how much of that the listing shows. With both withheld the group
+          would be an empty titled box with an edit link, so the whole group
+          goes. The step pills above still jump to step 4 for the photos. */}
+      {isOwnerAuthored && (
+        <Group
+          title={t("marketing:listBusiness.step5.group.photosYou")}
+          onEdit={() => onEdit(4)}
+        >
+          <Row k={t("marketing:listBusiness.step5.row.you")}>
+            {draft.ownerName}
+            {draft.ownerRole ? ` · ${draft.ownerRole}` : ""}
+          </Row>
+          <Row k={t("marketing:listBusiness.step5.row.nameShown")}>
+            {draft.visibility === "public"
+              ? t("marketing:listBusiness.step5.nameShown.public")
+              : draft.visibility === "role"
+                ? t("marketing:listBusiness.step5.nameShown.role")
+                : t("marketing:listBusiness.step5.nameShown.anon")}
+          </Row>
+        </Group>
+      )}
 
-      {draft.linkToProfile && (
+      {/* The vouch line survives a staff-authored draft on its own, because
+          `blankDraft()` sets `linkToProfile: true` and `ListingSeed` carries
+          no `linkToProfile`, so no seed Task 9 passes can turn it off. Left
+          alone it prints an empty avatar and an empty name over copy that
+          says a trusted member stands behind this. */}
+      {isOwnerAuthored && draft.linkToProfile && (
         <div className={styles.vouchLine}>
           <span className={styles.vlAv}>{userInitials}</span>
           <p>
@@ -245,27 +261,38 @@ export function StepReview({
         </div>
       )}
 
-      <h3 className={styles.groupH}>
-        {t("marketing:listBusiness.step5.beforeSendHeading")}
-      </h3>
-      <ConsentChecks form={form} />
-      {/* The condition of appearing in this directory at all, agreed to once
-          at submission. Not a preference and not a per-listing badge: every
-          listing here has made the same commitment, which is why it is asked
-          for here and never offered as a setting afterwards. */}
-      <AffirmingBaselineAgreement form={form} />
+      {/* The whole "before you send" block is addressed to the submitter:
+          two consents about their own identity, the commitment only they can
+          make, and a note promising a human will review it and tell them when
+          it goes live. An admin console publishes on its own terms and shows
+          its own copy for that, so the block goes as one piece. The owner
+          editor withholds the same consent pair from a co-manager. */}
+      {isOwnerAuthored && (
+        <>
+          <h3 className={styles.groupH}>
+            {t("marketing:listBusiness.step5.beforeSendHeading")}
+          </h3>
+          <ConsentChecks form={form} />
+          {/* The condition of appearing in this directory at all, agreed to
+              once at submission. Not a preference and not a per-listing
+              badge: every listing here has made the same commitment, which is
+              why it is asked for here and never offered as a setting
+              afterwards. */}
+          <AffirmingBaselineAgreement form={form} />
 
-      <div className={styles.submitNote}>
-        <span className={styles.ic}>
-          <FiShield size={15} />
-        </span>
-        <p>
-          <Translation
-            i18nKey="marketing:listBusiness.step5.submitNote"
-            components={{ b: <b /> }}
-          />
-        </p>
-      </div>
+          <div className={styles.submitNote}>
+            <span className={styles.ic}>
+              <FiShield size={15} />
+            </span>
+            <p>
+              <Translation
+                i18nKey="marketing:listBusiness.step5.submitNote"
+                components={{ b: <b /> }}
+              />
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

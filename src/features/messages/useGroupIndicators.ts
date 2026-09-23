@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useReadFrames } from "../../shared/api/realtime";
+import type { ServerToClientEvents } from "../../shared/contracts/realtime";
 import {
   computeGroupSeenBy,
   overlayLiveReadWatermarks,
@@ -48,14 +49,18 @@ export function useGroupIndicators(
 
   // A member's own `read` frame reports THEIR lastReadAt. Ignore frames
   // carrying the signed-in member's own id: that's my own read advancing,
-  // not a receipt on my sent messages.
+  // not a receipt on my sent messages. A group seat is always a profile, so
+  // a group frame always names a member; a frame without one (a business
+  // speaking for itself on a direct thread) has no roster entry to advance.
   const onRead = useCallback(
-    (frame: { conversationId: string; userId: string; lastReadAt: string }) => {
-      if (self.id && frame.userId === self.id) return;
+    (frame: ServerToClientEvents["read"]) => {
+      const memberUserId = frame.userId;
+      if (!memberUserId) return;
+      if (self.id && memberUserId === self.id) return;
       setLiveReadWatermarksByConversation((previousByConversation) => {
         const previousForConversation =
           previousByConversation[frame.conversationId];
-        const previousForMember = previousForConversation?.[frame.userId];
+        const previousForMember = previousForConversation?.[memberUserId];
         if (previousForMember && previousForMember >= frame.lastReadAt) {
           return previousByConversation; // ISO strings compare lexicographically
         }
@@ -63,7 +68,7 @@ export function useGroupIndicators(
           ...previousByConversation,
           [frame.conversationId]: {
             ...previousForConversation,
-            [frame.userId]: frame.lastReadAt,
+            [memberUserId]: frame.lastReadAt,
           },
         };
       });

@@ -6,6 +6,15 @@ import { MY_LISTING_CLAIMS_KEY } from "../listBusiness/api/useListingClaims";
 export interface ClaimListingInput {
   /** Free-text note a moderator reads in the claim queue. Optional. */
   note?: string;
+  /**
+   * Required, and required `true`, mirroring `CreateListingClaimDto` on the
+   * backend. Claiming a listing means becoming its owner, and the affirming
+   * baseline is the condition of being in the directory at all, so a claim
+   * carries the same pledge `AcceptListingOwnerOfferDto` collects from an
+   * owner-offer accept. `DirectoryClaimModal` only ever calls this mutation
+   * from behind its own ticked checkbox, so this is never sent `false`.
+   */
+  affirmingBaselineAccepted: true;
 }
 
 /**
@@ -31,6 +40,7 @@ export function useClaimListing(ref: string) {
       }
       await apiPost(`/listings/${ref}/claim`, {
         ...(input.note ? { note: input.note } : {}),
+        affirmingBaselineAccepted: input.affirmingBaselineAccepted,
       });
     },
     // So the claim is already on "Claims you've filed" when the claimant

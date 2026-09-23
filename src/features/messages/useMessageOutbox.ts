@@ -20,6 +20,7 @@ import {
   revokeBlobPreview,
   type MediaKind,
 } from "./messageSending.helpers";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import { isServerConversationId } from "./useMessagesController.helpers";
 import {
   isDueForAutoReplay,
@@ -38,6 +39,8 @@ type DeliverFunction = (
   forwarded?: boolean,
   attachment?: GifAttachment | DocumentAttachment,
   mediaKind?: MediaKind,
+  stickerId?: string,
+  asIdentityId?: string,
 ) => void;
 
 type DeliverAsyncFunction = (
@@ -48,7 +51,20 @@ type DeliverAsyncFunction = (
   forwarded?: boolean,
   attachment?: GifAttachment | DocumentAttachment,
   mediaKind?: MediaKind,
+  stickerId?: string,
+  asIdentityId?: string,
 ) => Promise<boolean>;
+
+/** A sticker's id lives on its attachment (see `retrySend`,
+ *  `useMessageSendActions.ts`, for the same extraction). Both replay paths
+ *  below already resolve `mediaKindOf(message)` correctly for a sticker;
+ *  this is the other half, so a queued or replayed sticker rebuilds the
+ *  same bare `{kind, stickerId}` payload its original send used. */
+function stickerIdOf(message: ChatMessage): string | undefined {
+  return message.attachment && isStickerAttachment(message.attachment)
+    ? message.attachment.stickerId
+    : undefined;
+}
 
 interface OutboxDeps {
   sent: Record<string, ChatMessage[]>;
@@ -233,6 +249,9 @@ export function useMessageOutbox({
             message.forwarded,
             message.sendAttachment ?? message.attachment,
             mediaKindOf(message),
+            stickerIdOf(message),
+            // The identity the entry was composed as (see `outbox.ts`).
+            message.sendAsIdentityId,
           );
         }
       }
@@ -293,6 +312,10 @@ export function useMessageOutbox({
               // Same real-payload preference as `retrySend`/`migrateOutboxConversation`.
               current.sendAttachment ?? current.attachment,
               mediaKindOf(current),
+              stickerIdOf(current),
+              // The identity the entry was composed as (see `outbox.ts`),
+              // whichever mailbox is open now.
+              current.sendAsIdentityId,
             );
           },
         );

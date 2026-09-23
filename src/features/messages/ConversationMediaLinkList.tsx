@@ -35,7 +35,12 @@ export function ConversationMediaLinkList({
   return (
     <ul className={styles.rows}>
       {entries.flatMap((entry, entryIndex) => {
-        const name = entrySenderName(entry.message, counterpartName, youLabel);
+        const name = entrySenderName(
+          entry.message,
+          counterpartName,
+          youLabel,
+          t,
+        );
         const date = entryDateLabel(entry.at, locale);
         const meta = date
           ? t("messages:mediaGallery.entryMeta", { name, date })

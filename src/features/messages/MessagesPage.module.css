@@ -226,6 +226,18 @@
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
+/* The reply-only mailbox's compose-button explainer (`MessagesThreadListBody`,
+   `mailbox.replyOnly.composeHint`), sitting above the row list at the same
+   16px inset the rows themselves use. Same small/muted treatment as every
+   other inline hint in this feature (see `.hint` in
+   `IdentityEnquiryModal.module.css`). */
+.tpComposeHint {
+  margin: 0;
+  padding: 10px 16px;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
 /* DES-188: the row list is a real `<ul>` (`MessagesThreadListBody`). Reset
    the browser's default bullet + inset so it stays pixel-identical to the
    bare-fragment markup it replaces. */
@@ -2061,6 +2073,19 @@
   color: rgba(var(--cream-rgb), 0.97);
   box-shadow: var(--shadow-e2);
   --chat-link-ink: var(--accent-soft);
+}
+
+/* A sticker is drawn with its own transparency and needs no bubble chrome:
+   no background, no padding, no radius. Sized in rem so it tracks the type
+   scale the way the rest of the thread does. `StickerBubble` renders no
+   `.bubble`/`.attachmentGroup` wrapper around it (see that component), so
+   there is no ancestor surface left to zero out here. */
+.stickerImage {
+  display: block;
+  width: 8rem;
+  height: 8rem;
+  object-fit: contain;
+  user-select: none;
 }
 
 /* The composer's in-pill icon buttons: the attach paperclip at the leading

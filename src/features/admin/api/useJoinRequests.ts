@@ -45,6 +45,9 @@ export interface JoinRequestView {
    * or "Opened the invite page directly" when no source was recorded. Always set.
    */
   sourceLabel: string;
+  /** The applicant's own answer to "Where did you hear about QueerPulse?",
+   *  as plain text. Null on legacy rows that predate the question. */
+  heardFrom: string | null;
   /** Pre-formatted "Applied 2 days ago". */
   appliedLine: string;
   /** Whole days since the request was submitted. */
@@ -186,6 +189,7 @@ export function dtoToView(
     mutualMemberEmail: dto.mutualMemberEmail,
     ageLine: ageLine(dto, t, locale),
     sourceLabel: t(sourceLabelKey(dto.source)),
+    heardFrom: dto.heardFrom ?? null,
     appliedLine: appliedLine(dto.createdAt, t),
     daysWaiting,
     inviteCode: dto.inviteCode,

@@ -341,6 +341,7 @@ export const communities: Catalog = {
   "detail.tabs.discussion": "Discussion",
   "detail.tabs.events": "Events",
   "detail.tabs.modtools": "Mod tools",
+  "detail.tabs.spaces": "Spaces",
   // Shown to an owner/mod on a tab they've hidden from members (the
   // "events"/"roster" feature toggles, or "show roster to members").
   "detail.hiddenFromMembers":
@@ -440,6 +441,7 @@ export const communities: Catalog = {
   "detail.modtools.nav.history": "History",
   "detail.modtools.nav.card": "Member card",
   "detail.modtools.nav.danger": "Danger zone",
+  "detail.modtools.nav.spaces": "Spaces",
   "detail.modtools.overview.attention.label": "Needs attention",
   "detail.modtools.overview.attention.requests_one":
     "One person is waiting to join",
@@ -2130,4 +2132,41 @@ export const communities: Catalog = {
     "Nobody speaks for the whole community without being asked to.",
   "values.lib.disagreeOnTactics":
     "You can disagree about tactics and still belong here.",
+
+  // ── Spaces (subcommunities) ────────────────────────────────────────────────
+  "spaces.tab.intro":
+    "Smaller spaces inside {name}. Join the ones that fit you.",
+  "spaces.tab.empty.title": "No spaces yet",
+  "spaces.tab.empty.body": "Moderators can open a space from mod tools.",
+  "spaces.tab.error": "Couldn't load the spaces.",
+  "spaces.tab.retry": "Try again",
+  "spaces.card.count_one": "{count} person",
+  "spaces.card.count_other": "{count} people",
+  "spaces.card.joined": "You're in",
+  "spaces.breadcrumb.label": "Back to {name}",
+  "spaces.rules.fromParent": "From {name}",
+  "spaces.rules.spaceAdds": "This space adds",
+  "spaces.join.parentFirst": "Join {name} first",
+  "spaces.join.rulesNote":
+    "You already agreed to the rules of {name}. This space adds a few of its own.",
+  "spaces.paused.parent": "This space is paused because {name} is paused.",
+  "spaces.mod.label": "Spaces",
+  "spaces.mod.intro":
+    "Open a smaller space inside this community. Only people already here can join it.",
+  "spaces.mod.create": "Create a space",
+  "spaces.mod.form.name": "Name",
+  "spaces.mod.form.handle": "Web address",
+  "spaces.mod.form.tagline": "Tagline",
+  "spaces.mod.form.purpose": "What it's for",
+  "spaces.mod.form.tier": "Who can join",
+  "spaces.mod.form.rules": "Extra rules for this space",
+  "spaces.mod.form.rulesHint": "The rules of {name} already apply here.",
+  "spaces.mod.form.addRule": "Add a rule",
+  "spaces.mod.form.tierLocked": "A space can't be more open than {name}.",
+  "spaces.mod.form.submit": "Create space",
+  "spaces.mod.created": "Space created",
+  "spaces.mod.createError": "Couldn't create the space. Try again.",
+  "spaces.mod.notAllowed": "This community can't open spaces right now.",
+  "spaces.mod.list.title": "Spaces in this community",
+  "spaces.mod.list.empty": "No spaces yet.",
 };

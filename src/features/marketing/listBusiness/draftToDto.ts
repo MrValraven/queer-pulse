@@ -41,8 +41,15 @@ import type {
  * literal, TypeScript's excess-property check makes adding one of those keys
  * back here a compile error, so the co-manager's body cannot silently regain a
  * field the API answers 403 to.
+ *
+ * Exported for the admin console's create body, which is this same business
+ * half with `ownerRole` dropped as well (see
+ * `features/admin/api/adminListingCreate.api.ts`). Reusing it is what keeps
+ * one derivation of "everything about the business" in the app.
  */
-function businessPayload(draft: ListingDraft): CoManagerUpdateListingDto {
+export function businessPayload(
+  draft: ListingDraft,
+): CoManagerUpdateListingDto {
   const accessibility = normalizeAccessibilityDraft(draft.accessibility);
   return {
     path: draft.path,

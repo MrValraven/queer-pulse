@@ -2,6 +2,7 @@ import {
   FiCompass,
   FiMail,
   FiMapPin,
+  FiRadio,
   FiUserCheck,
   FiUsers,
 } from "react-icons/fi";
@@ -47,6 +48,15 @@ export function JoinRequestFacts({ item }: { item: JoinRequestView }) {
         </dt>
         <dd className={styles.queueFactValue}>{item.sourceLabel}</dd>
       </div>
+      {item.heardFrom !== null && (
+        <div className={styles.queueFact}>
+          <dt className={styles.queueFactLabel}>
+            <FiRadio aria-hidden />
+            {t("admin:members.verify.heardFromLabel")}
+          </dt>
+          <dd className={styles.queueFactValue}>{item.heardFrom}</dd>
+        </div>
+      )}
       {item.mutualMemberEmail && (
         <div className={styles.queueFact}>
           <dt className={styles.queueFactLabel}>

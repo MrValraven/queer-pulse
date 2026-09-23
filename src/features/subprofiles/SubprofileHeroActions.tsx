@@ -10,7 +10,7 @@ import { safeHref } from "../../shared/lib/safeHref";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { subprofileEditPath } from "../../app/routeMap";
-import { useMemberContact } from "../connect/useMemberContact";
+import { IdentityContactButton } from "../messages/identityContact/IdentityContactButton";
 import { SubprofileAvailability } from "./SubprofileAvailability";
 import { SubprofileEndorse } from "./SubprofileEndorse";
 import { SubprofileFollow } from "./SubprofileFollow";
@@ -57,12 +57,13 @@ export function SubprofileHeroActions({
   onAction: (action: PersonaAction) => void;
 }) {
   const { t } = useTranslation();
-  const { contact } = useMemberContact(view.ownerSlug ?? "");
   const accent = view.accent ?? DEFAULT_ACCENT;
   const ctaHref = safeHref(view.ctaUrl);
   const hasCta = Boolean(ctaHref && view.ctaLabel);
-  const canMessage =
-    view.linkVisibility === "linked" && Boolean(view.ownerSlug);
+  // Spec 7: reaching a persona no longer exposes its owner, so an unlinked
+  // persona is messageable too. The only thing that still gates it is
+  // whether there is a published page to reach at all.
+  const canMessage = view.status === "published";
 
   if (mode === "owner") {
     return (
@@ -157,19 +158,12 @@ export function SubprofileHeroActions({
         </Button>
       )}
       {canMessage && (
-        <Button
-          variant={hasCta ? "ghost" : "primary"}
-          size="md"
-          onClick={() => {
-            onAction("message");
-            contact({
-              slug: view.ownerSlug ?? "",
-              name: view.ownerName ?? view.displayName,
-            });
-          }}
-        >
-          {t("subprofiles:hero.message")}
-        </Button>
+        <IdentityContactButton
+          target={{ kind: "persona", subprofileId: view.id }}
+          name={view.displayName}
+          buttonVariant={hasCta ? "ghost" : "primary"}
+          onOpen={() => onAction("message")}
+        />
       )}
       <SubprofileFollow
         subprofileId={view.id}

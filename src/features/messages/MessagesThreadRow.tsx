@@ -10,12 +10,15 @@ import {
   useToggleMute,
   useTogglePin,
 } from "./api/useConversationPrefs";
+import { claimStatusOf } from "./api/useConversationClaim";
 import { SendStatusTick } from "./MessageSendStatus";
 import { resolveMuteState } from "./muteUntilLabel";
 import { ThreadRowIndicators } from "./ThreadRowIndicators";
 import { ThreadRowMenu } from "./ThreadRowMenu";
 import { ThreadRowSwipeAffordances } from "./ThreadRowSwipeAffordances";
 import { isThreadUnread } from "./threadFilters";
+import { shouldShowCounterpartPresence } from "./mailboxes/mailboxPresence";
+import { useMessageViewer } from "./useMessageViewer";
 import { useThreadRowPreview } from "./useThreadRowPreview";
 import { useThreadRowSwipe } from "./useThreadRowSwipe";
 import { useThreadRowTimeLabel } from "./useThreadRowTimeLabel";
@@ -71,9 +74,15 @@ function MessagesThreadRowImpl({
   const isUnread = isThreadUnread(thread, activeId, readIds);
   const isCurrentlyOpen = thread.id === activeId;
   const presenceOnline = useIsOnline(thread.otherParticipantId);
+  const viewer = useMessageViewer();
+  // Computed once here for the row tag and the row menu alike.
+  const claimStatus = claimStatusOf(thread, viewer.myHandle);
+  // A business, persona or company never shows presence; the demo `online`
+  // fallback passes through the same gate.
   const isOnline =
-    (!!thread.otherParticipantId && presenceOnline) ||
-    (!thread.otherParticipantId && !!thread.online);
+    shouldShowCounterpartPresence(thread) &&
+    ((!!thread.otherParticipantId && presenceOnline) ||
+      (!thread.otherParticipantId && !!thread.online));
   const isPinned = !!thread.pinnedAt;
   const isFavorite = !!thread.favorite;
   const { isMuted, mutedUntilTime, isMentionsOnly } = resolveMuteState(thread);
@@ -187,6 +196,8 @@ function MessagesThreadRowImpl({
                 isFavorite={isFavorite}
                 isPinned={isPinned}
                 time={displayedTime}
+                claimStatus={claimStatus}
+                claimantFirstName={thread.claimedBy?.firstName}
               />
             </div>
             <div className={styles.trPreviewRow}>
@@ -242,6 +253,7 @@ function MessagesThreadRowImpl({
         onToggleArchive={handleToggleArchive}
         onToggleReadUnread={handleToggleReadUnread}
         onDelete={() => onRequestDelete(thread)}
+        claimStatus={claimStatus}
       />
     </div>
   );

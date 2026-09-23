@@ -3,11 +3,20 @@ import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
+import type {
+  StickerAttachmentResponse,
+  StickerResponse,
+} from "../../shared/contracts/contracts";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import { nextLocalId } from "./useMessagesController.helpers";
 import { mediaKindOf, type MediaKind } from "./messageSending.helpers";
 import { replyQuoteSourceFromMessage } from "./replyQuoteSource";
 import { clockLabel } from "./api/messages.adapters";
-import { useAttachmentMessageSendActions } from "./useAttachmentMessageSendActions";
+import { isTypedByViewer } from "./viewerSideSender";
+import {
+  composingIdentityOf,
+  useAttachmentMessageSendActions,
+} from "./useAttachmentMessageSendActions";
 
 /** Targets an explicit thread instead of whichever one is currently open,
  *  carrying its own reply quote with it (see the file doc below and
@@ -18,6 +27,10 @@ export interface ExplicitSendOptions {
   conversationId: string;
   replyToId?: string;
   replyTo?: ChatMessage["replyTo"];
+  /** The mailbox seat the send was composed as, snapshotted with the target
+   *  thread so a send that resolves after a mailbox switch still goes out as
+   *  the identity it was written in. Undefined for a personal thread. */
+  sendAsIdentityId?: string;
 }
 
 /** Builds the reply-quote block for a new send from the CURRENT reply draft.
@@ -39,13 +52,35 @@ export function buildReplySnapshot(
     replyTo: {
       id: replyDraft.id!,
       snippet: replyDraft.text.slice(0, 120),
-      senderName:
-        replyDraft.from === "me" ? t("messages:conversation.you") : active.name,
+      // A colleague's business reply is quoted by the business alone, which
+      // is what the server renders in `replyTo.senderName`, so the label
+      // holds still when the server copy replaces this snapshot.
+      senderName: isTypedByViewer(replyDraft)
+        ? t("messages:conversation.you")
+        : replyDraft.from === "me"
+          ? (replyDraft.senderName ?? active.name)
+          : active.name,
       deleted: false,
       kind: quoteSource.kind,
       thumbnailUrl: quoteSource.thumbnailUrl,
       fileName: quoteSource.fileName,
     },
+  };
+}
+
+/** The attachment a sticker's optimistic bubble paints from, built from the
+ *  pack entry the picker already holds (see `sendSticker`). */
+function stickerPreviewAttachment(
+  sticker: StickerResponse,
+): StickerAttachmentResponse {
+  return {
+    url: sticker.url,
+    previewUrl: sticker.url,
+    width: sticker.width,
+    height: sticker.height,
+    provider: "sticker",
+    stickerId: sticker.id,
+    label: sticker.label,
   };
 }
 
@@ -70,6 +105,8 @@ interface SendActionsDeps {
     forwarded?: boolean,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
+    stickerId?: string,
+    asIdentityId?: string,
   ) => void;
 }
 
@@ -84,6 +121,13 @@ export interface MessageSendActions {
    *  reply quote) instead of whichever one is currently open: see the file
    *  doc below and `ExplicitSendOptions`. */
   sendGif: (attachment: GifAttachment, options?: ExplicitSendOptions) => void;
+  /** Send a catalogue sticker as its own message, through the same pipeline
+   *  as `sendGif`. `options`, when given, targets a thread explicitly (and
+   *  carries its own reply quote), exactly like `sendGif`'s own `options`. */
+  sendSticker: (
+    sticker: StickerResponse,
+    options?: ExplicitSendOptions,
+  ) => void;
   /** Send an uploaded image as its own message. `attachment` is the SEND
    *  payload (its `url`/`previewUrl` are the private storage key the upload
    *  minted); `localAttachment`, when given, is what the OPTIMISTIC bubble
@@ -151,6 +195,7 @@ export function useMessageSendActions({
       const convId = active.id;
       const localId = nextLocalId();
       const replyTo = currentReplyPreview();
+      const sendAsIdentityId = composingIdentityOf(active);
       // Stamp the optimistic bubble with a REAL send time, formatted with the
       // same `clockLabel` the server rows use, rather than a "Just now"
       // placeholder, so the label is final from the first paint and never
@@ -170,10 +215,21 @@ export function useMessageSendActions({
         status: "sending",
         localId,
         replyTo,
+        sendAsIdentityId,
       });
       const replyToId = replyDraft?.id;
       setReplyDraft(null);
-      deliver(convId, trimmedBody, localId, replyToId);
+      deliver(
+        convId,
+        trimmedBody,
+        localId,
+        replyToId,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        sendAsIdentityId,
+      );
     },
     [
       activeBlocked,
@@ -205,6 +261,7 @@ export function useMessageSendActions({
       const replyToId = options?.conversationId
         ? options.replyToId
         : replyDraft?.id;
+      const sendAsIdentityId = composingIdentityOf(active, options);
       // See `send`: a real `at` plus a final clock label from the first paint,
       // so the ack cannot resize the bubble, re-group its run, or flash a
       // premature "Seen by N".
@@ -219,9 +276,77 @@ export function useMessageSendActions({
         status: "sending",
         localId,
         replyTo,
+        sendAsIdentityId,
       });
       if (!options?.conversationId) setReplyDraft(null);
-      deliver(convId, "GIF", localId, replyToId, false, attachment, "gif");
+      deliver(
+        convId,
+        "GIF",
+        localId,
+        replyToId,
+        false,
+        attachment,
+        "gif",
+        undefined,
+        sendAsIdentityId,
+      );
+    },
+    [
+      activeBlocked,
+      active,
+      currentReplyPreview,
+      appendOptimistic,
+      replyDraft,
+      setReplyDraft,
+      deliver,
+    ],
+  );
+
+  /** Send a sticker as its own message. Same optimistic, idempotent, outbox
+   *  path as a GIF, except the wire payload is an id: the server resolves the
+   *  row and bakes the attachment, so nothing here can point a message at an
+   *  arbitrary storage key. The optimistic bubble is painted from the pack
+   *  entry the picker already holds, so the sticker appears instantly and the
+   *  server echo replaces an identical-looking message. Independent of the
+   *  text draft, exactly like `sendGif`. */
+  const sendSticker = useCallback(
+    (sticker: StickerResponse, options?: ExplicitSendOptions) => {
+      const convId = options?.conversationId ?? active?.id;
+      if (!convId) return;
+      if (!options?.conversationId && (activeBlocked || !active)) return;
+      const localId = nextLocalId();
+      const replyTo = options?.conversationId
+        ? options.replyTo
+        : currentReplyPreview();
+      const replyToId = options?.conversationId
+        ? options.replyToId
+        : replyDraft?.id;
+      const sendAsIdentityId = composingIdentityOf(active, options);
+      const at = new Date().toISOString();
+      appendOptimistic(convId, {
+        from: "me",
+        text: sticker.label,
+        kind: "sticker",
+        attachment: stickerPreviewAttachment(sticker),
+        time: clockLabel(at),
+        at,
+        status: "sending",
+        localId,
+        replyTo,
+        sendAsIdentityId,
+      });
+      if (!options?.conversationId) setReplyDraft(null);
+      deliver(
+        convId,
+        sticker.label,
+        localId,
+        replyToId,
+        false,
+        undefined,
+        "sticker",
+        sticker.id,
+        sendAsIdentityId,
+      );
     },
     [
       activeBlocked,
@@ -254,21 +379,38 @@ export function useMessageSendActions({
     (message: ChatMessage) => {
       if (!active || !message.localId) return;
       setStatus(active.id, message.localId, "sending");
+      // Resend the real payload (`sendAttachment`, an image/document's
+      // storage key) when present: `attachment` alone may be the local
+      // blob preview, which the server can't validate/store.
+      const attachmentToResend = message.sendAttachment ?? message.attachment;
+      // A sticker's id lives on its attachment. Pull it back out here so a
+      // retry rebuilds the same `{kind, stickerId}` payload the original
+      // send used. The server rejects a send that carries both an
+      // attachment and a stickerId (see `messages.api.ts#sendMessage`), so
+      // the attachment itself is dropped from what's actually resent
+      // whenever the message is a sticker.
+      const stickerId =
+        attachmentToResend && isStickerAttachment(attachmentToResend)
+          ? attachmentToResend.stickerId
+          : undefined;
+      const resendableAttachment =
+        attachmentToResend && !isStickerAttachment(attachmentToResend)
+          ? attachmentToResend
+          : undefined;
       deliver(
         active.id,
         message.text,
         message.localId,
         message.replyTo?.id,
         message.forwarded,
-        // Resend the real payload (`sendAttachment`, an image/document's
-        // storage key) when present — `attachment` alone may be the local
-        // blob preview, which the server can't validate/store.
-        message.sendAttachment ?? message.attachment,
+        resendableAttachment,
         mediaKindOf(message),
+        stickerId,
+        message.sendAsIdentityId,
       );
     },
     [active, setStatus, deliver],
   );
 
-  return { send, sendGif, sendImage, sendDocument, retrySend };
+  return { send, sendGif, sendSticker, sendImage, sendDocument, retrySend };
 }

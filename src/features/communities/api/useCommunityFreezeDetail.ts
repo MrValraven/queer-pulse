@@ -3,7 +3,7 @@ import { apiGet } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 
 /**
- * Why a community is paused, and since when — the fields the frozen banner
+ * Why a community is paused, and since when: the fields the frozen banner
  * needs to stop narrating every pause as a report review.
  *
  * Read with its own narrow request rather than off `useCommunity`, which maps
@@ -19,12 +19,15 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
  */
 
 /** Why the pause happened.
- *  - `manual` — a moderator paused the community deliberately. No report
+ *  - `manual`: a moderator paused the community deliberately. No report
  *    exists, so the copy must not mention one.
- *  - `emergency_report` — a single severe report tripped an immediate pause.
- *  - `report_pileup` — enough reports arrived at once to trip a pause. */
+ *  - `emergency_report`: a single severe report tripped an immediate pause.
+ *  - `report_pileup`: enough reports arrived at once to trip a pause.
+ *  - `parent_frozen`: a space (subcommunity), paused because its parent
+ *    community is paused. The space's own staff has nothing to review here;
+ *    only the parent's staff can lift it. */
 export type CommunityFrozenReason =
-  "manual" | "emergency_report" | "report_pileup";
+  "manual" | "emergency_report" | "report_pileup" | "parent_frozen";
 
 interface FrozenDetailResponse {
   frozenAt?: string | null;

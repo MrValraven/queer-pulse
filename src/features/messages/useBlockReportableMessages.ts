@@ -3,11 +3,12 @@ import { useMemo } from "react";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { MessagePage } from "./api/threadCacheTrim";
+import { messageDisplayText } from "./api/messages.adapters";
 
 /** One reportable message, ready for the "report before you block" step's
- *  checkbox list — the raw body already carries the "GIF"/"Photo"/"Document"
- *  text fallback for an attachment (see `MessageResponse.attachment`'s own
- *  doc), so a preview never needs to special-case a media message. */
+ *  checkbox list. `preview` goes through `messageDisplayText()` so a sticker
+ *  (whose server `body` is deliberately blank) shows its label instead of a
+ *  blank row a reporting member could not identify. */
 export interface ReportableMessageOption {
   id: string;
   preview: string;
@@ -72,7 +73,7 @@ export function useBlockReportableMessages(
       .reverse()
       .map((message) => ({
         id: message.id,
-        preview: message.body,
+        preview: messageDisplayText(message),
         createdAt: message.createdAt,
       }));
   }, [cached]);

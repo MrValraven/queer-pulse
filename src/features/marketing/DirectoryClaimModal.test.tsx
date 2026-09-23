@@ -10,7 +10,7 @@ import { DirectoryClaimModal } from "./DirectoryClaimModal";
  * A demo claim resolves in the browser and is never stored, and both
  * `useMyListingClaims` and `useListingClaimPolicy` are disabled there, so the
  * confirmation must not offer a claims page that would answer it with "you
- * haven't claimed a listing yet". `DirectoryAsideOwner` guards the same
+ * haven't claimed a listing yet". `DirectoryAsideFooter` guards the same
  * destination the same way.
  */
 describe("DirectoryClaimModal in demo mode", () => {
@@ -25,9 +25,21 @@ describe("DirectoryClaimModal in demo mode", () => {
       </TestProviders>,
     );
 
+    const submitCta = await screen.findByRole("button", {
+      name: /send to moderators/i,
+    });
+    // Claiming means becoming the owner, so the affirming-baseline pledge is
+    // required: submit stays disabled until the checkbox is ticked.
+    expect(submitCta).toBeDisabled();
+
     fireEvent.click(
-      await screen.findByRole("button", { name: /send to moderators/i }),
+      screen.getByRole("button", {
+        name: /i agree to this, for this listing/i,
+      }),
     );
+    expect(submitCta).toBeEnabled();
+
+    fireEvent.click(submitCta);
 
     // The demo mutation resolves after a short simulated delay.
     expect(

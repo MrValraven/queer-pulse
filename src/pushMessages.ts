@@ -17,9 +17,20 @@ export type PushLang = "en" | "pt";
 /** Mirrors `src/shared/i18n/translate.ts`'s `{token}` interpolation exactly. */
 const INTERPOLATION = /\{(\w+)\}/g;
 
+/** Matches a still-unresolved `{token}` left over after interpolation. */
+const UNRESOLVED_TOKEN = /\{\w+\}/;
+
+/**
+ * Task 22: a business reply's push names the staff member who wrote it,
+ * beside the business, when both attribution switches allow it
+ * (`push.listener.ts:477-533`).
+ */
+export const STAFF_TITLE_KEY = "push:messages.staffTitle";
+
 const en: Record<string, string> = {
   "push:event.reminder.body": "Starting soon — tap to see the details.",
   "push:messages.coalesced": "{count} new messages from {name}",
+  [STAFF_TITLE_KEY]: "{name} from {business}",
   // PRD-333: a group burst names the group, since its senders differ.
   "push:messages.coalescedGroup": "{count} new messages in {group}",
   // ENG-227: attachment-only messages. The server picks the key from the
@@ -27,9 +38,11 @@ const en: Record<string, string> = {
   "push:messages.attachment.photo": "Photo",
   "push:messages.attachment.gif": "GIF",
   "push:messages.attachment.document": "Document",
+  "push:messages.attachment.sticker": "Sticker",
   "push:messages.group.attachment.photo": "{name}: Photo",
   "push:messages.group.attachment.gif": "{name}: GIF",
   "push:messages.group.attachment.document": "{name}: Document",
+  "push:messages.group.attachment.sticker": "{name}: Sticker",
   // PRD-336: a group message that also `@`-mentions the recipient gets
   // exactly one push. This is that push's body, folding "you were mentioned"
   // and the message itself into one line. `{preview}` carries the message
@@ -39,6 +52,7 @@ const en: Record<string, string> = {
   "push:messages.group.mention.photo": "{name} mentioned you: Photo",
   "push:messages.group.mention.gif": "{name} mentioned you: GIF",
   "push:messages.group.mention.document": "{name} mentioned you: Document",
+  "push:messages.group.mention.sticker": "{name} mentioned you: Sticker",
   "push:test.title": "Test notification",
   "push:test.body": "This is a test — your notifications are working.",
   "push:connection.request.title": "New connection request",
@@ -173,24 +187,35 @@ const en: Record<string, string> = {
   "push:groupInvite.body": "{name} invited you to {group}.",
   // A group with no title yet, so there is no {group} to name.
   "push:groupInvite.bodyUntitled": "{name} invited you to a group.",
+  // An admin wrote up a place in the directory and put it in this member's
+  // name. The answer, and the affirming pledge that rides with accepting,
+  // live on the member's own places panel, so the push only says an offer is
+  // waiting.
+  "push:listingOwnerOffer.title": "Ownership offer",
+  "push:listingOwnerOffer.body":
+    "{name} has offered you ownership of {listingName}.",
 };
 
 const pt: Record<string, string> = {
   "push:event.reminder.body": "A começar em breve — toca para ver os detalhes.",
   "push:messages.coalesced": "{count} novas mensagens de {name}",
+  [STAFF_TITLE_KEY]: "{name}, de {business}",
   "push:messages.coalescedGroup": "{count} novas mensagens em {group}",
   "push:messages.attachment.photo": "Foto",
   "push:messages.attachment.gif": "GIF",
   "push:messages.attachment.document": "Documento",
+  "push:messages.attachment.sticker": "Sticker",
   "push:messages.group.attachment.photo": "{name}: Foto",
   "push:messages.group.attachment.gif": "{name}: GIF",
   "push:messages.group.attachment.document": "{name}: Documento",
+  "push:messages.group.attachment.sticker": "{name}: Sticker",
   // PRD-336: ver a nota no bloco EN. Uma mensagem de grupo que também te
   // menciona gera UMA notificação só.
   "push:messages.group.mention.body": "{name} mencionou-te: {preview}",
   "push:messages.group.mention.photo": "{name} mencionou-te: Foto",
   "push:messages.group.mention.gif": "{name} mencionou-te: GIF",
   "push:messages.group.mention.document": "{name} mencionou-te: Documento",
+  "push:messages.group.mention.sticker": "{name} mencionou-te: Sticker",
   "push:test.title": "Notificação de teste",
   "push:test.body": "Isto é um teste — as tuas notificações estão a funcionar.",
   "push:connection.request.title": "Novo pedido de ligação",
@@ -290,6 +315,9 @@ const pt: Record<string, string> = {
   "push:groupInvite.title": "Novo convite de grupo",
   "push:groupInvite.body": "{name} convidou-te para {group}.",
   "push:groupInvite.bodyUntitled": "{name} convidou-te para um grupo.",
+  "push:listingOwnerOffer.title": "Oferta de propriedade",
+  "push:listingOwnerOffer.body":
+    "{name} ofereceu-te a propriedade de {listingName}.",
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };
@@ -322,6 +350,12 @@ export interface PushCopySource {
  * key isn't in the catalog, or there is no `l10n` block at all — so a push
  * from before this feature (or a key the catalog hasn't caught up with) still
  * renders correctly.
+ *
+ * A resolved title that still holds an unresolved `{token}` also falls back
+ * to the plain title. `pushCoalesce` folds a burst into a summary and
+ * replaces the payload's params with `{ count, name }`, so a staff title
+ * template carried through unchanged would read "Rui from {business}"; the
+ * plain title is always the business name and is safe on its own.
  */
 export function formatPushCopy(
   payload: PushCopySource,
@@ -334,11 +368,16 @@ export function formatPushCopy(
 
   const titleTemplate = titleKey !== undefined ? table[titleKey] : undefined;
   const bodyTemplate = bodyKey !== undefined ? table[bodyKey] : undefined;
+  const interpolatedTitle =
+    titleTemplate !== undefined
+      ? interpolate(titleTemplate, params)
+      : undefined;
 
   return {
     title:
-      titleTemplate !== undefined
-        ? interpolate(titleTemplate, params)
+      interpolatedTitle !== undefined &&
+      !UNRESOLVED_TOKEN.test(interpolatedTitle)
+        ? interpolatedTitle
         : payload.title,
     body:
       bodyTemplate !== undefined

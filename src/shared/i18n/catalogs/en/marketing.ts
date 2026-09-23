@@ -2267,6 +2267,10 @@ export const marketing: Catalog = {
   "changelog.entry.more": "More",
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-22.headline":
+    "You can reply as your business, and communities can open spaces.",
+  "changelog.releases.2026-09-20.headline":
+    "The team can put a place in your name, and messages carry stickers.",
   "changelog.releases.2026-09-18.headline":
     "Chat photos go from camera to caption in one screen, and back returns to your chats.",
   "changelog.releases.2026-09-16.headline":
@@ -2387,6 +2391,14 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "See the changelog",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Section 4 (Communities), 6 Sep 2026.
+  "changelog.entries.pages-stay-in-one-language.title":
+    "Pages stay in one language",
+  "changelog.entries.pages-stay-in-one-language.body":
+    "The homepage no longer shows English text under a Portuguese header while it loads.",
+  "changelog.entries.invite-requests-ask-where-you-heard-about-us.title":
+    "Invite requests ask where you heard about us",
+  "changelog.entries.invite-requests-ask-where-you-heard-about-us.body":
+    "A required question on the request form, and reviewers see your answer beside your request.",
   "changelog.entries.photos-match-your-screen-instead-of-a-guess.title":
     "Photos match your screen instead of a guess",
   "changelog.entries.photos-match-your-screen-instead-of-a-guess.body":
@@ -7090,7 +7102,6 @@ export const marketing: Catalog = {
   "directory.detail.visitWebsite": "Visit website",
   "directory.detail.getInTouch": "Get in touch",
   "directory.detail.backToDirectory": "Back to directory",
-  "directory.detail.claimCta": "Do you run this place? Claim it",
   "directory.detail.claimsFiledLink": "See the claims you've filed",
   "directory.detail.loader.ariaLabel": "Opening this place",
   "directory.detail.loader.title": "Opening this place",
@@ -7268,6 +7279,14 @@ export const marketing: Catalog = {
     "e.g. I'm the owner, here's how you can reach me to confirm.",
   "directory.detail.claim.note":
     "Claiming doesn't hand over the listing on its own. A moderator reviews every request first.",
+  // The affirming-baseline pledge (ClaimAffirmingBaselinePledge), collected
+  // on every claim because claiming a listing means becoming its owner.
+  "directory.detail.claim.pledgeLead":
+    "Claiming <b>{name}</b> means becoming the person who runs it, with one promise attached. Every listing in the directory has made the same one.",
+  "directory.detail.claim.pledgeAgreeTitle":
+    "I agree to this, for this listing",
+  "directory.detail.claim.pledgeAgreeSub":
+    "Your agreement is recorded with your name and the date you accept, if a moderator approves your claim.",
   "directory.detail.claim.cancel": "Cancel",
   "directory.detail.claim.submit": "Send to moderators",
   "directory.detail.claim.submitting": "Sending…",
@@ -7336,10 +7355,17 @@ export const marketing: Catalog = {
   "directory.detail.trust.howLine":
     "This space meets the same criteria as every verified space.",
   "directory.detail.trust.howLink": "How verification works",
-  "directory.detail.whoRunsIt": "Who runs it",
+  "directory.detail.runBy": "Run by <a>{name}</a>",
   "directory.detail.onQueerPulse": "On QueerPulse",
   "directory.detail.addedByMember": "Added by a member",
-  "directory.detail.viewProfile": "View {name}'s profile",
+  // Shown when the backend reports `ownerId === null`. TWO situations
+  // produce that: staff authoring an entry for a business that has not
+  // joined, and a member erasing their account, which nulls the column via
+  // `ON DELETE SET NULL` and leaves their venue live and unowned. The line
+  // therefore states the claim status and says nothing about who wrote the
+  // entry, because in the second situation a member did. See the long
+  // comment in DirectoryAsideFooter.tsx before editing this string.
+  "directory.detail.unclaimedNote": "Nobody has claimed this listing yet.",
   "directory.detail.savedByMembers_one": "Saved by {count} member",
   "directory.detail.savedByMembers_other": "Saved by {count} members",
   "directory.detail.membersHereLately": "Members here lately",
@@ -7349,7 +7375,6 @@ export const marketing: Catalog = {
   "directory.detail.upcoming.downloadIcs": ".ics",
   "directory.detail.galleryAria": "Photos of {name}",
   "directory.detail.viewPhoto": "View photo",
-  "directory.detail.noPhotos": "No photos yet",
   "directory.detail.lightboxClose": "Close",
   "directory.detail.prevPhoto": "Previous photo",
   "directory.detail.nextPhoto": "Next photo",
@@ -7361,6 +7386,41 @@ export const marketing: Catalog = {
   "directory.detail.action.linkCopied": "Link copied",
   "directory.detail.action.shareError": "Couldn't share. Try copying the link",
   "directory.detail.action.saveSignIn": "Sign in to save this space",
+
+  // ── Moderator band (`DirectoryStaffBand`), the plum strip above the
+  //    breadcrumb. Shown only to a directory moderator (admins included), and
+  //    never inside the admin moderation drawer, which is already that surface.
+  //    It states only what the listing payload can back: there is no
+  //    moderation `status` field on a directory place, so nothing here claims
+  //    one.
+  "directory.detail.staffBand.label": "Moderator view",
+  "directory.detail.staffBand.reference": "Ref {reference}",
+  "directory.detail.staffBand.safeSpace.verified": "Safe space verified",
+  "directory.detail.staffBand.safeSpace.verifiedTier":
+    "Safe space verified, tier {tier}",
+  "directory.detail.staffBand.safeSpace.suspended":
+    "Safe-space badge suspended",
+  "directory.detail.staffBand.safeSpace.removed": "Safe-space badge removed",
+  "directory.detail.staffBand.dueForReReview": "Badge due for re-review",
+  "directory.detail.staffBand.openInQueue": "Open in listings queue",
+  "directory.detail.staffBand.safeSpaceReview": "Safe-space review",
+
+  // ── Owner band (`DirectoryOwnerBand`), the jade-edged card under the
+  //    breadcrumb. Shown only to the member who owns this listing. The
+  //    confirm-details prompt appears only while the details are stale or were
+  //    never confirmed, so it stays useful instead of becoming a standing nag.
+  "directory.detail.ownerBand.title": "Your listing",
+  "directory.detail.ownerBand.freshness.fresh":
+    "You confirmed these details on {date}. Visitors can see they are recent.",
+  "directory.detail.ownerBand.freshness.stale":
+    "You last confirmed these details on {date}, more than six months ago. A quick check keeps the hours worth trusting.",
+  "directory.detail.ownerBand.freshness.unconfirmed":
+    "You have not confirmed these details yet. Visitors are told so, so a first check is worth a minute.",
+  "directory.detail.ownerBand.confirm": "Confirm details are still right",
+  "directory.detail.ownerBand.confirmToast":
+    "Thank you. Your listing now shows as confirmed today.",
+  "directory.detail.ownerBand.confirmError":
+    "That did not save. Please try again.",
   "directory.relative.yesterday": "Yesterday",
   "directory.relative.twoDaysAgo": "2 days ago",
   "directory.relative.threeDaysAgo": "3 days ago",
@@ -8850,9 +8910,10 @@ export const marketing: Catalog = {
   // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
   // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
   // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  // FE Task 3 (business mailboxes, spec 2026-09-20): the delivery promise "It arrives as a direct message from your account" stops being true. An enquiry now lands in the listing's mailbox, read by whoever runs it. deliveryNote, sub and successBody are REPLACEMENT VALUES for these existing keys only; no key is added or removed.
   "directory.detail.enquiry.cta": "Message this business",
   "directory.detail.enquiry.deliveryNote":
-    "It arrives as a direct message from your account, and only the people who run this listing can read it.",
+    "It lands in this business's mailbox, and only the people who run this listing can read it.",
   "directory.detail.enquiry.replyNote":
     "They can reply to this straight away. You can send more once they do.",
   "directory.detail.enquiry.existingThreadCta":
@@ -8865,7 +8926,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.loadErrorBody":
     "The rest of the listing is fine. Only this one check did not come back.",
   "directory.detail.enquiry.unavailable.unclaimed":
-    "Nobody has claimed this listing yet, so there is no business inbox behind it. If you run {name}, claim the listing and members will be able to reach you here.",
+    "Nobody has claimed this listing yet, so there is no mailbox behind it. If you run {name}, claim the listing and members will be able to reach you here.",
   "directory.detail.enquiry.unavailable.noAccount":
     "This listing is not attached to an account that can receive messages, so the contact details above are the way to reach it.",
   "directory.detail.enquiry.unavailable.ownListing":
@@ -8876,7 +8937,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.eyebrow": "Private message",
   "directory.detail.enquiry.title": "Write to <em>{name}</em>",
   "directory.detail.enquiry.sub":
-    "This goes to the people who run this listing as a direct message from your account. It is not published anywhere on the listing.",
+    "This goes to the mailbox of the people who run this listing, and they reply as the business. It is not published anywhere on the listing.",
   "directory.detail.enquiry.replyNotice":
     "{name} can reply to this straight away. You can send more once they do.",
   "directory.detail.enquiry.bodyLabel": "Your message",
@@ -8902,7 +8963,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.successTitle": "Message",
   "directory.detail.enquiry.successEm": "sent",
   "directory.detail.enquiry.successBody":
-    "It is in the inbox of whoever runs {name}, as a direct message from you.",
+    "It is in {name}'s mailbox, where the people who run it can reply as {name}.",
   "directory.detail.enquiry.successReplyStep":
     "{name} can reply to this straight away. You'll be able to send more once they do.",
   "directory.detail.enquiry.openThreadCta": "Open the conversation",
@@ -9293,6 +9354,55 @@ export const marketing: Catalog = {
     "Saved lists flag a dead item before you file it",
   "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.body":
     "The recent-saves row on your lists marks items whose page has come down, like the rest of your saved items.",
+
+  // Business mailboxes, 22 Sep 2026.
+  "changelog.entries.reply-as-your-business.title":
+    "Reply as your business, persona or company",
+  "changelog.entries.reply-as-your-business.body":
+    "Switch mailboxes in Messages and answer enquiries as the business, with your first name shown only if the owner turns that on.",
+
+  // Community spaces, 22 Sep 2026.
+  "changelog.entries.community-spaces.title": "Communities can open spaces",
+  "changelog.entries.community-spaces.body":
+    "Smaller groups inside a community that share its members, moderators and rules.",
+
+  // Uno reverse sticker art, 22 Sep 2026.
+  "changelog.entries.hosts-can-delete-a-gathering-from-manage.title":
+    "Hosts can delete a gathering from Manage",
+  "changelog.entries.hosts-can-delete-a-gathering-from-manage.body":
+    "Settings now has a Delete button beside Cancel, with the same confirm and cancel-first rule.",
+  "changelog.entries.uno-reverse-stickers-look-like-the-real-card.title":
+    "Uno reverse stickers look like the real card",
+  "changelog.entries.uno-reverse-stickers-look-like-the-real-card.body":
+    "Two chunky raised arrows sit inside a tall tilted oval, in every pride flag.",
+
+  // Admin-authored listings and messaging stickers, 20 Sep 2026.
+  "changelog.entries.admin-authored-listings.title":
+    "Put a place in the directory in someone's name",
+  "changelog.entries.admin-authored-listings.body":
+    "The team writes the page, seats co-managers, and offers it to you; accepting takes the pledge.",
+  "changelog.entries.stickers-in-messages.title": "Stickers in messages",
+  "changelog.entries.stickers-in-messages.body":
+    "Admins build packs in a new Sticker pack builder, starting with an Uno reverse card in every pride flag.",
+
+  // Section 9 (Local directory), 20 Sep 2026.
+  "changelog.entries.a-listing-with-no-photos-skips-the-cover.title":
+    "A listing with no photos skips the photo strip",
+  "changelog.entries.a-listing-with-no-photos-skips-the-cover.body":
+    "A business page without uploaded photos now goes straight from its name to its hours, instead of a tinted panel announcing there are none.",
+  "changelog.entries.a-listing-header-says-who-each-button-is-for.title":
+    "A listing header says who each button is for",
+  "changelog.entries.a-listing-header-says-who-each-button-is-for.body":
+    "Owner controls and moderator tools now sit in bands of their own, and the public actions are a compact row of icons with tooltips.",
+  "changelog.entries.who-runs-a-place-is-one-line.title":
+    "Who runs a place is one line now",
+  "changelog.entries.who-runs-a-place-is-one-line.body":
+    "The owner's card used to follow you down the sidebar; their name and role now sit under the listing's own name, where you read it once and carry on.",
+
+  "changelog.entries.the-map-on-a-listing-draws-every-time.title":
+    "The map on a business page draws every time",
+  "changelog.entries.the-map-on-a-listing-draws-every-time.body":
+    "Opening a listing from the directory used to leave an empty panel where the map belongs until you reloaded the page.",
 
   // Section 8 (Groups), 16 Sep 2026.
   "changelog.entries.reply-quotes-look-like-whatsapp.title":

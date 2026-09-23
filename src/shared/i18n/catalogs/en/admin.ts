@@ -380,6 +380,7 @@ export const admin: Catalog = {
   "members.verify.noCity": "Not given",
   // Which page the applicant came through on their way to the request form.
   "members.verify.sourceLabel": "Came from",
+  "members.verify.heardFromLabel": "Heard about us",
   "members.verify.source.homepage_hero": "Homepage hero",
   "members.verify.source.homepage_outro": "Homepage closing invite",
   "members.verify.source.homepage_built":
@@ -1754,6 +1755,14 @@ export const admin: Catalog = {
   "moderation.reportDrawer.disputeReasonTitle": "Dispute reason",
   "moderation.reportDrawer.listingEvidenceTitle": "Ownership evidence",
   "moderation.reportDrawer.contactEmailTitle": "Disputer contact",
+  // Business mailboxes, design section 9 (I2): the identity a message was
+  // sent as, beside the human sender. `kind` resolves through
+  // `messages:mailbox.kind.*`; `name` falls back to `sentAsIdentity.deletedName`
+  // when the identity row is gone.
+  "moderation.reportDrawer.sentAsIdentity.labelWithKind":
+    "Sent as {name} ({kind})",
+  "moderation.reportDrawer.sentAsIdentity.label": "Sent as {name}",
+  "moderation.reportDrawer.sentAsIdentity.deletedName": "Deleted identity",
   "moderation.reportDrawer.contextLoading": "Loading the report's context",
   "moderation.reportDrawer.limitedContext":
     "This report came in without the full thread attached. You can still act on the summary below.",
@@ -2016,6 +2025,9 @@ export const admin: Catalog = {
   "communities.detail.tabs.queue": "Scoped queue",
   "communities.detail.tabs.members": "Members",
   "communities.detail.tabs.settings": "Settings",
+  "communities.detail.spaces.title": "Spaces",
+  "communities.detail.spaces.empty": "No spaces",
+  "communities.detail.parent": "Space inside {name}",
   "communities.detail.health.thriving": "thriving",
   "communities.detail.health.steady": "steady",
   "communities.detail.health.needsHand": "needs a hand",
@@ -2074,6 +2086,15 @@ export const admin: Catalog = {
     "This community is now featured on Discover",
   "communities.settings.featured.offToast":
     "This community is no longer featured",
+  "communities.settings.spaces.title": "Allow spaces",
+  "communities.settings.spaces.sub":
+    "Let this community's owner and moderators open smaller spaces inside it.",
+  "communities.settings.spaces.onToast": "Spaces turned on",
+  "communities.settings.spaces.offToast": "Spaces turned off",
+  "communities.settings.spaces.isSpace":
+    "This is a space inside {name}, so it can't have spaces of its own.",
+  "communities.settings.featured.isSpace":
+    "This is a space inside {name}, so it can't be featured on Discover.",
   "communities.settings.saveErrorToast": "That didn't save. Try again.",
   "communities.settings.codeOfCare": "Code of care",
   "communities.settings.viewCta": "View",
@@ -6231,4 +6252,188 @@ export const admin: Catalog = {
   "officialMessages.status.sending": "Sending",
   "officialMessages.status.completed": "Delivered",
   "officialMessages.status.failed": "Stopped",
+
+  // Sticker pack builder (AdminStickerPacksPage, src/features/admin/stickerBuilder/)
+  "stickerPacks.title": "Sticker packs · <em>the builder</em>",
+  "stickerPacks.eyebrow": "Sticker pack builder",
+  "stickerPacks.sub":
+    "Build a pack from a template, then publish it to every member.",
+
+  "stickerPacks.rail.heading": "Packs",
+  "stickerPacks.rail.newCta": "New pack",
+  "stickerPacks.rail.newName": "Pack name",
+  "stickerPacks.rail.newSlug": "Slug",
+  "stickerPacks.rail.empty": "No packs yet",
+  "stickerPacks.rail.loadError": "Couldn't load the packs. Try again",
+  "stickerPacks.rail.demoOnly": "Sticker packs are live-mode only",
+
+  "stickerPacks.status.draft": "Draft",
+  "stickerPacks.status.published": "Published",
+  "stickerPacks.status.archived": "Archived",
+
+  "stickerPacks.controls.flagsLegend": "Flags",
+  "stickerPacks.controls.selectAll": "Select all",
+  "stickerPacks.controls.clear": "Clear",
+  "stickerPacks.controls.frameColor": "Frame colour",
+  "stickerPacks.controls.frameWidth": "Frame thickness",
+  "stickerPacks.controls.ringAngle": "Oval tilt",
+  "stickerPacks.controls.ringStroke": "Oval thickness",
+  "stickerPacks.controls.cornerArrows": "Corner arrows",
+  "stickerPacks.controls.cornerArrowScale": "Corner arrow size",
+
+  "stickerPacks.preview.empty": "Pick a flag to see a preview",
+
+  "stickerPacks.publish.publishCta": "Generate and publish",
+  "stickerPacks.publish.publishing": "Publishing…",
+  "stickerPacks.publish.needsPack":
+    "Create a pack or pick one from the list to publish into",
+  "stickerPacks.publish.needsFlags": "Pick at least one flag to publish",
+  "stickerPacks.publish.progress": "Publishing {done} of {total}…",
+  "stickerPacks.publish.failure": "These flags did not upload: {flags}",
+  "stickerPacks.publish.stickerLabel": "{flag} reverse",
+
+  "stickerPacks.detail.heading": "Inside {name}",
+  "stickerPacks.detail.empty": "No stickers in this pack yet",
+  "stickerPacks.detail.statusLabel": "Status",
+  "stickerPacks.detail.setCover": "Use as cover",
+  "stickerPacks.detail.deleteSticker": "Remove",
+  "stickerPacks.detail.publishBlocked": "Add at least one sticker first",
+
+  "stickerPacks.toast.packCreated": "Pack created",
+  "stickerPacks.toast.statusUpdated": "Pack status updated",
+  "stickerPacks.toast.stickerDeleted": "Sticker removed",
+
+  "stickerPacks.errors.create": "Couldn't create the pack",
+  "stickerPacks.errors.updateStatus": "Couldn't update the pack",
+  "stickerPacks.errors.setCover": "Couldn't set the cover",
+  "stickerPacks.errors.deleteSticker": "Couldn't remove the sticker",
+
+  // ── Admin-authored directory listings (`/admin/listings/new`) ─────────────
+  // Staff writing up a place that has not joined QueerPulse yet. The listing
+  // belongs to nobody until a member accepts it, so every string here keeps
+  // the owner's side of the page empty until that person has agreed.
+  "listingNew.title": "Add a listing",
+  "listingNew.eyebrow": "Directory",
+  "listingNew.sub":
+    "Write up a place that has not joined yet. You can hand it over to its owner whenever you like.",
+  // A plain breadcrumb label of its own, because `adminListings.title`
+  // carries `<em>` markup for the queue's own heading.
+  "listingNew.queueBreadcrumb": "Listings",
+  "listingNew.fields.aria": "Admin settings for this listing",
+  "listingNew.publishState.label": "How should this go out?",
+  "listingNew.publishState.hint":
+    "You can change this later from the listings queue.",
+  "listingNew.publishState.review.title": "Send to review",
+  "listingNew.publishState.review.desc":
+    "It joins the moderation queue and waits for a second pair of eyes.",
+  "listingNew.publishState.live.title": "Publish now",
+  "listingNew.publishState.live.desc":
+    "It shows in the directory as soon as you send.",
+  "listingNew.owner.label": "Offer it to someone",
+  "listingNew.owner.hint":
+    "Optional. They hold the listing in their own name once they accept, and everything about the owner is theirs to fill in.",
+  "listingNew.owner.slugLabel": "Member profile slug",
+  "listingNew.owner.slugHelper":
+    "Leave this empty to keep the listing with the team for now.",
+  "listingNew.owner.noteLabel": "Message to them",
+  "listingNew.owner.noteHelper":
+    "They read this with the offer. An unsolicited offer lands better with some context.",
+  // SuccessPanel title; the listing name is passed as its coral `em`, so the
+  // heading reads "Added <name>".
+  "listingNew.success.title": "Added",
+  "listingNew.success.body":
+    "Reference {ref}. Nothing about the owner has been filled in, because that belongs to whoever takes it on.",
+  "listingNew.success.step.review": "It is waiting in the moderation queue.",
+  "listingNew.success.step.live": "It is showing in the directory now.",
+  "listingNew.success.closeCta": "Back to the listings queue",
+
+  // ── Delegation panel on a listing ─────────────────────────────────────────
+  // Who runs a listing the house authored: its owner, any ownership offer
+  // waiting on an answer, and the co-managers seated to help. A listing
+  // carries one open offer at a time and five co-manager seats.
+  "listingDelegation.heading": "Delegation",
+  "listingDelegation.intro":
+    "Who runs this page: the owner, any open ownership offer, and the people seated to help.",
+  "listingDelegation.unknownMember": "A member who has since left",
+  "listingDelegation.slugPlaceholder": "member-profile-slug",
+  "listingDelegation.unknownSlugError":
+    "No active member answers to that slug. Check it on their profile page.",
+  "listingDelegation.loadError.title": "The delegation panel could not load",
+  "listingDelegation.loadError.body":
+    "The open offer and the co-manager roster are both missing from this view. Try again.",
+
+  "listingDelegation.owner.heading": "Owner",
+  "listingDelegation.owner.ownedBy": "Owned by @{slug}",
+  "listingDelegation.owner.none": "No owner yet.",
+  "listingDelegation.owner.noneDetail":
+    "Nobody holds this listing, so you can offer it to a member.",
+
+  "listingDelegation.offer.heading": "Ownership offer",
+  "listingDelegation.offer.ownedNotice":
+    "This listing already has an owner, so there is nothing to offer. An ownership offer goes to a listing the house still holds.",
+  "listingDelegation.offer.none": "No ownership offer is open on this listing.",
+  "listingDelegation.offer.offeredTo": "Offered to {name}",
+  "listingDelegation.offer.sentOn": "Sent {date}",
+  "listingDelegation.offer.awaitingReply": "waiting on their answer",
+  "listingDelegation.offer.oneAtATime":
+    "A listing carries one open offer at a time. To offer it to somebody else, withdraw this one first.",
+  "listingDelegation.offer.slugLabel": "Member profile slug",
+  "listingDelegation.offer.noteLabel": "A note for them (optional)",
+  "listingDelegation.offer.notePlaceholder":
+    "Say why you are offering them this listing.",
+  "listingDelegation.offer.sendCta": "Offer ownership",
+  "listingDelegation.offer.sendingCta": "Sending…",
+  "listingDelegation.offer.revokeCta": "Withdraw offer",
+  "listingDelegation.offer.revokeConfirmTitle": "Withdraw the offer to {name}?",
+  "listingDelegation.offer.revokeConfirmBody":
+    "They lose the offer straight away. Once it is withdrawn you can offer this listing to somebody else.",
+  "listingDelegation.offer.revokeConfirmCta": "Withdraw",
+  "listingDelegation.offer.sentToast": "Ownership offered to @{slug}.",
+  "listingDelegation.offer.revokedToast": "The ownership offer is withdrawn.",
+  "listingDelegation.offer.conflictError":
+    "This listing already has an owner, or it already carries an open offer. Reopen the drawer to see where it stands.",
+  "listingDelegation.offer.failedError":
+    "The offer did not go through. Try again in a moment.",
+  "listingDelegation.offer.revokeFailedError":
+    "The offer is still open. Try withdrawing it again in a moment.",
+  "listingDelegation.offer.revokeGoneError":
+    "That offer is no longer open. Somebody answered it, or another admin withdrew it. The panel has refreshed.",
+
+  "listingDelegation.roster.heading": "Co-managers",
+  "listingDelegation.roster.seats": "{used} of {cap} seats taken",
+  "listingDelegation.roster.empty": "Nobody holds a seat on this listing yet.",
+  "listingDelegation.roster.status.invited": "Invited",
+  "listingDelegation.roster.status.active": "Managing",
+  "listingDelegation.roster.status.declined": "Declined",
+  "listingDelegation.roster.status.revoked": "Seat taken back",
+  "listingDelegation.roster.status.left": "Stepped down",
+  "listingDelegation.roster.invitedOn": "Invited {date}, still deciding",
+  "listingDelegation.roster.acceptedOn": "Editing since {date}",
+  "listingDelegation.roster.endedOn": "Seat ended {date}",
+  "listingDelegation.roster.staffSeatNotice":
+    "While this listing has no owner, a seat you open now stays through the handover to a new owner.",
+  "listingDelegation.roster.ownerSeatNotice":
+    "A seat opened on a listing that already has an owner leaves when that owner does.",
+  "listingDelegation.roster.seatsFullNotice":
+    "Every seat on this listing is taken. Free one up before inviting anybody else.",
+  "listingDelegation.roster.inviteLabel": "Member profile slug",
+  "listingDelegation.roster.inviteCta": "Send invitation",
+  "listingDelegation.roster.invitingCta": "Sending…",
+  "listingDelegation.roster.invitedToast": "Invitation sent to @{slug}.",
+  "listingDelegation.roster.removeCta": "Remove seat",
+  "listingDelegation.roster.cancelInviteCta": "Cancel invitation",
+  "listingDelegation.roster.removeConfirmTitle":
+    "Take {name} off this listing?",
+  "listingDelegation.roster.removeConfirmBody":
+    "They lose the editor straight away. You can invite them again whenever you like.",
+  "listingDelegation.roster.cancelInviteConfirmBody":
+    "The invitation disappears from their inbox. You can send another one whenever you like.",
+  "listingDelegation.roster.removeConfirmCta": "Remove",
+  "listingDelegation.roster.removedToast": "The seat is free again.",
+  "listingDelegation.roster.removeFailedError":
+    "The seat is still there. Try again in a moment.",
+  "listingDelegation.roster.conflictError":
+    "That member already holds or has been offered a seat, or this listing is at its cap of five.",
+  "listingDelegation.roster.failedError":
+    "The invitation did not go through. Try again in a moment.",
 };

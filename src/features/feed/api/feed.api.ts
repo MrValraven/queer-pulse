@@ -36,11 +36,16 @@ export type FeedReason = "membership" | "connection" | "topic" | "recent";
  * scoped tab carries no reason, and an older backend carries neither.
  */
 /** A source the member can turn down in their own feed (SOC-18). Muting it
- *  never touches membership: it quiets the room in this one member's feed. */
+ *  never touches membership: it quiets that source in this one member's feed. */
 export interface FeedItemSource {
   kind: "community" | "forum_thread";
   id: string;
   name: string;
+  /** For a community source that is a space (subcommunity): its parent's
+   *  name, so the card's `SpaceLabel` reads "Parent, Space" (the parent, a
+   *  chevron, then the space). Null for a top-level community; absent on a
+   *  forum thread and from an older backend. */
+  parentName?: string | null;
 }
 
 /** PRD-107: the magazine credit on an `article` item.

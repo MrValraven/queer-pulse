@@ -382,6 +382,7 @@ export const admin: Catalog = {
   "members.verify.noCity": "Não indicada",
   // Por que página a pessoa passou até ao formulário de pedido.
   "members.verify.sourceLabel": "Veio de",
+  "members.verify.heardFromLabel": "Ouviu falar de nós",
   "members.verify.source.homepage_hero": "Destaque da página inicial",
   "members.verify.source.homepage_outro": "Convite final da página inicial",
   "members.verify.source.homepage_built":
@@ -1747,6 +1748,14 @@ export const admin: Catalog = {
   "moderation.reportDrawer.disputeReasonTitle": "Motivo da contestação",
   "moderation.reportDrawer.listingEvidenceTitle": "Prova de propriedade",
   "moderation.reportDrawer.contactEmailTitle": "Contacto de quem contesta",
+  // Business mailboxes, design section 9 (I2): a identidade com que uma
+  // mensagem foi enviada, ao lado de quem a enviou. `kind` resolve através de
+  // `messages:mailbox.kind.*`; `name` recorre a
+  // `sentAsIdentity.deletedName` quando a identidade já não existe.
+  "moderation.reportDrawer.sentAsIdentity.labelWithKind":
+    "Enviado como {name} ({kind})",
+  "moderation.reportDrawer.sentAsIdentity.label": "Enviado como {name}",
+  "moderation.reportDrawer.sentAsIdentity.deletedName": "Identidade eliminada",
   "moderation.reportDrawer.contextLoading": "A carregar o contexto da denúncia",
   "moderation.reportDrawer.limitedContext":
     "Esta denúncia chegou sem a conversa completa anexada. Podes na mesma agir a partir do resumo abaixo.",
@@ -1983,6 +1992,9 @@ export const admin: Catalog = {
   "communities.detail.tabs.queue": "Fila da comunidade",
   "communities.detail.tabs.members": "Pessoas",
   "communities.detail.tabs.settings": "Definições",
+  "communities.detail.spaces.title": "Espaços",
+  "communities.detail.spaces.empty": "Sem espaços",
+  "communities.detail.parent": "Espaço dentro de {name}",
   "communities.detail.health.thriving": "próspera",
   "communities.detail.health.steady": "estável",
   "communities.detail.health.needsHand": "precisa de uma ajuda",
@@ -2046,6 +2058,15 @@ export const admin: Catalog = {
     "Esta comunidade está agora em destaque no Descobrir",
   "communities.settings.featured.offToast":
     "Esta comunidade deixou de estar em destaque",
+  "communities.settings.spaces.title": "Permitir espaços",
+  "communities.settings.spaces.sub":
+    "Deixa a equipa desta comunidade abrir espaços mais pequenos dentro dela.",
+  "communities.settings.spaces.onToast": "Espaços ativados",
+  "communities.settings.spaces.offToast": "Espaços desativados",
+  "communities.settings.spaces.isSpace":
+    "Isto é um espaço dentro de {name}, por isso não pode ter espaços próprios.",
+  "communities.settings.featured.isSpace":
+    "Isto é um espaço dentro de {name}, por isso não pode ficar em destaque no Descobrir.",
   "communities.settings.saveErrorToast":
     "Não foi possível guardar. Tenta novamente.",
   "communities.settings.codeOfCare": "Código de cuidado",
@@ -6232,4 +6253,197 @@ export const admin: Catalog = {
   "officialMessages.status.sending": "A enviar",
   "officialMessages.status.completed": "Entregue",
   "officialMessages.status.failed": "Interrompido",
+
+  // Criador de packs de stickers (AdminStickerPacksPage, src/features/admin/stickerBuilder/)
+  "stickerPacks.title": "Packs de stickers · <em>o criador</em>",
+  "stickerPacks.eyebrow": "Criador de packs de stickers",
+  "stickerPacks.sub":
+    "Cria um pack a partir de um modelo e depois publica-o para todos os membros.",
+
+  "stickerPacks.rail.heading": "Packs",
+  "stickerPacks.rail.newCta": "Novo pack",
+  "stickerPacks.rail.newName": "Nome do pack",
+  "stickerPacks.rail.newSlug": "Slug",
+  "stickerPacks.rail.empty": "Ainda sem packs",
+  "stickerPacks.rail.loadError":
+    "Não foi possível carregar os packs. Tenta de novo",
+  "stickerPacks.rail.demoOnly": "Packs de stickers só existem no modo ao vivo",
+
+  "stickerPacks.status.draft": "Rascunho",
+  "stickerPacks.status.published": "Publicado",
+  "stickerPacks.status.archived": "Arquivado",
+
+  "stickerPacks.controls.flagsLegend": "Bandeiras",
+  "stickerPacks.controls.selectAll": "Selecionar tudo",
+  "stickerPacks.controls.clear": "Limpar",
+  "stickerPacks.controls.frameColor": "Cor da moldura",
+  "stickerPacks.controls.frameWidth": "Espessura da moldura",
+  "stickerPacks.controls.ringAngle": "Inclinação do oval",
+  "stickerPacks.controls.ringStroke": "Espessura do oval",
+  "stickerPacks.controls.cornerArrows": "Setas nos cantos",
+  "stickerPacks.controls.cornerArrowScale": "Tamanho da seta do canto",
+
+  "stickerPacks.preview.empty":
+    "Escolhe uma bandeira para ver uma pré-visualização",
+
+  "stickerPacks.publish.publishCta": "Gerar e publicar",
+  "stickerPacks.publish.publishing": "A publicar…",
+  "stickerPacks.publish.needsPack":
+    "Cria um pack ou escolhe um da lista para publicar",
+  "stickerPacks.publish.needsFlags":
+    "Escolhe pelo menos uma bandeira para publicar",
+  "stickerPacks.publish.progress": "A publicar {done} de {total}…",
+  "stickerPacks.publish.failure": "Estas bandeiras não foram enviadas: {flags}",
+  "stickerPacks.publish.stickerLabel": "{flag} reverse",
+
+  "stickerPacks.detail.heading": "Dentro de {name}",
+  "stickerPacks.detail.empty": "Ainda não há stickers neste pack",
+  "stickerPacks.detail.statusLabel": "Estado",
+  "stickerPacks.detail.setCover": "Usar como capa",
+  "stickerPacks.detail.deleteSticker": "Remover",
+  "stickerPacks.detail.publishBlocked":
+    "Adiciona pelo menos um sticker primeiro",
+
+  "stickerPacks.toast.packCreated": "Pack criado",
+  "stickerPacks.toast.statusUpdated": "Estado do pack atualizado",
+  "stickerPacks.toast.stickerDeleted": "Sticker removido",
+
+  "stickerPacks.errors.create": "Não foi possível criar o pack",
+  "stickerPacks.errors.updateStatus": "Não foi possível atualizar o pack",
+  "stickerPacks.errors.setCover": "Não foi possível definir a capa",
+  "stickerPacks.errors.deleteSticker": "Não foi possível remover o sticker",
+
+  // ── Espaços do diretório escritos pela equipa (`/admin/listings/new`) ─────
+  // A equipa escreve sobre um espaço que ainda não se juntou à QueerPulse. O
+  // espaço não pertence a ninguém até um membro aceitar, por isso tudo o que
+  // diz respeito a quem o gere fica por preencher até essa pessoa concordar.
+  "listingNew.title": "Adicionar um espaço",
+  "listingNew.eyebrow": "Diretório",
+  "listingNew.sub":
+    "Escreve sobre um espaço que ainda não se juntou. Podes passá-lo a quem o gere quando quiseres.",
+  // Uma etiqueta simples só para a migalha, porque `adminListings.title` traz
+  // marcação `<em>` para o título da própria fila.
+  "listingNew.queueBreadcrumb": "Espaços",
+  "listingNew.fields.aria": "Definições de administração deste espaço",
+  "listingNew.publishState.label": "Como é que isto deve sair?",
+  "listingNew.publishState.hint":
+    "Podes mudar isto mais tarde, na fila de espaços.",
+  "listingNew.publishState.review.title": "Enviar para revisão",
+  "listingNew.publishState.review.desc":
+    "Entra na fila de moderação e espera por um segundo par de olhos.",
+  "listingNew.publishState.live.title": "Publicar já",
+  "listingNew.publishState.live.desc":
+    "Aparece no diretório assim que enviares.",
+  "listingNew.owner.label": "Oferecer a alguém",
+  "listingNew.owner.hint":
+    "Opcional. A pessoa fica com o espaço em nome dela depois de aceitar, e tudo o que diz respeito a quem o gere fica para ela preencher.",
+  "listingNew.owner.slugLabel": "Slug do perfil do membro",
+  "listingNew.owner.slugHelper":
+    "Deixa vazio para o espaço ficar com a equipa por agora.",
+  "listingNew.owner.noteLabel": "Mensagem para a pessoa",
+  "listingNew.owner.noteHelper":
+    "A pessoa lê isto com a oferta. Uma oferta que ninguém pediu cai melhor com algum contexto.",
+  // Título do SuccessPanel; o nome do espaço vai como `em` coral, por isso o
+  // cabeçalho lê-se "Adicionado <nome>".
+  "listingNew.success.title": "Adicionado",
+  "listingNew.success.body":
+    "Referência {ref}. Nada sobre quem gere o espaço foi preenchido, porque isso pertence a quem ficar com ele.",
+  "listingNew.success.step.review": "Está à espera na fila de moderação.",
+  "listingNew.success.step.live": "Já está a aparecer no diretório.",
+  "listingNew.success.closeCta": "Voltar à fila de espaços",
+
+  // ── Painel de delegação de um espaço ──────────────────────────────────────
+  // Quem trata de um espaço escrito pela equipa: quem é proprietário, a
+  // oferta de propriedade à espera de resposta, e as pessoas com lugar para
+  // ajudar. Um espaço tem uma oferta em aberto de cada vez e cinco lugares.
+  "listingDelegation.heading": "Delegação",
+  "listingDelegation.intro":
+    "Quem trata deste espaço: quem é proprietário, qualquer oferta de propriedade em aberto, e as pessoas com lugar para ajudar.",
+  "listingDelegation.unknownMember": "Alguém que entretanto saiu",
+  "listingDelegation.slugPlaceholder": "slug-do-perfil",
+  "listingDelegation.unknownSlugError":
+    "Nenhum membro ativo responde a esse slug. Confirma-o na página de perfil dessa pessoa.",
+  "listingDelegation.loadError.title": "O painel de delegação não carregou",
+  "listingDelegation.loadError.body":
+    "A oferta em aberto e a lista de cogestores faltam as duas nesta vista. Tenta outra vez.",
+
+  "listingDelegation.owner.heading": "Proprietário",
+  "listingDelegation.owner.ownedBy": "Pertence a @{slug}",
+  "listingDelegation.owner.none": "Ainda sem proprietário.",
+  "listingDelegation.owner.noneDetail":
+    "Este espaço não é de ninguém, por isso podes oferecer a propriedade.",
+
+  "listingDelegation.offer.heading": "Oferta de propriedade",
+  "listingDelegation.offer.ownedNotice":
+    "Este espaço já tem proprietário, por isso não há nada para oferecer. Uma oferta de propriedade vai para um espaço que a casa ainda tem.",
+  "listingDelegation.offer.none":
+    "Não há nenhuma oferta de propriedade em aberto neste espaço.",
+  "listingDelegation.offer.offeredTo": "Oferecida a {name}",
+  "listingDelegation.offer.sentOn": "Enviada a {date}",
+  "listingDelegation.offer.awaitingReply": "à espera da resposta",
+  "listingDelegation.offer.oneAtATime":
+    "Um espaço tem uma oferta em aberto de cada vez. Para o oferecer a outra pessoa, retira esta primeiro.",
+  "listingDelegation.offer.slugLabel": "Slug do perfil do membro",
+  "listingDelegation.offer.noteLabel": "Um recado para a pessoa (opcional)",
+  "listingDelegation.offer.notePlaceholder":
+    "Diz porque lhe estás a oferecer este espaço.",
+  "listingDelegation.offer.sendCta": "Oferecer propriedade",
+  "listingDelegation.offer.sendingCta": "A enviar…",
+  "listingDelegation.offer.revokeCta": "Retirar oferta",
+  "listingDelegation.offer.revokeConfirmTitle": "Retirar a oferta a {name}?",
+  "listingDelegation.offer.revokeConfirmBody":
+    "A pessoa perde a oferta de imediato. Depois de retirada, podes oferecer este espaço a outra pessoa.",
+  "listingDelegation.offer.revokeConfirmCta": "Retirar",
+  "listingDelegation.offer.sentToast": "Propriedade oferecida a @{slug}.",
+  "listingDelegation.offer.revokedToast":
+    "A oferta de propriedade foi retirada.",
+  "listingDelegation.offer.conflictError":
+    "Este espaço já tem proprietário, ou já tem uma oferta em aberto. Reabre a gaveta para veres como está.",
+  "listingDelegation.offer.failedError":
+    "A oferta não passou. Tenta daqui a pouco.",
+  "listingDelegation.offer.revokeFailedError":
+    "A oferta continua em aberto. Tenta retirá-la outra vez daqui a pouco.",
+  "listingDelegation.offer.revokeGoneError":
+    "Essa oferta já não está em aberto. Alguém respondeu, ou outra pessoa da equipa retirou-a. O painel foi atualizado.",
+
+  "listingDelegation.roster.heading": "Cogestores",
+  "listingDelegation.roster.seats": "{used} de {cap} lugares ocupados",
+  "listingDelegation.roster.empty": "Ainda ninguém tem lugar neste espaço.",
+  // Descreve o convite, e nunca a pessoa: um adjetivo com género aplicado
+  // a um membro assume algo sobre ele. Os irmãos deste bloco ("A gerir",
+  // "Recusou", "Saiu") já são neutros.
+  "listingDelegation.roster.status.invited": "Convite enviado",
+  "listingDelegation.roster.status.active": "A gerir",
+  "listingDelegation.roster.status.declined": "Recusou",
+  "listingDelegation.roster.status.revoked": "Lugar retirado",
+  "listingDelegation.roster.status.left": "Saiu",
+  "listingDelegation.roster.invitedOn":
+    "Convite enviado a {date}, ainda a decidir",
+  "listingDelegation.roster.acceptedOn": "A editar desde {date}",
+  "listingDelegation.roster.endedOn": "Lugar terminado a {date}",
+  "listingDelegation.roster.staffSeatNotice":
+    "Enquanto este espaço não tiver proprietário, um lugar que abras agora mantém-se na passagem para quem ficar com ele.",
+  "listingDelegation.roster.ownerSeatNotice":
+    "Um lugar aberto num espaço que já tem proprietário sai quando essa pessoa sai.",
+  "listingDelegation.roster.seatsFullNotice":
+    "Todos os lugares deste espaço estão ocupados. Liberta um antes de convidares mais alguém.",
+  "listingDelegation.roster.inviteLabel": "Slug do perfil do membro",
+  "listingDelegation.roster.inviteCta": "Enviar convite",
+  "listingDelegation.roster.invitingCta": "A enviar…",
+  "listingDelegation.roster.invitedToast": "Convite enviado a @{slug}.",
+  "listingDelegation.roster.removeCta": "Retirar lugar",
+  "listingDelegation.roster.cancelInviteCta": "Cancelar convite",
+  "listingDelegation.roster.removeConfirmTitle": "Retirar {name} deste espaço?",
+  "listingDelegation.roster.removeConfirmBody":
+    "A pessoa perde o editor de imediato. Podes convidá-la outra vez quando quiseres.",
+  "listingDelegation.roster.cancelInviteConfirmBody":
+    "O convite desaparece da caixa de entrada da pessoa. Podes enviar outro quando quiseres.",
+  "listingDelegation.roster.removeConfirmCta": "Retirar",
+  "listingDelegation.roster.removedToast": "O lugar está livre outra vez.",
+  "listingDelegation.roster.removeFailedError":
+    "O lugar continua lá. Tenta daqui a pouco.",
+  "listingDelegation.roster.conflictError":
+    "Esse membro já tem ou já recebeu um lugar, ou este espaço chegou ao limite de cinco.",
+  "listingDelegation.roster.failedError":
+    "O convite não passou. Tenta daqui a pouco.",
 };

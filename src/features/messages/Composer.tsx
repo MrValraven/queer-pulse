@@ -11,13 +11,13 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useReplyPreviewTransition } from "./useReplyPreviewTransition";
-import { ComposerConnectionNotice } from "./ComposerConnectionNotice";
+import { ComposerBlockedState } from "./ComposerBlockedState";
+import { isComposerBlocked } from "./isComposerBlocked";
 import { ComposerDropOverlay } from "./ComposerDropOverlay";
 import { ComposerInputRow } from "./ComposerInputRow";
 import { ComposerLengthCounter } from "./ComposerLengthCounter";
 import { ComposerSafetyNotice } from "./ComposerSafetyNotice";
 import { ComposerReplyPreview } from "./ComposerReplyPreview";
-import { ComposerSeveredNotice } from "./ComposerSeveredNotice";
 import { detectContactSafetySignals } from "./contactSafetyDetector";
 import { isMessageBodyOverLimit } from "./messageBodyLimit";
 import type { AttachmentStaging } from "./useAttachmentStaging";
@@ -35,6 +35,7 @@ import {
   shouldSeedLateServerDraft,
 } from "./drafts";
 import type { ChatMessage, Conversation } from "./data";
+import type { StickerResponse } from "../../shared/contracts/contracts";
 import styles from "./MessagesPage.module.css";
 import dropStyles from "./ComposerDropOverlay.module.css";
 
@@ -45,6 +46,12 @@ interface ComposerProps {
    *  composer owns the draft and clears itself in the same frame it calls
    *  this. The caller never reads or writes draft text. */
   onSend: (body: string) => void;
+  /** Sends a picked sticker as its own message. Unlike GIFs/images/documents
+   *  this never routes through `staging`: a sticker sends the instant it is
+   *  picked, with no caption step, so it is threaded straight through from
+   *  wherever `sendSticker` originates. Absent = no Sticker entry point on
+   *  either surface. */
+  onSendSticker?: (sticker: StickerResponse) => void;
   blocked: boolean;
   /** The message currently being quoted for a reply, or null/absent. */
   replyDraft?: ChatMessage | null;
@@ -83,6 +90,7 @@ export function Composer({
   active,
   conversationId,
   onSend,
+  onSendSticker,
   blocked,
   replyDraft,
   onCancelReply,
@@ -201,62 +209,25 @@ export function Composer({
       syncNow,
     });
 
-  // Official thread, blocked counterpart, or a group the member has left:
-  // see `ComposerSeveredNotice`'s own doc for what each notice says. The
-  // pending strip still renders above it, so an attachment already
-  // committed to send before the thread turned severed stays visible here
-  // for the member to watch finish or cancel. F2: `staging.screen` (the
-  // caption step) also renders here, since `useAttachmentStaging` exposes no
-  // discard-only entry point this component can call to close it on its own
-  // when a thread turns severed mid-caption; see the file's own doc. Leaving
-  // it unrendered would strand an open caption screen with no way to close
-  // it once the notice below replaces the rest of the composer.
-  // ENG-243: a DM whose counterpart erased their account has nobody left to
-  // read a reply, so it gets the same notice bar as the severed states.
-  if (active.isCounterpartErased) {
-    return (
-      <div className={styles.composer}>
-        <div className={styles.officialBar}>
-          {t("messages:conversation.formerMemberNotice")}
-        </div>
-      </div>
-    );
-  }
-  if (active.official || blocked || (active.isGroup && active.hasLeft)) {
-    return (
-      <div className={styles.composer}>
-        {staging.pendingStrip}
-        <ComposerSeveredNotice
-          active={active}
-          blocked={blocked}
-          firstName={firstName}
-        />
-        {staging.screen}
-      </div>
-    );
-  }
-  // A cold enquiry (housing/flatmate, etc.) opened this DM between two
-  // members who aren't accepted connections (PRD-220): the server's ordinary
-  // send path 403s every reply from EITHER side past that first enquiry. Tell
-  // the truth and offer the fix in place, rather than rendering a normal
-  // composer whose send will fail. Checked after the severed states above:
-  // blocked/official/left-group already explain why sending is impossible and
-  // outrank this notice if both were somehow true at once. F1: the pending
-  // strip still renders here too, so an item already committed to send
-  // before the thread required a connection stays visible and cancelable.
-  if (active.replyRequiresConnection) {
-    return (
-      <div className={styles.composer}>
-        {staging.pendingStrip}
-        <ComposerConnectionNotice active={active} />
-      </div>
-    );
-  }
+  // `ComposerBlockedState` picks between the severed-thread notices, split
+  // out purely to keep THIS component under the line cap; `isComposerBlocked`
+  // is the same condition it branches on, so this component can choose
+  // between it and the normal input row without evaluating that body twice.
+  const isBlocked = isComposerBlocked(active, blocked);
   const composerPlaceholder = active.isGroup
     ? t("messages:conversation.composerGroupPlaceholder")
     : t("messages:conversation.composerPlaceholder", { name: firstName });
 
-  return (
+  return isBlocked ? (
+    <ComposerBlockedState
+      active={active}
+      blocked={blocked}
+      firstName={firstName}
+      isBlocked={isBlocked}
+      pendingStrip={staging.pendingStrip}
+      screen={staging.screen}
+    />
+  ) : (
     <div
       ref={containerRef}
       className={[styles.composer, dropStyles.composerDropZone].join(" ")}
@@ -292,6 +263,7 @@ export function Composer({
         onSendGif={staging.onSendGif}
         onImagePicked={staging.onImagePicked}
         onDocumentPicked={staging.onDocumentPicked}
+        onSendSticker={onSendSticker}
         onInsertShortcut={insertShortcut}
         placeholder={composerPlaceholder}
         draft={draft}

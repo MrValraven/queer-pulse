@@ -4,6 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDirectoryListings } from "../marketing/listBusiness/api/useDirectoryListings";
 import { CoManagerInvitesInbox } from "../marketing/listBusiness/coManagers/CoManagerInvitesInbox";
+import { OwnerOfferInbox } from "../marketing/listBusiness/ownership/OwnerOfferInbox";
 import { routes } from "../../app/routeMap";
 import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { submittedToPlace } from "../marketing/api/directory.adapters";
@@ -18,7 +19,8 @@ import styles from "./PlacesSection.module.css";
 
 /** "Places I run" (owner) / "Places {firstName} runs" (visitor). Merges the
  *  static directory registry with this member's session-submitted listings,
- *  and puts any co-management invitation waiting on them above the grid. */
+ *  and puts anything waiting on them above the grid: an offer of ownership
+ *  first, then any co-management invitation. */
 export function PlacesSection({
   memberSlug,
   isSelf,
@@ -85,7 +87,7 @@ export function PlacesSection({
   // bare `null` here would flash that fallback and then replace it with the
   // grid. `data-section-pending` marks the node as "still deciding" for that
   // rule. It stays childless, so `[data-section-wrap]:empty` semantics and
-  // the visitor's own view are unchanged — nothing is drawn either way.
+  // the visitor's own view are unchanged: nothing is drawn either way.
   if (places.length === 0 && !isSelf && !hasVisitorFetchFailed) {
     return visitorListings.isPending ? <div data-section-pending /> : null;
   }
@@ -107,6 +109,9 @@ export function PlacesSection({
 
   return (
     <section id="places" className={`${styles.section} wrap`}>
+      {/* Ownership above co-management: being handed a business is the heavier
+          ask of the two, so it is answered first. */}
+      {isSelf && <OwnerOfferInbox />}
       {isSelf && <CoManagerInvitesInbox />}
 
       {hasVisitorFetchFailed || hasOwnFetchFailed ? (

@@ -3,7 +3,7 @@
    colour always agree about how serious the situation is. */
 
 .wrap {
-  max-width: var(--maxw-page);
+  max-width: var(--maxw-nav);
   margin: 0 auto;
   padding: 18px 16px 0;
 }

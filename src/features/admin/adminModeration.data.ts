@@ -1,6 +1,10 @@
 import type { TFunction } from "../../shared/i18n/types";
 import type { ReportSubjectType } from "../safety/reportReasons";
 import type { AdminTone } from "./ui";
+import {
+  DEMO_SENT_AS_CAFE_LISBOA,
+  SENT_AS_IDENTITY_DEMO_REPORT_ID,
+} from "./adminReportConversationContext.data";
 
 export type Severity = "emergency" | "high" | "medium" | "low";
 
@@ -115,6 +119,24 @@ export interface ReportedPhoto {
   uploadedAt: string;
 }
 
+/**
+ * Business mailboxes, design section 9: the business, persona or company a
+ * reported message was sent as, shown beside the human sender whatever
+ * either attribution switch says a customer sees. Mirrors `SentAsIdentityDTO`
+ * (`api/moderation.api.ts`) as its own view type so this file stays free of
+ * an api import, matching `ThreadMsg`/`DrawerPerson`.
+ *
+ * `kind` and `displayName` read null when the identity row is gone; the
+ * moderator still learns the message went out as an identity that no longer
+ * exists.
+ */
+export interface SentAsIdentity {
+  identityId: string;
+  kind: "listing" | "subprofile" | "company" | null;
+  displayName: string | null;
+  handle: string | null;
+}
+
 export interface ReportDetail {
   /** Author byline for the reported content. */
   contentAuthor: string;
@@ -124,6 +146,11 @@ export interface ReportDetail {
   redactionNote?: string;
   thread: ThreadMsg[];
   people: DrawerPerson[];
+  /** Business mailboxes, design section 9: the identity the reported message
+   *  was sent as, rendered beside `contentAuthor` above. Present only on a
+   *  `message` report whose message went out as an identity other than the
+   *  sender's own profile. */
+  sentAsIdentity?: SentAsIdentity;
   /** Listing-dispute enrichment (listing subjects only): the disputer's
    *  free-text reason for challenging the listing. Rendered when non-empty. */
   disputeReason?: string;
@@ -544,6 +571,62 @@ export const OTHER_REPORTS: ModReport[] = [
           initials: "RC",
           tone: "coral",
           meta: "Member since Jan 2026 · 4 prior reports.",
+        },
+      ],
+    },
+  },
+  // Business mailboxes, design section 9 (I2 fix): a message sent through a
+  // staffed mailbox identity, so the drawer's "Sent as" line and the
+  // conversation viewer's per-message tag both have a demo case to render
+  // (fixture in `adminReportConversationContext.data.ts`).
+  {
+    id: SENT_AS_IDENTITY_DEMO_REPORT_ID,
+    subjectType: "message",
+    subjectId: "demo-message-sent-as-cafe-lisboa",
+    severity: "medium",
+    category: "Harassment",
+    chips: [{ tone: "amber", labelKey: "admin:moderation.chip.harassment" }],
+    title: "Rude reply from a business mailbox",
+    preview:
+      "Customer says the reply from Café Lisboa was dismissive after asking about a refund.",
+    reporterName: "Sofia M.",
+    reportedName: "@nightowl",
+    priorReports: { kind: "count", count: 0 },
+    reporterCredibility: { kind: "new" },
+    age: "40m",
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+    slaDueAt: new Date(Date.now() + 200 * 60_000).toISOString(),
+    detail: {
+      contentAuthor: "@nightowl · direct message",
+      excerpt: "we don't do refunds, read the listing next time",
+      thread: [],
+      conversationContextAvailable: true,
+      sentAsIdentity: DEMO_SENT_AS_CAFE_LISBOA,
+      people: [
+        {
+          role: "Reporter",
+          name: "Sofia M.",
+          initials: "SM",
+          tone: "jade",
+          meta: "Member since 2024 · asked about a refund.",
+        },
+        {
+          role: "Reported",
+          name: "@nightowl",
+          initials: "RC",
+          tone: "coral",
+          meta: "Staffs Café Lisboa · member since Jan 2026.",
+        },
+        // Mirrors the backend's own `people` enrichment
+        // (`SENT_AS_PERSON_ROLE`, queerpulse-backend
+        // `moderation.service.ts` `buildDetail`), so the demo roster reads
+        // exactly as live mode's would.
+        {
+          role: "sent as",
+          name: "Café Lisboa",
+          initials: "CL",
+          tone: "plum",
+          meta: "listing identity",
         },
       ],
     },

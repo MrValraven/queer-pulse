@@ -99,6 +99,9 @@ describe("useMessageForwarding", () => {
       true,
       undefined,
       undefined,
+      undefined,
+      // A brand-new first contact goes out as the member's own profile.
+      undefined,
     );
     expect(deliver).toHaveBeenCalledWith(
       "conv-bree",
@@ -107,6 +110,9 @@ describe("useMessageForwarding", () => {
       undefined,
       true,
       undefined,
+      undefined,
+      undefined,
+      // A brand-new first contact goes out as the member's own profile.
       undefined,
     );
     expect(appendOptimistic).toHaveBeenCalledTimes(2);

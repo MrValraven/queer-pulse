@@ -33,6 +33,24 @@ export type ModActionCode =
   | "ban"
   | "escalate";
 
+/**
+ * Business mailboxes, design section 9: the business, persona or company a
+ * reported message was sent as, shown to the moderator beside the human
+ * sender whatever either attribution switch says a customer sees. Mirrors
+ * `SentAsIdentityDTO` in queerpulse-backend `moderation/sent-as-identity.ts`.
+ *
+ * `kind` and `displayName` read null when the identity row is gone (the
+ * listing, persona or company was deleted); `identityId` keeps its value so
+ * the moderator still learns the message went out as an identity that no
+ * longer exists.
+ */
+export interface SentAsIdentityDTO {
+  identityId: string;
+  kind: "listing" | "subprofile" | "company" | null;
+  displayName: string | null;
+  handle: string | null;
+}
+
 export interface ModReportDTO {
   id: string;
   severity: ModSeverity;
@@ -115,6 +133,15 @@ export interface ModReportDTO {
      * opening a private conversation is always an explicit, audited request.
      */
     conversationContextAvailable?: boolean;
+    /**
+     * Business mailboxes, design section 9: the identity the reported message
+     * was sent as. `contentAuthor` and `reported` still name the human sender;
+     * this names the business, persona or company beside them, so the
+     * moderator reads both whatever either attribution switch says. Present
+     * only on a `message` report whose message went out as an identity other
+     * than the sender's own profile.
+     */
+    sentAsIdentity?: SentAsIdentityDTO;
     /**
      * Listing-report enrichment — only present on a `listing`-subject report's
      * detail (hand-mapped server-side; see queerpulse-backend
@@ -384,7 +411,10 @@ export interface ConversationContextMessageDTO {
   /** Null exactly when `senderId` is null: render "Former member". */
   senderDisplayName: string | null;
   senderSlug: string | null;
-  kind: "user" | "system" | "gif" | "image" | "document";
+  /** Business mailboxes, design section 9: the identity this message was sent
+   *  as, beside the human sender above. Null for a personal message. */
+  sentAsIdentity: SentAsIdentityDTO | null;
+  kind: "user" | "system" | "gif" | "image" | "document" | "sticker";
   /** Null for a deleted message, except the reported one. */
   body: string | null;
   /** Display facts only, never a URL. */

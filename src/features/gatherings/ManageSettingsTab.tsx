@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiTrash2 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EventHostDTO } from "./api/events.api";
@@ -11,6 +12,10 @@ type SettingId = (typeof GATHERING_SETTINGS)[number]["id"];
 interface SettingsTabProps {
   slug: string;
   onCancel: () => void;
+  /** Opens the delete confirm (`useDeleteGatheringFlow`, owned by the page). */
+  onDelete: () => void;
+  /** A delete is in flight, so the button holds still. */
+  isDeletePending?: boolean;
   /** The event's real accepted co-hosts — see `CohostManager`. */
   cohosts?: EventHostDTO[];
   /** The two toggles' real current values (`Event.allowWaitlist`/
@@ -27,6 +32,8 @@ interface SettingsTabProps {
 export function SettingsTab({
   slug,
   onCancel,
+  onDelete,
+  isDeletePending = false,
   cohosts,
   allowWaitlist,
   showAttendeeCount,
@@ -91,6 +98,19 @@ export function SettingsTab({
         </div>
         <Button variant="ghost" className={styles.cancelBtn} onClick={onCancel}>
           {t("gatherings:manage.settings.cancelCta")}
+        </Button>
+      </div>
+      {/* Erasing is its own block below cancel: cancel tells people, delete
+          tells nobody, so the text says which one to reach for. */}
+      <div className={`${styles.dangerZone} ${styles.dangerZoneFollow}`}>
+        <div className={styles.dzLabel}>
+          {t("gatherings:manage.settings.deleteLabel")}
+        </div>
+        <div className={styles.dzText}>
+          {t("gatherings:manage.settings.deleteText")}
+        </div>
+        <Button variant="danger" onClick={onDelete} disabled={isDeletePending}>
+          <FiTrash2 aria-hidden /> {t("gatherings:manage.settings.deleteCta")}
         </Button>
       </div>
     </div>

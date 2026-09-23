@@ -1,0 +1,69 @@
+/* ── Owner offers ───────────────────────────────────────────────────────────
+   The member-facing half of an admin-authored listing: somebody is told a
+   place has been put in their name, and answers.
+
+   The inbox shell, the rows and the two answer buttons are shared with the
+   co-manager inbox that sits directly below it (CoManagers.module.css), so the
+   two stacked inboxes read as one thing. Only the pledge step is new, and only
+   the pledge step lives here. */
+
+/* The pledge, opened inside a row by pressing Accept.
+
+   A full-width block on its own line: the row it sits in is a wrapping flex
+   line sized for a name and two buttons, and the pledge is a paragraph, a
+   notice panel and a control that all need the whole width to be readable.
+
+   Paper on paper with a firmer border, because the notice inside it carries
+   the tinted fill and two tinted panels nested would blur which is which. */
+.pledge {
+  flex: 1 1 100%;
+  min-inline-size: 0;
+  margin-block-start: 2px;
+  padding: 15px 16px;
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+}
+
+/* The three rules below echo type that also exists in CoManagers.module.css
+   (.confirmText, .confirmActions, .inviteFrom). They are written out here on
+   purpose.
+
+   A `composes: … from` would remove the repetition and would also be this
+   repo's first cross-feature stylesheet dependency: `ownership/` would break
+   quietly the day somebody renames a class in `coManagers/`, with no tool
+   watching the link. Twelve repeated declarations are the cheaper failure.
+   Adopting cross-module composition is a repo-wide call for the design
+   system's owner to make deliberately. */
+
+/* The opening line of the pledge: the confirm paragraph's voice, held to a
+   comfortable measure, with air under it before the notice. */
+.pledgeLead {
+  margin: 0 0 14px;
+  font-size: var(--text-13-5);
+  line-height: 1.6;
+  color: var(--ink);
+  max-inline-size: 66ch;
+  text-wrap: pretty;
+}
+
+/* Answers sit at the end of the block, after the thing being agreed to. */
+.pledgeActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-block-start: 16px;
+}
+
+/* The line the admin wrote to the member, under the offer. Set at the same
+   size as the "offered by" line directly above it, because it is the same
+   kind of aside on the same row. */
+.note {
+  margin: 6px 0 0;
+  font-size: var(--text-13-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-inline-size: 66ch;
+  text-wrap: pretty;
+}

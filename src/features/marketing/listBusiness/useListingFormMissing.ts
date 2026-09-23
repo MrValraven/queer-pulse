@@ -40,6 +40,14 @@ export function useListingFormMissing(
        bar permanently blocked on inputs that are not on the page. `ownerRole`
        is not among them: it describes the business, so it stays required. */
     const isOwnerEditing = draft.managementRole !== "co_manager";
+    /* A STAFF-AUTHORED draft is written by an admin about a business that has
+       not joined yet. The owner block, the two consents and the affirming
+       baseline are all first- and second-person statements about the
+       submitter, so the admin form leaves them off the page and an admin is
+       never asked to answer them for somebody else. The owner supplies them
+       when they accept the handover. An absent flag means a member is
+       writing, which is every draft the wizard makes today. */
+    const isOwnerAuthored = !draft.isStaffAuthored;
 
     const s0: MissingField[] = [];
     if (!draft.path)
@@ -98,13 +106,18 @@ export function useListingFormMissing(
       add(s3, "marketing:listBusiness.missing.socialFormat", ANCHOR.social);
 
     const s4: MissingField[] = [];
-    if (isClaim && isOwnerEditing && !draft.rel)
+    if (isClaim && isOwnerEditing && isOwnerAuthored && !draft.rel)
       add(s4, "marketing:listBusiness.missing.rel", ANCHOR.rel);
-    if (isClaim && isOwnerEditing && !draft.ownerName.trim())
+    if (isClaim && isOwnerEditing && isOwnerAuthored && !draft.ownerName.trim())
       add(s4, "marketing:listBusiness.missing.ownerName", ANCHOR.ownerName);
     if (isClaim && !draft.ownerRole.trim())
       add(s4, "marketing:listBusiness.missing.ownerRole", ANCHOR.ownerRole);
-    if (isClaim && isOwnerEditing && !emailValid(draft.contactEmail))
+    if (
+      isClaim &&
+      isOwnerEditing &&
+      isOwnerAuthored &&
+      !emailValid(draft.contactEmail)
+    )
       add(
         s4,
         "marketing:listBusiness.missing.contactEmail",
@@ -119,12 +132,18 @@ export function useListingFormMissing(
       add(s4, "marketing:listBusiness.missing.alt", ANCHOR.photos);
 
     const s5: MissingField[] = [];
-    if (isOwnerEditing && (!draft.consentOuting || !draft.consentGuide))
+    if (
+      isOwnerEditing &&
+      isOwnerAuthored &&
+      (!draft.consentOuting || !draft.consentGuide)
+    )
       add(s5, "marketing:listBusiness.missing.consent", ANCHOR.consent);
     // The affirming baseline is the condition of being listed, so the submit
     // stays out of reach until the submitter agrees to it. An existing listing
-    // agreed when it was created, so this never blocks an owner's edit.
-    if (!draft.affirmingBaselineAccepted)
+    // agreed when it was created, so this never blocks an owner's edit. A
+    // staff-authored draft has no submitter on the page to agree, so the
+    // owner agrees when they accept the handover.
+    if (isOwnerAuthored && !draft.affirmingBaselineAccepted)
       add(
         s5,
         "marketing:listBusiness.missing.affirmingBaseline",

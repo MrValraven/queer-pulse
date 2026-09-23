@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage } from "./data";
+import { colleagueSenderLabel, isTypedByViewer } from "./viewerSideSender";
 
 /** One entry in the conversation's photo sequence, already resolved to
  *  everything the viewer paints: the pixels, who sent it, and when. */
@@ -48,20 +51,62 @@ interface CollectOptions {
   counterpartAvatar?: string;
   /** The signed-in member's profile photo, for own messages. */
   youAvatar?: string;
+  /** Names a colleague's business reply ("Rui from Café Lisboa"). Without
+   *  it such a photo goes by the business alone. */
+  t?: TFunction;
+}
+
+/** The top bar's name and photo for one message. A reply a colleague typed
+ *  as the business sits on the viewer's side yet is not the member's own, so
+ *  it carries the business's name and photo. */
+function senderOf(
+  message: ChatMessage,
+  {
+    counterpartName,
+    youLabel,
+    counterpartAvatar,
+    youAvatar,
+    t,
+  }: CollectOptions,
+): { senderName: string; senderAvatar?: string } {
+  if (isTypedByViewer(message)) {
+    return { senderName: youLabel, senderAvatar: youAvatar };
+  }
+  if (message.from === "me") {
+    return {
+      senderName: t
+        ? colleagueSenderLabel(message, t)
+        : (message.senderName ?? counterpartName),
+      senderAvatar: message.senderAvatar,
+    };
+  }
+  return {
+    senderName: message.senderName ?? counterpartName,
+    senderAvatar: message.senderAvatar ?? counterpartAvatar,
+  };
 }
 
 /**
  * Whether a message is a photo the viewer can actually open. Excludes
- * documents (a file card has no pixels), soft-deleted messages, and the
- * restored-outbox case where the local blob preview was stripped on persist
- * and only `sendAttachment` survives, which is precisely why that branch
- * renders a placeholder rather than an `<img>`.
+ * documents (a file card has no pixels) and stickers (tapping one must never
+ * open the photo viewer; a sticker has no gallery, no zoom, no Save),
+ * soft-deleted messages, and the restored-outbox case where the local blob
+ * preview was stripped on persist and only `sendAttachment` survives, which
+ * is precisely why that branch renders a placeholder rather than an `<img>`.
+ * The leading `kind` check already excludes a sticker (its own kind is
+ * `"sticker"`, never `"image"`/`"gif"`); the attachment-shape check below is
+ * the same belt-and-suspenders `photoAttachmentOf` applies in
+ * `conversationMediaFilters.ts`.
  */
 export function isViewablePhoto(message: ChatMessage): boolean {
   if (message.kind !== "image" && message.kind !== "gif") return false;
   if (message.deletedAt) return false;
   const attachment = message.attachment;
-  return !!attachment && !isDocumentAttachment(attachment);
+  return (
+    !!attachment &&
+    !isDocumentAttachment(attachment) &&
+    !isStickerAttachment(attachment)
+  );
 }
 
 /**
@@ -70,7 +115,7 @@ export function isViewablePhoto(message: ChatMessage): boolean {
  */
 export function collectThreadPhotos(
   groups: { day: string; items: ChatMessage[] }[],
-  { counterpartName, youLabel, counterpartAvatar, youAvatar }: CollectOptions,
+  options: CollectOptions,
 ): ViewerPhoto[] {
   const photos: ViewerPhoto[] = [];
   for (const group of groups) {
@@ -84,14 +129,7 @@ export function collectThreadPhotos(
         width: attachment.width,
         height: attachment.height,
         alt: message.kind === "gif" ? message.text : undefined,
-        senderName:
-          message.from === "me"
-            ? youLabel
-            : (message.senderName ?? counterpartName),
-        senderAvatar:
-          message.from === "me"
-            ? youAvatar
-            : (message.senderAvatar ?? counterpartAvatar),
+        ...senderOf(message, options),
         dayLabel: group.day,
         timeLabel: message.time ?? "",
         key:
@@ -134,7 +172,8 @@ export function useThreadImageGallery(
   groups: { day: string; items: ChatMessage[] }[],
   options: CollectOptions,
 ): ViewerPhoto[] {
-  const { counterpartName, youLabel, counterpartAvatar, youAvatar } = options;
+  const { counterpartName, youLabel, counterpartAvatar, youAvatar, t } =
+    options;
   return useMemo(
     () =>
       collectThreadPhotos(groups, {
@@ -142,7 +181,8 @@ export function useThreadImageGallery(
         youLabel,
         counterpartAvatar,
         youAvatar,
+        t,
       }),
-    [groups, counterpartName, youLabel, counterpartAvatar, youAvatar],
+    [groups, counterpartName, youLabel, counterpartAvatar, youAvatar, t],
   );
 }

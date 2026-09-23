@@ -25,6 +25,7 @@ import { useAllCommunities, useCreatedDetail } from "../useAllCommunities";
 import type { CommunityDetail } from "../communityDetails";
 import { getCommunityDetail } from "../communityDetail.lookup";
 import { getLiving } from "../livingCommunities.data";
+import { DEMO_SPACE_DETAILS, findDemoSpace } from "../spaces.data";
 import type { Community } from "../../homepage/data/types";
 import type { LivingCommunity } from "../community.model";
 
@@ -35,6 +36,10 @@ export interface CommunityResult {
    *  for non-flagship communities (→ the lighter fallback tabs). */
   living: LivingCommunity | undefined;
   myRole: RosterRole | null;
+  /** True when the viewer holds their own roster row here. `myRole` is the
+   *  effective role, which a parent's staff also carry into a space they
+   *  never joined, so the Join/Leave CTA reads this instead. */
+  isRosterMember: boolean;
   myJoinRequestStatus: JoinRequestStatus | null;
   /**
    * When this viewer's standing invitation was sent (PRD-140), or null. Only
@@ -78,6 +83,7 @@ const EMPTY: CommunityResult = {
   detail: null,
   living: undefined,
   myRole: null,
+  isRosterMember: false,
   myJoinRequestStatus: null,
   invitedAt: null,
   editable: null,
@@ -162,9 +168,17 @@ export function useCommunity(slug: string | undefined): CommunityResult {
   const { overrideFor } = useCommunityEdits();
 
   const demoResult = useMemo<CommunityResult>(() => {
-    const community = all.find((c) => c.slug === slug) ?? null;
+    // A demo space (subcommunity) is kept out of the Discover registry, so
+    // its card and detail come from the spaces fixtures instead. Its living
+    // entry (with `parent` and `inheritedRules`) comes from `getLiving` below
+    // like every other flagship's.
+    const demoSpace = demoMode ? findDemoSpace(slug) : undefined;
+    const community = all.find((c) => c.slug === slug) ?? demoSpace ?? null;
     const detail =
-      (slug ? getCommunityDetail(slug) : undefined) ?? createdDetail ?? null;
+      (slug ? getCommunityDetail(slug) : undefined) ??
+      createdDetail ??
+      (demoSpace?.slug ? DEMO_SPACE_DETAILS[demoSpace.slug] : undefined) ??
+      null;
     if (!community || !detail) return { ...EMPTY, notFound: true };
     const baseLiving = getLiving(slug);
     const override = slug ? overrideFor(slug) : undefined;
@@ -181,6 +195,8 @@ export function useCommunity(slug: string | undefined): CommunityResult {
       detail: override ? applyDetailOverride(detail, override) : detail,
       living: override ? applyLivingOverride(baseLiving, override) : baseLiving,
       myRole: slug ? roleIn(slug) : null,
+      // The demo store holds only real roster rows, so a role is a row.
+      isRosterMember: slug ? roleIn(slug) != null : false,
       myJoinRequestStatus: slug && hasRequested(slug) ? "pending" : null,
       // The demo membership store holds memberships and pending requests and
       // nothing else, so the prototype has no invitation to report.
@@ -194,7 +210,16 @@ export function useCommunity(slug: string | undefined): CommunityResult {
       isError: false,
       refetch: NOOP,
     };
-  }, [all, createdDetail, slug, roleIn, hasRequested, overrideFor, t]);
+  }, [
+    all,
+    createdDetail,
+    demoMode,
+    slug,
+    roleIn,
+    hasRequested,
+    overrideFor,
+    t,
+  ]);
 
   const query = useQuery<CommunityResult>({
     queryKey: ["community", slug, language],
@@ -207,6 +232,9 @@ export function useCommunity(slug: string | undefined): CommunityResult {
           detail: detailDtoToDetail(dto, t),
           living: detailDtoToLiving(dto),
           myRole: dto.myRole,
+          // An older backend sends no `isRosterMember`; `myRole` is the best
+          // reading it has.
+          isRosterMember: dto.isRosterMember ?? dto.myRole != null,
           myJoinRequestStatus: dto.myJoinRequestStatus,
           invitedAt: dto.invitedAt ?? null,
           editable: dtoToEditable(dto),

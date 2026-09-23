@@ -11,9 +11,7 @@ import {
   type JoinRefusal,
 } from "./api/communityJoin.api";
 import { useCommunityRules } from "./api/useCommunityJoin";
-import { JoinStepAbout, JoinStepDone, JoinStepIntro } from "./JoinModalSteps";
-import { JoinRulesStep } from "./JoinRulesStep";
-import { JoinRefusalPanel } from "./JoinRefusalPanel";
+import { JoinModalStepView } from "./JoinModalStepView";
 import styles from "./JoinModal.module.css";
 
 export interface JoinModalCommunity {
@@ -32,6 +30,7 @@ export function JoinModal({
   community,
   tier = "public",
   isInvited = false,
+  parentName,
   onClose,
   onJoined,
   onRequested,
@@ -43,6 +42,10 @@ export function JoinModal({
    *  request. The wizard words itself as joining, because that is what
    *  happens. */
   isInvited?: boolean;
+  /** Set when `community` is a space (subcommunity): the parent's name,
+   *  passed through to `JoinRulesStep` so the rules step can note that the
+   *  applicant already agreed to the parent's rules. */
+  parentName?: string;
   onClose: () => void;
   /** Instant (public-tier) join. May return a promise: the modal waits for it
    *  and only shows the welcome step once it resolves. */
@@ -84,6 +87,9 @@ export function JoinModal({
   // anything left here is one of the two refusals that replace the whole form.
   const refusalPanel =
     refusal && refusal.kind !== "rulesChanged" ? refusal : null;
+  const isIntroStep = step === 1;
+  const isRulesStep = hasRules && step === RULES_STEP;
+  const isAboutStep = step === aboutStep;
 
   // The welcome/request-received step belongs on the far side of the network
   // call: a frozen space, an already-pending request or a lost connection all
@@ -157,53 +163,32 @@ export function JoinModal({
         </div>
       )}
 
-      {refusalPanel ? (
-        <JoinRefusalPanel refusal={refusalPanel} onClose={onClose} />
-      ) : (
-        <>
-          {step === 1 && (
-            <JoinStepIntro
-              community={community}
-              isRequest={isRequest}
-              isInvite={isInvite}
-              isInvited={isInvited}
-              onNext={() => setStep(2)}
-            />
-          )}
-
-          {hasRules && step === RULES_STEP && (
-            <JoinRulesStep
-              name={community.name}
-              rules={rulesState.rules}
-              isUpdated={isRulesUpdated}
-              isAcknowledged={isAcknowledged}
-              setIsAcknowledged={setIsAcknowledged}
-              onContinue={() => setStep(aboutStep)}
-            />
-          )}
-
-          {step === aboutStep && (
-            <JoinStepAbout
-              isRequest={isRequest}
-              involvement={involvement}
-              setInvolvement={setInvolvement}
-              aboutText={aboutText}
-              setAboutText={setAboutText}
-              isSubmitting={isSubmitting}
-              errorMessage={errorMessage}
-              onSubmit={() => void submit()}
-            />
-          )}
-
-          {done && (
-            <JoinStepDone
-              community={community}
-              isRequest={isRequest}
-              onClose={onClose}
-            />
-          )}
-        </>
-      )}
+      <JoinModalStepView
+        refusalPanel={refusalPanel}
+        onClose={onClose}
+        isIntroStep={isIntroStep}
+        isRulesStep={isRulesStep}
+        isAboutStep={isAboutStep}
+        isDone={done}
+        community={community}
+        isRequest={isRequest}
+        isInvite={isInvite}
+        isInvited={isInvited}
+        onIntroNext={() => setStep(2)}
+        rules={rulesState.rules}
+        isRulesUpdated={isRulesUpdated}
+        isAcknowledged={isAcknowledged}
+        setIsAcknowledged={setIsAcknowledged}
+        onRulesContinue={() => setStep(aboutStep)}
+        parentName={parentName}
+        involvement={involvement}
+        setInvolvement={setInvolvement}
+        aboutText={aboutText}
+        setAboutText={setAboutText}
+        isSubmitting={isSubmitting}
+        errorMessage={errorMessage}
+        onAboutSubmit={() => void submit()}
+      />
     </ModalSheet>
   );
 }

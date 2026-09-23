@@ -24,7 +24,25 @@ interface FieldLocation {
   anchor: string;
 }
 
+/**
+ * The DOM id of the admin block that the admin create page renders ABOVE the
+ * wizard (publish state and the ownership offer). Those two fields belong to
+ * no wizard step, so an admin-field 422 surfaces at the top of the form:
+ * step 0 is the topmost step, and the inline server message is shown there.
+ *
+ * Kept local, because `ANCHOR` catalogs the wizard's own fields.
+ * `flashField` no-ops when no element carries the id, so a member submit that
+ * never renders the admin block is unaffected.
+ */
+const ADMIN_BLOCK_ANCHOR = "lb-admin-fields";
+
 const FIELD_TO_STEP: Record<string, FieldLocation> = {
+  // Above the wizard: the admin-only block. Mapped to step 0 so an
+  // admin-field 422 surfaces at the top of the form.
+  publishState: { step: 0, anchor: ADMIN_BLOCK_ANCHOR },
+  // `ownerOffer.memberSlug` routes by its first path segment, the same way
+  // `social.website` and `photos.wide` do.
+  ownerOffer: { step: 0, anchor: ADMIN_BLOCK_ANCHOR },
   // Step 0 — how you know the place
   path: { step: 0, anchor: ANCHOR.path },
   // Step 1 — basics

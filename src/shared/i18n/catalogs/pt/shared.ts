@@ -254,6 +254,9 @@ export const shared: Catalog = {
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.topics": "Tópicos",
   "adminNav.items.listings": "Espaços",
+  // `/admin/listings/new`: a equipa escreve sobre um espaço que ainda
+  // não se juntou.
+  "adminNav.items.listingNew": "Adicionar espaço",
   "adminNav.items.housingListings": "Revisão de alojamento",
   "adminNav.items.media": "Imagens enviadas",
   "adminNav.items.invites": "Convites",
@@ -580,6 +583,7 @@ export const shared: Catalog = {
   "mediaRef.magazine-deck": "Deck da revista",
   "mediaRef.message-photo": "Conversa",
   "mediaRef.press-contact": "Contacto de imprensa",
+  "mediaRef.sticker": "Sticker",
 
   // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
   // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,
@@ -647,6 +651,7 @@ export const shared: Catalog = {
   "adminNav.items.housingGroupListings": "Anúncios de grupo",
   "adminNav.items.landlords": "Senhorios",
   "adminNav.items.volunteerHours": "Horas de voluntariado",
+  "adminNav.items.stickerPacks": "Packs de stickers",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-49 — PRD-49 - the quiet marker on a meganav / mobile drawer / sidebar link whose destination is not launched yet (Cinema, Studio in live mode). Rendered by NavBuildBadge INSIDE the link, so it also becomes the tail of the link's accessible name: 'Cinema Being built'. Keep it short, uppercase-safe and free of any timing promise: it says the thing is under construction, never that it arrives soon or on a date.

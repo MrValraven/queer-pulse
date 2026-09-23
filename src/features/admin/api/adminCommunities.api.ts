@@ -112,6 +112,26 @@ export interface AdminCommunityDetailDTO extends AdminCommunityCardDTO {
    *  `scopedQueue`/the health numbers above. Mirrors
    *  `AdminCommunityListDTO.truncated`. */
   truncated: boolean;
+  /** Whether this community may host spaces (subcommunities). Staff-only
+   *  switch. Optional so an older backend still types. */
+  allowsSubcommunities?: boolean;
+  /** The parent when this community is itself a space, else null. */
+  parent?: { slug: string; name: string } | null;
+  /** The spaces this community hosts. Empty on a space. */
+  subcommunities?: AdminSubcommunityDTO[];
+}
+
+/** Access tier strictness, lowest first. Inlined to keep this file
+ *  self-contained (see the file comment above). */
+export type AdminCommunityAccessTier =
+  "public" | "request" | "invite" | "private";
+
+/** One space (subcommunity) row on the admin community detail. */
+export interface AdminSubcommunityDTO {
+  slug: string;
+  name: string;
+  accessTier: AdminCommunityAccessTier;
+  memberCount: number;
 }
 
 /** The full `GET /admin/communities` payload: the cards, plus whether either
@@ -130,6 +150,8 @@ export interface UpdateAdminCommunitySettingsDto {
   /** Set true to feature this community on Discover (clears every other
    *  community's flag server-side); set false to unfeature it. */
   isFeatured?: boolean;
+  /** Set true to let this community host spaces (subcommunities). */
+  allowsSubcommunities?: boolean;
 }
 
 /** Every community on the platform, for the admin grid. Admin-only — 403s otherwise. */

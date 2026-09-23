@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ReplyQuoteContent } from "./ReplyQuoteContent";
 import { replyQuoteSourceFromMessage } from "./replyQuoteSource";
 import type { ChatMessage } from "./data";
+import { colleagueSenderLabel, isTypedByViewer } from "./viewerSideSender";
 import styles from "./MessagesPage.module.css";
 
 const replyPreviewClassNames = {
@@ -46,13 +47,15 @@ export function ComposerReplyPreview({
         <div className={styles.replyPreview}>
           <ReplyQuoteContent
             senderName={
-              previewMessage.from === "me"
+              isTypedByViewer(previewMessage)
                 ? t("messages:conversation.you")
-                : previewMessage.isSenderFormerMember
-                  ? t("messages:formerMember")
-                  : isGroup
-                    ? (previewMessage.senderName ?? activeName)
-                    : activeName
+                : previewMessage.from === "me"
+                  ? colleagueSenderLabel(previewMessage, t)
+                  : previewMessage.isSenderFormerMember
+                    ? t("messages:formerMember")
+                    : isGroup
+                      ? (previewMessage.senderName ?? activeName)
+                      : activeName
             }
             source={replyQuoteSourceFromMessage(previewMessage)}
             classNames={replyPreviewClassNames}

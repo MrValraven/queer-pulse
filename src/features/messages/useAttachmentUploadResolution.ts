@@ -36,6 +36,9 @@ export interface SendResolvedItemParams {
   conversationId: string;
   replyToId?: string;
   replyTo?: ChatMessage["replyTo"];
+  /** The mailbox seat the item was composed as (see
+   *  `StagedItemCommon.sendAsIdentityId`). */
+  sendAsIdentityId?: string;
 }
 
 /**
@@ -110,11 +113,13 @@ export function useAttachmentUploadResolution({
       conversationId,
       replyToId,
       replyTo,
+      sendAsIdentityId,
     }: SendResolvedItemParams) => {
       const options: ExplicitSendOptions = {
         conversationId,
         replyToId,
         replyTo,
+        sendAsIdentityId,
       };
       if (kind === "document") {
         onSendDocument?.(
@@ -159,6 +164,7 @@ export function useAttachmentUploadResolution({
           conversationId,
           replyToId: candidate.replyToId,
           replyTo: candidate.replyTo,
+          sendAsIdentityId: candidate.sendAsIdentityId,
         });
         // Sent: the raw staged preview blob served only the pending strip,
         // which stops showing this item the moment it's flushed (the sent

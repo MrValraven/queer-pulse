@@ -1,0 +1,36 @@
+.intro {
+  margin: -4px 0 14px;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 64ch;
+}
+
+.joinNote {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-13);
+  color: var(--ink-40);
+  margin: 0 0 18px;
+}
+.joinNote svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+/* A space card's quiet footer note ("Join {parent} first", "Invitation
+ * only"): information with no control behind it, so it reads as text. */
+.cardNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.cardNote svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}

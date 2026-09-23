@@ -191,6 +191,8 @@ export function messageKindLabel(
       return t("messages:viewer.gifBadge");
     case "document":
       return t("messages:attachments.documentFallbackText");
+    case "sticker":
+      return t("messages:sticker.attachmentLabel");
     default:
       return undefined;
   }

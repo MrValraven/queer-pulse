@@ -29,6 +29,7 @@ function demoRow(id: string): JoinRequestDTO {
     ageAttestedAt: now,
     termsVersion: "2.4",
     source: null,
+    heardFrom: null,
     createdAt: now,
     reviewedAt: null,
     reviewedBy: null,

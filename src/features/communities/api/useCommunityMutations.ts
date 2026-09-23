@@ -175,6 +175,9 @@ export function useJoinCommunity(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["join-requests", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      // A space's card on its parent's Spaces tab shows the viewer's own
+      // roster row, so the parent's list refreshes too.
+      void queryClient.invalidateQueries({ queryKey: ["subcommunities"] });
     },
   });
 }
@@ -197,6 +200,9 @@ export function useLeaveCommunity(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["communities"] });
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      // A space's card on its parent's Spaces tab shows the viewer's own
+      // roster row, so the parent's list refreshes too.
+      void queryClient.invalidateQueries({ queryKey: ["subcommunities"] });
     },
   });
 }

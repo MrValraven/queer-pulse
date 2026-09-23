@@ -44,6 +44,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     Record<Language, Partial<Record<Namespace, Catalog>>>
   >({ en: EMPTY_LOADED_NAMESPACES, pt: EMPTY_LOADED_NAMESPACES });
 
+  // Namespaces whose chunk failed to load, per language. A pending non-EN
+  // namespace renders blank rather than borrowing English (that mixed a PT
+  // header with an EN homepage body); only once its chunk has actually failed
+  // does `t` fall back to EN, so a dead chunk never leaves the page empty.
+  const [failedNamespaces, setFailedNamespaces] = useState<
+    Record<Language, Partial<Record<Namespace, true>>>
+  >({ en: {}, pt: {} });
+
   // Namespaces requested during render but not yet fetched, keyed by language.
   // `t` runs mid-render (in consumers), so it can only queue work here; the
   // effect below drains the queue after commit, where kicking off imports is
@@ -115,6 +123,15 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       );
       if (active !== undefined) return active;
 
+      // One language at a time: while the active language's chunk is still in
+      // flight, render nothing for this key instead of an English stand-in.
+      // The chunk's arrival re-renders consumers with the real string.
+      const isActivePending =
+        language !== "en" &&
+        activeCatalog === undefined &&
+        failedNamespaces[language][ns] !== true;
+      if (isActivePending) return "";
+
       // EN is the universal fallback. Queue it too — this is the fix that
       // makes lazy EN safe: a PT (or any non-EN) miss now kicks off BOTH the
       // active namespace's fetch AND its EN fallback's fetch in the same
@@ -127,7 +144,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       logWarn("i18n: missing translation key", { key, language });
       return key;
     },
-    [language, catalogForQueueing],
+    [language, catalogForQueueing, failedNamespaces],
   );
 
   // Drain the fetch queue after every commit. Namespaces queued by `t` during
@@ -156,6 +173,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
           )
           .catch((error) => {
             requestedNamespaces.current[namespaceLanguage].delete(namespace);
+            setFailedNamespaces((previous) =>
+              previous[namespaceLanguage][namespace]
+                ? previous
+                : {
+                    ...previous,
+                    [namespaceLanguage]: {
+                      ...previous[namespaceLanguage],
+                      [namespace]: true,
+                    },
+                  },
+            );
             logWarn("i18n: failed to load namespace", {
               namespace,
               language: namespaceLanguage,

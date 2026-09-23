@@ -17,17 +17,52 @@ function senderIdentity(message: ChatMessage): string | undefined {
 }
 
 /**
+ * Who a message was sent as, for run breaking: the mailbox identity plus the
+ * person behind it. A confirmed reply names its identity in
+ * `senderIdentityId`; an optimistic or outbox send carries only
+ * `sendAsIdentityId`, and the viewer composed it, so it counts as the
+ * viewer's own, like a confirmed reply with `isSentByViewer === true`. Staff
+ * first names tell colleagues apart (and, for a customer, named staff from
+ * unnamed staff, who all share one key). A personal message has no identity
+ * and resolves to the empty key.
+ */
+function mailboxSenderKey(message: ChatMessage): string {
+  const identityId = message.senderIdentityId ?? message.sendAsIdentityId;
+  if (!identityId) return "";
+  const isPendingOwnSend =
+    !message.senderIdentityId && !!message.sendAsIdentityId;
+  if (message.isSentByViewer === true || isPendingOwnSend) {
+    return `${identityId}:viewer`;
+  }
+  return `${identityId}:staff:${message.senderStaffFirstName ?? ""}`;
+}
+
+/**
+ * True when two messages were sent as the same mailbox by the same person.
+ * Two personal messages both resolve to the empty key, so they always match.
+ */
+function isSameMailboxSender(
+  previousMessage: ChatMessage,
+  message: ChatMessage,
+): boolean {
+  return mailboxSenderKey(previousMessage) === mailboxSenderKey(message);
+}
+
+/**
  * True when `message` may join the run `previousMessage` ends: same side, and
- * for two received messages the same member too. Own messages always share a
- * sender. Without the member check a group merged back-to-back messages from
- * two members into one run, rendering the second under the first's name and
- * avatar (DES-215).
+ * for two received messages the same member too. Own messages share a sender
+ * unless a business mailbox tells them apart. Without the member check a
+ * group merged back-to-back messages from two members into one run, rendering
+ * the second under the first's name and avatar (DES-215). On either side a
+ * run also breaks when the mailbox sender changes (`mailboxSenderKey`), so
+ * each run carries one attribution line.
  */
 export function isSameSender(
   previousMessage: ChatMessage,
   message: ChatMessage,
 ): boolean {
   if (previousMessage.from !== message.from) return false;
+  if (!isSameMailboxSender(previousMessage, message)) return false;
   if (message.from === "me") return true;
   return senderIdentity(previousMessage) === senderIdentity(message);
 }

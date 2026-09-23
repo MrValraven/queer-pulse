@@ -56,15 +56,20 @@ export function DirectorySpaceView({
             ownerRef={ownerRef}
           />
         </div>
-        {/* The commitment every listing here made, stated once for the whole
-            directory. Takes no listing and reads no per-listing field on
-            purpose: it is a house rule, not a badge one place earned. Shown in
-            the moderation preview too, since it is not interactive. */}
-        <DirectoryAffirmingBaseline />
         {/* Read-only moderation preview never shows the interactive "add a
             vouch" trigger, matching how the review form/contact CTAs above
             are already gated off for `preview`. */}
         {!preview && <DirectorySpaceTrust place={place} />}
+        {/* The commitment every listing here made, stated once for the whole
+            directory. Takes no listing and reads no per-listing field on
+            purpose: it is a house rule, not a badge one place earned. Shown in
+            the moderation preview too, since it is not interactive.
+
+            Last on the page by design: everything above answers questions
+            about THIS place, and the visitor reaches the house rule once they
+            are done reading the listing, so it closes the page rather than
+            interrupting it. */}
+        <DirectoryAffirmingBaseline />
       </div>
     </>
   );

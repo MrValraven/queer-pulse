@@ -14,16 +14,25 @@ import { RosterTab } from "./RosterTab";
 import { EventsTab } from "./EventsTab";
 import { AboutResourcesTab } from "./AboutResourcesTab";
 import { ModToolsTab } from "./ModToolsTab";
+import { SpacesTab } from "./SpacesTab";
 import { isCommunityStaff } from "./communityStaff";
 import styles from "./CommunityDetailPage.module.css";
 
-type Tab = "pulse" | "discussion" | "members" | "events" | "about" | "modtools";
+type Tab =
+  | "pulse"
+  | "discussion"
+  | "members"
+  | "events"
+  | "spaces"
+  | "about"
+  | "modtools";
 
 const TABS: Tab[] = [
   "pulse",
   "discussion",
   "members",
   "events",
+  "spaces",
   "about",
   "modtools",
 ];
@@ -107,6 +116,14 @@ export function LivingHubTabs({
     featureOn(living.features, "roster") && (living.rosterVisible ?? true);
   const showEvents = eventsOn || isStaff;
   const showMembers = rosterOn || isStaff;
+  // A top-level community offers this tab while platform staff let it host
+  // spaces, and keeps it while spaces it already hosts still exist after the
+  // switch goes off (the backend keeps them), so members keep a route to
+  // them. A space's own page never does: `living.parent` is non-null there,
+  // and spaces nest one level only (PRD community-subcommunities).
+  const showSpaces =
+    living.parent === null &&
+    (living.allowsSubcommunities || living.subcommunityCount > 0);
 
   const baseTabs: { id: Tab; label: string }[] = [
     { id: "pulse", label: t("communities:detail.tabs.pulse") },
@@ -116,6 +133,9 @@ export function LivingHubTabs({
       : []),
     ...(showEvents
       ? [{ id: "events" as Tab, label: t("communities:detail.tabs.events") }]
+      : []),
+    ...(showSpaces
+      ? [{ id: "spaces" as Tab, label: t("communities:detail.tabs.spaces") }]
       : []),
     { id: "about", label: t("communities:detail.tabs.about") },
   ];
@@ -130,7 +150,8 @@ export function LivingHubTabs({
   const active: Tab =
     (tab === "modtools" && !isStaff) ||
     (tab === "events" && !showEvents) ||
-    (tab === "members" && !showMembers)
+    (tab === "members" && !showMembers) ||
+    (tab === "spaces" && !showSpaces)
       ? "pulse"
       : tab;
 
@@ -139,14 +160,17 @@ export function LivingHubTabs({
     discussion: threads.length,
     members: living.stats.members,
     events: living.events.filter((e) => !e.past).length,
+    // No count on the Spaces tab: which spaces a viewer may see depends on
+    // their standing in each private space, so the tab shows no number.
     modtools:
       (living.joinRequests?.length ?? 0) + (living.reports?.length ?? 0),
   };
 
   return (
     <div>
-      {/* Wrapper, not decoration: on a phone it turns the six underline tabs
-          into one horizontal scroll strip instead of three stacked rows. */}
+      {/* This wrapper does real layout work: on a phone it turns the
+          underline tabs into one horizontal scroll strip, so they keep to a
+          single row. */}
       <div className={styles.tabScroller}>
         <Tabs
           className={styles.tabs}
@@ -270,6 +294,13 @@ function LivingHubTabContent({
           isLoading={communityPulse.isLoading}
           isError={communityPulse.isError}
           onRetry={communityPulse.refetch}
+        />
+      )}
+      {active === "spaces" && (
+        <SpacesTab
+          living={living}
+          name={community.name}
+          isParentMember={role !== null}
         />
       )}
       {active === "about" && (

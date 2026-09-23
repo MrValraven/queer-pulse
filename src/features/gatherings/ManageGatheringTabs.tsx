@@ -19,6 +19,9 @@ interface ManageGatheringTabsProps {
   /** Event slug the attendee list is fetched for. */
   slug: string;
   onCancel: () => void;
+  /** Opens the delete confirm; see `SettingsTab`. */
+  onDelete: () => void;
+  isDeletePending?: boolean;
   details: GatheringDetail[];
   description: string;
   /** Live going/waitlist/spots-left for the overview chips; demo omits it and
@@ -61,6 +64,8 @@ export function ManageGatheringTabs({
   initialTab = "overview",
   slug,
   onCancel,
+  onDelete,
+  isDeletePending,
   details,
   description,
   overviewCounts,
@@ -112,6 +117,8 @@ export function ManageGatheringTabs({
         <SettingsTab
           slug={slug}
           onCancel={onCancel}
+          onDelete={onDelete}
+          isDeletePending={isDeletePending}
           cohosts={cohosts}
           allowWaitlist={allowWaitlist}
           showAttendeeCount={showAttendeeCount}

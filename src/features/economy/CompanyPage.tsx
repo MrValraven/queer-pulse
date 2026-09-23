@@ -106,6 +106,7 @@ export function CompanyPage() {
     <PageShell>
       <CompanyCover
         profile={profile}
+        slug={slug}
         openRoles={jobs.length}
         onSeeRoles={() => setTab("jobs")}
       />

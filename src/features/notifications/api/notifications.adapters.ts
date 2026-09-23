@@ -628,6 +628,23 @@ function sourceHrefFromPayload(
   // are stripped before the client sees them. Guessing would send half of these
   // rows to a workspace that does not hold the thread. The copy still names
   // what happened and who said it, which is what was missing entirely before.
+  //
+  // Task 13 fix round 1. Both `listing_co_manager_invite` and
+  // `listing_owner_offer` are answered on the account profile's Places
+  // section (`PlacesSection`), never the public listing page: that is where
+  // the accept/decline UI lives, and the generic `source: "listing"` branch
+  // below resolves to `businessPath`, a page with no accept control on it at
+  // all. Keyed on `type`, the same reasoning as `group_invite` above: both
+  // payloads carry `source: "listing"`, so placing this branch first is what
+  // keeps the generic one below from catching them.
+  //
+  // `listing_co_manager_invite_accepted`/`_declined` stay off this branch
+  // deliberately: those two are information for the OWNER, with nothing left
+  // to answer, so the public listing page the generic branch resolves is the
+  // right destination for them.
+  if (type === "listing_co_manager_invite" || type === "listing_owner_offer") {
+    return `${routes.accountProfile}#places`;
+  }
   if (!payload) return undefined;
   if (payload.source === "forum") {
     const threadSlug = payload.threadSlug;

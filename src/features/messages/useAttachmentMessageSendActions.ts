@@ -8,6 +8,20 @@ import { nextLocalId } from "./useMessagesController.helpers";
 import { clockLabel } from "./api/messages.adapters";
 import type { ExplicitSendOptions } from "./useMessageSendActions";
 
+/** The identity a new send is composed as: an explicit target's own
+ *  snapshot, or else the open thread's mailbox seat. Stamped on the
+ *  optimistic message, so every later retry or replay sends the stamp
+ *  (`retrySend` reads `message.sendAsIdentityId`, whatever the thread object
+ *  says by then; a pre-feature entry carries none and stays personal). */
+export function composingIdentityOf(
+  active: Conversation | null,
+  options?: ExplicitSendOptions,
+): string | undefined {
+  return options?.conversationId
+    ? options.sendAsIdentityId
+    : active?.mailboxSeatIdentityId;
+}
+
 interface AttachmentSendActionsDeps {
   active: Conversation | null;
   activeBlocked: boolean;
@@ -27,6 +41,8 @@ interface AttachmentSendActionsDeps {
     forwarded?: boolean,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: "image" | "document",
+    stickerId?: string,
+    asIdentityId?: string,
   ) => void;
 }
 
@@ -89,6 +105,7 @@ export function useAttachmentMessageSendActions({
       const replyToId = options?.conversationId
         ? options.replyToId
         : replyDraft?.id;
+      const sendAsIdentityId = composingIdentityOf(active, options);
       const fallbackText = t("messages:attachments.fallbackText");
       // See `useMessageSendActions.send`: a real `at` plus a final clock
       // label from the first paint, so the ack cannot resize the bubble,
@@ -107,6 +124,7 @@ export function useAttachmentMessageSendActions({
         status: "sending",
         localId,
         replyTo,
+        sendAsIdentityId,
       });
       if (!options?.conversationId) setReplyDraft(null);
       deliver(
@@ -117,6 +135,8 @@ export function useAttachmentMessageSendActions({
         false,
         attachment,
         "image",
+        undefined,
+        sendAsIdentityId,
       );
     },
     [
@@ -147,6 +167,7 @@ export function useAttachmentMessageSendActions({
       const replyToId = options?.conversationId
         ? options.replyToId
         : replyDraft?.id;
+      const sendAsIdentityId = composingIdentityOf(active, options);
       const fallbackText = t("messages:attachments.documentFallbackText");
       // See `useMessageSendActions.send`: a real `at` plus a final clock
       // label from the first paint, so the ack cannot resize the bubble,
@@ -163,6 +184,7 @@ export function useAttachmentMessageSendActions({
         status: "sending",
         localId,
         replyTo,
+        sendAsIdentityId,
       });
       if (!options?.conversationId) setReplyDraft(null);
       deliver(
@@ -173,6 +195,8 @@ export function useAttachmentMessageSendActions({
         false,
         attachment,
         "document",
+        undefined,
+        sendAsIdentityId,
       );
     },
     [

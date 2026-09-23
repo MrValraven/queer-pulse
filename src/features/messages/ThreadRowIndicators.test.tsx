@@ -103,3 +103,64 @@ describe("ThreadRowIndicators: mute + mentions-only", () => {
     expect(screen.queryByText("Mentions only")).not.toBeInTheDocument();
   });
 });
+
+describe("ThreadRowIndicators: business mailbox claim tag", () => {
+  it("tags an unclaimed seated row", async () => {
+    render(
+      <ThreadRowIndicators
+        {...baseProps}
+        isMuted={false}
+        mutedUntilTime={undefined}
+        isMentionsOnly={false}
+        claimStatus="unclaimed"
+      />,
+      { wrapper },
+    );
+    expect(await screen.findByText("Unclaimed")).toBeInTheDocument();
+  });
+
+  it("tags a row the viewer holds", async () => {
+    render(
+      <ThreadRowIndicators
+        {...baseProps}
+        isMuted={false}
+        mutedUntilTime={undefined}
+        isMentionsOnly={false}
+        claimStatus="mine"
+      />,
+      { wrapper },
+    );
+    expect(await screen.findByText("Yours")).toBeInTheDocument();
+  });
+
+  it("names the colleague holding the row", async () => {
+    render(
+      <ThreadRowIndicators
+        {...baseProps}
+        isMuted={false}
+        mutedUntilTime={undefined}
+        isMentionsOnly={false}
+        claimStatus="theirs"
+        claimantFirstName="Rui"
+      />,
+      { wrapper },
+    );
+    expect(await screen.findByText("With Rui")).toBeInTheDocument();
+  });
+
+  it("shows no claim tag on a personal row", async () => {
+    render(
+      <ThreadRowIndicators
+        {...baseProps}
+        isMuted={false}
+        mutedUntilTime={undefined}
+        isMentionsOnly={false}
+      />,
+      { wrapper },
+    );
+    await waitFor(() => {
+      expect(screen.getByText("10:00")).toBeInTheDocument();
+    });
+    expect(screen.queryByText(/Unclaimed|Yours|With /)).not.toBeInTheDocument();
+  });
+});

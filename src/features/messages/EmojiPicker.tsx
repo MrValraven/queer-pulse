@@ -1,9 +1,19 @@
 // src/features/messages/EmojiPicker.tsx
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Suspense,
+  lazy,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDebouncedValue } from "../../shared/hooks/useDebouncedValue";
 import { useEmojiDataset } from "./useEmojiDataset";
 import { useEmojiGridVirtualizer } from "./useEmojiGridVirtualizer";
+import { useEmojiPickerSectionJump } from "./useEmojiPickerSectionJump";
 import { EmojiCategoryRail } from "./EmojiCategoryRail";
 import { EmojiGrid } from "./EmojiGrid";
 import { filterEmojiEntries, normalizeEmojiQuery } from "./emojiSearch";
@@ -18,12 +28,128 @@ import {
   recordEmojiRecent,
   type RecentEmoji,
 } from "./emojiRecents";
+import type { StickerResponse } from "../../shared/contracts/contracts";
 import styles from "./EmojiPicker.module.css";
+
+// Dynamically imported, mirroring `useEmojiDataset.ts`'s own precedent for
+// keeping weight out of the composer's own bundle: most opens of this panel
+// never touch the Stickers tab at all, so its chunk (the sticker grid plus
+// `useStickerPacks`) only loads the first time that tab is actually clicked.
+const StickerPicker = lazy(() =>
+  import("./StickerPicker").then((module) => ({
+    default: module.StickerPicker,
+  })),
+);
+
+type EmojiPickerTab = "emoji" | "stickers";
+
+interface EmojiPickerTabRailProps {
+  activeTab: EmojiPickerTab;
+  onSelectTab: (tab: EmojiPickerTab) => void;
+  emojiTabId: string;
+  stickersTabId: string;
+  panelId: string;
+}
+
+/** The WAI-ARIA tabs pattern's arrow-key targets: ArrowRight/ArrowLeft move
+ *  to the other tab (with exactly two tabs, "next" and "previous" both land
+ *  on the same place, which is wrap-around already handled for free), Home
+ *  selects the first, End the last. Any other key is left alone. A plain
+ *  function (not a hook): it reads no component state of its own. */
+function nextTabForArrowKey(
+  key: string,
+  activeTab: EmojiPickerTab,
+): EmojiPickerTab | null {
+  if (key === "ArrowRight" || key === "ArrowLeft") {
+    return activeTab === "emoji" ? "stickers" : "emoji";
+  }
+  if (key === "Home") return "emoji";
+  if (key === "End") return "stickers";
+  return null;
+}
+
+/** The two-item segmented rail (Emoji / Stickers) sitting above the existing
+ *  category rail, a real ARIA tablist so the two tabs read correctly to
+ *  assistive tech: `role="tab"` with `aria-selected`, a roving tab stop (only
+ *  the active tab is in the Tab order), `aria-controls` pointing at the one
+ *  shared content region both tabs swap in and out of, and the matching
+ *  ArrowLeft/ArrowRight/Home/End handler the roving tab stop exists to
+ *  support: without it, Tab alone can reach the active tab but nothing else
+ *  can reach the inactive one from the keyboard at all. */
+function EmojiPickerTabRail({
+  activeTab,
+  onSelectTab,
+  emojiTabId,
+  stickersTabId,
+  panelId,
+}: EmojiPickerTabRailProps) {
+  const { t } = useTranslation();
+  const emojiButtonRef = useRef<HTMLButtonElement>(null);
+  const stickersButtonRef = useRef<HTMLButtonElement>(null);
+
+  function handleTabRailKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+    const nextTab = nextTabForArrowKey(event.key, activeTab);
+    if (!nextTab) return;
+    event.preventDefault();
+    onSelectTab(nextTab);
+    const nextButtonRef =
+      nextTab === "emoji" ? emojiButtonRef : stickersButtonRef;
+    nextButtonRef.current?.focus();
+  }
+
+  return (
+    <div
+      className={styles.tabRail}
+      role="tablist"
+      aria-label={t("messages:emoji.tabsLabel")}
+    >
+      <button
+        ref={emojiButtonRef}
+        id={emojiTabId}
+        type="button"
+        role="tab"
+        className={
+          activeTab === "emoji"
+            ? `${styles.tabBtn} ${styles.tabBtnActive}`
+            : styles.tabBtn
+        }
+        aria-selected={activeTab === "emoji"}
+        aria-controls={panelId}
+        tabIndex={activeTab === "emoji" ? 0 : -1}
+        onClick={() => onSelectTab("emoji")}
+        onKeyDown={handleTabRailKeyDown}
+      >
+        {t("messages:emoji.tabEmoji")}
+      </button>
+      <button
+        ref={stickersButtonRef}
+        id={stickersTabId}
+        type="button"
+        role="tab"
+        className={
+          activeTab === "stickers"
+            ? `${styles.tabBtn} ${styles.tabBtnActive}`
+            : styles.tabBtn
+        }
+        aria-selected={activeTab === "stickers"}
+        aria-controls={panelId}
+        tabIndex={activeTab === "stickers" ? 0 : -1}
+        onClick={() => onSelectTab("stickers")}
+        onKeyDown={handleTabRailKeyDown}
+      >
+        {t("messages:emoji.tabStickers")}
+      </button>
+    </div>
+  );
+}
 
 interface EmojiPickerProps {
   /** Inserts the picked glyph into the composer draft — see `useInsertEmoji`
    *  (owned by `EmojiComposerButton`) for why this never touches DOM focus. */
   onPick: (glyph: string) => void;
+  /** Sending a sticker from the Stickers tab. Absent on a surface that
+   *  cannot send one, in which case the tab is not rendered at all. */
+  onPickSticker?: (sticker: StickerResponse) => void;
 }
 
 /**
@@ -53,8 +179,16 @@ interface EmojiPickerProps {
  * LOCAL Escape listener here turned out not to reliably fire at all: a real
  * browser trace showed the outer listener always wins the race and unmounts
  * this component first).
+ *
+ * `onPickSticker` present adds a two-item segmented rail (a real ARIA
+ * tablist, `EmojiPickerTabRail`) above the category rail: Emoji and
+ * Stickers, defaulting to Emoji. The Stickers tab swaps the whole content
+ * region for `StickerPicker` (lazily imported, the same `useEmojiDataset`
+ * chunk-splitting precedent), rendered `isEmbedded` so it fills this panel's
+ * own chrome instead of drawing a second one: this outer `.panel` and its
+ * `role="dialog"` stay mounted across the tab switch either way.
  */
-export function EmojiPicker({ onPick }: EmojiPickerProps) {
+export function EmojiPicker({ onPick, onPickSticker }: EmojiPickerProps) {
   const { t, language } = useTranslation();
   const datasetState = useEmojiDataset();
   const [recents, setRecents] = useState<RecentEmoji[]>(() =>
@@ -64,10 +198,20 @@ export function EmojiPicker({ onPick }: EmojiPickerProps) {
   const debouncedQuery = useDebouncedValue(query, 250);
   const normalizedQuery = normalizeEmojiQuery(debouncedQuery);
   const searchRef = useRef<HTMLInputElement>(null);
+  // Which tab is showing. Holding this here (rather than in a caller) keeps
+  // the tab a purely visual affordance: closing and reopening the popover
+  // always lands back on Emoji, the same way the search field always clears.
+  const [activeTab, setActiveTab] = useState<EmojiPickerTab>("emoji");
+  const idPrefix = useId();
+  const emojiTabId = `${idPrefix}-emoji-tab`;
+  const stickersTabId = `${idPrefix}-stickers-tab`;
+  const tabPanelId = `${idPrefix}-tabpanel`;
 
   useEffect(() => {
-    searchRef.current?.focus();
-  }, []);
+    // Focusing the search field only makes sense on the Emoji tab; the
+    // Stickers tab has no field of its own to steal focus from.
+    if (activeTab === "emoji") searchRef.current?.focus();
+  }, [activeTab]);
 
   // What the rail's tabs are built from: the real category list, derived
   // without any reference to the query, so searching never reshapes it.
@@ -99,92 +243,20 @@ export function EmojiPicker({ onPick }: EmojiPickerProps) {
     activeSectionKey,
   } = useEmojiGridVirtualizer(sections);
 
-  // The section a rail jump is currently sweeping toward, held separately
-  // from `activeSectionKey` so the rail can show that target immediately
-  // instead of waiting for the scroll-spy to catch up. A `behavior: "smooth"`
-  // jump takes a few hundred ms and strobes through every section it passes
-  // over on the way; pinning the rail to the target for that stretch (via
-  // `pendingSectionKey ?? activeSectionKey` below) is what prevents that
-  // strobe.
-  const [pendingSectionKey, setPendingSectionKey] = useState<string | null>(
-    null,
-  );
-  const pendingSectionTimeoutRef = useRef<
-    ReturnType<typeof setTimeout> | undefined
-  >(undefined);
-  // What `sections` was as of the last render, purely so the render-time
-  // reset below can detect a reshape (a search starting/ending swaps the
-  // whole list). Held in state rather than a ref: this codebase's
-  // `react-hooks/refs` rule forbids reading or writing a ref's `current`
-  // during render (only effects/handlers may touch one), so the plain
-  // `useState` "previous value" comparison React's own docs use for
-  // adjusting state during render is the correct tool here, not a ref.
-  const [previousSections, setPreviousSections] = useState(sections);
-
-  // Clears the pending key the moment either condition below holds, using
-  // React's sanctioned "adjust state while rendering" idiom (the same shape
-  // `EmojiGrid.tsx`'s own `clampedActiveRow` clamp already uses) rather than
-  // a `useEffect`: a `setState` called synchronously in an effect body is
-  // itself a redundant extra render pass the lint rule `set-state-in-effect`
-  // flags, and both checks below are cheap enough to run on every render:
-  //   1. The scroll-spy actually reached the pending section, the ordinary,
-  //      happy-path resolution of a jump.
-  //   2. `sections` reshaped since the jump was issued, so the row index it
-  //      targeted is stale the instant that happens, so the pending
-  //      highlight is dropped rather than risk pointing at a section that
-  //      may not even exist in the new list.
-  if (pendingSectionKey !== null && activeSectionKey === pendingSectionKey) {
-    setPendingSectionKey(null);
-  }
-  if (sections !== previousSections) {
-    setPreviousSections(sections);
-    if (pendingSectionKey !== null) {
-      setPendingSectionKey(null);
-    }
-  }
-
-  // Safety net: a pending key must never wedge the rail on a section it can
-  // never reach, e.g. the user scrolls away mid-animation, or the target
-  // section is short enough that the spy skips past it as "active" without
-  // ever landing exactly on it as topmost. A generous timeout (longer than
-  // any realistic smooth-scroll duration) clears it unconditionally; this
-  // genuinely is effect territory (it subscribes to an external timer and
-  // must clean it up), unlike the two render-time resets above.
-  useEffect(() => {
-    if (pendingSectionKey === null) return;
-    pendingSectionTimeoutRef.current = setTimeout(() => {
-      setPendingSectionKey(null);
-    }, 1000);
-    return () => clearTimeout(pendingSectionTimeoutRef.current);
-  }, [pendingSectionKey]);
+  // The rail's jump-to-section bookkeeping, split into its own hook to keep
+  // this component under the line cap; see that file's own doc.
+  const { pendingSectionKey, handleSelectSection } = useEmojiPickerSectionJump({
+    sections,
+    sectionFirstRowIndex,
+    activeSectionKey,
+    scrollToIndex: rowVirtualizer.scrollToIndex,
+    onBeforeJump: () => setQuery(""),
+  });
 
   function handlePick(item: EmojiGridItem) {
     recordEmojiRecent(item);
     setRecents(loadEmojiRecents());
     onPick(item.glyph);
-  }
-
-  function handleSelectSection(sectionKey: string) {
-    // A category tab is also the way out of a search — the grid is showing
-    // one flat "results" list, and picking a group plainly means "show me the
-    // groups again". The jump itself then only applies when the grid already
-    // HAS that group as rows: mid-search `sectionFirstRowIndex` holds nothing
-    // but "results", so the guard below returns and the clear above is the
-    // whole of what the click does. Deliberately not deferred until the
-    // (debounced) query catches up 250ms later: the machinery to hold a jump
-    // open across that reshape costs more than it buys, since clearing a
-    // search already lands the grid at the top of the category list.
-    setQuery("");
-    const rowIndex = sectionFirstRowIndex[sectionKey];
-    if (rowIndex === undefined) return;
-    setPendingSectionKey(sectionKey);
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    rowVirtualizer.scrollToIndex(rowIndex, {
-      align: "start",
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
   }
 
   return (
@@ -193,40 +265,75 @@ export function EmojiPicker({ onPick }: EmojiPickerProps) {
       role="dialog"
       aria-label={t("messages:emoji.panelLabel")}
     >
-      <EmojiCategoryRail
-        sections={categorySections}
-        onSelectSection={handleSelectSection}
-        // Nothing reads as current mid-search: the grid's only section is the
-        // synthetic "results" one, whose key matches no tab.
-        activeSectionKey={pendingSectionKey ?? activeSectionKey}
-      />
-      <input
-        ref={searchRef}
-        type="search"
-        className={styles.search}
-        placeholder={t("messages:emoji.searchPlaceholder")}
-        aria-label={t("messages:emoji.searchPlaceholder")}
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-      />
-      {datasetState.status === "loading" && (
-        <p className={styles.state}>{t("messages:emoji.loading")}</p>
-      )}
-      {datasetState.status === "error" && (
-        <p className={styles.state}>{t("messages:emoji.loadError")}</p>
-      )}
-      {datasetState.status === "ready" && rows.length === 0 && (
-        <p className={styles.state}>{t("messages:emoji.empty")}</p>
-      )}
-      {datasetState.status === "ready" && rows.length > 0 && (
-        <EmojiGrid
-          containerRef={containerRef}
-          rowVirtualizer={rowVirtualizer}
-          rows={rows}
-          columnCount={columnCount}
-          language={language}
-          onPick={handlePick}
+      {/* Rendered only when this surface can actually send a sticker, so no
+          surface grows a tab that leads nowhere. */}
+      {onPickSticker && (
+        <EmojiPickerTabRail
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
+          emojiTabId={emojiTabId}
+          stickersTabId={stickersTabId}
+          panelId={tabPanelId}
         />
+      )}
+      {activeTab === "stickers" && onPickSticker ? (
+        <div
+          id={tabPanelId}
+          role="tabpanel"
+          aria-labelledby={stickersTabId}
+          className={styles.tabPanel}
+        >
+          <Suspense
+            fallback={
+              <p className={styles.state}>{t("messages:sticker.loading")}</p>
+            }
+          >
+            <StickerPicker onPick={onPickSticker} isEmbedded />
+          </Suspense>
+        </div>
+      ) : (
+        <div
+          id={tabPanelId}
+          role="tabpanel"
+          aria-labelledby={onPickSticker ? emojiTabId : undefined}
+          className={styles.tabPanel}
+        >
+          <EmojiCategoryRail
+            sections={categorySections}
+            onSelectSection={handleSelectSection}
+            // Nothing reads as current mid-search: the grid's only section is
+            // the synthetic "results" one, whose key matches no tab.
+            activeSectionKey={pendingSectionKey ?? activeSectionKey}
+          />
+          <input
+            ref={searchRef}
+            type="search"
+            className={styles.search}
+            placeholder={t("messages:emoji.searchPlaceholder")}
+            aria-label={t("messages:emoji.searchPlaceholder")}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          {datasetState.status === "loading" && (
+            <p className={styles.state}>{t("messages:emoji.loading")}</p>
+          )}
+          {datasetState.status === "error" && (
+            <p className={styles.state}>{t("messages:emoji.loadError")}</p>
+          )}
+          {datasetState.status === "ready" && rows.length === 0 && (
+            <p className={styles.state}>{t("messages:emoji.empty")}</p>
+          )}
+          {datasetState.status === "ready" && rows.length > 0 && (
+            <EmojiGrid
+              containerRef={containerRef}
+              rowVirtualizer={rowVirtualizer}
+              rows={rows}
+              columnCount={columnCount}
+              language={language}
+              onPick={handlePick}
+            />
+          )}
+        </div>
       )}
     </div>
   );

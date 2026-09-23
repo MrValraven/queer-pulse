@@ -10,6 +10,8 @@ import {
   upsertMessage,
 } from "../../shared/api/messageCache";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
+import type { MessageResponse } from "../../shared/contracts/contracts";
 import {
   sendDocumentMessage,
   sendMessage as postMessage,
@@ -363,6 +365,52 @@ function writeOutboxEntryOutcome(
   writeOutboxRaw(next, scopeId);
 }
 
+/** POST one stored outbox entry, rebuilding the payload its original send
+ *  used: a document routes to `sendDocumentMessage`; a GIF or image carries
+ *  its real attachment (`sendAttachment` first); a sticker sends its bare
+ *  `{kind, stickerId}` (the id lives on its attachment, see `retrySend` in
+ *  `useMessageSendActions.ts`); anything else is a text send. Every send
+ *  carries `entry.sendAsIdentityId`, the identity the entry was composed as
+ *  (see `outbox.ts`), whichever mailbox is open now. Exported for tests. */
+export function sendOutboxEntry(
+  conversationId: string,
+  localId: string,
+  entry: ChatMessage,
+): Promise<MessageResponse> {
+  const attachment = entry.sendAttachment ?? entry.attachment;
+  const mediaKind = mediaKindOf(entry);
+  if (attachment && isDocumentAttachment(attachment)) {
+    return sendDocumentMessage(
+      conversationId,
+      entry.text,
+      attachment,
+      entry.replyTo?.id,
+      localId,
+      entry.forwarded,
+      entry.sendAsIdentityId,
+    );
+  }
+  const stickerId =
+    attachment && isStickerAttachment(attachment)
+      ? attachment.stickerId
+      : undefined;
+  return postMessage(
+    conversationId,
+    entry.text,
+    entry.replyTo?.id,
+    localId,
+    entry.forwarded,
+    stickerId ? undefined : attachment,
+    stickerId
+      ? "sticker"
+      : mediaKind === "gif" || mediaKind === "image"
+        ? mediaKind
+        : undefined,
+    stickerId,
+    entry.sendAsIdentityId,
+  );
+}
+
 /** Attempt one entry's delivery straight against the API (no react-query
  *  mutation object exists outside a component) and patch the outcome into
  *  BOTH the shared react-query cache (`upsertMessage` and
@@ -418,30 +466,8 @@ async function attemptDelivery(
   // here too even though `runScopeReplay` already filters placeholder ids out
   // of its work list, as a second line of defence.
   if (!isServerConversationId(conversationId)) return false;
-  const attachment = current.sendAttachment ?? current.attachment;
-  const mediaKind = mediaKindOf(current);
   try {
-    const response =
-      attachment && isDocumentAttachment(attachment)
-        ? await sendDocumentMessage(
-            conversationId,
-            current.text,
-            attachment,
-            current.replyTo?.id,
-            localId,
-            current.forwarded,
-          )
-        : await postMessage(
-            conversationId,
-            current.text,
-            current.replyTo?.id,
-            localId,
-            current.forwarded,
-            attachment,
-            mediaKind === "gif" || mediaKind === "image"
-              ? mediaKind
-              : undefined,
-          );
+    const response = await sendOutboxEntry(conversationId, localId, current);
     if (!isScopeStillActive()) return false;
     // Mark delivered in memory FIRST, unconditionally: even if the storage
     // removal below silently fails (quota), this tab must never attempt this

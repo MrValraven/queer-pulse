@@ -29,7 +29,8 @@ export type UploadKind =
   | "community-avatar"
   | "event-cover"
   | "message-image"
-  | "message-document";
+  | "message-document"
+  | "sticker";
 
 /**
  * ============================================================================

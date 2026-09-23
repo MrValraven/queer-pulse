@@ -3,6 +3,7 @@ import { FiFile, FiImage } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import { renderWithLinks } from "./linkify";
 import {
   AttachmentPreviewUnavailable,
@@ -49,6 +50,29 @@ export function MessageActionOverlayMedia({
     sharedStyles.attachmentGroup,
     styles.overlayMediaClone,
   ].join(" ");
+
+  // A sticker clone: just the sticker itself, no caption row (it never
+  // carries one) and no tap target. This clone is a static visual for the
+  // duration of the long-press overlay; Save and the photo viewer stay off
+  // it, since neither applies to a sticker.
+  if (message.kind === "sticker") {
+    const stickerAttachment =
+      message.attachment && isStickerAttachment(message.attachment)
+        ? message.attachment
+        : null;
+    if (!stickerAttachment) return null;
+    return (
+      <div className={groupClassName}>
+        <img
+          className={sharedStyles.stickerImage}
+          src={stickerAttachment.url}
+          alt={t("messages:sticker.imageAlt", {
+            label: stickerAttachment.label,
+          })}
+        />
+      </div>
+    );
+  }
 
   if (message.kind === "document") {
     const documentAttachment =

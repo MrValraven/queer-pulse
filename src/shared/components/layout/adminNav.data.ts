@@ -25,10 +25,12 @@ import {
   FiMapPin,
   FiMessageSquare,
   FiPhoneCall,
+  FiPlusSquare,
   FiRadio,
   FiServer,
   FiSettings,
   FiShield,
+  FiSmile,
   FiTag,
   FiThumbsUp,
   FiType,
@@ -311,6 +313,21 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminListings,
         capabilities: ["directory_moderator"],
         icon: FiFileText,
+        // Exact match only, the same reason the resource-guide console below
+        // takes it: the create page sits at `/admin/listings/new`, so prefix
+        // matching lit both rows at once while only one was open.
+        end: true,
+      },
+      {
+        // Staff authoring a listing for a business that has not joined yet.
+        // `POST /admin/listings` carries an empty `@StaffRoles()` alongside
+        // `@Roles(Admin)`, so no grant reaches it: hence `isAdminOnly` and
+        // no `capabilities`, which together keep a `directory_moderator`
+        // holder from being offered a page their POST would be refused from.
+        labelKey: "shared:adminNav.items.listingNew",
+        to: routes.adminListingNew,
+        icon: FiPlusSquare,
+        isAdminOnly: true,
       },
       {
         labelKey: "shared:adminNav.items.housingListings",
@@ -533,6 +550,14 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "shared:adminNav.items.media",
         to: routes.adminMedia,
         icon: FiImage,
+      },
+      {
+        // The backend controller is `@Roles(Admin)` alone, so a moderator's
+        // rail must not offer it.
+        labelKey: "shared:adminNav.items.stickerPacks",
+        to: routes.adminStickerPacks,
+        icon: FiSmile,
+        isAdminOnly: true,
       },
       {
         labelKey: "admin:settings.breadcrumb",

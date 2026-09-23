@@ -149,6 +149,9 @@ function renderLiveFeedCard(item: FeedItem, fmt: Formatters): React.ReactNode {
                 }
               : undefined
           }
+          // The source's parent, when it is a space (subcommunity), so the
+          // card can read "Parent, Space" (`FeedItemSource.parentName`).
+          parentName={item.source?.parentName ?? null}
         />
       );
     case "gathering":

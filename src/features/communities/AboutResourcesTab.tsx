@@ -2,6 +2,7 @@ import type { CommunityDetail } from "./communityDetails";
 import type { LivingCommunity } from "./community.model";
 import type { CommunityRole } from "./membership.types";
 import { CommunityResourcesSection } from "./CommunityResourcesSection";
+import { CommunityRulesList } from "./CommunityRulesList";
 import { RULE_PRESET_KEYS } from "./startCommunity/startCommunity.data";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import detail from "./CommunityDetailPage.module.css";
@@ -15,7 +16,7 @@ export function AboutResourcesTab({
 }: {
   info: CommunityDetail;
   living: LivingCommunity;
-  /** The viewer's roster role — owner, co-owner and moderator get the shelf
+  /** The viewer's roster role: owner, co-owner and moderator get the shelf
    *  editor; everybody else reads the shelf as it always was. */
   role: CommunityRole | null;
   isMember: boolean;
@@ -39,20 +40,44 @@ export function AboutResourcesTab({
         </div>
       ))}
 
-      <div className={detail.secLbl}>
-        {t("communities:detail.aboutResources.houseRules")}
-      </div>
-      <ol className={styles.rules}>
-        {living.rules.map((r, i) => (
-          <li className={styles.rule} key={r}>
-            <span className={styles.ruleNum}>{i + 1}</span>
-            {/* Preset rules are stored as i18n keys (a stable, language-
-                independent id); custom rules are content typed by the member
-                and rendered verbatim. Mirrors StepTone's covenant editor. */}
-            <span>{RULE_PRESET_KEYS.includes(r) ? t(r) : r}</span>
-          </li>
-        ))}
-      </ol>
+      {living.inheritedRules ? (
+        // A space (subcommunity) shows its parent's rules first, since it
+        // inherits them whole, then its own additions on top. Both lists go
+        // through `CommunityRulesList`, the same preset-key resolution the
+        // join wizard and the founding wizard use, so a reader never sees a
+        // raw i18n key on one surface and the sentence on another.
+        <>
+          <div className={detail.secLbl}>
+            {t("communities:spaces.rules.fromParent", {
+              name: living.parent?.name ?? "",
+            })}
+          </div>
+          <CommunityRulesList rules={living.inheritedRules.rules} />
+
+          <div className={detail.secLbl}>
+            {t("communities:spaces.rules.spaceAdds")}
+          </div>
+          <CommunityRulesList rules={living.rules} />
+        </>
+      ) : (
+        <>
+          <div className={detail.secLbl}>
+            {t("communities:detail.aboutResources.houseRules")}
+          </div>
+          <ol className={styles.rules}>
+            {living.rules.map((r, i) => (
+              <li className={styles.rule} key={r}>
+                <span className={styles.ruleNum}>{i + 1}</span>
+                {/* Preset rules are stored as i18n keys (a stable, language-
+                    independent id); custom rules are content typed by the
+                    member and rendered verbatim. Mirrors StepTone's covenant
+                    editor. */}
+                <span>{RULE_PRESET_KEYS.includes(r) ? t(r) : r}</span>
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
 
       {/* The shelf reads the live `GET /communities/:slug/resources` (demo
           keeps the mock fixtures) and still renders nothing at all when a

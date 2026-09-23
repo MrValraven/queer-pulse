@@ -2,6 +2,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useIsOnline } from "../../shared/api/realtime";
 import { useDemoPresenceSimulation } from "./useDemoSignalSimulation";
 import { useMessageReceipts } from "./useMessageReceipts";
+import { shouldShowCounterpartPresence } from "./mailboxes/mailboxPresence";
 import type { Conversation } from "./data";
 
 /**
@@ -28,9 +29,12 @@ export function useCounterpartStatus(
   // Presence for JUST this counterpart: re-renders only on THEIR status flip,
   // not every presence frame for every other member (see `useIsOnline`).
   const counterpartOnline = useIsOnline(active.otherParticipantId);
+  // A business, persona or company never shows presence, whatever a presence
+  // frame, a demo row or a stale cache says (`shouldShowCounterpartPresence`).
   const isCounterpartOnline =
-    (!!active.otherParticipantId && counterpartOnline) ||
-    (!active.otherParticipantId && !!active.online);
+    shouldShowCounterpartPresence(active) &&
+    ((!!active.otherParticipantId && counterpartOnline) ||
+      (!active.otherParticipantId && !!active.online));
 
   const { counterpartLastReadAt, counterpartDeliveredAt } = useMessageReceipts(
     myUserId ?? null,

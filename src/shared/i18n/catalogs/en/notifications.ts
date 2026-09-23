@@ -981,4 +981,31 @@ export const notifications: Catalog = {
     "Someone asked a question on {listingName}.",
   "type.listing_public_question.meta": "Question on your listing",
   "type.listing_public_question.subjectFallback": "your listing",
+
+  // ── Admin-authored listings: ownership offers and co-manager seats ────────
+  // Four rows off one feature. `listing_co_manager_invite` goes to the person
+  // being invited; `_accepted` and `_declined` go back to whoever invited
+  // them; `listing_owner_offer` goes to the member a staff-authored listing
+  // has been put in the name of. All four interpolate {name} and
+  // {listingName}, and all four share the two fallbacks below (see
+  // `listingNameToken` and `listingActorNameToken` in formatNotification.ts),
+  // so a row whose actor or business is missing still reads as a whole
+  // sentence and never shows a bare brace token. None of them carries an
+  // answer: the offer is accepted, and the affirming pledge agreed to, on the
+  // member's own places panel. Nothing here says anything is emailed or on
+  // its way: QueerPulse sends no email.
+  "type.listing_co_manager_invite.text":
+    "{name} invited you to help manage {listingName}.",
+  "type.listing_co_manager_invite.meta": "Co-manager invite",
+  "type.listing_co_manager_invite_accepted.text":
+    "{name} accepted your invite to co-manage {listingName}.",
+  "type.listing_co_manager_invite_accepted.meta": "Co-manager invite accepted",
+  "type.listing_co_manager_invite_declined.text":
+    "{name} declined your invite to co-manage {listingName}.",
+  "type.listing_co_manager_invite_declined.meta": "Co-manager invite declined",
+  "type.listing_owner_offer.text":
+    "{name} has offered you ownership of {listingName}.",
+  "type.listing_owner_offer.meta": "Ownership offer",
+  "type.listing_co_manager_invite.listingNameFallback": "this listing",
+  "type.listing_co_manager_invite.nameFallback": "Someone",
 };

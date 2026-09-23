@@ -102,7 +102,14 @@ export const routes = {
   adminLegalRequests: "/admin/legal-requests",
   adminSafeSpaces: "/admin/safe-spaces",
   adminListings: "/admin/listings",
+  /** Admin-only. Backend: POST /admin/listings, `@StaffRoles()` with
+   *  `@Roles(Admin)`, so a `directory_moderator` grant does NOT reach it. */
+  adminListingNew: "/admin/listings/new",
   adminMedia: "/admin/media",
+  /** The sticker pack builder. Admin-only: `AdminStickersController` is
+   *  `@Roles(Admin)` alone, so this path is deliberately absent from
+   *  MOD_ACCESSIBLE_ADMIN_PATTERNS. */
+  adminStickerPacks: "/admin/sticker-packs",
   adminInvites: "/admin/invites",
   adminGovernance: "/admin/governance",
   adminRoadmap: "/admin/roadmap",

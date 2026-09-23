@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ApiError } from "../../shared/api/client";
 import type { Person } from "./communityDetails";
+import type { JoinCommunityPayload } from "./api/communityJoin.api";
 import { useCommunity } from "./api/useCommunity";
 import { useRelatedCommunities } from "./api/useRelatedCommunities";
 import { useRoster } from "./api/useRoster";
@@ -32,12 +34,22 @@ export function useCommunityDetailState() {
   const { isMember, hasRequested, roleIn } = useCommunityMembership();
   const [joining, setJoining] = useState(false);
   const [editing, setEditing] = useState(false);
+  // A space (subcommunity) join proactively gates on `living.parent.isMember`
+  // below, which reads the page's own load. This flag covers the race where
+  // the viewer left the parent between that load and clicking Join: it flips
+  // true the moment the join mutation itself comes back with the coded 403,
+  // so the CTA still lands on "Join {parent} first" with a way forward.
+  const [
+    hasParentMembershipRequiredFromJoinAttempt,
+    setHasParentMembershipRequiredFromJoinAttempt,
+  ] = useState(false);
 
   const {
     community,
     detail,
     living: baseLiving,
     myRole,
+    isRosterMember: isRosterMemberFromSource,
     myJoinRequestStatus,
     invitedAt,
     editable,
@@ -53,16 +65,19 @@ export function useCommunityDetailState() {
   const { threads, paging: discussionPaging } = useCommunityDiscussions(slug);
   const related = useRelatedCommunities(slug, community?.type);
   // `GET /communities/:slug/pulse` is roster-member-only (403 otherwise), so
-  // it's only enabled once the viewer's own membership is known — computed
+  // it's only enabled once the viewer's own membership is known: computed
   // the same way `joined` is below, just ahead of that later derivation
   // (which needs `community`/`detail` to already be resolved, i.e. after the
   // early returns this hook call has to precede).
-  const isRosterMember = demoMode
+  // `myRole` is the effective role, so a parent's staff read a space's pulse
+  // too; `hasMemberAccess` is that reach, and `isRosterMember` (below) is the
+  // viewer's own roster row.
+  const hasMemberAccess = demoMode
     ? slug
       ? isMember(slug)
       : false
     : myRole != null;
-  const communityPulse = useCommunityPulse(slug, { enabled: isRosterMember });
+  const communityPulse = useCommunityPulse(slug, { enabled: hasMemberAccess });
   // PRD-145. The pulse's mirror image, and the two are never both live: a
   // roster member gets the full three-arm pulse (which includes this
   // community's members-only gatherings), and a prospective member gets the
@@ -71,7 +86,7 @@ export function useCommunityDetailState() {
   // was, because the pulse it read from was disabled for them. Demo mode calls
   // neither and keeps reading `baseLiving.events`.
   const nonMemberGatherings = useCommunityUpcomingGatherings(slug, {
-    enabled: !isRosterMember,
+    enabled: !hasMemberAccess,
   });
   // PRD-140. The detail DTO says THAT this viewer holds an invitation
   // (`invitedAt`); the id needed to decline it lives on `GET
@@ -111,7 +126,7 @@ export function useCommunityDetailState() {
 
   // Compose the enriched hub: roster + posts arrive from their own endpoints
   // (in demo they equal `baseLiving`'s, keeping this byte-for-byte). Events
-  // are the one field demo mode does NOT take from `communityPulse` — demo
+  // are the one field demo mode does NOT take from `communityPulse`: demo
   // keeps `baseLiving.events` (the `nextEventFromGathering`-mirrored mock),
   // exactly as before this endpoint existed.
   const living = baseLiving
@@ -122,7 +137,7 @@ export function useCommunityDetailState() {
         pulse: posts.pulse,
         events: demoMode
           ? baseLiving.events
-          : isRosterMember
+          : hasMemberAccess
             ? communityPulse.events
             : nonMemberGatherings.events,
       }
@@ -134,7 +149,7 @@ export function useCommunityDetailState() {
   // (the pulse query is disabled for them), which is what keeps the sidebar's
   // members-only cards off a non-member's page.
   const communityPulseForTabs =
-    demoMode || isRosterMember
+    demoMode || hasMemberAccess
       ? communityPulse
       : {
           ...communityPulse,
@@ -148,7 +163,7 @@ export function useCommunityDetailState() {
   // `useCommunityDiscussions` returns empty and the tab would show an
   // EmptyState where the synthetic thread used to render. In demo mode only,
   // fall back to the synthetic `detail.topicThread` when there are no real
-  // threads. Live mode always uses the real threads — an empty state there
+  // threads. Live mode always uses the real threads: an empty state there
   // is intentional.
   const discussionThreads =
     demoMode && threads.length === 0 && detail.topicThread
@@ -158,6 +173,11 @@ export function useCommunityDetailState() {
   // Membership CTA state: the session provider is the demo source of truth;
   // live mode reads the viewer's role/request straight off the detail DTO.
   const joined = demoMode ? (slug ? isMember(slug) : false) : myRole != null;
+  // `joined` follows the effective role and decides what the page shows. The
+  // Join/Leave CTA, the invitation, the notification control and the parent
+  // gate read the viewer's own roster row instead: a parent mod on a space
+  // they never joined can moderate it, and can still join it.
+  const isRosterMember = demoMode ? joined : isRosterMemberFromSource;
   const requested = demoMode
     ? slug
       ? hasRequested(slug)
@@ -179,7 +199,7 @@ export function useCommunityDetailState() {
   // PRD-140. A standing invitation only ever reaches a non-member, and only in
   // live mode. It replaces the join CTA with accept/decline, and for a
   // `private` community it is the only reason this page rendered at all.
-  const isInvited = !demoMode && !joined && invitedAt != null;
+  const isInvited = !demoMode && !isRosterMember && invitedAt != null;
 
   // Precedence: the enriched living data (flagship/live) → the community's own
   // join policy (created + live-card DTOs carry it) → the legacy `privateBadge`
@@ -211,12 +231,25 @@ export function useCommunityDetailState() {
   // Live only: the demo prototype has no invitation record, so its invite-tier
   // communities keep the join flow they have always had.
   const isInviteOnlyLocked =
-    !demoMode && !joined && !requested && !isInvited && tier === "invite";
+    !demoMode &&
+    !isRosterMember &&
+    !requested &&
+    !isInvited &&
+    tier === "invite";
+  // A space (subcommunity) can only be joined by someone already on the
+  // parent's roster (the backend refuses with `PARENT_MEMBERSHIP_REQUIRED`
+  // otherwise). `living.parent.isMember` is the viewer's own standing there,
+  // carried on the detail DTO, so no separate `/me/communities` lookup is needed.
+  // `hasParentMembershipRequiredFromJoinAttempt` covers the race where a join
+  // attempt itself comes back with that coded 403 (see its declaration above).
+  const isParentMembershipRequired =
+    (living?.parent != null && !living.parent.isMember && !isRosterMember) ||
+    hasParentMembershipRequiredFromJoinAttempt;
 
   const memberNum = parseInt(community.count, 10);
   const hasCount = !Number.isNaN(memberNum);
   // The real roster: live mode fetches it, flagship demo communities supply it,
-  // and a just-founded community has only its founder — so fall back to the
+  // and a just-founded community has only its founder, so fall back to the
   // organiser rather than fabricating a crowd that isn't there.
   const members: Person[] = roster.length > 0 ? roster : [detail.organiser];
   const heroAvatars = members.slice(0, 5);
@@ -229,6 +262,31 @@ export function useCommunityDetailState() {
     activeThisWeek: living?.stats.activeThisWeek ?? community.activeThisWeek,
   };
 
+  // Wraps `actions.onJoined`/`actions.onRequested` so a live 403 coded
+  // `PARENT_MEMBERSHIP_REQUIRED` (the parent-membership race described above
+  // `hasParentMembershipRequiredFromJoinAttempt`'s declaration) flips that
+  // flag as well as surfacing as a join failure. The error is
+  // rethrown either way, so `JoinModal`'s own refusal handling is unaffected.
+  const withParentMembershipGate = (
+    joinHandler: (payload: JoinCommunityPayload) => void | Promise<unknown>,
+  ) => {
+    return async (payload: JoinCommunityPayload) => {
+      try {
+        return await joinHandler(payload);
+      } catch (error) {
+        if (
+          error instanceof ApiError &&
+          error.status === 403 &&
+          (error.data as { code?: string } | undefined)?.code ===
+            "PARENT_MEMBERSHIP_REQUIRED"
+        ) {
+          setHasParentMembershipRequiredFromJoinAttempt(true);
+        }
+        throw error;
+      }
+    };
+  };
+
   return {
     status: "ready" as const,
     slug,
@@ -239,6 +297,7 @@ export function useCommunityDetailState() {
     living,
     discussionThreads,
     joined,
+    isRosterMember,
     requested,
     role,
     canEdit,
@@ -246,6 +305,7 @@ export function useCommunityDetailState() {
     transferOwnershipHref,
     isInvited,
     isInviteOnlyLocked,
+    isParentMembershipRequired,
     // Null while the invitations list is still in flight, so "Decline" waits
     // for it rather than firing at an id that does not exist yet.
     canDeclineInvite: standingInviteId != null,
@@ -269,6 +329,10 @@ export function useCommunityDetailState() {
     // `performLeave` / `performWithdrawRequest` / `performDeclineInvite`, the
     // three mutations and the three confirm-dialog flags all ride in here.
     ...actions,
+    // Overrides `actions.onJoined`/`onRequested` with the parent-membership
+    // gate above, so a coded 403 updates `isParentMembershipRequired` too.
+    onJoined: withParentMembershipGate(actions.onJoined),
+    onRequested: withParentMembershipGate(actions.onRequested),
     posts,
     discussionPaging,
     rosterResult,

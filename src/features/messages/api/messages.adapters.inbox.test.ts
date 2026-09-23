@@ -294,7 +294,7 @@ describe("groupMessages: local-day boundaries", () => {
         message({ id: "a", createdAt: "2026-09-14T08:00:00Z" }),
         message({ id: "b", createdAt: "2026-09-14T23:55:00Z" }),
       ],
-      null,
+      { myHandle: null, staffedIdentityIds: new Set() },
     );
     expect(groups).toHaveLength(1);
     expect(groups[0]!.items).toHaveLength(2);
@@ -307,7 +307,7 @@ describe("groupMessages: local-day boundaries", () => {
         message({ id: "a", createdAt: "2026-09-14T23:59:00Z" }),
         message({ id: "b", createdAt: "2026-09-15T00:01:00Z" }),
       ],
-      null,
+      { myHandle: null, staffedIdentityIds: new Set() },
     );
     expect(groups).toHaveLength(2);
     expect(groups[0]!.dayKey).toBe("2026-09-14");

@@ -287,6 +287,13 @@ export function detailDtoToCommunity(
     frozen: detailDto.frozen,
     archived: detailDto.archived,
     truncated: detailDto.truncated,
+    // Optional on the DTO (an older backend still types). Defaulted so a
+    // space feature this backend doesn't send yet reads as "off", and the
+    // spaces toggle in AdminCommunitySettings plus the parent line and spaces
+    // list in AdminCommunityDetail always get a defined value.
+    allowsSubcommunities: detailDto.allowsSubcommunities ?? false,
+    parent: detailDto.parent ?? null,
+    subcommunities: detailDto.subcommunities ?? [],
     // Still no backend field for either of these — see the card-path comment.
     join: "",
     code: "",

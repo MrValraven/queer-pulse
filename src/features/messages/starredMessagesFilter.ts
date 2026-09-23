@@ -35,7 +35,12 @@ function matchesStarredMessageType(
     case "all":
       return true;
     case "photos":
-      return item.kind === "image" || item.kind === "gif";
+      // A sticker is a media hit too: it has no text body of its own, so it
+      // belongs alongside photos/GIFs rather than falling through to
+      // nothing on this tab.
+      return (
+        item.kind === "image" || item.kind === "gif" || item.kind === "sticker"
+      );
     case "documents":
       return item.kind === "document";
     case "links":
@@ -58,15 +63,30 @@ function matchesStarredMessageType(
   }
 }
 
-/** The attachment's caption, empty for a plain-text hit or an uncaptioned one. */
+/** The attachment's caption, empty for a plain-text hit, an uncaptioned one,
+ *  or a sticker (its `StickerAttachmentResponse` shape carries no `caption`
+ *  property at all). Narrows with `"stickerId" in attachment` (unique to
+ *  that shape) rather than reading `.caption` off the raw wire union, which
+ *  no longer type-checks once a sticker is one of its three members. */
 function attachmentCaption(item: FilterableStarredMessage): string {
-  return item.attachment?.caption ?? "";
+  const attachment = item.attachment;
+  return attachment && !("stickerId" in attachment)
+    ? (attachment.caption ?? "")
+    : "";
 }
 
 /** The attachment's file name, only present on the document variant. */
 function attachmentFileName(item: FilterableStarredMessage): string {
   const attachment = item.attachment;
   return attachment && "fileName" in attachment ? attachment.fileName : "";
+}
+
+/** A starred sticker's label (`StickerAttachmentResponse.label`), the only
+ *  text it carries, so it stands in as the search snippet the way a
+ *  document's file name does above. Empty for every other hit. */
+function attachmentStickerLabel(item: FilterableStarredMessage): string {
+  const attachment = item.attachment;
+  return attachment && "stickerId" in attachment ? attachment.label : "";
 }
 
 function matchesStarredMessageQuery(
@@ -78,6 +98,7 @@ function matchesStarredMessageQuery(
     item.snippet,
     attachmentCaption(item),
     attachmentFileName(item),
+    attachmentStickerLabel(item),
     item.sender.displayName,
     item.conversationTitle,
   ];

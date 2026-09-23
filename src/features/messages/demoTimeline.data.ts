@@ -2,6 +2,7 @@
 import { activeLocale } from "../../shared/i18n/locale";
 import { clockLabel, localDayKey, timeLabel } from "./api/messages.adapters";
 import type { ChatMessage, Conversation } from "./data";
+import { isTypedByViewer } from "./viewerSideSender";
 
 // ── DEMO timeline ────────────────────────────────────────────────────────────
 // Every demo timestamp is an offset back from ONE anchor fixed at module load
@@ -113,7 +114,10 @@ const ACTIVE_VIEWER: DemoThreadViewer = { isViewerActiveParticipant: true };
 
 /**
  * The per-message flags exactly as `messaging-core.service.ts` computes them
- * for this viewer (ENG-241, ENG-254). The demo viewer is never staff.
+ * for this viewer (ENG-241, ENG-254). The demo viewer holds no platform staff
+ * role, and a business reply a colleague typed (`isSentByViewer: false`) sits
+ * on the viewer's side while staying someone else's message: the viewer may
+ * report it, and Edit and Delete stay off it.
  * - canPin: not deleted, and the viewer is an active participant.
  * - canEdit: not deleted, not a system pill, the viewer authored it, inside
  *   `EDIT_WINDOW_MS`, and the viewer is an active participant.
@@ -135,7 +139,7 @@ function serverFlags(
   const isSystemMessage = seed.kind === "system";
   const isAuthor = isSystemMessage
     ? seed.systemEvent?.actorIsMe === true
-    : seed.from === "me";
+    : isTypedByViewer(seed);
   const isWithinEditWindow =
     DEMO_ANCHOR_MS - new Date(seed.at).getTime() <= EDIT_WINDOW_MS;
   return {

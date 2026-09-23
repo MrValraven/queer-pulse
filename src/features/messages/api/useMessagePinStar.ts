@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -27,6 +27,12 @@ import type {
 } from "../../../shared/contracts/contracts";
 import type { StarredMessageFilterType } from "../starredMessagesFilter";
 import {
+  belongsToMailbox,
+  isNotStaffError,
+  type ConversationListScope,
+} from "../mailboxes/mailboxScope";
+import { useActiveMailbox } from "../mailboxes/useActiveMailbox";
+import {
   demoPinnedMessages,
   readDemoStarredMessages,
   rememberDemoStarToggle,
@@ -36,6 +42,7 @@ import {
   DemoActionRefusedError,
 } from "./demoActionGuards";
 import {
+  findDemoConversation,
   findDemoConversationIdForMessage,
   readDemoThread,
 } from "./demoThreadCache";
@@ -89,6 +96,24 @@ function mergeStarredMessagesPages(
   };
 }
 
+/** Demo starred, narrowed to the active mailbox's threads the way the live
+ *  `as` query param narrows the server's list. A thread the registry does not
+ *  hold (created this session) is personal. */
+function demoStarredInMailbox(
+  starred: StarredMessagesResponse,
+  mailboxScope: ConversationListScope,
+): StarredMessagesResponse {
+  const isInMailbox = (conversationId: string) =>
+    belongsToMailbox(findDemoConversation(conversationId) ?? {}, mailboxScope);
+  return {
+    ...starred,
+    items: starred.items.filter((item) => isInMailbox(item.conversationId)),
+    conversations: starred.conversations.filter((group) =>
+      isInMailbox(group.conversationId),
+    ),
+  };
+}
+
 /**
  * Forward / Pin / Star data hooks. Each branches on `demoMode`: live mode calls
  * the API then patches/refetches only the affected keys (never a blanket thread
@@ -100,6 +125,13 @@ function mergeStarredMessagesPages(
  */
 
 const EMPTY_PINS: MessageResponse[] = [];
+
+const NO_STARRED_MESSAGES: StarredMessagesResponse = {
+  items: [],
+  conversations: [],
+  nextCursor: null,
+  hasMore: false,
+};
 
 /** The demo thread a pin or star lands in. `useConversationPinStar` hands a
  *  null id to a demo DM whose id equals its slug, so a seeded message id
@@ -216,7 +248,12 @@ export interface UseStarredMessagesResult {
  *  (the server hit could be sitting on a page not yet fetched, so `snippet`
  *  is the only text available to check against); once settled, `data.items`
  *  IS the server's authoritative answer and renders as-is, matches beyond
- *  `snippet`'s 160 characters and all. */
+ *  `snippet`'s 160 characters and all.
+ *
+ *  Both modes list the active mailbox's stars only: live sends its identity
+ *  as `as` and both keys carry it; demo narrows with `belongsToMailbox`. A
+ *  refused mailbox (`IDENTITY_NOT_STAFF`) falls back to the personal one
+ *  through `reportLostAccess`. */
 export function useStarredMessages(
   enabled: boolean,
   options: UseStarredMessagesOptions = {},
@@ -231,19 +268,30 @@ export function useStarredMessages(
     STARRED_SEARCH_DEBOUNCE_MS,
   );
   const serverType = type === "all" ? undefined : type;
+  const activeMailbox = useActiveMailbox();
+  const mailboxScope = activeMailbox.scope;
+  const mailboxIdentityId = mailboxScope?.identityId ?? null;
+  const readDemoStarredInMailbox = () =>
+    mailboxScope
+      ? demoStarredInMailbox(readDemoStarredMessages(queryClient), mailboxScope)
+      : undefined;
 
   const demoQuery = useQuery<StarredMessagesResponse>({
-    queryKey: ["starred-messages", demoMode],
-    enabled: enabled && demoMode,
-    queryFn: () => readDemoStarredMessages(queryClient),
-    initialData: demoMode
-      ? () => readDemoStarredMessages(queryClient)
-      : undefined,
+    queryKey: ["starred-messages", demoMode, mailboxIdentityId],
+    enabled: enabled && demoMode && mailboxScope !== null,
+    queryFn: () => readDemoStarredInMailbox() ?? NO_STARRED_MESSAGES,
+    initialData: demoMode ? readDemoStarredInMailbox : undefined,
   });
 
   const liveQuery = useInfiniteQuery<StarredMessagesResponse>({
-    queryKey: ["starred-messages", demoMode, debouncedQuery, type],
-    enabled: enabled && !demoMode,
+    queryKey: [
+      "starred-messages",
+      demoMode,
+      debouncedQuery,
+      type,
+      mailboxIdentityId,
+    ],
+    enabled: enabled && !demoMode && mailboxIdentityId !== null,
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam, signal }) =>
       getStarredMessages({
@@ -251,6 +299,7 @@ export function useStarredMessages(
         type: serverType,
         cursor: pageParam as string | undefined,
         signal,
+        as: mailboxIdentityId ?? undefined,
       }),
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     // A starred search result is short-lived context worth caching only
@@ -275,6 +324,10 @@ export function useStarredMessages(
   const isSearchPending =
     !demoMode &&
     (trimmedRawQuery !== debouncedQuery || liveQuery.isPlaceholderData);
+  const { reportLostAccess } = activeMailbox;
+  useEffect(() => {
+    if (isNotStaffError(liveQuery.error)) reportLostAccess();
+  }, [liveQuery.error, reportLostAccess]);
 
   if (demoMode) {
     return {
@@ -292,11 +345,21 @@ export function useStarredMessages(
   }
   return {
     data: mergedLiveData,
-    isLoading: liveQuery.isLoading,
+    // Still loading while no mailbox has resolved, since the list waits for
+    // one.
+    isLoading:
+      (mailboxIdentityId === null && !activeMailbox.isError) ||
+      liveQuery.isLoading,
     isSearchPending,
     shouldFilterClientSide: isSearchPending,
-    isError: liveQuery.isError,
-    refetch: () => void liveQuery.refetch(),
+    isError: liveQuery.isError || activeMailbox.isError,
+    refetch: () => {
+      if (activeMailbox.isError) {
+        activeMailbox.refetch();
+        return;
+      }
+      void liveQuery.refetch();
+    },
     hasNextPage: liveQuery.hasNextPage ?? false,
     isFetchingNextPage: liveQuery.isFetchingNextPage,
     isFetchNextPageError: liveQuery.isFetchNextPageError,

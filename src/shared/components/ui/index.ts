@@ -68,6 +68,7 @@ export {
 export { Badge, type BadgeTone } from "./Badge";
 export { StaffBadge, type StaffRole, type StaffBadgeSize } from "./StaffBadge";
 export { HubBackLink } from "./HubBackLink";
+export { SpaceLabel } from "./SpaceLabel";
 export { SubpageIndex, type SubpageItem } from "./SubpageIndex";
 export { ComingSoon } from "./ComingSoon";
 export { CopyLinkRow, type CopyLinkRowProps } from "./CopyLinkRow";

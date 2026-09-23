@@ -2,11 +2,18 @@ import { useCallback, useEffect, useRef } from "react";
 import { useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import { canMirrorHidePushPreviews } from "../../pushPrivacy";
+import {
+  isFromViewerSide,
+  readStaffedIdentityIds,
+  type MessageViewer,
+} from "../../shared/api/mailboxViewer";
 import {
   useConversationMessageFrames,
   useRealtime,
 } from "../../shared/api/realtime";
+import type { AuthorSummary } from "../../shared/contracts/contracts";
 import type { ServerToClientEvents } from "../../shared/contracts/realtime";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { TFunction } from "../../shared/i18n/types";
@@ -23,19 +30,76 @@ import {
   incomingMessagePreviewText,
   isBannerEligibleMessage,
   resolveIncomingConversationRow,
+  type CachedConversationRow,
 } from "./incomingMessageBanner";
 import { showIncomingMessageNotification } from "./showIncomingMessageNotification";
 
 type ConversationMessageFrame = ServerToClientEvents["conversation:message"];
 
-/** Every live inbox list variant (`useConversations` keys on demo mode). */
+/**
+ * `resolveIncomingConversationRow` narrows its result to
+ * `CachedConversationRow`, but the object behind it is always a real cached
+ * `Conversation` (the pick just omits these fields from the type). Widened
+ * locally in this file to keep `incomingMessageBanner.ts` untouched.
+ */
+type ConversationRowWithMailboxState = CachedConversationRow &
+  Pick<Conversation, "mailboxIdentityId" | "claimedByUserId">;
+
+/**
+ * Final review I1. A banner must never fire for a message already on the
+ * viewer's own side, nor for a customer message on a staffed mailbox thread a
+ * colleague currently claims.
+ *
+ * `isFromViewerSide` catches the business "messaging itself" case: a
+ * colleague's reply sent as a mailbox identity the viewer staffs, matching
+ * the rule the realtime unread handler already applies
+ * (`shared/api/realtime.ts` `isFromOwnSide`).
+ *
+ * The claim check mirrors the backend push rule
+ * (`push.listener.ts` `loadMessagePushThreadAudience`): once a staffed
+ * mailbox thread is claimed, only the claimant is notified. This is a
+ * simplified client-side mirror (no block/reachability lookup), scoped to
+ * gating a local toast.
+ */
+export function isOwnSideOrClaimedByColleagueMessage(input: {
+  sender: Pick<AuthorSummary, "handle" | "identityId"> | null | undefined;
+  viewer: MessageViewer;
+  mailboxIdentityId: string | undefined;
+  claimedByUserId: string | null | undefined;
+  myUserId: string | null;
+}): boolean {
+  if (isFromViewerSide(input.sender, input.viewer)) return true;
+  const isStaffedMailboxThread =
+    !!input.mailboxIdentityId &&
+    input.viewer.staffedIdentityIds.has(input.mailboxIdentityId);
+  const isClaimedByAnotherColleague =
+    !!input.claimedByUserId && input.claimedByUserId !== input.myUserId;
+  return isStaffedMailboxThread && isClaimedByAnotherColleague;
+}
+
+/**
+ * Every live, per-mailbox inbox list (`useConversations` keys its scoped
+ * entries `["conversations", demoMode, deletedToken, scopeCacheKey]`). This
+ * prefix matches every one of them regardless of scope, so the cached-row
+ * read below sees every mailbox's list at once.
+ */
 const LIVE_CONVERSATIONS_QUERY_ROOT = ["conversations", false] as const;
 /**
- * The live inbox list's full key exactly as `useConversations` builds it: live
- * mode never writes deleted ids, so its deleted token is always "". Sharing the
- * key is what makes the load below dedupe with the inbox's own fetch.
+ * A private cache slot for the fallback load below, shaped like a real
+ * `useConversations` key (live mode's deleted token is always "") but with a
+ * scope segment no real mailbox scope ever produces (`scopeCacheKey` only
+ * ever returns a mailbox identity uuid or "unresolved"), so this can never
+ * collide with, or be mistaken for, an actual mailbox's cached list. It does
+ * NOT dedupe with the inbox's own fetch (each mailbox has its own scoped
+ * key); it exists only so a cold lookup for a conversation not yet cached in
+ * any mailbox list has somewhere to land.
  */
-const LIVE_CONVERSATIONS_QUERY_KEY = ["conversations", false, ""] as const;
+const LIVE_CONVERSATIONS_QUERY_KEY = [
+  "conversations",
+  false,
+  "",
+  "incoming-message-banner",
+] as const;
 
 function readNotificationPermission(): NotificationPermission | "unsupported" {
   return typeof Notification === "undefined"
@@ -74,9 +138,15 @@ function loadLiveConversationList(
  * state and the group shape come from the inbox row: the cached list first,
  * else one `ensureQueryData` load of it. A row still unknown after that
  * suppresses the banner, because a muted chat must never raise one.
+ *
+ * Also suppressed: a message already on the viewer's own side (a colleague's
+ * reply sent as a business the viewer staffs), and a customer message on a
+ * staffed mailbox thread a colleague currently claims. See
+ * `isOwnSideOrClaimedByColleagueMessage`.
  */
 export function useIncomingMessageBanner(): void {
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const { getActiveConversationId } = useRealtime();
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -88,6 +158,10 @@ export function useIncomingMessageBanner(): void {
   const { isHidingPreviews } = useHidePushPreviews({
     isFetchEnabled: canMirrorHidePushPreviews(),
   });
+  // Live mode only (the handler below returns before reading these in demo
+  // mode), so no demo-viewer fallback is needed here unlike `useMessageViewer`.
+  const myHandle = user?.profile.slug ?? null;
+  const myUserId = user?.id ?? null;
 
   // Everything the frame handler reads that changes between renders, kept in
   // a ref so the handler keeps one identity and never resubscribes.
@@ -98,6 +172,8 @@ export function useIncomingMessageBanner(): void {
     t,
     showToast,
     navigate,
+    myHandle,
+    myUserId,
   });
   useEffect(() => {
     latestRef.current = {
@@ -107,8 +183,19 @@ export function useIncomingMessageBanner(): void {
       t,
       showToast,
       navigate,
+      myHandle,
+      myUserId,
     };
-  }, [demoMode, pathname, isHidingPreviews, t, showToast, navigate]);
+  }, [
+    demoMode,
+    pathname,
+    isHidingPreviews,
+    t,
+    showToast,
+    navigate,
+    myHandle,
+    myUserId,
+  ]);
 
   const lastToastAtByConversationRef = useRef(new Map<string, number>());
 
@@ -145,6 +232,23 @@ export function useIncomingMessageBanner(): void {
         isMessageDeleted: message.deletedAt !== null,
       });
       if (action === "ignore" || conversationRow === null) return;
+
+      const mailboxRow =
+        conversationRow as unknown as ConversationRowWithMailboxState;
+      if (
+        isOwnSideOrClaimedByColleagueMessage({
+          sender: message.sender,
+          viewer: {
+            myHandle: latest.myHandle,
+            staffedIdentityIds: readStaffedIdentityIds(queryClient),
+          },
+          mailboxIdentityId: mailboxRow.mailboxIdentityId,
+          claimedByUserId: mailboxRow.claimedByUserId,
+          myUserId: latest.myUserId,
+        })
+      ) {
+        return;
+      }
 
       const copy = buildIncomingMessageCopy({
         senderName: message.sender.displayName,

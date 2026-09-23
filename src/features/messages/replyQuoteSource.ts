@@ -10,7 +10,8 @@ export interface ReplyQuoteSource {
   kind: NonNullable<ChatMessage["kind"]>;
   /** The parent's text body (a `user`/`system` quote's snippet). */
   text: string;
-  /** A gif/image preview to show as the trailing thumbnail, else null. */
+  /** A gif/image/sticker preview to show as the trailing thumbnail, else
+   *  null. */
   thumbnailUrl: string | null;
   /** A document's original file name, else null. */
   fileName: string | null;

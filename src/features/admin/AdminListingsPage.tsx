@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FiAlertTriangle } from "react-icons/fi";
 import {
   Button,
@@ -49,9 +50,16 @@ const VIEWS: ViewTab[] = ["queue", "editSuggestions", "claims"];
  */
 export function AdminListingsPage() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
   const [view, setView] = useState<ViewTab>("queue");
   const [filter, setFilter] = useState<AdminListingsStatusFilter>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  // Seeded once from `?q=`, so a deep link (e.g. the directory staff band
+  // pointing at one listing reference) lands on that row. The URL is a
+  // starting point: typing in the header owns the value from then on, and
+  // nothing syncs it back.
+  const [searchQuery, setSearchQuery] = useState(
+    () => searchParams.get("q") ?? "",
+  );
   const [sort, setSort] = useState<ListingQueueSort>("newest");
   const statusArg = filter === "all" ? undefined : filter;
   const {

@@ -3,16 +3,32 @@ import type { Conversation } from "./data";
 /** "requests" (MSG-1) isn't a conversation filter at all — it swaps the whole
  *  list body for `MessagesRequestsPanel` (incoming first-contact message
  *  requests), so `filterThreadsByTab` below just returns no conversation rows
- *  for it; the real data comes from `useConnectionsList("incoming")`.
+ *  for it; the real data comes from `useConnectionsList("incoming")`. It also
+ *  lists the member's OWN requests, a personal-mailbox concept, so
+ *  `InboxTabs` never renders this tab inside a business, persona or company
+ *  mailbox at all.
  *
  *  "archived" (SOC-16) is the mirror image of every other tab: every OTHER
  *  tab hides an archived thread (it's out of the main inbox experience by
  *  definition), and only this tab shows them. A thread never sits in both —
  *  the moment it's archived it drops out of "all"/"unread"/"favorites"/
  *  "groups" and appears only here, until it's explicitly unarchived or a new
- *  message auto-unarchives it server-side. */
+ *  message auto-unarchives it server-side.
+ *
+ *  "unclaimed" and "mine" belong to a business, persona or company mailbox:
+ *  there the row swaps Favorites and Groups for Unclaimed and Mine, and drops
+ *  Requests, staying five tabs on one line (the personal mailbox's own row
+ *  is six). Unclaimed lists the threads nobody on the team is
+ *  handling; Mine lists the ones the member has claimed. */
 export type InboxTab =
-  "all" | "unread" | "favorites" | "groups" | "archived" | "requests";
+  | "all"
+  | "unread"
+  | "favorites"
+  | "groups"
+  | "unclaimed"
+  | "mine"
+  | "archived"
+  | "requests";
 
 /** Same unread rule `MessagesThreadRow` uses for its dot/badge — unread flag
  *  on, not locally marked read this session, and not the thread currently
@@ -33,6 +49,8 @@ export function filterThreadsByTab(
   tab: InboxTab,
   activeId: string,
   readIds: Set<string>,
+  /** The member's own handle, which the Mine tab matches a claim against. */
+  myHandle: string | null,
 ): Conversation[] {
   if (tab === "archived") {
     return threads.filter((thread) => !!thread.archivedAt);
@@ -54,6 +72,12 @@ export function filterThreadsByTab(
       return unarchived.filter((thread) => thread.favorite === true);
     case "groups":
       return unarchived.filter((thread) => thread.isGroup === true);
+    case "unclaimed":
+      return unarchived.filter((thread) => !thread.claimedBy);
+    case "mine":
+      return unarchived.filter(
+        (thread) => !!myHandle && thread.claimedBy?.handle === myHandle,
+      );
     default:
       return unarchived;
   }

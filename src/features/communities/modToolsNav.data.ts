@@ -16,6 +16,7 @@ export type ModSection =
   | "members"
   | "ratifications"
   | "invites"
+  | "spaces"
   | "support"
   | "history"
   | "card"
@@ -58,6 +59,14 @@ export const MOD_NAV: ModNavItem[] = [
     badge: "ratifications",
   },
   { id: "invites", labelKey: "communities:detail.modtools.nav.invites" },
+  {
+    // Only rendered for a community that may host spaces or still hosts some,
+    // and never for a space itself (spaces nest one level only). `ModToolsTab`
+    // filters this item out entirely, so the rail only offers a section that
+    // loads when opened.
+    id: "spaces",
+    labelKey: "communities:detail.modtools.nav.spaces",
+  },
   {
     // What platform staff have offered this community (OPS-05). Badged like
     // the two queues above, because an unanswered offer of help is something

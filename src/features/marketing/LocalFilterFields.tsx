@@ -106,7 +106,7 @@ export function LocalFilterFields({
   // `photos.vibe` is an unrelated photo-caption slot, not a mood tag), so the
   // chips would silently do nothing to a real listing. Gated to demo mode only
   // (gap-audit HSG-8), matching this folder's existing `useDemoMode` gates
-  // (`DirectoryAsideExtras`, `DirectoryAsideOwner`) until/unless a real
+  // (`DirectoryAsideExtras`, `DirectoryAsideFooter`) until/unless a real
   // vibe-tag field exists on live businesses.
   const showVibeFilter = demoMode;
   // Surfaced on the collapsed toggle so hidden-but-active filters still read.

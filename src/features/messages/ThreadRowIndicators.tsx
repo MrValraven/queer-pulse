@@ -1,6 +1,8 @@
 import { FiArchive, FiAtSign, FiBellOff, FiHeart } from "react-icons/fi";
 import { TbBellExclamation, TbPinnedFilled } from "react-icons/tb";
+import { Badge } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { ClaimStatus } from "./api/useConversationClaim";
 import styles from "./MessagesPage.module.css";
 
 interface ThreadRowIndicatorsProps {
@@ -23,6 +25,12 @@ interface ThreadRowIndicatorsProps {
   isFavorite: boolean;
   isPinned: boolean;
   time: string;
+  /** Business mailboxes: the row's claim, from `claimStatusOf(thread,
+   *  viewer.myHandle)`. Absent or `none` on a personal row. The row reads the
+   *  cache, so a colleague's `conversation:claim` frame updates the tag live. */
+  claimStatus?: ClaimStatus;
+  /** The claimant's first name, read on a colleague's claim. */
+  claimantFirstName?: string;
 }
 
 /**
@@ -43,10 +51,22 @@ export function ThreadRowIndicators({
   isFavorite,
   isPinned,
   time,
+  claimStatus = "none",
+  claimantFirstName = "",
 }: ThreadRowIndicatorsProps) {
   const { t } = useTranslation();
+  // A text tag, so the claim never rides on colour alone.
+  const claimLabel =
+    claimStatus === "unclaimed"
+      ? t("messages:mailbox.claim.unclaimed")
+      : claimStatus === "mine"
+        ? t("messages:mailbox.claim.rowMine")
+        : claimStatus === "theirs"
+          ? t("messages:mailbox.claim.rowTheirs", { name: claimantFirstName })
+          : null;
   return (
     <span className={styles.trIndicators}>
+      {claimLabel && <Badge tone="ghost">{claimLabel}</Badge>}
       {isArchived && (
         <span className={styles.trArchivedIcon}>
           <FiArchive aria-hidden="true" />

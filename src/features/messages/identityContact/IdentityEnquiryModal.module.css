@@ -1,0 +1,42 @@
+/* Body treatment for the persona/company "Message" composer. `Modal` already
+ * supplies the eyebrow/title/sub head and the footer row; this covers only
+ * the form's own hint/counter/error, mirroring `DirectoryEnquiryModal`'s
+ * local copy (that file is held by another session, so this is not a
+ * cross-import). */
+.footRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-40);
+}
+
+.counter {
+  margin: 0;
+  flex: none;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+.error {
+  margin-top: 14px;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--accent-text);
+}
+
+/* On the plum success panel, so it dims toward cream. */
+.threadLink {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: rgba(var(--cream-rgb), 1);
+  text-decoration: underline;
+}

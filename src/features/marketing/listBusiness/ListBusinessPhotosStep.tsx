@@ -32,11 +32,18 @@ export function StepPhotosYou({
 
       <PhotosFields form={form} uploadPhoto={uploadPhoto} />
 
-      <h3 className={styles.groupH}>
-        {t("marketing:listBusiness.step4.aboutYouHeading")}
-      </h3>
+      {/* The owner half is written in the first person about whoever is
+          filling the form in, so a staff-authored draft leaves it off the
+          page. The owner fills it in after accepting the handover. */}
+      {!form.draft.isStaffAuthored && (
+        <>
+          <h3 className={styles.groupH}>
+            {t("marketing:listBusiness.step4.aboutYouHeading")}
+          </h3>
 
-      <OwnerFields form={form} userName={userName} />
+          <OwnerFields form={form} userName={userName} />
+        </>
+      )}
     </div>
   );
 }

@@ -24,7 +24,8 @@ export function SettingsPane({ community }: { community: Community }) {
     patch:
       | { requiresSecondVouch: boolean }
       | { autoFreezeOnReports: boolean }
-      | { isFeatured: boolean },
+      | { isFeatured: boolean }
+      | { allowsSubcommunities: boolean },
     value: boolean,
     onToastKey: string,
     offToastKey: string,
@@ -70,6 +71,26 @@ export function SettingsPane({ community }: { community: Community }) {
         }
       />
       <ToggleRow
+        title={t("admin:communities.settings.spaces.title")}
+        sub={
+          community.parent
+            ? t("admin:communities.settings.spaces.isSpace", {
+                name: community.parent.name,
+              })
+            : t("admin:communities.settings.spaces.sub")
+        }
+        checked={community.allowsSubcommunities ?? false}
+        disabled={updateCommunity.isPending || community.parent != null}
+        onChange={(value) =>
+          saveToggle(
+            { allowsSubcommunities: value },
+            value,
+            "admin:communities.settings.spaces.onToast",
+            "admin:communities.settings.spaces.offToast",
+          )
+        }
+      />
+      <ToggleRow
         title={t("admin:communities.settings.autoFreeze.title")}
         sub={t("admin:communities.settings.autoFreeze.sub")}
         checked={community.autoFreezeOnReports}
@@ -85,9 +106,17 @@ export function SettingsPane({ community }: { community: Community }) {
       />
       <ToggleRow
         title={t("admin:communities.settings.featured.title")}
-        sub={t("admin:communities.settings.featured.sub")}
+        sub={
+          community.parent
+            ? t("admin:communities.settings.featured.isSpace", {
+                name: community.parent.name,
+              })
+            : t("admin:communities.settings.featured.sub")
+        }
         checked={community.isFeatured}
-        disabled={updateCommunity.isPending}
+        // A space never appears on Discover, so the backend refuses to
+        // feature one.
+        disabled={updateCommunity.isPending || community.parent != null}
         onChange={(value) =>
           saveToggle(
             { isFeatured: value },

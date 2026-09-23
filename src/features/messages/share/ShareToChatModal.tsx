@@ -11,6 +11,7 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useConversations } from "../api/useConversations";
+import { usePersonalMailboxScope } from "../mailboxes/useActiveMailbox";
 import { useSendToConversations } from "./useSendToConversations";
 import {
   buildShareBody,
@@ -38,6 +39,10 @@ export interface ShareToChatModalProps {
  * idempotent message per picked conversation (`useSendToConversations`) whose
  * body is the note plus the absolute URL; the existing link-preview pipeline
  * unfurls it on the recipient's side, so the URL itself carries the title.
+ *
+ * Personal threads only, whatever mailbox is active on `/messages`: a share
+ * send carries no identity, so the server would refuse one into a business
+ * thread.
  */
 export function ShareToChatModal({
   url,
@@ -48,7 +53,8 @@ export function ShareToChatModal({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const { data: conversations = [] } = useConversations();
+  const personalScope = usePersonalMailboxScope();
+  const { data: conversations = [] } = useConversations(personalScope);
   const { sendToMany } = useSendToConversations();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [note, setNote] = useState("");

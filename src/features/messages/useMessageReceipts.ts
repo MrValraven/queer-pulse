@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useDeliveredFrames, useReadFrames } from "../../shared/api/realtime";
+import type { ServerToClientEvents } from "../../shared/contracts/realtime";
 import type { Conversation } from "./data";
 
 export interface MessageReceipts {
@@ -34,8 +35,10 @@ export function useMessageReceipts(
   // lastReadAt, which advances the watermark for the message they've now read
   // up to. Ignore frames carrying my OWN userId — those are my own read
   // (drives the unread badge elsewhere), not a receipt on my sent messages.
+  // A business's collapsed receipt carries `identityId` and no `userId`, so
+  // it passes this skip as the counterpart's receipt.
   const onRead = useCallback(
-    (frame: { conversationId: string; userId: string; lastReadAt: string }) => {
+    (frame: ServerToClientEvents["read"]) => {
       if (myUserId && frame.userId === myUserId) return;
       setReadWatermarks((prev) => {
         const existing = prev[frame.conversationId];
@@ -52,11 +55,7 @@ export function useMessageReceipts(
   // that's my own device acking receipt of the counterpart's messages, which
   // renders against THEIR bubbles for them, not mine.
   const onDelivered = useCallback(
-    (frame: {
-      conversationId: string;
-      userId: string;
-      deliveredAt: string;
-    }) => {
+    (frame: ServerToClientEvents["message:delivered"]) => {
       if (myUserId && frame.userId === myUserId) return;
       setDeliveredWatermarks((prev) => {
         const existing = prev[frame.conversationId];

@@ -11,6 +11,7 @@ import {
   messageLinks,
   type ConversationMediaEntry,
 } from "./conversationMediaFilters";
+import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage } from "./data";
 
 function textMessage(
@@ -237,7 +238,36 @@ describe("entryDateLabel", () => {
   });
 });
 
+const translate: TFunction = (key, values) =>
+  key === "messages:mailbox.attribution.customerLine"
+    ? `${values?.name} from ${values?.business}`
+    : key;
+
 describe("entrySenderName", () => {
+  it("names a colleague's business photo by the business and first name", () => {
+    const colleagues = photoMessage({
+      from: "me",
+      senderName: "Café Lisboa",
+      senderIdentityId: "identity-cafe",
+      senderStaffFirstName: "Rui",
+      isSentByViewer: false,
+    });
+    expect(entrySenderName(colleagues, "Nuno", "You", translate)).toBe(
+      "Rui from Café Lisboa",
+    );
+  });
+
+  it("keeps the you label for the member's own business photo", () => {
+    const mine = photoMessage({
+      from: "me",
+      senderName: "Café Lisboa",
+      senderIdentityId: "identity-cafe",
+      senderStaffFirstName: "Tiago",
+      isSentByViewer: true,
+    });
+    expect(entrySenderName(mine, "Nuno", "You", translate)).toBe("You");
+  });
+
   it("names the viewer, a group sender, or the DM counterpart", () => {
     expect(entrySenderName(photoMessage({ from: "me" }), "Ana", "You")).toBe(
       "You",

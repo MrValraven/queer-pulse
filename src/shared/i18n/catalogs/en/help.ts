@@ -25,6 +25,13 @@ export const help: Catalog = {
     "Start with the triage banner at the top: it counts everything waiting for a moderator.\nClick a queue item to jump straight into moderation.\nScan the charts below for reports by type, member growth, and response times.",
   "admin.hub.demo":
     'the banner might read "12 things need a human", with safety emergencies flagged first.',
+  "admin.listingNew.title": "Add a listing",
+  "admin.listingNew.intro":
+    "Where staff write up a place that has not joined QueerPulse yet. The listing starts out belonging to nobody, and you can offer it to a member who then decides whether to take it on.",
+  "admin.listingNew.use":
+    "Choose whether it goes straight to the directory or waits in the moderation queue.\nName a member by profile slug to offer them the listing, and write a line about why.\nFill in the business itself. Everything about an owner stays empty until somebody accepts.",
+  "admin.listingNew.demo":
+    "a café you add stays in the team's hands until the person you offered it to says yes.",
   "admin.listings.title": "Listings",
   "admin.listings.intro":
     "The review desk for member-submitted directory listings: the queer-friendly venues, cafés, and shops people add to the map. You decide what goes live.",

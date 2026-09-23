@@ -1,6 +1,7 @@
 import type {
   ConversationContextMessageDTO,
   ReportConversationContextDTO,
+  SentAsIdentityDTO,
 } from "./api/moderation.api";
 
 /**
@@ -42,6 +43,10 @@ interface DemoLine {
   kind?: ConversationContextMessageDTO["kind"];
   isEdited?: boolean;
   isDeletedWithoutBody?: boolean;
+  /** Business mailboxes, design section 9 (I2): the identity this line was
+   *  sent as. Absent (null) for every line in the personal-DM fixture below;
+   *  the sent-as-identity fixture further down is the one that sets it. */
+  sentAsIdentity?: SentAsIdentityDTO;
 }
 
 const EARLIER_LINES: DemoLine[] = [
@@ -85,6 +90,7 @@ function demoMessage(
   return {
     id: `demo-context-message-${position}`,
     ...line.sender,
+    sentAsIdentity: line.sentAsIdentity ?? null,
     kind: line.kind ?? "user",
     body: line.isDeletedWithoutBody ? null : line.body,
     attachment: null,
@@ -95,9 +101,74 @@ function demoMessage(
   };
 }
 
+/**
+ * Business mailboxes, design section 9 (I2 fix): the reportId
+ * `OTHER_REPORTS` uses for the sent-as-identity demo case
+ * (`adminModeration.data.ts`). Kept as its own short fixture: `sentAsIdentity`
+ * only makes sense next to a staffed mailbox's reply, and folding one into the
+ * personal-DM fixture above would misstate that harassment scenario between
+ * two members.
+ */
+export const SENT_AS_IDENTITY_DEMO_REPORT_ID = "r-msg-sent-as-identity";
+
+/** The demo mailbox identity the fixture's reported reply went out as.
+ *  Reused by `adminModeration.data.ts` so the drawer's inline line and the
+ *  conversation viewer's per-message tag agree on the same business. */
+export const DEMO_SENT_AS_CAFE_LISBOA: SentAsIdentityDTO = {
+  identityId: "demo-identity-cafe-lisboa",
+  kind: "listing",
+  displayName: "Café Lisboa",
+  handle: "cafe-lisboa",
+};
+
+const SENT_AS_CUSTOMER: DemoSender = {
+  senderId: "demo-member-sofia",
+  senderDisplayName: "Sofia M.",
+  senderSlug: "sofia-m",
+};
+const SENT_AS_STAFF: DemoSender = {
+  senderId: "demo-member-nightowl",
+  senderDisplayName: "Rui C.",
+  senderSlug: "nightowl",
+};
+
+const SENT_AS_IDENTITY_LINES: DemoLine[] = [
+  {
+    sender: SENT_AS_CUSTOMER,
+    body: "hi, do you do refunds if the pastries arrive stale?",
+  },
+  {
+    sender: SENT_AS_STAFF,
+    body: "we don't do refunds, read the listing next time",
+    sentAsIdentity: DEMO_SENT_AS_CAFE_LISBOA,
+  },
+  { sender: SENT_AS_CUSTOMER, body: "that's a pretty rude way to say it" },
+];
+
+function demoSentAsIdentityConversationContext(
+  reportId: string,
+): ReportConversationContextDTO {
+  const messages = SENT_AS_IDENTITY_LINES.map((line, index) =>
+    demoMessage(index, line),
+  );
+  const reported = messages[1];
+  if (reported) reported.isReportedMessage = true;
+  return {
+    reportId,
+    conversationId: "demo-conversation-sent-as-identity",
+    reportedMessageId: (reported ?? messages[0])?.id ?? "",
+    hasEarlierMessages: false,
+    hasLaterMessages: false,
+    messages,
+  };
+}
+
 export function demoReportConversationContext(
   reportId: string,
 ): ReportConversationContextDTO {
+  if (reportId === SENT_AS_IDENTITY_DEMO_REPORT_ID) {
+    return demoSentAsIdentityConversationContext(reportId);
+  }
   // Each line set runs twice: twenty messages either side of the reported one.
   const earlier = [...EARLIER_LINES, ...EARLIER_LINES].map((line, index) =>
     demoMessage(index, line),

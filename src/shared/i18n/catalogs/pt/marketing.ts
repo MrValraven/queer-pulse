@@ -2328,6 +2328,10 @@ export const marketing: Catalog = {
   "changelog.entry.more": "Mais",
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-09-22.headline":
+    "Já podes responder como o teu negócio, e as comunidades podem abrir espaços.",
+  "changelog.releases.2026-09-20.headline":
+    "A equipa pode pôr um espaço em teu nome, e as mensagens levam stickers.",
   "changelog.releases.2026-09-18.headline":
     "As fotos do chat vão da câmara à legenda num só ecrã, e voltar de uma conversa leva-te às conversas.",
   "changelog.releases.2026-09-16.headline":
@@ -2448,6 +2452,14 @@ export const marketing: Catalog = {
   "changelog.tag.changelog": "Ver o registo de alterações",
   // Section 11, core member journeys (PRD-01..PRD-18).
   // Seccao 4 (Comunidades), 6 Set 2026.
+  "changelog.entries.pages-stay-in-one-language.title":
+    "As páginas ficam numa só língua",
+  "changelog.entries.pages-stay-in-one-language.body":
+    "A página inicial já não mostra texto em inglês por baixo de um cabeçalho em português enquanto carrega.",
+  "changelog.entries.invite-requests-ask-where-you-heard-about-us.title":
+    "Os pedidos de convite perguntam onde ouviste falar de nós",
+  "changelog.entries.invite-requests-ask-where-you-heard-about-us.body":
+    "Uma pergunta obrigatória no formulário de pedido, e quem revê vê a tua resposta junto ao pedido.",
   "changelog.entries.photos-match-your-screen-instead-of-a-guess.title":
     "As fotos passam a acertar com o teu ecrã em vez de adivinhar",
   "changelog.entries.photos-match-your-screen-instead-of-a-guess.body":
@@ -7194,7 +7206,6 @@ export const marketing: Catalog = {
   "directory.detail.visitWebsite": "Visitar o site",
   "directory.detail.getInTouch": "Entrar em contacto",
   "directory.detail.backToDirectory": "Voltar ao diretório",
-  "directory.detail.claimCta": "És tu que geres este espaço? Reivindica-o",
   "directory.detail.claimsFiledLink": "Ver os pedidos que enviaste",
   "directory.detail.loader.ariaLabel": "A abrir este espaço",
   "directory.detail.loader.title": "A abrir este espaço",
@@ -7376,6 +7387,15 @@ export const marketing: Catalog = {
     "ex.: Sou a pessoa responsável, aqui está como me podes contactar para confirmar.",
   "directory.detail.claim.note":
     "Reclamar não transfere a listagem por si só. Uma pessoa moderadora analisa cada pedido primeiro.",
+  // A promessa da base afirmativa (ClaimAffirmingBaselinePledge), pedida em
+  // todos os pedidos, porque reclamar uma listagem significa passares a ser
+  // quem a gere.
+  "directory.detail.claim.pledgeLead":
+    "Reclamar <b>{name}</b> significa passares a ser quem a gere, com uma promessa à mistura. Todas as listagens do diretório fizeram a mesma.",
+  "directory.detail.claim.pledgeAgreeTitle":
+    "Concordo com isto, por esta listagem",
+  "directory.detail.claim.pledgeAgreeSub":
+    "O teu acordo fica registado com o teu nome e a data em que aceitas, se o teu pedido for aprovado por uma pessoa moderadora.",
   "directory.detail.claim.cancel": "Cancelar",
   "directory.detail.claim.submit": "Enviar à moderação",
   "directory.detail.claim.submitting": "A enviar…",
@@ -7438,10 +7458,17 @@ export const marketing: Catalog = {
   "directory.detail.trust.howLine":
     "Este espaço cumpre os mesmos critérios que qualquer espaço verificado.",
   "directory.detail.trust.howLink": "Como funciona a verificação",
-  "directory.detail.whoRunsIt": "Quem gere isto",
+  "directory.detail.runBy": "Quem gere: <a>{name}</a>",
   "directory.detail.onQueerPulse": "Na QueerPulse",
   "directory.detail.addedByMember": "Adicionado por um membro",
-  "directory.detail.viewProfile": "Ver o perfil de {name}",
+  // Aparece quando o backend diz `ownerId === null`. DUAS situações levam a
+  // isso: a equipa escrever a ficha de um negócio que ainda não se juntou,
+  // e um membro apagar a conta, o que limpa a coluna via
+  // `ON DELETE SET NULL` e deixa o espaço dele no ar e sem dono. A frase
+  // fala só do estado da reivindicação e cala quem escreveu a ficha,
+  // porque na segunda situação foi um membro. Lê o comentário longo em
+  // DirectoryAsideFooter.tsx antes de mexeres nesta frase.
+  "directory.detail.unclaimedNote": "Ainda ninguém reivindicou esta ficha.",
   "directory.detail.savedByMembers_one": "Guardado por {count} membro",
   "directory.detail.savedByMembers_other": "Guardado por {count} membros",
   "directory.detail.membersHereLately": "Pessoas por aqui recentemente",
@@ -7451,7 +7478,6 @@ export const marketing: Catalog = {
   "directory.detail.upcoming.downloadIcs": ".ics",
   "directory.detail.galleryAria": "Fotos de {name}",
   "directory.detail.viewPhoto": "Ver foto",
-  "directory.detail.noPhotos": "Ainda sem fotos",
   "directory.detail.lightboxClose": "Fechar",
   "directory.detail.prevPhoto": "Foto anterior",
   "directory.detail.nextPhoto": "Foto seguinte",
@@ -7465,6 +7491,35 @@ export const marketing: Catalog = {
     "Não foi possível partilhar. Tenta copiar o link",
   "directory.detail.action.saveSignIn":
     "Inicia sessão para guardar este espaço",
+
+  // ── Faixa de moderação (`DirectoryStaffBand`).
+  "directory.detail.staffBand.label": "Vista de moderação",
+  "directory.detail.staffBand.reference": "Ref. {reference}",
+  "directory.detail.staffBand.safeSpace.verified": "Espaço seguro verificado",
+  "directory.detail.staffBand.safeSpace.verifiedTier":
+    "Espaço seguro verificado, nível {tier}",
+  "directory.detail.staffBand.safeSpace.suspended":
+    "Selo de espaço seguro suspenso",
+  "directory.detail.staffBand.safeSpace.removed":
+    "Selo de espaço seguro removido",
+  "directory.detail.staffBand.dueForReReview":
+    "Selo a precisar de nova revisão",
+  "directory.detail.staffBand.openInQueue": "Abrir na fila de anúncios",
+  "directory.detail.staffBand.safeSpaceReview": "Revisão de espaço seguro",
+
+  // ── Faixa do proprietário (`DirectoryOwnerBand`).
+  "directory.detail.ownerBand.title": "O teu anúncio",
+  "directory.detail.ownerBand.freshness.fresh":
+    "Confirmaste estes dados a {date}. Quem visita vê que são recentes.",
+  "directory.detail.ownerBand.freshness.stale":
+    "Confirmaste estes dados pela última vez a {date}, há mais de seis meses. Uma verificação rápida mantém o horário fiável.",
+  "directory.detail.ownerBand.freshness.unconfirmed":
+    "Ainda não confirmaste estes dados. Quem visita é avisado disso, por isso vale a pena a primeira verificação.",
+  "directory.detail.ownerBand.confirm": "Confirmar que os dados estão certos",
+  "directory.detail.ownerBand.confirmToast":
+    "Obrigado. O teu anúncio passa a constar como confirmado hoje.",
+  "directory.detail.ownerBand.confirmError":
+    "Não foi possível guardar. Tenta novamente.",
   "directory.relative.yesterday": "Ontem",
   "directory.relative.twoDaysAgo": "há 2 dias",
   "directory.relative.threeDaysAgo": "há 3 dias",
@@ -8969,9 +9024,10 @@ export const marketing: Catalog = {
   // PRD-36 — PRD-36 - 'Message this business' on a directory listing: the contact-row affordance, its unavailable reasons, and the private enquiry composer. Sits under the existing marketing:directory.detail.* copy alongside claim/questions. PT follows the catalog's own terminology: a listing is a 'ficha', the business is 'negocio', the venue is 'espaco'.
   // PRD-36b — PRD-36b. Told to the member BEFORE the composer opens, from GET /directory/:slug/contact. A cap is not the business being unreachable, so the copy says the member has already written rather than that the place has gone, and it never states or implies that anything is emailed. {when} is Intl.RelativeTimeFormat output ('in 20 hours' / 'dentro de 20 horas'), rounded up so the sentence never promises a moment earlier than the truth. The clearsIn line is appended only when there is a real future instant to give.
   // PRD-37 — PRD-37. The partner-application success screen and the form's 'what happens next' tip both promised 'we'll be in touch', which QueerPulse cannot keep: the platform sends no email and never will. All three keys ALREADY EXIST in en/marketing.ts and pt/marketing.ts. These are REPLACEMENT VALUES for those existing keys, not new keys, and no key is added or removed. Approving or rejecting a partner application now emits a decision notification, and the applicant can read the outcome on their submissions page, so the copy points at those two places instead of at an inbox.
+  // FE Task 3 (business mailboxes, spec 2026-09-20): the delivery promise "It arrives as a direct message from your account" stops being true. An enquiry now lands in the listing's mailbox, read by whoever runs it. deliveryNote, sub and successBody are REPLACEMENT VALUES for these existing keys only; no key is added or removed.
   "directory.detail.enquiry.cta": "Enviar mensagem a este negócio",
   "directory.detail.enquiry.deliveryNote":
-    "Chega como mensagem direta da tua conta, e só quem gere esta ficha a pode ler.",
+    "Chega à caixa de mensagens deste negócio, e só quem gere esta ficha a pode ler.",
   "directory.detail.enquiry.replyNote":
     "Podem responder-te já a esta mensagem. Podes escrever mais assim que o fizerem.",
   "directory.detail.enquiry.existingThreadCta": "Abrir a conversa que já tens",
@@ -8983,7 +9039,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.loadErrorBody":
     "O resto da ficha está bem. Só esta verificação é que não respondeu.",
   "directory.detail.enquiry.unavailable.unclaimed":
-    "Ainda ninguém reivindicou esta ficha, por isso não há uma caixa de entrada do negócio por trás dela. Se és tu que geres o {name}, reivindica a ficha e passas a poder ser contactado por aqui.",
+    "Ainda ninguém reivindicou esta ficha, por isso não há uma caixa de mensagens por trás dela. Se és tu que geres o {name}, reivindica a ficha e passas a poder ser contactado por aqui.",
   "directory.detail.enquiry.unavailable.noAccount":
     "Esta ficha não está ligada a uma conta que possa receber mensagens, por isso os contactos acima são a forma de lá chegar.",
   "directory.detail.enquiry.unavailable.ownListing":
@@ -8994,7 +9050,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.eyebrow": "Mensagem privada",
   "directory.detail.enquiry.title": "Escrever a <em>{name}</em>",
   "directory.detail.enquiry.sub":
-    "Isto vai para quem gere esta ficha, como mensagem direta da tua conta. Não fica publicado na ficha.",
+    "Isto vai para a caixa de mensagens de quem gere esta ficha, e a resposta chega em nome do negócio. Não fica publicado na ficha.",
   "directory.detail.enquiry.replyNotice":
     "{name} pode responder-te já a isto. Podes escrever mais assim que o fizer.",
   "directory.detail.enquiry.bodyLabel": "A tua mensagem",
@@ -9020,7 +9076,7 @@ export const marketing: Catalog = {
   "directory.detail.enquiry.successTitle": "Mensagem",
   "directory.detail.enquiry.successEm": "enviada",
   "directory.detail.enquiry.successBody":
-    "Está na caixa de entrada de quem gere o {name}, como mensagem direta tua.",
+    "Está na caixa de mensagens de {name}, onde quem o gere pode responder em nome de {name}.",
   "directory.detail.enquiry.successReplyStep":
     "{name} pode responder-te já a isto. Vais poder escrever mais assim que o fizer.",
   "directory.detail.enquiry.openThreadCta": "Abrir a conversa",
@@ -9411,6 +9467,56 @@ export const marketing: Catalog = {
     "As listas de guardados assinalam um item morto antes de o arrumares",
   "changelog.entries.saved-lists-flag-a-dead-item-before-you-file-it.body":
     "A linha de guardados recentes nas tuas listas marca os itens cuja página saiu, como o resto dos teus guardados.",
+
+  // Community spaces, 22 Sep 2026.
+  // Business mailboxes, 22 Sep 2026.
+  "changelog.entries.reply-as-your-business.title":
+    "Responde como o teu negócio, persona ou empresa",
+  "changelog.entries.reply-as-your-business.body":
+    "Troca de caixa de mensagens nas Mensagens e responde aos contactos como o negócio, com o teu primeiro nome à vista só se quem gere o ativar.",
+
+  "changelog.entries.community-spaces.title":
+    "As comunidades podem abrir espaços",
+  "changelog.entries.community-spaces.body":
+    "Grupos mais pequenos dentro de uma comunidade, com as mesmas pessoas, moderação e regras.",
+
+  // Uno reverse sticker art, 22 Sep 2026.
+  "changelog.entries.hosts-can-delete-a-gathering-from-manage.title":
+    "Quem organiza pode eliminar um convívio no Gerir",
+  "changelog.entries.hosts-can-delete-a-gathering-from-manage.body":
+    "As Definições têm agora um botão Eliminar ao lado de Cancelar, com a mesma confirmação e regra de cancelar primeiro.",
+  "changelog.entries.uno-reverse-stickers-look-like-the-real-card.title":
+    "Os stickers Uno reverse parecem a carta a sério",
+  "changelog.entries.uno-reverse-stickers-look-like-the-real-card.body":
+    "Duas setas grossas em relevo dentro de um oval alto e inclinado, em cada bandeira do orgulho.",
+
+  // Admin-authored listings and messaging stickers, 20 Sep 2026.
+  "changelog.entries.admin-authored-listings.title":
+    "Pôr um espaço do diretório em nome de alguém",
+  "changelog.entries.admin-authored-listings.body":
+    "A equipa escreve a página, junta cogestores e oferece-ta; aceitar é onde assumes o compromisso.",
+  "changelog.entries.stickers-in-messages.title": "Stickers nas mensagens",
+  "changelog.entries.stickers-in-messages.body":
+    "Os admins têm um novo Criador de packs de stickers, a começar por uma carta Uno reverse em cada bandeira do orgulho.",
+
+  // Section 9 (Local directory), 20 Sep 2026.
+  "changelog.entries.a-listing-with-no-photos-skips-the-cover.title":
+    "Uma ficha sem fotos salta a faixa de fotos",
+  "changelog.entries.a-listing-with-no-photos-skips-the-cover.body":
+    "Uma página de negócio sem fotos carregadas passa agora do nome direto para os horários, em vez de um painel a anunciar que ainda não há nenhuma.",
+  "changelog.entries.a-listing-header-says-who-each-button-is-for.title":
+    "O cabeçalho de um anúncio diz para quem é cada botão",
+  "changelog.entries.a-listing-header-says-who-each-button-is-for.body":
+    "Os controlos de quem gere o espaço e as ferramentas de moderação passam a ter faixas próprias, e as ações públicas são uma linha compacta de ícones com dicas.",
+  "changelog.entries.who-runs-a-place-is-one-line.title":
+    "Quem gere um espaço cabe numa linha",
+  "changelog.entries.who-runs-a-place-is-one-line.body":
+    "O cartão de quem gere acompanhava-te pela barra lateral; o nome e o papel ficam agora por baixo do nome da ficha, onde os lês uma vez e segues.",
+
+  "changelog.entries.the-map-on-a-listing-draws-every-time.title":
+    "O mapa da página de um negócio aparece sempre",
+  "changelog.entries.the-map-on-a-listing-draws-every-time.body":
+    "Abrir uma ficha a partir do diretório deixava um painel vazio no lugar do mapa até recarregares a página.",
 
   // Section 8 (Groups), 16 Sep 2026.
   "changelog.entries.reply-quotes-look-like-whatsapp.title":

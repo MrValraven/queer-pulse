@@ -246,6 +246,14 @@ export interface DirectoryPlace {
   hoursType: HoursType;
   hoursNote: string;
   owner: Owner;
+  /** True when nobody owns this listing (the backend derives it from
+   * `ownerId === null`). This is the only safe gate for anything that invites
+   * a claim. An empty `owner.name` is a different question entirely: an owner
+   * who chose `anon` visibility also arrives with a blank name, and inviting
+   * a claim there would out someone who asked this platform to leave them
+   * unnamed. Absent on demo fixtures and older payloads, which read as
+   * owned. */
+  isUnclaimed?: boolean;
   social: {
     instagram?: string;
     website?: string;

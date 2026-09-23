@@ -1,0 +1,168 @@
+/**
+ * The admin-only delegation panel inside the listing preview drawer: who owns
+ * the listing, the open ownership offer, and the co-manager roster.
+ *
+ * Reads as a bordered aside pinned under the preview, quieter than the
+ * moderation actions in the drawer footer. Everything is drawn from tokens,
+ * and the ground stays `--cream` so the panel sits on the same paper as the
+ * rest of the console in both themes.
+ */
+
+.section {
+  margin: 18px 0 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-16);
+  background: var(--cream);
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.intro {
+  margin: 4px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.block {
+  margin: 16px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+
+.blockHeading {
+  margin: 0 0 8px;
+  font-size: var(--text-11-5);
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.line {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+.meta {
+  margin: 3px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.quote {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-left: 3px solid rgba(var(--line-rgb), 0.24);
+  border-radius: var(--radius-8);
+  background: rgba(var(--line-rgb), 0.04);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.notice {
+  margin: 8px 0 0;
+  padding: 9px 11px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--line-rgb), 0.05);
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.noticeWarn {
+  background: rgba(var(--amber-rgb), 0.1);
+  color: var(--ink);
+}
+
+.error {
+  margin: 8px 0 0;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--danger);
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.rowMain {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.rowName {
+  display: block;
+  overflow: hidden;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowActions {
+  display: flex;
+  flex: none;
+  gap: 8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0 0;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+.textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.formActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

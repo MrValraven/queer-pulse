@@ -17,6 +17,13 @@ export const help: Catalog = {
     "Começa pelo aviso de triagem no topo: conta tudo o que espera por um moderador.\nClica num item da fila para saltares diretamente para a moderação.\nPercorre os gráficos abaixo para veres denúncias por tipo, crescimento de membros e tempos de resposta.",
   "admin.hub.demo":
     'o aviso pode indicar "12 coisas precisam de atenção humana", com as emergências de segurança destacadas primeiro.',
+  "admin.listingNew.title": "Adicionar um espaço",
+  "admin.listingNew.intro":
+    "É aqui que a equipa escreve sobre um espaço que ainda não se juntou à QueerPulse. O registo começa sem pertencer a ninguém, e podes oferecê-lo a um membro, que depois decide se fica com ele.",
+  "admin.listingNew.use":
+    "Escolhe se vai direto para o diretório ou se espera na fila de moderação.\nIndica um membro pelo slug do perfil para lhe oferecer o espaço, e escreve uma linha a explicar porquê.\nPreenche o negócio em si. Tudo o que diz respeito a quem o gere fica vazio até alguém aceitar.",
+  "admin.listingNew.demo":
+    "um café que acrescentes fica nas mãos da equipa até a pessoa a quem o ofereceste dizer que sim.",
   "admin.listings.title": "Estabelecimentos",
   "admin.listings.intro":
     "A mesa de revisão dos estabelecimentos submetidos pelos membros: os espaços, cafés e lojas queer-friendly que as pessoas adicionam ao mapa. És tu que decides o que fica visível.",

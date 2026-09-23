@@ -13,6 +13,7 @@ import {
 } from "./ModToolsSections";
 import { ModToolsOverview } from "./ModToolsOverview";
 import { ModToolsInvites } from "./ModToolsInvites";
+import { ModToolsSpaces } from "./ModToolsSpaces";
 import { ModToolsBans } from "./ModToolsBans";
 import { ModToolsSupport } from "./ModToolsSupport";
 import { ModToolsGovernanceLog } from "./ModToolsGovernanceLog";
@@ -79,14 +80,32 @@ export function ModToolsTab({
   const { data: ratificationQueue } = useCommunityBanRatifications(living.slug);
   const signableRatifications = signableRatificationCount(ratificationQueue);
 
+  // Spaces nest one level only, so the rail offers the section to a
+  // community's own console but never to a space's. It shows while platform
+  // staff let this community host spaces, and while spaces it already hosts
+  // still exist after the switch goes off, so moderators keep the list.
+  const isSpace = living.parent !== null;
+  const canHostSpaces =
+    !isSpace && (living.allowsSubcommunities || living.subcommunityCount > 0);
+  // Membership cards and platform support offers are out of v1 for a space
+  // (the backend refuses both there), so a space's rail leaves them out.
+  const isSectionOffered = (id: ModSection) =>
+    id === "spaces"
+      ? canHostSpaces
+      : id === "card" || id === "support"
+        ? !isSpace
+        : true;
+
   // The open section lives in the URL beside the tab (?tab=modtools&mod=…),
   // so a pane is deep-linkable, survives a refresh, and the back button walks
-  // out of it. An unknown value falls back to Overview.
+  // out of it. An unknown value falls back to Overview, and so does a
+  // section this community is not offered, e.g. `?mod=card` on a space.
   const [searchParams, setSearchParams] = useSearchParams();
   const rawSection = searchParams.get("mod");
-  const section: ModSection = isModSection(rawSection)
-    ? rawSection
-    : "overview";
+  const section: ModSection =
+    isModSection(rawSection) && isSectionOffered(rawSection)
+      ? rawSection
+      : "overview";
   const openSection = (next: ModSection) =>
     setSearchParams(
       (prev) => {
@@ -117,15 +136,17 @@ export function ModToolsTab({
           className={styles.rail}
           idPrefix={railId}
           label={t("communities:detail.modtools.nav.label")}
-          tabs={MOD_NAV.map((item) => ({
-            id: item.id,
-            label: t(item.labelKey),
-            // Only a queue with something in it gets a badge. A rail of
-            // zeroes reads as work rather than as an all-clear.
-            ...(item.badge && counts[item.id]
-              ? { count: counts[item.id] }
-              : {}),
-          }))}
+          tabs={MOD_NAV.filter((item) => isSectionOffered(item.id)).map(
+            (item) => ({
+              id: item.id,
+              label: t(item.labelKey),
+              // Only a queue with something in it gets a badge, so a rail
+              // with no badges reads as an all-clear.
+              ...(item.badge && counts[item.id]
+                ? { count: counts[item.id] }
+                : {}),
+            }),
+          )}
           active={section}
           onChange={(id) => openSection(id as ModSection)}
         />
@@ -276,6 +297,9 @@ function ModToolsPane({
   }
   if (section === "invites") {
     return <ModToolsInvites slug={living.slug} role={role} />;
+  }
+  if (section === "spaces") {
+    return <ModToolsSpaces living={living} communityName={communityName} />;
   }
   if (section === "support") {
     return <ModToolsSupport slug={living.slug} />;

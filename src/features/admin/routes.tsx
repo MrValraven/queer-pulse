@@ -74,9 +74,17 @@ const AdminListingsPage = lazyNamed(
   () => import("./AdminListingsPage"),
   "AdminListingsPage",
 );
+const AdminListingNewPage = lazyNamed(
+  () => import("./AdminListingNewPage"),
+  "AdminListingNewPage",
+);
 const AdminMediaPage = lazyNamed(
   () => import("./AdminMediaPage"),
   "AdminMediaPage",
+);
+const AdminStickerPacksPage = lazyNamed(
+  () => import("./AdminStickerPacksPage"),
+  "AdminStickerPacksPage",
 );
 const AdminInvitesPage = lazyNamed(
   () => import("./AdminInvitesPage"),
@@ -255,7 +263,12 @@ export function adminRoutes() {
       />
       <Route path={routes.adminSafeSpaces} element={<AdminSafeSpacesPage />} />
       <Route path={routes.adminListings} element={<AdminListingsPage />} />
+      <Route path={routes.adminListingNew} element={<AdminListingNewPage />} />
       <Route path={routes.adminMedia} element={<AdminMediaPage />} />
+      <Route
+        path={routes.adminStickerPacks}
+        element={<AdminStickerPacksPage />}
+      />
       <Route path={routes.adminInvites} element={<AdminInvitesPage />} />
       <Route
         path={routes.adminChangemakers}

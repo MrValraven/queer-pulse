@@ -110,6 +110,22 @@ export const messages: Catalog = {
   "emoji.categorySymbols": "Symbols",
   "emoji.categoryFlags": "Flags",
 
+  // Sticker picker (StickerPicker + EmojiPicker's segmented rail, ComposerAttachButton)
+  "sticker.open": "Send a sticker",
+  "sticker.panelLabel": "Sticker picker",
+  "sticker.packsLabel": "Sticker packs",
+  "sticker.recentsLabel": "Recently used",
+  "sticker.loading": "Loading stickers…",
+  "sticker.loadError": "Couldn't load stickers. Try again",
+  "sticker.empty": "No stickers yet",
+  "sticker.imageAlt": "{label} sticker",
+  "sticker.attachmentLabel": "Sticker",
+  // Segmented rail inside the emoji popover; keep these in the emoji.* family,
+  // since they label that rail rather than the standalone sticker picker.
+  "emoji.tabsLabel": "Emoji and stickers",
+  "emoji.tabEmoji": "Emoji",
+  "emoji.tabStickers": "Stickers",
+
   // Attach menu (ComposerAttachButton) — the paperclip inside the composer
   // pill and the Photo / File / GIF menu it opens. The rows themselves reuse
   // attachments.open, attachments.openDocument and gif.open below as their
@@ -634,6 +650,162 @@ export const messages: Catalog = {
   "system.memberJoined": "{actor} joined",
   "system.groupDissolvedYou": "You ended this group",
   "system.groupDissolved": "{actor} ended this group",
+  // Business mailboxes: the migration note a moved enquiry thread gets.
+  // Neutral and actor-free by design: the migration writes this row with a
+  // NULL sender and names no actor, so it reads the same for every viewer,
+  // owner included.
+  "system.movedToBusinessMailbox":
+    "This conversation moved to the business mailbox",
+  // Same note, once the server resolves the business's name. The unnamed
+  // key above stays the fallback when it cannot.
+  "system.movedToNamedBusinessMailbox":
+    "This conversation moved to {business}'s mailbox",
+  // Neutral fallback for a system event type this client has never heard of
+  // (e.g. a migration that starts writing a new event before the client that
+  // renders it ships). Never a departure sentence.
+  "system.unknownEvent": "This conversation was updated",
+
+  // PRD-376: Business mailboxes (spec 2026-09-20, section 10): the mailbox
+  // switcher, shared-mailbox claiming, staff attribution, reply-only
+  // mailboxes, identity blocks and reports, and persona and company
+  // contact. PT is informal tu. A mailbox is a caixa de mensagens, a
+  // listing is a ficha, the business is negócio.
+  "mailbox.switcher.buttonAria": "Mailbox: {name}. Switch mailbox",
+  "mailbox.switcher.buttonAriaWithUnread":
+    "Mailbox: {name}. Switch mailbox. New messages in your other mailboxes",
+  "mailbox.switcher.title": "Your mailboxes",
+  "mailbox.switcher.unreadCount": "{count} unread",
+  "mailbox.switcher.current": "Current mailbox",
+  "mailbox.switcher.settings": "Mailbox settings",
+  "mailbox.kind.profile": "Personal",
+  "mailbox.kind.listing": "Directory listing",
+  "mailbox.kind.subprofile": "Persona",
+  "mailbox.kind.company": "Company",
+  "mailbox.role.owner": "Owner",
+  "mailbox.role.team": "Team",
+  "mailbox.readOnly.tag": "Read only",
+  "mailbox.untitled": "Unnamed mailbox",
+  "mailbox.lostAccess":
+    "You no longer answer for that mailbox, so your own messages are showing.",
+  "mailbox.replyOnly.emptyTitle": "Nothing to answer yet",
+  "mailbox.replyOnly.emptyBody":
+    "Members write to {name} from its page. Every reply you send here goes out as {name}.",
+  "mailbox.replyOnly.composeHint":
+    "{name} answers conversations members start. Switch to your own mailbox to write to someone.",
+  "mailbox.composer.replyingAs": "Replying as {name}",
+  "mailbox.composer.readOnly":
+    "Moderation removed {name}. Its conversations stay here to read, and replies are switched off.",
+  "mailbox.claim.unclaimed": "Unclaimed",
+  "mailbox.claim.mine": "You're handling this",
+  "mailbox.claim.theirs": "{name} is handling this",
+  "mailbox.claim.tookOverFrom": "{name} took over from {previous}",
+  "mailbox.claim.rowMine": "Yours",
+  "mailbox.claim.rowTheirs": "With {name}",
+  "mailbox.claim.claim": "Claim",
+  "mailbox.claim.release": "Release",
+  "mailbox.claim.takeOver": "Take over",
+  "mailbox.claim.takeOverTitle": "Take over from {name}?",
+  "mailbox.claim.takeOverBody":
+    "{name} is handling this conversation. Taking over moves it to you, and your team will see it with you.",
+  "mailbox.claim.takeOverConfirm": "Take over",
+  "mailbox.claim.claimedToast": "You're handling this conversation",
+  "mailbox.claim.releasedToast": "Released for your team",
+  "mailbox.claim.lostRaceToast": "Someone on your team got there first",
+  "mailbox.claim.tookOverToast": "You took over from {name}",
+  "mailbox.claim.error": "That didn't go through. Try again.",
+  "mailbox.tab.unclaimed": "Unclaimed",
+  "mailbox.tab.mine": "Mine",
+  "mailbox.tab.unclaimedEmpty": "Every conversation has someone handling it",
+  "mailbox.tab.mineEmpty": "You're not handling any conversations yet",
+  "mailbox.attribution.customerLine": "{name} from {business}",
+  "mailbox.attribution.staffLine": "Sent by {name}",
+  "mailbox.formerBusiness": "Former business",
+  "mailbox.failure.notStaff":
+    "Not sent. You no longer answer for this mailbox.",
+  "mailbox.failure.removed": "Not sent. Moderation removed this persona.",
+  "mailbox.failure.wrongMailbox":
+    "Not sent. This message belongs to another mailbox.",
+  "mailbox.failure.cannotStart":
+    "A business, persona or company mailbox can only reply.",
+  "mailbox.settings.title": "Mailbox settings for {name}",
+  "mailbox.settings.showStaffNames": "Show who replied",
+  "mailbox.settings.showStaffNamesHelp":
+    "Customers see a first name beside each reply, like “Ana from {name}”. Surnames and profiles stay hidden.",
+  "mailbox.settings.ownerOnly": "Only the owner can change this.",
+  "mailbox.settings.readOnly":
+    "Moderation removed {name}, so these settings can't change.",
+  "mailbox.settings.allowMyName": "Include my first name",
+  "mailbox.settings.allowMyNameHelp":
+    "Takes effect while “Show who replied” is on.",
+  "mailbox.settings.saved": "Saved",
+  "mailbox.settings.error": "That didn't save. Try again.",
+  "mailbox.settings.loadError": "These settings didn't load. Try again.",
+  "mailbox.settings.close": "Close",
+  "mailbox.block.action": "Block {name}",
+  "mailbox.block.unblockAction": "Unblock {name}",
+  "mailbox.block.confirmTitle": "Block {name}?",
+  "mailbox.block.confirmBody":
+    "Your conversations with {name} close for you. Whoever answers for {name} stays reachable on their own profile.",
+  "mailbox.block.confirm": "Block",
+  "mailbox.block.done": "You blocked {name}",
+  "mailbox.block.undo": "Undo",
+  "mailbox.block.error": "The block didn't go through. Try again.",
+  "mailbox.report.action": "Report {name}",
+  "mailbox.blocked.title": "Businesses, personas and companies",
+  "mailbox.blocked.description":
+    "Blocking one closes your conversations with it. Whoever answers for it stays reachable as themselves.",
+  "mailbox.blocked.empty":
+    "You haven't blocked any business, persona or company.",
+  "mailbox.blocked.since": "Blocked {date}",
+  "mailbox.blocked.unblocked": "You unblocked {name}",
+  "mailbox.blocked.loadErrorTitle": "This list didn't load",
+  "mailbox.blocked.loadErrorBody": "Check your connection and try again.",
+  "mailbox.contact.cta": "Send a message",
+  "mailbox.contact.note":
+    "It lands in {name}'s mailbox, and only whoever answers for {name} can read it.",
+  "mailbox.contact.replyNote":
+    "They can reply straight away. You can send more once they do.",
+  "mailbox.contact.existingThreadCta": "Open your conversation",
+  "mailbox.contact.signInPrompt":
+    "Sign in to write to {name} without sharing a phone number or an email address.",
+  "mailbox.contact.signInCta": "Sign in",
+  "mailbox.contact.loadErrorTitle": "Messaging options didn't load",
+  "mailbox.contact.loadErrorBody": "Try again in a moment.",
+  "mailbox.contact.unavailable.ownMailbox":
+    "You answer for {name}. Its messages reach you through your mailbox switcher.",
+  "mailbox.contact.unavailable.unstaffed": "Nobody answers for {name} yet.",
+  "mailbox.contact.unavailable.removed":
+    "{name} was removed and can't receive messages.",
+  "mailbox.contact.unavailable.unavailable":
+    "You can't message {name} from your account.",
+  "mailbox.contact.limit.thisMailbox":
+    "You've already written to {name} today. Give them a chance to reply first.",
+  "mailbox.contact.limit.acrossMailboxes":
+    "You've written to a lot of businesses and personas today, so this is paused for now.",
+  "mailbox.contact.limit.clearsIn": "You can write again {when}.",
+  "mailbox.contact.eyebrow": "Private message",
+  "mailbox.contact.title": "Write to <em>{name}</em>",
+  "mailbox.contact.sub":
+    "This goes to {name}'s mailbox, and whoever answers replies as {name}. Nothing is published.",
+  "mailbox.contact.bodyLabel": "Your message",
+  "mailbox.contact.bodyPlaceholder": "What would you like to ask?",
+  "mailbox.contact.bodyHint": "At least {min} characters.",
+  "mailbox.contact.charactersLeft": "Characters left: {remaining}",
+  "mailbox.contact.cancel": "Cancel",
+  "mailbox.contact.submit": "Send message",
+  "mailbox.contact.submitting": "Sending",
+  "mailbox.contact.error.generic":
+    "Your message didn't send. Try again in a moment.",
+  "mailbox.contact.error.rateLimited":
+    "You've already written here today. Give them a chance to reply first.",
+  "mailbox.contact.error.unavailable":
+    "{name} can't receive messages right now.",
+  "mailbox.contact.successAria": "Your message to {name} was sent",
+  "mailbox.contact.successTitle": "Message",
+  "mailbox.contact.successEm": "sent",
+  "mailbox.contact.successBody": "It's in {name}'s mailbox.",
+  "mailbox.contact.openThreadCta": "Open the conversation",
+  "mailbox.contact.doneCta": "Done",
 
   // ── Safety — block/report a member + share-carefully notice (Wave A) ──
   "conversation.reportMemberAction": "Report {name}",

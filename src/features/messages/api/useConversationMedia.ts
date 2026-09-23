@@ -1,7 +1,6 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useAuth } from "../../../app/providers/authContext";
 import {
   filterEntriesByKind,
   flattenNewestFirst,
@@ -10,6 +9,7 @@ import {
 } from "../conversationMediaFilters";
 import { conversations as mockConversations, type Conversation } from "../data";
 import type { MessageGroup } from "../useMessagesController.helpers";
+import { useMessageViewer } from "../useMessageViewer";
 import {
   getConversationMedia,
   type ConversationMediaKind,
@@ -104,8 +104,7 @@ export function useConversationMedia(
   messageGroups: MessageGroup[],
 ) {
   const { demoMode } = useDemoMode();
-  const { user } = useAuth();
-  const myHandle = user?.profile.slug ?? null;
+  const viewer = useMessageViewer();
   const isLiveEnabled = !demoMode && !!conversationId;
 
   const query = useInfiniteQuery<ConversationMediaPage>({
@@ -154,11 +153,11 @@ export function useConversationMedia(
     const liveEntries = (query.data?.pages ?? [])
       .flatMap((page) => page.items)
       .map((messageResponse) => ({
-        message: messageToChat(messageResponse, myHandle),
+        message: messageToChat(messageResponse, viewer),
         at: messageResponse.createdAt,
       }));
     return filterEntriesByKind(liveEntries, kind);
-  }, [demoMode, demoGroups, demoMessageGroups, query.data, myHandle, kind]);
+  }, [demoMode, demoGroups, demoMessageGroups, query.data, viewer, kind]);
 
   const { isFetchingNextPage, hasNextPage, fetchNextPage, refetch } = query;
   const loadMore = useCallback(() => {

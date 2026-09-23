@@ -3,9 +3,17 @@ import { activeLocale } from "../../../shared/i18n/locale";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { ChatMessage, Conversation, GroupMemberView } from "../data";
-import { systemMessageText } from "../systemMessageText";
+import {
+  normalizeSystemEventType,
+  systemMessageText,
+} from "../systemMessageText";
 import type { ConversationResponse, MessageResponse } from "./messages.api";
 import type { ConversationMemberPreview } from "../../../shared/contracts/contracts";
+import {
+  isFromViewerSide,
+  type MessageViewer,
+} from "../../../shared/api/mailboxViewer";
+import { toConversationClaimant } from "../../../shared/api/conversationClaim";
 
 /**
  * ENG-253: `conversationToView`'s return, extended with the trimmed preview
@@ -141,6 +149,36 @@ export function groupInitials(title: string): string {
   return title.trim().slice(0, 2).toUpperCase();
 }
 
+/** A sticker send blanks `body` server-side BY DESIGN: the sticker branch of
+ *  `MessagingCoreService.postMessage` drops the frontend's placeholder text
+ *  before persisting, since every field a sticker bubble needs already lives
+ *  on its baked `attachment`. A raw `.body` read for a sticker is therefore
+ *  always empty. Every caller that shows a message as plain TEXT (a chat
+ *  bubble, an inbox/group preview) falls back to the sticker's own `label`
+ *  instead, exactly the placeholder a locally-sent optimistic sticker
+ *  already carries (`useMessageSendActions.sendSticker`'s `text:
+ *  sticker.label`). Narrows with the raw `"stickerId" in attachment` check
+ *  rather than the shared `isStickerAttachment` guard, mirroring
+ *  `attachmentToChat`'s own reasoning below: this function sits on the wire
+ *  `MessageResponse["attachment"]` shape, whose `caption` is nullable, unlike
+ *  the normalized `ChatMessage` shape the guard is typed against. */
+export function messageDisplayText(message: MessageResponse): string {
+  const attachment = message.attachment;
+  return message.kind === "sticker" && attachment && "stickerId" in attachment
+    ? attachment.label
+    : message.body;
+}
+
+/** The business a moved note names, kept only while that business still
+ *  resolves: a deleted one (`isFormerMailbox`) carries the English fallback
+ *  label, so its note reads the unnamed line. */
+function movedNoteMailboxName(
+  systemEvent: NonNullable<MessageResponse["systemEvent"]>,
+): string | undefined {
+  if (systemEvent.isFormerMailbox === true) return undefined;
+  return systemEvent.mailboxName || undefined;
+}
+
 /** Inbox preview for a group's last message: sender first name prefixed for a
  *  member message ("Ana: …"), or the localized system sentence for a system
  *  message ("Ana made Bea an admin"), built by the SAME `systemMessageText`
@@ -160,12 +198,13 @@ function groupPreview(
     if (t) {
       return systemMessageText(
         {
-          type: last.systemEvent.type,
+          type: normalizeSystemEventType(last.systemEvent.type),
           actorName: last.systemEvent.actorName,
           targetName: last.systemEvent.targetName,
           value: last.systemEvent.value,
           actorIsMe: last.systemEvent.actorIsMe,
           targetIsMe: last.systemEvent.targetIsMe,
+          mailboxName: movedNoteMailboxName(last.systemEvent),
         },
         t,
       );
@@ -179,7 +218,8 @@ function groupPreview(
     last.sender.isFormerMember && formerMemberLabel
       ? formerMemberLabel
       : (last.sender.displayName.trim().split(/\s+/)[0] ?? "");
-  return first ? `${first}: ${last.body}` : last.body;
+  const displayText = messageDisplayText(last);
+  return first ? `${first}: ${displayText}` : displayText;
 }
 
 /** Inbox-row preview text for a just-sent/received message, matching group vs
@@ -190,7 +230,68 @@ export function previewForMessage(
   isGroup: boolean,
   message: MessageResponse,
 ): string {
-  return isGroup ? groupPreview(message) : message.body;
+  return isGroup ? groupPreview(message) : messageDisplayText(message);
+}
+
+/** Inbox preview for a DIRECT thread's last message: the localized system
+ *  sentence for a system message (e.g. the migration's "This conversation
+ *  moved to the business mailbox" note), or the plain display text
+ *  otherwise. A DM preview is always plain text: the row's own header
+ *  already identifies the single counterpart, the job a group's prefixed
+ *  sender name does instead. */
+function directPreview(
+  lastMessage: MessageResponse | null,
+  t: TFunction,
+): string {
+  if (!lastMessage) return "";
+  if (lastMessage.kind === "system" && lastMessage.systemEvent) {
+    return systemMessageText(
+      {
+        type: normalizeSystemEventType(lastMessage.systemEvent.type),
+        actorName: lastMessage.systemEvent.actorName,
+        targetName: lastMessage.systemEvent.targetName,
+        value: lastMessage.systemEvent.value,
+        actorIsMe: lastMessage.systemEvent.actorIsMe,
+        targetIsMe: lastMessage.systemEvent.targetIsMe,
+        mailboxName: movedNoteMailboxName(lastMessage.systemEvent),
+      },
+      t,
+    );
+  }
+  return messageDisplayText(lastMessage);
+}
+
+/** The business side of a row's last message, every key always present. */
+export interface LastMessageMailboxFields {
+  lastMessageSenderIdentityId: string | undefined;
+  lastMessageStaffFirstName: string | undefined;
+  lastMessageIsSentByViewer: boolean | undefined;
+}
+
+/** The business side of a row's last message: the identity it was sent as,
+ *  the staff first name the server let this reader see, and whether the
+ *  viewer typed it. Every key is always returned, `undefined` for a system
+ *  or personal message, so a caller that spreads the result over an existing
+ *  row (`patchConversationPreview`) clears the previous message's values.
+ *  The server list rows carry `isSentByViewer`, and so does each live
+ *  message the patch receives, since the server renders it per reader; it
+ *  stays `undefined` when the key is absent, since `false` means a
+ *  colleague typed it. */
+export function lastMessageMailboxFields(
+  lastMessage: MessageResponse | null,
+): LastMessageMailboxFields {
+  if (!lastMessage || lastMessage.kind === "system") {
+    return {
+      lastMessageSenderIdentityId: undefined,
+      lastMessageStaffFirstName: undefined,
+      lastMessageIsSentByViewer: undefined,
+    };
+  }
+  return {
+    lastMessageSenderIdentityId: lastMessage.sender.identityId,
+    lastMessageStaffFirstName: lastMessage.sender.staffFirstName,
+    lastMessageIsSentByViewer: lastMessage.isSentByViewer,
+  };
 }
 
 /** ConversationResponse (group) → the inbox `Conversation` row. */
@@ -234,8 +335,11 @@ function groupConversationToView(
     // substitute "You: " for the baked-in sender name when the viewer sent
     // the last message, without re-parsing `groupPreview`'s formatted string.
     lastMessageSenderHandle: dto.lastMessage?.sender.handle || undefined,
-    lastMessageBody: dto.lastMessage?.body,
+    lastMessageBody: dto.lastMessage
+      ? messageDisplayText(dto.lastMessage)
+      : undefined,
     lastMessageIsSystem: dto.lastMessage?.kind === "system",
+    ...lastMessageMailboxFields(dto.lastMessage),
     // PRD-225: a manual "mark unread" is unread even with nothing new to
     // read — ORed in alongside the count-based rule, never replacing it.
     unread: dto.unreadCount > 0 || !!dto.markedUnreadAt,
@@ -293,18 +397,27 @@ export function conversationToView(
   // erased their account (ENG-243). `isOfficial` tells them apart; an older
   // response without it keeps the historical reading (null means official).
   const isOfficial = dto.isOfficial ?? !counterpart;
-  const name =
-    counterpart?.displayName ??
-    (isOfficial
-      ? t("messages:conversation.officialName")
-      : t("messages:formerMember"));
+  // A deleted business keeps a summary with the server's English fallback
+  // name, so the row names it in the viewer's language with no initials.
+  const isCounterpartFormerBusiness = counterpart?.isFormerIdentity === true;
+  const name = isCounterpartFormerBusiness
+    ? t("messages:mailbox.formerBusiness")
+    : (counterpart?.displayName ??
+      (isOfficial
+        ? t("messages:conversation.officialName")
+        : t("messages:formerMember")));
   const { first, last } = splitName(name);
   const slug = counterpart?.handle;
   const tint: AvatarTint = slug ? tintForSlug(slug) : "plum";
   return {
     id: dto.id,
     slug,
-    initials: counterpart ? initialsOf(first, last) : isOfficial ? "QP" : "",
+    initials:
+      counterpart && !isCounterpartFormerBusiness
+        ? initialsOf(first, last)
+        : isOfficial
+          ? "QP"
+          : "",
     tint,
     avatarUrl: counterpart?.avatarUrl ?? undefined,
     name,
@@ -315,13 +428,16 @@ export function conversationToView(
     connectedSince: connectedSinceLabel(dto.connectedSince),
     time: timeLabel(dto.updatedAt),
     updatedAt: dto.updatedAt,
-    preview: dto.lastMessage?.body ?? "",
+    preview: directPreview(dto.lastMessage, t),
     // DES-190: see the matching comment in `groupConversationToView`. A DM's
-    // `preview` is already the bare body, but the row still needs to know WHO
-    // sent it to show "You: " when the viewer did.
+    // `preview` is already the sender-agnostic display text, but the row
+    // still needs to know WHO sent it to show "You: " when the viewer did.
     lastMessageSenderHandle: dto.lastMessage?.sender.handle || undefined,
-    lastMessageBody: dto.lastMessage?.body,
+    lastMessageBody: dto.lastMessage
+      ? messageDisplayText(dto.lastMessage)
+      : undefined,
     lastMessageIsSystem: dto.lastMessage?.kind === "system",
+    ...lastMessageMailboxFields(dto.lastMessage),
     // PRD-225: see the matching comment in `groupConversationToView`.
     unread: dto.unreadCount > 0 || !!dto.markedUnreadAt,
     pinnedAt: dto.pinnedAt ?? undefined,
@@ -354,17 +470,50 @@ export function conversationToView(
       : false,
     // Server-authoritative (PRD-340); see `Conversation.replyGate`.
     replyGate: counterpart ? (dto.replyGate ?? "open") : "open",
+    // Business mailboxes: the counterpart's identity when the other side is
+    // a business, persona or company (a profile counterpart leaves these
+    // unset), and the staff-only claim, whose null and absent both survive.
+    counterpartIdentityId: counterpart?.identityId,
+    counterpartIdentityKind:
+      counterpart?.identityKind && counterpart.identityKind !== "profile"
+        ? counterpart.identityKind
+        : undefined,
+    isCounterpartFormerBusiness: isCounterpartFormerBusiness || undefined,
+    mailboxIdentityId: dto.mailboxIdentityId,
+    claimedAt: dto.claimedAt,
+    claimedBy: toConversationClaimant(dto.claimedBy),
+    claimedByUserId: dto.claimedByUserId,
+    claimTakenOverFrom: toConversationClaimant(dto.claimTakenOverFrom),
     messages: [],
   };
 }
 
 /** The wire attachment onto the bubble's attachment type. The backend may send
  *  `caption: null`, while `GifAttachment`/`DocumentAttachment` promise a caption
- *  is absent whenever there is none, so a null or empty one is dropped here. */
+ *  is absent whenever there is none, so a null or empty one is dropped here.
+ *
+ *  A sticker is checked FIRST, before the `fileName` test: it is the third
+ *  shape `MessageResponse["attachment"]` carries (`StickerAttachmentResponse`)
+ *  and, unlike the other two, has no `caption` at all, so it must never reach
+ *  either the document or the image/gif branch below, both of which
+ *  destructure `caption` off whatever they're given.
+ *
+ *  This narrows with a raw `"stickerId" in attachment` check rather than the
+ *  shared `isStickerAttachment` guard (`shared/api/stickerAttachment.ts`):
+ *  that guard's parameter type is pinned to the already-normalized
+ *  `ChatMessage["attachment"]` shapes, whose `caption` is optional-only
+ *  (`string | undefined`); the wire shape here still carries the nullable
+ *  `string | null` caption, which is not assignable to it. `stickerId` is
+ *  unique to the sticker member of the wire union, so this narrows exactly
+ *  as precisely as the shared guard would, for the one caller that sits on
+ *  the wire shape instead of the FE one, mirroring the `"fileName" in
+ *  attachment` structural check the document branch already uses for the
+ *  same reason. */
 function attachmentToChat(
   attachment: MessageResponse["attachment"],
 ): ChatMessage["attachment"] {
   if (!attachment) return undefined;
+  if ("stickerId" in attachment) return attachment;
   if ("fileName" in attachment) {
     const { caption: documentCaption, ...document } = attachment;
     return documentCaption
@@ -375,16 +524,23 @@ function attachmentToChat(
   return imageCaption ? { ...image, caption: imageCaption } : image;
 }
 
-/** MessageResponse → a single chat bubble, `from` decided by the sender handle. */
+/** MessageResponse → a single chat bubble, `from` decided by
+ *  `isFromViewerSide`: a reply sent as a business the viewer staffs sits on
+ *  the viewer's side whoever typed it. */
 export function messageToChat(
   dto: MessageResponse,
-  myHandle: string | null,
+  viewer: MessageViewer,
 ): ChatMessage {
-  const isMe = !!myHandle && dto.sender.handle === myHandle;
+  const isMe = isFromViewerSide(dto.sender, viewer);
+  const isSystem = dto.kind === "system";
   return {
     id: dto.id,
     from: isMe ? "me" : "them",
-    text: dto.body,
+    // CRITICAL 1: a sticker's stored `body` is always empty (see
+    // `messageDisplayText`'s own doc); falling back to its label here is
+    // what lets a forwarded sticker's `SendMessageDto.body` clear
+    // `@MinLength(1)` instead of 400ing forever.
+    text: messageDisplayText(dto),
     // Bubbles ALWAYS show a wall-clock time; the day comes from the separator.
     time: clockLabel(dto.createdAt),
     at: dto.createdAt,
@@ -415,11 +571,13 @@ export function messageToChat(
             ? "image"
             : dto.kind === "document"
               ? "document"
-              : undefined,
+              : dto.kind === "sticker"
+                ? "sticker"
+                : undefined,
     attachment: attachmentToChat(dto.attachment),
     systemEvent: dto.systemEvent
       ? {
-          type: dto.systemEvent.type,
+          type: normalizeSystemEventType(dto.systemEvent.type),
           actorName: dto.systemEvent.actorName,
           targetName: dto.systemEvent.targetName,
           value: dto.systemEvent.value,
@@ -431,22 +589,53 @@ export function messageToChat(
           actorIsMe:
             dto.systemEvent.actorIsMe ??
             (dto.systemEvent.actorHandle != null
-              ? dto.systemEvent.actorHandle === myHandle
+              ? dto.systemEvent.actorHandle === viewer.myHandle
               : isMe),
           targetIsMe:
             dto.systemEvent.targetIsMe ??
             (dto.systemEvent.targetHandle != null &&
-              dto.systemEvent.targetHandle === myHandle),
+              dto.systemEvent.targetHandle === viewer.myHandle),
+          mailboxName: movedNoteMailboxName(dto.systemEvent),
         }
       : undefined,
     // Group attribution: the sender's identity so a received run in a group can
     // show a name label + avatar. Harmlessly carried in DMs too (ignored there).
-    senderName: dto.sender.displayName,
-    senderHandle: dto.sender.handle || undefined,
-    senderTint: dto.sender.handle ? tintForSlug(dto.sender.handle) : undefined,
-    senderAvatar: dto.sender.avatarUrl ?? undefined,
-    // ENG-243: an erased sender renders as a localized "Former member".
-    isSenderFormerMember: dto.sender.isFormerMember || undefined,
+    // A `system` row names its actor through the event itself (`systemEvent`),
+    // never through these sender fields: the mailbox migration writes such a
+    // row with `sender_id` NULL, which the server renders as "Former member"
+    // (`isFormerMember: true`) purely so an OLDER client (one that doesn't
+    // know this event yet) still shows something plausible. A client that DOES
+    // know the event must never let that server-side placeholder reach a pill
+    // or a run, so every sender field below is left undefined for a system row.
+    senderName: dto.kind === "system" ? undefined : dto.sender.displayName,
+    senderHandle:
+      dto.kind === "system" ? undefined : dto.sender.handle || undefined,
+    senderTint:
+      dto.kind === "system"
+        ? undefined
+        : dto.sender.handle
+          ? tintForSlug(dto.sender.handle)
+          : undefined,
+    senderAvatar:
+      dto.kind === "system" ? undefined : (dto.sender.avatarUrl ?? undefined),
+    // ENG-243: an erased sender renders as a localized "Former member" on
+    // an ordinary message. A system row's sender fields are always left
+    // undefined instead, per the comment above.
+    isSenderFormerMember:
+      dto.kind === "system"
+        ? undefined
+        : dto.sender.isFormerMember || undefined,
+    // Business mailboxes, under the same system-row rule: the identity the
+    // message was sent as, the staff first name this reader may see, a
+    // deleted business's flag, and the server's word on who typed a reply
+    // (`undefined` when the key is absent, since `false` names a colleague).
+    senderIdentityId: isSystem ? undefined : dto.sender.identityId,
+    senderIdentityKind: isSystem ? undefined : dto.sender.identityKind,
+    senderStaffFirstName: isSystem ? undefined : dto.sender.staffFirstName,
+    isSenderFormerBusiness: isSystem
+      ? undefined
+      : dto.sender.isFormerIdentity || undefined,
+    isSentByViewer: isSystem ? undefined : dto.isSentByViewer,
   };
 }
 
@@ -458,9 +647,10 @@ export function messageToChat(
  * message it changes and passes the others through by reference, and
  * react-query's structural sharing keeps deep-equal refetched DTOs stable too,
  * so a changed message misses naturally. The bubble also depends on the viewer
- * (`from`, `actorIsMe`) and the locale (`time`), so each entry remembers the
- * context it was built for and rebuilds when that moves. A WeakMap lets an
- * entry go with its DTO once the query cache drops it.
+ * (`from`, `actorIsMe`: their handle and staffed identities) and the locale
+ * (`time`), so each entry remembers the context it was built for and rebuilds
+ * when that moves. A WeakMap lets an entry go with its DTO once the query
+ * cache drops it.
  */
 const chatMessageByDto = new WeakMap<
   MessageResponse,
@@ -469,12 +659,12 @@ const chatMessageByDto = new WeakMap<
 
 function stableMessageToChat(
   dto: MessageResponse,
-  myHandle: string | null,
+  viewer: MessageViewer,
   contextKey: string,
 ): ChatMessage {
   const cached = chatMessageByDto.get(dto);
   if (cached && cached.contextKey === contextKey) return cached.chatMessage;
-  const chatMessage = messageToChat(dto, myHandle);
+  const chatMessage = messageToChat(dto, viewer);
   chatMessageByDto.set(dto, { contextKey, chatMessage });
   return chatMessage;
 }
@@ -485,16 +675,19 @@ function stableMessageToChat(
  *  `stableMessageToChat`, so an unchanged DTO keeps its bubble object. */
 export function groupMessages(
   messages: MessageResponse[],
-  myHandle: string | null,
+  viewer: MessageViewer,
 ): { day: string; dayKey: string; items: ChatMessage[] }[] {
   const groups: { day: string; dayKey: string; items: ChatMessage[] }[] = [];
-  const contextKey = `${activeLocale()}|${myHandle ?? ""}`;
+  // The staffed identities are part of the context: gaining or losing a
+  // mailbox moves a business reply between sides, so every bubble rebuilds.
+  const staffedIdentitiesKey = [...viewer.staffedIdentityIds].sort().join(",");
+  const contextKey = `${activeLocale()}|${viewer.myHandle ?? ""}|${staffedIdentitiesKey}`;
   for (const message of messages) {
     const parsed = new Date(message.createdAt);
     const dayKey = Number.isNaN(parsed.getTime())
       ? message.createdAt
       : localDayKey(parsed);
-    const chatMessage = stableMessageToChat(message, myHandle, contextKey);
+    const chatMessage = stableMessageToChat(message, viewer, contextKey);
     const bucket = groups.at(-1);
     if (bucket && bucket.dayKey === dayKey) bucket.items.push(chatMessage);
     else

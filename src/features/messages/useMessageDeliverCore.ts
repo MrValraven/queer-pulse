@@ -17,6 +17,7 @@ import {
 } from "../../shared/api/messageCache";
 import { revokeBlobPreview, type MediaKind } from "./messageSending.helpers";
 import { PERMANENT_FAILURE_STATUS_CODES } from "./outboxReplay.helpers";
+import { MAILBOXES_QUERY_KEY_PREFIX } from "../../shared/api/mailboxViewer";
 
 /**
  * The live mutation behind a `kind:"document"` send (PRD-226), a standalone
@@ -38,6 +39,7 @@ function useSendDocumentMessage() {
       replyToId?: string;
       clientMessageId?: string;
       forwarded?: boolean;
+      asIdentityId?: string;
     }
   >({
     mutationFn: ({
@@ -47,6 +49,7 @@ function useSendDocumentMessage() {
       replyToId,
       clientMessageId,
       forwarded,
+      asIdentityId,
     }) =>
       sendDocumentMessage(
         conversationId,
@@ -55,6 +58,7 @@ function useSendDocumentMessage() {
         replyToId,
         clientMessageId,
         forwarded,
+        asIdentityId,
       ),
     onSuccess: (message, { conversationId }) => {
       upsertMessage(queryClient, conversationId, message);
@@ -172,6 +176,24 @@ function handleDeliverSuccessEffect(
   }
 }
 
+// Module-level, kept out of `runDeliver`'s own body for the same reason as
+// `handleDeliverSuccessEffect` above: it keeps `useMessageDeliverCore` under
+// the 200-line cap. Resolves the kind EXPLICITLY from `stickerId`/`mediaKind`:
+// `stickerId` alone decides a sticker send, since the server reads the
+// catalogue row and bakes its own attachment, so a sticker send always
+// arrives here with no attachment of its own to key a kind off of.
+function resolveSendKind(
+  attachment: GifAttachment | DocumentAttachment | undefined,
+  mediaKind: MediaKind | undefined,
+  stickerId: string | undefined,
+): "user" | "gif" | "image" | "sticker" | undefined {
+  if (stickerId) return "sticker";
+  if (attachment && (mediaKind === "gif" || mediaKind === "image")) {
+    return mediaKind;
+  }
+  return undefined;
+}
+
 interface DeliverCoreDeps {
   setSent: Dispatch<SetStateAction<Record<string, ChatMessage[]>>>;
   demoMode: boolean;
@@ -190,10 +212,16 @@ export interface MessageDeliverCore {
    *  mutation). `mediaKind` is required whenever `attachment` is set: it's
    *  what tells the server (and a resend/outbox-replay) a `gif`/`image`
    *  message (both carry a `GifAttachment`) from a `document` one (carries a
-   *  `DocumentAttachment`, routed to its own mutation below). Fire-and-forget:
-   *  existing callers (`send`/`sendGif`/`sendImage`/`sendDocument`/
-   *  `retrySend`) never awaited a result and still don't; see `deliverAsync`
-   *  for a caller that needs to know the outcome. */
+   *  `DocumentAttachment`, routed to its own mutation below). `stickerId` is
+   *  the sticker send's ENTIRE payload: a sticker carries no attachment at
+   *  all (the server reads the catalogue row and bakes one), so the send kind
+   *  is resolved from `stickerId`/`mediaKind` explicitly rather than from
+   *  whether `attachment` is present, which a sticker send never has (see
+   *  `runDeliver`'s own doc). Fire-and-forget: existing callers
+   *  (`send`/`sendGif`/`sendImage`/`sendDocument`/`sendSticker`/`retrySend`)
+   *  never awaited a result and still don't; see `deliverAsync` for a caller
+   *  that needs to know the outcome. `asIdentityId` is the identity the
+   *  message was composed as (see `runDeliver`). */
   deliver: (
     convId: string,
     body: string,
@@ -202,6 +230,8 @@ export interface MessageDeliverCore {
     forwarded?: boolean,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
+    stickerId?: string,
+    asIdentityId?: string,
   ) => void;
   /** ENG-213: the same send primitive as `deliver`, but resolving `true` on
    *  success and `false` on failure (demo mode always resolves `true`; the
@@ -220,6 +250,8 @@ export interface MessageDeliverCore {
     forwarded?: boolean,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
+    stickerId?: string,
+    asIdentityId?: string,
   ) => Promise<boolean>;
   /** ENG-208: true while a delivery for `localId` is already underway (added
    *  the instant `deliver`/`deliverAsync` starts it, removed the instant it
@@ -247,6 +279,8 @@ export function useMessageDeliverCore({
   // `sendMessage` instead), same idempotent-on-`clientMessageId` endpoint,
   // same cache-patch contract, just a separate react-query mutation object.
   const sendDocumentMessageMutation = useSendDocumentMessage();
+  // Read only by `handleDeliverError`'s `IDENTITY_REMOVED` branch below.
+  const queryClient = useQueryClient();
 
   // ENG-208: stamp `lastAttemptAt` the moment the bubble is created, when
   // (`isDeliveryAttemptImminent`) the `deliver`/`deliverAsync` call that
@@ -320,6 +354,16 @@ export function useMessageDeliverCore({
         typeof (error.data as { code?: unknown }).code === "string"
           ? (error.data as { code: string }).code
           : undefined;
+      // Moderation removed the persona this message was composed as, mid-
+      // flight: refresh the mailbox list so `isReadOnly` lands and the
+      // composer turns itself off, the same invalidation
+      // `useConversationClaim`'s own `IDENTITY_REMOVED` catch runs for a
+      // claim/release/take-over refused the same way.
+      if (failureCode === "IDENTITY_REMOVED") {
+        void queryClient.invalidateQueries({
+          queryKey: MAILBOXES_QUERY_KEY_PREFIX,
+        });
+      }
       setSent((prev) => ({
         ...prev,
         [convId]: (prev[convId] ?? []).map((item) =>
@@ -335,13 +379,17 @@ export function useMessageDeliverCore({
         ),
       }));
     },
-    [setSent],
+    [setSent, queryClient],
   );
 
   // The shared implementation behind BOTH `deliver` (fire-and-forget) and
   // `deliverAsync` (ENG-213, awaitable) below, so the two can never drift:
   // exactly one place decides demo-simulation vs. the live idempotent
   // mutation, and every caller sees the same success/failure classification.
+  // `asIdentityId` is always the identity stamped on the message being
+  // delivered (`ChatMessage.sendAsIdentityId`, fixed at compose time), so a
+  // retry or replay after a mailbox switch still sends as the mailbox the
+  // message was written in. Undefined sends as the member's own profile.
   const runDeliver = useCallback(
     (
       convId: string,
@@ -351,6 +399,8 @@ export function useMessageDeliverCore({
       forwarded?: boolean,
       attachment?: GifAttachment | DocumentAttachment,
       mediaKind?: MediaKind,
+      stickerId?: string,
+      asIdentityId?: string,
     ): Promise<boolean> => {
       // ENG-208: mark this localId in flight for the WHOLE attempt (every
       // branch below), cleared on every exit path. A replay loop racing this
@@ -410,6 +460,7 @@ export function useMessageDeliverCore({
             replyToId,
             clientMessageId: localId,
             forwarded,
+            asIdentityId,
           },
           (message) =>
             handleDeliverSuccess(convId, localId, wasMessageReplayed(message)),
@@ -418,11 +469,9 @@ export function useMessageDeliverCore({
         );
       }
       // `attachment` is narrowed to `GifAttachment | undefined` here (the
-      // `DocumentAttachment` case returned above). `mediaKind` still isn't
-      // provably `"gif" | "image"` from types alone (it's an independent
-      // param), so it's checked with a real comparison, not a cast.
-      const gifOrImageKind =
-        mediaKind === "gif" || mediaKind === "image" ? mediaKind : undefined;
+      // `DocumentAttachment` case returned above). See `resolveSendKind`'s
+      // own doc for why the kind is resolved from `stickerId`/`mediaKind`.
+      const sendKind = resolveSendKind(attachment, mediaKind, stickerId);
       // Drop only THIS optimistic message (matched by localId) on success: a
       // concurrent second send in the same thread survives independently,
       // since `settleDelivery`'s `mutateAsync`-based promise settles on its
@@ -440,7 +489,9 @@ export function useMessageDeliverCore({
           clientMessageId: localId,
           forwarded,
           attachment,
-          kind: attachment ? gifOrImageKind : undefined,
+          kind: sendKind,
+          stickerId,
+          asIdentityId,
         },
         // ENG-222: `sendMessage.mutateAsync` resolves `MessageResponse | null`
         // (`useMessageMutations.ts#useSendMessage`'s demo-mode branch resolves
@@ -495,6 +546,8 @@ export function useMessageDeliverCore({
       forwarded?: boolean,
       attachment?: GifAttachment | DocumentAttachment,
       mediaKind?: MediaKind,
+      stickerId?: string,
+      asIdentityId?: string,
     ) => {
       void runDeliver(
         convId,
@@ -504,30 +557,18 @@ export function useMessageDeliverCore({
         forwarded,
         attachment,
         mediaKind,
+        stickerId,
+        asIdentityId,
       );
     },
     [runDeliver],
   );
 
+  // The awaitable twin takes exactly `runDeliver`'s parameters, spread
+  // through unchanged, so the two can never disagree on their order.
   const deliverAsync = useCallback(
-    (
-      convId: string,
-      body: string,
-      localId: string,
-      replyToId?: string,
-      forwarded?: boolean,
-      attachment?: GifAttachment | DocumentAttachment,
-      mediaKind?: MediaKind,
-    ): Promise<boolean> =>
-      runDeliver(
-        convId,
-        body,
-        localId,
-        replyToId,
-        forwarded,
-        attachment,
-        mediaKind,
-      ),
+    (...args: Parameters<typeof runDeliver>): Promise<boolean> =>
+      runDeliver(...args),
     [runDeliver],
   );
 

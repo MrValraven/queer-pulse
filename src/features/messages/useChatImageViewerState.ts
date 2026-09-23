@@ -4,6 +4,7 @@ import {
   useThreadImageGallery,
   type ViewerPhoto,
 } from "./useThreadImageGallery";
+import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage } from "./data";
 
 /**
@@ -154,6 +155,7 @@ export function useChatImageViewerState(
     youLabel: string;
     counterpartAvatar?: string;
     youAvatar?: string;
+    t?: TFunction;
   },
 ): {
   photos: ViewerPhoto[];

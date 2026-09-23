@@ -239,6 +239,28 @@ describe("resolveShownPushCopy", () => {
   });
 });
 
+describe("resolveShownPushCopy: staff attribution", () => {
+  it("names the business, never one staff member, on a coalesced burst", () => {
+    const copy = resolveShownPushCopy({
+      payload: {
+        title: "Café Lisboa",
+        body: "See you Saturday",
+        l10n: {
+          titleKey: "push:messages.staffTitle",
+          params: { name: "Rui", business: "Café Lisboa" },
+        },
+        data: { conversationId: "c1" },
+      } as never,
+      lang: "en",
+      isDirectMessagePush: true,
+      decision: { count: 3, coalesced: true },
+      shouldHidePreviews: false,
+    });
+    expect(copy.title).toBe("Café Lisboa");
+    expect(copy.body).toBe("3 new messages from Café Lisboa");
+  });
+});
+
 describe("decideCoalesce", () => {
   it("returns count 1 and coalesced=false when there is no existing notification", () => {
     expect(decideCoalesce([])).toEqual({ count: 1, coalesced: false });

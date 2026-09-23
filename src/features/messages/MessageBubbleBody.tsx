@@ -15,7 +15,9 @@ import {
   MessageDocumentAttachment,
 } from "./MessageDocumentAttachment";
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import { PhotoBubbleImage } from "./PhotoBubbleImage";
+import { StickerBubble } from "./StickerBubble";
 import { ReplyQuoteContent } from "./ReplyQuoteContent";
 import { replyQuoteSourceFromReplyTo } from "./replyQuoteSource";
 import { detectContactSafetySignals } from "./contactSafetyDetector";
@@ -100,6 +102,21 @@ export function MessageBubbleBody({
     </button>
   );
 
+  // A sticker renders bare, ahead of every other branch: it must never fall
+  // through to the text bubble, and it shares nothing with the image branch
+  // beyond both being pictures (no caption, no viewer, no album grouping).
+  if (message.kind === "sticker") {
+    return (
+      <StickerBubble
+        message={message}
+        isSent={isSent}
+        metaStatus={metaStatus}
+        labelIds={labelIds}
+        forwardedNode={forwardedNode}
+        replyQuoteNode={replyQuoteNode}
+      />
+    );
+  }
   // An uploaded document (PRD-226) renders as a file-card, never inline —
   // there are no pixels to preview. Rendered ahead of the gif/image branch for
   // the same "never fall through to text" reason as that branch's own note.
@@ -317,13 +334,23 @@ function ImageOrGifBubble({
   replyQuoteNode: ReactNode;
 }) {
   const { t } = useTranslation();
+  // This branch only ever runs for `kind:"gif"`/`kind:"image"` (the caller
+  // gates on that before mounting it), so a sticker never reaches here at
+  // runtime; `message.attachment`'s STATIC type still carries the sticker
+  // shape too, though, which has no `caption` at all. Excluding it here
+  // keeps the narrowed `attachment` a plain `GifAttachment`, the same reason
+  // `isDocumentAttachment` is excluded on the line below it.
   const attachment =
-    message.attachment && !isDocumentAttachment(message.attachment)
+    message.attachment &&
+    !isDocumentAttachment(message.attachment) &&
+    !isStickerAttachment(message.attachment)
       ? message.attachment
       : null;
   // A restored outbox entry keeps `sendAttachment` (the resend payload) even
   // once the blob preview above it is gone, so the caption survives right
   // alongside it — the words are still meaningful when the picture isn't.
+  // `sendAttachment` never carries the sticker shape (see `ChatMessage`'s own
+  // doc), so no equivalent exclusion is needed here.
   const sendAttachment =
     message.sendAttachment && !isDocumentAttachment(message.sendAttachment)
       ? message.sendAttachment

@@ -32,6 +32,7 @@ import {
 } from "../safety/api/useMutedMembers";
 import { simulateOr } from "./api/account.api";
 import { blockedUsersQueryKey, useBlockedUsers } from "./api/useBlockedUsers";
+import { BlockedIdentitiesSection } from "./BlockedIdentitiesSection";
 import { Pane, Section } from "./SettingsControls";
 import styles from "./BlockedUsersPane.module.css";
 
@@ -359,6 +360,10 @@ export function BlockedUsersPane() {
     >
       <BlockedSection />
       <MutedSection />
+      {/* PRD-376: businesses, personas and companies, kept separate from the
+          member block list above: a distinct identity is blocked through
+          `/identity-blocks`, its own dedicated endpoint. */}
+      <BlockedIdentitiesSection />
     </Pane>
   );
 }

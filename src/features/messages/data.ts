@@ -1,10 +1,22 @@
 import type { AvatarTint } from "../../shared/components/ui/Avatar";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
+import type { ConversationClaimant } from "../../shared/api/conversationClaim";
 import type {
   ConversationPendingInvite,
   ConversationRole,
+  IdentityKind,
+  KnownSystemEventType,
   ReactionSummary,
+  StickerAttachmentResponse,
 } from "../../shared/contracts/contracts";
+import {
+  atelierPulsoSaraConversation,
+  cafeLisboaFatimaConversation,
+  cafeLisboaNunoConversation,
+  estudioNorteDanielConversation,
+  formerBusinessConversation,
+  livrariaAuroraConversation,
+} from "./demoBusinessThreads.data";
 import {
   anikaConversation,
   bilalConversation,
@@ -29,19 +41,10 @@ import { mariaConversation } from "./demoLongThread.data";
  *  pill. Names are already resolved (never user ids); the pill text is built
  *  bilingually on the client from `type` + these names. */
 export interface ChatSystemEvent {
-  type:
-    | "group_created"
-    | "member_added"
-    | "member_removed"
-    | "member_left"
-    | "group_renamed"
-    | "member_promoted"
-    | "member_demoted"
-    | "owner_changed"
-    | "group_photo_changed"
-    | "group_description_changed"
-    | "member_joined"
-    | "group_dissolved";
+  /** `"unknown"` is the client-only neutral fallback `normalizeSystemEventType`
+   *  folds a type this client has never heard of into (`systemMessageText.ts`);
+   *  it never appears on the wire. */
+  type: KnownSystemEventType | "unknown";
   actorName: string;
   targetName?: string | null;
   /** For `member_joined`: `"link"` (the invite-link path) or `"invite"` (an
@@ -55,6 +58,9 @@ export interface ChatSystemEvent {
    *  rather than the target's name. Absent/false when the event carries no
    *  target, or the target isn't the viewer. */
   targetIsMe?: boolean;
+  /** `moved_to_business_mailbox` only: the business the thread moved into,
+   *  set only when that business still resolves. */
+  mailboxName?: string;
 }
 
 /** One member of a GROUP thread, for the header/info roster + bubble avatars. */
@@ -83,19 +89,24 @@ export interface ChatMessage {
    *  `"image"` both render an inline image (see `attachment`, distinguished
    *  only for copy/analytics — the bubble markup is identical either way);
    *  `"document"` renders a file-card (name, format, size, a download link —
-   *  PRD-226); absent/`"user"` is an ordinary bubble. */
-  kind?: "user" | "system" | "gif" | "image" | "document";
+   *  PRD-226); `"sticker"` renders bare (no bubble chrome, no caption; its
+   *  alt text comes from `attachment.label`); absent/`"user"` is an ordinary
+   *  bubble. */
+  kind?: "user" | "system" | "gif" | "image" | "document" | "sticker";
   /** Resolved system event for a `kind: "system"` message. */
   systemEvent?: ChatSystemEvent;
-  /** The media/document attachment a `kind:"gif"`/`kind:"image"`/
-   *  `kind:"document"` bubble RENDERS. Absent for text/system messages.
-   *  `text` holds a "GIF"/"Photo"/"Document" fallback. For an image or
-   *  document message this is the upload's local blob preview while the send
-   *  is optimistic (immediately paintable) — see `sendAttachment` for what's
-   *  actually sent. */
+  /** The media/document/sticker attachment a `kind:"gif"`/`kind:"image"`/
+   *  `kind:"document"`/`kind:"sticker"` bubble RENDERS. Absent for
+   *  text/system messages. `text` holds a "GIF"/"Photo"/"Document"/"Sticker"
+   *  fallback. For an image or document message this is the upload's local
+   *  blob preview while the send is optimistic (immediately paintable);
+   *  see `sendAttachment` for what's actually sent. A sticker is a reference
+   *  to a published catalogue entry, sent whole with the message that
+   *  carries it, so it never appears on `sendAttachment` below. */
   attachment?:
     | import("../../shared/api/gifs").GifAttachment
-    | import("../../shared/api/documentAttachment").DocumentAttachment;
+    | import("../../shared/api/documentAttachment").DocumentAttachment
+    | StickerAttachmentResponse;
   /** Client-only: the SEND payload for a `kind:"image"`/`kind:"document"`
    *  optimistic message — the private storage key the upload minted, distinct
    *  from `attachment` (the local blob preview) because the key alone isn't a
@@ -118,6 +129,24 @@ export interface ChatMessage {
    *  "Former member" with a neutral avatar in place of `senderName`, and the
    *  message carries no handle, so nothing links to a profile. */
   isSenderFormerMember?: boolean;
+  /** The business, persona or company identity this message was sent as;
+   *  absent on a personal message. */
+  senderIdentityId?: string;
+  /** The kind of `senderIdentityId`, with the same presence rule. */
+  senderIdentityKind?: IdentityKind;
+  /** The first name of the staff member who wrote a business reply, present
+   *  only when attribution allows this reader to see it. */
+  senderStaffFirstName?: string;
+  /** The business this message was sent as has since been deleted, so the
+   *  run renders the localized former-business placeholder. */
+  isSenderFormerBusiness?: boolean;
+  /** On a reply sent as a business the member staffs: true when the member
+   *  typed it, false when a colleague did; absent everywhere else. */
+  isSentByViewer?: boolean;
+  /** The identity this optimistic message was composed as; absent means the
+   *  member's own profile; the outbox persists it and every send path sends
+   *  it. */
+  sendAsIdentityId?: string;
   /** Stable server id for React keys and every per-message action. Live mode
    *  gets it from the DTO; the demo seed carries a readable stable one
    *  (`demo-msg-<thread>-NNN`). Absent only for optimistic messages, which
@@ -191,8 +220,9 @@ export interface ChatMessage {
     deleted: boolean;
     /** The quoted parent's kind (live mode and demo seed quotes). Absent on
      *  optimistic quotes, which only ever carry text. */
-    kind?: "user" | "system" | "gif" | "image" | "document";
-    /** The parent's gif/image preview URL (live mode), else null/absent. */
+    kind?: "user" | "system" | "gif" | "image" | "document" | "sticker";
+    /** The parent's gif/image/sticker preview URL (live mode), else
+     *  null/absent. */
     thumbnailUrl?: string | null;
     /** The parent document's file name (live mode), else null/absent. */
     fileName?: string | null;
@@ -317,6 +347,45 @@ export interface Conversation {
    *  group") rather than a member's own text. The "You: "/status-tick
    *  treatment never applies to it, even when the actor is the viewer. */
   lastMessageIsSystem?: boolean;
+  /** The identity the row's last message was sent as; absent on a personal
+   *  message. */
+  lastMessageSenderIdentityId?: string;
+  /** The staff first name on the row's last message, when attribution
+   *  allows this reader to see it. */
+  lastMessageStaffFirstName?: string;
+  /** The same flag as `ChatMessage.isSentByViewer`, for the row's last
+   *  message; the server list rows carry it under the thread's rule, and a
+   *  live frame that patches the preview carries it too. */
+  lastMessageIsSentByViewer?: boolean;
+  /** The business, persona or company identity this thread belongs to, for
+   *  staff and customer alike; absent on a personal thread or a group. */
+  mailboxIdentityId?: string;
+  /** The identity this member answers as on this thread; set only when they
+   *  staff the thread's mailbox (Task 8 decorates it). */
+  mailboxSeatIdentityId?: string;
+  /** The thread's mailbox is a persona moderation removed (Task 8 decorates
+   *  it). */
+  isMailboxReadOnly?: boolean;
+  /** The identity the counterpart speaks as, present when the other side is
+   *  a business, persona or company. */
+  counterpartIdentityId?: string;
+  /** The kind of `counterpartIdentityId`, with the same presence rule. */
+  counterpartIdentityKind?: IdentityKind;
+  /** The counterpart business has since been deleted, so the row renders the
+   *  localized former-business placeholder. */
+  isCounterpartFormerBusiness?: boolean;
+  /** Staff only: the colleague holding this thread, null while unclaimed and
+   *  always null for a customer. */
+  claimedBy?: ConversationClaimant | null;
+  /** Staff only: the claimant's user id, the `fromUserId` a take-over names.
+   *  Null while unclaimed; the conversation read and every claim frame carry
+   *  it. */
+  claimedByUserId?: string | null;
+  /** Staff only: when the current claim was taken, null while unclaimed. */
+  claimedAt?: string | null;
+  /** Staff only: the colleague the current claimant took the thread over
+   *  from, null for an ordinary claim. */
+  claimTakenOverFrom?: ConversationClaimant | null;
   /** ISO timestamp this chat was archived out of the main inbox. Absent/null =
    *  not archived. The reversible replacement for the destructive clear-for-me
    *  as the everyday way to declutter — server auto-clears this the instant a
@@ -433,9 +502,16 @@ export interface Conversation {
 /**
  * Neutral placeholder for the sent-bubble avatar during the brief pre-auth /
  * logged-out window only. The real sent avatar always comes from the signed-in
- * member (`useAuth().user.profile` — see `ConversationPanel`); this must stay a
- * non-identity so no fabricated persona ("SR", a demo member) can ever leak into
- * a live thread. Empty initials render as a plain neutral circle.
+ * member (`useAuth().user.profile`, see `ConversationPanel`).
+ *
+ * Business mailboxes (spec 2026-09-20, section 6.3) changed the rule this
+ * comment used to state. A bubble on the viewer's side may now belong to a
+ * sender who is not the signed-in member: a listing, persona or company the
+ * member answers for, or a colleague writing as it. That sender is
+ * legitimate, and it always comes from a real identity row the server sent
+ * (`AuthorSummary.identityId`, carried as `ChatMessage.senderIdentityId`).
+ * Nothing on the client fabricates one, so this placeholder stays a
+ * non-identity with empty initials.
  */
 export const me = { initials: "", tint: "default" as AvatarTint };
 
@@ -455,9 +531,21 @@ export const me = { initials: "", tint: "default" as AvatarTint };
 export const DEMO_INBOUND_SIMULATION_MESSAGE_BODY =
   "One more thing: should Inês bring anything Saturday, or just herself?";
 
+/** Business mailboxes (spec 2026-09-20, section 6.3): the registry now spans
+ *  every demo mailbox: the viewer's own personal inbox, plus every business,
+ *  persona and company they staff. Demo `useConversations` still hands back
+ *  this one flat list; a live mailbox view filters it per mailbox the way the
+ *  server's `GET /conversations?as=` does, and Task 8's demo scope helper
+ *  does the same client-side. */
 export const conversations: Conversation[] = [
   brunchCrewConversation,
   anikaConversation,
+  cafeLisboaFatimaConversation,
+  atelierPulsoSaraConversation,
+  cafeLisboaNunoConversation,
+  livrariaAuroraConversation,
+  estudioNorteDanielConversation,
+  formerBusinessConversation,
   mariaConversation,
   priyaConversation,
   jordanConversation,

@@ -31,6 +31,7 @@ export function CommunityDetailDialogs({ state }: { state: ReadyState }) {
     detail,
     cardStats,
     editable,
+    living,
     role,
     tier,
     isOwner,
@@ -72,6 +73,7 @@ export function CommunityDetailDialogs({ state }: { state: ReadyState }) {
           }}
           tier={tier}
           isInvited={isInvited}
+          parentName={living?.parent?.name}
           onClose={() => setJoining(false)}
           onJoined={onJoined}
           onRequested={onRequested}

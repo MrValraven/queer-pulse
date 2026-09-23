@@ -69,6 +69,7 @@ export function MessagesPage() {
     deletePending,
     send,
     sendGif,
+    sendSticker,
     sendImage,
     sendDocument,
     retrySend,
@@ -78,6 +79,7 @@ export function MessagesPage() {
     hasMoreThreads,
     isLoadingMoreThreads,
     loadMoreThreads,
+    activeMailbox,
   } = useMessagesController();
 
   // See useIsDesktopMessagesChrome's own doc for why this reads a different
@@ -135,6 +137,9 @@ export function MessagesPage() {
                 hasMoreThreads={hasMoreThreads}
                 isLoadingMoreThreads={isLoadingMoreThreads}
                 onLoadMoreThreads={loadMoreThreads}
+                mailboxes={activeMailbox.mailboxes}
+                activeMailbox={activeMailbox.active}
+                onSelectMailbox={activeMailbox.selectMailbox}
               />
             )}
 
@@ -147,6 +152,7 @@ export function MessagesPage() {
                   onSendGif={sendGif}
                   onSendImage={sendImage}
                   onSendDocument={sendDocument}
+                  onSendSticker={sendSticker}
                   blocked={activeBlocked}
                   onBack={isMobile ? () => setView("list") : undefined}
                   onRetry={retrySend}

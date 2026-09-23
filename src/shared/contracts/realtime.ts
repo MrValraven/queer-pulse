@@ -11,7 +11,11 @@
 // topic, never a socket event — the gateway re-emits it to sockets as
 // `message:new`. Do not code against it.
 
-import type { MessageReactionKey, MessageResponse } from "./contracts";
+import type {
+  AuthorSummary,
+  MessageReactionKey,
+  MessageResponse,
+} from "./contracts";
 
 /** One key's authoritative count in a `reaction` frame — viewer-agnostic (no
  *  `mine`), so a single broadcast is correct for every client in the room. */
@@ -48,19 +52,43 @@ export interface ServerToClientEvents {
    *  edited (15-min window) in this conversation. */
   "message:updated": { conversationId: string; message: MessageResponse };
   /** `namespace.to(conversationId).emit('read', …)`. `lastReadAt` is a Date on
-   *  the server; socket.io JSON-serialises it to an ISO string on the wire. */
-  read: { conversationId: string; userId: string; lastReadAt: string };
-  /** `namespace.to(conversationId).emit('message:delivered', …)` — `userId`'s
-   *  device acked receipt up to `deliveredAt`. The SENDER advances its tick from
-   *  one check (sent) to two (delivered). `deliveredAt` is a Date server-side,
-   *  ISO on the wire (as with `read`). One rung below `read`, which outranks it. */
+   *  the server; socket.io JSON-serialises it to an ISO string on the wire.
+   *  Exactly one of `userId` and `identityId` is present. On a business
+   *  mailbox thread the customer receives `identityId` for any staff read:
+   *  that frame speaks for the whole business. Staff receive the customer's
+   *  frame with its `userId`, and colleagues receive nothing for each other. */
+  read: {
+    conversationId: string;
+    lastReadAt: string;
+    userId?: string;
+    identityId?: string;
+  };
+  /** `namespace.to(conversationId).emit('message:delivered', …)`: the
+   *  reader's device acked receipt up to `deliveredAt`. The SENDER advances its
+   *  tick from one check (sent) to two (delivered). `deliveredAt` is a Date
+   *  server-side, ISO on the wire (as with `read`). One rung below `read`,
+   *  which outranks it. Exactly one of `userId` and `identityId` is present,
+   *  under the same rule as `read`: an `identityId` frame speaks for a whole
+   *  business. */
   "message:delivered": {
     conversationId: string;
-    userId: string;
     deliveredAt: string;
+    userId?: string;
+    identityId?: string;
   };
-  /** `client.to(conversationId).emit('typing', …)`. */
-  typing: { conversationId: string; userId: string; isTyping: boolean };
+  /** `client.to(conversationId).emit('typing', …)`. Exactly one of `userId`
+   *  and `identityId` is present. On a business mailbox thread the customer
+   *  receives `identityId` plus the business's `displayName`: the frame
+   *  speaks for the whole business, which types as one identity however many
+   *  staff are typing. Staff receive the customer's frame with its `userId`,
+   *  and colleagues never see each other type. */
+  typing: {
+    conversationId: string;
+    isTyping: boolean;
+    userId?: string;
+    identityId?: string;
+    displayName?: string | null;
+  };
   /** `namespace.to('user:'+id).emit('presence', …)` — a connection came on/offline. */
   presence: { userId: string; online: boolean };
   /** `client.emit('presence:snapshot', …)` on connect, or on request. */
@@ -89,12 +117,16 @@ export interface ServerToClientEvents {
    *  or removed on a message in this conversation. Carries the reactor's
    *  `userId` (so a client can skip the echo of its OWN reaction, already
    *  patched optimistically) and the message's authoritative per-key `reactions`
-   *  counts, so clients patch the chip counts in place instead of refetching. */
+   *  counts, so clients patch the chip counts in place with no refetch.
+   *  Exactly one of `userId` and `identityId` is present: the customer of a
+   *  business mailbox thread receives staff reactions with `identityId`, the
+   *  frame speaking for the whole business, which counts once. */
   reaction: {
     conversationId: string;
     messageId: string;
-    userId: string;
     reactions: ReactionCount[];
+    userId?: string;
+    identityId?: string;
   };
   /** `namespace.to(conversationId).emit('message:deleted', …)` — a message was
    *  soft-deleted in this conversation. */
@@ -134,6 +166,52 @@ export interface ServerToClientEvents {
     domainCode?: string;
     statusCode?: number;
   };
+  /** `MailboxStaffRelayListener` → `user:<id>` room: a business mailbox
+   *  thread's claim changed. STAFF ONLY: it reaches every reachable staff
+   *  member of the mailbox through their own `user:` room, the actor's other
+   *  devices included, and never the customer. It is newer truth than any
+   *  claim REST response still in flight. */
+  "conversation:claim": ConversationClaimFrame;
+  /** `MailboxStaffRelayListener` → `user:<id>` room: the member gained or
+   *  lost staff standing on a mailbox. Sent to the affected member's own
+   *  `user:` room only, after the seat change commits; the client refreshes
+   *  its mailbox switcher on it. */
+  "mailbox:staffing": MailboxStaffingFrame;
+}
+
+/** The three writes that change a claim. */
+export type ConversationClaimChange = "claimed" | "released" | "taken_over";
+
+/** Payload of `conversation:claim`, mirroring the backend's
+ *  `ConversationClaimFrame` (`src/messaging/conversation-claim.ts`). */
+export interface ConversationClaimFrame {
+  conversationId: string;
+  /** The business, persona or company identity the thread belongs to. */
+  mailboxIdentityId: string;
+  change: ConversationClaimChange;
+  /** True when a reply claimed the thread as a side effect of sending. */
+  isImplicit: boolean;
+  /** Who made the change. Null: the system released the claim of a
+   *  claimant who left the business. */
+  actor: AuthorSummary | null;
+  /** The claimant's user id after the change, null after a release. A
+   *  colleague passes it as `fromUserId` to take the thread over. */
+  claimedByUserId: string | null;
+  /** The claimant after the change. Null after a release. */
+  claimedBy: AuthorSummary | null;
+  /** Whose claim ended with this change: the released claimant, or the
+   *  colleague a take-over took it from. Null for an ordinary claim. */
+  previousClaimant: AuthorSummary | null;
+  claimedAt: string | null;
+  changedAt: string;
+}
+
+/** Payload of `mailbox:staffing`, mirroring the backend's
+ *  `MailboxStaffingFrame` (`src/identities/identity-staffing.events.ts`). */
+export interface MailboxStaffingFrame {
+  identityId: string;
+  /** True when the member is now staff of the mailbox. */
+  isStaff: boolean;
 }
 
 /**

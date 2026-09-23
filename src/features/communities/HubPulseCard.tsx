@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiHeart, FiCornerUpLeft, FiArrowRight } from "react-icons/fi";
-import { Avatar } from "../../shared/components/ui";
+import { Avatar, SpaceLabel } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -14,6 +14,12 @@ export interface HubPost {
   post: Post;
   communityName: string;
   communitySlug: string;
+  /** The parent community's name when this community is a space
+   *  (subcommunity), else null. `useCommunitiesHomeData` reads it off the
+   *  demo `LivingCommunity.parent` for the community this post came from.
+   *  Optional so an older caller still types; undefined is treated as
+   *  null. */
+  parentName?: string | null;
 }
 
 /** Compact, read-only pulse card for the aggregated hub feed (links into the
@@ -22,12 +28,12 @@ export function HubPulseCard({ item }: { item: HubPost }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const communityTime = useCommunityTime();
-  const { post, communityName, communitySlug } = item;
+  const { post, communityName, communitySlug, parentName = null } = item;
   const reactionTotal = post.reactions.reduce((sum, r) => sum + r.count, 0);
   return (
     <article className={styles.pulseCard}>
       <Link to={`/community/${communitySlug}`} className={styles.pulseFrom}>
-        {communityName}
+        <SpaceLabel parentName={parentName} name={communityName} />
         {post.kind === "announcement" && (
           <span className={styles.announce}>
             {t("communities:hub.pulseCard.announcement")}
@@ -77,6 +83,12 @@ export interface HubExcerpt {
   createdAt: string;
   communityName: string;
   communitySlug: string;
+  /** The parent community's name when this entry is a space (subcommunity),
+   *  else null. Copied from `CommunityDigestEntryDTO.parentName` by
+   *  `useCommunitiesHomeData` onto every excerpt built for that entry.
+   *  Optional so an older caller still types; undefined is treated as
+   *  null. */
+  parentName?: string | null;
 }
 
 /**
@@ -94,11 +106,18 @@ export interface HubExcerpt {
 export function HubExcerptCard({ item }: { item: HubExcerpt }) {
   const { t } = useTranslation();
   const communityTime = useCommunityTime();
-  const { excerpt, kind, createdAt, communityName, communitySlug } = item;
+  const {
+    excerpt,
+    kind,
+    createdAt,
+    communityName,
+    communitySlug,
+    parentName = null,
+  } = item;
   return (
     <article className={styles.pulseCard}>
       <Link to={communityPath(communitySlug)} className={styles.pulseFrom}>
-        {communityName}
+        <SpaceLabel parentName={parentName} name={communityName} />
         {kind === "announcement" && (
           <span className={styles.announce}>
             {t("communities:hub.pulseCard.announcement")}

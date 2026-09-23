@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { useThreadRowPreview } from "./useThreadRowPreview";
@@ -87,5 +87,53 @@ describe("useThreadRowPreview: draft source (ENG-253)", () => {
       wrapper: TestProviders,
     });
     expect(result.current.draftText).toBe("");
+  });
+});
+
+describe("useThreadRowPreview: a reply sent as the business", () => {
+  function businessThread(
+    overrides: Partial<ConversationWithPreview>,
+  ): ConversationWithPreview {
+    return baseThread({
+      preview: "We do have a step-free entrance.",
+      lastMessageSenderHandle: "cafe-lisboa",
+      lastMessageSenderIdentityId: "identity-cafe",
+      lastMessageStaffFirstName: "Rui",
+      mailboxSeatIdentityId: "identity-cafe",
+      ...overrides,
+    });
+  }
+
+  it("reads as the viewer's own when the server says the viewer typed it", async () => {
+    const thread = businessThread({ lastMessageIsSentByViewer: true });
+    const { result } = renderHook(() => useThreadRowPreview(thread, false), {
+      wrapper: TestProviders,
+    });
+    // The messages catalog loads lazily, so wait for the "You:" copy.
+    await waitFor(() => {
+      expect(result.current.previewText).toBe(
+        "You: We do have a step-free entrance.",
+      );
+    });
+  });
+
+  it("names the colleague who typed it", () => {
+    const thread = businessThread({ lastMessageIsSentByViewer: false });
+    const { result } = renderHook(() => useThreadRowPreview(thread, false), {
+      wrapper: TestProviders,
+    });
+    expect(result.current.previewText).toBe(
+      "Rui: We do have a step-free entrance.",
+    );
+  });
+
+  it("names the writer when the row carries no flag", () => {
+    const thread = businessThread({});
+    const { result } = renderHook(() => useThreadRowPreview(thread, false), {
+      wrapper: TestProviders,
+    });
+    expect(result.current.previewText).toBe(
+      "Rui: We do have a step-free entrance.",
+    );
   });
 });

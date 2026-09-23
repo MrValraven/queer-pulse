@@ -4,6 +4,7 @@ import {
   FiInfo,
   FiClock,
   FiUserCheck,
+  FiBriefcase,
 } from "react-icons/fi";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -19,6 +20,7 @@ import {
 } from "./adminModeration.data";
 import { auditActionLabel } from "./moderationActionLabels";
 import { isAnonymousReporter, reporterDisplayName } from "./moderationReporter";
+import { sentAsIdentityLabel } from "./sentAsIdentityLabel";
 import { useReportAudit } from "./api/useReportAudit";
 import { ReportConversationContext } from "./AdminReportConversationContext";
 import { ReportEvidenceSnapshots } from "./AdminReportEvidence";
@@ -118,6 +120,15 @@ export function ReportContext({
           {t("admin:moderation.reportDrawer.contentTitle")}
         </h3>
         <p className={styles.dContentAuthor}>{detail.contentAuthor}</p>
+        {/* Business mailboxes, design section 9 (I2): the identity this
+            message was sent as, beside the human sender named just above,
+            whatever either attribution switch says a customer sees. */}
+        {detail.sentAsIdentity && (
+          <p className={styles.dSentAsIdentity}>
+            <FiBriefcase aria-hidden />
+            {sentAsIdentityLabel(detail.sentAsIdentity, t)}
+          </p>
+        )}
         <blockquote className={styles.dExcerpt}>{detail.excerpt}</blockquote>
         <AmbiguousAuthorsNote subjectType={subjectType} />
         {detail.redactionNote && (

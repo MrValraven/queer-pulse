@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { FiHeart, FiNavigation, FiPhone, FiShare2 } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import {
+  FiHeart,
+  FiMessageSquare,
+  FiNavigation,
+  FiPhone,
+  FiShare2,
+} from "react-icons/fi";
+import { Button, IconButton, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useShareLink } from "../../shared/hooks";
 import { useAuth } from "../../app/providers/authContext";
@@ -13,12 +19,13 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import { placeCoordinates } from "./businessCoords";
-import { ShareToChatAction } from "../messages/share/ShareToChatAction";
+import { useShareToChat } from "../messages/share/useShareToChat";
+import { ShareToChatModal } from "../messages/share/ShareToChatModal";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
   place: DirectoryPlace;
-  /** Moderation preview: the bar is decorative context only, not actionable. */
+  /** Moderation preview: the row is decorative context only. */
   preview?: boolean;
 }
 
@@ -31,9 +38,12 @@ function directionsHref(place: DirectoryPlace, demoMode: boolean): string {
 }
 
 /**
- * Primary venue actions — Directions, Call, Share, Save — the things a top
- * business page leads with. Sits above the map card in the aside column and
- * collapses to a sticky bottom bar on mobile for one-handed reach.
+ * Primary venue actions (Directions, Call, Share, Send in a message, Save) as
+ * one compact row of icon-only buttons sitting to the right of the listing
+ * name, at every viewport. Each control carries a tooltip for the sighted
+ * reader and its own `aria-label` for everyone else, so the row stays legible
+ * without spending a card's worth of the page on five labels. Directions keeps
+ * a coral tint so it still reads as first among equals.
  *
  * Operating state gates two of them, on different grounds.
  *
@@ -49,15 +59,17 @@ function directionsHref(place: DirectoryPlace, demoMode: boolean): string {
  *
  * Share and Save survive every state: the page remains a record worth passing
  * on, and stripping Save would strand anybody who had already saved the place.
+ * A signed-out visitor keeps Save too, routed to sign-in. "Send in a message"
+ * is the one action hidden outright when signed out, since there is no inbox
+ * to pick a thread from.
  *
  * Preview handling: the admin moderation drawer reuses this whole page body
  * (`DirectorySpaceView`) to show what a listing looks like live. None of
  * these actions make sense against a not-yet-approved listing (nowhere to
- * navigate to reliably, nothing to save), and — same as the aside's own
- * "back to directory" CTA — the moderator isn't the audience for them. We
- * return `null` outright rather than rendering disabled buttons: an empty
- * slot reads as "this bar doesn't apply here", while a row of dead buttons
- * would invite clicking.
+ * navigate to reliably, nothing to save), and the moderator is not their
+ * audience anyway, same as the aside's own "back to directory" CTA. We return
+ * `null` outright. An empty slot reads as "these actions do not apply here",
+ * while a row of dead buttons would invite clicking.
  */
 export function DirectoryActionBar({ place, preview = false }: Props) {
   const { t } = useTranslation();
@@ -68,7 +80,11 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
   const { isSaved, toggleSave } = useSaved();
-  const [sharing, setSharing] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  // `ShareToChatAction` is deliberately not used here: its own JSDoc points a
+  // surface with bespoke action markup at this pair instead, so the trigger
+  // matches the row's idiom, in place of an ordinary pill button.
+  const shareToChat = useShareToChat();
 
   if (preview) return null;
 
@@ -79,6 +95,13 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
   const savedId = `listing:${place.slug}`;
   const saved = isSaved(savedId);
 
+  const directionsLabel = t("marketing:directory.detail.action.directions");
+  const callLabel = t("marketing:directory.detail.action.call");
+  const shareLabel = t("marketing:directory.detail.action.share");
+  const saveLabel = saved
+    ? t("marketing:directory.detail.action.saved")
+    : t("marketing:directory.detail.action.save");
+
   async function handleShare() {
     if (typeof navigator === "undefined") return;
     const url = window.location.href;
@@ -87,15 +110,16 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
     // failure toasts) everywhere else.
     if (navigator.share) {
       try {
-        setSharing(true);
+        setIsSharing(true);
         await navigator.share({ title: place.name, url });
         return;
       } catch (error) {
-        // User-cancelled share sheets throw AbortError — not a failure, stay
-        // silent. Any other native-share failure falls through to copy.
+        // User-cancelled share sheets throw AbortError, which is not a
+        // failure, so stay silent. Any other native-share failure falls
+        // through to copy.
         if (error instanceof Error && error.name === "AbortError") return;
       } finally {
-        setSharing(false);
+        setIsSharing(false);
       }
     }
     await shareLink.share(url);
@@ -111,79 +135,105 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
     });
   }
 
+  // `placement="bottom"` throughout: the row sits under the floating navbar,
+  // so a bubble above it would land on the nav.
   return (
     <div className={s.actionBar}>
       {!isGone && (
-        <Button
-          variant="primary"
-          className={s.actionBarBtn}
-          href={directionsHref(place, demoMode)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <FiNavigation aria-hidden />
-          {t("marketing:directory.detail.action.directions")}
-        </Button>
+        <Tooltip label={directionsLabel} placement="bottom">
+          {/* `IconButton` is typed as a <button> only and Directions is an
+              external href, so this uses the same `Button variant="icon"` that
+              IconButton wraps and states the accessible name itself. */}
+          <Button
+            variant="icon"
+            href={directionsHref(place, demoMode)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={directionsLabel}
+          >
+            <FiNavigation aria-hidden className={s.actionBarDirectionsIcon} />
+          </Button>
+        </Tooltip>
       )}
       {!isPermanentlyClosed && place.social.phone && (
-        <Button
-          variant="ghost"
-          className={s.actionBarBtn}
-          href={`tel:${place.social.phone.replace(/\s/g, "")}`}
-        >
-          <FiPhone aria-hidden />
-          {t("marketing:directory.detail.action.call")}
-        </Button>
+        <Tooltip label={callLabel} placement="bottom">
+          {/* A `tel:` href is an anchor too, so it takes the same route. */}
+          <Button
+            variant="icon"
+            href={`tel:${place.social.phone.replace(/\s/g, "")}`}
+            aria-label={callLabel}
+          >
+            <FiPhone aria-hidden />
+          </Button>
+        </Tooltip>
       )}
-      <Button
-        variant="ghost"
-        className={s.actionBarBtn}
-        onClick={() => void handleShare()}
-        disabled={sharing}
-      >
-        <FiShare2 aria-hidden />
-        {t("marketing:directory.detail.action.share")}
-      </Button>
-      <ShareToChatAction
-        url={businessPath(place.slug)}
-        title={place.name}
-        kind="directory"
-        variant="ghost"
-        className={s.actionBarBtn}
-      />
+      <Tooltip label={shareLabel} placement="bottom">
+        <IconButton
+          aria-label={shareLabel}
+          onClick={() => void handleShare()}
+          disabled={isSharing}
+        >
+          <FiShare2 aria-hidden />
+        </IconButton>
+      </Tooltip>
+      {shareToChat.canShare && (
+        <Tooltip label={t("messages:share.cta")} placement="bottom">
+          <IconButton
+            aria-label={t("messages:share.ariaLabel", { title: place.name })}
+            onClick={shareToChat.open}
+          >
+            {/* A message bubble, where the labelled share-to-chat triggers
+                elsewhere (`ShareToChatAction`, `ArticleToolbar`) use FiSend.
+                Two reasons to diverge here. FiSend and the FiNavigation arrow
+                on Directions are both angular shapes pointing up and right,
+                which read as the same glyph at 44px in one row. And this row
+                is icon-only, so each glyph carries its whole meaning, while a
+                paper plane beside the words "Send in a message" has the label
+                to lean on. FiMessageSquare is also what the navbar, the
+                sidebar and the admin nav already use for messaging. */}
+            <FiMessageSquare aria-hidden />
+          </IconButton>
+        </Tooltip>
+      )}
       {user ? (
-        <Button
-          variant={saved ? "jade" : "ghost"}
-          className={s.actionBarBtn}
-          onClick={handleSave}
-          aria-pressed={saved}
-          aria-label={
-            saved
-              ? t("marketing:directory.detail.action.saved")
-              : t("marketing:directory.detail.action.save")
-          }
-        >
-          <FiHeart
-            aria-hidden
-            style={{ fill: saved ? "currentColor" : "none" }}
-          />
-          {saved
-            ? t("marketing:directory.detail.action.saved")
-            : t("marketing:directory.detail.action.save")}
-        </Button>
+        <Tooltip label={saveLabel} placement="bottom">
+          <IconButton
+            onClick={handleSave}
+            aria-pressed={saved}
+            aria-label={saveLabel}
+          >
+            {/* Both branches name a class that sets `fill` to a real value
+                ("currentColor" plus the jade tint, or "none"). An undefined
+                fill paints a Feather icon solid black, so neither branch may
+                fall through. */}
+            <FiHeart
+              aria-hidden
+              className={saved ? s.actionBarHeartFull : s.actionBarHeartHollow}
+            />
+          </IconButton>
+        </Tooltip>
       ) : (
-        // Logged-out visitors still see Save — clicking routes them to sign-in
-        // (there's no local session to save into) rather than hiding the
-        // affordance and the sign-in nudge entirely.
-        <Button
-          variant="ghost"
-          className={s.actionBarBtn}
-          to={routes.signIn}
-          aria-label={t("marketing:directory.detail.action.saveSignIn")}
-        >
-          <FiHeart aria-hidden style={{ fill: "none" }} />
-          {t("marketing:directory.detail.action.save")}
-        </Button>
+        // Signed-out visitors still see Save. Activating it routes them to
+        // sign-in (there is no local session to save into), which keeps both
+        // the affordance and the sign-in nudge on the page. A router link
+        // again, so `Button variant="icon"` carries the label itself.
+        <Tooltip label={saveLabel} placement="bottom">
+          <Button
+            variant="icon"
+            to={routes.signIn}
+            aria-label={t("marketing:directory.detail.action.saveSignIn")}
+          >
+            <FiHeart aria-hidden className={s.actionBarHeartHollow} />
+          </Button>
+        </Tooltip>
+      )}
+      {shareToChat.isOpen && (
+        <ShareToChatModal
+          url={businessPath(place.slug)}
+          title={place.name}
+          kind="directory"
+          onClose={shareToChat.close}
+        />
       )}
     </div>
   );

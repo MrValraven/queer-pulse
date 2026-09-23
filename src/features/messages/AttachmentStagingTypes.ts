@@ -54,6 +54,13 @@ export interface StagedItemCommon {
    *  that ends up failing or getting cancelled instead. */
   replyToId?: string;
   replyTo?: ChatMessage["replyTo"];
+  /** The mailbox seat the batch was composed as, snapshotted when "Send"
+   *  was pressed and set on EVERY item of the batch (see
+   *  `useAttachmentQueueLifecycle.sendStaged`), so an upload that finishes
+   *  after a thread or mailbox switch still sends as that identity.
+   *  Undefined for a personal thread and for anything still in the caption
+   *  screen. */
+  sendAsIdentityId?: string;
 }
 
 export interface StagedImageItem extends StagedItemCommon {

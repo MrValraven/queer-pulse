@@ -1,6 +1,7 @@
 // src/features/messages/useNewIncomingAnnouncement.ts
 import { useEffect, useRef, useState } from "react";
 import type { TFunction } from "../../shared/i18n/types";
+import { attachmentCaption } from "./messageCopy";
 import type { ChatMessage } from "./data";
 import { systemMessageText } from "./systemMessageText";
 
@@ -39,6 +40,8 @@ function mediaKindLabel(
       return t("messages:viewer.gifBadge");
     case "document":
       return t("messages:attachments.documentFallbackText");
+    case "sticker":
+      return t("messages:sticker.attachmentLabel");
     default:
       return undefined;
   }
@@ -63,7 +66,10 @@ function announcementText(
       t("messages:conversation.announcementSenderFallback")
     : counterpartName;
   const kindLabel = mediaKindLabel(message, t);
-  const caption = message.attachment?.caption?.trim();
+  // `attachmentCaption` (`messageCopy.ts`) already excludes the sticker
+  // shape, which carries no caption at all, rather than reading
+  // `message.attachment?.caption` directly here.
+  const caption = attachmentCaption(message)?.trim();
   const snippet = kindLabel
     ? caption
       ? t("messages:conversation.announcementMediaWithCaption", {

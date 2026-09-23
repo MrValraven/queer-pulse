@@ -1,10 +1,9 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useAuth } from "../../../app/providers/authContext";
 import type { ChatMessage } from "../data";
+import { useMessageViewer } from "../useMessageViewer";
 import {
-  DEMO_VIEWER_HANDLE,
   demoThreadPage,
   fetchDemoThreadPage,
   readDemoThread,
@@ -27,14 +26,19 @@ import {
  */
 export function useMessageThread(conversationId: string | null) {
   const { demoMode } = useDemoMode();
-  const { user } = useAuth();
   const queryClient = useQueryClient();
-  const myHandle = demoMode ? DEMO_VIEWER_HANDLE : (user?.profile.slug ?? null);
+  const viewer = useMessageViewer();
 
   useEffect(() => {
     ensureInactiveThreadTrim(queryClient);
   }, [queryClient]);
 
+  // Deliberately free of the viewer and the active mailbox, the one exception
+  // to keying every query by the active identity: the server renders these
+  // DTOs per reading member whichever mailbox is active, and every patch in
+  // `shared/api/messageCache.ts` and `useCachedThreadMessages` addresses this
+  // exact key. The viewer-dependent bubbles rebuild through `groupMessages`'
+  // own context key.
   const queryKey = ["messages", conversationId, demoMode];
   const isEnabled = !!conversationId;
   const query = useInfiniteQuery<MessagePage>({
@@ -87,11 +91,11 @@ export function useMessageThread(conversationId: string | null) {
     const oldestFirst = (query.data?.pages ?? [])
       .flatMap((page) => page.items)
       .reverse();
-    const grouped = groupMessages(oldestFirst, myHandle);
+    const grouped = groupMessages(oldestFirst, viewer);
     return demoMode && conversationId
       ? withDemoPresentation(conversationId, grouped)
       : grouped;
-  }, [query.data, myHandle, demoMode, conversationId]);
+  }, [query.data, viewer, demoMode, conversationId]);
 
   // react-query keeps `fetchMeta` from the last fetch until the next one
   // starts, and its optimistic result for a mount or key change marks the

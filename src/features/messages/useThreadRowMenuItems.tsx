@@ -6,6 +6,8 @@ import {
   FiHeart,
   FiInbox,
   FiTrash2,
+  FiUserCheck,
+  FiUserX,
 } from "react-icons/fi";
 import {
   TbAt,
@@ -15,6 +17,7 @@ import {
   TbPinnedFilled,
 } from "react-icons/tb";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { ClaimStatus } from "./api/useConversationClaim";
 import { useToggleMute, useToggleMuteMode } from "./api/useConversationPrefs";
 import type { Conversation } from "./data";
 import { resolveMuteState } from "./muteUntilLabel";
@@ -41,6 +44,16 @@ export interface ThreadRowMenuHandlers {
   onToggleReadUnread: () => void;
   /** Opens the delete-confirmation flow for this conversation. */
   onDelete: () => void;
+  /** Business mailboxes: the row's claim, computed once by the row
+   *  (`claimStatusOf`). Absent reads as `none`, with no claim items. */
+  claimStatus?: ClaimStatus;
+  /** Claims an unclaimed row (`useConversationClaim().claim`). */
+  onClaim?: () => void;
+  /** Releases the member's own claim. */
+  onRelease?: () => void;
+  /** Opens the take-over confirm (`TakeOverConfirmDialog`, the one the
+   *  composer bar uses) for a thread a colleague holds. */
+  onRequestTakeOver?: () => void;
 }
 
 const MUTE_8_HOURS_MS = 8 * 60 * 60 * 1000;
@@ -95,6 +108,10 @@ export function useThreadRowMenuItems(
     onToggleArchive,
     onToggleReadUnread,
     onDelete,
+    claimStatus = "none",
+    onClaim,
+    onRelease,
+    onRequestTakeOver,
   } = handlers;
 
   const mutedStatusLabel = mutedUntilTime
@@ -162,7 +179,39 @@ export function useThreadRowMenuItems(
                 setMuteMode({ conversationId, muteMode: "mentionsOnly" }),
             },
           ];
+    // Business mailboxes, on a seated and writable row only: the one claim
+    // action that fits the row's claim.
+    const claimItems: MenuItemDef[] =
+      claimStatus === "unclaimed" && onClaim
+        ? [
+            {
+              key: "claim",
+              label: t("messages:mailbox.claim.claim"),
+              icon: <FiUserCheck aria-hidden />,
+              onSelect: onClaim,
+            },
+          ]
+        : claimStatus === "mine" && onRelease
+          ? [
+              {
+                key: "release",
+                label: t("messages:mailbox.claim.release"),
+                icon: <FiUserX aria-hidden />,
+                onSelect: onRelease,
+              },
+            ]
+          : claimStatus === "theirs" && onRequestTakeOver
+            ? [
+                {
+                  key: "takeOver",
+                  label: t("messages:mailbox.claim.takeOver"),
+                  icon: <FiUserCheck aria-hidden />,
+                  onSelect: onRequestTakeOver,
+                },
+              ]
+            : [];
     return [
+      ...claimItems,
       {
         key: "pin",
         label: isPinned
@@ -221,6 +270,10 @@ export function useThreadRowMenuItems(
     onToggleArchive,
     onToggleReadUnread,
     onDelete,
+    claimStatus,
+    onClaim,
+    onRelease,
+    onRequestTakeOver,
     t,
   ]);
 }

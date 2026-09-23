@@ -1,5 +1,6 @@
 // src/features/messages/messageAlbums.ts
 import { isDocumentAttachment } from "../../shared/api/documentAttachment";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import { isSameSender } from "./messageRuns";
 import type { ChatMessage } from "./data";
 
@@ -20,17 +21,26 @@ export type RunSegment =
 
 /**
  * True when `message` may sit inside an album. Only an uploaded photo with
- * pixels to paint qualifies (GIFs and documents never join), and anything
- * that carries its own per-message chrome breaks out to its own bubble so
- * that chrome stays visible: a reaction with a count above 0, a pin, a star, a
- * failed send (its Retry is an action), a reply quote, the forwarded label, a
+ * pixels to paint qualifies (GIFs, documents and stickers never join; two
+ * stickers in a row stay two separate stickers), and anything that carries
+ * its own per-message chrome breaks out to its own bubble so that chrome
+ * stays visible: a reaction with a count above 0, a pin, a star, a failed
+ * send (its Retry is an action), a reply quote, the forwarded label, a
  * non-empty caption, or a soft delete.
+ *
+ * The `message.kind !== "image"` check above already excludes a sticker at
+ * runtime (its own `kind` is `"sticker"`), but `attachment`'s STATIC type
+ * still carries the sticker shape regardless of `kind`, and that shape has
+ * no `caption` property at all. `isStickerAttachment` narrows it out here
+ * the same way `isDocumentAttachment` narrows out a document, so the
+ * `attachment.caption` read below stays on a plain `GifAttachment`.
  */
 export function canJoinAlbum(message: ChatMessage): boolean {
   if (message.kind !== "image") return false;
   if (message.deletedAt) return false;
   const attachment = message.attachment;
   if (!attachment || isDocumentAttachment(attachment)) return false;
+  if (isStickerAttachment(attachment)) return false;
   const caption = attachment.caption ?? message.sendAttachment?.caption;
   if (caption?.trim()) return false;
   if (message.reactions?.some((reaction) => reaction.count > 0)) return false;

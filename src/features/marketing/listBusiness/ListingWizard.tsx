@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -12,7 +12,7 @@ import {
   type ListingDraft,
   type PendingListing,
 } from "./listBusiness.data";
-import { useListingForm } from "./useListingForm";
+import { useListingForm, type ListingSeed } from "./useListingForm";
 import { useListingDraft } from "./useListingDraft";
 import { DraftBanner, SendingPanel } from "./ListBusinessChrome";
 import { WizardFormPane } from "./WizardFormPane";
@@ -20,14 +20,10 @@ import { ListBusinessSuccess } from "./ListBusinessSuccess";
 import { WizardFormChrome } from "./WizardExtras";
 import { useListingDraftBanner } from "./useListingDraftBanner";
 import { useListingSubmit } from "./useListingSubmit";
+import { useListingWizardSubmit } from "./useListingWizardSubmit";
 import styles from "./ListBusinessPage.module.css";
 
 type Phase = "form" | "sending" | "success";
-
-// Floor for the "sending" ring so it's always visible; live mode also waits
-// for the real POST round-trip, whichever is longer.
-const MIN_SEND_MS = 700;
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * The guided six-step flow for submitting a NEW listing.
@@ -37,6 +33,11 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * an owner arrives to change one line and should not walk a step sequence to
  * reach it. Both surfaces render the same field components (see `./fields`),
  * so there is one copy of every input and one set of validation rules.
+ *
+ * Every prop below the first three is a seam for an admin console that
+ * authors a listing on a business's behalf. All are optional and each one
+ * defaults to the member flow's existing expression, so a `<ListingWizard />`
+ * with no new props behaves exactly as it did before the seams existed.
  */
 export interface ListingWizardProps {
   /** A create-mode draft being resumed (from the landing drafts list or a
@@ -48,45 +49,90 @@ export interface ListingWizardProps {
   /** Live resume: the server draft-row id, so autosave keeps upserting the
    *  same row instead of minting a duplicate. */
   initialDraftId?: string;
+  /** Persist the finished draft and resolve with the created record.
+   *  Defaults to the member's own `addListing(draft, profile.slug)`. */
+  submit?: (draft: ListingDraft) => Promise<PendingListing>;
+  /** Pre-fill for a BLANK draft. Defaults to the signed-in member's name,
+   *  bio and email. */
+  seed?: ListingSeed;
+  /** The name shown in the preview, the owner block and the vouch line.
+   *  Defaults to the signed-in member's full name. */
+  userName?: string;
+  /** The initials shown on the review step's vouch line. Defaults to the
+   *  signed-in member's initials. */
+  userInitials?: string;
+  /** Whether the draft autosaves. Defaults to true, the member behaviour.
+   *  A console passes false, because autosave writes member-scoped draft
+   *  rows and an admin's console has no business minting one. */
+  isDraftAutosaveEnabled?: boolean;
+  /** Leaving the wizard from step 0's back button. Defaults to navigating to
+   *  the directory. */
+  onCancel?: () => void;
+  /** Leaving after withdrawing the submitted listing. Defaults to navigating
+   *  to the directory. */
+  onDone?: () => void;
+  /** Replace the success panel. Left out, the wizard renders
+   *  `ListBusinessSuccess`. Supplied, whatever it returns is rendered, so
+   *  returning `null` shows nothing at all. */
+  renderSuccess?: (created: PendingListing) => ReactNode;
 }
 
-export function ListingWizard(props: ListingWizardProps) {
+export function ListingWizard({
+  initialDraft,
+  initialStep,
+  initialDraftId,
+  submit,
+  seed,
+  userName,
+  userInitials,
+  isDraftAutosaveEnabled,
+  onCancel,
+  onDone,
+  renderSuccess,
+}: ListingWizardProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { addListing, withdrawListing } = useDirectoryListingsActions();
-  // The authoring member — real user in live, mock persona in demo (item #3).
+  // The authoring member: real user in live, mock persona in demo (item #3).
+  // Both reads stay unconditional, because hooks cannot be conditional. They
+  // are cheap context reads, and a console that supplies its own name, seed
+  // and submit ignores the values.
   const { profile } = useProfileData();
   const { user } = useAuth();
-  const userName = `${profile.first} ${profile.last}`;
+  const memberName = `${profile.first} ${profile.last}`;
+  const resolvedUserName = userName ?? memberName;
+  const resolvedUserInitials = userInitials ?? profile.initials;
   // Prefill from the member (item #3). `useListingForm` applies it only when
   // building a blank draft (no `initialDraft`). Memoised so the form's `reset`
   // keeps a stable identity across renders.
-  const seed = useMemo(
-    () => ({
-      ownerName: userName.trim(),
-      ownerBio: profile.bio ?? "",
-      contactEmail: user?.email ?? "",
-    }),
-    [userName, profile.bio, user?.email],
+  const resolvedSeed = useMemo(
+    () =>
+      seed ?? {
+        ownerName: resolvedUserName.trim(),
+        ownerBio: profile.bio ?? "",
+        contactEmail: user?.email ?? "",
+      },
+    [seed, resolvedUserName, profile.bio, user?.email],
   );
-  const form = useListingForm(props.initialDraft, seed);
+  const form = useListingForm(initialDraft, resolvedSeed);
   const { draft } = form;
   const uploadPhoto = useUploadImage("listing-photo");
   // A draft resumed from the landing list / a `?draft` deep link.
-  const isResumed = Boolean(props.initialDraft);
-  const [step, setStep] = useState(props.initialStep ?? 0);
+  const isResumed = Boolean(initialDraft);
+  const [step, setStep] = useState(initialStep ?? 0);
   const [phase, setPhase] = useState<Phase>("form");
   const [listing, setListing] = useState<PendingListing | null>(null);
 
+  const isAutosaveOn = isDraftAutosaveEnabled ?? true;
   // A resumed draft keeps autosaving but doesn't re-offer the in-wizard banner.
   const { saved, savedAt, clearDraft, saveAndExit } = useListingDraft(
     draft,
     step,
     {
-      enabled: true,
+      enabled: isAutosaveOn,
       offerResume: !isResumed,
-      initialDraftId: props.initialDraftId,
+      initialDraftId,
     },
   );
   const { isBannerVisible, resumeDraft, discardDraft } = useListingDraftBanner(
@@ -110,16 +156,24 @@ export function ListingWizard(props: ListingWizardProps) {
     flashClass: styles.fieldFlash,
     onPhotosRejected: form.setRejectedPhotoSlots,
   });
-  // Guard against setState after unmount mid-send. Reset on setup so
-  // StrictMode's mount→cleanup→remount doesn't leave the ref stuck at false.
-  const mountedRef = useRef(true);
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-  const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollUp = useCallback(
+    () => window.scrollTo({ top: 0, behavior: "smooth" }),
+    [],
+  );
+  const submitListing = useCallback(
+    (finished: ListingDraft) =>
+      submit ? submit(finished) : addListing(finished, profile.slug),
+    [submit, addListing, profile.slug],
+  );
+  const { send } = useListingWizardSubmit({
+    submit: submitListing,
+    setPhase,
+    setListing,
+    clearDraft,
+    routeSubmitError,
+    setServerError,
+    scrollUp,
+  });
 
   const goToStep = (n: number) => {
     setStep(n);
@@ -133,31 +187,19 @@ export function ListingWizard(props: ListingWizardProps) {
       goToStep(step + 1);
       return;
     }
-    setServerError(null);
-    setPhase("sending");
-    scrollUp();
-    try {
-      const [created] = await Promise.all([
-        addListing(draft, profile.slug),
-        sleep(MIN_SEND_MS),
-      ]);
-      if (!mountedRef.current) return;
-      setListing(created);
-      clearDraft();
-      setPhase("success");
-      showToast(t("marketing:listBusiness.toast.submitted"), "success");
-      scrollUp();
-    } catch (error) {
-      if (!mountedRef.current) return;
-      setPhase("form");
-      routeSubmitError(error, () =>
-        showToast(t("marketing:listBusiness.toast.submitError"), "error"),
-      );
-    }
+    await send(draft);
   };
 
+  // Both exits land on the directory by default: cancelling from step 0 and
+  // finishing after a withdrawal.
+  const goToDirectory = useCallback(
+    () => void navigate(routes.directory),
+    [navigate],
+  );
+  const leaveWizard = onCancel ?? goToDirectory;
+  const finishWizard = onDone ?? goToDirectory;
   const back = () => {
-    if (step === 0) void navigate(routes.directory);
+    if (step === 0) leaveWizard();
     else goToStep(step - 1);
   };
   const editSubmission = () => {
@@ -168,7 +210,7 @@ export function ListingWizard(props: ListingWizardProps) {
   const withdraw = () => {
     if (listing) withdrawListing(listing.ref);
     showToast(t("marketing:listBusiness.toast.withdrawn"), "info");
-    void navigate(routes.directory);
+    finishWizard();
   };
   const listAnother = () => {
     form.reset();
@@ -185,10 +227,13 @@ export function ListingWizard(props: ListingWizardProps) {
       <div className="wrap">
         {phase === "form" && (
           <>
+            {/* "Save and finish later" persists through the same autosave
+                layer, so with autosave off the save can only fail. Offer it
+                only while there is somewhere for it to write. */}
             <WizardFormChrome
               serverError={serverError}
               onDismissError={() => setServerError(null)}
-              isSaveLaterVisible={draft.path !== ""}
+              isSaveLaterVisible={isAutosaveOn && draft.path !== ""}
               onSaveLater={() => void saveAndFinishLater()}
               isSavingLater={savingLater}
             />
@@ -196,8 +241,8 @@ export function ListingWizard(props: ListingWizardProps) {
               form={form}
               step={step}
               savedAt={savedAt}
-              userName={userName}
-              userInitials={profile.initials}
+              userName={resolvedUserName}
+              userInitials={resolvedUserInitials}
               draft={draft}
               goToStep={goToStep}
               onBack={back}
@@ -211,12 +256,16 @@ export function ListingWizard(props: ListingWizardProps) {
 
         {phase === "success" && listing && (
           <div className={styles.page}>
-            <ListBusinessSuccess
-              listing={listing}
-              onEdit={editSubmission}
-              onWithdraw={withdraw}
-              onAnother={listAnother}
-            />
+            {renderSuccess ? (
+              renderSuccess(listing)
+            ) : (
+              <ListBusinessSuccess
+                listing={listing}
+                onEdit={editSubmission}
+                onWithdraw={withdraw}
+                onAnother={listAnother}
+              />
+            )}
           </div>
         )}
       </div>

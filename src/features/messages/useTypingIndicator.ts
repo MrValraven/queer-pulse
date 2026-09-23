@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTypingFrames } from "../../shared/api/realtime";
+import type { ServerToClientEvents } from "../../shared/contracts/realtime";
 import { useDemoTypingSimulation } from "./useDemoSignalSimulation";
 
 /** How long a "typing" signal lives without a refresh frame before it self-clears. */
@@ -9,11 +10,14 @@ const TYPING_TTL_MS = 4000;
 export interface TypingState {
   /** True while at least one other participant is typing in the open thread. */
   typing: boolean;
-  /** The user ids currently typing (a DM has at most one; a group may have
-   *  several). Always OTHER people — never the signed-in member: the gateway
-   *  excludes the sender's whole `user:<id>` room (not just their socket, which
-   *  would still echo to their other devices), and the realtime client drops any
-   *  self-frame that slips through. See realtime.ts's `typing` handler. */
+  /** The typers currently typing, each keyed by the frame's `identityId`
+   *  when it carries one, else its `userId` (a DM has at most one; a group
+   *  may have several). A business types as one identity however many of its
+   *  staff are typing, so it holds one entry. Always OTHER people, never the
+   *  signed-in member: the gateway excludes the sender's whole `user:<id>`
+   *  room (not just their socket, which would still echo to their other
+   *  devices), and the realtime client drops any self-frame that slips
+   *  through. See realtime.ts's `typing` handler. */
   typingUserIds: string[];
 }
 
@@ -22,7 +26,9 @@ export interface TypingState {
  * Tracks EACH typer independently (per-user self-clearing timer) so a group can
  * show "Ana is typing" / "Ana and Bea are typing" / "Several people are typing…"
  * — the single-counterpart DM case is just the one-element path through the same
- * machinery (no forked hook). Demo mode has no socket, so there one seeded
+ * machinery (no forked hook). A business mailbox types as one identity
+ * however many of its staff are typing: its frame carries `identityId` and
+ * the typer is keyed by it. Demo mode has no socket, so there one seeded
  * thread feeds simulated frames into the same handler after the viewer sends
  * (`useDemoTypingSimulation`). Resets on thread switch and never leaves a
  * timer running past unmount.
@@ -30,8 +36,9 @@ export interface TypingState {
 export function useTypingIndicator(activeId: string): TypingState {
   const { demoMode } = useDemoMode();
   const [typingUserIds, setTypingUserIds] = useState<string[]>([]);
-  // Per-user auto-clear timers, keyed by userId — a typer clears on its own if a
-  // `typing:false` frame never arrives, independently of the others.
+  // Per-typer auto-clear timers, keyed by identity id or else user id: a typer
+  // clears on its own if a `typing:false` frame never arrives, independently
+  // of the others.
   const timersRef = useRef<Map<string, number>>(new Map());
 
   const clearAllTimers = useCallback(() => {
@@ -50,31 +57,29 @@ export function useTypingIndicator(activeId: string): TypingState {
   // Memoized so `useTypingFrames` (which resubscribes on handler identity change)
   // only re-attaches when the open thread changes.
   const handleTyping = useCallback(
-    (frame: { conversationId: string; userId: string; isTyping: boolean }) => {
+    (frame: ServerToClientEvents["typing"]) => {
       if (frame.conversationId !== activeId) return;
+      const typerId = frame.identityId ?? frame.userId;
+      if (!typerId) return;
       const timers = timersRef.current;
-      const existing = timers.get(frame.userId);
+      const existing = timers.get(typerId);
       if (existing) window.clearTimeout(existing);
       if (frame.isTyping) {
         setTypingUserIds((previous) =>
-          previous.includes(frame.userId)
-            ? previous
-            : [...previous, frame.userId],
+          previous.includes(typerId) ? previous : [...previous, typerId],
         );
         timers.set(
-          frame.userId,
+          typerId,
           window.setTimeout(() => {
-            timers.delete(frame.userId);
+            timers.delete(typerId);
             setTypingUserIds((previous) =>
-              previous.filter((id) => id !== frame.userId),
+              previous.filter((id) => id !== typerId),
             );
           }, TYPING_TTL_MS),
         );
       } else {
-        timers.delete(frame.userId);
-        setTypingUserIds((previous) =>
-          previous.filter((id) => id !== frame.userId),
-        );
+        timers.delete(typerId);
+        setTypingUserIds((previous) => previous.filter((id) => id !== typerId));
       }
     },
     [activeId],

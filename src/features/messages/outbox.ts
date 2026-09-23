@@ -26,6 +26,9 @@ import type { ChatMessage } from "./data";
 // body (and any pending image's storage key) would sit in localStorage after
 // they sign out and REPLAY against a different member's session the next time
 // Messages is opened on a shared device.
+//
+// Each entry carries the identity it was composed as (`sendAsIdentityId`, a
+// business, persona or company mailbox seat), and replay sends that identity.
 
 const STORAGE_KEY = "qp.messages.outbox.v1";
 

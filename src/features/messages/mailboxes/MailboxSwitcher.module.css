@@ -1,0 +1,178 @@
+/* The header mailbox switcher and its sheet. Tokens only; both button kinds
+   carry the focus ring triple. No motion of its own: the sheet animates
+   through `ModalSheet`. */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 44px;
+  margin-left: 8px;
+  padding: 0 8px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.07);
+  color: var(--text-strong);
+  font-size: var(--text-14);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .trigger:hover {
+    background: rgba(var(--line-rgb), 0.12);
+  }
+}
+
+.trigger:focus-visible,
+.row:focus-visible,
+.settingsButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.triggerName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.triggerChevron {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+}
+
+.unreadDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.title {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.row {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 8px;
+  border: none;
+  border-radius: var(--radius-12);
+  background: none;
+  color: var(--ink);
+  text-align: start;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+
+.row[aria-current="true"] {
+  background: rgba(var(--line-rgb), 0.07);
+}
+
+.rowText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rowName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.rowDetail,
+.rowTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.readOnlyTag {
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.09);
+  color: var(--ink-60);
+  font-weight: 600;
+}
+
+.unreadCount {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.current {
+  display: flex;
+  flex: none;
+  color: var(--accent);
+}
+
+.current svg {
+  width: 20px;
+  height: 20px;
+}
+
+.settingsButton {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-40);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .settingsButton:hover {
+    color: var(--text-strong);
+  }
+}
+
+.settingsButton svg {
+  width: 20px;
+  height: 20px;
+}

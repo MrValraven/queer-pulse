@@ -102,6 +102,22 @@ export const messages: Catalog = {
   "emoji.categorySymbols": "Símbolos",
   "emoji.categoryFlags": "Bandeiras",
 
+  // Seletor de stickers (StickerPicker + separador do EmojiPicker, ComposerAttachButton)
+  "sticker.open": "Enviar um sticker",
+  "sticker.panelLabel": "Seletor de stickers",
+  "sticker.packsLabel": "Packs de stickers",
+  "sticker.recentsLabel": "Usados recentemente",
+  "sticker.loading": "A carregar stickers…",
+  "sticker.loadError": "Não foi possível carregar os stickers. Tenta de novo",
+  "sticker.empty": "Ainda sem stickers",
+  "sticker.imageAlt": "Sticker de {label}",
+  "sticker.attachmentLabel": "Sticker",
+  // Separador dentro do seletor de emoji; mantém-se na família emoji.*, já
+  // que rotula esse separador em vez do seletor de stickers autónomo.
+  "emoji.tabsLabel": "Emoji e stickers",
+  "emoji.tabEmoji": "Emoji",
+  "emoji.tabStickers": "Stickers",
+
   // Menu de anexos (ComposerAttachButton) — o clipe dentro da barra de
   // escrita e o menu Foto / Ficheiro / GIF que abre. As linhas reutilizam
   // attachments.open, attachments.openDocument e gif.open como rótulos
@@ -636,6 +652,162 @@ export const messages: Catalog = {
   "system.memberJoined": "{actor} entrou",
   "system.groupDissolvedYou": "Encerraste o grupo",
   "system.groupDissolved": "{actor} encerrou o grupo",
+  // Caixas de negócio: a nota da migração que uma conversa de contacto movida
+  // recebe. Neutra e sem autor por natureza: a migração escreve esta linha
+  // sem remetente e sem nomear ninguém, por isso lê-se igual para qualquer
+  // pessoa que a veja, incluindo a dona da caixa.
+  "system.movedToBusinessMailbox":
+    "Esta conversa passou para a caixa de mensagens do negócio",
+  // A mesma nota, quando o servidor resolve o nome do negócio. A chave sem
+  // nome acima continua a ser a alternativa quando isso não é possível.
+  "system.movedToNamedBusinessMailbox":
+    "Esta conversa passou para a caixa de mensagens de {business}",
+  // Alternativa neutra para um tipo de evento de sistema que este cliente
+  // ainda não conhece (por exemplo, uma migração que começa a escrever um
+  // evento novo antes de o cliente que o mostra ser lançado). Nunca uma frase de saída.
+  "system.unknownEvent": "Esta conversa foi atualizada",
+
+  // PRD-376: Caixas de mensagens de negócios (spec 2026-09-20, secção 10): o
+  // seletor de caixas, a atribuição de caixas partilhadas, a autoria da
+  // equipa, caixas só de resposta, blocos de identidade e denúncias, e o
+  // contacto de personas e empresas. PT usa tu. Uma caixa de mensagens é
+  // uma caixa de mensagens, uma ficha é uma ficha, o negócio é o negócio.
+  "mailbox.switcher.buttonAria": "Caixa de mensagens: {name}. Mudar de caixa",
+  "mailbox.switcher.buttonAriaWithUnread":
+    "Caixa de mensagens: {name}. Mudar de caixa. Há mensagens novas nas tuas outras caixas",
+  "mailbox.switcher.title": "As tuas caixas de mensagens",
+  "mailbox.switcher.unreadCount": "{count} por ler",
+  "mailbox.switcher.current": "Caixa atual",
+  "mailbox.switcher.settings": "Definições da caixa",
+  "mailbox.kind.profile": "Pessoal",
+  "mailbox.kind.listing": "Ficha do diretório",
+  "mailbox.kind.subprofile": "Persona",
+  "mailbox.kind.company": "Empresa",
+  "mailbox.role.owner": "Titular",
+  "mailbox.role.team": "Equipa",
+  "mailbox.readOnly.tag": "Só leitura",
+  "mailbox.untitled": "Caixa sem nome",
+  "mailbox.lostAccess":
+    "Já não respondes por essa caixa de mensagens, por isso estás a ver as tuas mensagens.",
+  "mailbox.replyOnly.emptyTitle": "Ainda não há nada para responder",
+  "mailbox.replyOnly.emptyBody":
+    "Os membros escrevem a {name} a partir da página. Cada resposta que envias daqui sai como {name}.",
+  "mailbox.replyOnly.composeHint":
+    "{name} responde a conversas que os membros começam. Muda para a tua caixa de mensagens para escreveres a alguém.",
+  "mailbox.composer.replyingAs": "A responder como {name}",
+  "mailbox.composer.readOnly":
+    "A moderação removeu {name}. As conversas ficam aqui para leres, e as respostas estão desligadas.",
+  "mailbox.claim.unclaimed": "Por atribuir",
+  "mailbox.claim.mine": "Estás a tratar disto",
+  "mailbox.claim.theirs": "{name} está a tratar disto",
+  "mailbox.claim.tookOverFrom": "{name} assumiu no lugar de {previous}",
+  "mailbox.claim.rowMine": "Tua",
+  "mailbox.claim.rowTheirs": "Com {name}",
+  "mailbox.claim.claim": "Assumir",
+  "mailbox.claim.release": "Libertar",
+  "mailbox.claim.takeOver": "Assumir",
+  "mailbox.claim.takeOverTitle": "Assumir no lugar de {name}?",
+  "mailbox.claim.takeOverBody":
+    "{name} está a tratar desta conversa. Se a assumires, passa para ti, e a tua equipa vai vê-la contigo.",
+  "mailbox.claim.takeOverConfirm": "Assumir",
+  "mailbox.claim.claimedToast": "Estás a tratar desta conversa",
+  "mailbox.claim.releasedToast": "Libertada para a tua equipa",
+  "mailbox.claim.lostRaceToast": "Alguém da tua equipa chegou primeiro",
+  "mailbox.claim.tookOverToast": "Assumiste no lugar de {name}",
+  "mailbox.claim.error": "Não resultou. Tenta outra vez.",
+  "mailbox.tab.unclaimed": "Por atribuir",
+  "mailbox.tab.mine": "Minhas",
+  "mailbox.tab.unclaimedEmpty": "Todas as conversas têm alguém a tratar delas",
+  "mailbox.tab.mineEmpty": "Ainda não estás a tratar de nenhuma conversa",
+  "mailbox.attribution.customerLine": "{name}, de {business}",
+  "mailbox.attribution.staffLine": "Enviada por {name}",
+  "mailbox.formerBusiness": "Antigo negócio",
+  "mailbox.failure.notStaff":
+    "Não enviada. Já não respondes por esta caixa de mensagens.",
+  "mailbox.failure.removed": "Não enviada. A moderação removeu esta persona.",
+  "mailbox.failure.wrongMailbox":
+    "Não enviada. Esta mensagem pertence a outra caixa de mensagens.",
+  "mailbox.failure.cannotStart":
+    "A caixa de mensagens de um negócio, persona ou empresa só pode responder.",
+  "mailbox.settings.title": "Definições da caixa de mensagens de {name}",
+  "mailbox.settings.showStaffNames": "Mostrar quem respondeu",
+  "mailbox.settings.showStaffNamesHelp":
+    "Os clientes veem um primeiro nome junto a cada resposta, como “Ana, de {name}”. Apelidos e perfis ficam escondidos.",
+  "mailbox.settings.ownerOnly": "Só quem é titular pode mudar isto.",
+  "mailbox.settings.readOnly":
+    "A moderação removeu {name}, por isso estas definições não podem mudar.",
+  "mailbox.settings.allowMyName": "Incluir o meu primeiro nome",
+  "mailbox.settings.allowMyNameHelp":
+    "Aplica-se enquanto “Mostrar quem respondeu” estiver ligado.",
+  "mailbox.settings.saved": "Guardado",
+  "mailbox.settings.error": "Não ficou guardado. Tenta outra vez.",
+  "mailbox.settings.loadError":
+    "Estas definições não carregaram. Tenta outra vez.",
+  "mailbox.settings.close": "Fechar",
+  "mailbox.block.action": "Bloquear {name}",
+  "mailbox.block.unblockAction": "Desbloquear {name}",
+  "mailbox.block.confirmTitle": "Bloquear {name}?",
+  "mailbox.block.confirmBody":
+    "As tuas conversas com {name} fecham-se para ti. Quem responde por {name} continua contactável no próprio perfil.",
+  "mailbox.block.confirm": "Bloquear",
+  "mailbox.block.done": "Bloqueaste {name}",
+  "mailbox.block.undo": "Anular",
+  "mailbox.block.error": "O bloqueio não resultou. Tenta outra vez.",
+  "mailbox.report.action": "Denunciar {name}",
+  "mailbox.blocked.title": "Negócios, personas e empresas",
+  "mailbox.blocked.description":
+    "Bloquear um fecha as tuas conversas com ele. Quem responde por ele continua contactável no próprio perfil.",
+  "mailbox.blocked.empty": "Não bloqueaste nenhum negócio, persona ou empresa.",
+  "mailbox.blocked.since": "Bloqueado a {date}",
+  "mailbox.blocked.unblocked": "Desbloqueaste {name}",
+  "mailbox.blocked.loadErrorTitle": "Esta lista não carregou",
+  "mailbox.blocked.loadErrorBody": "Verifica a ligação e tenta outra vez.",
+  "mailbox.contact.cta": "Enviar mensagem",
+  "mailbox.contact.note":
+    "Chega à caixa de mensagens de {name}, e só quem responde por {name} a pode ler.",
+  "mailbox.contact.replyNote":
+    "Podem responder-te já. Podes escrever mais assim que o fizerem.",
+  "mailbox.contact.existingThreadCta": "Abrir a tua conversa",
+  "mailbox.contact.signInPrompt":
+    "Inicia sessão para escreveres a {name} sem dares um número de telefone nem um email.",
+  "mailbox.contact.signInCta": "Iniciar sessão",
+  "mailbox.contact.loadErrorTitle": "As opções de mensagem não carregaram",
+  "mailbox.contact.loadErrorBody": "Tenta outra vez daqui a pouco.",
+  "mailbox.contact.unavailable.ownMailbox":
+    "Respondes por {name}. As mensagens chegam-te pelo seletor de caixas de mensagens.",
+  "mailbox.contact.unavailable.unstaffed": "Ainda ninguém responde por {name}.",
+  "mailbox.contact.unavailable.removed":
+    "{name} foi removida e não pode receber mensagens.",
+  "mailbox.contact.unavailable.unavailable":
+    "Não podes enviar mensagens a {name} a partir da tua conta.",
+  "mailbox.contact.limit.thisMailbox":
+    "Já escreveste a {name} hoje. Dá-lhes tempo para responder.",
+  "mailbox.contact.limit.acrossMailboxes":
+    "Escreveste a muitos negócios e personas hoje, por isso isto está em pausa por agora.",
+  "mailbox.contact.limit.clearsIn": "Podes voltar a escrever {when}.",
+  "mailbox.contact.eyebrow": "Mensagem privada",
+  "mailbox.contact.title": "Escreve a <em>{name}</em>",
+  "mailbox.contact.sub":
+    "Isto vai para a caixa de mensagens de {name}, e quem responde fá-lo como {name}. Nada fica publicado.",
+  "mailbox.contact.bodyLabel": "A tua mensagem",
+  "mailbox.contact.bodyPlaceholder": "O que queres perguntar?",
+  "mailbox.contact.bodyHint": "Pelo menos {min} caracteres.",
+  "mailbox.contact.charactersLeft": "Caracteres restantes: {remaining}",
+  "mailbox.contact.cancel": "Cancelar",
+  "mailbox.contact.submit": "Enviar mensagem",
+  "mailbox.contact.submitting": "A enviar",
+  "mailbox.contact.error.generic":
+    "A tua mensagem não foi enviada. Tenta outra vez daqui a pouco.",
+  "mailbox.contact.error.rateLimited":
+    "Já escreveste aqui hoje. Dá-lhes tempo para responder.",
+  "mailbox.contact.error.unavailable":
+    "{name} não pode receber mensagens neste momento.",
+  "mailbox.contact.successAria": "A tua mensagem para {name} foi enviada",
+  "mailbox.contact.successTitle": "Mensagem",
+  "mailbox.contact.successEm": "enviada",
+  "mailbox.contact.successBody": "Está na caixa de mensagens de {name}.",
+  "mailbox.contact.openThreadCta": "Abrir a conversa",
+  "mailbox.contact.doneCta": "Feito",
 
   // ── Segurança — bloquear/denunciar um membro + aviso de partilha (Wave A) ──
   "conversation.reportMemberAction": "Denunciar {name}",

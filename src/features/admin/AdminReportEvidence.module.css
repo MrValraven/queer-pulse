@@ -188,6 +188,20 @@
   color: var(--ink-40);
 }
 
+.contextSentAsIdentity {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.contextSentAsIdentity svg {
+  width: 11px;
+  height: 11px;
+}
+
 .contextTime {
   font-size: var(--text-11-5);
   color: var(--ink-40);

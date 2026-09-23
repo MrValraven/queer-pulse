@@ -552,7 +552,31 @@ export type NotificationKind =
   // It BUNDLES on the queue, so one row can stand for several arrivals. Its
   // copy therefore carries the count itself and `NotificationItem` suppresses
   // the generic "and N others" suffix for it.
-  | "admin_queue_item";
+  | "admin_queue_item"
+  // Co-manager seats on a business directory listing (mirrors the backend
+  // `notifications_type_enum` values added in
+  // `AddListingCoManagerEnumValues1794530000000`, emitted from
+  // `ListingCoManagersService`; see
+  // `notification.entity.ts:294-296`). `listing_co_manager_invite` goes to the
+  // INVITED member and carries the owner as `payload.actorId`; it is the only
+  // way they learn an owner has asked them, and nothing happens to their
+  // access until they answer it.
+  // `listing_co_manager_invite_accepted`/`_declined` go back to the OWNER
+  // with the member as `actorId`, closing the loop on an invitation the owner
+  // sent by hand. None of the three has a preference toggle. Payload carries
+  // `listingSlug`/`listingName` (plus `inviteId` on the invite), never a note
+  // or any other prose. These three had no entry here before this change: the
+  // backend has emitted them since that migration shipped, so every row of
+  // all three rendered the unknown-kind fallback.
+  | "listing_co_manager_invite"
+  | "listing_co_manager_invite_accepted"
+  | "listing_co_manager_invite_declined"
+  // An admin has offered a member ownership of a listing that has none
+  // (mirrors the backend `notifications_type_enum` value added in
+  // `AddListingOwnerOfferNotificationType1821300300000`, emitted from
+  // `ListingOwnerOffersService.offer`; see `notification.entity.ts:304`).
+  // Actor is the offering admin. Payload carries `listingSlug`/`listingName`.
+  | "listing_owner_offer";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -723,6 +747,18 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // An arrival in a review queue is platform duty mail that deep-links into a
   // console, same tab as moderation_queue_alert.
   admin_queue_item: "platform",
+  // A co-manager invite, acceptance, or decline is activity between two
+  // members over a business listing, the same shape group_added/group_invite
+  // are over a group chat: community tab, since both parties here are
+  // members talking to each other.
+  listing_co_manager_invite: "community",
+  listing_co_manager_invite_accepted: "community",
+  listing_co_manager_invite_declined: "community",
+  // An admin offering a member ownership of a listing is the platform handing
+  // somebody something to answer, the same shape as `community_support_offered`
+  // (platform staff offering a community support): platform tab, same as
+  // listing_approved.
+  listing_owner_offer: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -1138,6 +1174,49 @@ function listingQuestionSubjectToken(payload: unknown, t: TFunction): string {
   return typeof listingName === "string" && listingName.trim() !== ""
     ? listingName
     : t("notifications:type.listing_public_question_answered.subjectFallback");
+}
+
+/**
+ * Resolves the `{listingName}` token the three co-manager rows and
+ * `listing_owner_offer` interpolate: the business the invite, decision, or
+ * offer is about.
+ *
+ * Same defensive read as `listingQuestionSubjectToken` above. The backend
+ * always writes `listingName` on all four payloads, but a row from a
+ * malformed or older shape must not leave `{listingName}` sitting in a row
+ * that is asking somebody to act. All four share ONE fallback key
+ * (`listing_co_manager_invite.listingNameFallback`), the same way
+ * `group_invite` borrows `group_added`'s own fallback above: the phrase
+ * ("this listing") reads the same regardless of which of the four rows it
+ * lands in.
+ */
+function listingNameToken(payload: unknown, t: TFunction): string {
+  const listingName = (payload as { listingName?: string } | null)?.listingName;
+  return typeof listingName === "string" && listingName.trim() !== ""
+    ? listingName
+    : t("notifications:type.listing_co_manager_invite.listingNameFallback");
+}
+
+/**
+ * Resolves the `{name}` token the three co-manager rows and
+ * `listing_owner_offer` interpolate into their plain `.text`, the same
+ * mechanism `group_added` uses, staying clear of the `PERSONALIZED_KINDS`/
+ * `textNamed` path in `notifications.adapters.ts`: all four always carry an
+ * actor (the owner on the invite, the member on the accept/decline, the
+ * offering admin on the offer), and `actorDisplayName` is already threaded
+ * through every call site regardless of kind, so no change is needed outside
+ * this file to make the name resolve. All four share ONE fallback key
+ * (`listing_co_manager_invite.nameFallback`), the same way they share
+ * `listingNameToken`'s fallback above.
+ */
+function listingActorNameToken(
+  actorDisplayName: string | undefined,
+  t: TFunction,
+): string {
+  return (
+    actorDisplayName?.trim() ||
+    t("notifications:type.listing_co_manager_invite.nameFallback")
+  );
 }
 
 /**
@@ -1893,6 +1972,20 @@ export function formatNotification(
     tokens.name =
       actorDisplayName?.trim() ||
       t("notifications:type.group_added.nameFallback");
+  }
+  if (
+    type === "listing_co_manager_invite" ||
+    type === "listing_co_manager_invite_accepted" ||
+    type === "listing_co_manager_invite_declined" ||
+    type === "listing_owner_offer"
+  ) {
+    // Overrides the raw `listingName` `interpolationTokens` already copied
+    // through, and resolves the actor's name the same way `group_added` does
+    // (see `listingActorNameToken`), so a row missing either still reads as a
+    // whole sentence naming "this listing"/"Someone" in front of somebody
+    // being asked to act, never a bare `{listingName}` or `{name}` token.
+    tokens.listingName = listingNameToken(payload, t);
+    tokens.name = listingActorNameToken(actorDisplayName, t);
   }
   return {
     text: t(`notifications:type.${key}.text`, tokens),

@@ -37,9 +37,13 @@ export interface JoinFlowCommunity {
  */
 export function CommunityJoinFlowModal({
   community,
+  parentName,
   onClose,
 }: {
   community: JoinFlowCommunity;
+  /** Set when `community` is a space: the parent's name, so the wizard's
+   *  rules step notes the parent's rules the applicant already agreed to. */
+  parentName?: string;
   onClose: () => void;
 }) {
   const { demoMode } = useDemoMode();
@@ -79,6 +83,7 @@ export function CommunityJoinFlowModal({
         slug: community.slug,
       }}
       tier={tier}
+      parentName={parentName}
       onClose={onClose}
       onJoined={(payload) => submit(false, payload)}
       onRequested={(payload) => submit(true, payload)}

@@ -32,6 +32,12 @@ const sendToMany =
   vi.fn<
     (conversationIds: string[], body: string) => Promise<ShareSendResult[]>
   >();
+// The personal scope comes from the mailbox list; the stubbed
+// `useConversations` above ignores it.
+vi.mock("../mailboxes/useActiveMailbox", () => ({
+  usePersonalMailboxScope: () => null,
+}));
+
 vi.mock("./useSendToConversations", () => ({
   useSendToConversations: () => ({ sendToMany }),
 }));

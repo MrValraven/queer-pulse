@@ -505,6 +505,20 @@ export interface ListingDraft {
    * Absent on a brand-new draft, which is always being written by its owner.
    */
   managementRole?: ManagementRole;
+  /**
+   * Authored by staff for a business that has not joined yet.
+   *
+   * Suppresses the owner block, the consent checks and the affirming
+   * baseline, because all three are written in first and second person
+   * about the submitter and an admin cannot answer them for somebody else.
+   * The owner supplies them after accepting the handover.
+   *
+   * Draft-only, like `managementRole`: the payload mappers build their bodies
+   * from an explicit allow-list that never names this key, so it is read on
+   * the way out and never sent. Absent on a member's draft, and an absent
+   * flag reads as false, which is the member default.
+   */
+  isStaffAuthored?: boolean;
 }
 
 export interface PendingListing extends ListingDraft {

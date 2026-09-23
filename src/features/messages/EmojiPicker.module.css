@@ -52,6 +52,62 @@
   }
 }
 
+/* The Emoji/Stickers segmented rail (a real ARIA tablist), sitting above the
+   category rail only when the surface can send a sticker. Same 10px
+   horizontal inset as `.rail`/`.grid` below it, so all three line up. */
+.tabRail {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  padding: 8px 10px 0;
+}
+.tabBtn {
+  flex: 1;
+  padding: 7px 0;
+  border: none;
+  border-radius: var(--radius-badge);
+  background: transparent;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .tabBtn:hover {
+    color: var(--ink);
+  }
+}
+.tabBtn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  box-shadow: none;
+}
+.tabBtnActive {
+  color: var(--ink);
+  background: var(--cream);
+}
+@media (hover: hover) {
+  .tabBtnActive:hover {
+    color: var(--ink);
+  }
+}
+
+/* Wraps whichever content the active tab shows (the emoji layout, or
+   `StickerPicker` embedded). Fills the remaining panel height below the
+   rail(s), the same flex column the panel itself was before this wrapper
+   existed, so every child's own `flex: 1` still resolves against it. */
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
 .search {
   flex: none;
   margin: 10px 10px 6px;

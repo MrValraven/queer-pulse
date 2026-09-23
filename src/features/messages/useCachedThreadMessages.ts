@@ -1,9 +1,8 @@
 // src/features/messages/useCachedThreadMessages.ts
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
-import { useAuth } from "../../app/providers/authContext";
 import { groupMessages } from "./api/messages.adapters";
-import { DEMO_VIEWER_HANDLE } from "./api/demoThreadCache";
+import { useMessageViewer } from "./useMessageViewer";
 import type { MessagePage } from "./api/threadCacheTrim";
 import type { ChatMessage } from "./data";
 
@@ -27,10 +26,7 @@ export function useCachedThreadMessages(
   isDemoMode = false,
 ): ChatMessage[] {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
-  const myHandle = isDemoMode
-    ? DEMO_VIEWER_HANDLE
-    : (user?.profile.slug ?? null);
+  const viewer = useMessageViewer();
   const subscribe = useCallback(
     (onStoreChange: () => void) =>
       queryClient.getQueryCache().subscribe(onStoreChange),
@@ -53,6 +49,6 @@ export function useCachedThreadMessages(
     const oldestFirst = (threadData?.pages ?? [])
       .flatMap((page) => page.items)
       .reverse();
-    return groupMessages(oldestFirst, myHandle).flatMap((group) => group.items);
-  }, [threadData, myHandle]);
+    return groupMessages(oldestFirst, viewer).flatMap((group) => group.items);
+  }, [threadData, viewer]);
 }

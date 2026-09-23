@@ -269,4 +269,47 @@ describe("detailDtoToCommunity", () => {
     );
     expect(truncated.truncated).toBe(true);
   });
+
+  // F7: an older backend that predates spaces omits allowsSubcommunities,
+  // parent and subcommunities entirely (all three are optional on the DTO),
+  // so the toggle/list they feed must safely default to "off".
+  it("defaults allowsSubcommunities, parent and subcommunities when the DTO omits them", () => {
+    const community = detailDtoToCommunity(baseDetailDto, translate, fmt);
+    expect(community.allowsSubcommunities).toBe(false);
+    expect(community.parent).toBeNull();
+    expect(community.subcommunities).toEqual([]);
+  });
+
+  it("maps allowsSubcommunities, parent and subcommunities when the DTO carries them", () => {
+    const community = detailDtoToCommunity(
+      {
+        ...baseDetailDto,
+        allowsSubcommunities: true,
+        parent: { slug: "trans-friends", name: "Trans & Friends" },
+        subcommunities: [
+          {
+            slug: "trans-friends-parents",
+            name: "Parents Circle",
+            accessTier: "public",
+            memberCount: 42,
+          },
+        ],
+      },
+      translate,
+      fmt,
+    );
+    expect(community.allowsSubcommunities).toBe(true);
+    expect(community.parent).toEqual({
+      slug: "trans-friends",
+      name: "Trans & Friends",
+    });
+    expect(community.subcommunities).toEqual([
+      {
+        slug: "trans-friends-parents",
+        name: "Parents Circle",
+        accessTier: "public",
+        memberCount: 42,
+      },
+    ]);
+  });
 });

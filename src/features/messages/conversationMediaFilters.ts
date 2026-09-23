@@ -3,11 +3,14 @@ import {
   isDocumentAttachment,
   type DocumentAttachment,
 } from "../../shared/api/documentAttachment";
+import { isStickerAttachment } from "../../shared/api/stickerAttachment";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { ConversationMediaKind } from "./api/conversationMedia.api";
 import { firstLinkUrl, formatLinkLabel } from "./linkify";
 import { isViewablePhoto } from "./useThreadImageGallery";
+import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage } from "./data";
+import { colleagueSenderLabel, isTypedByViewer } from "./viewerSideSender";
 
 /** One message on a gallery shelf, with the moment it is dated by. */
 export interface ConversationMediaEntry {
@@ -83,11 +86,19 @@ export function messageLinks(message: ChatMessage): ConversationMediaLink[] {
   }));
 }
 
-/** The photo or GIF a message shows, when the viewer could open it. */
+/** The photo or GIF a message shows, when the viewer could open it. A sticker
+ *  is excluded the same way a document is: `isViewablePhoto` already gates
+ *  on `kind` being `"image"`/`"gif"`, which a sticker's own `"sticker"` kind
+ *  never satisfies, so this second check is belt-and-suspenders against the
+ *  attachment shape itself rather than the kind label alone. */
 export function photoAttachmentOf(message: ChatMessage): GifAttachment | null {
   if (!isViewablePhoto(message)) return null;
   const attachment = message.attachment;
-  return attachment && !isDocumentAttachment(attachment) ? attachment : null;
+  return attachment &&
+    !isDocumentAttachment(attachment) &&
+    !isStickerAttachment(attachment)
+    ? attachment
+    : null;
 }
 
 /** The file a document message carries, unless the message was deleted. */
@@ -223,14 +234,19 @@ export function entryDateLabel(
   });
 }
 
-/** Who shared a message: "You" for the viewer's own, the group sender's name,
- *  or the DM counterpart (a demo DM message carries no `senderName`). */
+/** Who shared a message: "You" for the viewer's own, the business with the
+ *  colleague's first name for a business reply a colleague typed, the group
+ *  sender's name, or the DM counterpart (a demo DM message carries no
+ *  `senderName`). `t` names the colleague's business; without it such an
+ *  entry reads as the business alone. */
 export function entrySenderName(
   message: ChatMessage,
   counterpartName: string,
   youLabel: string,
+  t?: TFunction,
 ): string {
-  if (message.from === "me") return youLabel;
+  if (isTypedByViewer(message)) return youLabel;
+  if (message.from === "me" && t) return colleagueSenderLabel(message, t);
   return message.senderName ?? counterpartName;
 }
 

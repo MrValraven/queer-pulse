@@ -2,12 +2,8 @@ import { FiAlertCircle, FiCheckCircle, FiHelpCircle } from "react-icons/fi";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { parseListingDate, type DirectoryPlace } from "./directoryPlaces";
+import { listingFreshnessOf } from "./listingFreshness";
 import s from "./DirectorySpacePage.module.css";
-
-/** After six months a confirmation stops being evidence and becomes a date.
- *  The stamp keeps showing it, worded so nobody mistakes it for freshness. */
-const STALE_AFTER_DAYS = 180;
-const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 
 /**
  * "Details confirmed by Ana on 3 March 2026", sitting under the hours.
@@ -20,6 +16,10 @@ const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
  * - never confirmed → says so outright and tells the visitor to check, rather
  *   than staying silent and letting the hours table imply an authority nobody
  *   ever gave it.
+ *
+ * The six-month staleness rule itself lives in `./listingFreshness`, shared
+ * with the owner-facing surfaces so the two can never disagree about when a
+ * confirmation stopped counting.
  *
  * The date always goes through the repo's localized `fmt.date`. `venueNow` is
  * the venue's own clock, passed down from the hours section so "how long ago
@@ -36,11 +36,14 @@ export function DirectoryFreshnessStamp({
   const { t } = useTranslation();
   const fmt = useFormat();
 
+  const freshness = listingFreshnessOf(place.detailsConfirmedAt, venueNow);
   const confirmedAt = parseListingDate(place.detailsConfirmedAt);
   const ownerFirstName = place.owner.first.trim();
   const hasOwnerName = ownerFirstName.length > 0;
 
-  if (!confirmedAt) {
+  // The second half of the test is a type narrowing: `confirmedAt` is null on
+  // exactly the values that make the freshness read "unconfirmed".
+  if (freshness === "unconfirmed" || !confirmedAt) {
     return (
       <p className={`${s.freshness} ${s.freshnessUnknown}`}>
         <FiHelpCircle aria-hidden />
@@ -49,13 +52,9 @@ export function DirectoryFreshnessStamp({
     );
   }
 
-  const daysSince = Math.floor(
-    (venueNow.getTime() - confirmedAt.getTime()) / MILLISECONDS_PER_DAY,
-  );
-  const isStale = daysSince > STALE_AFTER_DAYS;
   const date = fmt.date(confirmedAt);
 
-  if (isStale) {
+  if (freshness === "stale") {
     return (
       <p className={`${s.freshness} ${s.freshnessStale}`}>
         <FiAlertCircle aria-hidden />

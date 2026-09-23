@@ -5,6 +5,7 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { IdentityContactButton } from "../messages/identityContact/IdentityContactButton";
 import type { CompanyProfile } from "./companies.data";
 import styles from "./CompanyPage.module.css";
 
@@ -19,10 +20,12 @@ const badgeClass: Record<
 
 export function CompanyCover({
   profile,
+  slug,
   openRoles,
   onSeeRoles,
 }: {
   profile: CompanyProfile;
+  slug: string;
   openRoles: number;
   onSeeRoles: () => void;
 }) {
@@ -91,25 +94,15 @@ export function CompanyCover({
                   ? t("economy:company.cover.following")
                   : t("economy:company.cover.follow")}
               </Button>
-              {/* PRD-337: only offered when there's a real member behind this
-                  company's profile to message. An unclaimed company (or a
-                  team-wide demo contact) has nobody on the other end, so the
-                  CTA hides rather than landing on the inbox's first
-                  auto-selected thread. */}
-              {profile.owner && (
-                <Button
-                  variant="ghost-dark"
-                  to={routes.messages}
-                  state={{
-                    to: {
-                      slug: profile.owner.slug,
-                      name: `${profile.owner.firstName} ${profile.owner.lastName}`,
-                    },
-                  }}
-                >
-                  {t("economy:company.cover.message")}
-                </Button>
-              )}
+              {/* Task 13: shown for every company, claimed or not. The
+                  message lands in the company's own shared mailbox, and the
+                  contact read explains an unstaffed company with its own
+                  reason sentence. */}
+              <IdentityContactButton
+                target={{ kind: "company", slug }}
+                name={profile.nameText}
+                buttonVariant="ghost-dark"
+              />
             </div>
           </div>
         </div>

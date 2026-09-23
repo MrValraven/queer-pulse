@@ -559,6 +559,27 @@
   }
 }
 
+/* Space row: a <button> variant of .memberRow. The whole row opens that
+   space's (or the parent's) admin detail, so it needs the button resets
+   .memberRow itself doesn't carry. */
+.spaceRowBtn {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .spaceRowBtn:hover {
+    border-color: rgba(var(--line-rgb), 0.2);
+  }
+}
+.spaceRowChevron {
+  flex: none;
+  color: var(--ink-40);
+}
+
 /* Settings set-row */
 .setRow {
   display: flex;

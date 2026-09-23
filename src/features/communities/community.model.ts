@@ -2,7 +2,12 @@ import type { Person } from "./communityDetails";
 import type { JoinInvolvement } from "./api/communityJoin.api";
 import type { AccessTier, CommunityRole } from "./membership.types";
 import type { ReasonCode } from "../safety/reportReasons";
-import type { CommunityReportSeverity } from "./api/communities.api";
+import type { Community } from "../homepage/data/types";
+import type {
+  CommunityInheritedRules,
+  CommunityParentRef,
+  CommunityReportSeverity,
+} from "./api/communities.api";
 
 /** A named reaction; `key` maps to a react-icon in the ReactionBar. */
 export type ReactionKey = "heart" | "celebrate" | "support" | "fire";
@@ -240,4 +245,40 @@ export interface LivingCommunity {
    *  `undefined` (demo mock data) defaults to visible, matching prior
    *  behaviour. */
   rosterVisible?: boolean;
+  /** Why the community is paused while `frozen` is true (`manual`,
+   *  `emergency_report`, `report_pileup`, or `parent_frozen` for a space
+   *  paused because its parent is). Null when not frozen or not reported. */
+  frozenReason: string | null;
+  /** The parent community when this is a space (subcommunity), else null. */
+  parent: CommunityParentRef | null;
+  /** The parent's rules a space inherits. Non-null only on a space. */
+  inheritedRules: CommunityInheritedRules | null;
+  /** Whether platform staff allow this community to host spaces. */
+  allowsSubcommunities: boolean;
+  /** How many spaces this community hosts. 0 on a space. */
+  subcommunityCount: number;
 }
+
+/** The subcommunity fields of a `LivingCommunity`. The demo registry
+ *  (`livingCommunities.data.ts`) may leave them out and `getLiving` fills the
+ *  top-level defaults in. */
+export type LivingSubcommunityFields =
+  | "frozenReason"
+  | "parent"
+  | "inheritedRules"
+  | "allowsSubcommunities"
+  | "subcommunityCount";
+
+/** A demo registry entry: a `LivingCommunity` whose subcommunity fields are
+ *  optional. */
+export type LivingCommunitySeed = Omit<
+  LivingCommunity,
+  LivingSubcommunityFields
+> &
+  Partial<Pick<LivingCommunity, LivingSubcommunityFields>>;
+
+/** One card on a parent's Spaces tab: the discover card plus `isMember`, the
+ *  viewer's own roster row in that space. `myRole` on the card is the
+ *  effective role (a parent's staff carry one into every space), so the
+ *  "You're in" badge and the card's join action read `isMember`. */
+export type SpaceCardModel = Community & { isMember: boolean };

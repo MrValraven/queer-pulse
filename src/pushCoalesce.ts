@@ -18,7 +18,7 @@
  * total (`sumAppBadgeCount`).
  */
 
-import { type PushLang, formatPushCopy } from "./pushMessages";
+import { STAFF_TITLE_KEY, type PushLang, formatPushCopy } from "./pushMessages";
 import type { DirectMessagePush } from "./pushPayload";
 
 /** The shape this module reads off a live `Notification` (or a test double). */
@@ -198,18 +198,28 @@ export function resolveShownPushCopy({
 
   if (isDirectMessagePush && coalesced) {
     const isGroup = payload.data?.isGroup === true;
+    // A coalesced burst takes its copy from the latest payload only, so
+    // naming one staff member would credit them with every reply in the
+    // burst (notes, backend Task 13d). `businessName` is the attribution
+    // params' own business name when the payload carried one, and the plain
+    // title otherwise (the plain title is always the business name); either
+    // way the burst's title and "from"/"in" name stay on the business.
+    const businessName = payload.l10n?.params?.business ?? payload.title;
     return formatPushCopy(
       {
-        title: payload.title,
+        title: businessName,
         body: payload.body,
         l10n: {
-          titleKey: payload.l10n?.titleKey,
+          titleKey:
+            payload.l10n?.titleKey === STAFF_TITLE_KEY
+              ? undefined
+              : payload.l10n?.titleKey,
           bodyKey: isGroup
             ? "push:messages.coalescedGroup"
             : "push:messages.coalesced",
           params: isGroup
             ? { count: String(count), group: payload.title }
-            : { count: String(count), name: payload.title },
+            : { count: String(count), name: businessName },
         },
       },
       lang,

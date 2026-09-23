@@ -1,12 +1,15 @@
 // src/features/messages/ComposerDockContent.tsx
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { FiArrowDown } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Composer } from "./Composer";
+import { useDemoReplyClaim } from "./api/useConversationClaim";
+import { ComposerMailboxBar } from "./mailboxes/ComposerMailboxBar";
 import { useAttachmentStaging } from "./useAttachmentStaging";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
+import type { StickerResponse } from "../../shared/contracts/contracts";
 import type { ExplicitSendOptions } from "./useMessageSendActions";
 import styles from "./MessagesPage.module.css";
 
@@ -21,6 +24,11 @@ export interface ComposerDockContentProps {
     attachment: GifAttachment,
     options?: ExplicitSendOptions,
   ) => void;
+  /** Sends a picked sticker as its own message. Unlike `onSendGif` this
+   *  bypasses `useAttachmentStaging` entirely and is passed straight through
+   *  to `Composer`: a sticker never takes a caption, so it has nothing to
+   *  stage. */
+  onSendSticker?: (sticker: StickerResponse) => void;
   onSendImage?: (
     attachment: GifAttachment,
     localAttachment?: GifAttachment,
@@ -65,6 +73,7 @@ export function ComposerDockContent({
   onSendGif,
   onSendImage,
   onSendDocument,
+  onSendSticker,
   blocked,
   replyDraft,
   onCancelReply,
@@ -84,6 +93,21 @@ export function ComposerDockContent({
     onSendDocument,
     textareaRef,
   });
+  const markDemoReplyClaim = useDemoReplyClaim(active);
+  const handleSend = useCallback(
+    (body: string) => {
+      onSend(body);
+      markDemoReplyClaim();
+    },
+    [onSend, markDemoReplyClaim],
+  );
+  const handleSendSticker = useCallback(
+    (sticker: StickerResponse) => {
+      onSendSticker?.(sticker);
+      markDemoReplyClaim();
+    },
+    [onSendSticker, markDemoReplyClaim],
+  );
   return (
     <div className={styles.composerDock}>
       {showJumpPill && (
@@ -101,6 +125,12 @@ export function ComposerDockContent({
         </button>
       )}
 
+      {/* A reply sent as the business claims an unclaimed thread on the
+          server, in the same transaction as the message, and the
+          `conversation:claim` frame (`isImplicit: true`) updates this bar
+          and every colleague's row. The senders here never claim; demo mode
+          mirrors the server's claim through `useDemoReplyClaim`. */}
+      <ComposerMailboxBar active={active} />
       <Composer
         // Remounts per thread so the draft (owned inside `Composer`) resets
         // instead of leaking the previous thread's typed-but-unsent text.
@@ -109,7 +139,8 @@ export function ComposerDockContent({
         key={active.id}
         active={active}
         conversationId={active.id}
-        onSend={onSend}
+        onSend={handleSend}
+        onSendSticker={onSendSticker ? handleSendSticker : undefined}
         blocked={blocked}
         replyDraft={replyDraft}
         onCancelReply={onCancelReply}

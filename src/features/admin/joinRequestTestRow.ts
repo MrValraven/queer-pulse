@@ -17,6 +17,7 @@ export function makeJoinRequestRow(
     mutualMemberEmail: null,
     ageLine: "18+ confirmed",
     sourceLabel: "Homepage hero",
+    heardFrom: "A friend",
     appliedLine: "Applied 2 days ago",
     daysWaiting: 2,
     inviteCode: null,

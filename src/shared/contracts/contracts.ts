@@ -121,7 +121,28 @@ export interface AuthorSummary {
    *  erased their account. `handle` is empty and `avatarUrl` null; render a
    *  localized "Former member" with a neutral avatar and no profile link. */
   isFormerMember?: boolean;
+  /** Business mailboxes: the identity this summary was built for. Present on
+   *  a sender, counterpart or claimant the server resolved through an
+   *  identity; absent on the older profile-only summaries. */
+  identityId?: string;
+  /** The kind of `identityId`, with the same presence rule. */
+  identityKind?: IdentityKind;
+  /** A business reply's staff first name. Present only when both
+   *  attribution switches allow this reader to see it, or the reader is
+   *  staff of the same mailbox; never a blank string. Never set on a
+   *  profile summary. */
+  staffFirstName?: string;
+  /** True for a message sent as a business, persona or company that has
+   *  since been deleted: `handle` is empty, `avatarUrl` null, and
+   *  `displayName` is the English fallback "Former business". Distinct from
+   *  `isFormerMember`, which is about a human's own erased account. */
+  isFormerIdentity?: boolean;
 }
+
+/** The kind of identity a message can be sent as, and a mailbox belongs to:
+ *  the member's own profile, a persona (`subprofile`), a directory listing,
+ *  or a company. */
+export type IdentityKind = "profile" | "subprofile" | "listing" | "company";
 
 export interface CommunityPostResponse {
   id: string;
@@ -156,6 +177,37 @@ export interface MessageReactor {
 export interface MessageReactorsResponse {
   reactors: MessageReactor[];
 }
+
+/** Mirrors `StickerAttachment` in the backend's `message.entity.ts`: the
+ *  third shape a `MessageResponse.attachment` jsonb column can hold,
+ *  discriminated from the other two by `provider === "sticker"`. */
+export interface StickerAttachmentResponse {
+  url: string;
+  previewUrl: string;
+  width: number;
+  height: number;
+  provider: "sticker";
+  stickerId: string;
+  label: string;
+}
+
+/** Every system event type this client renders a dedicated sentence for. See
+ *  `MessageResponse.systemEvent.type`'s own doc for what happens to a type
+ *  outside this list. */
+export type KnownSystemEventType =
+  | "group_created"
+  | "member_added"
+  | "member_removed"
+  | "member_left"
+  | "group_renamed"
+  | "member_promoted"
+  | "member_demoted"
+  | "owner_changed"
+  | "group_photo_changed"
+  | "group_description_changed"
+  | "member_joined"
+  | "group_dissolved"
+  | "moved_to_business_mailbox";
 
 // PRD-375: a message page persisted offline carries this shape verbatim; bump
 // MESSAGING_CACHE_SCHEMA_VERSION (messagingCacheSelection.ts) if it changes.
@@ -210,24 +262,26 @@ export interface MessageResponse {
     senderIsFormerMember?: boolean;
     deleted: boolean;
     /** The quoted parent's own kind, reported even when it is deleted. */
-    kind: "user" | "system" | "gif" | "image" | "document";
-    /** The parent's resolved preview URL for a `gif`/`image`, else null (and
-     *  null once the parent is deleted or taken down). */
+    kind: "user" | "system" | "gif" | "image" | "document" | "sticker";
+    /** The parent's resolved preview URL for a `gif`/`image`/`sticker`, else
+     *  null (and null once the parent is deleted or taken down). */
     thumbnailUrl: string | null;
     /** The parent document's file name, else null (and null once the parent
      *  is deleted or taken down). */
     fileName: string | null;
   } | null;
   /** `user` (an ordinary bubble), `system` (a rendered event pill), `gif` (a
-   *  picked provider GIF), `image` (a member-uploaded photo) — both render as
-   *  an inline-image bubble — or `document` (a member-uploaded PDF/spreadsheet/
-   *  text file, PRD-226), which renders as a file-card bubble. Every DM
-   *  message is `user`, so the existing bubble path is unchanged. */
-  kind: "user" | "system" | "gif" | "image" | "document";
-  /** The media attachment for a `kind:"gif"`/`kind:"image"` (inline image) or
-   *  `kind:"document"` (file-card) message, else null. `body` carries a
-   *  "GIF"/"Photo"/"Document" text fallback so previews/notifications keep
-   *  working. */
+   *  picked provider GIF) and `image` (a member-uploaded photo), which both
+   *  render as an inline-image bubble, `document` (a member-uploaded
+   *  PDF/spreadsheet/text file, PRD-226), which renders as a file-card
+   *  bubble, or `sticker` (a published catalogue sticker), which renders as
+   *  a sticker bubble. Every DM message is `user`, so the existing bubble
+   *  path is unchanged. */
+  kind: "user" | "system" | "gif" | "image" | "document" | "sticker";
+  /** The media attachment for a `kind:"gif"`/`kind:"image"` (inline image),
+   *  `kind:"document"` (file-card), or `kind:"sticker"` message, else null.
+   *  `body` carries a "GIF"/"Photo"/"Document"/"Sticker" text fallback so
+   *  previews/notifications keep working. */
   attachment:
     | {
         url: string;
@@ -247,24 +301,18 @@ export interface MessageResponse {
         /** The sender's caption, when one was written. */
         caption?: string | null;
       }
+    | StickerAttachmentResponse
     | null;
   /** Resolved system event for a `system` message (else null). Actor/target come
    *  back as DISPLAY NAMES (never user ids); the client renders bilingual
    *  templates. `value` carries a scalar the event needs (e.g. a new title). */
   systemEvent: {
-    type:
-      | "group_created"
-      | "member_added"
-      | "member_removed"
-      | "member_left"
-      | "group_renamed"
-      | "member_promoted"
-      | "member_demoted"
-      | "owner_changed"
-      | "group_photo_changed"
-      | "group_description_changed"
-      | "member_joined"
-      | "group_dissolved";
+    /** A newer server may send a type this client has never heard of (e.g. a
+     *  migration that starts writing an event before the client that renders
+     *  it ships); the adapter always folds anything outside
+     *  `KnownSystemEventType` into `"unknown"` before it reaches the
+     *  `default` branch. */
+    type: KnownSystemEventType | (string & {});
     actorName: string;
     targetName: string | null;
     /** For `member_joined`: `"link"` (the invite-link path) or `"invite"` (an
@@ -288,7 +336,22 @@ export interface MessageResponse {
     /** Target's public profile handle, null when the event has no target.
      *  The adapter falls back to it when `targetIsMe` itself is absent. */
     targetHandle?: string | null;
+    /** `moved_to_business_mailbox` only: the business the thread moved
+     *  into, resolved on every read (thread pages and the inbox preview
+     *  alike) so a later rename shows everywhere, and "Former business" once
+     *  it no longer resolves. */
+    mailboxName?: string;
+    /** `moved_to_business_mailbox` only: true when the business no longer
+     *  resolves, so `mailboxName` holds the fallback label. */
+    isFormerMailbox?: boolean;
   } | null;
+  /** Business mailboxes: present only on a business reply read by staff of
+   *  the business that sent it. True when this viewer typed it, false when a
+   *  colleague did. Absent on every other row (personal messages, the
+   *  customer's view, system rows, group threads). Carried by thread reads,
+   *  send responses, per-viewer socket frames and the inbox preview
+   *  (`ConversationResponse.lastMessage`), under the same rule. */
+  isSentByViewer?: boolean;
 }
 
 export type ConversationRole = "owner" | "admin" | "member";
@@ -559,6 +622,32 @@ export interface ConversationResponse {
   /** GROUP only, owner/admin (PRD-353): invites still awaiting a response.
    *  Always `[]` for a non-owner/admin, a DM, or a member who has left. */
   pendingInvites?: ConversationPendingInvite[];
+  /** Business mailboxes: the business, persona or company identity this
+   *  thread belongs to, the mailbox the claim routes act on. Present for a
+   *  direct, non-official thread with a business side, for staff and
+   *  customer alike; absent on a member-to-member DM, a group and an
+   *  official thread. */
+  mailboxIdentityId?: string;
+  /** STAFF ONLY: the staff member holding this thread, as their own profile
+   *  summary. Null while unclaimed, and always null for a customer. Absent
+   *  where the read resolved no mailbox for the row. */
+  claimedBy?: AuthorSummary | null;
+  /** STAFF ONLY: when the current claim was taken. Null while unclaimed and
+   *  for a customer. */
+  claimedAt?: string | null;
+  /** STAFF ONLY: the current claimant's user id, the `fromUserId` a
+   *  colleague passes to take the thread over. Null while unclaimed and for
+   *  a customer. */
+  claimedByUserId?: string | null;
+  /** STAFF ONLY: who last released the claim. Null when nobody has, when a
+   *  claim has been taken since, after a system release, and for a
+   *  customer. */
+  claimReleasedBy?: AuthorSummary | null;
+  /** STAFF ONLY: when `claimReleasedBy` released it. Null for a customer. */
+  claimReleasedAt?: string | null;
+  /** STAFF ONLY: the colleague the current claimant took the thread over
+   *  from. Null for an ordinary claim, while unclaimed, and for a customer. */
+  claimTakenOverFrom?: AuthorSummary | null;
 }
 
 /**
@@ -585,7 +674,7 @@ export interface MessageSearchHit {
   sender: AuthorSummary;
   createdAt: string;
   /** Mirrors `MessageResponse.kind` for this hit's message. */
-  kind: "user" | "system" | "gif" | "image" | "document";
+  kind: "user" | "system" | "gif" | "image" | "document" | "sticker";
   /** Mirrors `MessageResponse.attachment` for this hit's message, null for a
    *  plain-text hit. */
   attachment: MessageResponse["attachment"];
@@ -1128,6 +1217,43 @@ export interface MediaAssetResponse {
   kind: MediaKind;
   url: string | null;
   processingState: "pending" | "ready" | "failed";
+}
+
+// --- Stickers ---
+
+/** Mirrors `StickerResponse` in the backend's `src/stickers/sticker-response.ts`.
+ *  One sticker as the composer picker needs it. `url` is already a fully
+ *  resolved URL, never a bare storage key. */
+export interface StickerResponse {
+  id: string;
+  slug: string;
+  label: string;
+  url: string;
+  width: number;
+  height: number;
+  keywords: { en: string[]; pt: string[] };
+}
+
+/** Mirrors `StickerPackResponse` in the backend's
+ *  `src/stickers/sticker-response.ts`. `GET /sticker-packs` returns every
+ *  published pack in this shape. */
+export interface StickerPackResponse {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  coverStickerId: string | null;
+  stickers: StickerResponse[];
+}
+
+/** Mirrors the admin sticker pack response from the backend's admin
+ *  `sticker-packs` module (`GET/POST/PATCH /admin/sticker-packs`): the same
+ *  pack shape plus the moderation/ordering fields only the builder needs. */
+export interface AdminStickerPackResponse extends StickerPackResponse {
+  status: "draft" | "published" | "archived";
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // --- Search ---

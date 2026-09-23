@@ -95,6 +95,55 @@ describe("formatPushCopy", () => {
       ).body,
     ).toBe("3 new messages from Priya");
   });
+
+  it("titles a staff reply with the first name and the business", () => {
+    expect(
+      formatPushCopy(
+        {
+          title: "Café Lisboa",
+          body: "See you Saturday",
+          l10n: {
+            titleKey: "push:messages.staffTitle",
+            params: { name: "Rui", business: "Café Lisboa" },
+          },
+        },
+        "en",
+      ).title,
+    ).toBe("Rui from Café Lisboa");
+  });
+
+  it("keeps an attachment body key beside the staff title", () => {
+    const copy = formatPushCopy(
+      {
+        title: "Café Lisboa",
+        body: "Photo",
+        l10n: {
+          titleKey: "push:messages.staffTitle",
+          bodyKey: "push:messages.attachment.photo",
+          params: { name: "Rui", business: "Café Lisboa" },
+        },
+      },
+      "en",
+    );
+    expect(copy.title).toBe("Rui from Café Lisboa");
+    expect(copy.body).not.toContain("{");
+  });
+
+  it("falls back to the plain title when a title token has no value", () => {
+    expect(
+      formatPushCopy(
+        {
+          title: "Café Lisboa",
+          body: "x",
+          l10n: {
+            titleKey: "push:messages.staffTitle",
+            params: { count: "3", name: "Rui" },
+          },
+        },
+        "pt",
+      ).title,
+    ).toBe("Café Lisboa");
+  });
 });
 
 describe("formatPushCopy: section 4 keys", () => {
@@ -106,6 +155,7 @@ describe("formatPushCopy: section 4 keys", () => {
     "push:messages.attachment.photo": { en: "Photo", pt: "Foto" },
     "push:messages.attachment.gif": { en: "GIF", pt: "GIF" },
     "push:messages.attachment.document": { en: "Document", pt: "Documento" },
+    "push:messages.attachment.sticker": { en: "Sticker", pt: "Sticker" },
     "push:messages.group.attachment.photo": {
       en: "Bo: Photo",
       pt: "Bo: Foto",
@@ -114,6 +164,10 @@ describe("formatPushCopy: section 4 keys", () => {
     "push:messages.group.attachment.document": {
       en: "Bo: Document",
       pt: "Bo: Documento",
+    },
+    "push:messages.group.attachment.sticker": {
+      en: "Bo: Sticker",
+      pt: "Bo: Sticker",
     },
     "push:preview.hidden.messages": {
       en: "3 new messages.",
@@ -135,8 +189,26 @@ describe("formatPushCopy: section 4 keys", () => {
       en: "Bo added you to a group.",
       pt: "Bo adicionou-te a um grupo.",
     },
+    "push:listingOwnerOffer.title": {
+      en: "Ownership offer",
+      pt: "Oferta de propriedade",
+    },
+    "push:listingOwnerOffer.body": {
+      en: "Bo has offered you ownership of Casa Rosa.",
+      pt: "Bo ofereceu-te a propriedade de Casa Rosa.",
+    },
+    "push:messages.staffTitle": {
+      en: "Bo from Casa Rosa",
+      pt: "Bo, de Casa Rosa",
+    },
   };
-  const params = { count: "3", group: "Terrace crew", name: "Bo" };
+  const params = {
+    business: "Casa Rosa",
+    count: "3",
+    group: "Terrace crew",
+    listingName: "Casa Rosa",
+    name: "Bo",
+  };
 
   for (const [key, copy] of Object.entries(expectedCopy)) {
     it(`resolves ${key} in EN and PT`, () => {

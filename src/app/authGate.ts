@@ -454,9 +454,19 @@ const CAPABILITY_ELEVATED_PATTERNS: {
     // `AdminSafeSpaceBadgesController`. The flag queue is NOT included (it is
     // the only place a flagger's identity and free text are served), so the
     // safe-spaces page hides that tab for a holder without the mod tier.
+    //
+    // `routes.adminListings` is matched EXACTLY, with no `/*` beside it, and
+    // re-adding that wildcard would silently re-open a page a grant holder
+    // cannot use. `/admin/listings/new` is the admin create page, and
+    // `POST /admin/listings` carries an empty `@StaffRoles()` alongside
+    // `@Roles(Admin)`, so a `directory_moderator` is 403ed at submit. Matched
+    // here, they would walk the whole six-step wizard and be refused at the
+    // end. The exact pattern still covers the queue's own query strings
+    // (`?tab=claims`), because `matchPath` tests the pathname alone. The
+    // create page's rail entry carries `isAdminOnly: true` and no
+    // `capabilities`, which is the other half of the same decision.
     patterns: [
       routes.adminListings,
-      `${routes.adminListings}/*`,
       routes.adminSafeSpaces,
       `${routes.adminSafeSpaces}/*`,
     ],

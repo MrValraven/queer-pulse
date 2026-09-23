@@ -1265,6 +1265,30 @@ export const members: Catalog = {
   "places.coManagerInvites.acceptedToast": "You now help run {listing}.",
   "places.coManagerInvites.declinedToast": "Invitation declined.",
   "places.coManagerInvites.error": "We couldn't send your answer. Try again.",
+  // Ownership offers. Staff can write up a place in the directory and put it
+  // in a member's name; this is where that member answers. Accepting is also
+  // where they agree to the affirming pledge, so the row opens a second step
+  // and waits for a real answer to it.
+  "places.ownerOffers.title_one": "1 place put in your name",
+  "places.ownerOffers.title_other": "{count} places put in your name",
+  "places.ownerOffers.sub":
+    "Someone on the team added a place to the directory and put it in your name. Nothing changes until you answer.",
+  "places.ownerOffers.fromNamed": "Offered to you by <b>{name}</b>.",
+  "places.ownerOffers.from": "Offered to you by the QueerPulse team.",
+  "places.ownerOffers.note": "They wrote: {note}",
+  "places.ownerOffers.acceptCta": "Accept",
+  "places.ownerOffers.declineCta": "Decline",
+  "places.ownerOffers.acceptCloseCta": "Never mind",
+  "places.ownerOffers.pledgeLead":
+    "Say yes and <b>{listing}</b> is yours to run, with one promise attached. Every place in the directory has made the same one.",
+  "places.ownerOffers.agreeTitle": "I agree to this, for this place",
+  "places.ownerOffers.agreeSub":
+    "Your agreement is recorded with your name and the date you accept.",
+  "places.ownerOffers.pledgeBackCta": "Not yet",
+  "places.ownerOffers.pledgeAcceptCta": "Agree and accept",
+  "places.ownerOffers.acceptedToast": "{listing} is yours now.",
+  "places.ownerOffers.declinedToast": "Offer declined.",
+  "places.ownerOffers.error": "We couldn't send your answer. Try again.",
   "places.empty.title": "No places yet",
   "places.empty.description":
     "Run a studio, shop, clinic or space in Lisbon? List it in the directory. Once it's live, it'll show up here too.",

@@ -214,6 +214,11 @@ export function detailDtoToPlace(
     hoursType: dto.hoursType,
     hoursNote: dto.hoursNote,
     owner: dto.owner,
+    // Ownership as a fact, carried separately from the owner identity above,
+    // because `owner.name` is blank both for an unowned listing and for one
+    // whose owner chose anonymity. Absent on an older payload reads as owned,
+    // which is the safe default.
+    isUnclaimed: dto.isUnclaimed ?? false,
     social: dto.social,
     address: dto.address,
     photos: dto.photos,

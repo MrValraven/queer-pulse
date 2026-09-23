@@ -133,10 +133,26 @@
 :global([data-theme="dark"]) .mapCanvas {
   filter: saturate(0.92) brightness(0.82);
 }
-/* Read-only location map (LocationMiniMap.tsx) — fills whatever sized, rounded,
-   overflow-hidden box the parent gives it (e.g. the directory detail card's
-   square .map). MapLoading overlays it, so the canvas is absolutely placed. */
-.miniCanvas {
+/* Read-only location map (LocationMiniMap.tsx, HousingLocationMap.tsx). Fills
+   whatever sized, rounded, overflow-hidden box the parent gives it (e.g. the
+   directory detail card's square .map). MapLoading overlays it, so the canvas
+   is absolutely placed.
+
+   The selector is DOUBLED on purpose. maplibre stamps `maplibregl-map` onto
+   this same element, and its own stylesheet declares
+   `.maplibregl-map { position: relative; overflow: hidden }`. That is one
+   class, the same specificity as `.miniCanvas`, so the winner is decided by which
+   stylesheet the browser saw last. maplibre-gl.css is imported from the map
+   components, which live in lazily-loaded route chunks, so on a client-side
+   navigation to the listing page it is injected AFTER this module and takes
+   the tie: the element falls back to `position: relative`, `inset` stops
+   applying, its height collapses to 0 (every child maplibre puts inside is
+   itself absolutely positioned), and `overflow: hidden` then clips the whole
+   basemap away. The card showed a bare tinted panel until a full page reload
+   happened to load the two stylesheets in the other order. `.miniCanvas` twice
+   is (0,2,0) against maplibre's (0,1,0), so the outcome no longer depends on
+   load order. Keep it doubled. */
+.miniCanvas.miniCanvas {
   position: absolute;
   inset: 0;
 }

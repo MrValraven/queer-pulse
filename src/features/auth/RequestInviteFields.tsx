@@ -15,6 +15,12 @@ export interface RequestInviteFieldsProps {
   /** Required-but-empty email, only ever true after a submit attempt. */
   emailMissing: boolean;
   onEmailBlur: () => void;
+  /** Where the applicant heard about QueerPulse. Required free text, sent as
+   *  `heardFrom` so reviewers can see how people find the platform. */
+  heardFrom: string;
+  setHeardFrom: (v: string) => void;
+  /** Required-but-empty "heard from", only ever true after a submit attempt. */
+  heardFromMissing: boolean;
   /** Required-but-empty name, only ever true after a submit attempt. */
   firstMissing: boolean;
   /** Required-but-empty "why", only ever true after a submit attempt. */
@@ -50,6 +56,9 @@ export function RequestInviteFields({
   emailError,
   emailMissing,
   onEmailBlur,
+  heardFrom,
+  setHeardFrom,
+  heardFromMissing,
   firstMissing,
   whyMissing,
   why,
@@ -111,6 +120,27 @@ export function RequestInviteFields({
           onChange={(e) => setEmail(e.target.value)}
           onBlur={onEmailBlur}
           aria-invalid={emailError || emailMissing}
+        />
+      </FormField>
+
+      <FormField
+        label={t("auth:requestInvite.field.heardFrom.label")}
+        required
+        error={
+          heardFromMissing
+            ? t("auth:requestInvite.field.heardFrom.error")
+            : undefined
+        }
+      >
+        <input
+          id="ri-heard-from"
+          type="text"
+          maxLength={200}
+          autoComplete="off"
+          placeholder={t("auth:requestInvite.field.heardFrom.placeholder")}
+          value={heardFrom}
+          onChange={(e) => setHeardFrom(e.target.value)}
+          aria-invalid={heardFromMissing}
         />
       </FormField>
 

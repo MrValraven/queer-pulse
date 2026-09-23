@@ -8,6 +8,16 @@
  */
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
+    "22 Sep 2026": {
+      // Five entries this day, so the rule in the file header asks for
+      // curated highlights; the two features come first.
+      highlights: ["reply-as-your-business", "community-spaces"],
+    },
+    "20 Sep 2026": {
+      // Six entries this day, so the rule in the file header asks for two
+      // curated highlights; both features come first.
+      highlights: ["admin-authored-listings", "stickers-in-messages"],
+    },
     "18 Sep 2026": {
       highlights: [
         "chat-camera-in-one-screen",

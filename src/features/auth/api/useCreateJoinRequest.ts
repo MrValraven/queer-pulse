@@ -21,6 +21,8 @@ export interface JoinRequestVars {
   /** The email of a member already here who can vouch for the applicant —
    *  a structured field distinct from the free-text `message`. */
   mutualMemberEmail?: string;
+  /** Required: where they heard about QueerPulse, already trimmed. */
+  heardFrom: string;
   /** The CTA the applicant came through, when the form could resolve one. */
   source?: JoinRequestSource;
 }
@@ -55,6 +57,7 @@ export function useCreateJoinRequest() {
       city,
       message,
       mutualMemberEmail,
+      heardFrom,
       source,
     }) => {
       if (demoMode) {
@@ -76,6 +79,7 @@ export function useCreateJoinRequest() {
         city: city?.trim() || undefined,
         message,
         mutualMemberEmail: mutualMemberEmail?.trim() || undefined,
+        heardFrom,
         ageAttested: true,
         termsVersion,
         source,

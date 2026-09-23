@@ -132,6 +132,15 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
   // cap, since a multi-page scanned lease is never downscaled the way a photo
   // is.
   "message-document": { maxBytes: 20 * MB, maxLabel: "20 MB" },
+  // A published sticker's rasterised PNG, minted by the admin Sticker Pack
+  // Builder rather than picked by a member: platform artwork, PNG only,
+  // already exported at an exact 512x512 with alpha. Mirrors the backend's
+  // 1 MB cap (`sticker` in `upload-kinds.ts`), which is pure headroom since
+  // the builder's flat-palette export lands well under 200 KB. No
+  // minWidth/minHeight: the file passes through `stripMetadata` untouched
+  // (see the `kind === "sticker"` branch there), so there is no resample
+  // step whose output dimensions this would gate.
+  sticker: { maxBytes: 1 * MB, maxLabel: "1 MB" },
 };
 
 /** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */
@@ -201,6 +210,12 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   // pipeline (see the `"message-image"` entry above's sibling note on
   // `UPLOAD_LIMITS`). Present only so the `Record<UploadKind, …>` stays total.
   "message-document": 0,
+  // Unused: a sticker returns from `stripMetadata` before this cap is ever
+  // read (see the `kind === "sticker"` branch there). Resampling it would
+  // re-encode the alpha channel and soften edges, which is a defect for
+  // platform artwork rather than a size saving. Present only so the
+  // `Record<UploadKind, …>` stays total.
+  sticker: 0,
 };
 
 /** Re-encode quality used once an image is actually being downscaled — a
@@ -535,6 +550,18 @@ async function stripMetadata(
   kind: UploadKind,
 ): Promise<Blob> {
   try {
+    if (kind === "sticker") {
+      // Platform artwork minted by the admin Sticker Pack Builder, already
+      // exported as an exact 512x512 PNG with alpha. A canvas round-trip
+      // through `drawResampled`/`encodeCanvas` would re-encode that alpha
+      // channel and can soften hard edges even when the output dimensions
+      // are unchanged, which is a defect for a sticker where the goal is
+      // preserving the artwork exactly. The file passes through with its
+      // bytes untouched instead, skipping the resample/re-encode path
+      // below. The bytes never came from a member's device, so there is
+      // also no EXIF/GPS concern to strip here.
+      return file;
+    }
     if (file.type === "image/gif") {
       const cleaned = sanitizeGif(new Uint8Array(await file.arrayBuffer()));
       return new Blob([cleaned], { type: "image/gif" });
@@ -667,6 +694,10 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
     aspectLabel: "free",
     allowFreeform: true,
   },
+  // Unused: a sticker has no crop/reframe UI. The admin Sticker Pack Builder
+  // exports it pre-sized at 512x512, and the reframe editor never opens for
+  // this kind. Present only so the `Record<UploadKind, …>` stays total.
+  sticker: { aspect: "free", aspectLabel: "free", allowFreeform: true },
 };
 
 /** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */

@@ -20,6 +20,7 @@ import { useWallpaper } from "./wallpaper";
 import { type ChatMessage, type Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
+import type { StickerResponse } from "../../shared/contracts/contracts";
 import styles from "./MessagesPage.module.css";
 
 /** The GROUP-management callbacks/pending-flags a conversation panel passes
@@ -64,6 +65,10 @@ interface ConversationPanelProps {
     attachment: DocumentAttachment,
     localAttachment?: DocumentAttachment,
   ) => void;
+  /** Sends a picked sticker as its own message (from the Stickers tab of the
+   *  composer's emoji popover on desktop, or the attach menu's Sticker row
+   *  on touch). */
+  onSendSticker?: (sticker: StickerResponse) => void;
   /** True when the counterpart is blocked; the composer is severed. */
   blocked?: boolean;
   /** Mobile only: returns to the conversation list. Absent on desktop. */
@@ -116,6 +121,7 @@ export function ConversationPanel({
   onSendGif,
   onSendImage,
   onSendDocument,
+  onSendSticker,
   blocked = false,
   onBack,
   onRetry,
@@ -264,6 +270,7 @@ export function ConversationPanel({
           onSendGif={onSendGif}
           onSendImage={onSendImage}
           onSendDocument={onSendDocument}
+          onSendSticker={onSendSticker}
           blocked={blocked}
           replyDraft={replyDraft}
           onCancelReply={onCancelReply}

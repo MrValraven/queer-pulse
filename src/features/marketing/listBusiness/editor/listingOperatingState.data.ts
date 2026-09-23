@@ -1,6 +1,10 @@
 import type { IconType } from "react-icons";
 import { FiCheckCircle, FiClock, FiMapPin, FiSlash } from "react-icons/fi";
 import type { ListingOperatingState } from "../api/listings.api";
+import {
+  listingConfirmationAgeInDays,
+  STALE_AFTER_DAYS,
+} from "../../listingFreshness";
 
 /**
  * The four states a business can report about itself, in the order an owner
@@ -65,20 +69,27 @@ export const MOVED_ADDRESS_MAX = 300;
  */
 export type DetailsFreshness = "fresh" | "ageing" | "stale";
 
-const DAY_MS = 24 * 60 * 60 * 1000;
 /** Under this many days old, the confirmation is a quiet aside. */
 export const DETAILS_AGEING_DAYS = 90;
-/** Past this many days old, the confirmation is the loudest thing on the page. */
-export const DETAILS_STALE_DAYS = 180;
+/** Past this many days old, the confirmation is the loudest thing on the page.
+ *  Shared with the visitor-facing freshness stamp, which draws its own line at
+ *  the same six months. */
+export const DETAILS_STALE_DAYS = STALE_AFTER_DAYS;
 
+/**
+ * Three tiers over the shared age reading. A listing with no usable
+ * confirmation timestamp lands on "stale": the editor has a louder card to
+ * show, and the age helper reports that case as a null age.
+ */
 export function detailsFreshness(
   detailsConfirmedAt: string | null,
   now: number = Date.now(),
 ): DetailsFreshness {
-  if (!detailsConfirmedAt) return "stale";
-  const confirmedAt = new Date(detailsConfirmedAt).getTime();
-  if (Number.isNaN(confirmedAt)) return "stale";
-  const ageInDays = Math.max(0, now - confirmedAt) / DAY_MS;
+  const ageInDays = listingConfirmationAgeInDays(
+    detailsConfirmedAt,
+    new Date(now),
+  );
+  if (ageInDays === null) return "stale";
   if (ageInDays < DETAILS_AGEING_DAYS) return "fresh";
   if (ageInDays < DETAILS_STALE_DAYS) return "ageing";
   return "stale";

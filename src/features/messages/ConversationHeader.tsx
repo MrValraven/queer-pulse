@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiSearch, FiStar } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
@@ -6,6 +5,10 @@ import { hapticTap } from "../../shared/lib/haptics";
 import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import {
+  conversationHeaderMeta,
+  isMailboxCounterpart,
+} from "./ConversationHeaderMeta";
 import { ConversationMenu } from "./ConversationMenu";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -45,49 +48,21 @@ export function ConversationHeader({
   const isGroup = !!active.isGroup;
 
   // Where the identity block goes when tapped — a real profile for DMs, the
-  // member list for groups, nowhere for official accounts.
-  const opensProfile = !isGroup && !active.official;
+  // member list for groups, nowhere for official accounts. A business,
+  // persona or company counterpart has no member profile behind its handle,
+  // so it stays inert too.
+  const isMailbox = isMailboxCounterpart(active);
+  const isFormerBusiness = !!active.isCounterpartFormerBusiness;
+  const opensProfile = !isGroup && !active.official && !isMailbox;
   const opensGroupInfo = isGroup && !!onOpenGroupInfo;
   const identityTappable = opensProfile || opensGroupInfo;
 
-  // The status line under the name. WhatsApp/Telegram always say SOMETHING
-  // here; the old inline expression fell through to the empty string for a DM
-  // carrying neither pronouns nor a connected-since date, leaving a dead gap
-  // under the name. The chain below ends in the profile affordance itself
-  // (WhatsApp's own "click here for contact info" fallback), and yields null
-  // only for a thread with nothing to say AND nowhere to go, where the meta
-  // element is dropped entirely rather than rendered empty.
-  const pronounsLine = active.pronouns
-    ? `${active.pronouns}${
-        active.connectedSince
-          ? t("messages:conversation.connectedSinceSuffix", {
-              date: active.connectedSince,
-            })
-          : ""
-      }`
-    : active.connectedSince
-      ? t("messages:conversation.connectedSinceSuffix", {
-          date: active.connectedSince,
-        }).replace(/^\s*·\s*/, "")
-      : "";
-
-  let meta: ReactNode = null;
-  if (isGroup) {
-    meta = t("messages:group.memberCount", { count: active.memberCount ?? 0 });
-  } else if (active.official) {
-    meta = t("messages:conversation.officialMeta");
-  } else if (isCounterpartOnline) {
-    meta = (
-      <>
-        <span className={styles.activeNowDot} aria-hidden />
-        {t("messages:conversation.activeNow")}
-      </>
-    );
-  } else if (pronounsLine) {
-    meta = pronounsLine;
-  } else if (opensProfile) {
-    meta = t("messages:conversation.viewProfile");
-  }
+  const meta = conversationHeaderMeta(
+    active,
+    isCounterpartOnline,
+    opensProfile,
+    t,
+  );
 
   const openIdentity = () => {
     // A subtle tick confirming the tap landed, native-app style; no-op on
@@ -101,16 +76,20 @@ export function ConversationHeader({
   const identity = (
     <>
       <Avatar
-        initials={active.initials}
-        tint={active.tint}
-        src={active.avatarUrl}
+        initials={isFormerBusiness ? "" : active.initials}
+        tint={isFormerBusiness ? "default" : active.tint}
+        src={isFormerBusiness ? undefined : active.avatarUrl}
         size={38}
       />
       <div className={styles.ctbInfo}>
         <div className={styles.ctbName}>
           <span className={styles.nameRow}>
-            <span className={styles.ctbNameText}>{active.name}</span>
-            {!isGroup && <MemberStaffBadge slug={active.slug} />}
+            <span className={styles.ctbNameText}>
+              {isFormerBusiness
+                ? t("messages:mailbox.formerBusiness")
+                : active.name}
+            </span>
+            {!isGroup && !isMailbox && <MemberStaffBadge slug={active.slug} />}
           </span>
         </div>
         {meta !== null && <div className={styles.ctbMeta}>{meta}</div>}
@@ -168,6 +147,19 @@ export function ConversationHeader({
               ? {
                   slug: active.slug,
                   reportSubjectId: active.otherParticipantId,
+                }
+              : undefined
+          }
+          counterpart={
+            !isGroup
+              ? {
+                  name: active.name,
+                  avatarUrl: active.avatarUrl,
+                  slug: active.slug,
+                  counterpartIdentityId: active.counterpartIdentityId,
+                  counterpartIdentityKind: active.counterpartIdentityKind,
+                  isCounterpartFormerBusiness:
+                    active.isCounterpartFormerBusiness,
                 }
               : undefined
           }

@@ -3,6 +3,7 @@ import type { TFunction } from "../../shared/i18n/types";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
+import type { StickerResponse } from "../../shared/contracts/contracts";
 import type { useSendMessage } from "./api/useMessageMutations";
 import { useMessageDeliverCore } from "./useMessageDeliverCore";
 import { useMessageSendActions } from "./useMessageSendActions";
@@ -44,9 +45,13 @@ export interface MessageSending {
     forwarded?: boolean,
     attachment?: GifAttachment | DocumentAttachment,
     mediaKind?: MediaKind,
+    stickerId?: string,
   ) => void;
   /** Send a GIF as its own message, through the same pipeline as `send()`. */
   sendGif: (attachment: GifAttachment) => void;
+  /** Send a catalogue sticker as its own message, through the same pipeline
+   *  as `sendGif`. */
+  sendSticker: (sticker: StickerResponse) => void;
   /** Send an uploaded image as its own message. `attachment` is the SEND
    *  payload (its `url`/`previewUrl` are the private storage key the upload
    *  minted); `localAttachment`, when given, is what the OPTIMISTIC bubble
@@ -116,7 +121,7 @@ export function useMessageSending({
     sendMessage,
   });
 
-  const { send, sendGif, sendImage, sendDocument, retrySend } =
+  const { send, sendGif, sendSticker, sendImage, sendDocument, retrySend } =
     useMessageSendActions({
       active,
       activeBlocked,
@@ -143,6 +148,7 @@ export function useMessageSending({
     appendOptimistic,
     deliver,
     sendGif,
+    sendSticker,
     sendImage,
     sendDocument,
     migrateOutboxConversation,

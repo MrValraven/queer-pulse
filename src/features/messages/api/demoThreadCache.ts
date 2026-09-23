@@ -15,6 +15,7 @@ import {
   type ChatMessage,
   type Conversation,
 } from "../data";
+import { demoIdentityAuthor } from "../demoIdentities.data";
 import type { MessageGroup } from "../useMessagesController.helpers";
 import type { MessagePage } from "./threadCacheTrim";
 
@@ -105,19 +106,37 @@ function normalizedReactions(
   });
 }
 
+/**
+ * Business mailboxes: `senderIdentityId` and `isSenderFormerBusiness` are
+ * checked before the plain viewer/former-member/counterpart branches, since a
+ * business reply carries `from: "me"` (it renders on the viewer's side of the
+ * thread) for every staff member's send, colleague included. A system row
+ * keeps its own branch untouched, as it always has.
+ */
 function senderOf(
   message: ChatMessage,
   conversation: Conversation,
 ): AuthorSummary {
-  const isViewer =
-    message.kind === "system"
-      ? message.systemEvent?.actorIsMe === true
-      : message.from === "me";
-  if (isViewer) return DEMO_VIEWER;
   if (message.kind === "system") {
+    if (message.systemEvent?.actorIsMe === true) return DEMO_VIEWER;
     const actorName = message.systemEvent?.actorName ?? "";
     return { handle: "", displayName: actorName, avatarUrl: null };
   }
+  if (message.senderIdentityId) {
+    return demoIdentityAuthor(
+      message.senderIdentityId,
+      message.senderStaffFirstName,
+    );
+  }
+  if (message.isSenderFormerBusiness) {
+    return {
+      handle: "",
+      displayName: "Former business",
+      avatarUrl: null,
+      isFormerIdentity: true,
+    };
+  }
+  if (message.from === "me") return DEMO_VIEWER;
   // ENG-243: the demo's erased sender, in the shape the server sends one.
   if (message.isSenderFormerMember) {
     return {
@@ -180,8 +199,17 @@ export function demoMessageToResponse(
           actorName: systemEvent.actorName,
           targetName: systemEvent.targetName ?? null,
           value: systemEvent.value ?? null,
+          ...(systemEvent.mailboxName !== undefined
+            ? { mailboxName: systemEvent.mailboxName }
+            : {}),
         }
       : null,
+    // Business mailboxes: only a reply sent as an identity the viewer staffs
+    // defines this on the seed; every other row leaves the key off entirely,
+    // matching the server's own presence rule (see `MessageResponse`'s doc).
+    ...(message.isSentByViewer !== undefined
+      ? { isSentByViewer: message.isSentByViewer }
+      : {}),
   };
 }
 

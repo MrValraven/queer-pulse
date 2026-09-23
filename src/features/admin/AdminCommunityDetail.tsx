@@ -12,11 +12,12 @@ import { adminCommunityMod } from "../../app/routeMap";
 import { AdminTabs, AdminAvatar, type AdminTab } from "./ui";
 import { ScopedQueuePane, MembersPane } from "./AdminCommunityDetailTabs";
 import { SettingsPane } from "./AdminCommunitySettings";
+import { AdminCommunitySpaces } from "./AdminCommunitySpaces";
 import { GovernanceLogPane } from "./AdminCommunityGovernanceLog";
 import { AdminHealthModal } from "./AdminHealthModal";
 import { AdminSupportModal } from "./AdminSupportModal";
 import { useAdminCommunity } from "./api/useAdminCommunities";
-import { firstName } from "./adminCommunities.data";
+import { firstName, type Community } from "./adminCommunities.data";
 import styles from "./AdminCommunitiesPage.module.css";
 
 function BackLink({ onBack }: { onBack: () => void }) {
@@ -28,6 +29,68 @@ function BackLink({ onBack }: { onBack: () => void }) {
   );
 }
 
+/** The overview area's parent/spaces line: a space names the community it
+ *  lives inside; a top-level community lists the spaces it hosts. `onOpen`
+ *  drills `AdminCommunityDetail` into whichever community is clicked. */
+function SpacesOverview({
+  community,
+  onOpen,
+}: {
+  community: Community;
+  onOpen: (slug: string) => void;
+}) {
+  const { t } = useTranslation();
+  if (community.parent) {
+    const parent = community.parent;
+    return (
+      <button
+        type="button"
+        className={styles.linkBtn}
+        onClick={() => onOpen(parent.slug)}
+      >
+        {t("admin:communities.detail.parent", { name: parent.name })}
+      </button>
+    );
+  }
+  return <AdminCommunitySpaces community={community} onOpen={onOpen} />;
+}
+
+/** The "could use a hand" banner shown when a community's health score is
+ *  low enough to flag for outreach. Self-contained aside from the callback
+ *  that opens the support-offer modal owned by the parent screen. */
+function SupportBanner({
+  community,
+  onOfferSupport,
+}: {
+  community: Community;
+  onOfferSupport: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.supportBanner}>
+      <div>
+        <h3 className={styles.bannerTitle}>
+          <Translation
+            i18nKey="admin:communities.detail.supportBanner.title"
+            components={{ em: <em /> }}
+          />
+        </h3>
+        <p className={styles.bannerText}>
+          {t(supportBannerTextKey(community.moderators.length), {
+            name: community.moderators[0]
+              ? firstName(community.moderators[0].name)
+              : "",
+            members: community.members,
+          })}
+        </p>
+      </div>
+      <Button variant="primary" size="md" onClick={onOfferSupport}>
+        {t("admin:communities.detail.supportBanner.offerCta")}
+      </Button>
+    </div>
+  );
+}
+
 /**
  * Loading, error, and "loaded but missing" are kept distinct — mirroring the
  * rule `AdminSettingsHistory` follows. `data` is `undefined` in both the
@@ -35,6 +98,14 @@ function BackLink({ onBack }: { onBack: () => void }) {
  * would either crash on `community.moderators[0]!` or silently render nothing
  * useful. The back link is always present so a stalled or failed fetch never
  * strands the admin on a dead screen.
+ *
+ * `currentSlug` tracks the community actually shown, separate from the `slug`
+ * prop: a space's parent line and a top-level community's spaces list both
+ * drill into another community's admin detail without leaving this screen or
+ * involving `AdminCommunitiesPage` (which only knows how to open a top-level
+ * community from the grid). `onBack` always returns to that grid, even from a
+ * drilled-into space, mirroring the single-level back stack the grid itself
+ * already has.
  */
 export function AdminCommunityDetail({
   slug,
@@ -44,10 +115,30 @@ export function AdminCommunityDetail({
   onBack: () => void;
 }) {
   const { t } = useTranslation();
+  const [currentSlug, setCurrentSlug] = useState(slug);
+  // Resets `currentSlug` when `slug` itself changes (a fresh community opened
+  // from the grid). The adjustment happens during render, following React's
+  // own recommended pattern for "state that resets when a prop changes"
+  // (https://react.dev/reference/react/useState#storing-information-from-previous-renders).
+  const [previousSlugProp, setPreviousSlugProp] = useState(slug);
+  if (slug !== previousSlugProp) {
+    setPreviousSlugProp(slug);
+    setCurrentSlug(slug);
+  }
   const [active, setActive] = useState("queue");
   const [health, setHealth] = useState(false);
   const [support, setSupport] = useState(false);
-  const { data: community, isLoading, isError } = useAdminCommunity(slug);
+  const {
+    data: community,
+    isLoading,
+    isError,
+  } = useAdminCommunity(currentSlug);
+
+  function openCommunity(nextSlug: string) {
+    setCurrentSlug(nextSlug);
+    setActive("queue");
+    window.scrollTo(0, 0);
+  }
 
   if (isLoading) {
     return (
@@ -151,27 +242,10 @@ export function AdminCommunityDetail({
       </div>
 
       {community.support && (
-        <div className={styles.supportBanner}>
-          <div>
-            <h3 className={styles.bannerTitle}>
-              <Translation
-                i18nKey="admin:communities.detail.supportBanner.title"
-                components={{ em: <em /> }}
-              />
-            </h3>
-            <p className={styles.bannerText}>
-              {t(supportBannerTextKey(community.moderators.length), {
-                name: community.moderators[0]
-                  ? firstName(community.moderators[0].name)
-                  : "",
-                members: community.members,
-              })}
-            </p>
-          </div>
-          <Button variant="primary" size="md" onClick={() => setSupport(true)}>
-            {t("admin:communities.detail.supportBanner.offerCta")}
-          </Button>
-        </div>
+        <SupportBanner
+          community={community}
+          onOfferSupport={() => setSupport(true)}
+        />
       )}
 
       <div className={styles.statBar}>
@@ -196,6 +270,8 @@ export function AdminCommunityDetail({
           }
         />
       </div>
+
+      <SpacesOverview community={community} onOpen={openCommunity} />
 
       <AdminTabs
         tabs={tabs}

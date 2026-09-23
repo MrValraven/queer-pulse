@@ -1,6 +1,8 @@
 import { FiCheck, FiClock, FiKey } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { communityPath } from "../../app/routeMap";
+import type { CommunityParentRef } from "./api/communities.api";
 import styles from "./CommunityDetailPage.module.css";
 
 /**
@@ -32,6 +34,8 @@ export function CommunityHeroActions({
   canDeclineInvite,
   canWithdrawRequest,
   joinLabel,
+  parent = null,
+  isParentMembershipRequired = false,
   onJoin,
   onLeave,
   onAcceptInvite,
@@ -49,6 +53,14 @@ export function CommunityHeroActions({
   /** Live mode only: the demo membership store cannot take a request back. */
   canWithdrawRequest: boolean;
   joinLabel: string;
+  /** Set when this community is a space (subcommunity): the parent it
+   *  belongs to. Needed for the "Join {parent} first" link's label and
+   *  target. */
+  parent?: CommunityParentRef | null;
+  /** True when the viewer has not yet joined the space's parent, so joining
+   *  the space itself is refused. Takes over the CTA in place of the join
+   *  button. */
+  isParentMembershipRequired?: boolean;
   onJoin: () => void;
   onLeave: () => void;
   onAcceptInvite: () => void;
@@ -95,6 +107,18 @@ export function CommunityHeroActions({
         }
       >
         <FiClock aria-hidden /> {t("communities:detail.requested")}
+      </Button>
+    );
+  }
+
+  // A space (subcommunity) requires parent membership before it can be
+  // joined at all: the backend refuses with `PARENT_MEMBERSHIP_REQUIRED`.
+  // This takes over the CTA in place of the tier-driven states below, since
+  // no tier answer is reachable until the viewer joins the parent.
+  if (isParentMembershipRequired && parent) {
+    return (
+      <Button variant="primary" to={communityPath(parent.slug)}>
+        {t("communities:spaces.join.parentFirst", { name: parent.name })}
       </Button>
     );
   }

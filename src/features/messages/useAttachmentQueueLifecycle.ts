@@ -109,7 +109,9 @@ export function useAttachmentQueueLifecycle({
   // screen's own UI already implies. Every item of the batch is stamped
   // with the same fresh `batchId`, so a reply-carrying item that later
   // fails or is cancelled can hand the reply to a batch-mate instead of
-  // losing it (see `reassignReplyAfterRemoval`).
+  // losing it (see `reassignReplyAfterRemoval`). The snapshot's
+  // `sendAsIdentityId` (the composing mailbox seat) goes on EVERY item, since
+  // each one is its own message sent as that identity.
   //
   // The whole batch always goes through `flushPendingHead`, appended behind
   // whatever's already pending for this conversation: an earlier batch that
@@ -120,7 +122,11 @@ export function useAttachmentQueueLifecycle({
   const sendStaged = useCallback(
     (
       conversationId: string,
-      replySnapshot?: { replyToId?: string; replyTo?: ChatMessage["replyTo"] },
+      replySnapshot?: {
+        replyToId?: string;
+        replyTo?: ChatMessage["replyTo"];
+        sendAsIdentityId?: string;
+      },
     ) => {
       const items = stagedRef.current?.[conversationId] ?? [];
       if (items.length === 0) return;
@@ -137,6 +143,7 @@ export function useAttachmentQueueLifecycle({
             : item.replyToId,
         replyTo:
           index === 0 && carriesReply ? replySnapshot?.replyTo : item.replyTo,
+        sendAsIdentityId: replySnapshot?.sendAsIdentityId,
       }));
       setStaged(conversationId, []);
       flushPendingHead(conversationId, [

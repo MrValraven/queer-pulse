@@ -173,6 +173,23 @@ function registerSessionHandlers() {
     http.get(`${API_V1}/conversations/unread-count`, () =>
       HttpResponse.json({ count: 0 }),
     ),
+    // The inbox lists one mailbox (`?as=`), so it waits for this list.
+    http.get(`${API_V1}/identities/mailboxes`, () =>
+      HttpResponse.json([
+        {
+          identityId: "live-member-identity",
+          kind: "profile",
+          displayName: "Live Member",
+          handle: "live-member",
+          avatarUrl: null,
+          unreadCount: 0,
+          isOwner: true,
+          isReadOnly: false,
+          shouldShowStaffNames: null,
+          shouldAllowMyName: null,
+        },
+      ]),
+    ),
   );
 }
 

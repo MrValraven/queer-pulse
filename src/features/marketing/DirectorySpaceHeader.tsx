@@ -8,6 +8,7 @@ import { categoryLabel } from "./localCategories";
 import { Stars } from "./DirectoryStars";
 import { DirectoryActionBar } from "./DirectoryActionBar";
 import { DirectoryQueerOwnedProvenance } from "./DirectoryQueerOwnedProvenance";
+import { DirectoryOwnerByline } from "./DirectoryOwnerByline";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -36,7 +37,9 @@ const OWNERSHIP_PILL_KEYS: Record<OwnershipBadgeState, string> = {
  * either the rating or a "New" chip). The primary actions (Directions / Share /
  * Save) sit inline on the right, aligned with the name, instead of floating in
  * a disconnected card. Extracted out of `DirectorySpaceMain` so the two-column
- * body below can start straight into the content sections.
+ * body below can start straight into the content sections. A compact "Run by"
+ * byline closes the identity block, where the sticky rail's "Who runs it" card
+ * used to carry the same attribution.
  */
 export function DirectorySpaceHeader({ place, preview = false }: Props) {
   const { t } = useTranslation();
@@ -100,6 +103,8 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
                 check it where they meet it. Renders nothing unless the badge
                 currently applies AND there is provenance on record. */}
             <DirectoryQueerOwnedProvenance place={place} />
+            {/* Who runs the place, demoted out of the rail to one line here. */}
+            <DirectoryOwnerByline place={place} />
           </div>
           <div className={s.spaceHeadActions}>
             <DirectoryActionBar place={place} preview={preview} />

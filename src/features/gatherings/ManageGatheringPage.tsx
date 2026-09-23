@@ -24,10 +24,8 @@ import {
   applyEditDraft,
   applyVenueSelection,
   buildEditPatch,
-  demoInitialState,
   editDraftCareFields,
   editDraftFormatFields,
-  liveInitialState,
   manageGatheringCounts,
   type GatheringState,
 } from "./manageGatheringState";
@@ -41,6 +39,8 @@ import { useEvent } from "./api/useEvent";
 import { useAttendees } from "./api/useAttendees";
 import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
 import { dateToDatetimeValue } from "./manageGatheringDates";
+import { useDeleteGatheringFlow } from "./useDeleteGatheringFlow";
+import { useManageGatheringState } from "./useManageGatheringState";
 import styles from "./ManageGatheringPage.module.css";
 
 /**
@@ -60,6 +60,7 @@ export function ManageGatheringPage() {
         demoMode
         gathering={null}
         slug={DEMO_GATHERING_SLUGS.manage}
+        routeParam={param}
       />
     );
   }
@@ -75,6 +76,7 @@ export function ManageGatheringPage() {
       demoMode={false}
       gathering={gathering}
       slug={gathering.slug}
+      routeParam={param}
     />
   );
 }
@@ -134,10 +136,13 @@ function ManageGatheringMain({
   demoMode,
   gathering,
   slug,
+  routeParam,
 }: {
   demoMode: boolean;
   gathering: GatheringDetail | null;
   slug: string;
+  /** The raw `:slug` route param the detail query is keyed on. */
+  routeParam: string | undefined;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -164,28 +169,13 @@ function ManageGatheringMain({
   const [pendingEditPatch, setPendingEditPatch] =
     useState<UpdateEventDto | null>(null);
 
-  const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
-    demoMode || !gathering
-      ? demoInitialState()
-      : liveInitialState(gathering, fmt, t),
-  );
-
-  // A saved cover folds into state as the storage key the upload returned,
-  // which the edit modal's cover slot cannot paint. Once the refetched detail
-  // brings its read URL, only the cover is re-seeded from it, during render
-  // like `GatheringHostBar` re-seeds its state. The URL is the same on every
-  // refetch of an unchanged cover, and `buildEditPatch` sends a cover only
-  // when the host picks or removes one, so the read URL stays off the wire.
-  const detailCoverImageUrl = gathering?.coverImageUrl;
-  const [previousCoverImageUrl, setPreviousCoverImageUrl] =
-    useState(detailCoverImageUrl);
-  if (previousCoverImageUrl !== detailCoverImageUrl) {
-    setPreviousCoverImageUrl(detailCoverImageUrl);
-    setGatheringState((current) => ({
-      ...current,
-      coverImageUrl: detailCoverImageUrl ?? "",
-    }));
-  }
+  const [gatheringState, setGatheringState] = useManageGatheringState({
+    demoMode,
+    gathering,
+  });
+  // Demo runs it too: `useDeleteEvent` resolves without a request there.
+  const { requestDelete, isDeletePending, deleteDialog } =
+    useDeleteGatheringFlow({ slug, title: gatheringState.title, routeParam });
 
   const { daysToGo, attendeeCount, overviewCounts } = manageGatheringCounts(
     demoMode,
@@ -259,6 +249,8 @@ function ManageGatheringMain({
             <ManageGatheringTabs
               slug={slug}
               onCancel={cancelGathering}
+              onDelete={requestDelete}
+              isDeletePending={isDeletePending}
               details={gatheringState.details}
               description={gatheringState.description}
               overviewCounts={overviewCounts}
@@ -327,6 +319,7 @@ function ManageGatheringMain({
         attendeeCount={attendeeCount}
         onCloseMessage={() => setMessageOpen(false)}
       />
+      {deleteDialog}
     </PageShell>
   );
 }

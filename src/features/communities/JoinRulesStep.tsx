@@ -26,6 +26,7 @@ export function JoinRulesStep({
   isAcknowledged,
   setIsAcknowledged,
   onContinue,
+  parentName,
 }: {
   name: string;
   rules: string[];
@@ -33,6 +34,11 @@ export function JoinRulesStep({
   isAcknowledged: boolean;
   setIsAcknowledged: (isAcknowledged: boolean) => void;
   onContinue: () => void;
+  /** Set when joining a space (subcommunity): the parent community's name.
+   *  Shown as a note above the rules list, since a space's own rules are only
+   *  the additions on top of the parent's, which the applicant already
+   *  agreed to when they joined the parent. */
+  parentName?: string;
 }) {
   const { t } = useTranslation();
   // Shown only after a continue attempt with the box unticked. The button
@@ -61,6 +67,11 @@ export function JoinRulesStep({
         </p>
       )}
       <p className={styles.hint}>{t("communities:join.rules.hint")}</p>
+      {parentName && (
+        <p className={styles.hint}>
+          {t("communities:spaces.join.rulesNote", { name: parentName })}
+        </p>
+      )}
 
       <CommunityRulesList rules={rules} />
 

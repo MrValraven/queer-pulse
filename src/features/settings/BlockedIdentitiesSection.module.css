@@ -1,0 +1,84 @@
+/* BlockedIdentitiesSection: businesses, personas and companies the account
+   has blocked. Row shape mirrors BlockedUsersPane.module.css's `.row`. */
+.sectionNote {
+  margin: 0 0 12px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+  line-height: 1.55;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.2s,
+    box-shadow 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .row:hover {
+    transform: translateY(-1px);
+    border-color: rgba(var(--line-rgb), 0.18);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+.identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.identityHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.identityText {
+  min-width: 0;
+}
+
+.name {
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  margin-top: 2px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+
+.action {
+  flex: none;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}
+.skeletonBody {
+  flex: 1;
+  min-width: 0;
+}

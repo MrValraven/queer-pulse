@@ -1261,6 +1261,10 @@ export const gatherings: Catalog = {
   "manage.settings.cancelText":
     "All attendees will be notified and RSVPs will be released. This cannot be undone. A cancellation message will be sent automatically.",
   "manage.settings.cancelCta": "Cancel gathering",
+  "manage.settings.deleteLabel": "Delete this gathering",
+  "manage.settings.deleteText":
+    "Removes the gathering with its RSVPs, photos and announcements for good. Nobody is notified. If people have signed up, cancel it first so they are told.",
+  "manage.settings.deleteCta": "Delete gathering",
 
   // ── Manage: sidebar ───────────────────────────────────────────────────────────
   "manage.sidebar.coverAlt": "Cover photo for {title}",

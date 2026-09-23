@@ -8,6 +8,15 @@ import { applyConversationPrefs } from "../conversationPrefs";
 import { isServerConversationId } from "../useMessagesController.helpers";
 import { conversations as mockConversations } from "../data";
 import {
+  belongsToMailbox,
+  isBlockedByIdentity,
+  scopeCacheKey,
+  withMailboxSeat,
+  type ConversationListScope,
+} from "../mailboxes/mailboxScope";
+import { readDemoIdentityBlocks } from "../../social/api/identityBlocks.data";
+import { applyDemoClaims } from "./demoClaims";
+import {
   getConversation,
   getConversationsPage,
   getConversationsUnreadCount,
@@ -52,8 +61,21 @@ const NO_MORE_PAGES: ConversationsPageCursor = {
  * real pagination to exercise) and reports `hasNextPage: false`.
  *
  * `queryKey` includes `demoMode` so cache entries never cross the boundary.
+ *
+ * Mailboxes: `scope` names the mailbox to list, and every live page request
+ * sends its identity as `as` (`GET /conversations?as=`), one request per page
+ * as before. The key's fourth segment is `scopeCacheKey(scope)`, so each
+ * mailbox keeps its own entry. Every patch in `messageCache.ts`,
+ * `claimCache.ts` and `realtime.ts` writes the `["conversations"]` prefix,
+ * which still matches every scoped entry; the server puts each thread in
+ * exactly one mailbox's list, so a row sits only in its own mailbox's entry.
+ * The query stays disabled while `scope` is null (the mailboxes are still
+ * loading). Demo mode mirrors the server's filter with `belongsToMailbox`.
+ * Rows come back seated (`withMailboxSeat`) for a mailbox the member staffs.
+ * A 403 `IDENTITY_NOT_STAFF` is never retried: the app-wide rule
+ * (`queryClient.ts`) retries no 4xx but its own 408 timeout.
  */
-export function useConversations() {
+export function useConversations(scope: ConversationListScope | null) {
   const { demoMode } = useDemoMode();
   const { deletedIds } = useDeletedConversations();
   const { t } = useTranslation();
@@ -61,34 +83,65 @@ export function useConversations() {
   // Stable, order-independent token so the demo query re-derives when a chat is
   // deleted. Live mode never writes deletedIds, so this stays "".
   const deletedToken = [...deletedIds].sort().join(",");
+  const scopeKey = scopeCacheKey(scope);
   const queryKey = useMemo(
-    () => ["conversations", demoMode, deletedToken] as const,
-    [demoMode, deletedToken],
+    () => ["conversations", demoMode, deletedToken, scopeKey] as const,
+    [demoMode, deletedToken, scopeKey],
   );
 
   // Cursor bookkeeping for "load more", kept alongside the query rather than
   // inside its cache entry, so the cache itself never has to carry anything
-  // but the flat row list every other consumer already expects.
-  const [pageCursor, setPageCursor] =
-    useState<ConversationsPageCursor>(NO_MORE_PAGES);
+  // but the flat row list every other consumer already expects. One cursor
+  // per mailbox: switching back to a mailbox whose first page is still
+  // cached runs no queryFn, and must never page on with another mailbox's
+  // cursor.
+  const cursorKey = `${demoMode}:${scopeKey}`;
+  const [pageCursors, setPageCursors] = useState<
+    Record<string, ConversationsPageCursor>
+  >({});
+  const pageCursor = pageCursors[cursorKey] ?? NO_MORE_PAGES;
+  const setPageCursor = useCallback(
+    (cursor: ConversationsPageCursor) =>
+      setPageCursors((previous) => ({ ...previous, [cursorKey]: cursor })),
+    [cursorKey],
+  );
   const [isFetchingNextPage, setIsFetchingNextPage] = useState(false);
 
   const query = useQuery<ConversationWithPreview[]>({
     queryKey,
+    enabled: scope !== null,
+    // Demo claims live outside the cache (`demoClaims.ts`): the seeded list
+    // is re-derived on every rebuild, so they are applied as the rows are
+    // read and a claim never silently reverts.
+    select: demoMode ? applyDemoClaims : undefined,
     queryFn: async () => {
+      // `enabled` holds the query until a scope resolves.
+      if (!scope) return [];
       if (demoMode) {
         // Fold in DEMO pin/favorite overrides (localStorage) so a toggle
         // survives this refetch and a reload, see conversationPrefs.ts. The
         // whole seeded list is one page; there is nothing to page through.
         setPageCursor(NO_MORE_PAGES);
+        // I-2: mirrors the live backend (`mailbox-seats.ts`), which drops a
+        // blocked identity's threads from every read for both sides.
+        const blockedIdentityIds = new Set(
+          readDemoIdentityBlocks(queryClient).map((block) => block.identity.id),
+        );
         return applyConversationPrefs(
           mockConversations.filter(
             (conversation) => !deletedIds.has(conversation.id),
           ),
-        );
+        )
+          .filter((conversation) => belongsToMailbox(conversation, scope))
+          .filter(
+            (conversation) =>
+              !isBlockedByIdentity(conversation, blockedIdentityIds),
+          )
+          .map((conversation) => withMailboxSeat(conversation, scope));
       }
       const page = await getConversationsPage({
         limit: CONVERSATIONS_PAGE_SIZE,
+        as: scope.identityId,
       });
       // ENG-192-style guard (mirrors `useMessageThread`): a next page exists
       // only when the server says so AND hands back a cursor to fetch it
@@ -98,7 +151,9 @@ export function useConversations() {
           ? { nextCursor: page.pageInfo.nextCursor, hasMore: true }
           : NO_MORE_PAGES,
       );
-      return page.data.map((row) => conversationToView(row, t));
+      return page.data.map((row) =>
+        withMailboxSeat(conversationToView(row, t), scope),
+      );
     },
   });
 
@@ -108,14 +163,19 @@ export function useConversations() {
    *  in demo mode, while a fetch is already underway, or once the server has
    *  said there is nothing more (mirrors `useMessageThread`'s `hasNextPage`). */
   const fetchNextPage = useCallback(async () => {
-    if (demoMode || !pageCursor.hasMore || isFetchingNextPage) return;
+    if (demoMode || !scope || !pageCursor.hasMore || isFetchingNextPage) {
+      return;
+    }
     setIsFetchingNextPage(true);
     try {
       const page = await getConversationsPage({
         cursor: pageCursor.nextCursor ?? undefined,
         limit: CONVERSATIONS_PAGE_SIZE,
+        as: scope.identityId,
       });
-      const rows = page.data.map((row) => conversationToView(row, t));
+      const rows = page.data.map((row) =>
+        withMailboxSeat(conversationToView(row, t), scope),
+      );
       setPageCursor(
         page.pageInfo.hasMore && page.pageInfo.nextCursor
           ? { nextCursor: page.pageInfo.nextCursor, hasMore: true }
@@ -132,7 +192,16 @@ export function useConversations() {
     } finally {
       setIsFetchingNextPage(false);
     }
-  }, [demoMode, pageCursor, isFetchingNextPage, queryClient, t, queryKey]);
+  }, [
+    demoMode,
+    scope,
+    pageCursor,
+    setPageCursor,
+    isFetchingNextPage,
+    queryClient,
+    t,
+    queryKey,
+  ]);
 
   return {
     ...query,

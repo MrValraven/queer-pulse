@@ -167,6 +167,7 @@ export function useCommunitiesHomeData(): CommunitiesHomeData {
             post,
             communityName: entry.name,
             communitySlug: entry.slug,
+            parentName: entry.living!.parent?.name ?? null,
           })),
       ),
   ).slice(0, PULSE_LIMIT);
@@ -251,6 +252,7 @@ export function useCommunitiesHomeData(): CommunitiesHomeData {
         createdAt: excerpt.createdAt,
         communityName: entry.name,
         communitySlug: entry.slug,
+        parentName: entry.parentName ?? null,
       })),
     ),
   ).slice(0, PULSE_LIMIT);

@@ -6,11 +6,8 @@ import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { CommunityDetailHero } from "./CommunityDetailHero";
+import { CommunityDetailBody } from "./CommunityDetailBody";
 import { CommunityDetailDialogs } from "./CommunityDetailDialogs";
-import { CommunityFrozenBanner } from "./CommunityFrozenBanner";
-import { CommunityRulesUpdateNotice } from "./CommunityRulesUpdateNotice";
-import { CommunityHubLayout } from "./CommunityHubLayout";
-import { SimilarCommunitiesSection } from "./SimilarCommunitiesSection";
 import { useCommunityDetailState } from "./useCommunityDetailState";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -73,6 +70,7 @@ export function CommunityDetailPage() {
     living,
     discussionThreads,
     joined,
+    isRosterMember,
     requested,
     role,
     canEdit,
@@ -103,7 +101,7 @@ export function CommunityDetailPage() {
 
   // Rendered only from the loaded branch: the not-found / error / loading
   // returns above bail out before this, so the tab title is never a community
-  // called "" — those states keep the neutral brand default from index.html.
+  // called "", so those states keep the neutral brand default from index.html.
   // The community's own tagline, and its cover when it has one. Both are
   // omitted rather than sent empty, so PageMeta falls back to the neutral
   // brand description / default social image instead of a blank card.
@@ -128,7 +126,10 @@ export function CommunityDetailPage() {
         community={community}
         detail={detail}
         avatarImageUrl={avatarImageUrl}
-        joined={joined}
+        // The hero's Join/Leave CTA and notification control need the
+        // viewer's own roster row; `joined` (the effective role) reaches the
+        // body, where it decides what content and mod tools show.
+        joined={isRosterMember}
         requested={requested}
         isInvited={isInvited}
         isInviteOnlyLocked={isInviteOnlyLocked}
@@ -153,45 +154,29 @@ export function CommunityDetailPage() {
         onDeclineInvite={() => setDecliningInvite(true)}
         onWithdrawRequest={() => setConfirmingWithdraw(true)}
         onEdit={() => setEditing(true)}
+        parent={living?.parent}
+        isParentMembershipRequired={state.isParentMembershipRequired}
       />
 
-      <div className={styles.body}>
-        <div className="wrap">
-          {(living?.frozen || detail.frozen) && slug && (
-            <CommunityFrozenBanner slug={slug} canManage={canEdit} />
-          )}
-          {/* An owner edited the house rules since this member agreed to them.
-              In-page and dismissible on purpose: reading the community is
-              never blocked behind re-agreeing. */}
-          {slug && (
-            <CommunityRulesUpdateNotice
-              slug={slug}
-              name={community.name}
-              isMember={joined}
-            />
-          )}
-          <CommunityHubLayout
-            community={community}
-            detail={detail}
-            living={living}
-            slug={slug}
-            threads={discussionThreads}
-            joined={joined}
-            role={role}
-            canEdit={canEdit}
-            members={members}
-            memberNum={memberNum}
-            hasCount={hasCount}
-            posts={posts}
-            discussionPaging={discussionPaging}
-            rosterResult={rosterResult}
-            related={related}
-            communityPulse={communityPulse}
-          />
-
-          {slug && <SimilarCommunitiesSection currentSlug={slug} />}
-        </div>
-      </div>
+      <CommunityDetailBody
+        community={community}
+        detail={detail}
+        living={living}
+        slug={slug}
+        discussionThreads={discussionThreads}
+        joined={joined}
+        isRosterMember={isRosterMember}
+        role={role}
+        canEdit={canEdit}
+        members={members}
+        memberNum={memberNum}
+        hasCount={hasCount}
+        posts={posts}
+        discussionPaging={discussionPaging}
+        rosterResult={rosterResult}
+        related={related}
+        communityPulse={communityPulse}
+      />
 
       <CommunityDetailDialogs state={state} />
     </PageShell>

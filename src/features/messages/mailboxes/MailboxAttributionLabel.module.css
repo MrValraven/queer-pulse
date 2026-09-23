@@ -1,0 +1,19 @@
+/* The staff attribution line at the top of a business run. Sized like the
+   group sender label (`.runSenderName` in MessagesPage.module.css). */
+.label {
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--ink-60);
+  margin: 0 0 2px 2px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The staff view: the line sits over the member's own side of the thread. */
+.labelMine {
+  align-self: flex-end;
+  margin: 0 2px 2px 0;
+}

@@ -127,6 +127,17 @@ const KINDS: NotificationKind[] = [
   // row missing its `groupTitle` and its adder still has to read as a whole
   // sentence rather than leaving `{groupTitle}` or `{name}` on screen.
   "group_added",
+  // Task 13. The three co-manager kinds and `listing_owner_offer` were absent
+  // here even though the backend has emitted them for a while, so every row
+  // of all four fell through to the unknown-kind fallback. Listed with an
+  // empty payload for the same reason as the rows above: each resolves
+  // `listingName` and the actor's name defensively, so a row missing both
+  // still reads as a whole sentence, naming "this listing" and "Someone"
+  // when the payload carries neither.
+  "listing_co_manager_invite",
+  "listing_co_manager_invite_accepted",
+  "listing_co_manager_invite_declined",
+  "listing_owner_offer",
 ];
 
 describe("formatNotification", () => {
@@ -427,5 +438,66 @@ describe("formatNotification: admin_queue_item", () => {
       makeAdminT("pt"),
     );
     expect(result.text).not.toBe("");
+  });
+});
+
+/**
+ * Task 13. The three co-manager kinds and `listing_owner_offer` had no entry
+ * in `KIND_CATEGORY` before this, so every row of all four resolved to
+ * `isKnownKind === false` and rendered the unknown-kind fallback. A sibling
+ * top-level describe, the same rationale as the blocks above: it stays under
+ * the per-function line budget.
+ */
+describe("formatNotification: listing co-manager and owner offer", () => {
+  const coManagerKinds = [
+    "listing_co_manager_invite",
+    "listing_co_manager_invite_accepted",
+    "listing_co_manager_invite_declined",
+  ] as const;
+
+  it("resolves all four as known kinds", () => {
+    for (const kind of [...coManagerKinds, "listing_owner_offer"] as const) {
+      expect(formatNotification(kind, {}, t).kind).toBe(kind);
+    }
+  });
+
+  it("puts the three co-manager kinds on the community tab", () => {
+    for (const kind of coManagerKinds) {
+      expect(formatNotification(kind, {}, t).category).toBe("community");
+    }
+  });
+
+  it("puts listing_owner_offer on the platform tab", () => {
+    expect(formatNotification("listing_owner_offer", {}, t).category).toBe(
+      "platform",
+    );
+  });
+
+  it("interpolates the listing name and the resolved actor's name", () => {
+    // A stub `t` that echoes what it was handed, the same technique the
+    // interpolation-tokens test above uses, so this asserts the token seam
+    // without depending on catalog copy that has not landed yet.
+    const spy: TFunction = (key, options) =>
+      `${key}|${JSON.stringify(options)}`;
+    const out = formatNotification(
+      "listing_co_manager_invite",
+      { listingSlug: "lux-cafe", listingName: "Lux Cafe", inviteId: "inv1" },
+      spy,
+      undefined,
+      undefined,
+      "Jordan Rivera",
+    );
+    expect(out.text).toContain('"listingName":"Lux Cafe"');
+    expect(out.text).toContain('"name":"Jordan Rivera"');
+  });
+
+  it("falls back to a generic listing name and actor name when the payload carries neither", () => {
+    const spy: TFunction = (key, options) =>
+      `${key}|${JSON.stringify(options)}`;
+    const out = formatNotification("listing_owner_offer", {}, spy);
+    expect(out.text).toContain(
+      "type.listing_co_manager_invite.listingNameFallback",
+    );
+    expect(out.text).toContain("type.listing_co_manager_invite.nameFallback");
   });
 });

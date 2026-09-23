@@ -50,6 +50,7 @@ export function RequestInviteForm({
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
   const [why, setWhy] = useState("");
+  const [heardFrom, setHeardFrom] = useState("");
   const [mutual, setMutual] = useState("");
   const [mutualTouched, setMutualTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -74,6 +75,7 @@ export function RequestInviteForm({
     (mutualTouched || attempted) && !mutualEmpty && !mutualValid;
   const firstMissing = attempted && first.trim().length === 0;
   const whyMissing = attempted && why.trim().length === 0;
+  const heardFromMissing = attempted && heardFrom.trim().length === 0;
   const consentMissing = attempted && !agreed;
   const ageMissing = attempted && !is18;
   const submitting = createJoinRequest.isPending;
@@ -82,6 +84,7 @@ export function RequestInviteForm({
     emailValid &&
     (mutualEmpty || mutualValid) &&
     why.trim().length > 0 &&
+    heardFrom.trim().length > 0 &&
     agreed &&
     is18 &&
     !submitting;
@@ -105,6 +108,7 @@ export function RequestInviteForm({
         city: city.trim() || undefined,
         message: why.trim(),
         mutualMemberEmail: mutual.trim() || undefined,
+        heardFrom: heardFrom.trim(),
         source: source ?? undefined,
       });
       onSent("sent", created.statusToken);
@@ -164,6 +168,9 @@ export function RequestInviteForm({
         emailError={emailError}
         emailMissing={emailMissing}
         onEmailBlur={() => setTouched(true)}
+        heardFrom={heardFrom}
+        setHeardFrom={setHeardFrom}
+        heardFromMissing={heardFromMissing}
         firstMissing={firstMissing}
         whyMissing={whyMissing}
         why={why}

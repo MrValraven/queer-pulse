@@ -15,14 +15,17 @@ function PinGlyph() {
   return <PinIcon size={14} aria-hidden="true" />;
 }
 
-/** The banner's snippet for a pinned `image`/`gif`/`document` message
- *  (DES-224): read from `kind`/`attachment` rather than the server's raw
- *  fallback `body` text, so a pinned photo shows a real thumbnail and a
+/** The banner's snippet for a pinned `image`/`gif`/`document`/`sticker`
+ *  message (DES-224): read from `kind`/`attachment` rather than the server's
+ *  raw fallback `body` text, so a pinned photo shows a real thumbnail and a
  *  localized "Photo"/"Foto" label instead of whatever fallback text the
  *  sender's client happened to write. `null` for a text or system message,
  *  which keep rendering the body unchanged. Reuses the SAME kind labels the
- *  attach flow already uses (`attachments.fallbackText`, `viewer.gifBadge`)
- *  so the wording can't drift between the composer and this banner. */
+ *  attach flow already uses (`attachments.fallbackText`, `viewer.gifBadge`,
+ *  `sticker.attachmentLabel`) so the wording can't drift between the
+ *  composer and this banner. A sticker's `body` is blanked server-side by
+ *  design, so without this branch a pinned sticker rendered a blank snippet
+ *  and a blank aria-label. */
 function pinnedMediaDescriptor(
   message: MessageResponse,
   t: TFunction,
@@ -35,6 +38,20 @@ function pinnedMediaDescriptor(
         message.kind === "gif"
           ? t("messages:viewer.gifBadge")
           : t("messages:attachments.fallbackText"),
+      thumbnail: (
+        <img
+          className={bannerStyles.pinnedMediaThumb}
+          src={attachment.previewUrl}
+          alt=""
+        />
+      ),
+    };
+  }
+  if (message.kind === "sticker") {
+    const attachment = message.attachment;
+    if (!attachment || !("previewUrl" in attachment)) return null;
+    return {
+      label: t("messages:sticker.attachmentLabel"),
       thumbnail: (
         <img
           className={bannerStyles.pinnedMediaThumb}
