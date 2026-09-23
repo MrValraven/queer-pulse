@@ -4202,6 +4202,45 @@ export const admin: Catalog = {
   "adminCommunityTagRequests.toast.resolved": "Tag request resolved.",
   "adminCommunityTagRequests.toast.error": "Couldn't resolve that request.",
 
+  // ── Community space requests (AdminCommunitySpaceRequestsPage) ────────────
+  "adminCommunitySpaceRequests.title": "Space <em>requests</em>",
+  "adminCommunitySpaceRequests.header.eyebrow": "Communities",
+  "adminCommunitySpaceRequests.header.title": "Space <em>requests</em>",
+  "adminCommunitySpaceRequests.header.sub":
+    "Owners and co-owners asking to open spaces inside their community. Approving switches spaces on straight away.",
+  "adminCommunitySpaceRequests.filter.open": "Open",
+  "adminCommunitySpaceRequests.filter.approved": "Approved",
+  "adminCommunitySpaceRequests.filter.declined": "Declined",
+  "adminCommunitySpaceRequests.filter.all": "All",
+  "adminCommunitySpaceRequests.status.open": "Open",
+  "adminCommunitySpaceRequests.status.approved": "Approved",
+  "adminCommunitySpaceRequests.status.declined": "Declined",
+  "adminCommunitySpaceRequests.status.withdrawn": "Withdrawn",
+  "adminCommunitySpaceRequests.row.by": "Requested by {name}",
+  "adminCommunitySpaceRequests.row.sent": "Asked {age}",
+  "adminCommunitySpaceRequests.row.declineReason": "Declined: {reason}",
+  "adminCommunitySpaceRequests.unknownRequester": "A former member",
+  "adminCommunitySpaceRequests.withheldRequester": "An owner or co-owner",
+  "adminCommunitySpaceRequests.action.approve": "Approve",
+  "adminCommunitySpaceRequests.action.decline": "Decline",
+  "adminCommunitySpaceRequests.decline.eyebrow": "Space request",
+  "adminCommunitySpaceRequests.decline.title": "Decline this request?",
+  "adminCommunitySpaceRequests.decline.label": "Reason (optional)",
+  "adminCommunitySpaceRequests.decline.placeholder":
+    "What would help them ask again later?",
+  "adminCommunitySpaceRequests.decline.hint":
+    "The community's owner and moderators see this in their mod tools.",
+  "adminCommunitySpaceRequests.decline.confirm": "Decline request",
+  "adminCommunitySpaceRequests.empty": "No requests here.",
+  "adminCommunitySpaceRequests.error": "Couldn't load space requests.",
+  "adminCommunitySpaceRequests.loadMore": "Load more",
+  "adminCommunitySpaceRequests.loadingMore": "Loading…",
+  "adminCommunitySpaceRequests.toast.approved": "Spaces turned on for {name}",
+  "adminCommunitySpaceRequests.toast.declined": "Request declined",
+  "adminCommunitySpaceRequests.toast.notOpen":
+    "This request was already decided or withdrawn.",
+  "adminCommunitySpaceRequests.toast.error": "Couldn't save that. Try again.",
+
   // ── 2026-08-21 code-review 4.6 fixes ──
   "members.flagged.openMemberAriaLabel": "Open the member details for {handle}",
   "members.flagged.loadingDrawerLabel": "Loading member details",
@@ -5548,6 +5587,7 @@ export const admin: Catalog = {
   "moderationHealth.queue.legal_requests": "Legal and government demands",
   "moderationHealth.queue.housing_coop_join_requests": "Co-op join requests",
   "moderationHealth.queue.community_tag_requests": "Community tag requests",
+  "moderationHealth.queue.community_space_requests": "Space requests",
   "moderationHealth.queue.reading_group_proposals": "Reading group proposals",
   "moderationHealth.queue.safe_space_nominations": "Safe space nominations",
   "moderationHealth.queue.safe_space_flags": "Safe space flags",

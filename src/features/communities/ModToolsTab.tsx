@@ -80,13 +80,11 @@ export function ModToolsTab({
   const { data: ratificationQueue } = useCommunityBanRatifications(living.slug);
   const signableRatifications = signableRatificationCount(ratificationQueue);
 
-  // Spaces nest one level only, so the rail offers the section to a
-  // community's own console but never to a space's. It shows while platform
-  // staff let this community host spaces, and while spaces it already hosts
-  // still exist after the switch goes off, so moderators keep the list.
+  // Every top-level community gets the Spaces pane: with spaces on it lists
+  // and opens them, with spaces off it lets the owner ask for them. Spaces
+  // nest one level only, so a space never gets the pane.
   const isSpace = living.parent !== null;
-  const canHostSpaces =
-    !isSpace && (living.allowsSubcommunities || living.subcommunityCount > 0);
+  const canHostSpaces = !isSpace;
   // Membership cards and platform support offers are out of v1 for a space
   // (the backend refuses both there), so a space's rail leaves them out.
   const isSectionOffered = (id: ModSection) =>
@@ -299,7 +297,13 @@ function ModToolsPane({
     return <ModToolsInvites slug={living.slug} role={role} />;
   }
   if (section === "spaces") {
-    return <ModToolsSpaces living={living} communityName={communityName} />;
+    return (
+      <ModToolsSpaces
+        living={living}
+        communityName={communityName}
+        viewerRole={role}
+      />
+    );
   }
   if (section === "support") {
     return <ModToolsSupport slug={living.slug} />;

@@ -4196,6 +4196,48 @@ export const admin: Catalog = {
   "adminCommunityTagRequests.toast.error":
     "Não foi possível resolver o pedido.",
 
+  // ── Pedidos de espaços de comunidades (AdminCommunitySpaceRequestsPage) ───
+  "adminCommunitySpaceRequests.title": "Pedidos de <em>espaços</em>",
+  "adminCommunitySpaceRequests.header.eyebrow": "Comunidades",
+  "adminCommunitySpaceRequests.header.title": "Pedidos de <em>espaços</em>",
+  "adminCommunitySpaceRequests.header.sub":
+    "Pessoas responsáveis e cotitulares a pedir para abrir espaços dentro da sua comunidade. Aprovar ativa os espaços de imediato.",
+  "adminCommunitySpaceRequests.filter.open": "Em aberto",
+  "adminCommunitySpaceRequests.filter.approved": "Aprovados",
+  "adminCommunitySpaceRequests.filter.declined": "Recusados",
+  "adminCommunitySpaceRequests.filter.all": "Todos",
+  "adminCommunitySpaceRequests.status.open": "Em aberto",
+  "adminCommunitySpaceRequests.status.approved": "Aprovado",
+  "adminCommunitySpaceRequests.status.declined": "Recusado",
+  "adminCommunitySpaceRequests.status.withdrawn": "Retirado",
+  "adminCommunitySpaceRequests.row.by": "Pedido por {name}",
+  "adminCommunitySpaceRequests.row.sent": "Pedido {age}",
+  "adminCommunitySpaceRequests.row.declineReason": "Recusado: {reason}",
+  "adminCommunitySpaceRequests.unknownRequester": "Uma pessoa que já saiu",
+  "adminCommunitySpaceRequests.withheldRequester":
+    "A pessoa responsável ou cotitular",
+  "adminCommunitySpaceRequests.action.approve": "Aprovar",
+  "adminCommunitySpaceRequests.action.decline": "Recusar",
+  "adminCommunitySpaceRequests.decline.eyebrow": "Pedido de espaços",
+  "adminCommunitySpaceRequests.decline.title": "Recusar este pedido?",
+  "adminCommunitySpaceRequests.decline.label": "Motivo (opcional)",
+  "adminCommunitySpaceRequests.decline.placeholder":
+    "O que as ajudaria a voltar a pedir mais tarde?",
+  "adminCommunitySpaceRequests.decline.hint":
+    "A equipa da comunidade vê isto nas ferramentas de moderação.",
+  "adminCommunitySpaceRequests.decline.confirm": "Recusar pedido",
+  "adminCommunitySpaceRequests.empty": "Não há pedidos aqui.",
+  "adminCommunitySpaceRequests.error":
+    "Não foi possível carregar os pedidos de espaços.",
+  "adminCommunitySpaceRequests.loadMore": "Carregar mais",
+  "adminCommunitySpaceRequests.loadingMore": "A carregar…",
+  "adminCommunitySpaceRequests.toast.approved": "Espaços ativados em {name}",
+  "adminCommunitySpaceRequests.toast.declined": "Pedido recusado",
+  "adminCommunitySpaceRequests.toast.notOpen":
+    "Este pedido já foi decidido ou retirado.",
+  "adminCommunitySpaceRequests.toast.error":
+    "Não foi possível guardar. Tenta de novo.",
+
   // ── 2026-08-21 code-review 4.6 fixes ──
   "members.flagged.openMemberAriaLabel": "Abrir os detalhes de {handle}",
   "members.flagged.loadingDrawerLabel": "A carregar os detalhes do membro",
@@ -5545,6 +5587,7 @@ export const admin: Catalog = {
   "moderationHealth.queue.housing_coop_join_requests":
     "Pedidos de adesão a cooperativas",
   "moderationHealth.queue.community_tag_requests": "Pedidos de etiquetas",
+  "moderationHealth.queue.community_space_requests": "Pedidos de espaços",
   "moderationHealth.queue.reading_group_proposals":
     "Propostas de grupos de leitura",
   "moderationHealth.queue.safe_space_nominations":

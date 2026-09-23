@@ -66,6 +66,8 @@
 .icon.sm {
   font-size: var(--text-16);
   padding: 0;
+  /* `.sm` lowers the floor to 40px; put it back. */
+  min-height: 44px;
 }
 /* On a plum/dark ground the ink tokens disappear; follow ghost-dark's cream. */
 .iconDark {

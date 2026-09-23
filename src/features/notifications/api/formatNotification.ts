@@ -591,7 +591,15 @@ export type NotificationKind =
   // `AddListingOwnerOfferNotificationType1821300300000`, emitted from
   // `ListingOwnerOffersService.offer`; see `notification.entity.ts:304`).
   // Actor is the offering admin. Payload carries `listingSlug`/`listingName`.
-  | "listing_owner_offer";
+  | "listing_owner_offer"
+  // Task 6, "space requests". A community owner or co-owner asks platform
+  // staff for permission to open a dedicated Space, and these two close that
+  // loop back to the requester. Payload: `{ source: 'community',
+  // communitySlug, communityName }`. Deep-links into the community's own
+  // mod-tools console (see `sourceHrefFromPayload`), where the requesting
+  // owner or co-owner reads the decision.
+  | "community_space_request_approved"
+  | "community_space_request_declined";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -777,6 +785,11 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // (platform staff offering a community support): platform tab, same as
   // listing_approved.
   listing_owner_offer: "platform",
+  // A community owner or co-owner's own space request being answered is
+  // activity about their community, the same tab review_replied/group_added
+  // sit in: the recipient is the requesting owner or co-owner themself.
+  community_space_request_approved: "community",
+  community_space_request_declined: "community",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -1446,19 +1459,22 @@ function barterOfferToken(payload: unknown, t: TFunction): string {
 }
 
 /**
- * Resolves the `{communityName}` token both PRD-31 ban-evasion rows
- * interpolate: the community the escalation was raised from.
+ * Resolves the `{communityName}` token for any row whose sentence names a
+ * community: both PRD-31 ban-evasion rows (the community the escalation was
+ * raised from) and, since Task 6, both space-request decision rows (the
+ * community the request was about).
  *
  * Read defensively, the way `barterOfferToken` and `deviceLabelToken` are. The
- * backend writes `communityName` on both payloads, but a row from an older or
- * future shape must not leave a literal `{communityName}` sitting in a
- * moderation row, and a blank one must not leave a hole mid-sentence. The
- * fallback phrase is per type because the two sentences read differently: the
- * staff row is about some community, and the moderator's row is about their
- * own. Passing the type through keeps that in the catalog, where the
- * surrounding grammar lives, rather than hardcoding a phrase here.
+ * backend writes `communityName` on each of these payloads, but a row from an
+ * older or future shape must not leave a literal `{communityName}` sitting in
+ * a moderation row, and a blank one must not leave a hole mid-sentence. The
+ * fallback phrase is per type because the sentences read differently: the
+ * ban-evasion staff row is about some community, the moderator's own
+ * ban-evasion row is about their own, and each space-request row is about the
+ * community that asked. Passing the type through keeps that in the catalog,
+ * where the surrounding grammar lives, rather than hardcoding a phrase here.
  */
-function banEvasionCommunityToken(
+function communityNameToken(
   type: string,
   payload: unknown,
   t: TFunction,
@@ -1946,13 +1962,15 @@ export function formatNotification(
   }
   if (
     type === "ban_evasion_escalation_raised" ||
-    type === "ban_evasion_escalation_resolved"
+    type === "ban_evasion_escalation_resolved" ||
+    type === "community_space_request_approved" ||
+    type === "community_space_request_declined"
   ) {
     // Overrides the raw `communityName` `interpolationTokens` already copied
     // through with the same value, defensively re-resolved so a row whose
     // payload is missing or malformed still reads as a whole sentence instead
     // of showing `{communityName}` to somebody being asked to act.
-    tokens.communityName = banEvasionCommunityToken(type, payload, t);
+    tokens.communityName = communityNameToken(type, payload, t);
   }
   if (type === "submission_decided") {
     // Overrides the raw `subjectLabel`/`reviewNote` `interpolationTokens`

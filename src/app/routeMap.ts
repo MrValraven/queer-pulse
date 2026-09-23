@@ -139,6 +139,7 @@ export const routes = {
   adminResourceGuideEdit: "/admin/resource-guides/edit",
   adminResourceSuggestions: "/admin/resource-suggestions",
   adminCommunityTagRequests: "/admin/community-tag-requests",
+  adminCommunitySpaceRequests: "/admin/community-space-requests",
   adminPartnerApplications: "/admin/partner-applications",
   adminSettings: "/admin/settings",
   adminReports: "/admin/reports",

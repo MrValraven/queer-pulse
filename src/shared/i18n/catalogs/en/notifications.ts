@@ -279,6 +279,15 @@ export const notifications: Catalog = {
   "type.community_support_offered.text":
     "Someone from QueerPulse has offered {communityName} a hand.",
   "type.community_support_offered.meta": "An offer of support",
+  // Task 6. Both close the loop back to the community that asked for spaces.
+  "type.community_space_request_approved.text":
+    "Spaces are on for {communityName}. You can open the first one from mod tools.",
+  "type.community_space_request_approved.meta": "Space request approved",
+  "type.community_space_request_approved.communityFallback": "your community",
+  "type.community_space_request_declined.text":
+    "The QueerPulse team declined the request for spaces in {communityName}.",
+  "type.community_space_request_declined.meta": "Space request declined",
+  "type.community_space_request_declined.communityFallback": "your community",
   "type.community_report_filed.emergency.text":
     "An urgent report in {communityName} needs a decision within the hour.",
   "type.community_report_filed.emergency.meta": "Urgent report",

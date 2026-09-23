@@ -13,7 +13,7 @@ import { routes } from "../../../app/routeMap";
  * row reaches this file it has already been addressed to somebody. What this
  * file owns is only the destination.
  *
- * 28 keys map onto 23 distinct routes: /admin/moderation carries two
+ * 29 keys map onto 24 distinct routes: /admin/moderation carries two
  * (`appeals`, `ban_ratifications`), /admin/safe-spaces two
  * (`safe_space_nominations`, `safe_space_flags`), /admin/landlords two
  * (`landlord_intro_requests`, `landlord_suggestions`), and /admin/listings
@@ -35,6 +35,7 @@ export const ADMIN_QUEUE_ROUTES: Record<string, string> = {
   legal_requests: routes.adminLegalRequests,
   housing_coop_join_requests: routes.adminHousingCoops,
   community_tag_requests: routes.adminCommunityTagRequests,
+  community_space_requests: routes.adminCommunitySpaceRequests,
   reading_group_proposals: routes.adminReadingGroupProposals,
   safe_space_nominations: routes.adminSafeSpaces,
   safe_space_flags: routes.adminSafeSpaces,

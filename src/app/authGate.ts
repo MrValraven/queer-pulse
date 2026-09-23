@@ -511,6 +511,8 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       `${routes.adminCommunities}/*`,
       routes.adminCommunityTagRequests,
       `${routes.adminCommunityTagRequests}/*`,
+      routes.adminCommunitySpaceRequests,
+      `${routes.adminCommunitySpaceRequests}/*`,
       routes.adminTopics,
       `${routes.adminTopics}/*`,
       routes.adminReadingGroupProposals,

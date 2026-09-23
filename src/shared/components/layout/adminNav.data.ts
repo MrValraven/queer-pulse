@@ -260,6 +260,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiTag,
       },
       {
+        labelKey: "shared:adminNav.items.communitySpaceRequests",
+        to: routes.adminCommunitySpaceRequests,
+        capabilities: ["communities"],
+        icon: FiLayers,
+      },
+      {
         labelKey: "shared:adminNav.items.housingGroups",
         to: routes.adminHousingGroups,
         icon: FiHome,

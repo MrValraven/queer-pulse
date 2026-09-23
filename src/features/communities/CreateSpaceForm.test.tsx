@@ -63,11 +63,12 @@ function renderForm() {
 }
 
 async function fillRequiredFields(user: ReturnType<typeof userEvent.setup>) {
-  await user.type(await screen.findByLabelText("Name"), "  Trail Runners  ");
-  await user.type(screen.getByLabelText("Web address"), "  Trail Runners  ");
-  await user.type(screen.getByLabelText("Tagline"), "  For the hills  ");
+  // The web address fills itself from the name until it is edited. Labels
+  // end in FormField's required marker, so they match from the start.
+  await user.type(await screen.findByLabelText(/^Name/), "  Trail Runners  ");
+  await user.type(screen.getByLabelText(/^Tagline/), "  For the hills  ");
   await user.type(
-    screen.getByLabelText("What it's for"),
+    screen.getByLabelText(/^What it's for/),
     "  Long weekend runs.  ",
   );
 }
@@ -81,18 +82,14 @@ describe("CreateSpaceForm", () => {
   it("disables tiers more open than the parent and explains why", async () => {
     renderForm();
 
-    const publicTier = await screen.findByRole("radio", {
-      name: "Open to all",
-    });
+    const publicTier = await screen.findByRole("radio", { name: "Open" });
     expect(publicTier).toBeDisabled();
     expect(
       screen.getByText("A space can't be more open than Queer Runners Lisboa."),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole("radio", { name: "Request to join" }),
-    ).toBeEnabled();
-    expect(screen.getByRole("radio", { name: "Invite-only" })).toBeEnabled();
+    expect(screen.getByRole("radio", { name: "Ask to join" })).toBeEnabled();
+    expect(screen.getByRole("radio", { name: "Invite only" })).toBeEnabled();
     expect(screen.getByRole("radio", { name: "Private" })).toBeEnabled();
   });
 
@@ -121,6 +118,23 @@ describe("CreateSpaceForm", () => {
     });
   });
 
+  it("fills the web address from the name until the moderator edits it", async () => {
+    const user = userEvent.setup();
+    renderForm();
+    const nameInput = await screen.findByLabelText(/^Name/);
+    const handleInput = screen.getByLabelText(/^Web address/);
+
+    await user.type(nameInput, "Trail Runners");
+    expect(handleInput).toHaveValue("trail-runners");
+
+    await user.clear(handleInput);
+    await user.type(handleInput, "hill repeats");
+    expect(handleInput).toHaveValue("hill-repeats");
+
+    await user.type(nameInput, " Club");
+    expect(handleInput).toHaveValue("hill-repeats");
+  });
+
   it("toasts that the community can't open spaces on a SUBCOMMUNITIES_NOT_ALLOWED 409", async () => {
     const user = userEvent.setup();
     renderForm();
@@ -142,7 +156,7 @@ describe("CreateSpaceForm", () => {
       screen.queryByText("Couldn't create the space. Try again."),
     ).not.toBeInTheDocument();
     // The form keeps what the moderator typed: nothing on it was wrong.
-    expect(screen.getByLabelText("Name")).toHaveValue("  Trail Runners  ");
+    expect(screen.getByLabelText(/^Name/)).toHaveValue("  Trail Runners  ");
   });
 
   it("toasts a generic failure for any other error", async () => {
@@ -172,6 +186,18 @@ describe("CreateSpaceForm", () => {
 
     expect(await screen.findByText("Space created")).toBeInTheDocument();
     expect(onCreated).toHaveBeenCalledWith("trail-runners");
-    expect(screen.getByLabelText("Name")).toHaveValue("");
+    expect(screen.getByLabelText(/^Name/)).toHaveValue("");
+  });
+
+  it("sends an early Create space press to the first empty field", async () => {
+    const user = userEvent.setup();
+    renderForm();
+    const nameInput = await screen.findByLabelText(/^Name/);
+    // Clicking the submit takes focus off the name first, so the assertion
+    // below proves the form moved it back.
+    await user.click(screen.getByRole("button", { name: "Create space" }));
+
+    expect(mutate).not.toHaveBeenCalled();
+    expect(nameInput).toHaveFocus();
   });
 });

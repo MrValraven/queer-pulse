@@ -29,6 +29,7 @@ const EXPECTED_CAPABILITIES: Record<string, string[]> = {
   legal_requests: [],
   housing_coop_join_requests: [],
   community_tag_requests: ["communities"],
+  community_space_requests: ["communities"],
   reading_group_proposals: ["communities"],
   safe_space_nominations: ["directory_moderator"],
   safe_space_flags: [],
@@ -77,8 +78,8 @@ const navItemsByPath = new Map(
 );
 
 describe("admin queue routes", () => {
-  it("covers twenty-eight queues", () => {
-    expect(ADMIN_QUEUE_KEYS).toHaveLength(28);
+  it("covers twenty-nine queues", () => {
+    expect(ADMIN_QUEUE_KEYS).toHaveLength(29);
   });
 
   it("points every queue at a real admin route", () => {

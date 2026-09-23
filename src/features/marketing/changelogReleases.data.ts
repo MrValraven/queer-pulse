@@ -9,10 +9,12 @@
 export const CHANGELOG_RELEASE_NOTES: Record<string, { highlights: string[] }> =
   {
     "23 Sep 2026": {
+      // Twenty entries this day, so the rule in the file header asks for
+      // curated highlights; the feature comes first.
       highlights: [
+        "space-requests",
         "directory-map-full-screen",
         "share-to-chat-shows-a-preview",
-        "listings-reachable-through-co-managers",
       ],
     },
     "22 Sep 2026": {

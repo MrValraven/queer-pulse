@@ -1315,6 +1315,10 @@ export const communities: Catalog = {
   "badges.tier.request": "Pedido para entrar",
   "badges.tier.invite": "Só com convite",
   "badges.tier.private": "Privada",
+  "badges.spaceTier.public": "Aberto",
+  "badges.spaceTier.request": "Com pedido",
+  "badges.spaceTier.invite": "Só com convite",
+  "badges.spaceTier.private": "Privado",
   "badges.reaction.heart": "Adoro",
   "badges.reaction.celebrate": "Celebrar",
   "badges.reaction.support": "Apoio",
@@ -2158,10 +2162,64 @@ export const communities: Catalog = {
   "spaces.mod.form.tierLocked":
     "Um espaço não pode ser mais aberto do que {name}.",
   "spaces.mod.form.submit": "Criar espaço",
+  "spaces.mod.form.basics": "O essencial",
+  "spaces.mod.form.handleHelper":
+    "Preenchido a partir do nome até o alterares.",
+  "spaces.mod.form.taglineHelper": "Uma linha, mostrada no cartão do espaço.",
+  "spaces.mod.form.purposeHelper":
+    "O que vão as pessoas fazer aqui? Bastam umas frases.",
+  "spaces.mod.form.charCount": "{count}/{max}",
+  "spaces.mod.form.tierDescription.public":
+    "Qualquer pessoa em {name} pode entrar logo.",
+  "spaces.mod.form.tierDescription.request":
+    "Quem está em {name} pede para entrar e a moderação aprova.",
+  "spaces.mod.form.tierDescription.invite":
+    "Aparece com os outros espaços de {name}. Só entra quem receber convite.",
+  "spaces.mod.form.tierDescription.private":
+    "Não aparece na lista de espaços para quem está de fora. Só entra quem receber convite.",
+  "spaces.mod.form.optional": "Opcional",
+  "spaces.mod.form.rulesCount": "{count} de {max}",
+  "spaces.mod.form.rulePlaceholder":
+    "Por exemplo: Pede antes de partilhar fotos de um encontro",
+  "spaces.mod.form.requiredHint":
+    "São precisos os quatro campos do essencial para criar o espaço.",
+  "spaces.mod.form.creating": "A criar…",
+  "spaces.mod.form.cancel": "Cancelar",
   "spaces.mod.created": "Espaço criado",
   "spaces.mod.createError": "Não foi possível criar o espaço. Tenta de novo.",
   "spaces.mod.notAllowed":
     "Esta comunidade não pode abrir espaços neste momento.",
   "spaces.mod.list.title": "Espaços nesta comunidade",
   "spaces.mod.list.empty": "Ainda não há espaços.",
+  "spaces.request.offTitle":
+    "Os espaços ainda não estão ativos nesta comunidade",
+  "spaces.request.intro":
+    "Os espaços são grupos mais pequenos dentro desta comunidade, como um canto para mães e pais ou um clube de leitura. Só quem já está aqui pode entrar.",
+  "spaces.request.note.label": "Que espaços abririas?",
+  "spaces.request.note.helper":
+    "Opcional. A equipa do QueerPulse lê isto com o teu pedido.",
+  "spaces.request.note.placeholder":
+    "Por exemplo: um espaço para mães e pais e outro para quem chegou há pouco à cidade.",
+  "spaces.request.submit": "Pedir espaços",
+  "spaces.request.sending": "A enviar…",
+  "spaces.request.sent": "Pedido enviado à equipa do QueerPulse",
+  "spaces.request.error": "Não foi possível enviar o pedido. Tenta de novo.",
+  "spaces.request.alreadyOpen":
+    "Já há um pedido à espera da equipa do QueerPulse.",
+  "spaces.request.alreadyAllowed":
+    "Os espaços já estão ativos nesta comunidade.",
+  "spaces.request.approved": "Os espaços estão ativos. A atualizar…",
+  "spaces.request.pending":
+    "Pedido feito a {date}. À espera da equipa do QueerPulse.",
+  "spaces.request.withdraw": "Retirar pedido",
+  "spaces.request.withdrawn": "Pedido retirado",
+  "spaces.request.withdrawError":
+    "Não foi possível retirar o pedido. Tenta de novo.",
+  "spaces.request.declined": "A equipa do QueerPulse recusou o último pedido.",
+  "spaces.request.declinedReason": "A nota da equipa: {reason}",
+  "spaces.request.askAgain": "Podes voltar a pedir quando quiseres.",
+  "spaces.request.staffOnly":
+    "Só a pessoa responsável ou quem é cotitular pode pedir espaços.",
+  "spaces.request.loadError": "Não foi possível carregar o estado do pedido.",
+  "spaces.request.retry": "Tentar de novo",
 };

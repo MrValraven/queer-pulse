@@ -1,0 +1,107 @@
+/* The Spaces pane while platform staff have not switched spaces on: an
+   explanation, the community's own request status, and the ask-again form.
+   A plain card, matching the other ModTools panels' `.picker` surface. */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0 0 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  background: var(--paper);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  flex: none;
+  font-size: var(--text-20);
+  color: var(--accent-ink);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.intro {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 64ch;
+}
+
+/* ---- status callouts: a request already open, or declined ---- */
+
+.status,
+.declined {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  padding: 12px 14px;
+  background: var(--wash);
+}
+
+.declined {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.statusText {
+  flex: 1 1 12rem;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.status > button {
+  margin-inline-start: auto;
+}
+
+.iconOk {
+  color: var(--jade-ink);
+}
+
+.reason {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+/* ---- ask-again form ---- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.submitRow {
+  display: flex;
+  justify-content: flex-end;
+}

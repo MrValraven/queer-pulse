@@ -52,7 +52,7 @@ export function SpaceCard({
             <FiCheck aria-hidden /> {t("communities:spaces.card.joined")}
           </span>
         ) : (
-          <AccessTierBadge tier={space.accessTier ?? "public"} />
+          <AccessTierBadge tier={space.accessTier ?? "public"} isSpace />
         )
       }
       footAction={

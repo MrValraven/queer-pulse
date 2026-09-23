@@ -60,10 +60,10 @@ export const MOD_NAV: ModNavItem[] = [
   },
   { id: "invites", labelKey: "communities:detail.modtools.nav.invites" },
   {
-    // Only rendered for a community that may host spaces or still hosts some,
-    // and never for a space itself (spaces nest one level only). `ModToolsTab`
-    // filters this item out entirely, so the rail only offers a section that
-    // loads when opened.
+    // Rendered for every top-level community, on or off: with spaces on it
+    // lists and opens them, with spaces off it offers the ask-again request
+    // form instead. Never for a space itself, since spaces nest one level
+    // only: `ModToolsTab` filters this item out there.
     id: "spaces",
     labelKey: "communities:detail.modtools.nav.spaces",
   },

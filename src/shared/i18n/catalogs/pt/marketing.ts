@@ -2420,7 +2420,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Menos",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-23.headline":
-    "O mapa do diretório em ecrã inteiro e uma pré-visualização ao partilhar no chat.",
+    "Quem é dono já pode pedir espaços nas ferramentas de moderação, e o mapa do diretório passa a ecrã inteiro.",
   "changelog.releases.2026-09-22.headline":
     "Já podes responder como o teu negócio, e as comunidades podem abrir espaços.",
   "changelog.releases.2026-09-20.headline":
@@ -2582,6 +2582,16 @@ export const marketing: Catalog = {
     "Listas partilhadas só abrem para membros",
   "changelog.entries.shared-lists-members-only.body":
     "Um link de partilha pede agora para iniciares sessão, e cada item da lista abre a sua própria página.",
+  // Pedidos de espaços, 23 Set 2026.
+  "changelog.entries.space-requests.title":
+    "Pede espaços nas ferramentas de moderação",
+  "changelog.entries.space-requests.body":
+    "Quem gere a comunidade pode pedir à equipa do QueerPulse para ativar espaços, e a aprovação abre-os logo.",
+  // Criar um espaço redesenhado, 23 Set 2026.
+  "changelog.entries.create-a-space-redesigned.title":
+    "Criar um espaço ficou mais claro",
+  "changelog.entries.create-a-space-redesigned.body":
+    "A moderação abre-o num botão, escolhe quem entra em cartões explicados e o endereço preenche-se sozinho.",
   // Os grupos de leitura ganham nome próprio, 23 Set 2026.
   "changelog.entries.reading-groups-get-their-own-names.title":
     "Os grupos de leitura ganham nome próprio",

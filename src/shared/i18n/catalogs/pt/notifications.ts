@@ -247,6 +247,15 @@ export const notifications: Catalog = {
   "type.community_support_offered.text":
     "Alguém da QueerPulse ofereceu ajuda a {communityName}.",
   "type.community_support_offered.meta": "Uma oferta de apoio",
+  // Task 6. Fecham o ciclo de volta para a comunidade que pediu espaços.
+  "type.community_space_request_approved.text":
+    "{communityName} já tem espaços ativos. Podes abrir o primeiro nas ferramentas de moderação.",
+  "type.community_space_request_approved.meta": "Pedido de espaços aprovado",
+  "type.community_space_request_approved.communityFallback": "A tua comunidade",
+  "type.community_space_request_declined.text":
+    "A equipa do QueerPulse recusou o pedido de espaços para {communityName}.",
+  "type.community_space_request_declined.meta": "Pedido de espaços recusado",
+  "type.community_space_request_declined.communityFallback": "a tua comunidade",
   "type.community_report_filed.emergency.text":
     "Uma denúncia urgente em {communityName} precisa de uma decisão dentro de uma hora.",
   "type.community_report_filed.emergency.meta": "Denúncia urgente",

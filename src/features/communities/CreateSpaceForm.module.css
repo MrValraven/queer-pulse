@@ -1,86 +1,268 @@
-/* Mirrors EditCommunityModal.module.css's fieldset/rule-list tokens, so the
-   mod-tools founding form shares the scale of the rest of the community
-   settings surfaces. */
+/* The founding form for a space, drawn as one paper card in the mod-tools
+   Spaces pane. Inputs keep FormField's own styling; this module owns the card,
+   the section rhythm, the address adornment, the tier cards and the rules. */
 
-.form {
+/* Header row above the list: its title on the left, the trigger on the right. */
+.listHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* ---- card ---- */
+
+.card {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(var(--line-rgb), 0.14);
+  gap: 24px;
+  margin: 0 0 24px;
+  padding: 24px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
 }
 
-.formTitle {
-  font-size: var(--text-16);
+@media (--sm) {
+  .card {
+    padding: 20px 16px;
+  }
+}
+
+/* The title stands alone at the top; the card's own gap spaces it from the
+   first section. */
+.cardHead {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* ---- sections ---- */
+
+/* Each section is a borderless fieldset; whitespace alone separates them, so
+   consecutive sections add a step on top of the card's gap. The legend floats
+   so it stops being the fieldset's "rendered legend" and lays out like any
+   other block. */
+.section {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.section + .section {
+  margin-top: 12px;
+}
+
+.sectionLegend {
+  float: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+  font-size: var(--text-15);
   font-weight: 700;
   color: var(--ink);
-  margin: 0;
 }
 
-.fieldset {
-  border: none;
-  padding: 0;
-  margin: 0;
+.sectionLegend + * {
+  clear: both;
 }
 
-.legend {
+.optionalTag {
   font-size: var(--text-11-5);
   font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
   color: var(--ink-60);
-  margin-bottom: 10px;
-  padding: 0;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+}
+
+.sectionIntro {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .hint {
-  margin: 0 0 12px;
-  font-size: var(--text-13);
+  margin: 0;
+  font-size: var(--text-body-sm);
   line-height: 1.5;
-  color: var(--ink-40);
+  color: var(--ink-60);
 }
 
-/* Tier radios */
-.tierList {
+/* ---- the basics ---- */
+
+/* One column by default; name and address share a row once the card is wide
+   enough for two. The step is explicit so no empty third track can open up
+   beside the full-width rows. */
+.basicsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 16px;
+  align-items: start;
+}
+
+@container (min-width: 540px) {
+  .basicsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fullRow {
+  grid-column: 1 / -1;
+}
+
+.basicsGrid > :last-child {
+  margin-bottom: 0;
+}
+
+/* The address box: a fixed `/community/` lead-in, then the editable handle.
+   The border lives on the wrapper, so the inner input drops FormField's own
+   box. Scoped at two classes to out-rank FormField's `.field input` rules. */
+.affix {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 
-.tierOption {
+.affix:focus-within {
+  background: var(--paper);
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+}
+
+.affixPrefix {
+  flex: none;
+  padding-left: 15px;
+  font-size: var(--text-16);
+  color: var(--ink-40);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.affix .affixInput,
+.affix .affixInput:focus {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding-left: 1px;
+}
+
+/* ---- who can join ---- */
+
+.tierGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+@container (min-width: 520px) {
+  .tierGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tierCard {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 12px 14px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: var(--radius-12);
+  padding: 14px;
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-16);
   cursor: pointer;
   touch-action: manipulation;
   transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease);
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 }
 
-.tierOptionChecked {
+@media (hover: hover) {
+  .tierCard:not(.tierCardLocked):not(.tierCardChecked):hover {
+    border-color: rgba(var(--line-rgb), 0.4);
+  }
+}
+
+.tierCard:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.tierCardChecked {
   border-color: var(--accent);
-  background: rgba(var(--accent-rgb), 0.05);
+  background: rgba(var(--accent-rgb), 0.07);
 }
 
-.tierOptionDisabled {
+/* Only the decoration dims on a locked tier; the description stays at full
+   opacity so the reason it is out of reach remains readable. */
+.tierCardLocked {
   cursor: not-allowed;
+  background: var(--wash);
+}
+
+.tierCardLocked .tierIcon,
+.tierCardLocked .tierMark {
   opacity: 0.6;
 }
 
-.tierOption input {
-  margin-top: 2px;
-  accent-color: var(--accent);
+.tierCardLocked .tierName {
+  color: var(--ink-60);
 }
 
-.tierOptionBody {
+.tierCardLocked .tierDescription {
+  color: var(--ink-40);
+}
+
+.tierIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-10);
+  background: var(--wash);
+  color: var(--ink-60);
+}
+
+.tierCardChecked .tierIcon {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-text);
+}
+
+.tierBody {
+  flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .tierName {
@@ -89,27 +271,90 @@
   color: var(--ink);
 }
 
-.tierLockedHint {
-  font-size: var(--text-12-5);
+.tierDescription {
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* The radio dot: an empty ring, a filled check once chosen, a lock when the
+   parent rules the tier out. */
+.tierMark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.35);
+  border-radius: var(--radius-avatar);
   color: var(--ink-40);
 }
 
-/* Rules list */
+.tierCardChecked .tierMark {
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.tierCardLocked .tierMark {
+  border-color: transparent;
+}
+
+.tierNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.tierNote svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* ---- extra rules ---- */
+
+.ruleCount {
+  flex: none;
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
+  white-space: nowrap;
+}
+
+/* Numbered by a counter, so the digits never live in translated copy. */
 .ruleList {
+  list-style: none;
+  counter-reset: space-rule;
   display: flex;
   flex-direction: column;
-  gap: var(--gap-xs);
-  margin-bottom: 12px;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 0;
 }
 
 .ruleRow {
+  counter-increment: space-rule;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.5);
+  background: var(--wash);
+  border: 1px solid var(--line);
   border-radius: var(--radius-12);
-  padding: 10px 12px;
+  padding: 6px 6px 6px 14px;
+}
+
+.ruleRow::before {
+  content: counter(space-rule) ".";
+  flex: none;
+  min-width: 18px;
+  font-size: var(--text-caption);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-40);
 }
 
 .ruleText {
@@ -136,10 +381,78 @@
   background: var(--cream);
   border: 1.5px solid rgba(var(--line-rgb), 0.5);
   border-radius: var(--radius-12);
-  padding: 12px 14px;
+  padding: 13px 15px;
+  outline: none;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 
-.submitRow {
+.ruleAdd input:focus {
+  background: var(--paper);
+  border-color: var(--line-strong);
+  box-shadow: var(--ring-plum-soft);
+}
+
+.ruleAdd input::placeholder {
+  color: var(--ink-40);
+}
+
+.ruleAdd input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* On a narrow card the button drops under the input, so the placeholder keeps
+   the full width to itself. */
+@container (max-width: 440px) {
+  .ruleAdd {
+    flex-wrap: wrap;
+  }
+
+  .ruleAdd input {
+    flex-basis: 100%;
+  }
+
+  .ruleAdd > button {
+    margin-inline-start: auto;
+  }
+}
+
+/* ---- footer ---- */
+
+.footer {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+/* Explains the faded submit button while a required field is still empty. */
+.footerHint {
+  flex: 1 1 220px;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+
+.footerActions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+@container (max-width: 440px) {
+  .footerActions {
+    width: 100%;
+  }
+
+  .footerActions > * {
+    flex: 1 1 0;
+  }
 }

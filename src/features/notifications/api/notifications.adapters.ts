@@ -606,6 +606,19 @@ function sourceHrefFromPayload(
       ? `${communityPath(communitySlug)}?tab=modtools&mod=support`
       : undefined;
   }
+  // Task 6, both halves of a space-request decision. The recipient is the
+  // requesting owner or co-owner, and the answer to either outcome lives in
+  // the community's own mod-tools console, in the spaces pane. No slug means
+  // no destination rather than a fallback there; the row still reads.
+  if (
+    type === "community_space_request_approved" ||
+    type === "community_space_request_declined"
+  ) {
+    const communitySlug = payload?.communitySlug;
+    return typeof communitySlug === "string" && communitySlug
+      ? `${communityPath(communitySlug)}?tab=modtools&mod=spaces`
+      : undefined;
+  }
   // PRD-121, the three desk rows that go to a piece's WRITER. Keyed on `type`
   // and placed above the generic branches for a reason that would otherwise
   // bite silently: all three carry `source: "magazine"`, and that value already

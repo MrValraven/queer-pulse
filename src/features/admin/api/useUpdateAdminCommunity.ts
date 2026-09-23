@@ -9,6 +9,7 @@ import {
 import { adminCommunityDetailQueryKey } from "./useAdminCommunities";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 import { setDemoFeaturedSlug } from "../../communities/featuredCommunity.demo";
+import { SPACE_REQUESTS_QUERY_KEY } from "./useAdminCommunitySpaceRequests";
 
 export interface UpdateAdminCommunityVars {
   slug: string;
@@ -88,10 +89,21 @@ export function useUpdateAdminCommunity() {
         );
       }
     },
-    onLiveSuccess: (_data, { slug }) => {
+    onLiveSuccess: (_data, { slug, patch }) => {
       void queryClient.invalidateQueries({
         queryKey: adminCommunityDetailQueryKey(slug, demoMode, language),
       });
+      // Switching spaces on closes any open request for this community
+      // server-side (`AdminCommunitiesService.updateSettings`), but the
+      // admin space-requests queue's cache keeps the row until its next
+      // refetch. The stale row's own Approve click is handled (a
+      // `SPACE_REQUEST_NOT_OPEN` toast), so this is polish rather than a
+      // correctness fix.
+      if (patch.allowsSubcommunities === true) {
+        void queryClient.invalidateQueries({
+          queryKey: SPACE_REQUESTS_QUERY_KEY,
+        });
+      }
     },
   });
 }

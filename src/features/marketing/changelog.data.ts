@@ -66,6 +66,18 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "space-requests",
+        category: "feature",
+        date: "23 Sep 2026",
+        ...entryKeys("space-requests"),
+      },
+      {
+        id: "create-a-space-redesigned",
+        category: "improvement",
+        date: "23 Sep 2026",
+        ...entryKeys("create-a-space-redesigned"),
+      },
+      {
         id: "reading-groups-get-their-own-names",
         category: "feature",
         date: "23 Sep 2026",

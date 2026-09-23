@@ -2360,7 +2360,7 @@ export const marketing: Catalog = {
   "changelog.entry.less": "Less",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-09-23.headline":
-    "A full-screen directory map, and a live preview when you share into chat.",
+    "Owners can ask for spaces from mod tools, and the directory map goes full-screen.",
   "changelog.releases.2026-09-22.headline":
     "You can reply as your business, and communities can open spaces.",
   "changelog.releases.2026-09-20.headline":
@@ -2522,6 +2522,15 @@ export const marketing: Catalog = {
     "Shared lists open for members only",
   "changelog.entries.shared-lists-members-only.body":
     "A share link now asks the reader to sign in, and every item on the list links through to its page.",
+  // Space requests, 23 Sep 2026.
+  "changelog.entries.space-requests.title": "Ask for spaces from mod tools",
+  "changelog.entries.space-requests.body":
+    "Owners can ask the QueerPulse team to switch spaces on, and approval opens them straight away.",
+  // Create a space redesigned, 23 Sep 2026.
+  "changelog.entries.create-a-space-redesigned.title":
+    "A clearer way to create a space",
+  "changelog.entries.create-a-space-redesigned.body":
+    "Moderators open it from a button, pick who can join from described cards, and the address fills itself.",
   // Reading groups get their own names, 23 Sep 2026.
   "changelog.entries.reading-groups-get-their-own-names.title":
     "Reading groups get their own names",

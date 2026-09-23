@@ -44,6 +44,15 @@
   color: var(--text-strong);
 }
 
+/* Marks a `.rowName` that is also a link (e.g. the community-space-requests
+   queue) as clickable: `.rowName` alone is bold text-strong with no
+   underline, so nothing signals it can be tapped. */
+.rowNameLink {
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.35);
+  text-underline-offset: 3px;
+}
+
 .rowMeta {
   margin-top: 7px;
   font-size: var(--text-14);
@@ -55,6 +64,7 @@
   font-size: var(--text-13-5);
   color: var(--ink);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .rowDates {

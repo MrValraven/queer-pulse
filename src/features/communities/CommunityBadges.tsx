@@ -61,6 +61,15 @@ const TIER_LABEL_KEY: Record<AccessTier, string> = {
   private: "communities:badges.tier.private",
 };
 
+/** Tier names as a space wears them. The Portuguese names agree with
+ *  "espaço", where the community names above agree with "comunidade". */
+const SPACE_TIER_LABEL_KEY: Record<AccessTier, string> = {
+  public: "communities:badges.spaceTier.public",
+  request: "communities:badges.spaceTier.request",
+  invite: "communities:badges.spaceTier.invite",
+  private: "communities:badges.spaceTier.private",
+};
+
 /**
  * Access-tier pill for community cards/headers.
  *
@@ -72,17 +81,21 @@ const TIER_LABEL_KEY: Record<AccessTier, string> = {
 export function AccessTierBadge({
   tier,
   onPhoto = false,
+  isSpace = false,
 }: {
   tier: AccessTier;
   onPhoto?: boolean;
+  /** Labels the pill with the space tier names for a space's card. */
+  isSpace?: boolean;
 }) {
   const { t } = useTranslation();
   const { icon: Icon, cls } = TIER_META[tier];
+  const labelKey = isSpace ? SPACE_TIER_LABEL_KEY : TIER_LABEL_KEY;
   return (
     <span
       className={[styles.tier, onPhoto ? styles.tierOnPhoto : cls].join(" ")}
     >
-      <Icon aria-hidden /> {t(TIER_LABEL_KEY[tier])}
+      <Icon aria-hidden /> {t(labelKey[tier])}
     </span>
   );
 }

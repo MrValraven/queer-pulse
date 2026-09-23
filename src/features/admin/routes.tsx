@@ -130,6 +130,10 @@ const AdminCommunityTagRequestsPage = lazyNamed(
   () => import("./AdminCommunityTagRequestsPage"),
   "AdminCommunityTagRequestsPage",
 );
+const AdminCommunitySpaceRequestsPage = lazyNamed(
+  () => import("./AdminCommunitySpaceRequestsPage"),
+  "AdminCommunitySpaceRequestsPage",
+);
 const AdminLandingPage = lazyNamed(
   () => import("./AdminLandingPage"),
   "AdminLandingPage",
@@ -308,6 +312,10 @@ export function adminRoutes() {
       <Route
         path={routes.adminCommunityTagRequests}
         element={<AdminCommunityTagRequestsPage />}
+      />
+      <Route
+        path={routes.adminCommunitySpaceRequests}
+        element={<AdminCommunitySpaceRequestsPage />}
       />
       <Route path={routes.adminLanding} element={<AdminLandingPage />} />
       <Route path={routes.adminPressKit} element={<AdminPressKitPage />} />

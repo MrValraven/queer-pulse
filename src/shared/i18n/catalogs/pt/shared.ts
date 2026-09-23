@@ -274,6 +274,7 @@ export const shared: Catalog = {
   "adminNav.items.resourceListings": "Diretório de recursos",
   "adminNav.items.resourceSuggestions": "Sugestões de recursos",
   "adminNav.items.communityTagRequests": "Pedidos de etiquetas de comunidades",
+  "adminNav.items.communitySpaceRequests": "Pedidos de espaços",
   "adminNav.items.housingGroups": "Grupos de habitação",
   "adminNav.items.housingCoops": "Cooperativas de habitação",
   "adminNav.items.governance": "Governação",

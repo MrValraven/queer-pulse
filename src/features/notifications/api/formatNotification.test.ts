@@ -138,6 +138,13 @@ const KINDS: NotificationKind[] = [
   "listing_co_manager_invite_accepted",
   "listing_co_manager_invite_declined",
   "listing_owner_offer",
+  // Task 6, both halves of a community space request decision. Listed with an
+  // empty payload for the same reason `ban_evasion_escalation_raised`/
+  // `_resolved` are above: each interpolates the community the request was
+  // about, and a row whose payload never arrived still has to read as a whole
+  // sentence rather than leaving `{communityName}` in front of the requester.
+  "community_space_request_approved",
+  "community_space_request_declined",
 ];
 
 describe("formatNotification", () => {
@@ -155,6 +162,17 @@ describe("formatNotification", () => {
     expect(result.text.trim()).not.toBe("");
     expect(result.meta.trim()).not.toBe("");
   });
+
+  it.each([
+    "community_space_request_approved",
+    "community_space_request_declined",
+  ] as const)(
+    "%s reads as a whole sentence without a community name",
+    (kind) => {
+      const formatted = formatNotification(kind, {}, t);
+      expect(formatted.text).not.toMatch(/\{communityName\}/);
+    },
+  );
 
   it("gives each kind text distinct from the generic fallback", () => {
     const fallback = formatNotification("something_else", {}, t).text;

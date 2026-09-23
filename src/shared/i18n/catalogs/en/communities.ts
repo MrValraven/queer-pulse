@@ -1340,6 +1340,10 @@ export const communities: Catalog = {
   "badges.tier.request": "Request to join",
   "badges.tier.invite": "Invite-only",
   "badges.tier.private": "Private",
+  "badges.spaceTier.public": "Open",
+  "badges.spaceTier.request": "Ask to join",
+  "badges.spaceTier.invite": "Invite only",
+  "badges.spaceTier.private": "Private",
   "badges.reaction.heart": "Love",
   "badges.reaction.celebrate": "Celebrate",
   "badges.reaction.support": "Support",
@@ -2173,9 +2177,60 @@ export const communities: Catalog = {
   "spaces.mod.form.addRule": "Add a rule",
   "spaces.mod.form.tierLocked": "A space can't be more open than {name}.",
   "spaces.mod.form.submit": "Create space",
+  "spaces.mod.form.basics": "The basics",
+  "spaces.mod.form.handleHelper":
+    "Filled in from the name until you change it.",
+  "spaces.mod.form.taglineHelper": "One line, shown on the space's card.",
+  "spaces.mod.form.purposeHelper":
+    "What will people do here? A few sentences are enough.",
+  "spaces.mod.form.charCount": "{count}/{max}",
+  "spaces.mod.form.tierDescription.public":
+    "Anyone in {name} can join straight away.",
+  "spaces.mod.form.tierDescription.request":
+    "People in {name} ask to join, and a moderator lets them in.",
+  "spaces.mod.form.tierDescription.invite":
+    "Listed with the other spaces in {name}. Only invited people get in.",
+  "spaces.mod.form.tierDescription.private":
+    "Hidden from the spaces list for anyone outside it. Only invited people get in.",
+  "spaces.mod.form.optional": "Optional",
+  "spaces.mod.form.rulesCount": "{count} of {max}",
+  "spaces.mod.form.rulePlaceholder":
+    "For example: Ask before sharing photos from a meetup",
+  "spaces.mod.form.requiredHint":
+    "All four basics are needed to create the space.",
+  "spaces.mod.form.creating": "Creating…",
+  "spaces.mod.form.cancel": "Cancel",
   "spaces.mod.created": "Space created",
   "spaces.mod.createError": "Couldn't create the space. Try again.",
   "spaces.mod.notAllowed": "This community can't open spaces right now.",
   "spaces.mod.list.title": "Spaces in this community",
   "spaces.mod.list.empty": "No spaces yet.",
+  "spaces.request.offTitle": "Spaces aren't on for this community yet",
+  "spaces.request.intro":
+    "Spaces are smaller groups inside this community, like a parents' corner or a reading circle. Only people already here can join them.",
+  "spaces.request.note.label": "What spaces would you open?",
+  "spaces.request.note.helper":
+    "Optional. The QueerPulse team reads it with your request.",
+  "spaces.request.note.placeholder":
+    "For example: one space for parents and one for people new to the city.",
+  "spaces.request.submit": "Request spaces",
+  "spaces.request.sending": "Sending…",
+  "spaces.request.sent": "Request sent to the QueerPulse team",
+  "spaces.request.error": "Couldn't send the request. Try again.",
+  "spaces.request.alreadyOpen":
+    "A request is already waiting for the QueerPulse team.",
+  "spaces.request.alreadyAllowed": "Spaces are already on for this community.",
+  "spaces.request.approved": "Spaces are on. Refreshing…",
+  "spaces.request.pending":
+    "Requested on {date}. Waiting for the QueerPulse team.",
+  "spaces.request.withdraw": "Withdraw request",
+  "spaces.request.withdrawn": "Request withdrawn",
+  "spaces.request.withdrawError": "Couldn't withdraw the request. Try again.",
+  "spaces.request.declined": "The QueerPulse team declined the last request.",
+  "spaces.request.declinedReason": "Their note: {reason}",
+  "spaces.request.askAgain": "You can ask again whenever you're ready.",
+  "spaces.request.staffOnly":
+    "Only the owner or a co-owner can ask for spaces.",
+  "spaces.request.loadError": "Couldn't load the request status.",
+  "spaces.request.retry": "Try again",
 };
